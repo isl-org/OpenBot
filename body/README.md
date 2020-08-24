@@ -1,6 +1,7 @@
 
 # OpenBot: Robot Body
 We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware. The total cost of building such a robot is only $50.
+![Assembly](../docs/images/assembly.gif)
 
 ## 3D printed chassis
 You will need to print the following parts in order to build your OpenBot. 
