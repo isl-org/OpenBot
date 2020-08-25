@@ -14,9 +14,13 @@ Please cite our [paper](docs/paper/OpenBot.pdf) if you use OpenBot.
 
 ```bib
 @article{openbot2020,
-    author    = {Matthias M\"{u}ller and Vladlen Koltun},
+    author    = {Matthias M\"uller and Vladlen Koltun},
     title     = {{OpenBot}: Turning Smartphones into Robots},
     journal   = {arXiv:arxiv_id},
     year      = {2020},
 }
 ```
+
+## Video
+
+[![OpenBot Video](https://img.youtube.com/vi/qc8hFLyWDOM/0.jpg)](https://www.youtube.com/watch?v=qc8hFLyWDOM)
