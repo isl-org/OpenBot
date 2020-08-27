@@ -6,7 +6,7 @@ We have designed a body for a wheeled robot which relies on low-cost, readily av
 ## 3D printed chassis
 You will need to print the following parts in order to build your OpenBot. 
 1) body_bottom ([STL](body_bottom.stl))
-2) body_top ([STL](body_bottom.stl))
+2) body_top ([STL](body_top.stl))
 3) phone_mount_bottom ([STL](phone_mount_bottom.stl))
 4) phone_mount_top ([STL](phone_mount_top.stl))
 
