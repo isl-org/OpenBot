@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo.png" width="200"/>
+</p>
+
 # OpenBot: Turning Smartphones into Robots
 
 OpenBot leverages smartphones as brains for low-cost robots. We have designed a small electric vehicle that costs about $50 and serves as a robot body. Our software stack for Android smartphones supports advanced robotics workloads such as person following and real-time autonomous navigation.
