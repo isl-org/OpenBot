@@ -51,13 +51,13 @@ You will need the following components.
 8) Mount the speed sensors with one M3x5 screw each
 9) Install the battery case (e.g. velcro)
 10) (Optional) Insert the on/off switch
-11) Connect the PWM inputs of the L298 to pins D5, D6, D9 and D10 of the Arduino
+11) Connect the PWM inputs of the L298N to pins D5, D6, D9 and D10 of the Arduino
 12) Connect the speed sensors and ultrasonic sensor to 5V and GND
-13) Connect D0 of the speed sensors to pins D2 (left) and D2 (right) of the Arduino
+13) Connect D0 of the speed sensors to pins D2 (left) and D3 (right) of the Arduino
 14) Connect Echo and Trigger of the ultrasonic sensor to pin D4 of the Arduino
 15) Connect the USB cable to the Arduino and route it through the top cover
 16) (Optional) Connect the LEDs to pins D7 (left) and D8 (right) of the Arduino and GND
 17) (Optional) Connect the voltage divider to pin A7 of the Arduino
-18) Connect the battery cables to Vin of L298N. If you installed the switch, put it in the current path.
+18) Connect the battery cables to Vin of the L298N. If you installed the switch, put it in the current path.
 19) Insert six M3 nuts into the bottom plate and mount the top cover with six M3x25 screws
 20) Install the wheels
