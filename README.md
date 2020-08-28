@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/logo.png" width="200"/>
+  <img src="docs/images/banner.png" alt="Banner" width="100%"/>
 </p>
 
 # OpenBot: Turning Smartphones into Robots
@@ -20,7 +20,7 @@ Please cite our [paper](docs/paper/OpenBot.pdf) if you use OpenBot.
 @article{openbot2020,
     author    = {Matthias M\"uller and Vladlen Koltun},
     title     = {{OpenBot}: Turning Smartphones into Robots},
-    journal   = {arXiv:arxiv_id},
+    journal   = {arXiv:2008.10631},
     year      = {2020},
 }
 ```
