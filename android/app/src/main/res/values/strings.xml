@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenBot</string>
+    <string name="activity_name">OpenBot</string>
+    <string name="description_info">Info</string>
+    <string name="camera_permission_denied">Camera permission is necessary to run this application.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="threads">Threads</string>
+    <string name="location_permission_denied">Location permission is necessary for logging.</string>
+    <string name="storage_permission_denied">External storage permission is necessary for logging.</string>
+    <string name="model">Model</string>
+    <string-array name="models">
+        <item>DETECTOR_V1_1_0_Q</item>
+        <item>DETECTOR_V3_S_Q</item>
+        <item>AUTOPILOT_F</item>
+    </string-array>
+
+    <string name="device">Device</string>
+    <string-array name="devices">
+        <item>CPU</item>
+        <item>GPU</item>
+        <item>NNAPI</item>
+    </string-array>
+
+    <string name="baud_rate">Baud Rate</string>
+    <string-array name="baud_rates">
+        <item>9600</item>
+        <item>14400</item>
+        <item>19200</item>
+        <item>38400</item>
+        <item>57600</item>
+        <item>115200</item>
+        <item>230400</item>
+        <item>460800</item>
+        <item>921600</item>
+    </string-array>
+
+    <string name="logger_setting">Logger Setting</string>
+    <string-array name="logger_settings">
+        <item>all_imgs</item>
+        <item>crop_img</item>
+        <item>preview_img</item>
+        <item>only_sensors</item>
+    </string-array>
+
+    <string name="drive_mode">Drive Mode</string>
+    <string-array name="drive_modes">
+        <item>Dual</item>
+        <item>Game</item>
+        <item>Joystick</item>
+    </string-array>
+
+</resources>
