@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/banner.png" alt="Banner" width="100%"/>
+  <img src="docs/images/banner.jpg" alt="Banner" width="100%"/>
 </p>
 
 # OpenBot: Turning Smartphones into Robots
