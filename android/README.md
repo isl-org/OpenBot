@@ -24,5 +24,5 @@ The [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflo
 ## How to Use the App
 Coming soon...
 <p align="center">
-  <img src="docs/images/app_teaser.jpg" alt="App Teaser" width="100%"/>
+  <img src="../docs/images/app_teaser.jpg" alt="App Teaser" width="100%"/>
 </p>
