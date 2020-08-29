@@ -5,8 +5,8 @@ We have designed a body for a wheeled robot which relies on low-cost, readily av
 
 ## 3D printed chassis
 You will need to print the following parts in order to build your OpenBot. 
-1) body_bottom ([STL](body_bottom.stl))
-2) body_top ([STL](body_top.stl))
+1) body_bottom ([STL](body_bottom.stl), [STEP](body_bottom.step))
+2) body_top ([STL](body_top.stl), [STEP](body_top.step))
 3) phone_mount_bottom ([STL](phone_mount_bottom.stl))
 4) phone_mount_top ([STL](phone_mount_top.stl))
 
@@ -19,6 +19,8 @@ On an Ultimaker S5, we achieved good results with the following settings:
 - no support
 
 We were able to print the chassis with PLA, ABS and CPE. In our experience the print was not affected very much by the print settings. However, if you have the patience, printing slower and with smaller layer height will improve the print. Also adding a support structure can improve the print, but it will require additional work to remove afterwards.
+
+Since a lot of common 3D printers have a smaller build volume, we have also made a [body_bottom_slim.stl](body_bottom_slim.stl) and [body_top_slim.stl](body_bottom_slim.stl) which fit on a 223x223 build plate at 45 degrees. These have not been tested, but should work fine.
 
 ## Bill of materials
 You will need the following components.
