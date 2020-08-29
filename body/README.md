@@ -20,7 +20,7 @@ On an Ultimaker S5, we achieved good results with the following settings:
 
 We were able to print the chassis with PLA, ABS and CPE. In our experience the print was not affected very much by the print settings. However, if you have the patience, printing slower and with smaller layer height will improve the print. Also adding a support structure can improve the print, but it will require additional work to remove afterwards.
 
-Since a lot of common 3D printers have a smaller build volume, we have also made a [body_bottom_slim.stl](body_bottom_slim.stl) and [body_top_slim.stl](body_bottom_slim.stl) which fit on a 223x223 build plate at 45 degrees. These have not been tested, but should work fine.
+Since a lot of common 3D printers have a smaller build volume, we have also made a [body_bottom_slim.stl](body_bottom_slim.stl) and [body_top_slim.stl](body_top_slim.stl) which fit on a 223x223 build plate at 45 degrees. These have not been tested, but should work fine.
 
 ## Bill of materials
 You will need the following components.

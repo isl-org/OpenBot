@@ -20,3 +20,9 @@ Our application is derived from the [TensorFlow Lite Object Detection Android De
 
 ### Code Structure
 The [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android) was used as starting point to integrate TFLite models and obtain the camera feed. The main activity is the [NetworkActivity](app/src/main/java/org/openbot/NetworkActivity.java) which runs the main thread. It inherits from the [CameraActivity](app/src/main/java/org/openbot/CameraActivity.java) which manages the camera and UI. The [SensorService](app/src/main/java/org/openbot/SensorService.java) reads all other phone sensors and logs them. The [env](app/src/main/java/org/openbot/env) folder contains utility classes such as the [GameController](app/src/main/java/org/openbot/env/GameController.java) interface and an [AudioPlayer](app/src/main/java/org/openbot/env/AudioPlayer.java) for the audible feedback. The [tflite](app/src/main/java/org/openbot/tflite) folder contains the model definitions for the [Autopilot](app/src/main/java/org/openbot/tflite/Autopilot.java) and [Detector](app/src/main/java/org/openbot/tflite/Detector.java) networks.
+
+## How to Use the App
+Coming soon...
+<p align="center">
+  <img src="docs/images/app_teaser.jpg" alt="App Teaser" width="100%"/>
+</p>
