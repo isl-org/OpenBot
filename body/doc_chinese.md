@@ -7,7 +7,7 @@
 您将需要打印以下部分用来组装您的OpenBot机器车。
 
 1) 车身底部 ([STL](body_bottom.stl), [STEP](body_bottom.step))
-2) 车身地步 ([STL](body_top.stl), [STEP](body_top.step))
+2) 车身底部 ([STL](body_top.stl), [STEP](body_top.step))
 3) 手机支架底部 ([STL](phone_mount_bottom.stl))
 4) 手机支架顶部 ([STL](phone_mount_top.stl))
 
