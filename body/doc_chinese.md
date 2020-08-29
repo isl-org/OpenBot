@@ -2,7 +2,7 @@
 
 我们为轮式机器人设计了一个车身，该车身依赖于低成本，随时可用的业余爱好硬件。
 
-![Assembly](/images/assembly.gif)
+![Assembly](../doc/images/assembly.gif)
 ## 3D打印机身
 您将需要打印以下部分用来组装您的OpenBot机器车。
 
