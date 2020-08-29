@@ -1,5 +1,8 @@
 
 # OpenBot: Robot Body
+
+[简体中文](/doc_chinese.md)
+
 We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware. 
 ![Assembly](../docs/images/assembly.gif)
 
