@@ -42,7 +42,7 @@ You will need the following components.
 
 (Optional)
 - 1x Ultrasonic Sensor ([EU](https://www.amazon.de/dp/B00LSJWRXU), [US](https://www.amazon.com/dp/B0852V181G/), [AE](https://www.aliexpress.com/item/32713522570.html?spm=a2g0o.productlist.0.0.798110f86VwFId&algo_pvid=aa665343-c450-4ded-8d6a-6cef7e7f0af2&algo_expid=aa665343-c450-4ded-8d6a-6cef7e7f0af2-0&btsid=0bb47a1a15986882673204579e47f9&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_))
-- 1x On/Off Switch ([EU](https://www.amazon.de/dp/B07QB22J62), [US](https://www.amazon.com/dp/B01N2U8PK0),[AE](https://www.aliexpress.com/item/1000005699023.html?spm=a2g0o.productlist.0.0.1a6c7fb71FhAHs&algo_pvid=aecb292e-471e-4598-99f5-4f74161ddd75&algo_expid=aecb292e-471e-4598-99f5-4f74161ddd75-1&btsid=0bb47a1a15986883373795667e47f9&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_))
+- 1x On/Off Switch ([EU](https://www.amazon.de/dp/B07QB22J62), [US](https://www.amazon.com/dp/B01N2U8PK0), [AE](https://www.aliexpress.com/item/1000005699023.html?spm=a2g0o.productlist.0.0.1a6c7fb71FhAHs&algo_pvid=aecb292e-471e-4598-99f5-4f74161ddd75&algo_expid=aecb292e-471e-4598-99f5-4f74161ddd75-1&btsid=0bb47a1a15986883373795667e47f9&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_))
 - 2x Orange LED 5mm ([EU](https://www.amazon.de/gp/product/B01NCL0UTQ), [US](https://www.amazon.com/dp/B077XD7MVB), [AE](https://www.aliexpress.com/item/4000329069943.html?spm=a2g0o.productlist.0.0.61c2172d8P9Xa3&algo_pvid=b2723730-97d9-413c-96b9-ed257265ad2d&algo_expid=b2723730-97d9-413c-96b9-ed257265ad2d-5&btsid=0bb47a1a15986884170516963e47f9&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_))
 
 ## Build instructions
