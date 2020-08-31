@@ -68,4 +68,14 @@ Our robot body relies on readily available hobby electronics. We provide links f
 20) Install the wheels
 
 ## Custom PCB
-Coming soon. Stay tuned!
+![PCB](../docs/images/pcb_3d.png)
+The custom PCB involves the following steps:
+1) **Order the PCB**: Download the [Gerber](gerber.zip) files and order the PCB at the vendor of your choice. You can also order the PCB directly on [PCBWay](https://www.pcbway.com/project/shareproject/OpenBot__Turning_Smartphones_into_Robots.html) where we have shared a project for OpenBot.
+2) **Order the components:** Download the [BOM](BOM.csv) and order the compenents at the vendor of your choice, for example [LCSC](https://lcsc.com).
+3) **Assembly of the PCB:** You can either assemble the PCB yourself or have them assembled by a vendor. For automated assembly you will need the [Centroid File](centroid_file.csv)
+
+You can also find vendors that will provide you a TurnKey solution covering all 3 steps. They will manufacture the PCB, source the components and assemble the PCB. This is very convenient and also not too expensive. However, delivery times are often very long (1-3 months). 
+
+When requesting a quote at [PCBWay](https://www.pcbway.com/orderonline.aspx), you can select the assembly service after uploading the Gerber file. 
+![Assembly Service](../docs/images/assembly_service.jpg)
+In the next step, you will need to upload the [BOM](BOM.csv) and the [Centroid File](centroid_file.csv). Your quote will then be reviewed and updated within a few days. You can then choose to proceed with payment after reviewing cost and delivery time. 
