@@ -49,5 +49,23 @@
         <item>Game</item>
         <item>Joystick</item>
     </string-array>
+    <string name="control_speed">Vehicle Speed</string>
+    <string name="data_logger">Data Logger</string>
+    <string name="not_logging">Not Logging</string>
+    <string name="usb_connection">USB Connection</string>
+    <string name="no_device">No Device</string>
+    <string name="control">Vehicle Control</string>
+    <string name="plus">plus</string>
+    <string name="arrow">arrow</string>
+    <string name="minus">minus</string>
+    <string name="controller">Controller</string>
+    <string name="crop">Crop</string>
+    <string name="frame">Frame</string>
+    <string name="_1">1</string>
+    <string-array name="control_speeds">
+        <item>Slow</item>
+        <item>Normal</item>
+        <item>Fast</item>
+    </string-array>
 
 </resources>
