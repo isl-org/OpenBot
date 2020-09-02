@@ -56,18 +56,18 @@
     - 数量 1
     - 价格:¥29.27
     - [淘宝购买](https://s.click.taobao.com/vmo45xu) , [领券](https://s.click.taobao.com/zjmJ4xu)
-- 摩托车配件 弹簧 
+- 304不锈钢拉簧拉力拉伸带钩弹簧 
     - 数量 1
     - 价格:¥0.60
-    - [淘宝购买](https://s.click.taobao.com/ijIJ4xu)
+    - [淘宝购买](https://s.click.taobao.com/nj1Kzwu)
 - M2.5 M3 304不锈钢圆头一字螺丝*4x5x6x8x20x25x50mm
     - 数量 16
     - 价格:¥4.00
     - [淘宝购买](https://s.click.taobao.com/GGF45xu)
-- 不锈钢无角焊点304六角焊接螺母m3m4m5m6m8
+- 304不锈钢六角螺母小螺丝帽
     - 数量 16
     - 价格:¥18.00
-    - [淘宝购买](https://s.click.taobao.com/sTj45xu)
+    - [淘宝购买](https://s.click.taobao.com/3roD0xu)
 - M3* 5 螺丝
     - 数量 6
     - 价格:￥2.18
@@ -113,3 +113,18 @@
 18. 将电池电缆连接至L298N的Vin。如果安装了交换机，请将其放在当前路径中。
 19. 将六个M3螺母插入底板，然后用六个M3x25螺钉安装顶盖
 20. 安装车轮
+
+## 定制PCB
+![PCB](../docs/images/pcb_3d.png)
+定制PCB包括以下步骤:
+1) **购买 PCB**: 下载[Gerber](gerber.zip) 文件 并选择供应商处订购PCB。 你也可以直接在[PCBWay](https://www.pcbway.com/project/shareproject/OpenBot__Turning_Smartphones_into_Robots.html)上订购PCB，在那里我们共享了一个OpenBot项目。
+2) **订购组件:** 下载[BOM](BOM.csv)并在您选择的供应商处订购组件，例如[LCSC](https://lcsc.com)。
+3) **PCB组装:** 你可以自己组装PCB，也可以让供应商来组装。对于自动装配，您将需要[Centroid文件](centroid_file.csv)
+
+您还可以找到供应商，他们将为您提供涵盖所有3个步骤的全套解决方案。他们将生产PCB，提供组件和组装PCB。这非常方便，也不太贵。然而，交货时间通常很长(1-3个月)。
+
+当在[PCBWay](https://www.pcbway.com/orderonline.aspx)请求报价时，您可以在上传Gerber文件后选择组装服务。
+
+![Assembly Service](../docs/images/assembly_service.jpg)
+
+在下一步中，您将需要上传[BOM](BOM.csv)和[Centroid File](centroid_file.csv)。 您的报价将在几天之内进行审核和更新。 然后，您可以在查看成本和交货时间后选择继续付款。
