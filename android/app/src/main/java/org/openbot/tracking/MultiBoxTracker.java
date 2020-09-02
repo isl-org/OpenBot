@@ -70,8 +70,8 @@ public class MultiBoxTracker {
   private int frameWidth;
   private int frameHeight;
   private int sensorOrientation;
-  private int leftControl;
-  private int rightControl;
+  private float leftControl;
+  private float rightControl;
 
   public MultiBoxTracker(final Context context) {
     for (final int color : COLORS) {
@@ -151,25 +151,25 @@ public class MultiBoxTracker {
       float imgWidth = (float) (rotated ? frameHeight : frameWidth);
       float centerX = (rotated ? trackedPos.centerY() : trackedPos.centerX());
       //Make sure object center is in frame
-      centerX = Math.max(0, Math.min(centerX, imgWidth));
+      centerX = Math.max(0.0f, Math.min(centerX, imgWidth));
       //Scale relative position along x-axis between -1 and 1
       float x_pos_norm = 1.0f - 2.0f * centerX / imgWidth;
       //Scale to control signal and account for rotation
-      double x_pos_scaled = rotated ? -x_pos_norm * 255.0f : x_pos_norm * 255.0f;
+      float x_pos_scaled = rotated ? -x_pos_norm * 1.0f : x_pos_norm * 1.0f;
       ////Scale by "exponential" function: y = x / sqrt(1-x^2)
       //Math.max (Math.min(x_pos_norm / Math.sqrt(1 - x_pos_norm * x_pos_norm),2),-2) * 255.0f;
 
       if (x_pos_scaled < 0) {
-        leftControl = 255;
-        rightControl = (int) (255.0f + x_pos_scaled);
+        leftControl = 1.0f;
+        rightControl = 1.0f + x_pos_scaled;
       } else {
-        leftControl = (int) (255.0f - x_pos_scaled);
-        rightControl = 255;
+        leftControl = 1.0f - x_pos_scaled;
+        rightControl = 1.0f;
       }
     }
     else {
-      leftControl = 0;
-      rightControl = 0;
+      leftControl = 0.0f;
+      rightControl = 0.0f;
     }
     return new ControlSignal(leftControl, rightControl);
   }
@@ -198,7 +198,7 @@ public class MultiBoxTracker {
 //                canvas,
 //                trackedPos.left + cornerSize,
 //                trackedPos.top + 40.0f,
-//                String.format("%d", leftControl) + "," + String.format("%d", rightControl),
+//                String.format("%.2f", leftControl) + "," + String.format("%.2f", rightControl),
 //                boxPaint);
 //      }
     }

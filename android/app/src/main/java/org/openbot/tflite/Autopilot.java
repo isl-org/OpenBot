@@ -82,7 +82,7 @@ public abstract class Autopilot extends Network {
     LOGGER.v("Timecost to run model inference: " + (endTime - startTime));
 
     Trace.endSection(); // "recognizeImage"
-    return new ControlSignal((int) (255.f * predicted_ctrl[0][0]), (int) (255.f * predicted_ctrl[0][1]));
+    return new ControlSignal(predicted_ctrl[0][0], predicted_ctrl[0][1]);
   }
 
 }

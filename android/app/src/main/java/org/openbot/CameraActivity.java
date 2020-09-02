@@ -129,7 +129,7 @@ public abstract class CameraActivity extends AppCompatActivity
   protected TextView frameValueTextView, cropValueTextView, inferenceTimeTextView, controlValueTextView;
   protected ImageView bottomSheetArrowImageView;
   private ImageView plusImageView, minusImageView;
-  protected Spinner baudRateSpinner, modelSpinner, deviceSpinner, driveModeSpinner, loggerSpinner;
+  protected Spinner baudRateSpinner, modelSpinner, deviceSpinner, driveModeSpinner, loggerSpinner, controlSpinner;
   private TextView threadsTextView;
   private Model model = Model.DETECTOR_V1_1_0_Q;
   private Device device = Device.CPU;
@@ -143,6 +143,7 @@ public abstract class CameraActivity extends AppCompatActivity
   public int[] BaudRates = {9600,14400,19200,38400,57600,115200,230400,460800,921600};
   private int baudRate = 115200;
   protected LogMode logMode = LogMode.CROP_IMG;
+  protected ControlSpeed controlSpeed = ControlSpeed.NORMAL;
   protected DriveMode driveMode = DriveMode.GAME;
   protected String logFolder;
   private boolean loggingEnabled;
@@ -155,6 +156,12 @@ public abstract class CameraActivity extends AppCompatActivity
     PREVIEW_IMG,
     ONLY_SENSORS
   }
+  
+  public enum ControlSpeed {
+    SLOW,
+    NORMAL,
+    FAST
+  }
 
   public enum DriveMode {
     DUAL,
@@ -163,24 +170,25 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   public final static class ControlSignal {
-    private final int left;
-    private final int right;
+    private final float left;
+    private final float right;
 
-    public ControlSignal(int left, int right) {
-      this.left = Math.max(-255, Math.min(255, left));
-      this.right = Math.max(-255, Math.min(255, right));
+    public ControlSignal(float left, float right) {
+      this.left = Math.max(-1.f, Math.min(1.f, left));
+      this.right = Math.max(-1.f, Math.min(1.f, right));
     }
 
-    public int getLeft() {
+    public float getLeft() {
       return left;
     }
 
-    public int getRight() {
+    public float getRight() {
       return right;
     }
   }
 
   protected ControlSignal vehicleControl = new ControlSignal(0,0);
+  protected int speedMultiplier = 192; //128,192,255
   protected int vehicleIndicator = 0;
 
   @Override
@@ -216,6 +224,7 @@ public abstract class CameraActivity extends AppCompatActivity
     bottomSheetArrowImageView = findViewById(R.id.bottom_sheet_arrow);
     loggerSwitchCompat = findViewById(R.id.logger_switch);
     loggerSpinner = findViewById(R.id.logger_spinner);
+    controlSpinner = findViewById(R.id.control_spinner);
 
     ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
     vto.addOnGlobalLayoutListener(
@@ -281,6 +290,7 @@ public abstract class CameraActivity extends AppCompatActivity
     deviceSpinner.setOnItemSelectedListener(this);
     driveModeSpinner.setOnItemSelectedListener(this);
     loggerSpinner.setOnItemSelectedListener(this);
+    controlSpinner.setOnItemSelectedListener(this);
 
     //Make sure spinners are initialized correctly
     baudRateSpinner.setSelection(Arrays.binarySearch(BaudRates, baudRate));
@@ -288,6 +298,8 @@ public abstract class CameraActivity extends AppCompatActivity
     deviceSpinner.setSelection(device.ordinal());
     driveModeSpinner.setSelection(driveMode.ordinal());
     loggerSpinner.setSelection(logMode.ordinal());
+    controlSpinner.setSelection(controlSpeed.ordinal());
+
     numThreads = Integer.parseInt(threadsTextView.getText().toString().trim());
 
     gameController = new GameController(driveMode);
@@ -702,6 +714,26 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
+  private void setControlSpeed(ControlSpeed controlSpeed) {
+    if (this.controlSpeed != controlSpeed) {
+      LOGGER.d("Updating  controlSpeed: " + controlSpeed);
+      this.controlSpeed = controlSpeed;
+      switch (controlSpeed) {
+        case SLOW:
+          speedMultiplier = 128;
+          break;
+        case NORMAL:
+          speedMultiplier = 192;
+          break;
+        case FAST:
+          speedMultiplier = 255;
+          break;
+        default:
+          throw new IllegalStateException("Unexpected value: " + controlSpeed);
+      }
+    }
+  }
+  
   protected void setDriveMode(DriveMode driveMode) {
     if (this.driveMode != driveMode) {
       LOGGER.d("Updating  driveMode: " + driveMode);
@@ -802,8 +834,8 @@ public abstract class CameraActivity extends AppCompatActivity
   protected void sendControlToSensorService(ControlSignal vehicleControl) {
     if (mSensorMessenger != null){
       Message msg = Message.obtain();
-      msg.arg1 = vehicleControl.getLeft();
-      msg.arg2 = vehicleControl.getRight();
+      msg.arg1 = (int) vehicleControl.getLeft() * speedMultiplier;
+      msg.arg2 = (int) vehicleControl.getRight() * speedMultiplier;
       msg.what = SensorService.MSG_CONTROL;
       try {
         mSensorMessenger.send(msg);
@@ -864,15 +896,15 @@ public abstract class CameraActivity extends AppCompatActivity
     if (loggingActive && !getLoggingEnabled()) {
       if (!hasCameraPermission() && logMode != LogMode.ONLY_SENSORS) {
         requestCameraPermission();
-        return;
+        this.loggingEnabled = false;
       }
       else if (!hasLocationPermission()){
         requestLocationPermission();
-        return;
+        this.loggingEnabled = false;
       }
       else if (!hasStoragePermission()){
         requestStoragePermission();
-        return;
+        this.loggingEnabled = false;
       }
       else {
         startLogging();
@@ -908,7 +940,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void disconnectUsb () {
     if (usbConnection != null) {
-      sendControlToVehicle("0,0");
+      sendControlToVehicle(new ControlSignal(0,0));
       usbConnection.stopUsbConnection();
       usbConnection = null;
     }
@@ -950,16 +982,18 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected abstract void setDriveByNetwork(boolean isChecked);
 
-  protected void sendControlToVehicle(String message) {
-    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      message = 'c' + message + '\n';
+  protected void sendControlToVehicle(ControlSignal vehicleControl) {
+    if ((usbConnection != null) && usbConnection.isOpen() && !usbConnection.isBusy()) {
+      String message = String.format("c%d,%d\n",
+              (int) (vehicleControl.getLeft() * speedMultiplier),
+              (int) (vehicleControl.getRight() * speedMultiplier));
       usbConnection.send(message);
     }
   }
 
-  protected void sendIndicatorToVehicle(String message) {
+  protected void sendIndicatorToVehicle(int vehicleIndicator) {
     if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      message = 'i' + message + '\n';
+      String message = String.format("i%d\n", vehicleIndicator);
       usbConnection.send(message);
     }
   }
@@ -1015,6 +1049,9 @@ public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
   }
   else if (parent == loggerSpinner) {
     setLogMode(LogMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
+  }
+  else if (parent == controlSpinner) {
+    setControlSpeed(ControlSpeed.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
   }
 }
 

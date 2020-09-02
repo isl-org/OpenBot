@@ -185,10 +185,7 @@ public class GameController {
         break;
     }
 
-    left *= 255;
-    right *= 255;
-
-    return new ControlSignal((int)left,(int)right);
+    return new ControlSignal(left,right);
 
   }
 
