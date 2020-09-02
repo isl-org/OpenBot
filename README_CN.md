@@ -11,7 +11,7 @@ OpenBot利用智能手机作为低成本机器人的大脑。我们设计了一�
 ## 开始使用OpenBot
 - 构建自己的车身 [车身](body)
 - 刷入 [Arduino 固件](firmware)
-- 变异并运行 [Android App](android)
+- 编译并运行 [Android App](android)
 - 训练自己的 [驾驶策略](policy)
 
 ## 引用
