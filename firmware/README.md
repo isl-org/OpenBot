@@ -1,4 +1,5 @@
 # Firmware
+[简体中文](README_CN.md)
 
 We use a microcontroller unit (MCU) to act as a bridge between the robot body and the smartphone.  We provide our [firmware](openbot_v1_nano/openbot_v1_nano.ino) for the Arduino Nano with an ATmega328P microcontroller. 
 
