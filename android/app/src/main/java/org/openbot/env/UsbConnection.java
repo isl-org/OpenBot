@@ -112,7 +112,7 @@ public class UsbConnection {
 
       if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
         UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-        if (device != null && device.getVendorId() == USB_VENDOR_ID && device.getProductId() == USB_PRODUCT_ID) {
+        if (device != null) {
           LOGGER.i("USB device detached");
           stopUsbConnection();
         }
@@ -131,7 +131,7 @@ public class UsbConnection {
     Map<String, UsbDevice> connectedDevices = usbManager.getDeviceList();
     if (!connectedDevices.isEmpty()) {
       for (UsbDevice usbDevice : connectedDevices.values()) {
-        if (usbDevice.getVendorId() == USB_VENDOR_ID && usbDevice.getProductId() == USB_PRODUCT_ID) {
+        //if (usbDevice.getVendorId() == USB_VENDOR_ID && usbDevice.getProductId() == USB_PRODUCT_ID) {
           LOGGER.i("Device found: " + usbDevice.getDeviceName());
           if (usbManager.hasPermission(usbDevice)) {
             return startSerialConnection(usbDevice);
@@ -143,7 +143,7 @@ public class UsbConnection {
                     Toast.LENGTH_SHORT).show();
             return false;
           }
-        }
+        //}
       }
     }
     LOGGER.w("Could not start USB connection - No devices found");
