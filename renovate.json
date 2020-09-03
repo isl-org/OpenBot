@@ -30,6 +30,7 @@
     {
       "datasources": ["docker"],
       "automerge": false
+      "includeForks": true
     },
     {
       "updateTypes": ["major"],
