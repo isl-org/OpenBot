@@ -22,7 +22,52 @@ Our application is derived from the [TensorFlow Lite Object Detection Android De
 The [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android) was used as starting point to integrate TFLite models and obtain the camera feed. The main activity is the [NetworkActivity](app/src/main/java/org/openbot/NetworkActivity.java) which runs the main thread. It inherits from the [CameraActivity](app/src/main/java/org/openbot/CameraActivity.java) which manages the camera and UI. The [SensorService](app/src/main/java/org/openbot/SensorService.java) reads all other phone sensors and logs them. The [env](app/src/main/java/org/openbot/env) folder contains utility classes such as the [GameController](app/src/main/java/org/openbot/env/GameController.java) interface and an [AudioPlayer](app/src/main/java/org/openbot/env/AudioPlayer.java) for the audible feedback. The [tflite](app/src/main/java/org/openbot/tflite) folder contains the model definitions for the [Autopilot](app/src/main/java/org/openbot/tflite/Autopilot.java) and [Detector](app/src/main/java/org/openbot/tflite/Detector.java) networks.
 
 ## How to Use the App
-Coming soon...
+<p align="center">
+  <img src="../docs/images/app_gui.jpg" alt="App GUI" width="100%"/>
+</p>
+
+### Data Logger
+There are four different logging modes:
+- **only_sensors**: All sensor data but no images are saved.
+- **crop_img**: All sensor data and a cropped images that have the input size of the network are saved. This is the default setting and is what should be used for data collection.
+- **preview_img**: All sensor data and a full-size images are saved. This will require a lot of memory and can be slow. However, it is nice for compiling FPV videos. 
+- **all_imgs**: All sensor data and both cropped and full-size images are saved. This will require a lot of memory and can be slow.
+
+The switch on the right is used to toggle logging on and off. On the game controller this switch can be toggled with the X button. 
+
+### USB Connection
+The drop-down menu is used to set the baud rate. The default is 115200 and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
+
+### Drive Mode
+There are three different drive modes when using a game controller (e.g. PS4):
+- **Game Mode**: Use the right and left shoulder triggers (R2, L2) for forward and reverse throttle and either joystick for steering. This mode imitates the control mode of car racing video games. 
+- **Joystick**: Use either one of the joysticks to control the robot.
+- **Dual**: Use the left and right joystick to control the left and right side of the car. This is raw differential steering. 
+
+The switch on the right is used to toggle the control between a game controller and the network. On the game controller this switch can be toggled with the R1 trigger button. 
+
+### Vehicle Control
+There are three different speeds:
+- **Slow**: The voltage applied to the motors is limited to 50% of the input voltage (~6V).
+- **Normal**: The voltage applied to the motors is limited to 75% of the input voltage (~9V).
+- **Fast**: There is no limit. The full input voltage will be applied to the motors at full throttle (~12V). *This is the default setting for running the neural networks.*
+
+Running at higher speeds will reduce the lifetime of the motors but is more fun. The controls received from a connected game controller or predicted by the network are displayed on the right side.
+
+### Model 
+There are three models that come with the app:
+- **DETECTOR_V1_1_0_Q**: This model is used for person following. It uses a SSD object detector with MobileNet V1 backbone. The model is quantized for better performance on embedded devices. 
+- **DETECTOR_V3_S_Q**: This model is used for person following. It uses a SSD object detector with MobileNet V3 backbone. The model is quantized for better performance on embedded devices. 
+- **AUTOPILOT_F**: This model is used for autonomous navigation. It will predict controls directly from the camera input. Chances are that it will not work in your environment. You should follow our instructions to train your own [Driving Policy](../policy) and replace it.
+
+If a model is active, the inference speed in [ms] will be displayed on the right side. 
+
+### Device
+Use the drop-down menu to select the device on which the neural network should be executed. You have the following choices:
+- **CPU**: Using the CPU works on most phones and is the default choice. You can adjust the number of threads to optimize performance. 
+- **GPU**: Most smartphones have a GPU. Networks with large inputs such as images often run faster on a GPU.
+- **NNAPI**: This will use the [TensorFlow Lite NNAPI delegate](https://www.tensorflow.org/lite/performance/nnapi). Modern smartphones often come with dedicated AI accelerators. The [Neural Network API](https://developer.android.com/ndk/guides/neuralnetworks) (NNAPI) provides acceleration for TensorFlow Lite models on Android devices with Graphics Processing Unit (GPU), Digital Signal Processor (DSP) and Neural Processing Unit (NPU). Note that on some older phones this can be very slow!
+
 <p align="center">
   <img src="../docs/images/app_teaser.jpg" alt="App Teaser" width="100%"/>
 </p>
