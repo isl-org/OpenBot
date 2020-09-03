@@ -29,7 +29,7 @@
   "packageRules": [
     {
       "datasources": ["docker"],
-      "automerge": false
+      "automerge": false,
       "includeForks": true
     },
     {
