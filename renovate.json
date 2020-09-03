@@ -6,7 +6,7 @@
     ":label(ready)",
     "group:linters",
     ":masterIssue",
-    ":assignee(rarkins)"
+    ":assignee(felder)"
   ],
   "lockFileMaintenance": {
     "enabled": true,
