@@ -46,29 +46,33 @@ Our robot body relies on readily available hobby electronics. We provide links f
 - 1x Ultrasonic Sensor ([EU](https://www.amazon.de/dp/B00LSJWRXU), [US](https://www.amazon.com/dp/B0852V181G/), [AE](https://www.aliexpress.com/item/32713522570.html))
 - 1x On/Off Switch ([EU](https://www.amazon.de/dp/B07QB22J62), [US](https://www.amazon.com/dp/B01N2U8PK0), [AE](https://www.aliexpress.com/item/1000005699023.html))
 - 2x Orange LED 5mm ([EU](https://www.amazon.de/gp/product/B01NCL0UTQ), [US](https://www.amazon.com/dp/B077XD7MVB), [AE](https://www.aliexpress.com/item/4000329069943.html))
+- Resistors (2x 150<span>&#8486;</span> for the LEDs and a 20 k<span>&#8486;</span> and 10k<span>&#8486;</span> for the voltage divider)
 
 
 ## Build instructions
-1) Connect wires to the motors if neccessary
-2) Insert the positive and negative leads of two motors into OUT1 (+) and OUT2 (-) of the L298N board
-3) Insert the positive and negative leads of the other two motors into OUT4 (+) and OUT3 (-) of the L298N board
+
+![Wiring Diagram](../docs/images/wiring_diagram.jpg)
+
+1) Connect wires to the motors if neccessary.
+2) Insert the positive and negative leads of the two left motors into OUT1 (+) and OUT2 (-) of the L298N board.
+3) Insert the positive and negative leads of the two right motors into OUT4 (+) and OUT3 (-) of the L298N board.
 4) Mount the L298N with four M3x5 screws and the motors with eight M3x25 screws and nuts
-5) (Optional) Install the ultrasonic sensor and orange LEDs
-6) Mount the bottom of the phone mount to the top plate using two M3x25 screws and nuts
-7) Insert the top of the phone mount and install the spring or rubber band
-8) Mount the speed sensors with one M3x5 screw each
-9) Install the battery case (e.g. velcro)
-10) (Optional) Insert the on/off switch
-11) Connect the PWM inputs of the L298N to pins D5, D6, D9 and D10 of the Arduino
-12) Connect the speed sensors and ultrasonic sensor to 5V and GND
-13) Connect D0 of the speed sensors to pins D2 (left) and D3 (right) of the Arduino
-14) Connect Echo and Trigger of the ultrasonic sensor to pin D4 of the Arduino
-15) Connect the USB cable to the Arduino and route it through the top cover
-16) (Optional) Connect the LEDs to pins D7 (left) and D8 (right) of the Arduino and GND
-17) (Optional) Connect the voltage divider to pin A7 of the Arduino
+5) (Optional) Install the ultrasonic sensor and orange LEDs.
+6) Mount the bottom of the phone mount to the top plate using two M3x25 screws and nuts.
+7) Insert the top of the phone mount and install the spring or rubber band.
+8) Mount the speed sensors with one M3x5 screw each.
+9) Install the battery case (e.g. velcro).
+10) (Optional) Insert the on/off switch.
+11) Connect the PWM inputs of the L298N to pins D5, D6, D9 and D10 of the Arduino.
+12) Connect the speed sensors and ultrasonic sensor to 5V and GND.
+13) Connect D0 of the speed sensors to pins D2 (left) and D3 (right) of the Arduino.
+14) Connect Echo and Trigger of the ultrasonic sensor to pin D4 of the Arduino.
+15) Connect the USB cable to the Arduino and route it through the top cover.
+16) (Optional) Connect the LEDs to pins D7 (left) and D8 (right) of the Arduino and GND. We recommend to add a 150 Ohm resistor in series to limit the current draw.
+17) (Optional) Connect the voltage divider to pin A7 of the Arduino. It is used to measure the battery voltage.
 18) Connect the battery cables to Vin of the L298N. If you installed the switch, put it in the current path.
-19) Insert six M3 nuts into the bottom plate and mount the top cover with six M3x25 screws
-20) Install the wheels
+19) Insert six M3 nuts into the bottom plate and mount the top cover with six M3x25 screws.
+20) Install the wheels.
 
 ## Custom PCB
 ![PCB](../docs/images/pcb_3d.png)

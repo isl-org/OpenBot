@@ -93,6 +93,8 @@
 
 ## 制作说明
 
+![Wiring Diagram](../docs/images/wiring_diagram.jpg)
+
 1. 如有必要，将线连接到电动机
 2. 将两个电动机的正极和负极引线插入L298N板的OUT1（+）和OUT2（-）
 3. 将其他两个电动机的正极和负极引线插入L298N板的OUT4（+）和OUT3（-）
