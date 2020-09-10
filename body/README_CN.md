@@ -8,8 +8,8 @@
 
 1) 车身底部 ([STL](body_bottom.stl), [STEP](body_bottom.step))
 2) 车身顶部 ([STL](body_top.stl), [STEP](body_top.step))
-3) 手机支架底部 ([STL](phone_mount_bottom.stl))
-4) 手机支架顶部 ([STL](phone_mount_top.stl))
+3) 手机支架底部 ([STL](phone_mount_bottom.stl), [STEP](phone_mount_bottom.step))
+4) 手机支架顶部 ([STL](phone_mount_top.stl), [STEP](phone_mount_top.step))
 
 在Ultimaker S5上，我们通过以下设置获得了良好的效果：
 
