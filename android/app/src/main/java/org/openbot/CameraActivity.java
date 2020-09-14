@@ -834,8 +834,8 @@ public abstract class CameraActivity extends AppCompatActivity
   protected void sendControlToSensorService(ControlSignal vehicleControl) {
     if (mSensorMessenger != null){
       Message msg = Message.obtain();
-      msg.arg1 = (int) vehicleControl.getLeft() * speedMultiplier;
-      msg.arg2 = (int) vehicleControl.getRight() * speedMultiplier;
+      msg.arg1 = (int) (vehicleControl.getLeft() * speedMultiplier);
+      msg.arg2 = (int) (vehicleControl.getRight() * speedMultiplier);
       msg.what = SensorService.MSG_CONTROL;
       try {
         mSensorMessenger.send(msg);
