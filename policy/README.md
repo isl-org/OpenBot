@@ -1,5 +1,7 @@
 
-# Driving Policy
+# Driving Policy (Advanced)
+WARNING: To get a good driving policy for your custom dataset will require some patience. It is not straight-forward, involves data collection, hyperparameter tuning, etc. If you have never trained machine learning models before, it will be challenging and may even get frustrating. 
+
 In order to train an autonomous driving policy, you will first need to collect a dataset. The more data you collect, the better the resulting driving policy. For the experiments in our paper, we collected about 30 minutes worth of data. Note that the network will imitate your driving behaviour. The better and more consistent you drive, the better the network will learn to drive. 
 
 ## Data Collection
@@ -12,18 +14,18 @@ You will now find a folder called *Openbot* on the internal storage of your smar
 Your dataset should be stored in the following structure.
 ```
 dataset
-└── train
+└── train_data
 	└── my_openbot_1
 		└── recording_1
-			recording_2
-			...
-		my_openbot_2
-		...
-	test
+		    recording_2
+		    ...
+	    my_openbot_2
+	    ...
+	test_data
 	└── my_openbot_3
 		└── recording_1
-			recording_2
-			...
+		    recording_2
+		    ...
 ```
 
 Each recording corresponds to an extracted zip file that you have transferred from the *Openbot* folder on your phone.
