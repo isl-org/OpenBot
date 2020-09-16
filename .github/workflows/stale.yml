@@ -1,0 +1,54 @@
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+  - cron: "30 1 * * *"
+
+jobs:
+  stale:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/stale@v1
+      with:
+        # Token for the repository. Can be passed in using `{{ secrets.GITHUB_TOKEN }}`.
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+#         # The message to post on the issue when tagging it. If none provided, will not mark issues stale.
+#         stale-issue-message: # optional
+#         # The message to post on the pr when tagging it. If none provided, will not mark pull requests stale.
+#         stale-pr-message: # optional
+        # The message to post on the issue when closing it. If none provided, will not comment when closing an issue.
+        close-issue-message: 'Closing due to inactivity. Please reopen the issue if it is not solved and provide more details.' # optional
+        # The message to post on the pr when closing it. If none provided, will not comment when closing a pull requests.
+        close-pr-message: 'Closing due to inactivity.' # optional
+        # The number of days old an issue can be before marking it stale. Set to -1 to never mark issues or pull requests as stale automatically.
+        days-before-stale: 30 # optional, default is 60
+        # The number of days to wait to close an issue or pull request after it being marked stale. Set to -1 to never close stale issues.
+        days-before-close: 3 # optional, default is 7
+        # The label to apply when an issue is stale.
+        stale-issue-label: 'no-issue-activity' # optional, default is Stale
+#         # The label to apply when an issue is closed.
+#         close-issue-label: # optional
+#         # The labels to apply when an issue is exempt from being marked stale. Separate multiple labels with commas (eg. "label1,label2")
+#         exempt-issue-labels: # optional, default is 
+        # The label to apply when a pull request is stale.
+        stale-pr-label: 'no-pr-activity' # optional, default is Stale
+#         # The label to apply when a pull request is closed.
+#         close-pr-label: # optional
+#         # The labels to apply when a pull request is exempt from being marked stale. Separate multiple labels with commas (eg. "label1,label2")
+#         exempt-pr-labels: # optional, default is 
+#         # Only issues or pull requests with all of these labels are checked if stale. Defaults to `[]` (disabled) and can be a comma-separated list of labels.
+#         only-labels: # optional, default is 
+#         # The maximum number of operations per run, used to control rate limiting.
+#         operations-per-run: # optional, default is 30
+#         # Remove stale labels from issues when they are updated or commented on.
+#         remove-stale-when-updated: # optional, default is true
+#         # Run the processor in debug mode without actually performing any operations on live issues.
+#         debug-only: # optional
+#         # The order to get issues or pull requests. Defaults to false, which is descending
+#         ascending: # optional
+#         # Skip adding stale message when marking a pull request as stale.
+#         skip-stale-pr-message: # optional
+#         # Skip adding stale message when marking an issue as stale.
+#         skip-stale-issue-message: # optional:  
