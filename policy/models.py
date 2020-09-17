@@ -84,6 +84,7 @@ def pilot_net(img_width, img_height, bn=False):
     # our final model will accept commands on the MLP input
     # and images on the CNN input, outputting two values (left/right ctrl)
     model = tf.keras.Model(name='pilot_net',inputs=(cnn.input, mlp.input), outputs=x)
+    return model
 
 def cil_mobile(img_width, img_height, bn=True):
     mlp = create_mlp(1, 16, 16, dropout=0.5)
