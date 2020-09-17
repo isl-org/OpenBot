@@ -21,7 +21,7 @@ class dataloader:
                 with open(os.path.join(self.data_dir, dataset, folder,"sensor_data","matched_frame_ctrl_cmd_processed.txt")) as f_input:
                     header = f_input.readline() #discard header
                     data = f_input.read()
-                    lines = data.replace(","," ").replace("\t"," ").split("\n") 
+                    lines = data.replace(","," ").replace("\\","/").replace("\r","").replace("\t"," ").split("\n") 
                     data = [[v.strip() for v in line.split(" ") if v.strip()!=""] for line in lines if len(line)>0 and line[0]!="#"]
                     #Tuples containing id: framepath and label: left,right,cmd
                     data = [(l[1],l[2:]) for l in data if len(l)>1]
