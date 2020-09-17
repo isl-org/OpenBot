@@ -1,3 +1,14 @@
+# Note about Chinese clone Nano (from US Amazon link)
+ - Download drivers
+ Drivers: directly from the chip manufacturer (Chinese Language site):
+WCH 340 product home page: http://www.wch.cn/product/CH340.html
+http://www.wch.cn/download/CH341SER_LINUX_ZIP.html (linux should operate fine without the driver)
+http://www.wch.cn/download/CH341SER_MAC_ZIP.html
+http://www.wch-ic.com/download/list.asp?id=127 (windows)
+
+- Select Tools -> Processor -> ATmega328p (old bootloader) from Arduino application 
+- Upload firmware
+
 # Firmware
 
 We use a microcontroller unit (MCU) to act as a bridge between the robot body and the smartphone.  We provide our [firmware](openbot_v1_nano/openbot_v1_nano.ino) for the Arduino Nano with an ATmega328P microcontroller. 
