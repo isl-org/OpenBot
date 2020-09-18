@@ -84,8 +84,8 @@
     - [淘宝购买](https://s.click.taobao.com/q5545xu)
 - 10*15mm 开关
     - 数量 1
-    - 价格:¥38.95
-    - [淘宝购买](https://s.click.taobao.com/8YrJ4xu)
+    - 价格:¥0.40
+    - [淘宝购买](https://m.tb.cn/h.VybOsxh)
 - 5mm发光二极管橘色 
     - 数量 2
     - 价格:¥1.98
