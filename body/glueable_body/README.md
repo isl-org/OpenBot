@@ -17,7 +17,7 @@ Requird parts:
 
 Optional parts:
 
-These pieces give extra surface area for glueing, which can help if your print experiences warping.
+These pieces give extra surface area for gluing, which can help if your print experiences warping.
 
 * `bottom_glue` ([STL](bottom_glue.stl), [STEP](bottom_glue.step))
 * `top_glue_A` ([STL](top_glue_A.stl), [STEP](top_glue_A.step))
