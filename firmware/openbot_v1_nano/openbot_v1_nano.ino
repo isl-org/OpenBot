@@ -33,6 +33,8 @@
 #define DIY 0
 #define PCB 1
 
+#define HAS_SONAR 1
+
 // Setup the OpenBot version
 #define OPENBOT DIY                      
 
@@ -67,6 +69,7 @@
 //INITIALIZATION
 //------------------------------------------------------//
 
+#if HAS_SONAR
 //Sonar sensor
 #include <NewPing.h>
 const int MAX_DISTANCE = 300;
@@ -75,6 +78,10 @@ unsigned int ping_interval = 100; // How frequently are we going to send out a p
 unsigned long ping_timeout;   // Timeout (in milliseconds). After timeout, distance is set to maximum.
 unsigned long ping_time;      // Holds the next ping time.
 unsigned int distance_cm = MAX_DISTANCE;
+#else
+#include <limits.h>
+unsigned int distance_cm = UINT_MAX;
+#endif
 
 //Vehicle Control
 int ctrl_left = 0;
@@ -131,7 +138,9 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(PIN_SPEED_R), speed_right, RISING);
   Serial.begin(115200,SERIAL_8N1); //8 data bits, no parity, 1 stop bit
   send_time = millis() + send_interval; //wait for one interval to get readings
+#if HAS_SONAR
   ping_time = millis();
+#endif
 }
 
 //------------------------------------------------------//
@@ -144,12 +153,14 @@ void loop() {
   vin_array[counter_voltage%vin_array_sz] = analogRead(PIN_VIN);
   counter_voltage++;
 
+#if HAS_SONAR
   //Measure distance every ping_interval
   if (millis() >= ping_time) {    // Ping if it's time
     ping_timeout = ping_time + 2 * MAX_DISTANCE * 10 / 343 + 1; // Set ping timeout.
     ping_time += ping_interval;   // Set the next ping time.
     sonar.ping_timer(echoCheck);  // Send out the ping, calls "echoCheck" function every 24uS where you can check the ping status.
   }
+#endif
   
   // Write voltage to serial every send_interval
   if (millis() >= send_time) 
@@ -337,6 +348,7 @@ void updateindicator()
   digitalWrite(PIN_LED_RR, indicator_right);
 }
 
+#if HAS_SONAR
 void echoCheck() { // Timer2 interrupt calls this function every 24uS.
   if (sonar.check_timer()) { // Check ping status
     distance_cm = sonar.ping_result / US_ROUNDTRIP_CM; // Ping returned in uS, convert to cm.
@@ -345,3 +357,4 @@ void echoCheck() { // Timer2 interrupt calls this function every 24uS.
     distance_cm = MAX_DISTANCE;
   }
 }
+#endif
