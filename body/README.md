@@ -25,6 +25,8 @@ We were able to print the chassis with PLA, ABS and CPE. In our experience the p
 
 Since a lot of common 3D printers have a smaller build volume, we have also made a [body_bottom_slim.stl](body_bottom_slim.stl) and [body_top_slim.stl](body_top_slim.stl) which fit on a 223x223 build plate at 45 degrees. These have not been tested, but should work fine.
 
+There is also [a version meant to be glued together](glueable_body/README.md) for printing on 3D printers with even smaller build volumes.
+
 ## Bill of materials
 
 
