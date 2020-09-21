@@ -8,10 +8,14 @@ We have designed a body for a wheeled robot which relies on low-cost, readily av
 
 ## 3D printed chassis
 You will need to print the following parts in order to build your OpenBot. 
-1) body_bottom ([STL](body_bottom.stl), [STEP](body_bottom.step))
-2) body_top ([STL](body_top.stl), [STEP](body_top.step))
-3) phone_mount_bottom ([STL](phone_mount_bottom.stl), [STEP](phone_mount_bottom.step))
-4) phone_mount_top ([STL](phone_mount_top.stl), [STEP](phone_mount_top.step))
+1) body_bottom ([STL](cad/regular_body/body_bottom.stl), [STEP](cad/regular_body/body_bottom.step))
+2) body_top ([STL](cad/regular_body/body_top.stl), [STEP](cad/regular_body/body_top.step))
+3) phone_mount_bottom ([STL](cad/phone_mount/phone_mount_bottom.stl), [STEP](cad/phone_mount/phone_mount_bottom.step))
+4) phone_mount_top ([STL](cad/phone_mount/phone_mount_top.stl), [STEP](cad/phone_mount/phone_mount_top.step))
+
+Since a lot of common 3D printers have a smaller build volume, we have also made a [slim body](cad/slim_body/README.md) which fits on a 220mmx220mm build plate at 45 degrees.
+
+For printing on 3D printers with even smaller build volumes, there is also a [glueable body](cad/glue_body/README.md) which fits on a 150mmx140mm build plate. Thanks to @sloretz.
 
 On an Ultimaker S5, we achieved good results with the following settings:
 - layer height: 0.2mm
@@ -22,10 +26,6 @@ On an Ultimaker S5, we achieved good results with the following settings:
 - no support
 
 We were able to print the chassis with PLA, ABS and CPE. In our experience the print was not affected very much by the print settings. However, if you have the patience, printing slower and with smaller layer height will improve the print. Also adding a support structure can improve the print, but it will require additional work to remove afterwards.
-
-Since a lot of common 3D printers have a smaller build volume, we have also made a [body_bottom_slim.stl](body_bottom_slim.stl) and [body_top_slim.stl](body_top_slim.stl) which fit on a 223x223 build plate at 45 degrees. These have not been tested, but should work fine.
-
-There is also [a version meant to be glued together](glueable_body/README.md) for printing on 3D printers with even smaller build volumes.
 
 ## Bill of materials
 
@@ -92,15 +92,15 @@ WARNING: The PCB was updated to version 2 and not yet tested. Here are the chang
 - Update voltage divider to 20k/10k for better precision
 - Change motor connectors to upright version for easier access
 
-If you have already ordered version 1 of the PCB ([2D view](../docs/images/pcb_2d_v1.png), [3D view](../docs/images/pcb_3d_v1.png)), you will need to adjust the firmware to read the speed sensors manually. See this [issue](https://github.com/intel-isl/OpenBot/issues/34) for more info.
+If you have already ordered [version 1](pcb/v1) of the PCB ([2D view](../docs/images/pcb_2d_v1.png), [3D view](../docs/images/pcb_3d_v1.png)), you will need to adjust the firmware to read the speed sensors manually. See this [issue](https://github.com/intel-isl/OpenBot/issues/34) for more info.
 
 The custom PCB involves the following steps:
-1) **Order the PCB**: Download the [Gerber](gerber_v2.zip) files and order the PCB at the vendor of your choice. You can also order the PCB directly on [PCBWay](https://www.pcbway.com/project/shareproject/OpenBot__Turning_Smartphones_into_Robots.html) where we have shared a project for OpenBot.
-2) **Order the components:** Download the [BOM](BOM_v2.csv) and order the compenents at the vendor of your choice, for example [LCSC](https://lcsc.com).
-3) **Assembly of the PCB:** You can either assemble the PCB yourself or have them assembled by a vendor. For automated assembly you will need the [Centroid File](centroid_file_v2.csv)
+1) **Order the PCB**: Download the [Gerber](pcb/v2/gerber_v2.zip) files and order the PCB at the vendor of your choice. You can also order the PCB directly on [PCBWay](https://www.pcbway.com/project/shareproject/OpenBot__Turning_Smartphones_into_Robots.html) where we have shared a project for OpenBot.
+2) **Order the components:** Download the [BOM](pcb/v2/BOM_v2.csv) and order the compenents at the vendor of your choice, for example [LCSC](https://lcsc.com).
+3) **Assembly of the PCB:** You can either assemble the PCB yourself or have them assembled by a vendor. For automated assembly you will need the [Centroid File](pcb/v2/centroid_file_v2.csv)
 
 You can also find vendors that will provide you a TurnKey solution covering all 3 steps. They will manufacture the PCB, source the components and assemble the PCB. This is very convenient and also not too expensive. However, delivery times are often very long (1-3 months). 
 
 When requesting a quote at [PCBWay](https://www.pcbway.com/orderonline.aspx), you can select the assembly service after uploading the Gerber file. 
 ![Assembly Service](../docs/images/assembly_service.jpg)
-In the next step, you will need to upload the [BOM](BOM.csv) and the [Centroid File](centroid_file.csv). Your quote will then be reviewed and updated within a few days. You can then choose to proceed with payment after reviewing cost and delivery time. 
+In the next step, you will need to upload the [BOM](pcb/v2/BOM_v2.csv) and the [Centroid File](pcb/v2/centroid_file_v2.csv). Your quote will then be reviewed and updated within a few days. You can then choose to proceed with payment after reviewing cost and delivery time. 
