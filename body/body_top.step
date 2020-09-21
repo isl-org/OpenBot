@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 
-'/Users/matthia1/Documents/Github/OpenBot/body/body_top.step',
+'body_top.step',
 /* time_stamp */ '2020-08-29T02:02:32+02:00',
 /* author */ (''),
 /* organization */ (''),
