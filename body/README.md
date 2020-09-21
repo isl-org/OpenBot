@@ -15,7 +15,7 @@ You will need to print the following parts in order to build your OpenBot.
 
 Since a lot of common 3D printers have a smaller build volume, we have also made a [slim body](slim_body/README.md) which fits on a 220mmx220mm build plate at 45 degrees.
 
-For printing on 3D printers with even smaller build volumes, there is also a [glueable body](glueable_body/README.md) which fits on a 150mmx140mm build plate. Thanks to @sloretz.
+For printing on 3D printers with even smaller build volumes, there is also a [glueable body](glue_body/README.md) which fits on a 150mmx140mm build plate. Thanks to @sloretz.
 
 On an Ultimaker S5, we achieved good results with the following settings:
 - layer height: 0.2mm
