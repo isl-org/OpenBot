@@ -8,6 +8,7 @@ from IPython.display import Javascript
 from nbconvert import HTMLExporter
 import codecs
 import nbformat
+import metrics
 
 def save_notebook():
     Javascript("IPython.notebook.save_notebook()")
