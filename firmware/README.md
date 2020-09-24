@@ -20,3 +20,13 @@ If you want to use the ultrasonic sensor, you need to install the [NewPing](http
 ```
 Tools
 └─── Manage Libraries
+```
+
+If you want to disable the ultrasonic sensor, you need to set `HAS_SONAR = 0`
+
+## Chinese clone Nano (e.g. US link)
+
+You may need to download the [WCH340](http://www.wch.cn/product/CH340.html) drivers from the chip manufacturer (Chinese):
+- [Windows](http://www.wch.cn/downloads/CH341SER_EXE.html)
+- [Linux](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html)
+- [Mac](http://www.wch.cn/download/CH341SER_MAC_ZIP.html)

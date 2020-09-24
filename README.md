@@ -30,3 +30,7 @@ Please cite our [paper](docs/paper/OpenBot.pdf) if you use OpenBot.
 ## Video
 
 [![OpenBot Video](https://img.youtube.com/vi/qc8hFLyWDOM/0.jpg)](https://www.youtube.com/watch?v=qc8hFLyWDOM)
+
+## Contact
+- Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-hpso8cfl-JO9OVhVMdUWvR4vDXwcMGA) channel to connect with the OpenBot community. 
+- Contact us via [Email](mailto:openbot.team@gmail.com)

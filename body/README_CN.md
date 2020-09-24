@@ -6,10 +6,10 @@
 ## 3D打印机身
 您将需要打印以下部分用来组装您的OpenBot机器车。
 
-1) 车身底部 ([STL](body_bottom.stl), [STEP](body_bottom.step))
-2) 车身顶部 ([STL](body_top.stl), [STEP](body_top.step))
-3) 手机支架底部 ([STL](phone_mount_bottom.stl))
-4) 手机支架顶部 ([STL](phone_mount_top.stl))
+1) 车身底部 ([STL](cad/body_bottom.stl), [STEP](cad/body_bottom.step))
+2) 车身顶部 ([STL](cad/body_top.stl), [STEP](cad/body_top.step))
+3) 手机支架底部 ([STL](cad/phone_mount_bottom.stl), [STEP](cad/phone_mount_bottom.step))
+4) 手机支架顶部 ([STL](cad/phone_mount_top.stl), [STEP](cad/phone_mount_top.step))
 
 在Ultimaker S5上，我们通过以下设置获得了良好的效果：
 
@@ -22,7 +22,7 @@
 
 我们能够使用PLA，ABS和CPE打印机箱。 根据我们的经验，打印不受打印设置的影响很大。 但是，如果您有耐心，则打印速度较慢且层高度较小的纸张会改善打印质量。 另外，添加支撑结构可以改善打印效果，但是之后需要进行额外的工作才能删除。
 
-由于许多常见的3D打印机的构建体积较小，因此我们还制作了一个[body_bottom_slim.stl](./body_bottom_slim.stl) 和[body_top_slim.stl](./body_top_slim.stl)，它们以45度安装在223x223构建板上。 这些未经测试，但应该可以正常工作。
+由于许多常见的3D打印机的构建体积较小，因此我们还制作了一个[body_bottom_slim.stl](./cad/slim_body/slim_body_bottom.stl) 和[body_top_slim.stl](./cad/slim_body/body_top_slim.stl)，它们以45度安装在220x220构建板上。 这些未经测试，但应该可以正常工作。
 
 ## 配件购买：
 
@@ -84,14 +84,18 @@
     - [淘宝购买](https://s.click.taobao.com/q5545xu)
 - 10*15mm 开关
     - 数量 1
-    - 价格:¥38.95
-    - [淘宝购买](https://s.click.taobao.com/8YrJ4xu)
+    - 价格:¥0.40
+    - [淘宝购买](https://m.tb.cn/h.VybOsxh)
 - 5mm发光二极管橘色 
     - 数量 2
     - 价格:¥1.98
     - [淘宝购买](https://s.click.taobao.com/rjXJ4xu)
 
 ## 制作说明
+
+### 选项1：自己动手做
+
+![Wiring Diagram](../docs/images/wiring_diagram.jpg)
 
 1. 如有必要，将线连接到电动机
 2. 将两个电动机的正极和负极引线插入L298N板的OUT1（+）和OUT2（-）
@@ -114,12 +118,23 @@
 19. 将六个M3螺母插入底板，然后用六个M3x25螺钉安装顶盖
 20. 安装车轮
 
-## 定制PCB
-![PCB](../docs/images/pcb_3d.png)
+### 选项2：定制PCB
+![PCB_2D](../docs/images/pcb_2d_v2.png)
+![PCB_3D](../docs/images/pcb_3d_v2.png)
+
+警告：PCB已更新至版本2，尚未经过测试。 更改如下：
+-将正确的速度传感器移至D3引脚以启用中断功能
+-为主电池添加电源LED
+-更新一些更常用的组件
+-将分压器更新为20k / 10k，以获得更高的精度
+-将电机连接器更改为直立版本，以便于操作
+
+如果您已经订购了版本1的PCB（[2D视图]（../docs/images/pcb_2d_v1.png），[3D视图]（../docs/images/pcb_3d_v1.png))，则需要 调整固件以手动读取速度传感器。 有关更多信息，请参见此[issue]（https://github.com/intel-isl/OpenBot/issues/34)。
+
 定制PCB包括以下步骤:
-1) **购买 PCB**: 下载[Gerber](gerber.zip) 文件 并选择供应商处订购PCB。 你也可以直接在[PCBWay](https://www.pcbway.com/project/shareproject/OpenBot__Turning_Smartphones_into_Robots.html)上订购PCB，在那里我们共享了一个OpenBot项目。
-2) **订购组件:** 下载[BOM](BOM.csv)并在您选择的供应商处订购组件，例如[LCSC](https://lcsc.com)。
-3) **PCB组装:** 你可以自己组装PCB，也可以让供应商来组装。对于自动装配，您将需要[Centroid文件](centroid_file.csv)
+1) **购买 PCB**: 下载[Gerber](pcb/v2/gerber_v2.zip) 文件 并选择供应商处订购PCB。 你也可以直接在[PCBWay](https://www.pcbway.com/project/shareproject/OpenBot__Turning_Smartphones_into_Robots.html)上订购PCB，在那里我们共享了一个OpenBot项目。
+2) **订购组件:** 下载[BOM](pcb/v2/BOM_v2.csv)并在您选择的供应商处订购组件，例如[LCSC](https://lcsc.com)。
+3) **PCB组装:** 你可以自己组装PCB，也可以让供应商来组装。对于自动装配，您将需要[Centroid文件](pcb/v2/centroid_file_v2.csv)
 
 您还可以找到供应商，他们将为您提供涵盖所有3个步骤的全套解决方案。他们将生产PCB，提供组件和组装PCB。这非常方便，也不太贵。然而，交货时间通常很长(1-3个月)。
 
@@ -127,4 +142,4 @@
 
 ![Assembly Service](../docs/images/assembly_service.jpg)
 
-在下一步中，您将需要上传[BOM](BOM.csv)和[Centroid File](centroid_file.csv)。 您的报价将在几天之内进行审核和更新。 然后，您可以在查看成本和交货时间后选择继续付款。
+在下一步中，您将需要上传[BOM](pcb/v2/BOM_v2.csv)和[Centroid File](pcb/v2/centroid_file_v2.csv)。 您的报价将在几天之内进行审核和更新。 然后，您可以在查看成本和交货时间后选择继续付款。

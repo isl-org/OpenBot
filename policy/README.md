@@ -1,3 +1,64 @@
-# Driving Policy
 
-Stay tuned! Coming Soon...
+# Driving Policy (Advanced)
+WARNING: To get a good driving policy for your custom dataset will require some patience. It is not straight-forward, involves data collection, hyperparameter tuning, etc. If you have never trained machine learning models before, it will be challenging and may even get frustrating. 
+
+In order to train an autonomous driving policy, you will first need to collect a dataset. The more data you collect, the better the resulting driving policy. For the experiments in our paper, we collected about 30 minutes worth of data. Note that the network will imitate your driving behaviour. The better and more consistent you drive, the better the network will learn to drive. 
+
+## Data Collection
+1. Connect a bluetooth game controller to the phone (e.g. PS4 controller). 
+2. Select the AUTOPILOT_F network in the app.
+3. Now drive drive the car via a game controller and record a dataset. On the PS4 controller logging can be toggled with the **X** button.
+
+You will now find a folder called *Openbot* on the internal storage of your smartphone. For each recording, there will be zip file. The name of the zip file will be in the format *yyyymmdd_hhmmss.zip* corresponding to the timestamp of when the recording was started. 
+
+Your dataset should be stored in the following structure.
+```
+dataset
+└── train_data
+	└── my_openbot_1
+		└── recording_1
+		    recording_2
+		    ...
+	    my_openbot_2
+	    ...
+	test_data
+	└── my_openbot_3
+		└── recording_1
+		    recording_2
+		    ...
+```
+
+Each recording corresponds to an extracted zip file that you have transferred from the *Openbot* folder on your phone.
+
+## Policy Training
+You first need to setup your training environment. 
+
+### Dependencies
+We recommend to create a conda environment for OpenBot. Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/).
+
+
+If you do not have a dedicated GPU (e.g. using your laptop) you can create a new environment with the following command:
+```
+conda create -n openbot python tensorflow notebook matplotlib pillow
+```
+Note that training will be very slow. So if you have access to a computer with dedicated GPU, we highly recommend to use it. In this case, you will need Tensorflow with GPU support. Run the following command to setup the conda environment:
+```
+conda create -n openbot python tensorflow-gpu notebook matplotlib pillow
+```
+
+If you prefer to setup the environment manually, here is a list of the dependencies:
+- Tensorflow
+- Jupyter Notebook
+- Matplotlib
+- Numpy
+- PIL
+
+### Jupyter Notebook
+We provide a [Jupyter Notebook](policy_learning.ipynb) that guides you through the steps for training an autonomous driving policy. The notebook will produce two tflite files corresponding to the best checkpoint according to the validation metrics and the last checkpoint. Pick one of them and rename them to autopilot_float.tflite. Replace the existing model at
+```
+app
+└── assets
+	└── networks
+		└── autopilot_float.tflite
+```
+and recompile the app. 
