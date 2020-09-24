@@ -90,6 +90,7 @@
     - 数量 2
     - 价格:¥1.98
     - [淘宝购买](https://s.click.taobao.com/rjXJ4xu)
+- 电阻器（2个150<span>&#8486;</span>用于LED，一个20k<span>&#8486;</span>和10k<span>&#8486;</span>用于分压器。
 
 ## 制作说明
 
