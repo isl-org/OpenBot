@@ -6,13 +6,13 @@ It can be printed with a build plate of 220mmx220mm when the parts are rotated 4
 
 ![Slim Body](../../../docs/images/slim_body.jpg)
 
-
 ## Parts
 
 1) `slim_body_bottom` ([STL](slim_body_bottom.stl), [STEP](slim_body_bottom.step))
 2) `slim_body_top` ([STL](slim_body_top.stl), [STEP](slim_body_top.step))
 
 In order to make it fit you may have to adjust the following settings to get the maximum print area.
+
 - Set *Build Plate Adhesion Type* to "None" (Brim, Skirt and Raft increase the overall size of your print)
 - Disable prime blob (in *Build Plate* section)
 - Disable the second extruder (if your printer has one)
