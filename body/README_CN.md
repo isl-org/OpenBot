@@ -3,7 +3,9 @@
 我们为轮式机器人设计了一个车身，该车身依赖于低成本，随时可用的业余爱好硬件。
 
 ![Assembly](../docs/images/assembly.gif)
+
 ## 3D打印机身
+
 您将需要打印以下部分用来组装您的OpenBot机器车。
 
 1) 车身底部 ([STL](cad/body_bottom.stl), [STEP](cad/body_bottom.step))
@@ -24,79 +26,80 @@
 
 由于许多常见的3D打印机的构建体积较小，因此我们还制作了一个[body_bottom_slim.stl](./cad/slim_body/slim_body_bottom.stl) 和[body_top_slim.stl](./cad/slim_body/body_top_slim.stl)，它们以45度安装在220x220构建板上。 这些未经测试，但应该可以正常工作。
 
-## 配件购买：
-
+## 配件购买
 
 ### 必须
+
 - PLA材料 3D打印机身
-    - 层高:0.2mm
-    - 壁厚:1.5mm
-    - 填充密度:20％
-    - 填充图案:网格
-    - 机身数量 共4块
-    - 建议价格:¥120.00以内(含邮费)
+  - 层高:0.2mm
+  - 壁厚:1.5mm
+  - 填充密度:20％
+  - 填充图案:网格
+  - 机身数量 共4块
+  - 建议价格:¥120.00以内(含邮费)
 - 直流减速电机+智能小车车轮cbot 
-    - 数量 4
-    - 价格:¥10.00
-    - [淘宝购买](https://s.click.taobao.com/GA955xu)
+  - 数量 4
+  - 价格:¥10.00
+  - [淘宝购买](https://s.click.taobao.com/GA955xu)
 - L298N 开发板
-    - 数量 1
-    - 价格:¥14.92
-    - [淘宝购买](https://s.click.taobao.com/pyt45xu) , [领券](https://s.click.taobao.com/C1nJ4xu)
-- Arduino nano V3.0 CH340G 改进版 
-    - 数量 1
-    - 价格:¥5.49
-    - [淘宝购买](https://s.click.taobao.com/iI1K4xu)
+  - 数量 1
+  - 价格:¥14.92
+  - [淘宝购买](https://s.click.taobao.com/pyt45xu) , [领券](https://s.click.taobao.com/C1nJ4xu)
+- Arduino nano V3.0 CH340G 改进版
+  - 数量 1
+  - 价格:¥5.49
+  - [淘宝购买](https://s.click.taobao.com/iI1K4xu)
 - 测速传感器 Tacho Sensor 3.3V-5V
-    - 数量 2
-    - 价格:¥3.80
-    - [淘宝购买](https://s.click.taobao.com/jMA45xu)
+  - 数量 2
+  - 价格:¥3.80
+  - [淘宝购买](https://s.click.taobao.com/jMA45xu)
 - 18650大容量充电锂电池
-    - 数量 3
-    - 价格:¥16.80
-    - [淘宝购买](https://s.click.taobao.com/5jj45xu) , [领券](https://s.click.taobao.com/ww855xu)
+  - 数量 3
+  - 价格:¥16.80
+  - [淘宝购买](https://s.click.taobao.com/5jj45xu) , [领券](https://s.click.taobao.com/ww855xu)
 - BS电池盒 5号/五号/七号7号18650电池盒 
-    - 数量 1
-    - 价格:¥1.59
-    - [淘宝购买](https://s.click.taobao.com/tzcJ4xu)
+  - 数量 1
+  - 价格:¥1.59
+  - [淘宝购买](https://s.click.taobao.com/tzcJ4xu)
 - T型口转type-c 连接线
-    - 数量 1
-    - 价格:¥25.00
-    - [淘宝购买](https://m.tb.cn/h.VzbuDbd)
+  - 数量 1
+  - 价格:¥25.00
+  - [淘宝购买](https://m.tb.cn/h.VzbuDbd)
 - 304不锈钢拉簧拉力拉伸带钩弹簧 
-    - 数量 1
-    - 价格:¥0.60
-    - [淘宝购买](https://s.click.taobao.com/nj1Kzwu)
+  - 数量 1
+  - 价格:¥0.60
+  - [淘宝购买](https://s.click.taobao.com/nj1Kzwu)
 - M2.5 M3 304不锈钢圆头一字螺丝*25mm
-    - 数量 16
-    - 价格:¥4.00
-    - [淘宝购买](https://s.click.taobao.com/GGF45xu)
+  - 数量 16
+  - 价格:¥4.00
+  - [淘宝购买](https://s.click.taobao.com/GGF45xu)
 - 304不锈钢六角螺母小螺丝帽
-    - 数量 16
-    - 价格:¥18.00
-    - [淘宝购买](https://s.click.taobao.com/3roD0xu)
+  - 数量 16
+  - 价格:¥18.00
+  - [淘宝购买](https://s.click.taobao.com/3roD0xu)
 - M3* 5 螺丝
-    - 数量 6
-    - 价格:￥2.18
-    - [淘宝购买](https://s.click.taobao.com/WHO55xu) , [领券](https://s.click.taobao.com/6Np45xu)
+  - 数量 6
+  - 价格:￥2.18
+  - [淘宝购买](https://s.click.taobao.com/WHO55xu) , [领券](https://s.click.taobao.com/6Np45xu)
 - 杜邦线
-    - 数量 1
-    - 价格:¥2.80
-    - [淘宝购买](https://s.click.taobao.com/nfSJ4xu)
+  - 数量 1
+  - 价格:¥2.80
+  - [淘宝购买](https://s.click.taobao.com/nfSJ4xu)
 
 ### 可选
+
 - HC-SR04超声波测距模块传感器
-    - 数量 1
-    - 价格:¥2.69
-    - [淘宝购买](https://s.click.taobao.com/q5545xu)
+  - 数量 1
+  - 价格:¥2.69
+  - [淘宝购买](https://s.click.taobao.com/q5545xu)
 - 21*15mm 开关
-    - 数量 1
-    - 价格:¥1.60
-    - [淘宝购买](https://m.tb.cn/h.VzbvV36)
+  - 数量 1
+  - 价格:¥1.60
+  - [淘宝购买](https://m.tb.cn/h.VzbvV36)
 - 5mm发光二极管橘色 (接线需要分压器, 新手不太建议)
-    - 数量 2
-    - 价格:¥1.98
-    - [淘宝购买](https://s.click.taobao.com/rjXJ4xu)
+  - 数量 2
+  - 价格:¥1.98
+  - [淘宝购买](https://s.click.taobao.com/rjXJ4xu)
 - 电阻器（2个150<span>&#8486;</span>用于LED，一个20k<span>&#8486;</span>和10k<span>&#8486;</span>用于分压器。
 
 ## 制作说明
@@ -127,6 +130,7 @@
 20. 安装车轮
 
 ### 选项2：定制PCB
+
 ![PCB_2D](../docs/images/pcb_2d_v2.png)
 ![PCB_3D](../docs/images/pcb_3d_v2.png)
 
@@ -137,9 +141,10 @@
 -将分压器更新为20k / 10k，以获得更高的精度
 -将电机连接器更改为直立版本，以便于操作
 
-如果您已经订购了版本1的PCB（[2D视图]（../docs/images/pcb_2d_v1.png），[3D视图]（../docs/images/pcb_3d_v1.png))，则需要 调整固件以手动读取速度传感器。 有关更多信息，请参见此[issue]（https://github.com/intel-isl/OpenBot/issues/34)。
+如果您已经订购了版本1的PCB（[2D视图]（../docs/images/pcb_2d_v1.png），[3D视图]（../docs/images/pcb_3d_v1.png))，则需要 调整固件以手动读取速度传感器。 有关更多信息，请参见此[issue](https://github.com/intel-isl/OpenBot/issues/34)。
 
 定制PCB包括以下步骤:
+
 1) **购买 PCB**: 下载[Gerber](pcb/v2/gerber_v2.zip) 文件 并选择供应商处订购PCB。 你也可以直接在[PCBWay](https://www.pcbway.com/project/shareproject/OpenBot__Turning_Smartphones_into_Robots.html)上订购PCB，在那里我们共享了一个OpenBot项目。
 2) **订购组件:** 下载[BOM](pcb/v2/BOM_v2.csv)并在您选择的供应商处订购组件，例如[LCSC](https://lcsc.com)。
 3) **PCB组装:** 你可以自己组装PCB，也可以让供应商来组装。对于自动装配，您将需要[Centroid文件](pcb/v2/centroid_file_v2.csv)
