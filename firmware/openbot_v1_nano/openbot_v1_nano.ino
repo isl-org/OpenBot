@@ -30,14 +30,18 @@
 //DEFINITIONS
 //------------------------------------------------------//
 
+// DO NOT CHANGE!
 #define DIY 0
-#define PCB 1
+#define PCB_V1 1
+#define PCB_V2 2
 
-#define HAS_SONAR 1
+// Setup the OpenBot version (DIY,PCB_V1,PCB_V2)
+#define OPENBOT DIY   
 
-// Setup the OpenBot version
-#define OPENBOT DIY                      
+// Enable/Disable sonar (1,0)
+#define HAS_SONAR 0               
 
+//Setup the pin definitions
 #if (OPENBOT == DIY)
   #define PIN_PWM1 5
   #define PIN_PWM2 6
@@ -50,9 +54,9 @@
   #define PIN_ECHO      4
   #define PIN_LED_RL 7
   #define PIN_LED_RR 8
-#elif (OPENBOT == PCB)
-  #define PIN_PWM1 10
-  #define PIN_PWM2 9
+#elif (OPENBOT == PCB_V1)
+  #define PIN_PWM1 9
+  #define PIN_PWM2 10
   #define PIN_PWM3 5
   #define PIN_PWM4 6
   #define PIN_SPEED_L 2
@@ -60,6 +64,18 @@
   #define PIN_VIN A7
   #define PIN_TRIGGER   3
   #define PIN_ECHO      3
+  #define PIN_LED_RL 7
+  #define PIN_LED_RR 8
+#elif (OPENBOT == PCB_V2)
+  #define PIN_PWM1 9
+  #define PIN_PWM2 10
+  #define PIN_PWM3 5
+  #define PIN_PWM4 6
+  #define PIN_SPEED_L 2
+  #define PIN_SPEED_R 3
+  #define PIN_VIN A7
+  #define PIN_TRIGGER   4
+  #define PIN_ECHO      4
   #define PIN_LED_RL 7
   #define PIN_LED_RR 8
 #endif
@@ -70,17 +86,23 @@
 //------------------------------------------------------//
 
 #if HAS_SONAR
-//Sonar sensor
-#include <NewPing.h>
-const int MAX_DISTANCE = 300;
-NewPing sonar(PIN_TRIGGER, PIN_ECHO, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
-unsigned int ping_interval = 100; // How frequently are we going to send out a ping (in milliseconds).
-unsigned long ping_timeout;   // Timeout (in milliseconds). After timeout, distance is set to maximum.
-unsigned long ping_time;      // Holds the next ping time.
-unsigned int distance_cm = MAX_DISTANCE;
+  //Sonar sensor
+  #include <NewPing.h>
+  const int MAX_DISTANCE = 300;
+  NewPing sonar(PIN_TRIGGER, PIN_ECHO, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+  unsigned int ping_interval = 100; // How frequently are we going to send out a ping (in milliseconds).
+  unsigned long ping_timeout;   // Timeout (in milliseconds). After timeout, distance is set to maximum.
+  unsigned long ping_time;      // Holds the next ping time.
+  unsigned int distance_cm = MAX_DISTANCE;
 #else
-#include <limits.h>
-unsigned int distance_cm = UINT_MAX;
+  #include <limits.h>
+  unsigned int distance_cm = UINT_MAX;
+#endif
+
+#if (OPENBOT == PCB_V1)
+  float VOLTAGE_DIVIDER_FACTOR = 133/33;
+#else
+  float VOLTAGE_DIVIDER_FACTOR = 30/10;
 #endif
 
 //Vehicle Control
@@ -98,6 +120,12 @@ unsigned long oldtime_left = 0;
 unsigned long curtime_left = 0;
 unsigned long oldtime_right = 0;
 unsigned long curtime_right = 0;
+#if (OPENBOT == PCB_V1)
+  int oldstate_left = 0;
+  int oldstate_right = 0;
+  int newstate_left = 0;
+  int newstate_right = 0;
+#endif
 int counter_left = 0;
 int counter_right = 0;
 
@@ -133,14 +161,19 @@ void setup()
   pinMode(PIN_VIN,INPUT);       
   pinMode(PIN_SPEED_L,INPUT);
   pinMode(PIN_SPEED_R,INPUT);
-
-  attachInterrupt(digitalPinToInterrupt(PIN_SPEED_L), speed_left, RISING);
-  attachInterrupt(digitalPinToInterrupt(PIN_SPEED_R), speed_right, RISING);
+  
   Serial.begin(115200,SERIAL_8N1); //8 data bits, no parity, 1 stop bit
   send_time = millis() + send_interval; //wait for one interval to get readings
-#if HAS_SONAR
-  ping_time = millis();
-#endif
+
+  #if (OPENBOT == DIY || OPENBOT == PCB_V2)
+    attachInterrupt(digitalPinToInterrupt(PIN_SPEED_L), speed_left, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(PIN_SPEED_R), speed_right, CHANGE);
+  #endif
+  
+  #if HAS_SONAR
+    ping_time = millis();
+  #endif
+
 }
 
 //------------------------------------------------------//
@@ -153,14 +186,19 @@ void loop() {
   vin_array[counter_voltage%vin_array_sz] = analogRead(PIN_VIN);
   counter_voltage++;
 
-#if HAS_SONAR
-  //Measure distance every ping_interval
-  if (millis() >= ping_time) {    // Ping if it's time
-    ping_timeout = ping_time + 2 * MAX_DISTANCE * 10 / 343 + 1; // Set ping timeout.
-    ping_time += ping_interval;   // Set the next ping time.
-    sonar.ping_timer(echoCheck);  // Send out the ping, calls "echoCheck" function every 24uS where you can check the ping status.
-  }
-#endif
+  #if (OPENBOT == PCB_V1)
+    check_speed_left();
+    check_speed_right();
+  #endif
+  
+  #if HAS_SONAR
+    //Measure distance every ping_interval
+    if (millis() >= ping_time) {    // Ping if it's time
+      ping_timeout = ping_time + 2 * MAX_DISTANCE * 10 / 343 + 1; // Set ping timeout.
+      ping_time += ping_interval;   // Set the next ping time.
+      sonar.ping_timer(echoCheck);  // Send out the ping, calls "echoCheck" function every 24uS where you can check the ping status.
+    }
+  #endif
   
   // Write voltage to serial every send_interval
   if (millis() >= send_time) 
@@ -203,7 +241,7 @@ float getVoltage () {
   { 
     array_sum += vin_array[index]; 
   }
-  return float(array_sum)/array_size/1023*4.04*5;
+  return float(array_sum)/array_size/1023*5*VOLTAGE_DIVIDER_FACTOR;
 }
 
 void speed_left() {
@@ -212,7 +250,7 @@ void speed_left() {
     if (ctrl_left < 0) {
       counter_left--; 
     }
-    else {
+    else if (ctrl_left > 0) {
       counter_left++;
     }
     oldtime_left = curtime_left;
@@ -225,7 +263,7 @@ void speed_right() {
     if (ctrl_right < 0) {
       counter_right--; 
     }
-    else {
+    else if (ctrl_right > 0){
       counter_right++;
     }
     oldtime_right = curtime_right;
@@ -348,13 +386,31 @@ void updateindicator()
   digitalWrite(PIN_LED_RR, indicator_right);
 }
 
+#if (OPENBOT == PCB_V1)
+  void check_speed_left() {
+    newstate_left = digitalRead(PIN_SPEED_L);
+    if (newstate_left != oldstate_left) {
+      oldstate_left=newstate_left;
+      speed_left();
+    }
+  }
+  
+  void check_speed_right() {
+    newstate_right = digitalRead(PIN_SPEED_R);
+    if (newstate_right != oldstate_right) {
+      oldstate_right=newstate_right;
+      speed_right();
+    }
+  }
+#endif
+
 #if HAS_SONAR
-void echoCheck() { // Timer2 interrupt calls this function every 24uS.
-  if (sonar.check_timer()) { // Check ping status
-    distance_cm = sonar.ping_result / US_ROUNDTRIP_CM; // Ping returned in uS, convert to cm.
+  void echoCheck() { // Timer2 interrupt calls this function every 24uS.
+    if (sonar.check_timer()) { // Check ping status
+      distance_cm = sonar.ping_result / US_ROUNDTRIP_CM; // Ping returned in uS, convert to cm.
+    }
+    else if (millis() >= ping_timeout) {
+      distance_cm = MAX_DISTANCE;
+    }
   }
-  else if (millis() >= ping_timeout) {
-    distance_cm = MAX_DISTANCE;
-  }
-}
 #endif
