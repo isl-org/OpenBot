@@ -18,7 +18,7 @@ Tools
 └─── Manage Libraries
 ```
 
-If you want to disable the ultrasonic sensor, you need to set `HAS_SONAR 0`
+If you want to enable the ultrasonic sensor, you need to set `HAS_SONAR 1`.
 
 ### Chinese clone Nano (e.g. US link)
 
