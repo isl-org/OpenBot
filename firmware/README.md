@@ -53,4 +53,4 @@ The main task of the MCU is to handle the low-level control of the vehicle and p
 
 ## Next
 
-Compile and run the [Android App](android)
+Compile and run the [Android App](../android/README.md)

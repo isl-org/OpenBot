@@ -1,7 +1,7 @@
 
 # OpenBot: Robot Body
 
-[简体中文](./README_CN.md)
+[简体中文](README_CN.md)
 
 We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware.
 ![Assembly](../docs/images/assembly.gif)
@@ -109,4 +109,4 @@ Our robot body relies on readily available hobby electronics. We provide links f
 
 ## Next
 
-Flash the [Arduino Firmware](firmware)
+Flash the [Arduino Firmware](../firmware/README.md)

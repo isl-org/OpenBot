@@ -84,4 +84,4 @@ Use the drop-down menu to select the device on which the neural network should b
 
 ## Next (optional)
 
-Train your own [Driving Policy](policy)
+Train your own [Driving Policy](../policy/README.md)
