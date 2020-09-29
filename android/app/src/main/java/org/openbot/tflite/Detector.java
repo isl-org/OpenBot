@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-//Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
-
+// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 package org.openbot.tflite;
 
@@ -29,15 +28,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Wrapper for frozen detection models trained using the Tensorflow Object Detection API:
  * github.com/tensorflow/models/tree/master/research/object_detection
  */
 public abstract class Detector extends Network {
 
-   /** Labels corresponding to the output of the vision model. */
-   protected List<String> labels;
+  /** Labels corresponding to the output of the vision model. */
+  protected List<String> labels;
 
   /**
    * Creates a detector with the provided configuration.
@@ -48,16 +46,15 @@ public abstract class Detector extends Network {
    * @param numThreads The number of threads to use for classification.
    * @return A detector with the desired configuration.
    */
-
-  public static Detector create (Activity activity, Model model, Device device, int numThreads)
+  public static Detector create(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
-      switch (model) {
-        case DETECTOR_V1_1_0_Q:
-          return new DetectorQuantizedMobileNetV1(activity, device, numThreads);
-        case DETECTOR_V3_S_Q:
-          return new DetectorQuantizedMobileNetV3(activity, device, numThreads);
-        default:
-          return new DetectorQuantizedMobileNetV1(activity, device, numThreads);
+    switch (model) {
+      case DETECTOR_V1_1_0_Q:
+        return new DetectorQuantizedMobileNetV1(activity, device, numThreads);
+      case DETECTOR_V3_S_Q:
+        return new DetectorQuantizedMobileNetV3(activity, device, numThreads);
+      default:
+        return new DetectorQuantizedMobileNetV1(activity, device, numThreads);
     }
   }
 
@@ -131,25 +128,25 @@ public abstract class Detector extends Network {
     }
   }
 
-    /** Initializes a {@code Detector}. */
-    protected Detector(Activity activity, Device device, int numThreads) throws IOException {
-      super(activity, device, numThreads);
-      labels = loadLabelList(activity);
-      LOGGER.d("Created a Tensorflow Lite Detector.");
+  /** Initializes a {@code Detector}. */
+  protected Detector(Activity activity, Device device, int numThreads) throws IOException {
+    super(activity, device, numThreads);
+    labels = loadLabelList(activity);
+    LOGGER.d("Created a Tensorflow Lite Detector.");
+  }
+
+  /** Reads label list from Assets. */
+  private List<String> loadLabelList(Activity activity) throws IOException {
+    List<String> labels = new ArrayList<String>();
+    BufferedReader reader =
+        new BufferedReader(new InputStreamReader(activity.getAssets().open(getLabelPath())));
+    String line;
+    while ((line = reader.readLine()) != null) {
+      labels.add(line);
     }
-  
-    /** Reads label list from Assets. */
-    private List<String> loadLabelList(Activity activity) throws IOException {
-      List<String> labels = new ArrayList<String>();
-      BufferedReader reader =
-          new BufferedReader(new InputStreamReader(activity.getAssets().open(getLabelPath())));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        labels.add(line);
-      }
-      reader.close();
-      return labels;
-    }
+    reader.close();
+    return labels;
+  }
 
   public List<Recognition> recognizeImage(final Bitmap bitmap) {
     // Log this method so that it can be analyzed with systrace.
@@ -168,11 +165,10 @@ public abstract class Detector extends Network {
     Trace.beginSection("runInference");
     long startTime = SystemClock.uptimeMillis();
     runInference();
-    //tflite.runForMultipleInputsOutputs(inputArray, outputMap);
+    // tflite.runForMultipleInputsOutputs(inputArray, outputMap);
     long endTime = SystemClock.uptimeMillis();
     Trace.endSection();
     LOGGER.v("Timecost to run model inference: " + (endTime - startTime));
-
 
     Trace.endSection(); // "recognizeImage"
     return getRecognitions();
@@ -248,5 +244,4 @@ public abstract class Detector extends Network {
    * @return
    */
   protected abstract List<Recognition> getRecognitions();
-
 }

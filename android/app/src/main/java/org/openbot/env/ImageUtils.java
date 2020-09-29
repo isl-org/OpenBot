@@ -13,14 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-//Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
+// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 package org.openbot.env;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
-
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -172,11 +171,14 @@ public class ImageUtils {
 
     if (applyRotation != 0) {
       // Translate for crop.
-      matrix.postTranslate((cropRect.bottom-cropRect.top) * srcHeight, (cropRect.right-cropRect.left) * srcWidth);
-    }
-    else {
+      matrix.postTranslate(
+          (cropRect.bottom - cropRect.top) * srcHeight,
+          (cropRect.right - cropRect.left) * srcWidth);
+    } else {
       // Translate for crop.
-      matrix.postTranslate((cropRect.right-cropRect.left) * srcWidth, (cropRect.bottom-cropRect.top) * srcHeight);
+      matrix.postTranslate(
+          (cropRect.right - cropRect.left) * srcWidth,
+          (cropRect.bottom - cropRect.top) * srcHeight);
     }
 
     if (applyRotation != 0) {

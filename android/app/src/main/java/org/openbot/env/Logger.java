@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-//Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
+// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 package org.openbot.env;
 
@@ -118,7 +118,7 @@ public final class Logger {
     this.minLogLevel = minLogLevel;
   }
 
-  public boolean isLoggable(final int logLevel) {
+  public boolean checkLoggable(final int logLevel) {
     return logLevel >= minLogLevel || Log.isLoggable(tag, logLevel);
   }
 
@@ -127,61 +127,61 @@ public final class Logger {
   }
 
   public void v(final String format, final Object... args) {
-    if (isLoggable(Log.VERBOSE)) {
+    if (checkLoggable(Log.VERBOSE)) {
       Log.v(tag, toMessage(format, args));
     }
   }
 
   public void v(final Throwable t, final String format, final Object... args) {
-    if (isLoggable(Log.VERBOSE)) {
+    if (checkLoggable(Log.VERBOSE)) {
       Log.v(tag, toMessage(format, args), t);
     }
   }
 
   public void d(final String format, final Object... args) {
-    if (isLoggable(Log.DEBUG)) {
+    if (checkLoggable(Log.DEBUG)) {
       Log.d(tag, toMessage(format, args));
     }
   }
 
   public void d(final Throwable t, final String format, final Object... args) {
-    if (isLoggable(Log.DEBUG)) {
+    if (checkLoggable(Log.DEBUG)) {
       Log.d(tag, toMessage(format, args), t);
     }
   }
 
   public void i(final String format, final Object... args) {
-    if (isLoggable(Log.INFO)) {
+    if (checkLoggable(Log.INFO)) {
       Log.i(tag, toMessage(format, args));
     }
   }
 
   public void i(final Throwable t, final String format, final Object... args) {
-    if (isLoggable(Log.INFO)) {
+    if (checkLoggable(Log.INFO)) {
       Log.i(tag, toMessage(format, args), t);
     }
   }
 
   public void w(final String format, final Object... args) {
-    if (isLoggable(Log.WARN)) {
+    if (checkLoggable(Log.WARN)) {
       Log.w(tag, toMessage(format, args));
     }
   }
 
   public void w(final Throwable t, final String format, final Object... args) {
-    if (isLoggable(Log.WARN)) {
+    if (checkLoggable(Log.WARN)) {
       Log.w(tag, toMessage(format, args), t);
     }
   }
 
   public void e(final String format, final Object... args) {
-    if (isLoggable(Log.ERROR)) {
+    if (checkLoggable(Log.ERROR)) {
       Log.e(tag, toMessage(format, args));
     }
   }
 
   public void e(final Throwable t, final String format, final Object... args) {
-    if (isLoggable(Log.ERROR)) {
+    if (checkLoggable(Log.ERROR)) {
       Log.e(tag, toMessage(format, args), t);
     }
   }

@@ -1,4 +1,4 @@
-//Created by Matthias Mueller - Intel Intelligent Systems Lab - 2020
+// Created by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 package org.openbot.tflite;
 
@@ -6,11 +6,9 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.SystemClock;
 import android.os.Trace;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
 import org.openbot.CameraActivity.ControlSignal;
 
 public abstract class Autopilot extends Network {
@@ -28,9 +26,8 @@ public abstract class Autopilot extends Network {
   /** A ByteBuffer to hold image data, to be feed into Tensorflow Lite as inputs. */
   protected ByteBuffer indicatorBuffer = null;
 
-
-  public static Autopilot create (Activity activity, Model model, Device device, int numThreads)
-          throws IOException {
+  public static Autopilot create(Activity activity, Model model, Device device, int numThreads)
+      throws IOException {
     switch (model) {
       case AUTOPILOT_F:
         return new AutopilotFloat(activity, device, numThreads);
@@ -47,7 +44,7 @@ public abstract class Autopilot extends Network {
     LOGGER.d("Created a Tensorflow Lite Autopilot.");
   }
 
-  private void convertIndicatorToByteBuffer (int indicator) {
+  private void convertIndicatorToByteBuffer(int indicator) {
     if (indicatorBuffer == null) {
       return;
     }
@@ -68,10 +65,9 @@ public abstract class Autopilot extends Network {
     long startTime = SystemClock.uptimeMillis();
     Object[] inputArray;
     if (tflite.getInputIndex("cmd_input") == 0) {
-      inputArray = new Object[] {indicatorBuffer,imgData};
-    }
-    else {
-      inputArray = new Object[] {imgData,indicatorBuffer};
+      inputArray = new Object[] {indicatorBuffer, imgData};
+    } else {
+      inputArray = new Object[] {imgData, indicatorBuffer};
     }
 
     float[][] predicted_ctrl = new float[1][2];
@@ -84,5 +80,4 @@ public abstract class Autopilot extends Network {
     Trace.endSection(); // "recognizeImage"
     return new ControlSignal(predicted_ctrl[0][0], predicted_ctrl[0][1]);
   }
-
 }
