@@ -1,0 +1,15 @@
+name: Move assigned pull requests into OpenBot - In progress
+
+on:
+  pull_request:
+    types: [assigned]
+
+jobs:
+  automate-project-columns:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.3.0
+        with:
+          project: OpenBot
+          column: In progress
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
