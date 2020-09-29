@@ -1,0 +1,14 @@
+name: Move new issues into OpenBot - Triage
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  automate-project-columns:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.3.0
+        with:
+          project: OpenBot
+          column: Triage
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
