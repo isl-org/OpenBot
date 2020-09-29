@@ -1,16 +1,15 @@
-//Created by Matthias Mueller - Intel Intelligent Systems Lab - 2020
+// Created by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 package org.openbot.env;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
-
 import java.io.File;
 import java.io.IOException;
 
-//Convert text to speech
-//https://ttsmp3.com
+// Convert text to speech
+// https://ttsmp3.com
 
 public class AudioPlayer {
   private MediaPlayer mp;
@@ -21,9 +20,8 @@ public class AudioPlayer {
     mContext = context;
   }
 
-
-  //Play from a resource file
-  public void play(int id){
+  // Play from a resource file
+  public void play(int id) {
     try {
       mp.reset();
       mp = mp.create(mContext, id);
@@ -33,7 +31,7 @@ public class AudioPlayer {
     }
   }
 
-  //Play from a file in storage
+  // Play from a file in storage
   public void play(String path) {
     try {
       mp.reset();
@@ -45,15 +43,15 @@ public class AudioPlayer {
     }
   }
 
-  //Play from media asset
+  // Play from media asset
   public void play(String assetFolder, String fileName) {
     try {
-      AssetFileDescriptor afd = mContext.getAssets().openFd(
-              "media" + File.separator +
-                      assetFolder + File.separator +
-                      fileName);
+      AssetFileDescriptor afd =
+          mContext
+              .getAssets()
+              .openFd("media" + File.separator + assetFolder + File.separator + fileName);
       mp.reset();
-      mp.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+      mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
       mp.prepare();
       mp.start();
     } catch (IOException e) {

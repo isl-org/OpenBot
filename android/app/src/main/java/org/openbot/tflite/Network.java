@@ -13,18 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-//Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
+// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 package org.openbot.tflite;
+
 import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.os.SystemClock;
-
-import org.tensorflow.lite.Interpreter;
-import org.tensorflow.lite.gpu.GpuDelegate;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -33,8 +30,9 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.openbot.env.Logger;
+import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.gpu.GpuDelegate;
 
 public abstract class Network {
 
@@ -56,6 +54,7 @@ public abstract class Network {
 
   /** Dimensions of inputs. */
   protected static final int DIM_BATCH_SIZE = 1;
+
   protected static final int DIM_PIXEL_SIZE = 3;
 
   /** Preallocated buffers for storing image data in. */
@@ -96,12 +95,12 @@ public abstract class Network {
     tfliteOptions.setNumThreads(numThreads);
     tflite = new Interpreter(tfliteModel, tfliteOptions);
     imgData =
-            ByteBuffer.allocateDirect(
-                    DIM_BATCH_SIZE
-                            * getImageSizeX()
-                            * getImageSizeY()
-                            * DIM_PIXEL_SIZE
-                            * getNumBytesPerChannel());
+        ByteBuffer.allocateDirect(
+            DIM_BATCH_SIZE
+                * getImageSizeX()
+                * getImageSizeY()
+                * DIM_PIXEL_SIZE
+                * getNumBytesPerChannel());
     imgData.order(ByteOrder.nativeOrder());
     LOGGER.d("Created a Tensorflow Lite Network.");
   }
@@ -135,7 +134,6 @@ public abstract class Network {
     long endTime = SystemClock.uptimeMillis();
     LOGGER.v("Timecost to put values into ByteBuffer: " + (endTime - startTime));
   }
-
 
   /** Closes the interpreter and model to release resources. */
   public void close() {
@@ -198,5 +196,4 @@ public abstract class Network {
    * @return
    */
   public abstract RectF getCropRect();
-
 }

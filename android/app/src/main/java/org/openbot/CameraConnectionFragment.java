@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-//Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
+// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 package org.openbot;
 
@@ -225,9 +225,9 @@ public class CameraConnectionFragment extends Fragment {
       }
 
       if (option.getHeight() >= minSize && option.getWidth() >= minSize) {
-        //Check for aspect ratio
+        // Check for aspect ratio
         if (desiredSize.getWidth() / option.getWidth()
-                == desiredSize.getHeight() / option.getHeight()) {
+            == desiredSize.getHeight() / option.getHeight()) {
           correctAspect.add(option);
         }
         bigEnough.add(option);
@@ -250,8 +250,7 @@ public class CameraConnectionFragment extends Fragment {
       final Size chosenSize = Collections.min(correctAspect, new CompareSizesByArea());
       LOGGER.i("Chosen size: " + chosenSize.getWidth() + "x" + chosenSize.getHeight());
       return chosenSize;
-    }
-    else if (bigEnough.size() > 0) {
+    } else if (bigEnough.size() > 0) {
       final Size chosenSize = Collections.min(bigEnough, new CompareSizesByArea());
       LOGGER.i("Chosen size: " + chosenSize.getWidth() + "x" + chosenSize.getHeight());
       return chosenSize;
@@ -385,8 +384,7 @@ public class CameraConnectionFragment extends Fragment {
       }
       try {
         manager.openCamera(cameraId, stateCallback, backgroundHandler);
-      }
-      catch (SecurityException e) {
+      } catch (SecurityException e) {
         throw new SecurityException("No permission to open the camera.", e);
       }
     } catch (final CameraAccessException e) {

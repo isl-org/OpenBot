@@ -16,7 +16,7 @@ package org.openbot;
  * limitations under the License.
  */
 
-//Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
+// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -42,7 +42,6 @@ import org.openbot.env.Logger;
 @SuppressLint("ValidFragment")
 public class LegacyCameraConnectionFragment extends Fragment {
 
-
   private static int mFacing = CameraInfo.CAMERA_FACING_BACK;
   private static final Logger LOGGER = new Logger();
   /** Conversion from screen rotation to JPEG orientation. */
@@ -66,10 +65,12 @@ public class LegacyCameraConnectionFragment extends Fragment {
    * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a {@link
    * TextureView}.
    */
-
   @SuppressLint("ValidFragment")
   public LegacyCameraConnectionFragment(
-          final Camera.PreviewCallback imageListener, final int layout, final Size desiredSize, int facing) {
+      final Camera.PreviewCallback imageListener,
+      final int layout,
+      final Size desiredSize,
+      int facing) {
     this.imageListener = imageListener;
     this.layout = layout;
     this.desiredSize = desiredSize;
@@ -132,7 +133,6 @@ public class LegacyCameraConnectionFragment extends Fragment {
       };
   /** An additional thread for running tasks that shouldn't block the UI. */
   private HandlerThread backgroundThread;
-
 
   @Override
   public View onCreateView(
@@ -207,5 +207,4 @@ public class LegacyCameraConnectionFragment extends Fragment {
     }
     return -1; // No camera found
   }
-
 }
