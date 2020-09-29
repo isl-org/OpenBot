@@ -6,8 +6,14 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ master ]
+    paths:
+    - 'android/**'
+    - '.github/workflows/gradle.yml'
   pull_request:
     branches: [ master ]
+    paths:
+    - 'android/**'
+    - '.github/workflows/gradle.yml'
 
 jobs:
   build:
@@ -20,6 +26,12 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Style
         run: |
           cd android
@@ -28,7 +40,7 @@ jobs:
         run: |
           cd android
           ./gradlew lint
-      # - name: Build
-      #   run: |
-      #     cd android
-      #     ./gradlew build
+      - name: Build
+        run: |
+          cd android
+          ./gradlew build
