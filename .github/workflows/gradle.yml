@@ -34,7 +34,7 @@ jobs:
         run: |
           cd android
           ./gradlew lint
-      # - name: Build
-      #   run: |
-      #     cd android
-      #     ./gradlew build
+      - name: Build
+        run: |
+          cd android
+          ./gradlew build
