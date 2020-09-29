@@ -6,8 +6,14 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ master ]
+    paths:
+    - 'android/**'
+    - '.github/workflows/gradle.yml'
   pull_request:
     branches: [ master ]
+    paths:
+    - 'android/**'
+    - '.github/workflows/gradle.yml'
 
 jobs:
   build:
