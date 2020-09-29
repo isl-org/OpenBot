@@ -1,4 +1,4 @@
-name: Move opened pull requests into To do
+name: Move opened pull requests into OpenBot - To do
 
 on:
   pull_request:

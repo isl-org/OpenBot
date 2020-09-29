@@ -1,4 +1,4 @@
-name: Move assigned pull requests into To do
+name: Move assigned pull requests into OpenBot - In progress
 
 on:
   pull_request:
