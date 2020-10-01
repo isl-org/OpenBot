@@ -44,3 +44,8 @@ jobs:
         run: |
           cd android
           ./gradlew build
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-debug.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
