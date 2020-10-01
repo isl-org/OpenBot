@@ -6,12 +6,12 @@ Our application is derived from the [TensorFlow Lite Object Detection Android De
 
 ### Prerequisites
 
-- Setup [Android Studio](https://developer.android.com/studio/index.html)
+- [Android Studio 3.2 or later](https://developer.android.com/studio/index.html) for building and installing the apk, or otherwise download the apk from the assets of the [latest release](https://github.com/intel-isl/OpenBot/releases/latest).
 - Android device and Android development environment with minimum API 21
-- Android Studio 3.2 or later
 
 ### Building
 
+- In case you are using the apk from the assets of the [latest release](https://github.com/intel-isl/OpenBot/releases/latest), you can skip the below steps and instead just [install](https://www.lifewire.com/install-apk-on-android-4177185) it on your phone directly. Note that that apk is signed with a debug key.
 - Open Android Studio and select *Open an existing Android Studio project*.
 - Select the OpenBot/android directory and click OK.
 - Confirm Gradle Sync if neccessary.
