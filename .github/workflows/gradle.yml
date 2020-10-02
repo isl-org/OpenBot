@@ -19,7 +19,9 @@ jobs:
   build:
     name: Gradle Checks
     runs-on: ubuntu-latest
-
+    defaults:
+          run:
+            working-directory: android
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 1.8
@@ -33,19 +35,14 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Style
-        run: |
-          cd android
-          ./gradlew checkStyle
+        run: ./gradlew checkStyle
       - name: Lint
-        run: |
-          cd android
-          ./gradlew lint
+        run: ./gradlew lint
       - name: Build
-        run: |
-          cd android
-          ./gradlew build
+        run: ./gradlew build
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
           name: app-debug.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+

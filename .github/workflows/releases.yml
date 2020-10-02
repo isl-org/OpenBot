@@ -1,0 +1,42 @@
+on:
+  release:
+    types:
+      - published # We are using published instead of created because otherwise, it would never trigger if it was first created as a draft and then published.
+
+name: Upload Android Apk to Release
+
+jobs:
+  upload-apk-to-release:
+    name: Add Android Debug Apk to Release Assets
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v2
+      - name: Print Release Url
+        run: echo "${{ github.event.release.html_url }}"
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Assemble Debug Apk
+        id: assemble_debug_apk
+        run: |
+          ./gradlew assembleDebug
+          echo "::set-output name=debug_apk_path::$(pwd)/app/build/outputs/apk/debug/app-debug.apk"
+      - name: Specify Release Asset Name using tag [${{github.event.release.tag_name}}]
+        id: make_asset_name
+        run: echo "::set-output name=asset_name::OpenBot-$(echo ${{github.event.release.tag_name}}| sed 's/[^-a-zA-Z0-9.]/_/g'| sed 's/^v//').apk"
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.assemble_debug_apk.outputs.debug_apk_path }}
+          asset_name: ${{steps.make_asset_name.outputs.asset_name}}
+          asset_content_type: application/vnd.android.package-archive
