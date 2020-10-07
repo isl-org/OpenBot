@@ -87,8 +87,8 @@ Our robot body relies on readily available hobby electronics. We provide links f
 10. (Optional) Insert the on/off switch.
 11. Connect the PWM inputs of the L298N to pins D5, D6, D9 and D10 of the Arduino.
 12. Connect the speed sensors and ultrasonic sensor to 5V and GND.
-13. Connect D0 of the speed sensors to pins D2 (left) and D3 (right) of the Arduino.
-14. Connect Echo and Trigger of the ultrasonic sensor to pin D4 of the Arduino.
+13. Connect pin D0 of the speed sensors to pins D2 (left) and D3 (right) of the Arduino.
+14. Connect pins Trigger and Echo of the ultrasonic sensor to pins D11 and D12 of the Arduino respectively.
 15. Connect the USB cable to the Arduino and route it through the top cover.
 16. (Optional) Connect the LEDs to pins D7 (left) and D8 (right) of the Arduino and GND. We recommend to add a 150 Ohm resistor in series to limit the current draw.
 17. (Optional) Connect the voltage divider to pin A7 of the Arduino. It is used to measure the battery voltage.
