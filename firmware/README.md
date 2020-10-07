@@ -56,13 +56,12 @@ This section explains how to test all functionalities of the car after the firmw
 2. Open the Serial Monitor: `Tools -> Serial Monitor`
 
 You should now see four comma-seperated values that update once per second:
+
 ![Serial Monitor](../docs/images/serial_monitor.png)
 
-The first value is the battery voltage. If you connect the battery to the car (i.e. turn on the switch), it should show the battery voltage. If you disconnect the battery (i.e. turn off the switch), it should show a small value.
-
-The second and third values are the raw readings of the speed sensors. Each hole in the encoder disk will produce two counts. You can set the number of holes with the parameter `DISK_HOLES`. If you are using the stardard disk with 20 holes, there will be 40 counts for each revolution of the wheel. Hence, if you divide the displayed number by 40, you will get the revolutions per second.
-
-The fourth value is the estimated free space in front of the ultrasonic sensor in cm up to the `MAX_DISTANCE` which is `300` by default. If the ultrasonic sensor is disabled, it will show `65535`.
+- The first value is the battery voltage. If you connect the battery to the car (i.e. turn on the switch), it should show the battery voltage. If you disconnect the battery (i.e. turn off the switch), it should show a small value.
+- The second and third values are the raw readings of the speed sensors. Each hole in the encoder disk will produce two counts. You can set the number of holes with the parameter `DISK_HOLES`. If you are using the stardard disk with 20 holes, there will be 40 counts for each revolution of the wheel. Hence, if you divide the displayed number by 40, you will get the revolutions per second.
+- The fourth value is the estimated free space in front of the ultrasonic sensor in cm up to the `MAX_DISTANCE` which is `300` by default. If the ultrasonic sensor is disabled, it will show `65535`.
 
 You can also send messages to the Arudino by typing a command into the input field on the top and then pressing send. The following commands are available:
 
@@ -82,7 +81,7 @@ The following test procedure can be used to test all functionalities of the car:
 
 ### No Phone Mode
 
-Before testing the car with a smartphone phone that has the OpenBot application installed, you can also test the car without a phone first. Simply set the option `NO_PHONE_MODE` to `1`. The car will now drive at *normal_speed* (75% PWM) and slow down as it detects obstacles with the ultrasonic sensor. If it gets within the `STOP_THRESHOLD` (default: 64cm), it will turn to the right. Note that both the car and the Arduino need to be powered. The Arduino can be powered by connecting the 5V pin to the 5V output of the L298N motor driver, or by connecting the USB cable to a power source.
+Before testing the car with a smartphone that has the OpenBot application installed, you can also test the car without a phone first. Simply set the option `NO_PHONE_MODE` to `1`. The car will now drive at *normal_speed* (75% PWM) and slow down as it detects obstacles with the ultrasonic sensor. If it gets within the `STOP_THRESHOLD` (default: 64cm), it will turn to the right. Note that both the car and the Arduino need to be powered. The Arduino can be powered by connecting the 5V pin to the 5V output of the L298N motor driver, or by connecting the USB cable to a power source.
 
 Before running the car, we recommend to remove the tires, connect the Arduino to a computer and observe the serial monitor like in the section [Testing](#testing). The output is a bit easier to parse and shows the battery voltage, the rpm for the left and right motors and the estimated free space in front of the car. You can move a large object back and forth in front of ultrasonic sensor and observe the speed of the motors changing.
 
