@@ -1,8 +1,15 @@
-<p align="center">
-  <img src="docs/images/banner.jpg" alt="Banner" width="100%"/>
-</p>
+<a href="https://www.openbot.org/" target="_blank">
+  <img align="center" alt="Banner" width="100%" src="docs/images/banner.jpg" />
+</a>
+<br/><br/>
 
-# OpenBot: Turning Smartphones into Robots
+<p align="center">
+   <img alt="GitHub issues" src="https://img.shields.io/github/issues/intel-isl/OpenBot"></a>
+   <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/intel-isl/OpenBot?"></a>
+   <img alt="GitHub forks" src="https://img.shields.io/github/forks/intel-isl/OpenBot"></a>
+   <img alt="GitHub stars" src="https://img.shields.io/github/stars/intel-isl/OpenBot"></a>
+   <img alt="Github license" src="https://img.shields.io/github/license/intel-isl/OpenBot"></a>
+</p>
 
 [简体中文](./README_CN.md)
 
@@ -28,11 +35,17 @@ Please cite our [paper](docs/paper/OpenBot.pdf) if you use OpenBot.
 }
 ```
 
-## Video
-
-[![OpenBot Video](https://img.youtube.com/vi/qc8hFLyWDOM/0.jpg)](https://www.youtube.com/watch?v=qc8hFLyWDOM)
+## YouTube Video
+</a>
+<a href="https://www.youtube.com/watch?v=qc8hFLyWDOM" >
+  <img align="center" width="500" alt="youtube video" src="docs/images/youtube.jpg" />
+</a>
 
 ## Contact
 
 - Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-hpso8cfl-JO9OVhVMdUWvR4vDXwcMGA) channel to connect with the OpenBot community.
 - Contact us via [Email](mailto:openbot.team@gmail.com)
+
+<a href="https://www.openbot.org//" target="_blank">
+  <img align="center" alt="Banner" width="100%" src="docs/images/openbot.gif" />
+</a>
