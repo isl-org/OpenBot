@@ -1,7 +1,7 @@
 <a href="https://www.openbot.org//" target="_blank">
   <img align="center" alt="Banner" width="100%" src="docs/images/banner.jpg" />
 </a>
-
+<br/><br/>
 
 <p align="center">
    <img alt="GitHub issues" src="https://img.shields.io/github/issues/intel-isl/OpenBot"></a>
