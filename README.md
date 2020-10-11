@@ -45,3 +45,7 @@ Please cite our [paper](docs/paper/OpenBot.pdf) if you use OpenBot.
 
 - Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-hpso8cfl-JO9OVhVMdUWvR4vDXwcMGA) channel to connect with the OpenBot community.
 - Contact us via [Email](mailto:openbot.team@gmail.com)
+
+<a href="https://www.openbot.org//" target="_blank">
+  <img align="center" alt="Banner" width="100%" src="docs/images/openbot.gif" />
+</a>
