@@ -1,7 +1,9 @@
 <a href="https://www.openbot.org/" target="_blank">
   <img align="center" alt="Banner" width="100%" src="docs/images/banner.jpg" />
 </a>
-<br/><br/>
+
+<h1 align="center"><a href="https://www.openbot.org/" target="_blank">OpenBot</a></h1>
+<h3 align="center"><a>Turning Smartphones into Robots</a></h3>
 
 <p align="center">
    <img alt="GitHub issues" src="https://img.shields.io/github/issues/intel-isl/OpenBot"></a>
@@ -47,5 +49,5 @@ Please cite our [paper](docs/paper/OpenBot.pdf) if you use OpenBot.
 - Contact us via [Email](mailto:openbot.team@gmail.com)
 
 <a href="https://www.openbot.org//" target="_blank">
-  <img align="center" alt="Banner" width="100%" src="docs/images/openbot.gif" />
+  <img align="center" alt="Banner" width="100%" src="docs/images/open_bot.gif" />
 </a>
