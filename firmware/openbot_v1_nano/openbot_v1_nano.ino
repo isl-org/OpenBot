@@ -57,10 +57,10 @@
   #define PIN_SPEED_L 2
   #define PIN_SPEED_R 3
   #define PIN_VIN A7
-  #define PIN_TRIGGER 11
-  #define PIN_ECHO 12
-  #define PIN_LED_LB 7
-  #define PIN_LED_RB 8
+  #define PIN_TRIGGER 12 //4
+  #define PIN_ECHO 11 //4
+  #define PIN_LED_LB 4 //7
+  #define PIN_LED_RB 7 //8
 #elif (OPENBOT == PCB_V1)
   #define PIN_PWM_L1 9
   #define PIN_PWM_L2 10

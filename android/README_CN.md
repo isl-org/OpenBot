@@ -1,5 +1,10 @@
 # 安卓 App
 
+<p align="center">
+  <a href="README.md">English</a> |
+  <span>简体中文</span>
+</p>
+
 我们的应用程序派生自[TensorFlow Lite object Detection Android Demo](https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android)。我们增加了一个数据记录器，并支持游戏控制器与机器人一起收集数据集。目前，我们记录以下传感器的读数：相机、陀螺仪、加速计、磁力计、环境光传感器和气压计。使用Android API，我们可以获得以下传感器读数：RGB图像、角速度、线加速度、重力、磁场强度、光强、大气压力、纬度、经度、海拔、方位和速度。除了手机传感器，我们还记录车身传感器读数(车轮里程计、障碍物距离和电池电压)，这些读数通过串口传输。最后，我们记录从连接的游戏控制器接收道德命令(如果存在)。我们还集成了多个神经网络用于人员跟踪和自主导航。
 
 ## 开始

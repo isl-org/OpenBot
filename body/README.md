@@ -1,7 +1,10 @@
 
 # OpenBot: Robot Body
 
-[简体中文](README_CN.md)
+<p align="center">
+  <span>English</span> |
+  <a href="README_CN.md">简体中文</a>
+</p>
 
 We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware.
 ![Assembly](../docs/images/assembly.gif)
@@ -43,7 +46,7 @@ Our robot body relies on readily available hobby electronics. We provide links f
 (General)
 
 - 1x Arduino Nano ([EU](https://www.amazon.de/dp/B01MS7DUEM), [US](https://www.amazon.com/dp/B00NLAMS9C), [AE](https://www.aliexpress.com/item/32866959979.html))
-- 4x TT motors with tires ([EU](https://www.conrad.de/de/p/joy-it-com-motor01-getriebemotor-gelb-schwarz-passend-fuer-einplatinen-computer-arduino-banana-pi-cubieboard-raspbe-1573543.html), [US](https://www.amazon.com/dp/B07ZT619TD), [AE](https://www.aliexpress.com/item/4000126948489.html))
+- 4x TT motors with tires ([EU](https://www.conrad.de/de/p/joy-it-com-motor01-getriebemotor-gelb-schwarz-passend-fuer-einplatinen-computer-arduino-banana-pi-cubieboard-raspbe-1573543.html), [US](https://www.amazon.com/dp/B081YQM55P), [AE](https://www.aliexpress.com/item/4000126948489.html))
 - 3x 18650 battery ([EU](https://www.conrad.de/de/p/conrad-energy-18650-usb-spezial-akku-18650-li-ion-3-7-v-1400-mah-1525536.html), [US](https://www.amazon.com/dp/B083K4XSKG), [AE](https://www.aliexpress.com/item/32352434845.html))
 - 1x 18650 battery holder([EU](https://www.amazon.de/dp/B075V25QJ9), [US](https://www.amazon.com/dp/B07DWQYD7H), [AE](https://www.aliexpress.com/item/33037738446.html))
 - 1x USB OTG cable ([EU](https://www.amazon.de/gp/product/B075M4CQHZ) ,[US](https://www.amazon.com/dp/B07LBHKTMM), [AE](https://www.aliexpress.com/item/10000330515850.html))
@@ -51,16 +54,19 @@ Our robot body relies on readily available hobby electronics. We provide links f
 - 16x M3x25 screw ([EU](https://www.amazon.de/dp/B07KFL3SSV), [US](https://www.amazon.com/dp/B07WJL3P3X), [AE](https://www.aliexpress.com/item/4000173341865.html))
 - 16x M3 nut ([EU](https://www.amazon.de/dp/B07JMF3KMD), [US](https://www.amazon.com/dp/B071NLDW56), [AE](https://www.aliexpress.com/item/32977174437.html))
 - 6x M3x5 screw ([EU](https://www.amazon.de/dp/B01HBRG3W8), [US](https://www.amazon.com/dp/B07MBHMLL2), [AE](https://www.aliexpress.com/item/32892594230.html))
-- Wires ([EU](https://www.amazon.de/dp/B07KYHBVR7), [US](https://www.amazon.com/dp/B07GD2BWPY), [AE](https://www.aliexpress.com/item/4000766001685.html))
+- Dupont cables ([EU](https://www.amazon.de/dp/B07KYHBVR7), [US](https://www.amazon.com/dp/B07GD2BWPY), [AE](https://www.aliexpress.com/item/4000766001685.html))
 
 (DIY only)
 
-- 1x L298N Motor Driver ([EU](https://www.conrad.de/de/p/joy-it-motormodul-2-u-4-phasen-6-bis-12v-1573541.html), [US](https://www.amazon.com/dp/B07ZT619TD), [AE](https://www.aliexpress.com/item/32994608743.html))
+- 1x L298N Motor Driver ([EU](https://www.conrad.de/de/p/joy-it-motormodul-2-u-4-phasen-6-bis-12v-1573541.html), [US](https://www.amazon.com/dp/B085XSLKFQ), [AE](https://www.aliexpress.com/item/32994608743.html))
 - (Optional) Resistors (2x 150<span>&#8486;</span> for the LEDs and a 20 k<span>&#8486;</span> and 10k<span>&#8486;</span> for the voltage divider)
+- (Combo) 4x TT motors & tires + 2x L298N + dupont cables ([US](https://www.amazon.com/dp/B07ZT619TD))
+- (Combo) 4x TT motors & tires + wires + screws ([US](https://www.amazon.com/dp/B07DRGTCTP))
 
 (PCB only)
 
 - 1x [Custom PCB](pcb)
+- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B07449V33P), [AE](https://www.aliexpress.com/item/32963304134.html))
 
 (Optional)
 
@@ -73,7 +79,7 @@ Our robot body relies on readily available hobby electronics. We provide links f
 
 #### Option 1: DIY
 
-![Wiring Diagram](../docs/images/wiring_diagram.jpg)
+![Wiring Diagram](../docs/images/wiring_diagram.png)
 
 1. Solder wires to the motors.
 2. Insert the positive and negative leads of the two left motors into OUT1 (+) and OUT2 (-) of the L298N board.
@@ -88,9 +94,9 @@ Our robot body relies on readily available hobby electronics. We provide links f
 11. Connect the PWM inputs of the L298N to pins D5, D6, D9 and D10 of the Arduino.
 12. Connect the speed sensors and ultrasonic sensor to 5V and GND.
 13. Connect pin D0 of the speed sensors to pins D2 (left) and D3 (right) of the Arduino.
-14. Connect pins Trigger and Echo of the ultrasonic sensor to pins D11 and D12 of the Arduino respectively.
+14. Connect pins Echo and Trigger of the ultrasonic sensor to pins D11 and D12 of the Arduino respectively.
 15. Connect the USB cable to the Arduino and route it through the top cover.
-16. (Optional) Connect the LEDs to pins D7 (left) and D8 (right) of the Arduino and GND. We recommend to add a 150 Ohm resistor in series to limit the current draw.
+16. (Optional) Connect the LEDs to pins D4 (left) and D7 (right) of the Arduino and GND. We recommend to add a 150 Ohm resistor in series to limit the current draw.
 17. (Optional) Connect the voltage divider to pin A7 of the Arduino. It is used to measure the battery voltage.
 18. Connect the battery cables to Vin of the L298N. If you installed the switch, put it in the current path.
 19. Insert six M3 nuts into the bottom plate and mount the top cover with six M3x25 screws.
@@ -98,13 +104,13 @@ Our robot body relies on readily available hobby electronics. We provide links f
 
 #### Option 2: Custom PCB
 
-1. Solder wires with connectors to the motors.
+1. Solder wires with Micro JST PH 2.0 connectors to the motors.
 2. Connect the left two motors to M3 and M4 and the right two motors to M1 and M2.
 3. Mount the PCB with four M3x5 screws and the motors with eight M3x25 screws and nuts.
 4. Follow steps 5-10 from the DIY option.
 5. Connect the LEDs, speed sensors and ultrasonic sensor to the PCB.
 6. Connect the USB cable to the Arduino and route it through the top cover.
-7. Connect the battery to Vin of the PCB. If you installed the switch, put it in the current path.
+7. Connect the battery to Vin (Micro JST PH 2.0 connector) of the PCB. If you installed the switch, put it in the current path.
 8. Follow steps 19-20 from the DIY option.
 
 ## Next

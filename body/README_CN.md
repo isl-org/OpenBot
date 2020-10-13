@@ -1,5 +1,10 @@
 # OpenBot 中文版说明
 
+<p align="center">
+  <a href="README.md">English</a> |
+  <span>简体中文</span>
+</p>
+
 我们为轮式机器人设计了一个车身，该车身依赖于低成本，随时可用的业余爱好硬件。
 
 ![Assembly](../docs/images/assembly.gif)
@@ -106,7 +111,7 @@
 
 ### 选项1：自己动手做
 
-![Wiring Diagram](../docs/images/wiring_diagram.jpg)
+![Wiring Diagram](../docs/images/wiring_diagram.png)
 
 1. 如有必要，将线连接到电动机
 2. 将两个电动机的正极和负极引线插入L298N板的OUT1（+）和OUT2（-）
@@ -121,9 +126,9 @@
 11. 将L298N的PWM输入连接到Arduino的引脚D5，D6，D9和D10
 12. 将速度传感器和超声波传感器连接到5V和GND
 13. 将速度传感器的D0连接到Arduino的D2引脚（左）和D3（右侧）
-14. 将超声波传感器的回声和触发器连接到Arduino的D4引脚
+14. 将超声波传感器的回声和触发器连接到Arduino的D11和D12引脚
 15. 将USB电缆连接到Arduino，并将其穿过顶盖
-16. （可选）将LED连接到Arduino和GND的D7引脚（左）和D8引脚（右）
+16. （可选）将LED连接到Arduino和GND的D4引脚（左）和D7引脚（右）
 17. （可选）将分压器连接至Arduino的A7引脚
 18. 将电池电缆连接至L298N的Vin。如果安装了交换机，请将其放在当前路径中。
 19. 将六个M3螺母插入底板，然后用六个M3x25螺钉安装顶盖
@@ -140,8 +145,6 @@
 -更新一些更常用的组件
 -将分压器更新为20k / 10k，以获得更高的精度
 -将电机连接器更改为直立版本，以便于操作
-
-如果您已经订购了版本1的PCB（[2D视图]（../docs/images/pcb_2d_v1.png），[3D视图]（../docs/images/pcb_3d_v1.png))，则需要 调整固件以手动读取速度传感器。 有关更多信息，请参见此[issue](https://github.com/intel-isl/OpenBot/issues/34)。
 
 定制PCB包括以下步骤:
 
