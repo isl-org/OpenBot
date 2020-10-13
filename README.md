@@ -2,9 +2,9 @@
   <img align="center" alt="Banner" width="100%" src="docs/images/banner.jpg" />
 </a>
 
-# OpenBot: Turning Smartphones into Robots
+<h1 align="center"><a> Turning Smartphones into Robots</a></h1>
 
-<p align="left">
+<p align="center">
    <img alt="GitHub issues" src="https://img.shields.io/github/issues/intel-isl/OpenBot"></a>
    <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/intel-isl/OpenBot?"></a>
    <img alt="GitHub forks" src="https://img.shields.io/github/forks/intel-isl/OpenBot"></a>
@@ -12,7 +12,10 @@
    <img alt="Github license" src="https://img.shields.io/github/license/intel-isl/OpenBot"></a>
 </p>
 
-[简体中文](./README_CN.md)
+<p align="center">
+  <span>English</span> |
+  <a href="./README_CN.md">简体中文</a> 
+</p>
 
 OpenBot leverages smartphones as brains for low-cost robots. We have designed a small electric vehicle that costs about $50 and serves as a robot body. Our software stack for Android smartphones supports advanced robotics workloads such as person following and real-time autonomous navigation.
 
