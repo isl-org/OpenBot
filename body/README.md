@@ -61,12 +61,12 @@ Our robot body relies on readily available hobby electronics. We provide links f
 - 1x L298N Motor Driver ([EU](https://www.conrad.de/de/p/joy-it-motormodul-2-u-4-phasen-6-bis-12v-1573541.html), [US](https://www.amazon.com/dp/B085XSLKFQ), [AE](https://www.aliexpress.com/item/32994608743.html))
 - (Optional) Resistors (2x 150<span>&#8486;</span> for the LEDs and a 20 k<span>&#8486;</span> and 10k<span>&#8486;</span> for the voltage divider)
 - (Combo) 4x TT motors & tires + 2x L298N + dupont cables ([US](https://www.amazon.com/dp/B07ZT619TD))
-- (Combo) 4x TT motors & tires + wires + screws ([US](https://www.amazon.com/dp/B07DRGTCTP)
+- (Combo) 4x TT motors & tires + wires + screws ([US](https://www.amazon.com/dp/B07DRGTCTP))
 
 (PCB only)
 
 - 1x [Custom PCB](pcb)
-- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P),[US](https://www.amazon.com/dp/B07449V33P),[AE](https://www.aliexpress.com/item/32963304134.html))
+- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B07449V33P), [AE](https://www.aliexpress.com/item/32963304134.html))
 
 (Optional)
 

@@ -111,7 +111,7 @@
 
 ### 选项1：自己动手做
 
-![Wiring Diagram](../docs/images/wiring_diagram.jpg)
+![Wiring Diagram](../docs/images/wiring_diagram.png)
 
 1. 如有必要，将线连接到电动机
 2. 将两个电动机的正极和负极引线插入L298N板的OUT1（+）和OUT2（-）
@@ -145,8 +145,6 @@
 -更新一些更常用的组件
 -将分压器更新为20k / 10k，以获得更高的精度
 -将电机连接器更改为直立版本，以便于操作
-
-如果您已经订购了版本1的PCB（[2D视图]（../docs/images/pcb_2d_v1.png），[3D视图]（../docs/images/pcb_3d_v1.png))，则需要 调整固件以手动读取速度传感器。 有关更多信息，请参见此[issue](https://github.com/intel-isl/OpenBot/issues/34)。
 
 定制PCB包括以下步骤:
 
