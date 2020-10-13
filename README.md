@@ -2,10 +2,9 @@
   <img align="center" alt="Banner" width="100%" src="docs/images/banner.jpg" />
 </a>
 
-<h1 align="center"><a href="https://www.openbot.org/" target="_blank">OpenBot</a></h1>
-<h3 align="center"><a>Turning Smartphones into Robots</a></h3>
+# OpenBot: Turning Smartphones into Robots
 
-<p align="center">
+<p align="left">
    <img alt="GitHub issues" src="https://img.shields.io/github/issues/intel-isl/OpenBot"></a>
    <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/intel-isl/OpenBot?"></a>
    <img alt="GitHub forks" src="https://img.shields.io/github/forks/intel-isl/OpenBot"></a>
@@ -37,7 +36,7 @@ Please cite our [paper](docs/paper/OpenBot.pdf) if you use OpenBot.
 }
 ```
 
-## YouTube Video
+## Video
 </a>
 <a href="https://www.youtube.com/watch?v=qc8hFLyWDOM" >
   <img align="center" width="500" alt="youtube video" src="docs/images/youtube.jpg" />
