@@ -1,7 +1,10 @@
 
 # Driving Policy (Advanced)
 
-[简体中文](README_CN.md)
+<p align="center">
+  <span>English</span> |
+  <a href="README_CN.md">简体中文</a>
+</p>
 
 In order to train an autonomous driving policy, you will first need to collect a dataset. The more data you collect, the better the resulting driving policy. For the experiments in our paper, we collected about 30 minutes worth of data. Note that the network will imitate your driving behaviour. The better and more consistent you drive, the better the network will learn to drive.
 

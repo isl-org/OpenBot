@@ -1,5 +1,10 @@
 # OpenBot 中文版说明
 
+<p align="center">
+  <a href="README.md">English</a> |
+  <span>简体中文</span>
+</p>
+
 我们为轮式机器人设计了一个车身，该车身依赖于低成本，随时可用的业余爱好硬件。
 
 ![Assembly](../docs/images/assembly.gif)

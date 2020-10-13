@@ -1,7 +1,10 @@
 
 # OpenBot: Robot Body
 
-[简体中文](README_CN.md)
+<p align="center">
+  <span>English</span> |
+  <a href="README_CN.md">简体中文</a>
+</p>
 
 We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware.
 ![Assembly](../docs/images/assembly.gif)

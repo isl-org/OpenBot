@@ -1,5 +1,10 @@
 # 固件
 
+<p align="center">
+  <a href="README.md">English</a> |
+  <span>简体中文</span>
+</p>
+
 我们使用单片机（MCU）充当机器人主体和智能手机之间的桥梁。 我们提供带有ATmega328P微控制器的Arduino Nano的 [固件](openbot_v1_nano/openbot_v1_nano.ino) 。
 
 ## 单片机的需求
