@@ -1,5 +1,10 @@
 # Glueable Body
 
+<p align="center">
+  <span>English</span> |
+  <a href="README_CN.md">简体中文</a>
+</p>
+
 Some 3D printers have build volumes that are too small to print the full size OpenBot body.
 This folder contains the OpenBot body split into 4 pieces.
 It can be printed with a build plate as small as 150mmx140mm, and then glued together.

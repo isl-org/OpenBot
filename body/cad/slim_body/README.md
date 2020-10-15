@@ -1,5 +1,9 @@
 # Slim Body
 
+<p align="center">
+  <span>English</span> |
+  <a href="README_CN.md">简体中文</a>
+</p>
 Some 3D printers have build volumes that are too small to print the full size OpenBot body.
 This folder contains the slim version of the OpenBot body.
 It can be printed with a build plate of 220mmx220mm when the parts are rotated 45 degrees.

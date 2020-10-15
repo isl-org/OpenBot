@@ -1,5 +1,10 @@
 # Contributing
 
+<p align="center">
+  <span>English</span> |
+  <a href="README_CN.md">简体中文</a>
+</p>
+
 ## Process
 
 1. Submit an issue describing the changes you want to implement. If it's only minor changes/bug-fixes, you can skip to step 3.
