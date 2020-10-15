@@ -13,7 +13,7 @@
     
    `git clone https://github.com/<user_id>/OpenBot.git`。
 
-4. 创建一个分支，并将其命名为`<user_id>/<feature>`，其中`<feature>`简明扼要地描述了工作范围。
+4. 创建一个分支，并将其命名为`<user_id>/<feature>`，其中`<feature>`简明扼要地描述工作范围。
 
    `git checkout -b <user_id>/<feature>`。
    
@@ -29,7 +29,7 @@
 7. 处理你可能收到的任何代码审查反馈，并将其推送到你的fork中。pull request会自动更新。
 8. 来一杯你喜欢的冷饮，奖励你让世界变得更美好。
 
-## ＃＃指南
+## 指南
 
 - 使用与其他代码相同的样式和格式。
   - 对于Android代码，你可以运行以下命令。

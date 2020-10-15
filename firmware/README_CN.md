@@ -44,7 +44,7 @@ Tools
 - `Tools -> Port -> *选择USB 端口*`
 
 现在可以通过 `Sketch -> Upload `或按上传按钮（右箭头）上传固件。
-[固件上传](.../docs/images/firmware_upload.png)
+[固件上传](../docs/images/firmware_upload.png)
 
 注意：目前，大多数廉价的Arduino Nano板都带有*Old bootloader*。但是，根据卖家的不同，你也可能会得到一个新的bootloader。所以，如果你无法上传固件，有可能需要将处理器换成*ATmega328P*。
 
@@ -60,7 +60,7 @@ Tools
 
 现在您应该看到四个逗号分隔的值，每秒更新一次。
 
-![串行监视器](.../docs/images/serial_monitor.png)
+![串行监视器](../docs/images/serial_monitor.png)
 
 - 第一个值是蓄电池电压。如果您将蓄电池连接到汽车上（即打开开关），它应该显示蓄电池电压。如果您断开蓄电池（即关闭开关），它应该显示一个小值。
 - 第二个和第三个值是速度传感器的原始读数。编码器盘上的每个孔都会产生两个计数。您可以通过参数`DISK_HOLES`设置孔的数量。如果您使用的是20个孔的标准盘，那么轮子每转一圈就会有40个计数。因此，如果你把显示的数字除以40，你将得到每秒的转数。
