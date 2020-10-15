@@ -29,11 +29,11 @@ Tools
 
 ### 中文克隆Nano（例如美国链接）
 
-您可能需要从芯片制造商（中文）下载[WCH340]（http://www.wch.cn/product/CH340.html）驱动程序：
+您可能需要从芯片制造商（中文）下载[WCH340](http://www.wch.cn/product/CH340.html)驱动程序：
 
--[Windows]（http://www.wch.cn/downloads/CH341SER_EXE.html）
--[Linux]（http://www.wch.cn/download/CH341SER_LINUX_ZIP.html）
--[Mac]（http://www.wch.cn/download/CH341SER_MAC_ZIP.html）
+- [Windows](http://www.wch.cn/downloads/CH341SER_EXE.html)
+- [Linux](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html)
+- [Mac](http://www.wch.cn/download/CH341SER_MAC_ZIP.html)
 
 ## 上传
 
@@ -41,7 +41,7 @@ Tools
 
 - `Tools -> Board -> Arduino AVR Boards -> Arduino Nano`
 - `Tools -> Processor -> ATmega328P (Old Bootloader)`
-- `Tools -> Port -> *选择USB 端口*`
+- `Tools -> Port ->  选择USB 端口 `
 
 现在可以通过 `Sketch -> Upload `或按上传按钮（右箭头）上传固件。
 [固件上传](../docs/images/firmware_upload.png)
@@ -86,7 +86,7 @@ Tools
 
 在用安装了OpenBot应用的智能手机测试汽车之前，你也可以先测试没有手机的汽车。只需将选项`NO_PHONE_MODE`设置为`1`。汽车现在将以*正常速度*（75%PWM）行驶，当它用超声波传感器检测到障碍物时，会减速。如果它进入`STOP_THRESHOLD`（默认值：64cm）内，它将向右转。注意，汽车和Arduino都需要供电。Arduino可以通过将5V引脚连接到L298N电机驱动器的5V输出端，或者将USB线连接到电源上进行供电。
 
-在让车跑之前，建议先把轮胎拆下来，把Arduino连接到电脑上，像[测试](#testing)一节那样观察串口显示器。输出的数据比较容易理解，可以显示出电池电压、左右电机的转速和车前估计的自由空间。你可以在超声波传感器前来回移动一个大物体，观察电机的速度变化。
+在让车跑之前，建议先把轮胎拆下来，把Arduino连接到电脑上，像[测试](#测试)一节那样观察串口显示器。输出的数据比较容易理解，可以显示出电池电压、左右电机的转速和车前估计的自由空间。你可以在超声波传感器前来回移动一个大物体，观察电机的速度变化。
 
 警告：如果你没有安装超声波传感器或超声波传感器被禁用，汽车只会以*正常_速度*（75%PWM）向前行驶，会发生碰撞。即使安装了传感器，由于读数有噪音，汽车也会偶尔发生碰撞。
 
@@ -103,5 +103,5 @@ Tools
 
 ## 下一步
 
-编译并运行[Android App](../android/README.md)
+编译并运行[Android App](../android/README_CN.md)
 

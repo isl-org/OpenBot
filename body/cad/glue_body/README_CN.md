@@ -12,9 +12,9 @@
 
 ![可胶合机身](../../../docs/images/glue_body.jpg)
 
-## ＃＃部分
+## 部件
 
-必需的部分：
+必需的部件：
 
 1) `glue_body_bottom_A` ([STL](glue_body_bottom_A.stl), [STEP](glue_body_bottom_A.step))
 2) `glue_body_bottom_B` ([STL](glue_body_bottom_B.stl), [STEP](glue_body_bottom_B.step))

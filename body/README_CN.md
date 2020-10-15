@@ -20,9 +20,9 @@
 
 对于上述零件，你的构建板至少需要240mmx150mm。
 
-由于很多常见的3D打印机的构建体积较小，我们还制作了一个[slim body](cad/slim_body/README.md)，它适合在220mmx220mm的构建板上以45度的角度进行构建。
+由于很多常见的3D打印机的构建体积较小，我们还制作了一个[slim body](cad/slim_body/README_CN.md)，它适合在220mmx220mm的构建板上以45度的角度进行构建。
 
-对于在3D打印机上打印更小的构建量，还有一个[glueable body](cad/glue_body/README.md)，适合在150mmx140mm的构建板上打印。感谢@sloretz。
+对于在3D打印机上打印更小的构建量，还有一个[glueable body](cad/glue_body/README_CN.md)，适合在150mmx140mm的构建板上打印。感谢@sloretz。
 
 在Ultimaker S5上，我们通过以下设置获得了良好的效果：
 
@@ -170,5 +170,5 @@
 
 ## 下一步
 
-烧录[Arduino固件](./firmware/README.md)
+烧录[Arduino固件](../firmware/README_CN.md)
 

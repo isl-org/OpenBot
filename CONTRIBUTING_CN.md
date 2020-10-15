@@ -47,6 +47,6 @@
 如果你正在寻找更多关于为开源项目做贡献的信息，这里有两个很好的参考资料。
 
 - [如何为开源做贡献](http://opensource.guide/how-to-contribute/)
-- [为GitHub项目做贡献的初学者指南](https://akrabat.com/the-beginners-guide-to-contributing-to-a-github-project/)
+- [为GitHub项目做贡献的初学者指南(英文)](https://akrabat.com/the-beginners-guide-to-contributing-to-a-github-project/)
 
 非常感谢你！
