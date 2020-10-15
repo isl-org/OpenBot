@@ -16,7 +16,7 @@
 
 ### 先决条件
 
--[Android Studio 3.2或更高版本](https://developer.android.com/studio/index.html)，用于构建和安装apk，否则从[最新版本](https://github.com/intel-isl/OpenBot/releases/latest)的静态资源中下载apk。
+- [Android Studio 3.2或更高版本](https://developer.android.com/studio/index.html)，用于构建和安装apk，否则从[最新版本](https://github.com/intel-isl/OpenBot/releases/latest)的静态资源中下载apk。
 - 安卓设备和安卓开发环境，最低API 21。
 
 ### 构建
@@ -33,7 +33,7 @@ Tensorlfow Lite目标检测示例程序 [TensorFlow Lite Object Detection Androi
 
 ## 如何使用应用程序
 <p align="center">
-  <img src="../docs/images/app_teaser.jpg" alt="App Teaser" width="100%"/>
+  <img src="../docs/images/app_gui.jpg" alt="App Teaser" width="100%"/>
 </p>
 
 ### 数据记录器

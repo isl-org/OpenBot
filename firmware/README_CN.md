@@ -44,7 +44,7 @@ Tools
 - `Tools -> Port ->  选择USB 端口 `
 
 现在可以通过 `Sketch -> Upload `或按上传按钮（右箭头）上传固件。
-[固件上传](../docs/images/firmware_upload.png)
+![固件上传](../docs/images/firmware_upload.png)
 
 注意：目前，大多数廉价的Arduino Nano板都带有*Old bootloader*。但是，根据卖家的不同，你也可能会得到一个新的bootloader。所以，如果你无法上传固件，有可能需要将处理器换成*ATmega328P*。
 
