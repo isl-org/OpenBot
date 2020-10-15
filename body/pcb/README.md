@@ -1,5 +1,10 @@
 # Custom PCB
 
+<p align="center">
+  <span>English</span> |
+  <a href="README_CN.md">简体中文</a>
+</p>
+
 The custom PCB acts as a carrier board for the Arduino Nano and integrates modern motor drivers, the voltage divider circuit and resistors for the LEDs. The Arduino is simply plugged into the pin header and all sensors and LEDs are connected via Dupont cables to the appropriate connectors.
 
 ![PCB_2D](../../docs/images/pcb_2d_v2.png)
