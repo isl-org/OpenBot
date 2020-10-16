@@ -25,10 +25,10 @@ jobs:
         close-pr-message: 'Closing due to inactivity.' # optional
         # The number of days old an issue can be before marking it stale. Set to -1 to never mark issues or pull requests as stale automatically.
         days-before-stale: 30 # optional, default is 60
-        # The number of days to wait to close an issue or pull request after it being marked stale. Set to -1 to never close stale issues.
-        days-before-close: 7 # optional, default is 7
         # The label to apply when an issue is stale.
         stale-issue-label: 'no-issue-activity' # optional, default is Stale
+#        # The number of days to wait to close an issue or pull request after it being marked stale. Set to -1 to never close stale issues.
+#        days-before-close: 7 # optional, default is 7
 #         # The label to apply when an issue is closed.
 #         close-issue-label: # optional
 #         # The labels to apply when an issue is exempt from being marked stale. Separate multiple labels with commas (eg. "label1,label2")
