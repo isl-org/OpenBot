@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Use Stale v3
-      uses: actions/stale@v3.0.11
+      uses: actions/stale@v3
       with:
         # Token for the repository. Can be passed in using `{{ secrets.GITHUB_TOKEN }}`.
         repo-token: ${{ secrets.GH_TOKEN }}
