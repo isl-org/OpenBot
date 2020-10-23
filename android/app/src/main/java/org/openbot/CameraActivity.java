@@ -99,7 +99,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
   private static Context mContext;
-  private int cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
+  private int cameraSelection = CameraCharacteristics.LENS_FACING_FRONT;
   protected int previewWidth = 0;
   protected int previewHeight = 0;
   private boolean debug = false;
