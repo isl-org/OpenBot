@@ -141,16 +141,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/camera_switch"
+        <ToggleButton
+            android:id="@+id/camera_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:checked="false"
-            android:gravity="end"
+            android:layout_weight="0"
+            android:checked="true"
             android:text="@string/control_camera"
-            android:textColor="@android:color/black" />
+            android:textOff="Front"
+            android:textOn="Back" />
 
     </LinearLayout>
 

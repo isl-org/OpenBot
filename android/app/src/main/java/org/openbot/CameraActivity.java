@@ -58,6 +58,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -117,11 +119,14 @@ public abstract class CameraActivity extends AppCompatActivity
   private LinearLayout gestureLayout;
   private BottomSheetBehavior sheetBehavior;
 
-  protected SwitchCompat connectionSwitchCompat, driveModeSwitchCompat, loggerSwitchCompat;
+  protected SwitchCompat connectionSwitchCompat,
+          driveModeSwitchCompat,
+          loggerSwitchCompat;
   protected TextView frameValueTextView,
       cropValueTextView,
       inferenceTimeTextView,
       controlValueTextView;
+  protected ToggleButton cameraToggle;
   protected ImageView bottomSheetArrowImageView;
   private ImageView plusImageView, minusImageView;
   protected Spinner baudRateSpinner,
@@ -224,6 +229,7 @@ public abstract class CameraActivity extends AppCompatActivity
     loggerSwitchCompat = findViewById(R.id.logger_switch);
     loggerSpinner = findViewById(R.id.logger_spinner);
     controlSpinner = findViewById(R.id.control_spinner);
+    cameraToggle = findViewById(R.id.camera_toggle);
 
     ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
     vto.addOnGlobalLayoutListener(
@@ -280,6 +286,8 @@ public abstract class CameraActivity extends AppCompatActivity
     connectionSwitchCompat.setOnCheckedChangeListener(this);
     driveModeSwitchCompat.setOnCheckedChangeListener(this);
     loggerSwitchCompat.setOnCheckedChangeListener(this);
+
+    cameraToggle.setOnCheckedChangeListener(this);
 
     plusImageView.setOnClickListener(this);
     minusImageView.setOnClickListener(this);
@@ -610,6 +618,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   protected void setFragment() {
+    cameraSelection = getCameraUserSelction();
     String cameraId = chooseCamera(cameraSelection);
     Fragment fragment;
     if (useCamera2API) {
@@ -685,6 +694,12 @@ public abstract class CameraActivity extends AppCompatActivity
   protected void showInference(String inferenceTime) {
     inferenceTimeTextView.setText(inferenceTime);
   }
+
+  protected int getCameraUserSelction(){
+    int camera_user_selection = this.cameraToggle.isChecked() ? 1 : 0;
+    return camera_user_selection;
+  }
+
 
   protected void showControl(String controlValue) {
     controlValueTextView.setText(controlValue);
