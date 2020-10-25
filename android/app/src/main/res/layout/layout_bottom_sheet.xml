@@ -106,6 +106,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <Spinner
+            android:id="@+id/drive_mode_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:entries="@array/drive_modes"
+            android:gravity="end"
+            android:prompt="@string/drive_mode" />
+
         <TextView
             android:id="@+id/drive_mode"
             android:layout_width="wrap_content"
@@ -113,16 +123,6 @@
             android:layout_marginTop="10dp"
             android:text="@string/drive_mode"
             android:textColor="@android:color/black" />
-
-        <Spinner
-            android:id="@+id/drive_mode_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:gravity="end"
-            android:entries="@array/drive_modes"
-            android:prompt="@string/drive_mode" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/drive_mode_info_switch"
@@ -133,6 +133,25 @@
             android:gravity="end"
             android:text="@string/controller"
             android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/camera_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:gravity="end"
+            android:text="@string/control_camera"
+            android:textColor="@android:color/black" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -171,7 +190,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/frame"
@@ -195,7 +214,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/crop"
