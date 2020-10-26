@@ -618,7 +618,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   protected void setFragment() {
-    cameraSelection = getCameraUserSelction();
+    cameraSelection = getCameraUserSelection();
     String cameraId = chooseCamera(cameraSelection);
     Fragment fragment;
     if (useCamera2API) {
@@ -695,9 +695,14 @@ public abstract class CameraActivity extends AppCompatActivity
     inferenceTimeTextView.setText(inferenceTime);
   }
 
-  protected int getCameraUserSelction(){
-    int camera_user_selection = this.cameraToggle.isChecked() ? 1 : 0;
-    return camera_user_selection;
+  protected int getCameraUserSelection(){
+    //during initialisation there is no cameraToggle so we assume default
+    if (this.cameraToggle == null ){
+      this.cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
+    } else {
+      this.cameraSelection = this.cameraToggle.isChecked() ? 1 : 0;
+    }
+    return this.cameraSelection;
   }
 
 
@@ -964,6 +969,11 @@ public abstract class CameraActivity extends AppCompatActivity
     usbConnected = false;
   }
 
+  protected void toggleCamera(boolean isChecked){
+    LOGGER.d("Camera Toggled to" + isChecked);
+    this.cameraSelection = getCameraUserSelection();
+  }
+
   protected void toggleConnection(boolean isChecked) {
     if (isChecked) {
       connectUsb();
@@ -1020,6 +1030,8 @@ public abstract class CameraActivity extends AppCompatActivity
       setDriveByNetwork(isChecked);
     } else if (buttonView == loggerSwitchCompat) {
       setIsLoggingActive(isChecked);
+    } else if ( buttonView == cameraToggle ) {
+      toggleCamera(isChecked);
     }
   }
 
