@@ -48,6 +48,9 @@
 // Enable/Disable sonar (1,0)
 #define HAS_SONAR 0
 
+// Enable/Disable median filter for sonar measurements (1,0)
+#define USE_MEDIAN 0
+
 //Setup the pin definitions
 #if (OPENBOT == DIY)
   #define PIN_PWM_L1 5
@@ -92,18 +95,18 @@
 //INITIALIZATION
 //------------------------------------------------------//
 
+const unsigned int STOP_THRESHOLD = 64; //cm
+
 #if HAS_SONAR
   //Sonar sensor
   #include <NewPing.h>
   const unsigned int MAX_DISTANCE = 300; //cm
-  const unsigned int STOP_THRESHOLD = 64; //cm
   NewPing sonar(PIN_TRIGGER, PIN_ECHO, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
   const unsigned int PING_INTERVAL = 100; // How frequently to send out a ping (ms).
   unsigned long ping_timeout = 0;   // After timeout (ms), distance is set to maximum.
   boolean ping_success = false;
   unsigned int distance = MAX_DISTANCE; //cm
   unsigned int distance_estimate = MAX_DISTANCE; //cm
-  #define USE_MEDIAN 0 //If median filter should be used (1,0)
   #if USE_MEDIAN
     const unsigned int distance_array_sz = 3;
     unsigned int distance_array[distance_array_sz]={};
@@ -111,7 +114,6 @@
   #endif
 #else
   #include <limits.h>
-  const unsigned int STOP_THRESHOLD = 0; //cm
   unsigned int distance_estimate = UINT_MAX; //cm
 #endif
 
@@ -438,12 +440,12 @@ void update_indicator() {
   digitalWrite(PIN_LED_RB, indicator_right);
 }
 
-int get_median(int a[], int sz) {
+unsigned int get_median(unsigned int a[], unsigned int sz) {
   //bubble sort
-  for(int i=0; i<(sz-1); i++) {
-    for(int j=0; j<(sz-(i+1)); j++) {
+  for(unsigned int i=0; i<(sz-1); i++) {
+    for(unsigned int j=0; j<(sz-(i+1)); j++) {
       if(a[j] > a[j+1]) {
-          int t = a[j];
+          unsigned int t = a[j];
           a[j] = a[j+1];
           a[j+1] = t;
       }
