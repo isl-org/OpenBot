@@ -30,6 +30,10 @@
 //DEFINITIONS
 //------------------------------------------------------//
 
+// Ingmar Stapel 20201002
+long randNumber;
+float voltage_value;
+
 // DO NOT CHANGE!
 #define DIY 0
 #define PCB_V1 1
@@ -47,6 +51,14 @@
 
 // Enable/Disable sonar (1,0)
 #define HAS_SONAR 0
+
+// 20201105 Ingmar Stapel
+// Enable/Disable OLED (1,0)
+#define HAS_OLED 1
+
+// 20201105 Ingmar Stapel
+// Switch left / right dc motor wiring (1,0)
+#define SWITCH_WIRING 1
 
 // Enable/Disable median filter for sonar measurements (1,0)
 #define USE_MEDIAN 0
@@ -94,6 +106,21 @@
 //------------------------------------------------------//
 //INITIALIZATION
 //------------------------------------------------------//
+
+// 20201105 Ingmar Stapel
+#if HAS_OLED
+  #include <SPI.h>
+  #include <Wire.h>
+  #include <Adafruit_GFX.h>
+  #include <Adafruit_SSD1306.h>
+  
+  #define OLED_RESET 4 // not used / nicht genutzt bei diesem Display
+  Adafruit_SSD1306 display(OLED_RESET);
+  
+  // OLED Display SSD1306
+  #define SCREEN_WIDTH 128 // OLED display width, in pixels
+  #define SCREEN_HEIGHT 64 // OLED display height, in pixels
+#endif
 
 const unsigned int STOP_THRESHOLD = 64; //cm
 
@@ -200,10 +227,24 @@ void loop() {
     if (distance_estimate > STOP_THRESHOLD) {
       ctrl_left = min(192, distance_estimate);
       ctrl_right = min(192, distance_estimate);
+      
+      // 20201105 Ingmar Stapel
+      // randNumer used for the logic to turn left or right
+      randNumber = random(10, 20);
+      
     }
     else {
-      ctrl_left = 128;
-      ctrl_right = -128;
+
+      // 20201105 Ingmar Stapel
+      // Changed the logic to turn left and right and not only to the left...
+      if (randNumber > 15){
+        ctrl_left = 128;
+        ctrl_right = -128;
+      }
+      else{
+        ctrl_left = -128;
+        ctrl_right = 128;
+      }
     }
   #else // Wait for messages from the phone
     if (Serial.available() > 0) {
@@ -403,6 +444,14 @@ void check_for_msg() {
     Serial.print("Right RPM: "); Serial.println(counter_right*rpm_factor, 0);
     Serial.print("Distance: "); Serial.println(distance_estimate);
     Serial.println("------------------");
+    
+    // 20201105 Ingmar Stapel
+    #if HAS_OLED
+      // Set display information
+      voltage_value = get_voltage();
+      drawString("Voltage:    " + String(voltage_value,3), "Left RPM:  " + String(counter_left*rpm_factor,0), "Right RPM: " + String(counter_right*rpm_factor, 0), "Distance:   " + String(distance_estimate));
+    #endif
+    
     counter_left = 0;
     counter_right = 0;
   }
@@ -416,6 +465,15 @@ void check_for_msg() {
     Serial.print(",");
     Serial.print(distance_estimate);
     Serial.println();
+    
+    // 20201105 Ingmar Stapel
+    #if HAS_OLED
+      // Set display information
+      float rpm_factor = 60.0*(1000.0/SEND_INTERVAL)/(DISK_HOLES*2);    
+      voltage_value = get_voltage();
+      drawString("Voltage:    " + String(voltage_value,3), "Left RPM:  " + String(counter_left*rpm_factor,0), "Right RPM: " + String(counter_right*rpm_factor, 0), "Distance:   " + String(distance_estimate));
+    #endif      
+    
     counter_left = 0;
     counter_right = 0;
   }
