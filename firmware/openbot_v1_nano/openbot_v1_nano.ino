@@ -65,10 +65,19 @@ float voltage_value;
 
 //Setup the pin definitions
 #if (OPENBOT == DIY)
-  #define PIN_PWM_L1 5
-  #define PIN_PWM_L2 6
-  #define PIN_PWM_R1 9
-  #define PIN_PWM_R2 10
+// 20201105 Ingmar Stapel
+  #if SWITCH_WIRING
+    #define PIN_PWM_L1 5
+    #define PIN_PWM_L2 6
+    #define PIN_PWM_R1 9
+    #define PIN_PWM_R2 10
+  #else
+    #define PIN_PWM_L1 9 
+    #define PIN_PWM_L2 10
+    #define PIN_PWM_R1 5
+    #define PIN_PWM_R2 6
+  #endif
+
   #define PIN_SPEED_L 2
   #define PIN_SPEED_R 3
   #define PIN_VIN A7
