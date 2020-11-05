@@ -47,10 +47,10 @@ float voltage_value;
 // - the motors will turn at 75% speed
 // - the speed will be reduced if an obstacle is detected by the sonar sensor
 // - the car will turn, if an obstacle is detected within STOP_THRESHOLD
-#define NO_PHONE_MODE 0
+#define NO_PHONE_MODE 1
 
 // Enable/Disable sonar (1,0)
-#define HAS_SONAR 0
+#define HAS_SONAR 1
 
 // 20201105 Ingmar Stapel
 // Enable/Disable OLED (1,0)
@@ -215,7 +215,13 @@ void setup()
     attachInterrupt(digitalPinToInterrupt(PIN_SPEED_L), update_speed_left, CHANGE);
     attachInterrupt(digitalPinToInterrupt(PIN_SPEED_R), update_speed_right, CHANGE);
   #endif
-
+  
+  
+  // 20201105 Ingmar Stapel
+  // initialize with the I2C addr 0x3C / mit I2C-Adresse 0x3c initialisieren
+  #if HAS_OLED
+    display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  #endif
 }
 
 //------------------------------------------------------//
@@ -496,6 +502,34 @@ void update_indicator() {
   }
   digitalWrite(PIN_LED_LB, indicator_left);
   digitalWrite(PIN_LED_RB, indicator_right);
+}
+
+// 20201105 Ingmar Stapel
+// Function for drawing a string on the OLED display
+void drawString(String string_text1, String string_text2, String string_text3, String string_text4) {
+
+  display.clearDisplay();
+  
+  // set text color / Textfarbe setzen
+  display.setTextColor(WHITE);
+  // set text size / Textgroesse setzen
+  display.setTextSize(1);
+  // set text cursor position / Textstartposition einstellen
+  display.setCursor(1,0);
+  // show text / Text anzeigen
+  display.println(string_text1);
+  display.setCursor(1,8);
+  // show text / Text anzeigen
+  display.println(string_text2);
+  display.setCursor(1,16);
+  // show text / Text anzeigen
+  display.println(string_text3);
+  display.setCursor(1,24);
+  // show text / Text anzeigen
+  display.println(string_text4);    
+  display.display();
+  //delay(8000);
+  display.clearDisplay();
 }
 
 unsigned int get_median(unsigned int a[], unsigned int sz) {
