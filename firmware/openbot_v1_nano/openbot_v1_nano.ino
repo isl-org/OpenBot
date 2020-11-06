@@ -45,16 +45,16 @@
 // - the motors will turn at 75% speed
 // - the speed will be reduced if an obstacle is detected by the sonar sensor
 // - the car will turn, if an obstacle is detected within STOP_THRESHOLD
-#define NO_PHONE_MODE 1
+#define NO_PHONE_MODE 0
 
 // Enable/Disable sonar (1,0)
-#define HAS_SONAR 1
+#define HAS_SONAR 0
 
 // Enable/Disable median filter for sonar measurements (1,0)
 #define USE_MEDIAN 0
 
 // Enable/Disable OLED (1,0)
-#define HAS_OLED 1
+#define HAS_OLED 0
 
 //Setup the pin definitions
 #if (OPENBOT == DIY)
