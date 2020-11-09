@@ -1,5 +1,6 @@
 // ---------------------------------------------------------------------------
 // This Arduino sketch accompanies the OpenBot Android application. 
+// By Matthias Mueller, Intelligent Systems Lab, 2020
 //
 // The sketch has the following functinonalities:
 //  - receive control commands from Android application (USB serial)
@@ -10,20 +11,21 @@
 //  - estimate distance based on sonar sensor 
 //  - send sensor readings to Android application (USB serial)
 //
-//  Dependencies (if sonar is required):
-//  - NewPing library by Tim Eckel (Install via Tools --> Manage Libraries)
-//  
-// By Matthias Mueller, Intelligent Systems Lab, 2020
+// Dependencies for optional components: (Install via "Tools --> Manage Libraries")
+//  - Sonar: NewPing library by Tim Eckel 
+//  - OLED: Adafruit_SSD1306 & Adafruit_GFX
+// Contributors:
+//  - October 2020: OLED display support by Ingmar Stapel
 // ---------------------------------------------------------------------------
 
 
-// PIN_PWM_L1,PIN_PWM_L2,PIN_PWM_R1,PIN_PWM_R2      Low-level control of left DC motors via PWM 
-// PIN_SPEED_L, PIN_SPEED_R          	      Measure left and right wheel speed
-// PIN_VIN                                  Measure battery voltage via voltage divider
-// PIN_TRIGGER                              Arduino pin tied to trigger pin on ultrasonic sensor.
-// PIN_ECHO                                 Arduino pin tied to echo pin on ultrasonic sensor.
-// MAX_DISTANCE                             Maximum distance we want to ping for (in centimeters). 
-// PIN_LED_LB, PIN_LED_RB                   Toggle left and right rear LEDs (indicator signals) 
+// PIN_PWM_L1,PIN_PWM_L2,PIN_PWM_R1,PIN_PWM_R2  Low-level control of left DC motors via PWM 
+// PIN_SPEED_L, PIN_SPEED_R                     Measure left and right wheel speed
+// PIN_VIN                                      Measure battery voltage via voltage divider
+// PIN_TRIGGER                                  Arduino pin tied to trigger pin on ultrasonic sensor.
+// PIN_ECHO                                     Arduino pin tied to echo pin on ultrasonic sensor.
+// MAX_DISTANCE                                 Maximum distance we want to ping for (in centimeters). 
+// PIN_LED_LB, PIN_LED_RB                       Toggle left and right rear LEDs (indicator signals) 
 
 
 //------------------------------------------------------//
@@ -36,7 +38,7 @@
 #define PCB_V2 2
 
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2)
-#define OPENBOT DIY
+#define OPENBOT PCB_V1
 
 // Enable/Disable no phone mode (1,0)
 // In no phone mode:
@@ -51,6 +53,9 @@
 // Enable/Disable median filter for sonar measurements (1,0)
 #define USE_MEDIAN 0
 
+// Enable/Disable OLED (1,0)
+#define HAS_OLED 0
+
 //Setup the pin definitions
 #if (OPENBOT == DIY)
   #define PIN_PWM_L1 5
@@ -60,10 +65,10 @@
   #define PIN_SPEED_L 2
   #define PIN_SPEED_R 3
   #define PIN_VIN A7
-  #define PIN_TRIGGER 12 //4
-  #define PIN_ECHO 11 //4
-  #define PIN_LED_LB 4 //7
-  #define PIN_LED_RB 7 //8
+  #define PIN_TRIGGER 12
+  #define PIN_ECHO 11
+  #define PIN_LED_LB 4
+  #define PIN_LED_RB 7
 #elif (OPENBOT == PCB_V1)
   #define PIN_PWM_L1 9
   #define PIN_PWM_L2 10
@@ -117,10 +122,24 @@ const unsigned int STOP_THRESHOLD = 64; //cm
   unsigned int distance_estimate = UINT_MAX; //cm
 #endif
 
-//The factor is computed as (R1+R2)/R2
+#if HAS_OLED
+  #include <SPI.h>
+  #include <Wire.h>
+  #include <Adafruit_GFX.h>
+  #include <Adafruit_SSD1306.h>
+  
+  #define OLED_RESET -1 // not used
+  Adafruit_SSD1306 display(OLED_RESET);
+  
+  // OLED Display SSD1306
+  #define SCREEN_WIDTH 128 // OLED display width, in pixels
+  #define SCREEN_HEIGHT 64 // OLED display height, in pixels
+#endif
+
+//The voltage divider factor is computed as (R1+R2)/R2
 #if (OPENBOT == PCB_V1)
   float VOLTAGE_DIVIDER_FACTOR = 133/33;
-#else
+#else //DIY and PCB_V2
   float VOLTAGE_DIVIDER_FACTOR = 30/10;
 #endif
 
@@ -189,6 +208,19 @@ void setup()
     attachInterrupt(digitalPinToInterrupt(PIN_SPEED_R), update_speed_right, CHANGE);
   #endif
 
+  //Initialize with the I2C addr 0x3C
+  #if HAS_OLED
+    display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  #endif
+  
+  //Test sequence for indicator LEDs
+  digitalWrite(PIN_LED_LB,HIGH);
+  delay(500);
+  digitalWrite(PIN_LED_LB,LOW);
+  delay(500);
+  digitalWrite(PIN_LED_RB,HIGH);
+  delay(500);
+  digitalWrite(PIN_LED_RB,LOW);
 }
 
 //------------------------------------------------------//
@@ -202,8 +234,15 @@ void loop() {
       ctrl_right = min(192, distance_estimate);
     }
     else {
-      ctrl_left = 128;
-      ctrl_right = -128;
+      // Randomly turn left or right
+      if (random(2) > 0) { //Generate random number in the range [0,1]
+        ctrl_left = 128;
+        ctrl_right = -128;
+      }
+      else {
+        ctrl_left = -128;
+        ctrl_right = 128;
+      }
     }
   #else // Wait for messages from the phone
     if (Serial.available() > 0) {
@@ -395,20 +434,19 @@ void check_for_msg() {
   }
 }
 
-#if (NO_PHONE_MODE)
-  void send_vehicle_data() {
+void send_vehicle_data() {
+  float voltage_value = get_voltage();
+  #if (NO_PHONE_MODE || HAS_OLED)
     float rpm_factor = 60.0*(1000.0/SEND_INTERVAL)/(DISK_HOLES*2);
-    Serial.print("Voltage: "); Serial.println(get_voltage(), 2);
+  #endif
+  #if (NO_PHONE_MODE)
+    Serial.print("Voltage: "); Serial.println(voltage_value, 2);
     Serial.print("Left RPM: "); Serial.println(counter_left*rpm_factor, 0);
     Serial.print("Right RPM: "); Serial.println(counter_right*rpm_factor, 0);
     Serial.print("Distance: "); Serial.println(distance_estimate);
     Serial.println("------------------");
-    counter_left = 0;
-    counter_right = 0;
-  }
-#else
-  void send_vehicle_data() {
-    Serial.print(get_voltage());
+  #else
+    Serial.print(voltage_value);
     Serial.print(",");
     Serial.print(counter_left);
     Serial.print(",");
@@ -416,10 +454,16 @@ void check_for_msg() {
     Serial.print(",");
     Serial.print(distance_estimate);
     Serial.println();
-    counter_left = 0;
-    counter_right = 0;
-  }
-#endif
+  #endif 
+  
+  #if HAS_OLED
+    // Set display information
+    drawString("Voltage:    " + String(voltage_value,3), "Left RPM:  " + String(counter_left*rpm_factor,0), "Right RPM: " + String(counter_right*rpm_factor, 0), "Distance:   " + String(distance_estimate));
+  #endif
+  
+  counter_left = 0;
+  counter_right = 0;
+}
 
 void update_indicator() {
   switch (indicator_val) {
@@ -439,6 +483,32 @@ void update_indicator() {
   digitalWrite(PIN_LED_LB, indicator_left);
   digitalWrite(PIN_LED_RB, indicator_right);
 }
+
+#if HAS_OLED
+// Function for drawing a string on the OLED display
+void drawString(String line1, String line2, String line3, String line4) {
+  display.clearDisplay();
+  // set text color
+  display.setTextColor(WHITE);
+  // set text size
+  display.setTextSize(1);
+  // set text cursor position
+  display.setCursor(1,0);
+  // show text
+  display.println(line1);
+  display.setCursor(1,8);
+  // show text
+  display.println(line2);
+  display.setCursor(1,16);
+  // show text
+  display.println(line3);
+  display.setCursor(1,24);
+  // show text
+  display.println(line4);    
+  display.display();
+  //display.clearDisplay();
+}
+#endif
 
 unsigned int get_median(unsigned int a[], unsigned int sz) {
   //bubble sort
