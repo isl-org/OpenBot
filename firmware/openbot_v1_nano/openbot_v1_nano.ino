@@ -15,12 +15,12 @@
 //  - Sonar: NewPing library by Tim Eckel 
 //  - OLED: Adafruit_SSD1306 & Adafruit_GFX
 // Contributors:
-//  - October 2020: OLED display support by Ingmar Stapel
+//  - October 2020: OLED (SSD1306) display support by Ingmar Stapel
 // ---------------------------------------------------------------------------
 
 
 // PIN_PWM_L1,PIN_PWM_L2,PIN_PWM_R1,PIN_PWM_R2      Low-level control of left DC motors via PWM 
-// PIN_SPEED_L, PIN_SPEED_R          	      Measure left and right wheel speed
+// PIN_SPEED_L, PIN_SPEED_R                  Measure left and right wheel speed
 // PIN_VIN                                  Measure battery voltage via voltage divider
 // PIN_TRIGGER                              Arduino pin tied to trigger pin on ultrasonic sensor.
 // PIN_ECHO                                 Arduino pin tied to echo pin on ultrasonic sensor.
@@ -435,8 +435,10 @@ void check_for_msg() {
 }
 
 void send_vehicle_data() {
-  float rpm_factor = 60.0*(1000.0/SEND_INTERVAL)/(DISK_HOLES*2);
   float voltage_value = get_voltage();
+  #if (NO_PHONE_MODE || HAS_OLED)
+    float rpm_factor = 60.0*(1000.0/SEND_INTERVAL)/(DISK_HOLES*2);
+  #endif
   #if (NO_PHONE_MODE)
     Serial.print("Voltage: "); Serial.println(voltage_value, 2);
     Serial.print("Left RPM: "); Serial.println(counter_left*rpm_factor, 0);
