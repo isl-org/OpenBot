@@ -16,7 +16,7 @@ In order to train an autonomous driving policy, you will first need to collect a
 
 ## Data Collection
 
-1. Connect a bluetooth game controller to the phone (e.g. PS4 controller).
+1. Connect a bluetooth game controller to the phone (e.g. PS4 controller: to enter pairing mode press the PS and share buttons until the LED flashes quickly).
 2. Select the AUTOPILOT_F network in the app.
 3. Now drive drive the car via a game controller and record a dataset. On the PS4 controller logging can be toggled with the **X** button.
 
@@ -69,7 +69,10 @@ If you prefer to setup the environment manually, here is a list of the dependenc
 - Numpy
 - PIL
 
-If you want to use tensorflow=2.2.0 you may need to pass the custom metrics as custom objects dictionary. (See this [issue](https://github.com/intel-isl/OpenBot/issues/39).)
+NOTES:
+- Whenever you want to run the Jupyter notebook you need the active the environment first: `conda activate openbot`
+- If you want to use tensorflow=2.2.0 you may need to pass the custom metrics as custom objects dictionary. (See this [issue](https://github.com/intel-isl/OpenBot/issues/39).)
+- If your tensorflow import does not work, try installing via `pip install tensorflow --user`. (See this [issue](https://github.com/intel-isl/OpenBot/issues/98).)
 
 ### Jupyter Notebook
 
