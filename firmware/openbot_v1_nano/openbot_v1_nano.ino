@@ -15,17 +15,17 @@
 //  - Sonar: NewPing library by Tim Eckel 
 //  - OLED: Adafruit_SSD1306 & Adafruit_GFX
 // Contributors:
-//  - October 2020: OLED (SSD1306) display support by Ingmar Stapel
+//  - October 2020: OLED display support by Ingmar Stapel
 // ---------------------------------------------------------------------------
 
 
-// PIN_PWM_L1,PIN_PWM_L2,PIN_PWM_R1,PIN_PWM_R2      Low-level control of left DC motors via PWM 
-// PIN_SPEED_L, PIN_SPEED_R                  Measure left and right wheel speed
-// PIN_VIN                                  Measure battery voltage via voltage divider
-// PIN_TRIGGER                              Arduino pin tied to trigger pin on ultrasonic sensor.
-// PIN_ECHO                                 Arduino pin tied to echo pin on ultrasonic sensor.
-// MAX_DISTANCE                             Maximum distance we want to ping for (in centimeters). 
-// PIN_LED_LB, PIN_LED_RB                   Toggle left and right rear LEDs (indicator signals) 
+// PIN_PWM_L1,PIN_PWM_L2,PIN_PWM_R1,PIN_PWM_R2  Low-level control of left DC motors via PWM 
+// PIN_SPEED_L, PIN_SPEED_R                     Measure left and right wheel speed
+// PIN_VIN                                      Measure battery voltage via voltage divider
+// PIN_TRIGGER                                  Arduino pin tied to trigger pin on ultrasonic sensor.
+// PIN_ECHO                                     Arduino pin tied to echo pin on ultrasonic sensor.
+// MAX_DISTANCE                                 Maximum distance we want to ping for (in centimeters). 
+// PIN_LED_LB, PIN_LED_RB                       Toggle left and right rear LEDs (indicator signals) 
 
 
 //------------------------------------------------------//
@@ -38,7 +38,7 @@
 #define PCB_V2 2
 
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2)
-#define OPENBOT DIY
+#define OPENBOT PCB_V1
 
 // Enable/Disable no phone mode (1,0)
 // In no phone mode:
@@ -231,7 +231,7 @@ void loop() {
   #if (NO_PHONE_MODE)
     if (distance_estimate > STOP_THRESHOLD) {
       ctrl_left = min(192, distance_estimate);
-      ctrl_right = min(192, distance_estimate); 
+      ctrl_right = min(192, distance_estimate);
     }
     else {
       // Randomly turn left or right
