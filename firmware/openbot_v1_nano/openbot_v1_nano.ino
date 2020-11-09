@@ -11,9 +11,9 @@
 //  - estimate distance based on sonar sensor 
 //  - send sensor readings to Android application (USB serial)
 //
-// Dependencies (if sonar is required):
-//  - NewPing library by Tim Eckel (Install via Tools --> Manage Libraries)
-//  
+// Dependencies for optional components: (Install via "Tools --> Manage Libraries")
+//  - Sonar: NewPing library by Tim Eckel 
+//  - OLED: Adafruit_SSD1306 & Adafruit_GFX
 // Contributors:
 //  - October 2020: OLED display support by Ingmar Stapel
 // ---------------------------------------------------------------------------
@@ -128,7 +128,7 @@ const unsigned int STOP_THRESHOLD = 64; //cm
   #include <Adafruit_GFX.h>
   #include <Adafruit_SSD1306.h>
   
-  #define OLED_RESET 4 // not used
+  #define OLED_RESET -1 // not used
   Adafruit_SSD1306 display(OLED_RESET);
   
   // OLED Display SSD1306
@@ -482,8 +482,9 @@ void update_indicator() {
   digitalWrite(PIN_LED_RB, indicator_right);
 }
 
+#if HAS_OLED
 // Function for drawing a string on the OLED display
-void drawString(String string_text1, String string_text2, String string_text3, String string_text4) {
+void drawString(String line1, String line2, String line3, String line4) {
   display.clearDisplay();
   // set text color
   display.setTextColor(WHITE);
@@ -492,19 +493,20 @@ void drawString(String string_text1, String string_text2, String string_text3, S
   // set text cursor position
   display.setCursor(1,0);
   // show text
-  display.println(string_text1);
+  display.println(line1);
   display.setCursor(1,8);
   // show text
-  display.println(string_text2);
+  display.println(line2);
   display.setCursor(1,16);
   // show text
-  display.println(string_text3);
+  display.println(line3);
   display.setCursor(1,24);
   // show text
-  display.println(string_text4);    
+  display.println(line4);    
   display.display();
   //display.clearDisplay();
 }
+#endif
 
 unsigned int get_median(unsigned int a[], unsigned int sz) {
   //bubble sort
