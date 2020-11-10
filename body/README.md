@@ -89,8 +89,8 @@ Before you proceed with the build, you may need to clean the 3D print.
 #### Option 1: DIY
 
 <p float="left">
-  <img src="../docs/images/diy_parts.jpg" width="49.5%" />
-  <img src="../docs/images/wiring_diagram.png" width="49.5%" /> 
+  <img src="../docs/images/diy_parts.jpg" height="300" />
+  <img src="../docs/images/wiring_diagram.png" height="300" /> 
 </p>
 
 **Tip:** To make all the wiring easier you can build a small power distributor for the 5V and GND connections by soldering a 6x2 male header to a perfboard. Then connect the power distributor with the 5V / GND of the motor driver.
