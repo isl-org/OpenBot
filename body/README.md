@@ -77,51 +77,99 @@ Our robot body relies on readily available hobby electronics. We provide links f
 
 ### Build instructions
 
+Before you proceed with the build, you may need to clean the 3D print.
+<p float="left">
+  <img src="../docs/images/clean_3d_print_1.jpg" height="100" />
+  <img src="../docs/images/clean_3d_print_2.jpg" height="100" /> 
+  <img src="../docs/images/clean_3d_print_3.jpg" height="100" />
+</p>
+
 #### Option 1: DIY
 
+![DIY Parts](../docs/images/diy_parts.png)
 ![Wiring Diagram](../docs/images/wiring_diagram.png)
 
 Tip: To make all the wiring easier you can build a small power distributor for the 5V and GND connections by soldering a 6x2 male header to a perfboard. Then connect the power distributor with the 5V / GND of the motor driver.
 
-1. Solder wires to the motors.
-2. Insert the positive and negative leads of the two left motors into OUT1 (+) and OUT2 (-) of the L298N board.
-3. Insert the positive and negative leads of the two right motors into OUT4 (+) and OUT3 (-) of the L298N board.
-4. Mount the L298N with four M3x5 screws and the motors with eight M3x25 screws and nuts.
-5. (Optional) Install the ultrasonic sensor and orange LEDs.
-6. Mount the bottom of the phone mount to the top plate using two M3x25 screws and nuts.
-7. Insert the top of the phone mount and install the spring or rubber band.
-8. Mount the speed sensors with one M3x5 screw each.
-9. Install the battery case (e.g. velcro).
-10. (Optional) Insert the on/off switch.
-11. Connect the PWM inputs of the L298N to pins D5, D6, D9 and D10 of the Arduino.
-12. Connect the speed sensors and ultrasonic sensor to 5V and GND.
-13. Connect pin D0 of the speed sensors to pins D2 (left) and D3 (right) of the Arduino.
-14. Connect pins Echo and Trigger of the ultrasonic sensor to pins D11 and D12 of the Arduino respectively.
-15. Connect the USB cable to the Arduino and route it through the top cover.
-16. (Optional) Connect the LEDs to pins D4 (left) and D7 (right) of the Arduino and GND. We recommend to add a 150 Ohm resistor in series to limit the current draw.
-17. (Optional) Connect the voltage divider to pin A7 of the Arduino. It is used to measure the battery voltage.
-18. (Optional) Connect the OLED display (SSD1306 chip) via the I2C bus to the Arduino Nano
+1. Solder wires to the motors and add the encoder disks to the two front motors if you intend to use the speed sensors.
+<p float="left">
+  <img src="../docs/images/add_wires_motor.jpg" height="100" />
+  <img src="../docs/images/add_disk_motor.jpg" height="100" /> 
+</p>
+2. Insert the positive and negative leads of the two left motors into OUT1 (+) and OUT2 (-) of the L298N board. Insert the positive and negative leads of the two right motors into OUT4 (+) and OUT3 (-) of the L298N board.
+3. Mount the motors with eight M3x25 screws and nuts.
+<p float="left">
+  <img src="../docs/images/attach_motors_1.jpg" height="100" />
+  <img src="../docs/images/attach_motors_2.jpg" height="100" /> 
+  <img src="../docs/images/attach_motors_3.jpg" height="100" />
+</p>
+4. Mount the L298N with four M3x5 screws
+5. (Optional) Install the ultrasonic sensor and very carefully bend the pins.
+<p float="left">
+  <img src="../docs/images/sonar_front.jpg" height="100" />
+  <img src="../docs/images/sonar_back.jpg" height="100" /> 
+  <img src="../docs/images/sonar_bend_pins.jpg" height="100" />
+</p>
+6. (Optional) Install the orange LEDs for the indicator signals.
+<p float="left">
+  <img src="../docs/images/led_insert.jpg" height="100" />
+  <img src="../docs/images/led_left.jpg" height="100" /> 
+  <img src="../docs/images/led_right.jpg" height="100" />
+</p>
+7. Mount the bottom of the phone mount to the top plate using two M3x25 screws and nuts.
+8. Insert the top of the phone mount and install the spring or rubber band.
+9. Mount the speed sensors with one M3x5 screw each.
+10. Install the battery case (e.g. velcro).
+11. (Optional) Insert the on/off switch.
+<p float="left">
+  <img src="../docs/images/switch_insert.jpg" height="100" />
+</p>
+12. Connect the PWM inputs of the L298N to pins D5, D6, D9 and D10 of the Arduino.
+13. Connect the speed sensors and ultrasonic sensor to 5V and GND.
+14. Connect pin D0 of the speed sensors to pins D2 (left) and D3 (right) of the Arduino.
+15. Connect pins Echo and Trigger of the ultrasonic sensor to pins D11 and D12 of the Arduino respectively.
+16. Connect the USB cable to the Arduino and route it through the top cover.
+17. (Optional) Connect the LEDs to pins D4 (left) and D7 (right) of the Arduino and GND. We recommend to add a 150 Ohm resistor in series to limit the current draw.
+18. (Optional) Connect the voltage divider to pin A7 of the Arduino. It is used to measure the battery voltage.
+19. (Optional) Connect the OLED display (SSD1306 chip) via the I2C bus to the Arduino Nano
     1. Connect the VIN and GND pins of the display to 5V and GND.
     2. Connect the SCL pin of the display to the A5 pin.
     3. Connect the SDA pin of the display to the A4 pin.
-19. Connect the battery cables to Vin of the L298N. If you installed the switch, put it in the current path.
-20. Insert six M3 nuts into the bottom plate and mount the top cover with six M3x25 screws.
-21. Install the wheels.
+20. Connect the battery cables to Vin of the L298N. If you installed the switch, put it in the current path.
+21. Insert six M3 nuts into the bottom plate and mount the top cover with six M3x25 screws.
+22. Install the wheels.
 
 #### Option 2: Custom PCB
 
-1. Solder wires with Micro JST PH 2.0 connectors to the motors.
-2. Connect the left two motors to M3 and M4 and the right two motors to M1 and M2.
-3. Mount the PCB with four M3x5 screws and the motors with eight M3x25 screws and nuts.
-4. Follow steps 5-10 from the DIY option.
-5. Connect the LEDs, speed sensors and ultrasonic sensor to the PCB.
-6. Connect the USB cable to the Arduino and route it through the top cover.
-7. (Optional) Connect the OLED display (SSD1306 chip) to the IO2 header on the PCB
+1. Solder wires with Micro JST PH 2.0 connectors to the motors and add the encoder disks to the two front motors if you intend to use the speed sensors.
+<p float="left">
+  <img src="../docs/images/add_wires_motor.jpg" height="100" />
+  <img src="../docs/images/add_disk_motor.jpg" height="100" /> 
+</p>
+2. Mount the motors with eight M3x25 screws and nuts.
+<p float="left">
+  <img src="../docs/images/attach_motors_1.jpg" height="100" />
+  <img src="../docs/images/attach_motors_2.jpg" height="100" /> 
+  <img src="../docs/images/attach_motors_3.jpg" height="100" />
+</p>
+3. Connect the left two motors to M3 and M4 and the right two motors to M1 and M2.
+<p float="left">
+  <img src="../docs/images/connect_motors_pcb.jpg" height="100" />
+</p>
+4. Mount the PCB with four M3x5 screws and the motors with eight M3x25 screws and nuts.
+<p float="left">
+  <img src="../docs/images/attach_pcb.jpg" height="100" />
+  <img src="../docs/images/chassis_motors_pcb.jpg" height="100" />
+</p>
+5. Follow steps 5-11 from the DIY option.
+6. Connect the LEDs, speed sensors and ultrasonic sensor to the PCB.
+7. Connect the USB cable to the Arduino and route it through the top cover.
+8. (Optional) Connect the OLED display (SSD1306 chip) to the IO2 header on the PCB
     1. Connect the VIN and GND pins of the display to 5V and GND.
     2. Connect the SCL pin of the display to the A5 pin.
     3. Connect the SDA pin of the display to the A4 pin.
-8. Connect the battery to Vin (Micro JST PH 2.0 connector) of the PCB. If you installed the switch, put it in the current path.
-9. Follow steps 20-21 from the DIY option.
+9. Connect the battery to Vin (Micro JST PH 2.0 connector) of the PCB. If you installed the switch, put it in the current path.
+10. Follow steps 21-22 from the DIY option.
 
 ## Next
 
