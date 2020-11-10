@@ -107,11 +107,11 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/battery_status"
+            android:id="@+id/battery_status_mcu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Battery Status MCU"
+            android:text="@string/battery_status_mcu"
             android:textColor="@android:color/black" />
         <TextView
             android:id="@+id/battery_state_info"
@@ -119,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="start"
-            android:text=":100%"
+            android:text="@string/battery_state_info"
             android:textColor="@android:color/black" />
 
     </LinearLayout>

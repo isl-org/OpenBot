@@ -53,6 +53,8 @@
     <string name="data_logger">Data Logger</string>
     <string name="not_logging">Not Logging</string>
     <string name="usb_connection">USB Connection</string>
+    <string name="battery_status_mcu">Battery Status MCU</string>
+    <string name="battery_state_info">100%</string>
     <string name="no_device">No Device</string>
     <string name="control">Vehicle Control</string>
     <string name="plus">plus</string>
