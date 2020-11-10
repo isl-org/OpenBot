@@ -22,27 +22,9 @@ In order to train an autonomous driving policy, you will first need to collect a
 
 You will now find a folder called *Openbot* on the internal storage of your smartphone. For each recording, there will be zip file. The name of the zip file will be in the format *yyyymmdd_hhmmss.zip* corresponding to the timestamp of when the recording was started.
 
-Your dataset should be stored in the following structure.
+The Jupyter notebook expects a folder called `dataset` in the same folder. In this folder, there should be two subfolders, `train_data` and `test_data`. The training data is used to learn the driving policy. The test data is used to validate the learned driving policy on unseen data during the training process. This provides some indication how well this policy will work on the robot. Even though the robot may drive along the same route as seen during training, the exact images observed will be slightly different in every run. The common split is 80% training data and 20% test data. Inside the `train_data` and `test_data` folders, you need to make a folder for each recording session and give it a name such as `my_openbot_1`, `my_openbot_2`, etc. The idea here is that each recording session may have different lighting conditions, a different robot, a different route. In the Jupyter notebook, you can then train only on a subset of these datasets or on all of them. Inside each recording session folder, you drop all the recordings from that recording session. Each recording corresponds to an extracted zip file that you have transferred from the *Openbot* folder on your phone. Your dataset folder should look like this:
 
-```markdown
-dataset
-└── train_data
- └── my_openbot_1
-  └── recording_1
-      recording_2
-      ...
-     my_openbot_2
-     ...
- test_data
- └── my_openbot_3
-  └── recording_1
-      recording_2
-      ...
-```
-
-Each recording corresponds to an extracted zip file that you have transferred from the *Openbot* folder on your phone.
-
-<img width="200" alt="folder structure" src="docs/images/folder_structure.png" />
+<img width="200" alt="folder structure" src="../docs/images/folder_structure.png" />
 
 ## Policy Training
 
