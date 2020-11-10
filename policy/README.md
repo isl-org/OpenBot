@@ -42,6 +42,8 @@ dataset
 
 Each recording corresponds to an extracted zip file that you have transferred from the *Openbot* folder on your phone.
 
+<img width="200" alt="folder structure" src="docs/images/folder_structure.png" />
+
 ## Policy Training
 
 You first need to setup your training environment.
