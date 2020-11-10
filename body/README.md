@@ -77,53 +77,57 @@ Our robot body relies on readily available hobby electronics. We provide links f
 
 ### Build instructions
 
+**Tip:** Click on the images to enlarge them.
+
 Before you proceed with the build, you may need to clean the 3D print.
 <p float="left">
-  <img src="../docs/images/clean_3d_print_1.jpg" height="100" />
-  <img src="../docs/images/clean_3d_print_2.jpg" height="100" /> 
-  <img src="../docs/images/clean_3d_print_3.jpg" height="100" />
+  <img src="../docs/images/clean_3d_print_1.jpg" width="33%" />
+  <img src="../docs/images/clean_3d_print_2.jpg" width="33%" /> 
+  <img src="../docs/images/clean_3d_print_3.jpg" width="33%" />
 </p>
 
 #### Option 1: DIY
 
-![DIY Parts](../docs/images/diy_parts.png)
-![Wiring Diagram](../docs/images/wiring_diagram.png)
+<p float="left">
+  <img src="../docs/images/diy_parts.jpg" width="49.5%" />
+  <img src="../docs/images/wiring_diagram.png" width="49.5%" /> 
+</p>
 
-Tip: To make all the wiring easier you can build a small power distributor for the 5V and GND connections by soldering a 6x2 male header to a perfboard. Then connect the power distributor with the 5V / GND of the motor driver.
+**Tip:** To make all the wiring easier you can build a small power distributor for the 5V and GND connections by soldering a 6x2 male header to a perfboard. Then connect the power distributor with the 5V / GND of the motor driver.
 
 1. Solder wires to the motors and add the encoder disks to the two front motors if you intend to use the speed sensors.
-<p float="left">
-  <img src="../docs/images/add_wires_motor.jpg" height="100" />
-  <img src="../docs/images/add_disk_motor.jpg" height="100" /> 
-</p>
+    <p float="left">
+      <img src="../docs/images/add_wires_motor.jpg" width="33%" />
+      <img src="../docs/images/add_disk_motor.jpg" width="33%" /> 
+    </p>
 2. Insert the positive and negative leads of the two left motors into OUT1 (+) and OUT2 (-) of the L298N board. Insert the positive and negative leads of the two right motors into OUT4 (+) and OUT3 (-) of the L298N board.
 3. Mount the motors with eight M3x25 screws and nuts.
-<p float="left">
-  <img src="../docs/images/attach_motors_1.jpg" height="100" />
-  <img src="../docs/images/attach_motors_2.jpg" height="100" /> 
-  <img src="../docs/images/attach_motors_3.jpg" height="100" />
-</p>
+    <p float="left">
+      <img src="../docs/images/attach_motors_1.jpg" width="33%" />
+      <img src="../docs/images/attach_motors_2.jpg" width="33%" /> 
+      <img src="../docs/images/attach_motors_3.jpg" width="33%" />
+    </p>
 4. Mount the L298N with four M3x5 screws
 5. (Optional) Install the ultrasonic sensor and very carefully bend the pins.
-<p float="left">
-  <img src="../docs/images/sonar_front.jpg" height="100" />
-  <img src="../docs/images/sonar_back.jpg" height="100" /> 
-  <img src="../docs/images/sonar_bend_pins.jpg" height="100" />
-</p>
+    <p float="left">
+      <img src="../docs/images/sonar_front.jpg" width="33%" />
+      <img src="../docs/images/sonar_back.jpg" width="33%" /> 
+      <img src="../docs/images/sonar_bend_pins.jpg" width="33%" />
+    </p>
 6. (Optional) Install the orange LEDs for the indicator signals.
-<p float="left">
-  <img src="../docs/images/led_insert.jpg" height="100" />
-  <img src="../docs/images/led_left.jpg" height="100" /> 
-  <img src="../docs/images/led_right.jpg" height="100" />
-</p>
+    <p float="left">
+      <img src="../docs/images/led_insert.jpg" width="33%" />
+      <img src="../docs/images/led_left.jpg" width="33%" /> 
+      <img src="../docs/images/led_right.jpg" width="33%" />
+    </p>
 7. Mount the bottom of the phone mount to the top plate using two M3x25 screws and nuts.
 8. Insert the top of the phone mount and install the spring or rubber band.
 9. Mount the speed sensors with one M3x5 screw each.
 10. Install the battery case (e.g. velcro).
 11. (Optional) Insert the on/off switch.
-<p float="left">
-  <img src="../docs/images/switch_insert.jpg" height="100" />
-</p>
+    <p float="left">
+      <img src="../docs/images/switch_insert.jpg" width="33%" />
+    </p>
 12. Connect the PWM inputs of the L298N to pins D5, D6, D9 and D10 of the Arduino.
 13. Connect the speed sensors and ultrasonic sensor to 5V and GND.
 14. Connect pin D0 of the speed sensors to pins D2 (left) and D3 (right) of the Arduino.
@@ -142,25 +146,25 @@ Tip: To make all the wiring easier you can build a small power distributor for t
 #### Option 2: Custom PCB
 
 1. Solder wires with Micro JST PH 2.0 connectors to the motors and add the encoder disks to the two front motors if you intend to use the speed sensors.
-<p float="left">
-  <img src="../docs/images/add_wires_motor.jpg" height="100" />
-  <img src="../docs/images/add_disk_motor.jpg" height="100" /> 
-</p>
+    <p float="left">
+      <img src="../docs/images/add_wires_motor.jpg" width="33%" />
+      <img src="../docs/images/add_disk_motor.jpg" width="33%" /> 
+    </p>
 2. Mount the motors with eight M3x25 screws and nuts.
-<p float="left">
-  <img src="../docs/images/attach_motors_1.jpg" height="100" />
-  <img src="../docs/images/attach_motors_2.jpg" height="100" /> 
-  <img src="../docs/images/attach_motors_3.jpg" height="100" />
-</p>
+    <p float="left">
+      <img src="../docs/images/attach_motors_1.jpg" width="33%" />
+      <img src="../docs/images/attach_motors_2.jpg" width="33%" /> 
+      <img src="../docs/images/attach_motors_3.jpg" width="33%" />
+    </p>
 3. Connect the left two motors to M3 and M4 and the right two motors to M1 and M2.
-<p float="left">
-  <img src="../docs/images/connect_motors_pcb.jpg" height="100" />
-</p>
+    <p float="left">
+      <img src="../docs/images/connect_motors_pcb.jpg" width="33%" />
+    </p>
 4. Mount the PCB with four M3x5 screws and the motors with eight M3x25 screws and nuts.
-<p float="left">
-  <img src="../docs/images/attach_pcb.jpg" height="100" />
-  <img src="../docs/images/chassis_motors_pcb.jpg" height="100" />
-</p>
+    <p float="left">
+      <img src="../docs/images/attach_pcb.jpg" width="33%" />
+      <img src="../docs/images/chassis_motors_pcb.jpg" width="33%" />
+    </p>
 5. Follow steps 5-11 from the DIY option.
 6. Connect the LEDs, speed sensors and ultrasonic sensor to the PCB.
 7. Connect the USB cable to the Arduino and route it through the top cover.
