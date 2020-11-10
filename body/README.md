@@ -43,7 +43,7 @@ There are two different options for assembly of the robot, DIY and PCB. The DIY 
 
 Our robot body relies on readily available hobby electronics. We provide links for Germany (EU) and the United States (US) with fast shipping. If you have the patience to wait a bit longer, you can also get the compoenents a lot cheaper from AliExpress (AE). You will need the following components.
 
-(General)
+#### Required components
 
 - 1x Arduino Nano ([EU](https://www.amazon.de/dp/B01MS7DUEM), [US](https://www.amazon.com/dp/B00NLAMS9C), [AE](https://www.aliexpress.com/item/32866959979.html))
 - 4x TT motors with tires ([EU](https://www.conrad.de/de/p/joy-it-com-motor01-getriebemotor-gelb-schwarz-passend-fuer-einplatinen-computer-arduino-banana-pi-cubieboard-raspbe-1573543.html), [US](https://www.amazon.com/dp/B081YQM55P), [AE](https://www.aliexpress.com/item/4000126948489.html))
@@ -56,30 +56,32 @@ Our robot body relies on readily available hobby electronics. We provide links f
 - 6x M3x5 screw ([EU](https://www.amazon.de/dp/B01HBRG3W8), [US](https://www.amazon.com/dp/B07MBHMLL2), [AE](https://www.aliexpress.com/item/32892594230.html))
 - Dupont cables ([EU](https://www.amazon.de/dp/B07KYHBVR7), [US](https://www.amazon.com/dp/B07GD2BWPY), [AE](https://www.aliexpress.com/item/4000766001685.html))
 
-(DIY only)
-
-- 1x L298N Motor Driver ([EU](https://www.conrad.de/de/p/joy-it-motormodul-2-u-4-phasen-6-bis-12v-1573541.html), [US](https://www.amazon.com/dp/B085XSLKFQ), [AE](https://www.aliexpress.com/item/32994608743.html))
-- (Optional) Resistors (2x 150<span>&#8486;</span> for the LEDs and a 20 k<span>&#8486;</span> and 10k<span>&#8486;</span> for the voltage divider)
-- (Combo) 4x TT motors & tires + 2x L298N + dupont cables ([US](https://www.amazon.com/dp/B07ZT619TD))
-- (Combo) 4x TT motors & tires + wires + screws ([US](https://www.amazon.com/dp/B07DRGTCTP))
-
-(PCB only)
-
-- 1x [Custom PCB](pcb)
-- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B07449V33P), [AE](https://www.aliexpress.com/item/32963304134.html))
-
-(Optional)
+#### Optional components
 
 - 2 x Speed Sensor ([EU](https://www.conrad.de/de/p/joy-it-sen-speed-erweiterungsmodul-passend-fuer-einplatinen-computer-arduino-banana-pi-cubieboard-raspberry-pi-pc-1646891.html), [US](https://www.amazon.com/dp/B081W2TY6Q), [AE](https://www.aliexpress.com/i/32850602744.html))
 - 1x Ultrasonic Sensor ([EU](https://www.amazon.de/dp/B00LSJWRXU), [US](https://www.amazon.com/dp/B0852V181G/), [AE](https://www.aliexpress.com/item/32713522570.html))
 - 1x On/Off Switch ([EU](https://www.amazon.de/dp/B07QB22J62), [US](https://www.amazon.com/dp/B01N2U8PK0), [AE](https://www.aliexpress.com/item/1000005699023.html))
 - 2x Orange LED 5mm ([EU](https://www.amazon.de/gp/product/B01NCL0UTQ), [US](https://www.amazon.com/dp/B077XD7MVB), [AE](https://www.aliexpress.com/item/4000329069943.html))
 
+#### DIY components (Option 1)
+
+- 1x L298N Motor Driver ([EU](https://www.conrad.de/de/p/joy-it-motormodul-2-u-4-phasen-6-bis-12v-1573541.html), [US](https://www.amazon.com/dp/B085XSLKFQ), [AE](https://www.aliexpress.com/item/32994608743.html))
+- (Optional) Resistors (2x 150<span>&#8486;</span> for the LEDs and a 20 k<span>&#8486;</span> and 10k<span>&#8486;</span> for the voltage divider)
+- (Combo) 4x TT motors & tires + 2x L298N + dupont cables ([US](https://www.amazon.com/dp/B07ZT619TD))
+- (Combo) 4x TT motors & tires + wires + screws ([US](https://www.amazon.com/dp/B07DRGTCTP))
+
+#### PCB components (Option 2)
+
+- 1x [Custom PCB](pcb)
+- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B07449V33P), [AE](https://www.aliexpress.com/item/32963304134.html))
+
 ### Build instructions
 
 #### Option 1: DIY
 
 ![Wiring Diagram](../docs/images/wiring_diagram.png)
+
+Tip: To make all the wiring easier you can build a small power distributor for the 5V and GND connections by soldering a 6x2 male header to a perfboard. Then connect the power distributor with the 5V / GND of the motor driver.
 
 1. Solder wires to the motors.
 2. Insert the positive and negative leads of the two left motors into OUT1 (+) and OUT2 (-) of the L298N board.
@@ -98,9 +100,13 @@ Our robot body relies on readily available hobby electronics. We provide links f
 15. Connect the USB cable to the Arduino and route it through the top cover.
 16. (Optional) Connect the LEDs to pins D4 (left) and D7 (right) of the Arduino and GND. We recommend to add a 150 Ohm resistor in series to limit the current draw.
 17. (Optional) Connect the voltage divider to pin A7 of the Arduino. It is used to measure the battery voltage.
-18. Connect the battery cables to Vin of the L298N. If you installed the switch, put it in the current path.
-19. Insert six M3 nuts into the bottom plate and mount the top cover with six M3x25 screws.
-20. Install the wheels.
+18. (Optional) Connect the OLED display (SSD1306 chip) via the I2C bus to the Arduino Nano
+  - Connect the VIN and GND pins of the display to 5V and GND.
+  - Connect the SCL pin of the display to the A5 pin.
+  - Connect the SDA pin of the display to the A4 pin.
+19. Connect the battery cables to Vin of the L298N. If you installed the switch, put it in the current path.
+20. Insert six M3 nuts into the bottom plate and mount the top cover with six M3x25 screws.
+21. Install the wheels.
 
 #### Option 2: Custom PCB
 
@@ -110,8 +116,12 @@ Our robot body relies on readily available hobby electronics. We provide links f
 4. Follow steps 5-10 from the DIY option.
 5. Connect the LEDs, speed sensors and ultrasonic sensor to the PCB.
 6. Connect the USB cable to the Arduino and route it through the top cover.
-7. Connect the battery to Vin (Micro JST PH 2.0 connector) of the PCB. If you installed the switch, put it in the current path.
-8. Follow steps 19-20 from the DIY option.
+7. (Optional) Connect the OLED display (SSD1306 chip) to the IO2 header on the PCB
+  - Connect the VIN and GND pins of the display to 5V and GND.
+  - Connect the SCL pin of the display to the A5 pin.
+  - Connect the SDA pin of the display to the A4 pin.
+8. Connect the battery to Vin (Micro JST PH 2.0 connector) of the PCB. If you installed the switch, put it in the current path.
+9. Follow steps 20-21 from the DIY option.
 
 ## Next
 
