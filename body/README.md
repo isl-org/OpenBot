@@ -101,9 +101,9 @@ Tip: To make all the wiring easier you can build a small power distributor for t
 16. (Optional) Connect the LEDs to pins D4 (left) and D7 (right) of the Arduino and GND. We recommend to add a 150 Ohm resistor in series to limit the current draw.
 17. (Optional) Connect the voltage divider to pin A7 of the Arduino. It is used to measure the battery voltage.
 18. (Optional) Connect the OLED display (SSD1306 chip) via the I2C bus to the Arduino Nano
-  - Connect the VIN and GND pins of the display to 5V and GND.
-  - Connect the SCL pin of the display to the A5 pin.
-  - Connect the SDA pin of the display to the A4 pin.
+    1. Connect the VIN and GND pins of the display to 5V and GND.
+    2. Connect the SCL pin of the display to the A5 pin.
+    3. Connect the SDA pin of the display to the A4 pin.
 19. Connect the battery cables to Vin of the L298N. If you installed the switch, put it in the current path.
 20. Insert six M3 nuts into the bottom plate and mount the top cover with six M3x25 screws.
 21. Install the wheels.
@@ -117,9 +117,9 @@ Tip: To make all the wiring easier you can build a small power distributor for t
 5. Connect the LEDs, speed sensors and ultrasonic sensor to the PCB.
 6. Connect the USB cable to the Arduino and route it through the top cover.
 7. (Optional) Connect the OLED display (SSD1306 chip) to the IO2 header on the PCB
-  - Connect the VIN and GND pins of the display to 5V and GND.
-  - Connect the SCL pin of the display to the A5 pin.
-  - Connect the SDA pin of the display to the A4 pin.
+    1. Connect the VIN and GND pins of the display to 5V and GND.
+    2. Connect the SCL pin of the display to the A5 pin.
+    3. Connect the SDA pin of the display to the A4 pin.
 8. Connect the battery to Vin (Micro JST PH 2.0 connector) of the PCB. If you installed the switch, put it in the current path.
 9. Follow steps 20-21 from the DIY option.
 
