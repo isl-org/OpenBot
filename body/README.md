@@ -9,7 +9,9 @@
 We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware.
 ![Assembly](../docs/images/assembly.gif)
 
-## 3D printed chassis
+## Chassis
+
+### 3D printing
 
 You will need to print the following parts in order to build your OpenBot.
 
@@ -34,6 +36,34 @@ On an Ultimaker S5, we achieved good results with the following settings:
 - no support
 
 We were able to print the chassis with PLA, ABS and CPE. In our experience the print was not affected very much by the print settings. However, if you have the patience, printing slower and with smaller layer height will improve the print. Also adding a support structure can improve the print, but it will require additional work to remove afterwards.
+
+Before you proceed with the build, you may need to clean the 3D print.
+<p float="left">
+  <img src="../docs/images/clean_3d_print_1.jpg" width="33%" />
+  <img src="../docs/images/clean_3d_print_2.jpg" width="33%" /> 
+  <img src="../docs/images/clean_3d_print_3.jpg" width="33%" />
+</p>
+
+### Alternatives
+
+If you do not have access to a 3D printer, there are several Arduino robot car kits available which you can use as a starting point. These kits come with a chassis, motors and accessories. We recommend to get a basic kit, since you won't need a lot of the electronics and sensors of the more expensive kits. Here are some options:
+
+- Perseids DIY Robot Smart Car Chassis Kit ([EU](https://www.amazon.de/dp/B07DNXBNHY), [US](https://www.amazon.com/dp/B07DNXBFQN))
+- SZDoit 4WD Smart Metal Robot Car Chassis Kit ([US](https://www.amazon.com/dp/B083K4RKBP), [AE](https://www.aliexpress.com/item/33048227237.html))
+- Joy-it Robot Car Kit 01 ([EU](https://www.amazon.de/dp/B073ZGJF28))
+- Smart Car Kit 4WD Smart Robot Car Chassis Kit ([AE](https://www.aliexpress.com/item/4001238626191.html))
+
+You will also need a phone mount. Here is one option:
+
+- Mpow Dashboard Car Phone Mount ([EU](https://www.amazon.de/dp/B0762GS7MS), [US](https://www.amazon.com/dp/B08BYFP9BZ))
+
+You can also get creative and build your own OpenBot chassis and phone mount using a material of your choice (e.g. wood, cardboard, styrofoam, etc.). If you do, please post some pictures on the [Slack channel](https://github.com/intel-isl/OpenBot#contact) so others can admire your creativity. Here is one example by [@custom-build-robots](https://custom-build-robots.com/roboter/openbot-dein-smartphone-steuert-ein-roboter-auto-chassis-bauen/13636):
+
+<p float="left">
+  <img src="https://custom-build-robots.com/wp-content/uploads/2020/11/OpenBot_chassis_build_07-768x670.jpg" width="32.8%" />
+  <img src="https://custom-build-robots.com/wp-content/uploads/2020/11/OpenBot_chassis_build_08-768x679.jpg" width="32.4%" /> 
+  <img src="https://custom-build-robots.com/wp-content/uploads/2020/11/OpenBot_ready_to_roll-768x644.jpg" width="33.8%" />
+</p>
 
 ## Assembly
 
@@ -62,6 +92,7 @@ Our robot body relies on readily available hobby electronics. We provide links f
 - 1x Ultrasonic Sensor ([EU](https://www.amazon.de/dp/B00LSJWRXU), [US](https://www.amazon.com/dp/B0852V181G/), [AE](https://www.aliexpress.com/item/32713522570.html))
 - 1x On/Off Switch ([EU](https://www.amazon.de/dp/B07QB22J62), [US](https://www.amazon.com/dp/B01N2U8PK0), [AE](https://www.aliexpress.com/item/1000005699023.html))
 - 2x Orange LED 5mm ([EU](https://www.amazon.de/gp/product/B01NCL0UTQ), [US](https://www.amazon.com/dp/B077XD7MVB), [AE](https://www.aliexpress.com/item/4000329069943.html))
+- 1x OLED display ([EU](https://www.amazon.de/dp/B079H2C7WH), [US](https://www.amazon.com/dp/B085NHM5TC), [AE](https://www.aliexpress.com/item/4001268387467.html))
 
 #### DIY components (Option 1)
 
@@ -77,14 +108,7 @@ Our robot body relies on readily available hobby electronics. We provide links f
 
 ### Build instructions
 
-**Tip:** Click on the images to enlarge them.
-
-Before you proceed with the build, you may need to clean the 3D print.
-<p float="left">
-  <img src="../docs/images/clean_3d_print_1.jpg" width="33%" />
-  <img src="../docs/images/clean_3d_print_2.jpg" width="33%" /> 
-  <img src="../docs/images/clean_3d_print_3.jpg" width="33%" />
-</p>
+**Tip:** Click on the images to open them in full resolution in a new tab.
 
 #### Option 1: DIY
 
