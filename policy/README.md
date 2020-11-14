@@ -32,7 +32,7 @@ You first need to setup your training environment.
 
 ### Dependencies
 
-We recommend to create a conda environment for OpenBot. Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/).
+We recommend to create a conda environment for OpenBot. Create a folder with the name for example `openbot` in your home directory. Then switch to that folder. Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/).
 If you do not have a dedicated GPU (e.g. using your laptop) you can create a new environment with the following command:
 
 ```bash
@@ -53,6 +53,12 @@ If you prefer to setup the environment manually, here is a list of the dependenc
 - Numpy
 - PIL
 
+After setting up the conda environment clone the OpenBot repository from the GitHub repo with the following command into the folder you created previously:
+
+```bash
+git clone https://github.com/intel-isl/OpenBot.git
+```
+
 NOTES:
 - Whenever you want to run the Jupyter notebook you need the active the environment first: `conda activate openbot`
 - If you want to use tensorflow=2.2.0 you may need to pass the custom metrics as custom objects dictionary. (See this [issue](https://github.com/intel-isl/OpenBot/issues/39).)
@@ -60,7 +66,14 @@ NOTES:
 
 ### Jupyter Notebook
 
-We provide a [Jupyter Notebook](policy_learning.ipynb) that guides you through the steps for training an autonomous driving policy. The notebook will produce two tflite files corresponding to the best checkpoint according to the validation metrics and the last checkpoint. Pick one of them and rename them to autopilot_float.tflite. Replace the existing model at
+We provide a [Jupyter Notebook](policy_learning.ipynb) that guides you through the steps for training an autonomous driving policy. Start Jupyter with the following command.
+
+```bash
+jupyter notebook
+```
+Now a web-browser window will automatically be open and the Jupyter environment appears. The Jupyter notebook policy_learning.ipynb is located in the following directory `...\openbot\policy\`. Please start that notebook over the Jupyter web interface by clicking the policy_learning.ipynb file. 
+
+The notebook will produce two tflite files corresponding to the best checkpoint according to the validation metrics and the last checkpoint. Pick one of them and rename them to autopilot_float.tflite. Replace the existing model at
 
 ```markdown
 app
