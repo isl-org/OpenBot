@@ -24,7 +24,7 @@ You will now find a folder called *Openbot* on the internal storage of your smar
 
 The Jupyter notebook expects a folder called `dataset` in the same folder. In this folder, there should be two subfolders, `train_data` and `test_data`. The training data is used to learn the driving policy. The test data is used to validate the learned driving policy on unseen data during the training process. This provides some indication how well this policy will work on the robot. Even though the robot may drive along the same route as seen during training, the exact images observed will be slightly different in every run. The common split is 80% training data and 20% test data. Inside the `train_data` and `test_data` folders, you need to make a folder for each recording session and give it a name such as `my_openbot_1`, `my_openbot_2`, etc. The idea here is that each recording session may have different lighting conditions, a different robot, a different route. In the Jupyter notebook, you can then train only on a subset of these datasets or on all of them. Inside each recording session folder, you drop all the recordings from that recording session. Each recording corresponds to an extracted zip file that you have transferred from the *Openbot* folder on your phone. Your dataset folder should look like this:
 
-<img width="200" alt="folder structure" src="../docs/images/folder_structure.png" />
+<img src="../docs/images/folder_structure.png" width="200" alt="folder structure" />
 
 ## Policy Training
 
@@ -53,13 +53,7 @@ If you prefer to setup the environment manually, here is a list of the dependenc
 - Numpy
 - PIL
 
-After setting up the conda environment navigate to the folder `policy` within your local OpenBot repository. You can clone the OpenBot repository from GitHub with the following command:
-
-```bash
-git clone https://github.com/intel-isl/OpenBot.git
-```
-
-Alternativly, you can also download the repo as a zip file and extract it into a folder of your choice. 
+After setting up the conda environment navigate to the folder `policy` within your local OpenBot repository.
 
 NOTES:
 - Whenever you want to run the Jupyter notebook you need the activate the environment first: `conda activate openbot`
@@ -73,13 +67,11 @@ We provide a [Jupyter Notebook](policy_learning.ipynb) that guides you through t
 ```bash
 jupyter notebook policy_learning.ipynb
 ```
-Now a web-browser window will open automatically and load the Jupyter notebook. Follow the steps in order to train a model with your own data. At the end, two tflite files are generated: one corresponds to the best checkpoint according to the validation metrics and the other to the last checkpoint. Pick one of them and rename it to autopilot_float.tflite. Replace the existing model at
 
-```markdown
-app
-└── assets
- └── networks
-  └── autopilot_float.tflite
-```
+Now a web-browser window will open automatically and load the Jupyter notebook. Follow the steps in order to train a model with your own data. At the end, two tflite files are generated: one corresponds to the best checkpoint according to the validation metrics and the other to the last checkpoint. Pick one of them and rename it to autopilot_float.tflite. Replace the existing model in Android Studio and recompile the app.
 
-and recompile the app.
+<p align="center">
+  <img src="../docs/images/android_studio_tflite_dir.jpg" width="200" alt="App GUI" />
+</p>
+
+If you are looking for the folder in your local directory, you will find it at: `app/src/main/assets/networks`.
