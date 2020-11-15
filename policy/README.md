@@ -53,14 +53,27 @@ If you prefer to setup the environment manually, here is a list of the dependenc
 - Numpy
 - PIL
 
+After setting up the conda environment navigate to the folder `policy` within your local OpenBot repository. You can clone the OpenBot repository from GitHub with the following command:
+
+```bash
+git clone https://github.com/intel-isl/OpenBot.git
+```
+
+Alternativly, you can also download the repo as a zip file and extract it into a folder of your choice. 
+
 NOTES:
-- Whenever you want to run the Jupyter notebook you need the active the environment first: `conda activate openbot`
+- Whenever you want to run the Jupyter notebook you need the activate the environment first: `conda activate openbot`
 - If you want to use tensorflow=2.2.0 you may need to pass the custom metrics as custom objects dictionary. (See this [issue](https://github.com/intel-isl/OpenBot/issues/39).)
 - If your tensorflow import does not work, try installing via `pip install tensorflow --user`. (See this [issue](https://github.com/intel-isl/OpenBot/issues/98).)
 
 ### Jupyter Notebook
 
-We provide a [Jupyter Notebook](policy_learning.ipynb) that guides you through the steps for training an autonomous driving policy. The notebook will produce two tflite files corresponding to the best checkpoint according to the validation metrics and the last checkpoint. Pick one of them and rename them to autopilot_float.tflite. Replace the existing model at
+We provide a [Jupyter Notebook](policy_learning.ipynb) that guides you through the steps for training an autonomous driving policy. Open the notebook with the following command.
+
+```bash
+jupyter notebook policy_learning.ipynb
+```
+Now a web-browser window will open automatically and load the Jupyter notebook. Follow the steps in order to train a model with your own data. At the end, two tflite files are generated: one corresponds to the best checkpoint according to the validation metrics and the other to the last checkpoint. Pick one of them and rename it to autopilot_float.tflite. Replace the existing model at
 
 ```markdown
 app
