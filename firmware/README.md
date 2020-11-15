@@ -83,7 +83,7 @@ You should now see four comma-seperated values that update once per second:
 ![Serial Monitor](../docs/images/serial_monitor.png)
 
 - The first value is the battery voltage. If you connect the battery to the car (i.e. turn on the switch), it should show the battery voltage. If you disconnect the battery (i.e. turn off the switch), it should show a small value.
-- The second and third values are the raw readings of the speed sensors. Each hole in the encoder disk will produce two counts. You can set the number of holes with the parameter `DISK_HOLES`. If you are using the stardard disk with 20 holes, there will be 40 counts for each revolution of the wheel. Hence, if you divide the displayed number by 40, you will get the revolutions per second.
+- The second and third values are the raw readings of the speed sensors. Each hole in the encoder disk will produce two counts. You can set the number of holes with the parameter `DISK_HOLES`. If you are using the stardard disk with 20 holes, there will be 20 counts for each revolution of the wheel. Hence, if you divide the displayed number by 20, you will get the revolutions per second.
 - The fourth value is the estimated free space in front of the ultrasonic sensor in cm. If the ultrasonic sensor is disabled or unable to get a reading, it will show `65535`.
 
 #### Vehicle Control
@@ -106,7 +106,7 @@ Before you proceed, make sure the tires are removed. You wil need the Serial Mon
         3. If the sensor readings change significantly, you will need to dampen the vibrations transmitted to the ultrasonic sensor from the chassis (e.g. add some silicon, adjust the mounting position).
 3. If you have the speed sensors installed:
     1. Make sure, you have plenty of free space in front of the ultrasonic sensor. The reading (fourth value) needs to be at least above the `STOP_THRESHOLD` which is `32` by default. If the ultrasonic sensor is not installed, you should see a reading of `65535`.
-    2. Send the command `c128,128`. The motors will start spinning at *slow speed* (50% PWM). The speed sensor readings (second and third value) should be similar to the values in the image above. If you are using the DIY version or a weaker battery, values may be lower. Check that all motors are spinning forward.
+    2. Send the command `c128,128`. The motors will start spinning at *slow speed* (50% PWM). The speed sensor readings (second and third value) should be similar to the values in the image above. If you are using the DIY version or a weaker battery, values may be lower. Check that all motors are spinning forward and that the speed sensor readings are positive. Note: If you multiply these values by 3, they correspond to the rpm for the standard disk with 20 holes.
     3. Try sending different controls and observe the speed sensor readings. For example, the command `c-128,-128` will spin all motors backward at *slow speed* (50% PWM). The command `c255,-255` will spin the left motors forward and the right motors backward at *fast speed* (100% PWM). The command `c-192,192` will spin the left motors backward and the right motors forward at *normal speed* (75% PWM).
 4. Stop the motors by sending the command `c0,0` or by holding your hand in front of the ultrasonic sensor
 5. If you have the indicator LEDs installed, send the command `i-1` and observe the left indicator light flashing. The send the command `i1` and observe the right indicator light flashing. Finally, turn the indicator off by sending the command `i0`.
