@@ -20,7 +20,7 @@ Our application is derived from the [TensorFlow Lite Object Detection Android De
 - Android device and Android development environment with minimum API 21
 - Currently, the we use API 28 as compile and target SDK. In the latest version of Android Studio, you may have to install the SDK manually. Go to Android Studio -> Preferences -> Appearance & Behaviour -> System Settings -> Android SDK. Make sure API 28 is checked and click apply.
 
-![Android SDK](../docs/images/android_studio_sdk.jpg)
+    ![Android SDK](../docs/images/android_studio_sdk.jpg)
 
 ### Building
 
