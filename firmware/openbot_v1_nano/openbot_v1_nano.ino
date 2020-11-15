@@ -13,7 +13,7 @@
 //  - display vehicle status on OLED
 //
 // Dependencies: Install via "Tools --> Manage Libraries" (type library name in the search field)
-//  - Interrupts: ChangePinInterrupt by Nico Hood (read speed sensors and sonar)
+//  - Interrupts: PinChangeInterrupt by Nico Hood (read speed sensors and sonar)
 //  - OLED: Adafruit_SSD1306 & Adafruit_GFX (display vehicle status)
 // Contributors:
 //  - October 2020: OLED display support by Ingmar Stapel
@@ -115,6 +115,7 @@
 // INITIALIZATION
 //------------------------------------------------------//
 
+#include <limits.h>
 const unsigned int STOP_THRESHOLD = 32; //cm
 
 #if NO_PHONE_MODE
@@ -125,7 +126,6 @@ const unsigned int STOP_THRESHOLD = 32; //cm
 
 #if HAS_SPEED_SENSORS or HAS_SONAR
   #include <PinChangeInterrupt.h>
-  #include <limits.h>
 #endif
 
 #if HAS_SONAR
