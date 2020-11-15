@@ -68,7 +68,7 @@ NOTES:
 
 ### Jupyter Notebook
 
-We provide a [Jupyter Notebook](policy_learning.ipynb) that guides you through the steps for training an autonomous driving policy. Start Jupyter with the following command.
+We provide a [Jupyter Notebook](policy_learning.ipynb) that guides you through the steps for training an autonomous driving policy. Open the notebook with the following command.
 
 ```bash
 jupyter notebook policy_learning.ipynb
