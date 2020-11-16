@@ -978,7 +978,8 @@ public abstract class CameraActivity extends AppCompatActivity
   protected void sendControlToVehicle(ControlSignal vehicleControl) {
     if ((usbConnection != null) && usbConnection.isOpen() && !usbConnection.isBusy()) {
       String message =
-          String.format(Locale.US,
+          String.format(
+              Locale.US,
               "c%d,%d\n",
               (int) (vehicleControl.getLeft() * speedMultiplier),
               (int) (vehicleControl.getRight() * speedMultiplier));

@@ -285,7 +285,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           public void run() {
             Log.i("display_ctrl", "runnable");
             showControl(
-                String.format(Locale.US,"%.2f,%.2f", vehicleControl.getLeft(), vehicleControl.getRight()));
+                String.format(
+                    Locale.US, "%.2f,%.2f", vehicleControl.getLeft(), vehicleControl.getRight()));
           }
         });
 

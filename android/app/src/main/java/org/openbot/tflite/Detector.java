@@ -118,7 +118,7 @@ public abstract class Detector extends Network {
       }
 
       if (confidence != null) {
-        resultString += String.format(Locale.US,"(%.1f%%) ", confidence * 100.0f);
+        resultString += String.format(Locale.US, "(%.1f%%) ", confidence * 100.0f);
       }
 
       if (location != null) {
