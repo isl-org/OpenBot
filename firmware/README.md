@@ -18,25 +18,21 @@ If you used the custom PCB, check the version and set either `OPENBOT PCB_V1` or
 
 Next, you need to configure which features you want to enable. Disabled features are not compiled to save memory and make the code faster.
 
-- Enable the voltage divider by setting `HAS_VOLTAGE_DIVIDER` to `1` (default: `0`)
-- Enable the indicator LEDs by setting `HAS_INDICATORS` to `1` (default: `0`)
-- Enable the speed sensors by setting `HAS_SPEED_SENSORS`  to `1` (default: `0`)
-- Enable the ultrasonic sensor by setting `HAS_SONAR`  to `1` (default: `0`)
-- Enable the median filter for sonar measurements by setting `USE_MEDIAN`  to `1` (default: `0`)
-- Enable the OLED display by setting `HAS_OLED`  to `1` (default: `0`)
+- Enable the voltage divider by setting `HAS_VOLTAGE_DIVIDER 1` (default: 0)
+- Enable the indicator LEDs by setting `HAS_INDICATORS 1` (default: 0)
+- Enable the speed sensors by setting `HAS_SPEED_SENSORS 1` (default: 0)
+- Enable the ultrasonic sensor by setting `HAS_SONAR 1` (default: 0)
+- Enable the median filter for sonar measurements by setting `USE_MEDIAN 1` (default: 0)
+- Enable the OLED display by setting `HAS_OLED 1` (default: 0)
 
 ### Dependencies
 
 If you have enabled the speed sensors or the ultrasonic sensor, you need to install the [PinChangeInterrupt](https://github.com/NicoHood/PinChangeInterrupt) library. The Arduino Nano only has two external interrupt pins (D2 and D3) and D3 is also one of only six pins that support PWM. Fortunately, it also has three port interrupts that cover all pins on the Arduino. This library parses these port interrupts allowing all pins of the Arduino to be used as interrupts.
 
-If you have enabled the OLED, you need to install [Adafruit_SSD1306](https://github.com/adafruit/Adafruit_SSD1306) and [Adafruit_GFX Library](https://github.com/adafruit/Adafruit-GFX-Library).
+If you have enabled the OLED, you need to install the libraries [Adafruit_SSD1306](https://github.com/adafruit/Adafruit_SSD1306) and [Adafruit_GFX Library](https://github.com/adafruit/Adafruit-GFX-Library).
 
-You can install libraries by:
-1. Open the Library Manager.
-    ```markdown
-    Tools
-    └─── Manage Libraries
-    ```
+You can install libraries by following these steps:
+1. Open the Library Manager: `Tools` :arrow_right: `Manage Libraries`
 2. Enter the name of the library in the search bar.
 3. Select the latest version and click install. If you have already installed the library it will show and you may be able to update it.
 
@@ -57,24 +53,24 @@ You may need to download the [WCH340](http://www.wch.cn/product/CH340.html) driv
 
 ### Settings
 
-- `Tools -> Board -> Arduino AVR Boards -> Arduino Nano`
-- `Tools -> Processor -> ATmega328P (Old Bootloader)`
-- `Tools -> Port -> *Select the USB port*`
+- `Tools` :arrow_right: `Board` :arrow_right: `Arduino AVR Boards` :arrow_right: `Arduino Nano`
+- `Tools` :arrow_right: `Processor` :arrow_right: `ATmega328P (Old Bootloader)`
+- `Tools` :arrow_right: `Port` :arrow_right: `*Select the USB port*`
 
-The firmware can now be uploaded through `Sketch -> Upload` or by pressing the upload button (right arrow).
+The firmware can now be uploaded through `Sketch` :arrow_right: `Upload` or by pressing the upload button (right arrow).
 ![Firmware Upload](../docs/images/firmware_upload.png)
 
-NOTE: Currently, most cheap Arduino Nano boards come with the *Old Bootloader*. However, depending on the seller you may also get one with the new bootloader. So if you are unable to upload the firmware, chances are that you need to change the processor to *ATmega328P*.
+:memo: NOTE: Currently, most cheap Arduino Nano boards come with the *Old Bootloader*. However, depending on the seller you may also get one with the new bootloader. So if you are unable to upload the firmware, chances are that you need to change the processor to *ATmega328P*.
 
 ### Testing
 
 This section explains how to test all functionalities of the car after the firmware was flashed successfully.
 
 1. Confirm that:
-    - the wheels are not connected to the car
-    - the Arduino is connected the the computer
-    - the correct USB port is selected
-2. Open the Serial Monitor: `Tools -> Serial Monitor`
+    1. the wheels are not connected to the car
+    2. the Arduino is connected to the computer
+    3. the correct USB port is selected
+2. Open the Serial Monitor: `Tools` :arrow_right: `Serial Monitor`
 
 #### Vehicle Status
 
@@ -83,7 +79,7 @@ You should now see four comma-seperated values that update once per second:
 ![Serial Monitor](../docs/images/serial_monitor.png)
 
 - The first value is the battery voltage. If you connect the battery to the car (i.e. turn on the switch), it should show the battery voltage. If you disconnect the battery (i.e. turn off the switch), it should show a small value.
-- The second and third values are the raw readings of the speed sensors. Each hole in the encoder disk will produce two counts. You can set the number of holes with the parameter `DISK_HOLES`. If you are using the stardard disk with 20 holes, there will be 20 counts for each revolution of the wheel. Hence, if you divide the displayed number by 20, you will get the revolutions per second.
+- The second and third values are the raw readings of the speed sensors. Each hole in the encoder disk will increment the counter by plus/minus one depending on the direction. You can set the number of holes with the parameter `DISK_HOLES`. If you are using the stardard disk with 20 holes, there will be 20 counts for each revolution of the wheel. Hence, if you divide the displayed number by 20, you will get the revolutions per second.
 - The fourth value is the estimated free space in front of the ultrasonic sensor in cm. If the ultrasonic sensor is disabled or unable to get a reading, it will show `65535`.
 
 #### Vehicle Control
@@ -95,7 +91,7 @@ You can also send messages to the Arudino by typing a command into the input fie
 
 #### Test procedure
 
-Before you proceed, make sure the tires are removed. You wil need the Serial Monitor open to send commands and you will see the messages received from your OpenBot. If you have the OLED display installed, you will also see the vehicle status displayed there in a more human-readable format. The following test procedure can be used to test all functionalities of the car:
+Before you proceed, make sure the tires are removed. You will need the Serial Monitor open to send commands and you will see the messages received from your OpenBot. If you have the OLED display installed, you will also see the vehicle status displayed there in a more human-readable format. The following test procedure can be used to test all functionalities of the car:
 
 1. Turn on the car and observe the battery voltage (first value). You can verify the reading with a multimeter and adjust the `VOLTAGE_DIVIDER_FACTOR` if neccessary.
 2. If you have a ultrasonic sensor installed:
@@ -117,7 +113,7 @@ Before testing the car with a smartphone that has the OpenBot application instal
 
 Before running the car, we recommend to remove the tires, connect the Arduino to a computer and observe the serial monitor like in the section [Testing](#testing). The output on the serial monitor is a bit easier to parse (same as OLED) and shows the battery voltage, the rpm for the left and right motors and the estimated free space in front of the car. You can move a large object back and forth in front of ultrasonic sensor and observe the speed of the motors changing.
 
-WARNING: If you do not have an ultrasonic sensor installed or if it is disabled, the car will just drive forward at *normal_speed* (75% PWM) and will eventually collide. Even with the sensor installed, the car may collide occasionally due to noisy readings.
+:warning: WARNING: If you do not have an ultrasonic sensor installed or if it is disabled, the car will just drive forward at *normal_speed* (75% PWM) and will eventually collide. Even with the sensor installed, the car may collide occasionally due to noisy readings.
 
 ## Using other MCUs (requirements)
 
