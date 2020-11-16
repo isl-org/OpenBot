@@ -31,6 +31,7 @@ import android.util.Pair;
 import android.util.TypedValue;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Queue;
 import org.openbot.CameraActivity.ControlSignal;
 import org.openbot.env.BorderedText;
@@ -169,7 +170,9 @@ public class MultiBoxTracker {
       leftControl = 0.0f;
       rightControl = 0.0f;
     }
-    return new ControlSignal(leftControl, rightControl);
+    return new ControlSignal(
+        (0 > sensorOrientation) ? rightControl : leftControl,
+        (0 > sensorOrientation) ? leftControl : rightControl);
   }
 
   public synchronized void draw(final Canvas canvas) {
@@ -186,8 +189,9 @@ public class MultiBoxTracker {
 
       final String labelString =
           !TextUtils.isEmpty(recognition.title)
-              ? String.format("%s %.2f", recognition.title, (100 * recognition.detectionConfidence))
-              : String.format("%.2f", (100 * recognition.detectionConfidence));
+              ? String.format(
+                  Locale.US, "%s %.2f", recognition.title, (100 * recognition.detectionConfidence))
+              : String.format(Locale.US, "%.2f", 100 * recognition.detectionConfidence);
       borderedText.drawText(
           canvas, trackedPos.left + cornerSize, trackedPos.top, labelString + "%", boxPaint);
 
@@ -196,7 +200,7 @@ public class MultiBoxTracker {
       //                canvas,
       //                trackedPos.left + cornerSize,
       //                trackedPos.top + 40.0f,
-      //                String.format("%.2f", leftControl) + "," + String.format("%.2f",
+      //                String.format(Locale.US, "%.2f", leftControl) + "," + String.format("%.2f",
       // rightControl),
       //                boxPaint);
       //      }

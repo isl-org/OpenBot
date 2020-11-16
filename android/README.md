@@ -18,23 +18,23 @@ Our application is derived from the [TensorFlow Lite Object Detection Android De
 
 - [Android Studio 3.2 or later](https://developer.android.com/studio/index.html) for building and installing the apk, or otherwise download the apk from the assets of the [latest release](https://github.com/intel-isl/OpenBot/releases/latest).
 - Android device and Android development environment with minimum API 21
-- Currently, the we use API 28 as compile and target SDK. In the latest version of Android Studio, you may have to install the SDK manually. Go to Android Studio -> Preferences -> Appearance & Behaviour -> System Settings -> Android SDK. Make sure API 28 is checked and click apply.
+- Currently, we use API 30 as compile and target SDK. It should get installed automatically, but if not you can install the SDK manually. Go to Android Studio -> Preferences -> Appearance & Behaviour -> System Settings -> Android SDK. Make sure API 30 is checked and click apply.
 
-    ![Android SDK](../docs/images/android_studio_sdk.jpg)
+![Android SDK](../docs/images/android_studio_sdk.jpg)
 
 ### Building
 
-In case you are using the apk from the assets of the [latest release](https://github.com/intel-isl/OpenBot/releases/latest), you can skip the below steps and instead just [install](https://www.lifewire.com/install-apk-on-android-4177185) it on your phone directly. Note that that apk is signed with a debug key. If you would like to make changes to the app later, follow these steps to compile the app and deploy it on your phone.
+In case you are using the apk from the assets of the [latest release](https://github.com/intel-isl/OpenBot/releases/latest), you can skip the below steps and instead just [install](https://www.lifewire.com/install-apk-on-android-4177185) it on your phone directly. Note that that apk is signed with a debug key. If you would like to make changes to the app later, follow these steps to compile the app and deploy it on your phone:
 
-- Open Android Studio and select *Open an existing Android Studio project*.
-- Select the OpenBot/android directory and click OK.
-- Confirm Gradle Sync if neccessary. To perform a Gradle Sync manually, click on the gradle icon.
+1. Open Android Studio and select *Open an existing Android Studio project*.
+2. Select the OpenBot/android directory and click OK.
+3. Confirm Gradle Sync if neccessary. To perform a Gradle Sync manually, click on the gradle icon.
     ![Gradle Sync](../docs/images/android_studio_bar_gradle.jpg)
-- Connect your Android device and make sure USB Debugging in the [developer options](https://developer.android.com/studio/debug/dev-options) is enabled. Depending on your development environment [further steps](https://developer.android.com/studio/run/device) might be necessary. You should see your device in the navigation bar at the top now.
+4. Connect your Android device and make sure USB Debugging in the [developer options](https://developer.android.com/studio/debug/dev-options) is enabled. Depending on your development environment [further steps](https://developer.android.com/studio/run/device) might be necessary. You should see your device in the navigation bar at the top now.
   ![Phone](../docs/images/android_studio_bar_phone.jpg)
-- Click the Run button (the green arrow) or select Run > Run 'android' from the top menu. You may need to rebuild the project using Build > Rebuild Project.
+5. Click the Run button (the green arrow) or select Run > Run 'android' from the top menu. You may need to rebuild the project using Build > Rebuild Project.
   ![Run](../docs/images/android_studio_bar_run.jpg)
-- If it asks you to use Instant Run, click *Proceed Without Instant Run*.
+6. If it asks you to use Instant Run, click *Proceed Without Instant Run*.
 
 ### Code Structure
 
