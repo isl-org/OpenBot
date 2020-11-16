@@ -978,7 +978,7 @@ public abstract class CameraActivity extends AppCompatActivity
   protected void sendControlToVehicle(ControlSignal vehicleControl) {
     if ((usbConnection != null) && usbConnection.isOpen() && !usbConnection.isBusy()) {
       String message =
-          String.format(
+          String.format(Locale.US,
               "c%d,%d\n",
               (int) (vehicleControl.getLeft() * speedMultiplier),
               (int) (vehicleControl.getRight() * speedMultiplier));
@@ -988,7 +988,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void sendIndicatorToVehicle(int vehicleIndicator) {
     if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      String message = String.format("i%d\n", vehicleIndicator);
+      String message = String.format(Locale.US, "i%d\n", vehicleIndicator);
       usbConnection.send(message);
     }
   }
