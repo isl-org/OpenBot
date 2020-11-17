@@ -55,7 +55,7 @@ OpenBot利用智能手机作为低成本机器人的大脑。我们设计了一�
 ## 联系我们
 
 - 加入 [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-isk656e8-9SGO3F5iPFskJ8oir8i1ww) 频道与OpenBot社区联系. 
-- 给我们法[Email](mailto:openbot.team@gmail.com)
+- 给我们发[Email](mailto:openbot.team@gmail.com)
 
 <a href="https://www.openbot.org//" target="_blank">
   <img align="center" alt="Footer" width="100%" src="docs/images/footer.gif" />

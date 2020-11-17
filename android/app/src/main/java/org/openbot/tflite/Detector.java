@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Wrapper for frozen detection models trained using the Tensorflow Object Detection API:
@@ -117,7 +118,7 @@ public abstract class Detector extends Network {
       }
 
       if (confidence != null) {
-        resultString += String.format("(%.1f%%) ", confidence * 100.0f);
+        resultString += String.format(Locale.US, "(%.1f%%) ", confidence * 100.0f);
       }
 
       if (location != null) {

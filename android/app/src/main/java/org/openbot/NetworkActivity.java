@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;
@@ -284,7 +285,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           public void run() {
             Log.i("display_ctrl", "runnable");
             showControl(
-                String.format("%.2f,%.2f", vehicleControl.getLeft(), vehicleControl.getRight()));
+                String.format(
+                    Locale.US, "%.2f,%.2f", vehicleControl.getLeft(), vehicleControl.getRight()));
           }
         });
 
