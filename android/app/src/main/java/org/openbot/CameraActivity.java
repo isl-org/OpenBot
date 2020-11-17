@@ -970,7 +970,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   protected void toggleCamera(boolean isChecked){
-    LOGGER.d("Camera Toggled to" + isChecked);
+    LOGGER.d("Camera Toggled to " + isChecked);
     this.cameraSelection = getCameraUserSelection();
   }
 
