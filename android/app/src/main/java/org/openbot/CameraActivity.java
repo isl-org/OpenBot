@@ -59,7 +59,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -119,9 +118,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private LinearLayout gestureLayout;
   private BottomSheetBehavior sheetBehavior;
 
-  protected SwitchCompat connectionSwitchCompat,
-          driveModeSwitchCompat,
-          loggerSwitchCompat;
+  protected SwitchCompat connectionSwitchCompat, driveModeSwitchCompat, loggerSwitchCompat;
   protected TextView frameValueTextView,
       cropValueTextView,
       inferenceTimeTextView,
@@ -695,16 +692,15 @@ public abstract class CameraActivity extends AppCompatActivity
     inferenceTimeTextView.setText(inferenceTime);
   }
 
-  protected int getCameraUserSelection(){
-    //during initialisation there is no cameraToggle so we assume default
-    if (this.cameraToggle == null ){
+  protected int getCameraUserSelection() {
+    // during initialisation there is no cameraToggle so we assume default
+    if (this.cameraToggle == null) {
       this.cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
     } else {
       this.cameraSelection = this.cameraToggle.isChecked() ? 1 : 0;
     }
     return this.cameraSelection;
   }
-
 
   protected void showControl(String controlValue) {
     controlValueTextView.setText(controlValue);
@@ -969,7 +965,7 @@ public abstract class CameraActivity extends AppCompatActivity
     usbConnected = false;
   }
 
-  protected void toggleCamera(boolean isChecked){
+  protected void toggleCamera(boolean isChecked) {
     LOGGER.d("Camera Toggled to " + isChecked);
     this.cameraSelection = getCameraUserSelection();
     this.setFragment();
@@ -1031,7 +1027,7 @@ public abstract class CameraActivity extends AppCompatActivity
       setDriveByNetwork(isChecked);
     } else if (buttonView == loggerSwitchCompat) {
       setIsLoggingActive(isChecked);
-    } else if ( buttonView == cameraToggle ) {
+    } else if (buttonView == cameraToggle) {
       toggleCamera(isChecked);
     }
   }
