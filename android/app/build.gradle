@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
@@ -31,6 +31,9 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+    kotlinOptions{
+        jvmTarget = '1.8'
+    }
 }
 
 
@@ -47,5 +50,11 @@ dependencies {
     implementation 'com.github.felHR85:UsbSerial:6.1.0'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     implementation 'org.zeroturnaround:zt-zip:1.14'
+    implementation project(path: ':posenet')
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+}
+repositories {
+    mavenCentral()
 }

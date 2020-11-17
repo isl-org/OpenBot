@@ -1,1 +1,2 @@
+include ':posenet'
 include ':app' ,':tensorflow-lite'

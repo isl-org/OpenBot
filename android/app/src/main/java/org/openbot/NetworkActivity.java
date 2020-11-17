@@ -27,6 +27,8 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.util.Size;
@@ -34,6 +36,9 @@ import android.util.TypedValue;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+
+import androidx.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -45,11 +50,14 @@ import org.openbot.env.AudioPlayer;
 import org.openbot.env.BorderedText;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
+import org.openbot.env.PoseNetUtils;
 import org.openbot.tflite.Autopilot;
 import org.openbot.tflite.Detector;
 import org.openbot.tflite.Network.Device;
 import org.openbot.tflite.Network.Model;
 import org.openbot.tracking.MultiBoxTracker;
+import org.tensorflow.lite.examples.posenet.lib.Person;
+import org.tensorflow.lite.examples.posenet.lib.Posenet;
 
 /**
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
@@ -58,8 +66,10 @@ import org.openbot.tracking.MultiBoxTracker;
 public class NetworkActivity extends CameraActivity implements OnImageAvailableListener {
   private static final Logger LOGGER = new Logger();
 
+  public Posenet posenet;
+
   // Minimum detection confidence to track a detection.
-  private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
+  private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.55f;
   private static final Size DESIRED_PREVIEW_SIZE = new Size(1280, 720); // 16:9
 
   private static final float TEXT_SIZE_DIP = 10;
@@ -77,6 +87,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   private boolean computingNetwork = false;
   private boolean driveByNetwork = false;
   private boolean noiseEnabled = false;
+  private boolean runPosenet = false;
   private long frameNum = 0;
 
   private Matrix frameToCropTransform;
@@ -237,6 +248,10 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
                 tracker.trackResults(mappedRecognitions, currFrameNum);
                 vehicleControl = tracker.updateTarget();
                 trackingOverlay.postInvalidate();
+
+                // Runing posenet
+
+
               } else if (autoPilot != null) {
                 LOGGER.i("Running autopilot on image " + currFrameNum);
                 final long startTime = SystemClock.uptimeMillis();
@@ -268,6 +283,10 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
                   });
             }
           });
+    }
+    if (runPosenet){
+      PoseNetUtils poseNetUtils = PoseNetUtils.Companion.getInstance();
+      poseNetUtils.processImage(rgbFrameBitmap, getSurfaceHolder());
     }
   }
 
@@ -358,6 +377,17 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
       driveModeSwitchCompat.setText("Controller");
     }
     driveModeSwitchCompat.setChecked(driveByNetwork);
+  }
+
+  @Override
+  protected void runPosenet(boolean isChecked) {
+    runPosenet = isChecked;
+    if (runPosenet){
+      posenetSwitchCompat.setText("On");
+    } else {
+      posenetSwitchCompat.setText("Off");
+    }
+    posenetSwitchCompat.setChecked(runPosenet);
   }
 
   @Override
