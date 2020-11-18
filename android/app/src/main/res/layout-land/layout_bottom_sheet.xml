@@ -129,7 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:checked="false"
+            android:checked="true"
             android:gravity="end"
             android:text="@string/controller"
             android:textColor="@android:color/black" />
