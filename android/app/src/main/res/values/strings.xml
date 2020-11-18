@@ -62,6 +62,8 @@
     <string name="crop">Crop</string>
     <string name="frame">Frame</string>
     <string name="_1">1</string>
+    <string name="PoseNet">PoseNet</string>
+    <string name="off">Off</string>
     <string-array name="control_speeds">
         <item>Slow</item>
         <item>Normal</item>

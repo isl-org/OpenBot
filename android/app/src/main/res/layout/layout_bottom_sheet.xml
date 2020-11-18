@@ -244,6 +244,41 @@
             android:prompt="@string/model" />
 
         <TextView
+            android:id="@+id/ultrasonic_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="end"
+            android:text=""
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/PoseNet"
+            android:textColor="@android:color/black" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/posenet_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:layout_marginLeft="10dp"
+            android:checked="false"
+            android:gravity="end"
+            android:text="@string/off"
+            android:textColor="@android:color/black" />
+
+        <TextView
             android:id="@+id/inference_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -286,8 +321,9 @@
                 android:padding="2dp">
 
                 <ImageView
+
                     android:id="@+id/minus"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/minus"
                     android:src="@drawable/ic_baseline_remove" />
