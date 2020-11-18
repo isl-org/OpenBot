@@ -64,7 +64,7 @@ class Person {
   var score: Float = 0.0f
 }
 
-enum class Device {
+enum class Device_Posenet {
   CPU,
   NNAPI,
   GPU
@@ -74,7 +74,7 @@ class Posenet(
   val context: Context
 ) : AutoCloseable {
   val filename: String = "posenet_model.tflite"
-  val device: Device = Device.GPU
+  val device: Device_Posenet = Device_Posenet.GPU
   var lastInferenceTimeNanos: Long = -1
     private set
 
@@ -90,12 +90,12 @@ class Posenet(
     val options = Interpreter.Options()
     options.setNumThreads(NUM_LITE_THREADS)
     when (device) {
-      Device.CPU -> { }
-      Device.GPU -> {
+      Device_Posenet.CPU -> { }
+      Device_Posenet.GPU -> {
         gpuDelegate = GpuDelegate()
         options.addDelegate(gpuDelegate)
       }
-      Device.NNAPI -> options.setUseNNAPI(true)
+      Device_Posenet.NNAPI -> options.setUseNNAPI(true)
     }
     interpreter = Interpreter(loadModelFile(filename, context), options)
     return interpreter!!

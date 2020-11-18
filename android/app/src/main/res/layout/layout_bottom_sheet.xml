@@ -299,7 +299,7 @@
             android:text="@string/device"
             android:textColor="@android:color/black" />
         <Spinner
-            android:id="@+id/device_spinner"
+            android:id="@+id/device_spinner_model"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -320,14 +320,14 @@
                 android:padding="2dp">
 
                 <ImageView
-                    android:id="@+id/minus"
+                    android:id="@+id/minus_model"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/minus"
                     android:src="@drawable/ic_baseline_remove" />
 
                 <TextView
-                    android:id="@+id/threads"
+                    android:id="@+id/threads_model"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -338,7 +338,7 @@
                     android:textSize="14sp" />
 
                 <ImageView
-                    android:id="@+id/plus"
+                    android:id="@+id/plus_model"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/plus"
@@ -354,4 +354,69 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/device"
+            android:textColor="@android:color/black" />
+        <Spinner
+            android:id="@+id/device_spinner_posenet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:entries="@array/devices"
+            android:prompt="@string/device" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/rectangle"
+                android:orientation="horizontal"
+                android:padding="2dp">
+
+                <ImageView
+                    android:id="@+id/minus_posenet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/minus"
+                    android:src="@drawable/ic_baseline_remove" />
+
+                <TextView
+                    android:id="@+id/threads_posenet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/_1"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/plus_posenet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/plus"
+                    android:src="@drawable/ic_baseline_add" />
+            </LinearLayout>
+            <TextView
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/threads"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

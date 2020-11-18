@@ -88,6 +88,7 @@ import org.openbot.env.UsbConnection;
 import org.openbot.tflite.Network.Device;
 import org.openbot.tflite.Network.Model;
 import org.tensorflow.lite.examples.posenet.lib.BodyPart;
+import org.tensorflow.lite.examples.posenet.lib.Device_Posenet;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 
@@ -142,16 +143,18 @@ public abstract class CameraActivity extends AppCompatActivity
             inferenceTimeTextView,
             controlValueTextView;
     protected ImageView bottomSheetArrowImageView;
-    private ImageView plusImageView, minusImageView;
+    private ImageView plusImageView, minusImageView, plusImageViewPosenet, minusImageViewPosenet;
     protected Spinner baudRateSpinner,
             modelSpinner,
-            deviceSpinner,
+            deviceSpinnerModel,
+            deviceSpinnerPosenet,
             driveModeSpinner,
             loggerSpinner,
             controlSpinner;
     private TextView threadsTextView;
     private Model model = Model.DETECTOR_V1_1_0_Q;
     private Device device = Device.CPU;
+    private Device_Posenet device_posenet = Device_Posenet.GPU;
     private int numThreads = -1;
 
     protected GameController gameController;
@@ -236,9 +239,12 @@ public abstract class CameraActivity extends AppCompatActivity
         threadsTextView = findViewById(R.id.threads);
         plusImageView = findViewById(R.id.plus);
         minusImageView = findViewById(R.id.minus);
+        plusImageViewPosenet = findViewById(R.id.plus_posenet);
+        minusImageViewPosenet = findViewById(R.id.minus_posenet);
         baudRateSpinner = findViewById(R.id.baud_rate_spinner);
         modelSpinner = findViewById(R.id.model_spinner);
-        deviceSpinner = findViewById(R.id.device_spinner);
+        deviceSpinnerModel = findViewById(R.id.device_spinner);
+        deviceSpinnerPosenet = findViewById(R.id.device_spinner_posenet);
         driveModeSpinner = findViewById(R.id.drive_mode_spinner);
         driveModeSwitchCompat = findViewById(R.id.drive_mode_info_switch);
         bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
@@ -310,11 +316,14 @@ public abstract class CameraActivity extends AppCompatActivity
         posenetSwitchCompat.setOnCheckedChangeListener(this);
         
         plusImageView.setOnClickListener(this);
+        plusImageViewPosenet.setOnClickListener(this);
         minusImageView.setOnClickListener(this);
+        minusImageViewPosenet.setOnClickListener(this);
 
         baudRateSpinner.setOnItemSelectedListener(this);
         modelSpinner.setOnItemSelectedListener(this);
-        deviceSpinner.setOnItemSelectedListener(this);
+        deviceSpinnerModel.setOnItemSelectedListener(this);
+        deviceSpinnerPosenet.setOnItemSelectedListener(this);
         driveModeSpinner.setOnItemSelectedListener(this);
         loggerSpinner.setOnItemSelectedListener(this);
         controlSpinner.setOnItemSelectedListener(this);
@@ -322,7 +331,8 @@ public abstract class CameraActivity extends AppCompatActivity
         // Make sure spinners are initialized correctly
         baudRateSpinner.setSelection(Arrays.binarySearch(BaudRates, baudRate));
         modelSpinner.setSelection(model.ordinal());
-        deviceSpinner.setSelection(device.ordinal());
+        deviceSpinnerModel.setSelection(device.ordinal());
+        deviceSpinnerPosenet.setSelection(device_posenet.ordinal());
         driveModeSpinner.setSelection(driveMode.ordinal());
         loggerSpinner.setSelection(logMode.ordinal());
         controlSpinner.setSelection(controlSpeed.ordinal());
@@ -796,6 +806,10 @@ public abstract class CameraActivity extends AppCompatActivity
         return device;
     }
 
+    protected Device_Posenet getDevice_posenet() {
+        return device_posenet;
+    }
+
     private void setDevice(Device device) {
         if (this.device != device) {
             LOGGER.d("Updating  device: " + device);
@@ -803,6 +817,18 @@ public abstract class CameraActivity extends AppCompatActivity
             final boolean threadsEnabled = device == Device.CPU;
             plusImageView.setEnabled(threadsEnabled);
             minusImageView.setEnabled(threadsEnabled);
+            threadsTextView.setText(threadsEnabled ? String.valueOf(numThreads) : "N/A");
+            onInferenceConfigurationChanged();
+        }
+    }
+
+    private void setDevice_posenet(Device_Posenet device_posenet) {
+        if (this.device_posenet != device_posenet) {
+            LOGGER.d("Updating  device: " + device_posenet);
+            this.device_posenet = device_posenet;
+            final boolean threadsEnabled = device_posenet == Device_Posenet.CPU.CPU;
+            plusImageViewPosenet.setEnabled(threadsEnabled);
+            minusImageViewPosenet.setEnabled(threadsEnabled);
             threadsTextView.setText(threadsEnabled ? String.valueOf(numThreads) : "N/A");
             onInferenceConfigurationChanged();
         }
@@ -1079,7 +1105,7 @@ public abstract class CameraActivity extends AppCompatActivity
             setBaudRate(Integer.parseInt(parent.getItemAtPosition(pos).toString()));
         } else if (parent == modelSpinner) {
             setModel(Model.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
-        } else if (parent == deviceSpinner) {
+        } else if (parent == deviceSpinnerModel) {
             setDevice(Device.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
         } else if (parent == driveModeSpinner) {
             setDriveMode(DriveMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
