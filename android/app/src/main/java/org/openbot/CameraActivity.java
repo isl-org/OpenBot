@@ -309,7 +309,7 @@ public abstract class CameraActivity extends AppCompatActivity
     gameController = new GameController(driveMode);
 
     // load saved instance variables e.g. after rotation
-    if (savedInstanceState != null){
+    if (savedInstanceState != null) {
       super.onRestoreInstanceState(savedInstanceState);
       this.cameraSelection = savedInstanceState.getInt("cameraSelection");
     }
@@ -1099,5 +1099,4 @@ public abstract class CameraActivity extends AppCompatActivity
     super.onSaveInstanceState(savedInstanceState);
     savedInstanceState.putInt("cameraSelection", getCameraUserSelection());
   }
-
 }
