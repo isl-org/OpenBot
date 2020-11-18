@@ -308,6 +308,13 @@ public abstract class CameraActivity extends AppCompatActivity
 
     gameController = new GameController(driveMode);
 
+    // load saved instance variables e.g. after rotation
+    if (savedInstanceState != null){
+      super.onRestoreInstanceState(savedInstanceState);
+      this.cameraSelection = savedInstanceState.getInt("cameraSelection");
+    }
+    this.setCameraSwitchText();
+
     // Intent for sensor service
     intentSensorService = new Intent(this, SensorService.class);
 
@@ -697,12 +704,12 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.cameraSwitchCompat == null) {
       this.cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
     } else {
-      this.cameraSelection = this.cameraSwitchCompat.isChecked() ? 1 : 0;
+      this.cameraSelection = this.cameraSwitchCompat.isChecked() ? 0 : 1;
     }
     return this.cameraSelection;
   }
 
-  protected void setCameraUserSelection() {
+  protected void setCameraSwitchText() {
     if (this.cameraSelection == CameraCharacteristics.LENS_FACING_BACK) {
       cameraSwitchCompat.setText(R.string.camera_facing_back);
     } else {
@@ -976,7 +983,7 @@ public abstract class CameraActivity extends AppCompatActivity
   protected void toggleCamera(boolean isChecked) {
     LOGGER.d("Camera Toggled to " + isChecked);
     this.cameraSelection = getCameraUserSelection();
-    this.setCameraUserSelection();
+    this.setCameraSwitchText();
     this.setFragment();
   }
 
@@ -1080,4 +1087,17 @@ public abstract class CameraActivity extends AppCompatActivity
   public void onNothingSelected(AdapterView<?> parent) {
     // Do nothing.
   }
+
+  @Override
+  public void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    this.cameraSelection = savedInstanceState.getInt("cameraSelection");
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle savedInstanceState) {
+    super.onSaveInstanceState(savedInstanceState);
+    savedInstanceState.putInt("cameraSelection", getCameraUserSelection());
+  }
+
 }
