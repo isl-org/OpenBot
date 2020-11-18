@@ -101,7 +101,7 @@ public abstract class CameraActivity extends AppCompatActivity
     private static final Logger LOGGER = new Logger();
 
     //PoseNet Constants
-    private List<Pair<BodyPart, BodyPart>> bodyJoints = PoseNetUtils.Companion.getInstance().getBodyJoints();
+//    private List<Pair<BodyPart, BodyPart>> bodyJoints = PoseNetUtils.Companion.getInstance().getBodyJoints();
 
 
     // Constants
@@ -152,10 +152,13 @@ public abstract class CameraActivity extends AppCompatActivity
             loggerSpinner,
             controlSpinner;
     private TextView threadsTextView;
+    private TextView threadsTextViewPosenet;
     private Model model = Model.DETECTOR_V1_1_0_Q;
     private Device device = Device.CPU;
     private Device_Posenet device_posenet = Device_Posenet.GPU;
     private int numThreads = -1;
+    private int numThreadsPosenet = -1;
+
 
     protected GameController gameController;
 
@@ -170,6 +173,7 @@ public abstract class CameraActivity extends AppCompatActivity
     protected String logFolder;
     private boolean loggingEnabled;
     private Intent intentSensorService;
+
 
     public enum LogMode {
         ALL_IMGS,
@@ -237,6 +241,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
         connectionSwitchCompat = findViewById(R.id.connection_switch);
         threadsTextView = findViewById(R.id.threads);
+        threadsTextViewPosenet = findViewById(R.id.threads_posenet);
         plusImageView = findViewById(R.id.plus);
         minusImageView = findViewById(R.id.minus);
         plusImageViewPosenet = findViewById(R.id.plus_posenet);
@@ -338,6 +343,7 @@ public abstract class CameraActivity extends AppCompatActivity
         controlSpinner.setSelection(controlSpeed.ordinal());
 
         numThreads = Integer.parseInt(threadsTextView.getText().toString().trim());
+        numThreadsPosenet = Integer.parseInt(threadsTextView.getText().toString().trim());
 
         gameController = new GameController(driveMode);
 
@@ -829,7 +835,7 @@ public abstract class CameraActivity extends AppCompatActivity
             final boolean threadsEnabled = device_posenet == Device_Posenet.CPU.CPU;
             plusImageViewPosenet.setEnabled(threadsEnabled);
             minusImageViewPosenet.setEnabled(threadsEnabled);
-            threadsTextView.setText(threadsEnabled ? String.valueOf(numThreads) : "N/A");
+            threadsTextView.setText(threadsEnabled ? String.valueOf(numThreadsPosenet) : "N/A");
             onInferenceConfigurationChanged();
         }
     }
@@ -838,10 +844,22 @@ public abstract class CameraActivity extends AppCompatActivity
         return numThreads;
     }
 
+    protected int getNumThreadsPosenet() {
+        return numThreadsPosenet;
+    }
+
     private void setNumThreads(int numThreads) {
         if (this.numThreads != numThreads) {
             LOGGER.d("Updating  numThreads: " + numThreads);
             this.numThreads = numThreads;
+            onInferenceConfigurationChanged();
+        }
+    }
+
+    private void setNumThreadsPosenet(int numThreadsPosenet){
+        if (this.numThreadsPosenet != numThreadsPosenet) {
+            LOGGER.d("Updating  numThreadsPosenet: " + numThreadsPosenet);
+            this.numThreadsPosenet = numThreadsPosenet;
             onInferenceConfigurationChanged();
         }
     }
@@ -1045,7 +1063,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
     protected abstract void setDriveByNetwork(boolean isChecked);
 
-    protected abstract void runPosenet(boolean isChecked);
+    protected abstract void PosenetOn(boolean isChecked);
 
     protected void sendControlToVehicle(ControlSignal vehicleControl) {
         if ((usbConnection != null) && usbConnection.isOpen() && !usbConnection.isBusy()) {
@@ -1078,7 +1096,7 @@ public abstract class CameraActivity extends AppCompatActivity
         } else if (buttonView == loggerSwitchCompat) {
             setIsLoggingActive(isChecked);
         } else if (buttonView == posenetSwitchCompat) {
-            runPosenet(isChecked);
+            PosenetOn(isChecked);
         }
     }
 

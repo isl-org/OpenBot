@@ -88,7 +88,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   private boolean computingNetwork = false;
   private boolean driveByNetwork = false;
   private boolean noiseEnabled = false;
-  private boolean runPosenet = false;
+  private boolean PosenetOn = false;
   private long frameNum = 0;
 
   private Matrix frameToCropTransform;
@@ -285,7 +285,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
             }
           });
     }
-    if (runPosenet){
+    if (PosenetOn){
       PoseNetUtils poseNetUtils = PoseNetUtils.Companion.getInstance();
       poseNetUtils.processImage(rgbFrameBitmap, getSurfaceHolder());
     }
@@ -382,14 +382,14 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   }
 
   @Override
-  protected void runPosenet(boolean isChecked) {
-    runPosenet = isChecked;
-    if (runPosenet){
+  protected void PosenetOn(boolean isChecked) {
+    PosenetOn = isChecked;
+    if (PosenetOn){
       posenetSwitchCompat.setText("On");
     } else {
       posenetSwitchCompat.setText("Off");
     }
-    posenetSwitchCompat.setChecked(runPosenet);
+    posenetSwitchCompat.setChecked(PosenetOn);
   }
 
   @Override
