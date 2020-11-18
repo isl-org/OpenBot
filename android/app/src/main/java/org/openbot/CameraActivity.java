@@ -58,7 +58,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -118,7 +117,10 @@ public abstract class CameraActivity extends AppCompatActivity
   private LinearLayout gestureLayout;
   private BottomSheetBehavior sheetBehavior;
 
-  protected SwitchCompat connectionSwitchCompat, driveModeSwitchCompat, loggerSwitchCompat, cameraSwitchCompat;
+  protected SwitchCompat connectionSwitchCompat,
+      driveModeSwitchCompat,
+      loggerSwitchCompat,
+      cameraSwitchCompat;
   protected TextView frameValueTextView,
       cropValueTextView,
       inferenceTimeTextView,
@@ -700,6 +702,14 @@ public abstract class CameraActivity extends AppCompatActivity
     return this.cameraSelection;
   }
 
+  protected void setCameraUserSelection() {
+    if (this.cameraSelection == CameraCharacteristics.LENS_FACING_BACK) {
+      cameraSwitchCompat.setText(R.string.camera_facing_back);
+    } else {
+      cameraSwitchCompat.setText(R.string.camera_facing_front);
+    }
+  }
+
   protected void showControl(String controlValue) {
     controlValueTextView.setText(controlValue);
   }
@@ -966,6 +976,7 @@ public abstract class CameraActivity extends AppCompatActivity
   protected void toggleCamera(boolean isChecked) {
     LOGGER.d("Camera Toggled to " + isChecked);
     this.cameraSelection = getCameraUserSelection();
+    this.setCameraUserSelection();
     this.setFragment();
   }
 
