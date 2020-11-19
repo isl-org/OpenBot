@@ -18,7 +18,7 @@ Our application is derived from the [TensorFlow Lite Object Detection Android De
 
 - [Android Studio 3.2 or later](https://developer.android.com/studio/index.html) for building and installing the apk, or otherwise download the apk from the assets of the [latest release](https://github.com/intel-isl/OpenBot/releases/latest).
 - Android device and Android development environment with minimum API 21
-- Currently, we use API 30 as compile and target SDK. It should get installed automatically, but if not you can install the SDK manually. Go to Android Studio -> Preferences -> Appearance & Behaviour -> System Settings -> Android SDK. Make sure API 30 is checked and click apply.
+- Currently, we use API 28 as compile and target SDK. It should get installed automatically, but if not you can install the SDK manually. Go to Android Studio -> Preferences -> Appearance & Behaviour -> System Settings -> Android SDK. Make sure API 28 is checked and click apply.
 
 ![Android SDK](../docs/images/android_studio_sdk.jpg)
 
