@@ -70,18 +70,22 @@ enum class Device_Posenet {
   GPU
 }
 
+
+
 class Posenet(
-  val context: Context
+  val context: Context,
+  val device: Device_Posenet = Device_Posenet.GPU,
+  val NUM_LITE_THREADS: Int = 4
 ) : AutoCloseable {
   val filename: String = "posenet_model.tflite"
-  val device: Device_Posenet = Device_Posenet.GPU
+
   var lastInferenceTimeNanos: Long = -1
     private set
 
   /** An Interpreter for the TFLite model.   */
   private var interpreter: Interpreter? = null
   private var gpuDelegate: GpuDelegate? = null
-  private val NUM_LITE_THREADS = 4
+
 
   private fun getInterpreter(): Interpreter {
     if (interpreter != null) {

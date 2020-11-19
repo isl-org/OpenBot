@@ -240,15 +240,15 @@ public abstract class CameraActivity extends AppCompatActivity
 
 
         connectionSwitchCompat = findViewById(R.id.connection_switch);
-        threadsTextView = findViewById(R.id.threads);
+        threadsTextView = findViewById(R.id.threads_model);
         threadsTextViewPosenet = findViewById(R.id.threads_posenet);
-        plusImageView = findViewById(R.id.plus);
-        minusImageView = findViewById(R.id.minus);
+        plusImageView = findViewById(R.id.plus_model);
+        minusImageView = findViewById(R.id.minus_model);
         plusImageViewPosenet = findViewById(R.id.plus_posenet);
         minusImageViewPosenet = findViewById(R.id.minus_posenet);
         baudRateSpinner = findViewById(R.id.baud_rate_spinner);
         modelSpinner = findViewById(R.id.model_spinner);
-        deviceSpinnerModel = findViewById(R.id.device_spinner);
+        deviceSpinnerModel = findViewById(R.id.device_spinner_model);
         deviceSpinnerPosenet = findViewById(R.id.device_spinner_posenet);
         driveModeSpinner = findViewById(R.id.drive_mode_spinner);
         driveModeSwitchCompat = findViewById(R.id.drive_mode_info_switch);
@@ -832,7 +832,7 @@ public abstract class CameraActivity extends AppCompatActivity
         if (this.device_posenet != device_posenet) {
             LOGGER.d("Updating  device: " + device_posenet);
             this.device_posenet = device_posenet;
-            final boolean threadsEnabled = device_posenet == Device_Posenet.CPU.CPU;
+            final boolean threadsEnabled = device_posenet == Device_Posenet.CPU;
             plusImageViewPosenet.setEnabled(threadsEnabled);
             minusImageViewPosenet.setEnabled(threadsEnabled);
             threadsTextView.setText(threadsEnabled ? String.valueOf(numThreadsPosenet) : "N/A");
@@ -1102,18 +1102,30 @@ public abstract class CameraActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.plus) {
+        if (v.getId() == R.id.plus_model) {
             String threads = threadsTextView.getText().toString().trim();
             int numThreads = Integer.parseInt(threads);
             if (numThreads >= 9) return;
             setNumThreads(++numThreads);
             threadsTextView.setText(String.valueOf(numThreads));
-        } else if (v.getId() == R.id.minus) {
+        } else if (v.getId() == R.id.minus_model) {
             String threads = threadsTextView.getText().toString().trim();
             int numThreads = Integer.parseInt(threads);
             if (numThreads == 1) return;
             setNumThreads(--numThreads);
             threadsTextView.setText(String.valueOf(numThreads));
+        } else if (v.getId() == R.id.plus_posenet) {
+            String threads = threadsTextViewPosenet.getText().toString().trim();
+            int numThreads = Integer.parseInt(threads);
+            if (numThreads >= 9) return;
+            setNumThreadsPosenet(++numThreads);
+            threadsTextViewPosenet.setText(String.valueOf(numThreads));
+        } else if (v.getId() == R.id.minus_posenet) {
+            String threads = threadsTextViewPosenet.getText().toString().trim();
+            int numThreads = Integer.parseInt(threads);
+            if (numThreads == 1) return;
+            setNumThreadsPosenet(--numThreads);
+            threadsTextViewPosenet.setText(String.valueOf(numThreads));
         }
     }
 
