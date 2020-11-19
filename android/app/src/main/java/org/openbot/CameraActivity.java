@@ -117,7 +117,10 @@ public abstract class CameraActivity extends AppCompatActivity
   private LinearLayout gestureLayout;
   private BottomSheetBehavior sheetBehavior;
 
-  protected SwitchCompat connectionSwitchCompat, driveModeSwitchCompat, loggerSwitchCompat;
+  protected SwitchCompat connectionSwitchCompat,
+      driveModeSwitchCompat,
+      loggerSwitchCompat,
+      cameraSwitchCompat;
   protected TextView frameValueTextView,
       cropValueTextView,
       inferenceTimeTextView,
@@ -216,7 +219,7 @@ public abstract class CameraActivity extends AppCompatActivity
     modelSpinner = findViewById(R.id.model_spinner);
     deviceSpinner = findViewById(R.id.device_spinner);
     driveModeSpinner = findViewById(R.id.drive_mode_spinner);
-    driveModeSwitchCompat = findViewById(R.id.drive_mode_info_switch);
+    driveModeSwitchCompat = findViewById(R.id.drive_mode_switch);
     bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
     gestureLayout = findViewById(R.id.gesture_layout);
     sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
@@ -224,6 +227,7 @@ public abstract class CameraActivity extends AppCompatActivity
     loggerSwitchCompat = findViewById(R.id.logger_switch);
     loggerSpinner = findViewById(R.id.logger_spinner);
     controlSpinner = findViewById(R.id.control_spinner);
+    cameraSwitchCompat = findViewById(R.id.camera_toggle_switch);
 
     ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
     vto.addOnGlobalLayoutListener(
@@ -280,6 +284,7 @@ public abstract class CameraActivity extends AppCompatActivity
     connectionSwitchCompat.setOnCheckedChangeListener(this);
     driveModeSwitchCompat.setOnCheckedChangeListener(this);
     loggerSwitchCompat.setOnCheckedChangeListener(this);
+    cameraSwitchCompat.setOnCheckedChangeListener(this);
 
     plusImageView.setOnClickListener(this);
     minusImageView.setOnClickListener(this);
@@ -302,6 +307,13 @@ public abstract class CameraActivity extends AppCompatActivity
     numThreads = Integer.parseInt(threadsTextView.getText().toString().trim());
 
     gameController = new GameController(driveMode);
+
+    // load saved instance variables e.g. after rotation
+    if (savedInstanceState != null) {
+      super.onRestoreInstanceState(savedInstanceState);
+      this.cameraSelection = savedInstanceState.getInt("cameraSelection");
+    }
+    this.setCameraSwitchText();
 
     // Intent for sensor service
     intentSensorService = new Intent(this, SensorService.class);
@@ -610,6 +622,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   protected void setFragment() {
+    cameraSelection = getCameraUserSelection();
     String cameraId = chooseCamera(cameraSelection);
     Fragment fragment;
     if (useCamera2API) {
@@ -684,6 +697,24 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void showInference(String inferenceTime) {
     inferenceTimeTextView.setText(inferenceTime);
+  }
+
+  protected int getCameraUserSelection() {
+    // during initialisation there is no cameraToggle so we assume default
+    if (this.cameraSwitchCompat == null) {
+      this.cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
+    } else {
+      this.cameraSelection = this.cameraSwitchCompat.isChecked() ? 0 : 1;
+    }
+    return this.cameraSelection;
+  }
+
+  protected void setCameraSwitchText() {
+    if (this.cameraSelection == CameraCharacteristics.LENS_FACING_BACK) {
+      cameraSwitchCompat.setText(R.string.camera_facing_back);
+    } else {
+      cameraSwitchCompat.setText(R.string.camera_facing_front);
+    }
   }
 
   protected void showControl(String controlValue) {
@@ -949,6 +980,13 @@ public abstract class CameraActivity extends AppCompatActivity
     usbConnected = false;
   }
 
+  protected void toggleCamera(boolean isChecked) {
+    LOGGER.d("Camera Toggled to " + isChecked);
+    this.cameraSelection = getCameraUserSelection();
+    this.setCameraSwitchText();
+    this.setFragment();
+  }
+
   protected void toggleConnection(boolean isChecked) {
     if (isChecked) {
       connectUsb();
@@ -1006,6 +1044,8 @@ public abstract class CameraActivity extends AppCompatActivity
       setDriveByNetwork(isChecked);
     } else if (buttonView == loggerSwitchCompat) {
       setIsLoggingActive(isChecked);
+    } else if (buttonView == cameraSwitchCompat) {
+      toggleCamera(isChecked);
     }
   }
 
@@ -1046,5 +1086,17 @@ public abstract class CameraActivity extends AppCompatActivity
   @Override
   public void onNothingSelected(AdapterView<?> parent) {
     // Do nothing.
+  }
+
+  @Override
+  public void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    this.cameraSelection = savedInstanceState.getInt("cameraSelection");
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle savedInstanceState) {
+    super.onSaveInstanceState(savedInstanceState);
+    savedInstanceState.putInt("cameraSelection", getCameraUserSelection());
   }
 }

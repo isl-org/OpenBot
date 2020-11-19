@@ -49,6 +49,9 @@
         <item>Game</item>
         <item>Joystick</item>
     </string-array>
+    <string name="camera">Camera</string>
+    <string name="camera_facing_back">Back</string>
+    <string name="camera_facing_front">Front</string>
     <string name="control_speed">Vehicle Speed</string>
     <string name="data_logger">Data Logger</string>
     <string name="not_logging">Not Logging</string>
