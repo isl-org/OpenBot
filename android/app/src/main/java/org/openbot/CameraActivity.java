@@ -58,6 +58,7 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -115,7 +116,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
     // Surface holder to draw key points
     private SurfaceHolder surfaceHolder;
-    private SurfaceView surfaceView  = null;
+    private SurfaceView surfaceView = null;
 
     private static Context mContext;
     private int cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
@@ -136,7 +137,7 @@ public abstract class CameraActivity extends AppCompatActivity
     private LinearLayout gestureLayout;
     private BottomSheetBehavior sheetBehavior;
 
-    protected SwitchCompat connectionSwitchCompat, driveModeSwitchCompat, loggerSwitchCompat, 
+    protected SwitchCompat connectionSwitchCompat, driveModeSwitchCompat, loggerSwitchCompat,
             posenetSwitchCompat;
     protected TextView frameValueTextView,
             cropValueTextView,
@@ -236,6 +237,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
         // Create a surface so that we have a canvas to draw PoseNet output.
         surfaceView = findViewById(R.id.surfaceView);
+        surfaceView.setZOrderOnTop(true);
         surfaceHolder = surfaceView.getHolder();
 
 
@@ -257,7 +259,7 @@ public abstract class CameraActivity extends AppCompatActivity
         sheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
         bottomSheetArrowImageView = findViewById(R.id.bottom_sheet_arrow);
         loggerSwitchCompat = findViewById(R.id.logger_switch);
-        posenetSwitchCompat = bottomSheetLayout.findViewById(R.id.posenet_switch);
+        posenetSwitchCompat = findViewById(R.id.posenet_switch);
         loggerSpinner = findViewById(R.id.logger_spinner);
         controlSpinner = findViewById(R.id.control_spinner);
 
@@ -318,8 +320,8 @@ public abstract class CameraActivity extends AppCompatActivity
         connectionSwitchCompat.setOnCheckedChangeListener(this);
         driveModeSwitchCompat.setOnCheckedChangeListener(this);
         loggerSwitchCompat.setOnCheckedChangeListener(this);
-        posenetSwitchCompat.setOnCheckedChangeListener(this);
-        
+        posenetSwitchCompat.setOnCheckedChangeListener(this::onCheckedChanged);
+
         plusImageView.setOnClickListener(this);
         plusImageViewPosenet.setOnClickListener(this);
         minusImageView.setOnClickListener(this);
@@ -491,7 +493,8 @@ public abstract class CameraActivity extends AppCompatActivity
 
     //
     public SurfaceHolder getSurfaceHolder() {
-        return surfaceHolder;}
+        return surfaceHolder;
+    }
 
     @Override
     public synchronized void onStart() {
@@ -835,7 +838,7 @@ public abstract class CameraActivity extends AppCompatActivity
             final boolean threadsEnabled = device_posenet == Device_Posenet.CPU;
             plusImageViewPosenet.setEnabled(threadsEnabled);
             minusImageViewPosenet.setEnabled(threadsEnabled);
-            threadsTextView.setText(threadsEnabled ? String.valueOf(numThreadsPosenet) : "N/A");
+            threadsTextViewPosenet.setText(threadsEnabled ? String.valueOf(numThreadsPosenet) : "N/A");
             onInferenceConfigurationChanged();
         }
     }
@@ -856,7 +859,7 @@ public abstract class CameraActivity extends AppCompatActivity
         }
     }
 
-    private void setNumThreadsPosenet(int numThreadsPosenet){
+    private void setNumThreadsPosenet(int numThreadsPosenet) {
         if (this.numThreadsPosenet != numThreadsPosenet) {
             LOGGER.d("Updating  numThreadsPosenet: " + numThreadsPosenet);
             this.numThreadsPosenet = numThreadsPosenet;
@@ -1143,6 +1146,8 @@ public abstract class CameraActivity extends AppCompatActivity
             setLogMode(LogMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
         } else if (parent == controlSpinner) {
             setControlSpeed(ControlSpeed.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
+        } else if (parent == deviceSpinnerPosenet) {
+            setDevice_posenet(Device_Posenet.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
         }
     }
 

@@ -43,7 +43,7 @@
 #define OPENBOT DIY
 
 // Enable/Disable voltage divider (1,0)
-#define HAS_VOLTAGE_DIVIDER 0
+#define HAS_VOLTAGE_DIVIDER 1
 
 // Enable/Disable indicators (1,0)
 #define HAS_INDICATORS 0
@@ -52,10 +52,10 @@
 #define HAS_SPEED_SENSORS 0
 
 // Enable/Disable sonar (1,0)
-#define HAS_SONAR 0
+#define HAS_SONAR 1
 
 // Enable/Disable median filter for sonar measurements (1,0)
-#define USE_MEDIAN 0
+#define USE_MEDIAN 1
 
 // Enable/Disable OLED (1,0)
 #define HAS_OLED 0
@@ -116,7 +116,7 @@
 //------------------------------------------------------//
 
 #include <limits.h>
-const unsigned int STOP_THRESHOLD = 32; //cm
+const unsigned int STOP_THRESHOLD = 48; //cm
 
 #if NO_PHONE_MODE
   int turn_direction = 0; // right
