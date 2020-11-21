@@ -47,7 +47,7 @@ class PoseNetUtils {
 
 
     /** Threshold for confidence score. */
-    val minConfidence = 0.5
+    val minConfidence = 0.55
 
     /** Radius of circle used to draw keypoints.  */
     val circleRadius = 8.0f

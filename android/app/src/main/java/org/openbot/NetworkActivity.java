@@ -100,17 +100,11 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
 
     private static final int MODEL_WIDTH = 257;
     private static final int MODEL_HEIGHT = 257;
-    private float minConfidencePose = 0.50f;
+    private float minConfidencePose = 0.01f;
     public Posenet posenet;
     private float circleRadius = 8.0f;
     private SurfaceHolder surfaceHolder;
     private Paint paint = new Paint();
-    private Canvas mCanvas;
-    private LinkedList<Detector.Recognition> mappedRecognitions;
-    private List<Detector.Recognition> results;
-    private Person person;
-    private Bitmap scaledBitmap;
-
 
     // Minimum detection confidence to track a detection.
     private static final float minConfidenceOD = 0.55f;
@@ -142,6 +136,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
 
     private AudioPlayer audioPlayer;
     private String voice;
+    private Canvas mCanvas;
 
 
     public NetworkActivity() {
@@ -224,8 +219,9 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
             return;
         }
 
-//        final Canvas canvas = new Canvas(croppedBitmap);
-//        canvas.drawBitmap(rgbFrameBitmap, frameToCropTransform, null);
+        final Canvas canvas = new Canvas(croppedBitmap);
+        canvas.drawBitmap(rgbFrameBitmap, frameToCropTransform, null);
+
         // For examining the actual TF input.
         if (getLoggingEnabled() && SAVE_CROP_BITMAP) {
             runInBackground(
@@ -254,7 +250,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
                             if (detector != null) {
                                 LOGGER.i("Running detection on image " + currFrameNum);
                                 final long startTime = SystemClock.uptimeMillis();
-                                results = detector.recognizeImage(croppedBitmap);
+                                final List<Detector.Recognition> results = detector.recognizeImage(croppedBitmap);
                                 lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
 
                                 if (!results.isEmpty())
@@ -268,36 +264,52 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
                                                     + ", "
                                                     + results.get(0).getLocation().width());
 
-//                                cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
-//                                final Canvas canvas = new Canvas(cropCopyBitmap);
-//                                final Paint paint = new Paint();
-//                                paint.setColor(Color.RED);
-//                                paint.setStyle(Style.STROKE);
-//                                paint.setStrokeWidth(2.0f);
+                                cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
+                                final Canvas canvas = new Canvas(cropCopyBitmap);
+                                final Paint paint = new Paint();
+                                paint.setColor(Color.RED);
+                                paint.setStyle(Style.STROKE);
+                                paint.setStrokeWidth(2.0f);
 
-//                                float minimumConfidence = minConfidenceOD;
-//                                mCanvas.drawBitmap(rgbFrameBitmap, frameToCropTransform, null);
-//                                final Paint paint = new Paint();
-//                                paint.setColor(Color.RED);
-//                                paint.setStyle(Style.STROKE);
-//                                paint.setStrokeWidth(2.0f);
-//
-//                                mappedRecognitions = new LinkedList<Detector.Recognition>();
-//
-//                                for (final Detector.Recognition result : results) {
-//                                    final RectF location = result.getLocation();
-//                                    if (location != null && result.getConfidence() >= minConfidenceOD) {
-//                                        mCanvas.drawRect(location, paint);
-//                                        cropToFrameTransform.mapRect(location);
-//                                        result.setLocation(location);
-//                                        mappedRecognitions.add(result);
-//                                    }
-//                                }
-//
-//                                tracker.trackResults(mappedRecognitions, frameNum);
-//                                vehicleControl = tracker.updateTarget();
-//                                trackingOverlay.postInvalidate();
-//                                Log.d("#Drawing bb", "Drawing bounding box");
+                                float minimumConfidence = minConfidenceOD;
+
+                                final List<Detector.Recognition> mappedRecognitions =
+                                        new LinkedList<Detector.Recognition>();
+
+                                for (final Detector.Recognition result : results) {
+                                    final RectF location = result.getLocation();
+                                    if (location != null && result.getConfidence() >= minimumConfidence) {
+                                        canvas.drawRect(location, paint);
+                                        Log.d("Location", String.format("Right: %f, Left: %f, Top: %f, Bottom: %f ", location.right, location.left, location.top, location.bottom));
+                                        canvas.drawCircle(100, 200, 10f, paint);
+                                        cropToFrameTransform.mapRect(location);
+                                        result.setLocation(location);
+                                        mappedRecognitions.add(result);
+                                    }
+                                }
+
+
+
+//                                // Crop bitmap.
+//                                croppedBitmap = cropBitmap(croppedBitmap);
+
+                                // Created scaled version of bitmap for model input.
+                                Bitmap scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, MODEL_WIDTH, MODEL_HEIGHT, true);
+
+                                // Perform inference.
+                                Person person = posenet.estimateSinglePose(scaledBitmap);
+                                Log.d("PoseNet's run", String.format("Person score %f", person.getScore()));
+                                KeyPoint firstJoint = person.getKeyPoints().get(1);
+                                Log.d("PoseNet's run", String.format("Which Body part is it: %s", firstJoint.getBodyPart()));
+                                Log.d("PoseNet's run", String.format("Its position %s", firstJoint.getPosition()));
+                                Log.d("PoseNet's run", String.format("Score %s", firstJoint.getScore()));
+                                draw(canvas, person, cropCopyBitmap, paint);
+
+
+
+                                tracker.trackResults(mappedRecognitions, currFrameNum);
+                                vehicleControl = tracker.updateTarget();
+                                trackingOverlay.postInvalidate();
 
 
                             } else if (autoPilot != null) {
@@ -320,30 +332,26 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
 
                             updateVehicleState();
 
-                            if (PosenetOn) {
-                                final long startTime = SystemClock.uptimeMillis();
-                                // Crop bitmap.
-                                croppedBitmap = cropBitmap(rgbFrameBitmap);
-
-                                // Created scaled version of bitmap for model input.
-                                scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, MODEL_WIDTH, MODEL_HEIGHT, true);
-
-                                // Perform inference.
-                                person = posenet.estimateSinglePose(scaledBitmap);
-                                lastProcessingTimeMs += SystemClock.uptimeMillis() - startTime;
-                            }
-
-                            // Get surface where we will draw
-                            surfaceHolder = getSurfaceHolder();
-                            mCanvas = surfaceHolder.lockCanvas();
-
-                            // if the canvas is null, we can't draw
-                            if (mCanvas == null) {
-                                Log.d("#mCanvas", "mCanvas is null");
-                                return;
-                            }
-                            Log.d("#mCanvas", "mCanvas is not null");
-                            draw();
+//                            if (PosenetOn) {
+//                                final long startTime = SystemClock.uptimeMillis();
+//                                // Crop bitmap.
+//                                croppedBitmap = cropBitmap(croppedBitmap);
+////                                surfaceHolder = getSurfaceHolder();
+////                                Canvas canvas = surfaceHolder.lockCanvas();
+////                                if (canvas == null) {
+////                                    Log.d("#Surface Holder", "Surface holder is null");
+////                                    return;
+////                                }
+//
+//                                // Created scaled version of bitmap for model input.
+//                                Bitmap scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, MODEL_WIDTH, MODEL_HEIGHT, true);
+//
+//                                // Perform inference.
+//                                Person person = posenet.estimateSinglePose(scaledBitmap);
+//                                Log.d("#Surface Holder", "Surface holder is not null");
+//                                draw(canvas, person, scaledBitmap);
+//                                lastProcessingTimeMs += SystemClock.uptimeMillis() - startTime;
+//                            }
 
                             runOnUiThread(
                                     new Runnable() {
@@ -360,117 +368,89 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
 
     }
 
-    private void draw() {
+    private void draw(Canvas canvas, Person person, Bitmap bitmap, Paint paint_ori) {
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        // Draw `bitmap` and `person` in square canvas.
+        int screenWidth;
+        int screenHeight;
+        int left;
+        int right;
+        int top;
+        int bottom;
+        if (canvas.getHeight() > canvas.getWidth()) {
+            screenWidth = canvas.getWidth();
+            screenHeight = canvas.getHeight();
+            left = 0;
+            top = (canvas.getHeight() - canvas.getWidth()) / 2;
+        } else {
+            screenWidth = canvas.getWidth();
+            screenHeight = canvas.getHeight();
+            left = (canvas.getWidth() - canvas.getHeight()) / 2;
+            top = 0;
+        }
+        right = left + screenWidth;
+        bottom = top + screenHeight;
 
-        if (driveByNetwork) {
-            mCanvas.drawBitmap(rgbFrameBitmap,0,0, null);
+        setPaint();
+        canvas.drawBitmap(
+                bitmap,
+                new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
+                new Rect(left, top, right, bottom),
+                paint
+        );
 
-            final Paint paint = new Paint();
-            paint.setColor(Color.RED);
-            paint.setStyle(Style.STROKE);
-            paint.setStrokeWidth(2.0f);
+        float widthRatio = (float) screenWidth / MODEL_WIDTH;
+        float heightRatio = (float) screenHeight / MODEL_HEIGHT;
 
-            mappedRecognitions = new LinkedList<Detector.Recognition>();
-
-            for (final Detector.Recognition result : results) {
-                final RectF location = result.getLocation();
-                if (location != null && result.getConfidence() >= minConfidenceOD) {
-                    mCanvas.drawRect(location, paint);
-                    cropToFrameTransform.mapRect(location);
-                    result.setLocation(location);
-                    mappedRecognitions.add(result);
-                }
+        // Draw key points over the image.
+        for (KeyPoint keyPoint : person.getKeyPoints()) {
+            if (keyPoint.getScore() > minConfidencePose) {
+                Log.d("Body Part", String.format("%s", keyPoint.getBodyPart()));
+                Log.d("X:", String.format("%s", keyPoint.getPosition().getX()));
+                Log.d("Y:", String.format("%s", keyPoint.getPosition().getY()));
+                Log.d("Score:", String.format("%s", keyPoint.getScore()));
+                Position position = keyPoint.getPosition();
+                float adjustedX = position.getX() * widthRatio + left;
+                float adjustedY = position.getY() * heightRatio + top;
+                canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint);
             }
-
-            tracker.trackResults(mappedRecognitions, frameNum);
-            vehicleControl = tracker.updateTarget();
-            trackingOverlay.postInvalidate();
-            Log.d("#Drawing bb", "Drawing bounding box");
         }
 
-
-        //Draw keypoints
-        if (PosenetOn) {
-            mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            // Draw `bitmap` and `person` in square canvas.
-            int screenWidth;
-            int screenHeight;
-            int left;
-            int right;
-            int top;
-            int bottom;
-            if (mCanvas.getHeight() > mCanvas.getWidth()) {
-                screenWidth = mCanvas.getWidth();
-                screenHeight = mCanvas.getHeight();
-                left = 0;
-                top = (mCanvas.getHeight() - mCanvas.getWidth()) / 2;
-            } else {
-                screenWidth = mCanvas.getWidth();
-                screenHeight = mCanvas.getHeight();
-                left = (mCanvas.getWidth() - mCanvas.getHeight()) / 2;
-                top = 0;
+        for (Pair<BodyPart, BodyPart> line : bodyJoints) {
+            if ((person.getKeyPoints().get(line.first.ordinal()).getScore() > minConfidencePose) &&
+                    (person.getKeyPoints().get(line.second.ordinal()).getScore() > minConfidencePose)
+            ) {
+                canvas.drawLine(
+                        person.getKeyPoints().get(line.first.ordinal()).getPosition().getX() * widthRatio + left,
+                        person.getKeyPoints().get(line.first.ordinal()).getPosition().getY() * heightRatio + top,
+                        person.getKeyPoints().get(line.second.ordinal()).getPosition().getX() * widthRatio + left,
+                        person.getKeyPoints().get(line.second.ordinal()).getPosition().getY() * heightRatio + top,
+                        paint
+                );
             }
-            right = left + screenWidth;
-            bottom = top + screenHeight;
-
-            setPaint();
-            mCanvas.drawBitmap(
-                    scaledBitmap,
-                    new Rect(0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight()),
-                    new Rect(left, top, right, bottom),
-                    paint
-            );
-
-            float widthRatio = (float) screenWidth / MODEL_WIDTH;
-            float heightRatio = (float) screenHeight / MODEL_HEIGHT;
-
-            // Draw key points over the image.
-            for (KeyPoint keyPoint : person.getKeyPoints()) {
-                if (keyPoint.getScore() > minConfidencePose) {
-                    Position position = keyPoint.getPosition();
-                    float adjustedX = position.getX() * widthRatio + left;
-                    float adjustedY = position.getY() * heightRatio + top;
-                    mCanvas.drawCircle(adjustedX, adjustedY, circleRadius, paint);
-                }
-            }
-
-            for (Pair<BodyPart, BodyPart> line : bodyJoints) {
-                if ((person.getKeyPoints().get(line.first.ordinal()).getScore() > minConfidencePose) &&
-                        (person.getKeyPoints().get(line.second.ordinal()).getScore() > minConfidencePose)
-                ) {
-                    mCanvas.drawLine(
-                            person.getKeyPoints().get(line.first.ordinal()).getPosition().getX() * widthRatio + left,
-                            person.getKeyPoints().get(line.first.ordinal()).getPosition().getY() * heightRatio + top,
-                            person.getKeyPoints().get(line.second.ordinal()).getPosition().getX() * widthRatio + left,
-                            person.getKeyPoints().get(line.second.ordinal()).getPosition().getY() * heightRatio + top,
-                            paint
-                    );
-                }
-            }
-
-            mCanvas.drawText(
-                    String.format("Score: %.2f", person.getScore()),
-                    (15.0f * widthRatio),
-                    (30.0f * heightRatio + bottom),
-                    paint
-            );
-            mCanvas.drawText(
-                    String.format("Device: %s", posenet.getDevice()),
-                    (15.0f * widthRatio),
-                    (50.0f * heightRatio + bottom),
-                    paint
-            );
-            mCanvas.drawText(
-                    String.format("Time: %d ms", lastProcessingTimeMs),
-                    (15.0f * widthRatio),
-                    (70.0f * heightRatio + bottom),
-                    paint
-            );
-
-
         }
+//
+//        canvas.drawText(
+//                String.format("Score: %.2f", person.getScore()),
+//                (15.0f * widthRatio),
+//                (30.0f * heightRatio + bottom),
+//                paint
+//        );
+//        canvas.drawText(
+//                String.format("Device: %s", posenet.getDevice()),
+//                (15.0f * widthRatio),
+//                (50.0f * heightRatio + bottom),
+//                paint
+//        );
+//        canvas.drawText(
+//                String.format("Time: %d ms", lastProcessingTimeMs),
+//                (15.0f * widthRatio),
+//                (70.0f * heightRatio + bottom),
+//                paint
+//        );
+
         // Draw!
-        surfaceHolder.unlockCanvasAndPost(mCanvas);
+//        surfaceHolder.unlockCanvasAndPost(canvas);
     }
 
     protected void setPaint() {
@@ -482,6 +462,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     private Bitmap cropBitmap(Bitmap croppedBitmap) {
         Matrix matrix = new Matrix();
         matrix.preRotate(180f);
+        matrix.preScale(-1f, 1f);
         Bitmap rotatedBitmap = Bitmap.createBitmap(croppedBitmap, 0, 0, croppedBitmap.getWidth(), croppedBitmap.getHeight(), matrix, false);
         float bitmapRatio = (float) rotatedBitmap.getHeight() / rotatedBitmap.getWidth();
         float modelInputRatio = (float) MODEL_HEIGHT / MODEL_WIDTH;
@@ -490,7 +471,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
         double maxDifference = 1e-5;
 
         // Checks if the bitmap has similar aspect ratio as the required model input.
-        if (abs(modelInputRatio - bitmapRatio) < maxDifference)
+        if(abs(modelInputRatio - bitmapRatio) < maxDifference)
             return rotatedBitmap;
         else if (modelInputRatio < bitmapRatio) {
             float cropHeight = (float) rotatedBitmap.getHeight() - (rotatedBitmap.getWidth() / modelInputRatio);
@@ -500,7 +481,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
                     (int) (cropHeight / 2),
                     rotatedBitmap.getWidth(),
                     (int) (rotatedBitmap.getHeight() - cropHeight));
-        } else {
+        }
+        else{
             float cropWidth = (float) rotatedBitmap.getWidth() - (rotatedBitmap.getHeight() * modelInputRatio);
             croppedBitmap = Bitmap.createBitmap(
                     rotatedBitmap,
