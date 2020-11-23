@@ -3,7 +3,8 @@ import os
 from aiohttp import web
 import aiohttp_jinja2
 import jinja2
-from openbot.api import dataset_dir, handle_api
+from openbot.api import dataset_dir, handle_api, get_dir_info
+from openbot.gif import handle_gif
 from openbot.upload import handle_file_upload
 from openbot.zeroconf import register
 
@@ -13,8 +14,10 @@ print("Dataset dir: " + dataset_dir)
 
 @aiohttp_jinja2.template("index.html")
 async def handle_get(request: web.Request):
+    path = request.match_info.get("path")
     return {
-        "dir": request.match_info.get("dir")
+        "path": path,
+        "file_list": get_dir_info(dataset_dir + "/" + path),
     }
 
 
@@ -30,9 +33,10 @@ async def handle_post(request: web.Request) -> web.Response:
 
 app = web.Application()
 app.add_routes([
-    web.get('/{dir:.*}', handle_get),
-    web.get('/api/dataset', handle_api),
     web.post('/upload', handle_post),
+    web.get('/api/dataset', handle_api),
+    web.get('/{path:.*}/gif', handle_gif),
+    web.get('/{path:.*}', handle_get),
 ])
 app.on_startup.append(register)
 aiohttp_jinja2.setup(
