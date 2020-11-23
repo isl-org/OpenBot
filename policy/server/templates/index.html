@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Openbot Web Server</title>
+</head>
+<body>
+<h1>Hello Openbot!</h1>
+<h3>{{ dir }}</h3>
+<form method="post" action="/upload" enctype="multipart/form-data">
+    <label>File</label>
+    <input name="file" type="file"/>
+    <button type="submit">Upload</button>
+</form>
+</body>
+</html>
