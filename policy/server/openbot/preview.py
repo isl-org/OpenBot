@@ -7,10 +7,10 @@ import imageio
 from . import dataset_dir
 
 
-async def handle_gif(request):
+async def handle_preview(request):
     path = dataset_dir + "/" + request.match_info.get("path")
 
-    gif_path = path + '/movie.gif'
+    gif_path = path + '/preview.gif'
     if not os.path.isfile(gif_path):
         with imageio.get_writer(gif_path, mode='I', fps=8) as writer:
             images = os.listdir(path + "/images/")
