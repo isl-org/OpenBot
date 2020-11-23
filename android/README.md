@@ -14,17 +14,20 @@ Our application is derived from the [TensorFlow Lite Object Detection Android De
 
 ## Getting Started
 
-### Prerequisites
+### Install the app
+You can download the apk from the assets of the [latest release](https://github.com/intel-isl/OpenBot/releases/latest) and just [install](https://www.lifewire.com/install-apk-on-android-4177185) it on your phone directly. Note that that apk is signed with a debug key. If you want the latest app from the master branch, you can also download it from the build artifacts [here](https://github.com/intel-isl/OpenBot/actions?query=workflow%3A%22Java+CI+with+Gradle%22). Note, that it may not be stable. If you would like to make changes to the app later, follow the steps below to compile the app and deploy it on your phone.
 
-- [Android Studio 3.2 or later](https://developer.android.com/studio/index.html) for building and installing the apk, or otherwise download the apk from the assets of the [latest release](https://github.com/intel-isl/OpenBot/releases/latest).
-- Android device and Android development environment with minimum API 21
+### Build the app
+
+#### Prerequisites
+
+- [Android Studio 3.2 or later](https://developer.android.com/studio/index.html) for building and installing the apk.
+- Android device and Android development environment with minimum API 21.
 - Currently, we use API 28 as compile and target SDK. It should get installed automatically, but if not you can install the SDK manually. Go to Android Studio -> Preferences -> Appearance & Behaviour -> System Settings -> Android SDK. Make sure API 28 is checked and click apply.
 
 ![Android SDK](../docs/images/android_studio_sdk.jpg)
 
-### Building
-
-In case you are using the apk from the assets of the [latest release](https://github.com/intel-isl/OpenBot/releases/latest), you can skip the below steps and instead just [install](https://www.lifewire.com/install-apk-on-android-4177185) it on your phone directly. Note that that apk is signed with a debug key. If you would like to make changes to the app later, follow these steps to compile the app and deploy it on your phone:
+#### Build process
 
 1. Open Android Studio and select *Open an existing Android Studio project*.
 2. Select the OpenBot/android directory and click OK.
@@ -36,7 +39,7 @@ In case you are using the apk from the assets of the [latest release](https://gi
   ![Run](../docs/images/android_studio_bar_run.jpg)
 6. If it asks you to use Instant Run, click *Proceed Without Instant Run*.
 
-### Code Structure
+#### Code Structure
 
 The [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android) was used as starting point to integrate TFLite models and obtain the camera feed. The main activity is the [NetworkActivity](app/src/main/java/org/openbot/NetworkActivity.java) which runs the main thread. It inherits from the [CameraActivity](app/src/main/java/org/openbot/CameraActivity.java) which manages the camera and UI. The [SensorService](app/src/main/java/org/openbot/SensorService.java) reads all other phone sensors and logs them. The [env](app/src/main/java/org/openbot/env) folder contains utility classes such as the [GameController](app/src/main/java/org/openbot/env/GameController.java) interface and an [AudioPlayer](app/src/main/java/org/openbot/env/AudioPlayer.java) for the audible feedback. The [tflite](app/src/main/java/org/openbot/tflite) folder contains the model definitions for the [Autopilot](app/src/main/java/org/openbot/tflite/Autopilot.java) and [Detector](app/src/main/java/org/openbot/tflite/Detector.java) networks.
 
