@@ -9,7 +9,6 @@ import cz.msebera.android.httpclient.Header;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-
 class UploadService {
 
   private final AsyncHttpClient client;
@@ -31,17 +30,22 @@ class UploadService {
       return;
     }
 
-    client.post(context, url + "/upload", params, new AsyncHttpResponseHandler() {
-      @Override
-      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        // called when response HTTP status is "200 OK"
-      }
+    client.post(
+        context,
+        url + "/upload",
+        params,
+        new AsyncHttpResponseHandler() {
+          @Override
+          public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            // called when response HTTP status is "200 OK"
+          }
 
-      @Override
-      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-      }
-    });
+          @Override
+          public void onFailure(
+              int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+          }
+        });
   }
 
   public void stop() {
