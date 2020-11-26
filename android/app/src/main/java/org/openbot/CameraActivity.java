@@ -236,10 +236,6 @@ public abstract class CameraActivity extends AppCompatActivity
         }
 
         // Create a surface so that we have a canvas to draw PoseNet output.
-        surfaceView = findViewById(R.id.surfaceView);
-        surfaceView.setZOrderOnTop(true);
-        surfaceHolder = surfaceView.getHolder();
-
 
         connectionSwitchCompat = findViewById(R.id.connection_switch);
         threadsTextView = findViewById(R.id.threads_model);
@@ -263,8 +259,8 @@ public abstract class CameraActivity extends AppCompatActivity
         loggerSpinner = findViewById(R.id.logger_spinner);
         controlSpinner = findViewById(R.id.control_spinner);
 
-        // Bring to front otherwise the surfaceView will obscure it
-        bottomSheetLayout.bringToFront();
+//        // Bring to front otherwise the surfaceView will obscure it
+//        bottomSheetLayout.bringToFront();
 
         ViewTreeObserver vto = gestureLayout.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(
@@ -381,9 +377,6 @@ public abstract class CameraActivity extends AppCompatActivity
 
 
         // Create SurfaceHolder to takes to draw PoseNet keypoints
-        surfaceHolder = surfaceView.getHolder();
-        Log.d("#####a", surfaceHolder.toString());
-
         try {
             // Initialize the storage bitmaps once when the resolution is known.
             if (rgbBytes == null) {
@@ -492,9 +485,9 @@ public abstract class CameraActivity extends AppCompatActivity
     }
 
     //
-    public SurfaceHolder getSurfaceHolder() {
-        return surfaceHolder;
-    }
+//    public SurfaceHolder getSurfaceHolder() {
+//        return surfaceHolder;
+//    }
 
     @Override
     public synchronized void onStart() {

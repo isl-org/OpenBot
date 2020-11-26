@@ -18,6 +18,7 @@ limitations under the License.
 package org.openbot.tracking;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -25,10 +26,15 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
+
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +44,14 @@ import org.openbot.env.BorderedText;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
 import org.openbot.tflite.Detector.Recognition;
+import org.tensorflow.lite.examples.posenet.lib.BodyPart;
+import org.tensorflow.lite.examples.posenet.lib.KeyPoint;
+import org.tensorflow.lite.examples.posenet.lib.Person;
+import org.tensorflow.lite.examples.posenet.lib.Position;
+
+import static java.lang.StrictMath.abs;
+import static org.openbot.env.PoseNetUtilsKt.MODEL_HEIGHT;
+import static org.openbot.env.PoseNetUtilsKt.MODEL_WIDTH;
 
 /** A tracker that handles non-max suppression and matches existing objects to new detections. */
 public class MultiBoxTracker {
@@ -73,6 +87,26 @@ public class MultiBoxTracker {
   private int sensorOrientation;
   private float leftControl;
   private float rightControl;
+  private Person person;
+  private float minConfidencePose = 0.50f;
+  private float circleRadius = 8.0f;
+  private Paint paint = new Paint();
+
+  List<Pair<BodyPart, BodyPart>> bodyJoints = Arrays.asList(
+          new Pair(BodyPart.LEFT_WRIST, BodyPart.LEFT_ELBOW),
+          new Pair(BodyPart.LEFT_ELBOW, BodyPart.LEFT_SHOULDER),
+          new Pair(BodyPart.LEFT_SHOULDER, BodyPart.RIGHT_SHOULDER),
+          new Pair(BodyPart.RIGHT_SHOULDER, BodyPart.RIGHT_ELBOW),
+          new Pair(BodyPart.RIGHT_ELBOW, BodyPart.RIGHT_WRIST),
+          new Pair(BodyPart.LEFT_SHOULDER, BodyPart.LEFT_HIP),
+          new Pair(BodyPart.LEFT_HIP, BodyPart.RIGHT_HIP),
+          new Pair(BodyPart.RIGHT_HIP, BodyPart.RIGHT_SHOULDER),
+          new Pair(BodyPart.LEFT_HIP, BodyPart.LEFT_KNEE),
+          new Pair(BodyPart.LEFT_KNEE, BodyPart.LEFT_ANKLE),
+          new Pair(BodyPart.RIGHT_HIP, BodyPart.RIGHT_KNEE),
+          new Pair(BodyPart.RIGHT_KNEE, BodyPart.RIGHT_ANKLE)
+  );
+
 
   public MultiBoxTracker(final Context context) {
     for (final int color : COLORS) {
@@ -112,6 +146,11 @@ public class MultiBoxTracker {
     for (final Pair<Float, RectF> detection : screenRects) {
       final RectF rect = detection.second;
       canvas.drawRect(rect, boxPaint);
+      Paint paint = new Paint();
+      paint.setColor(Color.RED);
+//      paint.setTextSize(80.0f);
+      paint.setStrokeWidth(8.0f);
+      canvas.drawCircle(50, 50, 60f, paint);
       canvas.drawText("" + detection.first, rect.left, rect.top, textPaint);
       borderedText.drawText(canvas, rect.centerX(), rect.centerY(), "" + detection.first);
     }
@@ -120,6 +159,12 @@ public class MultiBoxTracker {
   public synchronized void trackResults(final List<Recognition> results, final long timestamp) {
     logger.i("Processing %d results from %d", results.size(), timestamp);
     processResults(results);
+  }
+
+  public synchronized void trackKeypoint(Person person, final long timestamp) {
+    logger.i("Processing keypoint from %d", timestamp);
+
+    processKeypoint(person);
   }
 
   private Matrix getFrameToCanvasMatrix() {
@@ -186,6 +231,11 @@ public class MultiBoxTracker {
 
       float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
       canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
+      // Just for testing
+//      Paint paint = new Paint();
+//      paint.setColor(Color.RED);
+//      paint.setStrokeWidth(8.0f);
+//      canvas.drawCircle(50, 50, 60f, paint);
 
       final String labelString =
           !TextUtils.isEmpty(recognition.title)
@@ -204,11 +254,19 @@ public class MultiBoxTracker {
       // rightControl),
       //                boxPaint);
       //      }
+      if (person != null) {
+        drawKeypoints(canvas);
+      }
     }
   }
 
   public void clearTrackedObjects() {
     trackedObjects.clear();
+  }
+
+  private void processKeypoint(Person person) {
+    final Matrix rgbFrameToScreen = new Matrix(getFrameToCanvasMatrix());
+    this.person = person;
   }
 
   private void processResults(final List<Recognition> results) {
@@ -267,5 +325,129 @@ public class MultiBoxTracker {
     float detectionConfidence;
     int color;
     String title;
+  }
+
+  private void drawKeypoints(Canvas canvas) {
+//    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+    // Draw `bitmap` and `person` in square canvas.
+    int screenWidth;
+    int screenHeight;
+    int left;
+    int right;
+    int top;
+    int bottom;
+    if (canvas.getHeight() > canvas.getWidth()) {
+      screenWidth = canvas.getWidth();
+      screenHeight = canvas.getHeight();
+      left = 0;
+      top = (canvas.getHeight() - canvas.getWidth()) / 2;
+    } else {
+      screenWidth = canvas.getWidth();
+      screenHeight = canvas.getHeight();
+      left = (canvas.getWidth() - canvas.getHeight()) / 2;
+      top = 0;
+    }
+    right = left + screenWidth;
+    bottom = top + screenHeight;
+
+    setPaint();
+//    canvas.drawBitmap(
+//            bitmap,
+//            new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
+//            new Rect(left, top, right, bottom),
+//            paint
+//    );
+
+    float widthRatio = (float) screenWidth / MODEL_WIDTH;
+    float heightRatio = (float) screenHeight / MODEL_HEIGHT;
+
+    // Draw key points over the image.
+    for (KeyPoint keyPoint : person.getKeyPoints()) {
+      if (keyPoint.getScore() > minConfidencePose) {
+        Position position = keyPoint.getPosition();
+        float adjustedX = position.getX() * widthRatio + left;
+        float adjustedY = position.getY() * heightRatio + top;
+        canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint);
+      }
+    }
+
+    int offsetY = 300;
+    for (Pair<BodyPart, BodyPart> line : bodyJoints) {
+      if ((person.getKeyPoints().get(line.first.ordinal()).getScore() > minConfidencePose) &&
+              (person.getKeyPoints().get(line.second.ordinal()).getScore() > minConfidencePose)
+      ) {
+        canvas.drawLine(
+                person.getKeyPoints().get(line.first.ordinal()).getPosition().getX() * widthRatio + left,
+                person.getKeyPoints().get(line.first.ordinal()).getPosition().getY() * heightRatio + top,
+                person.getKeyPoints().get(line.second.ordinal()).getPosition().getX() * widthRatio + left,
+                person.getKeyPoints().get(line.second.ordinal()).getPosition().getY() * heightRatio + top,
+                paint
+        );
+      }
+    }
+//
+//    canvas.drawText(
+//            String.format("Score: %.2f", person.getScore()),
+//            (15.0f * widthRatio),
+//            (30.0f * heightRatio + bottom),
+//            paint
+//    );
+//    canvas.drawText(
+//            String.format("Device: %s", posenet.getDevice()),
+//            (15.0f * widthRatio),
+//            (50.0f * heightRatio + bottom),
+//            paint
+//    );
+//    canvas.drawText(
+//            String.format("Time: %d ms", lastProcessingTimeMs),
+//            (15.0f * widthRatio),
+//            (70.0f * heightRatio + bottom),
+//            paint
+//    );
+
+    // Draw!
+//        surfaceHolder.unlockCanvasAndPost(canvas);
+  }
+
+  protected void setPaint() {
+    paint.setColor(Color.RED);
+    paint.setTextSize(80.0f);
+    paint.setStrokeWidth(8.0f);
+  }
+
+  private Bitmap cropBitmap(Bitmap rotatedBitmap) {
+//    Matrix matrix = new Matrix();
+//    matrix.preRotate(180f);
+//    matrix.preScale(-1f, 1f);
+//    Bitmap rotatedBitmap = Bitmap.createBitmap(croppedBitmap, 0, 0, croppedBitmap.getWidth(), croppedBitmap.getHeight(), matrix, false);
+    float bitmapRatio = (float) rotatedBitmap.getHeight() / rotatedBitmap.getWidth();
+    float modelInputRatio = (float) MODEL_HEIGHT / MODEL_WIDTH;
+    Bitmap croppedBitmap;
+    // Acceptable difference between the modelInputRatio and bitmapRatio to skip cropping.
+    double maxDifference = 1e-5;
+
+    // Checks if the bitmap has similar aspect ratio as the required model input.
+    if(abs(modelInputRatio - bitmapRatio) < maxDifference)
+      return rotatedBitmap;
+    else if (modelInputRatio < bitmapRatio) {
+      float cropHeight = (float) rotatedBitmap.getHeight() - (rotatedBitmap.getWidth() / modelInputRatio);
+      croppedBitmap = Bitmap.createBitmap(
+              rotatedBitmap,
+              0,
+              (int) (cropHeight / 2),
+              rotatedBitmap.getWidth(),
+              (int) (rotatedBitmap.getHeight() - cropHeight));
+    }
+    else{
+      float cropWidth = (float) rotatedBitmap.getWidth() - (rotatedBitmap.getHeight() * modelInputRatio);
+      croppedBitmap = Bitmap.createBitmap(
+              rotatedBitmap,
+              (int) (cropWidth / 2),
+              0,
+              (int) (rotatedBitmap.getWidth() - cropWidth),
+              rotatedBitmap.getHeight());
+    }
+    return croppedBitmap;
+
   }
 }
