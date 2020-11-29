@@ -451,6 +451,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
 
   @Override
   public boolean dispatchKeyEvent(KeyEvent event) {
+    Log.i("", "got event: " + event);
+    Log.i("", "event.getSource(): " + event.getSource());
     // Check that the event came from a game controller
     if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
         && event.getAction() == KeyEvent.ACTION_UP) {

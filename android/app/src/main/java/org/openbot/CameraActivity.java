@@ -93,10 +93,12 @@ public abstract class CameraActivity extends AppCompatActivity
   private static final int REQUEST_CAMERA_PERMISSION = 1;
   private static final int REQUEST_LOCATION_PERMISSION = 2;
   private static final int REQUEST_STORAGE_PERMISSION = 3;
+  private static final int REQUEST_BLUETOOTH_PERMISSION = 4;
 
   private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
   private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
   private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+  private static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
 
   private static Context mContext;
   private int cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
@@ -168,7 +170,8 @@ public abstract class CameraActivity extends AppCompatActivity
   public enum DriveMode {
     DUAL,
     GAME,
-    JOYSTICK
+    JOYSTICK,
+    SMARTPHONE
   }
 
   public static final class ControlSignal {
@@ -320,6 +323,10 @@ public abstract class CameraActivity extends AppCompatActivity
 
     // Try to connect to serial device
     toggleConnection(true);
+
+
+    SmartphoneControllerClient phone = new SmartphoneControllerClient();
+    phone.connect(this);
   }
 
   protected int[] getRgbBytes() {
@@ -564,7 +571,12 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void requestStoragePermission() {
     ActivityCompat.requestPermissions(
-        this, new String[] {PERMISSION_STORAGE}, REQUEST_STORAGE_PERMISSION);
+            this, new String[] {PERMISSION_STORAGE}, REQUEST_STORAGE_PERMISSION);
+  }
+
+  private void requestBluetoothePermission() {
+    ActivityCompat.requestPermissions(
+            this, new String[] {PERMISSION_BLUETOOTH}, REQUEST_BLUETOOTH_PERMISSION);
   }
 
   // Returns true if the device supports the required hardware level, or better.

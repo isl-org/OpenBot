@@ -47,4 +47,6 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     implementation 'org.zeroturnaround:zt-zip:1.14'
 
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.gms:play-services-nearby:15.0.1'
 }
