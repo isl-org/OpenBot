@@ -49,10 +49,10 @@
 #define HAS_INDICATORS 0
 
 // Enable/Disable speed sensors (1,0)
-#define HAS_SPEED_SENSORS 0
+#define HAS_SPEED_SENSORS 1
 
 // Enable/Disable sonar (1,0)
-#define HAS_SONAR 0
+#define HAS_SONAR 1
 
 // Enable/Disable median filter for sonar measurements (1,0)
 #define USE_MEDIAN 0
@@ -66,7 +66,7 @@
 // - the speed will be reduced if an obstacle is detected by the sonar sensor
 // - the car will turn, if an obstacle is detected within STOP_THRESHOLD
 // WARNING: If the sonar sensor is not setup, the car will go full speed forward!
-#define NO_PHONE_MODE 0
+#define NO_PHONE_MODE 1
 
 //------------------------------------------------------//
 // PINOUT
