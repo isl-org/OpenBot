@@ -324,7 +324,7 @@ public abstract class CameraActivity extends AppCompatActivity
     // Try to connect to serial device
     toggleConnection(true);
 
-
+    // TODO: Move these to where we select a smartphone as a controller
     SmartphoneControllerClient phone = new SmartphoneControllerClient();
     phone.connect(this);
   }

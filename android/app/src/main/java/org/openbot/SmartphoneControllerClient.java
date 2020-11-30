@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
@@ -43,16 +44,16 @@ public class SmartphoneControllerClient {
 
                     switch (command) {
                         case "LEFT":
-                            evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_L1, 0, 0);
+                            evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, MotionEvent.AXIS_LTRIGGER, 0, 0);
                             break;
                         case "RIGHT":
-                            evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_R1, 0, 0);
+                            evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, MotionEvent.AXIS_RTRIGGER, 0, 0);
                             break;
                         case "GO":
-                            evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_X, 0, 0);
+                            evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_R2, 0, 0);
                             break;
                         case "STOP":
-                            evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_Y, 0, 0);
+                            evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_L2, 0, 0);
                             break;
                         default:
                             Log.e(TAG, "Woooo, what are you doing? Will take away your keys!");
@@ -70,7 +71,7 @@ public class SmartphoneControllerClient {
             };
 
 
-    private class KeySender implements Runnable {
+    private static class KeySender implements Runnable {
 
         private final BlockingQueue<KeyEvent> queue;
         private final Instrumentation instrumentation = new Instrumentation();

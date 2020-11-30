@@ -24,7 +24,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.felhr.utils.Utils;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.ConnectionInfo;
 import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback;
@@ -73,7 +72,7 @@ public class NearbyConnection {
                 @Override
                 public void onConnectionInitiated(@NonNull String endpointId, @NonNull ConnectionInfo connectionInfo) {
                     Log.i(TAG, "onConnectionInitiated: accepting connection");
-                    final Task<Void> voidTask = connectionsClient.acceptConnection(endpointId, payloadCallback);
+                    connectionsClient.acceptConnection(endpointId, payloadCallback);
                 }
 
                 @Override
@@ -101,7 +100,9 @@ public class NearbyConnection {
     public void connect(Context context, PayloadCallback payloadCallback) {
         NearbyConnection.payloadCallback = payloadCallback;
         connectionsClient = Nearby.getConnectionsClient(context);
-        startDiscovery(context);
+
+        // TODO: Put a timeout to, say, 1 min to cancel the discovery process if nobody connects.
+        startDiscovery();
     }
 
     /**
@@ -117,7 +118,7 @@ public class NearbyConnection {
     /**
      * Starts looking for other players using Nearby Connections.
      */
-    private void startDiscovery(Context context) {
+    private void startDiscovery() {
         // Note: Discovery may fail. To keep this demo simple, we don't handle failures.
         connectionsClient.startDiscovery(
                 SERVICE_ID, endpointDiscoveryCallback,
