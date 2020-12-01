@@ -62,7 +62,7 @@ Please read the [contribution guidelines](CONTRIBUTING.md). If you are not sure 
 
 ## Contact
 
-- Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-isk656e8-9SGO3F5iPFskJ8oir8i1ww) channel to connect with the OpenBot community.
+- Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) channel to connect with the OpenBot community.
 - Contact us via [Email](mailto:openbot.team@gmail.com)
 
 <a href="https://www.openbot.org//" target="_blank">
