@@ -70,7 +70,6 @@ public class SmartphoneControllerClient {
                 }
             };
 
-
     private static class KeySender implements Runnable {
 
         private final BlockingQueue<KeyEvent> queue;

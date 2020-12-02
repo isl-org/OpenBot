@@ -39,7 +39,7 @@ import com.google.android.gms.tasks.Task;
 public class NearbyConnection {
     private static final String TAG = "NearbyConnection";
     private String pairedDeviceEndpointId;
-    private static final Strategy STRATEGY = Strategy.P2P_CLUSTER;
+    private static final Strategy STRATEGY = Strategy.P2P_POINT_TO_POINT;
     private static PayloadCallback payloadCallback;
     private static final String SERVICE_ID = "OPENBOT_SERVICE_ID";
 
@@ -100,6 +100,9 @@ public class NearbyConnection {
     public void connect(Context context, PayloadCallback payloadCallback) {
         NearbyConnection.payloadCallback = payloadCallback;
         connectionsClient = Nearby.getConnectionsClient(context);
+
+        // make sure we are not connecting
+        disconnect();
 
         // TODO: Put a timeout to, say, 1 min to cancel the discovery process if nobody connects.
         startDiscovery();

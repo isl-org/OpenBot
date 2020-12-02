@@ -48,6 +48,7 @@
         <item>Dual</item>
         <item>Game</item>
         <item>Joystick</item>
+        <item>Smartphone</item>
     </string-array>
     <string name="camera">Camera</string>
     <string name="camera_facing_back">Back</string>

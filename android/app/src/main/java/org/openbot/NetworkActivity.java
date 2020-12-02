@@ -500,6 +500,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
               audioPlayer.play(voice, "joystick_control.mp3");
               break;
             case JOYSTICK:
+            case SMARTPHONE:
               setDriveMode(DriveMode.DUAL);
               audioPlayer.play(voice, "dual_drive_control.mp3");
               break;
@@ -519,6 +520,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
                 break;
               case JOYSTICK:
                 audioPlayer.play(voice, "joystick_control.mp3");
+                break;
+              case SMARTPHONE:
                 break;
             }
           }

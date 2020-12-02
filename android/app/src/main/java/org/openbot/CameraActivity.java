@@ -141,6 +141,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private int numThreads = -1;
 
   protected GameController gameController;
+  private SmartphoneControllerClient smartphoneController = new SmartphoneControllerClient ();
 
   // **** USB **** //
   protected UsbConnection usbConnection;
@@ -323,10 +324,6 @@ public abstract class CameraActivity extends AppCompatActivity
 
     // Try to connect to serial device
     toggleConnection(true);
-
-    // TODO: Move these to where we select a smartphone as a controller
-    SmartphoneControllerClient phone = new SmartphoneControllerClient();
-    phone.connect(this);
   }
 
   protected int[] getRgbBytes() {
@@ -1087,7 +1084,11 @@ public abstract class CameraActivity extends AppCompatActivity
     } else if (parent == deviceSpinner) {
       setDevice(Device.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     } else if (parent == driveModeSpinner) {
-      setDriveMode(DriveMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
+      DriveMode driveMode = DriveMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase());
+      if ("SMARTPHONE".equals(driveMode.name())) {
+        smartphoneController.connect(this);
+      }
+      setDriveMode(driveMode);
     } else if (parent == loggerSpinner) {
       setLogMode(LogMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     } else if (parent == controlSpinner) {
