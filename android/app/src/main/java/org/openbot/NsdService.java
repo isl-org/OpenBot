@@ -49,27 +49,11 @@ class NsdService {
         }
       };
 
-  private final ResolveListener mResolveListener =
-      new ResolveListener() {
-        @Override
-        public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
-          // Called when the resolve fails.  Use the error code to debug.
-          Log.e("NSD", "Resolve failed " + errorCode);
-        }
-
-        @Override
-        public void onServiceResolved(NsdServiceInfo serviceInfo) {
-          serverUrl =
-              "http://" + serviceInfo.getHost().getHostAddress() + ":" + serviceInfo.getPort();
-          Log.d("NSD", "Resolved address = " + serverUrl);
-        }
-      };
-
+  private ResolveListener mResolveListener;
   private NsdManager mNsdManager;
 
-  String serverUrl = "";
-
-  public void start(Context context) {
+  public void start(Context context, ResolveListener resolveListener) {
+    this.mResolveListener = resolveListener;
     Log.d("NSD", "Start discovery");
     mNsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
     mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);

@@ -151,7 +151,6 @@ public abstract class CameraActivity extends AppCompatActivity
   protected String logFolder;
   private boolean loggingEnabled;
   private Intent intentSensorService;
-  private NsdService nsdService;
   private UploadService uploadService;
 
   public enum LogMode {
@@ -461,9 +460,8 @@ public abstract class CameraActivity extends AppCompatActivity
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
-    nsdService = new NsdService();
-    nsdService.start(getApplicationContext());
     uploadService = new UploadService(getApplicationContext());
+    uploadService.start();
   }
 
   @Override
@@ -475,7 +473,6 @@ public abstract class CameraActivity extends AppCompatActivity
       handlerThread.join();
       handlerThread = null;
       handler = null;
-      nsdService.stop();
       uploadService.stop();
     } catch (final InterruptedException e) {
       LOGGER.e(e, "Exception!");
@@ -936,11 +933,7 @@ public abstract class CameraActivity extends AppCompatActivity
           File zip = new File(logZipFile);
           ZipUtil.pack(folder, zip);
           FileUtils.deleteQuietly(folder);
-          String serverUrl = nsdService.serverUrl;
-          if (serverUrl.isEmpty()) {
-            return;
-          }
-          uploadService.upload(serverUrl, zip);
+          uploadService.upload(zip);
         });
   }
 

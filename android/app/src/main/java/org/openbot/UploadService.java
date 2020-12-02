@@ -1,6 +1,9 @@
 package org.openbot;
 
 import android.content.Context;
+import android.net.nsd.NsdManager;
+import android.net.nsd.NsdServiceInfo;
+import android.os.Environment;
 import android.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -13,14 +16,68 @@ class UploadService {
 
   private final AsyncHttpClient client;
   private final Context context;
+  private final NsdService nsdService;
+  private final NsdManager.ResolveListener resolveListener =
+      new NsdManager.ResolveListener() {
+        @Override
+        public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+          // Called when the resolve fails.  Use the error code to debug.
+          Log.e("NSD", "Resolve failed " + errorCode);
+        }
+
+        @Override
+        public void onServiceResolved(NsdServiceInfo serviceInfo) {
+          serverUrl =
+              "http://" + serviceInfo.getHost().getHostAddress() + ":" + serviceInfo.getPort();
+          Log.d("NSD", "Resolved address = " + serverUrl);
+
+          client.get(
+              context,
+              serverUrl + "/test",
+              new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                  Log.d("Upload", "Server found");
+                }
+
+                @Override
+                public void onFailure(
+                    int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                  Log.d("Upload", "Server error");
+                }
+              });
+
+          String logFolder =
+              Environment.getExternalStorageDirectory().getAbsolutePath()
+                  + File.separator
+                  + context.getString(R.string.app_name);
+          File directory = new File(logFolder);
+          File[] files = directory.listFiles();
+          for (File file : files) {
+            if (file.getName().endsWith(".zip")) {
+              upload(file);
+            }
+          }
+        }
+      };
+
+  private String serverUrl;
 
   public UploadService(Context context) {
     this.client = new AsyncHttpClient();
     this.context = context;
+    this.nsdService = new NsdService();
   }
 
-  public void upload(String url, File file) {
-    Log.d("Upload", "Start: " + url);
+  public void start() {
+    this.nsdService.start(context, resolveListener);
+  }
+
+  public void upload(File file) {
+    if (serverUrl.isEmpty()) {
+      return;
+    }
+    Log.d("Upload", "Start: " + serverUrl);
 
     RequestParams params = new RequestParams();
     try {
@@ -32,12 +89,17 @@ class UploadService {
 
     client.post(
         context,
-        url + "/upload",
+        serverUrl + "/upload",
         params,
         new AsyncHttpResponseHandler() {
           @Override
           public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             // called when response HTTP status is "200 OK"
+            if (file.delete()) {
+              Log.d("Upload", "uploaded: " + file.getName());
+            } else {
+              Log.e("Upload", "delete error: " + file.getName());
+            }
           }
 
           @Override
