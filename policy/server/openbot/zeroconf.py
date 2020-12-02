@@ -31,12 +31,18 @@ async def run_test(zc):
 
 def ip4_address():
     for interface in interfaces():
-        if interface == "lo" or interface.startswith("tun"):
-            continue
         addresses = ifaddresses(interface)
-        if AF_INET in addresses:
-            for link in addresses[AF_INET]:
-                return link['addr']
+        if AF_INET not in addresses:
+            continue
+        for link in addresses[AF_INET]:
+            if "addr" not in link:
+                continue
+            ip4 = link['addr']
+            if ip4.startswith("127.") or ip4.startswith("10."):
+                print(f"Skip address {ip4} @ interface {interface}")
+                continue
+            print(f"Found address {ip4} @ interface {interface}")
+            return ip4
 
 
 async def do_close(zc):
