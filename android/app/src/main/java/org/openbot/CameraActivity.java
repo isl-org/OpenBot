@@ -932,9 +932,10 @@ public abstract class CameraActivity extends AppCompatActivity
         () -> {
           String logZipFile = logFolder + ".zip";
           // Zip the log folder and then delete it
+          File folder = new File(logFolder);
           File zip = new File(logZipFile);
-          ZipUtil.pack(new File(logFolder), zip);
-          FileUtils.deleteQuietly(new File(logFolder));
+          ZipUtil.pack(folder, zip);
+          FileUtils.deleteQuietly(folder);
           String serverUrl = nsdService.serverUrl;
           if (serverUrl.isEmpty()) {
             return;
