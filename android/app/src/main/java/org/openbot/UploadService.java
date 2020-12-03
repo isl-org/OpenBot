@@ -103,9 +103,9 @@ class UploadService {
 
   public void uploadAll() {
     String logDir =
-            Environment.getExternalStorageDirectory().getAbsolutePath()
-                    + File.separator
-                    + context.getString(R.string.app_name);
+        Environment.getExternalStorageDirectory().getAbsolutePath()
+            + File.separator
+            + context.getString(R.string.app_name);
     File directory = new File(logDir);
     File[] files = directory.listFiles();
     for (File file : files) {
