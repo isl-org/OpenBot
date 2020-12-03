@@ -1,4 +1,4 @@
-# Python Server for Log Upload
+# Python server for log upload
 
 ## Dependencies
 
@@ -13,6 +13,8 @@ Make sure you are in the folder `policy/server`. Now, you can install all the de
 ```
 pip install -r requirements.txt
 ```
+
+## Running the server
 
 You can run the python server with the command:
 
@@ -45,6 +47,11 @@ http://localhost:8000/uploaded/
 
 <img src="../../docs/images/server.gif" width="100%" alt="server" />
 
+## Troubleshooting
 
+If the upload to the server is not working, here are some troubleshooting tips:
 
-
+- Try restarting the server (computer) and the OpenBot app (smartphone)
+- Make sure the smartphone and your computer are connected to the same WiFi network
+- If your router has both 2.4 GHz and 5 GHz networks with the same name, disable the 5 GHz network
+- Keep the phone connected to Android Studio while running the app. In the Logcat tab, select Debug from the dropdown. Type `NSD` into the filter field to see the debug messages concerning the server connection. Type `Upload` into the filter field for debug messages concerning the recording file upload.
