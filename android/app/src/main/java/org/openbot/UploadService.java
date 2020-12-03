@@ -43,21 +43,9 @@ class UploadService {
                 @Override
                 public void onFailure(
                     int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                  Log.d("Upload", "Server error");
+                  Log.d("Upload", "Server error " + error.toString());
                 }
               });
-
-          String logFolder =
-              Environment.getExternalStorageDirectory().getAbsolutePath()
-                  + File.separator
-                  + context.getString(R.string.app_name);
-          File directory = new File(logFolder);
-          File[] files = directory.listFiles();
-          for (File file : files) {
-            if (file.getName().endsWith(".zip")) {
-              upload(file);
-            }
-          }
         }
       };
 
@@ -74,6 +62,9 @@ class UploadService {
   }
 
   public void upload(File file) {
+    if (serverUrl == null) {
+      return;
+    }
     if (serverUrl.isEmpty()) {
       return;
     }
@@ -108,6 +99,20 @@ class UploadService {
             // called when response HTTP status is "4XX" (eg. 401, 403, 404)
           }
         });
+  }
+
+  public void uploadAll() {
+    String logDir =
+            Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + File.separator
+                    + context.getString(R.string.app_name);
+    File directory = new File(logDir);
+    File[] files = directory.listFiles();
+    for (File file : files) {
+      if (file.getName().endsWith(".zip")) {
+        upload(file);
+      }
+    }
   }
 
   public void stop() {
