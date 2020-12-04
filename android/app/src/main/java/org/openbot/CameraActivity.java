@@ -1086,6 +1086,7 @@ public abstract class CameraActivity extends AppCompatActivity
     } else if (parent == driveModeSpinner) {
       DriveMode driveMode = DriveMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase());
       if ("SMARTPHONE".equals(driveMode.name())) {
+        requestPermissionsForSmartphone();
         smartphoneController.connect(this);
       }
       setDriveMode(driveMode);
@@ -1093,6 +1094,12 @@ public abstract class CameraActivity extends AppCompatActivity
       setLogMode(LogMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     } else if (parent == controlSpinner) {
       setControlSpeed(ControlSpeed.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
+    }
+  }
+
+  private void requestPermissionsForSmartphone () {
+    if (!hasLocationPermission()) {
+      requestLocationPermission();
     }
   }
 
