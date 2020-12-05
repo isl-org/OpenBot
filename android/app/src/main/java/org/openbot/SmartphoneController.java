@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class SmartphoneControllerClient {
+public class SmartphoneController {
 
     private static final String TAG = "SmartphoneController";
 
@@ -25,6 +25,9 @@ public class SmartphoneControllerClient {
 
     public void connect(Context context) {
         connection.connect(context, payloadCallback);
+    }
+    public void disconnect() {
+        connection.disconnect();
     }
 
     // Callbacks for receiving payloads

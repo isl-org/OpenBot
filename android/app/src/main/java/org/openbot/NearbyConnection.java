@@ -18,7 +18,6 @@ limitations under the License.
 package org.openbot;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.util.Log;
 
@@ -34,7 +33,9 @@ import com.google.android.gms.nearby.connection.DiscoveryOptions;
 import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback;
 import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.Strategy;
-import com.google.android.gms.tasks.Task;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class NearbyConnection {
     private static final String TAG = "NearbyConnection";
@@ -42,6 +43,7 @@ public class NearbyConnection {
     private static final Strategy STRATEGY = Strategy.P2P_POINT_TO_POINT;
     private static PayloadCallback payloadCallback;
     private static final String SERVICE_ID = "OPENBOT_SERVICE_ID";
+    private final CancelableDiscovery discovery = new CancelableDiscovery(this);
 
     // Our handle to Nearby Connections
     private ConnectionsClient connectionsClient;
@@ -52,6 +54,8 @@ public class NearbyConnection {
                 @Override
                 public void onEndpointFound(@NonNull String endpointId, @NonNull DiscoveredEndpointInfo info) {
                     Log.i(TAG, "onEndpointFound: endpoint found, connecting");
+                    stopDiscovery();
+                    discovery.cancel();
                     String connectionName = "OpenBotConnection";
                     connectionsClient.requestConnection(connectionName, endpointId, connectionLifecycleCallback).addOnSuccessListener(
                             unusedResult -> Log.d("requestConnection", "Connected OK")
@@ -63,6 +67,8 @@ public class NearbyConnection {
                 @Override
                 public void onEndpointLost(@NonNull String endpointId) {
                     Log.i(TAG, "onEndpointLost: endpoint lost");
+                    discovery.cancel();
+                    stopDiscovery();
                 }
             };
 
@@ -82,7 +88,6 @@ public class NearbyConnection {
                         beep();
 
                         pairedDeviceEndpointId = endpointId;
-                        connectionsClient.stopDiscovery();
                     } else {
                         Log.i(TAG, "onConnectionResult: connection failed");
                     }
@@ -94,6 +99,10 @@ public class NearbyConnection {
                 }
             };
 
+    private void stopDiscovery() {
+        connectionsClient.stopDiscovery();
+    }
+
     /**
      * Finds an opponent to play the game with using Nearby Connections.
      */
@@ -104,14 +113,16 @@ public class NearbyConnection {
         // make sure we are not connecting
         disconnect();
 
-        // TODO: Put a timeout to, say, 1 min to cancel the discovery process if nobody connects.
-        startDiscovery();
+        // If nothing found within timeout period (60 seconds), discovery will stop.
+        discovery.startDiscovery(60);
     }
 
     /**
      * Disconnects from the opponent and reset the UI.
      */
     public void disconnect() {
+
+        discovery.cancel();
 
         if (pairedDeviceEndpointId != null) {
             connectionsClient.disconnectFromEndpoint(pairedDeviceEndpointId);
@@ -133,8 +144,40 @@ public class NearbyConnection {
                 e -> Log.d("startDiscovery", "We were unable to start startDiscovery. Error: " + e.toString()));
     }
 
-    private void beep () {
+    private void beep() {
         final ToneGenerator tg = new ToneGenerator(6, 100);
         tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+    }
+
+    public class CancelableDiscovery {
+        Timer timer;
+        NearbyConnection connection;
+
+        public CancelableDiscovery(NearbyConnection connection) {
+            this.connection = connection;
+        }
+
+        public void startDiscovery (int seconds) {
+            timer = new Timer();
+            timer.schedule(new StopDiscoveryTask(), seconds * 1000);
+            connection.startDiscovery();
+        }
+
+        class StopDiscoveryTask extends TimerTask {
+            public void run() {
+                connection.stopDiscovery();
+                if (timer != null) {
+                    timer.cancel(); //Terminate the timer thread
+                    timer = null;
+                }
+            }
+        }
+
+        public void cancel () {
+            if (timer != null) {
+                timer.cancel();
+                timer = null;
+            }
+        }
     }
 }

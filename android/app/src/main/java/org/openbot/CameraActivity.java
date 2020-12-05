@@ -141,7 +141,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private int numThreads = -1;
 
   protected GameController gameController;
-  private SmartphoneControllerClient smartphoneController = new SmartphoneControllerClient ();
+  private SmartphoneController smartphoneController = new SmartphoneController();
 
   // **** USB **** //
   protected UsbConnection usbConnection;
@@ -478,6 +478,7 @@ public abstract class CameraActivity extends AppCompatActivity
       LOGGER.e(e, "Exception!");
     }
 
+    smartphoneController.disconnect();
     super.onPause();
   }
 
@@ -1088,6 +1089,9 @@ public abstract class CameraActivity extends AppCompatActivity
       if ("SMARTPHONE".equals(driveMode.name())) {
         requestPermissionsForSmartphone();
         smartphoneController.connect(this);
+      } else {
+        // maybe not needed
+        smartphoneController.disconnect();
       }
       setDriveMode(driveMode);
     } else if (parent == loggerSpinner) {
