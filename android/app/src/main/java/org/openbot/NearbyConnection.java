@@ -20,6 +20,7 @@ package org.openbot;
 import android.content.Context;
 import android.media.ToneGenerator;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -44,6 +45,7 @@ public class NearbyConnection {
     private static PayloadCallback payloadCallback;
     private static final String SERVICE_ID = "OPENBOT_SERVICE_ID";
     private final CancelableDiscovery discovery = new CancelableDiscovery(this);
+    private boolean isConnected = false;
 
     // Our handle to Nearby Connections
     private ConnectionsClient connectionsClient;
@@ -53,7 +55,6 @@ public class NearbyConnection {
             new EndpointDiscoveryCallback() {
                 @Override
                 public void onEndpointFound(@NonNull String endpointId, @NonNull DiscoveredEndpointInfo info) {
-                    Log.i(TAG, "onEndpointFound: endpoint found, connecting");
                     stopDiscovery();
                     discovery.cancel();
                     String connectionName = "OpenBotConnection";
@@ -86,15 +87,21 @@ public class NearbyConnection {
                     if (result.getStatus().isSuccess()) {
                         Log.i(TAG, "onConnectionResult: connection successful");
                         beep();
+                        Toast.makeText(CameraActivity.getContext(), "Smartphone controller connected", Toast.LENGTH_LONG).show();
 
                         pairedDeviceEndpointId = endpointId;
+                        isConnected = true;
                     } else {
                         Log.i(TAG, "onConnectionResult: connection failed");
+                        isConnected = false;
+                        Toast.makeText(CameraActivity.getContext(), "Smartphone controller failed to connect", Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onDisconnected(@NonNull String endpointId) {
+                    isConnected = false;
+                    Toast.makeText(CameraActivity.getContext(), "Smartphone controller disconnected", Toast.LENGTH_LONG).show();
                     Log.i(TAG, "onDisconnected: disconnected from the opponent");
                 }
             };
@@ -130,6 +137,7 @@ public class NearbyConnection {
     }
 
     /**
+    /**
      * Starts looking for other players using Nearby Connections.
      */
     private void startDiscovery() {
@@ -142,11 +150,16 @@ public class NearbyConnection {
                 ).addOnFailureListener(
 
                 e -> Log.d("startDiscovery", "We were unable to start startDiscovery. Error: " + e.toString()));
+                Toast.makeText(CameraActivity.getContext(), "Searching for smartphone controller...", Toast.LENGTH_LONG).show();
     }
 
     private void beep() {
         final ToneGenerator tg = new ToneGenerator(6, 100);
         tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+    }
+
+    public boolean isConnected() {
+        return isConnected;
     }
 
     public class CancelableDiscovery {

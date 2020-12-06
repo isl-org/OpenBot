@@ -34,6 +34,9 @@ import android.util.TypedValue;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+
+import com.felhr.utils.Utils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -500,6 +503,9 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
               audioPlayer.play(voice, "joystick_control.mp3");
               break;
             case JOYSTICK:
+              setDriveMode(DriveMode.SMARTPHONE);
+              // audioPlayer.play(voice, "dual_drive_control.mp3");
+              break;
             case SMARTPHONE:
               setDriveMode(DriveMode.DUAL);
               audioPlayer.play(voice, "dual_drive_control.mp3");

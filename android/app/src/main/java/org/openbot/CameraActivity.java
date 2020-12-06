@@ -1088,10 +1088,9 @@ public abstract class CameraActivity extends AppCompatActivity
       DriveMode driveMode = DriveMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase());
       if ("SMARTPHONE".equals(driveMode.name())) {
         requestPermissionsForSmartphone();
-        smartphoneController.connect(this);
-      } else {
-        // maybe not needed
-        smartphoneController.disconnect();
+        if (!smartphoneController.isConnected()) {
+          smartphoneController.connect(this);
+        }
       }
       setDriveMode(driveMode);
     } else if (parent == loggerSpinner) {
