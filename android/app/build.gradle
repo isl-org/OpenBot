@@ -46,5 +46,6 @@ dependencies {
     implementation 'com.github.felHR85:UsbSerial:6.1.0'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     implementation 'org.zeroturnaround:zt-zip:1.14'
+    implementation 'com.loopj.android:android-async-http:1.4.9'
 
 }
