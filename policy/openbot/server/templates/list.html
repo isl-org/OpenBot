@@ -1,0 +1,25 @@
+<h2>Train datasets</h2>
+<div class="datasets">
+    {% for ds in train_datasets %}
+    {% include "dataset.html" %}
+    {% endfor %}
+</div>
+<h2>Test datasets</h2>
+<div class="datasets">
+    {% for ds in test_datasets %}
+    {% include "dataset.html" %}
+    {% endfor %}
+</div>
+
+<h2>Dirs in dataset/{{ path }}</h2>
+<div class="list">
+    {% for session in file_list %}
+    {% include "session.html" %}
+    {% endfor %}
+</div>
+<form method="post" action="/upload" enctype="multipart/form-data">
+    <h2>Upload log manually</h2>
+    <label>File</label>
+    <input name="file" type="file"/>
+    <button type="submit">Upload</button>
+</form>

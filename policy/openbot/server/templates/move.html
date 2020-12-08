@@ -1,0 +1,21 @@
+<form method="post">
+    <h2>Move session {{ path }}</h2>
+    <label>
+        New name:
+        <select name="new_path">
+            <option value="uploaded">uploaded</option>
+            <optgroup label="Train dataset">
+                {% for ds in train_datasets %}
+                <option value="{{ ds.path }}">{{ ds.name }}</option>
+                {% endfor %}
+            </optgroup>
+            <optgroup label="Test dataset">
+                {% for ds in test_datasets %}
+                <option value="{{ ds.path }}">{{ ds.name }}</option>
+                {% endfor %}
+            </optgroup>
+        </select>
+    </label>
+    <button type="submit">Save</button>
+</form>
+{% include "session.html" %}

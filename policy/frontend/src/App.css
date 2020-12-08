@@ -1,0 +1,20 @@
+body {
+  background-color: #f4f5f7;
+}
+.navbar-brand {
+  padding: 18px 20px;
+  display: inline-block;
+}
+.rs-panel {
+  background-color: white;
+}
+.App > .rs-content {
+  padding: 1em;
+}
+.list {
+  display: grid;
+  margin: 20px 0;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, 300px);
+  justify-content: space-between;
+}

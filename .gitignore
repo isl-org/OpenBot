@@ -7,7 +7,7 @@ composer.lock
 Thumbs.db
 
 # IDE's
-/.idea
+.idea/
 /.vscode
 .classpath
 .project

@@ -1,0 +1,21 @@
+<div>
+    <div>
+        <a href="{{ session.path }}/">
+            {% if session.is_session %}
+            <img src="{{ session.path }}/preview.gif" alt="preview"><br/>
+            {% else %}
+            <img src="https://via.placeholder.com/300?text={{ session.name }}" alt="placeholder"><br/>
+            {% endif %}
+            {{ session.name }}
+        </a>
+        ({{ session.images if session.is_session else session.dirs }})
+
+    </div>
+    <div>
+        Actions:
+        <a href="{{ session.path }}/?action=move">move</a>
+    </div>
+    <div>
+        <pre>Info: {{ session | tojson(2) }}</pre>
+    </div>
+</div>

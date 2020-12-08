@@ -1,0 +1,9 @@
+<form method="post">
+    <h2>Rename folder {{ path }}</h2>
+    <label>
+        New name:
+        <input name="new_name" value="{{ basename }}">
+    </label>
+    <button type="submit">Save</button>
+</form>
+{% include "session.html" %}
