@@ -22,6 +22,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static android.view.MotionEvent.obtain;
+import static java.lang.Float.parseFloat;
 
 public class SmartphoneController {
 
@@ -56,14 +57,13 @@ public class SmartphoneController {
                         if (jsonCommand.has("buttonValue")) {
                             buttonValue = jsonCommand.getString("buttonValue");
                         }
-                        String rightDriveValue = null;
-                        if (jsonCommand.has("rightDrive")) {
-                            rightDriveValue = jsonCommand.getString("rightDrive");
-                        }
 
-                        String leftDriveValue = null;
-                        if (jsonCommand.has("leftDrive")) {
-                            leftDriveValue = jsonCommand.getString("leftDrive");
+                        // {r:0.22, l:0.3}
+                        String rightValue = null;
+                        String leftValue = null;
+                        if (jsonCommand.has("r") && jsonCommand.has("l")) {
+                            leftValue = jsonCommand.getString("l");
+                            rightValue = jsonCommand.getString("r");
                         }
 
                         if (buttonValue != null) {
@@ -93,17 +93,13 @@ public class SmartphoneController {
                             evt.setSource(InputDevice.SOURCE_GAMEPAD);
                         }
 
-                        if (rightDriveValue != null) {
-                            Log.e(TAG, "rightDriveValue: " + rightDriveValue);
-                            evt.setSource(InputDevice.SOURCE_JOYSTICK);
+                        if (rightValue != null && leftValue != null) {
+                            Log.i(TAG, "left: " + parseFloat(leftValue) + ", right: " + parseFloat(rightValue));
                         }
 
-                        if (leftDriveValue != null) {
-                            Log.e(TAG, "leftDriveValue: " + leftDriveValue);
-                            evt.setSource(InputDevice.SOURCE_JOYSTICK);
+                        if (buttonValue != null) {
+                            queue.add(evt);
                         }
-
-                        queue.add(evt);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
