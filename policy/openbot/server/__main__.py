@@ -3,13 +3,10 @@ import os
 from aiohttp import web
 import aiohttp_jinja2
 import jinja2
-from openbot.api import dataset_dir, handle_api, get_dir_info
-from openbot.preview import handle_preview
-from openbot.upload import handle_file_upload
-from openbot.zeroconf import register
-
-
-print("Dataset dir: " + dataset_dir)
+from .api import dataset_dir, handle_api, get_dir_info
+from .preview import handle_preview
+from .upload import handle_file_upload
+from .zeroconf import register
 
 
 @aiohttp_jinja2.template("index.html")
@@ -40,7 +37,8 @@ app.add_routes([
 ])
 app.on_startup.append(register)
 aiohttp_jinja2.setup(
-    app, loader=jinja2.FileSystemLoader(os.path.join(os.getcwd(), "templates"))
+    app, loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"))
 )
 if __name__ == '__main__':
+    print("Dataset dir: " + dataset_dir)
     web.run_app(app, port=8000)
