@@ -172,7 +172,7 @@ public class NearbyConnection {
 
         public void startDiscovery (int seconds) {
             timer = new Timer();
-            timer.schedule(new StopDiscoveryTask(), seconds * 1000);
+            timer.schedule(new StopDiscoveryTask(), seconds * 60);
             connection.startDiscovery();
         }
 
