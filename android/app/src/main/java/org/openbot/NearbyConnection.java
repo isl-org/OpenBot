@@ -179,10 +179,7 @@ public class NearbyConnection {
         class StopDiscoveryTask extends TimerTask {
             public void run() {
                 connection.stopDiscovery();
-                if (timer != null) {
-                    timer.cancel(); //Terminate the timer thread
-                    timer = null;
-                }
+                cancel ();
             }
         }
 
