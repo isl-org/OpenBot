@@ -3,7 +3,7 @@ import os
 
 from aiohttp import web
 
-from . import dataset_dir
+from .. import dataset_dir
 
 
 async def handle_api(request):

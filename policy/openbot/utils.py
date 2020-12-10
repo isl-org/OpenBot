@@ -8,7 +8,6 @@ from IPython.display import Javascript
 from nbconvert import HTMLExporter
 import codecs
 import nbformat
-import metrics
 
 def save_notebook():
     Javascript("IPython.notebook.save_notebook()")
@@ -51,7 +50,7 @@ def show_train_batch(image_batch, cmd_batch, label_batch,fig_num=1):
       plt.imshow(image_batch[n])
       plt.title("Cmd: %s, Label: [%.2f %.2f]" \
         %(cmd_batch[n],float(label_batch[n][0]),float(label_batch[n][1])))
-      plt.axis('off')  
+      plt.axis('off')
 
 def show_test_batch(image_batch, cmd_batch, label_batch, pred_batch,fig_num=1):
   plt.figure(num=fig_num,figsize=(15,10))
@@ -60,7 +59,7 @@ def show_test_batch(image_batch, cmd_batch, label_batch, pred_batch,fig_num=1):
       plt.imshow(image_batch[n])
       plt.title("Cmd: %s, Label: [%.2f %.2f], Pred: [%.2f %.2f]" \
         %(cmd_batch[n],float(label_batch[n][0]),float(label_batch[n][1]),float(pred_batch[n][0]),float(pred_batch[n][1])))
-      plt.axis('off')  
+      plt.axis('off')
 
 def generate_tflite(path, filename):
     converter = tf.lite.TFLiteConverter.from_saved_model(os.path.join(path, filename))
@@ -69,14 +68,14 @@ def generate_tflite(path, filename):
     return tflite_model
 
 def save_tflite(tflite_model, path, filename):
-    open(os.path.join(path, filename + ".tflite"), "wb").write(tflite_model)    
+    open(os.path.join(path, filename + ".tflite"), "wb").write(tflite_model)
 
 def load_model(model_path,loss_fn,metric_list):
     model = tf.keras.models.load_model(model_path,
     custom_objects=None,
     compile=False
     )
-    model.compile(loss=loss_fn, 
+    model.compile(loss=loss_fn,
                   metrics=metric_list)
     return model
 
@@ -102,7 +101,7 @@ def compare_tf_tflite(model, tflite_model,img=None,cmd=None):
             input_data[input_detail['name']] = (np.array(np.random.random_sample(input_detail['shape']), dtype=np.float32))
         interpreter.set_tensor(input_detail['index'], input_data[input_detail['name']])
 
-    
+
     interpreter.invoke()
 
     # The function `get_tensor()` returns a copy of the tensor data.
