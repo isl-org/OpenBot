@@ -465,26 +465,26 @@ public class SensorService extends Service implements SensorEventListener {
       e.printStackTrace();
       return null;
     }
-  };
+  }
 
-  public void appendLog(BufferedWriter writer, String text) {
+	public void appendLog(BufferedWriter writer, String text) {
     try {
       writer.append(text);
       writer.newLine();
     } catch (IOException e) {
       e.printStackTrace();
     }
-  };
+  }
 
-  public void closeLog(BufferedWriter writer) {
+	public void closeLog(BufferedWriter writer) {
     try {
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
-  };
+  }
 
-  private void startTrackingLocation() {
+	private void startTrackingLocation() {
     try {
       mFusedLocationClient.requestLocationUpdates(
           getLocationRequest(), mLocationCallback, null /* Looper */);

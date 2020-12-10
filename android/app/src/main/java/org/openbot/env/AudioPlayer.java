@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class AudioPlayer {
   private MediaPlayer mp;
-  private Context mContext;
+  private final Context mContext;
 
   public AudioPlayer(Context context) {
     mp = new MediaPlayer();
@@ -24,7 +24,7 @@ public class AudioPlayer {
   public void play(int id) {
     try {
       mp.reset();
-      mp = mp.create(mContext, id);
+      mp = MediaPlayer.create(mContext, id);
       mp.start();
     } catch (Exception e) {
       e.printStackTrace();

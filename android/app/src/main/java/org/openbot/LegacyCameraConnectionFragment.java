@@ -55,10 +55,10 @@ public class LegacyCameraConnectionFragment extends Fragment {
   }
 
   private Camera camera;
-  private Camera.PreviewCallback imageListener;
-  private Size desiredSize;
+  private final Camera.PreviewCallback imageListener;
+  private final Size desiredSize;
   /** The layout identifier to inflate for this Fragment. */
-  private int layout;
+  private final int layout;
   /** An {@link AutoFitTextureView} for camera preview. */
   private AutoFitTextureView textureView;
   /**
@@ -142,7 +142,7 @@ public class LegacyCameraConnectionFragment extends Fragment {
 
   @Override
   public void onViewCreated(final View view, final Bundle savedInstanceState) {
-    textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
+    textureView = view.findViewById(R.id.texture);
   }
 
   @Override
