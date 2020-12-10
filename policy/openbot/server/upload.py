@@ -4,7 +4,7 @@ import zipfile
 
 from aiohttp import multipart, web
 
-from . import dataset_dir
+from .. import dataset_dir
 
 
 async def handle_file_upload(field: multipart.BodyPartReader) -> web.Response:

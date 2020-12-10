@@ -8,10 +8,10 @@ If you do not want install the dependencies globally, activate your conda enviro
 conda activate openbot
 ```
 
-Make sure you are in the folder `policy/server`. Now, you can install all the dependencies with the following command:
+Make sure you are in the folder `policy`. Now, you can install all the dependencies with the following command:
 
 ```
-pip install -r requirements.txt
+pip install -r openbot/server/requirements.txt
 ```
 
 ## Running the server
@@ -19,19 +19,18 @@ pip install -r requirements.txt
 You can run the python server with the command:
 
 ```
-python main.py
+python -m openbot.server
 ```
 
 There is also a developer mode:
 
 ```
-adev runserver main.py
+adev runserver openbot/server
 ```
 
 When you run the server you should see something like:
 
 ```
-Dataset dir: <clone-dir>/OpenBot/policy/dataset
 Skip address 127.0.0.1 @ interface lo0
 Found address 192.168.x.x @ interface en0
 Registration of a service, press Ctrl-C to exit...
@@ -45,7 +44,7 @@ You can now open your browser to visualize the dataset and see incoming uploads 
 http://localhost:8000/uploaded/
 ```
 
-<img src="../../docs/images/server.gif" width="100%" alt="server" />
+<img src="../../../docs/images/server.gif" width="100%" alt="server" />
 
 ## Troubleshooting
 

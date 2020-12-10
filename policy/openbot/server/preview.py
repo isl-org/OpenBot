@@ -4,7 +4,7 @@ import os
 from aiohttp import web
 import imageio
 
-from . import dataset_dir
+from .. import dataset_dir
 
 
 async def handle_preview(request):
