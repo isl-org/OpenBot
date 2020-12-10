@@ -48,8 +48,8 @@ public abstract class Network {
   /** The runtime device type used for execution. */
   public enum Device {
     CPU,
-    NNAPI,
-    GPU
+    GPU,
+    NNAPI
   }
 
   /** Dimensions of inputs. */

@@ -746,7 +746,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.logMode != logMode) {
       LOGGER.d("Updating  logMode: " + logMode);
       this.logMode = logMode;
-      preferencesManager.setLogMode(logMode.ordinal());
+      preferencesManager.setLoggerMode(logMode.ordinal());
     }
   }
 
