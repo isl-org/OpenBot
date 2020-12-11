@@ -19,6 +19,7 @@
 package org.openbot;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
@@ -75,6 +76,7 @@ import java.util.concurrent.TimeUnit;
 import org.openbot.env.GameController;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
+import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.UsbConnection;
 import org.openbot.tflite.Network.Device;
 import org.openbot.tflite.Network.Model;
@@ -139,6 +141,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private int numThreads = -1;
 
   protected GameController gameController;
+  private SharedPreferencesManager preferencesManager;
 
   // **** USB **** //
   protected UsbConnection usbConnection;
@@ -211,6 +214,8 @@ public abstract class CameraActivity extends AppCompatActivity
     } else {
       requestCameraPermission();
     }
+
+    preferencesManager = new SharedPreferencesManager(this);
 
     connectionSwitchCompat = findViewById(R.id.connection_switch);
     threadsTextView = findViewById(R.id.threads);
@@ -297,30 +302,30 @@ public abstract class CameraActivity extends AppCompatActivity
     loggerSpinner.setOnItemSelectedListener(this);
     controlSpinner.setOnItemSelectedListener(this);
 
-    // Make sure spinners are initialized correctly
-    baudRateSpinner.setSelection(Arrays.binarySearch(BaudRates, baudRate));
-    modelSpinner.setSelection(model.ordinal());
-    deviceSpinner.setSelection(device.ordinal());
-    driveModeSpinner.setSelection(driveMode.ordinal());
-    loggerSpinner.setSelection(logMode.ordinal());
-    controlSpinner.setSelection(controlSpeed.ordinal());
-
-    numThreads = Integer.parseInt(threadsTextView.getText().toString().trim());
-
-    gameController = new GameController(driveMode);
-
-    // load saved instance variables e.g. after rotation
-    if (savedInstanceState != null) {
-      super.onRestoreInstanceState(savedInstanceState);
-      this.cameraSelection = savedInstanceState.getInt("cameraSelection");
-    }
-    this.setCameraSwitchText();
-
     // Intent for sensor service
     intentSensorService = new Intent(this, SensorService.class);
 
+    setInitialValues();
+
+    gameController = new GameController(driveMode);
+
     // Try to connect to serial device
     toggleConnection(true);
+  }
+
+  @SuppressLint("SetTextI18n")
+  private void setInitialValues() {
+    cameraSwitchCompat.setChecked(preferencesManager.getCameraSwitch());
+
+    baudRateSpinner.setSelection(Arrays.binarySearch(BaudRates, preferencesManager.getBaudrate()));
+    modelSpinner.setSelection(preferencesManager.getModel());
+    deviceSpinner.setSelection(preferencesManager.getDevice());
+    driveModeSpinner.setSelection(preferencesManager.getDriveMode());
+    loggerSpinner.setSelection(preferencesManager.getLogMode());
+    controlSpinner.setSelection(preferencesManager.getControlSpeed());
+
+    setNumThreads(preferencesManager.getNumThreads());
+    threadsTextView.setText(Integer.toString(numThreads));
   }
 
   protected int[] getRgbBytes() {
@@ -733,6 +738,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.baudRate != baudRate) {
       LOGGER.d("Updating  baudRate: " + baudRate);
       this.baudRate = baudRate;
+      preferencesManager.setBaudrate(baudRate);
     }
   }
 
@@ -740,6 +746,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.logMode != logMode) {
       LOGGER.d("Updating  logMode: " + logMode);
       this.logMode = logMode;
+      preferencesManager.setLogMode(logMode.ordinal());
     }
   }
 
@@ -747,6 +754,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.controlSpeed != controlSpeed) {
       LOGGER.d("Updating  controlSpeed: " + controlSpeed);
       this.controlSpeed = controlSpeed;
+      preferencesManager.setControlSpeed(controlSpeed.ordinal());
       switch (controlSpeed) {
         case SLOW:
           speedMultiplier = 128;
@@ -767,6 +775,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.driveMode != driveMode) {
       LOGGER.d("Updating  driveMode: " + driveMode);
       this.driveMode = driveMode;
+      preferencesManager.setDriveMode(driveMode.ordinal());
       gameController.setDriveMode(driveMode);
     }
   }
@@ -779,6 +788,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.model != model) {
       LOGGER.d("Updating  model: " + model);
       this.model = model;
+      preferencesManager.setModel(model.ordinal());
       onInferenceConfigurationChanged();
     }
   }
@@ -795,6 +805,7 @@ public abstract class CameraActivity extends AppCompatActivity
       plusImageView.setEnabled(threadsEnabled);
       minusImageView.setEnabled(threadsEnabled);
       threadsTextView.setText(threadsEnabled ? String.valueOf(numThreads) : "N/A");
+      preferencesManager.setDevice(device.ordinal());
       onInferenceConfigurationChanged();
     }
   }
@@ -807,6 +818,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.numThreads != numThreads) {
       LOGGER.d("Updating  numThreads: " + numThreads);
       this.numThreads = numThreads;
+      preferencesManager.setNumThreads(numThreads);
       onInferenceConfigurationChanged();
     }
   }
@@ -993,6 +1005,7 @@ public abstract class CameraActivity extends AppCompatActivity
     this.cameraSelection = getCameraUserSelection();
     this.setCameraSwitchText();
     this.setFragment();
+    preferencesManager.setCameraSwitch(isChecked);
   }
 
   protected void toggleConnection(boolean isChecked) {
@@ -1094,17 +1107,5 @@ public abstract class CameraActivity extends AppCompatActivity
   @Override
   public void onNothingSelected(AdapterView<?> parent) {
     // Do nothing.
-  }
-
-  @Override
-  public void onRestoreInstanceState(Bundle savedInstanceState) {
-    super.onRestoreInstanceState(savedInstanceState);
-    this.cameraSelection = savedInstanceState.getInt("cameraSelection");
-  }
-
-  @Override
-  public void onSaveInstanceState(Bundle savedInstanceState) {
-    super.onSaveInstanceState(savedInstanceState);
-    savedInstanceState.putInt("cameraSelection", getCameraUserSelection());
   }
 }
