@@ -321,7 +321,7 @@ public abstract class CameraActivity extends AppCompatActivity
     modelSpinner.setSelection(preferencesManager.getModel());
     deviceSpinner.setSelection(preferencesManager.getDevice());
     driveModeSpinner.setSelection(preferencesManager.getDriveMode());
-    loggerSpinner.setSelection(preferencesManager.getLoggerMode());
+    loggerSpinner.setSelection(preferencesManager.getLogMode());
     controlSpinner.setSelection(preferencesManager.getControlSpeed());
 
     setNumThreads(preferencesManager.getNumThreads());
@@ -746,7 +746,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.logMode != logMode) {
       LOGGER.d("Updating  logMode: " + logMode);
       this.logMode = logMode;
-      preferencesManager.setLoggerMode(logMode.ordinal());
+      preferencesManager.setLogMode(logMode.ordinal());
     }
   }
 

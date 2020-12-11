@@ -49,7 +49,7 @@ public class SharedPreferencesManager {
     return preferences.getInt(DRIVE_MODE, DEFAULT_DRIVE_MODE);
   }
 
-  public int getLoggerMode() {
+  public int getLogMode() {
     return preferences.getInt(LOG_MODE, DEFAULT_LOG_MODE);
   }
 
@@ -81,7 +81,7 @@ public class SharedPreferencesManager {
     preferences.edit().putInt(DRIVE_MODE, mode).apply();
   }
 
-  public void setLoggerMode(int mode) {
+  public void setLogMode(int mode) {
     preferences.edit().putInt(LOG_MODE, mode).apply();
   }
 
