@@ -1,7 +1,13 @@
 import glob
 import os
+import sys
+import traceback
 
 from openbot import dataset_dir
+
+sys.path.append("../")
+
+import associate_frames
 
 
 def get_dataset_list(dir_path):
@@ -44,13 +50,27 @@ def get_info(dir_path, basename):
 
     isSession = is_session(real_path)
     if isSession:
+        try:
+            max_offset = 1e3
+            frames = associate_frames.match_frame_session(
+                real_path,
+                max_offset,
+                redo_matching=False,
+                remove_zeros=True,
+            )
+        except Exception as e:
+            traceback.print_exc()
+            frames = []
+
         return {
             "path": "/" + path,
             "name": basename,
             "is_session": isSession,
             "images": len(os.listdir(real_path + "/images")),
-            "ctrl": count_lines(real_path + "/sensor_data/ctrlLog.txt") - 1,
+            "rgbFrames": count_lines(real_path + "/sensor_data/rgbFrames.txt") - 1,
             "indicator": count_lines(real_path + "/sensor_data/indicatorLog.txt") - 1,
+            "ctrl": count_lines(real_path + "/sensor_data/ctrlLog.txt") - 1,
+            "frames": len(frames),
         }
 
     files = os.listdir(real_path)

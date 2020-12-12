@@ -4,12 +4,14 @@ set -e
 
 trap 'kill 0' SIGINT
 
-cd frontend
-yarn start &
-cd ..
+(
+    eval "$(conda shell.bash hook)"
+    conda activate openbot
+    adev runserver openbot/server
+) &
 
-eval "$(conda shell.bash hook)"
-conda activate openbot
-adev runserver openbot/server
+sleep 1
+cd frontend
+yarn start
 
 fg

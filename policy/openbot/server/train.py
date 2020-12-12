@@ -13,6 +13,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 import tensorflow as tf
+from tensorflow_core.python.keras import Model
 from openbot import (
     associate_frames,
     dataloader,
@@ -301,10 +302,13 @@ def do_evaluation(tr: Training):
         history.history['val_direction_metric'][-1],
         last_checkpoint))
 
-    best_model = utils.load_model(os.path.join(checkpoint_path, best_checkpoint), tr.loss_fn, tr.metric_list)
-    test_loss, test_acc, test_dir, test_ang = best_model.evaluate(tr.test_ds,
-                                                                  steps=tr.image_count_test / TEST_BATCH_SIZE,
-                                                                  verbose=2)
+    best_model: Model = utils.load_model(os.path.join(checkpoint_path, best_checkpoint), tr.loss_fn, tr.metric_list)
+    # test_loss, test_acc, test_dir, test_ang = best_model.evaluate(tr.test_ds,
+    res = best_model.evaluate(tr.test_ds,
+                              steps=tr.image_count_test / TEST_BATCH_SIZE,
+                              verbose=2)
+    print(res)
+
     NUM_SAMPLES = 15
     (image_batch, cmd_batch), label_batch = next(iter(tr.test_ds))
     pred_batch = best_model.predict(

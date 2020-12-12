@@ -4,7 +4,6 @@ import aiohttp
 from aiohttp import web
 
 from .dataset import get_dir_info
-from .train import start_train
 
 
 async def handle_test(request: web.Request):
