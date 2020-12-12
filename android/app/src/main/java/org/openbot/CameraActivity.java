@@ -261,14 +261,12 @@ public abstract class CameraActivity extends AppCompatActivity
               case BottomSheetBehavior.STATE_HIDDEN:
                 break;
               case BottomSheetBehavior.STATE_EXPANDED:
-                {
-                  bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_down);
-                }
+                bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_down);
+                preferencesManager.setSheetExpanded(true);
                 break;
               case BottomSheetBehavior.STATE_COLLAPSED:
-                {
-                  bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up);
-                }
+                bottomSheetArrowImageView.setImageResource(R.drawable.icn_chevron_up);
+                preferencesManager.setSheetExpanded(false);
                 break;
               case BottomSheetBehavior.STATE_DRAGGING:
                 break;
@@ -326,6 +324,10 @@ public abstract class CameraActivity extends AppCompatActivity
 
     setNumThreads(preferencesManager.getNumThreads());
     threadsTextView.setText(Integer.toString(numThreads));
+
+    if (preferencesManager.getSheetExpanded()) {
+      sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
   }
 
   protected int[] getRgbBytes() {
