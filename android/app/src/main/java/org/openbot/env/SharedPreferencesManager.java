@@ -23,6 +23,7 @@ public class SharedPreferencesManager {
   private static final int DEFAULT_NUM_THREAD = 1;
   private static final String NUM_THREAD = "NUM_THREAD";
   private static final String CAMERA_SWITCH = "CAMERA_SWITCH";
+  private static final String SHEET_EXPANDED = "SHEET_EXPANDED";
 
   private final SharedPreferences preferences;
 
@@ -65,6 +66,10 @@ public class SharedPreferencesManager {
     return preferences.getBoolean(CAMERA_SWITCH, false);
   }
 
+  public boolean getSheetExpanded() {
+    return preferences.getBoolean(SHEET_EXPANDED, false);
+  }
+
   public void setBaudrate(int baudRate) {
     preferences.edit().putInt(BAUD_RATE, baudRate).apply();
   }
@@ -95,5 +100,9 @@ public class SharedPreferencesManager {
 
   public void setCameraSwitch(boolean isChecked) {
     preferences.edit().putBoolean(CAMERA_SWITCH, isChecked).apply();
+  }
+
+  public void setSheetExpanded(boolean expanded) {
+    preferences.edit().putBoolean(SHEET_EXPANDED, expanded).apply();
   }
 }
