@@ -467,7 +467,7 @@ public class SensorService extends Service implements SensorEventListener {
     }
   }
 
-	public void appendLog(BufferedWriter writer, String text) {
+  public void appendLog(BufferedWriter writer, String text) {
     try {
       writer.append(text);
       writer.newLine();
@@ -476,7 +476,7 @@ public class SensorService extends Service implements SensorEventListener {
     }
   }
 
-	public void closeLog(BufferedWriter writer) {
+  public void closeLog(BufferedWriter writer) {
     try {
       writer.close();
     } catch (IOException e) {
@@ -484,7 +484,7 @@ public class SensorService extends Service implements SensorEventListener {
     }
   }
 
-	private void startTrackingLocation() {
+  private void startTrackingLocation() {
     try {
       mFusedLocationClient.requestLocationUpdates(
           getLocationRequest(), mLocationCallback, null /* Looper */);
