@@ -257,13 +257,10 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
             updateVehicleState();
 
             runOnUiThread(
-                new Runnable() {
-                  @Override
-                  public void run() {
-                    // showFrameInfo(previewWidth + "x" + previewHeight);
-                    // showCropInfo(croppedBitmap.getWidth() + "x" + croppedBitmap.getHeight());
-                    showInference(lastProcessingTimeMs + "ms");
-                  }
+                () -> {
+                  // showFrameInfo(previewWidth + "x" + previewHeight);
+                  // showCropInfo(croppedBitmap.getWidth() + "x" + croppedBitmap.getHeight());
+                  showInference(lastProcessingTimeMs + "ms");
                 });
           });
     }

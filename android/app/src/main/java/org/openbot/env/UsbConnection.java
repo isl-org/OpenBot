@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import org.openbot.SensorService;
 
@@ -54,20 +55,18 @@ public class UsbConnection {
 
   private final UsbSerialInterface.UsbReadCallback callback =
       data -> {
-        String dataUtf8 = new String(data, UTF_8);
-        buffer += dataUtf8;
-        int index;
-        while ((index = buffer.indexOf('\n')) != -1) {
-          final String dataStr = buffer.substring(0, index).trim();
-          buffer = buffer.length() == index ? "" : buffer.substring(index + 1);
+        try {
+          String dataUtf8 = new String(data, "UTF-8");
+          buffer += dataUtf8;
+          int index;
+          while ((index = buffer.indexOf('\n')) != -1) {
+            final String dataStr = buffer.substring(0, index).trim();
+            buffer = buffer.length() == index ? "" : buffer.substring(index + 1);
 
-          AsyncTask.execute(
-              new Runnable() {
-                @Override
-                public void run() {
-                  onSerialDataReceived(dataStr);
-                }
-              });
+            AsyncTask.execute(() -> onSerialDataReceived(dataStr));
+          }
+        } catch (UnsupportedEncodingException e) {
+          LOGGER.e("Error receiving USB data");
         }
       };
 
