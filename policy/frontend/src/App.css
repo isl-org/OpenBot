@@ -11,10 +11,3 @@ body {
 .App > .rs-content {
   padding: 1em;
 }
-.list {
-  display: grid;
-  margin: 20px 0;
-  grid-gap: 10px;
-  grid-template-columns: repeat(auto-fill, 300px);
-  justify-content: space-evenly;
-}

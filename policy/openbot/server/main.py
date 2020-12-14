@@ -32,6 +32,13 @@ async def handle_get(request: web.Request):
     })
 
 
+async def handle_get_datasets(_: web.Request):
+    return web.json_response({
+        "train": get_dataset_list("train_data"),
+        "test": get_dataset_list("test_data"),
+    })
+
+
 @aiohttp_jinja2.template("index.html")
 async def handle_train(request: web.Request):
     return {
@@ -88,6 +95,7 @@ def urljoin(*parts):
 app = web.Application()
 app.add_routes([
     web.get('/ws', api.websocket_handler),
+    web.get('/datasets', handle_get_datasets),
     web.get('/favicon.ico', handle_favicon),
     web.get('/train', handle_train),
     web.post('/upload', handle_upload),

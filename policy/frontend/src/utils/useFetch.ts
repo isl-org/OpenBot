@@ -1,9 +1,11 @@
 import {useEffect, useState} from 'react';
+import {useToggle} from './useToggle';
 
-export function useFetch(defaultValue, input, init) {
+export function useFetch<T>(defaultValue: T, input: RequestInfo, init?: RequestInit) {
     const [error, setError] = useState();
     const [pending, setPending] = useState(true);
     const [value, setValue] = useState(defaultValue);
+    const [reloadValue, reload] = useToggle(false);
     useEffect(() => {
         setPending(true);
         let active = true;
@@ -30,6 +32,6 @@ export function useFetch(defaultValue, input, init) {
         return () => {
             active = false;
         };
-    }, [input, init]);
-    return {error, pending, value};
+    }, [input, init, reloadValue]);
+    return {error, pending, value, reload};
 }
