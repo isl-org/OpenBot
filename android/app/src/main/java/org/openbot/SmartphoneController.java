@@ -5,8 +5,6 @@ import android.content.Context;
 import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -40,22 +38,43 @@ public class SmartphoneController {
     // Callbacks for receiving payloads
     private final PayloadCallback payloadCallback =
             new PayloadCallback() {
-                final BlockingQueue<KeyEvent> queue = new LinkedBlockingQueue<>(100);
-
-                {
-                    new Thread(new KeySender(queue)).start();
-                }
-
                 @Override
                 public void onPayloadReceived(String endpointId, Payload payload) {
                     String command = new String(payload.asBytes(), StandardCharsets.UTF_8);
                     try {
                         JSONObject jsonCommand = new JSONObject(command);
-                        KeyEvent evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_D, 0, 0);
 
                         String buttonValue = null;
                         if (jsonCommand.has("buttonValue")) {
                             buttonValue = jsonCommand.getString("buttonValue");
+                        }
+
+                        ControllerEventProcessor.ControllerEvent event = new ControllerEventProcessor.ControllerEvent();
+
+                        if (buttonValue != null) {
+                            switch (buttonValue) {
+                                case "LOGS":
+                                    event.type = ControllerEventProcessor.ControllerEventsTypes.LOGS;
+                                    break;
+                                case "NOISE":
+                                    event.type = ControllerEventProcessor.ControllerEventsTypes.NOISE;
+                                    break;
+                                case "DRIVE_BY_NETWORK":
+                                    event.type = ControllerEventProcessor.ControllerEventsTypes.DRIVE_MODE;
+                                    break;
+                                case "INDICATOR_RIGHT":
+                                    event.type = ControllerEventProcessor.ControllerEventsTypes.INDICATOR_RIGHT;
+                                    break;
+                                case "INDICATOR_LEFT":
+                                    event.type = ControllerEventProcessor.ControllerEventsTypes.INDICATOR_LEFT;
+                                    break;
+                                case "INDICATOR_STOP":
+                                    event.type = ControllerEventProcessor.ControllerEventsTypes.INDICATOR_STOP;
+                                    break;
+                                default:
+                                    Log.e(TAG, "Woooo, what are you doing? Will take away your keys!");
+                                    return;
+                            }
                         }
 
                         // {r:0.22, l:0.3}
@@ -66,40 +85,12 @@ public class SmartphoneController {
                             rightValue = jsonCommand.getString("r");
                         }
 
-                        if (buttonValue != null) {
-                            switch (buttonValue) {
-                                case "LOGS":
-                                    evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_A, 0, 0);
-                                    break;
-                                case "NOISE":
-                                    evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_START, 0, 0);
-                                    break;
-                                case "DRIVE_BY_NETWORK":
-                                    evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_L1, 0, 0);
-                                    break;
-                                case "INDICATOR_RIGHT":
-                                    evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_B, 0, 0);
-                                    break;
-                                case "INDICATOR_LEFT":
-                                    evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_Y, 0, 0);
-                                    break;
-                                case "INDICATOR_STOP":
-                                    evt = new KeyEvent(0, 0, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BUTTON_X, 0, 0);
-                                    break;
-                                default:
-                                    Log.e(TAG, "Woooo, what are you doing? Will take away your keys!");
-                                    break;
-                            }
-                            evt.setSource(InputDevice.SOURCE_GAMEPAD);
-                        }
-
                         if (rightValue != null && leftValue != null) {
-                            Log.i(TAG, "left: " + parseFloat(leftValue) + ", right: " + parseFloat(rightValue));
+                            event.type = ControllerEventProcessor.ControllerEventsTypes.DRIVE_LEFT_RIGHT_VALUES;
+                            ControllerEventProcessor.DriveValue leftRightValues = new ControllerEventProcessor.DriveValue(new Float(leftValue), new Float(rightValue));
+                            event.payload = leftRightValues;
                         }
-
-                        if (buttonValue != null) {
-                            queue.add(evt);
-                        }
+                        ControllerEventProcessor.emitEvent(event);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -113,29 +104,5 @@ public class SmartphoneController {
 
     public boolean isConnected() {
         return connection.isConnected();
-    }
-
-    private static class KeySender implements Runnable {
-
-        private final BlockingQueue<KeyEvent> queue;
-        private final Instrumentation instrumentation = new Instrumentation();
-
-        public KeySender(BlockingQueue<KeyEvent> queue) {
-            this.queue = queue;
-        }
-
-        @Override
-        public void run() {
-            try {
-                while (true) {
-                    KeyEvent keyEvent = queue.take();
-
-                    // This must run in the background...
-                    instrumentation.sendKeySync(keyEvent);
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
     }
 }

@@ -43,6 +43,7 @@ public class NearbyConnection {
     private String pairedDeviceEndpointId;
     private static final Strategy STRATEGY = Strategy.P2P_POINT_TO_POINT;
     private static PayloadCallback payloadCallback;
+    private static Context context;
     private static final String SERVICE_ID = "OPENBOT_SERVICE_ID";
     private final CancelableDiscovery discovery = new CancelableDiscovery(this);
     private boolean isConnected = false;
@@ -61,8 +62,35 @@ public class NearbyConnection {
                     connectionsClient.requestConnection(connectionName, endpointId, connectionLifecycleCallback).addOnSuccessListener(
                             unusedResult -> Log.d("requestConnection", "Connected OK")
                     ).addOnFailureListener(
+                            e -> {
+                                Log.d("requestConnection", "Unable to connect: Error: " + e.toString());
 
-                            e -> Log.d("requestConnection", "Unable to connet: Error: " + e.toString()));
+                                if (e.getMessage().contains("8012: STATUS_ENDPOINT_IO_ERROR")) {
+                                    // retry. this usually helps...
+                                    Log.d("NearbyConnection", "Got 8012. Reconnecting...");
+
+                                    connectionsClient.stopDiscovery();
+                                    connectionsClient.stopAdvertising();
+
+                                    connect(NearbyConnection.context, NearbyConnection.payloadCallback);
+                                }
+                                if (e.getMessage().contains("8002: STATUS_ALREADY_DISCOVERING")) {
+                                    Log.d("NearbyConnection", "Got 8002: STATUS_ALREADY_DISCOVERING");
+                                    connectionsClient.stopAdvertising();
+                                }
+
+                                if (e.getMessage().contains("8003: STATUS_ALREADY_CONNECTED_TO_ENDPOINT")) {
+                                    Log.d("NearbyConnection", "Got 8003. Do nothing...");
+                                }
+
+                                if (e.getMessage().contains("8007: STATUS_BLUETOOTH_ERROR")) {
+                                    Log.d("NearbyConnection", "Got 8007. Reconnecting...");
+                                    connectionsClient.stopDiscovery();
+                                    connectionsClient.stopAdvertising();
+
+                                    connect(NearbyConnection.context, NearbyConnection.payloadCallback);
+                                }
+                            });
                 }
 
                 @Override
@@ -114,6 +142,7 @@ public class NearbyConnection {
      * Finds an opponent to play the game with using Nearby Connections.
      */
     public void connect(Context context, PayloadCallback payloadCallback) {
+        NearbyConnection.context = context;
         NearbyConnection.payloadCallback = payloadCallback;
         connectionsClient = Nearby.getConnectionsClient(context);
 
@@ -148,7 +177,6 @@ public class NearbyConnection {
                 .addOnSuccessListener(
                         unusedResult -> Log.d("startDiscovery", "We started discovery OK")
                 ).addOnFailureListener(
-
                 e -> Log.d("startDiscovery", "We were unable to start startDiscovery. Error: " + e.toString()));
                 Toast.makeText(CameraActivity.getContext(), "Searching for smartphone controller...", Toast.LENGTH_LONG).show();
     }
