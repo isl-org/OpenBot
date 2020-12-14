@@ -38,6 +38,7 @@ class UploadService {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                   Log.d("Upload", "Server found");
+                  uploadAll();
                 }
 
                 @Override
@@ -68,7 +69,7 @@ class UploadService {
     if (serverUrl.isEmpty()) {
       return;
     }
-    Log.d("Upload", "Start: " + serverUrl);
+    Log.d("Upload", String.format("Start upload %s (%d MB)", file.getName(), file.length() / 1024 / 1024));
 
     RequestParams params = new RequestParams();
     try {
