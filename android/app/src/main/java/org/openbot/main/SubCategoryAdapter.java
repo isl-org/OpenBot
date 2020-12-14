@@ -43,7 +43,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
     int color =
         Color.rgb(holder.rand.nextInt(255), holder.rand.nextInt(255), holder.rand.nextInt(255));
     holder.icon.setStrokeColor(ColorStateList.valueOf(color));
-    holder.icon.setColorFilter(color);
+    holder.icon.setBackgroundColor(color);
   }
 
   @Override

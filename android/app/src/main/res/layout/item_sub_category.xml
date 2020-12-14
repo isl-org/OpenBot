@@ -10,13 +10,12 @@
         android:id="@+id/image"
         android:layout_width="@dimen/icon_asset_size"
         android:layout_height="@dimen/icon_asset_size"
-        android:background="?attr/selectableItemBackground"
+        android:foreground="?attr/selectableItemBackground"
         android:scaleType="center"
+        android:tint="@android:color/white"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
         app:strokeColor="@color/openBotBlue"
-        app:strokeWidth="1dp"
-        android:padding="1dp"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@drawable/openbot_icon" />
 
     <TextView
         android:id="@+id/title"
