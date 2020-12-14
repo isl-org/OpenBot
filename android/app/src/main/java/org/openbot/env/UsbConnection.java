@@ -26,17 +26,17 @@ public class UsbConnection {
   private static final int USB_PRODUCT_ID = 29987; // 0x0001;
   private static final Logger LOGGER = new Logger();
 
-  private UsbManager usbManager;
+  private final UsbManager usbManager;
   // private UsbDevice usbDevice;
   PendingIntent usbPermissionIntent;
   private static final String ACTION_USB_PERMISSION = "UsbConnection.USB_PERMISSION";
 
   private UsbDeviceConnection connection;
   private UsbSerialDevice serialDevice;
-  private LocalBroadcastManager mLocalBroadcastManager;
+  private final LocalBroadcastManager mLocalBroadcastManager;
   private String buffer = "";
-  private Context context;
-  private int baudRate;
+  private final Context context;
+  private final int baudRate;
   private boolean busy;
   private int vendorId;
   private int productId;
@@ -53,29 +53,20 @@ public class UsbConnection {
         PendingIntent.getBroadcast(this.context, 0, new Intent(ACTION_USB_PERMISSION), 0);
   }
 
-  private UsbSerialInterface.UsbReadCallback callback =
-      new UsbSerialInterface.UsbReadCallback() {
-        @Override
-        public void onReceivedData(byte[] data) {
-          try {
-            String dataUtf8 = new String(data, "UTF-8");
-            buffer += dataUtf8;
-            int index;
-            while ((index = buffer.indexOf('\n')) != -1) {
-              final String dataStr = buffer.substring(0, index).trim();
-              buffer = buffer.length() == index ? "" : buffer.substring(index + 1);
+  private final UsbSerialInterface.UsbReadCallback callback =
+      data -> {
+        try {
+          String dataUtf8 = new String(data, "UTF-8");
+          buffer += dataUtf8;
+          int index;
+          while ((index = buffer.indexOf('\n')) != -1) {
+            final String dataStr = buffer.substring(0, index).trim();
+            buffer = buffer.length() == index ? "" : buffer.substring(index + 1);
 
-              AsyncTask.execute(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      onSerialDataReceived(dataStr);
-                    }
-                  });
-            }
-          } catch (UnsupportedEncodingException e) {
-            LOGGER.e("Error receiving USB data");
+            AsyncTask.execute(() -> onSerialDataReceived(dataStr));
           }
+        } catch (UnsupportedEncodingException e) {
+          LOGGER.e("Error receiving USB data");
         }
       };
 
@@ -85,7 +76,7 @@ public class UsbConnection {
           String action = intent.getAction();
           if (ACTION_USB_PERMISSION.equals(action)) {
             synchronized (this) {
-              UsbDevice usbDevice = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+              UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
               if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                 if (usbDevice != null) {
                   // call method to set up device communication

@@ -465,7 +465,7 @@ public class SensorService extends Service implements SensorEventListener {
       e.printStackTrace();
       return null;
     }
-  };
+  }
 
   public void appendLog(BufferedWriter writer, String text) {
     try {
@@ -474,7 +474,7 @@ public class SensorService extends Service implements SensorEventListener {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  };
+  }
 
   public void closeLog(BufferedWriter writer) {
     try {
@@ -482,7 +482,7 @@ public class SensorService extends Service implements SensorEventListener {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  };
+  }
 
   private void startTrackingLocation() {
     try {

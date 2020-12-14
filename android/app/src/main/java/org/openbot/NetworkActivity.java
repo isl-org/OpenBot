@@ -86,8 +86,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   private MultiBoxTracker tracker;
   private BorderedText borderedText;
 
-  private AudioPlayer audioPlayer;
-  private String voice;
+  private final AudioPlayer audioPlayer;
+  private final String voice;
 
   public NetworkActivity() {
     audioPlayer = new AudioPlayer(this);
@@ -121,7 +121,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
       return;
     }
 
-    trackingOverlay = (OverlayView) findViewById(R.id.tracking_overlay);
+    trackingOverlay = findViewById(R.id.tracking_overlay);
     trackingOverlay.addCallback(
         new DrawCallback() {
           @Override
@@ -193,81 +193,75 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
       LOGGER.i("Putting image " + currFrameNum + " for detection in bg thread.");
 
       runInBackground(
-          new Runnable() {
-            @Override
-            public void run() {
-              if (detector != null) {
-                LOGGER.i("Running detection on image " + currFrameNum);
-                final long startTime = SystemClock.uptimeMillis();
-                final List<Detector.Recognition> results = detector.recognizeImage(croppedBitmap);
-                lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
+          () -> {
+            if (detector != null) {
+              LOGGER.i("Running detection on image " + currFrameNum);
+              final long startTime = SystemClock.uptimeMillis();
+              final List<Detector.Recognition> results = detector.recognizeImage(croppedBitmap);
+              lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
 
-                if (!results.isEmpty())
-                  LOGGER.i(
-                      "Object: "
-                          + results.get(0).getLocation().centerX()
-                          + ", "
-                          + results.get(0).getLocation().centerY()
-                          + ", "
-                          + results.get(0).getLocation().height()
-                          + ", "
-                          + results.get(0).getLocation().width());
+              if (!results.isEmpty())
+                LOGGER.i(
+                    "Object: "
+                        + results.get(0).getLocation().centerX()
+                        + ", "
+                        + results.get(0).getLocation().centerY()
+                        + ", "
+                        + results.get(0).getLocation().height()
+                        + ", "
+                        + results.get(0).getLocation().width());
 
-                cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
-                final Canvas canvas = new Canvas(cropCopyBitmap);
-                final Paint paint = new Paint();
-                paint.setColor(Color.RED);
-                paint.setStyle(Style.STROKE);
-                paint.setStrokeWidth(2.0f);
+              cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
+              final Canvas canvas1 = new Canvas(cropCopyBitmap);
+              final Paint paint = new Paint();
+              paint.setColor(Color.RED);
+              paint.setStyle(Style.STROKE);
+              paint.setStrokeWidth(2.0f);
 
-                float minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API;
+              float minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API;
 
-                final List<Detector.Recognition> mappedRecognitions =
-                    new LinkedList<Detector.Recognition>();
+              final List<Detector.Recognition> mappedRecognitions =
+                  new LinkedList<Detector.Recognition>();
 
-                for (final Detector.Recognition result : results) {
-                  final RectF location = result.getLocation();
-                  if (location != null && result.getConfidence() >= minimumConfidence) {
-                    canvas.drawRect(location, paint);
-                    cropToFrameTransform.mapRect(location);
-                    result.setLocation(location);
-                    mappedRecognitions.add(result);
-                  }
+              for (final Detector.Recognition result : results) {
+                final RectF location = result.getLocation();
+                if (location != null && result.getConfidence() >= minimumConfidence) {
+                  canvas1.drawRect(location, paint);
+                  cropToFrameTransform.mapRect(location);
+                  result.setLocation(location);
+                  mappedRecognitions.add(result);
                 }
-
-                tracker.trackResults(mappedRecognitions, currFrameNum);
-                vehicleControl = tracker.updateTarget();
-                trackingOverlay.postInvalidate();
-              } else if (autoPilot != null) {
-                LOGGER.i("Running autopilot on image " + currFrameNum);
-                final long startTime = SystemClock.uptimeMillis();
-                vehicleControl = autoPilot.recognizeImage(croppedBitmap, vehicleIndicator);
-                lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
               }
 
-              // In case control was removed from network during inference
-              if (!driveByNetwork) {
-                vehicleControl = new ControlSignal(0, 0);
-              }
-
-              if (getLoggingEnabled()) {
-                sendInferenceTimeToSensorService(currFrameNum, lastProcessingTimeMs);
-              }
-
-              computingNetwork = false;
-
-              updateVehicleState();
-
-              runOnUiThread(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      // showFrameInfo(previewWidth + "x" + previewHeight);
-                      // showCropInfo(croppedBitmap.getWidth() + "x" + croppedBitmap.getHeight());
-                      showInference(lastProcessingTimeMs + "ms");
-                    }
-                  });
+              tracker.trackResults(mappedRecognitions, currFrameNum);
+              vehicleControl = tracker.updateTarget();
+              trackingOverlay.postInvalidate();
+            } else if (autoPilot != null) {
+              LOGGER.i("Running autopilot on image " + currFrameNum);
+              final long startTime = SystemClock.uptimeMillis();
+              vehicleControl = autoPilot.recognizeImage(croppedBitmap, vehicleIndicator);
+              lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
             }
+
+            // In case control was removed from network during inference
+            if (!driveByNetwork) {
+              vehicleControl = new ControlSignal(0, 0);
+            }
+
+            if (getLoggingEnabled()) {
+              sendInferenceTimeToSensorService(currFrameNum, lastProcessingTimeMs);
+            }
+
+            computingNetwork = false;
+
+            updateVehicleState();
+
+            runOnUiThread(
+                () -> {
+                  // showFrameInfo(previewWidth + "x" + previewHeight);
+                  // showCropInfo(croppedBitmap.getWidth() + "x" + croppedBitmap.getHeight());
+                  showInference(lastProcessingTimeMs + "ms");
+                });
           });
     }
   }

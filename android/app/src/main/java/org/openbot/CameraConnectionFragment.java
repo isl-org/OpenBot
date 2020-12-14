@@ -294,7 +294,7 @@ public class CameraConnectionFragment extends Fragment {
 
   @Override
   public void onViewCreated(final View view, final Bundle savedInstanceState) {
-    textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
+    textureView = view.findViewById(R.id.texture);
   }
 
   @Override

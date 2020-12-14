@@ -35,7 +35,6 @@ import android.media.Image;
 import android.media.Image.Plane;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -104,12 +103,12 @@ public abstract class CameraActivity extends AppCompatActivity
   private int cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
   protected int previewWidth = 0;
   protected int previewHeight = 0;
-  private boolean debug = false;
+  private final boolean debug = false;
   private Handler handler;
   private HandlerThread handlerThread;
   private boolean useCamera2API;
   private boolean isProcessingFrame = false;
-  private byte[][] yuvBytes = new byte[3][];
+  private final byte[][] yuvBytes = new byte[3][];
   private int[] rgbBytes = null;
   private int yRowStride;
   private Runnable postInferenceCallback;
@@ -240,11 +239,7 @@ public abstract class CameraActivity extends AppCompatActivity
         new ViewTreeObserver.OnGlobalLayoutListener() {
           @Override
           public void onGlobalLayout() {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-              gestureLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            } else {
-              gestureLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
+            gestureLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             // int width = bottomSheetLayout.getMeasuredWidth();
             int height = gestureLayout.getMeasuredHeight();
 
@@ -858,7 +853,6 @@ public abstract class CameraActivity extends AppCompatActivity
         mSensorMessenger.send(msg);
       } catch (RemoteException e) {
         e.printStackTrace();
-        ;
       }
     }
   }
@@ -875,7 +869,6 @@ public abstract class CameraActivity extends AppCompatActivity
         mSensorMessenger.send(msg);
       } catch (RemoteException e) {
         e.printStackTrace();
-        ;
       }
     }
   }
@@ -890,7 +883,6 @@ public abstract class CameraActivity extends AppCompatActivity
         mSensorMessenger.send(msg);
       } catch (RemoteException e) {
         e.printStackTrace();
-        ;
       }
     }
   }
@@ -904,7 +896,6 @@ public abstract class CameraActivity extends AppCompatActivity
         mSensorMessenger.send(msg);
       } catch (RemoteException e) {
         e.printStackTrace();
-        ;
       }
     }
   }
