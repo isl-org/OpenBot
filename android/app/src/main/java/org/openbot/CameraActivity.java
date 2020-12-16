@@ -21,9 +21,11 @@ package org.openbot;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
@@ -64,6 +66,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -77,6 +80,7 @@ import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.UsbConnection;
+import org.openbot.env.Vehicle;
 import org.openbot.tflite.Network.Device;
 import org.openbot.tflite.Network.Model;
 import org.zeroturnaround.zip.ZipUtil;
@@ -99,7 +103,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
   private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-  private static Context mContext;
+  private static Context context;
   private int cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
   protected int previewWidth = 0;
   protected int previewHeight = 0;
@@ -147,6 +151,12 @@ public abstract class CameraActivity extends AppCompatActivity
   protected boolean usbConnected;
   public int[] BaudRates = {9600, 14400, 19200, 38400, 57600, 115200, 230400, 460800, 921600};
   private int baudRate = 115200;
+  private LocalBroadcastManager localBroadcastManager;
+  private BroadcastReceiver localBroadcastReceiver;
+  public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
+  public static final String USB_ACTION_CONNECTION_ESTABLISHED = "usb.connection_established";
+  public static final String USB_ACTION_CONNECTION_CLOSED = "usb.connection_closed";
+
   protected LogMode logMode = LogMode.CROP_IMG;
   protected ControlSpeed controlSpeed = ControlSpeed.NORMAL;
   protected DriveMode driveMode = DriveMode.GAME;
@@ -174,33 +184,13 @@ public abstract class CameraActivity extends AppCompatActivity
     JOYSTICK
   }
 
-  public static final class ControlSignal {
-    private final float left;
-    private final float right;
-
-    public ControlSignal(float left, float right) {
-      this.left = Math.max(-1.f, Math.min(1.f, left));
-      this.right = Math.max(-1.f, Math.min(1.f, right));
-    }
-
-    public float getLeft() {
-      return left;
-    }
-
-    public float getRight() {
-      return right;
-    }
-  }
-
-  protected ControlSignal vehicleControl = new ControlSignal(0, 0);
-  protected int speedMultiplier = 192; // 128,192,255
-  protected int vehicleIndicator = 0;
+  protected static Vehicle vehicle = new Vehicle();
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     LOGGER.d("onCreate " + this);
     super.onCreate(null);
-    mContext = getApplicationContext();
+    context = getApplicationContext();
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     setContentView(R.layout.activity_camera);
@@ -304,6 +294,43 @@ public abstract class CameraActivity extends AppCompatActivity
 
     // Try to connect to serial device
     toggleConnection(true);
+
+    localBroadcastReceiver =
+        new BroadcastReceiver() {
+          @Override
+          public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if (action != null) {
+
+              switch (action) {
+                case USB_ACTION_CONNECTION_ESTABLISHED:
+                  break;
+
+                case USB_ACTION_CONNECTION_CLOSED:
+                  break;
+
+                case USB_ACTION_DATA_RECEIVED:
+                  long timestamp = SystemClock.elapsedRealtimeNanos();
+                  String data = intent.getStringExtra("data");
+                  // Data has the following form: voltage, lWheel, rWheel, obstacle
+                  sendVehicleDataToSensorService(timestamp, data);
+                  String[] itemList = data.split(",");
+                  vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
+                  vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
+                  vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
+                  vehicle.setSonarReading(Float.parseFloat(itemList[3]));
+                  break;
+              }
+            }
+          }
+        };
+    IntentFilter localIntentFilter = new IntentFilter();
+    localIntentFilter.addAction(USB_ACTION_CONNECTION_ESTABLISHED);
+    localIntentFilter.addAction(USB_ACTION_CONNECTION_CLOSED);
+    localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
+    localBroadcastManager = LocalBroadcastManager.getInstance(this);
+    localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
   }
 
   @SuppressLint("SetTextI18n")
@@ -492,6 +519,11 @@ public abstract class CameraActivity extends AppCompatActivity
   @Override
   public synchronized void onDestroy() {
     toggleConnection(false);
+    if (localBroadcastManager != null) {
+      localBroadcastManager.unregisterReceiver(localBroadcastReceiver);
+      localBroadcastManager = null;
+    }
+    if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     LOGGER.d("onDestroy " + this);
     super.onDestroy();
   }
@@ -754,13 +786,13 @@ public abstract class CameraActivity extends AppCompatActivity
       preferencesManager.setControlSpeed(controlSpeed.ordinal());
       switch (controlSpeed) {
         case SLOW:
-          speedMultiplier = 128;
+          vehicle.setSpeedMultiplier(128);
           break;
         case NORMAL:
-          speedMultiplier = 192;
+          vehicle.setSpeedMultiplier(192);
           break;
         case FAST:
-          speedMultiplier = 255;
+          vehicle.setSpeedMultiplier(255);
           break;
         default:
           throw new IllegalStateException("Unexpected value: " + controlSpeed);
@@ -824,25 +856,25 @@ public abstract class CameraActivity extends AppCompatActivity
     return loggingEnabled;
   }
 
-  Messenger mSensorMessenger;
+  Messenger sensorMessenger;
 
-  ServiceConnection mSensorConnection =
+  ServiceConnection sensorConnection =
       new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder binder) {
-          mSensorMessenger = new Messenger(binder);
+          sensorMessenger = new Messenger(binder);
           Log.d("SensorServiceConnection", "connected");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName className) {
-          mSensorMessenger = null;
+          sensorMessenger = null;
           Log.d("SensorServiceConnection", "disconnected");
         }
       };
 
   protected void sendFrameNumberToSensorService(long frameNumber) {
-    if (mSensorMessenger != null) {
+    if (sensorMessenger != null) {
       Message msg = Message.obtain();
       Bundle bundle = new Bundle();
       bundle.putLong("frameNumber", frameNumber);
@@ -850,7 +882,7 @@ public abstract class CameraActivity extends AppCompatActivity
       msg.setData(bundle);
       msg.what = SensorService.MSG_FRAME;
       try {
-        mSensorMessenger.send(msg);
+        sensorMessenger.send(msg);
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -858,7 +890,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   protected void sendInferenceTimeToSensorService(long frameNumber, long inferenceTime) {
-    if (mSensorMessenger != null) {
+    if (sensorMessenger != null) {
       Message msg = Message.obtain();
       Bundle bundle = new Bundle();
       bundle.putLong("frameNumber", frameNumber);
@@ -866,34 +898,50 @@ public abstract class CameraActivity extends AppCompatActivity
       msg.setData(bundle);
       msg.what = SensorService.MSG_INFERENCE;
       try {
-        mSensorMessenger.send(msg);
+        sensorMessenger.send(msg);
       } catch (RemoteException e) {
         e.printStackTrace();
       }
     }
   }
 
-  protected void sendControlToSensorService(ControlSignal vehicleControl) {
-    if (mSensorMessenger != null) {
+  protected void sendControlToSensorService() {
+    if (sensorMessenger != null) {
       Message msg = Message.obtain();
-      msg.arg1 = (int) (vehicleControl.getLeft() * speedMultiplier);
-      msg.arg2 = (int) (vehicleControl.getRight() * speedMultiplier);
+      msg.arg1 = (int) (vehicle.getControl().getLeft());
+      msg.arg2 = (int) (vehicle.getControl().getRight());
       msg.what = SensorService.MSG_CONTROL;
       try {
-        mSensorMessenger.send(msg);
+        sensorMessenger.send(msg);
       } catch (RemoteException e) {
         e.printStackTrace();
       }
     }
   }
 
-  protected void sendIndicatorToSensorService(int vehicleIndicator) {
-    if (mSensorMessenger != null) {
+  protected void sendIndicatorToSensorService() {
+    if (sensorMessenger != null) {
       Message msg = Message.obtain();
-      msg.arg1 = vehicleIndicator;
+      msg.arg1 = vehicle.getIndicator();
       msg.what = SensorService.MSG_INDICATOR;
       try {
-        mSensorMessenger.send(msg);
+        sensorMessenger.send(msg);
+      } catch (RemoteException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  protected void sendVehicleDataToSensorService(long timestamp, String data) {
+    if (sensorMessenger != null) {
+      Message msg = Message.obtain();
+      Bundle bundle = new Bundle();
+      bundle.putLong("timestamp", timestamp);
+      bundle.putString("data", data);
+      msg.setData(bundle);
+      msg.what = SensorService.MSG_VEHICLE;
+      try {
+        sensorMessenger.send(msg);
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -909,15 +957,15 @@ public abstract class CameraActivity extends AppCompatActivity
             + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
     intentSensorService.putExtra("logFolder", logFolder + File.separator + "sensor_data");
     startService(intentSensorService);
-    bindService(intentSensorService, mSensorConnection, Context.BIND_AUTO_CREATE);
+    bindService(intentSensorService, sensorConnection, Context.BIND_AUTO_CREATE);
     // Send current vehicle state to log
     runInBackground(
         () -> {
           try {
             uploadService.uploadAll();
             TimeUnit.MILLISECONDS.sleep(500);
-            sendControlToSensorService(vehicleControl);
-            sendIndicatorToSensorService(vehicleIndicator);
+            sendControlToSensorService();
+            sendIndicatorToSensorService();
           } catch (InterruptedException e) {
             LOGGER.e(e, "Got interrupted.");
           }
@@ -925,10 +973,8 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   private void stopLogging() {
-    if (mSensorConnection != null) {
-      unbindService(mSensorConnection);
-      stopService(intentSensorService);
-    }
+    if (sensorConnection != null) unbindService(sensorConnection);
+    stopService(intentSensorService);
 
     // Pack and upload the collected data
     runInBackground(
@@ -937,9 +983,14 @@ public abstract class CameraActivity extends AppCompatActivity
           // Zip the log folder and then delete it
           File folder = new File(logFolder);
           File zip = new File(logZipFile);
-          ZipUtil.pack(folder, zip);
-          FileUtils.deleteQuietly(folder);
-          uploadService.upload(zip);
+          try {
+            TimeUnit.MILLISECONDS.sleep(500);
+            ZipUtil.pack(folder, zip);
+            FileUtils.deleteQuietly(folder);
+            uploadService.upload(zip);
+          } catch (InterruptedException e) {
+            LOGGER.e(e, "Got interrupted.");
+          }
         });
   }
 
@@ -986,7 +1037,8 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void disconnectUsb() {
     if (usbConnection != null) {
-      sendControlToVehicle(new ControlSignal(0, 0));
+      vehicle.setControl(0, 0);
+      sendControlToVehicle();
       usbConnection.stopUsbConnection();
       usbConnection = null;
     }
@@ -1027,27 +1079,39 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected abstract void setDriveByNetwork(boolean isChecked);
 
-  protected void sendControlToVehicle(ControlSignal vehicleControl) {
+  protected void sendControlToVehicle() {
     if ((usbConnection != null) && usbConnection.isOpen() && !usbConnection.isBusy()) {
       String message =
           String.format(
               Locale.US,
               "c%d,%d\n",
-              (int) (vehicleControl.getLeft() * speedMultiplier),
-              (int) (vehicleControl.getRight() * speedMultiplier));
+              (int) (vehicle.getControl().getLeft()),
+              (int) (vehicle.getControl().getRight()));
       usbConnection.send(message);
     }
   }
 
-  protected void sendIndicatorToVehicle(int vehicleIndicator) {
+  protected void sendNoisyControlToVehicle() {
+    if ((usbConnection != null) && usbConnection.isOpen() && !usbConnection.isBusy()) {
+      String message =
+          String.format(
+              Locale.US,
+              "c%d,%d\n",
+              (int) (vehicle.getNoisyControl().getLeft()),
+              (int) (vehicle.getNoisyControl().getRight()));
+      usbConnection.send(message);
+    }
+  }
+
+  protected void sendIndicatorToVehicle() {
     if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      String message = String.format(Locale.US, "i%d\n", vehicleIndicator);
+      String message = String.format(Locale.US, "i%d\n", vehicle.getIndicator());
       usbConnection.send(message);
     }
   }
 
   public static Context getContext() {
-    return mContext;
+    return context;
   }
 
   @Override
