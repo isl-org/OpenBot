@@ -9,7 +9,7 @@ import android.os.Trace;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import org.openbot.CameraActivity.ControlSignal;
+import org.openbot.env.Vehicle;
 
 public abstract class Autopilot extends Network {
 
@@ -52,7 +52,7 @@ public abstract class Autopilot extends Network {
     indicatorBuffer.putFloat(indicator);
   }
 
-  public ControlSignal recognizeImage(final Bitmap bitmap, final int indicator) {
+  public Vehicle.Control recognizeImage(final Bitmap bitmap, final int indicator) {
     // Log this method so that it can be analyzed with systrace.
     Trace.beginSection("recognizeImage");
     Trace.beginSection("preprocessBitmap");
@@ -78,6 +78,6 @@ public abstract class Autopilot extends Network {
     LOGGER.v("Timecost to run model inference: " + (endTime - startTime));
 
     Trace.endSection(); // "recognizeImage"
-    return new ControlSignal(predicted_ctrl[0][0], predicted_ctrl[0][1]);
+    return new Vehicle.Control(predicted_ctrl[0][0], predicted_ctrl[0][1]);
   }
 }

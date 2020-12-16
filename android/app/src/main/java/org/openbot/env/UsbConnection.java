@@ -19,7 +19,7 @@ import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import org.openbot.SensorService;
+import org.openbot.CameraActivity;
 
 public class UsbConnection {
   private static final int USB_VENDOR_ID = 6790; // 0x2341; // 9025
@@ -33,7 +33,7 @@ public class UsbConnection {
 
   private UsbDeviceConnection connection;
   private UsbSerialDevice serialDevice;
-  private final LocalBroadcastManager mLocalBroadcastManager;
+  private final LocalBroadcastManager localBroadcastManager;
   private String buffer = "";
   private final Context context;
   private final int baudRate;
@@ -47,7 +47,7 @@ public class UsbConnection {
   public UsbConnection(Context context, int baudRate) {
     this.context = context;
     this.baudRate = baudRate;
-    mLocalBroadcastManager = LocalBroadcastManager.getInstance(this.context);
+    localBroadcastManager = LocalBroadcastManager.getInstance(this.context);
     usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
     usbPermissionIntent =
         PendingIntent.getBroadcast(this.context, 0, new Intent(ACTION_USB_PERMISSION), 0);
@@ -112,10 +112,10 @@ public class UsbConnection {
 
   public boolean startUsbConnection() {
     IntentFilter usbPermissionFilter = new IntentFilter(ACTION_USB_PERMISSION);
-    mLocalBroadcastManager.registerReceiver(usbPermissionReceiver, usbPermissionFilter);
+    localBroadcastManager.registerReceiver(usbPermissionReceiver, usbPermissionFilter);
     // Detach events are sent as a system-wide broadcast
     IntentFilter usbDetachedFilter = new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED);
-    mLocalBroadcastManager.registerReceiver(usbDetachedReceiver, usbDetachedFilter);
+    localBroadcastManager.registerReceiver(usbDetachedReceiver, usbDetachedFilter);
 
     Map<String, UsbDevice> connectedDevices = usbManager.getDeviceList();
     if (!connectedDevices.isEmpty()) {
@@ -169,8 +169,8 @@ public class UsbConnection {
   private void onSerialDataReceived(String data) {
     // Add whatever you want here
     LOGGER.i("Serial data received: " + data);
-    mLocalBroadcastManager.sendBroadcast(
-        new Intent(SensorService.USB_ACTION_DATA_RECEIVED)
+    localBroadcastManager.sendBroadcast(
+        new Intent(CameraActivity.USB_ACTION_DATA_RECEIVED)
             .putExtra("from", "usb")
             .putExtra("data", data));
   }
@@ -188,8 +188,8 @@ public class UsbConnection {
       serialDevice = null;
       connection = null;
     }
-    mLocalBroadcastManager.unregisterReceiver(usbPermissionReceiver);
-    mLocalBroadcastManager.unregisterReceiver(usbDetachedReceiver);
+    localBroadcastManager.unregisterReceiver(usbPermissionReceiver);
+    localBroadcastManager.unregisterReceiver(usbDetachedReceiver);
   }
 
   public void send(String msg) {
