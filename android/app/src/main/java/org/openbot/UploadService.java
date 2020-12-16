@@ -108,9 +108,11 @@ class UploadService {
             + context.getString(R.string.app_name);
     File directory = new File(logDir);
     File[] files = directory.listFiles();
-    for (File file : files) {
-      if (file.getName().endsWith(".zip")) {
-        upload(file);
+    if (files != null) {
+      for (File file : files) {
+        if (file.getName().endsWith(".zip")) {
+          upload(file);
+        }
       }
     }
   }
