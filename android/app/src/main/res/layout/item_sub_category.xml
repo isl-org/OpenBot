@@ -14,7 +14,6 @@
         android:scaleType="center"
         android:tint="@android:color/white"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
-        app:strokeColor="@color/openBotBlue"
         tools:src="@drawable/openbot_icon" />
 
     <TextView

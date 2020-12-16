@@ -94,7 +94,8 @@ public class Constants {
     categories.add(new Category(Constants.CODING, subCategories));
 
     subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(Constants.CLASSICAL_ROBOTICS_ALGORITHMS, R.drawable.openbot_icon));
+    subCategories.add(
+        new SubCategory(Constants.CLASSICAL_ROBOTICS_ALGORITHMS, R.drawable.openbot_icon));
     subCategories.add(new SubCategory(Constants.BACKEND_FOR_LEARNING, R.drawable.openbot_icon));
     categories.add(new Category(Constants.RESEARCH, subCategories));
 

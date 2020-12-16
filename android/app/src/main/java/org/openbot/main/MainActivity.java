@@ -27,5 +27,23 @@ public class MainActivity extends AppCompatActivity {
     NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
 
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+    gotoSelectedFeature();
+  }
+
+  private void gotoSelectedFeature() {
+    viewModel
+        .getSelectedMode()
+        .observe(
+            this,
+            subCategory -> {
+              switch (subCategory.getTitle()) {
+                case Constants.GLOBAL_VIEW:
+                  Intent intent = new Intent(this, NetworkActivity.class);
+                  startActivity(intent);
+                  finish();
+
+                  break;
+              }
+            });
   }
 }
