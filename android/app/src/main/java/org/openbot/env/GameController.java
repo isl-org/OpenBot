@@ -7,7 +7,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Toast;
 import org.openbot.CameraActivity;
-import org.openbot.CameraActivity.ControlSignal;
 import org.openbot.CameraActivity.DriveMode;
 
 public class GameController {
@@ -81,7 +80,7 @@ public class GameController {
     }
   }
 
-  public ControlSignal processJoystickInput(MotionEvent event, int historyPos) {
+  public Vehicle.Control processJoystickInput(MotionEvent event, int historyPos) {
 
     InputDevice inputDevice = event.getDevice();
     switch (driveMode) {
@@ -170,6 +169,6 @@ public class GameController {
         break;
     }
 
-    return new ControlSignal(left, right);
+    return new Vehicle.Control(left, right);
   }
 }
