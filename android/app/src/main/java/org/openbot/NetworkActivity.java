@@ -39,7 +39,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;
 import org.openbot.env.AudioPlayer;
@@ -234,18 +235,18 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
               }
 
               tracker.trackResults(mappedRecognitions, currFrameNum);
-              vehicleControl = tracker.updateTarget();
+              vehicle.setControl(tracker.updateTarget());
               trackingOverlay.postInvalidate();
             } else if (autoPilot != null) {
               LOGGER.i("Running autopilot on image " + currFrameNum);
               final long startTime = SystemClock.uptimeMillis();
-              vehicleControl = autoPilot.recognizeImage(croppedBitmap, vehicleIndicator);
+              vehicle.setControl(autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
               lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
             }
 
             // In case control was removed from network during inference
             if (!driveByNetwork) {
-              vehicleControl = new ControlSignal(0, 0);
+              vehicle.setControl(0, 0);
             }
 
             if (getLoggingEnabled()) {
@@ -267,62 +268,45 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   }
 
   void updateVehicleState() {
-    float noise = 0;
-    int noiseDirection = 0;
-    long noiseDuration = 5000;
-    long noiseStartTime = 0;
-    long noiseTimeout = 10000;
+
+    float left;
+    float right;
+
+    // Log controls
+    if (getLoggingEnabled()) {
+      runInBackground(() -> sendControlToSensorService());
+    }
+
+    if (getNoiseEnabled()) {
+      left = vehicle.getNoisyControl().getLeft();
+      right = vehicle.getNoisyControl().getRight();
+      sendNoisyControlToVehicle();
+    } else {
+      left = vehicle.getControl().getLeft();
+      right = vehicle.getControl().getRight();
+      sendControlToVehicle();
+    }
+
     // Update GUI
     runOnUiThread(
         new Runnable() {
           @Override
           public void run() {
             Log.i("display_ctrl", "runnable");
-            showControl(
-                String.format(
-                    Locale.US, "%.2f,%.2f", vehicleControl.getLeft(), vehicleControl.getRight()));
+            showControl(String.format(Locale.US, "%.0f,%.0f", left, right));
           }
         });
-
-    // Log controls
-    if (getLoggingEnabled()) {
-      runInBackground(() -> sendControlToSensorService(vehicleControl));
-    }
-
-    if (noiseEnabled) {
-      long currentTime = SystemClock.uptimeMillis();
-      if (currentTime > noiseStartTime + noiseDuration + noiseTimeout) {
-        noiseStartTime = currentTime;
-        noiseDuration = generateRandomInt(1, 2) * 1000;
-        noise = 0;
-        Random r = new Random();
-        noiseDirection = r.nextBoolean() ? 1 : -1;
-      }
-      if (currentTime < noiseStartTime + noiseDuration) {
-        if (currentTime < noiseStartTime + noiseDuration / 2) {
-          noise += (float) generateRandomInt(1, 8) / 255;
-        } else {
-          noise -= (float) generateRandomInt(1, 8) / 255;
-        }
-        noise = Math.max(0, Math.min(noise, 0.5f));
-        LOGGER.d("Injecting Noise: " + noise);
-        if (noiseDirection < 0)
-          sendControlToVehicle(
-              new ControlSignal(vehicleControl.getLeft() - noise, vehicleControl.getRight()));
-        else
-          sendControlToVehicle(
-              new ControlSignal(vehicleControl.getLeft(), vehicleControl.getRight() - noise));
-      } else {
-        sendControlToVehicle(vehicleControl);
-      }
-    } else {
-      sendControlToVehicle(vehicleControl);
-    }
   }
 
-  public static int generateRandomInt(int min, int max) {
-    Random r = new Random();
-    return r.nextInt((max - min) + 1) + min;
+  private Timer noiseTimer;
+  private NoiseTask noiseTask;
+
+  private class NoiseTask extends TimerTask {
+    @Override
+    public void run() {
+      vehicle.applyNoise();
+      updateVehicleState();
+    }
   }
 
   private boolean getNoiseEnabled() {
@@ -331,6 +315,12 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
 
   private void toggleNoise() {
     noiseEnabled = !noiseEnabled;
+    if (noiseEnabled) {
+      noiseTimer = new Timer();
+      noiseTask = new NoiseTask();
+      noiseTimer.schedule(noiseTask, 0, 50); // no delay 50ms intervals
+    } else noiseTimer.cancel();
+    updateVehicleState();
   }
 
   @Override
@@ -349,7 +339,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     if (driveByNetwork) {
       driveModeSwitchCompat.setText("Network");
     } else {
-      vehicleControl = new ControlSignal(0, 0);
+      vehicle.setControl(0, 0);
       updateVehicleState();
       driveModeSwitchCompat.setText("Controller");
     }
@@ -434,7 +424,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           && event.getAction() == MotionEvent.ACTION_MOVE) {
 
         // Process the current movement sample in the batch (position -1)
-        vehicleControl = gameController.processJoystickInput(event, -1);
+        vehicle.setControl(gameController.processJoystickInput(event, -1));
         updateVehicleState();
         return true;
       }
@@ -455,25 +445,25 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           else audioPlayer.play(voice, "logging_stopped.mp3");
           return true;
         case KeyEvent.KEYCODE_BUTTON_B:
-          vehicleIndicator = 1;
+          vehicle.setIndicator(1);
           if (getLoggingEnabled()) {
-            sendIndicatorToSensorService(vehicleIndicator);
+            sendIndicatorToSensorService();
           }
-          sendIndicatorToVehicle(vehicleIndicator);
+          sendIndicatorToVehicle();
           return true;
         case KeyEvent.KEYCODE_BUTTON_Y:
-          vehicleIndicator = 0;
+          vehicle.setIndicator(0);
           if (getLoggingEnabled()) {
-            sendIndicatorToSensorService(vehicleIndicator);
+            sendIndicatorToSensorService();
           }
-          sendIndicatorToVehicle(vehicleIndicator);
+          sendIndicatorToVehicle();
           return true;
         case KeyEvent.KEYCODE_BUTTON_X:
-          vehicleIndicator = -1;
+          vehicle.setIndicator(-1);
           if (getLoggingEnabled()) {
-            sendIndicatorToSensorService(vehicleIndicator);
+            sendIndicatorToSensorService();
           }
-          sendIndicatorToVehicle(vehicleIndicator);
+          sendIndicatorToVehicle();
           return true;
         case KeyEvent.KEYCODE_BUTTON_START:
           toggleNoise();
