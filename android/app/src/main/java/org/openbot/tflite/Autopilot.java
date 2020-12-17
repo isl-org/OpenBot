@@ -62,7 +62,7 @@ public abstract class Autopilot extends Network {
 
     // Run the inference call.
     Trace.beginSection("runInference");
-    long startTime = SystemClock.uptimeMillis();
+    long startTime = SystemClock.elapsedRealtime();
     Object[] inputArray;
     if (tflite.getInputIndex("cmd_input") == 0) {
       inputArray = new Object[] {indicatorBuffer, imgData};
@@ -73,7 +73,7 @@ public abstract class Autopilot extends Network {
     float[][] predicted_ctrl = new float[1][2];
     outputMap.put(0, predicted_ctrl);
     tflite.runForMultipleInputsOutputs(inputArray, outputMap);
-    long endTime = SystemClock.uptimeMillis();
+    long endTime = SystemClock.elapsedRealtime();
     Trace.endSection();
     LOGGER.v("Timecost to run model inference: " + (endTime - startTime));
 
