@@ -32,9 +32,15 @@
 Tensorlfow Lite目标检测示例程序 [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android) 作为集成TFLite模型并获取相机源的起点。 Main activity 是运行主线程的[NetworkActivity](app/src/main/java/org/openbot/NetworkActivity.java)。它继承自管理摄像机和UI的[CameraActivity](app/src/main/java/org/openbot/CameraActivity.java)。[SensorService](app/src/main/java/org/openbot/SensorService.java)读取所有其他电话传感器并记录它们。[env](app/src/main/java/org/openbot/env)文件夹包含实用程序类，如[GameController](app/src/main/java/org/openbot/env/GameController.java)接口和用于声音反馈的[AudioPlayer](app/src/main/java/org/openbot/env/AudioPlayer.java)。[tflite](app/src/main/java/org/openbot/tflite)文件夹包含[Autopilot](app/src/main/java/org/openbot/tflite/Autopilot.java)和[Detector](app/src/main/java/org/openbot/tflite/Detector.java)网络的模型定义。
 
 ## 如何使用应用程序
+
 <p align="center">
-  <img src="../docs/images/app_gui.jpg" alt="App Teaser" width="100%"/>
+  <img src="../docs/images/app_gui_1.jpg" alt="App GUI" width="49%"/>
+  <img src="../docs/images/app_gui_2.jpg" alt="App GUI" width="49%"/>
 </p>
+
+### USB连接
+
+下拉菜单用于设置波特率。默认值是115200，你应该不需要改变这个值，除非你把Arduino固件搞乱。该应用程序将尝试自动连接，但如果你遇到问题，你可以使用这个开关来断开/连接。
 
 ### 数据记录器
 
@@ -46,10 +52,6 @@ Tensorlfow Lite目标检测示例程序 [TensorFlow Lite Object Detection Androi
 - **all_imgs**: 所有的传感器数据和裁剪和全尺寸的图像被保存。这将需要大量的内存，而且可能很慢。
 
 右边的开关是用来切换登录和关闭的。在游戏控制器上，这个开关可以用X按钮来切换。
-
-### USB连接
-
-下拉菜单用于设置波特率。默认值是115200，你应该不需要改变这个值，除非你把Arduino固件搞乱。该应用程序将尝试自动连接，但如果你遇到问题，你可以使用这个开关来断开/连接。
 
 ### 驱动模式
 

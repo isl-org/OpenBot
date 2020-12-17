@@ -124,14 +124,14 @@ public abstract class Network {
     bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
     // Convert the image to floating point.
     int pixel = 0;
-    long startTime = SystemClock.uptimeMillis();
+    long startTime = SystemClock.elapsedRealtime();
     for (int i = 0; i < getImageSizeX(); ++i) {
       for (int j = 0; j < getImageSizeY(); ++j) {
         final int val = intValues[pixel++];
         addPixelValue(val);
       }
     }
-    long endTime = SystemClock.uptimeMillis();
+    long endTime = SystemClock.elapsedRealtime();
     LOGGER.v("Timecost to put values into ByteBuffer: " + (endTime - startTime));
   }
 

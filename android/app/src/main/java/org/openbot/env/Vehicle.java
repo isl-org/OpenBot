@@ -11,10 +11,10 @@ public class Vehicle {
   private int indicator = 0;
   private static int speedMultiplier = 192; // 128,192,255
 
-  private SensorReading batteryVoltage = new SensorReading();
-  private SensorReading leftWheelTicks = new SensorReading();
-  private SensorReading rightWheelTicks = new SensorReading();
-  private SensorReading sonarReading = new SensorReading();
+  private final SensorReading batteryVoltage = new SensorReading();
+  private final SensorReading leftWheelTicks = new SensorReading();
+  private final SensorReading rightWheelTicks = new SensorReading();
+  private final SensorReading sonarReading = new SensorReading();
 
   private static final int diskHoles = 20;
   private static final int millisPerMinute = 60000;
@@ -54,7 +54,7 @@ public class Vehicle {
     long startTime = 0;
 
     public void update() {
-      long currentTime = SystemClock.uptimeMillis();
+      long currentTime = SystemClock.elapsedRealtime();
       if (currentTime > startTime + duration + timeout) {
         startTime = currentTime;
         duration = generateRandomInt(minDuration, maxDuration);
@@ -86,7 +86,7 @@ public class Vehicle {
   private static class SensorReading {
 
     public SensorReading() {
-      this.age = 0;
+      this.age = 1000;
       this.timestamp = 0;
       this.reading = 0;
     }
@@ -104,9 +104,9 @@ public class Vehicle {
     }
 
     public void setReading(float reading) {
-      long time = System.currentTimeMillis();
-      this.age = time - this.timestamp;
-      this.timestamp = time;
+      long currentTime = SystemClock.elapsedRealtime();
+      if (currentTime > timestamp + 5 && timestamp > 0) this.age = currentTime - this.timestamp;
+      this.timestamp = currentTime;
       this.reading = reading;
     }
 
@@ -128,7 +128,9 @@ public class Vehicle {
   }
 
   public float getLeftWheelRPM() {
-    return leftWheelTicks.getReading() * millisPerMinute / leftWheelTicks.getAge() / diskHoles;
+    if (leftWheelTicks.getAge() > 0 && leftWheelTicks.getReading() != 0)
+      return leftWheelTicks.getReading() * millisPerMinute / leftWheelTicks.getAge() / diskHoles;
+    else return 0;
   }
 
   public void setLeftWheelTicks(float leftWheelTicks) {
@@ -140,7 +142,9 @@ public class Vehicle {
   }
 
   public float getRightWheelRPM() {
-    return rightWheelTicks.getReading() * millisPerMinute / leftWheelTicks.getAge() / diskHoles;
+    if (rightWheelTicks.getAge() > 0 && rightWheelTicks.getReading() != 0)
+      return rightWheelTicks.getReading() * millisPerMinute / rightWheelTicks.getAge() / diskHoles;
+    else return 0;
   }
 
   public void setRightWheelTicks(float rightWheelTicks) {
