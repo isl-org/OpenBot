@@ -94,6 +94,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     public NetworkActivity() {
         audioPlayer = new AudioPlayer(this);
         voice = "matthew";
+        handleControllerEvents();
     }
 
     @Override
@@ -506,8 +507,9 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
                             setDriveMode(DriveMode.JOYSTICK);
                             audioPlayer.play(voice, "joystick_control.mp3");
                             break;
+
                         case JOYSTICK:
-                            setDriveMode(DriveMode.DUAL);
+                            setDriveMode(DriveMode.SMARTPHONE);
                             audioPlayer.play(voice, "dual_drive_control.mp3");
                             break;
                     }
@@ -527,6 +529,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
                             case JOYSTICK:
                                 audioPlayer.play(voice, "joystick_control.mp3");
                                 break;
+                            case SMARTPHONE:
+                                break;
                         }
                     }
                     return true;
@@ -540,7 +544,9 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
         return super.dispatchKeyEvent(event);
     }
 
-    // Classes to handle events from a Controller
+    // Classes to handle events from a Controller.
+    // This can be the entry point to other external controllers
+    // See how SmartphoneController emits events.
     private void handleControllerEvents() {
         ControllerHandler handler = new ControllerHandler();
 
@@ -584,8 +590,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     // Controller event handler
     private class ControllerHandler {
         private void handleDriveCommand(Float l, Float r) {
-            vehicleControl = new ControlSignal(l, r);
-            sendControlToVehicle(vehicleControl);
+            vehicle.setControl(l, r);
+            updateVehicleState();
         }
 
         private void handleLogs() {
@@ -601,27 +607,27 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
         }
 
         private void handleIndicatorLeft() {
-            vehicleIndicator = 1;
+            vehicle.setIndicator(1);
             if (getLoggingEnabled()) {
-                sendIndicatorToSensorService(vehicleIndicator);
+                sendIndicatorToSensorService();
             }
-            sendIndicatorToVehicle(vehicleIndicator);
+            sendIndicatorToVehicle();
         }
 
         private void handleIndicatorRight() {
-            vehicleIndicator = 0;
+            vehicle.setIndicator(0);
             if (getLoggingEnabled()) {
-                sendIndicatorToSensorService(vehicleIndicator);
+                sendIndicatorToSensorService();
             }
-            sendIndicatorToVehicle(vehicleIndicator);
+            sendIndicatorToVehicle();
         }
 
         private void handleIndictorStop() {
-            vehicleIndicator = -1;
+            vehicle.setIndicator(-1);
             if (getLoggingEnabled()) {
-                sendIndicatorToSensorService(vehicleIndicator);
+                sendIndicatorToSensorService();
             }
-            sendIndicatorToVehicle(vehicleIndicator);
+            sendIndicatorToVehicle();
         }
 
         private void handleDriveMode() {

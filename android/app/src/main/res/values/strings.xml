@@ -8,6 +8,9 @@
     <string name="threads">Threads</string>
     <string name="location_permission_denied">Location permission is necessary for logging.</string>
     <string name="storage_permission_denied">External storage permission is necessary for logging.</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
+
     <string name="model">Model</string>
     <string-array name="models">
         <item>DETECTOR_V1_1_0_Q</item>
@@ -35,38 +38,55 @@
         <item>921600</item>
     </string-array>
 
-    <string name="logger_setting">Logger Setting</string>
-    <string-array name="logger_settings">
+    <string-array name="log_settings">
         <item>all_imgs</item>
         <item>crop_img</item>
         <item>preview_img</item>
         <item>only_sensors</item>
     </string-array>
 
-    <string name="drive_mode">Drive Mode</string>
+    <string-array name="control_modes">
+        <item>Gamepad</item>
+<!--        <item>Phone</item>-->
+<!--        <item>WebRTC</item>-->
+    </string-array>
+
     <string-array name="drive_modes">
         <item>Dual</item>
         <item>Game</item>
         <item>Joystick</item>
         <item>Smartphone</item>
     </string-array>
-    <string name="camera">Camera</string>
+
+    <string name="log_setting">Log Setting</string>
     <string name="camera_facing_back">Back</string>
     <string name="camera_facing_front">Front</string>
-    <string name="control_speed">Vehicle Speed</string>
-    <string name="data_logger">Data Logger</string>
     <string name="not_logging">Not Logging</string>
-    <string name="usb_connection">USB Connection</string>
     <string name="no_device">No Device</string>
-    <string name="control">Vehicle Control</string>
+    <string name="data_log">Data Log</string>
+    <string name="usb_connection">USB Connection</string>
+    <string name="camera">Camera</string>
+    <string name="control">Control</string>
+    <string name="battery">Battery</string>
+    <string name="speed">Speed (l,r)</string>
+    <string name="sonar">Sonar</string>
+    <string name="control_info">***,***</string>
+    <string name="rpm">***,*** rpm</string>
+    <string name="voltage">**.* V</string>
+    <string name="distance">*** cm</string>
+    <string name="time_ms">*** ms</string>
+    <string name="resolution">*** x ***</string>
+    <string name="drive_mode">Drive Mode</string>
+    <string name="speed_mode">Speed Mode</string>
     <string name="plus">plus</string>
     <string name="arrow">arrow</string>
     <string name="minus">minus</string>
     <string name="controller">Controller</string>
+    <string name="control_mode">Control Mode</string>
     <string name="crop">Crop</string>
     <string name="frame">Frame</string>
     <string name="_1">1</string>
-    <string-array name="control_speeds">
+    <string-array name="speed_modes">
         <item>Slow</item>
         <item>Normal</item>
         <item>Fast</item>

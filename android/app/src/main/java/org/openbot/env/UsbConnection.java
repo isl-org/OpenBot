@@ -19,24 +19,24 @@ import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import org.openbot.SensorService;
+import org.openbot.CameraActivity;
 
 public class UsbConnection {
   private static final int USB_VENDOR_ID = 6790; // 0x2341; // 9025
   private static final int USB_PRODUCT_ID = 29987; // 0x0001;
   private static final Logger LOGGER = new Logger();
 
-  private UsbManager usbManager;
+  private final UsbManager usbManager;
   // private UsbDevice usbDevice;
   PendingIntent usbPermissionIntent;
   private static final String ACTION_USB_PERMISSION = "UsbConnection.USB_PERMISSION";
 
   private UsbDeviceConnection connection;
   private UsbSerialDevice serialDevice;
-  private LocalBroadcastManager mLocalBroadcastManager;
+  private final LocalBroadcastManager localBroadcastManager;
   private String buffer = "";
-  private Context context;
-  private int baudRate;
+  private final Context context;
+  private final int baudRate;
   private boolean busy;
   private int vendorId;
   private int productId;
@@ -47,35 +47,26 @@ public class UsbConnection {
   public UsbConnection(Context context, int baudRate) {
     this.context = context;
     this.baudRate = baudRate;
-    mLocalBroadcastManager = LocalBroadcastManager.getInstance(this.context);
+    localBroadcastManager = LocalBroadcastManager.getInstance(this.context);
     usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
     usbPermissionIntent =
         PendingIntent.getBroadcast(this.context, 0, new Intent(ACTION_USB_PERMISSION), 0);
   }
 
-  private UsbSerialInterface.UsbReadCallback callback =
-      new UsbSerialInterface.UsbReadCallback() {
-        @Override
-        public void onReceivedData(byte[] data) {
-          try {
-            String dataUtf8 = new String(data, "UTF-8");
-            buffer += dataUtf8;
-            int index;
-            while ((index = buffer.indexOf('\n')) != -1) {
-              final String dataStr = buffer.substring(0, index).trim();
-              buffer = buffer.length() == index ? "" : buffer.substring(index + 1);
+  private final UsbSerialInterface.UsbReadCallback callback =
+      data -> {
+        try {
+          String dataUtf8 = new String(data, "UTF-8");
+          buffer += dataUtf8;
+          int index;
+          while ((index = buffer.indexOf('\n')) != -1) {
+            final String dataStr = buffer.substring(0, index).trim();
+            buffer = buffer.length() == index ? "" : buffer.substring(index + 1);
 
-              AsyncTask.execute(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      onSerialDataReceived(dataStr);
-                    }
-                  });
-            }
-          } catch (UnsupportedEncodingException e) {
-            LOGGER.e("Error receiving USB data");
+            AsyncTask.execute(() -> onSerialDataReceived(dataStr));
           }
+        } catch (UnsupportedEncodingException e) {
+          LOGGER.e("Error receiving USB data");
         }
       };
 
@@ -85,7 +76,7 @@ public class UsbConnection {
           String action = intent.getAction();
           if (ACTION_USB_PERMISSION.equals(action)) {
             synchronized (this) {
-              UsbDevice usbDevice = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+              UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
               if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                 if (usbDevice != null) {
                   // call method to set up device communication
@@ -121,10 +112,10 @@ public class UsbConnection {
 
   public boolean startUsbConnection() {
     IntentFilter usbPermissionFilter = new IntentFilter(ACTION_USB_PERMISSION);
-    mLocalBroadcastManager.registerReceiver(usbPermissionReceiver, usbPermissionFilter);
+    localBroadcastManager.registerReceiver(usbPermissionReceiver, usbPermissionFilter);
     // Detach events are sent as a system-wide broadcast
     IntentFilter usbDetachedFilter = new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED);
-    mLocalBroadcastManager.registerReceiver(usbDetachedReceiver, usbDetachedFilter);
+    localBroadcastManager.registerReceiver(usbDetachedReceiver, usbDetachedFilter);
 
     Map<String, UsbDevice> connectedDevices = usbManager.getDeviceList();
     if (!connectedDevices.isEmpty()) {
@@ -178,8 +169,8 @@ public class UsbConnection {
   private void onSerialDataReceived(String data) {
     // Add whatever you want here
     LOGGER.i("Serial data received: " + data);
-    mLocalBroadcastManager.sendBroadcast(
-        new Intent(SensorService.USB_ACTION_DATA_RECEIVED)
+    localBroadcastManager.sendBroadcast(
+        new Intent(CameraActivity.USB_ACTION_DATA_RECEIVED)
             .putExtra("from", "usb")
             .putExtra("data", data));
   }
@@ -197,8 +188,8 @@ public class UsbConnection {
       serialDevice = null;
       connection = null;
     }
-    mLocalBroadcastManager.unregisterReceiver(usbPermissionReceiver);
-    mLocalBroadcastManager.unregisterReceiver(usbDetachedReceiver);
+    localBroadcastManager.unregisterReceiver(usbPermissionReceiver);
+    localBroadcastManager.unregisterReceiver(usbDetachedReceiver);
   }
 
   public void send(String msg) {

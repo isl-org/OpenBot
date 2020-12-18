@@ -17,4 +17,9 @@
         <item name="elevation">0dp</item>
     </style>
 
+    <style name="SpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/spinner_bg</item>
+    </style>
+
+
 </resources>
