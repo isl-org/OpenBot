@@ -86,6 +86,7 @@
     <string name="crop">Crop</string>
     <string name="frame">Frame</string>
     <string name="_1">1</string>
+    <string name="settings">Settings</string>
     <string-array name="speed_modes">
         <item>Slow</item>
         <item>Normal</item>
