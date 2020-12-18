@@ -671,12 +671,12 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void requestStoragePermission() {
     ActivityCompat.requestPermissions(
-            this, new String[] {PERMISSION_STORAGE}, REQUEST_STORAGE_PERMISSION);
+        this, new String[] {PERMISSION_STORAGE}, REQUEST_STORAGE_PERMISSION);
   }
 
   private void requestBluetoothePermission() {
     ActivityCompat.requestPermissions(
-            this, new String[] {PERMISSION_BLUETOOTH}, REQUEST_BLUETOOTH_PERMISSION);
+        this, new String[] {PERMISSION_BLUETOOTH}, REQUEST_BLUETOOTH_PERMISSION);
   }
 
   // Returns true if the device supports the required hardware level, or better.
@@ -1235,7 +1235,8 @@ public abstract class CameraActivity extends AppCompatActivity
     } else if (parent == deviceSpinner) {
       setDevice(Device.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     } else if (parent == driveModeSpinner) {
-      DriveMode driveMode = DriveMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase());
+      DriveMode driveMode =
+          DriveMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase());
       if ("SMARTPHONE".equals(driveMode.name())) {
         requestPermissionsForSmartphone();
         if (!smartphoneController.isConnected()) {
@@ -1252,7 +1253,7 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
-  private void requestPermissionsForSmartphone () {
+  private void requestPermissionsForSmartphone() {
     if (!hasLocationPermission()) {
       requestLocationPermission();
     }

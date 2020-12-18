@@ -4,42 +4,48 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public final class ControllerEventProcessor {
 
-    public enum ControllerEventsTypes {
-        LOGS,
-        INDICATOR_LEFT,
-        INDICATOR_RIGHT,
-        INDICATOR_STOP,
-        DRIVE_MODE,
-        NOISE,
-        DRIVE_LEFT_RIGHT_VALUES,
+  public enum ControllerEventsTypes {
+    LOGS,
+    INDICATOR_LEFT,
+    INDICATOR_RIGHT,
+    INDICATOR_STOP,
+    DRIVE_MODE,
+    NOISE,
+    DRIVE_LEFT_RIGHT_VALUES,
+  }
+
+  public static class DriveValue {
+    DriveValue(Float l, Float r) {
+      leftValue = l;
+      rightValue = r;
     }
 
-    public static class DriveValue {
-        DriveValue(Float l, Float r) {
-            leftValue = l;
-            rightValue = r;
-        }
-        private Float leftValue;
-        private Float rightValue;
+    private Float leftValue;
+    private Float rightValue;
 
-        public Float getLeftValue() {
-            return leftValue;
-        }
-        public Float getRightValue() {
-            return rightValue;
-        }
+    public Float getLeftValue() {
+      return leftValue;
     }
 
-    public static class ControllerEvent<T> {
-        ControllerEventsTypes type;
-        T payload;
+    public Float getRightValue() {
+      return rightValue;
     }
+  }
 
-    private ControllerEventProcessor () {}
-    private static PublishSubject<ControllerEvent> subject = PublishSubject.create();
-    public static PublishSubject<ControllerEvent> getProcessor() {return subject;}
+  public static class ControllerEvent<T> {
+    ControllerEventsTypes type;
+    T payload;
+  }
 
-    public static void emitEvent(ControllerEvent event) {
-        subject.onNext(event);
-    }
+  private ControllerEventProcessor() {}
+
+  private static PublishSubject<ControllerEvent> subject = PublishSubject.create();
+
+  public static PublishSubject<ControllerEvent> getProcessor() {
+    return subject;
+  }
+
+  public static void emitEvent(ControllerEvent event) {
+    subject.onNext(event);
+  }
 }
