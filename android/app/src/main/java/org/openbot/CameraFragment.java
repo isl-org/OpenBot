@@ -16,6 +16,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.viewbinding.ViewBinding;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -41,11 +42,15 @@ public abstract class CameraFragment extends Fragment {
 	}
 
 	protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
-		View view = inflater.inflate(resId, container, false);
-		return addCamera(view, inflater, container);
+		return addCamera(inflater.inflate(resId, container, false), inflater, container);
 	}
 
-	protected View addCamera(View view, LayoutInflater inflater, ViewGroup container)
+	protected View inflateFragment(ViewBinding viewBinding, LayoutInflater inflater, ViewGroup container)
+	{
+		return addCamera(viewBinding.getRoot(), inflater, container);
+	}
+
+	private View addCamera(View view, LayoutInflater inflater, ViewGroup container)
 	{
 		if (view.getRootView() instanceof ViewGroup) {
 			ViewGroup rootView = (ViewGroup) view.getRootView();
@@ -59,8 +64,6 @@ public abstract class CameraFragment extends Fragment {
 		}
 		return view;
 	}
-
-
 
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {

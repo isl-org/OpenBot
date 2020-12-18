@@ -22,7 +22,7 @@ public class GameFragment extends CameraFragment {
 							 Bundle savedInstanceState) {
 
 		binding = FragmentGameBinding.inflate(inflater, container, false);
-		addCamera(binding.getRoot(), inflater, container);
-		return binding.getRoot();
+
+		return inflateFragment(binding, inflater, container);
 	}
 }
