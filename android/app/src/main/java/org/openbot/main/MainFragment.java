@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.OnItemClickListener;
@@ -25,7 +24,9 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
 
   @Nullable
   @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+  public View onCreateView(
+      @NonNull LayoutInflater inflater,
+      @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     binding = FragmentMainBinding.inflate(inflater, container, false);
     return binding.getRoot();
@@ -40,17 +41,17 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     binding.list.setAdapter(new CategoryAdapter(Constants.getCategories(), this));
     binding.toolbar.inflateMenu(R.menu.menu_items);
 
-    binding.toolbar.setOnMenuItemClickListener(item -> {
-      switch (item.getItemId()) {
-        case R.id.action_settings:
-          // Navigate to settings screen
-          return true;
+    binding.toolbar.setOnMenuItemClickListener(
+        item -> {
+          switch (item.getItemId()) {
+            case R.id.action_settings:
+              // Navigate to settings screen
+              return true;
 
-        default:
-          return false;
-      }
-    });
-
+            default:
+              return false;
+          }
+        });
   }
 
   @Override

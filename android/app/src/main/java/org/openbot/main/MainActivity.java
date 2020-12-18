@@ -2,18 +2,14 @@ package org.openbot.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-
+import java.util.Objects;
 import org.openbot.NetworkActivity;
 import org.openbot.R;
 import org.openbot.common.Constants;
-import org.openbot.env.Logger;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
