@@ -13,23 +13,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.OnItemClickListener;
-import org.openbot.databinding.MainFragmentBinding;
+import org.openbot.databinding.FragmentMainBinding;
 import org.openbot.env.Logger;
 import org.openbot.model.SubCategory;
 
 public class MainFragment extends Fragment implements OnItemClickListener<SubCategory> {
 
   private MainViewModel mViewModel;
-  private MainFragmentBinding binding;
+  private FragmentMainBinding binding;
   private static final Logger LOGGER = new Logger();
 
   @Nullable
   @Override
-  public View onCreateView(
-      @NonNull LayoutInflater inflater,
-      @Nullable ViewGroup container,
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    binding = MainFragmentBinding.inflate(inflater, container, false);
+    binding = FragmentMainBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
 
