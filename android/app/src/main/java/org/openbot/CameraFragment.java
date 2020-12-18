@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import org.openbot.databinding.FragmentCameraBinding;
 import org.openbot.env.Logger;
 
 import java.util.concurrent.ExecutionException;
@@ -43,22 +42,25 @@ public abstract class CameraFragment extends Fragment {
 
 	protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
 		View view = inflater.inflate(resId, container, false);
+		return addCamera(view, inflater, container);
+	}
 
+	protected View addCamera(View view, LayoutInflater inflater, ViewGroup container)
+	{
 		if (view.getRootView() instanceof ViewGroup) {
 			ViewGroup rootView = (ViewGroup) view.getRootView();
 			previewView = (PreviewView) inflater.inflate(R.layout.fragment_camera, container, false);
 			rootView.addView(previewView, 0);
 
-			if (allPermissionsGranted()) {
+			if (allPermissionsGranted())
 				startCamera();
-			} else {
+			else
 				requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE);
-			}
-
 		}
-
 		return view;
 	}
+
+
 
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
