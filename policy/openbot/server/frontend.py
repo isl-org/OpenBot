@@ -1,5 +1,6 @@
 import os
 from subprocess import Popen
+import urllib.error
 import urllib.request
 import zipfile
 
@@ -24,13 +25,17 @@ async def init_frontend(app: web.Application):
     # todo fix URL
     url = f"https://github.com/sanyatuning/OpenBot/releases/download/{version_target}/frontend.zip"
     print("Downloading frontend...")
-    urllib.request.urlretrieve(url, zip_path)
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(frontend_dir)
-    with open(os.path.join(frontend_dir, "build", ".version")) as f:
-        f.write(version_target)
-    os.unlink(zip_path)
-    print("Frontend is ready!")
+    try:
+        urllib.request.urlretrieve(url, zip_path)
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(frontend_dir)
+        with open(os.path.join(frontend_dir, "build", ".version"), 'w') as f:
+            f.write(version_target)
+        os.unlink(zip_path)
+        print("Frontend is ready!")
+    except urllib.error.HTTPError as e:
+        print("Download error:", e)
+        print("URL:", url)
 
 
 async def run_frontend_dev_server(app: web.Application):
