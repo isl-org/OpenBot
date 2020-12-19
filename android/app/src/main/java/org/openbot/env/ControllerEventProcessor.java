@@ -1,16 +1,17 @@
-package org.openbot;
+package org.openbot.env;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public final class ControllerEventProcessor {
 
   public enum ControllerEventsTypes {
-    LOGS,
+    LOGGING,
     INDICATOR_LEFT,
     INDICATOR_RIGHT,
     INDICATOR_STOP,
     DRIVE_MODE,
     NOISE,
+    NETWROK,
     DRIVE_CMD,
   }
 
@@ -33,8 +34,8 @@ public final class ControllerEventProcessor {
   }
 
   public static class ControllerEvent<T> {
-    ControllerEventsTypes type;
-    T payload;
+    public ControllerEventsTypes type;
+    public T payload;
   }
 
   private ControllerEventProcessor() {}

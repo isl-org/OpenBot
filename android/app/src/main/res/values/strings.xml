@@ -47,7 +47,7 @@
 
     <string-array name="control_modes">
         <item>Gamepad</item>
-<!--        <item>Phone</item>-->
+        <item>Phone</item>
 <!--        <item>WebRTC</item>-->
     </string-array>
 
@@ -55,7 +55,6 @@
         <item>Dual</item>
         <item>Game</item>
         <item>Joystick</item>
-        <item>Smartphone</item>
     </string-array>
 
     <string name="log_setting">Log Setting</string>

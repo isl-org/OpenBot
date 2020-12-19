@@ -44,7 +44,6 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;
-import org.openbot.env.AudioPlayer;
 import org.openbot.env.BorderedText;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
@@ -78,8 +77,6 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   private Bitmap cropCopyBitmap = null;
 
   private boolean computingNetwork = false;
-  private boolean driveByNetwork = false;
-  private boolean noiseEnabled = false;
   private long frameNum = 0;
 
   private Matrix frameToCropTransform;
@@ -88,14 +85,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   private MultiBoxTracker tracker;
   private BorderedText borderedText;
 
-  private final AudioPlayer audioPlayer;
-  private final String voice;
-
-  public NetworkActivity() {
-    audioPlayer = new AudioPlayer(this);
-    voice = "matthew";
-    handleControllerEvents();
-  }
+  public NetworkActivity() {}
 
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {
@@ -145,7 +135,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     // trackingOverlay.postInvalidate();
 
     // If network is busy and we don't need to log any image, return.
-    if (computingNetwork && !getLoggingEnabled()) {
+    if (computingNetwork && !loggingEnabled) {
       readyForNextImage();
       return;
     }
@@ -156,7 +146,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
         logMode.equals(LogMode.ALL_IMGS) || logMode.equals(LogMode.CROP_IMG);
 
     rgbFrameBitmap.setPixels(getRgbBytes(), 0, previewWidth, 0, 0, previewWidth, previewHeight);
-    if (getLoggingEnabled() && SAVE_PREVIEW_BITMAP) {
+    if (loggingEnabled && SAVE_PREVIEW_BITMAP) {
       runInBackground(
           () ->
               ImageUtils.saveBitmap(
@@ -175,7 +165,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     final Canvas canvas = new Canvas(croppedBitmap);
     canvas.drawBitmap(rgbFrameBitmap, frameToCropTransform, null);
     // For examining the actual TF input.
-    if (getLoggingEnabled() && SAVE_CROP_BITMAP) {
+    if (loggingEnabled && SAVE_CROP_BITMAP) {
       runInBackground(
           () ->
               ImageUtils.saveBitmap(
@@ -186,7 +176,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     }
 
     // Network is control of the vehicle
-    if (driveByNetwork) {
+    if (networkEnabled) {
       // If network is busy, return.
       if (computingNetwork) {
         return;
@@ -248,7 +238,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
 
             computingNetwork = false;
 
-            if (getLoggingEnabled()) {
+            if (loggingEnabled) {
               sendInferenceTimeToSensorService(currFrameNum, lastProcessingTimeMs);
             }
 
@@ -263,22 +253,22 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           cropValueTextView.setText(
               String.format(
                   Locale.US, "%d x %d", croppedBitmap.getWidth(), croppedBitmap.getHeight()));
-          if (driveByNetwork)
+          if (networkEnabled)
             inferenceTimeTextView.setText(String.format(Locale.US, "%d ms", lastProcessingTimeMs));
         });
   }
 
-  void updateVehicleState() {
+  protected void updateVehicleState() {
 
     float left;
     float right;
 
     // Log controls
-    if (getLoggingEnabled()) {
+    if (loggingEnabled) {
       runInBackground(this::sendControlToSensorService);
     }
 
-    if (getNoiseEnabled()) {
+    if (noiseEnabled) {
       left = vehicle.getNoisyControl().getLeft();
       right = vehicle.getNoisyControl().getRight();
       sendNoisyControlToVehicle();
@@ -310,11 +300,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     }
   }
 
-  private boolean getNoiseEnabled() {
-    return noiseEnabled;
-  }
-
-  private void toggleNoise() {
+  protected void toggleNoise() {
     noiseEnabled = !noiseEnabled;
     if (noiseEnabled) {
       noiseTimer = new Timer();
@@ -335,9 +321,9 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   }
 
   @Override
-  protected void setDriveByNetwork(final boolean isChecked) {
-    driveByNetwork = isChecked;
-    if (driveByNetwork) {
+  protected void setNetworkEnabled(final boolean isChecked) {
+    networkEnabled = isChecked;
+    if (networkEnabled) {
       networkSwitchCompat.setText(R.string.on);
     } else {
       runInBackground(
@@ -357,8 +343,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
       networkSwitchCompat.setText(R.string.off);
     }
 
-    networkSwitchCompat.setChecked(driveByNetwork);
-    if (driveByNetwork) {
+    networkSwitchCompat.setChecked(networkEnabled);
+    if (networkEnabled) {
       controlModeSpinner.setAlpha(0.5f);
       driveModeSpinner.setAlpha(0.5f);
       speedModeSpinner.setAlpha(0.5f);
@@ -367,9 +353,9 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
       driveModeSpinner.setAlpha(1.0f);
       speedModeSpinner.setAlpha(1.0f);
     }
-    controlModeSpinner.setEnabled(!driveByNetwork);
-    driveModeSpinner.setEnabled(!driveByNetwork);
-    speedModeSpinner.setEnabled(!driveByNetwork);
+    controlModeSpinner.setEnabled(!networkEnabled);
+    driveModeSpinner.setEnabled(!networkEnabled);
+    speedModeSpinner.setEnabled(!networkEnabled);
   }
 
   @Override
@@ -444,7 +430,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   @Override
   public boolean dispatchGenericMotionEvent(MotionEvent event) {
     // Make sure vehicle is not controlled by network
-    if (!driveByNetwork) {
+    if (!networkEnabled) {
       // Check that the event came from a game controller
       if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
           && event.getAction() == MotionEvent.ACTION_MOVE) {
@@ -466,73 +452,26 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
         && event.getAction() == KeyEvent.ACTION_UP) {
       switch (event.getKeyCode()) {
         case KeyEvent.KEYCODE_BUTTON_A:
-          setIsLoggingActive(!getLoggingEnabled());
-          if (getLoggingEnabled()) audioPlayer.play(voice, "logging_started.mp3");
-          else audioPlayer.play(voice, "logging_stopped.mp3");
+          controllerHandler.handleLogging();
           return true;
         case KeyEvent.KEYCODE_BUTTON_B:
-          vehicle.setIndicator(1);
-          if (getLoggingEnabled()) {
-            sendIndicatorToSensorService();
-          }
-          sendIndicatorToVehicle();
+          controllerHandler.handleIndicatorLeft();
           return true;
         case KeyEvent.KEYCODE_BUTTON_Y:
-          vehicle.setIndicator(0);
-          if (getLoggingEnabled()) {
-            sendIndicatorToSensorService();
-          }
-          sendIndicatorToVehicle();
+          controllerHandler.handleIndicatorStop();
           return true;
         case KeyEvent.KEYCODE_BUTTON_X:
-          vehicle.setIndicator(-1);
-          if (getLoggingEnabled()) {
-            sendIndicatorToSensorService();
-          }
-          sendIndicatorToVehicle();
+          controllerHandler.handleIndicatorRight();
           return true;
         case KeyEvent.KEYCODE_BUTTON_START:
-          toggleNoise();
-          if (getNoiseEnabled()) audioPlayer.play(voice, "noise_enabled.mp3");
-          else audioPlayer.play(voice, "noise_disabled.mp3");
+          controllerHandler.handleNoise();
+          ;
           return true;
         case KeyEvent.KEYCODE_BUTTON_L1:
-          if (driveByNetwork) return true;
-          switch (driveMode) {
-            case DUAL:
-              setDriveMode(DriveMode.GAME);
-              audioPlayer.play(voice, "video_game_control.mp3");
-              break;
-            case GAME:
-              setDriveMode(DriveMode.JOYSTICK);
-              audioPlayer.play(voice, "joystick_control.mp3");
-              break;
-
-            case JOYSTICK:
-              setDriveMode(DriveMode.SMARTPHONE);
-              audioPlayer.play(voice, "dual_drive_control.mp3");
-              break;
-          }
-          driveModeSpinner.setSelection(driveMode.ordinal());
+          controllerHandler.handleDriveMode();
           return true;
         case KeyEvent.KEYCODE_BUTTON_R1:
-          setDriveByNetwork(!driveByNetwork);
-          if (driveByNetwork) audioPlayer.play(voice, "network_enabled.mp3");
-          else {
-            switch (driveMode) {
-              case DUAL:
-                audioPlayer.play(voice, "dual_drive_control.mp3");
-                break;
-              case GAME:
-                audioPlayer.play(voice, "video_game_control.mp3");
-                break;
-              case JOYSTICK:
-                audioPlayer.play(voice, "joystick_control.mp3");
-                break;
-              case SMARTPHONE:
-                break;
-            }
-          }
+          controllerHandler.handleNetwork();
           return true;
         default:
           // Toast.makeText(this,"Key " + event.getKeyCode() + " not recognized",
@@ -542,115 +481,5 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     }
 
     return super.dispatchKeyEvent(event);
-  }
-
-  // Classes to handle events from a Controller.
-  // This can be the entry point to other external controllers
-  // See how SmartphoneController emits events.
-  private void handleControllerEvents() {
-    ControllerHandler handler = new ControllerHandler();
-
-    ControllerEventProcessor.getProcessor()
-        .subscribe(
-            event -> {
-              ControllerEventProcessor.ControllerEvent command = event;
-
-              switch (command.type) {
-                case DRIVE_LEFT_RIGHT_VALUES:
-                  ControllerEventProcessor.ControllerEvent<ControllerEventProcessor.DriveValue>
-                      driveCommand = event;
-                  ControllerEventProcessor.DriveValue v = driveCommand.payload;
-                  handler.handleDriveCommand(v.getLeftValue(), v.getRightValue());
-                  break;
-
-                case LOGS:
-                  handler.handleLogs();
-                  break;
-
-                case NOISE:
-                  handler.handleNoise();
-                  break;
-
-                case INDICATOR_LEFT:
-                  handler.handleIndicatorLeft();
-                  break;
-
-                case INDICATOR_RIGHT:
-                  handler.handleIndicatorRight();
-                  break;
-
-                case INDICATOR_STOP:
-                  handler.handleIndictorStop();
-                  break;
-
-                case DRIVE_MODE:
-                  handler.handleDriveMode();
-                  break;
-              }
-            });
-  }
-
-  // Controller event handler
-  private class ControllerHandler {
-    private void handleDriveCommand(Float l, Float r) {
-      vehicle.setControl(l, r);
-      updateVehicleState();
-    }
-
-    private void handleLogs() {
-      setIsLoggingActive(!getLoggingEnabled());
-      if (getLoggingEnabled()) audioPlayer.play(voice, "logging_started.mp3");
-      else audioPlayer.play(voice, "logging_stopped.mp3");
-    }
-
-    private void handleNoise() {
-      toggleNoise();
-      if (getNoiseEnabled()) audioPlayer.play(voice, "noise_enabled.mp3");
-      else audioPlayer.play(voice, "noise_disabled.mp3");
-    }
-
-    private void handleIndicatorLeft() {
-      vehicle.setIndicator(1);
-      if (getLoggingEnabled()) {
-        sendIndicatorToSensorService();
-      }
-      sendIndicatorToVehicle();
-    }
-
-    private void handleIndicatorRight() {
-      vehicle.setIndicator(0);
-      if (getLoggingEnabled()) {
-        sendIndicatorToSensorService();
-      }
-      sendIndicatorToVehicle();
-    }
-
-    private void handleIndictorStop() {
-      vehicle.setIndicator(-1);
-      if (getLoggingEnabled()) {
-        sendIndicatorToSensorService();
-      }
-      sendIndicatorToVehicle();
-    }
-
-    private void handleDriveMode() {
-      if (driveByNetwork) return;
-      switch (driveMode) {
-        case DUAL:
-        case SMARTPHONE:
-          setDriveMode(DriveMode.GAME);
-          audioPlayer.play(voice, "video_game_control.mp3");
-          break;
-        case GAME:
-          setDriveMode(DriveMode.JOYSTICK);
-          audioPlayer.play(voice, "joystick_control.mp3");
-          break;
-        case JOYSTICK:
-          setDriveMode(DriveMode.DUAL);
-          audioPlayer.play(voice, "dual_drive_control.mp3");
-          break;
-      }
-      driveModeSpinner.setSelection(driveMode.ordinal());
-    }
   }
 }

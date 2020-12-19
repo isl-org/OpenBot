@@ -77,9 +77,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import org.openbot.env.AudioPlayer;
+import org.openbot.env.ControllerEventProcessor;
 import org.openbot.env.GameController;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
+import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.UsbConnection;
 import org.openbot.env.Vehicle;
@@ -148,10 +151,6 @@ public abstract class CameraActivity extends AppCompatActivity
   private Device device = Device.CPU;
   private int numThreads = -1;
 
-  protected GameController gameController;
-  private SmartphoneController smartphoneController = new SmartphoneController();
-  private SharedPreferencesManager preferencesManager;
-
   // **** USB **** //
   protected UsbConnection usbConnection;
   protected boolean usbConnected;
@@ -168,9 +167,18 @@ public abstract class CameraActivity extends AppCompatActivity
   protected SpeedMode speedMode = SpeedMode.NORMAL;
   protected DriveMode driveMode = DriveMode.GAME;
   protected String logFolder;
-  private boolean loggingEnabled;
+  protected boolean loggingEnabled;
+  protected boolean networkEnabled = false;
+  protected boolean noiseEnabled = false;
+
   private Intent intentSensorService;
   private UploadService uploadService;
+  private SharedPreferencesManager preferencesManager;
+  protected final GameController gameController = new GameController(driveMode);
+  private final PhoneController phoneController = new PhoneController();
+  protected final ControllerHandler controllerHandler = new ControllerHandler();
+  private final AudioPlayer audioPlayer = new AudioPlayer(this);
+  private final String voice = "matthew";
 
   public enum LogMode {
     ALL_IMGS,
@@ -195,7 +203,6 @@ public abstract class CameraActivity extends AppCompatActivity
     DUAL,
     GAME,
     JOYSTICK,
-    SMARTPHONE
   }
 
   protected static Vehicle vehicle = new Vehicle();
@@ -343,8 +350,6 @@ public abstract class CameraActivity extends AppCompatActivity
     intentSensorService = new Intent(this, SensorService.class);
 
     setInitialValues();
-
-    gameController = new GameController(driveMode);
 
     // Try to connect to serial device
     toggleConnection(true);
@@ -575,7 +580,7 @@ public abstract class CameraActivity extends AppCompatActivity
       LOGGER.e(e, "Exception!");
     }
 
-    smartphoneController.disconnect();
+    phoneController.disconnect();
     super.onPause();
   }
 
@@ -677,6 +682,12 @@ public abstract class CameraActivity extends AppCompatActivity
   private void requestBluetoothePermission() {
     ActivityCompat.requestPermissions(
         this, new String[] {PERMISSION_BLUETOOTH}, REQUEST_BLUETOOTH_PERMISSION);
+  }
+
+  private void requestPermissionsForPhone() {
+    if (!hasLocationPermission()) {
+      requestLocationPermission();
+    }
   }
 
   // Returns true if the device supports the required hardware level, or better.
@@ -867,6 +878,11 @@ public abstract class CameraActivity extends AppCompatActivity
         case GAMEPAD:
           break;
         case PHONE:
+          handleControllerEvents();
+          requestPermissionsForPhone();
+          if (!phoneController.isConnected()) {
+            phoneController.connect(this);
+          }
           break;
         case WEBRTC:
           break;
@@ -928,10 +944,6 @@ public abstract class CameraActivity extends AppCompatActivity
       preferencesManager.setNumThreads(numThreads);
       onInferenceConfigurationChanged();
     }
-  }
-
-  protected boolean getLoggingEnabled() {
-    return loggingEnabled;
   }
 
   Messenger sensorMessenger;
@@ -1073,7 +1085,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   protected void setIsLoggingActive(boolean loggingActive) {
-    if (loggingActive && !getLoggingEnabled()) {
+    if (loggingActive && !loggingEnabled) {
       if (!hasCameraPermission() && logMode != LogMode.ONLY_SENSORS) {
         requestCameraPermission();
         loggingEnabled = false;
@@ -1087,7 +1099,7 @@ public abstract class CameraActivity extends AppCompatActivity
         startLogging();
         loggingEnabled = true;
       }
-    } else if (!loggingActive && getLoggingEnabled()) {
+    } else if (!loggingActive && loggingEnabled) {
       stopLogging();
       loggingEnabled = false;
     }
@@ -1109,6 +1121,12 @@ public abstract class CameraActivity extends AppCompatActivity
   protected abstract Size getDesiredPreviewFrameSize();
 
   protected abstract void onInferenceConfigurationChanged();
+
+  protected abstract void toggleNoise();
+
+  protected abstract void updateVehicleState();
+
+  protected abstract void setNetworkEnabled(boolean isChecked);
 
   private void connectUsb() {
     usbConnection = new UsbConnection(this, baudRate);
@@ -1159,8 +1177,6 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
-  protected abstract void setDriveByNetwork(boolean isChecked);
-
   protected void sendControlToVehicle() {
     if ((usbConnection != null) && usbConnection.isOpen() && !usbConnection.isBusy()) {
       String message =
@@ -1201,7 +1217,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (buttonView == connectionSwitchCompat) {
       toggleConnection(isChecked);
     } else if (buttonView == networkSwitchCompat) {
-      setDriveByNetwork(isChecked);
+      setNetworkEnabled(isChecked);
     } else if (buttonView == logSwitchCompat) {
       setIsLoggingActive(isChecked);
     } else if (buttonView == cameraSwitchCompat) {
@@ -1235,14 +1251,6 @@ public abstract class CameraActivity extends AppCompatActivity
     } else if (parent == deviceSpinner) {
       setDevice(Device.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     } else if (parent == driveModeSpinner) {
-      DriveMode driveMode =
-          DriveMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase());
-      if ("SMARTPHONE".equals(driveMode.name())) {
-        requestPermissionsForSmartphone();
-        if (!smartphoneController.isConnected()) {
-          smartphoneController.connect(this);
-        }
-      }
       setDriveMode(driveMode);
     } else if (parent == logSpinner) {
       setLogMode(LogMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
@@ -1253,9 +1261,118 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
-  private void requestPermissionsForSmartphone() {
-    if (!hasLocationPermission()) {
-      requestLocationPermission();
+  // Classes to handle events from a Controller.
+  // This can be the entry point to other external controllers
+  // See how PhoneController emits events.
+  private void handleControllerEvents() {
+    ControllerEventProcessor.getProcessor()
+        .subscribe(
+            event -> {
+              ControllerEventProcessor.ControllerEvent command = event;
+
+              switch (command.type) {
+                case DRIVE_CMD:
+                  ControllerEventProcessor.ControllerEvent<ControllerEventProcessor.DriveValue>
+                      driveCommand = event;
+                  ControllerEventProcessor.DriveValue v = driveCommand.payload;
+                  controllerHandler.handleDriveCommand(v.getLeftValue(), v.getRightValue());
+                  break;
+
+                case LOGGING:
+                  controllerHandler.handleLogging();
+                  break;
+
+                case NOISE:
+                  controllerHandler.handleNoise();
+                  break;
+
+                case INDICATOR_LEFT:
+                  controllerHandler.handleIndicatorLeft();
+                  break;
+
+                case INDICATOR_RIGHT:
+                  controllerHandler.handleIndicatorRight();
+                  break;
+
+                case INDICATOR_STOP:
+                  controllerHandler.handleIndicatorStop();
+                  break;
+
+                case NETWROK:
+                  controllerHandler.handleNetwork();
+                  break;
+
+                case DRIVE_MODE:
+                  controllerHandler.handleDriveMode();
+                  break;
+              }
+            });
+  }
+
+  // Controller event handler
+  protected class ControllerHandler {
+    protected void handleDriveCommand(Float l, Float r) {
+      vehicle.setControl(l, r);
+      updateVehicleState();
+    }
+
+    protected void handleLogging() {
+      setIsLoggingActive(!loggingEnabled);
+      audioPlayer.playLogging(voice, loggingEnabled);
+    }
+
+    protected void handleNoise() {
+      toggleNoise();
+      audioPlayer.playNoise(voice, noiseEnabled);
+    }
+
+    protected void handleIndicatorLeft() {
+      vehicle.setIndicator(1);
+      if (loggingEnabled) {
+        sendIndicatorToSensorService();
+      }
+      sendIndicatorToVehicle();
+    }
+
+    protected void handleIndicatorRight() {
+      vehicle.setIndicator(0);
+      if (loggingEnabled) {
+        sendIndicatorToSensorService();
+      }
+      sendIndicatorToVehicle();
+    }
+
+    protected void handleIndicatorStop() {
+      vehicle.setIndicator(-1);
+      if (loggingEnabled) {
+        sendIndicatorToSensorService();
+      }
+      sendIndicatorToVehicle();
+    }
+
+    protected void handleDriveMode() {
+      if (networkEnabled) return;
+      switch (driveMode) {
+        case DUAL:
+          setDriveMode(DriveMode.GAME);
+          break;
+        case GAME:
+          setDriveMode(DriveMode.JOYSTICK);
+          break;
+        case JOYSTICK:
+          setDriveMode(DriveMode.DUAL);
+          break;
+      }
+      audioPlayer.playDriveMode(voice, driveMode);
+      driveModeSpinner.setSelection(driveMode.ordinal());
+    }
+
+    protected void handleNetwork() {
+      setNetworkEnabled(!networkEnabled);
+      if (networkEnabled) audioPlayer.play(voice, "network_enabled.mp3");
+      else {
+        audioPlayer.playDriveMode(voice, driveMode);
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-package org.openbot;
+package org.openbot.env;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,12 +7,13 @@ import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import java.nio.charset.StandardCharsets;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PhoneController {
 
-  private static final String TAG = "SmartphoneController";
+  private static final String TAG = "PhoneController";
 
   private static final NearbyConnection connection = new NearbyConnection();
 
@@ -28,7 +29,7 @@ public class PhoneController {
   private final PayloadCallback payloadCallback =
       new PayloadCallback() {
         @Override
-        public void onPayloadReceived(String endpointId, Payload payload) {
+        public void onPayloadReceived(@NotNull String endpointId, Payload payload) {
           String command = new String(payload.asBytes(), StandardCharsets.UTF_8);
           try {
             JSONObject jsonCommand = new JSONObject(command);
@@ -44,7 +45,7 @@ public class PhoneController {
             if (buttonValue != null) {
               switch (buttonValue) {
                 case "LOGS":
-                  event.type = ControllerEventProcessor.ControllerEventsTypes.LOGS;
+                  event.type = ControllerEventProcessor.ControllerEventsTypes.LOGGING;
                   break;
                 case "NOISE":
                   event.type = ControllerEventProcessor.ControllerEventsTypes.NOISE;
@@ -76,11 +77,10 @@ public class PhoneController {
             }
 
             if (rightValue != null && leftValue != null) {
-              event.type = ControllerEventProcessor.ControllerEventsTypes.DRIVE_LEFT_RIGHT_VALUES;
-              ControllerEventProcessor.DriveValue leftRightValues =
+              event.type = ControllerEventProcessor.ControllerEventsTypes.DRIVE_CMD;
+              event.payload =
                   new ControllerEventProcessor.DriveValue(
-                      new Float(leftValue), new Float(rightValue));
-              event.payload = leftRightValues;
+                      Float.valueOf(leftValue), Float.valueOf(rightValue));
             }
             ControllerEventProcessor.emitEvent(event);
 

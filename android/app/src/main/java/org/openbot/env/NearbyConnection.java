@@ -15,7 +15,7 @@ limitations under the License.
 
 // Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
-package org.openbot;
+package org.openbot.env;
 
 import android.content.Context;
 import android.media.ToneGenerator;
@@ -34,6 +34,7 @@ import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.Strategy;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.openbot.CameraActivity;
 
 public class NearbyConnection {
   private static final String TAG = "NearbyConnection";
