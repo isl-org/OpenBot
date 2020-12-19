@@ -342,8 +342,9 @@ public abstract class CameraActivity extends AppCompatActivity
     baudRateSpinner.setOnItemSelectedListener(this);
     modelSpinner.setOnItemSelectedListener(this);
     deviceSpinner.setOnItemSelectedListener(this);
-    driveModeSpinner.setOnItemSelectedListener(this);
     logSpinner.setOnItemSelectedListener(this);
+    controlModeSpinner.setOnItemSelectedListener(this);
+    driveModeSpinner.setOnItemSelectedListener(this);
     speedModeSpinner.setOnItemSelectedListener(this);
 
     // Intent for sensor service
@@ -412,9 +413,9 @@ public abstract class CameraActivity extends AppCompatActivity
     baudRateSpinner.setSelection(Arrays.binarySearch(BaudRates, preferencesManager.getBaudrate()));
     modelSpinner.setSelection(preferencesManager.getModel());
     deviceSpinner.setSelection(preferencesManager.getDevice());
-    driveModeSpinner.setSelection(preferencesManager.getDriveMode());
     logSpinner.setSelection(preferencesManager.getLogMode());
     controlModeSpinner.setSelection(preferencesManager.getControlMode());
+    driveModeSpinner.setSelection(preferencesManager.getDriveMode());
     speedModeSpinner.setSelection(preferencesManager.getSpeedMode());
 
     setNumThreads(preferencesManager.getNumThreads());
@@ -850,7 +851,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void setSpeedMode(SpeedMode speedMode) {
     if (this.speedMode != speedMode) {
-      LOGGER.d("Updating  controlSpeed: " + speedMode);
+      LOGGER.d("Updating  speedMode: " + speedMode);
       this.speedMode = speedMode;
       preferencesManager.setSpeedMode(speedMode.ordinal());
       switch (speedMode) {
@@ -876,6 +877,12 @@ public abstract class CameraActivity extends AppCompatActivity
       preferencesManager.setControlMode(controlMode.ordinal());
       switch (controlMode) {
         case GAMEPAD:
+          if (phoneController.isConnected()) {
+            phoneController.disconnect();
+          }
+          setDriveMode(DriveMode.values()[preferencesManager.getDriveMode()]);
+          driveModeSpinner.setEnabled(true);
+          driveModeSpinner.setAlpha(1.0f);
           break;
         case PHONE:
           handleControllerEvents();
@@ -883,6 +890,11 @@ public abstract class CameraActivity extends AppCompatActivity
           if (!phoneController.isConnected()) {
             phoneController.connect(this);
           }
+          DriveMode oldDriveMode = driveMode;
+          setDriveMode(DriveMode.DUAL);
+          preferencesManager.setDriveMode(oldDriveMode.ordinal());
+          driveModeSpinner.setEnabled(false);
+          driveModeSpinner.setAlpha(0.5f);
           break;
         case WEBRTC:
           break;
@@ -898,6 +910,7 @@ public abstract class CameraActivity extends AppCompatActivity
       this.driveMode = driveMode;
       preferencesManager.setDriveMode(driveMode.ordinal());
       gameController.setDriveMode(driveMode);
+      driveModeSpinner.setSelection(driveMode.ordinal());
     }
   }
 
@@ -1250,12 +1263,12 @@ public abstract class CameraActivity extends AppCompatActivity
       setModel(Model.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     } else if (parent == deviceSpinner) {
       setDevice(Device.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
-    } else if (parent == driveModeSpinner) {
-      setDriveMode(driveMode);
     } else if (parent == logSpinner) {
       setLogMode(LogMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     } else if (parent == controlModeSpinner) {
       setControlMode(ControlMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
+    } else if (parent == driveModeSpinner) {
+      setDriveMode(driveMode);
     } else if (parent == speedModeSpinner) {
       setSpeedMode(SpeedMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     }
