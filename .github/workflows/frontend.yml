@@ -22,12 +22,5 @@ jobs:
         with:
           node-version: '12'
       - run: yarn install
+      - run: yarn test
       - run: yarn build
-      - uses: montudor/action-zip@v0.1.1
-        with:
-          args: zip -qq -r frontend.zip policy/frontend/build
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: frontend.zip
-          path: frontend.zip
