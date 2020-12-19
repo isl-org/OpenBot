@@ -101,9 +101,10 @@ public abstract class CameraActivity extends AppCompatActivity
 
   // Constants
   private static final int REQUEST_CAMERA_PERMISSION = 1;
-  private static final int REQUEST_LOCATION_PERMISSION = 2;
-  private static final int REQUEST_STORAGE_PERMISSION = 3;
-  private static final int REQUEST_BLUETOOTH_PERMISSION = 4;
+  private static final int REQUEST_LOCATION_PERMISSION_LOGGING = 2;
+  private static final int REQUEST_LOCATION_PERMISSION_CONTROLLER = 3;
+  private static final int REQUEST_STORAGE_PERMISSION = 4;
+  private static final int REQUEST_BLUETOOTH_PERMISSION = 5;
 
   private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
   private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -624,14 +625,28 @@ public abstract class CameraActivity extends AppCompatActivity
         }
         break;
 
-      case REQUEST_LOCATION_PERMISSION:
+      case REQUEST_LOCATION_PERMISSION_LOGGING:
         // If the permission is granted, start logging,
         // otherwise, show a Toast
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           setIsLoggingActive(true);
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
-            Toast.makeText(this, R.string.location_permission_denied, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.location_permission_denied_logging, Toast.LENGTH_LONG).show();
+          }
+        }
+        break;
+
+      case REQUEST_LOCATION_PERMISSION_CONTROLLER:
+        // If the permission is granted, start advertising to controller,
+        // otherwise, show a Toast
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          if (!phoneController.isConnected()) {
+            phoneController.connect(this);
+          }
+        } else {
+          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
+            Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG).show();
           }
         }
         break;
@@ -665,14 +680,24 @@ public abstract class CameraActivity extends AppCompatActivity
         == PackageManager.PERMISSION_GRANTED;
   }
 
+  private boolean hasBluetoothPermission() {
+    return ContextCompat.checkSelfPermission(this, PERMISSION_BLUETOOTH)
+            == PackageManager.PERMISSION_GRANTED;
+  }
+
   private void requestCameraPermission() {
     ActivityCompat.requestPermissions(
         this, new String[] {PERMISSION_CAMERA}, REQUEST_CAMERA_PERMISSION);
   }
 
-  private void requestLocationPermission() {
+  private void requestLocationPermissionLogging() {
     ActivityCompat.requestPermissions(
-        this, new String[] {PERMISSION_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        this, new String[] {PERMISSION_LOCATION}, REQUEST_LOCATION_PERMISSION_LOGGING);
+  }
+
+  private void requestLocationPermissionController() {
+    ActivityCompat.requestPermissions(
+            this, new String[] {PERMISSION_LOCATION}, REQUEST_LOCATION_PERMISSION_CONTROLLER);
   }
 
   private void requestStoragePermission() {
@@ -680,15 +705,9 @@ public abstract class CameraActivity extends AppCompatActivity
         this, new String[] {PERMISSION_STORAGE}, REQUEST_STORAGE_PERMISSION);
   }
 
-  private void requestBluetoothePermission() {
+  private void requestBluetoothPermission() {
     ActivityCompat.requestPermissions(
         this, new String[] {PERMISSION_BLUETOOTH}, REQUEST_BLUETOOTH_PERMISSION);
-  }
-
-  private void requestPermissionsForPhone() {
-    if (!hasLocationPermission()) {
-      requestLocationPermission();
-    }
   }
 
   // Returns true if the device supports the required hardware level, or better.
@@ -877,24 +896,14 @@ public abstract class CameraActivity extends AppCompatActivity
       preferencesManager.setControlMode(controlMode.ordinal());
       switch (controlMode) {
         case GAMEPAD:
-          if (phoneController.isConnected()) {
-            phoneController.disconnect();
-          }
-          setDriveMode(DriveMode.values()[preferencesManager.getDriveMode()]);
-          driveModeSpinner.setEnabled(true);
-          driveModeSpinner.setAlpha(1.0f);
+          disconnectPhoneController();
           break;
         case PHONE:
           handleControllerEvents();
-          requestPermissionsForPhone();
-          if (!phoneController.isConnected()) {
-            phoneController.connect(this);
-          }
-          DriveMode oldDriveMode = driveMode;
-          setDriveMode(DriveMode.DUAL);
-          preferencesManager.setDriveMode(oldDriveMode.ordinal());
-          driveModeSpinner.setEnabled(false);
-          driveModeSpinner.setAlpha(0.5f);
+          if (!hasLocationPermission())
+            requestLocationPermissionController();
+          else
+            connectPhoneController();
           break;
         case WEBRTC:
           break;
@@ -902,6 +911,26 @@ public abstract class CameraActivity extends AppCompatActivity
           throw new IllegalStateException("Unexpected value: " + controlMode);
       }
     }
+  }
+
+  private void connectPhoneController() {
+    if (!phoneController.isConnected()) {
+      phoneController.connect(this);
+    }
+    DriveMode oldDriveMode = driveMode;
+    setDriveMode(DriveMode.DUAL);
+    preferencesManager.setDriveMode(oldDriveMode.ordinal());
+    driveModeSpinner.setEnabled(false);
+    driveModeSpinner.setAlpha(0.5f);
+  }
+
+  private void disconnectPhoneController() {
+    if (phoneController.isConnected()) {
+      phoneController.disconnect();
+    }
+    setDriveMode(DriveMode.values()[preferencesManager.getDriveMode()]);
+    driveModeSpinner.setEnabled(true);
+    driveModeSpinner.setAlpha(1.0f);
   }
 
   protected void setDriveMode(DriveMode driveMode) {
@@ -1103,7 +1132,7 @@ public abstract class CameraActivity extends AppCompatActivity
         requestCameraPermission();
         loggingEnabled = false;
       } else if (!hasLocationPermission()) {
-        requestLocationPermission();
+        requestLocationPermissionLogging();
         loggingEnabled = false;
       } else if (!hasStoragePermission()) {
         requestStoragePermission();
