@@ -1,5 +1,7 @@
 import os
 from subprocess import Popen
+import urllib.request
+import zipfile
 
 from aiohttp import web
 
@@ -11,11 +13,24 @@ async def init_frontend(app: web.Application):
         await run_frontend_dev_server(app)
         return
 
-    # todo:
-    # get version from file
-    # download from github if needed
-    # unzip
-    pass
+    frontend_dir = os.path.join(base_dir, "frontend")
+    zip_path = os.path.join(base_dir, "frontend.zip")
+    version_target = read_version(frontend_dir, ".version")
+    version_current = read_version(frontend_dir, "build", ".version")
+    if version_current == version_target:
+        print("Frontend is up to date!")
+        return
+
+    # todo fix URL
+    url = f"https://github.com/sanyatuning/OpenBot/releases/download/{version_target}/frontend.zip"
+    print("Downloading frontend...")
+    urllib.request.urlretrieve(url, zip_path)
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(frontend_dir)
+    with open(os.path.join(frontend_dir, "build", ".version")) as f:
+        f.write(version_target)
+    os.unlink(zip_path)
+    print("Frontend is ready!")
 
 
 async def run_frontend_dev_server(app: web.Application):
@@ -26,6 +41,14 @@ async def run_frontend_dev_server(app: web.Application):
         ["yarn", "run", "start"],
         cwd=os.path.join(base_dir, "frontend"),
     )
+
+
+def read_version(*args):
+    try:
+        with open(os.path.join(*args)) as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return None
 
 
 def is_port_in_use(port):
