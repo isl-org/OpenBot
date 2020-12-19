@@ -632,7 +632,8 @@ public abstract class CameraActivity extends AppCompatActivity
           setIsLoggingActive(true);
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
-            Toast.makeText(this, R.string.location_permission_denied_logging, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.location_permission_denied_logging, Toast.LENGTH_LONG)
+                .show();
           }
         }
         break;
@@ -646,7 +647,8 @@ public abstract class CameraActivity extends AppCompatActivity
           }
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
-            Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
+                .show();
           }
         }
         break;
@@ -682,7 +684,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private boolean hasBluetoothPermission() {
     return ContextCompat.checkSelfPermission(this, PERMISSION_BLUETOOTH)
-            == PackageManager.PERMISSION_GRANTED;
+        == PackageManager.PERMISSION_GRANTED;
   }
 
   private void requestCameraPermission() {
@@ -697,7 +699,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void requestLocationPermissionController() {
     ActivityCompat.requestPermissions(
-            this, new String[] {PERMISSION_LOCATION}, REQUEST_LOCATION_PERMISSION_CONTROLLER);
+        this, new String[] {PERMISSION_LOCATION}, REQUEST_LOCATION_PERMISSION_CONTROLLER);
   }
 
   private void requestStoragePermission() {
@@ -900,10 +902,8 @@ public abstract class CameraActivity extends AppCompatActivity
           break;
         case PHONE:
           handleControllerEvents();
-          if (!hasLocationPermission())
-            requestLocationPermissionController();
-          else
-            connectPhoneController();
+          if (!hasLocationPermission()) requestLocationPermissionController();
+          else connectPhoneController();
           break;
         case WEBRTC:
           break;
