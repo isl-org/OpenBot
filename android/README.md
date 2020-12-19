@@ -31,7 +31,7 @@ You can download the apk from the assets of the [latest release](https://github.
 #### Build process
 
 1. Open Android Studio and select *Open an existing Android Studio project*.
-2. Select the OpenBot/android/robot directory and click OK.
+2. Select the OpenBot/android directory and click OK.
 3. Confirm Gradle Sync if neccessary. To perform a Gradle Sync manually, click on the gradle icon.
     ![Gradle Sync](../docs/images/android_studio_bar_gradle.jpg)
 4. Connect your Android device and make sure USB Debugging in the [developer options](https://developer.android.com/studio/debug/dev-options) is enabled. Depending on your development environment [further steps](https://developer.android.com/studio/run/device) might be necessary. You should see your device in the navigation bar at the top now.
