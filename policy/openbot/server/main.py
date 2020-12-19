@@ -1,12 +1,13 @@
 import os
 
 from aiohttp import web
-from aiohttp.web_exceptions import HTTPBadRequest, HTTPNotFound
+from aiohttp.web_exceptions import HTTPBadRequest
 import aiohttp_jinja2
 import jinja2
 
 from . import api
-from .dataset import get_dataset_list, get_dir_info, get_info
+from .dataset import get_dir_info, get_info
+from .frontend import init_frontend
 from .preview import handle_preview
 from .upload import handle_file_upload
 from .zeroconf import register
@@ -18,24 +19,12 @@ async def handle_get(request: web.Request):
     basename = os.path.basename(path.rstrip("/"))
     dir_path = os.path.dirname(path.rstrip("/"))
     info = get_info(dir_path + "/", basename)
-    action = request.rel_url.query.get('action')
-    if not action:
-        action = 'session' if info['is_session'] else 'list'
+
     return web.json_response({
         "basename": basename,
         "path": path,
-        "action": action,
-        "train_datasets": get_dataset_list("train_data"),
-        "test_datasets": get_dataset_list("test_data"),
         "session": info,
         "file_list": get_dir_info(path),
-    })
-
-
-async def handle_get_datasets(_: web.Request):
-    return web.json_response({
-        "train": get_dataset_list("train_data"),
-        "test": get_dataset_list("test_data"),
     })
 
 
@@ -84,10 +73,6 @@ async def handle_upload(request: web.Request) -> web.Response:
     return web.Response(text="file not found")
 
 
-async def handle_favicon(request: web.Request):
-    raise HTTPNotFound
-
-
 def urljoin(*parts):
     return '/'.join(s.strip('/') for s in parts)
 
@@ -95,17 +80,16 @@ def urljoin(*parts):
 app = web.Application()
 app.add_routes([
     web.get('/ws', api.websocket_handler),
-    web.get('/datasets', handle_get_datasets),
-    web.get('/favicon.ico', handle_favicon),
     web.get('/train', handle_train),
     web.post('/upload', handle_upload),
     web.get('/test', api.handle_test),
     web.get('/api/uploaded', api.handle_uploaded),
     web.get('/{path:.*}/preview.gif', handle_preview),
-    web.get('/{path:.*}', handle_get),
+    web.get('/{path:.*}', api.handle_static),
     web.post('/{path:.*}', handle_post),
 ])
 app.on_startup.append(register)
+app.on_startup.append(init_frontend)
 aiohttp_jinja2.setup(
     app, loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"))
 )

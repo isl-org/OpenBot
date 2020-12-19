@@ -1,18 +1,20 @@
 import asyncio
 import json
-from operator import itemgetter
 import os
 import shutil
 import threading
-import time
+from typing import List
 
 import aiohttp
 from aiohttp import web
 
-from .dataset import get_dir_info
-from .. import dataset_dir
+from .dataset import get_dataset_list, get_dir_info, get_info
+from .models import get_models
+from .. import base_dir, dataset_dir
+from ..train import CancelledException, Hyperparameters, MyCallback, start_train
 
-current_train_process = None
+active_ws: List[web.WebSocketResponse] = []
+event_cancelled = threading.Event()
 
 
 async def handle_test(request: web.Request):
@@ -24,71 +26,125 @@ async def handle_uploaded(request: web.Request):
     return web.json_response(files)
 
 
-async def websocket_handler(request: web.Request):
-    global current_train_process
-    print('websocket connection started')
-    ws = web.WebSocketResponse()
-    await ws.prepare(request)
+async def handle_static(request: web.Request):
+    path = request.match_info.get("path") or "index.html"
+    if path[-4:] == ".png":
+        real = os.path.join(base_dir, path)
+        if os.path.isfile(real):
+            return web.FileResponse(real)
+    return web.FileResponse(os.path.join(base_dir, "frontend", "build", path))
 
-    async def send(data):
-        data_str = json.dumps(data)
-        print('websocket send ' + data_str)
+
+async def async_broadcast(event, payload=None):
+    data_str = json.dumps({
+        "event": event,
+        "payload": payload,
+    })
+    print('websocket send ' + data_str)
+    for ws in active_ws:
         await ws.send_str(data_str)
 
-    event = threading.Event()
+
+async def websocket_handler(request: web.Request):
+    print('websocket connection started')
+    ws = web.WebSocketResponse()
+    active_ws.append(ws)
+    await ws.prepare(request)
+
     print('websocket async for')
     msg: aiohttp.WSMessage
     async for msg in ws:
         if msg.type == aiohttp.WSMsgType.TEXT:
             print('websocket msg ' + msg.data)
             data = json.loads(msg.data)
-            action, payload = itemgetter('action', 'payload')(data)
-            if action == 'moveSession':
-                name = os.path.basename(payload['path'])
-                src = os.path.join(dataset_dir, payload["path"])
-                dst = os.path.join(dataset_dir, payload["new_path"], name)
-                # os.rename(src, dst)
-                await send({
-                    "event": "moveSessionSuccess",
-                    "old_path": payload["path"],
-                    "new_path": os.path.join(payload["new_path"], name),
+            method = data.get('method')
+            params = data.get('params')
+            req_id = data.get('id')
+
+            async def reply(result, error=None):
+                data_str = json.dumps({
+                    "jsonrpc": "2.0",
+                    "result": result,
+                    "id": req_id,
+                    "error": error,
                 })
-            elif action == 'deleteSession':
-                real_dir = dataset_dir + payload["path"]
+                print('websocket reply ' + data_str)
+                await ws.send_str(data_str)
+
+            if method == 'listDir':
+                path = params['path']
+                basename = os.path.basename(path.rstrip("/"))
+                dir_path = os.path.dirname(path.rstrip("/"))
+                await reply({
+                    "basename": basename,
+                    "path": path,
+                    "session": get_info(dir_path + "/", basename),
+                    "file_list": get_dir_info(path),
+                })
+            elif method == 'moveSession':
+                basename = os.path.basename(params['path'])
+                src = os.path.join(dataset_dir + params["path"])
+                dst = os.path.join(dataset_dir + params["new_path"], basename)
+                os.rename(src, dst)
+                await reply(True)
+                await async_broadcast('moveSessionSuccess', {
+                    "old_path": params["path"],
+                    "new_path": os.path.join(params["new_path"], basename),
+                })
+            elif method == 'deleteSession':
+                real_dir = dataset_dir + params["path"]
                 shutil.rmtree(real_dir)
-                await send({
-                    "event": "deleteSessionSuccess",
-                    "path": payload["path"],
+                await reply(True)
+                await async_broadcast('deleteSessionSuccess')
+            elif method == 'start':
+                event_cancelled.clear()
+                await async_train(params)
+                await reply(True)
+            elif method == 'stop':
+                event_cancelled.set()
+                await reply(True)
+
+            elif method == 'getDatasets':
+                await reply({
+                    "train": get_dataset_list("train_data"),
+                    "test": get_dataset_list("test_data"),
                 })
-            elif action == 'start':
-                # await start_train(ws)
-                event.clear()
-                await async_train(send, event)
-            elif action == 'stop':
-                event.set()
+
+            elif method == 'getModels':
+                await reply(get_models())
+
+            elif method == 'getHyperparameters':
+                await reply(Hyperparameters().__dict__)
+            else:
+                await reply(False, "Unknown method")
 
         elif msg.type == aiohttp.WSMsgType.ERROR:
             print('ws connection closed with exception %s' % ws.exception())
 
     print('websocket connection closed')
+    active_ws.remove(ws)
+
     return ws
 
 
-async def async_train(async_send, cancelled):
+async def async_train(params):
     loop = asyncio.get_event_loop()
 
-    def send(msg):
-        asyncio.run_coroutine_threadsafe(async_send(msg), loop).result()
+    def broadcast(event, payload=None):
+        asyncio.run_coroutine_threadsafe(async_broadcast(event, payload), loop).result()
 
-    loop.run_in_executor(None, train, send, cancelled)
+    hParams = Hyperparameters()
+    for p in params:
+        setattr(hParams, p, params[p])
+    print(hParams.__dict__)
+    loop.run_in_executor(None, train, hParams, broadcast, event_cancelled)
 
 
-def train(send, cancelled):
-    send({"event": "started"})
-    for i in range(10):
-        if cancelled.is_set():
-            send({"event": "cancelled"})
-            return
-        time.sleep(1)
-        send({"event": "progress", "current": i + 1})
-    send({"event": "done"})
+def train(params, broadcast, cancelled):
+    try:
+        broadcast("started")
+        my_callback = MyCallback(broadcast, cancelled)
+        tr = start_train(params, my_callback)
+        broadcast("done", {"model": tr.model_name})
+    except CancelledException:
+        broadcast("cancelled")

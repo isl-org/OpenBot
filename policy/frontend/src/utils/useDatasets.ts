@@ -1,4 +1,4 @@
-import {useFetch} from 'src/utils/useFetch';
+import {useRpc} from 'src/utils/useRpc';
 
 export interface Session {
     name: string;
@@ -13,10 +13,18 @@ export interface Dataset {
 }
 
 const defaultValue = {
-    train: [] as Dataset[],
-    test: [] as Dataset[],
+    train: [{
+        name: 'loading...',
+        path: '',
+        sessions: [] as Session[],
+    }] as Dataset[],
+    test: [{
+        name: 'loading...',
+        path: '',
+        sessions: [] as Session[],
+    }] as Dataset[],
 };
 
 export function useDatasets() {
-    return useFetch(defaultValue, '/datasets')
+    return useRpc(defaultValue, 'getDatasets')
 }

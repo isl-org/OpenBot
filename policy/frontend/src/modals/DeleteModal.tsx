@@ -1,5 +1,5 @@
 import {Button, Modal, ModalProps} from 'rsuite';
-import {send} from '../utils/ws';
+import {jsonRpc} from '../utils/ws';
 
 export function DeleteModal({path, ...props}: ModalProps & {path: string}) {
     return (
@@ -23,8 +23,5 @@ export function DeleteModal({path, ...props}: ModalProps & {path: string}) {
 }
 
 function deleteSession(path: string) {
-    send({
-        action: 'deleteSession',
-        payload: {path},
-    })
+    jsonRpc('deleteSession', {path})
 }

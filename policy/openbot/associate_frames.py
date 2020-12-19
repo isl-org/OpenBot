@@ -46,6 +46,8 @@ import sys
 import os
 import numpy
 
+from . import utils
+
 
 def read_file_list(filename):
     """
@@ -105,12 +107,11 @@ def associate(first_list, second_list, max_offset):
 def match_frame_ctrl_cmd(data_dir, datasets, max_offset, redo_matching=False, remove_zeros=True):
     frames = []
     for dataset in datasets:
-        for folder in os.listdir(os.path.join(data_dir,dataset)):
+        for folder in utils.list_dirs(os.path.join(data_dir, dataset)):
             session_dir = os.path.join(data_dir, dataset, folder)
-            if os.path.isdir(session_dir):
-                frame_list = match_frame_session(session_dir, max_offset, redo_matching, remove_zeros)
-                for timestamp in list(frame_list):
-                    frames.append(frame_list[timestamp][0])
+            frame_list = match_frame_session(session_dir, max_offset, redo_matching, remove_zeros)
+            for timestamp in list(frame_list):
+                frames.append(frame_list[timestamp][0])
     return frames
 
 def match_frame_session(session_dir, max_offset, redo_matching=False, remove_zeros=True):

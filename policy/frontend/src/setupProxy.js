@@ -10,6 +10,7 @@ module.exports = function (app) {
     app.use(
         createProxyMiddleware([
             '/datasets',
+            '/models',
             '/uploaded',
         ], {
             target: 'http://localhost:8000',

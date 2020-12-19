@@ -1,6 +1,17 @@
 export interface WsMessage {
     event: string;
-    [key: string]: any;
+    payload: any;
+}
+export type JsonRpcResponse = JsonRpcResult | JsonRpcError;
+export interface JsonRpcResult {
+    jsonrpc: "2.0";
+    id: number;
+    result: any;
+}
+export interface JsonRpcError {
+    jsonrpc: "2.0";
+    id: number;
+    error: any;
 }
 type ConnectionState = 'connecting' | 'connected' | 'closed';
 
@@ -10,11 +21,47 @@ type ConnectionStateCallback = (state: ConnectionState) => void;
 const onMessageCallbacks = new Set<MessageCallback>();
 const stateChangeCallbacks = new Set<ConnectionStateCallback>();
 let socket = initSocket();
+let jsonRpcId = 1;
+
+export function jsonRpc<T>(method: string, params?: any) {
+    return new Promise<T>((resolve, reject) => {
+        const id = jsonRpcId++;
+        const done = onMessage((msg: any) => {
+            if (msg.jsonrpc === '2.0' && msg.id === id) {
+                done();
+                if (msg.error) {
+                    reject(msg.error);
+                } else {
+                    resolve(msg.result);
+                }
+            }
+        });
+        send({
+            jsonrpc: '2.0',
+            method,
+            params,
+            id,
+        });
+        setTimeout(() => {
+            done();
+            reject("JsonRpc timeout");
+        }, 10000);
+    });
+}
 
 export function send(data: any) {
-    const msg = JSON.stringify(data);
-    console.log('ws.send', msg)
-    socket.send(msg);
+    if (socket.readyState === WebSocket.OPEN) {
+        const msg = JSON.stringify(data);
+        console.log('ws.send', msg);
+        socket.send(msg);
+    } else {
+        const done = onStateChange((state) => {
+            if (state === 'connected') {
+                done();
+                send(data);
+            }
+        });
+    }
 }
 
 export function onMessage(callback: MessageCallback) {

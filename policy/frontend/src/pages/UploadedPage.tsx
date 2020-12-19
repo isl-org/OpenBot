@@ -5,7 +5,7 @@ import {Session} from 'src/utils/useDatasets';
 import {GridView} from '../components/GridView';
 import {DeleteModal} from '../modals/DeleteModal';
 import {MoveModal} from '../modals/MoveModal';
-import {useFetch} from '../utils/useFetch';
+import {useRpc} from '../utils/useRpc';
 import {useToggle} from '../utils/useToggle';
 import {onMessage} from '../utils/ws';
 
@@ -28,7 +28,7 @@ export function UploadedPage() {
 
 function SessionPanel() {
     const {path} = useParams<any>();
-    const info = useFetch(defaultValue, '/uploaded/' + path);
+    const info = useRpc(defaultValue, 'listDir',  {path: 'uploaded/'+path});
     const {session} = info.value;
     return (
         <Panel shaded>
@@ -39,17 +39,22 @@ function SessionPanel() {
 }
 
 function ListView() {
-    const {reload, value} = useFetch(defaultValue, '/uploaded');
+    const {value, reload} = useRpc(defaultValue, 'listDir',  {path: 'uploaded'});
     useEffect(() => onMessage((msg) => {
-        if (msg.event === "deleteSessionSuccess") {
+        if (msg.event === 'deleteSessionSuccess' || msg.event === 'moveSessionSuccess') {
             reload();
         }
     }), [reload])
     return <>
         <h3>Uploaded sessions</h3>
         <GridView>
+            {!value.file_list.length && (
+                <Panel shaded>
+                    No sessions
+                </Panel>
+            )}
             {value.file_list.map(s => (
-                <Panel key={s.path} style={{overflow: 'visible'}} shaded>
+                <Panel key={s.path} bodyFill shaded>
                     <SessionComp {...s}/>
                 </Panel>
             ))}
@@ -61,18 +66,20 @@ function SessionComp(props: Session) {
     const [showMove, toggleMove] = useToggle(false);
     const [showDel, toggleDel] = useToggle(false);
     return (
-        <div>
+        <>
             <img src={`${props.path}/preview.gif`} alt="preview"/>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                <Link to={props.path}>{props.name}</Link>
-                <Dropdown title="Actions">
-                    <Dropdown.Item onSelect={toggleMove}>Move...</Dropdown.Item>
-                    <Dropdown.Item onSelect={toggleDel}>Remove...</Dropdown.Item>
-                </Dropdown>
-            </div>
-            <div>Frames: {props.frames}</div>
+            <Panel>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <Link to={props.path}>{props.name}</Link>
+                    <Dropdown title="Actions" >
+                        <Dropdown.Item onSelect={toggleMove}>Move...</Dropdown.Item>
+                        <Dropdown.Item onSelect={toggleDel}>Remove...</Dropdown.Item>
+                    </Dropdown>
+                </div>
+                <div>Frames: {props.frames}</div>
+            </Panel>
             {showMove && <MoveModal path={props.path} show={showMove} onHide={toggleMove}/>}
             <DeleteModal path={props.path} show={showDel} onHide={toggleDel}/>
-        </div>
+        </>
     );
 }

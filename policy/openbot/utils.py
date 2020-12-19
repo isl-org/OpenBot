@@ -70,13 +70,13 @@ def generate_tflite(path, filename):
 def save_tflite(tflite_model, path, filename):
     open(os.path.join(path, filename + ".tflite"), "wb").write(tflite_model)
 
-def load_model(model_path,loss_fn,metric_list):
-    model = tf.keras.models.load_model(model_path,
-    custom_objects=None,
-    compile=False
+def load_model(model_path, loss_fn, metric_list):
+    model: tf.keras.Model = tf.keras.models.load_model(
+        model_path,
+        custom_objects=None,
+        compile=False
     )
-    model.compile(loss=loss_fn,
-                  metrics=metric_list)
+    model.compile(loss=loss_fn, metrics=metric_list)
     return model
 
 def compare_tf_tflite(model, tflite_model,img=None,cmd=None):
@@ -115,5 +115,9 @@ def compare_tf_tflite(model, tflite_model,img=None,cmd=None):
 
     # Compare the result.
     for tf_result, tflite_result in zip(tf_results, tflite_results):
-      print("Almost equal (5% tolerance):", np.allclose(tf_result, tflite_result, rtol=5e-02))
-      #np.testing.assert_almost_equal(tf_result, tflite_result, decimal=2)
+        print("Almost equal (5% tolerance):", np.allclose(tf_result, tflite_result, rtol=5e-02))
+        # np.testing.assert_almost_equal(tf_result, tflite_result, decimal=2)
+
+
+def list_dirs(path):
+    return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]

@@ -28,6 +28,12 @@ There is also a developer mode:
 adev runserver openbot/server
 ```
 
+For frontend development (react app):
+
+```
+FE_DEV=1 adev runserver openbot/server
+```
+
 When you run the server you should see something like:
 
 ```

@@ -4,6 +4,7 @@ import 'rsuite/dist/styles/rsuite-default.css';
 import './App.css';
 import {ConnectionAlert} from './components/ConnectionAlert';
 import {HomePage} from './pages/HomePage';
+import {ModelsPage} from './pages/ModelsPage';
 import {TrainPage} from './pages/TrainPage';
 import {UploadedPage} from './pages/UploadedPage';
 
@@ -18,6 +19,7 @@ function App() {
                     <Navbar.Body>
                         <Nav>
                             <Nav.Item href="#/">Datasets</Nav.Item>
+                            <Nav.Item href="#/models">Models</Nav.Item>
                             <Nav.Item href="#/uploaded">Uploaded</Nav.Item>
                             <Nav.Item href="#/train">Train</Nav.Item>
                         </Nav>
@@ -26,6 +28,9 @@ function App() {
             </Header>
             <Content>
                 <Switch>
+                    <Route path="/models">
+                        <ModelsPage />
+                    </Route>
                     <Route path="/uploaded">
                         <UploadedPage />
                     </Route>

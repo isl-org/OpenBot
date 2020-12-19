@@ -10,13 +10,13 @@ export function HomePage() {
             <h3>Train datasets</h3>
             <GridView>
                 {datasets.value.train.map(ds => (
-                    <DatasetInfo {...ds}/>
+                    <DatasetInfo key={ds.name} {...ds}/>
                 ))}
             </GridView>
             <h3>Test datasets</h3>
             <GridView>
                 {datasets.value.test.map(ds => (
-                    <DatasetInfo {...ds}/>
+                    <DatasetInfo key={ds.name} {...ds}/>
                 ))}
             </GridView>
         </>

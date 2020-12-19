@@ -11,3 +11,27 @@ body {
 .App > .rs-content {
   padding: 1em;
 }
+.trainPage .rs-panel {
+    margin-top: 20px;
+}
+.trainPage .rs-panel img {
+    max-width: 100%;
+}
+.bool-input {
+    display: flex;
+    margin: 10px;
+    gap: 15px;
+    align-items: center;
+}
+.bool-input .rs-control-label {
+    text-align: right;
+    width: 136px;
+}
+
+.rs-message + .rs-form {
+    margin-top: 20px;
+}
+
+.rs-panel {
+    overflow: visible;
+}

@@ -1,28 +1,25 @@
 import {useRef} from 'react';
 import {Button, ControlLabel, Form, FormGroup, Modal, ModalProps, Tree} from 'rsuite';
-import {Dataset, useDatasets} from 'src/utils/useDatasets';
-import {send} from 'src/utils/ws';
+import {Dataset, useDatasets} from '../utils/useDatasets';
+import {jsonRpc} from '../utils/ws';
 
 export function MoveModal({path, ...props}: ModalProps & {path: string}) {
     const datasets = useDatasets();
     const data = makeData(datasets.value);
-    const fromValue = useRef<any>();
-    function onChange(values: any) {
-        fromValue.current = values;
+    const fromValue = useRef('');
+    function onChange(value: string) {
+        console.log(value)
+        fromValue.current = value;
     }
     function onSubmit() {
-        const {new_path} = fromValue.current;
-        send({
-            action: 'moveSession',
-            payload: {
-                path,
-                new_path,
-            },
+        jsonRpc('moveSession', {
+            path,
+            new_path: fromValue.current,
         })
     }
     return (
         <Modal backdrop="static" size="xs" {...props}>
-            <Form onChange={onChange} onSubmit={onSubmit}>
+            <Form onSubmit={onSubmit}>
                 <Modal.Header>
                     <Modal.Title>Move session</Modal.Title>
                 </Modal.Header>
@@ -35,6 +32,7 @@ export function MoveModal({path, ...props}: ModalProps & {path: string}) {
                             defaultValue="uploaded"
                             defaultExpandAll
                             disabledItemValues={['train', 'test']}
+                            onChange={onChange}
                             block
                         />
                     </FormGroup>
