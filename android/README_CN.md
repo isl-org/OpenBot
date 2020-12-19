@@ -22,7 +22,7 @@
 ### 构建
 - 如果你使用的是[最新版本](https://github.com/intel-isl/OpenBot/releases/latest)的静态资源中的apk，你可以跳过下面的步骤，直接在手机上[安装](https://www.lifewire.com/install-apk-on-android-4177185)即可。注意，该apk是用调试密钥签名的。
 - 打开Android Studio，选择*打开一个现有的Android Studio项目*。
-- 选择OpenBot/android目录，点击确定。
+- 选择OpenBot/android/robot目录，点击确定。
 - 如果需要的话，确认Gradle Sync。
 - 连接你的Android设备，并确保在[开发者选项](https://developer.android.com/studio/debug/dev-options)中启用USB调试。根据你的开发环境，[进一步的步骤](https://developer.android.com/studio/run/device)可能是必要的。
 - 单击"运行"按钮（绿色箭头）或从顶部菜单中选择 "运行">"运行'安卓'"。你可能需要使用Build > Rebuild Project来重建项目。
