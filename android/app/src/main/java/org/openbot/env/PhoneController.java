@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SmartphoneController {
+public class PhoneController {
 
   private static final String TAG = "SmartphoneController";
 

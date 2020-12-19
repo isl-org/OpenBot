@@ -11,7 +11,7 @@ public final class ControllerEventProcessor {
     INDICATOR_STOP,
     DRIVE_MODE,
     NOISE,
-    DRIVE_LEFT_RIGHT_VALUES,
+    DRIVE_CMD,
   }
 
   public static class DriveValue {
