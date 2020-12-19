@@ -6,7 +6,8 @@
     <string name="camera_permission_denied">Camera permission is necessary to run this application.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="threads">Threads</string>
-    <string name="location_permission_denied">Location permission is necessary for logging.</string>
+    <string name="location_permission_denied_logging">Location permission is necessary for logging GPS data.</string>
+    <string name="location_permission_denied_controller">Location permission is necessary for finding the controller phone.</string>
     <string name="storage_permission_denied">External storage permission is necessary for logging.</string>
     <string name="off">Off</string>
     <string name="on">On</string>
@@ -47,7 +48,7 @@
 
     <string-array name="control_modes">
         <item>Gamepad</item>
-<!--        <item>Phone</item>-->
+        <item>Phone</item>
 <!--        <item>WebRTC</item>-->
     </string-array>
 
