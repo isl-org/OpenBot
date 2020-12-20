@@ -10,29 +10,15 @@ from aiohttp import web
 
 from .dataset import get_dataset_list, get_dir_info, get_info
 from .models import get_models
-from .. import base_dir, dataset_dir
+from .. import dataset_dir
 from ..train import CancelledException, Hyperparameters, MyCallback, start_train
 
 active_ws: List[web.WebSocketResponse] = []
 event_cancelled = threading.Event()
 
 
-async def handle_test(request: web.Request):
+async def handle_test(_: web.Request):
     return web.json_response({"openbot": 1})
-
-
-async def handle_uploaded(request: web.Request):
-    files = get_dir_info("uploaded")
-    return web.json_response(files)
-
-
-async def handle_static(request: web.Request):
-    path = request.match_info.get("path") or "index.html"
-    if path[-4:] == ".png":
-        real = os.path.join(base_dir, path)
-        if os.path.isfile(real):
-            return web.FileResponse(real)
-    return web.FileResponse(os.path.join(base_dir, "frontend", "build", path))
 
 
 async def async_broadcast(event, payload=None):
@@ -133,11 +119,11 @@ async def async_train(params):
     def broadcast(event, payload=None):
         asyncio.run_coroutine_threadsafe(async_broadcast(event, payload), loop).result()
 
-    hParams = Hyperparameters()
+    hyper_params = Hyperparameters()
     for p in params:
-        setattr(hParams, p, params[p])
-    print(hParams.__dict__)
-    loop.run_in_executor(None, train, hParams, broadcast, event_cancelled)
+        setattr(hyper_params, p, params[p])
+    print(hyper_params.__dict__)
+    loop.run_in_executor(None, train, hyper_params, broadcast, event_cancelled)
 
 
 def train(params, broadcast, cancelled):

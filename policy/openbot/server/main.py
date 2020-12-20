@@ -1,7 +1,6 @@
 import os
 
 from aiohttp import web
-from aiohttp.web_exceptions import HTTPBadRequest
 import aiohttp_jinja2
 import jinja2
 
@@ -11,7 +10,6 @@ from .frontend import init_frontend
 from .preview import handle_preview
 from .upload import handle_file_upload
 from .zeroconf import register
-from .. import dataset_dir
 
 
 async def handle_get(request: web.Request):
@@ -26,41 +24,6 @@ async def handle_get(request: web.Request):
         "session": info,
         "file_list": get_dir_info(path),
     })
-
-
-@aiohttp_jinja2.template("index.html")
-async def handle_train(request: web.Request):
-    return {
-        "action": "train",
-    }
-
-
-async def handle_post(request: web.Request):
-    action = request.rel_url.query.get('action')
-    form = await request.post()
-    path = request.match_info.get("path").rstrip("/")
-
-    if action == "rename":
-        rename_dataset(path, form["new_name"])
-    if action == "move":
-        basename = os.path.basename(path)
-        move_dir(path, form["new_path"] + "/" + basename)
-
-    raise HTTPBadRequest
-
-
-def rename_dataset(old_path, new_name):
-    base_path = os.path.dirname(old_path)
-    new_path = urljoin(base_path, new_name)
-    move_dir(old_path, new_path)
-
-
-def move_dir(old_path, new_path):
-    os.rename(
-        os.path.join(dataset_dir, old_path),
-        os.path.join(dataset_dir, new_path),
-    )
-    raise web.HTTPFound(location=f'/{new_path}/')
 
 
 async def handle_upload(request: web.Request) -> web.Response:
@@ -80,13 +43,9 @@ def urljoin(*parts):
 app = web.Application()
 app.add_routes([
     web.get('/ws', api.websocket_handler),
-    web.get('/train', handle_train),
     web.post('/upload', handle_upload),
     web.get('/test', api.handle_test),
-    web.get('/api/uploaded', api.handle_uploaded),
     web.get('/{path:.*}/preview.gif', handle_preview),
-    web.get('/{path:.*}', api.handle_static),
-    web.post('/{path:.*}', handle_post),
 ])
 app.on_startup.append(register)
 app.on_startup.append(init_frontend)

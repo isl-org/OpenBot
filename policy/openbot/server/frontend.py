@@ -1,8 +1,6 @@
 import os
-from subprocess import Popen
-import urllib.error
-import urllib.request
-import zipfile
+from subprocess import Popen, check_call
+import sys
 
 from aiohttp import web
 
@@ -11,34 +9,58 @@ from openbot import base_dir
 
 async def init_frontend(app: web.Application):
     if os.getenv('FE_DEV'):
-        await run_frontend_dev_server(app)
+        run_frontend_dev_server()
         return
 
-    frontend_dir = os.path.join(base_dir, "frontend")
-    zip_path = os.path.join(base_dir, "frontend.zip")
-    version_target = read_version(frontend_dir, ".version")
-    version_current = read_version(frontend_dir, "build", ".version")
-    if version_current == version_target:
-        print("Frontend is up to date!")
-        return
+    frontend_pkg = 'openbot_frontend'
+    version = get_pkg_version(frontend_pkg)
 
-    # todo fix URL
-    url = f"https://github.com/sanyatuning/OpenBot/releases/download/{version_target}/frontend.zip"
-    print("Downloading frontend...")
+    installed = f"{frontend_pkg}=={version}"
+    required = None
+
+    for line in open(os.path.join(base_dir, "requirements.txt"), 'r'):
+        if line.startswith(frontend_pkg):
+            required = line.strip()
+
+    if required != installed:
+        print("Installing frontend:", required)
+        check_call([sys.executable, "-m", "pip", "install", required])
+
+    import openbot_frontend
+
+    version = get_pkg_version(frontend_pkg)
+    print("Running frontend:", version)
+
+    async def handle_static(request: web.Request):
+        path = request.match_info.get("path") or "index.html"
+        if path[-4:] == ".png":
+            real = os.path.join(base_dir, path)
+            if os.path.isfile(real):
+                return web.FileResponse(real)
+        return web.FileResponse(os.path.join(openbot_frontend.where(), path))
+
+    app.add_routes([
+        web.get('/{path:.*}', handle_static),
+    ])
+
+
+def get_pkg_version(frontend_pkg):
     try:
-        urllib.request.urlretrieve(url, zip_path)
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(frontend_dir)
-        with open(os.path.join(frontend_dir, "build", ".version"), 'w') as f:
-            f.write(version_target)
-        os.unlink(zip_path)
-        print("Frontend is ready!")
-    except urllib.error.HTTPError as e:
-        print("Download error:", e)
-        print("URL:", url)
+        import importlib.metadata
+        return importlib.metadata.version(frontend_pkg)
+    except ModuleNotFoundError:
+        pass
+
+    import pkg_resources
+    try:
+        return pkg_resources.get_distribution(frontend_pkg).version
+    except pkg_resources.DistributionNotFound:
+        pass
+
+    return None
 
 
-async def run_frontend_dev_server(app: web.Application):
+def run_frontend_dev_server():
     if is_port_in_use(3000):
         return
     print("Start Frontend Development Server...")
@@ -46,14 +68,6 @@ async def run_frontend_dev_server(app: web.Application):
         ["yarn", "run", "start"],
         cwd=os.path.join(base_dir, "frontend"),
     )
-
-
-def read_version(*args):
-    try:
-        with open(os.path.join(*args)) as f:
-            return f.read().strip()
-    except FileNotFoundError:
-        return None
 
 
 def is_port_in_use(port):

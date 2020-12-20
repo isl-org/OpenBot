@@ -11,7 +11,7 @@ conda activate openbot
 Make sure you are in the folder `policy`. Now, you can install all the dependencies with the following command:
 
 ```
-pip install -r openbot/server/requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Running the server

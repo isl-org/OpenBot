@@ -4,3 +4,4 @@ aiohttp_jinja2
 aiozeroconf
 imageio
 jinja2
+openbot_frontend==0.1.0
