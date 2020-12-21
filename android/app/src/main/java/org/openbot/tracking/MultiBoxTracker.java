@@ -33,10 +33,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
-import org.openbot.CameraActivity.ControlSignal;
 import org.openbot.env.BorderedText;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
+import org.openbot.env.Vehicle;
 import org.openbot.tflite.Detector.Recognition;
 
 /** A tracker that handles non-max suppression and matches existing objects to new detections. */
@@ -143,7 +143,7 @@ public class MultiBoxTracker {
             false);
   }
 
-  public synchronized ControlSignal updateTarget() {
+  public synchronized Vehicle.Control updateTarget() {
     if (!trackedObjects.isEmpty()) {
       // Pick person with highest probability
       final RectF trackedPos = new RectF(trackedObjects.get(0).location);
@@ -170,7 +170,7 @@ public class MultiBoxTracker {
       leftControl = 0.0f;
       rightControl = 0.0f;
     }
-    return new ControlSignal(
+    return new Vehicle.Control(
         (0 > sensorOrientation) ? rightControl : leftControl,
         (0 > sensorOrientation) ? leftControl : rightControl);
   }

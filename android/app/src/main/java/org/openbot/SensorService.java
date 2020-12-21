@@ -3,10 +3,8 @@
 package org.openbot;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,7 +16,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.SystemClock;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -32,67 +29,64 @@ import org.openbot.env.Logger;
 
 public class SensorService extends Service implements SensorEventListener {
   private SensorManager sensorManager;
-  private Sensor mAccelerometer;
-  private Sensor mGyroscope;
-  private Sensor mGravity;
-  private Sensor mMagnetic;
-  private Sensor mLight;
-  private Sensor mProximity;
-  private Sensor mPressure;
-  private Sensor mPose;
-  private Sensor mMotion;
-  private Sensor mStationary;
+  private Sensor accelerometerSensor;
+  private Sensor gyroscopeSensor;
+  private Sensor gravitySensor;
+  private Sensor magneticSensor;
+  private Sensor lightSensor;
+  private Sensor proximitySensor;
+  private Sensor pressureSensor;
+  private Sensor poseSensor;
+  private Sensor motionSensor;
+  private Sensor stationarySensor;
 
-  private BufferedWriter mAccelerometerLog;
-  private BufferedWriter mGyroscopeLog;
-  private BufferedWriter mGravityLog;
-  private BufferedWriter mMagneticLog;
-  private BufferedWriter mLightLog;
-  private BufferedWriter mProximityLog;
-  private BufferedWriter mPressureLog;
-  private BufferedWriter mPoseLog;
-  private BufferedWriter mMotionLog;
-  private BufferedWriter mGpsLog;
-  private BufferedWriter mFrameLog;
-  private BufferedWriter mInferenceLog;
-  private BufferedWriter mCtrlLog;
-  private BufferedWriter mIndicatorLog;
-  private BufferedWriter mVehicleLog;
+  private BufferedWriter accelerometerLog;
+  private BufferedWriter gyroscopeLog;
+  private BufferedWriter gravityLog;
+  private BufferedWriter magneticLog;
+  private BufferedWriter lightLog;
+  private BufferedWriter proximityLog;
+  private BufferedWriter pressureLog;
+  private BufferedWriter poseLog;
+  private BufferedWriter motionLog;
+  private BufferedWriter gpsLog;
+  private BufferedWriter frameLog;
+  private BufferedWriter inferenceLog;
+  private BufferedWriter ctrlLog;
+  private BufferedWriter indicatorLog;
+  private BufferedWriter vehicleLog;
 
-  private boolean mTrackingLocation = false;
-  private FusedLocationProviderClient mFusedLocationClient;
-  private LocationCallback mLocationCallback;
+  private boolean trackingLocation = false;
+  private boolean hasStarted = false;
+  private FusedLocationProviderClient fusedLocationClient;
+  private LocationCallback locationCallback;
 
   // Message Types
   public static final int MSG_FRAME = 0;
   public static final int MSG_INFERENCE = 1;
   public static final int MSG_CONTROL = 2;
   public static final int MSG_INDICATOR = 3;
+  public static final int MSG_VEHICLE = 4;
 
   private static final Logger LOGGER = new Logger();
-  Messenger mMessenger = new Messenger(new SensorMessageHandler());
-  private LocalBroadcastManager mLocalBroadcastManager;
-  private BroadcastReceiver mLocalBroadcastReceiver;
-  public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
-  public static final String USB_ACTION_CONNECTION_ESTABLISHED = "usb.connection_established";
-  public static final String USB_ACTION_CONNECTION_CLOSED = "usb.connection_closed";
+  Messenger messenger = new Messenger(new SensorMessageHandler());
 
   @Override
   public final void onCreate() {
     super.onCreate();
     sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-    mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-    mGyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-    mGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-    mMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-    mLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-    mProximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-    mPressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
-    mPose = sensorManager.getDefaultSensor(Sensor.TYPE_POSE_6DOF);
-    mMotion = sensorManager.getDefaultSensor(Sensor.TYPE_MOTION_DETECT);
-    mStationary = sensorManager.getDefaultSensor(Sensor.TYPE_STATIONARY_DETECT);
+    accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+    gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+    magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+    lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+    proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+    pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+    poseSensor = sensorManager.getDefaultSensor(Sensor.TYPE_POSE_6DOF);
+    motionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MOTION_DETECT);
+    stationarySensor = sensorManager.getDefaultSensor(Sensor.TYPE_STATIONARY_DETECT);
     // Initialize the FusedLocationClient.
-    mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
   }
 
   @Override
@@ -108,89 +102,88 @@ public class SensorService extends Service implements SensorEventListener {
       logFolder = (String) extras.get("logFolder");
     }
 
-    sensorManager.registerListener(
-        this, mAccelerometer, android.hardware.SensorManager.SENSOR_DELAY_FASTEST);
-    sensorManager.registerListener(
-        this, mGyroscope, android.hardware.SensorManager.SENSOR_DELAY_FASTEST);
-    sensorManager.registerListener(
-        this, mGravity, android.hardware.SensorManager.SENSOR_DELAY_FASTEST);
-    sensorManager.registerListener(
-        this, mMagnetic, android.hardware.SensorManager.SENSOR_DELAY_FASTEST);
-    sensorManager.registerListener(
-        this, mLight, android.hardware.SensorManager.SENSOR_DELAY_FASTEST);
-    sensorManager.registerListener(
-        this, mProximity, android.hardware.SensorManager.SENSOR_DELAY_FASTEST);
-    sensorManager.registerListener(
-        this, mPressure, android.hardware.SensorManager.SENSOR_DELAY_FASTEST);
-    sensorManager.registerListener(
-        this, mPose, android.hardware.SensorManager.SENSOR_DELAY_FASTEST);
-    sensorManager.registerListener(
-        this, mMotion, android.hardware.SensorManager.SENSOR_DELAY_FASTEST);
-    sensorManager.registerListener(
-        this, mStationary, android.hardware.SensorManager.SENSOR_DELAY_FASTEST);
-
-    mAccelerometerLog = openLog(logFolder, "accelerometerLog.txt");
+    accelerometerLog = openLog(logFolder, "accelerometerLog.txt");
     // appendLog(mAccelerometerLog, mAccelerometer.getName());
-    appendLog(mAccelerometerLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
+    appendLog(accelerometerLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
 
-    mGyroscopeLog = openLog(logFolder, "gyroscopeLog.txt");
+    gyroscopeLog = openLog(logFolder, "gyroscopeLog.txt");
     // appendLog(mGyroscopeLog, mGyroscope.getName());
-    appendLog(mGyroscopeLog, "timestamp[ns],x[rad/s],y[rad/s],z[rad/s]");
+    appendLog(gyroscopeLog, "timestamp[ns],x[rad/s],y[rad/s],z[rad/s]");
 
-    mGravityLog = openLog(logFolder, "gravityLog.txt");
+    gravityLog = openLog(logFolder, "gravityLog.txt");
     // appendLog(mGravityLog, mGravity.getName());
-    appendLog(mGravityLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
+    appendLog(gravityLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
 
-    mMagneticLog = openLog(logFolder, "magneticLog.txt");
+    magneticLog = openLog(logFolder, "magneticLog.txt");
     // appendLog(mMagneticLog, mMagnetic.getName());
-    appendLog(mMagneticLog, "timestamp[ns],x[uT],y[uT],z[uT]");
+    appendLog(magneticLog, "timestamp[ns],x[uT],y[uT],z[uT]");
 
-    mLightLog = openLog(logFolder, "lightLog.txt");
+    lightLog = openLog(logFolder, "lightLog.txt");
     // appendLog(mLightLog, mLight.getName());
-    appendLog(mLightLog, "timestamp[ns],light[lux]");
+    appendLog(lightLog, "timestamp[ns],light[lux]");
 
-    mProximityLog = openLog(logFolder, "proximityLog.txt");
+    proximityLog = openLog(logFolder, "proximityLog.txt");
     // appendLog(mProximityLog, mProximity.getName());
-    appendLog(mProximityLog, "timestamp[ns],proximity[cm]");
+    appendLog(proximityLog, "timestamp[ns],proximity[cm]");
 
-    mPressureLog = openLog(logFolder, "pressureLog.txt");
+    pressureLog = openLog(logFolder, "pressureLog.txt");
     // appendLog(mPressureLog, mPressure.getName());
-    appendLog(mPressureLog, "timestamp[ns],pressure[hPa]");
+    appendLog(pressureLog, "timestamp[ns],pressure[hPa]");
 
-    mPoseLog = openLog(logFolder, "poseLog.txt");
+    poseLog = openLog(logFolder, "poseLog.txt");
     // appendLog(mPoseLog, mPose.getName());
-    appendLog(mPoseLog, "timestamp[ns],x,y,z,w,x,y,z,dx,dy,dz,dw,dx,dy,dz,id");
+    appendLog(poseLog, "timestamp[ns],x,y,z,w,x,y,z,dx,dy,dz,dw,dx,dy,dz,id");
 
-    mMotionLog = openLog(logFolder, "motionLog.txt");
+    motionLog = openLog(logFolder, "motionLog.txt");
     // appendLog(mMotionLog, mMotion.getName());
-    appendLog(mMotionLog, "timestamp[ns],motion");
+    appendLog(motionLog, "timestamp[ns],motion");
 
-    mGpsLog = openLog(logFolder, "gpsLog.txt");
-    appendLog(mGpsLog, "timestamp[ns],latitude,longitude,altitude[m],bearing,speed[m/s]");
+    gpsLog = openLog(logFolder, "gpsLog.txt");
+    appendLog(gpsLog, "timestamp[ns],latitude,longitude,altitude[m],bearing,speed[m/s]");
 
-    mFrameLog = openLog(logFolder, "rgbFrames.txt");
-    appendLog(mFrameLog, "timestamp[ns],frame");
+    frameLog = openLog(logFolder, "rgbFrames.txt");
+    appendLog(frameLog, "timestamp[ns],frame");
 
-    mInferenceLog = openLog(logFolder, "inferenceTime.txt");
-    appendLog(mInferenceLog, "frame, inferenceTime [ns]");
+    inferenceLog = openLog(logFolder, "inferenceTime.txt");
+    appendLog(inferenceLog, "frame, inferenceTime [ns]");
 
-    mCtrlLog = openLog(logFolder, "ctrlLog.txt");
-    appendLog(mCtrlLog, "timestamp[ns],leftCtrl,rightCtrl");
+    ctrlLog = openLog(logFolder, "ctrlLog.txt");
+    appendLog(ctrlLog, "timestamp[ns],leftCtrl,rightCtrl");
 
-    mIndicatorLog = openLog(logFolder, "indicatorLog.txt");
-    appendLog(mIndicatorLog, "timestamp[ns],signal");
+    indicatorLog = openLog(logFolder, "indicatorLog.txt");
+    appendLog(indicatorLog, "timestamp[ns],signal");
 
-    mVehicleLog = openLog(logFolder, "vehicleLog.txt");
-    appendLog(mVehicleLog, "timestamp[ns],batteryVoltage,leftWheel,rightWheel,obstacle");
+    vehicleLog = openLog(logFolder, "vehicleLog.txt");
+    appendLog(vehicleLog, "timestamp[ns],batteryVoltage,leftWheel,rightWheel,obstacle");
 
-    mLocationCallback =
+    sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    sensorManager.registerListener(
+        this, gyroscopeSensor, android.hardware.SensorManager.SENSOR_DELAY_NORMAL);
+    sensorManager.registerListener(
+        this, gravitySensor, android.hardware.SensorManager.SENSOR_DELAY_NORMAL);
+    sensorManager.registerListener(
+        this, magneticSensor, android.hardware.SensorManager.SENSOR_DELAY_NORMAL);
+    sensorManager.registerListener(
+        this, lightSensor, android.hardware.SensorManager.SENSOR_DELAY_NORMAL);
+    sensorManager.registerListener(
+        this, proximitySensor, android.hardware.SensorManager.SENSOR_DELAY_NORMAL);
+    sensorManager.registerListener(
+        this, pressureSensor, android.hardware.SensorManager.SENSOR_DELAY_NORMAL);
+    sensorManager.registerListener(
+        this, poseSensor, android.hardware.SensorManager.SENSOR_DELAY_NORMAL);
+    sensorManager.registerListener(
+        this, motionSensor, android.hardware.SensorManager.SENSOR_DELAY_NORMAL);
+    sensorManager.registerListener(
+        this, stationarySensor, android.hardware.SensorManager.SENSOR_DELAY_NORMAL);
+
+    locationCallback =
         new LocationCallback() {
           @Override
           public void onLocationResult(LocationResult locationResult) {
             Location location = locationResult.getLastLocation();
             if (location != null) {
               appendLog(
-                  mGpsLog,
+                  gpsLog,
                   location.getElapsedRealtimeNanos()
                       + ","
                       + location.getLatitude()
@@ -207,38 +200,7 @@ public class SensorService extends Service implements SensorEventListener {
         };
 
     startTrackingLocation();
-
-    mLocalBroadcastReceiver =
-        new BroadcastReceiver() {
-          @Override
-          public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-
-            if (action != null) {
-
-              switch (action) {
-                case USB_ACTION_CONNECTION_ESTABLISHED:
-                  break;
-
-                case USB_ACTION_CONNECTION_CLOSED:
-                  break;
-
-                case USB_ACTION_DATA_RECEIVED:
-                  long timestamp = SystemClock.elapsedRealtimeNanos();
-                  String data = intent.getStringExtra("data");
-                  // Data has the following form: voltage, lWheel, rWheel, obstacle
-                  appendLog(mVehicleLog, timestamp + "," + data);
-                  break;
-              }
-            }
-          }
-        };
-    IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction(USB_ACTION_CONNECTION_ESTABLISHED);
-    localIntentFilter.addAction(USB_ACTION_CONNECTION_CLOSED);
-    localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
-    mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
-    mLocalBroadcastManager.registerReceiver(mLocalBroadcastReceiver, localIntentFilter);
+    hasStarted = true;
 
     return START_REDELIVER_INTENT;
   }
@@ -247,7 +209,7 @@ public class SensorService extends Service implements SensorEventListener {
   public IBinder onBind(Intent intent) {
     // We don't provide binding, so return null
     // return null;
-    return mMessenger.getBinder();
+    return messenger.getBinder();
   }
 
   @Override
@@ -266,7 +228,7 @@ public class SensorService extends Service implements SensorEventListener {
         // Acceleration including gravity along the X, Y and Z axis
         // Units are m/s^2
         appendLog(
-            mAccelerometerLog,
+            accelerometerLog,
             event.timestamp
                 + ","
                 + event.values[0]
@@ -280,7 +242,7 @@ public class SensorService extends Service implements SensorEventListener {
         // Units are radians/second
         // The coordinate system is the same as is used by the acceleration sensor
         appendLog(
-            mGyroscopeLog,
+            gyroscopeLog,
             event.timestamp
                 + ","
                 + event.values[0]
@@ -294,7 +256,7 @@ public class SensorService extends Service implements SensorEventListener {
         // Units are m/s^2
         // The coordinate system is the same as is used by the acceleration sensor
         appendLog(
-            mGravityLog,
+            gravityLog,
             event.timestamp
                 + ","
                 + event.values[0]
@@ -306,7 +268,7 @@ public class SensorService extends Service implements SensorEventListener {
       case Sensor.TYPE_MAGNETIC_FIELD:
         // Ambient magnetic field in the X, Y and Z axis in micro-Tesla (uT).
         appendLog(
-            mMagneticLog,
+            magneticLog,
             event.timestamp
                 + ","
                 + event.values[0]
@@ -317,15 +279,15 @@ public class SensorService extends Service implements SensorEventListener {
         break;
       case Sensor.TYPE_LIGHT:
         // Ambient light level in SI lux units
-        appendLog(mLightLog, event.timestamp + "," + event.values[0]);
+        appendLog(lightLog, event.timestamp + "," + event.values[0]);
         break;
       case Sensor.TYPE_PROXIMITY:
         // Proximity sensor distance measured in centimeters
-        appendLog(mProximityLog, event.timestamp + "," + event.values[0]);
+        appendLog(proximityLog, event.timestamp + "," + event.values[0]);
         break;
       case Sensor.TYPE_PRESSURE:
         // Atmospheric pressure in mPa (millibar)
-        appendLog(mPressureLog, event.timestamp + "," + event.values[0]);
+        appendLog(pressureLog, event.timestamp + "," + event.values[0]);
         break;
       case Sensor.TYPE_POSE_6DOF:
         // values[0]: x*sin(θ/2)
@@ -344,7 +306,7 @@ public class SensorService extends Service implements SensorEventListener {
         // values[13]: Delta translation along z axis.
         // values[14]: Sequence number
         appendLog(
-            mPoseLog,
+            poseLog,
             event.timestamp
                 + ","
                 + event.values[0]
@@ -378,10 +340,10 @@ public class SensorService extends Service implements SensorEventListener {
                 + event.values[14]);
         break;
       case Sensor.TYPE_MOTION_DETECT:
-        appendLog(mMotionLog, event.timestamp + "," + event.values[0]);
+        appendLog(motionLog, event.timestamp + "," + event.values[0]);
         break;
       case Sensor.TYPE_STATIONARY_DETECT:
-        appendLog(mMotionLog, event.timestamp + "," + (-1) * event.values[0]);
+        appendLog(motionLog, event.timestamp + "," + (-1) * event.values[0]);
         break;
       default:
         // Unknown sensor
@@ -392,48 +354,54 @@ public class SensorService extends Service implements SensorEventListener {
   private class SensorMessageHandler extends android.os.Handler {
     @Override
     public void handleMessage(Message msg) {
-      if (msg.what == MSG_FRAME) {
-        long frameNumber = msg.getData().getLong("frameNumber");
-        long timestamp = msg.getData().getLong("timestamp");
-        appendLog(mFrameLog, timestamp + "," + frameNumber);
-      } else if (msg.what == MSG_INFERENCE) {
-        long frameNumber = msg.getData().getLong("frameNumber");
-        long inferenceTime = msg.getData().getLong("inferenceTime");
-        appendLog(mInferenceLog, frameNumber + "," + inferenceTime);
-      } else if (msg.what == MSG_CONTROL) {
-        // msg.arg1 and msg.arg2 contain left and right control signals respectively
-        appendLog(mCtrlLog, SystemClock.elapsedRealtimeNanos() + "," + msg.arg1 + "," + msg.arg2);
-      } else if (msg.what == MSG_INDICATOR) {
-        // msg.arg1 contains indicator signal
-        appendLog(mIndicatorLog, SystemClock.elapsedRealtimeNanos() + "," + msg.arg1);
-      }
+      if (hasStarted) {
+        if (msg.what == MSG_FRAME) {
+          long frameNumber = msg.getData().getLong("frameNumber");
+          long timestamp = msg.getData().getLong("timestamp");
+          if (frameLog != null) appendLog(frameLog, timestamp + "," + frameNumber);
+        } else if (msg.what == MSG_INFERENCE) {
+          long frameNumber = msg.getData().getLong("frameNumber");
+          long inferenceTime = msg.getData().getLong("inferenceTime");
+          if (inferenceLog != null) appendLog(inferenceLog, frameNumber + "," + inferenceTime);
+        } else if (msg.what == MSG_CONTROL) {
+          // msg.arg1 and msg.arg2 contain left and right control signals respectively
+          if (ctrlLog != null)
+            appendLog(
+                ctrlLog, SystemClock.elapsedRealtimeNanos() + "," + msg.arg1 + "," + msg.arg2);
+        } else if (msg.what == MSG_INDICATOR) {
+          // msg.arg1 contains indicator signal
+          if (indicatorLog != null)
+            appendLog(indicatorLog, SystemClock.elapsedRealtimeNanos() + "," + msg.arg1);
+        } else if (msg.what == MSG_VEHICLE) {
+          long timestamp = msg.getData().getLong("timestamp");
+          String data = msg.getData().getString("data");
+          if (vehicleLog != null) appendLog(vehicleLog, timestamp + "," + data);
+        }
+      } else LOGGER.d("Message skipped.");
     }
   }
 
   @Override
   public void onDestroy() {
+    hasStarted = false;
     sensorManager.unregisterListener(this);
     stopTrackingLocation();
-    if (mLocalBroadcastManager != null) {
-      mLocalBroadcastManager.unregisterReceiver(mLocalBroadcastReceiver);
-      mLocalBroadcastManager = null;
-    }
-    if (mLocalBroadcastReceiver != null) mLocalBroadcastReceiver = null;
-    if (mAccelerometerLog != null) closeLog(mAccelerometerLog);
-    if (mGyroscopeLog != null) closeLog(mGyroscopeLog);
-    if (mGravityLog != null) closeLog(mGravityLog);
-    if (mMagneticLog != null) closeLog(mMagneticLog);
-    if (mLightLog != null) closeLog(mLightLog);
-    if (mProximityLog != null) closeLog(mProximityLog);
-    if (mPressureLog != null) closeLog(mPressureLog);
-    if (mPoseLog != null) closeLog(mPoseLog);
-    if (mMotionLog != null) closeLog(mMotionLog);
-    if (mGpsLog != null) closeLog(mGpsLog);
-    if (mFrameLog != null) closeLog(mFrameLog);
-    if (mInferenceLog != null) closeLog(mInferenceLog);
-    if (mCtrlLog != null) closeLog(mCtrlLog);
-    if (mIndicatorLog != null) closeLog(mIndicatorLog);
-    if (mVehicleLog != null) closeLog(mVehicleLog);
+
+    if (accelerometerLog != null) closeLog(accelerometerLog);
+    if (gyroscopeLog != null) closeLog(gyroscopeLog);
+    if (gravityLog != null) closeLog(gravityLog);
+    if (magneticLog != null) closeLog(magneticLog);
+    if (lightLog != null) closeLog(lightLog);
+    if (proximityLog != null) closeLog(proximityLog);
+    if (pressureLog != null) closeLog(pressureLog);
+    if (poseLog != null) closeLog(poseLog);
+    if (motionLog != null) closeLog(motionLog);
+    if (gpsLog != null) closeLog(gpsLog);
+    if (frameLog != null) closeLog(frameLog);
+    if (inferenceLog != null) closeLog(inferenceLog);
+    if (ctrlLog != null) closeLog(ctrlLog);
+    if (indicatorLog != null) closeLog(indicatorLog);
+    if (vehicleLog != null) closeLog(vehicleLog);
   }
 
   public BufferedWriter openLog(String path, String filename) {
@@ -465,16 +433,17 @@ public class SensorService extends Service implements SensorEventListener {
       e.printStackTrace();
       return null;
     }
-  };
+  }
 
   public void appendLog(BufferedWriter writer, String text) {
     try {
       writer.append(text);
       writer.newLine();
+      writer.flush();
     } catch (IOException e) {
       e.printStackTrace();
     }
-  };
+  }
 
   public void closeLog(BufferedWriter writer) {
     try {
@@ -482,15 +451,15 @@ public class SensorService extends Service implements SensorEventListener {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  };
+  }
 
   private void startTrackingLocation() {
     try {
-      mFusedLocationClient.requestLocationUpdates(
-          getLocationRequest(), mLocationCallback, null /* Looper */);
-      mTrackingLocation = true;
+      fusedLocationClient.requestLocationUpdates(
+          getLocationRequest(), locationCallback, null /* Looper */);
+      trackingLocation = true;
     } catch (SecurityException e) {
-      mTrackingLocation = false;
+      trackingLocation = false;
       throw new SecurityException("No permission to use location.", e);
     }
   }
@@ -500,9 +469,9 @@ public class SensorService extends Service implements SensorEventListener {
    * reset the UI.
    */
   private void stopTrackingLocation() {
-    if (mTrackingLocation) {
-      mTrackingLocation = false;
-      mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+    if (trackingLocation) {
+      trackingLocation = false;
+      fusedLocationClient.removeLocationUpdates(locationCallback);
     }
   }
 

@@ -164,10 +164,10 @@ public abstract class Detector extends Network {
 
     // Run the inference call.
     Trace.beginSection("runInference");
-    long startTime = SystemClock.uptimeMillis();
+    long startTime = SystemClock.elapsedRealtime();
     runInference();
     // tflite.runForMultipleInputsOutputs(inputArray, outputMap);
-    long endTime = SystemClock.uptimeMillis();
+    long endTime = SystemClock.elapsedRealtime();
     Trace.endSection();
     LOGGER.v("Timecost to run model inference: " + (endTime - startTime));
 

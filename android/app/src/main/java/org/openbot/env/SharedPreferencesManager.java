@@ -12,8 +12,10 @@ public class SharedPreferencesManager {
   private static final String BAUD_RATE = "BAUD_RATE";
   private static final int DEFAULT_LOG_MODE = CameraActivity.LogMode.CROP_IMG.ordinal();
   private static final String LOG_MODE = "LOG_MODE";
-  private static final int DEFAULT_CONTROL_SPEED = CameraActivity.ControlSpeed.NORMAL.ordinal();
-  private static final String CONTROL_SPEED = "CONTROL_SPEED";
+  private static final int DEFAULT_CONTROL_MODE = CameraActivity.ControlMode.GAMEPAD.ordinal();
+  private static final String CONTROL_MODE = "CONTROL_MODE";
+  private static final int DEFAULT_SPEED_MODE = CameraActivity.SpeedMode.NORMAL.ordinal();
+  private static final String SPEED_MODE = "SPEED_MODE";
   private static final int DEFAULT_DRIVE_MODE = CameraActivity.DriveMode.GAME.ordinal();
   private static final String DRIVE_MODE = "DRIVE_MODE";
   private static final int DEFAULT_MODEL = Network.Model.DETECTOR_V1_1_0_Q.ordinal();
@@ -54,8 +56,12 @@ public class SharedPreferencesManager {
     return preferences.getInt(LOG_MODE, DEFAULT_LOG_MODE);
   }
 
-  public int getControlSpeed() {
-    return preferences.getInt(CONTROL_SPEED, DEFAULT_CONTROL_SPEED);
+  public int getControlMode() {
+    return preferences.getInt(CONTROL_MODE, DEFAULT_CONTROL_MODE);
+  }
+
+  public int getSpeedMode() {
+    return preferences.getInt(SPEED_MODE, DEFAULT_SPEED_MODE);
   }
 
   public int getNumThreads() {
@@ -90,8 +96,12 @@ public class SharedPreferencesManager {
     preferences.edit().putInt(LOG_MODE, mode).apply();
   }
 
-  public void setControlSpeed(int speed) {
-    preferences.edit().putInt(CONTROL_SPEED, speed).apply();
+  public void setControlMode(int mode) {
+    preferences.edit().putInt(CONTROL_MODE, mode).apply();
+  }
+
+  public void setSpeedMode(int mode) {
+    preferences.edit().putInt(SPEED_MODE, mode).apply();
   }
 
   public void setNumThreads(int numThreads) {

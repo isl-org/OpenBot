@@ -7,24 +7,25 @@ import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import java.io.File;
 import java.io.IOException;
+import org.openbot.CameraActivity;
 
 // Convert text to speech
 // https://ttsmp3.com
 
 public class AudioPlayer {
   private MediaPlayer mp;
-  private Context mContext;
+  private final Context context;
 
   public AudioPlayer(Context context) {
     mp = new MediaPlayer();
-    mContext = context;
+    this.context = context;
   }
 
   // Play from a resource file
   public void play(int id) {
     try {
       mp.reset();
-      mp = mp.create(mContext, id);
+      mp = MediaPlayer.create(context, id);
       mp.start();
     } catch (Exception e) {
       e.printStackTrace();
@@ -47,7 +48,7 @@ public class AudioPlayer {
   public void play(String assetFolder, String fileName) {
     try {
       AssetFileDescriptor afd =
-          mContext
+          context
               .getAssets()
               .openFd("media" + File.separator + assetFolder + File.separator + fileName);
       mp.reset();
@@ -57,5 +58,29 @@ public class AudioPlayer {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public void playDriveMode(String voice, CameraActivity.DriveMode driveMode) {
+    switch (driveMode) {
+      case DUAL:
+        play(voice, "dual_drive_control.mp3");
+        break;
+      case GAME:
+        play(voice, "video_game_control.mp3");
+        break;
+      case JOYSTICK:
+        play(voice, "joystick_control.mp3");
+        break;
+    }
+  }
+
+  public void playNoise(String voice, boolean isEnabled) {
+    if (isEnabled) play(voice, "noise_enabled.mp3");
+    else play(voice, "noise_disabled.mp3");
+  }
+
+  public void playLogging(String voice, boolean isEnabled) {
+    if (isEnabled) play(voice, "logging_started.mp3");
+    else play(voice, "logging_stopped.mp3");
   }
 }

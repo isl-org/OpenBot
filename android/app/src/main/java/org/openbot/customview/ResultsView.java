@@ -19,5 +19,5 @@ import java.util.List;
 import org.openbot.tflite.Detector.Recognition;
 
 public interface ResultsView {
-  public void setResults(final List<Recognition> results);
+  void setResults(final List<Recognition> results);
 }
