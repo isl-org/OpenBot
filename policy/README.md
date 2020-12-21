@@ -93,7 +93,7 @@ We provide a web app and a python web server for easier policy training. (Beta)
 
 ### Preview
 
-<img src="../docs/images/server.gif" width="100%" alt="Web App preview" />
+<img src="../docs/images/web-app.gif" width="100%" alt="Web App preview" />
 
 
 ### Quickstart
