@@ -8,6 +8,21 @@ from openbot import base_dir
 
 
 async def init_frontend(app: web.Application):
+    public_dir = None
+
+    async def handle_static(request: web.Request):
+        path = request.match_info.get("path") or "index.html"
+        if path[-4:] == ".png":
+            real = os.path.join(base_dir, path)
+            if os.path.isfile(real):
+                return web.FileResponse(real)
+        if public_dir:
+            return web.FileResponse(os.path.join(public_dir, path))
+        else:
+            return web.HTTPNotFound()
+
+    app.router.add_route('GET', '/{path:.*}', handle_static)
+
     if os.getenv('FE_DEV'):
         run_frontend_dev_server()
         return
@@ -29,19 +44,9 @@ async def init_frontend(app: web.Application):
     import openbot_frontend
 
     version = get_pkg_version(frontend_pkg)
+    public_dir = openbot_frontend.where()
     print("Running frontend:", version)
-
-    async def handle_static(request: web.Request):
-        path = request.match_info.get("path") or "index.html"
-        if path[-4:] == ".png":
-            real = os.path.join(base_dir, path)
-            if os.path.isfile(real):
-                return web.FileResponse(real)
-        return web.FileResponse(os.path.join(openbot_frontend.where(), path))
-
-    app.add_routes([
-        web.get('/{path:.*}', handle_static),
-    ])
+    print("Frontend path:", public_dir)
 
 
 def get_pkg_version(frontend_pkg):

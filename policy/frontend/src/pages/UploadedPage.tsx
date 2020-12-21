@@ -7,7 +7,7 @@ import {DeleteModal} from '../modals/DeleteModal';
 import {MoveModal} from '../modals/MoveModal';
 import {useRpc} from '../utils/useRpc';
 import {useToggle} from '../utils/useToggle';
-import {onMessage} from '../utils/ws';
+import {subscribe} from '../utils/ws';
 
 const defaultValue = {
     basename: '',
@@ -40,11 +40,7 @@ function SessionPanel() {
 
 function ListView() {
     const {value, reload} = useRpc(defaultValue, 'listDir',  {path: 'uploaded'});
-    useEffect(() => onMessage((msg) => {
-        if (msg.event === 'deleteSessionSuccess' || msg.event === 'moveSessionSuccess') {
-            reload();
-        }
-    }), [reload])
+    useEffect(() => subscribe('session', reload), [reload])
     return <>
         <h3>Uploaded sessions</h3>
         <GridView>

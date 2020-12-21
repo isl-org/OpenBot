@@ -1,6 +1,7 @@
-export interface WsMessage {
-    event: string;
-    payload: any;
+export interface JsonRpcRequest {
+    jsonrpc: "2.0";
+    method: string;
+    params: any;
 }
 export type JsonRpcResponse = JsonRpcResult | JsonRpcError;
 export interface JsonRpcResult {
@@ -15,7 +16,8 @@ export interface JsonRpcError {
 }
 type ConnectionState = 'connecting' | 'connected' | 'closed';
 
-type MessageCallback = (msg: WsMessage, event: MessageEvent) => void;
+type MessageCallback = (msg: JsonRpcRequest | JsonRpcResponse, event: MessageEvent) => void;
+type TopicCallback = (msg: any, req: JsonRpcRequest, event: MessageEvent) => void;
 type ConnectionStateCallback = (state: ConnectionState) => void;
 
 const onMessageCallbacks = new Set<MessageCallback>();
@@ -23,7 +25,7 @@ const stateChangeCallbacks = new Set<ConnectionStateCallback>();
 let socket = initSocket();
 let jsonRpcId = 1;
 
-export function jsonRpc<T>(method: string, params?: any) {
+export function jsonRpc<T>(method: string, ...params: any[]) {
     return new Promise<T>((resolve, reject) => {
         const id = jsonRpcId++;
         const done = onMessage((msg: any) => {
@@ -64,6 +66,27 @@ export function send(data: any) {
     }
 }
 
+export function subscribe(topic: string, callback: TopicCallback) {
+    function realCallback(data: JsonRpcRequest | JsonRpcResponse, event: MessageEvent) {
+        if ('method' in data && data.method === topic) {
+            callback(data.params, data, event);
+        }
+    }
+
+    onMessageCallbacks.add(realCallback);
+    jsonRpc('subscribe', topic);
+    const removeStateChange = onStateChange((state) => {
+        if (state === 'connected') {
+            jsonRpc('subscribe', topic);
+        }
+    })
+    return () => {
+        onMessageCallbacks.delete(realCallback);
+        jsonRpc('unsubscribe', topic);
+        removeStateChange();
+    }
+}
+
 export function onMessage(callback: MessageCallback) {
     onMessageCallbacks.add(callback);
     return () => {
@@ -100,6 +123,7 @@ function initSocket() {
         setTimeout(() => {
             socket = initSocket();
         }, 3000);
+        ws.close();
     });
     ws.addEventListener('error', () => {
         console.error('ws.error');

@@ -10,7 +10,7 @@ import {
 import {ButtonBar} from '../components/ButtonBar';
 import {GridView} from '../components/GridView';
 import {useRpc} from '../utils/useRpc';
-import {onMessage, jsonRpc} from '../utils/ws';
+import {jsonRpc, subscribe} from '../utils/ws';
 
 interface FormValues {
     TRAIN_BATCH_SIZE: number;
@@ -42,7 +42,7 @@ export function TrainPage() {
     const {pending, value} = useRpc<FormValues>(emptyForm, 'getHyperparameters');
 
     useEffect(() => {
-        return onMessage((msg) => {
+        return subscribe('training', (msg) => {
             switch (msg.event) {
                 case 'started':
                     setStatus('active');
