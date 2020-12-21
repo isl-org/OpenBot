@@ -69,7 +69,8 @@ class UploadService {
     if (serverUrl.isEmpty()) {
       return;
     }
-    Log.d("Upload", String.format("Start upload %s (%d MB)", file.getName(), file.length() / 1024 / 1024));
+    long size = file.length() / 1024 / 1024;
+    Log.d("Upload", String.format("Start upload %s (%d MB)", file.getName(), size));
 
     RequestParams params = new RequestParams();
     try {
