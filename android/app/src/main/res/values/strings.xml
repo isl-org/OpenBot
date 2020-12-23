@@ -92,7 +92,8 @@
         <item>Normal</item>
         <item>Fast</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="voltageInfo">Battery %1$s V</string>
+    <string name="speedInfo">Speed (l,r) %1$s rpm</string>
+    <string name="distanceInfo">Sonar %1$s cm</string>
 </resources>

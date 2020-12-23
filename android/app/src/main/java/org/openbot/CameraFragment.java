@@ -46,15 +46,16 @@ public abstract class CameraFragment extends Fragment {
   }
 
   private View addCamera(View view, LayoutInflater inflater, ViewGroup container) {
-    if (view.getRootView() instanceof ViewGroup) {
-      ViewGroup rootView = (ViewGroup) view.getRootView();
-      previewView = (PreviewView) inflater.inflate(R.layout.fragment_camera, container, false);
-      rootView.addView(previewView, 0);
+    View cameraView = inflater.inflate(R.layout.fragment_camera, container, false);
+    ViewGroup rootView = (ViewGroup) cameraView.getRootView();
 
-      if (allPermissionsGranted()) startCamera();
-      else requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE);
-    }
-    return view;
+    previewView = cameraView.findViewById(R.id.viewFinder);
+    rootView.addView(view);
+
+    if (allPermissionsGranted()) startCamera();
+    else requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE);
+
+    return cameraView;
   }
 
   @Override
