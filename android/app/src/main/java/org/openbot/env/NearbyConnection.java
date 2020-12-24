@@ -172,6 +172,8 @@ public class NearbyConnection {
     if (pairedDeviceEndpointId != null) {
       connectionsClient.disconnectFromEndpoint(pairedDeviceEndpointId);
     }
+
+    isConnected = false;
   }
 
   /** /** Starts looking for other players using Nearby Connections. */

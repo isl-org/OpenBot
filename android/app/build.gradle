@@ -56,4 +56,7 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'org.jetbrains:annotations:15.0'
+
+    // gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

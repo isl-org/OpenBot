@@ -69,7 +69,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
@@ -77,6 +80,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import org.json.JSONObject;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.ControllerEventProcessor;
 import org.openbot.env.GameController;
@@ -1146,12 +1151,12 @@ public abstract class CameraActivity extends AppCompatActivity
       loggingEnabled = false;
     }
 
-    logSpinner.setEnabled(!loggingEnabled);
-    if (loggingEnabled) logSpinner.setAlpha(0.5f);
-    else logSpinner.setAlpha(1.0f);
-    logSwitchCompat.setChecked(loggingEnabled);
-    if (loggingEnabled) logSwitchCompat.setText("Logging");
-    else logSwitchCompat.setText("Not Logging");
+//    logSpinner.setEnabled(!loggingEnabled);
+//    if (loggingEnabled) logSpinner.setAlpha(0.5f);
+//    else logSpinner.setAlpha(1.0f);
+//    logSwitchCompat.setChecked(loggingEnabled);
+//    if (loggingEnabled) logSwitchCompat.setText("Logging");
+//    else logSwitchCompat.setText("Not Logging");
   }
 
   protected abstract void processImage();
@@ -1204,19 +1209,19 @@ public abstract class CameraActivity extends AppCompatActivity
     if (usbConnected) baudRateSpinner.setAlpha(0.5f);
     else baudRateSpinner.setAlpha(1.0f);
     connectionSwitchCompat.setChecked(usbConnected);
-
-    if (usbConnected) {
-      connectionSwitchCompat.setText(usbConnection.getProductName());
-      Toast.makeText(getContext(), "Connected.", Toast.LENGTH_SHORT).show();
-    } else {
-      connectionSwitchCompat.setText("No Device");
-      // Tried to connect but failed
-      if (isChecked) {
-        Toast.makeText(getContext(), "Please check the USB connection.", Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(getContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
-      }
-    }
+//
+//    if (usbConnected) {
+//      connectionSwitchCompat.setText(usbConnection.getProductName());
+//      Toast.makeText(getContext(), "Connected.", Toast.LENGTH_SHORT).show();
+//    } else {
+//      connectionSwitchCompat.setText("No Device");
+//      // Tried to connect but failed
+//      if (isChecked) {
+//        Toast.makeText(getContext(), "Please check the USB connection.", Toast.LENGTH_SHORT).show();
+//      } else {
+//        Toast.makeText(getContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
+//      }
+//    }
   }
 
   protected void sendControlToVehicle() {
@@ -1310,41 +1315,48 @@ public abstract class CameraActivity extends AppCompatActivity
     ControllerEventProcessor.getProcessor()
         .subscribe(
             event -> {
-              ControllerEventProcessor.ControllerEvent command = event;
+              JSONObject commandJsn = event;
+              String commandType = "";
+              if (commandJsn.has("command")) {
+                commandType = commandJsn.getString("command");
+              } else if (commandJsn.has("driveCmd")) {
+                commandType = "DRIVE_CMD";
+              } else {
+                return;
+              }
+              Log.i("CamereActivity", "Got command from controller: " + commandType);
 
-              switch (command.type) {
-                case DRIVE_CMD:
-                  ControllerEventProcessor.ControllerEvent<ControllerEventProcessor.DriveValue>
-                      driveCommand = event;
-                  ControllerEventProcessor.DriveValue v = driveCommand.payload;
-                  controllerHandler.handleDriveCommand(v.getLeftValue(), v.getRightValue());
+              switch (commandType) {
+                case "DRIVE_CMD":
+                  JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
+                  controllerHandler.handleDriveCommand(new Float(driveValue.getString("l")), new Float(driveValue.getDouble("r")));
                   break;
 
-                case LOGGING:
+                case "LOGS":
                   controllerHandler.handleLogging();
                   break;
 
-                case NOISE:
+                case "NOISE":
                   controllerHandler.handleNoise();
                   break;
 
-                case INDICATOR_LEFT:
+                case "INDICATOR_LEFT":
                   controllerHandler.handleIndicatorLeft();
                   break;
 
-                case INDICATOR_RIGHT:
+                case "INDICATOR_RIGHT":
                   controllerHandler.handleIndicatorRight();
                   break;
 
-                case INDICATOR_STOP:
+                case "INDICATOR_STOP":
                   controllerHandler.handleIndicatorStop();
                   break;
 
-                case NETWROK:
+                case "NETWORK":
                   controllerHandler.handleNetwork();
                   break;
 
-                case DRIVE_MODE:
+                case "DRIVE_MODE":
                   controllerHandler.handleDriveMode();
                   break;
               }
@@ -1413,7 +1425,8 @@ public abstract class CameraActivity extends AppCompatActivity
       setNetworkEnabled(!networkEnabled);
       if (networkEnabled) audioPlayer.play(voice, "network_enabled.mp3");
       else {
-        audioPlayer.playDriveMode(voice, driveMode);
+        // no file network_disabled!!!
+        // audioPlayer.playDriveMode(voice, "network_disabled.mp3");
       }
     }
   }
