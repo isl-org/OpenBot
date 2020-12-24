@@ -1322,14 +1322,14 @@ public abstract class CameraActivity extends AppCompatActivity
               } else if (commandJsn.has("driveCmd")) {
                 commandType = "DRIVE_CMD";
               } else {
+                Log.d(null, "Got invalid command from controller: " + commandJsn.toString());
                 return;
               }
-              Log.i("CamereActivity", "Got command from controller: " + commandType);
 
               switch (commandType) {
                 case "DRIVE_CMD":
                   JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
-                  controllerHandler.handleDriveCommand(new Float(driveValue.getString("l")), new Float(driveValue.getDouble("r")));
+                  controllerHandler.handleDriveCommand(new Float(driveValue.getString("l")), new Float(driveValue.getString("r")));
                   break;
 
                 case "LOGS":
