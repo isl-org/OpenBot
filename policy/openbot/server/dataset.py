@@ -9,11 +9,13 @@ def get_dataset_list(dir_path):
     datasets = []
     for d in listdir(dataset_dir, dir_path):
         file_list = get_dir_info(os.path.join(dir_path, d))
-        datasets.append({
-            "path": "/" + dir_path + "/" + d,
-            "name": d,
-            "sessions": list(filter(lambda f: f["is_session"], file_list)),
-        })
+        datasets.append(
+            {
+                "path": "/" + dir_path + "/" + d,
+                "name": d,
+                "sessions": list(filter(lambda f: f["is_session"], file_list)),
+            }
+        )
 
     return datasets
 

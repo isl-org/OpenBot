@@ -22,19 +22,19 @@ async def init_frontend(app: web.Application):
         else:
             return web.HTTPNotFound()
 
-    app.router.add_route('GET', '/{path:.*}', handle_static)
+    app.router.add_get("/{path:.*}", handle_static)
 
-    if os.getenv('FE_DEV'):
+    if os.getenv("FE_DEV"):
         run_frontend_dev_server()
         return
 
-    frontend_pkg = 'openbot_frontend'
+    frontend_pkg = "openbot_frontend"
     version = get_pkg_version(frontend_pkg)
 
     installed = f"{frontend_pkg}=={version}"
     required = None
 
-    for line in open(os.path.join(base_dir, "requirements.txt"), 'r'):
+    for line in open(os.path.join(base_dir, "requirements.txt"), "r"):
         if line.startswith(frontend_pkg):
             required = line.strip()
 
@@ -43,6 +43,7 @@ async def init_frontend(app: web.Application):
         check_call([sys.executable, "-m", "pip", "install", required])
 
     import openbot_frontend
+
     importlib.reload(openbot_frontend)
 
     version = get_pkg_version(frontend_pkg)
@@ -54,11 +55,13 @@ async def init_frontend(app: web.Application):
 def get_pkg_version(frontend_pkg):
     try:
         import importlib.metadata
+
         return importlib.metadata.version(frontend_pkg)
     except ModuleNotFoundError:
         pass
 
     import pkg_resources
+
     try:
         return pkg_resources.get_distribution(frontend_pkg).version
     except pkg_resources.DistributionNotFound:
@@ -79,5 +82,6 @@ def run_frontend_dev_server():
 
 def is_port_in_use(port):
     import socket
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        return s.connect_ex(('localhost', port)) == 0
+        return s.connect_ex(("localhost", port)) == 0

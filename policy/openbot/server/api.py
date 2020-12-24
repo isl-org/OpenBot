@@ -25,40 +25,38 @@ async def handle_upload(request: web.Request) -> web.Response:
     reader = await request.multipart()
     while not reader.at_eof():
         field = await reader.next()
-        if field.name == 'file':
+        if field.name == "file":
             res = await handle_file_upload(field)
-            await rpc.notify('session')
+            await rpc.notify("session")
             return res
 
     return web.Response(text="file not found")
 
 
 async def init_api(app: web.Application):
-    app.add_routes([
-        web.get('/test', handle_test),
-        web.post('/upload', handle_upload),
-        web.get('/{path:.*}/preview.gif', handle_preview),
-    ])
+    app.router.add_get("/test", handle_test)
+    app.router.add_post("/upload", handle_upload)
+    app.router.add_get("/{path:.*/preview.gif}", handle_preview)
+    app.router.add_route("*", "/ws", rpc.handle_request)
 
     rpc.add_methods(
-        ('', listDir),
-        ('', getDatasets),
-        ('', getModels),
-        ('', getHyperparameters),
-        ('', moveSession),
-        ('', deleteSession),
-        ('', start),
-        ('', stop),
+        ("", listDir),
+        ("", getDatasets),
+        ("", getModels),
+        ("", getHyperparameters),
+        ("", moveSession),
+        ("", deleteSession),
+        ("", start),
+        ("", stop),
     )
     rpc.add_topics(
-        'session',
-        'training',
+        "session",
+        "training",
     )
-    app.router.add_route('*', '/ws', rpc.handle_request)
 
 
 def listDir(params):
-    path = params['path']
+    path = params["path"]
     basename = os.path.basename(path.rstrip("/"))
     dir_path = os.path.dirname(path.rstrip("/"))
     return {
@@ -70,18 +68,18 @@ def listDir(params):
 
 
 async def moveSession(params):
-    basename = os.path.basename(params['path'])
+    basename = os.path.basename(params["path"])
     src = os.path.join(dataset_dir + params["path"])
     dst = os.path.join(dataset_dir + params["new_path"], basename)
     os.rename(src, dst)
-    await rpc.notify('session')
+    await rpc.notify("session")
     return True
 
 
 async def deleteSession(params):
     real_dir = dataset_dir + params["path"]
     shutil.rmtree(real_dir)
-    await rpc.notify('session')
+    await rpc.notify("session")
     return True
 
 
