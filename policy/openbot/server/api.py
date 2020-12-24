@@ -26,7 +26,9 @@ async def handle_upload(request: web.Request) -> web.Response:
     while not reader.at_eof():
         field = await reader.next()
         if field.name == 'file':
-            return await handle_file_upload(field)
+            res = await handle_file_upload(field)
+            await rpc.notify('session')
+            return res
 
     return web.Response(text="file not found")
 

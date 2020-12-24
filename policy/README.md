@@ -104,6 +104,9 @@ pip install -r requirements.txt
 python -m openbot.server
 ```
 
+You can now open your browser to visualize the dataset and see incoming uploads by going to: 
+[http://localhost:8000/#/uploaded](http://localhost:8000/#/uploaded)
+
 ### Dependencies
 
 If you do not want install the dependencies globally, activate your conda environment first:
@@ -148,12 +151,6 @@ Running frontend: 0.1.0
 Frontend path: /home/USERNAME/miniconda3/envs/openbot/lib/python3.7/site-packages/openbot_frontend
 ======== Running on http://0.0.0.0:8000 ========
 (Press CTRL+C to quit)
-```
-
-You can now open your browser to visualize the dataset and see incoming uploads by going to:
-
-```
-http://localhost:8000/#/uploaded
 ```
 
 ### Troubleshooting

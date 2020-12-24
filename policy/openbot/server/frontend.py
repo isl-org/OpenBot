@@ -1,3 +1,4 @@
+import importlib
 import os
 from subprocess import Popen, check_call
 import sys
@@ -42,6 +43,7 @@ async def init_frontend(app: web.Application):
         check_call([sys.executable, "-m", "pip", "install", required])
 
     import openbot_frontend
+    importlib.reload(openbot_frontend)
 
     version = get_pkg_version(frontend_pkg)
     public_dir = openbot_frontend.where()
