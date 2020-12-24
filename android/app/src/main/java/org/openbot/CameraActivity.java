@@ -1308,9 +1308,17 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
-  // Classes to handle events from a Controller.
-  // This can be the entry point to other external controllers
-  // See how PhoneController emits events.
+/*
+   Classes to handle events from a Controller.
+   This can be the entry point to other external controllers
+   See how PhoneController emits events.
+
+   Expected JSON format:
+   {command: "LOGS"}
+      or
+   {driveCmd: {l:0.2, r:-0.34}}
+*/
+
   private void handleControllerEvents() {
     ControllerEventProcessor.getProcessor()
         .subscribe(
