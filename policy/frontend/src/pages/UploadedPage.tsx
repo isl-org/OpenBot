@@ -10,7 +10,6 @@ import {useToggle} from '../utils/useToggle';
 import {subscribe} from '../utils/ws';
 
 const defaultValue = {
-    basename: '',
     path: '',
     session: undefined as Session | undefined,
     file_list: [] as Session[],
@@ -39,10 +38,11 @@ function SessionPanel() {
 }
 
 function ListView() {
-    const {value, reload} = useRpc(defaultValue, 'listDir',  {path: 'uploaded'});
+    const match = useRouteMatch();
+    const {value, reload} = useRpc(defaultValue, 'listDir',  {path: match.url});
     useEffect(() => subscribe('session', reload), [reload])
     return <>
-        <h3>Uploaded sessions</h3>
+        <h3>Sessions in {match.url}</h3>
         <GridView>
             {!value.file_list.length && (
                 <Panel shaded>
@@ -72,6 +72,7 @@ function SessionComp(props: Session) {
                         <Dropdown.Item onSelect={toggleDel}>Remove...</Dropdown.Item>
                     </Dropdown>
                 </div>
+                <div>Length: {props.seconds} seconds</div>
                 <div>Frames: {props.frames}</div>
             </Panel>
             {showMove && <MoveModal path={props.path} show={showMove} onHide={toggleMove}/>}

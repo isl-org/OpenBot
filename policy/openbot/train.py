@@ -92,7 +92,12 @@ class MyCallback(tf.keras.callbacks.Callback):
     def on_epoch_begin(self, epoch, logs=None):
         self.epoch = epoch
 
+    def on_epoch_end(self, epoch, logs=None):
+        print("on_epoch_end", logs)
+        self.broadcast("logs", logs)
+
     def on_batch_end(self, batch, logs=None):
+        print("on_batch_end", logs)
         if self.cancelled.is_set():
             raise CancelledException
         self.step = batch + 1

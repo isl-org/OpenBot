@@ -6,18 +6,16 @@ from .. import associate_frames, dataset_dir
 
 
 def get_dataset_list(dir_path):
-    datasets = []
-    for d in listdir(dataset_dir, dir_path):
-        file_list = get_dir_info(os.path.join(dir_path, d))
-        datasets.append(
-            {
-                "path": "/" + dir_path + "/" + d,
-                "name": d,
-                "sessions": list(filter(lambda f: f["is_session"], file_list)),
-            }
-        )
+    return [get_dataset_info(dir_path, name) for name in listdir(dataset_dir, dir_path)]
 
-    return datasets
+
+def get_dataset_info(dir_path, name):
+    file_list = get_dir_info(os.path.join(dir_path, name))
+    return dict(
+        name=name,
+        path="/" + dir_path + "/" + name,
+        sessions=list(filter(lambda f: f["is_session"], file_list)),
+    )
 
 
 def get_dir_info(dir_path):
@@ -57,6 +55,7 @@ def get_info(dir_path, basename):
             traceback.print_exc()
             frames = []
 
+        keys = list(frames.keys())
         return {
             "path": "/" + path,
             "name": basename,
@@ -66,6 +65,7 @@ def get_info(dir_path, basename):
             "indicator": count_lines(real_path + "/sensor_data/indicatorLog.txt") - 1,
             "ctrl": count_lines(real_path + "/sensor_data/ctrlLog.txt") - 1,
             "frames": len(frames),
+            "seconds": int((keys[-1] - keys[0]) / 1000 / 1000 / 1000),
         }
 
     files = os.listdir(real_path)

@@ -4,6 +4,7 @@ export interface Session {
     name: string;
     path: string;
     frames: number;
+    seconds: number;
 }
 
 export interface Dataset {

@@ -34,6 +34,12 @@ function App() {
                     <Route path="/uploaded">
                         <UploadedPage />
                     </Route>
+                    <Route path="/train_data/:model">
+                        <UploadedPage />
+                    </Route>
+                    <Route path="/test_data/:model">
+                        <UploadedPage />
+                    </Route>
                     <Route path="/train">
                         <TrainPage />
                     </Route>

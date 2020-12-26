@@ -5,6 +5,8 @@ import threading
 
 from aiohttp import web
 from aiohttp_json_rpc import JsonRpc
+import numpy as np
+from numpyencoder import NumpyEncoder
 
 from .dataset import get_dataset_list, get_dir_info, get_info
 from .models import get_models
@@ -14,6 +16,7 @@ from .. import dataset_dir
 from ..train import CancelledException, Hyperparameters, MyCallback, start_train
 
 event_cancelled = threading.Event()
+json_encoder = NumpyEncoder()
 rpc = JsonRpc()
 
 
@@ -56,15 +59,14 @@ async def init_api(app: web.Application):
 
 
 def listDir(params):
-    path = params["path"]
+    path = params["path"].lstrip("/")
     basename = os.path.basename(path.rstrip("/"))
     dir_path = os.path.dirname(path.rstrip("/"))
-    return {
-        "basename": basename,
-        "path": path,
-        "session": get_info(dir_path + "/", basename),
-        "file_list": get_dir_info(path),
-    }
+    return dict(
+        path=path,
+        session=get_info(dir_path + "/", basename),
+        file_list=get_dir_info(path),
+    )
 
 
 async def moveSession(params):
@@ -89,10 +91,10 @@ def stop():
 
 
 def getDatasets():
-    return {
-        "train": get_dataset_list("train_data"),
-        "test": get_dataset_list("test_data"),
-    }
+    return dict(
+        train=get_dataset_list("train_data"),
+        test=get_dataset_list("test_data"),
+    )
 
 
 def getModels():
@@ -109,7 +111,9 @@ async def start(params):
 
     def broadcast(event, payload=None):
         print("broadcast", event, payload)
-        data = {"event": event, "payload": payload}
+        if payload:
+            payload = encode(payload)
+        data = dict(event=event, payload=payload)
         asyncio.run_coroutine_threadsafe(rpc.notify("training", data), loop).result()
 
     hyper_params = Hyperparameters()
@@ -122,9 +126,41 @@ async def start(params):
 
 def train(params, broadcast, cancelled):
     try:
-        broadcast("started")
+        broadcast("started", params.__dict__)
         my_callback = MyCallback(broadcast, cancelled)
         tr = start_train(params, my_callback)
         broadcast("done", {"model": tr.model_name})
     except CancelledException:
         broadcast("cancelled")
+    except Exception as e:
+        broadcast("failed", str(e))
+        raise e
+
+
+def encode(obj):
+    if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
+                        np.int16, np.int32, np.int64, np.uint8,
+                        np.uint16, np.uint32, np.uint64)):
+
+        return int(obj)
+
+    elif isinstance(obj, (np.float_, np.float16, np.float32, np.float64)):
+        return float(obj)
+
+    elif isinstance(obj, (np.complex_, np.complex64, np.complex128)):
+        return {'real': obj.real, 'imag': obj.imag}
+
+    elif isinstance(obj, (np.ndarray,)):
+        return obj.tolist()
+
+    elif isinstance(obj, (np.bool_)):
+        return bool(obj)
+
+    elif isinstance(obj, (np.void)):
+        return None
+
+    if isinstance(obj, dict):
+        for k in obj:
+            obj[k] = encode(obj[k])
+
+    return obj
