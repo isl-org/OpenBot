@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;
 import org.openbot.env.BorderedText;
+import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
 import org.openbot.tflite.Autopilot;
@@ -308,6 +309,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
       noiseTimer.schedule(noiseTask, 0, 50); // no delay 50ms intervals
     } else noiseTimer.cancel();
     updateVehicleState();
+
+    BotToControllerEventBus.emitEvent(createStatus("NOISE", noiseEnabled));
   }
 
   @Override
@@ -465,7 +468,6 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           return true;
         case KeyEvent.KEYCODE_BUTTON_START:
           controllerHandler.handleNoise();
-          ;
           return true;
         case KeyEvent.KEYCODE_BUTTON_L1:
           controllerHandler.handleDriveMode();

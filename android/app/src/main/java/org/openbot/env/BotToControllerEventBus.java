@@ -4,9 +4,9 @@ import org.json.JSONObject;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
-public final class ControllerEventProcessor {
+public final class BotToControllerEventBus {
 
-  private ControllerEventProcessor() {}
+  private BotToControllerEventBus() {}
   private static PublishSubject<JSONObject> subject = PublishSubject.create();
   public static PublishSubject<JSONObject> getProcessor() {
     return subject;
