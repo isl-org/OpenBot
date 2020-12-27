@@ -1409,8 +1409,8 @@ public abstract class CameraActivity extends AppCompatActivity
 
             // Possibly can only send the value of the indicator here, but this makes it clearer.
             // Also, the controller need not have to know implementation details.
-            statusValue.put("INDICATOR_LEFT", vehicle.getIndicator() == 1);
-            statusValue.put("INDICATOR_RIGHT", vehicle.getIndicator() == -1);
+            statusValue.put("INDICATOR_LEFT", vehicle.getIndicator() == -1);
+            statusValue.put("INDICATOR_RIGHT", vehicle.getIndicator() == 1);
             statusValue.put("INDICATOR_STOP", vehicle.getIndicator() == 0);
 
             status.put("status", statusValue);
