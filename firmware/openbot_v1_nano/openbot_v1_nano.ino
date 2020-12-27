@@ -40,19 +40,22 @@
 //------------------------------------------------------//
 
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2)
-#define OPENBOT DIY
+#define OPENBOT PCB_V1
 
 // Enable/Disable voltage divider (1,0)
-#define HAS_VOLTAGE_DIVIDER 0
+#define HAS_VOLTAGE_DIVIDER 1
 
 // Enable/Disable indicators (1,0)
 #define HAS_INDICATORS 0
 
 // Enable/Disable speed sensors (1,0)
-#define HAS_SPEED_SENSORS 0
+#define HAS_SPEED_SENSORS 1
+
+// Enable/Disable dynamic motor trimming.Only works with Speed Sensors (1,0)
+#define USE_SPEED_TRIM 0
 
 // Enable/Disable sonar (1,0)
-#define HAS_SONAR 0
+#define HAS_SONAR 1
 
 // Enable/Disable median filter for sonar measurements (1,0)
 #define USE_MEDIAN 0
@@ -119,6 +122,7 @@
 const unsigned int STOP_THRESHOLD = 32; //cm
 
 #if NO_PHONE_MODE
+  int PHONE_MODE_SPEED = 128
   int turn_direction = 0; // right
   const unsigned long TURN_DIRECTION_INTERVAL = 2000; // How frequently to change turn direction (ms).
   unsigned long turn_direction_timeout = 0;   // After timeout (ms), random turn direction is updated.
@@ -174,6 +178,8 @@ const unsigned int STOP_THRESHOLD = 32; //cm
 //Vehicle Control
 int ctrl_left = 0;
 int ctrl_right = 0;
+int vhcl_motor_left = 0;
+int vhcl_motor_right = 0;
 
 //Voltage measurement
 const unsigned int VIN_ARR_SZ = 10;
@@ -184,6 +190,9 @@ unsigned int vin_array[VIN_ARR_SZ]={0};
 const unsigned int DISK_HOLES = 20;
 volatile int counter_left = 0;
 volatile int counter_right = 0;
+volatile int speed_left = 0;
+volatile int speed_right = 0;
+int speed_trim = 0;
 
 //Indicator Signal
 const unsigned long INDICATOR_INTERVAL = 500; //Blinking rate of the indicator signal (ms).
@@ -221,7 +230,11 @@ void setup()
     attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_L), update_speed_left, FALLING);
     attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_R), update_speed_right, FALLING);
   #endif
-  
+
+  // dynamic motor speed trimming only works with speed sensors
+  #if not HAS_SPEED_SENSORS
+    USE_SPEED_TRIM = 0
+  #endif
   //Initialize with the I2C addr 0x3C
   #if HAS_OLED
     display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
@@ -274,11 +287,14 @@ void loop() {
       send_ping();
     }
   #endif
-  
+
   // Send vehicle measurments to serial every SEND_INTERVAL
   if (millis() >= send_timeout) {
     send_vehicle_data();
     send_timeout = millis() + SEND_INTERVAL;
+    //
+    speed_left = 0;
+    speed_right = 0;
   }
 
   #if HAS_INDICATORS
@@ -309,8 +325,8 @@ void loop() {
     }
     // turn strongly
     else if (distance_estimate > STOP_THRESHOLD) {
-      ctrl_left = 192;
-      ctrl_right = - 192;
+      ctrl_left = PHONE_MODE_SPEED;
+      ctrl_right = - PHONE_MODE_SPEED;
     }
     // drive backward slowly
     else {
@@ -346,6 +362,15 @@ void loop() {
       if (ctrl_right > 0) ctrl_right = 0;
     }
   #endif
+
+  #if USE_SPEED_TRIM
+    set_speed_trim();
+    vhcl_motor_left = ctrl_left - speed_trim;
+    vhcl_motor_right = ctrl_right + speed_trim;
+  #else
+    vhcl_motor_left  = ctrl_left;
+    vhcl_motor_right = ctrl_right;
+  #endif
   
   update_left_motors();
   update_right_motors();
@@ -358,12 +383,12 @@ void loop() {
 
 void update_left_motors() {
     if (ctrl_left < 0) {
-      analogWrite(PIN_PWM_L1,-ctrl_left);
+      analogWrite(PIN_PWM_L1,-vhcl_motor_left);
       analogWrite(PIN_PWM_L2,0);
     }
     else if (ctrl_left > 0) {
       analogWrite(PIN_PWM_L1,0);
-      analogWrite(PIN_PWM_L2,ctrl_left);
+      analogWrite(PIN_PWM_L2,vhcl_motor_left);
     }
     else { //Motor brake
       analogWrite(PIN_PWM_L1,255);
@@ -373,12 +398,12 @@ void update_left_motors() {
 
 void update_right_motors() {
     if (ctrl_right < 0) {
-      analogWrite(PIN_PWM_R1,-ctrl_right);
+      analogWrite(PIN_PWM_R1,-vhcl_motor_right);
       analogWrite(PIN_PWM_R2,0);
     }
     else if (ctrl_right > 0) {
       analogWrite(PIN_PWM_R1,0);
-      analogWrite(PIN_PWM_R2,ctrl_right);
+      analogWrite(PIN_PWM_R2,vhcl_motor_right);
     }
     else { //Motor brake
       analogWrite(PIN_PWM_R1,255);
@@ -429,6 +454,16 @@ void send_vehicle_data() {
     Serial.print(ticks_right);
     Serial.print(",");
     Serial.print(distance_estimate);
+    Serial.print(",");
+    Serial.print(speed_left);
+    Serial.print(",");
+    Serial.print(speed_right);
+    Serial.print(",");
+    Serial.print(vhcl_motor_left);
+    Serial.print(",");
+    Serial.print(vhcl_motor_right);
+    Serial.print(",");
+    Serial.print(speed_trim);    
     Serial.println();
   #endif 
   
@@ -440,6 +475,24 @@ void send_vehicle_data() {
       "Right RPM: " + String(rpm_right, 0), 
       "Distance:   " + String(distance_estimate));
   #endif
+}
+
+void set_speed_trim(){
+    int trim = 0;
+    // only calculate trimming when running straight forward
+    if (ctrl_left <= 0){ return; }
+    if (ctrl_left == ctrl_right){
+      if (speed_left > speed_right){
+        trim = speed_left - speed_right;
+        trim = trim / 2;
+      }
+      if (speed_left < speed_right){
+        trim = speed_right - speed_left;
+        trim = trim / 2;
+        trim = 0 - trim;
+      }      
+      speed_trim = trim;
+    }
 }
 
 #if HAS_VOLTAGE_DIVIDER
@@ -521,13 +574,16 @@ void drawString(String line1, String line2, String line3, String line4) {
 //------------------------------------------------------//
 
 #if HAS_SPEED_SENSORS
-  // ISR: Increment speed sensor counter (right)
+  // ISR: Increment speed sensor counter (left)
   void update_speed_left() {
     if (ctrl_left < 0) {
       counter_left--; 
     }
     else if (ctrl_left > 0) {
       counter_left++;
+      if (ctrl_left == ctrl_right){
+        speed_left++;
+      }
     }
   }
   
@@ -538,6 +594,9 @@ void drawString(String line1, String line2, String line3, String line4) {
     }
     else if (ctrl_right > 0){
       counter_right++;
+      if (ctrl_left == ctrl_right){
+        speed_right++;
+      }      
     }
   }
 #endif
