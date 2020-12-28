@@ -1,6 +1,7 @@
 import {useEffect} from 'react';
 import {Link, Route, Switch, useParams, useRouteMatch} from 'react-router-dom';
 import {Dropdown, Loader, Panel} from 'rsuite';
+import {formatTime} from 'src/utils/formatTime';
 import {Session} from 'src/utils/useDatasets';
 import {GridView} from '../components/GridView';
 import {DeleteModal} from '../modals/DeleteModal';
@@ -72,7 +73,7 @@ function SessionComp(props: Session) {
                         <Dropdown.Item onSelect={toggleDel}>Remove...</Dropdown.Item>
                     </Dropdown>
                 </div>
-                <div>Length: {props.seconds} seconds</div>
+                <div>Length: {formatTime(props.seconds)}</div>
                 <div>Frames: {props.frames}</div>
             </Panel>
             {showMove && <MoveModal path={props.path} show={showMove} onHide={toggleMove}/>}

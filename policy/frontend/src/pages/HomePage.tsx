@@ -1,5 +1,6 @@
 import {Panel} from 'rsuite';
 import {GridView} from 'src/components/GridView';
+import {formatTime} from 'src/utils/formatTime';
 import {Dataset, useDatasets} from 'src/utils/useDatasets';
 import {Link} from 'react-router-dom';
 
@@ -27,7 +28,7 @@ function DatasetInfo(props: Dataset) {
     return (
         <Panel header={<Link to={props.path}>{props.name}</Link>} shaded>
             <div>Sessions: {props.sessions.length}</div>
-            <div>Length: {props.sessions.reduce((sum, cur) => sum + cur.seconds, 0)} seconds</div>
+            <div>Length: {formatTime(props.sessions.reduce((sum, cur) => sum + cur.seconds, 0))}</div>
             <div>Frames: {props.sessions.reduce((sum, cur) => sum + cur.frames, 0)}</div>
         </Panel>
     );

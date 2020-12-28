@@ -1,14 +1,25 @@
 from dataclasses import dataclass
 import os
+import re
 import threading
 
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 
-from . import associate_frames, base_dir, callbacks, dataloader, dataset_dir, losses, metrics, models, utils
+from . import (
+    associate_frames,
+    base_dir,
+    callbacks,
+    dataloader,
+    dataset_dir,
+    losses,
+    metrics,
+    models,
+    utils,
+)
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 # 0 = all messages are logged (default behavior)
 # 1 = INFO messages are not printed
 # 2 = INFO and WARNING messages are not printed
@@ -16,11 +27,11 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # On Mac you may encounter an error related to OMP, this is a workaround, but slows down the code
 # https://github.com/dmlc/xgboost/issues/1715
-os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
-models_dir = os.path.join(base_dir, 'models')
+models_dir = os.path.join(base_dir, "models")
 dataset_name = "my_openbot"
 
 train_data_dir = os.path.join(dataset_dir, "train_data")
@@ -29,6 +40,7 @@ test_data_dir = os.path.join(dataset_dir, "test_data")
 
 @dataclass
 class Hyperparameters:
+    MODEL: str = "cil_mobile"
 
     TRAIN_BATCH_SIZE: int = 16
     TEST_BATCH_SIZE: int = 16
@@ -39,8 +51,23 @@ class Hyperparameters:
     FLIP_AUG: bool = False
     CMD_AUG: bool = False
 
+    USE_LAST: bool = False
+
+    @classmethod
+    def parse(cls, name):
+        m = re.match(
+            r".*_((cil|pilot)_.+)_lr(\d+.\d+)_bz(\d+)(_bn)?(_flip)?(_cmd)?", name
+        )
+        params = Hyperparameters(m[1], int(m[4]), int(m[4]), float(m[3]))
+        params.BATCH_NORM = m[5] is not None
+        params.FLIP_AUG = m[6] is not None
+        params.CMD_AUG = m[7] is not None
+        return params
+
     def __str__(self):
-        model_name = "lr" + str(self.LEARNING_RATE) + "_bz" + str(self.TRAIN_BATCH_SIZE)
+        model_name = "{0}_lr{1}_bz{2}".format(
+            self.MODEL, self.LEARNING_RATE, self.TRAIN_BATCH_SIZE
+        )
 
         if self.BATCH_NORM:
             model_name += "_bn"
@@ -54,7 +81,6 @@ class Hyperparameters:
 
 @dataclass
 class Training:
-
     def __init__(self, params: Hyperparameters):
         self.hyperparameters = params
         self.NETWORK_IMG_WIDTH = 0
@@ -101,12 +127,15 @@ class MyCallback(tf.keras.callbacks.Callback):
         if self.cancelled.is_set():
             raise CancelledException
         self.step = batch + 1
-        epochs = self.params['epochs']
-        steps = self.params['steps']
-        self.broadcast("progress", {
-            "epoch": self.step / steps,
-            "train": (self.epoch * steps + self.step) / (epochs * steps),
-        })
+        epochs = self.params["epochs"]
+        steps = self.params["steps"]
+        self.broadcast(
+            "progress",
+            dict(
+                epoch=self.step / steps,
+                train=(self.epoch * steps + self.step) / (epochs * steps),
+            ),
+        )
 
 
 def process_data(tr: Training):
@@ -114,34 +143,43 @@ def process_data(tr: Training):
     tr.test_datasets = utils.list_dirs(test_data_dir)
 
     print(tr.hyperparameters)
-    print('Train Datasets: ', len(tr.train_datasets))
-    print('Test Datasets: ', len(tr.test_datasets))
+    print("Train Datasets: ", len(tr.train_datasets))
+    print("Test Datasets: ", len(tr.test_datasets))
 
     # 1ms
     max_offset = 1e3
-    train_frames = associate_frames.match_frame_ctrl_cmd(train_data_dir,
-                                                         tr.train_datasets,
-                                                         max_offset,
-                                                         redo_matching=False,
-                                                         remove_zeros=True)
-    test_frames = associate_frames.match_frame_ctrl_cmd(test_data_dir,
-                                                        tr.test_datasets,
-                                                        max_offset,
-                                                        redo_matching=False,
-                                                        remove_zeros=True)
+    train_frames = associate_frames.match_frame_ctrl_cmd(
+        train_data_dir,
+        tr.train_datasets,
+        max_offset,
+        redo_matching=False,
+        remove_zeros=True,
+    )
+    test_frames = associate_frames.match_frame_ctrl_cmd(
+        test_data_dir,
+        tr.test_datasets,
+        max_offset,
+        redo_matching=False,
+        remove_zeros=True,
+    )
 
     tr.image_count_train = len(train_frames)
     tr.image_count_test = len(test_frames)
-    print("There are %d train images and %d test images" % (tr.image_count_train, tr.image_count_test))
+    print(
+        "There are %d train images and %d test images"
+        % (tr.image_count_train, tr.image_count_test)
+    )
 
 
 def load_data(tr: Training, verbose=0):
     # list_train_ds = tf.data.Dataset.list_files(train_frames)
     # list_test_ds = tf.data.Dataset.list_files(test_frames)
-    list_train_ds = tf.data.Dataset.list_files([str(train_data_dir + '/' + dataset + '/*/images/*')
-                                                for dataset in tr.train_datasets])
-    list_test_ds = tf.data.Dataset.list_files([str(test_data_dir + '/' + dataset + '/*/images/*')
-                                               for dataset in tr.test_datasets])
+    list_train_ds = tf.data.Dataset.list_files(
+        [str(train_data_dir + "/" + ds + "/*/images/*") for ds in tr.train_datasets]
+    )
+    list_test_ds = tf.data.Dataset.list_files(
+        [str(test_data_dir + "/" + ds + "/*/images/*") for ds in tr.test_datasets]
+    )
     train_data = dataloader.dataloader(train_data_dir, tr.train_datasets)
     test_data = dataloader.dataloader(test_data_dir, tr.test_datasets)
 
@@ -180,7 +218,9 @@ def load_data(tr: Training, verbose=0):
           cmd: augmented command
         """
         if not (cmd > 0 or cmd < 0):
-            coin = tf.random.uniform(shape=[1], minval=0, maxval=1, dtype=tf.dtypes.float32)
+            coin = tf.random.uniform(
+                shape=[1], minval=0, maxval=1, dtype=tf.dtypes.float32
+            )
             if coin < 0.25:
                 cmd = -1.0
             elif coin < 0.5:
@@ -203,7 +243,9 @@ def load_data(tr: Training, verbose=0):
         return img
 
     def process_train_path(file_path):
-        cmd, label = train_data.get_label(tf.strings.regex_replace(file_path, "[/\\\\]", "/"))
+        cmd, label = train_data.get_label(
+            tf.strings.regex_replace(file_path, "[/\\\\]", "/")
+        )
         # load the raw data from the file as a string
         img = tf.io.read_file(file_path)
         img = decode_img(img)
@@ -215,7 +257,9 @@ def load_data(tr: Training, verbose=0):
         return (img, cmd), label
 
     def process_test_path(file_path):
-        cmd, label = test_data.get_label(tf.strings.regex_replace(file_path, "[/\\\\]", "/"))
+        cmd, label = test_data.get_label(
+            tf.strings.regex_replace(file_path, "[/\\\\]", "/")
+        )
         # load the raw data from the file as a string
         img = tf.io.read_file(file_path)
         img = decode_img(img)
@@ -238,118 +282,153 @@ def load_data(tr: Training, verbose=0):
     )
     (image_batch, cmd_batch), label_batch = next(iter(tr.train_ds))
     utils.show_train_batch(image_batch.numpy(), cmd_batch.numpy(), label_batch.numpy())
-    savefig(os.path.join(models_dir, 'train_preview.png'))
+    savefig(os.path.join(models_dir, "train_preview.png"))
     test_ds = list_test_ds.map(process_test_path, num_parallel_calls=4)
     test_ds = test_ds.batch(tr.hyperparameters.TEST_BATCH_SIZE)
     tr.test_ds = test_ds.prefetch(buffer_size=10 * tr.hyperparameters.TRAIN_BATCH_SIZE)
 
 
 def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
-    model = models.cil_mobile(tr.NETWORK_IMG_WIDTH, tr.NETWORK_IMG_HEIGHT, tr.hyperparameters.BATCH_NORM)
+    tr.model_name = dataset_name + "_" + str(tr.hyperparameters)
+    tr.checkpoint_path = os.path.join(models_dir, tr.model_name, "checkpoints")
+
+    append_logs = False
+    model: tf.keras.Model
+    if tr.hyperparameters.USE_LAST:
+        append_logs = True
+        dirs = utils.list_dirs(tr.checkpoint_path)
+        last_checkpoint = sorted(dirs)[-1]
+        model = tf.keras.models.load_model(
+            os.path.join(tr.checkpoint_path, last_checkpoint),
+            custom_objects=None,
+            compile=False,
+        )
+    else:
+        model = getattr(models, tr.hyperparameters.MODEL)(
+            tr.NETWORK_IMG_WIDTH,
+            tr.NETWORK_IMG_HEIGHT,
+            tr.hyperparameters.BATCH_NORM,
+        )
+
     tr.loss_fn = losses.sq_weighted_mse_angle
-    metric_list = ['MeanAbsoluteError', metrics.direction_metric, metrics.angle_metric]
+    metric_list = ["MeanAbsoluteError", metrics.direction_metric, metrics.angle_metric]
     optimizer = tf.keras.optimizers.Adam(lr=tr.hyperparameters.LEARNING_RATE)
 
-    model.compile(optimizer=optimizer,
-                  loss=tr.loss_fn,
-                  metrics=metric_list)
+    model.compile(optimizer=optimizer, loss=tr.loss_fn, metrics=metric_list)
     if verbose:
         print(model.summary())
 
-    tr.model_name = dataset_name + "_" + model.name + "_" + str(tr.hyperparameters)
-    tr.checkpoint_path = os.path.join(models_dir, tr.model_name, 'checkpoints')
-    tr.log_path = os.path.join(models_dir, tr.model_name, 'logs')
+    tr.log_path = os.path.join(models_dir, tr.model_name, "logs")
     if verbose:
         print(tr.model_name)
 
-    STEPS_PER_EPOCH = np.ceil(tr.image_count_train / tr.hyperparameters.TRAIN_BATCH_SIZE)
-    tr.history = model.fit(tr.train_ds,
-                           epochs=tr.hyperparameters.NUM_EPOCHS,
-                           steps_per_epoch=STEPS_PER_EPOCH,
-                           validation_data=tr.test_ds,
-                           verbose=verbose,
-                           callbacks=[callbacks.checkpoint_cb(tr.checkpoint_path),
-                                      callbacks.tensorboard_cb(tr.log_path),
-                                      callbacks.logger_cb(tr.log_path),
-                                      callback])
+    STEPS_PER_EPOCH = np.ceil(
+        tr.image_count_train / tr.hyperparameters.TRAIN_BATCH_SIZE
+    )
+    tr.history = model.fit(
+        tr.train_ds,
+        epochs=tr.hyperparameters.NUM_EPOCHS,
+        steps_per_epoch=STEPS_PER_EPOCH,
+        validation_data=tr.test_ds,
+        verbose=verbose,
+        callbacks=[
+            callbacks.checkpoint_cb(tr.checkpoint_path),
+            callbacks.tensorboard_cb(tr.log_path),
+            callbacks.logger_cb(tr.log_path, append_logs),
+            callback,
+        ],
+    )
 
 
 def do_evaluation(tr: Training):
     history = tr.history
     log_path = tr.log_path
-    plt.plot(history.history['MeanAbsoluteError'], label='mean_absolute_error')
-    plt.plot(history.history['val_MeanAbsoluteError'], label='val_mean_absolute_error')
-    plt.xlabel('Epoch')
-    plt.ylabel('Mean Absolute Error')
-    plt.legend(loc='lower right')
-    savefig(os.path.join(log_path, 'error.png'))
+    plt.plot(history.history["MeanAbsoluteError"], label="mean_absolute_error")
+    plt.plot(history.history["val_MeanAbsoluteError"], label="val_mean_absolute_error")
+    plt.xlabel("Epoch")
+    plt.ylabel("Mean Absolute Error")
+    plt.legend(loc="lower right")
+    savefig(os.path.join(log_path, "error.png"))
 
-    plt.plot(history.history['direction_metric'], label='direction_metric')
-    plt.plot(history.history['val_direction_metric'], label='val_direction_metric')
-    plt.xlabel('Epoch')
-    plt.ylabel('Direction Metric')
-    plt.legend(loc='lower right')
-    savefig(os.path.join(log_path, 'direction.png'))
+    plt.plot(history.history["direction_metric"], label="direction_metric")
+    plt.plot(history.history["val_direction_metric"], label="val_direction_metric")
+    plt.xlabel("Epoch")
+    plt.ylabel("Direction Metric")
+    plt.legend(loc="lower right")
+    savefig(os.path.join(log_path, "direction.png"))
 
-    plt.plot(history.history['angle_metric'], label='angle_metric')
-    plt.plot(history.history['val_angle_metric'], label='val_angle_metric')
-    plt.xlabel('Epoch')
-    plt.ylabel('Angle Metric')
-    plt.legend(loc='lower right')
-    savefig(os.path.join(log_path, 'angle.png'))
+    plt.plot(history.history["angle_metric"], label="angle_metric")
+    plt.plot(history.history["val_angle_metric"], label="val_angle_metric")
+    plt.xlabel("Epoch")
+    plt.ylabel("Angle Metric")
+    plt.legend(loc="lower right")
+    savefig(os.path.join(log_path, "angle.png"))
 
-    plt.plot(history.history['loss'], label='loss')
-    plt.plot(history.history['val_loss'], label='val_loss')
-    plt.xlabel('Epoch')
-    plt.ylabel('Loss')
-    plt.legend(loc='lower right')
-    savefig(os.path.join(log_path, 'loss.png'))
+    plt.plot(history.history["loss"], label="loss")
+    plt.plot(history.history["val_loss"], label="val_loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.legend(loc="lower right")
+    savefig(os.path.join(log_path, "loss.png"))
 
     checkpoint_path = tr.checkpoint_path
     print("checkpoint_path", checkpoint_path)
     best_index = np.argmax(
-        np.array(history.history['val_angle_metric'])
-        + np.array(history.history['val_direction_metric']))
+        np.array(history.history["val_angle_metric"])
+        + np.array(history.history["val_direction_metric"])
+    )
     best_checkpoint = str("cp-%04d.ckpt" % (best_index + 1))
     best_tflite = utils.generate_tflite(checkpoint_path, best_checkpoint)
     utils.save_tflite(best_tflite, checkpoint_path, "best")
-    print("Best Checkpoint (val_angle: %s, val_direction: %s): %s" % (
-        history.history['val_angle_metric'][best_index],
-        history.history['val_direction_metric'][best_index],
-        best_checkpoint))
+    print(
+        "Best Checkpoint (val_angle: %s, val_direction: %s): %s"
+        % (
+            history.history["val_angle_metric"][best_index],
+            history.history["val_direction_metric"][best_index],
+            best_checkpoint,
+        )
+    )
 
     last_checkpoint = sorted(utils.list_dirs(checkpoint_path))[-1]
     last_tflite = utils.generate_tflite(checkpoint_path, last_checkpoint)
     utils.save_tflite(last_tflite, checkpoint_path, "last")
-    print("Last Checkpoint (val_angle: %s, val_direction: %s): %s" % (
-        history.history['val_angle_metric'][-1],
-        history.history['val_direction_metric'][-1],
-        last_checkpoint))
+    print(
+        "Last Checkpoint (val_angle: %s, val_direction: %s): %s"
+        % (
+            history.history["val_angle_metric"][-1],
+            history.history["val_direction_metric"][-1],
+            last_checkpoint,
+        )
+    )
 
     best_model = utils.load_model(
-        os.path.join(checkpoint_path, best_checkpoint),
-        tr.loss_fn,
-        tr.metric_list
+        os.path.join(checkpoint_path, best_checkpoint), tr.loss_fn, tr.metric_list
     )
     # test_loss, test_acc, test_dir, test_ang = best_model.evaluate(tr.test_ds,
-    res = best_model.evaluate(tr.test_ds,
-                              steps=tr.image_count_test / tr.hyperparameters.TEST_BATCH_SIZE,
-                              verbose=2)
+    res = best_model.evaluate(
+        tr.test_ds,
+        steps=tr.image_count_test / tr.hyperparameters.TEST_BATCH_SIZE,
+        verbose=2,
+    )
     print(res)
 
     NUM_SAMPLES = 15
     (image_batch, cmd_batch), label_batch = next(iter(tr.test_ds))
-    pred_batch = best_model.predict((
-        tf.slice(image_batch, [0, 0, 0, 0], [NUM_SAMPLES, -1, -1, -1]),
-        tf.slice(cmd_batch, [0], [NUM_SAMPLES]),
-    ))
-    utils.show_test_batch(image_batch.numpy(), cmd_batch.numpy(), label_batch.numpy(), pred_batch)
-    savefig(os.path.join(log_path, 'test_preview.png'))
+    pred_batch = best_model.predict(
+        (
+            tf.slice(image_batch, [0, 0, 0, 0], [NUM_SAMPLES, -1, -1, -1]),
+            tf.slice(cmd_batch, [0], [NUM_SAMPLES]),
+        )
+    )
+    utils.show_test_batch(
+        image_batch.numpy(), cmd_batch.numpy(), label_batch.numpy(), pred_batch
+    )
+    savefig(os.path.join(log_path, "test_preview.png"))
     utils.compare_tf_tflite(best_model, best_tflite)
 
 
 def savefig(path):
-    plt.savefig(path, bbox_inches='tight')
+    plt.savefig(path, bbox_inches="tight")
     plt.clf()
 
 
@@ -364,7 +443,8 @@ def start_train(params: Hyperparameters, callback: MyCallback, verbose=0):
     return tr
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+
     def broadcast(event, payload=None):
         print()
         print(event, payload)

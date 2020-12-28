@@ -11,9 +11,6 @@ body {
 .App > .rs-content {
   padding: 1em;
 }
-.trainPage .rs-panel {
-    margin-top: 20px;
-}
 .trainPage .rs-panel img {
     max-width: 100%;
 }
@@ -25,7 +22,7 @@ body {
 }
 .bool-input .rs-control-label {
     text-align: right;
-    width: 136px;
+    width: 156px;
 }
 
 .rs-message + .rs-form {

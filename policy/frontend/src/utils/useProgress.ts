@@ -2,6 +2,7 @@ import {useCallback, useEffect, useReducer} from 'react';
 import {subscribe} from 'src/utils/ws';
 
 export interface Hyperparametes {
+    MODEL: string;
     TRAIN_BATCH_SIZE: number;
     TEST_BATCH_SIZE: number;
     LEARNING_RATE: number;
@@ -9,6 +10,7 @@ export interface Hyperparametes {
     BATCH_NORM: boolean;
     FLIP_AUG: boolean;
     CMD_AUG: boolean;
+    USE_LAST: boolean;
 }
 
 export interface ProgressState {
@@ -22,8 +24,15 @@ export interface ProgressState {
     rnd?: number;
 }
 
+const defaultState: ProgressState = {
+    status: undefined,
+    epoch: 0,
+    percent: 0,
+    logs: [],
+}
+
 export function useProgress() {
-    const [state, dispatch] = useReducer(progressReducer, {} as ProgressState);
+    const [state, dispatch] = useReducer(progressReducer, defaultState);
 
     useEffect(() => {
         return subscribe('training', dispatch);

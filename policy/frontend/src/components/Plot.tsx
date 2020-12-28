@@ -1,20 +1,34 @@
-import {ChartData} from 'chart.js';
+import {ChartData, ChartOptions} from 'chart.js';
 import {Line} from 'react-chartjs-2';
 import {Panel} from 'rsuite';
 
 const colors = ['blue', 'red'];
 
+const options: ChartOptions = {
+    scales: {
+        xAxes: [{
+            scaleLabel: {
+                display: true,
+                labelString: 'Epoch',
+            },
+        }],
+    },
+};
+
 export function Plot(props: {logs: any[], metric: string}) {
     return (
         <Panel bodyFill shaded>
-            <Line data={logToData(props.logs, [props.metric, `val_${props.metric}`])}/>
+            <Line
+                data={logToData(props.logs, [props.metric, `val_${props.metric}`])}
+                options={options}
+            />
         </Panel>
     );
 }
 
 function logToData(logs: any[], metrics: string[]): ChartData {
     return {
-        labels: Array(10).fill(0).map((v, i) => `${i + 1}`),
+        labels: Array(Math.max(logs.length, 10)).fill(0).map((v, i) => `${i}`),
         datasets: metrics.map((metric, i) => ({
             borderColor: colors[i],
             borderWidth: 2,
