@@ -8,6 +8,10 @@ import org.openbot.model.SubCategory;
 
 public class Constants {
 
+  public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
+  public static final String USB_ACTION_CONNECTION_ESTABLISHED = "usb.connection_established";
+  public static final String USB_ACTION_CONNECTION_CLOSED = "usb.connection_closed";
+
   // Global
   public static final String ALL = "All";
   public static final String GLOBAL_VIEW = "Global View";

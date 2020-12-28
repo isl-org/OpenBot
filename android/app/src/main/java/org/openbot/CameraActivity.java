@@ -82,6 +82,7 @@ import org.json.JSONObject;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.ControllerToBotEventBus;
+import org.openbot.common.Constants;
 import org.openbot.env.GameController;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
@@ -162,9 +163,6 @@ public abstract class CameraActivity extends AppCompatActivity
   private int baudRate = 115200;
   private LocalBroadcastManager localBroadcastManager;
   private BroadcastReceiver localBroadcastReceiver;
-  public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
-  public static final String USB_ACTION_CONNECTION_ESTABLISHED = "usb.connection_established";
-  public static final String USB_ACTION_CONNECTION_CLOSED = "usb.connection_closed";
 
   protected LogMode logMode = LogMode.CROP_IMG;
   protected ControlMode controlMode = ControlMode.GAMEPAD;
@@ -368,13 +366,13 @@ public abstract class CameraActivity extends AppCompatActivity
             if (action != null) {
 
               switch (action) {
-                case USB_ACTION_CONNECTION_ESTABLISHED:
+                case Constants.USB_ACTION_CONNECTION_ESTABLISHED:
                   break;
 
-                case USB_ACTION_CONNECTION_CLOSED:
+                case Constants.USB_ACTION_CONNECTION_CLOSED:
                   break;
 
-                case USB_ACTION_DATA_RECEIVED:
+                case Constants.USB_ACTION_DATA_RECEIVED:
                   long timestamp = SystemClock.elapsedRealtimeNanos();
                   String data = intent.getStringExtra("data");
                   // Data has the following form: voltage, lWheel, rWheel, obstacle
@@ -403,9 +401,9 @@ public abstract class CameraActivity extends AppCompatActivity
           }
         };
     IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction(USB_ACTION_CONNECTION_ESTABLISHED);
-    localIntentFilter.addAction(USB_ACTION_CONNECTION_CLOSED);
-    localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
+    localIntentFilter.addAction(Constants.USB_ACTION_CONNECTION_ESTABLISHED);
+    localIntentFilter.addAction(Constants.USB_ACTION_CONNECTION_CLOSED);
+    localIntentFilter.addAction(Constants.USB_ACTION_DATA_RECEIVED);
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
   }
