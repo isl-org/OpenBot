@@ -7,6 +7,7 @@ import {
     FormGroup,
     Message,
     Panel,
+    Placeholder,
     SelectPicker,
 } from 'rsuite';
 import {BoolParam} from 'src/components/BoolParam';
@@ -33,7 +34,7 @@ export function HyperparametersForm() {
     }, [value])
 
     if (pending) {
-        return null;
+        return <Placeholder.Paragraph rows={20}/>;
     }
 
     function onChange(values: any) {
@@ -49,11 +50,11 @@ export function HyperparametersForm() {
     }
 
     return (
-        <Panel shaded header="Hyperparameters">
+        <>
             <Message description="You may have to tune the learning rate and batch size depending on your available compute resources and dataset. As a general rule of thumb, if you increase the batch size by a factor of n, you can increase the learning rate by a factor of sqrt(n)."/>
             <Form onChange={onChange} formDefaultValue={value} layout="horizontal">
                 <FormGroup>
-                    <ControlLabel>Model</ControlLabel>
+                    <ControlLabel>MODEL</ControlLabel>
                     <FormControl name="MODEL" accepter={SelectPicker} data={models} block/>
                 </FormGroup>
                 <NumberParam name="LEARNING_RATE" min={0} step={0.0001}/>
@@ -79,6 +80,6 @@ export function HyperparametersForm() {
             <ButtonBar>
                 <Button onClick={() => jsonRpc('start', formValue.current)} appearance="primary">Start</Button>
             </ButtonBar>
-        </Panel>
+        </>
     );
 }

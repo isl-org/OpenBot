@@ -1,4 +1,5 @@
 import asyncio
+import glob
 import os
 import shutil
 import threading
@@ -9,10 +10,10 @@ import numpy as np
 from numpyencoder import NumpyEncoder
 
 from .dataset import get_dataset_list, get_dir_info, get_info
-from .models import get_models
+from .models import get_models, models_dir
 from .preview import handle_preview
 from .upload import handle_file_upload
-from .. import dataset_dir
+from .. import base_dir, dataset_dir
 from ..train import CancelledException, Hyperparameters, MyCallback, start_train
 
 event_cancelled = threading.Event()
@@ -22,6 +23,20 @@ rpc = JsonRpc()
 
 async def handle_test(_: web.Request):
     return web.json_response({"openbot": 1})
+
+
+async def handle_models(request: web.Request) -> web.StreamResponse:
+    path = request.match_info.get("path")
+    if path[-7:] == ".tflite":
+        real = os.path.join(base_dir, path)
+        if os.path.isfile(real):
+            return web.FileResponse(real)
+
+    models = [
+        dict(name=os.path.basename(p), mtime=int(os.path.getmtime(p)))
+        for p in glob.glob(os.path.join(models_dir, "*.tflite"))
+    ]
+    return web.json_response(models)
 
 
 async def handle_upload(request: web.Request) -> web.Response:
@@ -38,6 +53,7 @@ async def handle_upload(request: web.Request) -> web.Response:
 
 async def init_api(app: web.Application):
     app.router.add_get("/test", handle_test)
+    app.router.add_get("/{path:models.*}", handle_models)
     app.router.add_post("/upload", handle_upload)
     app.router.add_get("/{path:.*/preview.gif}", handle_preview)
     app.router.add_route("*", "/ws", rpc.handle_request)
@@ -138,17 +154,16 @@ def train(params, broadcast, cancelled):
 
 
 def encode(obj):
-    if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
-                        np.int16, np.int32, np.int64, np.uint8,
-                        np.uint16, np.uint32, np.uint64)):
-
+    int_ = (np.int_, np.intc, np.intp, np.int8, np.int16, np.int32, np.int64)
+    uint_ = (np.uint8, np.uint16, np.uint32, np.uint64)
+    if isinstance(obj, int_) or isinstance(obj, uint_):
         return int(obj)
 
     elif isinstance(obj, (np.float_, np.float16, np.float32, np.float64)):
         return float(obj)
 
     elif isinstance(obj, (np.complex_, np.complex64, np.complex128)):
-        return {'real': obj.real, 'imag': obj.imag}
+        return dict(real=obj.real, imag=obj.imag)
 
     elif isinstance(obj, (np.ndarray,)):
         return obj.tolist()

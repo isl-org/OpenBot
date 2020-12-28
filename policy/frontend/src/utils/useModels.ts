@@ -8,8 +8,12 @@ export interface Model {
     logs: any[];
 }
 
-const defaultValue: Model[] = [];
+const defaultValue: Model | null = null;
 
 export function useModels() {
-    return useRpc(defaultValue, 'getModels')
+    return useRpc([] as string[], 'getModels')
+}
+
+export function useModel(name: string) {
+    return useRpc(defaultValue, 'getModelInfo', name)
 }

@@ -13,7 +13,9 @@ export function TrainPage() {
         <div className="trainPage">
             <h3>Model training</h3>
             {!state.status ? (
-                <HyperparametersForm/>
+                <Panel shaded header="Hyperparameters">
+                    <HyperparametersForm/>
+                </Panel>
             ): (
                 <TrainProgress state={state} clear={clear}/>
             )}

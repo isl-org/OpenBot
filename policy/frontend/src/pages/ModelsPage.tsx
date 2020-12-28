@@ -1,28 +1,31 @@
 import {List, Panel} from 'rsuite';
 import {GridView} from 'src/components/GridView';
 import {Plot} from 'src/components/Plot';
-import {Model, useModels} from 'src/utils/useModels';
+import {useModel, useModels} from 'src/utils/useModels';
 import {Link, Route, Switch, useParams, useRouteMatch} from 'react-router-dom';
 
 export function ModelsPage() {
     const match = useRouteMatch();
     return (
         <Switch>
-            <Route path={match.url + '/:name'} component={ModelDetails}/>
+            <Route path={`${match.url}/:name`} component={ModelDetails}/>
             <Route component={ListView}/>
         </Switch>
     );
 }
 
 export function ListView() {
+    const match = useRouteMatch();
     const models = useModels();
     return (
         <>
-            <h3>Models</h3>
+            <h3>Trained models</h3>
             <Panel shaded bodyFill>
                 <List bordered>
-                    {models.value.map((m: Model) => (
-                        <ModelInfo key={m.name} {...m}/>
+                    {models.value.map(name => (
+                        <List.Item key={name}>
+                            <Link to={`${match.url}/${name}`}>{name}</Link>
+                        </List.Item>
                     ))}
                 </List>
             </Panel>
@@ -30,21 +33,13 @@ export function ListView() {
     );
 }
 
-function ModelInfo(props: Model) {
-    return (
-        <List.Item>
-            <Link to={props.path}>{props.name}</Link>
-        </List.Item>
-    );
-}
-
 function ModelDetails() {
     const {name} = useParams<any>();
-    const models = useModels();
-    const model = models.value.find(m => m.name === name);
-    if (!model) {
+    const modelInfo = useModel(name);
+    if (modelInfo.pending) {
         return null;
     }
+    const model = modelInfo.value!;
     return <>
         <Panel header={model.name} shaded>
             Params:
