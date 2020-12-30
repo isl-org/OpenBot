@@ -69,49 +69,49 @@ public class Constants {
     categories.add(new Category(Constants.ALL, subCategories));
 
     /*
-    subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(Constants.FREE_ROAM, R.drawable.ic_game));
-    subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game));
-    categories.add(new Category(Constants.GAME, subCategories));
+        subCategories = new ArrayList<>();
+        subCategories.add(new SubCategory(Constants.FREE_ROAM, R.drawable.ic_game));
+        subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game));
+        categories.add(new Category(Constants.GAME, subCategories));
 
-    subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(Constants.LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage));
-    subCategories.add(new SubCategory(Constants.EDGE_LOCAL_NETWORK, R.drawable.ic_network));
-    subCategories.add(new SubCategory(Constants.CLOUD_FIREBASE, R.drawable.ic_cloud_upload));
-    subCategories.add(new SubCategory(Constants.CROWD_SOURCE, R.drawable.openbot_icon));
-    categories.add(new Category(Constants.DATA_COLLECTION, subCategories));
+        subCategories = new ArrayList<>();
+        subCategories.add(new SubCategory(Constants.LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage));
+        subCategories.add(new SubCategory(Constants.EDGE_LOCAL_NETWORK, R.drawable.ic_network));
+        subCategories.add(new SubCategory(Constants.CLOUD_FIREBASE, R.drawable.ic_cloud_upload));
+        subCategories.add(new SubCategory(Constants.CROWD_SOURCE, R.drawable.openbot_icon));
+        categories.add(new Category(Constants.DATA_COLLECTION, subCategories));
 
-    subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(Constants.PERSON_FOLLOWING, R.drawable.ic_person_search));
-    subCategories.add(new SubCategory(Constants.OBJECT_NAV, R.drawable.openbot_icon));
-    subCategories.add(new SubCategory(Constants.SMART_VOICE, R.drawable.ic_voice_over));
-    subCategories.add(new SubCategory(Constants.AUTONOMOUS_DRIVING, R.drawable.openbot_icon));
-    subCategories.add(new SubCategory(Constants.VISUAL_GOALS, R.drawable.openbot_icon));
-    categories.add(new Category(Constants.AI, subCategories));
+        subCategories = new ArrayList<>();
+        subCategories.add(new SubCategory(Constants.PERSON_FOLLOWING, R.drawable.ic_person_search));
+        subCategories.add(new SubCategory(Constants.OBJECT_NAV, R.drawable.openbot_icon));
+        subCategories.add(new SubCategory(Constants.SMART_VOICE, R.drawable.ic_voice_over));
+        subCategories.add(new SubCategory(Constants.AUTONOMOUS_DRIVING, R.drawable.openbot_icon));
+        subCategories.add(new SubCategory(Constants.VISUAL_GOALS, R.drawable.openbot_icon));
+        categories.add(new Category(Constants.AI, subCategories));
 
-    subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(Constants.WEB_INTERFACE, R.drawable.openbot_icon));
-    subCategories.add(new SubCategory(Constants.ROS, R.drawable.openbot_icon));
-    subCategories.add(new SubCategory(Constants.FLEET_MANAGEMENT, R.drawable.openbot_icon));
-    categories.add(new Category(Constants.REMOTE_ACCESS, subCategories));
+        subCategories = new ArrayList<>();
+        subCategories.add(new SubCategory(Constants.WEB_INTERFACE, R.drawable.openbot_icon));
+        subCategories.add(new SubCategory(Constants.ROS, R.drawable.openbot_icon));
+        subCategories.add(new SubCategory(Constants.FLEET_MANAGEMENT, R.drawable.openbot_icon));
+        categories.add(new Category(Constants.REMOTE_ACCESS, subCategories));
 
-    subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(Constants.BLOCK_BASED_PROGRAMMING, R.drawable.ic_code));
-    subCategories.add(new SubCategory(Constants.SCRIPTS, R.drawable.ic_code));
-    categories.add(new Category(Constants.CODING, subCategories));
+        subCategories = new ArrayList<>();
+        subCategories.add(new SubCategory(Constants.BLOCK_BASED_PROGRAMMING, R.drawable.ic_code));
+        subCategories.add(new SubCategory(Constants.SCRIPTS, R.drawable.ic_code));
+        categories.add(new Category(Constants.CODING, subCategories));
 
-    subCategories = new ArrayList<>();
-    subCategories.add(
-        new SubCategory(Constants.CLASSICAL_ROBOTICS_ALGORITHMS, R.drawable.openbot_icon));
-    subCategories.add(new SubCategory(Constants.BACKEND_FOR_LEARNING, R.drawable.openbot_icon));
-    categories.add(new Category(Constants.RESEARCH, subCategories));
+        subCategories = new ArrayList<>();
+        subCategories.add(
+            new SubCategory(Constants.CLASSICAL_ROBOTICS_ALGORITHMS, R.drawable.openbot_icon));
+        subCategories.add(new SubCategory(Constants.BACKEND_FOR_LEARNING, R.drawable.openbot_icon));
+        categories.add(new Category(Constants.RESEARCH, subCategories));
 
-    subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(Constants.SENSORS_FROM_CAR, R.drawable.ic_electric_car));
-    subCategories.add(new SubCategory(Constants.SENSORS_FROM_PHONE, R.drawable.ic_phonelink));
-    subCategories.add(new SubCategory(Constants.MAP_VIEW, R.drawable.ic_map));
-    categories.add(new Category(Constants.MONITORING, subCategories));
-*/
+        subCategories = new ArrayList<>();
+        subCategories.add(new SubCategory(Constants.SENSORS_FROM_CAR, R.drawable.ic_electric_car));
+        subCategories.add(new SubCategory(Constants.SENSORS_FROM_PHONE, R.drawable.ic_phonelink));
+        subCategories.add(new SubCategory(Constants.MAP_VIEW, R.drawable.ic_map));
+        categories.add(new Category(Constants.MONITORING, subCategories));
+    */
 
     return categories;
   }

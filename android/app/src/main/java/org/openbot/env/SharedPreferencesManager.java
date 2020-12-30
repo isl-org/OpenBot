@@ -2,7 +2,6 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import org.openbot.CameraActivity;
 import org.openbot.common.Enums;
 import org.openbot.tflite.Network;
 

@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     // Default to open this when app opens
     Intent intent = new Intent(this, NetworkActivity.class);
     startActivity(intent);
-
   }
 
   private void gotoSelectedFeature() {
