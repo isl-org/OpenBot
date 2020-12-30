@@ -27,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
     gotoSelectedFeature();
+
+    // Default to open this when app opens
+    Intent intent = new Intent(this, NetworkActivity.class);
+    startActivity(intent);
+
   }
 
   private void gotoSelectedFeature() {
