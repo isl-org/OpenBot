@@ -303,14 +303,13 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
 
   protected void toggleNoise() {
     noiseEnabled = !noiseEnabled;
+    BotToControllerEventBus.emitEvent(createStatus("NOISE", noiseEnabled));
     if (noiseEnabled) {
       noiseTimer = new Timer();
       NoiseTask noiseTask = new NoiseTask();
       noiseTimer.schedule(noiseTask, 0, 50); // no delay 50ms intervals
     } else noiseTimer.cancel();
     updateVehicleState();
-
-    BotToControllerEventBus.emitEvent(createStatus("NOISE", noiseEnabled));
   }
 
   @Override

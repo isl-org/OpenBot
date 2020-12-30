@@ -1149,15 +1149,14 @@ public abstract class CameraActivity extends AppCompatActivity
       stopLogging();
       loggingEnabled = false;
     }
-
     BotToControllerEventBus.emitEvent(createStatus("LOGS", loggingEnabled));
 
-    //    logSpinner.setEnabled(!loggingEnabled);
-    //    if (loggingEnabled) logSpinner.setAlpha(0.5f);
-    //    else logSpinner.setAlpha(1.0f);
-    //    logSwitchCompat.setChecked(loggingEnabled);
-    //    if (loggingEnabled) logSwitchCompat.setText("Logging");
-    //    else logSwitchCompat.setText("Not Logging");
+    logSpinner.setEnabled(!loggingEnabled);
+    if (loggingEnabled) logSpinner.setAlpha(0.5f);
+    else logSpinner.setAlpha(1.0f);
+    logSwitchCompat.setChecked(loggingEnabled);
+    if (loggingEnabled) logSwitchCompat.setText("Logging");
+    else logSwitchCompat.setText("Not Logging");
   }
 
   protected abstract void processImage();
@@ -1210,20 +1209,19 @@ public abstract class CameraActivity extends AppCompatActivity
     if (usbConnected) baudRateSpinner.setAlpha(0.5f);
     else baudRateSpinner.setAlpha(1.0f);
     connectionSwitchCompat.setChecked(usbConnected);
-    //
-    //    if (usbConnected) {
-    //      connectionSwitchCompat.setText(usbConnection.getProductName());
-    //      Toast.makeText(getContext(), "Connected.", Toast.LENGTH_SHORT).show();
-    //    } else {
-    //      connectionSwitchCompat.setText("No Device");
-    //      // Tried to connect but failed
-    //      if (isChecked) {
-    //        Toast.makeText(getContext(), "Please check the USB connection.",
-    // Toast.LENGTH_SHORT).show();
-    //      } else {
-    //        Toast.makeText(getContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
-    //      }
-    //    }
+
+    if (usbConnected) {
+      connectionSwitchCompat.setText(usbConnection.getProductName());
+      Toast.makeText(getContext(), "Connected.", Toast.LENGTH_SHORT).show();
+    } else {
+      connectionSwitchCompat.setText("No Device");
+      // Tried to connect but failed
+      if (isChecked) {
+        Toast.makeText(getContext(), "Please check the USB connection.", Toast.LENGTH_SHORT).show();
+      } else {
+        Toast.makeText(getContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
+      }
+    }
   }
 
   protected void sendControlToVehicle() {
@@ -1495,8 +1493,8 @@ public abstract class CameraActivity extends AppCompatActivity
       setNetworkEnabled(!networkEnabled);
       if (networkEnabled) audioPlayer.play(voice, "network_enabled.mp3");
       else {
-        // no file network_disabled!!!
-        // audioPlayer.playDriveMode(voice, "network_disabled.mp3");
+        // when network disabled play the active drive mode used for controller
+        audioPlayer.playDriveMode(voice, driveMode);
       }
     }
   }
