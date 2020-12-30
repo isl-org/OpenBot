@@ -1,4 +1,4 @@
-package org.openbot;
+package org.openbot.robot;
 
 /*
  * Copyright 2019 The TensorFlow Authors. All Rights Reserved.
@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import java.io.IOException;
 import java.util.List;
+import org.openbot.R;
 import org.openbot.customview.AutoFitTextureView;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;

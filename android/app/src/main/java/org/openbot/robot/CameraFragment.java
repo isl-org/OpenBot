@@ -1,4 +1,4 @@
-package org.openbot;
+package org.openbot.robot;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -21,6 +21,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.openbot.R;
 import org.openbot.env.Logger;
 
 public abstract class CameraFragment extends Fragment {

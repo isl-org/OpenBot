@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/gameFragment"
-        android:name="org.openbot.GameFragment"
+        android:name="org.openbot.robot.GameFragment"
         android:label="fragment_game"
         tools:layout="@layout/fragment_game" />
 </navigation>

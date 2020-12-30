@@ -38,7 +38,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openbot.CameraActivity;
+import org.openbot.robot.CameraActivity;
 
 public class NearbyConnection {
   private static final String TAG = "NearbyConnection";

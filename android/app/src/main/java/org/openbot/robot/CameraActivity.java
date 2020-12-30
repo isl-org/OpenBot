@@ -16,7 +16,7 @@
 
 // Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
-package org.openbot;
+package org.openbot.robot;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -79,6 +79,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.Enums.*;
 import org.openbot.env.AudioPlayer;

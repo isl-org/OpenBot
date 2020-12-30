@@ -1,4 +1,4 @@
-package org.openbot;
+package org.openbot.robot;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
 import org.jetbrains.annotations.NotNull;
+import org.openbot.R;
 import org.openbot.databinding.FragmentGameBinding;
 
 public class GameFragment extends CameraFragment {

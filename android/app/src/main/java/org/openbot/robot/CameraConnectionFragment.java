@@ -16,7 +16,7 @@
 
 // Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
-package org.openbot;
+package org.openbot.robot;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -61,6 +61,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import org.openbot.R;
 import org.openbot.customview.AutoFitTextureView;
 import org.openbot.env.Logger;
 

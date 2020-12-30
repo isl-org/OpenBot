@@ -15,7 +15,7 @@ limitations under the License.
 
 // Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
-package org.openbot;
+package org.openbot.robot;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -42,6 +42,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import org.openbot.R;
 import org.openbot.common.Enums.*;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;

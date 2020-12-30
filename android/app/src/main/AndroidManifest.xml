@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NetworkActivity"
+            android:name=".robot.NetworkActivity"
             android:label="@string/activity_name"
             android:noHistory="false">
             <intent-filter>
@@ -53,7 +53,7 @@
         </activity>
 
         <service
-            android:name=".SensorService"
+            android:name=".robot.SensorService"
             android:enabled="true"
             android:launchMode="singleTask" />
     </application>

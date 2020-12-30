@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import java.util.Objects;
-import org.openbot.NetworkActivity;
 import org.openbot.R;
 import org.openbot.common.Constants;
+import org.openbot.robot.NetworkActivity;
 
 public class MainActivity extends AppCompatActivity {
 
