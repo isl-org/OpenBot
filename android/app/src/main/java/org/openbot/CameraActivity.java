@@ -77,8 +77,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openbot.env.AudioPlayer;
-import org.openbot.env.ControllerEventProcessor;
+import org.openbot.env.BotToControllerEventBus;
+import org.openbot.env.ControllerToBotEventBus;
 import org.openbot.env.GameController;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
@@ -895,7 +898,6 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.controlMode != controlMode) {
       LOGGER.d("Updating  controlMode: " + controlMode);
       this.controlMode = controlMode;
-      preferencesManager.setControlMode(controlMode.ordinal());
       switch (controlMode) {
         case GAMEPAD:
           disconnectPhoneController();
@@ -910,6 +912,8 @@ public abstract class CameraActivity extends AppCompatActivity
         default:
           throw new IllegalStateException("Unexpected value: " + controlMode);
       }
+      preferencesManager.setControlMode(controlMode.ordinal());
+      controlModeSpinner.setSelection(controlMode.ordinal());
     }
   }
 
@@ -918,10 +922,10 @@ public abstract class CameraActivity extends AppCompatActivity
       phoneController.connect(this);
     }
     DriveMode oldDriveMode = driveMode;
+    // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
-    preferencesManager.setDriveMode(oldDriveMode.ordinal());
-    driveModeSpinner.setEnabled(false);
     driveModeSpinner.setAlpha(0.5f);
+    preferencesManager.setDriveMode(oldDriveMode.ordinal());
   }
 
   private void disconnectPhoneController() {
@@ -940,6 +944,7 @@ public abstract class CameraActivity extends AppCompatActivity
       preferencesManager.setDriveMode(driveMode.ordinal());
       gameController.setDriveMode(driveMode);
       driveModeSpinner.setSelection(driveMode.ordinal());
+      BotToControllerEventBus.emitEvent(createStatus("DRIVE_MODE", driveMode.toString()));
     }
   }
 
@@ -1145,6 +1150,7 @@ public abstract class CameraActivity extends AppCompatActivity
       stopLogging();
       loggingEnabled = false;
     }
+    BotToControllerEventBus.emitEvent(createStatus("LOGS", loggingEnabled));
 
     logSpinner.setEnabled(!loggingEnabled);
     if (loggingEnabled) logSpinner.setAlpha(0.5f);
@@ -1303,56 +1309,138 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
-  // Classes to handle events from a Controller.
-  // This can be the entry point to other external controllers
-  // See how PhoneController emits events.
+  /*
+     Classes to handle events from a Controller.
+     This can be the entry point to other external controllers
+     See how PhoneController emits events.
+
+     Expected JSON format:
+     {command: "LOGS"}
+        or
+     {driveCmd: {l:0.2, r:-0.34}}
+  */
+
   private void handleControllerEvents() {
-    ControllerEventProcessor.getProcessor()
+    // Prevent multiple subscriptions. This happens if we select "Phone control multiple times.
+    if (ControllerToBotEventBus.getProcessor().hasObservers()) {
+      return;
+    }
+
+    ControllerToBotEventBus.getProcessor()
         .subscribe(
             event -> {
-              ControllerEventProcessor.ControllerEvent command = event;
+              JSONObject commandJsn = event;
+              String commandType = "";
+              if (commandJsn.has("command")) {
+                commandType = commandJsn.getString("command");
+              } else if (commandJsn.has("driveCmd")) {
+                commandType = "DRIVE_CMD";
+              } else {
+                Log.d(null, "Got invalid command from controller: " + commandJsn.toString());
+                return;
+              }
 
-              switch (command.type) {
-                case DRIVE_CMD:
-                  ControllerEventProcessor.ControllerEvent<ControllerEventProcessor.DriveValue>
-                      driveCommand = event;
-                  ControllerEventProcessor.DriveValue v = driveCommand.payload;
-                  controllerHandler.handleDriveCommand(v.getLeftValue(), v.getRightValue());
+              switch (commandType) {
+                case "DRIVE_CMD":
+                  JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
+                  controllerHandler.handleDriveCommand(
+                      new Float(driveValue.getString("l")), new Float(driveValue.getString("r")));
                   break;
 
-                case LOGGING:
+                case "LOGS":
                   controllerHandler.handleLogging();
                   break;
 
-                case NOISE:
+                case "NOISE":
                   controllerHandler.handleNoise();
                   break;
 
-                case INDICATOR_LEFT:
+                case "INDICATOR_LEFT":
                   controllerHandler.handleIndicatorLeft();
                   break;
 
-                case INDICATOR_RIGHT:
+                case "INDICATOR_RIGHT":
                   controllerHandler.handleIndicatorRight();
                   break;
 
-                case INDICATOR_STOP:
+                case "INDICATOR_STOP":
                   controllerHandler.handleIndicatorStop();
                   break;
 
-                case NETWROK:
+                case "NETWORK":
                   controllerHandler.handleNetwork();
                   break;
 
-                case DRIVE_MODE:
+                case "DRIVE_MODE":
                   controllerHandler.handleDriveMode();
+                  break;
+
+                  // We re connected to the controller, send back status info
+                case "CONNECTED":
+                  // PhoneController class will receive this event and resent it to the controller.
+                  // Other controllers can subscribe to this event as well.
+                  // That is why we are not calling phoneController.send() here directly.
+                  BotToControllerEventBus.emitEvent(getStatus());
+                  break;
+                case "DISCONNECTED":
+                  controllerHandler.handleDriveCommand(0.f, 0.f);
+                  setControlMode(ControlMode.GAMEPAD);
                   break;
               }
             });
   }
 
+  private JSONObject getStatus() {
+    JSONObject status = new JSONObject();
+    try {
+      JSONObject statusValue = new JSONObject();
+
+      statusValue.put("LOGS", this.loggingEnabled);
+      statusValue.put("NOISE", this.noiseEnabled);
+      statusValue.put("NETWORK", this.networkEnabled);
+      statusValue.put("DRIVE_MODE", this.driveMode);
+
+      // Possibly can only send the value of the indicator here, but this makes it clearer.
+      // Also, the controller need not have to know implementation details.
+      statusValue.put("INDICATOR_LEFT", vehicle.getIndicator() == -1);
+      statusValue.put("INDICATOR_RIGHT", vehicle.getIndicator() == 1);
+      statusValue.put("INDICATOR_STOP", vehicle.getIndicator() == 0);
+
+      status.put("status", statusValue);
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return status;
+  }
+
+  protected JSONObject createStatus(String name, Boolean value) {
+    return createStatus(name, value ? "true" : "false");
+  }
+
+  protected JSONObject createStatus(String name, String value) {
+    try {
+      return new JSONObject().put("status", new JSONObject().put(name, value));
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return new JSONObject();
+  }
+
+  private void sendIndicatorStatus(Integer status) {
+    BotToControllerEventBus.emitEvent(createStatus("INDICATOR_LEFT", status == -1));
+    BotToControllerEventBus.emitEvent(createStatus("INDICATOR_RIGHT", status == 1));
+    BotToControllerEventBus.emitEvent(createStatus("INDICATOR_STOP", status == 0));
+  }
+
   // Controller event handler
   protected class ControllerHandler {
+
+    protected void handleDriveCommand(Vehicle.Control control) {
+      vehicle.setControl(control);
+      updateVehicleState();
+    }
+
     protected void handleDriveCommand(Float l, Float r) {
       vehicle.setControl(l, r);
       updateVehicleState();
@@ -1369,27 +1457,30 @@ public abstract class CameraActivity extends AppCompatActivity
     }
 
     protected void handleIndicatorLeft() {
-      vehicle.setIndicator(1);
-      if (loggingEnabled) {
-        sendIndicatorToSensorService();
-      }
-      sendIndicatorToVehicle();
-    }
-
-    protected void handleIndicatorRight() {
-      vehicle.setIndicator(0);
-      if (loggingEnabled) {
-        sendIndicatorToSensorService();
-      }
-      sendIndicatorToVehicle();
-    }
-
-    protected void handleIndicatorStop() {
       vehicle.setIndicator(-1);
       if (loggingEnabled) {
         sendIndicatorToSensorService();
       }
       sendIndicatorToVehicle();
+      sendIndicatorStatus(vehicle.getIndicator());
+    }
+
+    protected void handleIndicatorRight() {
+      vehicle.setIndicator(1);
+      if (loggingEnabled) {
+        sendIndicatorToSensorService();
+      }
+      sendIndicatorToVehicle();
+      sendIndicatorStatus(vehicle.getIndicator());
+    }
+
+    protected void handleIndicatorStop() {
+      vehicle.setIndicator(0);
+      if (loggingEnabled) {
+        sendIndicatorToSensorService();
+      }
+      sendIndicatorToVehicle();
+      sendIndicatorStatus(vehicle.getIndicator());
     }
 
     protected void handleDriveMode() {
@@ -1413,6 +1504,7 @@ public abstract class CameraActivity extends AppCompatActivity
       setNetworkEnabled(!networkEnabled);
       if (networkEnabled) audioPlayer.play(voice, "network_enabled.mp3");
       else {
+        // when network disabled play the active drive mode used for controller
         audioPlayer.playDriveMode(voice, driveMode);
       }
     }

@@ -1,7 +1,6 @@
 package org.openbot.env;
 
 import android.content.Context;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.PayloadCallback;
@@ -11,11 +10,20 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class PhoneController {
+
+  {
+    handleBotEvents();
+  }
 
   private static final String TAG = "PhoneController";
 
-  private static final NearbyConnection connection = new NearbyConnection();
+  private static final NearbyConnection connection;
+
+  static {
+    connection = new NearbyConnection();
+  }
 
   public void connect(Context context) {
     connection.connect(context, payloadCallback);
@@ -25,65 +33,18 @@ public class PhoneController {
     connection.disconnect();
   }
 
+  public void send(JSONObject info) {
+    connection.sendMessage(info.toString());
+  }
+
   // Callbacks for receiving payloads
   private final PayloadCallback payloadCallback =
       new PayloadCallback() {
         @Override
         public void onPayloadReceived(@NotNull String endpointId, Payload payload) {
-          String command = new String(payload.asBytes(), StandardCharsets.UTF_8);
+          String commandStr = new String(payload.asBytes(), StandardCharsets.UTF_8);
           try {
-            JSONObject jsonCommand = new JSONObject(command);
-
-            String buttonValue = null;
-            if (jsonCommand.has("buttonValue")) {
-              buttonValue = jsonCommand.getString("buttonValue");
-            }
-
-            ControllerEventProcessor.ControllerEvent event =
-                new ControllerEventProcessor.ControllerEvent();
-
-            if (buttonValue != null) {
-              switch (buttonValue) {
-                case "LOGS":
-                  event.type = ControllerEventProcessor.ControllerEventsTypes.LOGGING;
-                  break;
-                case "NOISE":
-                  event.type = ControllerEventProcessor.ControllerEventsTypes.NOISE;
-                  break;
-                case "DRIVE_BY_NETWORK":
-                  event.type = ControllerEventProcessor.ControllerEventsTypes.DRIVE_MODE;
-                  break;
-                case "INDICATOR_RIGHT":
-                  event.type = ControllerEventProcessor.ControllerEventsTypes.INDICATOR_RIGHT;
-                  break;
-                case "INDICATOR_LEFT":
-                  event.type = ControllerEventProcessor.ControllerEventsTypes.INDICATOR_LEFT;
-                  break;
-                case "INDICATOR_STOP":
-                  event.type = ControllerEventProcessor.ControllerEventsTypes.INDICATOR_STOP;
-                  break;
-                default:
-                  Log.e(TAG, "Woooo, what are you doing? Will take away your keys!");
-                  return;
-              }
-            }
-
-            // {r:0.22, l:0.3}
-            String rightValue = null;
-            String leftValue = null;
-            if (jsonCommand.has("r") && jsonCommand.has("l")) {
-              leftValue = jsonCommand.getString("l");
-              rightValue = jsonCommand.getString("r");
-            }
-
-            if (rightValue != null && leftValue != null) {
-              event.type = ControllerEventProcessor.ControllerEventsTypes.DRIVE_CMD;
-              event.payload =
-                  new ControllerEventProcessor.DriveValue(
-                      Float.valueOf(leftValue), Float.valueOf(rightValue));
-            }
-            ControllerEventProcessor.emitEvent(event);
-
+            ControllerToBotEventBus.emitEvent(new JSONObject(commandStr));
           } catch (JSONException e) {
             e.printStackTrace();
           }
@@ -96,5 +57,9 @@ public class PhoneController {
 
   public boolean isConnected() {
     return connection.isConnected();
+  }
+
+  private void handleBotEvents() {
+    BotToControllerEventBus.getProcessor().subscribe(event -> send(event));
   }
 }
