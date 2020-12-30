@@ -14,7 +14,8 @@ public class Constants {
 
   // Global
   public static final String ALL = "All";
-  public static final String GLOBAL_VIEW = "Global View";
+  public static final String GLOBAL_VIEW = "Robot";
+  public static final String CONTROLLER = "Controller";
 
   // Game
   public static final String GAME = "Game";
@@ -64,8 +65,10 @@ public class Constants {
 
     ArrayList<SubCategory> subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(Constants.GLOBAL_VIEW, R.drawable.openbot_icon));
+    subCategories.add(new SubCategory(Constants.CONTROLLER, R.drawable.ic_controller));
     categories.add(new Category(Constants.ALL, subCategories));
 
+    /*
     subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(Constants.FREE_ROAM, R.drawable.ic_game));
     subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game));
@@ -108,6 +111,7 @@ public class Constants {
     subCategories.add(new SubCategory(Constants.SENSORS_FROM_PHONE, R.drawable.ic_phonelink));
     subCategories.add(new SubCategory(Constants.MAP_VIEW, R.drawable.ic_map));
     categories.add(new Category(Constants.MONITORING, subCategories));
+*/
 
     return categories;
   }

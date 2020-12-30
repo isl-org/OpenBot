@@ -47,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
                   break;
 
                 case Constants.FREE_ROAM:
-//                  navController.navigate(R.id.action_mainFragment_to_gameFragment);
+                  navController.navigate(R.id.action_mainFragment_to_gameFragment);
+                  break;
+
+                case Constants.CONTROLLER:
                   break;
               }
             });
