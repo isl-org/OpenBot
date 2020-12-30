@@ -19,7 +19,7 @@ import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import org.openbot.CameraActivity;
+import org.openbot.common.Constants;
 
 public class UsbConnection {
   private static final int USB_VENDOR_ID = 6790; // 0x2341; // 9025
@@ -170,7 +170,7 @@ public class UsbConnection {
     // Add whatever you want here
     LOGGER.i("Serial data received: " + data);
     localBroadcastManager.sendBroadcast(
-        new Intent(CameraActivity.USB_ACTION_DATA_RECEIVED)
+        new Intent(Constants.USB_ACTION_DATA_RECEIVED)
             .putExtra("from", "usb")
             .putExtra("data", data));
   }

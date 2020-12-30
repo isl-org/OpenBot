@@ -1,4 +1,4 @@
-package org.openbot;
+package org.openbot.robot;
 
 import android.content.Context;
 import android.net.nsd.NsdManager;

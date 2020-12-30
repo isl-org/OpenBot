@@ -1,6 +1,6 @@
 // Created by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
-package org.openbot;
+package org.openbot.robot;
 
 import android.app.Service;
 import android.content.Context;
@@ -25,6 +25,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import org.openbot.R;
 import org.openbot.env.Logger;
 
 public class SensorService extends Service implements SensorEventListener {

@@ -2,4 +2,7 @@
 <resources>
     <dimen name="bottom_sheet_corner_radius">15dp</dimen>
     <dimen name="bottom_sheet_top_padding">8dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="icon_asset_size">100dp</dimen>
+    <dimen name="feed_padding">16dp</dimen>
 </resources>
