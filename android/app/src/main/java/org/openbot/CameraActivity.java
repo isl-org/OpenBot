@@ -83,6 +83,7 @@ import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.ControllerToBotEventBus;
 import org.openbot.common.Constants;
+import org.openbot.common.Enums.*;
 import org.openbot.env.GameController;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
@@ -181,31 +182,6 @@ public abstract class CameraActivity extends AppCompatActivity
   protected final ControllerHandler controllerHandler = new ControllerHandler();
   private final AudioPlayer audioPlayer = new AudioPlayer(this);
   private final String voice = "matthew";
-
-  public enum LogMode {
-    ALL_IMGS,
-    CROP_IMG,
-    PREVIEW_IMG,
-    ONLY_SENSORS
-  }
-
-  public enum ControlMode {
-    GAMEPAD,
-    PHONE,
-    WEBRTC
-  }
-
-  public enum SpeedMode {
-    SLOW,
-    NORMAL,
-    FAST
-  }
-
-  public enum DriveMode {
-    DUAL,
-    GAME,
-    JOYSTICK,
-  }
 
   protected static Vehicle vehicle = new Vehicle();
 

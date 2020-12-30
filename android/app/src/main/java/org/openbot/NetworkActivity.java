@@ -42,6 +42,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import org.openbot.common.Enums.*;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;
 import org.openbot.env.BorderedText;
