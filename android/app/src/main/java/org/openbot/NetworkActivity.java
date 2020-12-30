@@ -435,13 +435,11 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     if (!networkEnabled) {
       // Check that the event came from a game controller
       if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
-          && event.getAction() == MotionEvent.ACTION_MOVE) {
-        if (controlMode == ControlMode.GAMEPAD) {
-          // Process the current movement sample in the batch (position -1)
-          vehicle.setControl(gameController.processJoystickInput(event, -1));
-          updateVehicleState();
-          return true;
-        }
+          && event.getAction() == MotionEvent.ACTION_MOVE
+          && controlMode == ControlMode.GAMEPAD) {
+        // Process the current movement sample in the batch (position -1)
+        controllerHandler.handleDriveCommand(gameController.processJoystickInput(event, -1));
+        return true;
       }
     }
     return super.dispatchGenericMotionEvent(event);
@@ -451,7 +449,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   public boolean dispatchKeyEvent(KeyEvent event) {
     // Check that the event came from a game controller
     if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
-        && event.getAction() == KeyEvent.ACTION_UP) {
+        && event.getAction() == KeyEvent.ACTION_UP
+        && controlMode == ControlMode.GAMEPAD) {
       switch (event.getKeyCode()) {
         case KeyEvent.KEYCODE_BUTTON_A:
           controllerHandler.handleLogging();

@@ -898,7 +898,6 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.controlMode != controlMode) {
       LOGGER.d("Updating  controlMode: " + controlMode);
       this.controlMode = controlMode;
-      preferencesManager.setControlMode(controlMode.ordinal());
       switch (controlMode) {
         case GAMEPAD:
           disconnectPhoneController();
@@ -913,6 +912,8 @@ public abstract class CameraActivity extends AppCompatActivity
         default:
           throw new IllegalStateException("Unexpected value: " + controlMode);
       }
+      preferencesManager.setControlMode(controlMode.ordinal());
+      controlModeSpinner.setSelection(controlMode.ordinal());
     }
   }
 
@@ -921,10 +922,10 @@ public abstract class CameraActivity extends AppCompatActivity
       phoneController.connect(this);
     }
     DriveMode oldDriveMode = driveMode;
+    // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
-    preferencesManager.setDriveMode(oldDriveMode.ordinal());
-    driveModeSpinner.setEnabled(false);
     driveModeSpinner.setAlpha(0.5f);
+    preferencesManager.setDriveMode(oldDriveMode.ordinal());
   }
 
   private void disconnectPhoneController() {
@@ -1381,6 +1382,10 @@ public abstract class CameraActivity extends AppCompatActivity
                   // That is why we are not calling phoneController.send() here directly.
                   BotToControllerEventBus.emitEvent(getStatus());
                   break;
+                case "DISCONNECTED":
+                  controllerHandler.handleDriveCommand(0.f, 0.f);
+                  setControlMode(ControlMode.GAMEPAD);
+                  break;
               }
             });
   }
@@ -1430,6 +1435,12 @@ public abstract class CameraActivity extends AppCompatActivity
 
   // Controller event handler
   protected class ControllerHandler {
+
+    protected void handleDriveCommand(Vehicle.Control control) {
+      vehicle.setControl(control);
+      updateVehicleState();
+    }
+
     protected void handleDriveCommand(Float l, Float r) {
       vehicle.setControl(l, r);
       updateVehicleState();

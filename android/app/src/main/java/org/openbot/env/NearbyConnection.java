@@ -153,6 +153,11 @@ public class NearbyConnection {
                   Toast.LENGTH_LONG)
               .show();
           Log.i(TAG, "onDisconnected: disconnected from the opponent");
+          try {
+            ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
         }
       };
 
