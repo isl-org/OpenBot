@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Openbot Controller</string>
+    <string name="Indicator_right">Right</string>
+    <string name="Indicator_left">Left</string>
+    <string name="Indicator_stop">Stop</string>
+    <string name="Exit">Exit</string>
+    <string name="Noise">Noise</string>
+    <string name="Network">Network</string>
+    <string name="Drive_mode">Drive Mode</string>
+    <string name="reconnect">Search again</string>
+    <string name="searching">Searching for Bot…</string>
+    <string name="hint_connect">Select <u>Phone Conrol</u> on the Bot app to connect</string>
+    <string name="switch_screens">Double-tap to switch screens</string>
+    <string name="logs">Logs</string>
+    <string name="openbot_icon">OpenBot Icon</string>
+
+
+</resources>
