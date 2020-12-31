@@ -9,6 +9,9 @@
 # Java class files
 *.class
 
+# Network files
+*.tflite
+
 # Generated files
 bin/
 gen/

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'de.undercouch.download'
 
 android {
     compileSdkVersion 30
@@ -17,12 +18,13 @@ android {
         }
     }
 
-//    lintOptions {
-//        checkReleaseBuilds false
-//        // Or, if you prefer, you can continue to check for errors in release builds,
-//        // but continue the build even when errors are found:
-//        abortOnError false
-//    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
     buildFeatures {
         viewBinding true
     }
@@ -36,6 +38,9 @@ android {
     }
 }
 
+// Download default models
+project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
+apply from:'download.gradle'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])

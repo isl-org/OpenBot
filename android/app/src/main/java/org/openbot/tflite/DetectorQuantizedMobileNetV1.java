@@ -89,7 +89,7 @@ public class DetectorQuantizedMobileNetV1 extends Detector {
 
   @Override
   protected String getLabelPath() {
-    return "labelmap.txt";
+    return "networks/labelmap.txt";
   }
 
   @Override
