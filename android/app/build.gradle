@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "org.openbot"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
     }
@@ -83,7 +83,7 @@ dependencies {
     // CameraX Lifecycle Library
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     // CameraX View class
-    implementation "androidx.camera:camera-view:1.0.0-alpha20"
+    implementation "androidx.camera:camera-view:1.0.0-alpha19"
 
     // For a library module, uncomment the following line
     // implementation project(path: ':controller')
