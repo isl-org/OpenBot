@@ -1,0 +1,12 @@
+task downloadNetworks(type: Download) {
+    src([
+            'https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite',
+            'https://storage.googleapis.com/openbot_models/mobile_ssd_v3_small_quant_coco.tflite',
+            'https://storage.googleapis.com/openbot_models/autopilot_float.tflite'
+    ])
+    src
+    dest project.ext.ASSET_DIR + '/networks'
+    onlyIfModified true
+}
+
+preBuild.dependsOn downloadNetworks
