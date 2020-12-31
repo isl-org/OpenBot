@@ -14,6 +14,7 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
@@ -22,33 +23,34 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDelegate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_fullscreen.*
 import org.openbot.controller.customComponents.DualDriveSeekBar
+import org.openbot.controller.databinding.ActivityFullscreenBinding
 import org.openbot.controller.utils.EventProcessor
 import org.openbot.controller.utils.Utils
 
 class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppCompatActivity gives errors in the IDE, but it does compile,
     private val TAG = "OpenbotControllerActivity"
     private var buttonsVisible: Boolean = false
+    private lateinit var binding: ActivityFullscreenBinding
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_fullscreen)
+        binding = ActivityFullscreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         createAppEventsSubscription()
 
-        leftDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.LEFT)
-        rightDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.RIGHT)
+        binding.leftDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.LEFT)
+        binding.rightDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.RIGHT)
 
         hideControls()
         hideSystemUI()
 
-        mainScreen.setupDoubleTap(::toggleButtons)
+        binding.mainScreen.setupDoubleTap(::toggleButtons)
         BotDataListener.init()
     }
 
@@ -61,42 +63,42 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
     }
 
     private fun hideButtons() {
-        botSetupButtons.hide()
+        binding.botSetupButtons.hide()
         showSliders()
         buttonsVisible = false
     }
 
     private fun hideSliders() {
-        driveModeControls.hide()
+        binding.driveModeControls.hide()
     }
 
     private fun showSliders() {
-        driveModeControls.show()
+        binding.driveModeControls.show()
     }
 
     private fun showButtons(milliseconds: Long) {
         showButtons()
 
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             hideButtons()
         }, milliseconds)
     }
 
     private fun showButtons() {
-        botSetupButtons.show()
+        binding.botSetupButtons.show()
 
         hideSliders()
         buttonsVisible = true
     }
 
     private fun hideControls() {
-        mainScreen.hide()
-        splashScreen.show()
+        binding.mainScreen.hide()
+        binding.splashScreen.show()
     }
 
     private fun showControls() {
-        splashScreen.hide()
-        mainScreen.show()
+        binding.splashScreen.hide()
+        binding.mainScreen.show()
 
         showButtons(3000)
     }
