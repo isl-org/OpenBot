@@ -43,19 +43,19 @@
 #define OPENBOT PCB_V1
 
 // Enable/Disable voltage divider (1,0)
-#define HAS_VOLTAGE_DIVIDER 1
+#define HAS_VOLTAGE_DIVIDER 0
 
 // Enable/Disable indicators (1,0)
 #define HAS_INDICATORS 0
 
 // Enable/Disable speed sensors (1,0)
-#define HAS_SPEED_SENSORS 1
+#define HAS_SPEED_SENSORS 0
 
 // Enable/Disable dynamic motor trimming.Only works with Speed Sensors (1,0)
 #define USE_SPEED_TRIM 0
 
 // Enable/Disable sonar (1,0)
-#define HAS_SONAR 1
+#define HAS_SONAR 0
 
 // Enable/Disable median filter for sonar measurements (1,0)
 #define USE_MEDIAN 0
@@ -122,7 +122,7 @@
 const unsigned int STOP_THRESHOLD = 32; //cm
 
 #if NO_PHONE_MODE
-  int PHONE_MODE_SPEED = 128
+  int PHONE_MODE_SPEED = 128;
   int turn_direction = 0; // right
   const unsigned long TURN_DIRECTION_INTERVAL = 2000; // How frequently to change turn direction (ms).
   unsigned long turn_direction_timeout = 0;   // After timeout (ms), random turn direction is updated.
@@ -454,17 +454,19 @@ void send_vehicle_data() {
     Serial.print(ticks_right);
     Serial.print(",");
     Serial.print(distance_estimate);
-    Serial.print(",");
-    Serial.print(speed_left);
-    Serial.print(",");
-    Serial.print(speed_right);
-    Serial.print(",");
-    Serial.print(vhcl_motor_left);
-    Serial.print(",");
-    Serial.print(vhcl_motor_right);
-    Serial.print(",");
-    Serial.print(speed_trim);    
-    Serial.println();
+    #if USE_SPEED_TRIM
+      Serial.print(",");
+      Serial.print(speed_left);
+      Serial.print(",");
+      Serial.print(speed_right);
+      Serial.print(",");
+      Serial.print(vhcl_motor_left);
+      Serial.print(",");
+      Serial.print(vhcl_motor_right);
+      Serial.print(",");
+      Serial.print(speed_trim);    
+      Serial.println();
+    #endif
   #endif 
   
   #if HAS_OLED
