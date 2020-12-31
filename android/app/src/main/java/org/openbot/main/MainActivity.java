@@ -9,11 +9,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.util.Objects;
 import org.openbot.R;
 import org.openbot.common.Constants;
+import org.openbot.robot.NetworkActivity;
 
 // For a library module, uncomment the following line
 // import org.openbot.controller.ControllerActivity;
-
-import org.openbot.robot.NetworkActivity;
 
 public class MainActivity extends AppCompatActivity {
 

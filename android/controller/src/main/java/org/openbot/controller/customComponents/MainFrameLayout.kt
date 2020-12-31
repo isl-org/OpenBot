@@ -37,7 +37,7 @@ class MainFrameLayout @JvmOverloads constructor(
 
         val gestureDetector = GestureDetector(context, GestureListener())
 
-        setOnTouchListener { v: View, m: MotionEvent ->
+        setOnTouchListener { _: View, m: MotionEvent ->
             gestureDetector.onTouchEvent(m)
             true
         }

@@ -27,7 +27,6 @@ import org.openbot.controller.customComponents.DualDriveSeekBar
 import org.openbot.controller.utils.EventProcessor
 import org.openbot.controller.utils.Utils
 
-@Suppress("DEPRECATION")
 class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppCompatActivity gives errors in the IDE, but it does compile,
     private val TAG = "OpenbotControllerActivity"
     private var buttonsVisible: Boolean = false
