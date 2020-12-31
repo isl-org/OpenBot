@@ -9,6 +9,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.util.Objects;
 import org.openbot.R;
 import org.openbot.common.Constants;
+
+// For a library module, uncomment the following line
+// import org.openbot.controller.ControllerActivity;
+
 import org.openbot.robot.NetworkActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
                   break;
 
                 case Constants.CONTROLLER:
+                  // For a library module, uncomment the following line
+                  // intent = new Intent(this, ControllerActivity.class);
+                  // startActivity(intent);
                   break;
               }
             });
