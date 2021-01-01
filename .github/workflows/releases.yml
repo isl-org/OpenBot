@@ -26,17 +26,33 @@ jobs:
         id: assemble_debug_apk
         run: |
           ./gradlew assembleDebug
-          echo "::set-output name=debug_apk_path::$(pwd)/app/build/outputs/apk/debug/app-debug.apk"
-      - name: Specify Release Asset Name using tag [${{github.event.release.tag_name}}]
-        id: make_asset_name
-        run: echo "::set-output name=asset_name::OpenBot-$(echo ${{github.event.release.tag_name}}| sed 's/[^-a-zA-Z0-9.]/_/g'| sed 's/^v//').apk"
-      - name: Upload Release Asset
-        id: upload-release-asset
+      - name: Specify Release Asset Paths
+        id: asset_paths
+        run:  |
+          echo "::set-output name=openbot_apk_path::$(pwd)/app/build/outputs/apk/debug/app-debug.apk"
+          echo "::set-output name=controller_apk_path::$(pwd)/controller/build/outputs/apk/debug/controller-debug.apk"
+      - name: Specify Release Asset Names using Tag [${{github.event.release.tag_name}}]
+        id: asset_names
+        run:  |
+          echo "::set-output name=openbot_name::OpenBot-$(echo ${{github.event.release.tag_name}}| sed 's/[^-a-zA-Z0-9.]/_/g'| sed 's/^v//').apk"
+          echo "::set-output name=controller_name::Controller-$(echo ${{github.event.release.tag_name}}| sed 's/[^-a-zA-Z0-9.]/_/g'| sed 's/^v//').apk"
+      - name: Upload OpenBot Asset
+        id: upload-openbot-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.assemble_debug_apk.outputs.debug_apk_path }}
-          asset_name: ${{steps.make_asset_name.outputs.asset_name}}
+          asset_path: ${{ steps.asset_paths.outputs.openbot_apk_path }}
+          asset_name: ${{ steps.asset_names.outputs.openbot_name }}
+          asset_content_type: application/vnd.android.package-archive
+      - name: Upload Controller Asset
+        id: upload-controller-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.asset_paths.outputs.controller_apk_path }}
+          asset_name: ${{ steps.asset_names.outputs.controller_name }}
           asset_content_type: application/vnd.android.package-archive
