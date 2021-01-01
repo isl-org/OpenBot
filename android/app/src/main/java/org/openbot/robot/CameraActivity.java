@@ -1131,8 +1131,8 @@ public abstract class CameraActivity extends AppCompatActivity
     if (loggingEnabled) logSpinner.setAlpha(0.5f);
     else logSpinner.setAlpha(1.0f);
     logSwitchCompat.setChecked(loggingEnabled);
-    if (loggingEnabled) logSwitchCompat.setText("Logging");
-    else logSwitchCompat.setText("Not Logging");
+    if (loggingEnabled) logSwitchCompat.setText(R.string.logging);
+    else logSwitchCompat.setText(R.string.not_logging);
   }
 
   protected abstract void processImage();
@@ -1190,7 +1190,7 @@ public abstract class CameraActivity extends AppCompatActivity
       connectionSwitchCompat.setText(usbConnection.getProductName());
       Toast.makeText(getContext(), "Connected.", Toast.LENGTH_SHORT).show();
     } else {
-      connectionSwitchCompat.setText("No Device");
+      connectionSwitchCompat.setText(R.string.no_device);
       // Tried to connect but failed
       if (isChecked) {
         Toast.makeText(getContext(), "Please check the USB connection.", Toast.LENGTH_SHORT).show();
@@ -1319,7 +1319,8 @@ public abstract class CameraActivity extends AppCompatActivity
                 case "DRIVE_CMD":
                   JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
                   controllerHandler.handleDriveCommand(
-                      new Float(driveValue.getString("l")), new Float(driveValue.getString("r")));
+                      Float.valueOf(driveValue.getString("l")),
+                      Float.valueOf(driveValue.getString("r")));
                   break;
 
                 case "LOGS":

@@ -88,4 +88,6 @@ dependencies {
     // CameraX View class
     implementation "androidx.camera:camera-view:1.0.0-alpha19"
 
+    // For a library module, uncomment the following line
+    // implementation project(path: ':controller')
 }

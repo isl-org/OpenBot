@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Developed for the OpenBot project (https://openbot.org) by:
+  ~
+  ~ Ivo Zivkov
+  ~ izivkov@gmail.com
+  ~
+  ~ Date: 2020-12-29, 11:07 a.m.
+  -->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="24dp"
+        android:height="24dp"
+        android:drawable="@drawable/left_notch"
+        android:gravity="center_vertical"
+        >
+    </item>
+
+    <item
+        android:width="24dp"
+        android:height="24dp"
+        android:gravity="right|center_vertical">
+        <rotate android:fromDegrees="180.0" android:toDegrees="0.0"
+            android:drawable="@drawable/left_notch"/>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="2dp"
+                android:color="@color/colorPrimary" />
+            <corners android:radius="10dp" />
+            <solid android:color="#00000000" />
+        </shape>
+    </item>
+
+</layer-list>

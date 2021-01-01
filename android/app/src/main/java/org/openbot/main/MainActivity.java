@@ -11,6 +11,9 @@ import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.robot.NetworkActivity;
 
+// For a library module, uncomment the following line
+// import org.openbot.controller.ControllerActivity;
+
 public class MainActivity extends AppCompatActivity {
 
   private MainViewModel viewModel;
@@ -50,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
                   break;
 
                 case Constants.CONTROLLER:
+                  // For a library module, uncomment the following line
+                  // intent = new Intent(this, ControllerActivity.class);
+                  // startActivity(intent);
                   break;
               }
             });

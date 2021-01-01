@@ -61,6 +61,7 @@
     <string name="log_setting">Log Setting</string>
     <string name="camera_facing_back">Back</string>
     <string name="camera_facing_front">Front</string>
+    <string name="logging">Logging</string>
     <string name="not_logging">Not Logging</string>
     <string name="no_device">No Device</string>
     <string name="data_log">Data Log</string>
