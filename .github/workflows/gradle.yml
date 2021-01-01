@@ -40,9 +40,13 @@ jobs:
         run: ./gradlew lint
       - name: Build
         run: ./gradlew build
-      - name: Upload
+      - name: Upload OpenBot App
         uses: actions/upload-artifact@v2
         with:
-          name: app-debug.apk
+          name: openbot-debug.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
-
+      - name: Upload Controller App
+        uses: actions/upload-artifact@v2
+        with:
+          name: controller-debug.apk
+          path: android/controller/build/outputs/apk/debug/controller-debug.apk
