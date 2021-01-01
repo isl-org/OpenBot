@@ -38,7 +38,6 @@ import android.media.Image;
 import android.media.Image.Plane;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -64,7 +63,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -1321,7 +1319,8 @@ public abstract class CameraActivity extends AppCompatActivity
                 case "DRIVE_CMD":
                   JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
                   controllerHandler.handleDriveCommand(
-                      Float.valueOf(driveValue.getString("l")), Float.valueOf(driveValue.getString("r")));
+                      Float.valueOf(driveValue.getString("l")),
+                      Float.valueOf(driveValue.getString("r")));
                   break;
 
                 case "LOGS":
