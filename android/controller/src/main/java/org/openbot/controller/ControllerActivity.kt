@@ -29,7 +29,7 @@ import org.openbot.controller.utils.EventProcessor
 import org.openbot.controller.utils.Utils
 
 class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppCompatActivity gives errors in the IDE, but it does compile,
-    private val TAG = "OpenbotControllerActivity"
+    private val TAG = "ControllerActivity"
     private var buttonsVisible: Boolean = false
     private lateinit var binding: ActivityFullscreenBinding
 

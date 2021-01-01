@@ -17,6 +17,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildFeatures {
         viewBinding true
     }
@@ -28,10 +29,6 @@ android {
             versionNameSuffix '1.0'
             debuggable true
         }
-    }
-
-    buildFeatures {
-        viewBinding true
     }
 
     compileOptions {
