@@ -29,7 +29,7 @@ function DatasetInfo(props: Dataset) {
         <Panel header={<Link to={props.path}>{props.name}</Link>} shaded>
             <div>Sessions: {props.sessions.length}</div>
             <div>Length: {formatTime(props.sessions.reduce((sum, cur) => sum + cur.seconds, 0))}</div>
-            <div>Frames: {props.sessions.reduce((sum, cur) => sum + cur.frames, 0)}</div>
+            <div>Frames: {props.sessions.reduce((sum, cur) => sum + cur.ctrl.length, 0)}</div>
         </Panel>
     );
 }

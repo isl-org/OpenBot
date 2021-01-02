@@ -1,6 +1,7 @@
 import {useEffect} from 'react';
-import {Link, Route, Switch, useParams, useRouteMatch} from 'react-router-dom';
-import {Dropdown, Loader, Panel} from 'rsuite';
+import {Link, Route, Switch, useRouteMatch} from 'react-router-dom';
+import {Dropdown, Panel} from 'rsuite';
+import {SessionPage} from 'src/pages/SessionPage';
 import {formatTime} from 'src/utils/formatTime';
 import {Session} from 'src/utils/useDatasets';
 import {GridView} from '../components/GridView';
@@ -10,31 +11,15 @@ import {useRpc} from '../utils/useRpc';
 import {useToggle} from '../utils/useToggle';
 import {subscribe} from '../utils/ws';
 
-const defaultValue = {
-    path: '',
-    session: undefined as Session | undefined,
-    file_list: [] as Session[],
-}
+const defaultValue =  [] as Session[];
 
-export function UploadedPage() {
+export function SessionListPage() {
     const match = useRouteMatch();
     return (
         <Switch>
-            <Route path={match.url + '/:path'} component={SessionPanel}/>
+            <Route path={match.url + '/:path'} component={SessionPage}/>
             <Route component={ListView}/>
         </Switch>
-    );
-}
-
-function SessionPanel() {
-    const {path} = useParams<any>();
-    const info = useRpc(defaultValue, 'listDir',  {path: 'uploaded/'+path});
-    const {session} = info.value;
-    return (
-        <Panel shaded>
-            <h3>{path}</h3>
-            {session ? <SessionComp {...session}/> : <Loader/>}
-        </Panel>
     );
 }
 
@@ -45,12 +30,12 @@ function ListView() {
     return <>
         <h3>Sessions in {match.url}</h3>
         <GridView>
-            {!value.file_list.length && (
+            {!value.length && (
                 <Panel shaded>
                     No sessions
                 </Panel>
             )}
-            {value.file_list.map(s => (
+            {value.map(s => (
                 <Panel key={s.path} bodyFill shaded>
                     <SessionComp {...s}/>
                 </Panel>
@@ -74,7 +59,8 @@ function SessionComp(props: Session) {
                     </Dropdown>
                 </div>
                 <div>Length: {formatTime(props.seconds)}</div>
-                <div>Frames: {props.frames}</div>
+                <div>Frames: {props.ctrl.length}</div>
+                {props.error && <div>Error: {props.error}</div>}
             </Panel>
             {showMove && <MoveModal path={props.path} show={showMove} onHide={toggleMove}/>}
             <DeleteModal path={props.path} show={showDel} onHide={toggleDel}/>

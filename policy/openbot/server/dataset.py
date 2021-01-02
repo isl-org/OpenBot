@@ -35,8 +35,12 @@ def listdir(*parts):
     return list1
 
 
-def get_info(dir_path, basename):
-    path = os.path.join(dir_path, basename)
+def get_info(path, basename=None):
+    path = path.lstrip("/")
+    if basename:
+        path = os.path.join(path, basename)
+    else:
+        basename = os.path.basename(path)
     real_path = dataset_dir + "/" + path
     if not os.path.isdir(real_path):
         return None
@@ -51,21 +55,27 @@ def get_info(dir_path, basename):
                 redo_matching=False,
                 remove_zeros=True,
             )
+            keys = list(frames.keys())
+            seconds = int((keys[-1] - keys[0]) / 1000 / 1000 / 1000)
+            ctrl = []
+            for key in frames:
+                frame = frames[key]
+                frame[0] = os.path.basename(frame[0])
+                ctrl.append(frame)
+            error = None
         except Exception as e:
             traceback.print_exc()
-            frames = []
+            seconds = 0
+            ctrl = []
+            error = str(e)
 
-        keys = list(frames.keys())
         return {
             "path": "/" + path,
             "name": basename,
             "is_session": isSession,
-            "images": len(os.listdir(real_path + "/images")),
-            "rgbFrames": count_lines(real_path + "/sensor_data/rgbFrames.txt") - 1,
-            "indicator": count_lines(real_path + "/sensor_data/indicatorLog.txt") - 1,
-            "ctrl": count_lines(real_path + "/sensor_data/ctrlLog.txt") - 1,
-            "frames": len(frames),
-            "seconds": int((keys[-1] - keys[0]) / 1000 / 1000 / 1000),
+            "ctrl": ctrl,
+            "seconds": seconds,
+            "error": error,
         }
 
     files = os.listdir(real_path)

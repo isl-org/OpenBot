@@ -123,7 +123,11 @@ def match_frame_session(session_dir, max_offset, redo_matching=False, remove_zer
     else:
         #Match frames with control signals
         frame_list = read_file_list(os.path.join(sensor_path,"rgbFrames.txt"))
+        if len(frame_list) == 0:
+            raise Exception("Empty rgbFrames.txt")
         ctrl_list = read_file_list(os.path.join(sensor_path,"ctrlLog.txt"))
+        if len(ctrl_list) == 0:
+            raise Exception("Empty ctrlLog.txt")
         matches = associate(frame_list, ctrl_list, max_offset)
         with open(os.path.join(sensor_path,"matched_frame_ctrl.txt"), 'w') as f:
             f.write("timestamp (frame),time_offset (ctrl-frame),frame,left,right\n")
@@ -136,17 +140,11 @@ def match_frame_session(session_dir, max_offset, redo_matching=False, remove_zer
     else:
         #Match frames and controls with indicator commands
         frame_list = read_file_list(os.path.join(sensor_path,"matched_frame_ctrl.txt"))
+        if len(frame_list) == 0:
+            raise Exception("Empty matched_frame_ctrl.txt")
         cmd_list = read_file_list(os.path.join(sensor_path,"indicatorLog.txt"))
         #Set indicator signal to 0 for initial frames
-        print()
-        print(len(frame_list))
-        print(len(cmd_list))
-        if len(cmd_list) == 0:
-            cmd_list = {'0': 0}
-        print()
-        print(len(frame_list))
-        print(len(cmd_list))
-        if sorted(frame_list)[0]<sorted(cmd_list)[0]:
+        if len(cmd_list) == 0 or sorted(frame_list)[0]<sorted(cmd_list)[0]:
             cmd_list[sorted(frame_list)[0]] = ['0']
         matches = associate(frame_list, cmd_list, max_offset)
         with open(os.path.join(sensor_path,"matched_frame_ctrl_cmd.txt"), 'w') as f:

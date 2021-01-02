@@ -28,7 +28,7 @@ export function Plot(props: {logs: any[], metric: string}) {
 
 function logToData(logs: any[], metrics: string[]): ChartData {
     return {
-        labels: logs.map(l => l.epoch),
+        labels: logs.map((l, i) => l.epoch || i),
         datasets: metrics.map((metric, i) => ({
             borderColor: colors[i],
             borderWidth: 2,

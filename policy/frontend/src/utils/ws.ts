@@ -47,7 +47,7 @@ export function jsonRpc<T>(method: string, ...params: any[]) {
         setTimeout(() => {
             done();
             reject("JsonRpc timeout");
-        }, 10000);
+        }, 30000);
     });
 }
 

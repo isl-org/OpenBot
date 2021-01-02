@@ -3,8 +3,9 @@ import {useRpc} from 'src/utils/useRpc';
 export interface Session {
     name: string;
     path: string;
-    frames: number;
     seconds: number;
+    ctrl: string[][];
+    error?: string;
 }
 
 export interface Dataset {

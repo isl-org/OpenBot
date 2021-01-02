@@ -10,10 +10,11 @@ import numpy as np
 from numpyencoder import NumpyEncoder
 
 from .dataset import get_dataset_list, get_dir_info, get_info
-from .models import get_models, models_dir
+from .models import get_model_info, get_models
 from .preview import handle_preview
+from .prediction import getPrediction
 from .upload import handle_file_upload
-from .. import base_dir, dataset_dir
+from .. import base_dir, dataset_dir, models_dir
 from ..train import CancelledException, Hyperparameters, MyCallback, start_train
 
 event_cancelled = threading.Event()
@@ -62,7 +63,10 @@ async def init_api(app: web.Application):
         ("", listDir),
         ("", getDatasets),
         ("", getModels),
+        ("", getModelInfo),
         ("", getHyperparameters),
+        ("", getPrediction),
+        ("", getSession),
         ("", moveSession),
         ("", deleteSession),
         ("", start),
@@ -75,14 +79,11 @@ async def init_api(app: web.Application):
 
 
 def listDir(params):
-    path = params["path"].lstrip("/")
-    basename = os.path.basename(path.rstrip("/"))
-    dir_path = os.path.dirname(path.rstrip("/"))
-    return dict(
-        path=path,
-        session=get_info(dir_path + "/", basename),
-        file_list=get_dir_info(path),
-    )
+    return get_dir_info(params["path"].lstrip("/"))
+
+
+async def getSession(path):
+    return get_info(path)
 
 
 async def moveSession(params):
@@ -111,6 +112,10 @@ def getDatasets():
         train=get_dataset_list("train_data"),
         test=get_dataset_list("test_data"),
     )
+
+
+def getModelInfo(name):
+    return get_model_info(name)
 
 
 def getModels():

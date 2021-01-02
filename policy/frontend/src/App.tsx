@@ -2,11 +2,11 @@ import {Route, Switch} from 'react-router-dom';
 import {Container, Content, Header, Nav, Navbar} from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 import './App.css';
+import {SessionListPage} from 'src/pages/SessionListPage';
 import {ConnectionAlert} from './components/ConnectionAlert';
 import {HomePage} from './pages/HomePage';
 import {ModelsPage} from './pages/ModelsPage';
 import {TrainPage} from './pages/TrainPage';
-import {UploadedPage} from './pages/UploadedPage';
 
 function App() {
     return (
@@ -32,13 +32,13 @@ function App() {
                         <ModelsPage />
                     </Route>
                     <Route path="/uploaded">
-                        <UploadedPage />
+                        <SessionListPage />
                     </Route>
                     <Route path="/train_data/:model">
-                        <UploadedPage />
+                        <SessionListPage />
                     </Route>
                     <Route path="/test_data/:model">
-                        <UploadedPage />
+                        <SessionListPage />
                     </Route>
                     <Route path="/train">
                         <TrainPage />

@@ -9,13 +9,13 @@ import tensorflow as tf
 
 from . import (
     associate_frames,
-    base_dir,
     callbacks,
     dataloader,
     dataset_dir,
     losses,
     metrics,
     models,
+    models_dir,
     utils,
 )
 
@@ -31,7 +31,6 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
-models_dir = os.path.join(base_dir, "models")
 dataset_name = "my_openbot"
 
 train_data_dir = os.path.join(dataset_dir, "train_data")
@@ -119,11 +118,12 @@ class MyCallback(tf.keras.callbacks.Callback):
         self.epoch = epoch
 
     def on_epoch_end(self, epoch, logs=None):
-        print("on_epoch_end", logs)
-        self.broadcast("logs", logs)
+        msg = logs.copy()
+        msg["epoch"] = epoch
+        print("on_epoch_end", msg)
+        self.broadcast("logs", msg)
 
     def on_batch_end(self, batch, logs=None):
-        print("on_batch_end", logs)
         if self.cancelled.is_set():
             raise CancelledException
         self.step = batch + 1
@@ -235,20 +235,11 @@ def load_data(tr: Training, verbose=0):
             label = tf.reverse(label, axis=[0])
         return img, cmd, label
 
-    def decode_img(img):
-        # convert the compressed string to a 3D uint8 tensor
-        img = tf.image.decode_jpeg(img, channels=3)
-        # Use `convert_image_dtype` to convert to floats in the [0,1] range.
-        img = tf.image.convert_image_dtype(img, tf.float32)
-        return img
-
     def process_train_path(file_path):
         cmd, label = train_data.get_label(
             tf.strings.regex_replace(file_path, "[/\\\\]", "/")
         )
-        # load the raw data from the file as a string
-        img = tf.io.read_file(file_path)
-        img = decode_img(img)
+        img = utils.load_img(file_path)
         img = augment_img(img)
         if tr.hyperparameters.FLIP_AUG:
             img, cmd, label = flip_sample(img, cmd, label)
@@ -260,9 +251,7 @@ def load_data(tr: Training, verbose=0):
         cmd, label = test_data.get_label(
             tf.strings.regex_replace(file_path, "[/\\\\]", "/")
         )
-        # load the raw data from the file as a string
-        img = tf.io.read_file(file_path)
-        img = decode_img(img)
+        img = utils.load_img(file_path)
         return (img, cmd), label
 
     # Set `num_parallel_calls` so multiple images are loaded/processed in parallel.

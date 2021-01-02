@@ -5,7 +5,7 @@ import sys
 
 from aiohttp import web
 
-from openbot import base_dir
+from openbot import base_dir, dataset_dir
 
 
 async def init_frontend(app: web.Application):
@@ -13,8 +13,11 @@ async def init_frontend(app: web.Application):
 
     async def handle_static(request: web.Request):
         path = request.match_info.get("path") or "index.html"
-        if path[-4:] == ".png":
+        if path[-4:] == ".png" or path[-5:] == ".jpeg":
             real = os.path.join(base_dir, path)
+            if os.path.isfile(real):
+                return web.FileResponse(real)
+            real = os.path.join(dataset_dir, path)
             if os.path.isfile(real):
                 return web.FileResponse(real)
         if public_dir:
