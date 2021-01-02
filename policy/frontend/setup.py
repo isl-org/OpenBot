@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="openbot_frontend",
-    version="0.2.0",
+    version="0.3.0",
     description="OpenBot Frontend package",
     url="https://github.com/sanyatuning/OpenBot",
     author="Balazs Sandor",

@@ -2,4 +2,4 @@ aiohttp[speedups]
 aiohttp-devtools
 aiozeroconf
 imageio
-openbot_frontend==0.2.0
+openbot_frontend==0.3.0
