@@ -19,7 +19,9 @@ async def init_frontend(app: web.Application):
                 return web.FileResponse(real)
             real = os.path.join(dataset_dir, path)
             if os.path.isfile(real):
-                return web.FileResponse(real)
+                return web.FileResponse(
+                    real, headers={"Cache-Control": "public, max-age=2592000"}
+                )
         if public_dir:
             return web.FileResponse(os.path.join(public_dir, path))
         else:

@@ -11,13 +11,15 @@ def getPrediction(params):
         return []
 
     # Load the TFLite model and allocate tensors.
-    interpreter = utils.load_tflite(models_dir, params["model"], "checkpoints", "best.tflite")
+    interpreter = utils.load_tflite(
+        models_dir, params["model"], "checkpoints", "best.tflite"
+    )
     interpreter.allocate_tensors()
 
     # Get input and output tensors.
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
-    '''
+    """
     input_details [
         {'name': 'cmd_input', 'index': 66, 'shape': array([1, 1], dtype=int32),
                                                             'dtype': <class 'numpy.float32'>, 'quantization': (0.0, 0)},
@@ -26,10 +28,12 @@ def getPrediction(params):
     output_details [
         {'name': 'Identity', 'index': 0, 'shape': array([1, 2], dtype=int32),
         'dtype': <class 'numpy.float32'>, 'quantization': (0.0, 0)}]
-    '''
+    """
 
     real_path = dataset_dir + params["path"]
-    frames = associate_frames.read_file_list(real_path + "/sensor_data/matched_frame_ctrl_cmd_processed.txt")
+    frames = associate_frames.read_file_list(
+        real_path + "/sensor_data/matched_frame_ctrl_cmd_processed.txt"
+    )
     result = np.empty((0, 2), dtype=int)
     cmd_input = np.array([[params["indicator"] or 0]], dtype=np.float32)
     for frame in frames:
@@ -41,10 +45,10 @@ def getPrediction(params):
         img = utils.load_img(path)
         img_input = np.expand_dims(img, axis=0)
 
-        interpreter.set_tensor(input_details[0]['index'], cmd_input)
-        interpreter.set_tensor(input_details[1]['index'], img_input)
+        interpreter.set_tensor(input_details[0]["index"], cmd_input)
+        interpreter.set_tensor(input_details[1]["index"], img_input)
         interpreter.invoke()
-        output = interpreter.get_tensor(output_details[0]['index']) * 255
+        output = interpreter.get_tensor(output_details[0]["index"]) * 255
         result = np.concatenate((result, output.astype(int)))
 
     return api.encode(result)

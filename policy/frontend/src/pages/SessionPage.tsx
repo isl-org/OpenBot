@@ -54,14 +54,10 @@ function SessionComp({session}: {session: Session}) {
     const [current, setCurrent] = useState(0);
     const [model, setModel] = useState(null);
     const [indicator, setIndicator] = useState(null);
-    useEffect(() => {
-        if (!playing) {
-            return undefined;
-        }
-        const i = setInterval(() => {
+    useAnimate(() => {
+        if (playing) {
             setCurrent(c => c === max ? 0 : c + 1);
-        }, 50)
-        return () => clearInterval(i);
+        }
     }, [playing, max]);
     useHotkeys('space', togglePlaying);
     useHotkeys('right', () => setCurrent(c => c === max ? 0 : c + 1), [max]);
@@ -128,4 +124,25 @@ function SessionComp({session}: {session: Session}) {
             />
         </>
     );
+}
+
+function useAnimate(update: () => void, deps: any[]) {
+    useEffect(() => {
+        let active = true;
+        let start = performance.now();
+        const animate = () => {
+            if (performance.now() - start > 25) {
+                update();
+                start = performance.now();
+            }
+            if (active) {
+                requestAnimationFrame(animate);
+            }
+        };
+        requestAnimationFrame(animate);
+        return () => {
+            active = false;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, deps);
 }
