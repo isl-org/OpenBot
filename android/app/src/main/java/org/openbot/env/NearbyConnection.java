@@ -30,11 +30,15 @@ import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo;
 import com.google.android.gms.nearby.connection.DiscoveryOptions;
 import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback;
+import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.Strategy;
+import java.nio.charset.StandardCharsets;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.openbot.CameraActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.openbot.robot.CameraActivity;
 
 public class NearbyConnection {
   private static final String TAG = "NearbyConnection";
@@ -124,6 +128,11 @@ public class NearbyConnection {
 
             pairedDeviceEndpointId = endpointId;
             isConnected = true;
+            try {
+              ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"CONNECTED\"}"));
+            } catch (JSONException e) {
+              e.printStackTrace();
+            }
           } else {
             Log.i(TAG, "onConnectionResult: connection failed");
             isConnected = false;
@@ -144,6 +153,11 @@ public class NearbyConnection {
                   Toast.LENGTH_LONG)
               .show();
           Log.i(TAG, "onDisconnected: disconnected from the opponent");
+          try {
+            ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
         }
       };
 
@@ -172,6 +186,8 @@ public class NearbyConnection {
     if (pairedDeviceEndpointId != null) {
       connectionsClient.disconnectFromEndpoint(pairedDeviceEndpointId);
     }
+
+    isConnected = false;
   }
 
   /** /** Starts looking for other players using Nearby Connections. */
@@ -202,6 +218,15 @@ public class NearbyConnection {
 
   public boolean isConnected() {
     return isConnected;
+  }
+
+  public void sendMessage(String message) {
+    if (connectionsClient == null) {
+      Log.d(TAG, "Cannot send...No connection!");
+      return;
+    }
+    connectionsClient.sendPayload(
+        pairedDeviceEndpointId, Payload.fromBytes(message.getBytes(StandardCharsets.UTF_8)));
   }
 
   public class CancelableDiscovery {

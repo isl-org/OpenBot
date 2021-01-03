@@ -3,6 +3,8 @@
     <color name="colorPrimary">#98999b</color>
     <color name="colorPrimaryDark">#404041</color>
     <color name="colorAccent">#d2d0d1</color>
+    <color name="openBotBlue">#4B7BFF</color>
 
     <color name="semi_transparent">#66000000</color>
+    <color name="background">#EDEDED</color>
 </resources>

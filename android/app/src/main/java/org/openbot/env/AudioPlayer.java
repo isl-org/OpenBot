@@ -7,7 +7,7 @@ import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import java.io.File;
 import java.io.IOException;
-import org.openbot.CameraActivity;
+import org.openbot.common.Enums;
 
 // Convert text to speech
 // https://ttsmp3.com
@@ -60,7 +60,7 @@ public class AudioPlayer {
     }
   }
 
-  public void playDriveMode(String voice, CameraActivity.DriveMode driveMode) {
+  public void playDriveMode(String voice, Enums.DriveMode driveMode) {
     switch (driveMode) {
       case DUAL:
         play(voice, "dual_drive_control.mp3");

@@ -61,6 +61,7 @@
     <string name="log_setting">Log Setting</string>
     <string name="camera_facing_back">Back</string>
     <string name="camera_facing_front">Front</string>
+    <string name="logging">Logging</string>
     <string name="not_logging">Not Logging</string>
     <string name="no_device">No Device</string>
     <string name="data_log">Data Log</string>
@@ -86,10 +87,14 @@
     <string name="crop">Crop</string>
     <string name="frame">Frame</string>
     <string name="_1">1</string>
+    <string name="settings">Settings</string>
     <string-array name="speed_modes">
         <item>Slow</item>
         <item>Normal</item>
         <item>Fast</item>
     </string-array>
 
+    <string name="voltageInfo">Battery %1$s V</string>
+    <string name="speedInfo">Speed (l,r) %1$s rpm</string>
+    <string name="distanceInfo">Sonar %1$s cm</string>
 </resources>

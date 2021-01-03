@@ -6,8 +6,8 @@ import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Toast;
-import org.openbot.CameraActivity;
-import org.openbot.CameraActivity.DriveMode;
+import org.openbot.common.Enums.DriveMode;
+import org.openbot.robot.CameraActivity;
 
 public class GameController {
   private float left = 0;
