@@ -1,8 +1,6 @@
 # Controller
 
-This Android app serves as a `drive controller` for the [OpenBot](https://www.openbot.org) car. This app runs on a separate android device from the one placed on the robot car,
-thus allowing it to control the robot remotely. Basically it preforms similar function as PS3/4 or Xbox remote controller, but running on another Android device.
-It allows the user to control the robot car via two sliders in `Dual Drive` mode.
+This Android app serves as a `remote controller` for the [OpenBot](https://www.openbot.org) vehicle.  Basically it preforms similar function as PS3/4 or Xbox remote controller, but running on another Android device. It allows the user to control the robot car via two sliders in `Dual Drive` mode.
 
 <p float="left">
   <img src="./docs/images/main-screen.png" height="250" style="padding:20px" />
@@ -16,7 +14,7 @@ When the controller app is started, it immediately tries to connect to the robot
   <img src="./docs/images/pre-connect.png" height="250" style="padding:20px"/>
 </p>
 
-To connect, place the **robot's app** control setting into a **Phone** node.
+To connect the controller to the robot, place the robot's app control setting into a **Phone** node.
 
 <p float="left">
   <img src="./docs/images/open-bot-settings-2.png" height="400" style="padding:20px" />  
@@ -29,7 +27,7 @@ In a few seconds, you will hear a beep, and the controller will change its scree
   <img src="./docs/images/command-buttons.png" height="250" style="padding:20px"/>
 </p>
 
-... and then to the screen with the drive sliders.
+... and then to the screen with the drive controls.
 
 ***Note:*** This should be sufficient to connect, but if the connection cannot be established after 30 seconds, toggle the `Control` setting on the bot app to `Gamepad`
 and then to `Phone` again to re-initiate the connection. If that fails, exit the controller app and start it again. Toggle the Control mode again on the robot app.
@@ -47,13 +45,13 @@ If you like to control some other settings on the robot, such as `Noise`, `Logs`
 They also show the current settings, so if the `Noise` button is highlighted, this means this setting is on the robot is `ON`. If you change the setting manually from
  the robot menu, this should be reflected on the controller app as well.
  
-## Future
+## Future Development
 Some of the features we are looking to add are:
 
 - Add information on the controller for more robot sensors, such as battery level and speed.
 - Video Stream from the robot's camera to the controller
-- Control by controller's gyroscope sensor instead of sliders
-- Send crash and bump events from the robot to the controller, so the robot can vibrate when these evens occur.
+- Use controller's gyroscope sensor co control the robot
+- Send crash and bump events from the robot to the controller for a more realistic experience
 
 ## Build
 
