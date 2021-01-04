@@ -42,7 +42,7 @@ You can also set right/left
 turn indicators by clicking on the arrows on the top-left of the screen, and the red button between them to cancel.
 
 If you like to control some other settings on the robot, such as `Noise`, `Logs`, etc, double-tap in the middle of the screen, and you will see the buttons on the left.
-They also show the current settings, so if the `Noise` button is highlighted, this means this setting is on the robot is `ON`. If you change the setting manually from
+They also show the current settings, so if the `Noise` button is highlighted, this means this setting on the robot is `ON`. If you change the setting manually from
  the robot menu, this should be reflected on the controller app as well.
  
 ## Future Development
