@@ -67,13 +67,14 @@ public class Constants {
     subCategories.add(new SubCategory(Constants.GLOBAL_VIEW, R.drawable.openbot_icon));
     categories.add(new Category(Constants.ALL, subCategories));
 
-    /*
+
         subCategories = new ArrayList<>();
         subCategories.add(new SubCategory(Constants.CONTROLLER, R.drawable.ic_controller));
         subCategories.add(new SubCategory(Constants.FREE_ROAM, R.drawable.ic_game));
         subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game));
         categories.add(new Category(Constants.GAME, subCategories));
 
+/*
         subCategories = new ArrayList<>();
         subCategories.add(new SubCategory(Constants.LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage));
         subCategories.add(new SubCategory(Constants.EDGE_LOCAL_NETWORK, R.drawable.ic_network));
