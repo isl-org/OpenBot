@@ -178,6 +178,8 @@ const unsigned int STOP_THRESHOLD = 32; //cm
 //Vehicle Control
 int ctrl_left = 0;
 int ctrl_right = 0;
+const unsigned int SPEED_MAX = 255;
+const unsigned int SPEED_STOP = 0;
 int vhcl_motor_left = 0;
 int vhcl_motor_right = 0;
 
@@ -384,30 +386,30 @@ void loop() {
 void update_left_motors() {
     if (ctrl_left < 0) {
       analogWrite(PIN_PWM_L1,-vhcl_motor_left);
-      analogWrite(PIN_PWM_L2,0);
+      analogWrite(PIN_PWM_L2,SPEED_STOP);
     }
     else if (ctrl_left > 0) {
-      analogWrite(PIN_PWM_L1,0);
+      analogWrite(PIN_PWM_L1,SPEED_STOP);
       analogWrite(PIN_PWM_L2,vhcl_motor_left);
     }
     else { //Motor brake
-      analogWrite(PIN_PWM_L1,255);
-      analogWrite(PIN_PWM_L2,255);
+      analogWrite(PIN_PWM_L1,SPEED_MAX);
+      analogWrite(PIN_PWM_L2,SPEED_MAX);
     }
 }
 
 void update_right_motors() {
     if (ctrl_right < 0) {
       analogWrite(PIN_PWM_R1,-vhcl_motor_right);
-      analogWrite(PIN_PWM_R2,0);
+      analogWrite(PIN_PWM_R2,SPEED_STOP);
     }
     else if (ctrl_right > 0) {
-      analogWrite(PIN_PWM_R1,0);
+      analogWrite(PIN_PWM_R1,SPEED_STOP);
       analogWrite(PIN_PWM_R2,vhcl_motor_right);
     }
     else { //Motor brake
-      analogWrite(PIN_PWM_R1,255);
-      analogWrite(PIN_PWM_R2,255);
+      analogWrite(PIN_PWM_R1,SPEED_MAX);
+      analogWrite(PIN_PWM_R2,SPEED_MAX);
     }
 }
 
@@ -480,23 +482,29 @@ void send_vehicle_data() {
 }
 
 void set_speed_trim(){
-    int trim = 0;
-    // only calculate trimming when running straight forward
+    int trimm = 0; // trim is an arduino command
+    
     if (ctrl_left <= 0){ return; }
+    // only calculate new trimming when running forward
     if (ctrl_left == ctrl_right){
       if (speed_left > speed_right){
-        trim = speed_left - speed_right;
-        trim = trim / 2;
+        trimm = speed_left - speed_right;
       }
-      if (speed_left < speed_right){
-        trim = speed_right - speed_left;
-        trim = trim / 2;
-        trim = 0 - trim;
-      }      
-      speed_trim = trim;
+      else {
+        trimm = speed_right - speed_left;
+      }
+      // we only mitigate speed between the speed differences
+      trimm = trimm / 2;
+      if (ctrl_left + trimm > SPEED_MAX){
+        trimm = SPEED_MAX - ctrl_left;
+      }
+      if (ctrl_left - trimm < 0){
+        trimm = 0;
+      }
+      speed_trim = trimm;  
     }
 }
-
+    
 #if HAS_VOLTAGE_DIVIDER
   float get_voltage () {
     unsigned long array_sum = 0;
