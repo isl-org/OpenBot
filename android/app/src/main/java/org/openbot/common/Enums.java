@@ -15,9 +15,20 @@ public class Enums {
   }
 
   public enum SpeedMode {
-    SLOW,
-    NORMAL,
-    FAST
+    SLOW(128),
+    NORMAL(192),
+    FAST(255);
+
+    private final int value;
+
+    SpeedMode(final int newValue) {
+      value = newValue;
+    }
+
+    public int getValue() {
+      return value;
+    }
+
   }
 
   public enum DriveMode {

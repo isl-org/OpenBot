@@ -854,19 +854,7 @@ public abstract class CameraActivity extends AppCompatActivity
       LOGGER.d("Updating  speedMode: " + speedMode);
       this.speedMode = speedMode;
       preferencesManager.setSpeedMode(speedMode.ordinal());
-      switch (speedMode) {
-        case SLOW:
-          vehicle.setSpeedMultiplier(128);
-          break;
-        case NORMAL:
-          vehicle.setSpeedMultiplier(192);
-          break;
-        case FAST:
-          vehicle.setSpeedMultiplier(255);
-          break;
-        default:
-          throw new IllegalStateException("Unexpected value: " + speedMode);
-      }
+      vehicle.setSpeedMultiplier(speedMode.getValue());
     }
   }
 
