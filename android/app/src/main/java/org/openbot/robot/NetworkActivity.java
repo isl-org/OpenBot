@@ -43,7 +43,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import org.openbot.R;
-import org.openbot.common.Enums.*;
+import org.openbot.common.Enums.ControlMode;
+import org.openbot.common.Enums.LogMode;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;
 import org.openbot.env.BorderedText;
@@ -274,22 +275,18 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     if (noiseEnabled) {
       left = vehicle.getNoisyControl().getLeft();
       right = vehicle.getNoisyControl().getRight();
-      sendNoisyControlToVehicle();
     } else {
       left = vehicle.getControl().getLeft();
       right = vehicle.getControl().getRight();
-      sendControlToVehicle();
     }
+    vehicle.sendInfoToVehicle(String.format(Locale.US, "c%d,%d\n", (int) (left), (int) (right)));
 
     // Update GUI
     runOnUiThread(
-        new Runnable() {
-          @Override
-          public void run() {
-            Log.i("display_ctrl", "runnable");
-            if (controlValueTextView != null)
-              controlValueTextView.setText(String.format(Locale.US, "%.0f,%.0f", left, right));
-          }
+        () -> {
+          Log.i("display_ctrl", "runnable");
+          if (controlValueTextView != null)
+            controlValueTextView.setText(String.format(Locale.US, "%.0f,%.0f", left, right));
         });
   }
 

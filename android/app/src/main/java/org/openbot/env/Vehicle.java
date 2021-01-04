@@ -1,6 +1,9 @@
 package org.openbot.env;
 
+import android.content.Context;
 import android.os.SystemClock;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 
 public class Vehicle {
@@ -18,6 +21,17 @@ public class Vehicle {
 
   private static final int diskHoles = 20;
   private static final int millisPerMinute = 60000;
+
+  private UsbConnection usbConnection;
+  protected boolean usbConnected;
+  private Context context;
+  private int baudRate;
+
+  public Vehicle(Context context, int baudRate) {
+    this.context = context;
+    this.baudRate = baudRate;
+    connectUsb();
+  }
 
   public static class Control {
     private float left = 0;
@@ -195,5 +209,37 @@ public class Vehicle {
 
   public void setIndicator(int indicator) {
     this.indicator = indicator;
+    Objects.requireNonNull(usbConnection).send(String.format(Locale.US, "i%d\n", indicator));
+  }
+
+  public UsbConnection getUsbConnection() {
+    return usbConnection;
+  }
+
+  public void connectUsb() {
+    usbConnection = new UsbConnection(context, baudRate);
+    usbConnected = usbConnection.startUsbConnection();
+  }
+
+  public void disconnectUsb() {
+    Objects.requireNonNull(usbConnection)
+        .send(
+            String.format(
+                Locale.US,
+                "c%d,%d\n",
+                (int) (getControl().getLeft()),
+                (int) (getControl().getRight())));
+
+    Objects.requireNonNull(usbConnection).stopUsbConnection();
+    usbConnection = null;
+    usbConnected = false;
+  }
+
+  public boolean isUsbConnected() {
+    return usbConnected;
+  }
+
+  public void sendInfoToVehicle(String message) {
+    usbConnection.send(message);
   }
 }

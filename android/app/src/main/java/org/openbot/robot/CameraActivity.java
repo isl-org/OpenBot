@@ -81,7 +81,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.common.Constants;
-import org.openbot.common.Enums.*;
+import org.openbot.common.Enums;
+import org.openbot.common.Enums.ControlMode;
+import org.openbot.common.Enums.DriveMode;
+import org.openbot.common.Enums.LogMode;
+import org.openbot.common.Enums.SpeedMode;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.ControllerToBotEventBus;
@@ -90,7 +94,6 @@ import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
 import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
-import org.openbot.env.UsbConnection;
 import org.openbot.env.Vehicle;
 import org.openbot.tflite.Network.Device;
 import org.openbot.tflite.Network.Model;
@@ -158,9 +161,6 @@ public abstract class CameraActivity extends AppCompatActivity
   private Device device = Device.CPU;
   private int numThreads = -1;
 
-  // **** USB **** //
-  protected UsbConnection usbConnection;
-  protected boolean usbConnected;
   public int[] BaudRates = {9600, 14400, 19200, 38400, 57600, 115200, 230400, 460800, 921600};
   private int baudRate = 115200;
   private LocalBroadcastManager localBroadcastManager;
@@ -184,7 +184,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private final AudioPlayer audioPlayer = new AudioPlayer(this);
   private final String voice = "matthew";
 
-  protected static Vehicle vehicle = new Vehicle();
+  protected Vehicle vehicle;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -192,6 +192,7 @@ public abstract class CameraActivity extends AppCompatActivity
     super.onCreate(null);
     context = getApplicationContext();
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    vehicle = new Vehicle(this, baudRate);
 
     setContentView(R.layout.activity_camera);
     Toolbar toolbar = findViewById(R.id.toolbar);
@@ -1151,21 +1152,6 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected abstract void setNetworkEnabled(boolean isChecked);
 
-  private void connectUsb() {
-    usbConnection = new UsbConnection(this, baudRate);
-    usbConnected = usbConnection.startUsbConnection();
-  }
-
-  private void disconnectUsb() {
-    if (usbConnection != null) {
-      vehicle.setControl(0, 0);
-      sendControlToVehicle();
-      usbConnection.stopUsbConnection();
-      usbConnection = null;
-    }
-    usbConnected = false;
-  }
-
   protected void toggleCamera(boolean isChecked) {
     LOGGER.d("Camera Toggled to " + isChecked);
     this.cameraSelection = getCameraUserSelection();
@@ -1176,18 +1162,18 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void toggleConnection(boolean isChecked) {
     if (isChecked) {
-      connectUsb();
+      vehicle.connectUsb();
     } else {
-      disconnectUsb();
+      vehicle.disconnectUsb();
     }
     // Disable baudrate selection if connected
-    baudRateSpinner.setEnabled(!usbConnected);
-    if (usbConnected) baudRateSpinner.setAlpha(0.5f);
+    baudRateSpinner.setEnabled(!vehicle.isUsbConnected());
+    if (vehicle.isUsbConnected()) baudRateSpinner.setAlpha(0.5f);
     else baudRateSpinner.setAlpha(1.0f);
-    connectionSwitchCompat.setChecked(usbConnected);
+    connectionSwitchCompat.setChecked(vehicle.isUsbConnected());
 
-    if (usbConnected) {
-      connectionSwitchCompat.setText(usbConnection.getProductName());
+    if (vehicle.isUsbConnected()) {
+      connectionSwitchCompat.setText(vehicle.getUsbConnection().getProductName());
       Toast.makeText(getContext(), "Connected.", Toast.LENGTH_SHORT).show();
     } else {
       connectionSwitchCompat.setText(R.string.no_device);
@@ -1197,37 +1183,6 @@ public abstract class CameraActivity extends AppCompatActivity
       } else {
         Toast.makeText(getContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
       }
-    }
-  }
-
-  protected void sendControlToVehicle() {
-    if ((usbConnection != null) && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      String message =
-          String.format(
-              Locale.US,
-              "c%d,%d\n",
-              (int) (vehicle.getControl().getLeft()),
-              (int) (vehicle.getControl().getRight()));
-      usbConnection.send(message);
-    }
-  }
-
-  protected void sendNoisyControlToVehicle() {
-    if ((usbConnection != null) && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      String message =
-          String.format(
-              Locale.US,
-              "c%d,%d\n",
-              (int) (vehicle.getNoisyControl().getLeft()),
-              (int) (vehicle.getNoisyControl().getRight()));
-      usbConnection.send(message);
-    }
-  }
-
-  protected void sendIndicatorToVehicle() {
-    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      String message = String.format(Locale.US, "i%d\n", vehicle.getIndicator());
-      usbConnection.send(message);
     }
   }
 
@@ -1433,29 +1388,26 @@ public abstract class CameraActivity extends AppCompatActivity
     }
 
     protected void handleIndicatorLeft() {
-      vehicle.setIndicator(-1);
+      vehicle.setIndicator(Enums.VehicleIndicator.LEFT.getValue());
       if (loggingEnabled) {
         sendIndicatorToSensorService();
       }
-      sendIndicatorToVehicle();
       sendIndicatorStatus(vehicle.getIndicator());
     }
 
     protected void handleIndicatorRight() {
-      vehicle.setIndicator(1);
+      vehicle.setIndicator(Enums.VehicleIndicator.RIGHT.getValue());
       if (loggingEnabled) {
         sendIndicatorToSensorService();
       }
-      sendIndicatorToVehicle();
       sendIndicatorStatus(vehicle.getIndicator());
     }
 
     protected void handleIndicatorStop() {
-      vehicle.setIndicator(0);
+      vehicle.setIndicator(Enums.VehicleIndicator.STOP.getValue());
       if (loggingEnabled) {
         sendIndicatorToSensorService();
       }
-      sendIndicatorToVehicle();
       sendIndicatorStatus(vehicle.getIndicator());
     }
 

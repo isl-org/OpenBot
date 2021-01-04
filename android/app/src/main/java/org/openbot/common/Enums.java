@@ -25,4 +25,20 @@ public class Enums {
     GAME,
     JOYSTICK
   }
+
+  public enum VehicleIndicator {
+    LEFT(-1),
+    STOP(0),
+    RIGHT(1);
+
+    private final int value;
+
+    VehicleIndicator(final int newValue) {
+      value = newValue;
+    }
+
+    public int getValue() {
+      return value;
+    }
+  }
 }
