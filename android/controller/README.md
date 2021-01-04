@@ -14,7 +14,7 @@ When the controller app is started, it immediately tries to connect to the robot
   <img src="./docs/images/pre-connect.png" height="250" style="padding:20px"/>
 </p>
 
-To connect the controller to the robot, place the robot's app control setting into a **Phone** node.
+To connect the controller to the robot, place the robot's app control setting into a **Phone** mode.
 
 <p float="left">
   <img src="./docs/images/open-bot-settings-2.png" height="400" style="padding:20px" />  
