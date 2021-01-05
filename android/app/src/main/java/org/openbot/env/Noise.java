@@ -1,7 +1,6 @@
 package org.openbot.env;
 
 import android.os.SystemClock;
-
 import java.util.Random;
 
 public class Noise {
@@ -39,7 +38,9 @@ public class Noise {
     } else value = 0;
   }
 
-  public float getNoise () {return value;}
+  public float getNoise() {
+    return value;
+  }
 
   private int generateRandomInt(int min, int max) {
     Random r = new Random();

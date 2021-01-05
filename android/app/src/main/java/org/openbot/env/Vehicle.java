@@ -1,7 +1,6 @@
 package org.openbot.env;
 
 import android.content.Context;
-
 import java.util.Locale;
 import java.util.Objects;
 

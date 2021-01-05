@@ -28,7 +28,6 @@ public class Enums {
     public int getValue() {
       return value;
     }
-
   }
 
   public enum DriveMode {
