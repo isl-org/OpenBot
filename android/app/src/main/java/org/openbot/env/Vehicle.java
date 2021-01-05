@@ -3,12 +3,14 @@ package org.openbot.env;
 import android.content.Context;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Vehicle {
 
   private Control control = new Control(0, 0);
-  private Control noisyControl = new Control(0, 0);
   private final Noise noise = new Noise(1000, 2000, 5000);
+  private boolean noiseEnabled = false;
   private int indicator = 0;
   private static int speedMultiplier = 192; // 128,192,255
 
@@ -22,8 +24,8 @@ public class Vehicle {
 
   private UsbConnection usbConnection;
   protected boolean usbConnected;
-  private Context context;
-  private int baudRate;
+  private final Context context;
+  private final int baudRate;
 
   public Vehicle(Context context, int baudRate) {
     this.context = context;
@@ -93,10 +95,6 @@ public class Vehicle {
     this.sonarReading.setReading(sonarReading);
   }
 
-  public Control getNoisyControl() {
-    return noisyControl;
-  }
-
   public Control getControl() {
     return control;
   }
@@ -109,10 +107,26 @@ public class Vehicle {
     this.control = new Control(left, right);
   }
 
-  public void applyNoise() {
-    noise.updateNoise();
-    if (noise.direction < 0) noisyControl = new Control(control.left - noise.value, control.right);
-    else noisyControl = new Control(control.left, control.right - noise.value);
+  private Timer noiseTimer;
+
+  private class NoiseTask extends TimerTask {
+    @Override
+    public void run() {
+      noise.update();
+      sendControl();
+    }
+  }
+
+  public void startNoise() {
+    noiseTimer = new Timer();
+    NoiseTask noiseTask = new NoiseTask();
+    noiseTimer.schedule(noiseTask, 0, 50); // no delay 50ms intervals
+    noiseEnabled = true;
+  }
+
+  public void stopNoise() {
+    noiseEnabled = false;
+    noiseTimer.cancel();
   }
 
   public int getSpeedMultiplier() {
@@ -129,7 +143,7 @@ public class Vehicle {
 
   public void setIndicator(int indicator) {
     this.indicator = indicator;
-    Objects.requireNonNull(usbConnection).send(String.format(Locale.US, "i%d\n", indicator));
+    sendStringToUsb(String.format(Locale.US, "i%d\n", indicator));
   }
 
   public UsbConnection getUsbConnection() {
@@ -159,7 +173,17 @@ public class Vehicle {
     return usbConnected;
   }
 
-  public void sendInfoToVehicle(String message) {
-    usbConnection.send(message);
+  private void sendStringToUsb(String message) {
+    Objects.requireNonNull(usbConnection).send(message);
+  }
+
+  public void sendControl() {
+    int left = (int) (control.left * speedMultiplier);
+    int right = (int) (control.right * speedMultiplier);
+    if (noiseEnabled && noise.getDirection() < 0)
+      left = (int) ((control.left - noise.getValue()) * speedMultiplier);
+    if (noiseEnabled && noise.getDirection() > 0)
+      right = (int) ((control.right - noise.getValue()) * speedMultiplier);
+    sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
   }
 }

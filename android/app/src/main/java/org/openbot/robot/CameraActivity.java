@@ -1136,7 +1136,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected abstract void toggleNoise();
 
-  protected abstract void updateVehicleState();
+  protected abstract void sendVehicleControl();
 
   protected abstract void setNetworkEnabled(boolean isChecked);
 
@@ -1357,12 +1357,12 @@ public abstract class CameraActivity extends AppCompatActivity
 
     protected void handleDriveCommand(Vehicle.Control control) {
       vehicle.setControl(control);
-      updateVehicleState();
+      sendVehicleControl();
     }
 
     protected void handleDriveCommand(Float l, Float r) {
       vehicle.setControl(l, r);
-      updateVehicleState();
+      sendVehicleControl();
     }
 
     protected void handleLogging() {
