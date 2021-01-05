@@ -1,4 +1,6 @@
+import {useEffect} from 'react';
 import {useRpc} from 'src/utils/useRpc';
+import {subscribe} from 'src/utils/ws';
 
 export interface Session {
     name: string;
@@ -28,5 +30,15 @@ const defaultValue = {
 };
 
 export function useDatasets() {
-    return useRpc(defaultValue, 'getDatasets')
+    const {error, pending, value, reload} = useRpc(defaultValue, 'getDatasets');
+    useEffect(() => subscribe('dataset', reload), [reload])
+    return {error, pending, value, reload};
+}
+
+const emptyList = [] as Session[];
+
+export function useDataset(path: string) {
+    const {error, pending, value, reload} = useRpc(emptyList, 'listDir', {path});
+    useEffect(() => subscribe('session', reload), [reload])
+    return {error, pending, value, reload};
 }

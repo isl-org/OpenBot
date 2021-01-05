@@ -81,6 +81,7 @@ function SessionComp({session}: {session: Session}) {
                         value={model}
                         onChange={setModel}
                         searchable={models.value.length > 10}
+                        placement="bottomEnd"
                     />
                     <br/>
                     Indicator <SelectPicker

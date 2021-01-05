@@ -1,7 +1,8 @@
 import {useRef} from 'react';
 import {Button, ControlLabel, Form, FormGroup, Modal, ModalProps, Tree} from 'rsuite';
-import {Dataset, useDatasets} from '../utils/useDatasets';
-import {jsonRpc} from '../utils/ws';
+import {DatasetModalWithButton} from 'src/modals/DatasetModal';
+import {Dataset, useDatasets} from 'src/utils/useDatasets';
+import {jsonRpc} from 'src/utils/ws';
 
 export function MoveModal({path, ...props}: ModalProps & {path: string}) {
     const datasets = useDatasets();
@@ -36,6 +37,7 @@ export function MoveModal({path, ...props}: ModalProps & {path: string}) {
                             block
                         />
                     </FormGroup>
+                    <DatasetModalWithButton defaultDir="train_data"/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type="submit" appearance="primary">

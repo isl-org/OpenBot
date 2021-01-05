@@ -1,15 +1,5 @@
 import {useEffect, useRef} from 'react';
-import {
-    Button,
-    ControlLabel,
-    Form,
-    FormControl,
-    FormGroup,
-    Message,
-    Panel,
-    Placeholder,
-    SelectPicker,
-} from 'rsuite';
+import {Button, ControlLabel, Form, FormControl, FormGroup, Message, Panel, Placeholder, SelectPicker} from 'rsuite';
 import {BoolParam} from 'src/components/BoolParam';
 import {ButtonBar} from 'src/components/ButtonBar';
 import {NumberParam} from 'src/components/NumberParam';
@@ -57,6 +47,11 @@ export function HyperparametersForm() {
                     <ControlLabel>MODEL</ControlLabel>
                     <FormControl name="MODEL" accepter={SelectPicker} data={models} block/>
                 </FormGroup>
+                <BoolParam
+                    name="USE_LAST"
+                    defaultChecked={value.USE_LAST}
+                    help="Continue training from last checkpoint"
+                />
                 <NumberParam name="LEARNING_RATE" min={0} step={0.0001}/>
                 <NumberParam name="TRAIN_BATCH_SIZE" min={1}/>
                 <NumberParam name="TEST_BATCH_SIZE" min={1}/>
@@ -65,17 +60,16 @@ export function HyperparametersForm() {
                     min={1}
                     help="For debugging and hyperparamter tuning, you can set the number of epochs to a small value like 10. If you want to train a model which will achieve good performance, you should set it to 50 or more. In our paper we used 100."
                 />
-                <BoolParam
-                    name="USE_LAST"
-                    defaultChecked={value.USE_LAST}
-                    help="Continue training from last checkpoint"
-                />
                 <Panel bordered header="Advanced parameters" collapsible>
                     <Message type="warning" description="Don't change these unless you know what you are doing" />
                     <BoolParam name="BATCH_NORM" defaultChecked={value.BATCH_NORM}/>
                     <BoolParam name="FLIP_AUG" defaultChecked={value.FLIP_AUG}/>
                     <BoolParam name="CMD_AUG" defaultChecked={value.CMD_AUG}/>
                 </Panel>
+                <Message
+                    title="Note"
+                    description="If you have a trained model with the same parameters, the old model will be overwritten."
+                />
             </Form>
             <ButtonBar>
                 <Button onClick={() => jsonRpc('start', formValue.current)} appearance="primary">Start</Button>

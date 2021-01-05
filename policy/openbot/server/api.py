@@ -26,13 +26,20 @@ async def handle_test(_: web.Request):
     return web.json_response({"openbot": 1})
 
 
-async def handle_models(request: web.Request) -> web.StreamResponse:
+async def handle_static(request: web.Request) -> web.StreamResponse:
     path = request.match_info.get("path")
-    if path[-7:] == ".tflite":
-        real = os.path.join(base_dir, path)
-        if os.path.isfile(real):
-            return web.FileResponse(real)
+    real = os.path.join(base_dir, path)
+    if os.path.isfile(real):
+        return web.FileResponse(real)
+    real = os.path.join(dataset_dir, path)
+    if os.path.isfile(real):
+        return web.FileResponse(
+            real, headers={"Cache-Control": "public, max-age=2592000"}
+        )
+    return web.HTTPNotFound()
 
+
+async def handle_models() -> web.StreamResponse:
     models = [
         dict(name=os.path.basename(p), mtime=int(os.path.getmtime(p)))
         for p in glob.glob(os.path.join(models_dir, "*.tflite"))
@@ -54,14 +61,20 @@ async def handle_upload(request: web.Request) -> web.Response:
 
 async def init_api(app: web.Application):
     app.router.add_get("/test", handle_test)
-    app.router.add_get("/{path:models.*}", handle_models)
+    app.router.add_get("/models", handle_models)
     app.router.add_post("/upload", handle_upload)
-    app.router.add_get("/{path:.*/preview.gif}", handle_preview)
+    app.router.add_get("/{path:.*/preview\\.gif}", handle_preview)
+    app.router.add_get("/{path:.*\\.jpeg}", handle_static)
+    app.router.add_get("/{path:.*\\.png}", handle_static)
+    app.router.add_get("/{path:.*\\.tflite}", handle_static)
     app.router.add_route("*", "/ws", rpc.handle_request)
 
     rpc.add_methods(
         ("", listDir),
         ("", getDatasets),
+        ("", createDataset),
+        ("", deleteDataset),
+        ("", renameDataset),
         ("", getModels),
         ("", getModelInfo),
         ("", getHyperparameters),
@@ -73,6 +86,7 @@ async def init_api(app: web.Application):
         ("", stop),
     )
     rpc.add_topics(
+        "dataset",
         "session",
         "training",
     )
@@ -84,6 +98,32 @@ def listDir(params):
 
 async def getSession(path):
     return get_info(path)
+
+
+async def createDataset(params):
+    path = os.path.join(dataset_dir, params["newDir"], params["newName"])
+    os.mkdir(path)
+    await rpc.notify("dataset")
+    return True
+
+
+async def deleteDataset(params):
+    real_dir = dataset_dir + params["path"]
+    shutil.rmtree(real_dir)
+    await rpc.notify("dataset")
+    return True
+
+
+async def renameDataset(params):
+    src = os.path.join(dataset_dir, params["oldDir"], params["oldName"])
+    dst = os.path.join(dataset_dir, params["newDir"], params["newName"])
+    if src == dst:
+        return True
+    if os.path.exists(dst):
+        raise FileExistsError
+    os.rename(src, dst)
+    await rpc.notify("dataset")
+    return True
 
 
 async def moveSession(params):

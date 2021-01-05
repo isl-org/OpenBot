@@ -30,7 +30,7 @@ def get_dir_info(dir_path):
 
 
 def listdir(*parts):
-    list1 = [d for d in os.listdir(os.path.join(*parts)) if not '.DS_Store' in d]
+    list1 = [d for d in os.listdir(os.path.join(*parts)) if ".DS_Store" not in d]
     list1.sort()
     return list1
 

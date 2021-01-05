@@ -1,27 +1,42 @@
-import {Button, Modal, ModalProps} from 'rsuite';
-import {jsonRpc} from '../utils/ws';
+import {Button, Modal, ModalProps, Notification} from 'rsuite';
+import {useToggle} from 'src/utils/useToggle';
+import {jsonRpc} from 'src/utils/ws';
 
-export function DeleteModal({path, ...props}: ModalProps & {path: string}) {
-    return (
-        <Modal backdrop="static" size="xs" {...props}>
+type FolderType = 'dataset' | 'session';
+
+export function DeleteModal({type, path, ...props}: ModalProps & {type: FolderType, path: string}) {
+    const [show, toggle] = useToggle(false);
+
+    async function handleDelete(type: FolderType, path: string) {
+        try {
+            if (type === 'session') {
+                await jsonRpc('deleteSession', {path})
+            } else {
+                await jsonRpc('deleteDataset', {path})
+            }
+        } catch (e) {
+            Notification.warning({
+                title: `${e}`
+            });
+        }
+    }
+    return <>
+        <Modal backdrop="static" size="xs" show={show} {...props}>
             <Modal.Header>
-                <Modal.Title>Are you really want to delete this session?</Modal.Title>
+                <Modal.Title>{path}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <img src={`${path}/preview.gif`} alt="preview"/>
+                Are you really want to delete this {type}?
+                {type === 'session' && <img src={`${path}/preview.gif`} alt="preview"/>}
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={() => deleteSession(path)} appearance="primary">
+                <Button onClick={() => handleDelete(type, path)} appearance="primary">
                     Yes
                 </Button>
-                <Button onClick={props.onHide} appearance="subtle">
+                <Button onClick={props.onHide || toggle} appearance="subtle">
                     No
                 </Button>
             </Modal.Footer>
         </Modal>
-    );
-}
-
-function deleteSession(path: string) {
-    jsonRpc('deleteSession', {path})
+    </>;
 }

@@ -18,6 +18,7 @@ export interface ProgressState {
     epoch: number;
     percent: number;
     logs: any[];
+    message: string;
     error?: string;
     model?: string;
     params?: Hyperparametes;
@@ -29,6 +30,7 @@ const defaultState: ProgressState = {
     epoch: 0,
     percent: 0,
     logs: [],
+    message: '',
 }
 
 export function useProgress() {
@@ -53,6 +55,7 @@ function progressReducer(state: ProgressState, msg: any): ProgressState {
                 epoch: 0,
                 percent: 0,
                 logs: [],
+                message: 'Starting...'
             }
         case 'preview':
             return {
@@ -64,19 +67,31 @@ function progressReducer(state: ProgressState, msg: any): ProgressState {
                 ...state,
                 logs: [...state.logs, msg.payload],
             };
+        case 'message':
+            return {
+                ...state,
+                message: msg.payload,
+            };
         case 'progress':
             return {
                 ...state,
                 status: 'active',
-                epoch: Math.round(msg.payload.epoch * 100),
-                percent: Math.round(msg.payload.train * 100),
+                epoch: msg.payload.epoch,
+                percent: msg.payload.train,
             };
         case 'cancelled':
+            return {
+                ...state,
+                status: 'fail',
+                error: msg.payload,
+                message: 'Cancelled',
+            };
         case 'failed':
             return {
                 ...state,
                 status: 'fail',
                 error: msg.payload,
+                message: 'Failed',
             };
         case 'done':
             return {
@@ -84,6 +99,7 @@ function progressReducer(state: ProgressState, msg: any): ProgressState {
                 rnd: Date.now(),
                 status: 'success',
                 model: msg.payload.model,
+                message: 'Done',
             };
         case 'clear':
             return {
@@ -91,6 +107,7 @@ function progressReducer(state: ProgressState, msg: any): ProgressState {
                 epoch: 0,
                 percent: 0,
                 logs: [],
+                message: '',
             };
     }
     return state;

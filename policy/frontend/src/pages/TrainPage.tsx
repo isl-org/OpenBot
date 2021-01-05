@@ -34,6 +34,7 @@ function TrainProgress({state, clear}: { state: ProgressState, clear: () => any 
                 Training:
                 <Progress.Line percent={state.percent} status={state.status}/>
             </div>
+            <h5>{state.message}</h5>
             <ButtonBar>
                 {state.status === 'active' ? (
                     <Button onClick={() => jsonRpc('stop')}>Stop</Button>

@@ -132,8 +132,8 @@ class MyCallback(tf.keras.callbacks.Callback):
         self.broadcast(
             "progress",
             dict(
-                epoch=self.step / steps,
-                train=(self.epoch * steps + self.step) / (epochs * steps),
+                epoch=int(100 * self.step / steps),
+                train=int(100 * (self.epoch * steps + self.step) / (epochs * steps)),
             ),
         )
 
@@ -314,6 +314,7 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     STEPS_PER_EPOCH = np.ceil(
         tr.image_count_train / tr.hyperparameters.TRAIN_BATCH_SIZE
     )
+    callback.broadcast("message", "Fit model...")
     tr.history = model.fit(
         tr.train_ds,
         epochs=tr.hyperparameters.NUM_EPOCHS,
@@ -329,7 +330,8 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     )
 
 
-def do_evaluation(tr: Training):
+def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
+    callback.broadcast("message", "Generate plots...")
     history = tr.history
     log_path = tr.log_path
     plt.plot(history.history["MeanAbsoluteError"], label="mean_absolute_error")
@@ -360,6 +362,7 @@ def do_evaluation(tr: Training):
     plt.legend(loc="lower right")
     savefig(os.path.join(log_path, "loss.png"))
 
+    callback.broadcast("message", "Generate tflite models...")
     checkpoint_path = tr.checkpoint_path
     print("checkpoint_path", checkpoint_path)
     best_index = np.argmax(
@@ -390,6 +393,7 @@ def do_evaluation(tr: Training):
         )
     )
 
+    callback.broadcast("message", "Evaluate model...")
     best_model = utils.load_model(
         os.path.join(checkpoint_path, best_checkpoint), tr.loss_fn, tr.metric_list
     )
@@ -423,11 +427,13 @@ def savefig(path):
 
 def start_train(params: Hyperparameters, callback: MyCallback, verbose=0):
     tr = Training(params)
+    callback.broadcast("message", "Processing data...")
     process_data(tr)
+    callback.broadcast("message", "Loading data...")
     load_data(tr, verbose)
     callback.broadcast("preview")
     do_training(tr, callback, verbose)
-    do_evaluation(tr)
+    do_evaluation(tr, callback, verbose)
 
     return tr
 

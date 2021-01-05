@@ -16,15 +16,19 @@ body {
 }
 .bool-input {
     display: flex;
-    margin: 10px;
+    margin: 12px 0;
     gap: 15px;
     align-items: center;
 }
+.bool-input:not(:last-child) {
+    margin-bottom: 24px;
+}
 .bool-input .rs-control-label {
     text-align: right;
-    width: 156px;
+    width: 170px;
 }
 
+.rs-panel + .rs-message,
 .rs-message + .rs-form {
     margin-top: 20px;
 }

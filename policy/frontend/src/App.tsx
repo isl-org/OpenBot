@@ -1,8 +1,8 @@
 import {Route, Switch} from 'react-router-dom';
 import {Container, Content, Header, Nav, Navbar} from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
-import './App.css';
 import {SessionListPage} from 'src/pages/SessionListPage';
+import './App.css';
 import {ConnectionAlert} from './components/ConnectionAlert';
 import {HomePage} from './pages/HomePage';
 import {ModelsPage} from './pages/ModelsPage';
@@ -34,10 +34,10 @@ function App() {
                     <Route path="/uploaded">
                         <SessionListPage />
                     </Route>
-                    <Route path="/train_data/:model">
+                    <Route path="/train_data/:dataset">
                         <SessionListPage />
                     </Route>
-                    <Route path="/test_data/:model">
+                    <Route path="/test_data/:dataset">
                         <SessionListPage />
                     </Route>
                     <Route path="/train">
