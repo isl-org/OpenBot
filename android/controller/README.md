@@ -3,7 +3,7 @@
 This Android app serves as a `remote controller` for the [OpenBot](https://www.openbot.org) vehicle.  Basically it preforms similar function as PS3/4 or Xbox remote controller, but running on another Android device. It allows the user to control the robot car via two sliders in `Dual Drive` mode.
 
 <p float="left">
-  <img src="./docs/images/main-screen.png" height="250" style="padding:20px" />
+  <img src="../../docs/images/main-screen.png" width="50%" />
 </p>
 
 ## Connection
@@ -11,20 +11,20 @@ This Android app serves as a `remote controller` for the [OpenBot](https://www.o
 When the controller app is started, it immediately tries to connect to the robot. We see the following screen:
 
 <p float="left">
-  <img src="./docs/images/pre-connect.png" height="250" style="padding:20px"/>
+  <img src="../../docs/images/pre-connect.png" width="50%" />
 </p>
 
 To connect the controller to the robot, place the robot's app control setting into a **Phone** mode.
 
 <p float="left">
-  <img src="./docs/images/open-bot-settings-2.png" height="400" style="padding:20px" />  
-  <img src="./docs/images/open-bot-settings-1.png" height="400" style="padding:20px"/>
+  <img src="../../docs/images/open-bot-settings-2.png" width="25%" />
+  <img src="../../docs/images/open-bot-settings-1.png" width="25%" />
 </p>
 
 In a few seconds, you will hear a beep, and the controller will change its screen to:
 
 <p float="left">
-  <img src="./docs/images/command-buttons.png" height="250" style="padding:20px"/>
+  <img src="../../docs/images/command-buttons.png" width="50%" />
 </p>
 
 ... and then to the screen with the drive controls.
@@ -33,12 +33,13 @@ In a few seconds, you will hear a beep, and the controller will change its scree
 and then to `Phone` again to re-initiate the connection. If that fails, exit the controller app and start it again. Toggle the Control mode again on the robot app.
 
 ## Operation
+
 The operation of the controller app is pretty self-explanatory. You can turn left/right by moving the slider thumb up and down on each side. You can also place the wheels
 on each side in reverse by moving the thumb below the center of the slider.
 
 You can also set right/left
-<img src="./docs/images/keyboard_arrow_left-24px.svg" height="24"/> 
-<img src="./docs/images/keyboard_arrow_right-24px.svg" height="24"/> 
+<img src="../../docs/images/keyboard_arrow_left-24px.svg" height="24"/> 
+<img src="../../docs/images/keyboard_arrow_right-24px.svg" height="24"/> 
 turn indicators by clicking on the arrows on the top-left of the screen, and the red button between them to cancel.
 
 If you like to control some other settings on the robot, such as `Noise`, `Logs`, etc, double-tap in the middle of the screen, and you will see the buttons on the left.
@@ -46,6 +47,7 @@ They also show the current settings, so if the `Noise` button is highlighted, th
  the robot menu, this should be reflected on the controller app as well.
  
 ## Future Development
+
 Some of the features we are looking to add are:
 
 - Add information on the controller for more robot sensors, such as battery level and speed.
@@ -57,4 +59,4 @@ Some of the features we are looking to add are:
 
 Compile and run the [Android App](../README.md)
 
-Here is a [Technical Overview](docs/OpenBot-Controlle-Technical-Overview.pdf) of the controller app.
+Here is a [Technical Overview](../../docs/technical/OpenBotController.pdf) of the controller app.
