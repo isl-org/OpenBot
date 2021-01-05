@@ -3,7 +3,7 @@
 This Android app serves as a `remote controller` for the [OpenBot](https://www.openbot.org) vehicle.  Basically it preforms similar function as PS3/4 or Xbox remote controller, but running on another Android device. It allows the user to control the robot car via two sliders in `Dual Drive` mode.
 
 <p float="left">
-  <img src="../../docs/images/main-screen.png" width="50%" />
+  <img src="../../docs/images/controller_main_screen.png" width="50%" />
 </p>
 
 ## Connection
@@ -11,20 +11,20 @@ This Android app serves as a `remote controller` for the [OpenBot](https://www.o
 When the controller app is started, it immediately tries to connect to the robot. We see the following screen:
 
 <p float="left">
-  <img src="../../docs/images/pre-connect.png" width="50%" />
+  <img src="../../docs/images/controller_pre_connect.png" width="50%" />
 </p>
 
 To connect the controller to the robot, place the robot's app control setting into a **Phone** mode.
 
 <p float="left">
-  <img src="../../docs/images/open-bot-settings-2.png" width="25%" />
-  <img src="../../docs/images/open-bot-settings-1.png" width="25%" />
+  <img src="../../docs/images/app_controller_settings_1.png" width="25%" />
+  <img src="../../docs/images/app_controller_settings_2.png" width="25%" />
 </p>
 
 In a few seconds, you will hear a beep, and the controller will change its screen to:
 
 <p float="left">
-  <img src="../../docs/images/command-buttons.png" width="50%" />
+  <img src="../../docs/images/controller_command_buttons.png" width="50%" />
 </p>
 
 ... and then to the screen with the drive controls.
