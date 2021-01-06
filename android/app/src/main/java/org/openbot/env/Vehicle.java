@@ -1,13 +1,16 @@
 package org.openbot.env;
 
-import android.os.SystemClock;
-import java.util.Random;
+import android.content.Context;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Vehicle {
 
   private Control control = new Control(0, 0);
-  private Control noisyControl = new Control(0, 0);
   private final Noise noise = new Noise(1000, 2000, 5000);
+  private boolean noiseEnabled = false;
   private int indicator = 0;
   private static int speedMultiplier = 192; // 128,192,255
 
@@ -18,6 +21,17 @@ public class Vehicle {
 
   private static final int diskHoles = 20;
   private static final int millisPerMinute = 60000;
+
+  private UsbConnection usbConnection;
+  protected boolean usbConnected;
+  private final Context context;
+  private final int baudRate;
+
+  public Vehicle(Context context, int baudRate) {
+    this.context = context;
+    this.baudRate = baudRate;
+    connectUsb();
+  }
 
   public static class Control {
     private float left = 0;
@@ -35,84 +49,6 @@ public class Vehicle {
     public float getRight() {
       return right * speedMultiplier;
     }
-  }
-
-  private static class Noise {
-
-    public Noise(int minDuration, int maxDuration, long timeout) {
-      this.minDuration = minDuration;
-      this.maxDuration = maxDuration;
-      this.timeout = timeout;
-    }
-
-    int minDuration;
-    int maxDuration;
-    long timeout;
-    float value = 0;
-    int direction = 0;
-    long duration = 0;
-    long startTime = 0;
-
-    public void update() {
-      long currentTime = SystemClock.elapsedRealtime();
-      if (currentTime > startTime + duration + timeout) {
-        startTime = currentTime;
-        duration = generateRandomInt(minDuration, maxDuration);
-        value = 0;
-        Random r = new Random();
-        direction = r.nextBoolean() ? 1 : -1;
-      }
-      if (currentTime < startTime + duration) {
-        if (currentTime < startTime + duration / 2) {
-          value += (float) generateRandomInt(1, 8) / 255;
-        } else {
-          value -= (float) generateRandomInt(1, 8) / 255;
-        }
-        value = Math.max(0, Math.min(value, 0.5f));
-      } else value = 0;
-    }
-
-    private int generateRandomInt(int min, int max) {
-      Random r = new Random();
-      return r.nextInt((max - min) + 1) + min;
-    }
-
-    private float generateRandomFloat() {
-      Random r = new Random();
-      return r.nextFloat();
-    }
-  }
-
-  private static class SensorReading {
-
-    public SensorReading() {
-      this.age = 1000;
-      this.timestamp = 0;
-      this.reading = 0;
-    }
-
-    public long getAge() {
-      return age;
-    }
-
-    public long getTimestamp() {
-      return timestamp;
-    }
-
-    public float getReading() {
-      return reading;
-    }
-
-    public void setReading(float reading) {
-      long currentTime = SystemClock.elapsedRealtime();
-      if (currentTime > timestamp + 5 && timestamp > 0) this.age = currentTime - this.timestamp;
-      this.timestamp = currentTime;
-      this.reading = reading;
-    }
-
-    private long age;
-    private long timestamp;
-    private float reading;
   }
 
   public float getBatteryVoltage() {
@@ -159,10 +95,6 @@ public class Vehicle {
     this.sonarReading.setReading(sonarReading);
   }
 
-  public Control getNoisyControl() {
-    return noisyControl;
-  }
-
   public Control getControl() {
     return control;
   }
@@ -175,10 +107,26 @@ public class Vehicle {
     this.control = new Control(left, right);
   }
 
-  public void applyNoise() {
-    noise.update();
-    if (noise.direction < 0) noisyControl = new Control(control.left - noise.value, control.right);
-    else noisyControl = new Control(control.left, control.right - noise.value);
+  private Timer noiseTimer;
+
+  private class NoiseTask extends TimerTask {
+    @Override
+    public void run() {
+      noise.update();
+      sendControl();
+    }
+  }
+
+  public void startNoise() {
+    noiseTimer = new Timer();
+    NoiseTask noiseTask = new NoiseTask();
+    noiseTimer.schedule(noiseTask, 0, 50); // no delay 50ms intervals
+    noiseEnabled = true;
+  }
+
+  public void stopNoise() {
+    noiseEnabled = false;
+    noiseTimer.cancel();
   }
 
   public int getSpeedMultiplier() {
@@ -195,5 +143,47 @@ public class Vehicle {
 
   public void setIndicator(int indicator) {
     this.indicator = indicator;
+    sendStringToUsb(String.format(Locale.US, "i%d\n", indicator));
+  }
+
+  public UsbConnection getUsbConnection() {
+    return usbConnection;
+  }
+
+  public void connectUsb() {
+    usbConnection = new UsbConnection(context, baudRate);
+    usbConnected = usbConnection.startUsbConnection();
+  }
+
+  public void disconnectUsb() {
+    Objects.requireNonNull(usbConnection)
+        .send(
+            String.format(
+                Locale.US,
+                "c%d,%d\n",
+                (int) (getControl().getLeft()),
+                (int) (getControl().getRight())));
+
+    Objects.requireNonNull(usbConnection).stopUsbConnection();
+    usbConnection = null;
+    usbConnected = false;
+  }
+
+  public boolean isUsbConnected() {
+    return usbConnected;
+  }
+
+  private void sendStringToUsb(String message) {
+    Objects.requireNonNull(usbConnection).send(message);
+  }
+
+  public void sendControl() {
+    int left = (int) (control.left * speedMultiplier);
+    int right = (int) (control.right * speedMultiplier);
+    if (noiseEnabled && noise.getDirection() < 0)
+      left = (int) ((control.left - noise.getValue()) * speedMultiplier);
+    if (noiseEnabled && noise.getDirection() > 0)
+      right = (int) ((control.right - noise.getValue()) * speedMultiplier);
+    sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
   }
 }

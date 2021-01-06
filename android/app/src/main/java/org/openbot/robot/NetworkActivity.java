@@ -39,11 +39,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import org.openbot.R;
-import org.openbot.common.Enums.*;
+import org.openbot.common.Enums.ControlMode;
+import org.openbot.common.Enums.LogMode;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;
 import org.openbot.env.BorderedText;
@@ -230,12 +229,13 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
               }
 
               tracker.trackResults(mappedRecognitions, currFrameNum);
-              vehicle.setControl(tracker.updateTarget());
+              controllerHandler.handleDriveCommand(tracker.updateTarget());
               trackingOverlay.postInvalidate();
             } else if (autoPilot != null) {
               LOGGER.i("Running autopilot on image " + currFrameNum);
               final long startTime = SystemClock.elapsedRealtime();
-              vehicle.setControl(autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+              controllerHandler.handleDriveCommand(
+                  autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
             }
 
@@ -244,8 +244,6 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
             if (loggingEnabled) {
               sendInferenceTimeToSensorService(currFrameNum, lastProcessingTimeMs);
             }
-
-            updateVehicleState();
           });
     }
 
@@ -261,57 +259,37 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
         });
   }
 
-  protected void updateVehicleState() {
-
-    float left;
-    float right;
+  protected void sendVehicleControl() {
 
     // Log controls
     if (loggingEnabled) {
       runInBackground(this::sendControlToSensorService);
     }
 
-    if (noiseEnabled) {
-      left = vehicle.getNoisyControl().getLeft();
-      right = vehicle.getNoisyControl().getRight();
-      sendNoisyControlToVehicle();
-    } else {
-      left = vehicle.getControl().getLeft();
-      right = vehicle.getControl().getRight();
-      sendControlToVehicle();
-    }
+    // Send control to vehicle
+    vehicle.sendControl();
 
     // Update GUI
     runOnUiThread(
-        new Runnable() {
-          @Override
-          public void run() {
-            Log.i("display_ctrl", "runnable");
-            if (controlValueTextView != null)
-              controlValueTextView.setText(String.format(Locale.US, "%.0f,%.0f", left, right));
-          }
+        () -> {
+          Log.i("display_ctrl", "runnable");
+          if (controlValueTextView != null)
+            controlValueTextView.setText(
+                String.format(
+                    Locale.US,
+                    "%.0f,%.0f",
+                    vehicle.getControl().getLeft(),
+                    vehicle.getControl().getRight()));
         });
-  }
-
-  private Timer noiseTimer;
-
-  private class NoiseTask extends TimerTask {
-    @Override
-    public void run() {
-      vehicle.applyNoise();
-      updateVehicleState();
-    }
   }
 
   protected void toggleNoise() {
     noiseEnabled = !noiseEnabled;
     BotToControllerEventBus.emitEvent(createStatus("NOISE", noiseEnabled));
     if (noiseEnabled) {
-      noiseTimer = new Timer();
-      NoiseTask noiseTask = new NoiseTask();
-      noiseTimer.schedule(noiseTask, 0, 50); // no delay 50ms intervals
-    } else noiseTimer.cancel();
-    updateVehicleState();
+      vehicle.startNoise();
+    } else vehicle.stopNoise();
+    sendVehicleControl();
   }
 
   @Override
@@ -334,8 +312,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           () -> {
             try {
               TimeUnit.MILLISECONDS.sleep(lastProcessingTimeMs);
-              vehicle.setControl(0, 0);
-              updateVehicleState();
+              controllerHandler.handleDriveCommand(0.f, 0.f);
               runOnUiThread(
                   () -> {
                     inferenceTimeTextView.setText(R.string.time_ms);
@@ -449,39 +426,40 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
 
   @Override
   public boolean dispatchKeyEvent(KeyEvent event) {
-    // Check that the event came from a game controller
-    if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
-        && event.getAction() == KeyEvent.ACTION_UP
-        && controlMode == ControlMode.GAMEPAD) {
-      switch (event.getKeyCode()) {
-        case KeyEvent.KEYCODE_BUTTON_A:
-          controllerHandler.handleLogging();
-          return true;
-        case KeyEvent.KEYCODE_BUTTON_B:
-          controllerHandler.handleIndicatorLeft();
-          return true;
-        case KeyEvent.KEYCODE_BUTTON_Y:
-          controllerHandler.handleIndicatorStop();
-          return true;
-        case KeyEvent.KEYCODE_BUTTON_X:
-          controllerHandler.handleIndicatorRight();
-          return true;
-        case KeyEvent.KEYCODE_BUTTON_START:
-          controllerHandler.handleNoise();
-          return true;
-        case KeyEvent.KEYCODE_BUTTON_L1:
-          controllerHandler.handleDriveMode();
-          return true;
-        case KeyEvent.KEYCODE_BUTTON_R1:
-          controllerHandler.handleNetwork();
-          return true;
-        default:
-          // Toast.makeText(this,"Key " + event.getKeyCode() + " not recognized",
-          // Toast.LENGTH_SHORT).show();
-          break;
+    if (controlMode == ControlMode.GAMEPAD) {
+      // Check that the event came from a game controller
+      if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
+          && event.getAction() == KeyEvent.ACTION_UP) {
+        switch (event.getKeyCode()) {
+          case KeyEvent.KEYCODE_BUTTON_A: // x
+            controllerHandler.handleLogging();
+            break;
+          case KeyEvent.KEYCODE_BUTTON_X: // square
+            controllerHandler.handleIndicatorLeft();
+            break;
+          case KeyEvent.KEYCODE_BUTTON_Y: // triangle
+            controllerHandler.handleIndicatorStop();
+            break;
+          case KeyEvent.KEYCODE_BUTTON_B: // circle
+            controllerHandler.handleIndicatorRight();
+            break;
+          case KeyEvent.KEYCODE_BUTTON_START: // options
+            controllerHandler.handleNoise();
+            break;
+          case KeyEvent.KEYCODE_BUTTON_L1:
+            controllerHandler.handleDriveMode();
+            break;
+          case KeyEvent.KEYCODE_BUTTON_R1:
+            controllerHandler.handleNetwork();
+            break;
+          default:
+            // Toast.makeText(this,"Key " + event.getKeyCode() + " not recognized",
+            // Toast.LENGTH_SHORT).show();
+            break;
+        }
       }
+      return true;
     }
-
     return super.dispatchKeyEvent(event);
   }
 }

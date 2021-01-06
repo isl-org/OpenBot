@@ -193,9 +193,11 @@ public class UsbConnection {
   }
 
   public void send(String msg) {
-    busy = true;
-    serialDevice.write(msg.getBytes(UTF_8));
-    busy = false;
+    if (isOpen() && !isBusy()) {
+      busy = true;
+      serialDevice.write(msg.getBytes(UTF_8));
+      busy = false;
+    }
   }
 
   public boolean isOpen() {

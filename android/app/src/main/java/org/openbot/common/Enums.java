@@ -15,14 +15,40 @@ public class Enums {
   }
 
   public enum SpeedMode {
-    SLOW,
-    NORMAL,
-    FAST
+    SLOW(128),
+    NORMAL(192),
+    FAST(255);
+
+    private final int value;
+
+    SpeedMode(final int newValue) {
+      value = newValue;
+    }
+
+    public int getValue() {
+      return value;
+    }
   }
 
   public enum DriveMode {
     DUAL,
     GAME,
     JOYSTICK
+  }
+
+  public enum VehicleIndicator {
+    LEFT(-1),
+    STOP(0),
+    RIGHT(1);
+
+    private final int value;
+
+    VehicleIndicator(final int newValue) {
+      value = newValue;
+    }
+
+    public int getValue() {
+      return value;
+    }
   }
 }
