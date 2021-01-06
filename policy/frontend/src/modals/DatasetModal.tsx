@@ -38,10 +38,10 @@ export function DatasetModal({defaultDir, name, toggle, ...props}: DatasetModalP
             if (oldName) {
                 await jsonRpc('renameDataset', {newDir, newName, oldDir, oldName})
                 history.replace(`/${newDir}/${newName}`)
-                props.toggle();
+                toggle();
             } else {
                 await jsonRpc('createDataset', {newDir, newName})
-                props.toggle();
+                toggle();
             }
         } catch (e) {
             Notification.warning({
@@ -74,7 +74,7 @@ export function DatasetModal({defaultDir, name, toggle, ...props}: DatasetModalP
                 <Button onClick={() => save(dir, newName, defaultDir, name)} appearance="primary">
                     Save
                 </Button>
-                <Button onClick={props.toggle} appearance="subtle">
+                <Button onClick={toggle} appearance="subtle">
                     Cancel
                 </Button>
             </Modal.Footer>
