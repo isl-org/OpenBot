@@ -1,0 +1,7 @@
+aiohttp[speedups]
+aiohttp-devtools
+aiohttp_json_rpc
+aiozeroconf
+imageio
+aiohttp_json_rpc
+openbot_frontend==0.4.1

@@ -1074,7 +1074,6 @@ public abstract class CameraActivity extends AppCompatActivity
     runInBackground(
         () -> {
           try {
-            uploadService.uploadAll();
             TimeUnit.MILLISECONDS.sleep(500);
             sendControlToSensorService();
             sendIndicatorToSensorService();

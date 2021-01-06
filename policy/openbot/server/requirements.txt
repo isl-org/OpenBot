@@ -1,6 +1,0 @@
-aiohttp[speedups]
-aiohttp-devtools
-aiohttp_jinja2
-aiozeroconf
-imageio
-jinja2

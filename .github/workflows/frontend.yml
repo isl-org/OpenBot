@@ -1,0 +1,26 @@
+name: Build frontend
+
+# Run this workflow every time a new commit pushed to your repository
+on: push
+
+defaults:
+  run:
+    working-directory: ./policy/frontend
+
+jobs:
+  # Set the job key. The key is displayed as the job name
+  # when a job name is not provided
+  frontend:
+    # Name the Job
+    name: Build frontend
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - run: yarn install
+      - run: yarn test
+      - run: yarn build

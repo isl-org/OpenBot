@@ -1,0 +1,38 @@
+body {
+  background-color: #f4f5f7;
+}
+.navbar-brand {
+  padding: 18px 20px;
+  display: inline-block;
+}
+.rs-panel {
+  background-color: white;
+}
+.App > .rs-content {
+  padding: 1em;
+}
+.trainPage .rs-panel img {
+    max-width: 100%;
+}
+.bool-input {
+    display: flex;
+    margin: 12px 0;
+    gap: 15px;
+    align-items: center;
+}
+.bool-input:not(:last-child) {
+    margin-bottom: 24px;
+}
+.bool-input .rs-control-label {
+    text-align: right;
+    width: 170px;
+}
+
+.rs-panel + .rs-message,
+.rs-message + .rs-form {
+    margin-top: 20px;
+}
+
+.rs-panel {
+    overflow: visible;
+}

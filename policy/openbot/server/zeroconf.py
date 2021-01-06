@@ -20,11 +20,16 @@ async def run_test(zc):
     desc = {}
     local_ip = ip4_address()
 
-    info = ServiceInfo("_http._tcp.local.",
-                       "Openbot Web Site._http._tcp.local.",
-                       address=socket.inet_aton(local_ip),
-                       port=8000,
-                       weight=0, priority=0, properties=desc, server="openbot.local.")
+    info = ServiceInfo(
+        "_http._tcp.local.",
+        "Openbot Web Site._http._tcp.local.",
+        address=socket.inet_aton(local_ip),
+        port=8000,
+        weight=0,
+        priority=0,
+        properties=desc,
+        server="openbot.local.",
+    )
     print("Registration of a service, press Ctrl-C to exit...")
     await zc.register_service(info)
 
@@ -37,7 +42,7 @@ def ip4_address():
         for link in addresses[AF_INET]:
             if "addr" not in link:
                 continue
-            ip4 = link['addr']
+            ip4 = link["addr"]
             if ip4.startswith("127.") or ip4.startswith("10."):
                 print(f"Skip address {ip4} @ interface {interface}")
                 continue
@@ -59,11 +64,11 @@ async def on_shutdown(app):
 loop = asyncio.get_event_loop()
 zc = Zeroconf(loop)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     if len(sys.argv) > 1:
-        assert sys.argv[1:] == ['--debug']
-        logging.getLogger('aiozeroconf').setLevel(logging.DEBUG)
+        assert sys.argv[1:] == ["--debug"]
+        logging.getLogger("aiozeroconf").setLevel(logging.DEBUG)
 
     try:
         xx = loop.create_task(run_test(zc))

@@ -1,0 +1,17 @@
+.grid-view {
+    display: grid;
+    margin: 0 0 20px;
+    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    justify-content: space-evenly;
+}
+.grid-view .rs-panel .rs-panel .rs-panel-body {
+    padding: 5px 15px 15px;
+}
+.grid-view img {
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+}
+.rs-panel + .grid-view {
+    margin-top: 20px;
+}

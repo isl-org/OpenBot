@@ -31,13 +31,13 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 #
-# Requirements: 
+# Requirements:
 # sudo apt-get install python-argparse
 
 """
 Modified and extended by Matthias Mueller - Intel Intelligent Systems Lab - 2020
-The controls are event-based and not synchronized to the frames. 
-This script matches the control signals to frames. 
+The controls are event-based and not synchronized to the frames.
+This script matches the control signals to frames.
 Specifically, if there was no control signal event within some threshold (default: 1ms), the last control signal before the frame is used.
 """
 
@@ -46,35 +46,37 @@ import sys
 import os
 import numpy
 
+from . import utils
+
 
 def read_file_list(filename):
     """
-    Reads a trajectory from a text file. 
-    
+    Reads a trajectory from a text file.
+
     File format:
     The file format is "stamp d1 d2 d3 ...", where stamp denotes the time stamp (to be matched)
-    and "d1 d2 d3.." is arbitary data (e.g., a 3D position and 3D orientation) associated to this timestamp. 
-    
+    and "d1 d2 d3.." is arbitary data (e.g., a 3D position and 3D orientation) associated to this timestamp.
+
     Input:
     filename -- File name
-    
+
     Output:
     dict -- dictionary of (stamp,data) tuples
-    
+
     """
     f = open(filename)
     header = f.readline() #discard header
     data = f.read()
-    lines = data.replace(","," ").replace("\t"," ").split("\n") 
+    lines = data.replace(","," ").replace("\t"," ").split("\n")
     data = [[v.strip() for v in line.split(" ") if v.strip()!=""] for line in lines if len(line)>0 and line[0]!="#"]
     data = [(int(l[0]),l[1:]) for l in data if len(l)>1]
     return dict(data)
 
 def associate(first_list, second_list, max_offset):
     """
-    Associate two dictionaries of (stamp,data). As the time stamps never match exactly, we aim 
+    Associate two dictionaries of (stamp,data). As the time stamps never match exactly, we aim
     to find the closest match for every input tuple.
-    
+
     Input:
     first_list -- first dictionary of (stamp,data) tuples
     second_list -- second dictionary of (stamp,data) tuples
@@ -83,13 +85,13 @@ def associate(first_list, second_list, max_offset):
 
     Output:
     matches -- list of matched tuples ((stamp1,data1),(stamp2,data2))
-    
+
     """
     first_keys = list(first_list)
     second_keys = list(second_list)
-    potential_matches = [(b-a, a, b) 
-                         for a in first_keys 
-                         for b in second_keys 
+    potential_matches = [(b-a, a, b)
+                         for a in first_keys
+                         for b in second_keys
                          if (b-a) < max_offset]   #Control before image or within max_offset
     potential_matches.sort(reverse = True)
     matches = []
@@ -97,7 +99,7 @@ def associate(first_list, second_list, max_offset):
         if a in first_keys and b in second_keys:
             first_keys.remove(a) #Remove frame that was assigned
             matches.append((a, b)) #Append tuple
-    
+
     matches.sort()
     return matches
 
@@ -105,63 +107,71 @@ def associate(first_list, second_list, max_offset):
 def match_frame_ctrl_cmd(data_dir, datasets, max_offset, redo_matching=False, remove_zeros=True):
     frames = []
     for dataset in datasets:
-        for folder in os.listdir(os.path.join(data_dir,dataset)):
-            if os.path.isdir(os.path.join(data_dir,dataset,folder)):
-                sensor_path = os.path.join(data_dir,dataset,folder,"sensor_data")
-                img_path = os.path.join(data_dir,dataset,folder,"images")
-                print("Processing folder %s/%s" %(dataset,folder))
-                if (not redo_matching and os.path.isfile(os.path.join(sensor_path,"matched_frame_ctrl.txt"))):
-                    print(" Frames and controls already matched.")
-                else:
-                    #Match frames with control signals
-                    frame_list = read_file_list(os.path.join(sensor_path,"rgbFrames.txt"))
-                    ctrl_list = read_file_list(os.path.join(sensor_path,"ctrlLog.txt"))
-                    matches = associate(frame_list, ctrl_list, max_offset)   
-                    with open(os.path.join(sensor_path,"matched_frame_ctrl.txt"), 'w') as f:
-                        f.write("timestamp (frame),time_offset (ctrl-frame),frame,left,right\n")
-                        for a,b in matches:
-                            f.write("%d %d %s %s \n"%(a,b-a," ".join(frame_list[a]),  " ".join(ctrl_list[b])))
-                    print(" Frames and controls matched.")
-
-                if (not redo_matching and os.path.isfile(os.path.join(sensor_path,"matched_frame_ctrl_cmd.txt"))):
-                    print(" Frames and commands already matched.")
-                else:
-                    #Match frames and controls with indicator commands
-                    frame_list = read_file_list(os.path.join(sensor_path,"matched_frame_ctrl.txt"))
-                    cmd_list = read_file_list(os.path.join(sensor_path,"indicatorLog.txt"))
-                    #Set indicator signal to 0 for initial frames
-                    if sorted(frame_list)[0]<sorted(cmd_list)[0]:
-                        cmd_list[sorted(frame_list)[0]] = ['0']
-                    matches = associate(frame_list, cmd_list, max_offset)   
-                    with open(os.path.join(sensor_path,"matched_frame_ctrl_cmd.txt"), 'w') as f:
-                        f.write("timestamp (frame),time_offset (cmd-frame),time_offset (ctrl-frame),frame,left,right,cmd\n")
-                        for a,b in matches:
-                            f.write("%d %d %s %s \n"%(a,b-a," ".join(frame_list[a]),  " ".join(cmd_list[b])))
-                    print(" Frames and commands matched.")
-                    
-                if (not redo_matching and os.path.isfile(os.path.join(sensor_path,"matched_frame_ctrl_cmd_processed.txt"))):
-                    print(" Preprocessing already completed.")
-                else:
-                    #Cleanup: Add path and remove frames where vehicle was stationary
-                    frame_list = read_file_list(os.path.join(sensor_path,"matched_frame_ctrl_cmd.txt"))
-                    with open(os.path.join(sensor_path,"matched_frame_ctrl_cmd_processed.txt"), 'w') as f:
-                        f.write("timestamp,frame,left,right,cmd\n")
-                        for timestamp in list(frame_list):
-                            if (len(frame_list[timestamp]) < 6):
-                                continue 
-                            left = int(frame_list[timestamp][3])
-                            right = int(frame_list[timestamp][4])
-                            if (remove_zeros and left-right==0 and left+right==0):
-                                print (" Removed timestamp:%s, left:%d, right:%d" %(timestamp,left,right))
-                                del frame_list[timestamp]
-                            else:
-                                frame_name=(os.path.join(img_path,frame_list[timestamp][2]+"_crop.jpeg"))
-                                cmd = int(frame_list[timestamp][5])
-                                f.write("%s,%s,%d,%d,%d\n"%(timestamp,frame_name,left,right,cmd)) 
-                    print(" Preprocessing completed.")
-
-                frame_list = read_file_list(os.path.join(sensor_path,"matched_frame_ctrl_cmd_processed.txt"))
-                for timestamp in list(frame_list):
-                    frames.append(frame_list[timestamp][0])
-                
+        for folder in utils.list_dirs(os.path.join(data_dir, dataset)):
+            session_dir = os.path.join(data_dir, dataset, folder)
+            frame_list = match_frame_session(session_dir, max_offset, redo_matching, remove_zeros)
+            for timestamp in list(frame_list):
+                frames.append(frame_list[timestamp][0])
     return frames
+
+def match_frame_session(session_dir, max_offset, redo_matching=False, remove_zeros=True):
+    sensor_path = os.path.join(session_dir, "sensor_data")
+    img_path = os.path.join(session_dir, "images")
+    print("Processing folder %s" %(session_dir))
+    if (not redo_matching and os.path.isfile(os.path.join(sensor_path,"matched_frame_ctrl.txt"))):
+        print(" Frames and controls already matched.")
+    else:
+        #Match frames with control signals
+        frame_list = read_file_list(os.path.join(sensor_path,"rgbFrames.txt"))
+        if len(frame_list) == 0:
+            raise Exception("Empty rgbFrames.txt")
+        ctrl_list = read_file_list(os.path.join(sensor_path,"ctrlLog.txt"))
+        if len(ctrl_list) == 0:
+            raise Exception("Empty ctrlLog.txt")
+        matches = associate(frame_list, ctrl_list, max_offset)
+        with open(os.path.join(sensor_path,"matched_frame_ctrl.txt"), 'w') as f:
+            f.write("timestamp (frame),time_offset (ctrl-frame),frame,left,right\n")
+            for a,b in matches:
+                f.write("%d %d %s %s \n"%(a,b-a," ".join(frame_list[a]),  " ".join(ctrl_list[b])))
+        print(" Frames and controls matched.")
+
+    if (not redo_matching and os.path.isfile(os.path.join(sensor_path,"matched_frame_ctrl_cmd.txt"))):
+        print(" Frames and commands already matched.")
+    else:
+        #Match frames and controls with indicator commands
+        frame_list = read_file_list(os.path.join(sensor_path,"matched_frame_ctrl.txt"))
+        if len(frame_list) == 0:
+            raise Exception("Empty matched_frame_ctrl.txt")
+        cmd_list = read_file_list(os.path.join(sensor_path,"indicatorLog.txt"))
+        #Set indicator signal to 0 for initial frames
+        if len(cmd_list) == 0 or sorted(frame_list)[0]<sorted(cmd_list)[0]:
+            cmd_list[sorted(frame_list)[0]] = ['0']
+        matches = associate(frame_list, cmd_list, max_offset)
+        with open(os.path.join(sensor_path,"matched_frame_ctrl_cmd.txt"), 'w') as f:
+            f.write("timestamp (frame),time_offset (cmd-frame),time_offset (ctrl-frame),frame,left,right,cmd\n")
+            for a,b in matches:
+                f.write("%d %d %s %s \n"%(a,b-a," ".join(frame_list[a]),  " ".join(cmd_list[b])))
+        print(" Frames and commands matched.")
+
+    if (not redo_matching and os.path.isfile(os.path.join(sensor_path,"matched_frame_ctrl_cmd_processed.txt"))):
+        print(" Preprocessing already completed.")
+    else:
+        #Cleanup: Add path and remove frames where vehicle was stationary
+        frame_list = read_file_list(os.path.join(sensor_path,"matched_frame_ctrl_cmd.txt"))
+        with open(os.path.join(sensor_path,"matched_frame_ctrl_cmd_processed.txt"), 'w') as f:
+            f.write("timestamp,frame,left,right,cmd\n")
+            for timestamp in list(frame_list):
+                if (len(frame_list[timestamp]) < 6):
+                    continue
+                left = int(frame_list[timestamp][3])
+                right = int(frame_list[timestamp][4])
+                if (remove_zeros and left-right==0 and left+right==0):
+                    print (" Removed timestamp:%s, left:%d, right:%d" %(timestamp,left,right))
+                    del frame_list[timestamp]
+                else:
+                    frame_name=(os.path.join(img_path,frame_list[timestamp][2]+"_crop.jpeg"))
+                    cmd = int(frame_list[timestamp][5])
+                    f.write("%s,%s,%d,%d,%d\n"%(timestamp,frame_name,left,right,cmd))
+        print(" Preprocessing completed.")
+
+    return read_file_list(os.path.join(sensor_path,"matched_frame_ctrl_cmd_processed.txt"))

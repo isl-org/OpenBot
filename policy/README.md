@@ -58,7 +58,7 @@ The Jupyter notebook expects a folder called `dataset` in the same folder. In th
 
 <img src="../docs/images/folder_structure.png" width="200" alt="folder structure" />
 
-Rather than copying all files manually from the phone, you can also upload the logs automatically to a [Python server](server/README.md) on your computer. In this case, the zip files will be uploaded and unpacked into the folder `dataset/uploaded`. You will still need to move them into the folder structure for training. You can simply treat the `uploaded` folder as a recording session and move it into `train_data`. The recordings will then be recognized as training data by the Jupyter notebook. If you do not already have a recording session in the `test_data` folder, you also need to move at least one recording from `train_data/uploaded` into `test_data/uploaded`.
+Rather than copying all files manually from the phone, you can also upload the logs automatically to a [Python server](#web-app) on your computer. In this case, the zip files will be uploaded and unpacked into the folder `dataset/uploaded`. You will still need to move them into the folder structure for training. You can simply treat the `uploaded` folder as a recording session and move it into `train_data`. The recordings will then be recognized as training data by the Jupyter notebook. If you do not already have a recording session in the `test_data` folder, you also need to move at least one recording from `train_data/uploaded` into `test_data/uploaded`.
 
 ## Policy Training
 
@@ -75,3 +75,89 @@ Now a web-browser window will open automatically and load the Jupyter notebook. 
 </p>
 
 If you are looking for the folder in your local directory, you will find it at: `app/src/main/assets/networks`.
+
+## Web App
+
+We provide a web app and a python web server for easier policy training. (Beta)
+
+### Features
+
+* Automatic log (session) upload 
+  * see Troubleshooting for details
+* List uploaded sessions, with GIF preview 
+* List datasets, with basic info
+* Move session to a dataset
+* Delete session
+* List trained models, and show plots about training
+* Train a model with basic parameters, show progress bar
+
+### Preview
+
+<img src="../docs/images/web-app.gif" width="100%" alt="Web App preview" />
+
+
+### Quickstart
+
+```
+conda activate openbot
+pip install -r requirements.txt
+python -m openbot.server
+```
+
+You can now open your browser to visualize the dataset and see incoming uploads by going to: 
+[http://localhost:8000/#/uploaded](http://localhost:8000/#/uploaded)
+
+### Dependencies
+
+If you do not want install the dependencies globally, activate your conda environment first:
+
+```
+conda activate openbot
+```
+
+Make sure you are in the folder `policy`. Now, you can install all the dependencies with the following command:
+
+```
+pip install -r requirements.txt
+```
+
+### Running the server
+
+You can run the python server with the command:
+
+```
+python -m openbot.server
+```
+
+There is also a developer mode:
+
+```
+adev runserver openbot/server
+```
+
+For frontend development (react app):
+
+```
+FE_DEV=1 adev runserver openbot/server
+```
+
+When you run the server you should see something like:
+
+```
+Skip address 127.0.0.1 @ interface lo
+Found address 192.168.x.x @ interface wlp2s0
+Registration of a service, press Ctrl-C to exit...
+Running frontend: 0.1.0
+Frontend path: /home/USERNAME/miniconda3/envs/openbot/lib/python3.7/site-packages/openbot_frontend
+======== Running on http://0.0.0.0:8000 ========
+(Press CTRL+C to quit)
+```
+
+### Troubleshooting
+
+If the upload to the server is not working, here are some troubleshooting tips:
+
+- Try restarting the server (computer) and the OpenBot app (smartphone)
+- Make sure the smartphone and your computer are connected to the same WiFi network
+- If your router has both 2.4 GHz and 5 GHz networks with the same name, disable the 5 GHz network
+- Keep the phone connected to Android Studio while running the app. In the Logcat tab, select Debug from the dropdown. Type `NSD` into the filter field to see the debug messages concerning the server connection. Type `Upload` into the filter field for debug messages concerning the recording file upload.
