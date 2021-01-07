@@ -87,6 +87,7 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     // CameraX View class
     implementation "androidx.camera:camera-view:1.0.0-alpha19"
+    implementation 'com.github.anastr:speedviewlib:1.5.3'
 
     // For a library module, uncomment the following line
     // implementation project(path: ':controller')

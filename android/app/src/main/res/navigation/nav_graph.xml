@@ -11,13 +11,13 @@
         android:label="main_fragment"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
+            android:id="@+id/action_mainFragment_to_robotCommunicationFragment"
+            app:destination="@id/robotCommunicationFragment" />
     </fragment>
-
     <fragment
-        android:id="@+id/gameFragment"
-        android:name="org.openbot.robot.GameFragment"
-        android:label="fragment_game"
-        tools:layout="@layout/fragment_game" />
+        android:id="@+id/robotCommunicationFragment"
+        android:name="org.openbot.robot.RobotCommunicationFragment"
+        android:label="fragment_robot_communication"
+        tools:layout="@layout/fragment_robot_communication" />
+
 </navigation>

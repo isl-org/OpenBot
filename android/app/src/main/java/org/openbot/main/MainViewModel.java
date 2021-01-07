@@ -16,4 +16,14 @@ public class MainViewModel extends ViewModel {
   public LiveData<SubCategory> getSelectedMode() {
     return selectedMode;
   }
+
+  private final MutableLiveData<String> usbData = new MutableLiveData<>();
+
+  public void setUsbData(String data) {
+    usbData.setValue(data);
+  }
+
+  public LiveData<String> getUsbData() {
+    return usbData;
+  }
 }

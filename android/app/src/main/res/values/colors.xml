@@ -7,4 +7,8 @@
 
     <color name="semi_transparent">#66000000</color>
     <color name="background">#EDEDED</color>
+    <color name="indicator">#FFAB00</color>
+    <color name="green">#93C47D</color>
+    <color name="yellow">#FFD966</color>
+    <color name="red">#E06666</color>
 </resources>

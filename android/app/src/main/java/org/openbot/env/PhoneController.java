@@ -60,6 +60,6 @@ public class PhoneController {
   }
 
   private void handleBotEvents() {
-    BotToControllerEventBus.getProcessor().subscribe(event -> send(event));
+    BotToControllerEventBus.getProcessor().subscribe(this::send);
   }
 }

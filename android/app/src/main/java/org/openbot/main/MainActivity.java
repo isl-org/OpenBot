@@ -1,15 +1,26 @@
 package org.openbot.main;
 
+import static org.openbot.common.Constants.USB_ACTION_CONNECTION_CLOSED;
+import static org.openbot.common.Constants.USB_ACTION_CONNECTION_ESTABLISHED;
+import static org.openbot.common.Constants.USB_ACTION_DATA_RECEIVED;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.InputDevice;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import java.util.Objects;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.navigation.Navigation;
+
 import org.openbot.R;
-import org.openbot.common.Constants;
-import org.openbot.robot.NetworkActivity;
+import org.openbot.model.SubCategory;
+import org.openbot.robot.RobotCommunicationViewModel;
 
 // For a library module, uncomment the following line
 // import org.openbot.controller.ControllerActivity;
@@ -17,47 +28,69 @@ import org.openbot.robot.NetworkActivity;
 public class MainActivity extends AppCompatActivity {
 
   private MainViewModel viewModel;
-  private NavController navController;
+  private RobotCommunicationViewModel robotCommunicationViewModel;
+  private LocalBroadcastManager localBroadcastManager;
+  private BroadcastReceiver localBroadcastReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    NavHostFragment navHostFragment =
-        (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-    navController = Objects.requireNonNull(navHostFragment).getNavController();
-
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-    gotoSelectedFeature();
+    robotCommunicationViewModel =
+        new ViewModelProvider(this).get(RobotCommunicationViewModel.class);
 
-    // Default to open this when app opens
-    Intent intent = new Intent(this, NetworkActivity.class);
-    startActivity(intent);
-  }
+    localBroadcastReceiver =
+        new BroadcastReceiver() {
+          @Override
+          public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
 
-  private void gotoSelectedFeature() {
-    viewModel
-        .getSelectedMode()
-        .observe(
-            this,
-            subCategory -> {
-              switch (subCategory.getTitle()) {
-                case Constants.GLOBAL_VIEW:
-                  Intent intent = new Intent(this, NetworkActivity.class);
-                  startActivity(intent);
+            if (action != null) {
+              switch (action) {
+                case USB_ACTION_CONNECTION_ESTABLISHED:
+
+                case USB_ACTION_CONNECTION_CLOSED:
                   break;
 
-                case Constants.FREE_ROAM:
-                  navController.navigate(R.id.action_mainFragment_to_gameFragment);
-                  break;
-
-                case Constants.CONTROLLER:
-                  // For a library module, uncomment the following line
-                  // intent = new Intent(this, ControllerActivity.class);
-                  // startActivity(intent);
+                case USB_ACTION_DATA_RECEIVED:
+                  viewModel.setUsbData(intent.getStringExtra("data"));
                   break;
               }
-            });
+            }
+          }
+        };
+    IntentFilter localIntentFilter = new IntentFilter();
+    localIntentFilter.addAction(USB_ACTION_CONNECTION_ESTABLISHED);
+    localIntentFilter.addAction(USB_ACTION_CONNECTION_CLOSED);
+    localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
+    localBroadcastManager = LocalBroadcastManager.getInstance(this);
+    localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
+
+    // Default to open this when app opens
+    //    Intent intent = new Intent(this, NetworkActivity.class);
+    //    startActivity(intent);
+  }
+
+  @Override
+  public boolean dispatchGenericMotionEvent(MotionEvent event) {
+    if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
+        && event.getAction() == MotionEvent.ACTION_MOVE) {
+      robotCommunicationViewModel.setGenericMotionEvent(event);
+      return true;
+    }
+    return super.dispatchGenericMotionEvent(event);
+  }
+
+  @Override
+  public boolean dispatchKeyEvent(KeyEvent event) {
+    // Check that the event came from a game controller
+    if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
+        && event.getAction() == KeyEvent.ACTION_UP) {
+      robotCommunicationViewModel.setKeyEvent(event.getKeyCode());
+      return true;
+    }
+    return super.dispatchKeyEvent(event);
   }
 }
