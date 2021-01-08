@@ -1,8 +1,17 @@
 name: Build frontend
 
-# Run this workflow every time a new commit pushed to your repository
-on: push
-
+# Run this workflow for every new commit and PR that changes the frontend
+on: 
+  push:
+    branches: [ master ]
+    paths:
+    - 'policy/frontend/**'
+    - '.github/workflows/frontend.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+    - 'policy/frontend/**'
+    - '.github/workflows/frontend.yml'
 defaults:
   run:
     working-directory: ./policy/frontend
