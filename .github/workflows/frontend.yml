@@ -21,6 +21,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      - run: yarn install --network-timeout 300000
+      - run: npm clean cache
+      - run: yarn clean cache
+      - run: yarn config delete proxy
+      - run: yarn config delete https-proxy
+      - run: yarn config delete registry
+      - run: yarn --no-lockfile --network-timeout 300000 --verbose
       - run: yarn test
       - run: yarn build
