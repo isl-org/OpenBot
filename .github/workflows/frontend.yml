@@ -21,7 +21,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      - run: npm clean cache
       - run: yarn clean cache
       - run: yarn config delete proxy
       - run: yarn config delete https-proxy
