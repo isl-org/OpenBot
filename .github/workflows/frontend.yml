@@ -21,6 +21,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      - run: yarn install --verbose
+      - run: yarn install
       - run: yarn test
       - run: yarn build
