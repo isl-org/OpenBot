@@ -1668,7 +1668,7 @@
 
 "@types/chart.js@^2.9.29":
   version "2.9.29"
-  resolved "https://npm.vcc-live.xyz:40443/@types%2fchart.js/-/chart.js-2.9.29.tgz#73bf7f02387402943f29946012492f10bde7ed43"
+  resolved "https://registry.npmjs.org/@types/chart.js/-/chart.js-2.9.29.tgz#73bf7f02387402943f29946012492f10bde7ed43"
   integrity sha512-WOZMitUU3gHDM0oQsCsVivX+oDsIki93szcTmmUPBm39cCvAELBjokjSDVOoA3xiIEbb+jp17z/3S2tIqruwOQ==
   dependencies:
     moment "^2.10.2"
@@ -3165,7 +3165,7 @@ char-regex@^1.0.2:
 
 chart.js@^2.9.4:
   version "2.9.4"
-  resolved "https://npm.vcc-live.xyz:40443/chart.js/-/chart.js-2.9.4.tgz#0827f9563faffb2dc5c06562f8eb10337d5b9684"
+  resolved "https://registry.npmjs.org/chart.js/-/chart.js-2.9.4.tgz#0827f9563faffb2dc5c06562f8eb10337d5b9684"
   integrity sha512-B07aAzxcrikjAPyV+01j7BmOpxtQETxTSlQ26BEYJ+3iUkbNKaOJ/nDbT6JjyqYxseM0ON12COHYdU2cTIjC7A==
   dependencies:
     chartjs-color "^2.1.0"
@@ -3173,14 +3173,14 @@ chart.js@^2.9.4:
 
 chartjs-color-string@^0.6.0:
   version "0.6.0"
-  resolved "https://npm.vcc-live.xyz:40443/chartjs-color-string/-/chartjs-color-string-0.6.0.tgz#1df096621c0e70720a64f4135ea171d051402f71"
+  resolved "https://registry.npmjs.org/chartjs-color-string/-/chartjs-color-string-0.6.0.tgz#1df096621c0e70720a64f4135ea171d051402f71"
   integrity sha512-TIB5OKn1hPJvO7JcteW4WY/63v6KwEdt6udfnDE9iCAZgy+V4SrbSxoIbTw/xkUIapjEI4ExGtD0+6D3KyFd7A==
   dependencies:
     color-name "^1.0.0"
 
 chartjs-color@^2.1.0:
   version "2.4.1"
-  resolved "https://npm.vcc-live.xyz:40443/chartjs-color/-/chartjs-color-2.4.1.tgz#6118bba202fe1ea79dd7f7c0f9da93467296c3b0"
+  resolved "https://registry.npmjs.org/chartjs-color/-/chartjs-color-2.4.1.tgz#6118bba202fe1ea79dd7f7c0f9da93467296c3b0"
   integrity sha512-haqOg1+Yebys/Ts/9bLo/BqUcONQOdr/hoEr2LLTRl6C5LXctUdHxsCYfvQVg5JIxITrfCNUDr4ntqmQk9+/0w==
   dependencies:
     chartjs-color-string "^0.6.0"
@@ -5423,9 +5423,9 @@ globby@^6.1.0:
     pinkie-promise "^2.0.0"
 
 goober@^2.0.18:
-  version "2.0.18"
-  resolved "https://npm.vcc-live.xyz:40443/goober/-/goober-2.0.18.tgz#5a7c1dbac104a4bccb1547f0218ef80d0171ad10"
-  integrity sha512-XaYq9GqRkWHS0DFPQZQLhrKGWWbiz+ydiEbMRN8eGJZ7enDjmWnRv3RWn5RwdukjnHUA6b/AQcf4QWjellKOCw==
+  version "2.0.19"
+  resolved "https://registry.npmjs.org/goober/-/goober-2.0.19.tgz#9a17ca57f32f5009d013a85bbb44d67d2be6b596"
+  integrity sha512-ewW0g4H+CDIxneBEynuaiGiCIGhlKxo6APHMntnJBt/Qx5XMBLJXrgKdj6CDM/id0vSK9F2EtIPE++8bttCC9Q==
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4:
   version "4.2.4"
@@ -5593,7 +5593,7 @@ hosted-git-info@^2.1.4:
 
 hotkeys-js@3.8.1:
   version "3.8.1"
-  resolved "https://npm.vcc-live.xyz:40443/hotkeys-js/-/hotkeys-js-3.8.1.tgz#fa7051f73bf1dc92a8b8d580a40b247f91966376"
+  resolved "https://registry.npmjs.org/hotkeys-js/-/hotkeys-js-3.8.1.tgz#fa7051f73bf1dc92a8b8d580a40b247f91966376"
   integrity sha512-YlhVQtyG9f1b7GhtzdhR0Pl+cImD1ZrKI6zYUa7QLd0zuThiL7RzZ+ANJyy7z+kmcCpNYBf5PjBa3CjiQ5PFpw==
 
 hpack.js@^2.1.6:
@@ -7447,7 +7447,7 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
 
 moment@^2.10.2:
   version "2.29.1"
-  resolved "https://npm.vcc-live.xyz:40443/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
+  resolved "https://registry.npmjs.org/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
 
 move-concurrently@^1.0.1:
@@ -9150,7 +9150,7 @@ react-app-polyfill@^2.0.0:
 
 react-chartjs-2@^2.11.1:
   version "2.11.1"
-  resolved "https://npm.vcc-live.xyz:40443/react-chartjs-2/-/react-chartjs-2-2.11.1.tgz#a78d0df05fc8bc8ffcd4c4ab5b89a25dd2ca3278"
+  resolved "https://registry.npmjs.org/react-chartjs-2/-/react-chartjs-2-2.11.1.tgz#a78d0df05fc8bc8ffcd4c4ab5b89a25dd2ca3278"
   integrity sha512-G7cNq/n2Bkh/v4vcI+GKx7Q1xwZexKYhOSj2HmrFXlvNeaURWXun6KlOUpEQwi1cv9Tgs4H3kGywDWMrX2kxfA==
   dependencies:
     lodash "^4.17.19"
@@ -9201,9 +9201,9 @@ react-error-overlay@^6.0.8:
   integrity sha512-HvPuUQnLp5H7TouGq3kzBeioJmXms1wHy9EGjz2OURWBp4qZO6AfGEcnxts1D/CbwPLRAgTMPCEgYhA3sEM4vw==
 
 react-hotkeys-hook@^3.0.1:
-  version "3.0.1"
-  resolved "https://npm.vcc-live.xyz:40443/react-hotkeys-hook/-/react-hotkeys-hook-3.0.1.tgz#96fd6f05019adb56e0c69f5019b7832353f0d753"
-  integrity sha512-otpd7gPyyz1etP+WtjEpKRFjR9QIBPYBrzpz9i7o6WeURbY9D2Cn5cy2jNIL9OrxaN2ljno3gSXLdvMfsCNgYA==
+  version "3.0.2"
+  resolved "https://registry.npmjs.org/react-hotkeys-hook/-/react-hotkeys-hook-3.0.2.tgz#2dd6f202b2178cda70b9714e0bc60e1030785a3b"
+  integrity sha512-m34awOc6KQFgi9/TT0HNBXh8x+2AroPdhw8VPOAM33m4JHPjySlUlZCmXtPRuz7QYrW3yN7F6vHQGlxcQVh4tw==
   dependencies:
     hotkeys-js "3.8.1"
 
