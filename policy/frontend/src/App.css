@@ -28,6 +28,7 @@ body {
     width: 170px;
 }
 
+.rs-panel + h3,
 .rs-panel + .rs-message,
 .rs-message + .rs-form {
     margin-top: 20px;

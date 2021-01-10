@@ -1,4 +1,6 @@
 import os
+import glob
+import shutil
 
 from openbot import models_dir
 from openbot.train import Hyperparameters
@@ -21,3 +23,18 @@ def get_model_info(name):
         params=params.__dict__,
         logs=logs,
     )
+
+
+def getPublished():
+    return [
+        dict(name=os.path.basename(p), mtime=int(os.path.getmtime(p)))
+        for p in glob.glob(os.path.join(models_dir, "*.tflite"))
+    ]
+
+
+def publishModel(params):
+    src = os.path.join(models_dir, params["model"], "checkpoints", params["checkpoint"]) + ".tflite"
+    dst = os.path.join(models_dir, params["name"]) + ".tflite"
+    print(src, dst)
+    shutil.copyfile(src, dst)
+    return True

@@ -1,8 +1,11 @@
+import {distanceInWordsToNow} from 'date-fns';
+import {Link, Route, Switch, useParams, useRouteMatch} from 'react-router-dom';
 import {List, Panel} from 'rsuite';
 import {GridView} from 'src/components/GridView';
 import {Plot} from 'src/components/Plot';
+import {PublishModalWithButton} from 'src/modals/PublishModal';
 import {useModel, useModels} from 'src/utils/useModels';
-import {Link, Route, Switch, useParams, useRouteMatch} from 'react-router-dom';
+import {useRpc} from 'src/utils/useRpc';
 
 export function ModelsPage() {
     const match = useRouteMatch();
@@ -17,6 +20,7 @@ export function ModelsPage() {
 export function ListView() {
     const match = useRouteMatch();
     const models = useModels();
+    const published = useRpc([] as any[], 'getPublished');
     return (
         <>
             <h3>Trained models</h3>
@@ -25,6 +29,23 @@ export function ListView() {
                     {models.value.map(name => (
                         <List.Item key={name}>
                             <Link to={`${match.url}/${name}`}>{name}</Link>
+                        </List.Item>
+                    ))}
+                </List>
+            </Panel>
+            <h3>Published models</h3>
+            <Panel shaded bodyFill>
+                <List bordered>
+                    <List.Item>
+                        Published models only accessible only on your local network.<br/>
+                        The android app will download these automatically.
+                    </List.Item>
+                    {published.value.map(({name, mtime}) => (
+                        <List.Item key={name}>
+                            <h6>{name}</h6>
+                            <div>
+                                {distanceInWordsToNow(new Date(mtime * 1000).toISOString())}
+                            </div>
                         </List.Item>
                     ))}
                 </List>
@@ -46,6 +67,7 @@ function ModelDetails() {
             <pre>{JSON.stringify(model.params, null, 2)}</pre>
             Last log:
             <pre>{JSON.stringify(model.logs[model.logs.length-1], null, 2)}</pre>
+            <PublishModalWithButton model={model.name}/>
         </Panel>
         <GridView>
             <Plot logs={model.logs} metric="MeanAbsoluteError"/>
