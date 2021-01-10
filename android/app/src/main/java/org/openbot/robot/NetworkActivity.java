@@ -51,8 +51,8 @@ import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
 import org.openbot.tflite.Autopilot;
 import org.openbot.tflite.Detector;
+import org.openbot.tflite.Model;
 import org.openbot.tflite.Network.Device;
-import org.openbot.tflite.Network.Model;
 import org.openbot.tracking.MultiBoxTracker;
 
 /**

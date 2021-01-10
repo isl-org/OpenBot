@@ -18,8 +18,9 @@ class AutopilotFloat extends Autopilot {
    *
    * @param activity
    */
-  public AutopilotFloat(Activity activity, Device device, int numThreads) throws IOException {
-    super(activity, device, numThreads);
+  public AutopilotFloat(Activity activity, Model model, Device device, int numThreads)
+      throws IOException {
+    super(activity, model, device, numThreads);
   }
 
   @Override

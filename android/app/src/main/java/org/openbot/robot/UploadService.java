@@ -6,14 +6,26 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Environment;
 import android.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import cz.msebera.android.httpclient.Header;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Timer;
+import java.util.TimerTask;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openbot.R;
 
 class UploadService {
+
+  private static final String TAG = "Server";
+
+  public interface ServerListener {
+    void onModelUpdated(String model);
+  }
 
   private final AsyncHttpClient client;
   private final Context context;
@@ -23,44 +35,110 @@ class UploadService {
         @Override
         public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
           // Called when the resolve fails.  Use the error code to debug.
-          Log.e("NSD", "Resolve failed " + errorCode);
+          Log.e(TAG, "Resolve failed " + errorCode);
         }
 
         @Override
         public void onServiceResolved(NsdServiceInfo serviceInfo) {
           serverUrl =
               "http://" + serviceInfo.getHost().getHostAddress() + ":" + serviceInfo.getPort();
-          Log.d("NSD", "Resolved address = " + serverUrl);
+          Log.d(TAG, "Resolved address: " + serverUrl);
 
-          client.get(
-              context,
-              serverUrl + "/test",
-              new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                  Log.d("Upload", "Server found");
-                  uploadAll();
-                }
-
-                @Override
-                public void onFailure(
-                    int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                  Log.d("Upload", "Server error " + error.toString());
-                }
-              });
+          client.get(context, serverUrl + "/test", testResponseHandler);
         }
       };
+  private final JsonHttpResponseHandler testResponseHandler =
+      new JsonHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+          Log.d(TAG, "Server found: " + response.toString());
+          uploadAll();
+        }
+
+        @Override
+        public void onFailure(
+            int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+          Log.d(TAG, "Server error: " + throwable.toString());
+        }
+      };
+  private final JsonHttpResponseHandler modelListHandler =
+      new JsonHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+          File dir = context.getFilesDir();
+
+          if (!dir.exists()) {
+            if (!dir.mkdirs()) {
+              Log.i(TAG, "Make dir failed");
+            }
+          }
+
+          for (int i = 0; i < response.length(); i++) {
+            try {
+              String name = response.optJSONObject(i).getString("name");
+              int mtime = response.optJSONObject(i).getInt("mtime");
+              File toFile = new File(dir + File.separator + name);
+              if (toFile.exists()) {
+                long time = toFile.lastModified() / 1000;
+                Log.d(TAG, "File exists: " + time);
+                if (time > mtime) {
+                  continue;
+                }
+                Log.d(TAG, "Update model: " + name);
+              } else {
+                Log.d(TAG, "Download new model: " + name);
+              }
+
+              client.get(
+                  context,
+                  serverUrl + "/models/" + name,
+                  new FileAsyncHttpResponseHandler(toFile) {
+                    @Override
+                    public void onFailure(
+                        int statusCode, Header[] headers, Throwable throwable, File file) {
+                      Log.e(TAG, "Download error: " + name, throwable);
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, File file) {
+                      Log.i(TAG, "Successful download: " + name);
+                      serverListener.onModelUpdated(name);
+                    }
+                  });
+            } catch (JSONException e) {
+              e.printStackTrace();
+            }
+          }
+        }
+      };
+  private final Timer timer;
+  private final ServerListener serverListener;
 
   private String serverUrl;
 
-  public UploadService(Context context) {
+  public UploadService(Context context, ServerListener serverListener) {
     this.client = new AsyncHttpClient();
     this.context = context;
     this.nsdService = new NsdService();
+    this.serverListener = serverListener;
+    this.timer = new Timer();
   }
 
   public void start() {
-    this.nsdService.start(context, resolveListener);
+    Log.d(TAG, "service started");
+    nsdService.start(context, resolveListener);
+    timer.scheduleAtFixedRate(
+        new TimerTask() {
+          @Override
+          public void run() {
+            if (serverUrl != null) {
+              Log.d(TAG, "Check for new models");
+              client.get(context, serverUrl + "/models", modelListHandler);
+            }
+          }
+        },
+        0,
+        10000);
   }
 
   public void upload(File file) {
@@ -71,37 +149,17 @@ class UploadService {
       return;
     }
     long size = file.length() / 1024 / 1024;
-    Log.d("Upload", String.format("Start upload %s (%d MB)", file.getName(), size));
+    Log.d(TAG, String.format("Start upload %s (%d MB)", file.getName(), size));
 
     RequestParams params = new RequestParams();
     try {
       params.put("file", file);
     } catch (FileNotFoundException e) {
-      Log.e("Upload", "File not found: " + file.getAbsolutePath());
+      Log.e(TAG, "File not found: " + file.getAbsolutePath());
       return;
     }
 
-    client.post(
-        context,
-        serverUrl + "/upload",
-        params,
-        new AsyncHttpResponseHandler() {
-          @Override
-          public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            // called when response HTTP status is "200 OK"
-            if (file.delete()) {
-              Log.d("Upload", "uploaded: " + file.getName());
-            } else {
-              Log.e("Upload", "delete error: " + file.getName());
-            }
-          }
-
-          @Override
-          public void onFailure(
-              int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-          }
-        });
+    client.post(context, serverUrl + "/upload", params, new UploadResponseHandler(file));
   }
 
   public void uploadAll() {
@@ -122,5 +180,24 @@ class UploadService {
 
   public void stop() {
     client.cancelRequests(context, true);
+    timer.cancel();
+  }
+
+  static class UploadResponseHandler extends JsonHttpResponseHandler {
+    private final File file;
+
+    public UploadResponseHandler(File file) {
+      super();
+      this.file = file;
+    }
+
+    @Override
+    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+      if (file.delete()) {
+        Log.d(TAG, "uploaded: " + file.getName());
+      } else {
+        Log.e(TAG, "delete error: " + file.getName());
+      }
+    }
   }
 }
