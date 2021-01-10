@@ -19,7 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
 
-class UploadService {
+class ServerService {
 
   private static final String TAG = "Server";
 
@@ -116,7 +116,7 @@ class UploadService {
 
   private String serverUrl;
 
-  public UploadService(Context context, ServerListener serverListener) {
+  public ServerService(Context context, ServerListener serverListener) {
     this.client = new AsyncHttpClient();
     this.context = context;
     this.nsdService = new NsdService();

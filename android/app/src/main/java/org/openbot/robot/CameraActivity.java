@@ -106,7 +106,7 @@ public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
         Camera.PreviewCallback,
         CompoundButton.OnCheckedChangeListener,
-        UploadService.ServerListener,
+        ServerService.ServerListener,
         View.OnClickListener,
         AdapterView.OnItemSelectedListener {
   private static final Logger LOGGER = new Logger();
@@ -180,7 +180,7 @@ public abstract class CameraActivity extends AppCompatActivity
   protected boolean noiseEnabled = false;
 
   private Intent intentSensorService;
-  private UploadService uploadService;
+  private ServerService serverService;
   private SharedPreferencesManager preferencesManager;
   protected final GameController gameController = new GameController(driveMode);
   private final PhoneController phoneController = new PhoneController();
@@ -548,8 +548,8 @@ public abstract class CameraActivity extends AppCompatActivity
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
-    uploadService = new UploadService(this, this);
-    uploadService.start();
+    serverService = new ServerService(this, this);
+    serverService.start();
   }
 
   @Override
@@ -573,7 +573,7 @@ public abstract class CameraActivity extends AppCompatActivity
       handlerThread.join();
       handlerThread = null;
       handler = null;
-      uploadService.stop();
+      serverService.stop();
     } catch (final InterruptedException e) {
       LOGGER.e(e, "Exception!");
     }
@@ -1108,7 +1108,7 @@ public abstract class CameraActivity extends AppCompatActivity
             TimeUnit.MILLISECONDS.sleep(500);
             ZipUtil.pack(folder, zip);
             FileUtils.deleteQuietly(folder);
-            uploadService.upload(zip);
+            serverService.upload(zip);
           } catch (InterruptedException e) {
             LOGGER.e(e, "Got interrupted.");
           }
