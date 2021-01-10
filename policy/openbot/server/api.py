@@ -39,7 +39,7 @@ async def handle_static(request: web.Request) -> web.StreamResponse:
     return web.HTTPNotFound()
 
 
-async def handle_models() -> web.StreamResponse:
+async def handle_models(request: web.Request) -> web.StreamResponse:
     models = [
         dict(name=os.path.basename(p), mtime=int(os.path.getmtime(p)))
         for p in glob.glob(os.path.join(models_dir, "*.tflite"))
