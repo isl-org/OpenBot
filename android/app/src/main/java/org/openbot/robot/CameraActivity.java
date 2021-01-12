@@ -854,6 +854,7 @@ public abstract class CameraActivity extends AppCompatActivity
       LOGGER.d("Updating  speedMode: " + speedMode);
       this.speedMode = speedMode;
       preferencesManager.setSpeedMode(speedMode.ordinal());
+      speedModeSpinner.setSelection(speedMode.ordinal());
       vehicle.setSpeedMultiplier(speedMode.getValue());
     }
   }
@@ -1400,19 +1401,41 @@ public abstract class CameraActivity extends AppCompatActivity
 
     protected void handleDriveMode() {
       if (networkEnabled) return;
-      switch (driveMode) {
-        case DUAL:
-          setDriveMode(DriveMode.GAME);
+      // Set next drive mode
+      setDriveMode(DriveMode.values()[(driveMode.getValue() + 1) % DriveMode.values().length]);
+      audioPlayer.playDriveMode(voice, driveMode);
+    }
+
+    protected void handleSpeedUp() {
+      if (networkEnabled) return;
+      // Increase speed
+      switch (speedMode) {
+        case SLOW:
+          setSpeedMode(SpeedMode.NORMAL);
           break;
-        case GAME:
-          setDriveMode(DriveMode.JOYSTICK);
+        case NORMAL:
+          setSpeedMode(SpeedMode.FAST);
           break;
-        case JOYSTICK:
-          setDriveMode(DriveMode.DUAL);
+        default:
           break;
       }
-      audioPlayer.playDriveMode(voice, driveMode);
-      driveModeSpinner.setSelection(driveMode.ordinal());
+      audioPlayer.playSpeedMode(voice, speedMode);
+    }
+
+    protected void handleSpeedDown() {
+      if (networkEnabled) return;
+      // Decrease speed
+      switch (speedMode) {
+        case FAST:
+          setSpeedMode(SpeedMode.NORMAL);
+          break;
+        case NORMAL:
+          setSpeedMode(SpeedMode.SLOW);
+          break;
+        default:
+          break;
+      }
+      audioPlayer.playSpeedMode(voice, speedMode);
     }
 
     protected void handleNetwork() {
