@@ -69,7 +69,8 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
         break;
 
       case Constants.FREE_ROAM:
-        Navigation.findNavController(requireView()).navigate(R.id.action_mainFragment_to_robotCommunicationFragment);
+        Navigation.findNavController(requireView())
+            .navigate(R.id.action_mainFragment_to_robotCommunicationFragment);
         break;
 
       case Constants.CONTROLLER:

@@ -13,13 +13,10 @@ import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.navigation.Navigation;
-
 import org.openbot.R;
-import org.openbot.model.SubCategory;
+import org.openbot.robot.NetworkActivity;
 import org.openbot.robot.RobotCommunicationViewModel;
 
 // For a library module, uncomment the following line

@@ -41,6 +41,7 @@ android {
 // Download default models
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
 apply from:'download.gradle'
+apply plugin: 'kotlin-android'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
@@ -71,6 +72,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     def nav_version = "2.3.2"
     // Java language implementation
