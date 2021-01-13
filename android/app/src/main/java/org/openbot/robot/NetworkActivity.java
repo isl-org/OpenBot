@@ -34,6 +34,7 @@ import android.util.TypedValue;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -403,8 +404,10 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
       cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
 
-    } catch (IOException e) {
-      LOGGER.e(e, "Failed to create detector.");
+    } catch (IllegalArgumentException | IOException e) {
+      String msg = "Failed to create network.";
+      LOGGER.e(e, msg);
+      Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
   }
 
