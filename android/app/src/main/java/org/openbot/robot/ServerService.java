@@ -40,6 +40,7 @@ class ServerService {
 
         @Override
         public void onServiceResolved(NsdServiceInfo serviceInfo) {
+          nsdService.stop();
           serverUrl =
               "http://" + serviceInfo.getHost().getHostAddress() + ":" + serviceInfo.getPort();
           Log.d(TAG, "Resolved address: " + serverUrl);
@@ -52,7 +53,11 @@ class ServerService {
         @Override
         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
           Log.d(TAG, "Server found: " + response.toString());
-          uploadAll();
+          try {
+            uploadAll();
+          } catch (Exception e) {
+            Log.w(TAG, e);
+          }
         }
 
         @Override
@@ -76,15 +81,15 @@ class ServerService {
           for (int i = 0; i < response.length(); i++) {
             try {
               String name = response.optJSONObject(i).getString("name");
-              int mtime = response.optJSONObject(i).getInt("mtime");
+              long serverFileTime = response.optJSONObject(i).getLong("mtime") * 1000;
               File toFile = new File(dir + File.separator + name);
               if (toFile.exists()) {
-                long time = toFile.lastModified() / 1000;
-                Log.d(TAG, "File exists: " + time);
-                if (time > mtime) {
+                long localFileTime = toFile.lastModified();
+                if (localFileTime >= serverFileTime) {
                   continue;
                 }
                 Log.d(TAG, "Update model: " + name);
+                Log.d(TAG, String.format("File times: %d < %d", localFileTime, serverFileTime));
               } else {
                 Log.d(TAG, "Download new model: " + name);
               }
@@ -106,7 +111,7 @@ class ServerService {
                     }
                   });
             } catch (JSONException e) {
-              e.printStackTrace();
+              Log.e(TAG, "JSON error", e);
             }
           }
         }
