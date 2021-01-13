@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.openbot.R;
-import org.openbot.robot.NetworkActivity;
 import org.openbot.robot.RobotCommunicationViewModel;
 
 // For a library module, uncomment the following line

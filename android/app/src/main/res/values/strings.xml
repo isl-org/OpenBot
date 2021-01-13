@@ -49,7 +49,7 @@
     <string-array name="control_modes">
         <item>Gamepad</item>
         <item>Phone</item>
-<!--        <item>WebRTC</item>-->
+        <!--        <item>WebRTC</item>-->
     </string-array>
 
     <string-array name="drive_modes">
@@ -94,7 +94,8 @@
         <item>Fast</item>
     </string-array>
 
-    <string name="voltageInfo">Battery %1$s V</string>
-    <string name="speedInfo">Speed (l,r) %1$s rpm</string>
-    <string name="distanceInfo">Sonar %1$s cm</string>
+    <string name="speedTitle">Speed</string>
+    <string name="voltageInfo">%1$s V</string>
+    <string name="speedInfo">%1$s rpm</string>
+    <string name="distanceInfo">%1$s cm</string>
 </resources>

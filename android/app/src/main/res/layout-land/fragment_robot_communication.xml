@@ -2,208 +2,251 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
-    android:orientation="vertical"
     tools:context=".robot.RobotCommunicationFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <ProgressBar
-            android:id="@+id/battery"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:max="100"
-            android:progress="50"
-            android:progressDrawable="@drawable/progress_drawable_battery"
-            app:layout_constraintBottom_toTopOf="@+id/voltage_info"
-            app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintEnd_toStartOf="@+id/speed"
-            app:layout_constraintHorizontal_weight="1.15"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <com.github.anastr.speedviewlib.DeluxeSpeedView
-            android:id="@+id/speed"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:sv_backgroundCircleColor="@android:color/transparent"
-            app:sv_speedBackgroundColor="@android:color/transparent"
-            app:sv_indicatorColor="@color/colorAccent"
-            app:layout_constraintBottom_toTopOf="@id/speed_info"
-            app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintEnd_toStartOf="@+id/sonar"
-            app:layout_constraintHorizontal_weight="2"
-            app:layout_constraintStart_toEndOf="@+id/battery"
-            app:sv_unit=" rpm"
-            app:sv_unitUnderSpeedText="false" />
-
-
-        <ProgressBar
-            android:id="@+id/sonar"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:max="100"
-            android:paddingHorizontal="48dp"
-            android:paddingVertical="8dp"
-            android:progress="80"
-            android:progressDrawable="@drawable/progress_drawable_sonar"
-            app:layout_constraintBottom_toTopOf="@+id/sonar_info"
-            app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_weight="1.15"
-            app:layout_constraintStart_toEndOf="@+id/speed" />
+        <ImageButton
+            android:id="@+id/controlMode"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:elevation="5dp"
+            android:padding="16dp"
+            android:scaleType="centerInside"
+            android:tint="@android:color/white"
+            app:backgroundTint="@color/openBotBlue"
+            app:layout_constraintEnd_toStartOf="@id/driveMode"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_controller" />
 
         <TextView
-            android:id="@+id/voltage_info"
+            android:id="@+id/controlModeTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/voltageInfo"
+            android:text="@string/controller"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/controlMode"
+            app:layout_constraintStart_toStartOf="@+id/controlMode"
+            app:layout_constraintTop_toBottomOf="@+id/controlMode" />
+
+        <ImageButton
+            android:id="@+id/driveMode"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:elevation="5dp"
+            android:padding="16dp"
+            android:scaleType="centerInside"
+            android:tint="@android:color/white"
+            app:backgroundTint="@color/openBotBlue"
+            app:layout_constraintBottom_toTopOf="@+id/driveModeTitle"
+            app:layout_constraintEnd_toStartOf="@id/speedMode"
+            app:layout_constraintStart_toEndOf="@+id/controlMode"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_dual" />
+
+        <TextView
+            android:id="@+id/driveModeTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/drive_mode"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/driveMode"
+            app:layout_constraintStart_toStartOf="@+id/driveMode"
+            app:layout_constraintTop_toBottomOf="@+id/driveMode" />
+
+        <ImageButton
+            android:id="@+id/speedMode"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:elevation="5dp"
+            android:padding="16dp"
+            android:scaleType="centerInside"
+            android:tint="@android:color/white"
+            app:backgroundTint="@color/openBotBlue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/driveMode"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_speed_high" />
+
+        <TextView
+            android:id="@+id/speedModeTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/speedTitle"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/speedMode"
+            app:layout_constraintStart_toStartOf="@+id/speedMode"
+            app:layout_constraintTop_toBottomOf="@+id/speedMode" />
+
+        <TextView
+            android:id="@+id/control_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:padding="16dp"
+            android:text="@string/control_info"
             android:textColor="@android:color/black"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/battery"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/controlMode"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/speed_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:padding="16dp"
             android:text="@string/speedInfo"
             android:textColor="@android:color/black"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/speed"
-            app:layout_constraintStart_toStartOf="@+id/speed" />
-
-        <TextView
-            android:id="@+id/sonar_info"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/distanceInfo"
-            android:textColor="@android:color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/sonar" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_car_steering_wheel"
-            app:layout_constraintEnd_toEndOf="@+id/speed"
-            app:layout_constraintTop_toTopOf="@+id/speed" />
-
-        <TextView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/rectangle"
-            android:text="D"
-            android:gravity="center"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            app:layout_constraintStart_toStartOf="@+id/speed"
-            app:layout_constraintTop_toTopOf="@+id/speed" />
-
-        <ImageView
-            android:id="@+id/indicatorLeft"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_margin="@dimen/feed_padding"
-            android:src="@drawable/circle"
-            app:tint="@color/indicator"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/speedMode"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/indicatorRight"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_margin="@dimen/feed_padding"
-            android:src="@drawable/circle"
-            app:tint="@color/indicator"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
+    <ProgressBar
+        android:id="@+id/battery"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:max="100"
+        android:progressDrawable="@drawable/progress_drawable_battery"
+        app:layout_constraintBottom_toTopOf="@+id/voltage_info"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toStartOf="@+id/speed"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="123dp">
+        app:layout_constraintTop_toTopOf="@+id/speed"
+        android:progress="50" />
 
-        <TextView
-            android:id="@+id/control"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:text="@string/control"
-            android:textColor="@android:color/black" />
+    <com.github.anastr.speedviewlib.SpeedView
+        android:id="@+id/speed"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toStartOf="@+id/sonar"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/battery"
+        app:layout_constraintTop_toTopOf="parent"
+        app:sv_backgroundCircleColor="@android:color/transparent"
+        app:sv_indicatorColor="@color/colorPrimary"
+        app:sv_speedBackgroundColor="@android:color/transparent"
+        app:sv_speedTextColor="@android:color/transparent"
+        app:sv_unit=""
+        app:sv_unitUnderSpeedText="false"
+        app:sv_withTremble="false" />
 
-        <Spinner
-            android:id="@+id/control_mode_spinner"
-            style="@style/SpinnerTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:entries="@array/control_modes"
-            android:prompt="@string/control_mode" />
 
-        <Spinner
-            android:id="@+id/drive_mode_spinner"
-            style="@style/SpinnerTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:entries="@array/drive_modes"
-            android:prompt="@string/drive_mode" />
+    <ProgressBar
+        android:id="@+id/sonar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:max="100"
+        android:paddingHorizontal="48dp"
+        android:paddingVertical="8dp"
+        android:progressDrawable="@drawable/progress_drawable_sonar"
+        app:layout_constraintBottom_toTopOf="@+id/sonar_info"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/speed"
+        app:layout_constraintTop_toTopOf="@+id/speed"
+        android:progress="80" />
 
-        <Spinner
-            android:id="@+id/speed_mode_spinner"
-            style="@style/SpinnerTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:entries="@array/speed_modes"
-            android:prompt="@string/speed_mode" />
+    <TextView
+        android:id="@+id/voltage_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/voltageInfo"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@id/constraintLayout2"
+        app:layout_constraintEnd_toEndOf="@+id/battery"
+        app:layout_constraintStart_toStartOf="@+id/battery" />
 
-        <TextView
-            android:id="@+id/control_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="2dp"
-            android:gravity="end"
-            android:text="@string/control_info"
-            android:textColor="@android:color/black" />
+    <TextView
+        android:id="@+id/sonar_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/distanceInfo"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@id/constraintLayout2"
+        app:layout_constraintEnd_toEndOf="@+id/sonar"
+        app:layout_constraintStart_toStartOf="@+id/sonar" />
 
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/steering"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/rectangle"
+        android:src="@drawable/ic_car_steering_wheel"
+        app:layout_constraintStart_toEndOf="@+id/speed"
+        app:layout_constraintTop_toTopOf="@+id/speed" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/rectangle"
+        android:gravity="center"
+        android:text="D"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/speed"
+        app:layout_constraintTop_toTopOf="@+id/speed" />
+
+    <ImageView
+        android:id="@+id/indicatorLeft"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="@dimen/feed_padding"
+        android:src="@drawable/circle"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/indicator"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/indicatorRight"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="@dimen/feed_padding"
+        android:src="@drawable/circle"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/indicator"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

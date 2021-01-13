@@ -55,6 +55,10 @@ public class Vehicle {
     return batteryVoltage.getReading();
   }
 
+  public int getBatteryPercentage() {
+    return (int) ((batteryVoltage.getReading() - 9.6f) * 100 / (12.0f - 9.6f));
+  }
+
   public void setBatteryVoltage(float batteryVoltage) {
     this.batteryVoltage.setReading(batteryVoltage);
   }
