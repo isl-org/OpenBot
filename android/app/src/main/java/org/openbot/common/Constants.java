@@ -64,13 +64,13 @@ public class Constants {
     ArrayList<Category> categories = new ArrayList<>();
 
     ArrayList<SubCategory> subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(Constants.GLOBAL_VIEW, R.drawable.openbot_icon));
+    subCategories.add(new SubCategory(Constants.GLOBAL_VIEW, R.drawable.openbot_icon,"#4B7BFF"));
     categories.add(new Category(Constants.ALL, subCategories));
 
     subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(Constants.CONTROLLER, R.drawable.ic_controller));
-    subCategories.add(new SubCategory(Constants.FREE_ROAM, R.drawable.ic_game));
-    subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game));
+//    subCategories.add(new SubCategory(Constants.CONTROLLER, R.drawable.ic_controller));
+    subCategories.add(new SubCategory(Constants.FREE_ROAM, R.drawable.ic_game,"#FFFF6D00"));
+    subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game,"#B3FF6D00"));
     categories.add(new Category(Constants.GAME, subCategories));
     /*
         subCategories = new ArrayList<>();
