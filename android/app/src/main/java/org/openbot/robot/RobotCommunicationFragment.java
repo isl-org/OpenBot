@@ -224,14 +224,14 @@ public class RobotCommunicationFragment extends Fragment {
               binding.voltageInfo.setText(
                   getString(
                       R.string.voltageInfo,
-                      String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage())));
+                      String.format(Locale.US, "%2.1f", vehicle.getBatteryVoltage())));
               binding.battery.setProgress(vehicle.getBatteryPercentage());
 
               binding.sonar.setProgress((int) (vehicle.getSonarReading() / 3));
               binding.sonarInfo.setText(
                   getString(
                       R.string.distanceInfo,
-                      String.format(Locale.US, "%3.0f cm", vehicle.getSonarReading())));
+                      String.format(Locale.US, "%3.0f", vehicle.getSonarReading())));
             });
   }
 
@@ -247,14 +247,19 @@ public class RobotCommunicationFragment extends Fragment {
     float right = vehicle.getControl().getRight();
     binding.controlInfo.setText(String.format(Locale.US, "%.0f,%.0f", left, right));
 
-    binding.speed.speedPercentTo(
-        Math.abs((int) ((left + right) * 100 / vehicle.getSpeedMultiplier() / 2)));
+    float throttle = (left + right) / 2;
+
+    binding.speed.speedPercentTo(Math.abs((int) (throttle * 100 / 255))); // 255 is the max speed
 
     //    Log.i("Steer", "listenUSBData: " + (left - right) / (left + right));
 
     float rotation = (left - right) * 180 / (left + right);
     if (Float.isNaN(rotation) || Float.isInfinite(rotation)) rotation = 0f;
     binding.steering.setRotation(rotation);
+
+    if (throttle > 0) binding.driveGear.setText("D");
+    else if (throttle < 0) binding.driveGear.setText("R");
+    else binding.driveGear.setText("P");
   }
 
   private void setSpeedMode(SpeedMode speedMode) {

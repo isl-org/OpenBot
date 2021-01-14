@@ -91,11 +91,12 @@
         app:layout_constraintTop_toTopOf="@+id/speed" />
 
     <TextView
+        android:id="@+id/driveGear"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/rectangle"
         android:gravity="center"
-        android:text="D"
+        android:text="P"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"

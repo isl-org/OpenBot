@@ -5,18 +5,14 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
-
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.common.OnItemClickListener;
 import org.openbot.databinding.ItemSubCategoryBinding;
 import org.openbot.model.SubCategory;
-
-import java.util.List;
 
 public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.ViewHolder> {
 
@@ -44,7 +40,8 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
     holder.title.setText(item.getTitle());
     Glide.with(holder.itemView).load(item.getImage()).centerInside().into(holder.icon);
     int color = Color.parseColor(item.getBackgroundColor());
-//        Color.rgb(holder.rand.nextInt(255), holder.rand.nextInt(255), holder.rand.nextInt(255));
+    //        Color.rgb(holder.rand.nextInt(255), holder.rand.nextInt(255),
+    // holder.rand.nextInt(255));
     holder.icon.setStrokeColor(ColorStateList.valueOf(color));
     holder.icon.setBackgroundColor(color);
   }
@@ -57,7 +54,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
   public static class ViewHolder extends RecyclerView.ViewHolder {
     public final TextView title;
     public final ShapeableImageView icon;
-//    public Random rand = new Random();
+    //    public Random rand = new Random();
 
     public ViewHolder(
         ItemSubCategoryBinding binding,
