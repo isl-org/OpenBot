@@ -1,11 +1,12 @@
 import {distanceInWordsToNow} from 'date-fns';
+import {styled} from 'goober';
 import {Link, Route, Switch, useParams, useRouteMatch} from 'react-router-dom';
 import {List, Panel} from 'rsuite';
 import {GridView} from 'src/components/GridView';
 import {Plot} from 'src/components/Plot';
+import {DeleteModalWithButton} from 'src/modals/DeleteModal';
 import {PublishModalWithButton} from 'src/modals/PublishModal';
-import {useModel, useModels} from 'src/utils/useModels';
-import {useRpc} from 'src/utils/useRpc';
+import {useModel, useModelFiles, useModels} from 'src/utils/useModels';
 
 export function ModelsPage() {
     const match = useRouteMatch();
@@ -17,10 +18,17 @@ export function ModelsPage() {
     );
 }
 
+const TfliteList = styled(List as any)`
+    .rs-list-item-content {
+        display: flex;
+        justify-content: space-between;
+    }
+`;
+
 export function ListView() {
     const match = useRouteMatch();
     const models = useModels();
-    const published = useRpc([] as any[], 'getPublished');
+    const published = useModelFiles();
     return (
         <>
             <h3>Trained models</h3>
@@ -33,22 +41,23 @@ export function ListView() {
                     ))}
                 </List>
             </Panel>
-            <h3>Published models</h3>
+            <h3>Published model files</h3>
             <Panel shaded bodyFill>
-                <List bordered>
+                <TfliteList bordered>
                     <List.Item>
                         Published models only accessible only on your local network.<br/>
                         The android app will download these automatically.
                     </List.Item>
                     {published.value.map(({name, mtime}) => (
                         <List.Item key={name}>
-                            <h6>{name}</h6>
                             <div>
+                                <h6>{name}</h6>
                                 {distanceInWordsToNow(new Date(mtime * 1000).toISOString())}
                             </div>
+                            <DeleteModalWithButton path={name} type="model file"/>
                         </List.Item>
                     ))}
-                </List>
+                </TfliteList>
             </Panel>
         </>
     );

@@ -17,7 +17,7 @@ import {
     Radio,
     RadioGroup,
 } from 'rsuite';
-import {useRpc} from 'src/utils/useRpc';
+import {useModelFiles} from 'src/utils/useModels';
 import {useToggle} from 'src/utils/useToggle';
 import {jsonRpc} from 'src/utils/ws';
 
@@ -32,7 +32,7 @@ export function PublishModalWithButton(props: { model: string }) {
     const [show, toggle] = useToggle()
     return <>
         <IconButton appearance="ghost" onClick={toggle} icon={<Icon icon="send"/>}>
-            Publish to phone
+            Push to phone
         </IconButton>
         <HelpBlock tooltip>
             Will be accessible only on your local network.
@@ -47,7 +47,7 @@ type DatasetModalProps = ModalProps & { model: string, toggle: () => void };
 export function PublishModal({model, toggle, ...props}: DatasetModalProps) {
     const [checkpoint, setType] = useState('best');
     const [name, setName] = useState(model);
-    const published = useRpc([] as any[], 'getPublished');
+    const published = useModelFiles();
     const warning = published.value.some(p => p.name === name + '.tflite');
 
     async function save() {

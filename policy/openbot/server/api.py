@@ -10,7 +10,7 @@ import numpy as np
 from numpyencoder import NumpyEncoder
 
 from .dataset import get_dataset_list, get_dir_info, get_info
-from .models import get_model_info, get_models, getPublished, publishModel
+from .models import get_model_info, get_models, getModelFiles, publishModel, deleteModelFile
 from .preview import handle_preview
 from .prediction import getPrediction
 from .upload import handle_file_upload
@@ -40,7 +40,7 @@ async def handle_static(request: web.Request) -> web.StreamResponse:
 
 
 async def handle_models(request: web.Request) -> web.StreamResponse:
-    models = getPublished()
+    models = getModelFiles()
     return web.json_response(models)
 
 
@@ -74,8 +74,9 @@ async def init_api(app: web.Application):
         ("", renameDataset),
         ("", getModels),
         ("", getModelInfo),
-        ("", getPublished),
+        ("", getModelFiles),
         ("", publishModel),
+        ("", deleteModelFile),
         ("", getHyperparameters),
         ("", getPrediction),
         ("", getSession),
@@ -86,6 +87,7 @@ async def init_api(app: web.Application):
     )
     rpc.add_topics(
         "dataset",
+        "modelFile",
         "session",
         "training",
     )
