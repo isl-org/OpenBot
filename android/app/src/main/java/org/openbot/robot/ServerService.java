@@ -109,8 +109,12 @@ class ServerService {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, File file) {
-                      Log.i(TAG, "Successful download: " + name);
                       serverListener.onModelUpdated(name);
+                      if (file.setLastModified(serverFileTime)) {
+                        Log.i(TAG, "Successful download: " + name);
+                      } else {
+                        Log.e(TAG, "Set file time error: " + name);
+                      }
                     }
                   });
             } catch (JSONException e) {
