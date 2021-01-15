@@ -12,6 +12,7 @@ import com.loopj.android.http.RequestParams;
 import cz.msebera.android.httpclient.Header;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.json.JSONArray;
@@ -78,9 +79,11 @@ class ServerService {
             }
           }
 
+          HashSet<String> valid = new HashSet<>();
           for (int i = 0; i < response.length(); i++) {
             try {
               String name = response.optJSONObject(i).getString("name");
+              valid.add(name);
               long serverFileTime = response.optJSONObject(i).getLong("mtime") * 1000;
               File toFile = new File(dir + File.separator + name);
               if (toFile.exists()) {
@@ -112,6 +115,20 @@ class ServerService {
                   });
             } catch (JSONException e) {
               Log.e(TAG, "JSON error", e);
+            }
+          }
+
+          String[] list = dir.list((dir1, name) -> name.endsWith(".tflite"));
+          if (list != null) {
+            for (String name : list) {
+              if (!valid.contains(name)) {
+                File file = new File(dir + File.separator + name);
+                if (file.delete()) {
+                  Log.d(TAG, "deleted: " + name);
+                } else {
+                  Log.e(TAG, "delete error: " + name);
+                }
+              }
             }
           }
         }
