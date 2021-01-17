@@ -1221,7 +1221,7 @@ public abstract class CameraActivity extends AppCompatActivity
     } else if (parent == controlModeSpinner) {
       setControlMode(ControlMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     } else if (parent == driveModeSpinner) {
-      setDriveMode(driveMode);
+      setDriveMode(DriveMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     } else if (parent == speedModeSpinner) {
       setSpeedMode(SpeedMode.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase()));
     }
