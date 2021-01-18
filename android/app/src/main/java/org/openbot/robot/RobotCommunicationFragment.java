@@ -249,19 +249,11 @@ public class RobotCommunicationFragment extends Fragment {
     float right = vehicle.getControl().getRight();
     binding.controlInfo.setText(String.format(Locale.US, "%.0f,%.0f", left, right));
 
-    float throttle = (left + right) / 2;
+    binding.speed.speedPercentTo(vehicle.getSpeedPercent());
 
-    binding.speed.speedPercentTo(Math.abs((int) (throttle * 100 / 255))); // 255 is the max speed
+    binding.steering.setRotation(vehicle.getRotation());
 
-    //    Log.i("Steer", "listenUSBData: " + (left - right) / (left + right));
-
-    float rotation = (left - right) * 180 / (left + right);
-    if (Float.isNaN(rotation) || Float.isInfinite(rotation)) rotation = 0f;
-    binding.steering.setRotation(rotation);
-
-    if (throttle > 0) binding.driveGear.setText("D");
-    else if (throttle < 0) binding.driveGear.setText("R");
-    else binding.driveGear.setText("P");
+    binding.driveGear.setText(vehicle.getDriveGear());
   }
 
   private void setSpeedMode(SpeedMode speedMode) {

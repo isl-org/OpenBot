@@ -91,6 +91,27 @@ public class Vehicle {
     this.rightWheelTicks.setReading(rightWheelTicks);
   }
 
+  public float getRotation()
+  {
+    float rotation = (getControl().getLeft() - getControl().getRight()) * 180 /
+            (getControl().getLeft() + getControl().getRight());
+    if (Float.isNaN(rotation) || Float.isInfinite(rotation)) rotation = 0f;
+    return rotation;
+  }
+
+  public int getSpeedPercent()
+  {
+    float throttle = (getControl().getLeft() + getControl().getRight()) / 2;
+    return  Math.abs((int) (throttle * 100 / 255)); // 255 is the max speed
+  }
+
+  public String getDriveGear()
+  {
+    float throttle = (getControl().getLeft() + getControl().getRight()) / 2;
+    if (throttle > 0) return "D";
+    if (throttle < 0) return "R";
+    return "P";
+  }
   public float getSonarReading() {
     return sonarReading.getReading();
   }
