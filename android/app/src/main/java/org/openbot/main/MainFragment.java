@@ -42,19 +42,6 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
     binding.list.setLayoutManager(new LinearLayoutManager(requireContext()));
     binding.list.setAdapter(new CategoryAdapter(Constants.getCategories(), this));
-    binding.toolbar.inflateMenu(R.menu.menu_items);
-
-    binding.toolbar.setOnMenuItemClickListener(
-        item -> {
-          switch (item.getItemId()) {
-            case R.id.action_settings:
-              // Navigate to settings screen
-              return true;
-
-            default:
-              return false;
-          }
-        });
   }
 
   @Override

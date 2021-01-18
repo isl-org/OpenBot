@@ -11,10 +11,19 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.InputDevice;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import org.openbot.R;
 import org.openbot.robot.RobotCommunicationViewModel;
 
@@ -64,9 +73,40 @@ public class MainActivity extends AppCompatActivity {
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
 
+    NavHostFragment navHostFragment =
+        (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+    NavController navController = navHostFragment.getNavController();
+    AppBarConfiguration appBarConfiguration =
+        new AppBarConfiguration.Builder(navController.getGraph()).build();
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+
+    NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
+
+    navController.addOnDestinationChangedListener(
+        (controller, destination, arguments) -> {
+          if (destination.getId() == R.id.mainFragment
+              || destination.getId() == R.id.settingsFragment) toolbar.setVisibility(View.VISIBLE);
+          else toolbar.setVisibility(View.GONE);
+        });
+
     // Default to open this when app opens
     //    Intent intent = new Intent(this, NetworkActivity.class);
     //    startActivity(intent);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.menu_items, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+    return NavigationUI.onNavDestinationSelected(item, navController)
+        || super.onOptionsItemSelected(item);
   }
 
   @Override

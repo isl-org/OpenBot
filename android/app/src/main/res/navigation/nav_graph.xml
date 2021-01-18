@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="org.openbot.main.MainFragment"
-        android:label="main_fragment"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_mainFragment_to_robotCommunicationFragment"
@@ -17,7 +17,18 @@
     <fragment
         android:id="@+id/robotCommunicationFragment"
         android:name="org.openbot.robot.RobotCommunicationFragment"
-        android:label="fragment_robot_communication"
+        android:label="RobotCommunicationFragment"
         tools:layout="@layout/fragment_robot_communication" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="org.openbot.main.SettingsFragment"
+        tools:layout="@layout/fragment_settings"
+        android:label="@string/settings" />
+
+    <action
+        android:id="@+id/open_settings_fragment"
+        app:destination="@id/settingsFragment"
+        />
 
 </navigation>

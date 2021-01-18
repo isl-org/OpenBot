@@ -1,6 +1,11 @@
 package org.openbot.robot;
 
+import static org.openbot.common.Enums.ControlMode;
+import static org.openbot.common.Enums.DriveMode;
+import static org.openbot.common.Enums.SpeedMode;
+
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -8,31 +13,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
+import androidx.preference.PreferenceManager;
 import com.github.anastr.speedviewlib.components.Section;
 import com.google.android.material.internal.ViewUtils;
-
+import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.Enums;
 import org.openbot.databinding.FragmentRobotCommunicationBinding;
 import org.openbot.env.GameController;
-import org.openbot.env.Logger;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
 import org.openbot.main.MainViewModel;
-
-import java.util.Locale;
-
 import timber.log.Timber;
-
-import static org.openbot.common.Enums.ControlMode;
-import static org.openbot.common.Enums.DriveMode;
-import static org.openbot.common.Enums.SpeedMode;
 
 public class RobotCommunicationFragment extends Fragment {
 
@@ -46,7 +42,6 @@ public class RobotCommunicationFragment extends Fragment {
   protected DriveMode driveMode = DriveMode.GAME;
   private RobotCommunicationViewModel robotCommunicationViewModel;
   private MainViewModel mViewModel;
-  private int baudRate = 115200;
   Animation startAnimation;
 
   @Override
@@ -67,6 +62,10 @@ public class RobotCommunicationFragment extends Fragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    SharedPreferences sharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(requireActivity());
+    int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
+
     startAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.blink);
 
     vehicle = new Vehicle(requireContext(), baudRate);
@@ -267,7 +266,7 @@ public class RobotCommunicationFragment extends Fragment {
 
   private void setSpeedMode(SpeedMode speedMode) {
     if (this.speedMode != speedMode) {
-      Timber.d("Updating  controlSpeed: %s",speedMode);
+      Timber.d("Updating  controlSpeed: %s", speedMode);
       this.speedMode = speedMode;
       preferencesManager.setSpeedMode(speedMode.ordinal());
       vehicle.setSpeedMultiplier(speedMode.getValue());
@@ -276,7 +275,7 @@ public class RobotCommunicationFragment extends Fragment {
 
   private void setControlMode(ControlMode controlMode) {
     if (this.controlMode != controlMode) {
-      Timber.d("Updating  controlMode: %s",controlMode);
+      Timber.d("Updating  controlMode: %s", controlMode);
       this.controlMode = controlMode;
       preferencesManager.setControlMode(controlMode.ordinal());
       switch (controlMode) {
@@ -292,7 +291,7 @@ public class RobotCommunicationFragment extends Fragment {
 
   protected void setDriveMode(DriveMode driveMode) {
     if (this.driveMode != driveMode) {
-      Timber.d("Updating  driveMode: %s",driveMode);
+      Timber.d("Updating  driveMode: %s", driveMode);
       this.driveMode = driveMode;
       preferencesManager.setDriveMode(driveMode.ordinal());
       gameController.setDriveMode(driveMode);
