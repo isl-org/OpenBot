@@ -1,9 +1,5 @@
 package org.openbot.robot;
 
-import static org.openbot.common.Enums.ControlMode;
-import static org.openbot.common.Enums.DriveMode;
-import static org.openbot.common.Enums.SpeedMode;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -12,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.github.anastr.speedviewlib.components.Section;
 import com.google.android.material.internal.ViewUtils;
-import java.util.Locale;
+
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.Enums;
@@ -28,12 +26,19 @@ import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
 import org.openbot.main.MainViewModel;
 
+import java.util.Locale;
+
+import timber.log.Timber;
+
+import static org.openbot.common.Enums.ControlMode;
+import static org.openbot.common.Enums.DriveMode;
+import static org.openbot.common.Enums.SpeedMode;
+
 public class RobotCommunicationFragment extends Fragment {
 
   private FragmentRobotCommunicationBinding binding;
   protected Vehicle vehicle;
 
-  private static final Logger LOGGER = new Logger();
   private SharedPreferencesManager preferencesManager;
   protected GameController gameController;
   protected ControlMode controlMode = ControlMode.GAMEPAD;
@@ -114,7 +119,7 @@ public class RobotCommunicationFragment extends Fragment {
           }
         });
 
-    LOGGER.d("Speed: " + new Vehicle.Control(1, 1).getLeft());
+    Timber.d("Speed: %s", new Vehicle.Control(1, 1).getLeft());
 
     binding.speed.getSections().clear();
     binding.speed.addSections(
@@ -147,15 +152,12 @@ public class RobotCommunicationFragment extends Fragment {
                     //            handleLogging();
                     break;
                   case KeyEvent.KEYCODE_BUTTON_X: // square
-                    vehicle.setIndicator(Enums.VehicleIndicator.LEFT.getValue());
                     toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
                     break;
                   case KeyEvent.KEYCODE_BUTTON_Y: // triangle
-                    vehicle.setIndicator(Enums.VehicleIndicator.STOP.getValue());
                     toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
                     break;
                   case KeyEvent.KEYCODE_BUTTON_B: // circle
-                    vehicle.setIndicator(Enums.VehicleIndicator.RIGHT.getValue());
                     toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
 
                     break;
@@ -184,6 +186,7 @@ public class RobotCommunicationFragment extends Fragment {
   }
 
   private void toggleIndicator(int value) {
+    vehicle.setIndicator(value);
     binding.indicatorRight.clearAnimation();
     binding.indicatorLeft.clearAnimation();
     binding.indicatorRight.setVisibility(View.INVISIBLE);
@@ -264,7 +267,7 @@ public class RobotCommunicationFragment extends Fragment {
 
   private void setSpeedMode(SpeedMode speedMode) {
     if (this.speedMode != speedMode) {
-      LOGGER.d("Updating  controlSpeed: " + speedMode);
+      Timber.d("Updating  controlSpeed: %s",speedMode);
       this.speedMode = speedMode;
       preferencesManager.setSpeedMode(speedMode.ordinal());
       vehicle.setSpeedMultiplier(speedMode.getValue());
@@ -273,7 +276,7 @@ public class RobotCommunicationFragment extends Fragment {
 
   private void setControlMode(ControlMode controlMode) {
     if (this.controlMode != controlMode) {
-      LOGGER.d("Updating  controlMode: " + controlMode);
+      Timber.d("Updating  controlMode: %s",controlMode);
       this.controlMode = controlMode;
       preferencesManager.setControlMode(controlMode.ordinal());
       switch (controlMode) {
@@ -289,7 +292,7 @@ public class RobotCommunicationFragment extends Fragment {
 
   protected void setDriveMode(DriveMode driveMode) {
     if (this.driveMode != driveMode) {
-      LOGGER.d("Updating  driveMode: " + driveMode);
+      Timber.d("Updating  driveMode: %s",driveMode);
       this.driveMode = driveMode;
       preferencesManager.setDriveMode(driveMode.ordinal());
       gameController.setDriveMode(driveMode);

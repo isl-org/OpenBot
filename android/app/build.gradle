@@ -91,6 +91,8 @@ dependencies {
     implementation "androidx.camera:camera-view:1.0.0-alpha19"
     implementation 'com.github.anastr:speedviewlib:1.5.3'
 
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
     // For a library module, uncomment the following line
     // implementation project(path: ':controller')
 }
