@@ -31,23 +31,10 @@ public class RtspServer implements ConnectCheckerRtsp, TextureView.SurfaceTextur
             rtspServerCamera1 = new RtspServerCamera1(textureView, this, port);
         }
 
-        /* Working params:
-        {
-      int32_t color-format = 21
-      int32_t i-frame-interval = 2
-      string mime = "video/avc"
-      int32_t width = 480
-      int32_t bitrate = 1228800
-      int32_t max-input-size = 0
-      int32_t frame-rate = 30
-      int32_t height = 640
-      int32_t encoder = 1
-        }
-         */
         if (!rtspServerCamera1.isStreaming()) {
             if (rtspServerCamera1.prepareAudio()
                     // && rtspServerCamera1.prepareVideo()) {
-                    && rtspServerCamera1.prepareVideo(width, height, 30, 5000 * 1024, 2, 90)) {
+                    && rtspServerCamera1.prepareVideo(width, height, 30, 2000 * 1024, 2, 90)) {
                 rtspServerCamera1.startStream("");
             }
         }
@@ -115,9 +102,8 @@ public class RtspServer implements ConnectCheckerRtsp, TextureView.SurfaceTextur
 
     @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
-//        if (rtspServerCamera1 == null) {
-//            rtspServerCamera1 = new RtspServerCamera1(textureView, this, 1935);
-//        }
+        // INZ remove later
+        // this.startServer(1280, 720, 1935);
     }
 
     @Override
