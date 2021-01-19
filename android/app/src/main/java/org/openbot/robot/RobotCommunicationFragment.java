@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.Enums;
 import org.openbot.databinding.FragmentRobotCommunicationBinding;
+import org.openbot.env.Control;
 import org.openbot.env.GameController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
@@ -118,7 +119,7 @@ public class RobotCommunicationFragment extends Fragment {
           }
         });
 
-    Timber.d("Speed: %s", new Vehicle.Control(1, 1).getLeft());
+//    Timber.d("Speed: %s", new Control(1, 1).getLeft());
 
     binding.speed.getSections().clear();
     binding.speed.addSections(
@@ -180,7 +181,7 @@ public class RobotCommunicationFragment extends Fragment {
             getViewLifecycleOwner(),
             motionEvent -> {
               if (controlMode == ControlMode.GAMEPAD)
-                handleDriveCommand(gameController.processJoystickInput(motionEvent, -1));
+                handleDriveCommand(gameController.processJoystickInput(motionEvent, -1, vehicle.getSpeedMultiplier()));
             });
   }
 
@@ -243,7 +244,7 @@ public class RobotCommunicationFragment extends Fragment {
     vehicle.disconnectUsb();
   }
 
-  protected void handleDriveCommand(Vehicle.Control control) {
+  protected void handleDriveCommand(Control control) {
     vehicle.setControl(control);
     float left = vehicle.getControl().getLeft();
     float right = vehicle.getControl().getRight();

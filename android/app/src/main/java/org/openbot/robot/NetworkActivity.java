@@ -17,8 +17,6 @@ limitations under the License.
 
 package org.openbot.robot;
 
-import static android.widget.Toast.*;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -232,13 +230,13 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
               }
 
               tracker.trackResults(mappedRecognitions, currFrameNum);
-              controllerHandler.handleDriveCommand(tracker.updateTarget());
+              controllerHandler.handleDriveCommand(tracker.updateTarget(vehicle.getSpeedMultiplier()));
               trackingOverlay.postInvalidate();
             } else if (autoPilot != null) {
               LOGGER.i("Running autopilot on image " + currFrameNum);
               final long startTime = SystemClock.elapsedRealtime();
               controllerHandler.handleDriveCommand(
-                  autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+                  autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator(),vehicle.getSpeedMultiplier()));
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
             }
 
@@ -422,7 +420,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           && event.getAction() == MotionEvent.ACTION_MOVE
           && controlMode == ControlMode.GAMEPAD) {
         // Process the current movement sample in the batch (position -1)
-        controllerHandler.handleDriveCommand(gameController.processJoystickInput(event, -1));
+        controllerHandler.handleDriveCommand(gameController.processJoystickInput(event, -1, vehicle.getSpeedMultiplier()));
         return true;
       }
     }

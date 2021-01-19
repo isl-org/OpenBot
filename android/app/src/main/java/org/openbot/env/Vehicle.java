@@ -8,11 +8,11 @@ import java.util.TimerTask;
 
 public class Vehicle {
 
-  private Control control = new Control(0, 0);
   private final Noise noise = new Noise(1000, 2000, 5000);
   private boolean noiseEnabled = false;
   private int indicator = 0;
-  private static int speedMultiplier = 192; // 128,192,255
+  private int speedMultiplier = 192; // 128,192,255
+  private Control control = new Control(0, 0, speedMultiplier);
 
   private final SensorReading batteryVoltage = new SensorReading();
   private final SensorReading leftWheelTicks = new SensorReading();
@@ -33,23 +33,6 @@ public class Vehicle {
     connectUsb();
   }
 
-  public static class Control {
-    private float left = 0;
-    private float right = 0;
-
-    public Control(float left, float right) {
-      this.left = Math.max(-1.f, Math.min(1.f, left));
-      this.right = Math.max(-1.f, Math.min(1.f, right));
-    }
-
-    public float getLeft() {
-      return left * speedMultiplier;
-    }
-
-    public float getRight() {
-      return right * speedMultiplier;
-    }
-  }
 
   public float getBatteryVoltage() {
     return batteryVoltage.getReading();
@@ -129,7 +112,7 @@ public class Vehicle {
   }
 
   public void setControl(float left, float right) {
-    this.control = new Control(left, right);
+    this.control = new Control(left, right, speedMultiplier);
   }
 
   private Timer noiseTimer;
@@ -203,12 +186,12 @@ public class Vehicle {
   }
 
   public void sendControl() {
-    int left = (int) (control.left * speedMultiplier);
-    int right = (int) (control.right * speedMultiplier);
+    int left = (int) (control.getLeft() * speedMultiplier);
+    int right = (int) (control.getRight() * speedMultiplier);
     if (noiseEnabled && noise.getDirection() < 0)
-      left = (int) ((control.left - noise.getValue()) * speedMultiplier);
+      left = (int) ((control.getLeft() - noise.getValue()) * speedMultiplier);
     if (noiseEnabled && noise.getDirection() > 0)
-      right = (int) ((control.right - noise.getValue()) * speedMultiplier);
+      right = (int) ((control.getRight() - noise.getValue()) * speedMultiplier);
     sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
   }
 }

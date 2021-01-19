@@ -90,6 +90,7 @@ import org.openbot.common.Enums.LogMode;
 import org.openbot.common.Enums.SpeedMode;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
+import org.openbot.env.Control;
 import org.openbot.env.ControllerToBotEventBus;
 import org.openbot.env.GameController;
 import org.openbot.env.ImageUtils;
@@ -1389,7 +1390,7 @@ public abstract class CameraActivity extends AppCompatActivity
   // Controller event handler
   protected class ControllerHandler {
 
-    protected void handleDriveCommand(Vehicle.Control control) {
+    protected void handleDriveCommand(Control control) {
       vehicle.setControl(control);
       sendVehicleControl();
     }
