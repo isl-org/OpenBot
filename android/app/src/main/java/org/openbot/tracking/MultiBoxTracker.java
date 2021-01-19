@@ -144,7 +144,7 @@ public class MultiBoxTracker {
             false);
   }
 
-  public synchronized Control updateTarget(int speedMultiplier) {
+  public synchronized Control updateTarget() {
     if (!trackedObjects.isEmpty()) {
       // Pick person with highest probability
       final RectF trackedPos = new RectF(trackedObjects.get(0).location);
@@ -173,7 +173,7 @@ public class MultiBoxTracker {
     }
     return new Control(
         (0 > sensorOrientation) ? rightControl : leftControl,
-        (0 > sensorOrientation) ? leftControl : rightControl,speedMultiplier);
+        (0 > sensorOrientation) ? leftControl : rightControl);
   }
 
   public synchronized void draw(final Canvas canvas) {

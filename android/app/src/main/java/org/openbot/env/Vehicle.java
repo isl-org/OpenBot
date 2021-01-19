@@ -1,6 +1,7 @@
 package org.openbot.env;
 
 import android.content.Context;
+
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Timer;
@@ -12,7 +13,7 @@ public class Vehicle {
   private boolean noiseEnabled = false;
   private int indicator = 0;
   private int speedMultiplier = 192; // 128,192,255
-  private Control control = new Control(0, 0, speedMultiplier);
+  private Control control = new Control(0, 0);
 
   private final SensorReading batteryVoltage = new SensorReading();
   private final SensorReading leftWheelTicks = new SensorReading();
@@ -76,21 +77,21 @@ public class Vehicle {
 
   public float getRotation()
   {
-    float rotation = (control.getLeft() - control.getRight()) * 180 /
-            (control.getLeft() + control.getRight());
+    float rotation = (getLeftSpeed() - getRightSpeed()) * 180 /
+            (getLeftSpeed() + getRightSpeed());
     if (Float.isNaN(rotation) || Float.isInfinite(rotation)) rotation = 0f;
     return rotation;
   }
 
   public int getSpeedPercent()
   {
-    float throttle = (control.getLeft() + control.getRight()) / 2;
+    float throttle = (getLeftSpeed() + getRightSpeed()) / 2;
     return  Math.abs((int) (throttle * 100 / 255)); // 255 is the max speed
   }
 
   public String getDriveGear()
   {
-    float throttle = (control.getLeft() + control.getRight()) / 2;
+    float throttle = (getLeftSpeed() + getRightSpeed()) / 2;
     if (throttle > 0) return "D";
     if (throttle < 0) return "R";
     return "P";
@@ -113,7 +114,7 @@ public class Vehicle {
   }
 
   public void setControl(float left, float right) {
-    this.control = new Control(left, right, speedMultiplier);
+    this.control = new Control(left, right);
     sendControl();
   }
 
@@ -171,8 +172,8 @@ public class Vehicle {
             String.format(
                 Locale.US,
                 "c%d,%d\n",
-                (int) (control.getLeft()),
-                (int) (control.getRight())));
+                (int) (getLeftSpeed()),
+                (int) (getRightSpeed())));
 
     Objects.requireNonNull(usbConnection).stopUsbConnection();
     usbConnection = null;
@@ -187,11 +188,20 @@ public class Vehicle {
     Objects.requireNonNull(usbConnection).send(message);
   }
 
+  public float getLeftSpeed() {
+    return control.getLeft() * speedMultiplier;
+  }
+
+  public float getRightSpeed()
+  {
+    return control.getRight() * speedMultiplier;
+  }
+
   public void sendControl() {
-    int left = (int) (control.getLeft() * speedMultiplier);
-    int right = (int) (control.getRight() * speedMultiplier);
+    int left = (int) (getLeftSpeed());
+    int right = (int) (getRightSpeed());
     if (noiseEnabled && noise.getDirection() < 0)
-      left = (int) ((control.getLeft() - noise.getValue()) * speedMultiplier);
+      left = (int) ((control.getLeft() - noise.getValue()) * speedMultiplier); // since noise value does not have speedMultiplier component, raw control value is used
     if (noiseEnabled && noise.getDirection() > 0)
       right = (int) ((control.getRight() - noise.getValue()) * speedMultiplier);
     sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));

@@ -230,13 +230,13 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
               }
 
               tracker.trackResults(mappedRecognitions, currFrameNum);
-              controllerHandler.handleDriveCommand(tracker.updateTarget(vehicle.getSpeedMultiplier()));
+              controllerHandler.handleDriveCommand(tracker.updateTarget());
               trackingOverlay.postInvalidate();
             } else if (autoPilot != null) {
               LOGGER.i("Running autopilot on image " + currFrameNum);
               final long startTime = SystemClock.elapsedRealtime();
               controllerHandler.handleDriveCommand(
-                  autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator(),vehicle.getSpeedMultiplier()));
+                  autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
             }
 
@@ -279,8 +279,8 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
                 String.format(
                     Locale.US,
                     "%.0f,%.0f",
-                    vehicle.getControl().getLeft(),
-                    vehicle.getControl().getRight()));
+                    vehicle.getLeftSpeed(),
+                    vehicle.getRightSpeed()));
         });
   }
 
@@ -420,7 +420,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           && event.getAction() == MotionEvent.ACTION_MOVE
           && controlMode == ControlMode.GAMEPAD) {
         // Process the current movement sample in the batch (position -1)
-        controllerHandler.handleDriveCommand(gameController.processJoystickInput(event, -1, vehicle.getSpeedMultiplier()));
+        controllerHandler.handleDriveCommand(gameController.processJoystickInput(event, -1));
         return true;
       }
     }

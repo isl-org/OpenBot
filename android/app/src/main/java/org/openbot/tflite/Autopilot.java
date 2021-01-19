@@ -50,7 +50,7 @@ public abstract class Autopilot extends Network {
     indicatorBuffer.putFloat(indicator);
   }
 
-  public Control recognizeImage(final Bitmap bitmap, final int indicator, int speedMultiplier) {
+  public Control recognizeImage(final Bitmap bitmap, final int indicator) {
     // Log this method so that it can be analyzed with systrace.
     Trace.beginSection("recognizeImage");
     Trace.beginSection("preprocessBitmap");
@@ -76,6 +76,6 @@ public abstract class Autopilot extends Network {
     LOGGER.v("Timecost to run model inference: " + (endTime - startTime));
 
     Trace.endSection(); // "recognizeImage"
-    return new Control(predicted_ctrl[0][0], predicted_ctrl[0][1], speedMultiplier);
+    return new Control(predicted_ctrl[0][0], predicted_ctrl[0][1]);
   }
 }

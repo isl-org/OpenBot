@@ -181,7 +181,7 @@ public class RobotCommunicationFragment extends Fragment {
             getViewLifecycleOwner(),
             motionEvent -> {
               if (controlMode == ControlMode.GAMEPAD)
-                handleDriveCommand(gameController.processJoystickInput(motionEvent, -1, vehicle.getSpeedMultiplier()));
+                handleDriveCommand(gameController.processJoystickInput(motionEvent, -1));
             });
   }
 
@@ -246,8 +246,8 @@ public class RobotCommunicationFragment extends Fragment {
 
   protected void handleDriveCommand(Control control) {
     vehicle.setControl(control);
-    float left = control.getLeft();
-    float right = control.getRight();
+    float left = vehicle.getLeftSpeed();
+    float right = vehicle.getRightSpeed();
     binding.controlInfo.setText(String.format(Locale.US, "%.0f,%.0f", left, right));
 
     binding.speed.speedPercentTo(vehicle.getSpeedPercent());

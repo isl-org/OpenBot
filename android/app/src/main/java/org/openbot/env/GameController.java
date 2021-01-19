@@ -81,7 +81,7 @@ public class GameController {
     }
   }
 
-  public Control processJoystickInput(MotionEvent event, int historyPos, int speedMultiplier) {
+  public Control processJoystickInput(MotionEvent event, int historyPos) {
 
     switch (driveMode) {
       case DUAL:
@@ -169,6 +169,6 @@ public class GameController {
         break;
     }
 
-    return new Control(left, right, speedMultiplier);
+    return new Control(left, right);
   }
 }
