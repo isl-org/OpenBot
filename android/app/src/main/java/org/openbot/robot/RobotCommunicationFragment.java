@@ -246,8 +246,8 @@ public class RobotCommunicationFragment extends Fragment {
 
   protected void handleDriveCommand(Control control) {
     vehicle.setControl(control);
-    float left = vehicle.getControl().getLeft();
-    float right = vehicle.getControl().getRight();
+    float left = control.getLeft();
+    float right = control.getRight();
     binding.controlInfo.setText(String.format(Locale.US, "%.0f,%.0f", left, right));
 
     binding.speed.speedPercentTo(vehicle.getSpeedPercent());

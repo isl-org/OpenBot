@@ -19,8 +19,8 @@ public class Vehicle {
   private final SensorReading rightWheelTicks = new SensorReading();
   private final SensorReading sonarReading = new SensorReading();
 
-  private static final int diskHoles = 20;
-  private static final int millisPerMinute = 60000;
+  private final int diskHoles = 20;
+  private final int millisPerMinute = 60000;
 
   private UsbConnection usbConnection;
   protected boolean usbConnected;
@@ -76,21 +76,21 @@ public class Vehicle {
 
   public float getRotation()
   {
-    float rotation = (getControl().getLeft() - getControl().getRight()) * 180 /
-            (getControl().getLeft() + getControl().getRight());
+    float rotation = (control.getLeft() - control.getRight()) * 180 /
+            (control.getLeft() + control.getRight());
     if (Float.isNaN(rotation) || Float.isInfinite(rotation)) rotation = 0f;
     return rotation;
   }
 
   public int getSpeedPercent()
   {
-    float throttle = (getControl().getLeft() + getControl().getRight()) / 2;
+    float throttle = (control.getLeft() + control.getRight()) / 2;
     return  Math.abs((int) (throttle * 100 / 255)); // 255 is the max speed
   }
 
   public String getDriveGear()
   {
-    float throttle = (getControl().getLeft() + getControl().getRight()) / 2;
+    float throttle = (control.getLeft() + control.getRight()) / 2;
     if (throttle > 0) return "D";
     if (throttle < 0) return "R";
     return "P";
@@ -109,10 +109,12 @@ public class Vehicle {
 
   public void setControl(Control control) {
     this.control = control;
+    sendControl();
   }
 
   public void setControl(float left, float right) {
     this.control = new Control(left, right, speedMultiplier);
+    sendControl();
   }
 
   private Timer noiseTimer;
@@ -169,8 +171,8 @@ public class Vehicle {
             String.format(
                 Locale.US,
                 "c%d,%d\n",
-                (int) (getControl().getLeft()),
-                (int) (getControl().getRight())));
+                (int) (control.getLeft()),
+                (int) (control.getRight())));
 
     Objects.requireNonNull(usbConnection).stopUsbConnection();
     usbConnection = null;
