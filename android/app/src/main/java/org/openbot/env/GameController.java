@@ -6,7 +6,6 @@ import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Toast;
-
 import org.openbot.common.Enums.DriveMode;
 import org.openbot.robot.CameraActivity;
 
@@ -27,8 +26,7 @@ public class GameController {
     return driveMode;
   }
 
-  private static float getCenteredAxis(
-      MotionEvent event, int axis, int historyPos) {
+  private static float getCenteredAxis(MotionEvent event, int axis, int historyPos) {
 
     final InputDevice.MotionRange range = event.getDevice().getMotionRange(axis, event.getSource());
 

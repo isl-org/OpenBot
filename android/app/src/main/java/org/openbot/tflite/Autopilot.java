@@ -6,12 +6,10 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.SystemClock;
 import android.os.Trace;
-
-import org.openbot.env.Control;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import org.openbot.env.Control;
 
 public abstract class Autopilot extends Network {
 

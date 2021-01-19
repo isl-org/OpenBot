@@ -37,7 +37,6 @@ import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
-import org.openbot.env.Vehicle;
 import org.openbot.tflite.Detector.Recognition;
 
 /** A tracker that handles non-max suppression and matches existing objects to new detections. */

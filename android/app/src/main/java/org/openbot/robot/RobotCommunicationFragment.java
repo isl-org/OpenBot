@@ -82,9 +82,10 @@ public class RobotCommunicationFragment extends Fragment {
 
     listenUSBData();
     observeKeyEvents();
-    binding.controlMode.setImageResource(R.drawable.ic_controller);
-    binding.speedMode.setImageResource(R.drawable.ic_speed_medium);
-    binding.driveMode.setImageResource(R.drawable.ic_game);
+
+    setSpeedMode(SpeedMode.getByID(preferencesManager.getSpeedMode()));
+    setControlMode(ControlMode.getByID(preferencesManager.getControlMode()));
+    setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
 
     binding.controlMode.setOnClickListener(
         v -> {
@@ -106,20 +107,17 @@ public class RobotCommunicationFragment extends Fragment {
           switch (speedMode) {
             case SLOW:
               setSpeedMode(SpeedMode.NORMAL);
-              binding.speedMode.setImageResource(R.drawable.ic_speed_medium);
               break;
             case NORMAL:
               setSpeedMode(SpeedMode.FAST);
-              binding.speedMode.setImageResource(R.drawable.ic_speed_high);
               break;
             case FAST:
               setSpeedMode(SpeedMode.SLOW);
-              binding.speedMode.setImageResource(R.drawable.ic_speed_low);
               break;
           }
         });
 
-//    Timber.d("Speed: %s", new Control(1, 1).getLeft());
+    //    Timber.d("Speed: %s", new Control(1, 1).getLeft());
 
     binding.speed.getSections().clear();
     binding.speed.addSections(
@@ -258,35 +256,60 @@ public class RobotCommunicationFragment extends Fragment {
   }
 
   private void setSpeedMode(SpeedMode speedMode) {
-    if (this.speedMode != speedMode) {
+    if (this.speedMode != speedMode && speedMode != null) {
+      switch (speedMode) {
+        case SLOW:
+          binding.speedMode.setImageResource(R.drawable.ic_speed_low);
+
+          break;
+        case NORMAL:
+          binding.speedMode.setImageResource(R.drawable.ic_speed_medium);
+          break;
+        case FAST:
+          binding.speedMode.setImageResource(R.drawable.ic_speed_high);
+          break;
+      }
+
       Timber.d("Updating  controlSpeed: %s", speedMode);
       this.speedMode = speedMode;
-      preferencesManager.setSpeedMode(speedMode.ordinal());
+      preferencesManager.setSpeedMode(speedMode.getValue());
       vehicle.setSpeedMultiplier(speedMode.getValue());
     }
   }
 
   private void setControlMode(ControlMode controlMode) {
-    if (this.controlMode != controlMode) {
-      Timber.d("Updating  controlMode: %s", controlMode);
-      this.controlMode = controlMode;
-      preferencesManager.setControlMode(controlMode.ordinal());
+    if (this.controlMode != controlMode && controlMode != null) {
       switch (controlMode) {
         case GAMEPAD:
-        case PHONE:
-        case WEBRTC:
+          binding.controlMode.setImageResource(R.drawable.ic_controller);
           break;
-        default:
-          throw new IllegalStateException("Unexpected value: " + controlMode);
+        case PHONE:
+          binding.controlMode.setImageResource(R.drawable.ic_phone);
+          break;
       }
+      Timber.d("Updating  controlMode: %s", controlMode);
+      this.controlMode = controlMode;
+      preferencesManager.setControlMode(controlMode.getValue());
     }
   }
 
   protected void setDriveMode(DriveMode driveMode) {
-    if (this.driveMode != driveMode) {
+    if (this.driveMode != driveMode && driveMode != null) {
+      switch (driveMode) {
+        case DUAL:
+          binding.driveMode.setImageResource(R.drawable.ic_dual);
+          break;
+        case GAME:
+          binding.driveMode.setImageResource(R.drawable.ic_game);
+          break;
+        case JOYSTICK:
+          binding.driveMode.setImageResource(R.drawable.ic_joystick);
+          break;
+      }
+
       Timber.d("Updating  driveMode: %s", driveMode);
       this.driveMode = driveMode;
-      preferencesManager.setDriveMode(driveMode.ordinal());
+      preferencesManager.setDriveMode(driveMode.getValue());
       gameController.setDriveMode(driveMode);
     }
   }
@@ -296,15 +319,12 @@ public class RobotCommunicationFragment extends Fragment {
     switch (driveMode) {
       case DUAL:
         setDriveMode(DriveMode.GAME);
-        binding.driveMode.setImageResource(R.drawable.ic_game);
         break;
       case GAME:
         setDriveMode(DriveMode.JOYSTICK);
-        binding.driveMode.setImageResource(R.drawable.ic_joystick);
         break;
       case JOYSTICK:
         setDriveMode(DriveMode.DUAL);
-        binding.driveMode.setImageResource(R.drawable.ic_dual);
         break;
     }
   }

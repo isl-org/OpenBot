@@ -176,7 +176,7 @@
             app:layout_constraintEnd_toStartOf="@id/speedMode"
             app:layout_constraintStart_toEndOf="@+id/controlMode"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_dual" />
+            app:srcCompat="@drawable/ic_game" />
 
         <TextView
             android:id="@+id/driveModeTitle"
@@ -203,7 +203,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/driveMode"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_speed_high" />
+            app:srcCompat="@drawable/ic_speed_medium" />
 
         <TextView
             android:id="@+id/speedModeTitle"

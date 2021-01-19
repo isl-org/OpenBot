@@ -277,10 +277,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           if (controlValueTextView != null)
             controlValueTextView.setText(
                 String.format(
-                    Locale.US,
-                    "%.0f,%.0f",
-                    vehicle.getLeftSpeed(),
-                    vehicle.getRightSpeed()));
+                    Locale.US, "%.0f,%.0f", vehicle.getLeftSpeed(), vehicle.getRightSpeed()));
         });
   }
 
