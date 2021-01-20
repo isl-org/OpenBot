@@ -83,4 +83,4 @@ The [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflo
 
 ## Next (optional)
 
-Train your own [Driving Policy](../policy/README.md)
+Train your own [Driving Policy](../../policy/README.md)
