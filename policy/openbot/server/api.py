@@ -10,7 +10,7 @@ import numpy as np
 from numpyencoder import NumpyEncoder
 
 from .dataset import get_dataset_list, get_dir_info, get_info
-from .models import get_model_info, get_models
+from .models import get_model_info, get_models, getModelFiles, publishModel, deleteModelFile
 from .preview import handle_preview
 from .prediction import getPrediction
 from .upload import handle_file_upload
@@ -39,11 +39,8 @@ async def handle_static(request: web.Request) -> web.StreamResponse:
     return web.HTTPNotFound()
 
 
-async def handle_models() -> web.StreamResponse:
-    models = [
-        dict(name=os.path.basename(p), mtime=int(os.path.getmtime(p)))
-        for p in glob.glob(os.path.join(models_dir, "*.tflite"))
-    ]
+async def handle_models(request: web.Request) -> web.StreamResponse:
+    models = getModelFiles()
     return web.json_response(models)
 
 
@@ -77,6 +74,9 @@ async def init_api(app: web.Application):
         ("", renameDataset),
         ("", getModels),
         ("", getModelInfo),
+        ("", getModelFiles),
+        ("", publishModel),
+        ("", deleteModelFile),
         ("", getHyperparameters),
         ("", getPrediction),
         ("", getSession),
@@ -87,6 +87,7 @@ async def init_api(app: web.Application):
     )
     rpc.add_topics(
         "dataset",
+        "modelFile",
         "session",
         "training",
     )
