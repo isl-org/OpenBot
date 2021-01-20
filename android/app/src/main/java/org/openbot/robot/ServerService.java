@@ -26,6 +26,7 @@ class ServerService {
 
   public interface ServerListener {
     void onAddModel(String model);
+
     void onRemoveModel(String model);
   }
 
