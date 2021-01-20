@@ -1,3 +1,5 @@
+import NoSleep from 'nosleep.js';
+import {useEffect} from 'react';
 import {Button, Panel, Progress} from 'rsuite';
 import {ButtonBar} from 'src/components/ButtonBar';
 import {GridView} from 'src/components/GridView';
@@ -5,6 +7,8 @@ import {HyperparametersForm} from 'src/components/HyperparametersForm';
 import {Plot} from 'src/components/Plot';
 import {ProgressState, useProgress} from 'src/utils/useProgress';
 import {jsonRpc} from 'src/utils/ws';
+
+const noSleep = new NoSleep();
 
 export function TrainPage() {
     const [state, clear] = useProgress();
@@ -24,6 +28,14 @@ export function TrainPage() {
 }
 
 function TrainProgress({state, clear}: { state: ProgressState, clear: () => any }) {
+    const active = state.status === 'active';
+    useEffect(() => {
+        if (active) {
+            noSleep.enable();
+        } else {
+            noSleep.disable();
+        }
+    }, [active]);
     return <>
         <Panel shaded header="Progress">
             <div>
@@ -36,7 +48,7 @@ function TrainProgress({state, clear}: { state: ProgressState, clear: () => any 
             </div>
             <h5>{state.message}</h5>
             <ButtonBar>
-                {state.status === 'active' ? (
+                {active ? (
                     <Button onClick={() => jsonRpc('stop')}>Stop</Button>
                 ): (
                     <Button onClick={clear}>Clear</Button>

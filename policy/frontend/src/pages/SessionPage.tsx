@@ -1,5 +1,5 @@
 import {styled} from 'goober';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useRouteMatch} from 'react-router-dom';
 import {FlexboxGrid, Icon, IconButton, InputNumber, Loader, Message, Panel, SelectPicker, Slider} from 'rsuite';
@@ -9,6 +9,7 @@ import {Session} from 'src/utils/useDatasets';
 import {useModels} from 'src/utils/useModels';
 import {useRpc} from 'src/utils/useRpc';
 import {useToggle} from 'src/utils/useToggle';
+import {jsonRpc} from 'src/utils/ws';
 
 const defaultValue: Session | null = null;
 const indicatorValues = [
@@ -63,7 +64,7 @@ function SessionComp({session}: {session: Session}) {
     useHotkeys('right', () => setCurrent(c => c === max ? 0 : c + 1), [max]);
     useHotkeys('left', () => setCurrent(c => c === 0 ? max : c - 1), [max]);
 
-    const prediction = useRpc([], 'getPrediction', {path: session.path, model, indicator});
+    const prediction = usePrediction(session.path, model, indicator, current);
     const [predLeft, predRight] = prediction.value[current] || [];
     const [img, left, right, ind] = session.ctrl[current];
     return (
@@ -102,7 +103,7 @@ function SessionComp({session}: {session: Session}) {
                 </Panel>
                 <Panel header="Model" bordered>
                     <Direction left={predLeft} right={predRight}/>
-                    {prediction.pending && <Loader/>}
+                    {prediction.pending > 0 && <Loader/>}
                 </Panel>
             </PreviewCont>
 
@@ -125,6 +126,49 @@ function SessionComp({session}: {session: Session}) {
             />
         </>
     );
+}
+
+const PREFETCH_SIZE = 50;
+
+function usePrediction(path: string, model: string | null, indicator: string | null, current: number) {
+    const [pending, setPending] = useState(0);
+    const [value, setValue] = useState<any[]>([]);
+    const valid = useRef<any>();
+    if (!valid.current) {
+        valid.current = [];
+    }
+    useEffect(() => {
+        console.log("clear predictions");
+        valid.current = [];
+    }, [indicator, model, path])
+    let batch = Math.floor(current / PREFETCH_SIZE);
+    if (valid.current[batch]) {
+        batch++;
+    }
+    useEffect(() => {
+        if (valid.current[batch]) {
+            return;
+        }
+        valid.current[batch] = true;
+        setPending(c => c + 1);
+        const start = batch * PREFETCH_SIZE;
+        jsonRpc<any[]>('getPrediction', {path, model, indicator, start, end: start + PREFETCH_SIZE})
+            .then(data => {
+                setValue(v => {
+                    const copy = v.slice();
+                    copy[start] = null;
+                    copy.splice(start, batch, ...data)
+                    return copy;
+                })
+                setPending(c => c - 1);
+            })
+            .catch(() => {
+                valid.current[batch] = false;
+                setPending(c => c - 1);
+            });
+    }, [batch, indicator, model, path])
+
+    return {value, pending};
 }
 
 function useAnimate(update: () => void, deps: any[]) {
