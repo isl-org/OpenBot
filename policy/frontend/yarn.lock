@@ -7675,7 +7675,7 @@ normalize-url@^3.0.0:
 
 nosleep.js@^0.12.0:
   version "0.12.0"
-  resolved "https://npm.vcc-live.xyz:40443/nosleep.js/-/nosleep.js-0.12.0.tgz#a01fddab2c13af357d673928b1f40a9013a4dc08"
+  resolved "https://registry.npmjs.org/nosleep.js/-/nosleep.js-0.12.0.tgz#a01fddab2c13af357d673928b1f40a9013a4dc08"
   integrity sha512-9d1HbpKLh3sdWlhXMhU6MMH+wQzKkrgfRkYV0EBdvt99YJfj0ilCJrWRDYG2130Tm4GXbEoTCx5b34JSaP+HhA==
 
 npm-run-path@^2.0.0:
