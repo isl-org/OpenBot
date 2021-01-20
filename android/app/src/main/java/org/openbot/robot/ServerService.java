@@ -25,7 +25,8 @@ class ServerService {
   private static final String TAG = "Server";
 
   public interface ServerListener {
-    void onModelUpdated(String model);
+    void onAddModel(String model);
+    void onRemoveModel(String model);
   }
 
   private final AsyncHttpClient client;
@@ -109,7 +110,7 @@ class ServerService {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, File file) {
-                      serverListener.onModelUpdated(name);
+                      serverListener.onAddModel(name);
                       if (file.setLastModified(serverFileTime)) {
                         Log.i(TAG, "Successful download: " + name);
                       } else {
@@ -128,6 +129,7 @@ class ServerService {
               if (!valid.contains(name)) {
                 File file = new File(dir + File.separator + name);
                 if (file.delete()) {
+                  serverListener.onRemoveModel(name);
                   Log.d(TAG, "deleted: " + name);
                 } else {
                   Log.e(TAG, "delete error: " + name);

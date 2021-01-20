@@ -553,7 +553,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   @Override
-  public void onModelUpdated(String model) {
+  public void onAddModel(String model) {
     if (modelAdapter != null && modelAdapter.getPosition(model) == -1) {
       modelAdapter.add(model);
     } else {
@@ -561,7 +561,15 @@ public abstract class CameraActivity extends AppCompatActivity
         setModel(new Model(model));
       }
     }
-    Toast.makeText(context, "Model updated: " + model, Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, "Model added: " + model, Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void onRemoveModel(String model) {
+    if (modelAdapter != null && modelAdapter.getPosition(model) != -1) {
+      modelAdapter.remove(model);
+    }
+    Toast.makeText(context, "Model removed: " + model, Toast.LENGTH_SHORT).show();
   }
 
   @Override
