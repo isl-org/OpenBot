@@ -57,14 +57,17 @@ Please read the [contribution guidelines](CONTRIBUTING.md). If you are not sure 
 There are a lot of cool projects using OpenBot already. Below is a small selection. Click on the images to be redirected to the respective projects.
 
 <p float="left">
-  <a href="https://custom-build-robots.com/raspberry-pi-robot-cars/openbot-your-smartphone-controls-a-robot-car-introduction/13860?lang=en" target="_blank">
-    <img alt="Cardboard OpenBot" width="32%" src="docs/images/chassis_cardboard_1.jpg" />
-  </a>
-  <a href="https://www.youtube.com/watch?v=PEj8jWapGt4" target="_blank">
-    <img alt="Baby Yoda OpenBot" width="32%" src="docs/images/openbot_yoda.jpg" />
+  <a href="https://www.thingiverse.com/thing:4670884" target="_blank">
+    <img alt="Tank OpenBot" width="24%" src="docs/images/openbot_tank.jpg" />
   </a>
   <a href="https://diyrobocars.com/2020/12/14/an-improved-version-of-the-intel-openbot" target="_blank">
-    <img alt="2WD OpenBot" width="32%" src="docs/images/openbot_2wd.jpg" />
+    <img alt="2WD OpenBot" width="24%" src="docs/images/openbot_2wd.jpg" />
+  </a>
+  <a href="https://custom-build-robots.com/raspberry-pi-robot-cars/openbot-your-smartphone-controls-a-robot-car-introduction/13860?lang=en" target="_blank">
+    <img alt="Cardboard OpenBot" width="24%" src="docs/images/chassis_cardboard_1.jpg" />
+  </a>
+  <a href="https://www.youtube.com/watch?v=PEj8jWapGt4" target="_blank">
+    <img alt="Baby Yoda OpenBot" width="24%" src="docs/images/openbot_yoda.jpg" />
   </a>
 </p>
 

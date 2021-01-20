@@ -1,4 +1,4 @@
-# Controller
+# Controller App
 
 This Android app serves as a `remote controller` for the [OpenBot](https://www.openbot.org) vehicle.  Basically it preforms similar function as PS3/4 or Xbox remote controller, but running on another Android device. It allows the user to control the robot car via two sliders in `Dual Drive` mode.
 
@@ -54,9 +54,5 @@ Some of the features we are looking to add are:
 - Video Stream from the robot's camera to the controller
 - Use controller's gyroscope sensor co control the robot
 - Send crash and bump events from the robot to the controller for a more realistic experience
-
-## Build
-
-Compile and run the [Android App](../README.md)
 
 Here is a [Technical Overview](../../docs/technical/OpenBotController.pdf) of the controller app.
