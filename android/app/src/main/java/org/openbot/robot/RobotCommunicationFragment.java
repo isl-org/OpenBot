@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -41,7 +42,6 @@ public class RobotCommunicationFragment extends Fragment {
   protected ControlMode controlMode = ControlMode.GAMEPAD;
   protected SpeedMode speedMode = SpeedMode.NORMAL;
   protected DriveMode driveMode = DriveMode.GAME;
-  private RobotCommunicationViewModel robotCommunicationViewModel;
   private MainViewModel mViewModel;
   Animation startAnimation;
 
@@ -73,15 +73,12 @@ public class RobotCommunicationFragment extends Fragment {
     preferencesManager = new SharedPreferencesManager(requireContext());
     gameController = new GameController(driveMode);
     mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-    robotCommunicationViewModel =
-        new ViewModelProvider(requireActivity()).get(RobotCommunicationViewModel.class);
 
     binding.voltageInfo.setText(getString(R.string.voltageInfo, "--.-"));
     binding.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
     binding.sonarInfo.setText(getString(R.string.distanceInfo, "---"));
 
     listenUSBData();
-    observeKeyEvents();
 
     setSpeedMode(SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(ControlMode.getByID(preferencesManager.getControlMode()));
@@ -136,51 +133,53 @@ public class RobotCommunicationFragment extends Fragment {
             1.0f,
             getResources().getColor(R.color.red),
             ViewUtils.dpToPx(requireContext(), 24)));
+
+    requireActivity()
+        .getSupportFragmentManager()
+        .setFragmentResultListener(
+            "dispatchGenericMotionEvent",
+            this,
+            (requestKey, result) -> onMotionEvent(result.getParcelable("event")));
+    requireActivity()
+        .getSupportFragmentManager()
+        .setFragmentResultListener(
+            "dispatchKeyEvent",
+            this,
+            (requestKey, result) -> onKeyEvent(result.getParcelable("keyEvent")));
   }
 
-  private void observeKeyEvents() {
-    robotCommunicationViewModel
-        .getKeyEvent()
-        .observe(
-            getViewLifecycleOwner(),
-            keyCode -> {
-              if (controlMode == ControlMode.GAMEPAD)
-                switch (keyCode) {
-                  case KeyEvent.KEYCODE_BUTTON_A: // x
-                    //            handleLogging();
-                    break;
-                  case KeyEvent.KEYCODE_BUTTON_X: // square
-                    toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
-                    break;
-                  case KeyEvent.KEYCODE_BUTTON_Y: // triangle
-                    toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
-                    break;
-                  case KeyEvent.KEYCODE_BUTTON_B: // circle
-                    toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
+  public void onKeyEvent(KeyEvent keyCode) {
+    if (controlMode == ControlMode.GAMEPAD)
+      switch (keyCode.getKeyCode()) {
+        case KeyEvent.KEYCODE_BUTTON_A: // x
+          //            handleLogging();
+          break;
+        case KeyEvent.KEYCODE_BUTTON_X: // square
+          toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
+          break;
+        case KeyEvent.KEYCODE_BUTTON_Y: // triangle
+          toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
+          break;
+        case KeyEvent.KEYCODE_BUTTON_B: // circle
+          toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
 
-                    break;
-                  case KeyEvent.KEYCODE_BUTTON_START: // options
-                    //            handleNoise();
-                    break;
-                  case KeyEvent.KEYCODE_BUTTON_L1:
-                    handleDriveMode();
-                    break;
-                  case KeyEvent.KEYCODE_BUTTON_R1:
-                    //            handleNetwork();
-                    break;
-                  default:
-                    break;
-                }
-            });
+          break;
+        case KeyEvent.KEYCODE_BUTTON_START: // options
+          //            handleNoise();
+          break;
+        case KeyEvent.KEYCODE_BUTTON_L1:
+          handleDriveMode();
+          break;
+        case KeyEvent.KEYCODE_BUTTON_R1:
+          //            handleNetwork();
+          break;
+        default:
+          break;
+      }
+  }
 
-    robotCommunicationViewModel
-        .getGenericMotionEvent()
-        .observe(
-            getViewLifecycleOwner(),
-            motionEvent -> {
-              if (controlMode == ControlMode.GAMEPAD)
-                handleDriveCommand(gameController.processJoystickInput(motionEvent, -1));
-            });
+  public void onMotionEvent(MotionEvent motionEvent) {
+    handleDriveCommand(gameController.processJoystickInput(motionEvent, -1));
   }
 
   private void toggleIndicator(int value) {

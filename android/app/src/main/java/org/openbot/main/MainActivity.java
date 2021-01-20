@@ -25,7 +25,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import org.openbot.R;
-import org.openbot.robot.RobotCommunicationViewModel;
 
 // For a library module, uncomment the following line
 // import org.openbot.controller.ControllerActivity;
@@ -33,7 +32,6 @@ import org.openbot.robot.RobotCommunicationViewModel;
 public class MainActivity extends AppCompatActivity {
 
   private MainViewModel viewModel;
-  private RobotCommunicationViewModel robotCommunicationViewModel;
   private LocalBroadcastManager localBroadcastManager;
   private BroadcastReceiver localBroadcastReceiver;
 
@@ -43,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-    robotCommunicationViewModel =
-        new ViewModelProvider(this).get(RobotCommunicationViewModel.class);
 
     localBroadcastReceiver =
         new BroadcastReceiver() {
@@ -113,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
   public boolean dispatchGenericMotionEvent(MotionEvent event) {
     if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
         && event.getAction() == MotionEvent.ACTION_MOVE) {
-      robotCommunicationViewModel.setGenericMotionEvent(event);
+      Bundle bundle = new Bundle();
+      bundle.putParcelable("event", event);
+      getSupportFragmentManager().setFragmentResult("dispatchGenericMotionEvent", bundle);
       return true;
     }
     return super.dispatchGenericMotionEvent(event);
@@ -124,7 +122,10 @@ public class MainActivity extends AppCompatActivity {
     // Check that the event came from a game controller
     if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
         && event.getAction() == KeyEvent.ACTION_UP) {
-      robotCommunicationViewModel.setKeyEvent(event.getKeyCode());
+      Bundle bundle = new Bundle();
+      bundle.putParcelable("keyEvent", event);
+      getSupportFragmentManager().setFragmentResult("dispatchKeyEvent", bundle);
+
       return true;
     }
     return super.dispatchKeyEvent(event);

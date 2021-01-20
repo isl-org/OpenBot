@@ -78,6 +78,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -400,9 +401,16 @@ public abstract class CameraActivity extends AppCompatActivity
     modelSpinner.setSelection(Math.max(0, modelAdapter.getPosition(preferencesManager.getModel())));
     deviceSpinner.setSelection(preferencesManager.getDevice());
     logSpinner.setSelection(preferencesManager.getLogMode());
-    controlModeSpinner.setSelection(preferencesManager.getControlMode());
-    driveModeSpinner.setSelection(preferencesManager.getDriveMode());
-    speedModeSpinner.setSelection(preferencesManager.getSpeedMode());
+    if (ControlMode.getByID(preferencesManager.getControlMode()) != null)
+      controlModeSpinner.setSelection(
+          Objects.requireNonNull(ControlMode.getByID(preferencesManager.getControlMode()))
+              .ordinal());
+    if (DriveMode.getByID(preferencesManager.getDriveMode()) != null)
+      driveModeSpinner.setSelection(
+          Objects.requireNonNull(DriveMode.getByID(preferencesManager.getDriveMode())).ordinal());
+    if (SpeedMode.getByID(preferencesManager.getSpeedMode()) != null)
+      speedModeSpinner.setSelection(
+          Objects.requireNonNull(SpeedMode.getByID(preferencesManager.getSpeedMode())).ordinal());
 
     setNumThreads(preferencesManager.getNumThreads());
     threadsTextView.setText(Integer.toString(numThreads));

@@ -2,7 +2,6 @@ package org.openbot.env;
 
 import android.content.Context;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -162,13 +161,13 @@ public class Vehicle {
   }
 
   public void disconnectUsb() {
-    Objects.requireNonNull(usbConnection)
-        .send(
-            String.format(Locale.US, "c%d,%d\n", (int) (getLeftSpeed()), (int) (getRightSpeed())));
-
-    Objects.requireNonNull(usbConnection).stopUsbConnection();
-    usbConnection = null;
-    usbConnected = false;
+    if (usbConnection != null) {
+      usbConnection.send(
+          String.format(Locale.US, "c%d,%d\n", (int) (getLeftSpeed()), (int) (getRightSpeed())));
+      usbConnection.stopUsbConnection();
+      usbConnection = null;
+      usbConnected = false;
+    }
   }
 
   public boolean isUsbConnected() {
@@ -176,7 +175,7 @@ public class Vehicle {
   }
 
   private void sendStringToUsb(String message) {
-    Objects.requireNonNull(usbConnection).send(message);
+    if (usbConnection != null) usbConnection.send(message);
   }
 
   public float getLeftSpeed() {
@@ -195,7 +194,7 @@ public class Vehicle {
           (int)
               ((control.getLeft() - noise.getValue())
                   * speedMultiplier); // since noise value does not have speedMultiplier component,
-                                      // raw control value is used
+    // raw control value is used
     if (noiseEnabled && noise.getDirection() > 0)
       right = (int) ((control.getRight() - noise.getValue()) * speedMultiplier);
     sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
