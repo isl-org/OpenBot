@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -61,8 +63,8 @@ public class RobotCommunicationFragment extends Fragment {
 
   @SuppressLint("RestrictedApi")
   @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     SharedPreferences sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(requireActivity());
     int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
@@ -236,8 +238,8 @@ public class RobotCommunicationFragment extends Fragment {
   }
 
   @Override
-  public void onStop() {
-    super.onStop();
+  public void onDestroy() {
+    super.onDestroy();
     vehicle.disconnectUsb();
   }
 

@@ -130,4 +130,15 @@ public class MainActivity extends AppCompatActivity {
     }
     return super.dispatchKeyEvent(event);
   }
+
+  @Override
+  public synchronized void onDestroy() {
+    if (localBroadcastManager != null) {
+      localBroadcastManager.unregisterReceiver(localBroadcastReceiver);
+      localBroadcastManager = null;
+    }
+    if (localBroadcastReceiver != null) localBroadcastReceiver = null;
+    super.onDestroy();
+  }
+
 }
