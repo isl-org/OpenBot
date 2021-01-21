@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 import org.openbot.R;
 import org.openbot.common.Enums.ControlMode;
 import org.openbot.common.Enums.LogMode;
+import org.openbot.common.Utils;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;
 import org.openbot.env.BorderedText;
@@ -283,7 +284,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
 
   protected void toggleNoise() {
     noiseEnabled = !noiseEnabled;
-    BotToControllerEventBus.emitEvent(createStatus("NOISE", noiseEnabled));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("NOISE", noiseEnabled));
     if (noiseEnabled) {
       vehicle.startNoise();
     } else vehicle.stopNoise();

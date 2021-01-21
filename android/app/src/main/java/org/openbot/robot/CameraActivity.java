@@ -89,6 +89,7 @@ import org.openbot.common.Enums.ControlMode;
 import org.openbot.common.Enums.DriveMode;
 import org.openbot.common.Enums.LogMode;
 import org.openbot.common.Enums.SpeedMode;
+import org.openbot.common.Utils;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.Control;
@@ -626,6 +627,7 @@ public abstract class CameraActivity extends AppCompatActivity
   @Override
   public void onRequestPermissionsResult(
       final int requestCode, final String[] permissions, final int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     switch (requestCode) {
       case REQUEST_CAMERA_PERMISSION:
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -646,7 +648,7 @@ public abstract class CameraActivity extends AppCompatActivity
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
             Toast.makeText(this, R.string.location_permission_denied_logging, Toast.LENGTH_LONG)
-                .show();
+                    .show();
           }
         }
         break;
@@ -661,7 +663,7 @@ public abstract class CameraActivity extends AppCompatActivity
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
             Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
-                .show();
+                    .show();
           }
         }
         break;
@@ -947,7 +949,7 @@ public abstract class CameraActivity extends AppCompatActivity
       preferencesManager.setDriveMode(driveMode.ordinal());
       gameController.setDriveMode(driveMode);
       driveModeSpinner.setSelection(driveMode.ordinal());
-      BotToControllerEventBus.emitEvent(createStatus("DRIVE_MODE", driveMode.toString()));
+      BotToControllerEventBus.emitEvent(Utils.createStatus("DRIVE_MODE", driveMode.toString()));
     }
   }
 
@@ -1152,7 +1154,7 @@ public abstract class CameraActivity extends AppCompatActivity
       stopLogging();
       loggingEnabled = false;
     }
-    BotToControllerEventBus.emitEvent(createStatus("LOGS", loggingEnabled));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("LOGS", loggingEnabled));
 
     logSpinner.setEnabled(!loggingEnabled);
     if (loggingEnabled) logSpinner.setAlpha(0.5f);
@@ -1342,7 +1344,9 @@ public abstract class CameraActivity extends AppCompatActivity
                   // PhoneController class will receive this event and resent it to the controller.
                   // Other controllers can subscribe to this event as well.
                   // That is why we are not calling phoneController.send() here directly.
-                  BotToControllerEventBus.emitEvent(getStatus());
+                  BotToControllerEventBus.emitEvent(Utils.getStatus(loggingEnabled,
+                          noiseEnabled,networkEnabled,
+                          driveMode.getValue(),vehicle.getIndicator()));
                   break;
                 case "DISCONNECTED":
                   controllerHandler.handleDriveCommand(0.f, 0.f);
@@ -1352,47 +1356,10 @@ public abstract class CameraActivity extends AppCompatActivity
             });
   }
 
-  private JSONObject getStatus() {
-    JSONObject status = new JSONObject();
-    try {
-      JSONObject statusValue = new JSONObject();
-
-      statusValue.put("LOGS", this.loggingEnabled);
-      statusValue.put("NOISE", this.noiseEnabled);
-      statusValue.put("NETWORK", this.networkEnabled);
-      statusValue.put("DRIVE_MODE", this.driveMode);
-
-      // Possibly can only send the value of the indicator here, but this makes it clearer.
-      // Also, the controller need not have to know implementation details.
-      statusValue.put("INDICATOR_LEFT", vehicle.getIndicator() == -1);
-      statusValue.put("INDICATOR_RIGHT", vehicle.getIndicator() == 1);
-      statusValue.put("INDICATOR_STOP", vehicle.getIndicator() == 0);
-
-      status.put("status", statusValue);
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    return status;
-  }
-
-  protected JSONObject createStatus(String name, Boolean value) {
-    return createStatus(name, value ? "true" : "false");
-  }
-
-  protected JSONObject createStatus(String name, String value) {
-    try {
-      return new JSONObject().put("status", new JSONObject().put(name, value));
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    return new JSONObject();
-  }
-
   private void sendIndicatorStatus(Integer status) {
-    BotToControllerEventBus.emitEvent(createStatus("INDICATOR_LEFT", status == -1));
-    BotToControllerEventBus.emitEvent(createStatus("INDICATOR_RIGHT", status == 1));
-    BotToControllerEventBus.emitEvent(createStatus("INDICATOR_STOP", status == 0));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_LEFT", status == -1));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_RIGHT", status == 1));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_STOP", status == 0));
   }
 
   // Controller event handler
