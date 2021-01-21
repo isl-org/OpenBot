@@ -3,6 +3,7 @@ package org.openbot.robot;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -246,8 +247,35 @@ public class RobotCommunicationFragment extends Fragment {
                       R.string.voltageInfo,
                       String.format(Locale.US, "%2.1f", vehicle.getBatteryVoltage())));
               binding.battery.setProgress(vehicle.getBatteryPercentage());
+              if (vehicle.getBatteryPercentage() < 15)
+              {
+                binding.battery.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                binding.battery.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+              }
+              else
+              {
+                binding.battery.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                binding.battery.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+              }
 
               binding.sonar.setProgress((int) (vehicle.getSonarReading() / 3));
+              if (vehicle.getSonarReading() / 3 < 15)
+              {
+                binding.sonar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                binding.sonar.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+              }
+              else
+              if (vehicle.getSonarReading() / 3 < 45)
+              {
+                binding.sonar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                binding.sonar.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+              }
+              else
+              {
+                binding.sonar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                binding.sonar.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+              }
+
               binding.sonarInfo.setText(
                   getString(
                       R.string.distanceInfo,
