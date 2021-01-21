@@ -1,5 +1,7 @@
 package org.openbot.common;
 
+import android.Manifest;
+
 import java.util.ArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
@@ -11,6 +13,16 @@ public class Constants {
   public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
   public static final String USB_ACTION_CONNECTION_ESTABLISHED = "usb.connection_established";
   public static final String USB_ACTION_CONNECTION_CLOSED = "usb.connection_closed";
+
+  public static final int REQUEST_CAMERA_PERMISSION = 1;
+  public static final int REQUEST_LOCATION_PERMISSION_LOGGING = 2;
+  public static final int REQUEST_LOCATION_PERMISSION_CONTROLLER = 3;
+  public static final int REQUEST_STORAGE_PERMISSION = 4;
+  public static final int REQUEST_BLUETOOTH_PERMISSION = 5;
+  public static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
+  public static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+  public static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+  public static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
 
   // Global
   public static final String ALL = "All";

@@ -1,11 +1,8 @@
 package org.openbot.robot;
 
-import static org.openbot.common.Enums.ControlMode;
-import static org.openbot.common.Enums.DriveMode;
-import static org.openbot.common.Enums.SpeedMode;
-
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -14,25 +11,41 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+
 import com.github.anastr.speedviewlib.components.Section;
 import com.google.android.material.internal.ViewUtils;
-import java.util.Locale;
+
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 import org.openbot.R;
+import org.openbot.common.Constants;
 import org.openbot.common.Enums;
+import org.openbot.common.Utils;
 import org.openbot.databinding.FragmentRobotCommunicationBinding;
+import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.Control;
+import org.openbot.env.ControllerToBotEventBus;
 import org.openbot.env.GameController;
+import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
 import org.openbot.main.MainViewModel;
+import org.openbot.utils.PermissionUtils;
+
+import java.util.Locale;
+
 import timber.log.Timber;
+
+import static org.openbot.common.Enums.ControlMode;
+import static org.openbot.common.Enums.DriveMode;
+import static org.openbot.common.Enums.SpeedMode;
 
 public class RobotCommunicationFragment extends Fragment {
 
@@ -41,11 +54,12 @@ public class RobotCommunicationFragment extends Fragment {
 
   private SharedPreferencesManager preferencesManager;
   protected GameController gameController;
+  private final PhoneController phoneController = new PhoneController();
   protected ControlMode controlMode = ControlMode.GAMEPAD;
   protected SpeedMode speedMode = SpeedMode.NORMAL;
   protected DriveMode driveMode = DriveMode.GAME;
   private MainViewModel mViewModel;
-  Animation startAnimation;
+  private Animation startAnimation;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -91,11 +105,9 @@ public class RobotCommunicationFragment extends Fragment {
           switch (controlMode) {
             case GAMEPAD:
               setControlMode(ControlMode.PHONE);
-              binding.controlMode.setImageResource(R.drawable.ic_phone);
               break;
             case PHONE:
               setControlMode(ControlMode.GAMEPAD);
-              binding.controlMode.setImageResource(R.drawable.ic_controller);
               break;
           }
         });
@@ -186,6 +198,7 @@ public class RobotCommunicationFragment extends Fragment {
 
   private void toggleIndicator(int value) {
     vehicle.setIndicator(value);
+    sendIndicatorStatus(value);
     binding.indicatorRight.clearAnimation();
     binding.indicatorLeft.clearAnimation();
     binding.indicatorRight.setVisibility(View.INVISIBLE);
@@ -198,6 +211,11 @@ public class RobotCommunicationFragment extends Fragment {
       binding.indicatorLeft.startAnimation(startAnimation);
       binding.indicatorLeft.setVisibility(View.VISIBLE);
     }
+  }
+  private void sendIndicatorStatus(Integer status) {
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_LEFT", status == -1));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_RIGHT", status == 1));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_STOP", status == 0));
   }
 
   private void listenUSBData() {
@@ -240,6 +258,7 @@ public class RobotCommunicationFragment extends Fragment {
   @Override
   public void onDestroy() {
     super.onDestroy();
+    handleDriveCommand(new Control(0.f, 0.f));
     vehicle.disconnectUsb();
   }
 
@@ -283,15 +302,43 @@ public class RobotCommunicationFragment extends Fragment {
       switch (controlMode) {
         case GAMEPAD:
           binding.controlMode.setImageResource(R.drawable.ic_controller);
+          disconnectPhoneController();
           break;
         case PHONE:
           binding.controlMode.setImageResource(R.drawable.ic_phone);
+          handleControllerEvents();
+          if(!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
+            PermissionUtils.requestPermissions(this,new String[] {Constants.PERMISSION_LOCATION}
+            , Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
+          else connectPhoneController();
+
           break;
       }
       Timber.d("Updating  controlMode: %s", controlMode);
       this.controlMode = controlMode;
       preferencesManager.setControlMode(controlMode.getValue());
     }
+  }
+
+  private void connectPhoneController() {
+    if (!phoneController.isConnected()) {
+      phoneController.connect(requireContext());
+    }
+    DriveMode oldDriveMode = driveMode;
+    // Currently only dual drive mode supported
+    setDriveMode(DriveMode.DUAL);
+    binding.driveMode.setAlpha(0.5f);
+    binding.driveMode.setEnabled(false);
+    preferencesManager.setDriveMode(oldDriveMode.getValue());
+  }
+
+  private void disconnectPhoneController() {
+    if (phoneController.isConnected()) {
+      phoneController.disconnect();
+    }
+    setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
+    binding.driveMode.setEnabled(true);
+    binding.driveMode.setAlpha(1.0f);
   }
 
   protected void setDriveMode(DriveMode driveMode) {
@@ -328,6 +375,90 @@ public class RobotCommunicationFragment extends Fragment {
         setDriveMode(DriveMode.DUAL);
         break;
     }
+  }
+
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    switch (requestCode) {
+      case Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER:
+        // If the permission is granted, start advertising to controller,
+        // otherwise, show a Toast
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          if (!phoneController.isConnected()) {
+            phoneController.connect(requireContext());
+          }
+        } else {
+          if(PermissionUtils.shouldShowRational(requireActivity(),Constants.PERMISSION_LOCATION))
+            Toast.makeText(requireActivity().getApplicationContext(),
+                    R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
+                    .show();
+        }
+        break;
+    }
+
+  }
+
+  private void handleControllerEvents() {
+    // Prevent multiple subscriptions. This happens if we select "Phone control multiple times.
+    if (ControllerToBotEventBus.getProcessor().hasObservers()) {
+      return;
+    }
+
+    ControllerToBotEventBus.getProcessor()
+            .subscribe(
+                    event -> {
+                      String commandType = "";
+                      if (event.has("command")) {
+                        commandType = event.getString("command");
+                      } else if (event.has("driveCmd")) {
+                        commandType = "DRIVE_CMD";
+                      } else {
+                        Timber.d("Got invalid command from controller: %s", event.toString());
+                        return;
+                      }
+
+                      switch (commandType) {
+                        case "DRIVE_CMD":
+                          JSONObject driveValue = event.getJSONObject("driveCmd");
+                          handleDriveCommand(
+                                  new Control(Float.parseFloat(driveValue.getString("l")),
+                                  Float.parseFloat(driveValue.getString("r"))));
+                          break;
+
+                        case "INDICATOR_LEFT":
+                          toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
+                          break;
+
+                        case "INDICATOR_RIGHT":
+                          toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
+                          break;
+
+                        case "INDICATOR_STOP":
+                          toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
+                          break;
+
+                        case "DRIVE_MODE":
+                          handleDriveMode();
+                          break;
+
+                        // We re connected to the controller, send back status info
+                        case "CONNECTED":
+                          // PhoneController class will receive this event and resent it to the controller.
+                          // Other controllers can subscribe to this event as well.
+                          // That is why we are not calling phoneController.send() here directly.
+                          BotToControllerEventBus.emitEvent(Utils.getStatus(false,
+                                  false, false,
+                                  driveMode.getValue(), vehicle.getIndicator()));
+
+                          break;
+                        case "DISCONNECTED":
+                          handleDriveCommand(new Control(0.f, 0.f));
+                          setControlMode(ControlMode.GAMEPAD);
+                          break;
+                      }
+                    });
   }
 
   @Override
