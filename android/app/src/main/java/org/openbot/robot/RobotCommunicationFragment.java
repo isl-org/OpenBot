@@ -49,7 +49,6 @@ public class RobotCommunicationFragment extends Fragment {
   protected GameController gameController;
   private final PhoneController phoneController = new PhoneController();
   protected ControlMode controlMode = ControlMode.GAMEPAD;
-  protected SpeedMode speedMode = SpeedMode.NORMAL;
   protected DriveMode driveMode = DriveMode.GAME;
   private MainViewModel mViewModel;
   private Animation startAnimation;
@@ -201,19 +200,21 @@ public class RobotCommunicationFragment extends Fragment {
   }
 
   private void toggleSpeed(int direction) {
-    switch (speedMode) {
-      case SLOW:
-        if (direction != Enums.Direction.DOWN.getValue()) setSpeedMode(SpeedMode.NORMAL);
-        break;
-      case NORMAL:
-        setSpeedMode(
-            direction == Enums.Direction.DOWN.getValue() ? SpeedMode.SLOW : SpeedMode.FAST);
-        break;
-      case FAST:
-        if (direction == Enums.Direction.DOWN.getValue()) setSpeedMode(SpeedMode.NORMAL);
-        else if (direction == Enums.Direction.CYCLIC.getValue()) setSpeedMode(SpeedMode.SLOW);
-        break;
-    }
+    SpeedMode speedMode = SpeedMode.getByID(preferencesManager.getSpeedMode());
+    if (speedMode != null)
+      switch (speedMode) {
+        case SLOW:
+          if (direction != Enums.Direction.DOWN.getValue()) setSpeedMode(SpeedMode.NORMAL);
+          break;
+        case NORMAL:
+          setSpeedMode(
+              direction == Enums.Direction.DOWN.getValue() ? SpeedMode.SLOW : SpeedMode.FAST);
+          break;
+        case FAST:
+          if (direction == Enums.Direction.DOWN.getValue()) setSpeedMode(SpeedMode.NORMAL);
+          else if (direction == Enums.Direction.CYCLIC.getValue()) setSpeedMode(SpeedMode.SLOW);
+          break;
+      }
   }
 
   private void listenUSBData() {
@@ -289,7 +290,7 @@ public class RobotCommunicationFragment extends Fragment {
   }
 
   private void setSpeedMode(SpeedMode speedMode) {
-    if (this.speedMode != speedMode && speedMode != null) {
+    if (speedMode != null) {
       switch (speedMode) {
         case SLOW:
           binding.speedMode.setImageResource(R.drawable.ic_speed_low);
@@ -304,7 +305,6 @@ public class RobotCommunicationFragment extends Fragment {
       }
 
       Timber.d("Updating  controlSpeed: %s", speedMode);
-      this.speedMode = speedMode;
       preferencesManager.setSpeedMode(speedMode.getValue());
       vehicle.setSpeedMultiplier(speedMode.getValue());
     }
