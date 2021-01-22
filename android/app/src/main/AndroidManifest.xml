@@ -50,6 +50,7 @@
             android:name=".robot.NetworkActivity"
             android:label="@string/activity_name"
             android:noHistory="false">
+<!--
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
@@ -57,6 +58,7 @@
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
+-->
 
         </activity>
 
