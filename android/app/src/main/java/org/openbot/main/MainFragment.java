@@ -15,15 +15,14 @@ import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.OnItemClickListener;
 import org.openbot.databinding.FragmentMainBinding;
-import org.openbot.env.Logger;
 import org.openbot.model.SubCategory;
 import org.openbot.robot.NetworkActivity;
+import timber.log.Timber;
 
 public class MainFragment extends Fragment implements OnItemClickListener<SubCategory> {
 
   private MainViewModel mViewModel;
   private FragmentMainBinding binding;
-  private static final Logger LOGGER = new Logger();
 
   @Nullable
   @Override
@@ -36,8 +35,8 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
   }
 
   @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
     mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
     binding.list.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -47,7 +46,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
   @Override
   public void onItemClick(SubCategory subCategory) {
 
-    LOGGER.d("onItemClick: " + subCategory.getTitle());
+    Timber.d("onItemClick: %s", subCategory.getTitle());
 
     switch (subCategory.getTitle()) {
       case Constants.GLOBAL_VIEW:

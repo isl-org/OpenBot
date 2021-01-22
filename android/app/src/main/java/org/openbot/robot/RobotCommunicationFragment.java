@@ -51,7 +51,6 @@ import static org.openbot.common.Enums.SpeedMode;
 public class RobotCommunicationFragment extends Fragment {
 
   private FragmentRobotCommunicationBinding binding;
-  protected Vehicle vehicle;
 
   private SharedPreferencesManager preferencesManager;
   protected GameController gameController;
@@ -61,6 +60,7 @@ public class RobotCommunicationFragment extends Fragment {
   protected DriveMode driveMode = DriveMode.GAME;
   private MainViewModel mViewModel;
   private Animation startAnimation;
+  private Vehicle vehicle;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -80,17 +80,14 @@ public class RobotCommunicationFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    SharedPreferences sharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(requireActivity());
-    int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
 
     startAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.blink);
 
-    vehicle = new Vehicle(requireContext(), baudRate);
     preferencesManager = new SharedPreferencesManager(requireContext());
     gameController = new GameController(driveMode);
     mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
+    vehicle = mViewModel.getVehicle().getValue();
     binding.voltageInfo.setText(getString(R.string.voltageInfo, "--.-"));
     binding.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
     binding.sonarInfo.setText(getString(R.string.distanceInfo, "---"));

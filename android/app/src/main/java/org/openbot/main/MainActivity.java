@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.InputDevice;
 import android.view.KeyEvent;
@@ -24,7 +25,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
+
 import org.openbot.R;
+import org.openbot.env.Vehicle;
 
 // For a library module, uncomment the following line
 // import org.openbot.controller.ControllerActivity;
@@ -41,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+    SharedPreferences sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this);
+    int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
+    Vehicle vehicle = new Vehicle(this, baudRate);
+    viewModel.setVehicle(vehicle);
 
     localBroadcastReceiver =
         new BroadcastReceiver() {

@@ -23,7 +23,6 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="org.openbot.main.SettingsFragment"
-        tools:layout="@layout/fragment_settings"
         android:label="@string/settings" />
 
     <action
