@@ -1,7 +1,6 @@
 package org.openbot.common;
 
 import android.Manifest;
-
 import java.util.ArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;

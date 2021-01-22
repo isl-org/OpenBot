@@ -80,7 +80,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.common.Constants;
@@ -648,7 +647,7 @@ public abstract class CameraActivity extends AppCompatActivity
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
             Toast.makeText(this, R.string.location_permission_denied_logging, Toast.LENGTH_LONG)
-                    .show();
+                .show();
           }
         }
         break;
@@ -663,7 +662,7 @@ public abstract class CameraActivity extends AppCompatActivity
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
             Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
-                    .show();
+                .show();
           }
         }
         break;
@@ -1344,9 +1343,13 @@ public abstract class CameraActivity extends AppCompatActivity
                   // PhoneController class will receive this event and resent it to the controller.
                   // Other controllers can subscribe to this event as well.
                   // That is why we are not calling phoneController.send() here directly.
-                  BotToControllerEventBus.emitEvent(Utils.getStatus(loggingEnabled,
-                          noiseEnabled,networkEnabled,
-                          driveMode.getValue(),vehicle.getIndicator()));
+                  BotToControllerEventBus.emitEvent(
+                      Utils.getStatus(
+                          loggingEnabled,
+                          noiseEnabled,
+                          networkEnabled,
+                          driveMode.getValue(),
+                          vehicle.getIndicator()));
                   break;
                 case "DISCONNECTED":
                   controllerHandler.handleDriveCommand(0.f, 0.f);

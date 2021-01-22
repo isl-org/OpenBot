@@ -1,7 +1,10 @@
 package org.openbot.robot;
 
+import static org.openbot.common.Enums.ControlMode;
+import static org.openbot.common.Enums.DriveMode;
+import static org.openbot.common.Enums.SpeedMode;
+
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -13,16 +16,13 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
-
 import com.github.anastr.speedviewlib.components.Section;
 import com.google.android.material.internal.ViewUtils;
-
+import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.openbot.R;
@@ -39,14 +39,7 @@ import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
 import org.openbot.main.MainViewModel;
 import org.openbot.utils.PermissionUtils;
-
-import java.util.Locale;
-
 import timber.log.Timber;
-
-import static org.openbot.common.Enums.ControlMode;
-import static org.openbot.common.Enums.DriveMode;
-import static org.openbot.common.Enums.SpeedMode;
 
 public class RobotCommunicationFragment extends Fragment {
 
@@ -210,6 +203,7 @@ public class RobotCommunicationFragment extends Fragment {
       binding.indicatorLeft.setVisibility(View.VISIBLE);
     }
   }
+
   private void sendIndicatorStatus(Integer status) {
     BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_LEFT", status == -1));
     BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_RIGHT", status == 1));
@@ -244,33 +238,34 @@ public class RobotCommunicationFragment extends Fragment {
                       R.string.voltageInfo,
                       String.format(Locale.US, "%2.1f", vehicle.getBatteryVoltage())));
               binding.battery.setProgress(vehicle.getBatteryPercentage());
-              if (vehicle.getBatteryPercentage() < 15)
-              {
-                binding.battery.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-                binding.battery.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-              }
-              else
-              {
-                binding.battery.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
-                binding.battery.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+              if (vehicle.getBatteryPercentage() < 15) {
+                binding.battery.setProgressTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                binding.battery.setProgressBackgroundTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.red)));
+              } else {
+                binding.battery.setProgressTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                binding.battery.setProgressBackgroundTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.green)));
               }
 
               binding.sonar.setProgress((int) (vehicle.getSonarReading() / 3));
-              if (vehicle.getSonarReading() / 3 < 15)
-              {
-                binding.sonar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-                binding.sonar.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-              }
-              else
-              if (vehicle.getSonarReading() / 3 < 45)
-              {
-                binding.sonar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-                binding.sonar.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-              }
-              else
-              {
-                binding.sonar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
-                binding.sonar.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+              if (vehicle.getSonarReading() / 3 < 15) {
+                binding.sonar.setProgressTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                binding.sonar.setProgressBackgroundTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.red)));
+              } else if (vehicle.getSonarReading() / 3 < 45) {
+                binding.sonar.setProgressTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                binding.sonar.setProgressBackgroundTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.red)));
+              } else {
+                binding.sonar.setProgressTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                binding.sonar.setProgressBackgroundTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.green)));
               }
 
               binding.sonarInfo.setText(
@@ -332,9 +327,11 @@ public class RobotCommunicationFragment extends Fragment {
         case PHONE:
           binding.controlMode.setImageResource(R.drawable.ic_phone);
           handleControllerEvents();
-          if(!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
-            PermissionUtils.requestPermissions(this,new String[] {Constants.PERMISSION_LOCATION}
-            , Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
+          if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
+            PermissionUtils.requestPermissions(
+                this,
+                new String[] {Constants.PERMISSION_LOCATION},
+                Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
           else connectPhoneController();
 
           break;
@@ -402,9 +399,9 @@ public class RobotCommunicationFragment extends Fragment {
     }
   }
 
-
   @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+  public void onRequestPermissionsResult(
+      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     switch (requestCode) {
       case Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER:
@@ -415,14 +412,15 @@ public class RobotCommunicationFragment extends Fragment {
             phoneController.connect(requireContext());
           }
         } else {
-          if(PermissionUtils.shouldShowRational(requireActivity(),Constants.PERMISSION_LOCATION))
-            Toast.makeText(requireActivity().getApplicationContext(),
-                    R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
-                    .show();
+          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_LOCATION))
+            Toast.makeText(
+                    requireActivity().getApplicationContext(),
+                    R.string.location_permission_denied_controller,
+                    Toast.LENGTH_LONG)
+                .show();
         }
         break;
     }
-
   }
 
   private void handleControllerEvents() {
@@ -432,58 +430,59 @@ public class RobotCommunicationFragment extends Fragment {
     }
 
     ControllerToBotEventBus.getProcessor()
-            .subscribe(
-                    event -> {
-                      String commandType = "";
-                      if (event.has("command")) {
-                        commandType = event.getString("command");
-                      } else if (event.has("driveCmd")) {
-                        commandType = "DRIVE_CMD";
-                      } else {
-                        Timber.d("Got invalid command from controller: %s", event.toString());
-                        return;
-                      }
+        .subscribe(
+            event -> {
+              String commandType = "";
+              if (event.has("command")) {
+                commandType = event.getString("command");
+              } else if (event.has("driveCmd")) {
+                commandType = "DRIVE_CMD";
+              } else {
+                Timber.d("Got invalid command from controller: %s", event.toString());
+                return;
+              }
 
-                      switch (commandType) {
-                        case "DRIVE_CMD":
-                          JSONObject driveValue = event.getJSONObject("driveCmd");
-                          handleDriveCommand(
-                                  new Control(Float.parseFloat(driveValue.getString("l")),
-                                  Float.parseFloat(driveValue.getString("r"))));
-                          break;
+              switch (commandType) {
+                case "DRIVE_CMD":
+                  JSONObject driveValue = event.getJSONObject("driveCmd");
+                  handleDriveCommand(
+                      new Control(
+                          Float.parseFloat(driveValue.getString("l")),
+                          Float.parseFloat(driveValue.getString("r"))));
+                  break;
 
-                        case "INDICATOR_LEFT":
-                          toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
-                          break;
+                case "INDICATOR_LEFT":
+                  toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
+                  break;
 
-                        case "INDICATOR_RIGHT":
-                          toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
-                          break;
+                case "INDICATOR_RIGHT":
+                  toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
+                  break;
 
-                        case "INDICATOR_STOP":
-                          toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
-                          break;
+                case "INDICATOR_STOP":
+                  toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
+                  break;
 
-                        case "DRIVE_MODE":
-                          handleDriveMode();
-                          break;
+                case "DRIVE_MODE":
+                  handleDriveMode();
+                  break;
 
-                        // We re connected to the controller, send back status info
-                        case "CONNECTED":
-                          // PhoneController class will receive this event and resent it to the controller.
-                          // Other controllers can subscribe to this event as well.
-                          // That is why we are not calling phoneController.send() here directly.
-                          BotToControllerEventBus.emitEvent(Utils.getStatus(false,
-                                  false, false,
-                                  driveMode.getValue(), vehicle.getIndicator()));
+                  // We re connected to the controller, send back status info
+                case "CONNECTED":
+                  // PhoneController class will receive this event and resent it to the controller.
+                  // Other controllers can subscribe to this event as well.
+                  // That is why we are not calling phoneController.send() here directly.
+                  BotToControllerEventBus.emitEvent(
+                      Utils.getStatus(
+                          false, false, false, driveMode.getValue(), vehicle.getIndicator()));
 
-                          break;
-                        case "DISCONNECTED":
-                          handleDriveCommand(new Control(0.f, 0.f));
-                          setControlMode(ControlMode.GAMEPAD);
-                          break;
-                      }
-                    });
+                  break;
+                case "DISCONNECTED":
+                  handleDriveCommand(new Control(0.f, 0.f));
+                  setControlMode(ControlMode.GAMEPAD);
+                  break;
+              }
+            });
   }
 
   @Override

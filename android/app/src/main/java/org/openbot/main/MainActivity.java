@@ -26,7 +26,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
-
 import org.openbot.R;
 import org.openbot.env.Vehicle;
 
@@ -45,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-    SharedPreferences sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(this);
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
     Vehicle vehicle = new Vehicle(this, baudRate);
     viewModel.setVehicle(vehicle);
@@ -149,5 +147,4 @@ public class MainActivity extends AppCompatActivity {
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     super.onDestroy();
   }
-
 }
