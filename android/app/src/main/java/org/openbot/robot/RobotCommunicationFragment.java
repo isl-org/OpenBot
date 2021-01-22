@@ -264,17 +264,11 @@ public class RobotCommunicationFragment extends Fragment {
               if (vehicle.getSonarReading() / 3 < 15) {
                 binding.sonar.setProgressTintList(
                     ColorStateList.valueOf(getResources().getColor(R.color.red)));
-                binding.sonar.setProgressBackgroundTintList(
-                    ColorStateList.valueOf(getResources().getColor(R.color.red)));
               } else if (vehicle.getSonarReading() / 3 < 45) {
                 binding.sonar.setProgressTintList(
-                    ColorStateList.valueOf(getResources().getColor(R.color.red)));
-                binding.sonar.setProgressBackgroundTintList(
-                    ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                    ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
               } else {
                 binding.sonar.setProgressTintList(
-                    ColorStateList.valueOf(getResources().getColor(R.color.green)));
-                binding.sonar.setProgressBackgroundTintList(
                     ColorStateList.valueOf(getResources().getColor(R.color.green)));
               }
 
