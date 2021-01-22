@@ -32,26 +32,48 @@ import com.google.android.gms.nearby.connection.DiscoveryOptions;
 import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback;
 import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.PayloadCallback;
+import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.connection.Strategy;
 import java.nio.charset.StandardCharsets;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.robot.CameraActivity;
 
-public class NearbyConnection {
+public class NearbyConnection implements ILocalConnection {
   private static final String TAG = "NearbyConnection";
   private String pairedDeviceEndpointId;
   private static final Strategy STRATEGY = Strategy.P2P_POINT_TO_POINT;
-  private static PayloadCallback payloadCallback;
   private static Context context;
   private static final String SERVICE_ID = "OPENBOT_SERVICE_ID";
   private final CancelableDiscovery discovery = new CancelableDiscovery(this);
   private boolean isConnected = false;
+  private IDataReceived dataReceivedCallback;
 
-  // Our handle to Nearby Connections
+    // Our handle to Nearby Connections
   private ConnectionsClient connectionsClient;
+
+  // Callbacks for receiving payloads
+  private final PayloadCallback payloadCallback =
+          new PayloadCallback() {
+            @Override
+            public void onPayloadReceived(@NotNull String endpointId, Payload payload) {
+              String commandStr = new String(payload.asBytes(), StandardCharsets.UTF_8);
+              dataReceivedCallback.dataReceived(commandStr);
+            }
+
+            @Override
+            public void onPayloadTransferUpdate(
+                    @NonNull String endpointId, @NonNull PayloadTransferUpdate update) {}
+          };
+
+  @Override
+  public void setDataCallback (IDataReceived dataCallback) {
+      this.dataReceivedCallback = dataCallback;
+  }
 
   // Callbacks for finding other devices
   private final EndpointDiscoveryCallback endpointDiscoveryCallback =
@@ -76,7 +98,7 @@ public class NearbyConnection {
                       connectionsClient.stopDiscovery();
                       connectionsClient.stopAdvertising();
 
-                      connect(NearbyConnection.context, NearbyConnection.payloadCallback);
+                      connect(NearbyConnection.context);
                     }
                     if (e.getMessage().contains("8002: STATUS_ALREADY_DISCOVERING")) {
                       Log.d("NearbyConnection", "Got 8002: STATUS_ALREADY_DISCOVERING");
@@ -92,7 +114,7 @@ public class NearbyConnection {
                       connectionsClient.stopDiscovery();
                       connectionsClient.stopAdvertising();
 
-                      connect(NearbyConnection.context, NearbyConnection.payloadCallback);
+                      connect(NearbyConnection.context);
                     }
                   });
         }
@@ -161,25 +183,26 @@ public class NearbyConnection {
         }
       };
 
-  private void stopDiscovery() {
+    private void stopDiscovery() {
     connectionsClient.stopDiscovery();
   }
 
-  /** Finds an opponent to play the game with using Nearby Connections. */
-  public void connect(Context context, PayloadCallback payloadCallback) {
+  @Override
+  public void connect(Context context) {
     NearbyConnection.context = context;
-    NearbyConnection.payloadCallback = payloadCallback;
+    this.dataReceivedCallback = dataReceivedCallback;
     connectionsClient = Nearby.getConnectionsClient(context);
 
     // make sure we are not connecting
-    disconnect();
+    disconnect(context);
 
     // If nothing found within timeout period (60 seconds), discovery will stop.
     discovery.startDiscovery(60);
   }
 
   /** Disconnects from the opponent and reset the UI. */
-  public void disconnect() {
+  @Override
+  public void disconnect(Context context) {
 
     discovery.cancel();
 
@@ -216,10 +239,12 @@ public class NearbyConnection {
     tg.startTone(ToneGenerator.TONE_PROP_BEEP);
   }
 
+  @Override
   public boolean isConnected() {
     return isConnected;
   }
 
+  @Override
   public void sendMessage(String message) {
     if (connectionsClient == null) {
       Log.d(TAG, "Cannot send...No connection!");

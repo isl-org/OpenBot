@@ -90,4 +90,6 @@ dependencies {
 
     // For a library module, uncomment the following line
     // implementation project(path: ':controller')
+
+    implementation 'com.abemart.wroup:wroup:0.9'
 }

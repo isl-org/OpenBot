@@ -62,6 +62,9 @@ dependencies {
     // material design
     implementation 'com.google.android.material:material:1.2.1'
 
+    // WiFi direct
+    implementation 'com.abemart.wroup:wroup:0.9'
+
     // For a library module, uncomment the following line and comment the one after
     // apply plugin: 'com.android.library'
     apply plugin: 'com.android.application'
