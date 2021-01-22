@@ -183,7 +183,6 @@ public class RobotCommunicationFragment extends Fragment {
 
   private void toggleIndicator(int value) {
     vehicle.setIndicator(value);
-    sendIndicatorStatus(value);
     binding.indicatorRight.clearAnimation();
     binding.indicatorLeft.clearAnimation();
     binding.indicatorRight.setVisibility(View.INVISIBLE);
@@ -196,6 +195,9 @@ public class RobotCommunicationFragment extends Fragment {
       binding.indicatorLeft.startAnimation(startAnimation);
       binding.indicatorLeft.setVisibility(View.VISIBLE);
     }
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_LEFT", value == -1));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_RIGHT", value == 1));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_STOP", value == 0));
   }
 
   private void toggleSpeed(int direction) {
@@ -212,12 +214,6 @@ public class RobotCommunicationFragment extends Fragment {
         else if (direction == Enums.Direction.CYCLIC.getValue()) setSpeedMode(SpeedMode.SLOW);
         break;
     }
-  }
-
-  private void sendIndicatorStatus(Integer status) {
-    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_LEFT", status == -1));
-    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_RIGHT", status == 1));
-    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_STOP", status == 0));
   }
 
   private void listenUSBData() {
@@ -277,13 +273,6 @@ public class RobotCommunicationFragment extends Fragment {
                       R.string.distanceInfo,
                       String.format(Locale.US, "%3.0f", vehicle.getSonarReading())));
             });
-  }
-
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-    handleDriveCommand(new Control(0.f, 0.f));
-    vehicle.disconnectUsb();
   }
 
   protected void handleDriveCommand(Control control) {
@@ -346,27 +335,6 @@ public class RobotCommunicationFragment extends Fragment {
     }
   }
 
-  private void connectPhoneController() {
-    if (!phoneController.isConnected()) {
-      phoneController.connect(requireContext());
-    }
-    DriveMode oldDriveMode = driveMode;
-    // Currently only dual drive mode supported
-    setDriveMode(DriveMode.DUAL);
-    binding.driveMode.setAlpha(0.5f);
-    binding.driveMode.setEnabled(false);
-    preferencesManager.setDriveMode(oldDriveMode.getValue());
-  }
-
-  private void disconnectPhoneController() {
-    if (phoneController.isConnected()) {
-      phoneController.disconnect();
-    }
-    setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
-    binding.driveMode.setEnabled(true);
-    binding.driveMode.setAlpha(1.0f);
-  }
-
   protected void setDriveMode(DriveMode driveMode) {
     if (this.driveMode != driveMode && driveMode != null) {
       switch (driveMode) {
@@ -403,28 +371,25 @@ public class RobotCommunicationFragment extends Fragment {
     }
   }
 
-  @Override
-  public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    switch (requestCode) {
-      case Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER:
-        // If the permission is granted, start advertising to controller,
-        // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          if (!phoneController.isConnected()) {
-            phoneController.connect(requireContext());
-          }
-        } else {
-          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_LOCATION))
-            Toast.makeText(
-                    requireActivity().getApplicationContext(),
-                    R.string.location_permission_denied_controller,
-                    Toast.LENGTH_LONG)
-                .show();
-        }
-        break;
+  private void connectPhoneController() {
+    if (!phoneController.isConnected()) {
+      phoneController.connect(requireContext());
     }
+    DriveMode oldDriveMode = driveMode;
+    // Currently only dual drive mode supported
+    setDriveMode(DriveMode.DUAL);
+    binding.driveMode.setAlpha(0.5f);
+    binding.driveMode.setEnabled(false);
+    preferencesManager.setDriveMode(oldDriveMode.getValue());
+  }
+
+  private void disconnectPhoneController() {
+    if (phoneController.isConnected()) {
+      phoneController.disconnect();
+    }
+    setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
+    binding.driveMode.setEnabled(true);
+    binding.driveMode.setAlpha(1.0f);
   }
 
   private void handleControllerEvents() {
@@ -490,7 +455,33 @@ public class RobotCommunicationFragment extends Fragment {
   }
 
   @Override
-  public void onDestroyView() {
-    super.onDestroyView();
+  public void onRequestPermissionsResult(
+      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    switch (requestCode) {
+      case Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER:
+        // If the permission is granted, start advertising to controller,
+        // otherwise, show a Toast
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          if (!phoneController.isConnected()) {
+            phoneController.connect(requireContext());
+          }
+        } else {
+          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_LOCATION))
+            Toast.makeText(
+                    requireActivity().getApplicationContext(),
+                    R.string.location_permission_denied_controller,
+                    Toast.LENGTH_LONG)
+                .show();
+        }
+        break;
+    }
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    handleDriveCommand(new Control(0.f, 0.f));
+    vehicle.disconnectUsb();
   }
 }
