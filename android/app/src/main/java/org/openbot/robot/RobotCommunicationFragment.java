@@ -104,20 +104,7 @@ public class RobotCommunicationFragment extends Fragment {
         });
     binding.driveMode.setOnClickListener(v -> handleDriveMode());
 
-    binding.speedMode.setOnClickListener(
-        v -> {
-          switch (speedMode) {
-            case SLOW:
-              setSpeedMode(SpeedMode.NORMAL);
-              break;
-            case NORMAL:
-              setSpeedMode(SpeedMode.FAST);
-              break;
-            case FAST:
-              setSpeedMode(SpeedMode.SLOW);
-              break;
-          }
-        });
+    binding.speedMode.setOnClickListener(v -> toggleSpeed(Enums.Direction.CYCLIC.getValue()));
 
     //    Timber.d("Speed: %s", new Control(1, 1).getLeft());
 
@@ -178,6 +165,13 @@ public class RobotCommunicationFragment extends Fragment {
         case KeyEvent.KEYCODE_BUTTON_R1:
           //            handleNetwork();
           break;
+        case KeyEvent.KEYCODE_BUTTON_THUMBL:
+          toggleSpeed(Enums.Direction.UP.getValue());
+          break;
+        case KeyEvent.KEYCODE_BUTTON_THUMBR:
+          toggleSpeed(Enums.Direction.DOWN.getValue());
+          break;
+
         default:
           break;
       }
@@ -201,6 +195,22 @@ public class RobotCommunicationFragment extends Fragment {
     } else if (value == Enums.VehicleIndicator.LEFT.getValue()) {
       binding.indicatorLeft.startAnimation(startAnimation);
       binding.indicatorLeft.setVisibility(View.VISIBLE);
+    }
+  }
+
+  private void toggleSpeed(int direction) {
+    switch (speedMode) {
+      case SLOW:
+        if (direction != Enums.Direction.DOWN.getValue()) setSpeedMode(SpeedMode.NORMAL);
+        break;
+      case NORMAL:
+        setSpeedMode(
+            direction == Enums.Direction.DOWN.getValue() ? SpeedMode.SLOW : SpeedMode.FAST);
+        break;
+      case FAST:
+        if (direction == Enums.Direction.DOWN.getValue()) setSpeedMode(SpeedMode.NORMAL);
+        else if (direction == Enums.Direction.CYCLIC.getValue()) setSpeedMode(SpeedMode.SLOW);
+        break;
     }
   }
 
