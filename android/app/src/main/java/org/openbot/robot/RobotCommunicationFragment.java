@@ -54,11 +54,6 @@ public class RobotCommunicationFragment extends Fragment {
   private Vehicle vehicle;
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
-
-  @Override
   public View onCreateView(
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -106,8 +101,6 @@ public class RobotCommunicationFragment extends Fragment {
     binding.driveMode.setOnClickListener(v -> changeDriveMode());
 
     binding.speedMode.setOnClickListener(v -> toggleSpeed(Enums.Direction.CYCLIC.getValue()));
-
-    //    Timber.d("Speed: %s", new Control(1, 1).getLeft());
 
     binding.speed.getSections().clear();
     binding.speed.addSections(

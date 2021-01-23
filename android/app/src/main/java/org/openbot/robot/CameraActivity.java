@@ -892,7 +892,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.speedMode != speedMode) {
       LOGGER.d("Updating  speedMode: " + speedMode);
       this.speedMode = speedMode;
-      preferencesManager.setSpeedMode(speedMode.ordinal());
+      preferencesManager.setSpeedMode(speedMode.getValue());
       speedModeSpinner.setSelection(speedMode.ordinal());
       vehicle.setSpeedMultiplier(speedMode.getValue());
     }
@@ -916,7 +916,7 @@ public abstract class CameraActivity extends AppCompatActivity
         default:
           throw new IllegalStateException("Unexpected value: " + controlMode);
       }
-      preferencesManager.setControlMode(controlMode.ordinal());
+      preferencesManager.setControlMode(controlMode.getValue());
       controlModeSpinner.setSelection(controlMode.ordinal());
     }
   }
@@ -929,7 +929,7 @@ public abstract class CameraActivity extends AppCompatActivity
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
     driveModeSpinner.setAlpha(0.5f);
-    preferencesManager.setDriveMode(oldDriveMode.ordinal());
+    preferencesManager.setDriveMode(oldDriveMode.getValue());
   }
 
   private void disconnectPhoneController() {
@@ -945,7 +945,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.driveMode != driveMode) {
       LOGGER.d("Updating  driveMode: " + driveMode);
       this.driveMode = driveMode;
-      preferencesManager.setDriveMode(driveMode.ordinal());
+      preferencesManager.setDriveMode(driveMode.getValue());
       gameController.setDriveMode(driveMode);
       driveModeSpinner.setSelection(driveMode.ordinal());
       BotToControllerEventBus.emitEvent(Utils.createStatus("DRIVE_MODE", driveMode.toString()));
