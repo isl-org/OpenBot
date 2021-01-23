@@ -103,7 +103,7 @@ public class RobotCommunicationFragment extends Fragment {
             }
           }
         });
-    binding.driveMode.setOnClickListener(v -> handleDriveMode());
+    binding.driveMode.setOnClickListener(v -> changeDriveMode());
 
     binding.speedMode.setOnClickListener(v -> toggleSpeed(Enums.Direction.CYCLIC.getValue()));
 
@@ -161,7 +161,7 @@ public class RobotCommunicationFragment extends Fragment {
           //            handleNoise();
           break;
         case KeyEvent.KEYCODE_BUTTON_L1:
-          handleDriveMode();
+          changeDriveMode();
           break;
         case KeyEvent.KEYCODE_BUTTON_R1:
           //            handleNetwork();
@@ -357,7 +357,7 @@ public class RobotCommunicationFragment extends Fragment {
     }
   }
 
-  protected void handleDriveMode() {
+  protected void changeDriveMode() {
     //    if (networkEnabled) return;
     switch (driveMode) {
       case DUAL:
@@ -434,7 +434,7 @@ public class RobotCommunicationFragment extends Fragment {
                   break;
 
                 case "DRIVE_MODE":
-                  handleDriveMode();
+                  changeDriveMode();
                   break;
 
                   // We re connected to the controller, send back status info
