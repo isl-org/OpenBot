@@ -127,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean dispatchKeyEvent(KeyEvent event) {
     // Check that the event came from a game controller
-    if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
-        && event.getAction() == KeyEvent.ACTION_UP) {
-      Bundle bundle = new Bundle();
-      bundle.putParcelable("keyEvent", event);
-      getSupportFragmentManager().setFragmentResult("dispatchKeyEvent", bundle);
-
+    if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) {
+      if (event.getAction() == KeyEvent.ACTION_UP) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("keyEvent", event);
+        getSupportFragmentManager().setFragmentResult("dispatchKeyEvent", bundle);
+      }
       return true;
     }
     return super.dispatchKeyEvent(event);

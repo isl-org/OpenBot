@@ -289,7 +289,6 @@ public class RobotCommunicationFragment extends Fragment {
       switch (speedMode) {
         case SLOW:
           binding.speedMode.setImageResource(R.drawable.ic_speed_low);
-
           break;
         case NORMAL:
           binding.speedMode.setImageResource(R.drawable.ic_speed_medium);
