@@ -48,7 +48,6 @@ public class RobotCommunicationFragment extends Fragment {
   private SharedPreferencesManager preferencesManager;
   protected GameController gameController;
   private final PhoneController phoneController = new PhoneController();
-  protected ControlMode controlMode = ControlMode.GAMEPAD;
   protected DriveMode driveMode = DriveMode.GAME;
   private MainViewModel mViewModel;
   private Animation startAnimation;
@@ -92,13 +91,16 @@ public class RobotCommunicationFragment extends Fragment {
 
     binding.controlMode.setOnClickListener(
         v -> {
-          switch (controlMode) {
-            case GAMEPAD:
-              setControlMode(ControlMode.PHONE);
-              break;
-            case PHONE:
-              setControlMode(ControlMode.GAMEPAD);
-              break;
+          ControlMode controlMode = ControlMode.getByID(preferencesManager.getControlMode());
+          if (controlMode != null) {
+            switch (controlMode) {
+              case GAMEPAD:
+                setControlMode(ControlMode.PHONE);
+                break;
+              case PHONE:
+                setControlMode(ControlMode.GAMEPAD);
+                break;
+            }
           }
         });
     binding.driveMode.setOnClickListener(v -> handleDriveMode());
@@ -140,7 +142,7 @@ public class RobotCommunicationFragment extends Fragment {
   }
 
   public void onKeyEvent(KeyEvent keyCode) {
-    if (controlMode == ControlMode.GAMEPAD)
+    if (ControlMode.getByID(preferencesManager.getControlMode()) == ControlMode.GAMEPAD)
       switch (keyCode.getKeyCode()) {
         case KeyEvent.KEYCODE_BUTTON_A: // x
           //            handleLogging();
@@ -311,7 +313,7 @@ public class RobotCommunicationFragment extends Fragment {
   }
 
   private void setControlMode(ControlMode controlMode) {
-    if (this.controlMode != controlMode && controlMode != null) {
+    if (controlMode != null) {
       switch (controlMode) {
         case GAMEPAD:
           binding.controlMode.setImageResource(R.drawable.ic_controller);
@@ -330,7 +332,6 @@ public class RobotCommunicationFragment extends Fragment {
           break;
       }
       Timber.d("Updating  controlMode: %s", controlMode);
-      this.controlMode = controlMode;
       preferencesManager.setControlMode(controlMode.getValue());
     }
   }
