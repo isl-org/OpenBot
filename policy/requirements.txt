@@ -5,3 +5,4 @@ aiozeroconf
 imageio
 aiohttp_json_rpc
 openbot_frontend==0.6.0
+numpyencoder
