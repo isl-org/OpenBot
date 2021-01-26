@@ -84,7 +84,7 @@ Pressing the back button opens up the menu screen to choose specific features to
 
 <p align="center">
 <img src="../../docs/images/menu_selector.png" alt="App GUI" width="25%"/>
-</p
+</p>
 
 - **Robot**: Robot opens the screen containing all the functionality described above.
 
@@ -93,7 +93,7 @@ Pressing the back button opens up the menu screen to choose specific features to
 
 <p align="center">
 <img src="../../docs/images/game_screen.png" alt="Alt text" width="50%" />
-</p
+</p>
 
 ## Code Structure
 
