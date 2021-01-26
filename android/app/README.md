@@ -82,14 +82,14 @@ If a model is active, the inference speed in [ms] will be displayed next to the 
 
 Pressing the back button opens up the menu screen to choose specific features to use.
 
-<img src="../../docs/images/menu_selector.png" alt="Alt text" style="zoom:33%;" />
+<img src="../../docs/images/menu_selector.png" alt="App GUI" width="25%"/>
 
 - **Robot**: Robot opens the screen containing all the functionality described above.
 
 
 - **Free Roam**: Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
 
-<img src="../../docs/images/game_screen.png" alt="Alt text" style="zoom:33%;" />
+<img src="../../docs/images/game_screen.png" alt="Alt text" width="50%" />
 
 ## Code Structure
 
