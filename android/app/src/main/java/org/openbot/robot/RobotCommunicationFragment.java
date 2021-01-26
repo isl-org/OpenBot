@@ -160,10 +160,10 @@ public class RobotCommunicationFragment extends Fragment {
           //            handleNetwork();
           break;
         case KeyEvent.KEYCODE_BUTTON_THUMBL:
-          toggleSpeed(Enums.Direction.UP.getValue());
+          toggleSpeed(Enums.Direction.DOWN.getValue());
           break;
         case KeyEvent.KEYCODE_BUTTON_THUMBR:
-          toggleSpeed(Enums.Direction.DOWN.getValue());
+          toggleSpeed(Enums.Direction.UP.getValue());
           break;
 
         default:
