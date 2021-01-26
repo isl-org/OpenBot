@@ -10,6 +10,8 @@ care is neccessary when using automated control (e.g. person following or drivin
 
 ## How to Use the App
 
+The app starts with the screen comprising of all the robot's functionality.
+
 <p align="center">
   <img src="../../docs/images/app_gui_1.jpg" alt="App GUI" width="49%"/>
   <img src="../../docs/images/app_gui_2.jpg" alt="App GUI" width="50%"/>
@@ -76,6 +78,18 @@ Use the drop-down menu to select the device on which the neural network should b
 
 If a model is active, the inference speed in [ms] will be displayed next to the device which is running the model.
 
+### Features
+
+Pressing the back button opens up the menu screen to choose specific features to use.
+
+<img src="../../docs/images/menu_selector.png" alt="Alt text" style="zoom:33%;" />
+
+- **Robot**: Robot opens the screen containing all the functionality described above.
+
+
+- **Free Roam**: Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
+
+<img src="../../docs/images/game_screen.png" alt="Alt text" style="zoom:33%;" />
 
 ## Code Structure
 

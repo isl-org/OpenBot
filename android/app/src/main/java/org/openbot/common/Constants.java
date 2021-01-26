@@ -81,7 +81,7 @@ public class Constants {
     subCategories = new ArrayList<>();
     //    subCategories.add(new SubCategory(Constants.CONTROLLER, R.drawable.ic_controller));
     subCategories.add(new SubCategory(Constants.FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
-//    subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game, "#B3FF6D00"));
+    //    subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game, "#B3FF6D00"));
     categories.add(new Category(Constants.GAME, subCategories));
     /*
         subCategories = new ArrayList<>();

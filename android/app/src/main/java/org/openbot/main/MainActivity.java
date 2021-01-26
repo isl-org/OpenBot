@@ -28,6 +28,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import org.openbot.R;
 import org.openbot.env.Vehicle;
+import org.openbot.robot.NetworkActivity;
 
 // For a library module, uncomment the following line
 // import org.openbot.controller.ControllerActivity;
@@ -94,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
     // Default to open this when app opens
-    //    Intent intent = new Intent(this, NetworkActivity.class);
-    //    startActivity(intent);
+    Intent intent = new Intent(this, NetworkActivity.class);
+    startActivity(intent);
   }
 
   @Override
