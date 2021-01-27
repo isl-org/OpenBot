@@ -20,7 +20,7 @@ public class Vehicle {
 
   private final int diskHoles = 20;
   private final int millisPerMinute = 60000;
-  
+
   private final float minBatteryVoltage = 9.6f;
   private final float maxBatteryVoltage = 12.6f;
 
@@ -40,7 +40,10 @@ public class Vehicle {
   }
 
   public int getBatteryPercentage() {
-    return (int) ((batteryVoltage.getReading() - minBatteryVoltage) * 100 / (maxBatteryVoltage - minBatteryVoltage));
+    return (int)
+        ((batteryVoltage.getReading() - minBatteryVoltage)
+            * 100
+            / (maxBatteryVoltage - minBatteryVoltage));
   }
 
   public void setBatteryVoltage(float batteryVoltage) {
