@@ -19,10 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
 import com.github.anastr.speedviewlib.components.Section;
 import com.google.android.material.internal.ViewUtils;
 import java.util.Locale;
@@ -136,19 +134,23 @@ public class RobotCommunicationFragment extends Fragment {
             this,
             (requestKey, result) -> onKeyEvent(result.getParcelable("keyEvent")));
 
-    mViewModel.getUsbStatus().observe(getViewLifecycleOwner(), status -> {
-      binding.usbToggle.setChecked(status);
-      binding.usbToggle.setEnabled(!status);
-    });
+    mViewModel
+        .getUsbStatus()
+        .observe(
+            getViewLifecycleOwner(),
+            status -> {
+              binding.usbToggle.setChecked(status);
+              binding.usbToggle.setEnabled(!status);
+            });
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
     binding.usbToggle.setEnabled(!vehicle.isUsbConnected());
 
-    binding.usbToggle.setOnClickListener(v -> {
-      binding.usbToggle.setChecked(vehicle.isUsbConnected());
-      Navigation.findNavController(requireView())
-              .navigate(R.id.open_settings_fragment);
-    });
+    binding.usbToggle.setOnClickListener(
+        v -> {
+          binding.usbToggle.setChecked(vehicle.isUsbConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+        });
   }
 
   public void onKeyEvent(KeyEvent keyCode) {

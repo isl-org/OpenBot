@@ -26,8 +26,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
-
-import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.env.Vehicle;
 import org.openbot.robot.NetworkActivity;
@@ -97,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
           else toolbar.setVisibility(View.GONE);
         });
 
-    if(savedInstanceState==null)
-    {
+    if (savedInstanceState == null) {
       // Default to open this when app opens
       Intent intent = new Intent(this, NetworkActivity.class);
       startActivity(intent);
