@@ -46,6 +46,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 vehicle.disconnectUsb();
                 connection.setTitle("No Device");
               }
+              mViewModel.setUsbStatus(vehicle.isUsbConnected());
             }
             return true;
           });

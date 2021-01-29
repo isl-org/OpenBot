@@ -18,6 +18,7 @@ public class MainViewModel extends ViewModel {
     return selectedMode;
   }
 
+
   private final MutableLiveData<String> usbData = new MutableLiveData<>();
 
   public void setUsbData(String data) {
@@ -28,6 +29,7 @@ public class MainViewModel extends ViewModel {
     return usbData;
   }
 
+
   private final MutableLiveData<Vehicle> vehicle = new MutableLiveData<>();
 
   public void setVehicle(Vehicle data) {
@@ -37,4 +39,16 @@ public class MainViewModel extends ViewModel {
   public LiveData<Vehicle> getVehicle() {
     return vehicle;
   }
+
+
+  private final MutableLiveData<Boolean> usbStatus = new MutableLiveData<>();
+
+  public void setUsbStatus(Boolean data) {
+    usbStatus.setValue(data);
+  }
+
+  public LiveData<Boolean> getUsbStatus() {
+    return usbStatus;
+  }
+
 }

@@ -39,6 +39,14 @@
         app:sv_unitUnderSpeedText="false"
         app:sv_withTremble="false" />
 
+    <CheckBox
+        android:id="@+id/usbToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@drawable/usb_toggle"
+        app:layout_constraintStart_toEndOf="@+id/battery"
+        app:layout_constraintTop_toBottomOf="@+id/speed" />
+
 
     <ProgressBar
         android:id="@+id/sonar"

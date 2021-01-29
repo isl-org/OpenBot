@@ -247,5 +247,13 @@
         app:tint="@color/indicator"
         tools:visibility="visible" />
 
+    <CheckBox
+        android:id="@+id/usbToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@drawable/usb_toggle"
+        app:layout_constraintBottom_toBottomOf="@+id/speed"
+        app:layout_constraintEnd_toStartOf="@+id/speed" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

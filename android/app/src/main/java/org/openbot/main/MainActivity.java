@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
   private MainViewModel viewModel;
   private LocalBroadcastManager localBroadcastManager;
   private BroadcastReceiver localBroadcastReceiver;
+  private Vehicle vehicle;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
-    Vehicle vehicle = new Vehicle(this, baudRate);
+    vehicle = new Vehicle(this, baudRate);
     viewModel.setVehicle(vehicle);
 
     localBroadcastReceiver =
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
       localBroadcastManager = null;
     }
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
+    vehicle.disconnectUsb();
     super.onDestroy();
   }
 }
