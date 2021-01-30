@@ -18,18 +18,14 @@ import org.json.JSONObject;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class PhoneController {
 
-    {
-        handleBotEvents();
-    }
-
     private static final String TAG = "PhoneController";
+    final ILocalConnection connection =
+            new WiFiDirectConnection();
+            // new NearbyConnection();
 
-    private static final WiFiDirectConnection connection;
-    // private static final NearbyConnection connection;
-
-    static {
-        connection = new WiFiDirectConnection();
+    {
         connection.setDataCallback (new DataReceived());
+        handleBotEvents();
     }
 
     static class DataReceived implements IDataReceived {
@@ -44,6 +40,7 @@ public class PhoneController {
     }
 
     public void connect(Context context) {
+        connection.init (context);
         connection.connect(context);
     }
 
@@ -62,4 +59,6 @@ public class PhoneController {
     private void handleBotEvents() {
         BotToControllerEventBus.getProcessor().subscribe(event -> send(event));
     }
+
+
 }

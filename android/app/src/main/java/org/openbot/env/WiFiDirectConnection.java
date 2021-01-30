@@ -3,6 +3,8 @@ package org.openbot.env;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.media.ToneGenerator;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.util.Log;
@@ -17,6 +19,7 @@ import com.abemart.wroup.common.WroupServiceDevice;
 import com.abemart.wroup.common.listeners.ClientConnectedListener;
 import com.abemart.wroup.common.listeners.ClientDisconnectedListener;
 import com.abemart.wroup.common.listeners.DataReceivedListener;
+import com.abemart.wroup.common.listeners.PeerConnectedListener;
 import com.abemart.wroup.common.listeners.ServiceDiscoveredListener;
 import com.abemart.wroup.common.listeners.ServiceRegisteredListener;
 import com.abemart.wroup.common.messages.MessageWrapper;
@@ -35,18 +38,26 @@ public class WiFiDirectConnection implements ILocalConnection {
     private static final String TAG = "WiFiDirectConnection";
 
     WiFiDirectBroadcastReceiver wiFiDirectBroadcastReceiver;
-    DataReceiver dataReceiver = new DataReceiver();
     IntentFilter intentFilter = new IntentFilter();
     WroupService wroupService;
     private boolean isConnected = false;
     private static final String SERVICE_ID = "OPENBOT_SERVICE_ID";
     private IDataReceived dataReceivedCallback;
 
-    {
+    @Override
+    public void init (Context context) {
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
+        wiFiDirectBroadcastReceiver = WiFiP2PInstance.getInstance(context).getBroadcastReceiver();
+        context.registerReceiver(wiFiDirectBroadcastReceiver, intentFilter);
+
+        wroupService = WroupService.getInstance(context);
+        wroupService.setDataReceivedListener(new DataReceiver());
+        wroupService.setClientDisconnectedListener(new DisconnectionListener());
+        wroupService.setClientConnectedListener(new ConnectionListener());
     }
 
     class DataReceiver implements DataReceivedListener {
@@ -66,36 +77,25 @@ public class WiFiDirectConnection implements ILocalConnection {
 
         @Override
         public void onClientConnected(WroupDevice wroupDevice) {
-            isConnected = true;
             Log.i(TAG, "onConnectionResult: connection successful");
-            beep();
-            Toast.makeText(
-                    CameraActivity.getContext(),
-                    "Smartphone controller connected",
-                    Toast.LENGTH_LONG)
-                    .show();
-
             try {
+                isConnected = true;
                 ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"CONNECTED\"}"));
+                beep();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
     class DisconnectionListener implements ClientDisconnectedListener {
         @Override
         public void onClientDisconnected(WroupDevice wroupDevice) {
-            isConnected = false;
-            Toast.makeText(
-                    CameraActivity.getContext(),
-                    "Smartphone controller disconnected",
-                    Toast.LENGTH_LONG)
-                    .show();
-            Log.i(TAG, "onDisconnected: disconnected from the opponent");
+            Log.i(TAG, "onDisconnected: disconnected...");
             try {
+                isConnected = false;
                 ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
+                beep();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -105,31 +105,6 @@ public class WiFiDirectConnection implements ILocalConnection {
     @Override
     public void connect(Context context) {
 
-//        WroupClient wroupClient = WroupClient.getInstance(context);
-//        wroupClient.discoverServices(5000L, new ServiceDiscoveredListener() {
-//
-//            @Override
-//            public void onNewServiceDeviceDiscovered(WroupServiceDevice serviceDevice) {
-//                Log.i(null, "onNewServiceDeviceDiscovered");
-//            }
-//
-//            @Override
-//            public void onFinishServiceDeviceDiscovered(List<WroupServiceDevice> serviceDevices) {
-//                Log.i(null, "onFinishServiceDeviceDiscovered");
-//
-//            }
-//
-//            @Override
-//            public void onError(WiFiP2PError wiFiP2PError) {
-//                Log.i(null, "onError");
-//            }
-//
-//        });
-
-        wiFiDirectBroadcastReceiver = WiFiP2PInstance.getInstance(context).getBroadcastReceiver();
-        context.getApplicationContext().registerReceiver(wiFiDirectBroadcastReceiver, intentFilter);
-
-        wroupService = WroupService.getInstance(context);
         wroupService.registerService(SERVICE_ID, new ServiceRegisteredListener() {
 
             @Override
@@ -142,22 +117,13 @@ public class WiFiDirectConnection implements ILocalConnection {
                 Log.i(TAG, "onErrorServiceRegistered");
             }
         });
-        wroupService.setDataReceivedListener(dataReceiver);
-        wroupService.setClientDisconnectedListener(new DisconnectionListener());
-        wroupService.setClientConnectedListener(new ConnectionListener());
-
-        isConnected = true;
     }
 
     @Override
     public void disconnect(Context context) {
-
-        context.getApplicationContext().registerReceiver(wiFiDirectBroadcastReceiver, intentFilter);
-
         if (wroupService != null) {
             wroupService.disconnect();
         }
-        isConnected = false;
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.abemart.wroup.common.messages.MessageWrapper
 import com.abemart.wroup.service.WroupService
 import org.openbot.controller.utils.EventProcessor
 
+
 object WiFiDirectConnection : ILocalConnection {
     private const val TAG = "WiFiDirectConnection"
 
@@ -21,22 +22,19 @@ object WiFiDirectConnection : ILocalConnection {
         private set
 
     private var dataReceivedCallback: IDataReceived? = null
+    private var wiFiDirectBroadcastReceiver: WiFiDirectBroadcastReceiver? = null
 
     init {
     }
 
-    override fun init (context: Context) {
-        intentFilter.apply {
-            addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
-            addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION)
-            addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)
-            addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
-        }
+    override fun init(context: Context) {
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION)
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
 
-        wroupClient = WroupClient.getInstance(context.applicationContext)
-        wroupClient.setDataReceivedListener(DataReceiver())
-        wroupClient.setClientDisconnectedListener(DisconnectionListener())
-        wroupClient.setClientConnectedListener(ConnectionListener())
+        wiFiDirectBroadcastReceiver = WiFiP2PInstance.getInstance(context).broadcastReceiver
+        context.registerReceiver(wiFiDirectBroadcastReceiver, intentFilter)
     }
 
     class DataReceiver : DataReceivedListener {
@@ -51,27 +49,33 @@ object WiFiDirectConnection : ILocalConnection {
 
     class ConnectionListener : ClientConnectedListener {
         override fun onClientConnected(wroupDevice: WroupDevice) {
+
+            val event: EventProcessor.ProgressEvents =
+                    EventProcessor.ProgressEvents.ConnectionSuccessful
+            EventProcessor.onNext(event)
+
             connected = true
         }
     }
 
     class DisconnectionListener : ClientDisconnectedListener {
         override fun onClientDisconnected(wroupDevice: WroupDevice) {
-            connected = true
+
+            val event: EventProcessor.ProgressEvents =
+                    EventProcessor.ProgressEvents.Disconnected
+            EventProcessor.onNext(event)
+
+            connected = false
         }
     }
 
     override fun connect(context: Context) {
-
         searchAvailableGroups(context)
-        connected = true
     }
 
     override fun disconnect(context: Context?) {
         if (this::wroupClient.isInitialized)
             wroupClient.disconnect()
-
-        connected = false
     }
 
     override fun isConnected(): Boolean {
@@ -87,10 +91,26 @@ object WiFiDirectConnection : ILocalConnection {
 
     private fun searchAvailableGroups(context: Context) {
 
+        wroupClient = WroupClient.getInstance(context.applicationContext)
+        wroupClient.setDataReceivedListener(DataReceiver())
+        wroupClient.setClientDisconnectedListener(DisconnectionListener())
+        wroupClient.setClientConnectedListener(ConnectionListener())
+
         class DiscoveryListener : ServiceDiscoveredListener {
             override fun onNewServiceDeviceDiscovered(serviceDevice: WroupServiceDevice) {
                 Log.i(TAG, "New group found:")
                 Log.i(TAG, "\tName: " + serviceDevice.txtRecordMap[WroupService.SERVICE_GROUP_NAME])
+
+                class ServiceListener : ServiceConnectedListener {
+                    override fun onServiceConnected(serviceDevice: WroupDevice?) {
+                        val event: EventProcessor.ProgressEvents = EventProcessor.ProgressEvents.ConnectionSuccessful
+                        EventProcessor.onNext(event)
+                        connected = true
+                    }
+                }
+
+                if (serviceDevice.txtRecordMap.get("GROUP_NAME") == SERVICE_ID) {
+                }
             }
 
             override fun onFinishServiceDeviceDiscovered(serviceDevices: List<WroupServiceDevice>) {
@@ -98,12 +118,23 @@ object WiFiDirectConnection : ILocalConnection {
                 if (serviceDevices.isEmpty()) {
                     Log.i(TAG, "No groups found")
                 } else {
-                    Log.i(TAG, "Devices: " + serviceDevices)
+                    Log.i(TAG, "Finished discovery")
 
-                    val event: EventProcessor.ProgressEvents =
-                            EventProcessor.ProgressEvents.ConnectionSuccessful
-                    EventProcessor.onNext(event)
+                    for (serviceDevice in serviceDevices) {
+                        val group = serviceDevice.txtRecordMap.get("GROUP_NAME")
+                        if (group == WiFiDirectConnection.SERVICE_ID) {
 
+                            class ServiceConListener : ServiceConnectedListener {
+                                override fun onServiceConnected(serviceDevice: WroupDevice?) {
+                                    Log.i(TAG, "*************************** Connected ***************************")
+                                    val event: EventProcessor.ProgressEvents = EventProcessor.ProgressEvents.ConnectionSuccessful
+                                    EventProcessor.onNext(event)
+                                    connected = true
+                                }
+                            }
+                            wroupClient.connectToService(serviceDevice, ServiceConListener())
+                        }
+                    }
                 }
             }
 
@@ -112,7 +143,6 @@ object WiFiDirectConnection : ILocalConnection {
             }
         }
 
-        wroupClient.discoverServices(60*1000L, DiscoveryListener())
+        wroupClient.discoverServices(5 * 1000L, DiscoveryListener())
     }
-
 }

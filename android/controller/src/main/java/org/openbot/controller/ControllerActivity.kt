@@ -62,7 +62,6 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         hideSystemUI()
 
         BotDataListener.init()
-        ConnectionFactory.get().init(this)
     }
 
     private fun setupPermissions() {
@@ -153,6 +152,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         super.onResume()
         hideSystemUI()
 
+        ConnectionFactory.get().init(this)
         ConnectionFactory.get().connect(this)
     }
 

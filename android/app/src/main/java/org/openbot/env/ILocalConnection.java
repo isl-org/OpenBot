@@ -7,6 +7,9 @@ import com.google.android.gms.nearby.connection.PayloadCallback;
 import java.util.concurrent.Callable;
 
 public interface ILocalConnection {
+
+    void init (Context context);
+
     void setDataCallback(IDataReceived dataCallback);
 
     void connect(Context context);

@@ -53,8 +53,11 @@ public class NearbyConnection implements ILocalConnection {
   private boolean isConnected = false;
   private IDataReceived dataReceivedCallback;
 
-    // Our handle to Nearby Connections
+  // Our handle to Nearby Connections
   private ConnectionsClient connectionsClient;
+
+  @Override
+  public void init (Context context) {}
 
   // Callbacks for receiving payloads
   private final PayloadCallback payloadCallback =
