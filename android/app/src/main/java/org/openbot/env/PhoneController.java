@@ -20,7 +20,8 @@ public class PhoneController {
 
     private static final String TAG = "PhoneController";
     final ILocalConnection connection =
-            new WiFiDirectConnection();
+            new BluethootConnection();
+            // new WiFiDirectConnection();
             // new NearbyConnection();
 
     {
