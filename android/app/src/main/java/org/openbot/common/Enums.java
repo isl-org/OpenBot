@@ -94,8 +94,8 @@ public class Enums {
       return null;
     }
   }
-  public static DriveMode switchDriveMode(DriveMode mode)
-  {
+
+  public static DriveMode switchDriveMode(DriveMode mode) {
     switch (mode) {
       case DUAL:
         return DriveMode.GAME;
@@ -139,7 +139,6 @@ public class Enums {
     }
   }
 
-
   public static SpeedMode toggleSpeed(int direction, SpeedMode speedMode) {
     if (speedMode != null)
       switch (speedMode) {
@@ -155,5 +154,4 @@ public class Enums {
       }
     return null;
   }
-
 }

@@ -1,5 +1,9 @@
 package org.openbot.robot;
 
+import static org.openbot.common.Enums.ControlMode;
+import static org.openbot.common.Enums.DriveMode;
+import static org.openbot.common.Enums.SpeedMode;
+
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -8,33 +12,21 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
-
 import com.github.anastr.speedviewlib.components.Section;
 import com.google.android.material.internal.ViewUtils;
-
+import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.Enums;
-import org.openbot.common.Utils;
 import org.openbot.databinding.FragmentRobotCommunicationBinding;
-import org.openbot.env.BotToControllerEventBus;
 import org.openbot.main.ControlsFragment;
 import org.openbot.utils.PermissionUtils;
-
-import java.util.Locale;
-
 import timber.log.Timber;
-
-import static org.openbot.common.Enums.ControlMode;
-import static org.openbot.common.Enums.DriveMode;
-import static org.openbot.common.Enums.SpeedMode;
 
 public class RobotCommunicationFragment extends ControlsFragment {
 
@@ -76,10 +68,15 @@ public class RobotCommunicationFragment extends ControlsFragment {
             }
           }
         });
-    binding.controllerContainer.driveMode.setOnClickListener(v -> setDriveMode(Enums.switchDriveMode(currentDriveMode)));
+    binding.controllerContainer.driveMode.setOnClickListener(
+        v -> setDriveMode(Enums.switchDriveMode(currentDriveMode)));
 
-    binding.controllerContainer.speedMode.setOnClickListener(v -> setSpeedMode(Enums.toggleSpeed(Enums.Direction.CYCLIC
-            .getValue(), SpeedMode.getByID(preferencesManager.getSpeedMode()))));
+    binding.controllerContainer.speedMode.setOnClickListener(
+        v ->
+            setSpeedMode(
+                Enums.toggleSpeed(
+                    Enums.Direction.CYCLIC.getValue(),
+                    SpeedMode.getByID(preferencesManager.getSpeedMode()))));
 
     binding.speed.getSections().clear();
     binding.speed.addSections(
@@ -124,85 +121,85 @@ public class RobotCommunicationFragment extends ControlsFragment {
     //      sendVehicleDataToSensorService(timestamp, data);
 
     binding.controllerContainer.speedInfo.setText(
-            getString(
-                    R.string.speedInfo,
-                    String.format(
-                            Locale.US,
-                            "%3.0f,%3.0f",
-                            vehicle.getLeftWheelRPM(),
-                            vehicle.getRightWheelRPM())));
+        getString(
+            R.string.speedInfo,
+            String.format(
+                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRPM(), vehicle.getRightWheelRPM())));
 
     binding.voltageInfo.setText(
-            getString(
-                    R.string.voltageInfo,
-                    String.format(Locale.US, "%2.1f", vehicle.getBatteryVoltage())));
+        getString(
+            R.string.voltageInfo, String.format(Locale.US, "%2.1f", vehicle.getBatteryVoltage())));
     binding.battery.setProgress(vehicle.getBatteryPercentage());
     if (vehicle.getBatteryPercentage() < 15) {
       binding.battery.setProgressTintList(
-              ColorStateList.valueOf(getResources().getColor(R.color.red)));
+          ColorStateList.valueOf(getResources().getColor(R.color.red)));
       binding.battery.setProgressBackgroundTintList(
-              ColorStateList.valueOf(getResources().getColor(R.color.red)));
+          ColorStateList.valueOf(getResources().getColor(R.color.red)));
     } else {
       binding.battery.setProgressTintList(
-              ColorStateList.valueOf(getResources().getColor(R.color.green)));
+          ColorStateList.valueOf(getResources().getColor(R.color.green)));
       binding.battery.setProgressBackgroundTintList(
-              ColorStateList.valueOf(getResources().getColor(R.color.green)));
+          ColorStateList.valueOf(getResources().getColor(R.color.green)));
     }
 
     binding.sonar.setProgress((int) (vehicle.getSonarReading() / 3));
     if (vehicle.getSonarReading() / 3 < 15) {
       binding.sonar.setProgressTintList(
-              ColorStateList.valueOf(getResources().getColor(R.color.red)));
+          ColorStateList.valueOf(getResources().getColor(R.color.red)));
     } else if (vehicle.getSonarReading() / 3 < 45) {
       binding.sonar.setProgressTintList(
-              ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
+          ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
     } else {
       binding.sonar.setProgressTintList(
-              ColorStateList.valueOf(getResources().getColor(R.color.green)));
+          ColorStateList.valueOf(getResources().getColor(R.color.green)));
     }
 
     binding.sonarInfo.setText(
-            getString(
-                    R.string.distanceInfo,
-                    String.format(Locale.US, "%3.0f", vehicle.getSonarReading())));
+        getString(
+            R.string.distanceInfo, String.format(Locale.US, "%3.0f", vehicle.getSonarReading())));
   }
 
   @Override
   public void onKeyEvent(KeyEvent keyCode) {
-    if (ControlMode.getByID(preferencesManager.getControlMode()) == ControlMode.GAMEPAD)
-      switch (keyCode.getKeyCode()) {
-        case KeyEvent.KEYCODE_BUTTON_A: // x
-          //            handleLogging();
-          break;
-        case KeyEvent.KEYCODE_BUTTON_X: // square
-          toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
-          break;
-        case KeyEvent.KEYCODE_BUTTON_Y: // triangle
-          toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
-          break;
-        case KeyEvent.KEYCODE_BUTTON_B: // circle
-          toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
+    switch (keyCode.getKeyCode()) {
+      case KeyEvent.KEYCODE_BUTTON_A: // x
+        //            handleLogging();
+        break;
+      case KeyEvent.KEYCODE_BUTTON_X: // square
+        toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
+        break;
+      case KeyEvent.KEYCODE_BUTTON_Y: // triangle
+        toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
+        break;
+      case KeyEvent.KEYCODE_BUTTON_B: // circle
+        toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
 
-          break;
-        case KeyEvent.KEYCODE_BUTTON_START: // options
-          //            handleNoise();
-          break;
-        case KeyEvent.KEYCODE_BUTTON_L1:
-          setDriveMode(Enums.switchDriveMode(currentDriveMode));
-          break;
-        case KeyEvent.KEYCODE_BUTTON_R1:
-          //            handleNetwork();
-          break;
-        case KeyEvent.KEYCODE_BUTTON_THUMBL:
-          setSpeedMode(Enums.toggleSpeed(Enums.Direction.DOWN.getValue(), SpeedMode.getByID(preferencesManager.getSpeedMode())));
-          break;
-        case KeyEvent.KEYCODE_BUTTON_THUMBR:
-          setSpeedMode(Enums.toggleSpeed(Enums.Direction.UP.getValue(), SpeedMode.getByID(preferencesManager.getSpeedMode())));
-          break;
+        break;
+      case KeyEvent.KEYCODE_BUTTON_START: // options
+        //            handleNoise();
+        break;
+      case KeyEvent.KEYCODE_BUTTON_L1:
+        setDriveMode(Enums.switchDriveMode(currentDriveMode));
+        break;
+      case KeyEvent.KEYCODE_BUTTON_R1:
+        //            handleNetwork();
+        break;
+      case KeyEvent.KEYCODE_BUTTON_THUMBL:
+        setSpeedMode(
+            Enums.toggleSpeed(
+                Enums.Direction.DOWN.getValue(),
+                SpeedMode.getByID(preferencesManager.getSpeedMode())));
+        break;
+      case KeyEvent.KEYCODE_BUTTON_THUMBR:
+        setSpeedMode(
+            Enums.toggleSpeed(
+                Enums.Direction.UP.getValue(),
+                SpeedMode.getByID(preferencesManager.getSpeedMode())));
+        break;
 
-        default:
-          break;
-      }
+      default:
+        break;
+    }
   }
 
   @Override
@@ -228,7 +225,8 @@ public class RobotCommunicationFragment extends ControlsFragment {
   protected void handleDriveCommand() {
     float left = vehicle.getLeftSpeed();
     float right = vehicle.getRightSpeed();
-    binding.controllerContainer.controlInfo.setText(String.format(Locale.US, "%.0f,%.0f", left, right));
+    binding.controllerContainer.controlInfo.setText(
+        String.format(Locale.US, "%.0f,%.0f", left, right));
 
     binding.speed.speedPercentTo(vehicle.getSpeedPercent());
 
@@ -323,7 +321,7 @@ public class RobotCommunicationFragment extends ControlsFragment {
   }
 
   @Override
-  protected void processPhoneControllerData(JSONObject event, String commandType) throws JSONException {
+  protected void processPhoneControllerData(JSONObject event, String commandType) {
     switch (commandType) {
       case "DRIVE_CMD":
         handleDriveCommand();
@@ -350,7 +348,5 @@ public class RobotCommunicationFragment extends ControlsFragment {
         setControlMode(ControlMode.GAMEPAD);
         break;
     }
-
   }
-
 }
