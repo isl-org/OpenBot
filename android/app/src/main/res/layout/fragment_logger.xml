@@ -1,108 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".logging.LoggerFragment">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:background="@drawable/bottom_sheet_bg"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-        <TextView
-            android:id="@+id/logger"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:text="@string/data_log"
-            android:textColor="@android:color/black" />
-
-        <Spinner
-            android:id="@+id/log_spinner"
-            style="@style/SpinnerTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:entries="@array/log_settings"
-            android:prompt="@string/log_setting" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/logger_switch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:checked="false"
-            android:gravity="end"
-            android:text="@string/not_logging"
-            android:textColor="@android:color/black" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/controllerContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/camera_toggle_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:text="@string/camera"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/frame_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:gravity="center"
-            android:text="@string/resolution"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/crop_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:gravity="center"
-            android:text="@string/resolution"
-            android:textColor="@android:color/black" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/camera_toggle_switch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"
-            android:checked="false"
-            android:gravity="end"
+        <ImageView
+            android:id="@+id/camera_toggle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="16dp"
+            android:background="@android:color/transparent"
+            android:scaleType="center"
+            android:src="@drawable/ic_cameraswitch"
             android:text="@string/camera_facing_back"
-            android:textColor="@android:color/black" />
+            app:layout_constraintBottom_toTopOf="@id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/openBotBlue" />
 
-    </LinearLayout>
+        <ToggleButton
+            android:id="@+id/logger_switch"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/logger_toggle"
+            android:backgroundTint="@color/openBotBlue"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toTopOf="@id/linearLayout2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/controllerContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/camera_toggle_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/camera"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/frame_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:text="@string/resolution"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/crop_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:text="@string/resolution"
+                android:textColor="@android:color/black" />
 
 
-    <include
-        android:id="@+id/controllerContainer"
-        layout="@layout/control_buttons" />
+            <TextView
+                android:id="@+id/logger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/data_log"
+                android:textColor="@android:color/black" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <Spinner
+                android:id="@+id/log_spinner"
+                style="@style/SpinnerTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
+                android:entries="@array/log_settings"
+                android:prompt="@string/log_setting" />
+
+        </LinearLayout>
+
+
+        <include
+            android:id="@+id/controllerContainer"
+            layout="@layout/control_buttons" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
