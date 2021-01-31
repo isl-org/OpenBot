@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import org.openbot.R;
-import org.openbot.common.Constants;
+import org.openbot.common.FeatureList;
 import org.openbot.common.OnItemClickListener;
 import org.openbot.databinding.FragmentMainBinding;
 import org.openbot.model.SubCategory;
@@ -40,7 +40,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
 
     mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
     binding.list.setLayoutManager(new LinearLayoutManager(requireContext()));
-    binding.list.setAdapter(new CategoryAdapter(Constants.getCategories(), this));
+    binding.list.setAdapter(new CategoryAdapter(FeatureList.getCategories(), this));
   }
 
   @Override
@@ -49,21 +49,21 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     Timber.d("onItemClick: %s", subCategory.getTitle());
 
     switch (subCategory.getTitle()) {
-      case Constants.GLOBAL_VIEW:
+      case FeatureList.GLOBAL_VIEW:
         Intent intent = new Intent(requireActivity(), NetworkActivity.class);
         startActivity(intent);
         break;
 
-      case Constants.FREE_ROAM:
+      case FeatureList.FREE_ROAM:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_robotCommunicationFragment);
         break;
 
-      case Constants.LOCAL_SAVE_ON_PHONE:
+      case FeatureList.LOCAL_SAVE_ON_PHONE:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_loggerFragment);
 
-      case Constants.CONTROLLER:
+      case FeatureList.CONTROLLER:
         // For a library module, uncomment the following line
         // intent = new Intent(this, ControllerActivity.class);
         // startActivity(intent);
