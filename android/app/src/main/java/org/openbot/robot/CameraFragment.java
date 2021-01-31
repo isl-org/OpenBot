@@ -8,7 +8,6 @@ import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.CameraSelector;
@@ -19,16 +18,13 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.viewbinding.ViewBinding;
-
 import com.google.common.util.concurrent.ListenableFuture;
-
-import org.openbot.R;
-import org.openbot.env.Logger;
-import org.openbot.main.ControlsFragment;
-
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.openbot.R;
+import org.openbot.env.Logger;
+import org.openbot.main.ControlsFragment;
 
 public abstract class CameraFragment extends ControlsFragment {
 
@@ -80,9 +76,7 @@ public abstract class CameraFragment extends ControlsFragment {
             preview = new Preview.Builder().build();
 
             CameraSelector cameraSelector =
-                new CameraSelector.Builder()
-                    .requireLensFacing(lensFacing)
-                    .build();
+                new CameraSelector.Builder().requireLensFacing(lensFacing).build();
 
             preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
@@ -123,13 +117,15 @@ public abstract class CameraFragment extends ControlsFragment {
   }
 
   @SuppressLint("RestrictedApi")
-  public Size getPreviewSize()
-  {
+  public Size getPreviewSize() {
     return preview.getAttachedSurfaceResolution();
   }
 
   public void toggleCamera() {
-    lensFacing = CameraSelector.LENS_FACING_FRONT == lensFacing ? CameraSelector.LENS_FACING_BACK : CameraSelector.LENS_FACING_FRONT;
+    lensFacing =
+        CameraSelector.LENS_FACING_FRONT == lensFacing
+            ? CameraSelector.LENS_FACING_BACK
+            : CameraSelector.LENS_FACING_FRONT;
     startCamera();
   }
 

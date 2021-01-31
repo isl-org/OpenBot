@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.common.Constants;
@@ -202,6 +201,7 @@ public abstract class ControlsFragment extends Fragment {
     super.onDestroy();
     vehicle.setControl(0, 0);
   }
+
   @Override
   public synchronized void onPause() {
     super.onPause();

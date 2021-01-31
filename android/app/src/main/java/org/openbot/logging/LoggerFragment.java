@@ -1,6 +1,5 @@
 package org.openbot.logging;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -22,13 +21,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
-
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.Constants;
@@ -42,13 +43,6 @@ import org.openbot.robot.ServerService;
 import org.openbot.utils.PermissionUtils;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
 import timber.log.Timber;
 
 public class LoggerFragment extends CameraFragment implements ServerService.ServerListener {
@@ -81,48 +75,51 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
 
     binding.controllerContainer.controlMode.setOnClickListener(
-            v -> {
-              Enums.ControlMode controlMode = Enums.ControlMode.getByID(preferencesManager.getControlMode());
-              if (controlMode != null) {
-                switch (controlMode) {
-                  case GAMEPAD:
-                    setControlMode(Enums.ControlMode.PHONE);
-                    break;
-                  case PHONE:
-                    setControlMode(Enums.ControlMode.GAMEPAD);
-                    break;
-                }
-              }
-            });
+        v -> {
+          Enums.ControlMode controlMode =
+              Enums.ControlMode.getByID(preferencesManager.getControlMode());
+          if (controlMode != null) {
+            switch (controlMode) {
+              case GAMEPAD:
+                setControlMode(Enums.ControlMode.PHONE);
+                break;
+              case PHONE:
+                setControlMode(Enums.ControlMode.GAMEPAD);
+                break;
+            }
+          }
+        });
     binding.controllerContainer.driveMode.setOnClickListener(
-            v -> setDriveMode(Enums.switchDriveMode(currentDriveMode)));
+        v -> setDriveMode(Enums.switchDriveMode(currentDriveMode)));
 
     binding.controllerContainer.speedMode.setOnClickListener(
-            v -> setSpeedMode(
-                            Enums.toggleSpeed(
-                                    Enums.Direction.CYCLIC.getValue(),
-                                    Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()))));
+        v ->
+            setSpeedMode(
+                Enums.toggleSpeed(
+                    Enums.Direction.CYCLIC.getValue(),
+                    Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()))));
 
-    binding.loggerSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> setIsLoggingActive(isChecked));
+    binding.loggerSwitch.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> setIsLoggingActive(isChecked));
 
-    binding.logSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Enums.LogMode mode = Enums.LogMode.valueOf(parent.getItemAtPosition(position).toString().toUpperCase());
-        if (logMode != mode) {
-          logMode = mode;
-          preferencesManager.setLogMode(mode.ordinal());
-        }
+    binding.logSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            Enums.LogMode mode =
+                Enums.LogMode.valueOf(parent.getItemAtPosition(position).toString().toUpperCase());
+            if (logMode != mode) {
+              logMode = mode;
+              preferencesManager.setLogMode(mode.ordinal());
+            }
+          }
 
-      }
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
-      @Override
-      public void onNothingSelected(AdapterView<?> parent) {
-
-      }
-    });
-
-    binding.cameraToggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> toggleCamera());
+    binding.cameraToggleSwitch.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> toggleCamera());
   }
 
   @Override
@@ -326,7 +323,7 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
 
   @Override
   public void onRequestPermissionsResult(
-          int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     switch (requestCode) {
       case Constants.REQUEST_LOCATION_PERMISSION_LOGGING:
@@ -335,9 +332,13 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           setIsLoggingActive(true);
         } else {
-          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_LOCATION)) {
-            Toast.makeText(requireContext().getApplicationContext(), R.string.location_permission_denied_logging, Toast.LENGTH_LONG)
-                    .show();
+          if (PermissionUtils.shouldShowRational(
+              requireActivity(), Constants.PERMISSION_LOCATION)) {
+            Toast.makeText(
+                    requireContext().getApplicationContext(),
+                    R.string.location_permission_denied_logging,
+                    Toast.LENGTH_LONG)
+                .show();
           }
         }
         break;
@@ -348,16 +349,20 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
           setIsLoggingActive(true);
         } else {
           if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_STORAGE)) {
-            Toast.makeText(requireContext().getApplicationContext(), R.string.storage_permission_denied, Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                    requireContext().getApplicationContext(),
+                    R.string.storage_permission_denied,
+                    Toast.LENGTH_LONG)
+                .show();
           }
         }
         break;
-
     }
   }
+
   protected void handleLogging() {
     setIsLoggingActive(!loggingEnabled);
-//    audioPlayer.playLogging(voice, loggingEnabled);
+    //    audioPlayer.playLogging(voice, loggingEnabled);
   }
 
   @Override
@@ -392,28 +397,28 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
         break;
       case KeyEvent.KEYCODE_BUTTON_THUMBL:
         setSpeedMode(
-                Enums.toggleSpeed(
-                        Enums.Direction.DOWN.getValue(),
-                        Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+            Enums.toggleSpeed(
+                Enums.Direction.DOWN.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
         break;
       case KeyEvent.KEYCODE_BUTTON_THUMBR:
         setSpeedMode(
-                Enums.toggleSpeed(
-                        Enums.Direction.UP.getValue(),
-                        Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+            Enums.toggleSpeed(
+                Enums.Direction.UP.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
         break;
-
     }
   }
+
   @Override
   protected void processPhoneControllerData(String commandType) {
     switch (commandType) {
       case "LOGS":
         handleLogging();
         break;
-//      case "NOISE":
-//        handleNoise();
-//        break;
+        //      case "NOISE":
+        //        handleNoise();
+        //        break;
       case "INDICATOR_LEFT":
       case "INDICATOR_RIGHT":
       case "INDICATOR_STOP":
@@ -430,7 +435,6 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
         handleDriveCommand();
         setControlMode(Enums.ControlMode.GAMEPAD);
         break;
-
     }
   }
 
@@ -438,7 +442,7 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
     float left = vehicle.getLeftSpeed();
     float right = vehicle.getRightSpeed();
     binding.controllerContainer.controlInfo.setText(
-            String.format(Locale.US, "%.0f,%.0f", left, right));
+        String.format(Locale.US, "%.0f,%.0f", left, right));
     runInBackground(this::sendControlToSensorService);
   }
 
@@ -473,9 +477,9 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
           binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
           if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
             PermissionUtils.requestPermissions(
-                    this,
-                    new String[] {Constants.PERMISSION_LOCATION},
-                    Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
+                this,
+                new String[] {Constants.PERMISSION_LOCATION},
+                Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
           else connectPhoneController();
 
           break;
@@ -530,15 +534,18 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
   @Override
   protected void processFrame(ImageProxy image) {
 
-    requireActivity().runOnUiThread(
+    requireActivity()
+        .runOnUiThread(
             () -> {
-                binding.frameInfo.setText(
-                        String.format(Locale.US, "%d x %d", getPreviewSize().getWidth(), getPreviewSize().getHeight()));
+              binding.frameInfo.setText(
+                  String.format(
+                      Locale.US,
+                      "%d x %d",
+                      getPreviewSize().getWidth(),
+                      getPreviewSize().getHeight()));
               binding.cropInfo.setText(
-                      String.format(
-                              Locale.US, "%d x %d", image.getWidth(), image.getHeight()));
+                  String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight()));
             });
-
   }
 
   @Override

@@ -19,7 +19,6 @@ import com.github.anastr.speedviewlib.components.Section;
 import com.google.android.material.internal.ViewUtils;
 import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.Enums;

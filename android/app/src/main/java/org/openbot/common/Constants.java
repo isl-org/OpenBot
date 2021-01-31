@@ -89,13 +89,16 @@ public class Constants {
     //    subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game, "#B3FF6D00"));
     categories.add(new Category(Constants.GAME, subCategories));
 
-        subCategories = new ArrayList<>();
-        subCategories.add(new SubCategory(Constants.LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage,"#93C47D"));
-//        subCategories.add(new SubCategory(Constants.EDGE_LOCAL_NETWORK, R.drawable.ic_network));
-//        subCategories.add(new SubCategory(Constants.CLOUD_FIREBASE, R.drawable.ic_cloud_upload));
-//        subCategories.add(new SubCategory(Constants.CROWD_SOURCE, R.drawable.openbot_icon));
-        categories.add(new Category(Constants.DATA_COLLECTION, subCategories));
-/*
+    subCategories = new ArrayList<>();
+    subCategories.add(
+        new SubCategory(Constants.LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage, "#93C47D"));
+    //        subCategories.add(new SubCategory(Constants.EDGE_LOCAL_NETWORK,
+    // R.drawable.ic_network));
+    //        subCategories.add(new SubCategory(Constants.CLOUD_FIREBASE,
+    // R.drawable.ic_cloud_upload));
+    //        subCategories.add(new SubCategory(Constants.CROWD_SOURCE, R.drawable.openbot_icon));
+    categories.add(new Category(Constants.DATA_COLLECTION, subCategories));
+    /*
         subCategories = new ArrayList<>();
         subCategories.add(new SubCategory(Constants.PERSON_FOLLOWING, R.drawable.ic_person_search));
         subCategories.add(new SubCategory(Constants.OBJECT_NAV, R.drawable.openbot_icon));
