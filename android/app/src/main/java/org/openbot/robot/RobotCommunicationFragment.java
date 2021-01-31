@@ -7,9 +7,7 @@ import static org.openbot.common.Enums.SpeedMode;
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -149,54 +147,6 @@ public class RobotCommunicationFragment extends ControlsFragment {
             R.string.distanceInfo, String.format(Locale.US, "%3.0f", vehicle.getSonarReading())));
   }
 
-  @Override
-  public void onKeyEvent(KeyEvent keyCode) {
-    switch (keyCode.getKeyCode()) {
-      case KeyEvent.KEYCODE_BUTTON_A: // x
-        //            handleLogging();
-        break;
-      case KeyEvent.KEYCODE_BUTTON_X: // square
-        toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
-        break;
-      case KeyEvent.KEYCODE_BUTTON_Y: // triangle
-        toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
-        break;
-      case KeyEvent.KEYCODE_BUTTON_B: // circle
-        toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
-
-        break;
-      case KeyEvent.KEYCODE_BUTTON_START: // options
-        //            handleNoise();
-        break;
-      case KeyEvent.KEYCODE_BUTTON_L1:
-        setDriveMode(Enums.switchDriveMode(currentDriveMode));
-        break;
-      case KeyEvent.KEYCODE_BUTTON_R1:
-        //            handleNetwork();
-        break;
-      case KeyEvent.KEYCODE_BUTTON_THUMBL:
-        setSpeedMode(
-            Enums.toggleSpeed(
-                Enums.Direction.DOWN.getValue(),
-                SpeedMode.getByID(preferencesManager.getSpeedMode())));
-        break;
-      case KeyEvent.KEYCODE_BUTTON_THUMBR:
-        setSpeedMode(
-            Enums.toggleSpeed(
-                Enums.Direction.UP.getValue(),
-                SpeedMode.getByID(preferencesManager.getSpeedMode())));
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  @Override
-  public void onMotionEvent(MotionEvent motionEvent) {
-    handleDriveCommand();
-  }
-
   private void toggleIndicator(int value) {
     binding.indicatorRight.clearAnimation();
     binding.indicatorLeft.clearAnimation();
@@ -311,7 +261,7 @@ public class RobotCommunicationFragment extends ControlsFragment {
   }
 
   @Override
-  protected void processPhoneControllerData(String commandType) {
+  protected void processControllerKeyData(String commandType) {
     switch (commandType) {
       case Constants.CMD_DRIVE:
         handleDriveCommand();
@@ -336,6 +286,18 @@ public class RobotCommunicationFragment extends ControlsFragment {
       case Constants.CMD_DISCONNECTED:
         handleDriveCommand();
         setControlMode(ControlMode.GAMEPAD);
+        break;
+      case Constants.CMD_SPEED_DOWN:
+        setSpeedMode(
+            Enums.toggleSpeed(
+                Enums.Direction.DOWN.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+        break;
+      case Constants.CMD_SPEED_UP:
+        setSpeedMode(
+            Enums.toggleSpeed(
+                Enums.Direction.UP.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
         break;
     }
   }

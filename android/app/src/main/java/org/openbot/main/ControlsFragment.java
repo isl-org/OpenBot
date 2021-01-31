@@ -50,7 +50,7 @@ public abstract class ControlsFragment extends Fragment {
             (requestKey, result) -> {
               MotionEvent motionEvent = result.getParcelable(Constants.DATA);
               vehicle.setControl(gameController.processJoystickInput(motionEvent, -1));
-              onMotionEvent(motionEvent);
+              processControllerKeyData(Constants.CMD_DRIVE);
             });
     requireActivity()
         .getSupportFragmentManager()
@@ -87,18 +87,39 @@ public abstract class ControlsFragment extends Fragment {
       switch (keyCode.getKeyCode()) {
         case KeyEvent.KEYCODE_BUTTON_X: // square
           toggleIndicatorEvent(Enums.VehicleIndicator.LEFT.getValue());
+          processControllerKeyData(Constants.CMD_INDICATOR_LEFT);
           break;
         case KeyEvent.KEYCODE_BUTTON_Y: // triangle
           toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
+          processControllerKeyData(Constants.CMD_INDICATOR_STOP);
           break;
         case KeyEvent.KEYCODE_BUTTON_B: // circle
           toggleIndicatorEvent(Enums.VehicleIndicator.RIGHT.getValue());
+          processControllerKeyData(Constants.CMD_INDICATOR_RIGHT);
+          break;
+
+        case KeyEvent.KEYCODE_BUTTON_A: // x
+          processControllerKeyData(Constants.CMD_LOGS);
+          break;
+        case KeyEvent.KEYCODE_BUTTON_START: // options
+          processControllerKeyData(Constants.CMD_NOISE);
+          break;
+        case KeyEvent.KEYCODE_BUTTON_L1:
+          processControllerKeyData(Constants.CMD_DRIVE_MODE);
+          break;
+        case KeyEvent.KEYCODE_BUTTON_R1:
+          processControllerKeyData(Constants.CMD_NETWORK);
+          break;
+        case KeyEvent.KEYCODE_BUTTON_THUMBL:
+          processControllerKeyData(Constants.CMD_SPEED_UP);
+          break;
+        case KeyEvent.KEYCODE_BUTTON_THUMBR:
+          processControllerKeyData(Constants.CMD_SPEED_DOWN);
           break;
 
         default:
           break;
       }
-      onKeyEvent(keyCode);
     }
   }
 
@@ -161,7 +182,7 @@ public abstract class ControlsFragment extends Fragment {
                   break;
               }
 
-              processPhoneControllerData(commandType);
+              processControllerKeyData(commandType);
             });
   }
 
@@ -208,11 +229,7 @@ public abstract class ControlsFragment extends Fragment {
     phoneController.disconnect();
   }
 
-  protected abstract void processPhoneControllerData(String command);
+  protected abstract void processControllerKeyData(String command);
 
   protected abstract void processUSBData(String data);
-
-  protected abstract void onMotionEvent(MotionEvent motionEvent);
-
-  protected abstract void onKeyEvent(KeyEvent keyEvent);
 }

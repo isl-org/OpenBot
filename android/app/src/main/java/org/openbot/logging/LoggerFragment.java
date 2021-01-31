@@ -13,9 +13,7 @@ import android.os.IBinder;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.SystemClock;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -337,61 +335,22 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
   }
 
   @Override
-  public void onMotionEvent(MotionEvent motionEvent) {
-    handleDriveCommand();
-  }
-
-  @Override
-  protected void onKeyEvent(KeyEvent keyCode) {
-    switch (keyCode.getKeyCode()) {
-      case KeyEvent.KEYCODE_BUTTON_A: // x
-        handleLogging();
-        break;
-      case KeyEvent.KEYCODE_BUTTON_START: // options
-        //            handleNoise();
-        break;
-      case KeyEvent.KEYCODE_BUTTON_X: // square
-      case KeyEvent.KEYCODE_BUTTON_Y: // triangle
-      case KeyEvent.KEYCODE_BUTTON_B: // circle
-        sendIndicatorToSensorService();
-        break;
-      case KeyEvent.KEYCODE_BUTTON_L1:
-        setDriveMode(Enums.switchDriveMode(currentDriveMode));
-        break;
-      case KeyEvent.KEYCODE_BUTTON_R1:
-        //            handleNetwork();
-        break;
-      case KeyEvent.KEYCODE_BUTTON_THUMBL:
-        setSpeedMode(
-            Enums.toggleSpeed(
-                Enums.Direction.DOWN.getValue(),
-                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
-        break;
-      case KeyEvent.KEYCODE_BUTTON_THUMBR:
-        setSpeedMode(
-            Enums.toggleSpeed(
-                Enums.Direction.UP.getValue(),
-                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
-        break;
-    }
-  }
-
-  @Override
-  protected void processPhoneControllerData(String commandType) {
+  protected void processControllerKeyData(String commandType) {
     switch (commandType) {
+      case Constants.CMD_DRIVE:
+        handleDriveCommand();
+        break;
+
       case Constants.CMD_LOGS:
         handleLogging();
         break;
-        //      case "NOISE":
+        //      case "Constants.CMD_NOISE":
         //        handleNoise();
         //        break;
       case Constants.CMD_INDICATOR_LEFT:
       case Constants.CMD_INDICATOR_RIGHT:
       case Constants.CMD_INDICATOR_STOP:
         sendIndicatorToSensorService();
-        break;
-      case Constants.CMD_DRIVE:
-        handleDriveCommand();
         break;
       case Constants.CMD_DRIVE_MODE:
         setDriveMode(Enums.switchDriveMode(currentDriveMode));
@@ -400,6 +359,22 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
       case Constants.CMD_DISCONNECTED:
         handleDriveCommand();
         setControlMode(Enums.ControlMode.GAMEPAD);
+        break;
+
+      case Constants.CMD_SPEED_DOWN:
+        setSpeedMode(
+            Enums.toggleSpeed(
+                Enums.Direction.DOWN.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+        break;
+      case Constants.CMD_SPEED_UP:
+        setSpeedMode(
+            Enums.toggleSpeed(
+                Enums.Direction.UP.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+        break;
+      case Constants.CMD_NETWORK:
+        //        handleNetwork();
         break;
     }
   }
