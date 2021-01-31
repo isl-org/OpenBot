@@ -413,25 +413,25 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
   @Override
   protected void processPhoneControllerData(String commandType) {
     switch (commandType) {
-      case "LOGS":
+      case Constants.CMD_LOGS:
         handleLogging();
         break;
         //      case "NOISE":
         //        handleNoise();
         //        break;
-      case "INDICATOR_LEFT":
-      case "INDICATOR_RIGHT":
-      case "INDICATOR_STOP":
+      case Constants.CMD_INDICATOR_LEFT:
+      case Constants.CMD_INDICATOR_RIGHT:
+      case Constants.CMD_INDICATOR_STOP:
         sendIndicatorToSensorService();
         break;
-      case "DRIVE_CMD":
+      case Constants.CMD_DRIVE:
         handleDriveCommand();
         break;
-      case "DRIVE_MODE":
+      case Constants.CMD_DRIVE_MODE:
         setDriveMode(Enums.switchDriveMode(currentDriveMode));
         break;
 
-      case "DISCONNECTED":
+      case Constants.CMD_DISCONNECTED:
         handleDriveCommand();
         setControlMode(Enums.ControlMode.GAMEPAD);
         break;

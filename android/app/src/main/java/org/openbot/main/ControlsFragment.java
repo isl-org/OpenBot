@@ -115,14 +115,14 @@ public abstract class ControlsFragment extends Fragment {
               if (event.has("command")) {
                 commandType = event.getString("command");
               } else if (event.has("driveCmd")) {
-                commandType = "DRIVE_CMD";
+                commandType = Constants.CMD_DRIVE;
               } else {
                 Timber.d("Got invalid command from controller: %s", event.toString());
                 return;
               }
 
               switch (commandType) {
-                case "DRIVE_CMD":
+                case Constants.CMD_DRIVE:
                   JSONObject driveValue = event.getJSONObject("driveCmd");
                   vehicle.setControl(
                       new Control(
@@ -130,20 +130,20 @@ public abstract class ControlsFragment extends Fragment {
                           Float.parseFloat(driveValue.getString("r"))));
                   break;
 
-                case "INDICATOR_LEFT":
+                case Constants.CMD_INDICATOR_LEFT:
                   toggleIndicatorEvent(Enums.VehicleIndicator.LEFT.getValue());
                   break;
 
-                case "INDICATOR_RIGHT":
+                case Constants.CMD_INDICATOR_RIGHT:
                   toggleIndicatorEvent(Enums.VehicleIndicator.RIGHT.getValue());
                   break;
 
-                case "INDICATOR_STOP":
+                case Constants.CMD_INDICATOR_STOP:
                   toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
                   break;
 
                   // We re connected to the controller, send back status info
-                case "CONNECTED":
+                case Constants.CMD_CONNECTED:
                   // PhoneController class will receive this event and resent it to the controller.
                   // Other controllers can subscribe to this event as well.
                   // That is why we are not calling phoneController.send() here directly.
@@ -156,7 +156,7 @@ public abstract class ControlsFragment extends Fragment {
                           vehicle.getIndicator()));
 
                   break;
-                case "DISCONNECTED":
+                case Constants.CMD_DISCONNECTED:
                   vehicle.setControl(0, 0);
                   break;
               }

@@ -322,27 +322,27 @@ public class RobotCommunicationFragment extends ControlsFragment {
   @Override
   protected void processPhoneControllerData(String commandType) {
     switch (commandType) {
-      case "DRIVE_CMD":
+      case Constants.CMD_DRIVE:
         handleDriveCommand();
         break;
 
-      case "INDICATOR_LEFT":
+      case Constants.CMD_INDICATOR_LEFT:
         toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
         break;
 
-      case "INDICATOR_RIGHT":
+      case Constants.CMD_INDICATOR_RIGHT:
         toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
         break;
 
-      case "INDICATOR_STOP":
+      case Constants.CMD_INDICATOR_STOP:
         toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
         break;
 
-      case "DRIVE_MODE":
+      case Constants.CMD_DRIVE_MODE:
         setDriveMode(Enums.switchDriveMode(currentDriveMode));
         break;
 
-      case "DISCONNECTED":
+      case Constants.CMD_DISCONNECTED:
         handleDriveCommand();
         setControlMode(ControlMode.GAMEPAD);
         break;
