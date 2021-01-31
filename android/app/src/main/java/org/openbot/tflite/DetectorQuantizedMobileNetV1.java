@@ -53,9 +53,9 @@ public class DetectorQuantizedMobileNetV1 extends Detector {
    *
    * @param activity
    */
-  public DetectorQuantizedMobileNetV1(Activity activity, Device device, int numThreads)
+  public DetectorQuantizedMobileNetV1(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
-    super(activity, device, numThreads);
+    super(activity, model, device, numThreads);
     labelProbArray = new byte[1][getNumLabels()];
   }
 

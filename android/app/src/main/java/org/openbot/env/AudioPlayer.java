@@ -74,6 +74,20 @@ public class AudioPlayer {
     }
   }
 
+  public void playSpeedMode(String voice, Enums.SpeedMode speedMode) {
+    switch (speedMode) {
+      case SLOW:
+        play(voice, "slow_speed.mp3");
+        break;
+      case NORMAL:
+        play(voice, "normal_speed.mp3");
+        break;
+      case FAST:
+        play(voice, "fast_speed.mp3");
+        break;
+    }
+  }
+
   public void playNoise(String voice, boolean isEnabled) {
     if (isEnabled) play(voice, "noise_enabled.mp3");
     else play(voice, "noise_disabled.mp3");

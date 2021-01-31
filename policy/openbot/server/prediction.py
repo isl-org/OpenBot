@@ -32,12 +32,17 @@ def getPrediction(params):
 
     real_path = dataset_dir + params["path"]
     frames = associate_frames.read_file_list(
-        real_path + "/sensor_data/matched_frame_ctrl_cmd_processed.txt"
+        real_path + "/sensor_data/matched_frame_ctrl_cmd.txt"
     )
     result = np.empty((0, 2), dtype=int)
     cmd_input = np.array([[params["indicator"] or 0]], dtype=np.float32)
-    for frame in frames:
-        path, left, right, ind = frames[frame]
+    start = params["start"]
+    end = params["end"]
+    keys = list(frames)[start:end]
+    print("get prediction from frame " + str(start))
+    for frame in keys:
+        _, _, img, left, right, ind = frames[frame]
+        path = f"{real_path}/images/{img}_crop.jpeg"
         # print(path, left, right)
         if params["indicator"] is None:
             cmd_input = np.array([[ind]], dtype=np.float32)

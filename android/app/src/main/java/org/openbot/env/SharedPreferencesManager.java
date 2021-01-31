@@ -3,6 +3,7 @@ package org.openbot.env;
 import android.content.Context;
 import android.content.SharedPreferences;
 import org.openbot.common.Enums;
+import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 
 public class SharedPreferencesManager {
@@ -18,8 +19,8 @@ public class SharedPreferencesManager {
   private static final String SPEED_MODE = "SPEED_MODE";
   private static final int DEFAULT_DRIVE_MODE = Enums.DriveMode.GAME.ordinal();
   private static final String DRIVE_MODE = "DRIVE_MODE";
-  private static final int DEFAULT_MODEL = Network.Model.DETECTOR_V1_1_0_Q.ordinal();
-  private static final String MODEL = "MODEL";
+  private static final String DEFAULT_MODEL = Model.DETECTOR_V1_1_0_Q.toString();
+  private static final String MODEL = "MODEL_NAME";
   private static final int DEFAULT_DEVICE = Network.Device.CPU.ordinal();
   private static final String DEVICE = "DEVICE";
   private static final int DEFAULT_NUM_THREAD = 1;
@@ -40,8 +41,8 @@ public class SharedPreferencesManager {
     return preferences.getInt(BAUD_RATE, DEFAULT_BAUD_RATE);
   }
 
-  public int getModel() {
-    return preferences.getInt(MODEL, DEFAULT_MODEL);
+  public String getModel() {
+    return preferences.getString(MODEL, DEFAULT_MODEL);
   }
 
   public int getDevice() {
@@ -80,8 +81,8 @@ public class SharedPreferencesManager {
     preferences.edit().putInt(BAUD_RATE, baudRate).apply();
   }
 
-  public void setModel(int model) {
-    preferences.edit().putInt(MODEL, model).apply();
+  public void setModel(String model) {
+    preferences.edit().putString(MODEL, model).apply();
   }
 
   public void setDevice(int device) {

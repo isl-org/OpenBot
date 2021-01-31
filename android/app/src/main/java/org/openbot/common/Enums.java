@@ -2,16 +2,36 @@ package org.openbot.common;
 
 public class Enums {
   public enum LogMode {
-    ALL_IMGS,
-    CROP_IMG,
-    PREVIEW_IMG,
-    ONLY_SENSORS
+    ALL_IMGS(0),
+    CROP_IMG(1),
+    PREVIEW_IMG(2),
+    ONLY_SENSORS(3);
+
+    private final int value;
+
+    LogMode(final int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
   }
 
   public enum ControlMode {
-    GAMEPAD,
-    PHONE,
-    WEBRTC
+    GAMEPAD(0),
+    PHONE(1),
+    WEBRTC(2);
+
+    private final int value;
+
+    ControlMode(final int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
   }
 
   public enum SpeedMode {
@@ -21,8 +41,8 @@ public class Enums {
 
     private final int value;
 
-    SpeedMode(final int newValue) {
-      value = newValue;
+    SpeedMode(final int value) {
+      this.value = value;
     }
 
     public int getValue() {
@@ -31,9 +51,19 @@ public class Enums {
   }
 
   public enum DriveMode {
-    DUAL,
-    GAME,
-    JOYSTICK
+    DUAL(0),
+    GAME(1),
+    JOYSTICK(2);
+
+    private final int value;
+
+    DriveMode(final int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
   }
 
   public enum VehicleIndicator {
@@ -43,8 +73,8 @@ public class Enums {
 
     private final int value;
 
-    VehicleIndicator(final int newValue) {
-      value = newValue;
+    VehicleIndicator(final int value) {
+      this.value = value;
     }
 
     public int getValue() {

@@ -1,6 +1,9 @@
 import os
+import glob
+import shutil
 
 from openbot import models_dir
+from openbot.server import api
 from openbot.train import Hyperparameters
 from openbot.utils import list_dirs, read_csv_dict
 
@@ -21,3 +24,26 @@ def get_model_info(name):
         params=params.__dict__,
         logs=logs,
     )
+
+
+def getModelFiles():
+    return [
+        dict(name=os.path.basename(p), mtime=int(os.path.getmtime(p)))
+        for p in glob.glob(os.path.join(models_dir, "*.tflite"))
+    ]
+
+
+async def publishModel(params):
+    src = os.path.join(models_dir, params["model"], "checkpoints", params["checkpoint"]) + ".tflite"
+    dst = os.path.join(models_dir, params["name"]) + ".tflite"
+    print(src, dst)
+    shutil.copyfile(src, dst)
+    await api.rpc.notify("modelFile")
+    return True
+
+
+async def deleteModelFile(params):
+    real_dir = os.path.join(models_dir, params["path"])
+    os.remove(real_dir)
+    await api.rpc.notify("modelFile")
+    return True

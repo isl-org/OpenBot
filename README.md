@@ -22,6 +22,12 @@
 
 OpenBot leverages smartphones as brains for low-cost robots. We have designed a small electric vehicle that costs about $50 and serves as a robot body. Our software stack for Android smartphones supports advanced robotics workloads such as person following and real-time autonomous navigation.
 
+## Video
+
+<a href="https://www.youtube.com/watch?v=qc8hFLyWDOM" >
+  <img align="center" width="500" alt="youtube video" src="docs/images/youtube.jpg" />
+</a>
+
 ## Get started with OpenBot
 - Build your own [Robot Body](body/README.md)
 - Flash the [Arduino Firmware](firmware/README.md)
@@ -37,6 +43,34 @@ OpenBot leverages smartphones as brains for low-cost robots. We have designed a 
     ```
 - You can fork the OpenBot repository and then clone your local copy. This is recommended, especially if you want to [contribute](CONTRIBUTING.md).
 
+## Contribute
+
+Please read the [contribution guidelines](CONTRIBUTING.md). If you are not sure where to start have a look at the [open issues](https://github.com/intel-isl/OpenBot/issues).
+
+## Contact
+
+- Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) channel to connect with the OpenBot community.
+- Contact us via [Email](mailto:openbot.team@gmail.com)
+
+## Cool projects using OpenBot
+
+There are a lot of cool projects using OpenBot already. Below is a small selection. Click on the images to be redirected to the respective projects.
+
+<p float="left">
+  <a href="https://www.thingiverse.com/thing:4670884" target="_blank">
+    <img alt="Tank OpenBot" width="24%" src="docs/images/openbot_tank.jpg" />
+  </a>
+  <a href="https://diyrobocars.com/2020/12/14/an-improved-version-of-the-intel-openbot" target="_blank">
+    <img alt="2WD OpenBot" width="24%" src="docs/images/openbot_2wd.jpg" />
+  </a>
+  <a href="https://custom-build-robots.com/raspberry-pi-robot-cars/openbot-your-smartphone-controls-a-robot-car-introduction/13860?lang=en" target="_blank">
+    <img alt="Cardboard OpenBot" width="24%" src="docs/images/chassis_cardboard_1.jpg" />
+  </a>
+  <a href="https://www.youtube.com/watch?v=PEj8jWapGt4" target="_blank">
+    <img alt="Baby Yoda OpenBot" width="24%" src="docs/images/openbot_yoda.jpg" />
+  </a>
+</p>
+
 ## Citation
 
 Please cite our [paper](docs/paper/OpenBot.pdf) if you use OpenBot.
@@ -49,21 +83,6 @@ Please cite our [paper](docs/paper/OpenBot.pdf) if you use OpenBot.
     year      = {2020},
 }
 ```
-
-## Video
-
-<a href="https://www.youtube.com/watch?v=qc8hFLyWDOM" >
-  <img align="center" width="500" alt="youtube video" src="docs/images/youtube.jpg" />
-</a>
-
-## Contribute
-
-Please read the [contribution guidelines](CONTRIBUTING.md). If you are not sure where to start have a look at the [open issues](https://github.com/intel-isl/OpenBot/issues).
-
-## Contact
-
-- Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) channel to connect with the OpenBot community.
-- Contact us via [Email](mailto:openbot.team@gmail.com)
 
 <a href="https://www.openbot.org//" target="_blank">
   <img align="center" alt="Footer" width="100%" src="docs/images/footer.gif" />
