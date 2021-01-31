@@ -35,6 +35,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private PreviewView previewView;
   private Preview preview;
   private int lensFacing = CameraSelector.LENS_FACING_BACK;
+  private ProcessCameraProvider cameraProvider;
 
   protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
@@ -52,7 +53,7 @@ public abstract class CameraFragment extends ControlsFragment {
     previewView = cameraView.findViewById(R.id.viewFinder);
     rootView.addView(view);
 
-    if (allPermissionsGranted()) startCamera();
+    if (allPermissionsGranted()) setupCamera();
     else requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE);
 
     return cameraView;
@@ -65,38 +66,42 @@ public abstract class CameraFragment extends ControlsFragment {
   }
 
   @SuppressLint("RestrictedApi")
-  private void startCamera() {
+  private void setupCamera() {
     ListenableFuture<ProcessCameraProvider> cameraProviderFuture =
         ProcessCameraProvider.getInstance(requireContext());
 
     cameraProviderFuture.addListener(
         () -> {
           try {
-            ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-            preview = new Preview.Builder().build();
-
-            CameraSelector cameraSelector =
-                new CameraSelector.Builder().requireLensFacing(lensFacing).build();
-
-            preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
-            ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
-
-            // insert your code here.
-            imageAnalysis.setAnalyzer(cameraExecutor, this::processFrame);
-
-            try {
-              cameraProvider.unbindAll();
-
-              cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
-            } catch (Exception e) {
-              LOGGER.e("Use case binding failed: %s", e);
-            }
+            cameraProvider = cameraProviderFuture.get();
+            bindCameraUseCases();
           } catch (ExecutionException | InterruptedException e) {
             LOGGER.e(e.toString());
           }
         },
         ContextCompat.getMainExecutor(requireContext()));
+  }
+
+  private void bindCameraUseCases() {
+    preview = new Preview.Builder().build();
+
+    CameraSelector cameraSelector =
+        new CameraSelector.Builder().requireLensFacing(lensFacing).build();
+
+    preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+    ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
+
+    // insert your code here.
+    imageAnalysis.setAnalyzer(cameraExecutor, this::processFrame);
+
+    try {
+      cameraProvider.unbindAll();
+
+      cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
+    } catch (Exception e) {
+      LOGGER.e("Use case binding failed: %s", e);
+    }
   }
 
   @Override
@@ -105,7 +110,7 @@ public abstract class CameraFragment extends ControlsFragment {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (requestCode == PERMISSIONS_REQUEST_CODE) {
       if (allPermissionsGranted()) {
-        startCamera();
+        setupCamera();
       }
     }
   }
@@ -126,7 +131,7 @@ public abstract class CameraFragment extends ControlsFragment {
         CameraSelector.LENS_FACING_FRONT == lensFacing
             ? CameraSelector.LENS_FACING_BACK
             : CameraSelector.LENS_FACING_FRONT;
-    startCamera();
+    bindCameraUseCases();
   }
 
   private boolean allPermissionsGranted() {

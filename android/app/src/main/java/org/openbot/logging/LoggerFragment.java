@@ -67,11 +67,11 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
     super.onViewCreated(view, savedInstanceState);
     intentSensorService = new Intent(requireActivity(), SensorService.class);
     logFolder =
-            Environment.getExternalStorageDirectory().getAbsolutePath()
-                    + File.separator
-                    + getString(R.string.app_name)
-                    + File.separator
-                    + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        Environment.getExternalStorageDirectory().getAbsolutePath()
+            + File.separator
+            + getString(R.string.app_name)
+            + File.separator
+            + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
@@ -239,6 +239,7 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
           File zip = new File(logZipFile);
           try {
             TimeUnit.MILLISECONDS.sleep(500);
+            // These two lines below are messy and may cause bugs. needs to be looked into
             ZipUtil.pack(folder, zip);
             FileUtils.deleteQuietly(folder);
             serverService.upload(zip);
