@@ -4,7 +4,6 @@ import android.Manifest;
 
 public class Constants {
 
-  // region Properties
   public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
   public static final String USB_ACTION_CONNECTION_ESTABLISHED = "usb.connection_established";
   public static final String USB_ACTION_CONNECTION_CLOSED = "usb.connection_closed";
@@ -33,4 +32,5 @@ public class Constants {
   public static final String CMD_DRIVE_MODE = "DRIVE_MODE";
   public static final String CMD_CONNECTED = "CONNECTED";
   public static final String CMD_DISCONNECTED = "DISCONNECTED";
+  // endregion
 }

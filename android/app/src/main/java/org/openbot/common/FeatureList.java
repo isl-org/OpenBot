@@ -7,6 +7,8 @@ import org.openbot.model.Category;
 import org.openbot.model.SubCategory;
 
 public class FeatureList {
+  // region Properties
+
   // Global
   public static final String ALL = "All";
   public static final String GLOBAL_VIEW = "Robot";

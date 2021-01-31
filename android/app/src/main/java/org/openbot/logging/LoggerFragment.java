@@ -10,11 +10,9 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -52,7 +50,13 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
   private HandlerThread handlerThread;
   private Intent intentSensorService;
   private ServerService serverService;
-  protected String logFolder;
+  protected String logFolder =
+      Environment.getExternalStorageDirectory().getAbsolutePath()
+          + File.separator
+          + getString(R.string.app_name)
+          + File.separator
+          + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+
   protected boolean loggingEnabled;
   protected Enums.LogMode logMode = Enums.LogMode.CROP_IMG;
 
@@ -146,26 +150,20 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
         @Override
         public void onServiceConnected(ComponentName className, IBinder binder) {
           sensorMessenger = new Messenger(binder);
-          Log.d("SensorServiceConnection", "connected");
+          Timber.d("SensorServiceConnection: connected");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName className) {
           sensorMessenger = null;
-          Log.d("SensorServiceConnection", "disconnected");
+          Timber.d("SensorServiceConnection: disconnected");
         }
       };
 
   protected void sendFrameNumberToSensorService(long frameNumber) {
     if (sensorMessenger != null) {
-      Message msg = Message.obtain();
-      Bundle bundle = new Bundle();
-      bundle.putLong("frameNumber", frameNumber);
-      bundle.putLong("timestamp", SystemClock.elapsedRealtimeNanos());
-      msg.setData(bundle);
-      msg.what = SensorService.MSG_FRAME;
       try {
-        sensorMessenger.send(msg);
+        sensorMessenger.send(LogDataUtils.generateFrameNumberMessage(frameNumber));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -174,14 +172,8 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
 
   protected void sendInferenceTimeToSensorService(long frameNumber, long inferenceTime) {
     if (sensorMessenger != null) {
-      Message msg = Message.obtain();
-      Bundle bundle = new Bundle();
-      bundle.putLong("frameNumber", frameNumber);
-      bundle.putLong("inferenceTime", inferenceTime);
-      msg.setData(bundle);
-      msg.what = SensorService.MSG_INFERENCE;
       try {
-        sensorMessenger.send(msg);
+        sensorMessenger.send(LogDataUtils.generateInferenceTimeMessage(frameNumber, inferenceTime));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -190,12 +182,10 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
 
   protected void sendControlToSensorService() {
     if (sensorMessenger != null) {
-      Message msg = Message.obtain();
-      msg.arg1 = (int) (vehicle.getLeftSpeed());
-      msg.arg2 = (int) (vehicle.getRightSpeed());
-      msg.what = SensorService.MSG_CONTROL;
       try {
-        sensorMessenger.send(msg);
+        sensorMessenger.send(
+            LogDataUtils.generateControlDataMessage(
+                (int) vehicle.getLeftSpeed(), (int) vehicle.getRightSpeed()));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -204,14 +194,8 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
 
   protected void sendVehicleDataToSensorService(long timestamp, String data) {
     if (sensorMessenger != null) {
-      Message msg = Message.obtain();
-      Bundle bundle = new Bundle();
-      bundle.putLong("timestamp", timestamp);
-      bundle.putString("data", data);
-      msg.setData(bundle);
-      msg.what = SensorService.MSG_VEHICLE;
       try {
-        sensorMessenger.send(msg);
+        sensorMessenger.send(LogDataUtils.generateVehicleDataMessage(timestamp, data));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -220,11 +204,8 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
 
   protected void sendIndicatorToSensorService() {
     if (sensorMessenger != null) {
-      Message msg = Message.obtain();
-      msg.arg1 = vehicle.getIndicator();
-      msg.what = SensorService.MSG_INDICATOR;
       try {
-        sensorMessenger.send(msg);
+        sensorMessenger.send(LogDataUtils.generateIndicatorMessage(vehicle.getIndicator()));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -232,12 +213,6 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
   }
 
   private void startLogging() {
-    logFolder =
-        Environment.getExternalStorageDirectory().getAbsolutePath()
-            + File.separator
-            + getString(R.string.app_name)
-            + File.separator
-            + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
     intentSensorService.putExtra("logFolder", logFolder + File.separator + "sensor_data");
     requireActivity().startService(intentSensorService);
     requireActivity().bindService(intentSensorService, sensorConnection, Context.BIND_AUTO_CREATE);
