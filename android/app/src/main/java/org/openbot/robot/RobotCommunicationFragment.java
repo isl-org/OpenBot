@@ -76,7 +76,7 @@ public class RobotCommunicationFragment extends Fragment {
 
     vehicle = mViewModel.getVehicle().getValue();
     binding.voltageInfo.setText(getString(R.string.voltageInfo, "--.-"));
-    binding.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
+    binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
     binding.sonarInfo.setText(getString(R.string.distanceInfo, "---"));
 
     listenUSBData();
@@ -85,7 +85,7 @@ public class RobotCommunicationFragment extends Fragment {
     setControlMode(ControlMode.getByID(preferencesManager.getControlMode()));
     setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
 
-    binding.controlMode.setOnClickListener(
+    binding.controllerContainer.controlMode.setOnClickListener(
         v -> {
           ControlMode controlMode = ControlMode.getByID(preferencesManager.getControlMode());
           if (controlMode != null) {
@@ -99,9 +99,9 @@ public class RobotCommunicationFragment extends Fragment {
             }
           }
         });
-    binding.driveMode.setOnClickListener(v -> changeDriveMode());
+    binding.controllerContainer.driveMode.setOnClickListener(v -> changeDriveMode());
 
-    binding.speedMode.setOnClickListener(v -> toggleSpeed(Enums.Direction.CYCLIC.getValue()));
+    binding.controllerContainer.speedMode.setOnClickListener(v -> toggleSpeed(Enums.Direction.CYCLIC.getValue()));
 
     binding.speed.getSections().clear();
     binding.speed.addSections(
@@ -245,7 +245,7 @@ public class RobotCommunicationFragment extends Fragment {
               vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
               vehicle.setSonarReading(Float.parseFloat(itemList[3]));
 
-              binding.speedInfo.setText(
+              binding.controllerContainer.speedInfo.setText(
                   getString(
                       R.string.speedInfo,
                       String.format(
@@ -294,7 +294,7 @@ public class RobotCommunicationFragment extends Fragment {
     vehicle.setControl(control);
     float left = vehicle.getLeftSpeed();
     float right = vehicle.getRightSpeed();
-    binding.controlInfo.setText(String.format(Locale.US, "%.0f,%.0f", left, right));
+    binding.controllerContainer.controlInfo.setText(String.format(Locale.US, "%.0f,%.0f", left, right));
 
     binding.speed.speedPercentTo(vehicle.getSpeedPercent());
 
@@ -307,13 +307,13 @@ public class RobotCommunicationFragment extends Fragment {
     if (speedMode != null) {
       switch (speedMode) {
         case SLOW:
-          binding.speedMode.setImageResource(R.drawable.ic_speed_low);
+          binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_low);
           break;
         case NORMAL:
-          binding.speedMode.setImageResource(R.drawable.ic_speed_medium);
+          binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_medium);
           break;
         case FAST:
-          binding.speedMode.setImageResource(R.drawable.ic_speed_high);
+          binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_high);
           break;
       }
 
@@ -327,11 +327,11 @@ public class RobotCommunicationFragment extends Fragment {
     if (controlMode != null) {
       switch (controlMode) {
         case GAMEPAD:
-          binding.controlMode.setImageResource(R.drawable.ic_controller);
+          binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_controller);
           disconnectPhoneController();
           break;
         case PHONE:
-          binding.controlMode.setImageResource(R.drawable.ic_phone);
+          binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
           handleControllerEvents();
           if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
             PermissionUtils.requestPermissions(
@@ -351,13 +351,13 @@ public class RobotCommunicationFragment extends Fragment {
     if (this.driveMode != driveMode && driveMode != null) {
       switch (driveMode) {
         case DUAL:
-          binding.driveMode.setImageResource(R.drawable.ic_dual);
+          binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_dual);
           break;
         case GAME:
-          binding.driveMode.setImageResource(R.drawable.ic_game);
+          binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_game);
           break;
         case JOYSTICK:
-          binding.driveMode.setImageResource(R.drawable.ic_joystick);
+          binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_joystick);
           break;
       }
 
@@ -390,8 +390,8 @@ public class RobotCommunicationFragment extends Fragment {
     DriveMode oldDriveMode = driveMode;
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
-    binding.driveMode.setAlpha(0.5f);
-    binding.driveMode.setEnabled(false);
+    binding.controllerContainer.driveMode.setAlpha(0.5f);
+    binding.controllerContainer.driveMode.setEnabled(false);
     preferencesManager.setDriveMode(oldDriveMode.getValue());
   }
 
@@ -400,8 +400,8 @@ public class RobotCommunicationFragment extends Fragment {
       phoneController.disconnect();
     }
     setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
-    binding.driveMode.setEnabled(true);
-    binding.driveMode.setAlpha(1.0f);
+    binding.controllerContainer.driveMode.setEnabled(true);
+    binding.controllerContainer.driveMode.setAlpha(1.0f);
   }
 
   private void handleControllerEvents() {
