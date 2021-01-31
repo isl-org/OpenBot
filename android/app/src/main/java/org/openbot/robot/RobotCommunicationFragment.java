@@ -56,16 +56,8 @@ public class RobotCommunicationFragment extends ControlsFragment {
     binding.controllerContainer.controlMode.setOnClickListener(
         v -> {
           ControlMode controlMode = ControlMode.getByID(preferencesManager.getControlMode());
-          if (controlMode != null) {
-            switch (controlMode) {
-              case GAMEPAD:
-                setControlMode(ControlMode.PHONE);
-                break;
-              case PHONE:
-                setControlMode(ControlMode.GAMEPAD);
-                break;
-            }
-          }
+          if (controlMode != null)
+            setControlMode(Enums.switchControlMode(controlMode));
         });
     binding.controllerContainer.driveMode.setOnClickListener(
         v -> setDriveMode(Enums.switchDriveMode(currentDriveMode)));

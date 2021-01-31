@@ -78,16 +78,8 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
         v -> {
           Enums.ControlMode controlMode =
               Enums.ControlMode.getByID(preferencesManager.getControlMode());
-          if (controlMode != null) {
-            switch (controlMode) {
-              case GAMEPAD:
-                setControlMode(Enums.ControlMode.PHONE);
-                break;
-              case PHONE:
-                setControlMode(Enums.ControlMode.GAMEPAD);
-                break;
-            }
-          }
+          if (controlMode != null)
+            setControlMode(Enums.switchControlMode(controlMode));
         });
     binding.controllerContainer.driveMode.setOnClickListener(
         v -> setDriveMode(Enums.switchDriveMode(currentDriveMode)));

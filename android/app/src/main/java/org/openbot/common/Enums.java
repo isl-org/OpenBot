@@ -45,6 +45,16 @@ public class Enums {
     }
   }
 
+  public static ControlMode switchControlMode(ControlMode mode) {
+    switch (mode) {
+      case GAMEPAD:
+        return ControlMode.PHONE;
+      case PHONE:
+        return ControlMode.GAMEPAD;
+    }
+    return null;
+  }
+
   public enum SpeedMode {
     SLOW(128),
     NORMAL(192),
