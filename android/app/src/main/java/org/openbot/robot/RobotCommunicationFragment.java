@@ -124,15 +124,15 @@ public class RobotCommunicationFragment extends Fragment {
     requireActivity()
         .getSupportFragmentManager()
         .setFragmentResultListener(
-            "dispatchGenericMotionEvent",
+            Constants.GENERIC_MOTION_EVENT,
             this,
-            (requestKey, result) -> onMotionEvent(result.getParcelable("event")));
+            (requestKey, result) -> onMotionEvent(result.getParcelable(Constants.DATA)));
     requireActivity()
         .getSupportFragmentManager()
         .setFragmentResultListener(
-            "dispatchKeyEvent",
+            Constants.KEY_EVENT,
             this,
-            (requestKey, result) -> onKeyEvent(result.getParcelable("keyEvent")));
+            (requestKey, result) -> onKeyEvent(result.getParcelable(Constants.DATA)));
 
     mViewModel
         .getUsbStatus()

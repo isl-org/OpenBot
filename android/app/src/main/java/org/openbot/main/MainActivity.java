@@ -27,6 +27,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import org.openbot.R;
+import org.openbot.common.Constants;
 import org.openbot.env.Vehicle;
 import org.openbot.robot.NetworkActivity;
 
@@ -121,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
     if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
         && event.getAction() == MotionEvent.ACTION_MOVE) {
       Bundle bundle = new Bundle();
-      bundle.putParcelable("event", event);
-      getSupportFragmentManager().setFragmentResult("dispatchGenericMotionEvent", bundle);
+      bundle.putParcelable(Constants.DATA, event);
+      getSupportFragmentManager().setFragmentResult(Constants.GENERIC_MOTION_EVENT, bundle);
       return true;
     }
     return super.dispatchGenericMotionEvent(event);
@@ -134,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
     if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) {
       if (event.getAction() == KeyEvent.ACTION_UP) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("keyEvent", event);
-        getSupportFragmentManager().setFragmentResult("dispatchKeyEvent", bundle);
+        bundle.putParcelable(Constants.DATA, event);
+        getSupportFragmentManager().setFragmentResult(Constants.KEY_EVENT, bundle);
       }
       return true;
     }

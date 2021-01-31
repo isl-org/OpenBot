@@ -22,6 +22,9 @@ public class Constants {
   public static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
   public static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
   public static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
+  public static final String GENERIC_MOTION_EVENT = "dispatchGenericMotionEvent";
+  public static final String KEY_EVENT = "dispatchKeyEvent";
+  public static final String DATA = "data";
 
   // Global
   public static final String ALL = "All";
