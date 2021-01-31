@@ -321,7 +321,7 @@ public class RobotCommunicationFragment extends ControlsFragment {
   }
 
   @Override
-  protected void processPhoneControllerData(JSONObject event, String commandType) {
+  protected void processPhoneControllerData(String commandType) {
     switch (commandType) {
       case "DRIVE_CMD":
         handleDriveCommand();

@@ -162,7 +162,7 @@ public abstract class ControlsFragment extends Fragment {
                   break;
               }
 
-              processPhoneControllerData(event, commandType);
+              processPhoneControllerData(commandType);
             });
   }
 
@@ -203,8 +203,7 @@ public abstract class ControlsFragment extends Fragment {
     vehicle.setControl(0, 0);
   }
 
-  protected abstract void processPhoneControllerData(JSONObject event, String command)
-      throws JSONException;
+  protected abstract void processPhoneControllerData(String command);
 
   protected abstract void processUSBData(String data);
 
