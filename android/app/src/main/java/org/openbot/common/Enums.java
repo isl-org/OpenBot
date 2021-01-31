@@ -94,6 +94,18 @@ public class Enums {
       return null;
     }
   }
+  public static DriveMode switchDriveMode(DriveMode mode)
+  {
+    switch (mode) {
+      case DUAL:
+        return DriveMode.GAME;
+      case GAME:
+        return DriveMode.JOYSTICK;
+      case JOYSTICK:
+        return DriveMode.DUAL;
+    }
+    return null;
+  }
 
   public enum VehicleIndicator {
     LEFT(-1),
@@ -126,4 +138,22 @@ public class Enums {
       return value;
     }
   }
+
+
+  public static SpeedMode toggleSpeed(int direction, SpeedMode speedMode) {
+    if (speedMode != null)
+      switch (speedMode) {
+        case SLOW:
+          if (direction != Enums.Direction.DOWN.getValue()) return SpeedMode.NORMAL;
+          break;
+        case NORMAL:
+          return direction == Enums.Direction.DOWN.getValue() ? SpeedMode.SLOW : SpeedMode.FAST;
+        case FAST:
+          if (direction == Enums.Direction.DOWN.getValue()) return SpeedMode.NORMAL;
+          if (direction == Enums.Direction.CYCLIC.getValue()) return SpeedMode.SLOW;
+          break;
+      }
+    return null;
+  }
+
 }
