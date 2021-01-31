@@ -1,11 +1,14 @@
 package org.openbot.robot;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.CameraSelector;
@@ -15,27 +18,27 @@ import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.viewbinding.ViewBinding;
+
 import com.google.common.util.concurrent.ListenableFuture;
+
+import org.openbot.R;
+import org.openbot.env.Logger;
+import org.openbot.main.ControlsFragment;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.openbot.R;
-import org.openbot.env.Logger;
 
-public abstract class CameraFragment extends Fragment {
+public abstract class CameraFragment extends ControlsFragment {
 
   private ExecutorService cameraExecutor;
   private final int PERMISSIONS_REQUEST_CODE = 10;
   private final String[] PERMISSIONS_REQUIRED = new String[] {Manifest.permission.CAMERA};
   private static final Logger LOGGER = new Logger();
   private PreviewView previewView;
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
+  private Preview preview;
+  private int lensFacing = CameraSelector.LENS_FACING_BACK;
 
   protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
@@ -60,11 +63,12 @@ public abstract class CameraFragment extends Fragment {
   }
 
   @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     cameraExecutor = Executors.newSingleThreadExecutor();
   }
 
+  @SuppressLint("RestrictedApi")
   private void startCamera() {
     ListenableFuture<ProcessCameraProvider> cameraProviderFuture =
         ProcessCameraProvider.getInstance(requireContext());
@@ -73,11 +77,11 @@ public abstract class CameraFragment extends Fragment {
         () -> {
           try {
             ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-            Preview preview = new Preview.Builder().build();
+            preview = new Preview.Builder().build();
 
             CameraSelector cameraSelector =
                 new CameraSelector.Builder()
-                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                    .requireLensFacing(lensFacing)
                     .build();
 
             preview.setSurfaceProvider(previewView.getSurfaceProvider());
@@ -116,6 +120,17 @@ public abstract class CameraFragment extends Fragment {
   public void onDestroy() {
     super.onDestroy();
     cameraExecutor.shutdown();
+  }
+
+  @SuppressLint("RestrictedApi")
+  public Size getPreviewSize()
+  {
+    return preview.getAttachedSurfaceResolution();
+  }
+
+  public void toggleCamera() {
+    lensFacing = CameraSelector.LENS_FACING_FRONT == lensFacing ? CameraSelector.LENS_FACING_BACK : CameraSelector.LENS_FACING_FRONT;
+    startCamera();
   }
 
   private boolean allPermissionsGranted() {

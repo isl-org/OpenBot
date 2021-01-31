@@ -20,7 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
 
-class ServerService {
+public class ServerService {
 
   private static final String TAG = "Server";
 

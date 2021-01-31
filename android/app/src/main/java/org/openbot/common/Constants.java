@@ -9,6 +9,7 @@ import org.openbot.model.SubCategory;
 
 public class Constants {
 
+  // region Properties
   public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
   public static final String USB_ACTION_CONNECTION_ESTABLISHED = "usb.connection_established";
   public static final String USB_ACTION_CONNECTION_CLOSED = "usb.connection_closed";
@@ -72,6 +73,7 @@ public class Constants {
   public static final String SENSORS_FROM_CAR = "Sensors from Car";
   public static final String SENSORS_FROM_PHONE = "Sensors from Phone";
   public static final String MAP_VIEW = "Map View";
+  // endregion
 
   @NotNull
   public static ArrayList<Category> getCategories() {
@@ -86,14 +88,14 @@ public class Constants {
     subCategories.add(new SubCategory(Constants.FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
     //    subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game, "#B3FF6D00"));
     categories.add(new Category(Constants.GAME, subCategories));
-    /*
-        subCategories = new ArrayList<>();
-        subCategories.add(new SubCategory(Constants.LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage));
-        subCategories.add(new SubCategory(Constants.EDGE_LOCAL_NETWORK, R.drawable.ic_network));
-        subCategories.add(new SubCategory(Constants.CLOUD_FIREBASE, R.drawable.ic_cloud_upload));
-        subCategories.add(new SubCategory(Constants.CROWD_SOURCE, R.drawable.openbot_icon));
-        categories.add(new Category(Constants.DATA_COLLECTION, subCategories));
 
+        subCategories = new ArrayList<>();
+        subCategories.add(new SubCategory(Constants.LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage,"#93C47D"));
+//        subCategories.add(new SubCategory(Constants.EDGE_LOCAL_NETWORK, R.drawable.ic_network));
+//        subCategories.add(new SubCategory(Constants.CLOUD_FIREBASE, R.drawable.ic_cloud_upload));
+//        subCategories.add(new SubCategory(Constants.CROWD_SOURCE, R.drawable.openbot_icon));
+        categories.add(new Category(Constants.DATA_COLLECTION, subCategories));
+/*
         subCategories = new ArrayList<>();
         subCategories.add(new SubCategory(Constants.PERSON_FOLLOWING, R.drawable.ic_person_search));
         subCategories.add(new SubCategory(Constants.OBJECT_NAV, R.drawable.openbot_icon));

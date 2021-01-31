@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_mainFragment_to_robotCommunicationFragment"
             app:destination="@id/robotCommunicationFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_loggerFragment"
+            app:destination="@id/loggerFragment" />
     </fragment>
     <fragment
         android:id="@+id/robotCommunicationFragment"
@@ -29,5 +32,10 @@
         android:id="@+id/open_settings_fragment"
         app:destination="@id/settingsFragment"
         />
+    <fragment
+        android:id="@+id/loggerFragment"
+        android:name="org.openbot.logging.LoggerFragment"
+        android:label="fragment_logger"
+        tools:layout="@layout/fragment_logger" />
 
 </navigation>

@@ -59,6 +59,10 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
             .navigate(R.id.action_mainFragment_to_robotCommunicationFragment);
         break;
 
+      case Constants.LOCAL_SAVE_ON_PHONE:
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_mainFragment_to_loggerFragment);
+
       case Constants.CONTROLLER:
         // For a library module, uncomment the following line
         // intent = new Intent(this, ControllerActivity.class);

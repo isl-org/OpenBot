@@ -202,6 +202,11 @@ public abstract class ControlsFragment extends Fragment {
     super.onDestroy();
     vehicle.setControl(0, 0);
   }
+  @Override
+  public synchronized void onPause() {
+    super.onPause();
+    phoneController.disconnect();
+  }
 
   protected abstract void processPhoneControllerData(String command);
 
