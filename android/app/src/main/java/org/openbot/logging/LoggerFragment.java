@@ -48,12 +48,7 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
   private HandlerThread handlerThread;
   private Intent intentSensorService;
   private ServerService serverService;
-  protected String logFolder =
-      Environment.getExternalStorageDirectory().getAbsolutePath()
-          + File.separator
-          + getString(R.string.app_name)
-          + File.separator
-          + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+  protected String logFolder;
 
   protected boolean loggingEnabled;
   protected Enums.LogMode logMode = Enums.LogMode.CROP_IMG;
@@ -71,7 +66,12 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     intentSensorService = new Intent(requireActivity(), SensorService.class);
-
+    logFolder =
+            Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + File.separator
+                    + getString(R.string.app_name)
+                    + File.separator
+                    + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
@@ -111,8 +111,7 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
           public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-    binding.cameraToggleSwitch.setOnCheckedChangeListener(
-        (buttonView, isChecked) -> toggleCamera());
+    binding.cameraToggle.setOnClickListener(v -> toggleCamera());
   }
 
   @Override
