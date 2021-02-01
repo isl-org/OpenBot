@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -33,6 +34,7 @@ import org.openbot.common.Enums;
 import org.openbot.common.Utils;
 import org.openbot.databinding.FragmentLoggerBinding;
 import org.openbot.env.BotToControllerEventBus;
+import org.openbot.env.ImageUtils;
 import org.openbot.robot.CameraFragment;
 import org.openbot.robot.SensorService;
 import org.openbot.robot.ServerCommunication;
@@ -51,7 +53,6 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   protected String logFolder;
 
   protected boolean loggingEnabled;
-  protected Enums.LogMode logMode = Enums.LogMode.CROP_IMG;
 
   @Override
   public View onCreateView(
@@ -95,23 +96,28 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
     binding.loggerSwitch.setOnCheckedChangeListener(
         (buttonView, isChecked) -> setIsLoggingActive(isChecked));
 
-    binding.logSpinner.setOnItemSelectedListener(
+    binding.cameraToggle.setOnClickListener(v -> toggleCamera());
+
+    binding.resolutionSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Enums.LogMode mode =
-                Enums.LogMode.valueOf(parent.getItemAtPosition(position).toString().toUpperCase());
-            if (logMode != mode) {
-              logMode = mode;
-              preferencesManager.setLogMode(mode.ordinal());
+            switch (position) {
+              case 0:
+                setAnalyserResolution(Enums.Preview.FULL_HD.getValue());
+                break;
+              case 1:
+                setAnalyserResolution(Enums.Preview.HD.getValue());
+                break;
+              case 2:
+                setAnalyserResolution(Enums.Preview.SD.getValue());
+                break;
             }
           }
 
           @Override
           public void onNothingSelected(AdapterView<?> parent) {}
         });
-
-    binding.cameraToggle.setOnClickListener(v -> toggleCamera());
   }
 
   @Override
@@ -252,7 +258,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   protected void setIsLoggingActive(boolean loggingActive) {
     if (loggingActive && !loggingEnabled) {
       if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_CAMERA)
-          && logMode != Enums.LogMode.ONLY_SENSORS) {
+          && (binding.previewCheckBox.isChecked() || binding.modelDataCheckBox.isChecked())) {
         PermissionUtils.requestCameraPermission(this);
         loggingEnabled = false;
       } else if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION)) {
@@ -271,12 +277,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
     }
     BotToControllerEventBus.emitEvent(Utils.createStatus("LOGS", loggingEnabled));
 
-    binding.logSpinner.setEnabled(!loggingEnabled);
-    if (loggingEnabled) binding.logSpinner.setAlpha(0.5f);
-    else binding.logSpinner.setAlpha(1.0f);
     binding.loggerSwitch.setChecked(loggingEnabled);
-    if (loggingEnabled) binding.loggerSwitch.setText(R.string.logging);
-    else binding.loggerSwitch.setText(R.string.not_logging);
   }
 
   protected synchronized void runInBackground(final Runnable r) {
@@ -472,20 +473,30 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
     binding.controllerContainer.driveMode.setAlpha(1.0f);
   }
 
+  private long frameNum = 0;
+
   @Override
-  protected void processFrame(ImageProxy image) {
+  protected void processFrame(Bitmap bitmap, ImageProxy image) {
+    ++frameNum;
+
+    if (binding.previewCheckBox.isChecked() || binding.modelDataCheckBox.isChecked()) {
+      sendFrameNumberToSensorService(frameNum);
+    }
+
+    if (binding.previewCheckBox.isChecked()) {
+      if (bitmap != null)
+        ImageUtils.saveBitmap(
+            bitmap, logFolder + File.separator + "images", frameNum + "_preview.jpeg");
+    }
 
     requireActivity()
         .runOnUiThread(
             () -> {
               binding.frameInfo.setText(
-                  String.format(
-                      Locale.US,
-                      "%d x %d",
-                      getPreviewSize().getWidth(),
-                      getPreviewSize().getHeight()));
-              binding.cropInfo.setText(
                   String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight()));
+              //              binding.cropInfo.setText(
+              //                  String.format(Locale.US, "%d x %d", image.getWidth(),
+              // image.getHeight()));
             });
   }
 

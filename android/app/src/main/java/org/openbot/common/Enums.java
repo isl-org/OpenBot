@@ -1,5 +1,6 @@
 package org.openbot.common;
 
+import android.util.Size;
 import java.util.EnumSet;
 
 public class Enums {
@@ -163,5 +164,21 @@ public class Enums {
           break;
       }
     return null;
+  }
+
+  public enum Preview {
+    FULL_HD(new Size(1080, 1920)),
+    HD(new Size(720, 1280)),
+    SD(new Size(360, 640));
+
+    private final Size value;
+
+    Preview(final Size value) {
+      this.value = value;
+    }
+
+    public Size getValue() {
+      return value;
+    }
   }
 }

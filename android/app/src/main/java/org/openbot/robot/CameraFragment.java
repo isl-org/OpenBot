@@ -3,6 +3,7 @@ package org.openbot.robot;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Size;
 import android.view.LayoutInflater;
@@ -23,6 +24,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.openbot.R;
+import org.openbot.common.Enums;
+import org.openbot.common.YuvToRgbConverter;
 import org.openbot.env.Logger;
 import org.openbot.main.ControlsFragment;
 
@@ -36,6 +39,9 @@ public abstract class CameraFragment extends ControlsFragment {
   private Preview preview;
   private int lensFacing = CameraSelector.LENS_FACING_BACK;
   private ProcessCameraProvider cameraProvider;
+  private Size analyserResolution = Enums.Preview.FULL_HD.getValue();
+  private YuvToRgbConverter converter;
+  private Bitmap bitmapBuffer;
 
   protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
@@ -82,7 +88,10 @@ public abstract class CameraFragment extends ControlsFragment {
         ContextCompat.getMainExecutor(requireContext()));
   }
 
+  @SuppressLint("UnsafeExperimentalUsageError")
   private void bindCameraUseCases() {
+    converter = new YuvToRgbConverter(requireContext());
+    bitmapBuffer = null;
     preview = new Preview.Builder().build();
 
     CameraSelector cameraSelector =
@@ -90,10 +99,21 @@ public abstract class CameraFragment extends ControlsFragment {
 
     preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-    ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
+    ImageAnalysis imageAnalysis =
+        new ImageAnalysis.Builder().setTargetResolution(analyserResolution).build();
 
     // insert your code here.
-    imageAnalysis.setAnalyzer(cameraExecutor, this::processFrame);
+    imageAnalysis.setAnalyzer(
+        cameraExecutor,
+        image -> {
+          if (bitmapBuffer == null)
+            bitmapBuffer =
+                Bitmap.createBitmap(image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
+
+          converter.yuvToRgb(image.getImage(), bitmapBuffer);
+          image.close();
+          processFrame(bitmapBuffer, image);
+        });
 
     try {
       cameraProvider.unbindAll();
@@ -134,6 +154,11 @@ public abstract class CameraFragment extends ControlsFragment {
     bindCameraUseCases();
   }
 
+  public void setAnalyserResolution(Size resolutionSize) {
+    this.analyserResolution = resolutionSize;
+    bindCameraUseCases();
+  }
+
   private boolean allPermissionsGranted() {
     boolean permissionsGranted = false;
     for (String permission : PERMISSIONS_REQUIRED)
@@ -144,5 +169,5 @@ public abstract class CameraFragment extends ControlsFragment {
     return permissionsGranted;
   }
 
-  protected abstract void processFrame(ImageProxy image);
+  protected abstract void processFrame(Bitmap image, ImageProxy imageProxy);
 }

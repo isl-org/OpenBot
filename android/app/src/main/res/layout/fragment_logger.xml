@@ -10,7 +10,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_bg"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="48dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:behavior_peekHeight="480dp">
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="48dp"
+            android:layout_height="5dp"
+            android:layout_marginTop="16dp"
+            android:alpha="0.5"
+            android:background="@drawable/button_item_background_black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/camera_toggle"
@@ -21,84 +35,105 @@
             android:scaleType="center"
             android:src="@drawable/ic_cameraswitch"
             android:text="@string/camera_facing_back"
-            app:layout_constraintBottom_toTopOf="@id/linearLayout2"
+            app:layout_constraintBottom_toBottomOf="@+id/logger_switch"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/logger_switch"
             app:tint="@color/openBotBlue" />
 
-        <ToggleButton
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/logger_switch"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="@drawable/logger_toggle"
-            android:backgroundTint="@color/openBotBlue"
-            android:textOff=""
-            android:textOn=""
-            app:layout_constraintBottom_toTopOf="@id/linearLayout2"
+            android:text="Log Data"
+            app:layout_constraintBottom_toTopOf="@+id/previewText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <TextView
+            android:id="@+id/previewText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/preview_resolution"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@+id/analyseText"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/frame_info"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="@string/resolution"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/previewText"
+            app:layout_constraintStart_toEndOf="@+id/previewText"
+            app:layout_constraintTop_toTopOf="@+id/previewText" />
+
+        <Spinner
+            android:id="@+id/resolution_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:entries="@array/preview_resolutions"
+            android:gravity="center"
+            android:layout_marginEnd="16dp"
+            android:prompt="@string/preview_resolution"
+            app:layout_constraintBottom_toBottomOf="@+id/frame_info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/frame_info" />
+
+        <TextView
+            android:id="@+id/analyseText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Model Resolution"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="@+id/previewText"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/crop_info"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="@string/resolution"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/analyseText"
+            app:layout_constraintStart_toEndOf="@+id/analyseText"
+            app:layout_constraintTop_toTopOf="@+id/analyseText" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/controllerContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
-                android:id="@+id/camera_toggle_text"
+            <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="2dp"
-                android:text="@string/camera"
-                android:textColor="@android:color/black" />
+                android:checked="true"
+                android:enabled="false"
+                android:text="Sensor Data" />
 
-            <TextView
-                android:id="@+id/frame_info"
+            <CheckBox
+                android:id="@+id/previewCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="2dp"
-                android:gravity="center"
-                android:text="@string/resolution"
-                android:textColor="@android:color/black" />
+                android:text="Preview Images" />
 
-            <TextView
-                android:id="@+id/crop_info"
+            <CheckBox
+                android:id="@+id/modelDataCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="2dp"
-                android:gravity="center"
-                android:text="@string/resolution"
-                android:textColor="@android:color/black" />
-
-
-            <TextView
-                android:id="@+id/logger"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="2dp"
-                android:text="@string/data_log"
-                android:textColor="@android:color/black" />
-
-            <Spinner
-                android:id="@+id/log_spinner"
-                style="@style/SpinnerTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="2dp"
-                android:entries="@array/log_settings"
-                android:prompt="@string/log_setting" />
+                android:text="Training Images" />
 
         </LinearLayout>
 

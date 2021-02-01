@@ -58,6 +58,12 @@
         <item>Joystick</item>
     </string-array>
 
+    <string-array name="preview_resolutions">
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+    </string-array>
+
     <string name="log_setting">Log Setting</string>
     <string name="camera_facing_back">Back</string>
     <string name="camera_facing_front">Front</string>
@@ -98,4 +104,5 @@
     <string name="voltageInfo">%1$s V</string>
     <string name="speedInfo">%1$s rpm</string>
     <string name="distanceInfo">%1$s cm</string>
+    <string name="preview_resolution">Preview Resolution</string>
 </resources>
