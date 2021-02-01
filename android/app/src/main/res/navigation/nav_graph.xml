@@ -19,9 +19,9 @@
     </fragment>
     <fragment
         android:id="@+id/robotCommunicationFragment"
-        android:name="org.openbot.robot.RobotCommunicationFragment"
+        android:name="org.openbot.robot.FreeRoamFragment"
         android:label="RobotCommunicationFragment"
-        tools:layout="@layout/fragment_robot_communication" />
+        tools:layout="@layout/fragment_free_roam" />
 
     <fragment
         android:id="@+id/settingsFragment"

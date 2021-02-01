@@ -35,19 +35,19 @@ import org.openbot.databinding.FragmentLoggerBinding;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.robot.CameraFragment;
 import org.openbot.robot.SensorService;
-import org.openbot.robot.ServerService;
+import org.openbot.robot.ServerCommunication;
 import org.openbot.utils.PermissionUtils;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 import timber.log.Timber;
 
-public class LoggerFragment extends CameraFragment implements ServerService.ServerListener {
+public class LoggerFragment extends CameraFragment implements ServerCommunication.ServerListener {
 
   private FragmentLoggerBinding binding;
   private Handler handler;
   private HandlerThread handlerThread;
   private Intent intentSensorService;
-  private ServerService serverService;
+  private ServerCommunication serverCommunication;
   protected String logFolder;
 
   protected boolean loggingEnabled;
@@ -121,8 +121,8 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
-    serverService = new ServerService(requireContext(), this);
-    serverService.start();
+    serverCommunication = new ServerCommunication(requireContext(), this);
+    serverCommunication.start();
   }
 
   @Override
@@ -133,7 +133,7 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
       handlerThread.join();
       handlerThread = null;
       handler = null;
-      serverService.stop();
+      serverCommunication.stop();
     } catch (final InterruptedException e) {
     }
 
@@ -242,7 +242,7 @@ public class LoggerFragment extends CameraFragment implements ServerService.Serv
             // These two lines below are messy and may cause bugs. needs to be looked into
             ZipUtil.pack(folder, zip);
             FileUtils.deleteQuietly(folder);
-            serverService.upload(zip);
+            serverCommunication.upload(zip);
           } catch (InterruptedException e) {
             Timber.e(e, "Got interrupted.");
           }
