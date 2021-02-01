@@ -1,5 +1,6 @@
 package org.openbot.tflite;
 
+import android.util.Size;
 import androidx.annotation.NonNull;
 
 /** The model. */
@@ -37,6 +38,18 @@ public class Model {
   public Model(String filename) {
     this.id = ID.AUTOPILOT_F;
     this.filename = filename;
+  }
+
+  public static Size getCroppedImageSize(String id) {
+    switch (ID.valueOf(id)) {
+      case DETECTOR_V1_1_0_Q:
+        return new Size(300, 300);
+      case DETECTOR_V3_S_Q:
+        return new Size(320, 320);
+      case AUTOPILOT_F:
+        return new Size(256, 96);
+    }
+    throw new IllegalArgumentException("No size with id " + id);
   }
 
   @NonNull

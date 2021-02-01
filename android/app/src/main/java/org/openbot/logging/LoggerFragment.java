@@ -38,6 +38,7 @@ import org.openbot.env.ImageUtils;
 import org.openbot.robot.CameraFragment;
 import org.openbot.robot.SensorService;
 import org.openbot.robot.ServerCommunication;
+import org.openbot.tflite.Model;
 import org.openbot.utils.PermissionUtils;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
@@ -98,6 +99,22 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
+    binding.modelSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String selected = parent.getItemAtPosition(position).toString();
+            binding.cropInfo.setText(
+                String.format(
+                    Locale.US,
+                    "%d x %d",
+                    Model.getCroppedImageSize(selected).getWidth(),
+                    Model.getCroppedImageSize(selected).getHeight()));
+          }
+
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
     binding.resolutionSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
@@ -491,13 +508,9 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
 
     requireActivity()
         .runOnUiThread(
-            () -> {
-              binding.frameInfo.setText(
-                  String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight()));
-              //              binding.cropInfo.setText(
-              //                  String.format(Locale.US, "%d x %d", image.getWidth(),
-              // image.getHeight()));
-            });
+            () ->
+                binding.frameInfo.setText(
+                    String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
   }
 
   @Override

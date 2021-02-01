@@ -73,15 +73,30 @@
 
         <Spinner
             android:id="@+id/resolution_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:entries="@array/preview_resolutions"
             android:gravity="center"
-            android:layout_marginEnd="16dp"
             android:prompt="@string/preview_resolution"
             app:layout_constraintBottom_toBottomOf="@+id/frame_info"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/frame_info"
             app:layout_constraintTop_toTopOf="@+id/frame_info" />
+
+        <Spinner
+            android:id="@+id/model_spinner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:entries="@array/models"
+            android:prompt="@string/model"
+            app:layout_constraintBottom_toBottomOf="@+id/crop_info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/crop_info"
+            app:layout_constraintTop_toTopOf="@+id/crop_info" />
 
         <TextView
             android:id="@+id/analyseText"
