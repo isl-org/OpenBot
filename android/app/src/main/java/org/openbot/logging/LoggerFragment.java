@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -54,6 +57,11 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   protected String logFolder;
 
   protected boolean loggingEnabled;
+  private Matrix frameToCropTransform;
+  private Bitmap croppedBitmap;
+  private int sensorOrientation;
+  private RectF cropRect;
+  private boolean maintainAspectRatio;
 
   @Override
   public View onCreateView(
@@ -104,12 +112,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selected = parent.getItemAtPosition(position).toString();
-            binding.cropInfo.setText(
-                String.format(
-                    Locale.US,
-                    "%d x %d",
-                    Model.getCroppedImageSize(selected).getWidth(),
-                    Model.getCroppedImageSize(selected).getHeight()));
+            updateCropImageInfo(selected);
           }
 
           @Override
@@ -135,6 +138,31 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
           @Override
           public void onNothingSelected(AdapterView<?> parent) {}
         });
+  }
+
+  private void updateCropImageInfo(String selected) {
+    frameToCropTransform = null;
+    binding.cropInfo.setText(
+        String.format(
+            Locale.US,
+            "%d x %d",
+            Model.getCroppedImageSize(selected).getWidth(),
+            Model.getCroppedImageSize(selected).getHeight()));
+
+    croppedBitmap =
+        Bitmap.createBitmap(
+            Model.getCroppedImageSize(selected).getWidth(),
+            Model.getCroppedImageSize(selected).getHeight(),
+            Bitmap.Config.ARGB_8888);
+
+    sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
+    if (Model.fromId(selected) == Model.AUTOPILOT_F) {
+      cropRect = new RectF(0.0f, 240.0f / 720.0f, 0.0f, 0.0f);
+      maintainAspectRatio = true;
+    } else {
+      cropRect = new RectF(0.0f, 0.0f, 0.0f, 0.0f);
+      maintainAspectRatio = false;
+    }
   }
 
   @Override
@@ -275,7 +303,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   protected void setIsLoggingActive(boolean loggingActive) {
     if (loggingActive && !loggingEnabled) {
       if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_CAMERA)
-          && (binding.previewCheckBox.isChecked() || binding.modelDataCheckBox.isChecked())) {
+          && (binding.previewCheckBox.isChecked() || binding.trainingDataCheckBox.isChecked())) {
         PermissionUtils.requestCameraPermission(this);
         loggingEnabled = false;
       } else if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION)) {
@@ -495,22 +523,42 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy image) {
     ++frameNum;
+    if (binding != null) {
+      requireActivity()
+          .runOnUiThread(
+              () ->
+                  binding.frameInfo.setText(
+                      String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
 
-    if (binding.previewCheckBox.isChecked() || binding.modelDataCheckBox.isChecked()) {
-      sendFrameNumberToSensorService(frameNum);
-    }
+      if (!binding.loggerSwitch.isChecked()) return;
 
-    if (binding.previewCheckBox.isChecked()) {
-      if (bitmap != null)
+      if (binding.previewCheckBox.isChecked() || binding.trainingDataCheckBox.isChecked()) {
+        sendFrameNumberToSensorService(frameNum);
+      }
+
+      if (binding.previewCheckBox.isChecked()) {
+        if (bitmap != null)
+          ImageUtils.saveBitmap(
+              bitmap, logFolder + File.separator + "images", frameNum + "_preview.jpeg");
+      }
+      if (binding.trainingDataCheckBox.isChecked()) {
+        if (frameToCropTransform == null)
+          frameToCropTransform =
+              ImageUtils.getTransformationMatrix(
+                  getMaxAnalyseImageSize().getWidth(),
+                  getMaxAnalyseImageSize().getHeight(),
+                  croppedBitmap.getWidth(),
+                  croppedBitmap.getHeight(),
+                  sensorOrientation,
+                  cropRect,
+                  maintainAspectRatio);
+
+        final Canvas canvas = new Canvas(croppedBitmap);
+        canvas.drawBitmap(bitmap, frameToCropTransform, null);
         ImageUtils.saveBitmap(
-            bitmap, logFolder + File.separator + "images", frameNum + "_preview.jpeg");
+            croppedBitmap, logFolder + File.separator + "images", frameNum + "_crop.jpeg");
+      }
     }
-
-    requireActivity()
-        .runOnUiThread(
-            () ->
-                binding.frameInfo.setText(
-                    String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
   }
 
   @Override

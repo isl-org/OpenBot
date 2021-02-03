@@ -93,11 +93,10 @@ public abstract class CameraFragment extends ControlsFragment {
     converter = new YuvToRgbConverter(requireContext());
     bitmapBuffer = null;
     preview = new Preview.Builder().build();
+    preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
     CameraSelector cameraSelector =
         new CameraSelector.Builder().requireLensFacing(lensFacing).build();
-
-    preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
     ImageAnalysis imageAnalysis =
         new ImageAnalysis.Builder().setTargetResolution(analyserResolution).build();
@@ -144,6 +143,10 @@ public abstract class CameraFragment extends ControlsFragment {
   @SuppressLint("RestrictedApi")
   public Size getPreviewSize() {
     return preview.getAttachedSurfaceResolution();
+  }
+
+  public Size getMaxAnalyseImageSize() {
+    return new Size(bitmapBuffer.getWidth(), bitmapBuffer.getHeight());
   }
 
   public void toggleCamera() {

@@ -17,9 +17,11 @@ limitations under the License.
 
 package org.openbot.env;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
+import android.view.Surface;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -222,5 +224,18 @@ public class ImageUtils {
     }
 
     return matrix;
+  }
+
+  public static int getScreenOrientation(Activity activity) {
+    switch (activity.getWindowManager().getDefaultDisplay().getRotation()) {
+      case Surface.ROTATION_270:
+        return 270;
+      case Surface.ROTATION_180:
+        return 180;
+      case Surface.ROTATION_90:
+        return 90;
+      default:
+        return Surface.ROTATION_0;
+    }
   }
 }

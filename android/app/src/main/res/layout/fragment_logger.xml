@@ -145,7 +145,7 @@
                 android:text="Preview Images" />
 
             <CheckBox
-                android:id="@+id/modelDataCheckBox"
+                android:id="@+id/trainingDataCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Training Images" />
