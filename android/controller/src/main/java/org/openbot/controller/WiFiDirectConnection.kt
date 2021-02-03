@@ -58,9 +58,9 @@ object WiFiDirectConnection : ILocalConnection {
         }
     }
 
-    class DisconnectionListener : ClientDisconnectedListener {
-        override fun onClientDisconnected(wroupDevice: WroupDevice) {
+    class ServiceDisconnectionListener : ServiceDisconnectedListener {
 
+        override fun onServerDisconnectedListener() {
             val event: EventProcessor.ProgressEvents =
                     EventProcessor.ProgressEvents.Disconnected
             EventProcessor.onNext(event)
@@ -93,8 +93,8 @@ object WiFiDirectConnection : ILocalConnection {
 
         wroupClient = WroupClient.getInstance(context.applicationContext)
         wroupClient.setDataReceivedListener(DataReceiver())
-        wroupClient.setClientDisconnectedListener(DisconnectionListener())
         wroupClient.setClientConnectedListener(ConnectionListener())
+        wroupClient.setServerDisconnetedListener (ServiceDisconnectionListener())
 
         class DiscoveryListener : ServiceDiscoveredListener {
             override fun onNewServiceDeviceDiscovered(serviceDevice: WroupServiceDevice) {
@@ -117,6 +117,12 @@ object WiFiDirectConnection : ILocalConnection {
                 Log.i(TAG, "Found '" + serviceDevices.size + "' groups")
                 if (serviceDevices.isEmpty()) {
                     Log.i(TAG, "No groups found")
+
+                    val event: EventProcessor.ProgressEvents =
+                            EventProcessor.ProgressEvents.TemporaryConnectionProblem
+                    EventProcessor.onNext(event)
+
+
                 } else {
                     Log.i(TAG, "Finished discovery")
 
@@ -126,7 +132,6 @@ object WiFiDirectConnection : ILocalConnection {
 
                             class ServiceConListener : ServiceConnectedListener {
                                 override fun onServiceConnected(serviceDevice: WroupDevice?) {
-                                    Log.i(TAG, "*************************** Connected ***************************")
                                     val event: EventProcessor.ProgressEvents = EventProcessor.ProgressEvents.ConnectionSuccessful
                                     EventProcessor.onNext(event)
                                     connected = true

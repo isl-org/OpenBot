@@ -20,8 +20,8 @@ public class PhoneController {
 
     private static final String TAG = "PhoneController";
     final ILocalConnection connection =
-            new BluethootConnection();
-            // new WiFiDirectConnection();
+            // new BluethootConnection();
+            new WiFiDirectConnection();
             // new NearbyConnection();
 
     {
@@ -60,6 +60,4 @@ public class PhoneController {
     private void handleBotEvents() {
         BotToControllerEventBus.getProcessor().subscribe(event -> send(event));
     }
-
-
 }

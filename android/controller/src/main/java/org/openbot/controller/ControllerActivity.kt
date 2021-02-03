@@ -106,6 +106,10 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
                             }
                             EventProcessor.ProgressEvents.StopAdvertising -> {
                             }
+                            EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
+                                screenManager.hideControls()
+                                ConnectionFactory.get().connect(this)
+                            }
                             EventProcessor.ProgressEvents.AdvertisingFailed -> {
                                 screenManager.hideControls()
                             }
