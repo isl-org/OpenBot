@@ -28,6 +28,8 @@ public class ServerCommunication {
     void onAddModel(String model);
 
     void onRemoveModel(String model);
+
+    void onConnectionEstablished(String ipAddress);
   }
 
   private final AsyncHttpClient client;
@@ -49,6 +51,7 @@ public class ServerCommunication {
           Log.d(TAG, "Resolved address: " + serverUrl);
 
           client.get(context, serverUrl + "/test", testResponseHandler);
+          serverListener.onConnectionEstablished(serverUrl);
         }
       };
   private final JsonHttpResponseHandler testResponseHandler =

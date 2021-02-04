@@ -562,6 +562,11 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   }
 
   @Override
+  public void onConnectionEstablished(String ipAddress) {
+    requireActivity().runOnUiThread(() -> binding.ipAddress.setText(ipAddress));
+  }
+
+  @Override
   public void onAddModel(String model) {}
 
   @Override

@@ -46,9 +46,30 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:text="Log Data"
-            app:layout_constraintBottom_toTopOf="@+id/previewText"
+            app:layout_constraintBottom_toTopOf="@+id/server"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <TextView
+            android:id="@+id/server"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Server :"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@+id/previewText"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/ipAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="x.x.x.x"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/server"
+            app:layout_constraintStart_toEndOf="@id/server"
+            app:layout_constraintTop_toTopOf="@+id/server" />
 
         <TextView
             android:id="@+id/previewText"
