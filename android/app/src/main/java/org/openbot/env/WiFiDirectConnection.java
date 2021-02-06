@@ -64,8 +64,10 @@ public class WiFiDirectConnection implements ILocalConnection {
 
     @Override
     public void disconnect(Context context) {
-        if (wroupClient != null)
+        if (wroupClient != null) {
             wroupClient.disconnect();
+        }
+        wroupClient = null;
     }
 
     @Override
@@ -75,10 +77,12 @@ public class WiFiDirectConnection implements ILocalConnection {
 
     @Override
     public void sendMessage(String message) {
-        MessageWrapper messageWrapper = new MessageWrapper();
-        messageWrapper.setMessage(message);
-        messageWrapper.setMessageType(MessageWrapper.MessageType.NORMAL);
-        wroupClient.sendMessageToAllClients(messageWrapper);
+        if (wroupClient != null) {
+            MessageWrapper messageWrapper = new MessageWrapper();
+            messageWrapper.setMessage(message);
+            messageWrapper.setMessageType(MessageWrapper.MessageType.NORMAL);
+            wroupClient.sendMessageToAllClients(messageWrapper);
+        }
     }
 
     class DataReceiver implements DataReceivedListener {
@@ -121,7 +125,7 @@ public class WiFiDirectConnection implements ILocalConnection {
         wroupClient = WroupClient.getInstance(context.getApplicationContext());
         wroupClient.setDataReceivedListener(new DataReceiver());
         wroupClient.setClientConnectedListener(new ConnectionListener());
-        wroupClient.setServerDisconnetedListener (new ServiceDisconnectionListener());
+        wroupClient.setServerDisconnetedListener(new ServiceDisconnectionListener());
 
         class DiscoveryListener implements ServiceDiscoveredListener {
 
@@ -143,7 +147,7 @@ public class WiFiDirectConnection implements ILocalConnection {
                     }
                 }
 
-                if (serviceDevice.getTxtRecordMap().get("GROUP_NAME") == SERVICE_ID) {
+                if (SERVICE_ID.equals(serviceDevice.getTxtRecordMap().get("GROUP_NAME"))) {
                 }
 
             }
@@ -153,9 +157,6 @@ public class WiFiDirectConnection implements ILocalConnection {
                 Log.i(TAG, "Found '" + serviceDevices.size() + "' groups");
                 if (serviceDevices.isEmpty()) {
                     Log.i(TAG, "No groups found");
-
-                    // Send event here
-
                 } else {
                     Log.i(TAG, "Finished discovery");
 
@@ -175,11 +176,12 @@ public class WiFiDirectConnection implements ILocalConnection {
                                     connected = true;
                                 }
                             }
-                            wroupClient.connectToService(serviceDevice, new ServiceConListener());
+                            if (wroupClient != null) {
+                                wroupClient.connectToService(serviceDevice, new ServiceConListener());
+                            }
                         }
                     }
                 }
-
             }
 
             @Override
@@ -187,6 +189,8 @@ public class WiFiDirectConnection implements ILocalConnection {
                 Log.i(TAG, "onError: " + wiFiP2PError.toString());
             }
         }
-        wroupClient.discoverServices(5 * 1000L, new DiscoveryListener());
+        if (wroupClient != null) {
+            wroupClient.discoverServices(5 * 1000L, new DiscoveryListener());
+        }
     }
 }
