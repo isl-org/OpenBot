@@ -2,16 +2,6 @@ package org.openbot.env;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.nearby.connection.Payload;
-import com.google.android.gms.nearby.connection.PayloadCallback;
-import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
-
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.Callable;
-
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 

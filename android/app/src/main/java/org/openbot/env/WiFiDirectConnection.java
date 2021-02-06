@@ -3,12 +3,8 @@ package org.openbot.env;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.media.ToneGenerator;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.abemart.wroup.client.WroupClient;
 import com.abemart.wroup.common.WiFiDirectBroadcastReceiver;
@@ -17,35 +13,31 @@ import com.abemart.wroup.common.WiFiP2PInstance;
 import com.abemart.wroup.common.WroupDevice;
 import com.abemart.wroup.common.WroupServiceDevice;
 import com.abemart.wroup.common.listeners.ClientConnectedListener;
-import com.abemart.wroup.common.listeners.ClientDisconnectedListener;
 import com.abemart.wroup.common.listeners.DataReceivedListener;
-import com.abemart.wroup.common.listeners.PeerConnectedListener;
+import com.abemart.wroup.common.listeners.ServiceConnectedListener;
+import com.abemart.wroup.common.listeners.ServiceDisconnectedListener;
 import com.abemart.wroup.common.listeners.ServiceDiscoveredListener;
-import com.abemart.wroup.common.listeners.ServiceRegisteredListener;
 import com.abemart.wroup.common.messages.MessageWrapper;
 import com.abemart.wroup.service.WroupService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openbot.robot.CameraActivity;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WiFiDirectConnection implements ILocalConnection {
-
     private static final String TAG = "WiFiDirectConnection";
 
-    WiFiDirectBroadcastReceiver wiFiDirectBroadcastReceiver;
-    IntentFilter intentFilter = new IntentFilter();
-    WroupService wroupService;
-    private boolean isConnected = false;
-    private static final String SERVICE_ID = "OPENBOT_SERVICE_ID";
-    private IDataReceived dataReceivedCallback;
+    private IntentFilter intentFilter = new IntentFilter();
+    private WroupClient wroupClient;
+    private final String SERVICE_ID = "OPENBOT_SERVICE_ID";
+    private boolean connected = false;
+
+    private IDataReceived dataReceivedCallback = null;
+    private WiFiDirectBroadcastReceiver wiFiDirectBroadcastReceiver = null;
 
     @Override
-    public void init (Context context) {
+    public void init(Context context) {
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
@@ -53,82 +45,32 @@ public class WiFiDirectConnection implements ILocalConnection {
 
         wiFiDirectBroadcastReceiver = WiFiP2PInstance.getInstance(context).getBroadcastReceiver();
         context.registerReceiver(wiFiDirectBroadcastReceiver, intentFilter);
-
-        wroupService = WroupService.getInstance(context);
-        wroupService.setDataReceivedListener(new DataReceiver());
-        wroupService.setClientDisconnectedListener(new DisconnectionListener());
-        wroupService.setClientConnectedListener(new ConnectionListener());
     }
 
-    class DataReceiver implements DataReceivedListener {
-
-        @Override
-        public void onDataReceived(MessageWrapper messageWrapper) {
-            dataReceivedCallback.dataReceived(messageWrapper.getMessage());
-        }
+    private void beep() {
+        final ToneGenerator tg = new ToneGenerator(6, 100);
+        tg.startTone(ToneGenerator.TONE_PROP_BEEP);
     }
 
     @Override
     public void setDataCallback(IDataReceived dataCallback) {
-        this.dataReceivedCallback = dataCallback;
-    }
-
-    class ConnectionListener implements ClientConnectedListener {
-
-        @Override
-        public void onClientConnected(WroupDevice wroupDevice) {
-            Log.i(TAG, "onConnectionResult: connection successful");
-            try {
-                isConnected = true;
-                ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"CONNECTED\"}"));
-                beep();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    class DisconnectionListener implements ClientDisconnectedListener {
-        @Override
-        public void onClientDisconnected(WroupDevice wroupDevice) {
-            Log.i(TAG, "onDisconnected: disconnected...");
-            try {
-                isConnected = false;
-                ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
-                beep();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        dataReceivedCallback = dataCallback;
     }
 
     @Override
     public void connect(Context context) {
-
-        wroupService.registerService(SERVICE_ID, new ServiceRegisteredListener() {
-
-            @Override
-            public void onSuccessServiceRegistered() {
-                Log.i(TAG, "onSuccessServiceRegistered");
-            }
-
-            @Override
-            public void onErrorServiceRegistered(WiFiP2PError wiFiP2PError) {
-                Log.i(TAG, "onErrorServiceRegistered");
-            }
-        });
+        searchAvailableGroups(context);
     }
 
     @Override
     public void disconnect(Context context) {
-        if (wroupService != null) {
-            wroupService.disconnect();
-        }
+        if (wroupClient != null)
+            wroupClient.disconnect();
     }
 
     @Override
     public boolean isConnected() {
-        return this.isConnected;
+        return connected;
     }
 
     @Override
@@ -136,12 +78,115 @@ public class WiFiDirectConnection implements ILocalConnection {
         MessageWrapper messageWrapper = new MessageWrapper();
         messageWrapper.setMessage(message);
         messageWrapper.setMessageType(MessageWrapper.MessageType.NORMAL);
-
-        wroupService.sendMessageToAllClients(messageWrapper);
+        wroupClient.sendMessageToAllClients(messageWrapper);
     }
 
-    private void beep() {
-        final ToneGenerator tg = new ToneGenerator(6, 100);
-        tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+    class DataReceiver implements DataReceivedListener {
+        @Override
+        public void onDataReceived(MessageWrapper messageWrapper) {
+            dataReceivedCallback.dataReceived(messageWrapper.getMessage());
+        }
+    }
+
+    class ConnectionListener implements ClientConnectedListener {
+
+        @Override
+        public void onClientConnected(WroupDevice wroupDevice) {
+            connected = true;
+            try {
+                ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"CONNECTED\"}"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            beep();
+        }
+    }
+
+    class ServiceDisconnectionListener implements ServiceDisconnectedListener {
+
+        @Override
+        public void onServerDisconnectedListener() {
+            connected = false;
+            try {
+                ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();
+            }
+            beep();
+        }
+    }
+
+    private void searchAvailableGroups(Context context) {
+
+        wroupClient = WroupClient.getInstance(context.getApplicationContext());
+        wroupClient.setDataReceivedListener(new DataReceiver());
+        wroupClient.setClientConnectedListener(new ConnectionListener());
+        wroupClient.setServerDisconnetedListener (new ServiceDisconnectionListener());
+
+        class DiscoveryListener implements ServiceDiscoveredListener {
+
+            @Override
+            public void onNewServiceDeviceDiscovered(WroupServiceDevice serviceDevice) {
+                Log.i(TAG, "New group found:");
+                Log.i(TAG, "\tName: " + serviceDevice.getTxtRecordMap().get(WroupService.SERVICE_GROUP_NAME));
+
+                class ServiceListener implements ServiceConnectedListener {
+                    @Override
+                    public void onServiceConnected(WroupDevice serviceDevice) {
+                        connected = true;
+                        try {
+                            ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+
+                if (serviceDevice.getTxtRecordMap().get("GROUP_NAME") == SERVICE_ID) {
+                }
+
+            }
+
+            @Override
+            public void onFinishServiceDeviceDiscovered(List<WroupServiceDevice> serviceDevices) {
+                Log.i(TAG, "Found '" + serviceDevices.size() + "' groups");
+                if (serviceDevices.isEmpty()) {
+                    Log.i(TAG, "No groups found");
+
+                    // Send event here
+
+                } else {
+                    Log.i(TAG, "Finished discovery");
+
+                    for (WroupServiceDevice serviceDevice : serviceDevices) {
+                        String group = serviceDevice.getTxtRecordMap().get("GROUP_NAME");
+                        if (SERVICE_ID.equals(group)) {
+
+                            class ServiceConListener implements ServiceConnectedListener {
+                                @Override
+                                public void onServiceConnected(WroupDevice serviceDevice) {
+                                    try {
+                                        ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"CONNECTED\"}"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    connected = true;
+                                }
+                            }
+                            wroupClient.connectToService(serviceDevice, new ServiceConListener());
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onError(WiFiP2PError wiFiP2PError) {
+                Log.i(TAG, "onError: " + wiFiP2PError.toString());
+            }
+        }
+        wroupClient.discoverServices(5 * 1000L, new DiscoveryListener());
     }
 }

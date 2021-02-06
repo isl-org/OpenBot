@@ -2,80 +2,107 @@ package org.openbot.controller
 
 import android.content.Context
 import android.content.IntentFilter
+import android.media.ToneGenerator
 import android.net.wifi.p2p.WifiP2pManager
 import android.util.Log
-import com.abemart.wroup.client.WroupClient
-import com.abemart.wroup.common.*
-import com.abemart.wroup.common.listeners.*
+import com.abemart.wroup.common.WiFiDirectBroadcastReceiver
+import com.abemart.wroup.common.WiFiP2PError
+import com.abemart.wroup.common.WiFiP2PInstance
+import com.abemart.wroup.common.WroupDevice
+import com.abemart.wroup.common.listeners.ClientConnectedListener
+import com.abemart.wroup.common.listeners.ClientDisconnectedListener
+import com.abemart.wroup.common.listeners.DataReceivedListener
+import com.abemart.wroup.common.listeners.ServiceRegisteredListener
 import com.abemart.wroup.common.messages.MessageWrapper
 import com.abemart.wroup.service.WroupService
+import org.json.JSONException
 import org.openbot.controller.utils.EventProcessor
 
-
 object WiFiDirectConnection : ILocalConnection {
-    private const val TAG = "WiFiDirectConnection"
-
+    var wiFiDirectBroadcastReceiver: WiFiDirectBroadcastReceiver? = null
     var intentFilter = IntentFilter()
-    lateinit private var wroupClient: WroupClient
-    private const val SERVICE_ID = "OPENBOT_SERVICE_ID"
+    var wroupService: WroupService? = null
     var connected = false
         private set
-
     private var dataReceivedCallback: IDataReceived? = null
-    private var wiFiDirectBroadcastReceiver: WiFiDirectBroadcastReceiver? = null
+    private const val TAG = "WiFiDirectConnection"
+    private const val SERVICE_ID = "OPENBOT_SERVICE_ID"
 
-    init {
-    }
 
     override fun init(context: Context) {
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION)
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
-
         wiFiDirectBroadcastReceiver = WiFiP2PInstance.getInstance(context).broadcastReceiver
         context.registerReceiver(wiFiDirectBroadcastReceiver, intentFilter)
-    }
 
-    class DataReceiver : DataReceivedListener {
-        override fun onDataReceived(messageWrapper: MessageWrapper) {
-            dataReceivedCallback?.dataReceived(messageWrapper.message)
-        }
+        wroupService = WroupService.getInstance(context)
+        wroupService?.setDataReceivedListener(DataReceiver())
+        wroupService?.setClientDisconnectedListener(DisconnectionListener())
+        wroupService?.setClientConnectedListener(ConnectionListener())
     }
 
     override fun setDataCallback(dataCallback: IDataReceived?) {
         dataReceivedCallback = dataCallback
     }
 
-    class ConnectionListener : ClientConnectedListener {
-        override fun onClientConnected(wroupDevice: WroupDevice) {
-
-            val event: EventProcessor.ProgressEvents =
-                    EventProcessor.ProgressEvents.ConnectionSuccessful
-            EventProcessor.onNext(event)
-
-            connected = true
+    internal class DataReceiver : DataReceivedListener {
+        override fun onDataReceived(messageWrapper: MessageWrapper) {
+            dataReceivedCallback?.dataReceived(messageWrapper.message)
         }
     }
 
-    class ServiceDisconnectionListener : ServiceDisconnectedListener {
+    internal class ConnectionListener : ClientConnectedListener {
+        override fun onClientConnected(wroupDevice: WroupDevice) {
+            Log.i(TAG, "onConnectionResult: connection successful")
+            try {
+                connected = true
 
-        override fun onServerDisconnectedListener() {
-            val event: EventProcessor.ProgressEvents =
-                    EventProcessor.ProgressEvents.Disconnected
-            EventProcessor.onNext(event)
+                val event: EventProcessor.ProgressEvents =
+                        EventProcessor.ProgressEvents.ConnectionSuccessful
+                EventProcessor.onNext(event)
 
-            connected = false
+                beep()
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    internal class DisconnectionListener : ClientDisconnectedListener {
+        override fun onClientDisconnected(wroupDevice: WroupDevice) {
+            Log.i(TAG, "onDisconnected: disconnected...")
+            try {
+                connected = false
+
+                val event: EventProcessor.ProgressEvents =
+                        EventProcessor.ProgressEvents.Disconnected
+                EventProcessor.onNext(event)
+
+                beep()
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
         }
     }
 
     override fun connect(context: Context) {
-        searchAvailableGroups(context)
+        wroupService!!.registerService(SERVICE_ID, object : ServiceRegisteredListener {
+            override fun onSuccessServiceRegistered() {
+                Log.i(TAG, "onSuccessServiceRegistered")
+            }
+
+            override fun onErrorServiceRegistered(wiFiP2PError: WiFiP2PError) {
+                Log.i(TAG, "onErrorServiceRegistered")
+            }
+        })
     }
 
     override fun disconnect(context: Context?) {
-        if (this::wroupClient.isInitialized)
-            wroupClient.disconnect()
+        if (wroupService != null) {
+            wroupService!!.disconnect()
+        }
     }
 
     override fun isConnected(): Boolean {
@@ -86,68 +113,11 @@ object WiFiDirectConnection : ILocalConnection {
         val messageWrapper = MessageWrapper()
         messageWrapper.message = message
         messageWrapper.messageType = MessageWrapper.MessageType.NORMAL
-        wroupClient.sendMessageToAllClients(messageWrapper)
+        wroupService!!.sendMessageToAllClients(messageWrapper)
     }
 
-    private fun searchAvailableGroups(context: Context) {
-
-        wroupClient = WroupClient.getInstance(context.applicationContext)
-        wroupClient.setDataReceivedListener(DataReceiver())
-        wroupClient.setClientConnectedListener(ConnectionListener())
-        wroupClient.setServerDisconnetedListener (ServiceDisconnectionListener())
-
-        class DiscoveryListener : ServiceDiscoveredListener {
-            override fun onNewServiceDeviceDiscovered(serviceDevice: WroupServiceDevice) {
-                Log.i(TAG, "New group found:")
-                Log.i(TAG, "\tName: " + serviceDevice.txtRecordMap[WroupService.SERVICE_GROUP_NAME])
-
-                class ServiceListener : ServiceConnectedListener {
-                    override fun onServiceConnected(serviceDevice: WroupDevice?) {
-                        val event: EventProcessor.ProgressEvents = EventProcessor.ProgressEvents.ConnectionSuccessful
-                        EventProcessor.onNext(event)
-                        connected = true
-                    }
-                }
-
-                if (serviceDevice.txtRecordMap.get("GROUP_NAME") == SERVICE_ID) {
-                }
-            }
-
-            override fun onFinishServiceDeviceDiscovered(serviceDevices: List<WroupServiceDevice>) {
-                Log.i(TAG, "Found '" + serviceDevices.size + "' groups")
-                if (serviceDevices.isEmpty()) {
-                    Log.i(TAG, "No groups found")
-
-                    val event: EventProcessor.ProgressEvents =
-                            EventProcessor.ProgressEvents.TemporaryConnectionProblem
-                    EventProcessor.onNext(event)
-
-
-                } else {
-                    Log.i(TAG, "Finished discovery")
-
-                    for (serviceDevice in serviceDevices) {
-                        val group = serviceDevice.txtRecordMap.get("GROUP_NAME")
-                        if (group == WiFiDirectConnection.SERVICE_ID) {
-
-                            class ServiceConListener : ServiceConnectedListener {
-                                override fun onServiceConnected(serviceDevice: WroupDevice?) {
-                                    val event: EventProcessor.ProgressEvents = EventProcessor.ProgressEvents.ConnectionSuccessful
-                                    EventProcessor.onNext(event)
-                                    connected = true
-                                }
-                            }
-                            wroupClient.connectToService(serviceDevice, ServiceConListener())
-                        }
-                    }
-                }
-            }
-
-            override fun onError(wiFiP2PError: WiFiP2PError) {
-                Log.d(TAG, "Error searching groups: $wiFiP2PError")
-            }
-        }
-
-        wroupClient.discoverServices(5 * 1000L, DiscoveryListener())
+    private fun beep() {
+        val tg = ToneGenerator(6, 100)
+        tg.startTone(ToneGenerator.TONE_PROP_BEEP)
     }
 }
