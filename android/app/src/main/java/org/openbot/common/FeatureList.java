@@ -11,7 +11,7 @@ public class FeatureList {
 
   // Global
   public static final String ALL = "All";
-  public static final String GLOBAL_VIEW = "Robot";
+  public static final String DEFAULT = "Default";
   public static final String CONTROLLER = "Controller";
 
   // Game
@@ -28,6 +28,7 @@ public class FeatureList {
 
   // AI
   public static final String AI = "AI";
+  public static final String AI_MODELS = "AI Models";
   public static final String PERSON_FOLLOWING = "Person Following";
   public static final String OBJECT_NAV = "Object Nav (follow/search)";
   public static final String AUTONOMOUS_DRIVING = "Autonomous Driving";
@@ -62,23 +63,26 @@ public class FeatureList {
     ArrayList<Category> categories = new ArrayList<>();
 
     ArrayList<SubCategory> subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(GLOBAL_VIEW, R.drawable.openbot_icon, "#4B7BFF"));
+    subCategories.add(new SubCategory(DEFAULT, R.drawable.openbot_icon, "#4B7BFF"));
+    subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
+    subCategories.add(new SubCategory(DATA_COLLECTION, R.drawable.ic_storage, "#93C47D"));
+//    subCategories.add(new SubCategory(AI_MODELS, R.drawable.ic_person_search, "#FFD966"));
     categories.add(new Category(ALL, subCategories));
 
-    subCategories = new ArrayList<>();
+    //    subCategories = new ArrayList<>();
     //    subCategories.add(new SubCategory(CONTROLLER, R.drawable.ic_controller));
-    subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
+    //    subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
     //    subCategories.add(new SubCategory(AR_MODE, R.drawable.ic_game, "#B3FF6D00"));
-    categories.add(new Category(GAME, subCategories));
+    //    categories.add(new Category(GAME, subCategories));
 
-    subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage, "#93C47D"));
+    //    subCategories = new ArrayList<>();
+    //    subCategories.add(new SubCategory(LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage, "#93C47D"));
     //        subCategories.add(new SubCategory(EDGE_LOCAL_NETWORK,
     // R.drawable.ic_network));
     //        subCategories.add(new SubCategory(CLOUD_FIREBASE,
     // R.drawable.ic_cloud_upload));
     //        subCategories.add(new SubCategory(CROWD_SOURCE, R.drawable.openbot_icon));
-    categories.add(new Category(DATA_COLLECTION, subCategories));
+    //    categories.add(new Category(DATA_COLLECTION, subCategories));
     /*
         subCategories = new ArrayList<>();
         subCategories.add(new SubCategory(PERSON_FOLLOWING, R.drawable.ic_person_search));

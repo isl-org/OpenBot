@@ -71,10 +71,17 @@ public abstract class ControlsFragment extends Fragment {
             data -> {
               String[] itemList = data.split(",");
               if (itemList.length == 4) {
-                vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
-                vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
-                vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
-                vehicle.setSonarReading(Float.parseFloat(itemList[3]));
+                if (Utils.isNumeric(itemList[0]))
+                  vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
+
+                if (Utils.isNumeric(itemList[1]))
+                  vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
+
+                if (Utils.isNumeric(itemList[2]))
+                  vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
+
+                if (Utils.isNumeric(itemList[3]))
+                  vehicle.setSonarReading(Float.parseFloat(itemList[3]));
 
                 processUSBData(data);
               }

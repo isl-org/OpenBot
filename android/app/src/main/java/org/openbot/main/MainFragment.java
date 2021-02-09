@@ -49,7 +49,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     Timber.d("onItemClick: %s", subCategory.getTitle());
 
     switch (subCategory.getTitle()) {
-      case FeatureList.GLOBAL_VIEW:
+      case FeatureList.DEFAULT:
         Intent intent = new Intent(requireActivity(), NetworkActivity.class);
         startActivity(intent);
         break;
@@ -59,7 +59,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
             .navigate(R.id.action_mainFragment_to_robotCommunicationFragment);
         break;
 
-      case FeatureList.LOCAL_SAVE_ON_PHONE:
+      case FeatureList.DATA_COLLECTION:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_loggerFragment);
 
