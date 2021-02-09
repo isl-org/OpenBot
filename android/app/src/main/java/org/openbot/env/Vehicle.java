@@ -2,25 +2,27 @@ package org.openbot.env;
 
 import android.content.Context;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Vehicle {
 
-  private Control control = new Control(0, 0);
   private final Noise noise = new Noise(1000, 2000, 5000);
   private boolean noiseEnabled = false;
   private int indicator = 0;
-  private static int speedMultiplier = 192; // 128,192,255
+  private int speedMultiplier = 192; // 128,192,255
+  private Control control = new Control(0, 0);
 
   private final SensorReading batteryVoltage = new SensorReading();
   private final SensorReading leftWheelTicks = new SensorReading();
   private final SensorReading rightWheelTicks = new SensorReading();
   private final SensorReading sonarReading = new SensorReading();
 
-  private static final int diskHoles = 20;
-  private static final int millisPerMinute = 60000;
+  private final int diskHoles = 20;
+  private final int millisPerMinute = 60000;
+
+  private final float minBatteryVoltage = 9.6f;
+  private final float maxBatteryVoltage = 12.6f;
 
   private UsbConnection usbConnection;
   protected boolean usbConnected;
@@ -33,26 +35,15 @@ public class Vehicle {
     connectUsb();
   }
 
-  public static class Control {
-    private float left = 0;
-    private float right = 0;
-
-    public Control(float left, float right) {
-      this.left = Math.max(-1.f, Math.min(1.f, left));
-      this.right = Math.max(-1.f, Math.min(1.f, right));
-    }
-
-    public float getLeft() {
-      return left * speedMultiplier;
-    }
-
-    public float getRight() {
-      return right * speedMultiplier;
-    }
-  }
-
   public float getBatteryVoltage() {
     return batteryVoltage.getReading();
+  }
+
+  public int getBatteryPercentage() {
+    return (int)
+        ((batteryVoltage.getReading() - minBatteryVoltage)
+            * 100
+            / (maxBatteryVoltage - minBatteryVoltage));
   }
 
   public void setBatteryVoltage(float batteryVoltage) {
@@ -87,6 +78,24 @@ public class Vehicle {
     this.rightWheelTicks.setReading(rightWheelTicks);
   }
 
+  public float getRotation() {
+    float rotation = (getLeftSpeed() - getRightSpeed()) * 180 / (getLeftSpeed() + getRightSpeed());
+    if (Float.isNaN(rotation) || Float.isInfinite(rotation)) rotation = 0f;
+    return rotation;
+  }
+
+  public int getSpeedPercent() {
+    float throttle = (getLeftSpeed() + getRightSpeed()) / 2;
+    return Math.abs((int) (throttle * 100 / 255)); // 255 is the max speed
+  }
+
+  public String getDriveGear() {
+    float throttle = (getLeftSpeed() + getRightSpeed()) / 2;
+    if (throttle > 0) return "D";
+    if (throttle < 0) return "R";
+    return "P";
+  }
+
   public float getSonarReading() {
     return sonarReading.getReading();
   }
@@ -101,10 +110,12 @@ public class Vehicle {
 
   public void setControl(Control control) {
     this.control = control;
+    sendControl();
   }
 
   public void setControl(float left, float right) {
     this.control = new Control(left, right);
+    sendControl();
   }
 
   private Timer noiseTimer;
@@ -127,6 +138,7 @@ public class Vehicle {
   public void stopNoise() {
     noiseEnabled = false;
     noiseTimer.cancel();
+    sendControl();
   }
 
   public int getSpeedMultiplier() {
@@ -156,17 +168,13 @@ public class Vehicle {
   }
 
   public void disconnectUsb() {
-    Objects.requireNonNull(usbConnection)
-        .send(
-            String.format(
-                Locale.US,
-                "c%d,%d\n",
-                (int) (getControl().getLeft()),
-                (int) (getControl().getRight())));
-
-    Objects.requireNonNull(usbConnection).stopUsbConnection();
-    usbConnection = null;
-    usbConnected = false;
+    if (usbConnection != null) {
+      usbConnection.send(
+          String.format(Locale.US, "c%d,%d\n", (int) (getLeftSpeed()), (int) (getRightSpeed())));
+      usbConnection.stopUsbConnection();
+      usbConnection = null;
+      usbConnected = false;
+    }
   }
 
   public boolean isUsbConnected() {
@@ -174,16 +182,28 @@ public class Vehicle {
   }
 
   private void sendStringToUsb(String message) {
-    Objects.requireNonNull(usbConnection).send(message);
+    if (usbConnection != null) usbConnection.send(message);
+  }
+
+  public float getLeftSpeed() {
+    return control.getLeft() * speedMultiplier;
+  }
+
+  public float getRightSpeed() {
+    return control.getRight() * speedMultiplier;
   }
 
   public void sendControl() {
-    int left = (int) (control.left * speedMultiplier);
-    int right = (int) (control.right * speedMultiplier);
+    int left = (int) (getLeftSpeed());
+    int right = (int) (getRightSpeed());
     if (noiseEnabled && noise.getDirection() < 0)
-      left = (int) ((control.left - noise.getValue()) * speedMultiplier);
+      left =
+          (int)
+              ((control.getLeft() - noise.getValue())
+                  * speedMultiplier); // since noise value does not have speedMultiplier component,
+    // raw control value is used
     if (noiseEnabled && noise.getDirection() > 0)
-      right = (int) ((control.right - noise.getValue()) * speedMultiplier);
+      right = (int) ((control.getRight() - noise.getValue()) * speedMultiplier);
     sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
   }
 }

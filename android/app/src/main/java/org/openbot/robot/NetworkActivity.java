@@ -17,8 +17,6 @@ limitations under the License.
 
 package org.openbot.robot;
 
-import static android.widget.Toast.*;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -46,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 import org.openbot.R;
 import org.openbot.common.Enums.ControlMode;
 import org.openbot.common.Enums.LogMode;
+import org.openbot.common.Utils;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;
 import org.openbot.env.BorderedText;
@@ -262,15 +261,12 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
         });
   }
 
-  protected void sendVehicleControl() {
+  protected void updateVehicleControl() {
 
     // Log controls
     if (loggingEnabled) {
       runInBackground(this::sendControlToSensorService);
     }
-
-    // Send control to vehicle
-    vehicle.sendControl();
 
     // Update GUI
     runOnUiThread(
@@ -279,20 +275,17 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
           if (controlValueTextView != null)
             controlValueTextView.setText(
                 String.format(
-                    Locale.US,
-                    "%.0f,%.0f",
-                    vehicle.getControl().getLeft(),
-                    vehicle.getControl().getRight()));
+                    Locale.US, "%.0f,%.0f", vehicle.getLeftSpeed(), vehicle.getRightSpeed()));
         });
   }
 
   protected void toggleNoise() {
     noiseEnabled = !noiseEnabled;
-    BotToControllerEventBus.emitEvent(createStatus("NOISE", noiseEnabled));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("NOISE", noiseEnabled));
     if (noiseEnabled) {
       vehicle.startNoise();
     } else vehicle.stopNoise();
-    sendVehicleControl();
+    updateVehicleControl();
   }
 
   @Override
@@ -459,10 +452,10 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
             controllerHandler.handleNetwork();
             break;
           case KeyEvent.KEYCODE_BUTTON_THUMBL:
-            controllerHandler.handleSpeedUp();
+            controllerHandler.handleSpeedDown();
             break;
           case KeyEvent.KEYCODE_BUTTON_THUMBR:
-            controllerHandler.handleSpeedDown();
+            controllerHandler.handleSpeedUp();
             break;
           default:
             //               makeText(this,"Key " + event.getKeyCode() + " not recognized",

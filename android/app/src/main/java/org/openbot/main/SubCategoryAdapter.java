@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 import java.util.List;
-import java.util.Random;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.common.OnItemClickListener;
 import org.openbot.databinding.ItemSubCategoryBinding;
@@ -40,8 +39,9 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
     SubCategory item = mValues.get(position);
     holder.title.setText(item.getTitle());
     Glide.with(holder.itemView).load(item.getImage()).centerInside().into(holder.icon);
-    int color =
-        Color.rgb(holder.rand.nextInt(255), holder.rand.nextInt(255), holder.rand.nextInt(255));
+    int color = Color.parseColor(item.getBackgroundColor());
+    //        Color.rgb(holder.rand.nextInt(255), holder.rand.nextInt(255),
+    // holder.rand.nextInt(255));
     holder.icon.setStrokeColor(ColorStateList.valueOf(color));
     holder.icon.setBackgroundColor(color);
   }
@@ -54,7 +54,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
   public static class ViewHolder extends RecyclerView.ViewHolder {
     public final TextView title;
     public final ShapeableImageView icon;
-    public Random rand = new Random();
+    //    public Random rand = new Random();
 
     public ViewHolder(
         ItemSubCategoryBinding binding,

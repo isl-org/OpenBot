@@ -1,5 +1,7 @@
 package org.openbot.common;
 
+import java.util.EnumSet;
+
 public class Enums {
   public enum LogMode {
     ALL_IMGS(0),
@@ -32,6 +34,15 @@ public class Enums {
     public int getValue() {
       return value;
     }
+
+    public static ControlMode getByID(int value) {
+      for (final ControlMode element : EnumSet.allOf(ControlMode.class)) {
+        if (element.value == value) {
+          return element;
+        }
+      }
+      return null;
+    }
   }
 
   public enum SpeedMode {
@@ -47,6 +58,15 @@ public class Enums {
 
     public int getValue() {
       return value;
+    }
+
+    public static SpeedMode getByID(int value) {
+      for (final SpeedMode element : EnumSet.allOf(SpeedMode.class)) {
+        if (element.value == value) {
+          return element;
+        }
+      }
+      return null;
     }
   }
 
@@ -64,6 +84,15 @@ public class Enums {
     public int getValue() {
       return value;
     }
+
+    public static DriveMode getByID(int value) {
+      for (final DriveMode element : EnumSet.allOf(DriveMode.class)) {
+        if (element.value == value) {
+          return element;
+        }
+      }
+      return null;
+    }
   }
 
   public enum VehicleIndicator {
@@ -74,6 +103,22 @@ public class Enums {
     private final int value;
 
     VehicleIndicator(final int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
+  }
+
+  public enum Direction {
+    UP(+1),
+    CYCLIC(0),
+    DOWN(-1);
+
+    private final int value;
+
+    Direction(final int value) {
       this.value = value;
     }
 

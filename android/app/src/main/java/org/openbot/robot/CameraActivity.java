@@ -78,8 +78,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.common.Constants;
@@ -88,8 +88,10 @@ import org.openbot.common.Enums.ControlMode;
 import org.openbot.common.Enums.DriveMode;
 import org.openbot.common.Enums.LogMode;
 import org.openbot.common.Enums.SpeedMode;
+import org.openbot.common.Utils;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
+import org.openbot.env.Control;
 import org.openbot.env.ControllerToBotEventBus;
 import org.openbot.env.GameController;
 import org.openbot.env.ImageUtils;
@@ -361,23 +363,31 @@ public abstract class CameraActivity extends AppCompatActivity
                   // Data has the following form: voltage, lWheel, rWheel, obstacle
                   sendVehicleDataToSensorService(timestamp, data);
                   String[] itemList = data.split(",");
-                  vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
-                  vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
-                  vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
-                  vehicle.setSonarReading(Float.parseFloat(itemList[3]));
-                  runOnUiThread(
-                      () -> {
-                        voltageTextView.setText(
-                            String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage()));
-                        speedTextView.setText(
-                            String.format(
-                                Locale.US,
-                                "%3.0f,%3.0f rpm",
-                                vehicle.getLeftWheelRPM(),
-                                vehicle.getRightWheelRPM()));
-                        sonarTextView.setText(
-                            String.format(Locale.US, "%3.0f cm", vehicle.getSonarReading()));
-                      });
+                  if (itemList.length == 4) {
+                    vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
+                    vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
+                    vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
+                    vehicle.setSonarReading(Float.parseFloat(itemList[3]));
+                    runOnUiThread(
+                        () -> {
+                          voltageTextView.setText(
+                              String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage()));
+                          speedTextView.setText(
+                              String.format(
+                                  Locale.US,
+                                  "%3.0f,%3.0f rpm",
+                                  vehicle.getLeftWheelRPM(),
+                                  vehicle.getRightWheelRPM()));
+                          sonarTextView.setText(
+                              String.format(Locale.US, "%3.0f cm", vehicle.getSonarReading()));
+                        });
+                  } else {
+                    Toast.makeText(
+                            context,
+                            "Skipping bad USB data, next update in 1s.",
+                            Toast.LENGTH_SHORT)
+                        .show();
+                  }
                   break;
               }
             }
@@ -399,9 +409,16 @@ public abstract class CameraActivity extends AppCompatActivity
     modelSpinner.setSelection(Math.max(0, modelAdapter.getPosition(preferencesManager.getModel())));
     deviceSpinner.setSelection(preferencesManager.getDevice());
     logSpinner.setSelection(preferencesManager.getLogMode());
-    controlModeSpinner.setSelection(preferencesManager.getControlMode());
-    driveModeSpinner.setSelection(preferencesManager.getDriveMode());
-    speedModeSpinner.setSelection(preferencesManager.getSpeedMode());
+    if (ControlMode.getByID(preferencesManager.getControlMode()) != null)
+      controlModeSpinner.setSelection(
+          Objects.requireNonNull(ControlMode.getByID(preferencesManager.getControlMode()))
+              .ordinal());
+    if (DriveMode.getByID(preferencesManager.getDriveMode()) != null)
+      driveModeSpinner.setSelection(
+          Objects.requireNonNull(DriveMode.getByID(preferencesManager.getDriveMode())).ordinal());
+    if (SpeedMode.getByID(preferencesManager.getSpeedMode()) != null)
+      speedModeSpinner.setSelection(
+          Objects.requireNonNull(SpeedMode.getByID(preferencesManager.getSpeedMode())).ordinal());
 
     setNumThreads(preferencesManager.getNumThreads());
     threadsTextView.setText(Integer.toString(numThreads));
@@ -598,7 +615,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   @Override
   public synchronized void onDestroy() {
-    toggleConnection(false);
+    //    toggleConnection(false);
     if (localBroadcastManager != null) {
       localBroadcastManager.unregisterReceiver(localBroadcastReceiver);
       localBroadcastManager = null;
@@ -617,6 +634,7 @@ public abstract class CameraActivity extends AppCompatActivity
   @Override
   public void onRequestPermissionsResult(
       final int requestCode, final String[] permissions, final int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     switch (requestCode) {
       case REQUEST_CAMERA_PERMISSION:
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -882,7 +900,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.speedMode != speedMode) {
       LOGGER.d("Updating  speedMode: " + speedMode);
       this.speedMode = speedMode;
-      preferencesManager.setSpeedMode(speedMode.ordinal());
+      preferencesManager.setSpeedMode(speedMode.getValue());
       speedModeSpinner.setSelection(speedMode.ordinal());
       vehicle.setSpeedMultiplier(speedMode.getValue());
     }
@@ -906,7 +924,7 @@ public abstract class CameraActivity extends AppCompatActivity
         default:
           throw new IllegalStateException("Unexpected value: " + controlMode);
       }
-      preferencesManager.setControlMode(controlMode.ordinal());
+      preferencesManager.setControlMode(controlMode.getValue());
       controlModeSpinner.setSelection(controlMode.ordinal());
     }
   }
@@ -919,7 +937,7 @@ public abstract class CameraActivity extends AppCompatActivity
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
     driveModeSpinner.setAlpha(0.5f);
-    preferencesManager.setDriveMode(oldDriveMode.ordinal());
+    preferencesManager.setDriveMode(oldDriveMode.getValue());
   }
 
   private void disconnectPhoneController() {
@@ -935,10 +953,10 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.driveMode != driveMode) {
       LOGGER.d("Updating  driveMode: " + driveMode);
       this.driveMode = driveMode;
-      preferencesManager.setDriveMode(driveMode.ordinal());
+      preferencesManager.setDriveMode(driveMode.getValue());
       gameController.setDriveMode(driveMode);
       driveModeSpinner.setSelection(driveMode.ordinal());
-      BotToControllerEventBus.emitEvent(createStatus("DRIVE_MODE", driveMode.toString()));
+      BotToControllerEventBus.emitEvent(Utils.createStatus("DRIVE_MODE", driveMode.toString()));
     }
   }
 
@@ -1039,8 +1057,8 @@ public abstract class CameraActivity extends AppCompatActivity
   protected void sendControlToSensorService() {
     if (sensorMessenger != null) {
       Message msg = Message.obtain();
-      msg.arg1 = (int) (vehicle.getControl().getLeft());
-      msg.arg2 = (int) (vehicle.getControl().getRight());
+      msg.arg1 = (int) (vehicle.getLeftSpeed());
+      msg.arg2 = (int) (vehicle.getRightSpeed());
       msg.what = SensorService.MSG_CONTROL;
       try {
         sensorMessenger.send(msg);
@@ -1143,7 +1161,7 @@ public abstract class CameraActivity extends AppCompatActivity
       stopLogging();
       loggingEnabled = false;
     }
-    BotToControllerEventBus.emitEvent(createStatus("LOGS", loggingEnabled));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("LOGS", loggingEnabled));
 
     logSpinner.setEnabled(!loggingEnabled);
     if (loggingEnabled) logSpinner.setAlpha(0.5f);
@@ -1165,7 +1183,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected abstract void toggleNoise();
 
-  protected abstract void sendVehicleControl();
+  protected abstract void updateVehicleControl();
 
   protected abstract void setNetworkEnabled(boolean isChecked);
 
@@ -1333,7 +1351,13 @@ public abstract class CameraActivity extends AppCompatActivity
                   // PhoneController class will receive this event and resent it to the controller.
                   // Other controllers can subscribe to this event as well.
                   // That is why we are not calling phoneController.send() here directly.
-                  BotToControllerEventBus.emitEvent(getStatus());
+                  BotToControllerEventBus.emitEvent(
+                      Utils.getStatus(
+                          loggingEnabled,
+                          noiseEnabled,
+                          networkEnabled,
+                          driveMode.getValue(),
+                          vehicle.getIndicator()));
                   break;
                 case "DISCONNECTED":
                   controllerHandler.handleDriveCommand(0.f, 0.f);
@@ -1343,60 +1367,23 @@ public abstract class CameraActivity extends AppCompatActivity
             });
   }
 
-  private JSONObject getStatus() {
-    JSONObject status = new JSONObject();
-    try {
-      JSONObject statusValue = new JSONObject();
-
-      statusValue.put("LOGS", this.loggingEnabled);
-      statusValue.put("NOISE", this.noiseEnabled);
-      statusValue.put("NETWORK", this.networkEnabled);
-      statusValue.put("DRIVE_MODE", this.driveMode);
-
-      // Possibly can only send the value of the indicator here, but this makes it clearer.
-      // Also, the controller need not have to know implementation details.
-      statusValue.put("INDICATOR_LEFT", vehicle.getIndicator() == -1);
-      statusValue.put("INDICATOR_RIGHT", vehicle.getIndicator() == 1);
-      statusValue.put("INDICATOR_STOP", vehicle.getIndicator() == 0);
-
-      status.put("status", statusValue);
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    return status;
-  }
-
-  protected JSONObject createStatus(String name, Boolean value) {
-    return createStatus(name, value ? "true" : "false");
-  }
-
-  protected JSONObject createStatus(String name, String value) {
-    try {
-      return new JSONObject().put("status", new JSONObject().put(name, value));
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    return new JSONObject();
-  }
-
   private void sendIndicatorStatus(Integer status) {
-    BotToControllerEventBus.emitEvent(createStatus("INDICATOR_LEFT", status == -1));
-    BotToControllerEventBus.emitEvent(createStatus("INDICATOR_RIGHT", status == 1));
-    BotToControllerEventBus.emitEvent(createStatus("INDICATOR_STOP", status == 0));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_LEFT", status == -1));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_RIGHT", status == 1));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_STOP", status == 0));
   }
 
   // Controller event handler
   protected class ControllerHandler {
 
-    protected void handleDriveCommand(Vehicle.Control control) {
+    protected void handleDriveCommand(Control control) {
       vehicle.setControl(control);
-      sendVehicleControl();
+      updateVehicleControl();
     }
 
     protected void handleDriveCommand(Float l, Float r) {
       vehicle.setControl(l, r);
-      sendVehicleControl();
+      updateVehicleControl();
     }
 
     protected void handleLogging() {
