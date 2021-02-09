@@ -3,6 +3,7 @@ package org.openbot.robot;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Size;
@@ -158,7 +159,9 @@ public abstract class CameraFragment extends ControlsFragment {
   }
 
   public void setAnalyserResolution(Size resolutionSize) {
-    this.analyserResolution = resolutionSize;
+    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+      this.analyserResolution = new Size(resolutionSize.getHeight(), resolutionSize.getWidth());
+    else this.analyserResolution = resolutionSize;
     bindCameraUseCases();
   }
 

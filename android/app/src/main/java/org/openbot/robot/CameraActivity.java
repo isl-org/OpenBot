@@ -590,9 +590,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   @Override
-  public void onConnectionEstablished(String ipAddress) {
-
-  }
+  public void onConnectionEstablished(String ipAddress) {}
 
   @Override
   public synchronized void onPause() {
