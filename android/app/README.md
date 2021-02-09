@@ -41,7 +41,7 @@ The third button is for selecting the **speed mode**. There are three different 
 - **Normal**: The voltage applied to the motors is limited to 75% of the input voltage (~9V).
 - **Fast**: There is no limit. The full input voltage will be applied to the motors at full throttle (~12V). *This is the default setting for running the neural networks.*
 
-Running at higher speeds will reduce the lifetime of the motors but is more fun. The controls that are sent to the robot are displayed on the right side.
+Running at higher speeds will reduce the lifetime of the motors but is more fun. The controls that are sent to the robot are displayed on the right side. When using the game controller, the speed mode can be increased by pressing down the right joystick (R3) and decrased by pressing down the left joystick (L3).
 
 ### Data Log
 
