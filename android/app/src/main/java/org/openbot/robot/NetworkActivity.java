@@ -455,10 +455,10 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
             controllerHandler.handleNetwork();
             break;
           case KeyEvent.KEYCODE_BUTTON_THUMBL:
-            controllerHandler.handleSpeedUp();
+            controllerHandler.handleSpeedDown();
             break;
           case KeyEvent.KEYCODE_BUTTON_THUMBR:
-            controllerHandler.handleSpeedDown();
+            controllerHandler.handleSpeedUp();
             break;
           default:
             //               makeText(this,"Key " + event.getKeyCode() + " not recognized",
