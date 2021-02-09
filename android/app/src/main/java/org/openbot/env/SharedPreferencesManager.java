@@ -13,11 +13,11 @@ public class SharedPreferencesManager {
   private static final String BAUD_RATE = "BAUD_RATE";
   private static final int DEFAULT_LOG_MODE = Enums.LogMode.CROP_IMG.ordinal();
   private static final String LOG_MODE = "LOG_MODE";
-  private static final int DEFAULT_CONTROL_MODE = Enums.ControlMode.GAMEPAD.ordinal();
+  private static final int DEFAULT_CONTROL_MODE = Enums.ControlMode.GAMEPAD.getValue();
   private static final String CONTROL_MODE = "CONTROL_MODE";
-  private static final int DEFAULT_SPEED_MODE = Enums.SpeedMode.NORMAL.ordinal();
+  private static final int DEFAULT_SPEED_MODE = Enums.SpeedMode.NORMAL.getValue();
   private static final String SPEED_MODE = "SPEED_MODE";
-  private static final int DEFAULT_DRIVE_MODE = Enums.DriveMode.GAME.ordinal();
+  private static final int DEFAULT_DRIVE_MODE = Enums.DriveMode.GAME.getValue();
   private static final String DRIVE_MODE = "DRIVE_MODE";
   private static final String DEFAULT_MODEL = Model.DETECTOR_V1_1_0_Q.toString();
   private static final String MODEL = "MODEL_NAME";

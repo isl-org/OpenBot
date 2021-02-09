@@ -28,7 +28,7 @@ public abstract class CameraFragment extends Fragment {
 
   private ExecutorService cameraExecutor;
   private final int PERMISSIONS_REQUEST_CODE = 10;
-  private String[] PERMISSIONS_REQUIRED = new String[] {Manifest.permission.CAMERA};
+  private final String[] PERMISSIONS_REQUIRED = new String[] {Manifest.permission.CAMERA};
   private static final Logger LOGGER = new Logger();
   private PreviewView previewView;
 
@@ -85,7 +85,7 @@ public abstract class CameraFragment extends Fragment {
             ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
 
             // insert your code here.
-            imageAnalysis.setAnalyzer(cameraExecutor, (ImageAnalysis.Analyzer) this::processFrame);
+            imageAnalysis.setAnalyzer(cameraExecutor, this::processFrame);
 
             try {
               cameraProvider.unbindAll();

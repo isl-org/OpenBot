@@ -1,5 +1,6 @@
 package org.openbot.common;
 
+import android.Manifest;
 import java.util.ArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
@@ -11,6 +12,16 @@ public class Constants {
   public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
   public static final String USB_ACTION_CONNECTION_ESTABLISHED = "usb.connection_established";
   public static final String USB_ACTION_CONNECTION_CLOSED = "usb.connection_closed";
+
+  public static final int REQUEST_CAMERA_PERMISSION = 1;
+  public static final int REQUEST_LOCATION_PERMISSION_LOGGING = 2;
+  public static final int REQUEST_LOCATION_PERMISSION_CONTROLLER = 3;
+  public static final int REQUEST_STORAGE_PERMISSION = 4;
+  public static final int REQUEST_BLUETOOTH_PERMISSION = 5;
+  public static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
+  public static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+  public static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+  public static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
 
   // Global
   public static final String ALL = "All";
@@ -64,16 +75,15 @@ public class Constants {
     ArrayList<Category> categories = new ArrayList<>();
 
     ArrayList<SubCategory> subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(Constants.GLOBAL_VIEW, R.drawable.openbot_icon));
+    subCategories.add(new SubCategory(Constants.GLOBAL_VIEW, R.drawable.openbot_icon, "#4B7BFF"));
     categories.add(new Category(Constants.ALL, subCategories));
 
+    subCategories = new ArrayList<>();
+    //    subCategories.add(new SubCategory(Constants.CONTROLLER, R.drawable.ic_controller));
+    subCategories.add(new SubCategory(Constants.FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
+    //    subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game, "#B3FF6D00"));
+    categories.add(new Category(Constants.GAME, subCategories));
     /*
-        subCategories = new ArrayList<>();
-        subCategories.add(new SubCategory(Constants.CONTROLLER, R.drawable.ic_controller));
-        subCategories.add(new SubCategory(Constants.FREE_ROAM, R.drawable.ic_game));
-        subCategories.add(new SubCategory(Constants.AR_MODE, R.drawable.ic_game));
-        categories.add(new Category(Constants.GAME, subCategories));
-
         subCategories = new ArrayList<>();
         subCategories.add(new SubCategory(Constants.LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage));
         subCategories.add(new SubCategory(Constants.EDGE_LOCAL_NETWORK, R.drawable.ic_network));

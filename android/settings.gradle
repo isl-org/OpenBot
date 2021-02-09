@@ -1,1 +1,1 @@
-include ':app' ,':tensorflow-lite', ':controller'
+include ':app' , ':controller'

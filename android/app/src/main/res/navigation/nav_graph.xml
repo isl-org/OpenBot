@@ -8,16 +8,26 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="org.openbot.main.MainFragment"
-        android:label="main_fragment"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
+            android:id="@+id/action_mainFragment_to_robotCommunicationFragment"
+            app:destination="@id/robotCommunicationFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/robotCommunicationFragment"
+        android:name="org.openbot.robot.RobotCommunicationFragment"
+        android:label="RobotCommunicationFragment"
+        tools:layout="@layout/fragment_robot_communication" />
 
     <fragment
-        android:id="@+id/gameFragment"
-        android:name="org.openbot.robot.GameFragment"
-        android:label="fragment_game"
-        tools:layout="@layout/fragment_game" />
+        android:id="@+id/settingsFragment"
+        android:name="org.openbot.main.SettingsFragment"
+        android:label="@string/settings" />
+
+    <action
+        android:id="@+id/open_settings_fragment"
+        app:destination="@id/settingsFragment"
+        />
+
 </navigation>

@@ -10,6 +10,8 @@ care is neccessary when using automated control (e.g. person following or drivin
 
 ## How to Use the App
 
+The app starts with the screen comprising of all the robot's functionality.
+
 <p align="center">
   <img src="../../docs/images/app_gui_1.jpg" alt="App GUI" width="49%"/>
   <img src="../../docs/images/app_gui_2.jpg" alt="App GUI" width="50%"/>
@@ -39,7 +41,7 @@ The third button is for selecting the **speed mode**. There are three different 
 - **Normal**: The voltage applied to the motors is limited to 75% of the input voltage (~9V).
 - **Fast**: There is no limit. The full input voltage will be applied to the motors at full throttle (~12V). *This is the default setting for running the neural networks.*
 
-Running at higher speeds will reduce the lifetime of the motors but is more fun. The controls that are sent to the robot are displayed on the right side.
+Running at higher speeds will reduce the lifetime of the motors but is more fun. The controls that are sent to the robot are displayed on the right side. When using the game controller, the speed mode can be increased by pressing down the right joystick (R3) and decrased by pressing down the left joystick (L3).
 
 ### Data Log
 
@@ -76,6 +78,22 @@ Use the drop-down menu to select the device on which the neural network should b
 
 If a model is active, the inference speed in [ms] will be displayed next to the device which is running the model.
 
+### Features
+
+Pressing the back button opens up the menu screen to choose specific features to use.
+
+<p align="center">
+<img src="../../docs/images/menu_selector.png" alt="App GUI" width="25%"/>
+</p>
+
+- **Robot**: Robot opens the screen containing all the functionality described above.
+
+
+- **Free Roam**: Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
+
+<p align="center">
+<img src="../../docs/images/game_screen.png" alt="Alt text" width="50%" />
+</p>
 
 ## Code Structure
 

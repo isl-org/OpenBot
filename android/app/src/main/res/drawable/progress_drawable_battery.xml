@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@android:id/background"
+        android:drawable="@drawable/ic_battery_outline" />   <!-- Your progress bar background drawable(SVG) here -->
+    <item android:id="@android:id/progress">
+        <clip
+            android:clipOrientation="vertical"
+            android:drawable="@drawable/ic_battery_full"
+            android:gravity="bottom" />  <!-- Your progress bar fill drawable(SVG) here -->
+    </item>
+
+</layer-list>

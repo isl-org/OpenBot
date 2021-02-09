@@ -1,0 +1,20 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/usb_connection">
+
+        <ListPreference
+            app:defaultValue="115200"
+            app:entries="@array/baud_rates"
+            app:entryValues="@array/baud_rates"
+            app:key="baud_rate"
+            app:title="@string/baud_rate"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="connection"
+            app:title="No Device"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

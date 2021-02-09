@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:drawable="@drawable/ic_usb_off" android:state_checked="false" />
+    <item android:drawable="@drawable/ic_usb" android:state_checked="true" />
+    <item android:drawable="@drawable/ic_usb_off" />
+</selector>
