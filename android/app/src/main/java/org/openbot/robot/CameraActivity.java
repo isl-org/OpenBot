@@ -1356,7 +1356,7 @@ public abstract class CameraActivity extends AppCompatActivity
                           loggingEnabled,
                           noiseEnabled,
                           networkEnabled,
-                          driveMode.getValue(),
+                          driveMode.toString(),
                           vehicle.getIndicator()));
                   break;
                 case "DISCONNECTED":

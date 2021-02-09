@@ -18,6 +18,7 @@ class DriveModeButton @JvmOverloads constructor(
 
     init {
         setOnTouchListener(OnTouchListener("{command: DRIVE_MODE}"))
+
         subscribe("DRIVE_MODE", ::onDataReceived)
         offState()
     }

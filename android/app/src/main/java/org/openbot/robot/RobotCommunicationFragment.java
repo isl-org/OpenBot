@@ -5,6 +5,7 @@ import static org.openbot.common.Enums.DriveMode;
 import static org.openbot.common.Enums.SpeedMode;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -328,7 +329,7 @@ public class RobotCommunicationFragment extends Fragment {
       switch (controlMode) {
         case GAMEPAD:
           binding.controlMode.setImageResource(R.drawable.ic_controller);
-          disconnectPhoneController();
+          disconnectPhoneController(requireContext());
           break;
         case PHONE:
           binding.controlMode.setImageResource(R.drawable.ic_phone);
@@ -395,9 +396,9 @@ public class RobotCommunicationFragment extends Fragment {
     preferencesManager.setDriveMode(oldDriveMode.getValue());
   }
 
-  private void disconnectPhoneController() {
+  private void disconnectPhoneController(Context context) {
     if (phoneController.isConnected()) {
-      phoneController.disconnect();
+      phoneController.disconnect(context);
     }
     setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.driveMode.setEnabled(true);
@@ -455,7 +456,7 @@ public class RobotCommunicationFragment extends Fragment {
                   // That is why we are not calling phoneController.send() here directly.
                   BotToControllerEventBus.emitEvent(
                       Utils.getStatus(
-                          false, false, false, driveMode.getValue(), vehicle.getIndicator()));
+                          false, false, false, driveMode.toString(), vehicle.getIndicator()));
 
                   break;
                 case "DISCONNECTED":

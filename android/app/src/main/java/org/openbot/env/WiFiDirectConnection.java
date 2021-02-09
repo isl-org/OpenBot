@@ -161,6 +161,9 @@ public class WiFiDirectConnection implements ILocalConnection {
                 Log.i(TAG, "Found '" + serviceDevices.size() + "' groups");
                 if (serviceDevices.isEmpty()) {
                     Log.i(TAG, "No groups found");
+
+                    // maybe the controller is not up yet, keep trying
+                    searchAvailableGroups(context);
                 } else {
                     Log.i(TAG, "Finished discovery");
 

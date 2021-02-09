@@ -22,7 +22,7 @@ public class Utils {
       boolean loggingEnabled,
       boolean noiseEnabled,
       boolean networkEnabled,
-      int driveMode,
+      String driveMode,
       int indicator) {
     JSONObject status = new JSONObject();
     try {
