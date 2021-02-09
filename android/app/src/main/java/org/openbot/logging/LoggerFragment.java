@@ -25,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -140,6 +141,8 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
           @Override
           public void onNothingSelected(AdapterView<?> parent) {}
         });
+    BottomSheetBehavior.from(binding.loggerBottomSheet)
+        .setState(BottomSheetBehavior.STATE_EXPANDED);
   }
 
   private void updateCropImageInfo(String selected) {

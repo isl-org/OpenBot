@@ -7,6 +7,7 @@
     tools:context=".logging.LoggerFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loggerBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_bg"
