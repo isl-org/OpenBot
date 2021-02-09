@@ -47,10 +47,6 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
-    vehicle = new Vehicle(this, baudRate);
-    viewModel.setVehicle(vehicle);
 
     localBroadcastReceiver =
         new BroadcastReceiver() {
@@ -152,5 +148,15 @@ public class MainActivity extends AppCompatActivity {
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     vehicle.disconnectUsb();
     super.onDestroy();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
+    vehicle = new Vehicle(this, baudRate);
+    viewModel.setVehicle(vehicle);
+
   }
 }

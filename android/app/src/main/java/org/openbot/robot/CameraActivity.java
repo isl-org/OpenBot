@@ -618,7 +618,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   @Override
   public synchronized void onDestroy() {
-    //    toggleConnection(false);
+    toggleConnection(false);
     if (localBroadcastManager != null) {
       localBroadcastManager.unregisterReceiver(localBroadcastReceiver);
       localBroadcastManager = null;

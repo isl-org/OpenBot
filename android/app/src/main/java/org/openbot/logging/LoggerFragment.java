@@ -75,6 +75,8 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
+
     intentSensorService = new Intent(requireActivity(), SensorService.class);
     logFolder =
         Environment.getExternalStorageDirectory().getAbsolutePath()
