@@ -70,12 +70,14 @@ public abstract class ControlsFragment extends Fragment {
             getViewLifecycleOwner(),
             data -> {
               String[] itemList = data.split(",");
-              vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
-              vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
-              vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
-              vehicle.setSonarReading(Float.parseFloat(itemList[3]));
+              if (itemList.length == 4) {
+                vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
+                vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
+                vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
+                vehicle.setSonarReading(Float.parseFloat(itemList[3]));
 
-              processUSBData(data);
+                processUSBData(data);
+              }
             });
 
     handlePhoneControllerEvents();
