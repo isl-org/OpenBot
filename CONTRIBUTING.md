@@ -9,20 +9,22 @@
 
 1. Submit an issue describing the changes you want to implement. If it's only minor changes/bug-fixes, you can skip to step 3.
 2. After the scope was discussed in the issue, assign it to yourself. It should show up in the "To do" column in the OpenBot project.
-3. Fork the project and clone it locally.
+3. Fork the project and clone it locally:
     
    `git clone https://github.com/<user_id>/OpenBot.git`
 
-4. Create a branch and name it `<user_id>/<feature>` where `<feature>` concisely describes the scope of the work.
+4. Create a branch:
 
-   `git checkout -b <user_id>/<feature>`
+   `git checkout -b <branch-name>` 
    
-5. Do the work, write good commit messages, push your branch to the forked repository.
+   where `<branch-name>` concisely describes the scope of the work.
+   
+5. Do the work, write good commit messages, push your branch to the forked repository:
    
    ```
    git add <modified file>
    git commit -m <meaningful description>
-   git push --set-upstream origin <user_id>/<feature>
+   git push --set-upstream origin <branch-name>
    ```
    
 6. Create a [pull request](https://github.com/intel-isl/OpenBot/pulls) in GitHub and link the issue to it. It should show up in the "In progress" column in the OpenBot project.
