@@ -138,6 +138,7 @@ public class Vehicle {
   public void stopNoise() {
     noiseEnabled = false;
     noiseTimer.cancel();
+    sendControl();
   }
 
   public int getSpeedMultiplier() {

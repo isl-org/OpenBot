@@ -268,9 +268,6 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
       runInBackground(this::sendControlToSensorService);
     }
 
-    // Send control to vehicle
-    vehicle.sendControl();
-
     // Update GUI
     runOnUiThread(
         () -> {
