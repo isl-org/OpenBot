@@ -1212,14 +1212,11 @@ public abstract class CameraActivity extends AppCompatActivity
 
     if (vehicle.isUsbConnected()) {
       connectionSwitchCompat.setText(vehicle.getUsbConnection().getProductName());
-      Toast.makeText(getContext(), "Connected.", Toast.LENGTH_SHORT).show();
     } else {
       connectionSwitchCompat.setText(R.string.no_device);
       // Tried to connect but failed
       if (isChecked) {
         Toast.makeText(getContext(), "Please check the USB connection.", Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(getContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
       }
     }
   }
