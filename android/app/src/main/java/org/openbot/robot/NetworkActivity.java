@@ -261,7 +261,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
         });
   }
 
-  protected void sendVehicleControl() {
+  protected void updateVehicleControl() {
 
     // Log controls
     if (loggingEnabled) {
@@ -285,7 +285,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
     if (noiseEnabled) {
       vehicle.startNoise();
     } else vehicle.stopNoise();
-    sendVehicleControl();
+    updateVehicleControl();
   }
 
   @Override
