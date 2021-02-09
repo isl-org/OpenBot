@@ -369,21 +369,24 @@ public abstract class CameraActivity extends AppCompatActivity
                     vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
                     vehicle.setSonarReading(Float.parseFloat(itemList[3]));
                     runOnUiThread(
-                            () -> {
-                              voltageTextView.setText(
-                                      String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage()));
-                              speedTextView.setText(
-                                      String.format(
-                                              Locale.US,
-                                              "%3.0f,%3.0f rpm",
-                                              vehicle.getLeftWheelRPM(),
-                                              vehicle.getRightWheelRPM()));
-                              sonarTextView.setText(
-                                      String.format(Locale.US, "%3.0f cm", vehicle.getSonarReading()));
-                            });
-                  }
-                  else {
-                    Toast.makeText(context, "Skipping bad USB data, next update in 1s.", Toast.LENGTH_SHORT).show();
+                        () -> {
+                          voltageTextView.setText(
+                              String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage()));
+                          speedTextView.setText(
+                              String.format(
+                                  Locale.US,
+                                  "%3.0f,%3.0f rpm",
+                                  vehicle.getLeftWheelRPM(),
+                                  vehicle.getRightWheelRPM()));
+                          sonarTextView.setText(
+                              String.format(Locale.US, "%3.0f cm", vehicle.getSonarReading()));
+                        });
+                  } else {
+                    Toast.makeText(
+                            context,
+                            "Skipping bad USB data, next update in 1s.",
+                            Toast.LENGTH_SHORT)
+                        .show();
                   }
                   break;
               }
