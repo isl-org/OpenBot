@@ -363,23 +363,28 @@ public abstract class CameraActivity extends AppCompatActivity
                   // Data has the following form: voltage, lWheel, rWheel, obstacle
                   sendVehicleDataToSensorService(timestamp, data);
                   String[] itemList = data.split(",");
-                  vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
-                  vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
-                  vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
-                  vehicle.setSonarReading(Float.parseFloat(itemList[3]));
-                  runOnUiThread(
-                      () -> {
-                        voltageTextView.setText(
-                            String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage()));
-                        speedTextView.setText(
-                            String.format(
-                                Locale.US,
-                                "%3.0f,%3.0f rpm",
-                                vehicle.getLeftWheelRPM(),
-                                vehicle.getRightWheelRPM()));
-                        sonarTextView.setText(
-                            String.format(Locale.US, "%3.0f cm", vehicle.getSonarReading()));
-                      });
+                  if (itemList.length == 4) {
+                    vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
+                    vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
+                    vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
+                    vehicle.setSonarReading(Float.parseFloat(itemList[3]));
+                    runOnUiThread(
+                            () -> {
+                              voltageTextView.setText(
+                                      String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage()));
+                              speedTextView.setText(
+                                      String.format(
+                                              Locale.US,
+                                              "%3.0f,%3.0f rpm",
+                                              vehicle.getLeftWheelRPM(),
+                                              vehicle.getRightWheelRPM()));
+                              sonarTextView.setText(
+                                      String.format(Locale.US, "%3.0f cm", vehicle.getSonarReading()));
+                            });
+                  }
+                  else {
+                    Toast.makeText(context, "Skipping bad USB data, next update in 1s.", Toast.LENGTH_SHORT).show();
+                  }
                   break;
               }
             }
