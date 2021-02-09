@@ -1,6 +1,8 @@
 package org.openbot.env;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,9 +12,8 @@ public class PhoneController {
 
     private static final String TAG = "PhoneController";
     final ILocalConnection connection =
-            new WiFiDirectConnection();
-            // new NearbyConnection();
-
+            // new WiFiDirectConnection();
+            new NearbyConnection();
     {
         connection.setDataCallback (new DataReceived());
         handleBotEvents();
@@ -47,6 +48,8 @@ public class PhoneController {
     }
 
     private void handleBotEvents() {
-        BotToControllerEventBus.getProcessor().subscribe(event -> send(event));
+        BotToControllerEventBus.getProcessor().subscribe(event -> send(event), error -> {
+            Log.d(null, "Error occurred in BotToControllerEventBus");
+        });
     }
 }

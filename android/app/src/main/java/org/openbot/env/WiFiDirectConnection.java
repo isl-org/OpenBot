@@ -78,10 +78,14 @@ public class WiFiDirectConnection implements ILocalConnection {
     @Override
     public void sendMessage(String message) {
         if (wroupClient != null) {
-            MessageWrapper messageWrapper = new MessageWrapper();
-            messageWrapper.setMessage(message);
-            messageWrapper.setMessageType(MessageWrapper.MessageType.NORMAL);
-            wroupClient.sendMessageToAllClients(messageWrapper);
+            try {
+                MessageWrapper messageWrapper = new MessageWrapper();
+                messageWrapper.setMessage(message);
+                messageWrapper.setMessageType(MessageWrapper.MessageType.NORMAL);
+                wroupClient.sendMessageToAllClients(messageWrapper);
+            } catch (Throwable t) {
+                Log.d(TAG, "Something went wrong while trying to send..." + t);
+            }
         }
     }
 

@@ -361,10 +361,12 @@ public abstract class CameraActivity extends AppCompatActivity
                   // Data has the following form: voltage, lWheel, rWheel, obstacle
                   sendVehicleDataToSensorService(timestamp, data);
                   String[] itemList = data.split(",");
-                  vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
-                  vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
-                  vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
-                  vehicle.setSonarReading(Float.parseFloat(itemList[3]));
+                  if (itemList.length == 4) {
+                    vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
+                    vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
+                    vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
+                    vehicle.setSonarReading(Float.parseFloat(itemList[3]));
+                  }
                   runOnUiThread(
                       () -> {
                         voltageTextView.setText(
@@ -1340,7 +1342,9 @@ public abstract class CameraActivity extends AppCompatActivity
                   setControlMode(ControlMode.GAMEPAD);
                   break;
               }
-            });
+            }, error -> {
+                  Log.d(null, "Error occurred in ControllerToBotEventBus");
+                });
   }
 
   private JSONObject getStatus() {

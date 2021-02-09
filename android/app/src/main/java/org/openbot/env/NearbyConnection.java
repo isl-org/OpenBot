@@ -237,7 +237,7 @@ public class NearbyConnection implements ILocalConnection {
         .show();
   }
 
-  private void beep() {
+  public static void beep() {
     final ToneGenerator tg = new ToneGenerator(6, 100);
     tg.startTone(ToneGenerator.TONE_PROP_BEEP);
   }
@@ -253,8 +253,12 @@ public class NearbyConnection implements ILocalConnection {
       Log.d(TAG, "Cannot send...No connection!");
       return;
     }
-    connectionsClient.sendPayload(
-        pairedDeviceEndpointId, Payload.fromBytes(message.getBytes(StandardCharsets.UTF_8)));
+    try {
+        connectionsClient.sendPayload(
+                pairedDeviceEndpointId, Payload.fromBytes(message.getBytes(StandardCharsets.UTF_8)));
+    } catch (Throwable t) {
+        Log.d(TAG, "Something went wrong while sending: " + t);
+    }
   }
 
   public class CancelableDiscovery {
