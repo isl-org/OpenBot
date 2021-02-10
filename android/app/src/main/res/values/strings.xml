@@ -14,9 +14,9 @@
 
     <string name="model">Model</string>
     <string-array name="models">
+        <item>AUTOPILOT_F</item>
         <item>DETECTOR_V1_1_0_Q</item>
         <item>DETECTOR_V3_S_Q</item>
-        <item>AUTOPILOT_F</item>
     </string-array>
 
     <string name="device">Device</string>
