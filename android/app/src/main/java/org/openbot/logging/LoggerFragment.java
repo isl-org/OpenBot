@@ -79,12 +79,6 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
 
     intentSensorService = new Intent(requireActivity(), SensorService.class);
-    logFolder =
-        Environment.getExternalStorageDirectory().getAbsolutePath()
-            + File.separator
-            + getString(R.string.app_name)
-            + File.separator
-            + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
@@ -266,6 +260,12 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   }
 
   private void startLogging() {
+    logFolder =
+            Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + File.separator
+                    + getString(R.string.app_name)
+                    + File.separator
+                    + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
     intentSensorService.putExtra("logFolder", logFolder + File.separator + "sensor_data");
     requireActivity().startService(intentSensorService);
     requireActivity().bindService(intentSensorService, sensorConnection, Context.BIND_AUTO_CREATE);
