@@ -120,10 +120,10 @@ public abstract class ControlsFragment extends Fragment {
           processControllerKeyData(Constants.CMD_NETWORK);
           break;
         case KeyEvent.KEYCODE_BUTTON_THUMBL:
-          processControllerKeyData(Constants.CMD_SPEED_UP);
+          processControllerKeyData(Constants.CMD_SPEED_DOWN);
           break;
         case KeyEvent.KEYCODE_BUTTON_THUMBR:
-          processControllerKeyData(Constants.CMD_SPEED_DOWN);
+          processControllerKeyData(Constants.CMD_SPEED_UP);
           break;
 
         default:
