@@ -261,11 +261,11 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
 
   private void startLogging() {
     logFolder =
-            Environment.getExternalStorageDirectory().getAbsolutePath()
-                    + File.separator
-                    + getString(R.string.app_name)
-                    + File.separator
-                    + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        Environment.getExternalStorageDirectory().getAbsolutePath()
+            + File.separator
+            + getString(R.string.app_name)
+            + File.separator
+            + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
     intentSensorService.putExtra("logFolder", logFolder + File.separator + "sensor_data");
     requireActivity().startService(intentSensorService);
     requireActivity().bindService(intentSensorService, sensorConnection, Context.BIND_AUTO_CREATE);
