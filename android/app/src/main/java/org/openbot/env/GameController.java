@@ -28,6 +28,7 @@ public class GameController {
 
   private static float getCenteredAxis(MotionEvent event, int axis, int historyPos) {
 
+    if (event == null || event.getDevice() == null) return 0;
     final InputDevice.MotionRange range = event.getDevice().getMotionRange(axis, event.getSource());
 
     // A joystick at rest does not always report an absolute position of

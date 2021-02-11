@@ -20,7 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
 
-class ServerService {
+public class ServerCommunication {
 
   private static final String TAG = "Server";
 
@@ -28,6 +28,8 @@ class ServerService {
     void onAddModel(String model);
 
     void onRemoveModel(String model);
+
+    void onConnectionEstablished(String ipAddress);
   }
 
   private final AsyncHttpClient client;
@@ -49,6 +51,7 @@ class ServerService {
           Log.d(TAG, "Resolved address: " + serverUrl);
 
           client.get(context, serverUrl + "/test", testResponseHandler);
+          serverListener.onConnectionEstablished(serverUrl);
         }
       };
   private final JsonHttpResponseHandler testResponseHandler =
@@ -145,7 +148,7 @@ class ServerService {
 
   private String serverUrl;
 
-  public ServerService(Context context, ServerListener serverListener) {
+  public ServerCommunication(Context context, ServerListener serverListener) {
     this.client = new AsyncHttpClient();
     this.context = context;
     this.nsdService = new NsdService();

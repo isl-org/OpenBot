@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    tools:showIn="@layout/fragment_free_roam">
+
+    <ImageButton
+        android:id="@+id/controlMode"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:elevation="5dp"
+        android:padding="16dp"
+        android:scaleType="centerInside"
+        android:tint="@android:color/white"
+        app:backgroundTint="@color/openBotBlue"
+        app:layout_constraintEnd_toStartOf="@id/driveMode"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_controller" />
+
+    <TextView
+        android:id="@+id/controlModeTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/controller"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/controlMode"
+        app:layout_constraintStart_toStartOf="@+id/controlMode"
+        app:layout_constraintTop_toBottomOf="@+id/controlMode" />
+
+    <ImageButton
+        android:id="@+id/driveMode"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:elevation="5dp"
+        android:padding="16dp"
+        android:scaleType="centerInside"
+        android:tint="@android:color/white"
+        app:backgroundTint="@color/openBotBlue"
+        app:layout_constraintBottom_toTopOf="@+id/driveModeTitle"
+        app:layout_constraintEnd_toStartOf="@id/speedMode"
+        app:layout_constraintStart_toEndOf="@+id/controlMode"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_game" />
+
+    <TextView
+        android:id="@+id/driveModeTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/drive_mode"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/driveMode"
+        app:layout_constraintStart_toStartOf="@+id/driveMode"
+        app:layout_constraintTop_toBottomOf="@+id/driveMode" />
+
+    <ImageButton
+        android:id="@+id/speedMode"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:elevation="5dp"
+        android:padding="16dp"
+        android:scaleType="centerInside"
+        android:tint="@android:color/white"
+        app:backgroundTint="@color/openBotBlue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/driveMode"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_speed_medium" />
+
+    <TextView
+        android:id="@+id/speedModeTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/speedTitle"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/speedMode"
+        app:layout_constraintStart_toStartOf="@+id/speedMode"
+        app:layout_constraintTop_toBottomOf="@+id/speedMode" />
+
+    <TextView
+        android:id="@+id/control_info"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/control_info"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/controlModeTitle"
+        app:layout_constraintEnd_toStartOf="@+id/controlMode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/controlMode" />
+
+    <TextView
+        android:id="@+id/speed_info"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingVertical="8dp"
+        android:text="@string/speedInfo"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/speedModeTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/speedMode"
+        app:layout_constraintTop_toTopOf="@+id/speedMode" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -108,7 +108,7 @@ public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
         Camera.PreviewCallback,
         CompoundButton.OnCheckedChangeListener,
-        ServerService.ServerListener,
+        ServerCommunication.ServerListener,
         View.OnClickListener,
         AdapterView.OnItemSelectedListener {
   private static final Logger LOGGER = new Logger();
@@ -182,7 +182,7 @@ public abstract class CameraActivity extends AppCompatActivity
   protected boolean noiseEnabled = false;
 
   private Intent intentSensorService;
-  private ServerService serverService;
+  private ServerCommunication serverCommunication;
   private SharedPreferencesManager preferencesManager;
   protected final GameController gameController = new GameController(driveMode);
   private final PhoneController phoneController = new PhoneController();
@@ -565,8 +565,8 @@ public abstract class CameraActivity extends AppCompatActivity
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
-    serverService = new ServerService(this, this);
-    serverService.start();
+    serverCommunication = new ServerCommunication(this, this);
+    serverCommunication.start();
   }
 
   @Override
@@ -590,6 +590,9 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   @Override
+  public void onConnectionEstablished(String ipAddress) {}
+
+  @Override
   public synchronized void onPause() {
     LOGGER.d("onPause " + this);
 
@@ -598,7 +601,7 @@ public abstract class CameraActivity extends AppCompatActivity
       handlerThread.join();
       handlerThread = null;
       handler = null;
-      serverService.stop();
+      serverCommunication.stop();
     } catch (final InterruptedException e) {
       LOGGER.e(e, "Exception!");
     }
@@ -615,7 +618,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   @Override
   public synchronized void onDestroy() {
-    //    toggleConnection(false);
+    toggleConnection(false);
     if (localBroadcastManager != null) {
       localBroadcastManager.unregisterReceiver(localBroadcastReceiver);
       localBroadcastManager = null;
@@ -1135,7 +1138,7 @@ public abstract class CameraActivity extends AppCompatActivity
             TimeUnit.MILLISECONDS.sleep(500);
             ZipUtil.pack(folder, zip);
             FileUtils.deleteQuietly(folder);
-            serverService.upload(zip);
+            serverCommunication.upload(zip);
           } catch (InterruptedException e) {
             LOGGER.e(e, "Got interrupted.");
           }
@@ -1209,14 +1212,11 @@ public abstract class CameraActivity extends AppCompatActivity
 
     if (vehicle.isUsbConnected()) {
       connectionSwitchCompat.setText(vehicle.getUsbConnection().getProductName());
-      Toast.makeText(getContext(), "Connected.", Toast.LENGTH_SHORT).show();
     } else {
       connectionSwitchCompat.setText(R.string.no_device);
       // Tried to connect but failed
       if (isChecked) {
         Toast.makeText(getContext(), "Please check the USB connection.", Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(getContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
       }
     }
   }

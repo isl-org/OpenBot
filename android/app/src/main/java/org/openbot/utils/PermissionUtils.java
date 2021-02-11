@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
+import org.openbot.common.Constants;
 
 public class PermissionUtils {
 
@@ -27,6 +28,25 @@ public class PermissionUtils {
 
   public static void requestPermissions(Activity activity, String[] permissions, int requestCode) {
     ActivityCompat.requestPermissions(activity, permissions, requestCode);
+  }
+
+  public static void requestCameraPermission(Fragment fragment) {
+    requestPermissions(
+        fragment, new String[] {Constants.PERMISSION_CAMERA}, Constants.REQUEST_CAMERA_PERMISSION);
+  }
+
+  public static void requestLocationPermissionLogging(Fragment fragment) {
+    requestPermissions(
+        fragment,
+        new String[] {Constants.PERMISSION_LOCATION},
+        Constants.REQUEST_LOCATION_PERMISSION_LOGGING);
+  }
+
+  public static void requestStoragePermission(Fragment fragment) {
+    requestPermissions(
+        fragment,
+        new String[] {Constants.PERMISSION_STORAGE},
+        Constants.REQUEST_STORAGE_PERMISSION);
   }
 
   public static void requestPermissions(Fragment fragment, String[] permissions, int requestCode) {
