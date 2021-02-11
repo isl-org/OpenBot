@@ -2,54 +2,54 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import timber.log.Timber;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class PhoneController {
 
-    private static final String TAG = "PhoneController";
-    final ILocalConnection connection =
-            // new WiFiDirectConnection();
-            new NearbyConnection();
-    {
-        connection.setDataCallback (new DataReceived());
-        handleBotEvents();
-    }
+  private static final String TAG = "PhoneController";
+  final ILocalConnection connection = new NearbyConnection();
 
-    static class DataReceived implements IDataReceived {
-        @Override
-        public void dataReceived(String commandStr) {
-            try {
-                ControllerToBotEventBus.emitEvent(new JSONObject(commandStr));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+  {
+    connection.setDataCallback(new DataReceived());
+    handleBotEvents();
+  }
 
-    public void connect(Context context) {
-        connection.init (context);
-        connection.connect(context);
+  static class DataReceived implements IDataReceived {
+    @Override
+    public void dataReceived(String commandStr) {
+      try {
+        ControllerToBotEventBus.emitEvent(new JSONObject(commandStr));
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
     }
+  }
 
-    public void disconnect(Context context) {
-        connection.disconnect(context);
-    }
+  public void connect(Context context) {
+    connection.init(context);
+    connection.connect(context);
+  }
 
-    public void send(JSONObject info) {
-        connection.sendMessage(info.toString());
-    }
+  public void disconnect(Context context) {
+    connection.disconnect(context);
+  }
 
-    public boolean isConnected() {
-        return connection.isConnected();
-    }
+  public void send(JSONObject info) {
+    connection.sendMessage(info.toString());
+  }
 
-    private void handleBotEvents() {
-        BotToControllerEventBus.getProcessor().subscribe(event -> send(event), error -> {
-            Log.d(null, "Error occurred in BotToControllerEventBus");
-        });
-    }
+  public boolean isConnected() {
+    return connection.isConnected();
+  }
+
+  private void handleBotEvents() {
+    BotToControllerEventBus.getProcessor()
+        .subscribe(
+                this::send,
+                error -> Timber.d("Error occurred in BotToControllerEventBus"));
+  }
 }

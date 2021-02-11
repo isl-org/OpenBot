@@ -1,5 +1,5 @@
 package org.openbot.env;
 
 public interface IDataReceived {
-    void dataReceived(String command);
+  void dataReceived(String command);
 }

@@ -37,17 +37,18 @@ import com.google.android.gms.nearby.connection.Strategy;
 import java.nio.charset.StandardCharsets;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.robot.CameraActivity;
 
+import timber.log.Timber;
+
 public class NearbyConnection implements ILocalConnection {
   private static final String TAG = "NearbyConnection";
   private String pairedDeviceEndpointId;
   private static final Strategy STRATEGY = Strategy.P2P_POINT_TO_POINT;
-  private static Context context;
+  private Context context;
   private static final String SERVICE_ID = "OPENBOT_SERVICE_ID";
   private final CancelableDiscovery discovery = new CancelableDiscovery(this);
   private boolean isConnected = false;
@@ -57,25 +58,25 @@ public class NearbyConnection implements ILocalConnection {
   private ConnectionsClient connectionsClient;
 
   @Override
-  public void init (Context context) {}
+  public void init(Context context) {}
 
   // Callbacks for receiving payloads
   private final PayloadCallback payloadCallback =
-          new PayloadCallback() {
-            @Override
-            public void onPayloadReceived(@NotNull String endpointId, Payload payload) {
-              String commandStr = new String(payload.asBytes(), StandardCharsets.UTF_8);
-              dataReceivedCallback.dataReceived(commandStr);
-            }
+      new PayloadCallback() {
+        @Override
+        public void onPayloadReceived(@NotNull String endpointId, Payload payload) {
+          String commandStr = new String(payload.asBytes(), StandardCharsets.UTF_8);
+          dataReceivedCallback.dataReceived(commandStr);
+        }
 
-            @Override
-            public void onPayloadTransferUpdate(
-                    @NonNull String endpointId, @NonNull PayloadTransferUpdate update) {}
-          };
+        @Override
+        public void onPayloadTransferUpdate(
+            @NonNull String endpointId, @NonNull PayloadTransferUpdate update) {}
+      };
 
   @Override
-  public void setDataCallback (IDataReceived dataCallback) {
-      this.dataReceivedCallback = dataCallback;
+  public void setDataCallback(IDataReceived dataCallback) {
+    this.dataReceivedCallback = dataCallback;
   }
 
   // Callbacks for finding other devices
@@ -89,42 +90,42 @@ public class NearbyConnection implements ILocalConnection {
           String connectionName = "OpenBotConnection";
           connectionsClient
               .requestConnection(connectionName, endpointId, connectionLifecycleCallback)
-              .addOnSuccessListener(unusedResult -> Log.d("requestConnection", "Connected OK"))
+              .addOnSuccessListener(unusedResult -> Timber.d("Connected OK"))
               .addOnFailureListener(
                   e -> {
-                    Log.d("requestConnection", "Unable to connect: Error: " + e.toString());
+                    Timber.d("Unable to connect: Error: %s", e.toString());
 
                     if (e.getMessage().contains("8012: STATUS_ENDPOINT_IO_ERROR")) {
                       // retry. this usually helps...
-                      Log.d("NearbyConnection", "Got 8012. Reconnecting...");
+                      Timber.d("Got 8012. Reconnecting...");
 
                       connectionsClient.stopDiscovery();
                       connectionsClient.stopAdvertising();
 
-                      connect(NearbyConnection.context);
+                      connect(context);
                     }
                     if (e.getMessage().contains("8002: STATUS_ALREADY_DISCOVERING")) {
-                      Log.d("NearbyConnection", "Got 8002: STATUS_ALREADY_DISCOVERING");
+                      Timber.d("Got 8002: STATUS_ALREADY_DISCOVERING");
                       connectionsClient.stopAdvertising();
                     }
 
                     if (e.getMessage().contains("8003: STATUS_ALREADY_CONNECTED_TO_ENDPOINT")) {
-                      Log.d("NearbyConnection", "Got 8003. Do nothing...");
+                      Timber.d("Got 8003. Do nothing...");
                     }
 
                     if (e.getMessage().contains("8007: STATUS_BLUETOOTH_ERROR")) {
-                      Log.d("NearbyConnection", "Got 8007. Reconnecting...");
+                      Timber.d("Got 8007. Reconnecting...");
                       connectionsClient.stopDiscovery();
                       connectionsClient.stopAdvertising();
 
-                      connect(NearbyConnection.context);
+                      connect(context);
                     }
                   });
         }
 
         @Override
         public void onEndpointLost(@NonNull String endpointId) {
-          Log.i(TAG, "onEndpointLost: endpoint lost");
+          Timber.i("onEndpointLost: endpoint lost");
           discovery.cancel();
           stopDiscovery();
         }
@@ -136,14 +137,14 @@ public class NearbyConnection implements ILocalConnection {
         @Override
         public void onConnectionInitiated(
             @NonNull String endpointId, @NonNull ConnectionInfo connectionInfo) {
-          Log.i(TAG, "onConnectionInitiated: accepting connection");
+          Timber.i("onConnectionInitiated: accepting connection");
           connectionsClient.acceptConnection(endpointId, payloadCallback);
         }
 
         @Override
         public void onConnectionResult(@NonNull String endpointId, ConnectionResolution result) {
           if (result.getStatus().isSuccess()) {
-            Log.i(TAG, "onConnectionResult: connection successful");
+            Timber.i("onConnectionResult: connection successful");
             beep();
             Toast.makeText(
                     CameraActivity.getContext(),
@@ -159,7 +160,7 @@ public class NearbyConnection implements ILocalConnection {
               e.printStackTrace();
             }
           } else {
-            Log.i(TAG, "onConnectionResult: connection failed");
+            Timber.i("onConnectionResult: connection failed");
             isConnected = false;
             Toast.makeText(
                     CameraActivity.getContext(),
@@ -177,7 +178,7 @@ public class NearbyConnection implements ILocalConnection {
                   "Smartphone controller disconnected",
                   Toast.LENGTH_LONG)
               .show();
-          Log.i(TAG, "onDisconnected: disconnected from the opponent");
+          Timber.i("onDisconnected: disconnected from the opponent");
           try {
             ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
           } catch (JSONException e) {
@@ -186,14 +187,13 @@ public class NearbyConnection implements ILocalConnection {
         }
       };
 
-    private void stopDiscovery() {
+  private void stopDiscovery() {
     connectionsClient.stopDiscovery();
   }
 
   @Override
   public void connect(Context context) {
-    NearbyConnection.context = context;
-    this.dataReceivedCallback = dataReceivedCallback;
+    this.context = context;
     connectionsClient = Nearby.getConnectionsClient(context);
 
     // make sure we are not connecting
@@ -224,12 +224,10 @@ public class NearbyConnection implements ILocalConnection {
             SERVICE_ID,
             endpointDiscoveryCallback,
             new DiscoveryOptions.Builder().setStrategy(STRATEGY).build())
-        .addOnSuccessListener(unusedResult -> Log.d("startDiscovery", "We started discovery OK"))
+        .addOnSuccessListener(unusedResult -> Timber.d("We started discovery OK"))
         .addOnFailureListener(
-            e ->
-                Log.d(
-                    "startDiscovery",
-                    "We were unable to start startDiscovery. Error: " + e.toString()));
+                e ->
+                        Timber.d("We were unable to start startDiscovery. Error: %s", e.toString()));
     Toast.makeText(
             CameraActivity.getContext(),
             "Searching for smartphone controller...",
@@ -250,14 +248,14 @@ public class NearbyConnection implements ILocalConnection {
   @Override
   public void sendMessage(String message) {
     if (connectionsClient == null) {
-      Log.d(TAG, "Cannot send...No connection!");
+      Timber.d("Cannot send...No connection!");
       return;
     }
     try {
-        connectionsClient.sendPayload(
-                pairedDeviceEndpointId, Payload.fromBytes(message.getBytes(StandardCharsets.UTF_8)));
+      connectionsClient.sendPayload(
+          pairedDeviceEndpointId, Payload.fromBytes(message.getBytes(StandardCharsets.UTF_8)));
     } catch (Throwable t) {
-        Log.d(TAG, "Something went wrong while sending: " + t);
+      Timber.d(t, "Something went wrong while sending");
     }
   }
 

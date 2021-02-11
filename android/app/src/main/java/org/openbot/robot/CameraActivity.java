@@ -1364,9 +1364,10 @@ public abstract class CameraActivity extends AppCompatActivity
                   setControlMode(ControlMode.GAMEPAD);
                   break;
               }
-            }, error -> {
-                  Log.d(null, "Error occurred in ControllerToBotEventBus");
-                });
+            },
+            error -> {
+              Log.d(null, "Error occurred in ControllerToBotEventBus");
+            });
   }
 
   private void sendIndicatorStatus(Integer status) {
