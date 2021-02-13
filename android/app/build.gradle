@@ -130,15 +130,10 @@ dependencies {
     // dependency to appear on your APK's compile classpath or the test APK
     // classpath.
     androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.3.0'
-<<<<<<< HEAD
-=======
     implementation platform('com.google.firebase:firebase-bom:26.4.0')
 
     // Declare the dependencies for the Crashlytics and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
-
-
->>>>>>> master
 }

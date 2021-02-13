@@ -253,7 +253,7 @@ public class FreeRoamFragment extends ControlsFragment {
 
   private void disconnectPhoneController() {
     if (phoneController.isConnected()) {
-      phoneController.disconnect();
+      phoneController.disconnect(requireContext());
     }
     setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
