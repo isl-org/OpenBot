@@ -237,7 +237,6 @@ public abstract class ControlsFragment extends Fragment {
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
-
   }
 
   @Override
