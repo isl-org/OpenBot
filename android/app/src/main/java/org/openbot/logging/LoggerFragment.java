@@ -51,8 +51,6 @@ import timber.log.Timber;
 public class LoggerFragment extends CameraFragment implements ServerCommunication.ServerListener {
 
   private FragmentLoggerBinding binding;
-  private Handler handler;
-  private HandlerThread handlerThread;
   private Intent intentSensorService;
   private ServerCommunication serverCommunication;
   protected String logFolder;
@@ -167,26 +165,13 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   @Override
   public synchronized void onResume() {
     super.onResume();
-
-    handlerThread = new HandlerThread("inference");
-    handlerThread.start();
-    handler = new Handler(handlerThread.getLooper());
     serverCommunication = new ServerCommunication(requireContext(), this);
     serverCommunication.start();
   }
 
   @Override
   public synchronized void onPause() {
-
-    handlerThread.quitSafely();
-    try {
-      handlerThread.join();
-      handlerThread = null;
-      handler = null;
-      serverCommunication.stop();
-    } catch (final InterruptedException e) {
-    }
-
+    serverCommunication.stop();
     super.onPause();
   }
 
@@ -328,12 +313,6 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
     BotToControllerEventBus.emitEvent(Utils.createStatus("LOGS", loggingEnabled));
 
     binding.loggerSwitch.setChecked(loggingEnabled);
-  }
-
-  protected synchronized void runInBackground(final Runnable r) {
-    if (handler != null) {
-      handler.post(r);
-    }
   }
 
   @Override

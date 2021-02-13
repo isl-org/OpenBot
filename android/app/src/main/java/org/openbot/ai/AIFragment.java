@@ -48,8 +48,6 @@ import timber.log.Timber;
 public class AIFragment extends CameraFragment implements ServerCommunication.ServerListener {
 
   private FragmentAiBinding binding;
-  private Handler handler;
-  private HandlerThread handlerThread;
   private ServerCommunication serverCommunication;
 
   private long lastProcessingTimeMs;
@@ -255,32 +253,14 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   public synchronized void onResume() {
     super.onResume();
 
-    handlerThread = new HandlerThread("inference");
-    handlerThread.start();
-    handler = new Handler(handlerThread.getLooper());
     serverCommunication = new ServerCommunication(requireContext(), this);
     serverCommunication.start();
   }
 
   @Override
   public synchronized void onPause() {
-
-    handlerThread.quitSafely();
-    try {
-      handlerThread.join();
-      handlerThread = null;
-      handler = null;
-      serverCommunication.stop();
-    } catch (final InterruptedException e) {
-    }
-
+    serverCommunication.stop();
     super.onPause();
-  }
-
-  protected synchronized void runInBackground(final Runnable r) {
-    if (handler != null) {
-      handler.post(r);
-    }
   }
 
   @Override
@@ -440,7 +420,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
 
   private void setModel(Model model) {
     if (this.model != model) {
-      Timber.d("Updating  model: " + model);
+      Timber.d("Updating  model: %s", model);
       this.model = model;
       preferencesManager.setModel(model.toString());
       onInferenceConfigurationChanged();
@@ -453,7 +433,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
 
   private void setDevice(Network.Device device) {
     if (this.device != device) {
-      Timber.d("Updating  device: " + device);
+      Timber.d("Updating  device: %s", device);
       this.device = device;
       final boolean threadsEnabled = device == Network.Device.CPU;
       binding.plus.setEnabled(threadsEnabled);
@@ -472,7 +452,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
 
   private void setNumThreads(int numThreads) {
     if (this.numThreads != numThreads) {
-      Timber.d("Updating  numThreads: " + numThreads);
+      Timber.d("Updating  numThreads: %s", numThreads);
       this.numThreads = numThreads;
       preferencesManager.setNumThreads(numThreads);
       onInferenceConfigurationChanged();
