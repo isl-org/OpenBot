@@ -160,7 +160,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
 
     Timber.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
-    recreateNetwork(getModel(), getDevice(), getNumThreads());
+    onInferenceConfigurationChanged();
     if (detector == null && autoPilot == null) {
       Timber.e("No network on preview!");
       return;
@@ -186,65 +186,69 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
     final Network.Device device = getDevice();
     final Model model = getModel();
     final int numThreads = getNumThreads();
-    runInBackground(() -> recreateNetwork(model, device, numThreads));
-  }
+    runInBackground(
+        () -> {
+          tracker.clearTrackedObjects();
+          if (detector != null) {
+            Timber.d("Closing detector.");
+            detector.close();
+            detector = null;
+          }
+          if (autoPilot != null) {
+            Timber.d("Closing autoPilot.");
+            autoPilot.close();
+            autoPilot = null;
+          }
 
-  private void recreateNetwork(Model model, Network.Device device, int numThreads) {
-    tracker.clearTrackedObjects();
-    if (detector != null) {
-      Timber.d("Closing detector.");
-      detector.close();
-      detector = null;
-    }
-    if (autoPilot != null) {
-      Timber.d("Closing autoPilot.");
-      autoPilot.close();
-      autoPilot = null;
-    }
+          try {
+            if (model == Model.AUTOPILOT_F) {
+              Timber.d(
+                  "Creating autopilot (model=%s, device=%s, numThreads=%d)",
+                  model, device, numThreads);
+              autoPilot = Autopilot.create(requireActivity(), model, device, numThreads);
+              croppedBitmap =
+                  Bitmap.createBitmap(
+                      autoPilot.getImageSizeX(),
+                      autoPilot.getImageSizeY(),
+                      Bitmap.Config.ARGB_8888);
+              frameToCropTransform =
+                  ImageUtils.getTransformationMatrix(
+                      getMaxAnalyseImageSize().getWidth(),
+                      getMaxAnalyseImageSize().getHeight(),
+                      croppedBitmap.getWidth(),
+                      croppedBitmap.getHeight(),
+                      sensorOrientation,
+                      autoPilot.getCropRect(),
+                      autoPilot.getMaintainAspect());
+            } else {
+              Timber.d(
+                  "Creating detector (model=%s, device=%s, numThreads=%d)",
+                  model, device, numThreads);
+              detector = Detector.create(requireActivity(), model, device, numThreads);
+              croppedBitmap =
+                  Bitmap.createBitmap(
+                      detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
+              frameToCropTransform =
+                  ImageUtils.getTransformationMatrix(
+                      getMaxAnalyseImageSize().getWidth(),
+                      getMaxAnalyseImageSize().getHeight(),
+                      croppedBitmap.getWidth(),
+                      croppedBitmap.getHeight(),
+                      sensorOrientation,
+                      detector.getCropRect(),
+                      detector.getMaintainAspect());
+            }
 
-    try {
-      if (model == Model.DETECTOR_V1_1_0_Q || model == Model.DETECTOR_V3_S_Q) {
-        Timber.d(
-            "Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-        detector = Detector.create(requireActivity(), model, device, numThreads);
-        croppedBitmap =
-            Bitmap.createBitmap(
-                detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
-        frameToCropTransform =
-            ImageUtils.getTransformationMatrix(
-                getMaxAnalyseImageSize().getWidth(),
-                getMaxAnalyseImageSize().getHeight(),
-                croppedBitmap.getWidth(),
-                croppedBitmap.getHeight(),
-                sensorOrientation,
-                detector.getCropRect(),
-                detector.getMaintainAspect());
-      } else {
-        Timber.d(
-            "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-        autoPilot = Autopilot.create(requireActivity(), model, device, numThreads);
-        croppedBitmap =
-            Bitmap.createBitmap(
-                autoPilot.getImageSizeX(), autoPilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
-        frameToCropTransform =
-            ImageUtils.getTransformationMatrix(
-                getMaxAnalyseImageSize().getWidth(),
-                getMaxAnalyseImageSize().getHeight(),
-                croppedBitmap.getWidth(),
-                croppedBitmap.getHeight(),
-                sensorOrientation,
-                autoPilot.getCropRect(),
-                autoPilot.getMaintainAspect());
-      }
+            cropToFrameTransform = new Matrix();
+            frameToCropTransform.invert(cropToFrameTransform);
 
-      cropToFrameTransform = new Matrix();
-      frameToCropTransform.invert(cropToFrameTransform);
-
-    } catch (IllegalArgumentException | IOException e) {
-      String msg = "Failed to create network.";
-      Timber.e(e, msg);
-      Toast.makeText(requireContext().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-    }
+          } catch (IllegalArgumentException | IOException e) {
+            String msg = "Failed to create network.";
+            Timber.e(e, msg);
+            Toast.makeText(requireContext().getApplicationContext(), msg, Toast.LENGTH_SHORT)
+                .show();
+          }
+        });
   }
 
   @Override
@@ -320,8 +324,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
 
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy image) {
-    if(tracker == null)
-      updateCropImageInfo();
+    if (tracker == null) updateCropImageInfo();
 
     ++frameNum;
     if (binding != null && binding.autoSwitch.isChecked()) {
@@ -388,8 +391,11 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
 
             computingNetwork = false;
           });
-      requireActivity().runOnUiThread(() -> binding.inferenceInfo.setText(String.format(Locale.US, "%d ms", lastProcessingTimeMs)));
-
+      requireActivity()
+          .runOnUiThread(
+              () ->
+                  binding.inferenceInfo.setText(
+                      String.format(Locale.US, "%d ms", lastProcessingTimeMs)));
     }
   }
 

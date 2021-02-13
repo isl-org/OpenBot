@@ -70,8 +70,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
         break;
       case FeatureList.AI_MODELS:
         Navigation.findNavController(requireView())
-                .navigate(R.id.action_mainFragment_to_AIFragment);
-
+            .navigate(R.id.action_mainFragment_to_AIFragment);
     }
   }
 }
