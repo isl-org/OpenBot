@@ -79,7 +79,7 @@ public class LegacyCameraConnectionFragment extends Fragment {
   }
 
   private final TextureView.SurfaceTextureListener surfaceTextureListener =
-      new TextureView.SurfaceTextureListener() {
+      new RtspServer() { //TextureView.SurfaceTextureListener() {
         @Override
         public void onSurfaceTextureAvailable(
             final SurfaceTexture texture, final int width, final int height) {
@@ -132,6 +132,11 @@ public class LegacyCameraConnectionFragment extends Fragment {
         @Override
         public void onSurfaceTextureUpdated(final SurfaceTexture texture) {}
       };
+
+  public RtspServer getRtspServer () {
+    return (RtspServer) surfaceTextureListener;
+  }
+
   /** An additional thread for running tasks that shouldn't block the UI. */
   private HandlerThread backgroundThread;
 

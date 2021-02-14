@@ -142,6 +142,25 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/video"
+                android:layout_width="320dp"
+                android:layout_height="200dp"
+                android:layout_margin="30dp"
+                android:background="@color/red"
+                android:layout_toEndOf="@+id/left_slider"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+                <org.openbot.controller.customComponents.VideoView2
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/bottom_buttons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

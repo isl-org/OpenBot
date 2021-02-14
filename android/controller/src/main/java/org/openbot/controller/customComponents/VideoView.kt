@@ -10,53 +10,78 @@
 package org.openbot.controller.customComponents
 
 import android.content.Context
+import android.net.Uri
+import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
-import android.view.SurfaceView
-import com.pedro.vlc.VlcListener
-import com.pedro.vlc.VlcVideoLibrary
+import android.widget.Toast
 import org.json.JSONObject
 import org.openbot.controller.StatusEventBus
 import org.openbot.controller.databinding.ActivityFullscreenBinding
+import org.videolan.libvlc.LibVLC
+import org.videolan.libvlc.Media
+import org.videolan.libvlc.MediaPlayer
+import org.videolan.libvlc.util.VLCVideoLayout
 import java.util.*
+
 
 class VideoView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : SurfaceView(context, attrs, defStyleAttr) {
+) : org.videolan.libvlc.util.VLCVideoLayout(context, attrs, defStyleAttr) {
 
-    private val TAG:String = "VideoView"
-    private var ipAddress:String? = null
-    private var ipPort:String? = null
+    private val TAG: String = "VideoView"
+    private var ipAddress: String? = null
+    private var ipPort: String? = null
+
+    private var mLibVLC: LibVLC? = null
+    private var mMediaPlayer: MediaPlayer? = null
+    private var mVideoLayout: VLCVideoLayout? = null
 
     init {
         StatusEventBus.addSubject("IP_ADDRESS")
-        StatusEventBus.getProcessor("IP_ADDRESS")?.subscribe {
+        StatusEventBus.getProcessor("IP_ADDRESS")?.subscribe ({
             gotIpAddress(it as String)
-        }
+        }, {
+            Log.i(null, "Failed to send...")
+        })
 
         StatusEventBus.addSubject("PORT")
-        StatusEventBus.getProcessor("PORT")?.subscribe {
+        StatusEventBus.getProcessor("PORT")?.subscribe ({
             gotPort(it as String)
-        }
+        }, {
+            Log.i(null, "Failed to add PORT...")
+        })
 
         StatusEventBus.addSubject("CAMERA_RESOLUTION")
         StatusEventBus.getProcessor("CAMERA_RESOLUTION")?.subscribe {
             gotCameraResolution(it as String)
+        }
+
+        StatusEventBus.addSubject("VIDEO_COMMAND")
+        StatusEventBus.getProcessor("VIDEO_COMMAND")?.subscribe {
+            processVideoCommand(it as String)
+        }
+    }
+
+    private fun processVideoCommand(command: String) {
+
+        when (command) {
+            "STOP" -> {
+                stop()
+            }
         }
     }
 
     private fun gotIpAddress(address: String) {
         if (ipPort != null) {
             start("rtsp://${address}:${ipPort}")
-        }
-        else ipAddress = address;
+        } else ipAddress = address;
     }
 
     private fun gotPort(port: String) {
         if (ipAddress != null) {
             start("rtsp://${ipAddress}:${port}")
-        }
-        else ipPort = port;
+        } else ipPort = port;
     }
 
     private fun gotCameraResolution(data: String) {
@@ -66,22 +91,6 @@ class VideoView @JvmOverloads constructor(
         setMeasuredDimension(width, height)
     }
 
-    private inner class Listener : VlcListener {
-        override fun onComplete() {
-            // Toast.makeText(this, "Playing", Toast.LENGTH_SHORT).show()
-            Log.i(TAG, "onComplete")
-        }
-
-        override fun onError() {
-            // Toast.makeText(this, "Error, make sure your endpoint is correct", Toast.LENGTH_SHORT).show()
-            vlcVideoLibrary?.stop()
-        }
-    }
-
-    private var vlcVideoLibrary: VlcVideoLibrary? = null
-    private val listener = Listener()
-    private val options = arrayOf(":fullscreen")
-
     init {
     }
 
@@ -89,7 +98,10 @@ class VideoView @JvmOverloads constructor(
         val args = ArrayList<String>()
         args.add("-vvv")
 
-        vlcVideoLibrary = VlcVideoLibrary(context, listener, binding.videoView)
+        mLibVLC = LibVLC(context, args)
+        mMediaPlayer = org.videolan.libvlc.MediaPlayer(mLibVLC)
+
+        mVideoLayout = this
     }
 
     fun show() {
@@ -104,10 +116,22 @@ class VideoView @JvmOverloads constructor(
         stop()
     }
 
-    fun start(url: String) {
-        vlcVideoLibrary!!.play(url)
+    private fun start(url: String) {
+
+        mMediaPlayer!!.detachViews()
+        mMediaPlayer!!.attachViews(mVideoLayout!!, null, true, true)
+
+        val media = Media(mLibVLC, Uri.parse(url))
+        media.setHWDecoderEnabled(true, true)
+
+        mMediaPlayer!!.media = media
+        media.release()
+
+        mMediaPlayer!!.play()
     }
 
     fun stop() {
+        mMediaPlayer!!.stop()
+        mMediaPlayer!!.detachViews()
     }
 }

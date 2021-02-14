@@ -13,6 +13,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
+    <!-- RTSP Video streaming -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
     <!-- Related to WiFi direct -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 

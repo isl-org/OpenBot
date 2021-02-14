@@ -68,6 +68,10 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'org.jetbrains:annotations:16.0.1'
 
+    // Video streaming
+    implementation 'com.github.pedroSG94:RTSP-Server:1.0.0'
+    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:1.9.3' // do not upgrade
+
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
@@ -136,4 +140,7 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
+
+    // WiFi direct
+    implementation 'com.abemart.wroup:wroup:0.9'
 }

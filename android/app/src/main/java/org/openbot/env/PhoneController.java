@@ -11,7 +11,9 @@ import timber.log.Timber;
 public class PhoneController {
 
   private static final String TAG = "PhoneController";
-  final ILocalConnection connection = new NearbyConnection();
+  final ILocalConnection connection =
+          new WiFiDirectConnection();
+          // new NearbyConnection();
 
   {
     connection.setDataCallback(new DataReceived());

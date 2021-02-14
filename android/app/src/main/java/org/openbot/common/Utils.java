@@ -1,7 +1,19 @@
 package org.openbot.common;
 
+import android.net.wifi.WifiManager;
+import android.text.format.Formatter;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openbot.robot.CameraActivity;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static android.content.Context.WIFI_SERVICE;
 
 public class Utils {
 
@@ -39,12 +51,42 @@ public class Utils {
       statusValue.put("INDICATOR_RIGHT", indicator == 1);
       statusValue.put("INDICATOR_STOP", indicator == 0);
 
+      statusValue.put("IP_ADDRESS", getIPAddress(true));
+      statusValue.put("PORT", "1935");
+
       status.put("status", statusValue);
 
     } catch (JSONException e) {
       e.printStackTrace();
     }
     return status;
+  }
+
+  public static String getIPAddress(boolean useIPv4) {
+    try {
+      List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+      for (NetworkInterface intf : interfaces) {
+        ArrayList<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+        for (InetAddress addr : addrs) {
+          if (!addr.isLoopbackAddress()) {
+            String sAddr = addr.getHostAddress();
+            //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+            boolean isIPv4 = sAddr.indexOf(':')<0;
+
+            if (useIPv4) {
+              if (isIPv4)
+                return sAddr;
+            } else {
+              if (!isIPv4) {
+                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+              }
+            }
+          }
+        }
+      }
+    } catch (Exception ignored) { } // for now eat exceptions
+    return "";
   }
 
   public static boolean isNumeric(String strNum) {

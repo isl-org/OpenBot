@@ -45,7 +45,6 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         binding = ActivityFullscreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         setupPermissions()
 
         screenManager = ScreenManager(binding)
@@ -62,6 +61,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         hideSystemUI()
 
         BotDataListener.init()
+        binding.videoView.init(binding)
     }
 
     private fun setupPermissions() {
@@ -103,6 +103,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
                             EventProcessor.ProgressEvents.Disconnected -> {
                                 screenManager.hideControls()
                                 ConnectionFactory.get().connect(this)
+
                             }
                             EventProcessor.ProgressEvents.StopAdvertising -> {
                             }

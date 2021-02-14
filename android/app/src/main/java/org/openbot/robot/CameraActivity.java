@@ -38,6 +38,7 @@ import android.media.Image;
 import android.media.Image.Plane;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -48,6 +49,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.os.Trace;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -104,6 +106,8 @@ import org.openbot.tflite.Network.Device;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 
+import static android.Manifest.permission.RECORD_AUDIO;
+
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
         Camera.PreviewCallback,
@@ -119,6 +123,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private static final int REQUEST_LOCATION_PERMISSION_CONTROLLER = 3;
   private static final int REQUEST_STORAGE_PERMISSION = 4;
   private static final int REQUEST_BLUETOOTH_PERMISSION = 5;
+  private static final int REQUEST_RECORD_PERMISSION_CONTROLLER = 6;
 
   private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
   private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -191,6 +196,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private final String voice = "matthew";
 
   protected Vehicle vehicle;
+  private CameraConnectionFragment cameraFragment;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -567,6 +573,9 @@ public abstract class CameraActivity extends AppCompatActivity
     handler = new Handler(handlerThread.getLooper());
     serverCommunication = new ServerCommunication(this, this);
     serverCommunication.start();
+
+    // INZ temp
+    // cameraFragment.getRtspServer().startServer(previewWidth, previewHeight, 1935);
   }
 
   @Override
@@ -602,11 +611,18 @@ public abstract class CameraActivity extends AppCompatActivity
       handlerThread = null;
       handler = null;
       serverCommunication.stop();
+      if (cameraFragment != null && cameraFragment.getRtspServer() != null) {
+        cameraFragment.getRtspServer().stopServer();
+      }
     } catch (final InterruptedException e) {
       LOGGER.e(e, "Exception!");
     }
 
     phoneController.disconnect(this);
+
+    // INZ temp
+    // cameraFragment.getRtspServer().stopServer();
+
     super.onPause();
   }
 
@@ -650,20 +666,24 @@ public abstract class CameraActivity extends AppCompatActivity
         }
         break;
 
-      case REQUEST_LOCATION_PERMISSION_LOGGING:
-        // If the permission is granted, start logging,
+      case REQUEST_LOCATION_PERMISSION_CONTROLLER:
+        // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          setIsLoggingActive(true);
+          // ask for recording permissions here
+
+          ActivityCompat.requestPermissions(
+                  this, new String[] {RECORD_AUDIO}, REQUEST_RECORD_PERMISSION_CONTROLLER);
+
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
-            Toast.makeText(this, R.string.location_permission_denied_logging, Toast.LENGTH_LONG)
-                .show();
+            Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
+                    .show();
           }
         }
         break;
 
-      case REQUEST_LOCATION_PERMISSION_CONTROLLER:
+      case REQUEST_RECORD_PERMISSION_CONTROLLER:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -671,9 +691,9 @@ public abstract class CameraActivity extends AppCompatActivity
             phoneController.connect(this);
           }
         } else {
-          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
-            Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
-                .show();
+          if (ActivityCompat.shouldShowRequestPermissionRationale(this, RECORD_AUDIO)) {
+            Toast.makeText(this, R.string.record_audio_permission_denied_controller, Toast.LENGTH_LONG)
+                    .show();
           }
         }
         break;
@@ -822,6 +842,7 @@ public abstract class CameraActivity extends AppCompatActivity
               this, getLayoutId(), getDesiredPreviewFrameSize(), cameraSelection);
     }
 
+    this.cameraFragment = (CameraConnectionFragment)fragment;
     getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
   }
 
@@ -1357,17 +1378,27 @@ public abstract class CameraActivity extends AppCompatActivity
                           noiseEnabled,
                           networkEnabled,
                           driveMode.toString(),
-                          vehicle.getIndicator()));
+                          vehicle.getIndicator())
+                  );
+
+                  cameraFragment.getRtspServer().startServer(previewWidth, previewHeight, 1935);
                   break;
+
                 case "DISCONNECTED":
                   controllerHandler.handleDriveCommand(0.f, 0.f);
                   setControlMode(ControlMode.GAMEPAD);
+                  BotToControllerEventBus.emitEvent(Utils.createStatus("VIDEO_COMMAND", "STOP"));
+                  cameraFragment.getRtspServer().stopServer();
                   break;
               }
             },
             error -> {
               Log.d(null, "Error occurred in ControllerToBotEventBus");
             });
+  }
+
+  private String getCameraResolution() {
+    return "{width:"+ previewWidth+", height:"+previewHeight+"}";
   }
 
   private void sendIndicatorStatus(Integer status) {
