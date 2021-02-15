@@ -19,7 +19,6 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.media.ToneGenerator;
-import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.google.android.gms.nearby.Nearby;
@@ -41,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.robot.CameraActivity;
-
 import timber.log.Timber;
 
 public class NearbyConnection implements ILocalConnection {
@@ -226,8 +224,7 @@ public class NearbyConnection implements ILocalConnection {
             new DiscoveryOptions.Builder().setStrategy(STRATEGY).build())
         .addOnSuccessListener(unusedResult -> Timber.d("We started discovery OK"))
         .addOnFailureListener(
-                e ->
-                        Timber.d("We were unable to start startDiscovery. Error: %s", e.toString()));
+            e -> Timber.d("We were unable to start startDiscovery. Error: %s", e.toString()));
     Toast.makeText(
             CameraActivity.getContext(),
             "Searching for smartphone controller...",

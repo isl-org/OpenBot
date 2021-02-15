@@ -1,10 +1,8 @@
 package org.openbot.env;
 
 import android.content.Context;
-import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import timber.log.Timber;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -48,8 +46,6 @@ public class PhoneController {
 
   private void handleBotEvents() {
     BotToControllerEventBus.getProcessor()
-        .subscribe(
-                this::send,
-                error -> Timber.d("Error occurred in BotToControllerEventBus"));
+        .subscribe(this::send, error -> Timber.d("Error occurred in BotToControllerEventBus"));
   }
 }
