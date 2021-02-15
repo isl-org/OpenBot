@@ -262,7 +262,6 @@ public abstract class ControlsFragment extends Fragment {
     if (handler != null) {
       handler.post(r);
     }
-
   }
 
   protected abstract void processControllerKeyData(String command);
