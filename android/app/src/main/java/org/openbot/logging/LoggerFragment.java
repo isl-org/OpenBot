@@ -516,7 +516,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
 
   private void disconnectPhoneController() {
     if (phoneController.isConnected()) {
-      phoneController.disconnect();
+      phoneController.disconnect(getContext());
     }
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);

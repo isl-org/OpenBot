@@ -606,7 +606,7 @@ public abstract class CameraActivity extends AppCompatActivity
       LOGGER.e(e, "Exception!");
     }
 
-    phoneController.disconnect();
+    phoneController.disconnect(this);
     super.onPause();
   }
 
@@ -945,7 +945,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void disconnectPhoneController() {
     if (phoneController.isConnected()) {
-      phoneController.disconnect();
+      phoneController.disconnect(this);
     }
     setDriveMode(DriveMode.values()[preferencesManager.getDriveMode()]);
     driveModeSpinner.setEnabled(true);
@@ -1356,7 +1356,7 @@ public abstract class CameraActivity extends AppCompatActivity
                           loggingEnabled,
                           noiseEnabled,
                           networkEnabled,
-                          driveMode.getValue(),
+                          driveMode.toString(),
                           vehicle.getIndicator()));
                   break;
                 case "DISCONNECTED":
@@ -1364,6 +1364,9 @@ public abstract class CameraActivity extends AppCompatActivity
                   setControlMode(ControlMode.GAMEPAD);
                   break;
               }
+            },
+            error -> {
+              Log.d(null, "Error occurred in ControllerToBotEventBus");
             });
   }
 

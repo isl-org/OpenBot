@@ -18,8 +18,8 @@ import org.openbot.controller.utils.Utils
 import java.nio.charset.StandardCharsets
 import kotlin.reflect.KProperty0
 
-object NearbyConnection {
-    private lateinit var payloadCallback: PayloadCallback
+object NearbyConnection : ILocalConnection {
+    private var dataReceivedCallback: IDataReceived? = null
     private const val TAG = "NearbyConnection"
     private val connectionName = "OpenBotConnection"
 
@@ -31,8 +31,32 @@ object NearbyConnection {
 
     private val STRATEGY = Strategy.P2P_POINT_TO_POINT
 
-    fun init() {
+    override fun init(context: Context) {
     }
+
+    override fun setDataCallback(dataCallback: IDataReceived?) {
+        dataReceivedCallback = dataCallback
+    }
+
+    // Callbacks for receiving payloads. The NearbyConnection will call this upon receiving new data.
+    private val payloadCallback: PayloadCallback = object : PayloadCallback() {
+        override fun onPayloadReceived(
+                endpointId: String,
+                payload: Payload
+        ) {
+            dataReceivedCallback?.dataReceived(String(
+                    payload.asBytes()!!,
+                    StandardCharsets.UTF_8
+            ))
+        }
+
+        override fun onPayloadTransferUpdate(
+                endpointId: String,
+                update: PayloadTransferUpdate
+        ) {
+        }
+    }
+
 
     // Callbacks for connections to other devices
     private val connectionLifecycleCallback: ConnectionLifecycleCallback =
@@ -93,16 +117,14 @@ object NearbyConnection {
             }
         }
 
-    fun connect(context: Context) {
+    override fun connect(context: Context) {
         connectionsClient = Nearby.getConnectionsClient(context)
-
         startAdvertising()
     }
 
-    /** Disconnects from the opponent and reset the UI.  */
-    fun disconnect() {
+    override fun disconnect(context: Context?) {
         val event: EventProcessor.ProgressEvents =
-            EventProcessor.ProgressEvents.Disconnecting
+                EventProcessor.ProgressEvents.Disconnecting
         EventProcessor.onNext(event)
 
         connectionsClient?.stopAdvertising()
@@ -111,6 +133,10 @@ object NearbyConnection {
             connectionsClient?.disconnectFromEndpoint(pairedDeviceEndpointId!!)
         }
         connectionsClient?.stopAllEndpoints()
+    }
+
+    override fun isConnected(): Boolean {
+        TODO("Not yet implemented")
     }
 
     /** Broadcasts our presence using Nearby Connections so the bot can find us  */
@@ -146,18 +172,14 @@ object NearbyConnection {
         disconnect()
     }
 
-    fun sendMessage(message: String) {
+    override fun sendMessage(message: String?) {
         if (connectionsClient == null || pairedDeviceEndpointId == null) {
             Log.d(TAG, "Cannot send...No connection!")
             return
         }
         connectionsClient!!.sendPayload(
             pairedDeviceEndpointId!!,
-            Payload.fromBytes(message.toByteArray(StandardCharsets.UTF_8))
+            Payload.fromBytes(message!!.toByteArray(StandardCharsets.UTF_8))
         )
-    }
-
-    fun setPayloadCallback(payloadCallback: KProperty0<PayloadCallback>) {
-        this.payloadCallback = payloadCallback.get()
     }
 }
