@@ -39,5 +39,6 @@ object EventProcessor {
         object Disconnected : ProgressEvents()
         object StopAdvertising : ProgressEvents()
         object AdvertisingFailed : ProgressEvents()
+        object TemporaryConnectionProblem : ProgressEvents()
     }
 }

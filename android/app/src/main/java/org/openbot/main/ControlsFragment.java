@@ -187,7 +187,7 @@ public abstract class ControlsFragment extends Fragment {
                           false,
                           false,
                           false,
-                          currentDriveMode.getValue(),
+                          currentDriveMode.toString(),
                           vehicle.getIndicator()));
 
                   break;
@@ -249,8 +249,7 @@ public abstract class ControlsFragment extends Fragment {
   public synchronized void onPause() {
     super.onPause();
     handlerThread.quitSafely();
-
-    phoneController.disconnect();
+    phoneController.disconnect(getContext());
     try {
       handlerThread.join();
       handlerThread = null;
@@ -263,6 +262,7 @@ public abstract class ControlsFragment extends Fragment {
     if (handler != null) {
       handler.post(r);
     }
+
   }
 
   protected abstract void processControllerKeyData(String command);
