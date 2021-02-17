@@ -89,6 +89,9 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
     binding.controllerContainer.driveMode.setEnabled(false);
     binding.controllerContainer.speedInfo.setEnabled(false);
 
+    binding.deviceSpinner.setSelection(preferencesManager.getDevice());
+    setNumThreads(preferencesManager.getNumThreads());
+
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
     List<CharSequence> models = Arrays.asList(getResources().getTextArray(R.array.models));
