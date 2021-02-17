@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -46,6 +48,8 @@ import timber.log.Timber;
 public class AIFragment extends CameraFragment implements ServerCommunication.ServerListener {
 
   private FragmentAiBinding binding;
+  private Handler handler;
+  private HandlerThread handlerThread;
   private ServerCommunication serverCommunication;
 
   private long lastProcessingTimeMs;
@@ -159,7 +163,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
 
     Timber.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
-    onInferenceConfigurationChanged();
+    recreateNetwork(getModel(), getDevice(), getNumThreads());
     if (detector == null && autoPilot == null) {
       Timber.e("No network on preview!");
       return;
@@ -185,83 +189,97 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
     final Network.Device device = getDevice();
     final Model model = getModel();
     final int numThreads = getNumThreads();
-    runInBackground(
-        () -> {
-          tracker.clearTrackedObjects();
-          if (detector != null) {
-            Timber.d("Closing detector.");
-            detector.close();
-            detector = null;
-          }
-          if (autoPilot != null) {
-            Timber.d("Closing autoPilot.");
-            autoPilot.close();
-            autoPilot = null;
-          }
+    runInBackground(() -> recreateNetwork(model, device, numThreads));
+  }
 
-          try {
-            if (model == Model.AUTOPILOT_F) {
-              Timber.d(
-                  "Creating autopilot (model=%s, device=%s, numThreads=%d)",
-                  model, device, numThreads);
-              autoPilot = Autopilot.create(requireActivity(), model, device, numThreads);
-              croppedBitmap =
-                  Bitmap.createBitmap(
-                      autoPilot.getImageSizeX(),
-                      autoPilot.getImageSizeY(),
-                      Bitmap.Config.ARGB_8888);
-              frameToCropTransform =
-                  ImageUtils.getTransformationMatrix(
-                      getMaxAnalyseImageSize().getWidth(),
-                      getMaxAnalyseImageSize().getHeight(),
-                      croppedBitmap.getWidth(),
-                      croppedBitmap.getHeight(),
-                      sensorOrientation,
-                      autoPilot.getCropRect(),
-                      autoPilot.getMaintainAspect());
-            } else {
-              Timber.d(
-                  "Creating detector (model=%s, device=%s, numThreads=%d)",
-                  model, device, numThreads);
-              detector = Detector.create(requireActivity(), model, device, numThreads);
-              croppedBitmap =
-                  Bitmap.createBitmap(
-                      detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
-              frameToCropTransform =
-                  ImageUtils.getTransformationMatrix(
-                      getMaxAnalyseImageSize().getWidth(),
-                      getMaxAnalyseImageSize().getHeight(),
-                      croppedBitmap.getWidth(),
-                      croppedBitmap.getHeight(),
-                      sensorOrientation,
-                      detector.getCropRect(),
-                      detector.getMaintainAspect());
-            }
+  private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+    tracker.clearTrackedObjects();
+    if (detector != null) {
+      Timber.d("Closing detector.");
+      detector.close();
+      detector = null;
+    }
+    if (autoPilot != null) {
+      Timber.d("Closing autoPilot.");
+      autoPilot.close();
+      autoPilot = null;
+    }
 
-            cropToFrameTransform = new Matrix();
-            frameToCropTransform.invert(cropToFrameTransform);
+    try {
+      if (model == Model.DETECTOR_V1_1_0_Q || model == Model.DETECTOR_V3_S_Q) {
+        Timber.d(
+            "Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
+        detector = Detector.create(requireActivity(), model, device, numThreads);
+        croppedBitmap =
+            Bitmap.createBitmap(
+                detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
+        frameToCropTransform =
+            ImageUtils.getTransformationMatrix(
+                getMaxAnalyseImageSize().getWidth(),
+                getMaxAnalyseImageSize().getHeight(),
+                croppedBitmap.getWidth(),
+                croppedBitmap.getHeight(),
+                sensorOrientation,
+                detector.getCropRect(),
+                detector.getMaintainAspect());
+      } else {
+        Timber.d(
+            "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
+        autoPilot = Autopilot.create(requireActivity(), model, device, numThreads);
+        croppedBitmap =
+            Bitmap.createBitmap(
+                autoPilot.getImageSizeX(), autoPilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
+        frameToCropTransform =
+            ImageUtils.getTransformationMatrix(
+                getMaxAnalyseImageSize().getWidth(),
+                getMaxAnalyseImageSize().getHeight(),
+                croppedBitmap.getWidth(),
+                croppedBitmap.getHeight(),
+                sensorOrientation,
+                autoPilot.getCropRect(),
+                autoPilot.getMaintainAspect());
+      }
 
-          } catch (IllegalArgumentException | IOException e) {
-            String msg = "Failed to create network.";
-            Timber.e(e, msg);
-            Toast.makeText(requireContext().getApplicationContext(), msg, Toast.LENGTH_SHORT)
-                .show();
-          }
-        });
+      cropToFrameTransform = new Matrix();
+      frameToCropTransform.invert(cropToFrameTransform);
+
+    } catch (IllegalArgumentException | IOException e) {
+      String msg = "Failed to create network.";
+      Timber.e(e, msg);
+      Toast.makeText(requireContext().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
   }
 
   @Override
   public synchronized void onResume() {
     super.onResume();
 
+    handlerThread = new HandlerThread("inference");
+    handlerThread.start();
+    handler = new Handler(handlerThread.getLooper());
     serverCommunication = new ServerCommunication(requireContext(), this);
     serverCommunication.start();
   }
 
   @Override
   public synchronized void onPause() {
-    serverCommunication.stop();
+
+    handlerThread.quitSafely();
+    try {
+      handlerThread.join();
+      handlerThread = null;
+      handler = null;
+      serverCommunication.stop();
+    } catch (final InterruptedException e) {
+    }
+
     super.onPause();
+  }
+
+  protected synchronized void runInBackground(final Runnable r) {
+    if (handler != null) {
+      handler.post(r);
+    }
   }
 
   @Override
