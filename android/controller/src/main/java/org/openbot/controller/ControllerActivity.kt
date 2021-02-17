@@ -9,18 +9,23 @@
 
 package org.openbot.controller
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.net.wifi.p2p.WifiP2pManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import org.openbot.controller.customComponents.DualDriveSeekBar
@@ -29,6 +34,7 @@ import org.openbot.controller.utils.EventProcessor
 import org.openbot.controller.utils.Utils
 
 class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppCompatActivity gives errors in the IDE, but it does compile,
+    private val PERMISSION_REQUEST_LOCATION = 101
     private val TAG = "ControllerActivity"
     private lateinit var binding: ActivityFullscreenBinding
     private lateinit var screenManager: ScreenManager
@@ -38,6 +44,9 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         super.onCreate(savedInstanceState)
         binding = ActivityFullscreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        setupPermissions()
 
         screenManager = ScreenManager(binding)
 
@@ -53,6 +62,23 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         hideSystemUI()
 
         BotDataListener.init()
+    }
+
+    private fun setupPermissions() {
+        val permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Permission to get location denied")
+            makeRequest()
+        }
+    }
+
+    private fun makeRequest() {
+        ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                PERMISSION_REQUEST_LOCATION
+        )
     }
 
     private fun createAppEventsSubscription(): Disposable =
@@ -76,9 +102,13 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
                             }
                             EventProcessor.ProgressEvents.Disconnected -> {
                                 screenManager.hideControls()
-                                NearbyConnection.connect(this)
+                                ConnectionFactory.get().connect(this)
                             }
                             EventProcessor.ProgressEvents.StopAdvertising -> {
+                            }
+                            EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
+                                screenManager.hideControls()
+                                ConnectionFactory.get().connect(this)
                             }
                             EventProcessor.ProgressEvents.AdvertisingFailed -> {
                                 screenManager.hideControls()
@@ -118,14 +148,33 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
     @Override
     override fun onPause() {
         super.onPause()
-        NearbyConnection.disconnect()
+        ConnectionFactory.get().disconnect()
     }
 
     @Override
     override fun onResume() {
         super.onResume()
         hideSystemUI()
-        NearbyConnection.connect(this)
+
+        ConnectionFactory.get().init(this)
+        ConnectionFactory.get().connect(this)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            PERMISSION_REQUEST_LOCATION -> {
+
+                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.i(TAG, "Permission has been denied by user")
+                    finish()
+                    System.exit(0)
+                } else {
+                    Log.i(TAG, "Permission has been granted by user")
+                }
+            }
+        }
     }
 
     companion object

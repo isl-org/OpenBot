@@ -12,7 +12,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.MotionEvent
-import org.openbot.controller.NearbyConnection
+import org.openbot.controller.ConnectionFactory
 
 class DualDriveSeekBar @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -94,7 +94,7 @@ class DualDriveSeekBar @JvmOverloads constructor(
 
             if ((System.currentTimeMillis() - lastTransmitted) >= MIN_TIME_BETWEEN_TRANSMISSIONS) {
                 val msg = "{driveCmd: {r:$lastRightValue, l:$lastLeftValue}}"
-                NearbyConnection.sendMessage(msg)
+                ConnectionFactory.get().sendMessage(msg)
                 lastTransmitted = System.currentTimeMillis()
             }
         }
