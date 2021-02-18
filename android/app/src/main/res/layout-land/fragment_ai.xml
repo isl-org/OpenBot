@@ -102,8 +102,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:paddingHorizontal="8dp"
                 android:gravity="center|start"
+                android:paddingHorizontal="8dp"
                 android:text="@string/time_ms"
                 android:textColor="@android:color/black" />
 
@@ -135,18 +135,18 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:padding="4dp"
                     android:contentDescription="@string/minus"
+                    android:padding="4dp"
                     android:src="@drawable/ic_baseline_remove" />
 
                 <TextView
                     android:id="@+id/threads"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:gravity="center"
-                    android:text="@string/_1"
                     android:padding="4dp"
+                    android:text="@string/_1"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
@@ -155,8 +155,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:padding="4dp"
                     android:contentDescription="@string/plus"
+                    android:padding="4dp"
                     android:src="@drawable/ic_baseline_add" />
             </LinearLayout>
 
