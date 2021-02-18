@@ -506,11 +506,12 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   protected void processFrame(Bitmap bitmap, ImageProxy image) {
     ++frameNum;
     if (binding != null) {
-      requireActivity()
-          .runOnUiThread(
-              () ->
-                  binding.frameInfo.setText(
-                      String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
+      if (isAdded())
+        requireActivity()
+            .runOnUiThread(
+                () ->
+                    binding.frameInfo.setText(
+                        String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
 
       if (!binding.loggerSwitch.isChecked()) return;
 
