@@ -337,10 +337,10 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
 
       runInBackground(
           () -> {
-            if (detector != null) {
-              final Canvas canvas = new Canvas(croppedBitmap);
-              canvas.drawBitmap(bitmap, frameToCropTransform, null);
+            final Canvas canvas = new Canvas(croppedBitmap);
+            canvas.drawBitmap(bitmap, frameToCropTransform, null);
 
+            if (detector != null) {
               Timber.i("Running detection on image %s", frameNum);
               final long startTime = SystemClock.elapsedRealtime();
               final List<Detector.Recognition> results = detector.recognizeImage(croppedBitmap);
