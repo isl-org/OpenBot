@@ -16,7 +16,7 @@ import org.openbot.common.FeatureList;
 import org.openbot.common.OnItemClickListener;
 import org.openbot.databinding.FragmentMainBinding;
 import org.openbot.model.SubCategory;
-import org.openbot.robot.NetworkActivity;
+import org.openbot.robot.DefaultActivity;
 import timber.log.Timber;
 
 public class MainFragment extends Fragment implements OnItemClickListener<SubCategory> {
@@ -50,7 +50,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
 
     switch (subCategory.getTitle()) {
       case FeatureList.DEFAULT:
-        Intent intent = new Intent(requireActivity(), NetworkActivity.class);
+        Intent intent = new Intent(requireActivity(), DefaultActivity.class);
         startActivity(intent);
         break;
 
