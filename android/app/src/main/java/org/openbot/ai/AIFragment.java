@@ -172,7 +172,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
     binding.trackingOverlay.addCallback(
         canvas -> {
           tracker.draw(canvas);
-          tracker.drawDebug(canvas);
+//          tracker.drawDebug(canvas);
         });
     tracker.setFrameConfiguration(
         getMaxAnalyseImageSize().getWidth(),

@@ -38,7 +38,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private static final Logger LOGGER = new Logger();
   private PreviewView previewView;
   private Preview preview;
-  private int lensFacing = CameraSelector.LENS_FACING_BACK;
+  private static int lensFacing = CameraSelector.LENS_FACING_BACK;
   private ProcessCameraProvider cameraProvider;
   private Size analyserResolution = Enums.Preview.FULL_HD.getValue();
   private YuvToRgbConverter converter;
