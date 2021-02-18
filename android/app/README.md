@@ -1,31 +1,38 @@
 # OpenBot App
 
-Our application is derived from the [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android). We add a data logger and support for game controllers to collect datasets with the robot. Currently, we record readings from following sensors: camera, gyroscope, accelerometer, magnetometer, ambient light sensor, and barometer. Using the Android API, we are able to obtain the following sensor readings: RGB images, angular speed, linear acceleration, gravity, magnetic field strength, light intensity, atmospheric pressure, latitude, longitude, altitude, bearing, and speed. In addition to the phone sensors, we also record body sensor readings (wheel odometry, obstacle distance and battery voltage), which are transmitted via the serial link. Lastly, we record control commands received from a connected game controller, if present. We also integrate several neural networks for person following and autonomous navigation.
-
 ## DISCLAIMERS
 
 1. **Safety:** Always make sure you operate in a safe environment. Keep in mind, that your phone could be damaged in a collision! Special 
 care is neccessary when using automated control (e.g. person following or driving policy). Make sure you always have a game controller connected and are familiar with the key mapping so you can stop the vehicle at any time. Use at your own risk!
 2. **App under development:** The application is under development and may crash or exhibit unexpected behaviour depending on your phone model and version of the operating system. Make sure to test all functionalities with no wheels connected. Use at your own risk!
 
-## How to Use the App
+## Default Activity
 
-The app starts with the screen comprising of all the robot's functionality.
+The app starts with the [DefaultActivity](src/main/java/org/openbot/robot/DefaultActivity.java) which includes the most important features of the OpenBot app in a single screen. It displays the connection status to the vehicle and reports measurements from vehicle sensors. The robot can be controlled by standard BT game controllers or another smartphone running the OpenBot [controller app](../controller). We have also implemented a data logger to collect datasets with the robot. Currently, we record readings from following sensors: camera, gyroscope, accelerometer, magnetometer, ambient light sensor, and barometer. Using the Android API, we are able to obtain the following sensor readings: RGB images, angular speed, linear acceleration, gravity, magnetic field strength, light intensity, atmospheric pressure, latitude, longitude, altitude, bearing, and speed. In addition to the phone sensors, we record body sensor readings (wheel odometry, obstacle distance and battery voltage), which are transmitted via the serial link. We also record and timestamp control signals received from a connected controller, if present. Lastly, we integrate several neural networks for person following and autonomous navigation.
+
+### Code Structure
+
+The [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android) was used as starting point to integrate TFLite models and obtain the camera feed. The [DefaultActivity](src/main/java/org/openbot/robot/DefaultActivity.java) runs the main thread and inherits from the [CameraActivity](src/main/java/org/openbot/robot/CameraActivity.java) to manage the camera and UI. The [SensorService](src/main/java/org/openbot/robot/SensorService.java) reads all other phone sensors and logs them. The [ServerService](src/main/java/org/openbot/robot/ServerService.java) and [NsdService](src/main/java/org/openbot/robot/NsdService.java) establish a connection to a local [Python server](../../policy/README.md#web-app) with a React frontend. If you collect data it can be uploaded automatically for visualization, training ML models and downloading trained models to the robot. The [env](src/main/java/org/openbot/env) folder contains utility classes such as the [Vehicle](src/main/java/org/openbot/env/Vehicle.java) interface, [GameController](src/main/java/org/openbot/env/GameController.java) interface, [PhoneController](src/main/java/org/openbot/env/PhoneController.java) interface and an [AudioPlayer](src/main/java/org/openbot/env/AudioPlayer.java) for the audible feedback. The [tflite](src/main/java/org/openbot/tflite) folder contains the model definitions for the [Autopilot](src/main/java/org/openbot/tflite/Autopilot.java) and [Detector](src/main/java/org/openbot/tflite/Detector.java) networks.
+
+### User Interface
+
+In the following we briefly explain the user interface.
 
 <p align="center">
   <img src="../../docs/images/app_gui_1.jpg" alt="App GUI" width="49%"/>
   <img src="../../docs/images/app_gui_2.jpg" alt="App GUI" width="50%"/>
 </p>
 
-### USB Connection
+
+#### USB Connection
 
 The drop-down menu is used to set the baud rate. The default is 115200 and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
 
-### Vehicle Status
+#### Vehicle Status
 
 The field **Battery** displays the battery voltage as measured by the Arduino via the voltage divider. The field **Speed (l,r)** reports the left and right speed of the (front) wheels in rpm. It is measured by the Arduino via the optical wheel speed sensors. The field **Sonar** shows the free space in front of the car in centimeters. It is measured by the Arduino via the ultrasonic sensor. Note, you will only receive values a few seconds after the USB connections has been established.
 
-### Control
+#### Control
 
 The first button is for selecting the **control mode**. Currenlty, the only control mode is **Gamepad**. In the future, it will be possible to control the robot with another smartphone, i.e. **Phone** or via **WebRTC**. 
 
@@ -43,7 +50,7 @@ The third button is for selecting the **speed mode**. There are three different 
 
 Running at higher speeds will reduce the lifetime of the motors but is more fun. The controls that are sent to the robot are displayed on the right side. When using the game controller, the speed mode can be increased by pressing down the right joystick (R3) and decrased by pressing down the left joystick (L3).
 
-### Data Log
+#### Data Log
 
 There are four different logging modes:
 
@@ -54,11 +61,11 @@ There are four different logging modes:
 
 The switch on the right is used to toggle logging on and off. On the game controller this switch can be toggled with the X button. 
 
-### Camera
+#### Camera
 
 The first item shows the preview resolution. The second item shows the crop resolution. This is the image that is used as input to the neural networks. You will notice that this resolution changes depending on which model you select below. If you train your own autopilot, make sure to select the `AUTOPILOT_F` model. The crop resolution should show `256x96`. The switch on the right is used to toggle between the rear and the front camera. 
 
-### Model
+#### Model
 
 There are three models that come with the app:
 
@@ -68,7 +75,7 @@ There are three models that come with the app:
 
 The switch on the right is used to turn the network on and off. When the network is running, it produces the controls for the robot and the game controller is disabled. However, you may still use the buttons on the game controller, for example to toggle this switch with the R1 trigger button to regain control of the robot. 
 
-### Device
+#### Device
 
 Use the drop-down menu to select the device on which the neural network should be executed. You have the following choices:
 
@@ -78,16 +85,13 @@ Use the drop-down menu to select the device on which the neural network should b
 
 If a model is active, the inference speed in [ms] will be displayed next to the device which is running the model.
 
-### Features
+## Additional fragments
 
-Pressing the back button opens up the menu screen to choose specific features to use.
+Pressing the back button opens up the menu screen that shows all available activities and fragments. Users may choose a custom screen to use specific features rather than the default activity.
 
 <p align="center">
 <img src="../../docs/images/menu_selector.png" alt="App GUI" width="25%"/>
 </p>
-
-- **Robot**: Robot opens the screen containing all the functionality described above.
-
 
 - **Free Roam**: Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
 
@@ -95,9 +99,13 @@ Pressing the back button opens up the menu screen to choose specific features to
 <img src="../../docs/images/game_screen.png" alt="Alt text" width="50%" />
 </p>
 
-## Code Structure
+- **Data Collection**: Simple UI for collection of data sets.
 
-The [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android) was used as starting point to integrate TFLite models and obtain the camera feed. The main activity is the [NetworkActivity](src/main/java/org/openbot/robot/NetworkActivity.java) which runs the main thread. It inherits from the [CameraActivity](src/main/java/org/openbot/robot/CameraActivity.java) which manages the camera and UI. The [SensorService](src/main/java/org/openbot/robot/SensorService.java) reads all other phone sensors and logs them. The [ServerService](src/main/java/org/openbot/robot/ServerService.java) and [NsdService](src/main/java/org/openbot/robot/NsdService.java) establish a connection to a local [Python server](../../policy/README.md#web-app) with a React frontend. If you collect data it can be uploaded automatically for visualization, training ML models and downloading trained models to the robot. The [env](src/main/java/org/openbot/env) folder contains utility classes such as the [Vehicle](src/main/java/org/openbot/env/Vehicle.java) interface, [GameController](src/main/java/org/openbot/env/GameController.java) interface, [PhoneController](src/main/java/org/openbot/env/PhoneController.java) interface and an [AudioPlayer](src/main/java/org/openbot/env/AudioPlayer.java) for the audible feedback. The [tflite](src/main/java/org/openbot/tflite) folder contains the model definitions for the [Autopilot](src/main/java/org/openbot/tflite/Autopilot.java) and [Detector](src/main/java/org/openbot/tflite/Detector.java) networks.
+- **AI Models**: Simple UI for running AI models.
+
+## Add your own fragment
+
+Please refer to the [ContributionGuide](ContributionGuide.md) to learn how to add your own fragments to the OpenBot app.
 
 ## Next (optional)
 
