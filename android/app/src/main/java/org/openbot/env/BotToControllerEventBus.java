@@ -1,5 +1,7 @@
 package org.openbot.env;
 
+import android.util.Log;
+
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import org.json.JSONObject;
 
@@ -14,6 +16,7 @@ public final class BotToControllerEventBus {
   }
 
   public static void emitEvent(JSONObject event) {
+    Log.i(null, "BotToControllerEventBus: Sending event: " + event);
     subject.onNext(event);
   }
 }

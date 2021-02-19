@@ -151,7 +151,7 @@
                 android:layout_alignParentBottom="true"
                 android:orientation="horizontal">
 
-                <org.openbot.controller.customComponents.VideoView2
+                <org.openbot.controller.customComponents.VideoView
                     android:id="@+id/videoView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

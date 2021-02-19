@@ -84,8 +84,8 @@ object WiFiDirectConnection : ILocalConnection {
                 val event: EventProcessor.ProgressEvents =
                         EventProcessor.ProgressEvents.Disconnected
                 EventProcessor.onNext(event)
-
                 beep()
+
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
@@ -105,9 +105,7 @@ object WiFiDirectConnection : ILocalConnection {
     }
 
     override fun disconnect(context: Context?) {
-        if (wroupService != null) {
-            wroupService!!.disconnect()
-        }
+        wroupService?.disconnect()
     }
 
     override fun isConnected(): Boolean {

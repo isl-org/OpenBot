@@ -33,7 +33,7 @@ public class RtspServer implements ConnectCheckerRtsp, TextureView.SurfaceTextur
 
         if (!rtspServerCamera1.isStreaming()) {
             if (rtspServerCamera1.prepareAudio()
-                    && rtspServerCamera1.prepareVideo(width, height, 30, 5000 * 1024, 2, 90)) {
+                    && rtspServerCamera1.prepareVideo(width, height, 30, 1500 * 1024, 2, 90)) {
                     // && rtspServerCamera1.prepareVideo()) {
                 rtspServerCamera1.startStream("");
             }
@@ -54,7 +54,7 @@ public class RtspServer implements ConnectCheckerRtsp, TextureView.SurfaceTextur
                 rtspServerCamera1.stopStream();
             }
 
-            rtspServerCamera1.stopPreview();
+            // rtspServerCamera1.stopPreview();
             rtspServerCamera1 = null;
         }
     }

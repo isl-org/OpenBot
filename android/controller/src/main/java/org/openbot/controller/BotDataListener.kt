@@ -9,6 +9,7 @@
 
 package org.openbot.controller
 
+import org.json.JSONException
 import org.json.JSONObject
 
 /*
@@ -21,17 +22,22 @@ object BotDataListener {
     fun init() {
         val dataReceived: IDataReceived = object : IDataReceived {
             override fun dataReceived(command: String?) {
-                val dataJson = JSONObject(command as String)
-                val statusValues = dataJson.getJSONObject("status")
+                try {
 
-                for (key in statusValues.keys()) {
-                    val value: String = statusValues.getString(key)
+                    val dataJson = JSONObject(command as String)
+                    val statusValues = dataJson.getJSONObject("status")
 
-                    /*
-                    Send an event on a particular subject.
-                    The custom components are listening on their subject.
-                    */
-                    StatusEventBus.emitEvent(key, value)
+                    for (key in statusValues.keys()) {
+                        val value: String = statusValues.getString(key)
+
+                        /*
+                        Send an event on a particular subject.
+                        The custom components are listening on their subject.
+                        */
+                        StatusEventBus.emitEvent(key, value)
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace();
                 }
             }
         }

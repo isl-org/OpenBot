@@ -1,9 +1,11 @@
 package org.openbot.env;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openbot.robot.CameraActivity;
 
 import timber.log.Timber;
 
@@ -12,8 +14,11 @@ public class PhoneController {
 
   private static final String TAG = "PhoneController";
   final ILocalConnection connection =
-          new WiFiDirectConnection();
+          // new WiFiDirectConnection();
           // new NearbyConnection();
+          new NetworkServiceConnection();
+
+  private ConnectionMonitor connectionManager = new ConnectionMonitor();
 
   {
     connection.setDataCallback(new DataReceived());

@@ -29,7 +29,7 @@ object NearbyConnection : ILocalConnection {
     private var pairedDeviceName: String? = null
     private const val SERVICE_ID = "OPENBOT_SERVICE_ID"
 
-    private val STRATEGY = Strategy.P2P_POINT_TO_POINT
+    private val STRATEGY = Strategy.P2P_STAR
 
     override fun init(context: Context) {
     }
