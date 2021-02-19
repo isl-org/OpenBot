@@ -89,19 +89,19 @@ If a model is active, the inference speed in [ms] will be displayed next to the 
 
 Pressing the back button opens up the menu screen that shows all available activities and fragments. Users may choose a custom screen to use specific features rather than the default activity.
 
-<p align="center">
+<p align="left">
 <img src="../../docs/images/menu_selector.jpg" alt="App GUI" width="50%"/>
 </p>
 
 - **Free Roam**: Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
 
-<p align="center">
+<p align="left">
 <img src="../../docs/images/game_screen.jpg" alt="Alt text" width="50%" />
 </p>
 
 - **Data Collection**: Simple UI for collection of data sets.
 
-<p align="center">
+<p align="left">
 <img src="../../docs/images/logger_screen.jpg" alt="Alt text" width="50%" />
 </p>
 
