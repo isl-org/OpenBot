@@ -94,8 +94,9 @@ public abstract class CameraFragment extends ControlsFragment {
   private void bindCameraUseCases() {
     converter = new YuvToRgbConverter(requireContext());
     bitmapBuffer = null;
-    preview = new Preview.Builder()
-//            .setTargetResolution(new Size(720,1280))
+    preview =
+        new Preview.Builder()
+            //            .setTargetResolution(new Size(720,1280))
             .setTargetAspectRatio(AspectRatio.RATIO_16_9)
             .build();
     preview.setSurfaceProvider(previewView.getSurfaceProvider());
