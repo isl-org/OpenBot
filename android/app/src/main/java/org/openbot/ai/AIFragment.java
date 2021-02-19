@@ -149,6 +149,8 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   }
 
   private void updateCropImageInfo() {
+//    Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
+//    Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(), getMaxAnalyseImageSize().getHeight());
     frameToCropTransform = null;
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());

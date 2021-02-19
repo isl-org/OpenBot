@@ -59,9 +59,9 @@
     </string-array>
 
     <string-array name="preview_resolutions">
-        <item>High</item>
-        <item>Medium</item>
         <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
     </string-array>
 
     <string name="log_setting">Log Setting</string>

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
@@ -40,7 +41,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private Preview preview;
   private static int lensFacing = CameraSelector.LENS_FACING_BACK;
   private ProcessCameraProvider cameraProvider;
-  private Size analyserResolution = Enums.Preview.FULL_HD.getValue();
+  private Size analyserResolution = Enums.Preview.SD.getValue();
   private YuvToRgbConverter converter;
   private Bitmap bitmapBuffer;
 
@@ -93,7 +94,10 @@ public abstract class CameraFragment extends ControlsFragment {
   private void bindCameraUseCases() {
     converter = new YuvToRgbConverter(requireContext());
     bitmapBuffer = null;
-    preview = new Preview.Builder().build();
+    preview = new Preview.Builder()
+//            .setTargetResolution(new Size(720,1280))
+            .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+            .build();
     preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
     CameraSelector cameraSelector =

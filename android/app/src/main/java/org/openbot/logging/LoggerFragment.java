@@ -117,13 +117,13 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             switch (position) {
               case 0:
-                setAnalyserResolution(Enums.Preview.FULL_HD.getValue());
+                setAnalyserResolution(Enums.Preview.SD.getValue());
                 break;
               case 1:
                 setAnalyserResolution(Enums.Preview.HD.getValue());
                 break;
               case 2:
-                setAnalyserResolution(Enums.Preview.SD.getValue());
+                setAnalyserResolution(Enums.Preview.FULL_HD.getValue());
                 break;
             }
           }
