@@ -49,7 +49,7 @@
                 android:resource="@xml/device_filter" />
         </activity>
         <activity
-            android:name=".robot.NetworkActivity"
+            android:name=".robot.DefaultActivity"
             android:label="@string/activity_name"
             android:noHistory="false">
 <!--

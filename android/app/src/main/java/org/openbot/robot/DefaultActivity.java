@@ -61,7 +61,7 @@ import org.openbot.tracking.MultiBoxTracker;
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
  * objects.
  */
-public class NetworkActivity extends CameraActivity implements OnImageAvailableListener {
+public class DefaultActivity extends CameraActivity implements OnImageAvailableListener {
   private static final Logger LOGGER = new Logger();
 
   // Minimum detection confidence to track a detection.
@@ -89,7 +89,7 @@ public class NetworkActivity extends CameraActivity implements OnImageAvailableL
   private MultiBoxTracker tracker;
   private BorderedText borderedText;
 
-  public NetworkActivity() {}
+  public DefaultActivity() {}
 
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {

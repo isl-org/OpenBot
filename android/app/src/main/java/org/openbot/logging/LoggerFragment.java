@@ -11,8 +11,6 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.os.RemoteException;
@@ -51,8 +49,6 @@ import timber.log.Timber;
 public class LoggerFragment extends CameraFragment implements ServerCommunication.ServerListener {
 
   private FragmentLoggerBinding binding;
-  private Handler handler;
-  private HandlerThread handlerThread;
   private Intent intentSensorService;
   private ServerCommunication serverCommunication;
   protected String logFolder;
@@ -121,13 +117,13 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             switch (position) {
               case 0:
-                setAnalyserResolution(Enums.Preview.FULL_HD.getValue());
+                setAnalyserResolution(Enums.Preview.SD.getValue());
                 break;
               case 1:
                 setAnalyserResolution(Enums.Preview.HD.getValue());
                 break;
               case 2:
-                setAnalyserResolution(Enums.Preview.SD.getValue());
+                setAnalyserResolution(Enums.Preview.FULL_HD.getValue());
                 break;
             }
           }
@@ -167,26 +163,13 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   @Override
   public synchronized void onResume() {
     super.onResume();
-
-    handlerThread = new HandlerThread("inference");
-    handlerThread.start();
-    handler = new Handler(handlerThread.getLooper());
     serverCommunication = new ServerCommunication(requireContext(), this);
     serverCommunication.start();
   }
 
   @Override
   public synchronized void onPause() {
-
-    handlerThread.quitSafely();
-    try {
-      handlerThread.join();
-      handlerThread = null;
-      handler = null;
-      serverCommunication.stop();
-    } catch (final InterruptedException e) {
-    }
-
+    serverCommunication.stop();
     super.onPause();
   }
 
@@ -328,12 +311,6 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
     BotToControllerEventBus.emitEvent(Utils.createStatus("LOGS", loggingEnabled));
 
     binding.loggerSwitch.setChecked(loggingEnabled);
-  }
-
-  protected synchronized void runInBackground(final Runnable r) {
-    if (handler != null) {
-      handler.post(r);
-    }
   }
 
   @Override
@@ -529,11 +506,12 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   protected void processFrame(Bitmap bitmap, ImageProxy image) {
     ++frameNum;
     if (binding != null) {
-      requireActivity()
-          .runOnUiThread(
-              () ->
-                  binding.frameInfo.setText(
-                      String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
+      if (isAdded())
+        requireActivity()
+            .runOnUiThread(
+                () ->
+                    binding.frameInfo.setText(
+                        String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
 
       if (!binding.loggerSwitch.isChecked()) return;
 

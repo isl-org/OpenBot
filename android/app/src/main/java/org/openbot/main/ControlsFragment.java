@@ -2,6 +2,8 @@ package org.openbot.main;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +37,9 @@ public abstract class ControlsFragment extends Fragment {
   protected final PhoneController phoneController = new PhoneController();
   protected Enums.DriveMode currentDriveMode = Enums.DriveMode.GAME;
   protected GameController gameController = new GameController(currentDriveMode);
+
+  private Handler handler;
+  private HandlerThread handlerThread;
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -227,6 +232,14 @@ public abstract class ControlsFragment extends Fragment {
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    handlerThread = new HandlerThread("inference");
+    handlerThread.start();
+    handler = new Handler(handlerThread.getLooper());
+  }
+
+  @Override
   public void onDestroy() {
     super.onDestroy();
     vehicle.setControl(0, 0);
@@ -235,7 +248,20 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public synchronized void onPause() {
     super.onPause();
+    handlerThread.quitSafely();
     phoneController.disconnect(getContext());
+    try {
+      handlerThread.join();
+      handlerThread = null;
+      handler = null;
+    } catch (final InterruptedException e) {
+    }
+  }
+
+  protected synchronized void runInBackground(final Runnable r) {
+    if (handler != null) {
+      handler.post(r);
+    }
   }
 
   protected abstract void processControllerKeyData(String command);

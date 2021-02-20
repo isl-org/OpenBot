@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mainFragment_to_loggerFragment"
             app:destination="@id/loggerFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_AIFragment"
+            app:destination="@id/AIFragment" />
     </fragment>
     <fragment
         android:id="@+id/robotCommunicationFragment"
@@ -37,5 +40,10 @@
         android:name="org.openbot.logging.LoggerFragment"
         android:label="fragment_logger"
         tools:layout="@layout/fragment_logger" />
+    <fragment
+        android:id="@+id/AIFragment"
+        android:name="org.openbot.ai.AIFragment"
+        android:label="fragment_ai"
+        tools:layout="@layout/fragment_ai" />
 
 </navigation>
