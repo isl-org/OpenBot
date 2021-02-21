@@ -1,5 +1,6 @@
 package org.openbot.env;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
@@ -14,8 +15,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -23,6 +24,7 @@ import java.util.concurrent.BlockingQueue;
 public class NetworkServiceConnection implements ILocalConnection {
 
     private static final String TAG = "NetworkServiceConn";
+    private Context context;
 
     private String SERVICE_NAME_CONTROLLER = "OPEN_BOT_CONTROLLER";
     private String MY_SERVICE_NAME = "OPEN_BOT";
@@ -33,11 +35,10 @@ public class NetworkServiceConnection implements ILocalConnection {
     private int hostPort;
     private NsdManager mNsdManager;
     private boolean connected = false;
-    private boolean discovering = false;
     private IDataReceived dataReceivedCallback;
     private SocketHandler socketHandler;
     private BlockingQueue<String> messageQueue =
-            new ArrayBlockingQueue<String>(100);
+            new ArrayBlockingQueue<String>(25);
 
     @Override
     public void init(Context context) {
@@ -52,17 +53,20 @@ public class NetworkServiceConnection implements ILocalConnection {
 
     @Override
     public void connect(Context context) {
+        this.context = context;
         runConnection();
     }
 
     @Override
     public void disconnect(Context context) {
-
-        if (mNsdManager != null) {
-            mNsdManager.stopServiceDiscovery(mDiscoveryListener);
-        }
         socketHandler.close();
         this.connected = false;
+
+        try {
+            mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+        } catch (IllegalArgumentException e) {
+            Log.d(TAG, "disconnect: Already discovering: " + e);
+        }
     }
 
     @Override
@@ -79,9 +83,10 @@ public class NetworkServiceConnection implements ILocalConnection {
     // end of interface //////////////////////////////
 
     private void runConnection() {
-        if (!discovering) {
+        try {
             mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
-            discovering = true;
+        } catch (IllegalArgumentException e) {
+            Log.d(TAG, "runConnection: Already discovering: " + e);
         }
     }
 
@@ -112,33 +117,36 @@ public class NetworkServiceConnection implements ILocalConnection {
         public void onServiceLost(NsdServiceInfo service) {
             // When the network service is no longer available.
             // Internal bookkeeping code goes here.
-            Log.e(TAG, "service lost" + service);
-            try {
-                ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            discovering = false;
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
         @Override
         public void onDiscoveryStopped(String serviceType) {
             Log.i(TAG, "Discovery stopped: " + serviceType);
-            discovering = false;
         }
 
         @Override
         public void onStartDiscoveryFailed(String serviceType, int errorCode) {
             Log.e(TAG, "Discovery failed: Error code:" + errorCode);
             mNsdManager.stopServiceDiscovery(this);
-            discovering = false;
+
+            // re-try connecting
+            runConnection();
         }
 
         @Override
         public void onStopDiscoveryFailed(String serviceType, int errorCode) {
             Log.e(TAG, "Discovery failed: Error code:" + errorCode);
             mNsdManager.stopServiceDiscovery(this);
-            discovering = false;
         }
     };
 
@@ -149,6 +157,9 @@ public class NetworkServiceConnection implements ILocalConnection {
             // Called when the resolve fails. Use the error code to debug.
             Log.e(TAG, "Resolve failed " + errorCode);
             Log.e(TAG, "serivce = " + serviceInfo);
+
+            // re-try connecting
+            runConnection();
         }
 
         @Override
@@ -165,15 +176,23 @@ public class NetworkServiceConnection implements ILocalConnection {
             String host = serviceInfo.getHost().getHostAddress();
             Log.d(TAG, "PORT: " + port + ", address: " + host);
 
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"CONNECTED\"}"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            connected = true;
+
             new Thread("Receiver Thread") {
                 public void run() {
                     SocketHandler.ClientInfo clientInfo = socketHandler.connect(host, port);
                     if (clientInfo == null) {
-                        try {
-                            ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        Log.d(TAG, "Could not get a connection");
                         return;
                     }
                     startReceiver(socketHandler, clientInfo.reader);
@@ -189,13 +208,16 @@ public class NetworkServiceConnection implements ILocalConnection {
                 socketHandler.runReceiver(reader);
             }
         }.start();
-
     }
 
     private void startSender(SocketHandler socketHandler, OutputStream writer) {
         new Thread("startSender Thread") {
             public void run() {
-                socketHandler.runSender(writer);
+                try {
+                    socketHandler.runSender(writer);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }.start();
     }
@@ -226,11 +248,10 @@ public class NetworkServiceConnection implements ILocalConnection {
                 if (client == null) {
                     return null;
                 }
-                clientInfo = new ClientInfo(new Scanner (new DataInputStream(new BufferedInputStream(client.getInputStream()))), client.getOutputStream());
-
-                ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"CONNECTED\"}"));
-                connected = true;
-            } catch (IOException | JSONException e) {
+                clientInfo = new ClientInfo(new Scanner(new DataInputStream(new BufferedInputStream(client.getInputStream()))), client.getOutputStream());
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -256,15 +277,21 @@ public class NetworkServiceConnection implements ILocalConnection {
             }
         }
 
-        void runSender(OutputStream writer) {
+        void runSender(OutputStream writer) throws JSONException {
             while (true) {
                 try {
                     String message = messageQueue.take();
                     Log.i(TAG, "queue capacity: " + messageQueue.remainingCapacity());
-                    writer.write((message+"\n").getBytes(StandardCharsets.UTF_8));
+                    writer.write((message + "\n").getBytes(StandardCharsets.UTF_8));
                 } catch (InterruptedException | IOException e) {
                     Log.i(TAG, "runSender got exception: " + e);
                     close();
+
+                    // reconnect again
+                    if (isConnected()) {
+                        connected = false;
+                        runConnection();
+                    }
                     break;
                 }
             }
@@ -275,9 +302,18 @@ public class NetworkServiceConnection implements ILocalConnection {
                 if (client != null) {
                     client.close();
                 }
-                ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
+                ((Activity) context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 connected = false;
-            } catch (JSONException | IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

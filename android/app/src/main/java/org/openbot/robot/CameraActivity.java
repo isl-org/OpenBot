@@ -625,17 +625,9 @@ public abstract class CameraActivity extends AppCompatActivity
       handlerThread = null;
       handler = null;
       serverCommunication.stop();
-      if (cameraFragment != null && cameraFragment.getRtspServer() != null) {
-        cameraFragment.getRtspServer().stopServer();
-      }
     } catch (final InterruptedException e) {
       LOGGER.e(e, "Exception!");
     }
-
-    phoneController.disconnect(this);
-
-    // INZ temp
-    // cameraFragment.getRtspServer().stopServer();
 
     super.onPause();
   }

@@ -15,8 +15,5 @@ public final class BotToControllerEventBus {
     return subject;
   }
 
-  public static void emitEvent(JSONObject event) {
-    Log.i(null, "BotToControllerEventBus: Sending event: " + event);
-    subject.onNext(event);
-  }
+  public static void emitEvent(JSONObject event) { subject.onNext(event); }
 }

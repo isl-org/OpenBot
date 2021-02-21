@@ -143,11 +143,13 @@
 
             <LinearLayout
                 android:id="@+id/video"
-                android:layout_width="320dp"
-                android:layout_height="200dp"
-                android:layout_margin="30dp"
-                android:background="@color/red"
-                android:layout_toEndOf="@+id/left_slider"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@color/common_google_signin_btn_text_light_default"
+                android:layout_toRightOf="@id/left_slider"
+                android:layout_toLeftOf="@id/right_slider"
+                android:layout_below="@id/top_buttons"
                 android:layout_alignParentBottom="true"
                 android:orientation="horizontal">
 
@@ -269,7 +271,5 @@
                 </LinearLayout>
 
             </org.openbot.controller.customComponents.BotSetupControlsLayout>
-
     </org.openbot.controller.customComponents.MainFrameLayout>
-
 </FrameLayout>

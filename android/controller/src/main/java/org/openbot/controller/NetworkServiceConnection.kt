@@ -84,14 +84,15 @@ object NetworkServiceConnection : ILocalConnection {
 
     class SocketHandler(messageQueue: BlockingQueue<String>) {
         private lateinit var client: Socket
-        private val serverSocket: ServerSocket = ServerSocket(port)
+        private lateinit var serverSocket: ServerSocket
         private val messageQueue: BlockingQueue<String> = messageQueue
+        private lateinit var clientInfo: ClientInfo
 
         class ClientInfo(val reader: Scanner, val writer: OutputStream) {
         }
 
         fun connect(port: Int): ClientInfo? {
-            lateinit var clientInfo: ClientInfo
+            serverSocket = ServerSocket(NetworkServiceConnection.port)
             serverSocket.reuseAddress = true;
             try {
                 client = serverSocket.accept()
@@ -108,7 +109,7 @@ object NetworkServiceConnection : ILocalConnection {
                     EventProcessor.onNext(event)
                 }
                 println("Client connected: ${client.inetAddress.hostAddress}")
-            } catch (e: BindException) {
+            } catch (e: Exception) {
                 Log.d(TAG, "Already connected");
                 close()
             }
@@ -121,7 +122,7 @@ object NetworkServiceConnection : ILocalConnection {
                     val payload: String? = reader?.nextLine()
                     Log.d(TAG, "Got payload ${payload}");
 
-                    if (isConnected() && payload != null) {
+                    if (payload != null) {
 
                         (context as Activity).runOnUiThread(Runnable {
                             dataReceivedCallback?.dataReceived(String(
@@ -129,17 +130,12 @@ object NetworkServiceConnection : ILocalConnection {
                                     StandardCharsets.UTF_8
                             ))
                         })
-
-
                     }
                 }
 
             } catch (ex: Exception) {
-
+                reader?.close ()
                 Log.d(TAG, "got exception ${ex}")
-                if (reader != null) {
-                    reader.close()
-                }
                 close()
 
             } finally {
@@ -147,25 +143,29 @@ object NetworkServiceConnection : ILocalConnection {
         }
 
         fun runSender(writer: OutputStream?) {
+            Log.i(TAG, "runSender started...")
             try {
                 while (true) {
                     val message = messageQueue.take() as String
                     writer?.write((message + '\n').toByteArray(Charset.defaultCharset()))
                 }
-            } catch (e: InterruptedException) {
+            } catch (e: Exception) {
                 Log.d(TAG, "runSender InterruptedException: {e}");
                 if (writer != null) {
                     writer.close()
                 }
-                close()
             } finally {
             }
+            Log.i(TAG, "end of runSender thread...")
         }
 
         fun close() {
             if (this::client.isInitialized && !client.isClosed) {
                 client.close()
             }
+            put("_TERMINATE_SENDER_LOOP")
+            serverSocket.close()
+
             val event: EventProcessor.ProgressEvents =
                     EventProcessor.ProgressEvents.Disconnected
             EventProcessor.onNext(event)
@@ -202,8 +202,10 @@ object NetworkServiceConnection : ILocalConnection {
 
         override fun onRegistrationFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
             Log.d(TAG, "onRegistrationFailed")
-            // Registration failed! Put debugging code here to determine
-            // why.
+
+            val event: EventProcessor.ProgressEvents =
+                    EventProcessor.ProgressEvents.ConnectionFailed
+            EventProcessor.onNext(event)
         }
 
         override fun onServiceUnregistered(serviceInfo: NsdServiceInfo) {

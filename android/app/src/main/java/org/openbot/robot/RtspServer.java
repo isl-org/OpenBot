@@ -10,10 +10,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.pedro.rtplibrary.rtsp.RtspCamera2;
 import com.pedro.rtsp.utils.ConnectCheckerRtsp;
 import com.pedro.rtspserver.RtspServerCamera1;
-import com.pedro.rtspserver.RtspServerCamera2;
 
 import org.openbot.R;
 import org.openbot.customview.AutoFitTextureView;
@@ -32,9 +30,13 @@ public class RtspServer implements ConnectCheckerRtsp, TextureView.SurfaceTextur
         }
 
         if (!rtspServerCamera1.isStreaming()) {
-            if (rtspServerCamera1.prepareAudio()
-                    && rtspServerCamera1.prepareVideo(width, height, 30, 1500 * 1024, 2, 90)) {
+            if (
+                    rtspServerCamera1.prepareAudio(64 * 1024, 32000, false, false, false)
+                    // rtspServerCamera1.prepareAudio()
+                    && rtspServerCamera1.prepareVideo(width, height, 30, 1200 * 1024, 2, 90)) {
                     // && rtspServerCamera1.prepareVideo()) {
+
+                // rtspServerCamera1.setForce(CodecUtil.Force.HARDWARE, CodecUtil.Force.HARDWARE);
                 rtspServerCamera1.startStream("");
             }
         }

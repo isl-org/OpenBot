@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.robot.CameraActivity;
 
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import timber.log.Timber;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -14,8 +15,8 @@ public class PhoneController {
 
   private static final String TAG = "PhoneController";
   final ILocalConnection connection =
-          // new WiFiDirectConnection();
           // new NearbyConnection();
+          // new WiFiDirectConnection();
           new NetworkServiceConnection();
 
   private ConnectionMonitor connectionManager = new ConnectionMonitor();
@@ -57,6 +58,8 @@ public class PhoneController {
     BotToControllerEventBus.getProcessor()
         .subscribe(
                 this::send,
-                error -> Timber.d("Error occurred in BotToControllerEventBus"));
+                error -> {
+                    Timber.d("Error occurred in BotToControllerEventBus: " + error);
+                  });
   }
 }
