@@ -70,6 +70,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import io.reactivex.rxjava3.disposables.Disposable;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
@@ -191,6 +192,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private final String voice = "matthew";
 
   protected Vehicle vehicle;
+  private Disposable phoneControllerEventObserver;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -625,6 +627,9 @@ public abstract class CameraActivity extends AppCompatActivity
     }
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     LOGGER.d("onDestroy " + this);
+
+    if (phoneControllerEventObserver != null) phoneControllerEventObserver.dispose();
+
     super.onDestroy();
   }
 
@@ -1296,78 +1301,80 @@ public abstract class CameraActivity extends AppCompatActivity
       return;
     }
 
-    ControllerToBotEventBus.getProcessor()
-        .subscribe(
-            event -> {
-              JSONObject commandJsn = event;
-              String commandType = "";
-              if (commandJsn.has("command")) {
-                commandType = commandJsn.getString("command");
-              } else if (commandJsn.has("driveCmd")) {
-                commandType = "DRIVE_CMD";
-              } else {
-                Log.d(null, "Got invalid command from controller: " + commandJsn.toString());
-                return;
-              }
+    phoneControllerEventObserver =
+        ControllerToBotEventBus.getProcessor()
+            .subscribe(
+                event -> {
+                  JSONObject commandJsn = event;
+                  String commandType = "";
+                  if (commandJsn.has("command")) {
+                    commandType = commandJsn.getString("command");
+                  } else if (commandJsn.has("driveCmd")) {
+                    commandType = "DRIVE_CMD";
+                  } else {
+                    Log.d(null, "Got invalid command from controller: " + commandJsn.toString());
+                    return;
+                  }
 
-              switch (commandType) {
-                case "DRIVE_CMD":
-                  JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
-                  controllerHandler.handleDriveCommand(
-                      Float.valueOf(driveValue.getString("l")),
-                      Float.valueOf(driveValue.getString("r")));
-                  break;
+                  switch (commandType) {
+                    case "DRIVE_CMD":
+                      JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
+                      controllerHandler.handleDriveCommand(
+                          Float.valueOf(driveValue.getString("l")),
+                          Float.valueOf(driveValue.getString("r")));
+                      break;
 
-                case "LOGS":
-                  controllerHandler.handleLogging();
-                  break;
+                    case "LOGS":
+                      controllerHandler.handleLogging();
+                      break;
 
-                case "NOISE":
-                  controllerHandler.handleNoise();
-                  break;
+                    case "NOISE":
+                      controllerHandler.handleNoise();
+                      break;
 
-                case "INDICATOR_LEFT":
-                  controllerHandler.handleIndicatorLeft();
-                  break;
+                    case "INDICATOR_LEFT":
+                      controllerHandler.handleIndicatorLeft();
+                      break;
 
-                case "INDICATOR_RIGHT":
-                  controllerHandler.handleIndicatorRight();
-                  break;
+                    case "INDICATOR_RIGHT":
+                      controllerHandler.handleIndicatorRight();
+                      break;
 
-                case "INDICATOR_STOP":
-                  controllerHandler.handleIndicatorStop();
-                  break;
+                    case "INDICATOR_STOP":
+                      controllerHandler.handleIndicatorStop();
+                      break;
 
-                case "NETWORK":
-                  controllerHandler.handleNetwork();
-                  break;
+                    case "NETWORK":
+                      controllerHandler.handleNetwork();
+                      break;
 
-                case "DRIVE_MODE":
-                  controllerHandler.handleDriveMode();
-                  break;
+                    case "DRIVE_MODE":
+                      controllerHandler.handleDriveMode();
+                      break;
 
-                  // We re connected to the controller, send back status info
-                case "CONNECTED":
-                  // PhoneController class will receive this event and resent it to the controller.
-                  // Other controllers can subscribe to this event as well.
-                  // That is why we are not calling phoneController.send() here directly.
-                  BotToControllerEventBus.emitEvent(
-                      Utils.getStatus(
-                          loggingEnabled,
-                          noiseEnabled,
-                          networkEnabled,
-                          driveMode.toString(),
-                          vehicle.getIndicator()));
-                  break;
-                case "DISCONNECTED":
-                  controllerHandler.handleDriveCommand(0.f, 0.f);
-                  setControlMode(ControlMode.GAMEPAD);
-                  break;
-              }
-            },
-            error -> {
-              Log.d(null, "Error occurred in ControllerToBotEventBus");
-            });
+                      // We re connected to the controller, send back status info
+                    case "CONNECTED":
+                      // PhoneController class will receive this event and resent it to the
+                      // controller.
+                      // Other controllers can subscribe to this event as well.
+                      // That is why we are not calling phoneController.send() here directly.
+                      BotToControllerEventBus.emitEvent(
+                          Utils.getStatus(
+                              loggingEnabled,
+                              noiseEnabled,
+                              networkEnabled,
+                              driveMode.toString(),
+                              vehicle.getIndicator()));
+                      break;
+                    case "DISCONNECTED":
+                      controllerHandler.handleDriveCommand(0.f, 0.f);
+                      setControlMode(ControlMode.GAMEPAD);
+                      break;
+                  }
+                },
+                error -> {
+                  Log.d(null, "Error occurred in ControllerToBotEventBus");
+                });
   }
 
   private void sendIndicatorStatus(Integer status) {
