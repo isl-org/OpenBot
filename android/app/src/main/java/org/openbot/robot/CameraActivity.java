@@ -353,12 +353,6 @@ public abstract class CameraActivity extends AppCompatActivity
             if (action != null) {
 
               switch (action) {
-                case Constants.USB_ACTION_CONNECTION_ESTABLISHED:
-                  break;
-
-                case Constants.USB_ACTION_CONNECTION_CLOSED:
-                  break;
-
                 case Constants.USB_ACTION_DATA_RECEIVED:
                   long timestamp = SystemClock.elapsedRealtimeNanos();
                   String data = intent.getStringExtra("data");
@@ -366,10 +360,17 @@ public abstract class CameraActivity extends AppCompatActivity
                   sendVehicleDataToSensorService(timestamp, data);
                   String[] itemList = data.split(",");
                   if (itemList.length == 4) {
-                    vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
-                    vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
-                    vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
-                    vehicle.setSonarReading(Float.parseFloat(itemList[3]));
+                    if (Utils.isNumeric(itemList[0]))
+                      vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
+
+                    if (Utils.isNumeric(itemList[1]))
+                      vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
+
+                    if (Utils.isNumeric(itemList[2]))
+                      vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
+
+                    if (Utils.isNumeric(itemList[3]))
+                      vehicle.setSonarReading(Float.parseFloat(itemList[3]));
                     runOnUiThread(
                         () -> {
                           voltageTextView.setText(
@@ -396,8 +397,6 @@ public abstract class CameraActivity extends AppCompatActivity
           }
         };
     IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction(Constants.USB_ACTION_CONNECTION_ESTABLISHED);
-    localIntentFilter.addAction(Constants.USB_ACTION_CONNECTION_CLOSED);
     localIntentFilter.addAction(Constants.USB_ACTION_DATA_RECEIVED);
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
