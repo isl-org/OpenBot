@@ -1,7 +1,5 @@
 package org.openbot.main;
 
-import static org.openbot.common.Constants.USB_ACTION_CONNECTION_CLOSED;
-import static org.openbot.common.Constants.USB_ACTION_CONNECTION_ESTABLISHED;
 import static org.openbot.common.Constants.USB_ACTION_DATA_RECEIVED;
 
 import android.content.BroadcastReceiver;
@@ -9,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.view.InputDevice;
 import android.view.KeyEvent;
@@ -19,7 +18,6 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -30,6 +28,7 @@ import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.env.Vehicle;
 import org.openbot.robot.DefaultActivity;
+import timber.log.Timber;
 
 // For a library module, uncomment the following line
 // import org.openbot.controller.ControllerActivity;
@@ -37,7 +36,6 @@ import org.openbot.robot.DefaultActivity;
 public class MainActivity extends AppCompatActivity {
 
   private MainViewModel viewModel;
-  private LocalBroadcastManager localBroadcastManager;
   private BroadcastReceiver localBroadcastReceiver;
   private Vehicle vehicle;
 
@@ -56,11 +54,18 @@ public class MainActivity extends AppCompatActivity {
 
             if (action != null) {
               switch (action) {
-                case USB_ACTION_CONNECTION_ESTABLISHED:
-
-                case USB_ACTION_CONNECTION_CLOSED:
+                case UsbManager.ACTION_USB_DEVICE_ATTACHED:
+                  if (!vehicle.isUsbConnected()) {
+                    vehicle.connectUsb();
+                    viewModel.setUsbStatus(vehicle.isUsbConnected());
+                  }
+                  Timber.i("USB device attached");
                   break;
-
+                case UsbManager.ACTION_USB_DEVICE_DETACHED:
+                  vehicle.disconnectUsb();
+                  viewModel.setUsbStatus(vehicle.isUsbConnected());
+                  Timber.i("USB device detached");
+                  break;
                 case USB_ACTION_DATA_RECEIVED:
                   viewModel.setUsbData(intent.getStringExtra("data"));
                   break;
@@ -69,11 +74,10 @@ public class MainActivity extends AppCompatActivity {
           }
         };
     IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction(USB_ACTION_CONNECTION_ESTABLISHED);
-    localIntentFilter.addAction(USB_ACTION_CONNECTION_CLOSED);
     localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
-    localBroadcastManager = LocalBroadcastManager.getInstance(this);
-    localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
+    localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+    localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+    registerReceiver(localBroadcastReceiver, localIntentFilter);
 
     NavHostFragment navHostFragment =
         (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
@@ -141,10 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public synchronized void onDestroy() {
-    if (localBroadcastManager != null) {
-      localBroadcastManager.unregisterReceiver(localBroadcastReceiver);
-      localBroadcastManager = null;
-    }
+    unregisterReceiver(localBroadcastReceiver);
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     vehicle.disconnectUsb();
     super.onDestroy();
