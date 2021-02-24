@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import io.reactivex.rxjava3.disposables.Disposable;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.common.Constants;
@@ -40,6 +41,7 @@ public abstract class ControlsFragment extends Fragment {
 
   private Handler handler;
   private HandlerThread handlerThread;
+  private Disposable phoneControllerEventObserver;
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -142,62 +144,64 @@ public abstract class ControlsFragment extends Fragment {
     if (ControllerToBotEventBus.getProcessor().hasObservers()) {
       return;
     }
+    phoneControllerEventObserver =
+        ControllerToBotEventBus.getProcessor()
+            .subscribe(
+                event -> {
+                  String commandType = "";
+                  if (event.has("command")) {
+                    commandType = event.getString("command");
+                  } else if (event.has("driveCmd")) {
+                    commandType = Constants.CMD_DRIVE;
+                  } else {
+                    Timber.d("Got invalid command from controller: %s", event.toString());
+                    return;
+                  }
 
-    ControllerToBotEventBus.getProcessor()
-        .subscribe(
-            event -> {
-              String commandType = "";
-              if (event.has("command")) {
-                commandType = event.getString("command");
-              } else if (event.has("driveCmd")) {
-                commandType = Constants.CMD_DRIVE;
-              } else {
-                Timber.d("Got invalid command from controller: %s", event.toString());
-                return;
-              }
+                  switch (commandType) {
+                    case Constants.CMD_DRIVE:
+                      JSONObject driveValue = event.getJSONObject("driveCmd");
+                      vehicle.setControl(
+                          new Control(
+                              Float.parseFloat(driveValue.getString("l")),
+                              Float.parseFloat(driveValue.getString("r"))));
+                      break;
 
-              switch (commandType) {
-                case Constants.CMD_DRIVE:
-                  JSONObject driveValue = event.getJSONObject("driveCmd");
-                  vehicle.setControl(
-                      new Control(
-                          Float.parseFloat(driveValue.getString("l")),
-                          Float.parseFloat(driveValue.getString("r"))));
-                  break;
+                    case Constants.CMD_INDICATOR_LEFT:
+                      Timber.i("left");
+                      toggleIndicatorEvent(Enums.VehicleIndicator.LEFT.getValue());
+                      break;
 
-                case Constants.CMD_INDICATOR_LEFT:
-                  toggleIndicatorEvent(Enums.VehicleIndicator.LEFT.getValue());
-                  break;
+                    case Constants.CMD_INDICATOR_RIGHT:
+                      toggleIndicatorEvent(Enums.VehicleIndicator.RIGHT.getValue());
+                      break;
 
-                case Constants.CMD_INDICATOR_RIGHT:
-                  toggleIndicatorEvent(Enums.VehicleIndicator.RIGHT.getValue());
-                  break;
+                    case Constants.CMD_INDICATOR_STOP:
+                      toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
+                      break;
 
-                case Constants.CMD_INDICATOR_STOP:
-                  toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
-                  break;
+                      // We re connected to the controller, send back status info
+                    case Constants.CMD_CONNECTED:
+                      // PhoneController class will receive this event and resent it to the
+                      // controller.
+                      // Other controllers can subscribe to this event as well.
+                      // That is why we are not calling phoneController.send() here directly.
+                      BotToControllerEventBus.emitEvent(
+                          Utils.getStatus(
+                              false,
+                              false,
+                              false,
+                              currentDriveMode.toString(),
+                              vehicle.getIndicator()));
 
-                  // We re connected to the controller, send back status info
-                case Constants.CMD_CONNECTED:
-                  // PhoneController class will receive this event and resent it to the controller.
-                  // Other controllers can subscribe to this event as well.
-                  // That is why we are not calling phoneController.send() here directly.
-                  BotToControllerEventBus.emitEvent(
-                      Utils.getStatus(
-                          false,
-                          false,
-                          false,
-                          currentDriveMode.toString(),
-                          vehicle.getIndicator()));
+                      break;
+                    case Constants.CMD_DISCONNECTED:
+                      vehicle.setControl(0, 0);
+                      break;
+                  }
 
-                  break;
-                case Constants.CMD_DISCONNECTED:
-                  vehicle.setControl(0, 0);
-                  break;
-              }
-
-              processControllerKeyData(commandType);
-            });
+                  processControllerKeyData(commandType);
+                });
   }
 
   private void toggleIndicatorEvent(int value) {
@@ -243,6 +247,7 @@ public abstract class ControlsFragment extends Fragment {
   public void onDestroy() {
     super.onDestroy();
     vehicle.setControl(0, 0);
+    if (phoneControllerEventObserver != null) phoneControllerEventObserver.dispose();
   }
 
   @Override
