@@ -37,8 +37,6 @@ public abstract class ControlsFragment extends Fragment {
   protected Animation startAnimation;
   protected SharedPreferencesManager preferencesManager;
   protected final PhoneController phoneController = new PhoneController();
-  protected Enums.DriveMode currentDriveMode = Enums.DriveMode.GAME;
-  protected GameController gameController = new GameController(currentDriveMode);
 
   private Handler handler;
   private HandlerThread handlerThread;
@@ -60,7 +58,7 @@ public abstract class ControlsFragment extends Fragment {
             this,
             (requestKey, result) -> {
               MotionEvent motionEvent = result.getParcelable(Constants.DATA);
-              vehicle.setControl(gameController.processJoystickInput(motionEvent, -1));
+              vehicle.setControl(vehicle.getGameController().processJoystickInput(motionEvent, -1));
               processControllerKeyData(Constants.CMD_DRIVE);
             });
     requireActivity()
@@ -199,7 +197,7 @@ public abstract class ControlsFragment extends Fragment {
                               false,
                               false,
                               false,
-                              currentDriveMode.toString(),
+                              vehicle.getDriveMode().toString(),
                               vehicle.getIndicator()));
 
                       break;

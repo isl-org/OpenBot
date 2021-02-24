@@ -1,6 +1,9 @@
 package org.openbot.env;
 
 import android.content.Context;
+
+import org.openbot.common.Enums;
+
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,11 +32,14 @@ public class Vehicle {
   private final Context context;
   private final int baudRate;
 
+  protected Enums.DriveMode driveMode = Enums.DriveMode.GAME;
   private boolean isNoiseEnabled = false;
+  private final GameController gameController;
 
   public Vehicle(Context context, int baudRate) {
     this.context = context;
     this.baudRate = baudRate;
+    gameController = new GameController(driveMode);
     connectUsb();
   }
 
@@ -130,6 +136,19 @@ public class Vehicle {
 
   public boolean isNoiseEnabled() {
     return isNoiseEnabled;
+  }
+
+  public void setDriveMode(Enums.DriveMode driveMode) {
+    this.driveMode = driveMode;
+    gameController.setDriveMode(driveMode);
+  }
+
+  public Enums.DriveMode getDriveMode() {
+    return driveMode;
+  }
+
+  public GameController getGameController() {
+    return gameController;
   }
 
   private class NoiseTask extends TimerTask {

@@ -86,7 +86,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
           if (controlMode != null) setControlMode(Enums.switchControlMode(controlMode));
         });
     binding.controllerContainer.driveMode.setOnClickListener(
-        v -> setDriveMode(Enums.switchDriveMode(currentDriveMode)));
+        v -> setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode())));
 
     binding.controllerContainer.speedMode.setOnClickListener(
         v ->
@@ -194,16 +194,6 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
     if (sensorMessenger != null) {
       try {
         sensorMessenger.send(LogDataUtils.generateFrameNumberMessage(frameNumber));
-      } catch (RemoteException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  protected void sendInferenceTimeToSensorService(long frameNumber, long inferenceTime) {
-    if (sensorMessenger != null) {
-      try {
-        sensorMessenger.send(LogDataUtils.generateInferenceTimeMessage(frameNumber, inferenceTime));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -354,7 +344,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
 
   protected void handleLogging() {
     setIsLoggingActive(!loggingEnabled);
-    //    audioPlayer.playLogging(voice, loggingEnabled);
+    audioPlayer.playLogging(voice, loggingEnabled);
   }
 
   @Override
@@ -381,7 +371,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
         sendIndicatorToSensorService();
         break;
       case Constants.CMD_DRIVE_MODE:
-        setDriveMode(Enums.switchDriveMode(currentDriveMode));
+        setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode()));
         break;
 
       case Constants.CMD_DISCONNECTED:
@@ -459,7 +449,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   }
 
   protected void setDriveMode(Enums.DriveMode driveMode) {
-    if (this.currentDriveMode != driveMode && driveMode != null) {
+    if (vehicle.getDriveMode() != driveMode && driveMode != null) {
       switch (driveMode) {
         case DUAL:
           binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_dual);
@@ -473,9 +463,9 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
       }
 
       Timber.d("Updating  driveMode: %s", driveMode);
-      this.currentDriveMode = driveMode;
+      vehicle.setDriveMode(driveMode);
+      audioPlayer.playDriveMode(voice, driveMode);
       preferencesManager.setDriveMode(driveMode.getValue());
-      gameController.setDriveMode(driveMode);
     }
   }
 
@@ -483,7 +473,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
     if (!phoneController.isConnected()) {
       phoneController.connect(requireContext());
     }
-    Enums.DriveMode oldDriveMode = currentDriveMode;
+    Enums.DriveMode oldDriveMode = vehicle.getDriveMode();
     // Currently only dual drive mode supported
     setDriveMode(Enums.DriveMode.DUAL);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
