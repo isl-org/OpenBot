@@ -310,16 +310,21 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   }
 
   private void setNetworkEnabled(boolean b) {
-    runInBackground(
-        () -> {
-          try {
-            TimeUnit.MILLISECONDS.sleep(lastProcessingTimeMs);
-            vehicle.setControl(0, 0);
-            requireActivity().runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_ms));
-          } catch (InterruptedException e) {
-            Timber.e(e, "Got interrupted.");
-          }
-        });
+    binding.autoSwitch.setChecked(b);
+    if (b) {
+      audioPlayer.play(voice, "network_enabled.mp3");
+      runInBackground(
+          () -> {
+            try {
+              TimeUnit.MILLISECONDS.sleep(lastProcessingTimeMs);
+              vehicle.setControl(0, 0);
+              requireActivity()
+                  .runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_ms));
+            } catch (InterruptedException e) {
+              Timber.e(e, "Got interrupted.");
+            }
+          });
+    } else audioPlayer.playDriveMode(voice, vehicle.getDriveMode());
   }
 
   private long frameNum = 0;

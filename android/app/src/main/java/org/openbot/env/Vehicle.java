@@ -1,12 +1,10 @@
 package org.openbot.env;
 
 import android.content.Context;
-
-import org.openbot.common.Enums;
-
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.openbot.common.Enums;
 
 public class Vehicle {
 

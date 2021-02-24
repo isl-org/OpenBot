@@ -24,7 +24,6 @@ import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.Control;
 import org.openbot.env.ControllerToBotEventBus;
-import org.openbot.env.GameController;
 import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
