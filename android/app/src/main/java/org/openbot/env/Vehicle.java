@@ -29,6 +29,8 @@ public class Vehicle {
   private final Context context;
   private final int baudRate;
 
+  private boolean isNoiseEnabled = false;
+
   public Vehicle(Context context, int baudRate) {
     this.context = context;
     this.baudRate = baudRate;
@@ -119,6 +121,16 @@ public class Vehicle {
   }
 
   private Timer noiseTimer;
+
+  public void toggleNoise() {
+    isNoiseEnabled = !isNoiseEnabled;
+    if (isNoiseEnabled) startNoise();
+    else stopNoise();
+  }
+
+  public boolean isNoiseEnabled() {
+    return isNoiseEnabled;
+  }
 
   private class NoiseTask extends TimerTask {
     @Override

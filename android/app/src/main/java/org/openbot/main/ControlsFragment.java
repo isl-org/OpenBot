@@ -20,6 +20,7 @@ import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.Enums;
 import org.openbot.common.Utils;
+import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.Control;
 import org.openbot.env.ControllerToBotEventBus;
@@ -42,6 +43,9 @@ public abstract class ControlsFragment extends Fragment {
   private Handler handler;
   private HandlerThread handlerThread;
   private Disposable phoneControllerEventObserver;
+
+  protected final AudioPlayer audioPlayer = new AudioPlayer(requireContext());
+  protected final String voice = "matthew";
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -118,6 +122,7 @@ public abstract class ControlsFragment extends Fragment {
           processControllerKeyData(Constants.CMD_LOGS);
           break;
         case KeyEvent.KEYCODE_BUTTON_START: // options
+          toggleNoise();
           processControllerKeyData(Constants.CMD_NOISE);
           break;
         case KeyEvent.KEYCODE_BUTTON_L1:
@@ -180,6 +185,9 @@ public abstract class ControlsFragment extends Fragment {
                       toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
                       break;
 
+                    case Constants.CMD_NOISE:
+                      toggleNoise();
+                      break;
                       // We re connected to the controller, send back status info
                     case Constants.CMD_CONNECTED:
                       // PhoneController class will receive this event and resent it to the
@@ -202,6 +210,12 @@ public abstract class ControlsFragment extends Fragment {
 
                   processControllerKeyData(commandType);
                 });
+  }
+
+  protected void toggleNoise() {
+    BotToControllerEventBus.emitEvent(Utils.createStatus("NOISE", vehicle.isNoiseEnabled()));
+    audioPlayer.playNoise(voice, vehicle.isNoiseEnabled());
+    vehicle.toggleNoise();
   }
 
   private void toggleIndicatorEvent(int value) {
