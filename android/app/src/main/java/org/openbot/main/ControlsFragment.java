@@ -258,6 +258,7 @@ public abstract class ControlsFragment extends Fragment {
   public void onDestroy() {
     super.onDestroy();
     vehicle.setControl(0, 0);
+    phoneController.disconnect(getContext());
     if (phoneControllerEventObserver != null) phoneControllerEventObserver.dispose();
   }
 
@@ -265,7 +266,6 @@ public abstract class ControlsFragment extends Fragment {
   public synchronized void onPause() {
     super.onPause();
     handlerThread.quitSafely();
-    phoneController.disconnect(getContext());
     try {
       handlerThread.join();
       handlerThread = null;
