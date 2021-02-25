@@ -32,8 +32,44 @@
  */
 
 // Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
+/*
+ * Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
+/*
+ * Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 package org.openbot.robot;
+
+import static android.Manifest.permission.RECORD_AUDIO;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -55,7 +91,6 @@ import android.media.Image;
 import android.media.Image.Plane;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -66,7 +101,6 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.os.Trace;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -123,8 +157,6 @@ import org.openbot.tflite.Network.Device;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 
-import static android.Manifest.permission.RECORD_AUDIO;
-
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
         Camera.PreviewCallback,
@@ -133,6 +165,8 @@ public abstract class CameraActivity extends AppCompatActivity
         View.OnClickListener,
         AdapterView.OnItemSelectedListener {
   private static final Logger LOGGER = new Logger();
+
+  private static final String TAG = "CameraActivity";
 
   // Constants
   private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -422,6 +456,8 @@ public abstract class CameraActivity extends AppCompatActivity
     localIntentFilter.addAction(Constants.USB_ACTION_DATA_RECEIVED);
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
+
+    handleControllerEvents();
   }
 
   @SuppressLint("SetTextI18n")
@@ -679,12 +715,12 @@ public abstract class CameraActivity extends AppCompatActivity
           // ask for recording permissions here
 
           ActivityCompat.requestPermissions(
-                  this, new String[] {RECORD_AUDIO}, REQUEST_RECORD_PERMISSION_CONTROLLER);
+              this, new String[] {RECORD_AUDIO}, REQUEST_RECORD_PERMISSION_CONTROLLER);
 
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
             Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
-                    .show();
+                .show();
           }
         }
         break;
@@ -698,8 +734,9 @@ public abstract class CameraActivity extends AppCompatActivity
           }
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, RECORD_AUDIO)) {
-            Toast.makeText(this, R.string.record_audio_permission_denied_controller, Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(
+                    this, R.string.record_audio_permission_denied_controller, Toast.LENGTH_LONG)
+                .show();
           }
         }
         break;
@@ -848,7 +885,7 @@ public abstract class CameraActivity extends AppCompatActivity
               this, getLayoutId(), getDesiredPreviewFrameSize(), cameraSelection);
     }
 
-    this.cameraFragment = (CameraConnectionFragment)fragment;
+    this.cameraFragment = (CameraConnectionFragment) fragment;
     getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
   }
 
@@ -945,7 +982,6 @@ public abstract class CameraActivity extends AppCompatActivity
           disconnectPhoneController();
           break;
         case PHONE:
-          handleControllerEvents();
           if (!hasLocationPermission()) requestLocationPermissionController();
           else connectPhoneController();
           break;
@@ -1320,7 +1356,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private void handleControllerEvents() {
     // Prevent multiple subscriptions. This happens if we select "Phone control multiple times.
     if (ControllerToBotEventBus.getProcessor().hasObservers()) {
-      return;
+      Log.d(TAG, "Aleady has subcribers.............");
     }
 
     ControllerToBotEventBus.getProcessor()
@@ -1384,28 +1420,26 @@ public abstract class CameraActivity extends AppCompatActivity
                           noiseEnabled,
                           networkEnabled,
                           driveMode.toString(),
-                          vehicle.getIndicator())
-                  );
+                          vehicle.getIndicator()));
 
                   // INZ ...
-                  cameraFragment.getRtspServer().startServer(previewWidth, previewHeight, 1935);
+                  // cameraFragment.getRtspServer().startServer(previewWidth, previewHeight, 1935);
                   break;
 
                 case "DISCONNECTED":
                   controllerHandler.handleDriveCommand(0.f, 0.f);
                   setControlMode(ControlMode.GAMEPAD);
                   BotToControllerEventBus.emitEvent(Utils.createStatus("VIDEO_COMMAND", "STOP"));
-                  cameraFragment.getRtspServer().stopServer();
                   break;
               }
             },
             error -> {
-              Log.d(null, "Error occurred in ControllerToBotEventBus");
+              Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
             });
   }
 
   private String getCameraResolution() {
-    return "{width:"+ previewWidth+", height:"+previewHeight+"}";
+    return "{width:" + previewWidth + ", height:" + previewHeight + "}";
   }
 
   private void sendIndicatorStatus(Integer status) {

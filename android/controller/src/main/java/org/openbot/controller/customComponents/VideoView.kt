@@ -31,7 +31,9 @@ class VideoView @JvmOverloads constructor(
 ) : org.videolan.libvlc.util.VLCVideoLayout(context, attrs, defStyleAttr), IVLCVout.Callback {
 
     private val TAG: String = "VideoView"
-    private var ipAddress: String? = null
+
+    private var extraVideoParams: String? = ""
+    private var ipAddress: String? = ""
     private var ipPort: String? = "1935"
 
     private var mLibVLC: LibVLC? = null
@@ -39,34 +41,41 @@ class VideoView @JvmOverloads constructor(
     private var mVideoLayout: VLCVideoLayout? = null
 
     init {
+        hide ()
+
         StatusEventBus.addSubject("IP_ADDRESS")
         StatusEventBus.getProcessor("IP_ADDRESS")?.subscribe({
-            gotIpAddress(it as String)
+            this.ipAddress = it
         }, {
             Log.i(null, "Failed to send...")
         })
 
-        StatusEventBus.addSubject("NEW_IP_ADDRESS")
-        StatusEventBus.getProcessor("NEW_IP_ADDRESS")?.subscribe({
-            gotNewIpAddress(it as String)
-        })
-
         StatusEventBus.addSubject("PORT")
         StatusEventBus.getProcessor("PORT")?.subscribe({
-            gotPort(it as String)
+            ipPort = it
         }, {
             Log.i(null, "Failed to add PORT...")
         })
 
-        StatusEventBus.addSubject("CAMERA_RESOLUTION")
-        StatusEventBus.getProcessor("CAMERA_RESOLUTION")?.subscribe {
-            gotCameraResolution(it as String)
-        }
+        StatusEventBus.addSubject("EXTRA_VIDEO_PARAMS")
+        StatusEventBus.getProcessor("EXTRA_VIDEO_PARAMS")?.subscribe({
+            this.extraVideoParams = it
+        }, {
+            Log.i(null, "Failed to add PORT...")
+        })
 
         StatusEventBus.addSubject("VIDEO_COMMAND")
         StatusEventBus.getProcessor("VIDEO_COMMAND")?.subscribe {
             processVideoCommand(it as String)
         }
+
+        val args = ArrayList<String>()
+        args.add("-vvv")
+
+        mLibVLC = LibVLC(context, args)
+        mMediaPlayer = MediaPlayer(mLibVLC)
+
+        mVideoLayout = this
     }
 
     private fun processVideoCommand(command: String) {
@@ -75,44 +84,24 @@ class VideoView @JvmOverloads constructor(
             "STOP" -> {
                 stop()
             }
+            "START" -> {
+                startSafe()
+            }
         }
     }
 
-    private fun gotIpAddress(address: String) {
-        if (ipPort != null) {
-            start("rtsp://${address}:${ipPort}")
-        } else ipAddress = address;
-    }
-
-    private fun gotNewIpAddress(address: String) {
-            stop()
-            start("rtsp://${address}:${ipPort}")
-    }
-
-    private fun gotPort(port: String) {
-        if (ipAddress != null) {
-            start("rtsp://${ipAddress}:${port}")
-        } else ipPort = port;
-    }
-
-    private fun gotCameraResolution(data: String) {
-        val dimensionJson = JSONObject(data)
-        val width = dimensionJson.getInt("width")
-        val height = dimensionJson.getInt("height")
-        setMeasuredDimension(width, height)
-    }
-
-    init {
-        val args = ArrayList<String>()
-        args.add("-vvv")
-
-        mLibVLC = LibVLC(context, args)
-        mMediaPlayer = org.videolan.libvlc.MediaPlayer(mLibVLC)
-
-        mVideoLayout = this
+    private fun startSafe () {
+        if (ipAddress == null || ipPort == null) {
+            Log.d(TAG, "Cannot start video, ipAddress: {ipAddress}, ipPort: {ipPort}")
+            return
+        }
+        start("rtsp://${ipAddress}:${ipPort}${extraVideoParams}")
+        show()
     }
 
     fun init(binding: ActivityFullscreenBinding) {
+        hide()
+
         mMediaPlayer!!.detachViews()
         mMediaPlayer!!.attachViews(mVideoLayout!!, null, true, true)
     }
@@ -122,7 +111,7 @@ class VideoView @JvmOverloads constructor(
     }
 
     fun hide() {
-        visibility = INVISIBLE
+        visibility = GONE
     }
 
     fun release() {
@@ -133,8 +122,6 @@ class VideoView @JvmOverloads constructor(
         Log.i(null, "Stated the player...")
 
         val media = Media(mLibVLC, Uri.parse(url))
-        media.setHWDecoderEnabled(true, true);
-
         mMediaPlayer!!.media = media
         media.release()
 
@@ -144,6 +131,7 @@ class VideoView @JvmOverloads constructor(
     fun stop() {
         mMediaPlayer!!.stop()
         mMediaPlayer!!.detachViews()
+        hide()
     }
 
     override fun onSurfacesCreated(vlcVout: IVLCVout?) {

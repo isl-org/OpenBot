@@ -23,7 +23,6 @@ object BotDataListener {
         val dataReceived: IDataReceived = object : IDataReceived {
             override fun dataReceived(command: String?) {
                 try {
-
                     val dataJson = JSONObject(command as String)
                     val statusValues = dataJson.getJSONObject("status")
 
@@ -37,7 +36,7 @@ object BotDataListener {
                         StatusEventBus.emitEvent(key, value)
                     }
                 } catch (e: JSONException) {
-                    e.printStackTrace();
+                    e.printStackTrace()
                 }
             }
         }

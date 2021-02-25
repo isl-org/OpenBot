@@ -71,6 +71,8 @@
             android:name=".robot.SensorService"
             android:enabled="true"
             android:launchMode="singleTask" />
+
+        <service android:name="net.majorkernelpanic.streaming.rtsp.RtspServer"/>
     </application>
 
 </manifest>

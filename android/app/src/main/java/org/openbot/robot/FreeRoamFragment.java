@@ -43,6 +43,9 @@ public class FreeRoamFragment extends ControlsFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    // connectPhoneController();
+    phoneController.setView(binding.videoWondow);
+
     binding.voltageInfo.setText(getString(R.string.voltageInfo, "--.-"));
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
     binding.sonarInfo.setText(getString(R.string.distanceInfo, "---"));
@@ -209,7 +212,9 @@ public class FreeRoamFragment extends ControlsFragment {
                 this,
                 new String[] {Constants.PERMISSION_LOCATION},
                 Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
-          else connectPhoneController();
+          else {
+            connectPhoneController();
+          }
 
           break;
       }

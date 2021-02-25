@@ -1,9 +1,7 @@
 package org.openbot.main;
 
 import android.content.pm.PackageManager;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.text.format.Formatter;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,11 +24,8 @@ import org.openbot.env.GameController;
 import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
-import org.openbot.robot.CameraActivity;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
-
-import static android.content.Context.WIFI_SERVICE;
 
 public abstract class ControlsFragment extends Fragment {
   protected MainViewModel mViewModel;
@@ -45,6 +40,7 @@ public abstract class ControlsFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    phoneController.init(requireContext());
     preferencesManager = new SharedPreferencesManager(requireContext());
 
     requireActivity()

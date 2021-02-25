@@ -10,8 +10,6 @@ import org.openbot.controller.utils.EventProcessor
 import java.io.BufferedInputStream
 import java.io.DataInputStream
 import java.io.OutputStream
-import java.net.BindException
-import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.nio.charset.Charset
@@ -31,11 +29,9 @@ object NetworkServiceConnection : ILocalConnection {
     private var SERVICE_NAME = "OPEN_BOT_CONTROLLER"
     private val SERVICE_TYPE = "_openbot._tcp"
     private var dataReceivedCallback: IDataReceived? = null
-    var connected = false
-        private set
 
     private const val port = 19400
-    private lateinit var socketHandler: SocketHandler;
+    private lateinit var socketHandler: SocketHandler
     private val messageQueue: BlockingQueue<String> = ArrayBlockingQueue(100)
     private lateinit var context: Context
 
@@ -59,59 +55,64 @@ object NetworkServiceConnection : ILocalConnection {
     }
 
     override fun isConnected(): Boolean {
-        return connected;
+        return socketHandler.isConnected()
     }
 
     override fun sendMessage(message: String?) {
-        socketHandler.put(message);
+        socketHandler.put(message)
     }
-    // end of interface //////////////////////////////////
+    // end of interface
 
     private fun runConnection() {
         socketHandler = SocketHandler(messageQueue)
 
         thread {
             val client: SocketHandler.ClientInfo? = socketHandler.connect(this.port)
+            if (client == null) {
+                return@thread
+            }
 
             thread {
-                socketHandler.runSender(client?.writer)
+                socketHandler.runSender(client.writer)
             }
             thread {
-                socketHandler.runReceiver(client?.reader)
+                socketHandler.runReceiver(client.reader)
             }
         }
     }
 
-    class SocketHandler(messageQueue: BlockingQueue<String>) {
+    class SocketHandler(private val messageQueue: BlockingQueue<String>) {
         private lateinit var client: Socket
         private lateinit var serverSocket: ServerSocket
-        private val messageQueue: BlockingQueue<String> = messageQueue
         private lateinit var clientInfo: ClientInfo
 
         class ClientInfo(val reader: Scanner, val writer: OutputStream) {
         }
 
+        fun isConnected(): Boolean {
+            return !client.isClosed()
+        }
+
         fun connect(port: Int): ClientInfo? {
-            serverSocket = ServerSocket(NetworkServiceConnection.port)
-            serverSocket.reuseAddress = true;
+            serverSocket = ServerSocket(port)
+            serverSocket.reuseAddress = true
             try {
                 client = serverSocket.accept()
 
-                var reader = Scanner(DataInputStream(BufferedInputStream(client.getInputStream())))
-                var writer = client.getOutputStream()
+                val reader = Scanner(DataInputStream(BufferedInputStream(client.getInputStream())))
+                val writer = client.getOutputStream()
 
                 clientInfo = ClientInfo(reader, writer)
 
-                if (!isConnected()) {
-                    connected = true
-                    val event: EventProcessor.ProgressEvents =
-                            EventProcessor.ProgressEvents.ConnectionSuccessful
-                    EventProcessor.onNext(event)
-                }
+                val event: EventProcessor.ProgressEvents =
+                        EventProcessor.ProgressEvents.ConnectionSuccessful
+                EventProcessor.onNext(event)
+
                 println("Client connected: ${client.inetAddress.hostAddress}")
             } catch (e: Exception) {
-                Log.d(TAG, "Already connected");
+                Log.d(TAG, "Got exception: " + e)
                 close()
+                return null
             }
             return clientInfo
         }
@@ -120,21 +121,21 @@ object NetworkServiceConnection : ILocalConnection {
             try {
                 while (true) {
                     val payload: String? = reader?.nextLine()
-                    Log.d(TAG, "Got payload ${payload}");
+                    Log.d(TAG, "Got payload ${payload}")
 
                     if (payload != null) {
 
-                        (context as Activity).runOnUiThread(Runnable {
+                        (context as Activity).runOnUiThread {
                             dataReceivedCallback?.dataReceived(String(
                                     payload.toByteArray(),
                                     StandardCharsets.UTF_8
                             ))
-                        })
+                        }
                     }
                 }
 
             } catch (ex: Exception) {
-                reader?.close ()
+                reader?.close()
                 Log.d(TAG, "got exception ${ex}")
                 close()
 
@@ -150,7 +151,7 @@ object NetworkServiceConnection : ILocalConnection {
                     writer?.write((message + '\n').toByteArray(Charset.defaultCharset()))
                 }
             } catch (e: Exception) {
-                Log.d(TAG, "runSender InterruptedException: {e}");
+                Log.d(TAG, "runSender InterruptedException: {e}")
                 if (writer != null) {
                     writer.close()
                 }
@@ -163,14 +164,11 @@ object NetworkServiceConnection : ILocalConnection {
             if (this::client.isInitialized && !client.isClosed) {
                 client.close()
             }
-            put("_TERMINATE_SENDER_LOOP")
             serverSocket.close()
 
             val event: EventProcessor.ProgressEvents =
                     EventProcessor.ProgressEvents.Disconnected
             EventProcessor.onNext(event)
-
-            connected = false
         }
 
         fun put(message: String?) {
@@ -185,7 +183,7 @@ object NetworkServiceConnection : ILocalConnection {
     private fun registerService(port: Int) {
         val serviceInfo = NsdServiceInfo()
         serviceInfo.serviceName = SERVICE_NAME
-        serviceInfo.serviceType = SERVICE_TYPE;
+        serviceInfo.serviceType = SERVICE_TYPE
         serviceInfo.port = port
 
         mNsdManager!!.registerService(serviceInfo,
