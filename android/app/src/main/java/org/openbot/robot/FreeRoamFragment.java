@@ -234,7 +234,6 @@ public class FreeRoamFragment extends ControlsFragment {
 
       Timber.d("Updating  driveMode: %s", driveMode);
       vehicle.setDriveMode(driveMode);
-      audioPlayer.playDriveMode(voice, driveMode);
       preferencesManager.setDriveMode(driveMode.getValue());
     }
   }

@@ -464,7 +464,6 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
 
       Timber.d("Updating  driveMode: %s", driveMode);
       vehicle.setDriveMode(driveMode);
-      audioPlayer.playDriveMode(voice, driveMode);
       preferencesManager.setDriveMode(driveMode.getValue());
     }
   }
