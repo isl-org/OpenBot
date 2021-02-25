@@ -41,7 +41,8 @@ public abstract class ControlsFragment extends Fragment {
   private HandlerThread handlerThread;
   private Disposable phoneControllerEventObserver;
 
-  protected final AudioPlayer audioPlayer = new AudioPlayer(requireContext());
+  protected AudioPlayer audioPlayer;
+
   protected final String voice = "matthew";
 
   @Override
@@ -49,6 +50,7 @@ public abstract class ControlsFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
 
     preferencesManager = new SharedPreferencesManager(requireContext());
+    audioPlayer = new AudioPlayer(requireContext());
 
     requireActivity()
         .getSupportFragmentManager()
@@ -257,6 +259,7 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public void onDestroy() {
     super.onDestroy();
+    Timber.d("onDestroy");
     vehicle.setControl(0, 0);
     phoneController.disconnect(getContext());
     if (phoneControllerEventObserver != null) phoneControllerEventObserver.dispose();
@@ -265,6 +268,7 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public synchronized void onPause() {
     super.onPause();
+    Timber.d("onpause");
     handlerThread.quitSafely();
     try {
       handlerThread.join();
@@ -272,6 +276,13 @@ public abstract class ControlsFragment extends Fragment {
       handler = null;
     } catch (final InterruptedException e) {
     }
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    Timber.d("onStop");
+
   }
 
   protected synchronized void runInBackground(final Runnable r) {
