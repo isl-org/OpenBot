@@ -43,7 +43,6 @@ public class FreeRoamFragment extends ControlsFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    // connectPhoneController();
     phoneController.setView(binding.videoWondow);
 
     binding.voltageInfo.setText(getString(R.string.voltageInfo, "--.-"));
