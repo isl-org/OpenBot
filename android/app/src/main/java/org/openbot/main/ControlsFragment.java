@@ -282,7 +282,6 @@ public abstract class ControlsFragment extends Fragment {
   public void onStop() {
     super.onStop();
     Timber.d("onStop");
-
   }
 
   protected synchronized void runInBackground(final Runnable r) {
