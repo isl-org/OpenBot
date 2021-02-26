@@ -2,6 +2,8 @@ package org.openbot.main;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import io.reactivex.rxjava3.disposables.Disposable;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.common.Constants;
@@ -35,6 +38,10 @@ public abstract class ControlsFragment extends Fragment {
   protected final PhoneController phoneController = new PhoneController();
   protected Enums.DriveMode currentDriveMode = Enums.DriveMode.GAME;
   protected GameController gameController = new GameController(currentDriveMode);
+
+  private Handler handler;
+  private HandlerThread handlerThread;
+  private Disposable phoneControllerEventObserver;
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -173,18 +180,19 @@ public abstract class ControlsFragment extends Fragment {
                   toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
                   break;
 
-                  // We re connected to the controller, send back status info
-                case Constants.CMD_CONNECTED:
-                  // PhoneController class will receive this event and resent it to the controller.
-                  // Other controllers can subscribe to this event as well.
-                  // That is why we are not calling phoneController.send() here directly.
-                  BotToControllerEventBus.emitEvent(
-                      Utils.getStatus(
-                          false,
-                          false,
-                          false,
-                          currentDriveMode.toString(),
-                          vehicle.getIndicator()));
+                      // We re connected to the controller, send back status info
+                    case Constants.CMD_CONNECTED:
+                      // PhoneController class will receive this event and resent it to the
+                      // controller.
+                      // Other controllers can subscribe to this event as well.
+                      // That is why we are not calling phoneController.send() here directly.
+                      BotToControllerEventBus.emitEvent(
+                          Utils.getStatus(
+                              false,
+                              false,
+                              false,
+                              currentDriveMode.toString(),
+                              vehicle.getIndicator()));
 
                   break;
                 case Constants.CMD_DISCONNECTED:
@@ -228,15 +236,37 @@ public abstract class ControlsFragment extends Fragment {
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    handlerThread = new HandlerThread("inference");
+    handlerThread.start();
+    handler = new Handler(handlerThread.getLooper());
+  }
+
+  @Override
   public void onDestroy() {
     super.onDestroy();
     vehicle.setControl(0, 0);
+    if (phoneControllerEventObserver != null) phoneControllerEventObserver.dispose();
   }
 
   @Override
   public synchronized void onPause() {
     super.onPause();
-    phoneController.disconnect(requireContext());
+    handlerThread.quitSafely();
+    phoneController.disconnect(getContext());
+    try {
+      handlerThread.join();
+      handlerThread = null;
+      handler = null;
+    } catch (final InterruptedException e) {
+    }
+  }
+
+  protected synchronized void runInBackground(final Runnable r) {
+    if (handler != null) {
+      handler.post(r);
+    }
   }
 
   protected abstract void processControllerKeyData(String command);

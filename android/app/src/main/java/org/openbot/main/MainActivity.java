@@ -29,7 +29,7 @@ import androidx.preference.PreferenceManager;
 import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.env.Vehicle;
-import org.openbot.robot.NetworkActivity;
+import org.openbot.robot.DefaultActivity;
 
 // For a library module, uncomment the following line
 // import org.openbot.controller.ControllerActivity;
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     if (savedInstanceState == null) {
       // Default to open this when app opens
-      Intent intent = new Intent(this, NetworkActivity.class);
+      Intent intent = new Intent(this, DefaultActivity.class);
       startActivity(intent);
     }
   }

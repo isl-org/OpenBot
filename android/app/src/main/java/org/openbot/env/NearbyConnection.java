@@ -45,7 +45,7 @@ import timber.log.Timber;
 public class NearbyConnection implements ILocalConnection {
   private static final String TAG = "NearbyConnection";
   private String pairedDeviceEndpointId;
-  private static final Strategy STRATEGY = Strategy.P2P_STAR;
+  private static final Strategy STRATEGY = Strategy.P2P_POINT_TO_POINT;
   private Context context;
   private static final String SERVICE_ID = "OPENBOT_SERVICE_ID";
   private final CancelableDiscovery discovery = new CancelableDiscovery(this);

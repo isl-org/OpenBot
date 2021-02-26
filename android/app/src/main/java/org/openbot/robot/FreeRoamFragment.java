@@ -211,9 +211,7 @@ public class FreeRoamFragment extends ControlsFragment {
                 this,
                 new String[] {Constants.PERMISSION_LOCATION},
                 Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
-          else {
-            connectPhoneController();
-          }
+          else connectPhoneController();
 
           break;
       }
@@ -257,7 +255,7 @@ public class FreeRoamFragment extends ControlsFragment {
 
   private void disconnectPhoneController() {
     if (phoneController.isConnected()) {
-      phoneController.disconnect(requireContext());
+      phoneController.disconnect(getContext());
     }
     setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);

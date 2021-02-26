@@ -15,57 +15,6 @@
  */
 
 // Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
-/*
- * Copyright 2019 The TensorFlow Authors. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
-/*
- * Copyright 2019 The TensorFlow Authors. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
-/*
- * Copyright 2019 The TensorFlow Authors. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-// Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 package org.openbot.robot;
 
@@ -123,6 +72,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import io.reactivex.rxjava3.disposables.Disposable;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
@@ -247,7 +197,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private final String voice = "matthew";
 
   protected Vehicle vehicle;
-  private CameraConnectionFragment cameraFragment;
+  private Disposable phoneControllerEventObserver;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -665,6 +615,7 @@ public abstract class CameraActivity extends AppCompatActivity
       LOGGER.e(e, "Exception!");
     }
 
+    phoneController.disconnect(this);
     super.onPause();
   }
 
@@ -683,6 +634,9 @@ public abstract class CameraActivity extends AppCompatActivity
     }
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     LOGGER.d("onDestroy " + this);
+
+    if (phoneControllerEventObserver != null) phoneControllerEventObserver.dispose();
+
     super.onDestroy();
   }
 
@@ -708,24 +662,20 @@ public abstract class CameraActivity extends AppCompatActivity
         }
         break;
 
-      case REQUEST_LOCATION_PERMISSION_CONTROLLER:
-        // If the permission is granted, start advertising to controller,
+      case REQUEST_LOCATION_PERMISSION_LOGGING:
+        // If the permission is granted, start logging,
         // otherwise, show a Toast
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          // ask for recording permissions here
-
-          ActivityCompat.requestPermissions(
-              this, new String[] {RECORD_AUDIO}, REQUEST_RECORD_PERMISSION_CONTROLLER);
-
+          setIsLoggingActive(true);
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
-            Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
+            Toast.makeText(this, R.string.location_permission_denied_logging, Toast.LENGTH_LONG)
                 .show();
           }
         }
         break;
 
-      case REQUEST_RECORD_PERMISSION_CONTROLLER:
+      case REQUEST_LOCATION_PERMISSION_CONTROLLER:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -733,9 +683,8 @@ public abstract class CameraActivity extends AppCompatActivity
             phoneController.connect(this);
           }
         } else {
-          if (ActivityCompat.shouldShowRequestPermissionRationale(this, RECORD_AUDIO)) {
-            Toast.makeText(
-                    this, R.string.record_audio_permission_denied_controller, Toast.LENGTH_LONG)
+          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
+            Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
                 .show();
           }
         }
@@ -885,7 +834,6 @@ public abstract class CameraActivity extends AppCompatActivity
               this, getLayoutId(), getDesiredPreviewFrameSize(), cameraSelection);
     }
 
-    this.cameraFragment = (CameraConnectionFragment) fragment;
     getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
   }
 
@@ -982,6 +930,7 @@ public abstract class CameraActivity extends AppCompatActivity
           disconnectPhoneController();
           break;
         case PHONE:
+          handleControllerEvents();
           if (!hasLocationPermission()) requestLocationPermissionController();
           else connectPhoneController();
           break;
@@ -1356,7 +1305,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private void handleControllerEvents() {
     // Prevent multiple subscriptions. This happens if we select "Phone control multiple times.
     if (ControllerToBotEventBus.getProcessor().hasObservers()) {
-      Log.d(TAG, "Aleady has subcribers.............");
+      return;
     }
 
     ControllerToBotEventBus.getProcessor()
@@ -1409,37 +1358,29 @@ public abstract class CameraActivity extends AppCompatActivity
                   controllerHandler.handleDriveMode();
                   break;
 
-                  // We re connected to the controller, send back status info
-                case "CONNECTED":
-                  // PhoneController class will receive this event and resent it to the controller.
-                  // Other controllers can subscribe to this event as well.
-                  // That is why we are not calling phoneController.send() here directly.
-                  BotToControllerEventBus.emitEvent(
-                      Utils.getStatus(
-                          loggingEnabled,
-                          noiseEnabled,
-                          networkEnabled,
-                          driveMode.toString(),
-                          vehicle.getIndicator()));
-
-                  // INZ ...
-                  // cameraFragment.getRtspServer().startServer(previewWidth, previewHeight, 1935);
-                  break;
-
-                case "DISCONNECTED":
-                  controllerHandler.handleDriveCommand(0.f, 0.f);
-                  setControlMode(ControlMode.GAMEPAD);
-                  BotToControllerEventBus.emitEvent(Utils.createStatus("VIDEO_COMMAND", "STOP"));
-                  break;
-              }
-            },
-            error -> {
-              Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
-            });
-  }
-
-  private String getCameraResolution() {
-    return "{width:" + previewWidth + ", height:" + previewHeight + "}";
+                      // We re connected to the controller, send back status info
+                    case "CONNECTED":
+                      // PhoneController class will receive this event and resent it to the
+                      // controller.
+                      // Other controllers can subscribe to this event as well.
+                      // That is why we are not calling phoneController.send() here directly.
+                      BotToControllerEventBus.emitEvent(
+                          Utils.getStatus(
+                              loggingEnabled,
+                              noiseEnabled,
+                              networkEnabled,
+                              driveMode.toString(),
+                              vehicle.getIndicator()));
+                      break;
+                    case "DISCONNECTED":
+                      controllerHandler.handleDriveCommand(0.f, 0.f);
+                      setControlMode(ControlMode.GAMEPAD);
+                      break;
+                  }
+                },
+                error -> {
+                  Log.d(null, "Error occurred in ControllerToBotEventBus");
+                });
   }
 
   private void sendIndicatorStatus(Integer status) {

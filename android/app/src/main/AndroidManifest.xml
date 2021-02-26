@@ -16,9 +16,6 @@
     <!-- RTSP Video streaming -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
-    <!-- Related to WiFi direct -->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-
     <uses-feature android:name="android.hardware.camera" android:required="true"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="true"/>
     <uses-feature android:name="android.hardware.camera.front" android:required="true" />
@@ -26,6 +23,7 @@
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false"/>
     <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="false"/>
     <uses-feature android:name="android.hardware.sensor.light" android:required="false"/>
+
 
     <application
         android:allowBackup="false"
@@ -52,7 +50,7 @@
                 android:resource="@xml/device_filter" />
         </activity>
         <activity
-            android:name=".robot.NetworkActivity"
+            android:name=".robot.DefaultActivity"
             android:label="@string/activity_name"
             android:noHistory="false">
 <!--

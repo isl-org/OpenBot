@@ -99,7 +99,6 @@
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:gravity="center"
-        android:padding="16dp"
         android:text="@string/control_info"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/controlModeTitle"
