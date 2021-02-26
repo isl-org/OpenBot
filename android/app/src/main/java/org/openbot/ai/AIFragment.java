@@ -32,23 +32,24 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
-import org.openbot.common.Constants;
-import org.openbot.common.Enums;
+import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentAiBinding;
 import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
-import org.openbot.robot.CameraFragment;
-import org.openbot.robot.ServerCommunication;
+import org.openbot.server.ServerCommunication;
+import org.openbot.server.ServerListener;
 import org.openbot.tflite.Autopilot;
 import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.utils.Constants;
 import timber.log.Timber;
 
-public class AIFragment extends CameraFragment implements ServerCommunication.ServerListener {
+public class AIFragment extends CameraFragment implements ServerListener {
 
   private FragmentAiBinding binding;
   private Handler handler;

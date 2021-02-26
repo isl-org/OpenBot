@@ -32,22 +32,22 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
-import org.openbot.common.Constants;
-import org.openbot.common.Enums;
-import org.openbot.common.Utils;
+import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentLoggerBinding;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.ImageUtils;
-import org.openbot.robot.CameraFragment;
-import org.openbot.robot.SensorService;
-import org.openbot.robot.ServerCommunication;
+import org.openbot.server.ServerCommunication;
+import org.openbot.server.ServerListener;
 import org.openbot.tflite.Model;
+import org.openbot.utils.Constants;
+import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.utils.Utils;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 import timber.log.Timber;
 
-public class LoggerFragment extends CameraFragment implements ServerCommunication.ServerListener {
+public class LoggerFragment extends CameraFragment implements ServerListener {
 
   private FragmentLoggerBinding binding;
   private Intent intentSensorService;

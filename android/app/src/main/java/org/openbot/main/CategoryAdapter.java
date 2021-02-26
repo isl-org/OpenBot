@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
-import org.openbot.common.MarginItemDecoration;
-import org.openbot.common.OnItemClickListener;
 import org.openbot.databinding.ItemCategoryBinding;
 import org.openbot.model.Category;
 import org.openbot.model.SubCategory;
+import org.openbot.utils.MarginItemDecoration;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 

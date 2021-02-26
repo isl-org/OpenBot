@@ -1,10 +1,9 @@
-package org.openbot.robot;
+package org.openbot.server;
 
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Environment;
-import android.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -19,18 +18,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
+import timber.log.Timber;
 
 public class ServerCommunication {
-
-  private static final String TAG = "Server";
-
-  public interface ServerListener {
-    void onAddModel(String model);
-
-    void onRemoveModel(String model);
-
-    void onConnectionEstablished(String ipAddress);
-  }
 
   private final AsyncHttpClient client;
   private final Context context;
@@ -40,7 +30,7 @@ public class ServerCommunication {
         @Override
         public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
           // Called when the resolve fails.  Use the error code to debug.
-          Log.e(TAG, "Resolve failed " + errorCode);
+          Timber.e("Resolve failed %s", errorCode);
         }
 
         @Override
@@ -48,7 +38,7 @@ public class ServerCommunication {
           nsdService.stop();
           serverUrl =
               "http://" + serviceInfo.getHost().getHostAddress() + ":" + serviceInfo.getPort();
-          Log.d(TAG, "Resolved address: " + serverUrl);
+          Timber.d("Resolved address: %s", serverUrl);
 
           client.get(context, serverUrl + "/test", testResponseHandler);
           serverListener.onConnectionEstablished(serverUrl);
@@ -58,18 +48,18 @@ public class ServerCommunication {
       new JsonHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-          Log.d(TAG, "Server found: " + response.toString());
+          Timber.d("Server found: %s", response.toString());
           try {
             uploadAll();
           } catch (Exception e) {
-            Log.w(TAG, e);
+            Timber.w(e);
           }
         }
 
         @Override
         public void onFailure(
             int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-          Log.d(TAG, "Server error: " + throwable.toString());
+          Timber.d("Server error: %s", throwable.toString());
         }
       };
   private final JsonHttpResponseHandler modelListHandler =
@@ -80,7 +70,7 @@ public class ServerCommunication {
 
           if (!dir.exists()) {
             if (!dir.mkdirs()) {
-              Log.i(TAG, "Make dir failed");
+              Timber.i("Make dir failed");
             }
           }
 
@@ -96,10 +86,10 @@ public class ServerCommunication {
                 if (localFileTime >= serverFileTime) {
                   continue;
                 }
-                Log.d(TAG, "Update model: " + name);
-                Log.d(TAG, String.format("File times: %d < %d", localFileTime, serverFileTime));
+                Timber.d("Update model: %s", name);
+                Timber.d("File times: %d < %d", localFileTime, serverFileTime);
               } else {
-                Log.d(TAG, "Download new model: " + name);
+                Timber.d("Download new model: %s", name);
               }
 
               client.get(
@@ -109,21 +99,21 @@ public class ServerCommunication {
                     @Override
                     public void onFailure(
                         int statusCode, Header[] headers, Throwable throwable, File file) {
-                      Log.e(TAG, "Download error: " + name, throwable);
+                      Timber.e(throwable, "Download error: %s", name);
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, File file) {
                       serverListener.onAddModel(name);
                       if (file.setLastModified(serverFileTime)) {
-                        Log.i(TAG, "Successful download: " + name);
+                        Timber.i("Successful download: %s", name);
                       } else {
-                        Log.e(TAG, "Set file time error: " + name);
+                        Timber.e("Set file time error: %s", name);
                       }
                     }
                   });
             } catch (JSONException e) {
-              Log.e(TAG, "JSON error", e);
+              Timber.e(e, "JSON error");
             }
           }
 
@@ -134,9 +124,9 @@ public class ServerCommunication {
                 File file = new File(dir + File.separator + name);
                 if (file.delete()) {
                   serverListener.onRemoveModel(name);
-                  Log.d(TAG, "deleted: " + name);
+                  Timber.d("deleted: %s", name);
                 } else {
-                  Log.e(TAG, "delete error: " + name);
+                  Timber.e("delete error: %s", name);
                 }
               }
             }
@@ -157,14 +147,14 @@ public class ServerCommunication {
   }
 
   public void start() {
-    Log.d(TAG, "service started");
+    Timber.d("service started");
     nsdService.start(context, resolveListener);
     timer.scheduleAtFixedRate(
         new TimerTask() {
           @Override
           public void run() {
             if (serverUrl != null) {
-              Log.d(TAG, "Check for new models");
+              Timber.d("Check for new models");
               client.get(context, serverUrl + "/models", modelListHandler);
             }
           }
@@ -181,13 +171,13 @@ public class ServerCommunication {
       return;
     }
     long size = file.length() / 1024 / 1024;
-    Log.d(TAG, String.format("Start upload %s (%d MB)", file.getName(), size));
+    Timber.d("Start upload %s (%d MB)", file.getName(), size);
 
     RequestParams params = new RequestParams();
     try {
       params.put("file", file);
     } catch (FileNotFoundException e) {
-      Log.e(TAG, "File not found: " + file.getAbsolutePath());
+      Timber.e("File not found: %s", file.getAbsolutePath());
       return;
     }
 
@@ -226,9 +216,9 @@ public class ServerCommunication {
     @Override
     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
       if (file.delete()) {
-        Log.d(TAG, "uploaded: " + file.getName());
+        Timber.d("uploaded: %s", file.getName());
       } else {
-        Log.e(TAG, "delete error: " + file.getName());
+        Timber.e("delete error: %s", file.getName());
       }
     }
   }

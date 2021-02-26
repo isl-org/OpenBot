@@ -1,6 +1,6 @@
 package org.openbot.main;
 
-import static org.openbot.common.Constants.USB_ACTION_DATA_RECEIVED;
+import static org.openbot.utils.Constants.USB_ACTION_DATA_RECEIVED;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,10 +27,10 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import org.openbot.R;
-import org.openbot.common.Constants;
 import org.openbot.env.UsbConnection;
 import org.openbot.env.Vehicle;
-import org.openbot.robot.DefaultActivity;
+import org.openbot.original.DefaultActivity;
+import org.openbot.utils.Constants;
 import timber.log.Timber;
 
 // For a library module, uncomment the following line

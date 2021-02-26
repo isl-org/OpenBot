@@ -15,7 +15,7 @@ limitations under the License.
 
 // Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
-package org.openbot.robot;
+package org.openbot.original;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -42,9 +42,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import org.openbot.R;
-import org.openbot.common.Enums.ControlMode;
-import org.openbot.common.Enums.LogMode;
-import org.openbot.common.Utils;
 import org.openbot.customview.OverlayView;
 import org.openbot.customview.OverlayView.DrawCallback;
 import org.openbot.env.BorderedText;
@@ -56,6 +53,9 @@ import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network.Device;
 import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.Enums.ControlMode;
+import org.openbot.utils.Enums.LogMode;
+import org.openbot.utils.Utils;
 
 /**
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track

@@ -7,7 +7,7 @@ import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import java.io.File;
 import java.io.IOException;
-import org.openbot.common.Enums;
+import org.openbot.utils.Enums;
 
 // Convert text to speech
 // https://ttsmp3.com

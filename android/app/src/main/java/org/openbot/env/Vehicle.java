@@ -4,7 +4,7 @@ import android.content.Context;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.openbot.common.Enums;
+import org.openbot.utils.Enums;
 
 public class Vehicle {
 
@@ -39,6 +39,13 @@ public class Vehicle {
     this.baudRate = baudRate;
     gameController = new GameController(driveMode);
     //    connectUsb();
+  }
+
+  public Vehicle(Context context, int baudRate, int driveMode) {
+    this.context = context;
+    this.baudRate = baudRate;
+    gameController = new GameController(Enums.DriveMode.getByID(driveMode));
+    connectUsb();
   }
 
   public float getBatteryVoltage() {

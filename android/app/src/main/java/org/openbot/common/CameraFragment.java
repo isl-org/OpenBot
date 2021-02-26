@@ -1,4 +1,4 @@
-package org.openbot.robot;
+package org.openbot.common;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -26,10 +26,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.openbot.R;
-import org.openbot.common.Enums;
-import org.openbot.common.YuvToRgbConverter;
 import org.openbot.env.Logger;
-import org.openbot.main.ControlsFragment;
+import org.openbot.utils.Enums;
+import org.openbot.utils.YuvToRgbConverter;
 
 public abstract class CameraFragment extends ControlsFragment {
 

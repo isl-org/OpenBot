@@ -1,4 +1,4 @@
-package org.openbot.main;
+package org.openbot.common;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -18,9 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 import io.reactivex.rxjava3.disposables.Disposable;
 import org.json.JSONObject;
 import org.openbot.R;
-import org.openbot.common.Constants;
-import org.openbot.common.Enums;
-import org.openbot.common.Utils;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.Control;
@@ -28,7 +25,11 @@ import org.openbot.env.ControllerToBotEventBus;
 import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
+import org.openbot.main.MainViewModel;
+import org.openbot.utils.Constants;
+import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.utils.Utils;
 import timber.log.Timber;
 
 public abstract class ControlsFragment extends Fragment {
