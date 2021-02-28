@@ -242,9 +242,7 @@ public class FreeRoamFragment extends ControlsFragment {
   }
 
   private void connectPhoneController() {
-    if (!phoneController.isConnected()) {
-      phoneController.connect(requireContext());
-    }
+    phoneController.connect(requireContext());
     DriveMode oldDriveMode = currentDriveMode;
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
@@ -254,9 +252,7 @@ public class FreeRoamFragment extends ControlsFragment {
   }
 
   private void disconnectPhoneController() {
-    if (phoneController.isConnected()) {
-      phoneController.disconnect(getContext());
-    }
+    phoneController.disconnect(getContext());
     setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
     binding.controllerContainer.driveMode.setAlpha(1.0f);

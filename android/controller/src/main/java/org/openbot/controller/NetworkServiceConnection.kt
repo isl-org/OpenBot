@@ -61,6 +61,12 @@ object NetworkServiceConnection : ILocalConnection {
     override fun sendMessage(message: String?) {
         socketHandler.put(message)
     }
+
+    override fun start() {
+    }
+
+    override fun stop() {
+    }
     // end of interface
 
     private fun runConnection() {

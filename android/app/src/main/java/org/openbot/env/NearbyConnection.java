@@ -256,6 +256,15 @@ public class NearbyConnection implements ILocalConnection {
     }
   }
 
+  @Override
+  public void stop() {
+  }
+
+  @Override
+  public void start() {
+
+  }
+
   public class CancelableDiscovery {
     Timer timer;
     NearbyConnection connection;

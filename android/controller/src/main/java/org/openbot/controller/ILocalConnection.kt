@@ -4,7 +4,7 @@ import android.content.Context
 
 interface ILocalConnection {
 
-    fun init (context: Context)
+    fun init(context: Context)
 
     fun setDataCallback(dataCallback: IDataReceived?)
 
@@ -15,4 +15,8 @@ interface ILocalConnection {
     fun isConnected(): Boolean
 
     fun sendMessage(message: String?)
+
+    fun start ()
+
+    fun stop ()
 }

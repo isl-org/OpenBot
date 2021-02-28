@@ -50,6 +50,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.os.Trace;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -191,7 +192,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private ServerCommunication serverCommunication;
   private SharedPreferencesManager preferencesManager;
   protected final GameController gameController = new GameController(driveMode);
-  private final PhoneController phoneController = new PhoneController();
+  private final PhoneController phoneController = PhoneController.getInstance();
   protected final ControllerHandler controllerHandler = new ControllerHandler();
   private final AudioPlayer audioPlayer = new AudioPlayer(this);
   private final String voice = "matthew";
@@ -679,9 +680,7 @@ public abstract class CameraActivity extends AppCompatActivity
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          if (!phoneController.isConnected()) {
-            phoneController.connect(this);
-          }
+          phoneController.connect(this);
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
             Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
@@ -945,9 +944,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   private void connectPhoneController() {
-    if (!phoneController.isConnected()) {
-      phoneController.connect(this);
-    }
+    phoneController.connect(this);
     DriveMode oldDriveMode = driveMode;
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
@@ -1313,12 +1310,12 @@ public abstract class CameraActivity extends AppCompatActivity
             event -> {
               JSONObject commandJsn = event;
               String commandType = "";
+              Log.d(null, "Got command from controller: " + commandJsn.toString());
               if (commandJsn.has("command")) {
                 commandType = commandJsn.getString("command");
               } else if (commandJsn.has("driveCmd")) {
                 commandType = "DRIVE_CMD";
               } else {
-                Log.d(null, "Got invalid command from controller: " + commandJsn.toString());
                 return;
               }
 
@@ -1371,10 +1368,13 @@ public abstract class CameraActivity extends AppCompatActivity
                               networkEnabled,
                               driveMode.toString(),
                               vehicle.getIndicator()));
+
+                      PhoneController.getInstance().startVideo();
                       break;
                     case "DISCONNECTED":
                       controllerHandler.handleDriveCommand(0.f, 0.f);
                       setControlMode(ControlMode.GAMEPAD);
+                      PhoneController.getInstance().stopVideo();
                       break;
                   }
                 },

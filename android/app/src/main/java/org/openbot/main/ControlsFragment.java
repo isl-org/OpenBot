@@ -35,7 +35,7 @@ public abstract class ControlsFragment extends Fragment {
   protected Vehicle vehicle;
   protected Animation startAnimation;
   protected SharedPreferencesManager preferencesManager;
-  protected final PhoneController phoneController = new PhoneController();
+  protected final PhoneController phoneController = PhoneController.getInstance();
   protected Enums.DriveMode currentDriveMode = Enums.DriveMode.GAME;
   protected GameController gameController = new GameController(currentDriveMode);
 
@@ -219,10 +219,7 @@ public abstract class ControlsFragment extends Fragment {
       case Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          if (!phoneController.isConnected()) {
-            phoneController.connect(requireContext());
-          }
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {  phoneController.connect(requireContext());
         } else {
           if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_LOCATION))
             Toast.makeText(

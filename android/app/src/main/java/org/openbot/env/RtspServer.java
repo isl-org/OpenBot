@@ -17,6 +17,8 @@ import net.majorkernelpanic.streaming.SessionBuilder;
 import net.majorkernelpanic.streaming.audio.AudioQuality;
 import net.majorkernelpanic.streaming.gl.SurfaceView;
 import net.majorkernelpanic.streaming.video.VideoQuality;
+
+import org.json.JSONObject;
 import org.openbot.common.Utils;
 import org.openbot.customview.AutoFitSurfaceView;
 
@@ -60,16 +62,6 @@ class RtspServer implements Session.Callback, SurfaceHolder.Callback {
     context.startService(new Intent(context, net.majorkernelpanic.streaming.rtsp.RtspServer.class));
   }
 
-  public void sendConnectionParams() {
-    List<Pair<String, String>> nameValues = new ArrayList<Pair<String, String>>();
-    boolean ip_address = nameValues.add(new Pair<>("IP_ADDRESS", getIPAddress(true)));
-    nameValues.add(new Pair<>("PORT", "" + PORT));
-    nameValues.add(new Pair<>("EXTRA_VIDEO_PARAMS", "?h264=200-20-" + WIDTH + "-" + HEIGHT));
-    nameValues.add(new Pair<>("VIDEO_COMMAND", "START"));
-
-    BotToControllerEventBus.emitEvent(Utils.createStatusBulk(nameValues));
-  }
-
   private void stopServer() {
 
     session.stop();
@@ -87,12 +79,14 @@ class RtspServer implements Session.Callback, SurfaceHolder.Callback {
   }
 
   public boolean isRunning() {
-    return session != null && configured;
+    boolean running = session != null && session.isStreaming();
+    return running;
   }
 
   @Override
   public void surfaceCreated(@NonNull SurfaceHolder holder) {
     session.startPreview();
+    sendConnectionParams();
   }
 
   @Override
@@ -100,7 +94,29 @@ class RtspServer implements Session.Callback, SurfaceHolder.Callback {
 
   @Override
   public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-    session.stop();
+    if (session != null) {
+      session.stop();
+      session.release();
+      session = null;
+    }
+    sendVideoStoppedStatus ();
+  }
+
+  public void sendConnectionParams() {
+    List<Pair<String, String>> nameValues = new ArrayList<Pair<String, String>>();
+    boolean ip_address = nameValues.add(new Pair<>("IP_ADDRESS", getIPAddress(true)));
+    nameValues.add(new Pair<>("PORT", "" + PORT));
+    nameValues.add(new Pair<>("EXTRA_VIDEO_PARAMS", "?h264=200-20-" + WIDTH + "-" + HEIGHT));
+    nameValues.add(new Pair<>("VIDEO_COMMAND", "START"));
+
+    BotToControllerEventBus.emitEvent(Utils.createStatusBulk(nameValues));
+  }
+
+  public void sendVideoStoppedStatus() {
+    List<Pair<String, String>> nameValues = new ArrayList<Pair<String, String>>();
+    nameValues.add(new Pair<>("VIDEO_COMMAND", "" + "STOP"));
+
+    BotToControllerEventBus.emitEvent(Utils.createStatusBulk(nameValues));
   }
 
   @Override

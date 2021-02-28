@@ -64,6 +64,9 @@ dependencies {
     // vlc for rtsp streaming display
     implementation 'org.videolan.android:libvlc-all:3.3.12'
 
+    // WiFi direct
+    implementation 'com.abemart.wroup:wroup:0.9'
+
     // For a library module, uncomment the following line and comment the one after
     // apply plugin: 'com.android.library'
     apply plugin: 'com.android.application'

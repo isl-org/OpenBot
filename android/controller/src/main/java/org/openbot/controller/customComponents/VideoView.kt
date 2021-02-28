@@ -119,18 +119,21 @@ class VideoView @JvmOverloads constructor(
     }
 
     private fun start(url: String) {
-        Log.i(null, "Stated the player...")
+        Log.i(null, "Stated the player..., playState: " + mMediaPlayer!!.playerState)
 
         val media = Media(mLibVLC, Uri.parse(url))
+        Log.i (TAG, "media.state: " + media.state)
+
         mMediaPlayer!!.media = media
         media.release()
 
         mMediaPlayer!!.play()
+        show()
     }
 
     fun stop() {
         mMediaPlayer!!.stop()
-        mMediaPlayer!!.detachViews()
+        // mMediaPlayer!!.detachViews()
         hide()
     }
 

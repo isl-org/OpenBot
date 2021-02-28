@@ -18,6 +18,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openbot.common.Utils;
 
 import timber.log.Timber;
 
@@ -39,6 +40,7 @@ public class NetworkServiceConnection implements ILocalConnection {
   private IDataReceived dataReceivedCallback;
   private SocketHandler socketHandler;
   private BlockingQueue<String> messageQueue = new ArrayBlockingQueue<>(25);
+  private boolean stopped = true;
 
   @Override
   public void init(Context context) {
@@ -54,11 +56,13 @@ public class NetworkServiceConnection implements ILocalConnection {
   @Override
   public void connect(Context context) {
     this.context = context;
+    start();
     runConnection();
   }
 
   @Override
   public void disconnect(Context context) {
+    stopped = true;
     if (socketHandler == null) {
       return;
     }
@@ -68,6 +72,19 @@ public class NetworkServiceConnection implements ILocalConnection {
     } catch (IllegalArgumentException e) {
       d("disconnect: Already discovering: %s", e);
     }
+  }
+
+  @Override
+  public void stop() {
+    stopped = true;
+    BotToControllerEventBus.emitEvent(Utils.createStatus("CONNECTION_ACTIVE", false));
+  }
+
+  @Override
+  public void start() {
+
+    stopped = false;
+    BotToControllerEventBus.emitEvent(Utils.createStatus("CONNECTION_ACTIVE", true));
   }
 
   @Override
@@ -224,8 +241,6 @@ public class NetworkServiceConnection implements ILocalConnection {
     }.start();
   }
 
-  public void setOnConnected(PhoneController.DataReceived dataReceived) {}
-
   class SocketHandler {
     private BlockingQueue<String> messageQueue;
     private Socket client;
@@ -269,9 +284,11 @@ public class NetworkServiceConnection implements ILocalConnection {
         while (true) {
           String msg = reader.nextLine().trim();
 
-          ((Activity) context)
-              .runOnUiThread(
-                      () -> dataReceivedCallback.dataReceived(msg));
+          if (!stopped) {
+            ((Activity) context)
+                    .runOnUiThread(
+                            () -> dataReceivedCallback.dataReceived(msg));
+          }
         }
       } catch (Exception e) {
         close();
