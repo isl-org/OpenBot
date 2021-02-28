@@ -1,11 +1,12 @@
 package org.openbot.env;
 
+import static timber.log.Timber.*;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
-import android.util.Log;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -19,10 +20,7 @@ import java.util.concurrent.BlockingQueue;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.common.Utils;
-
 import timber.log.Timber;
-
-import static timber.log.Timber.*;
 
 public class NetworkServiceConnection implements ILocalConnection {
 
@@ -62,7 +60,8 @@ public class NetworkServiceConnection implements ILocalConnection {
 
   @Override
   public void disconnect(Context context) {
-    stopped = true;
+    stop();
+
     if (socketHandler == null) {
       return;
     }
@@ -138,14 +137,14 @@ public class NetworkServiceConnection implements ILocalConnection {
           // Internal bookkeeping code goes here.
           ((Activity) context)
               .runOnUiThread(
-                      () -> {
-                        try {
-                          ControllerToBotEventBus.emitEvent(
-                              new JSONObject("{command: \"DISCONNECTED\"}"));
-                        } catch (JSONException e) {
-                          e.printStackTrace();
-                        }
-                      });
+                  () -> {
+                    try {
+                      ControllerToBotEventBus.emitEvent(
+                          new JSONObject("{command: \"DISCONNECTED\"}"));
+                    } catch (JSONException e) {
+                      e.printStackTrace();
+                    }
+                  });
         }
 
         @Override
@@ -177,7 +176,7 @@ public class NetworkServiceConnection implements ILocalConnection {
         public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
           // Called when the resolve fails. Use the error code to debug.
           Timber.e("Resolve failed %s", errorCode);
-          Timber.e( "serivce = %s", serviceInfo);
+          Timber.e("serivce = %s", serviceInfo);
 
           // re-try connecting
           runConnection();
@@ -198,14 +197,13 @@ public class NetworkServiceConnection implements ILocalConnection {
 
           ((Activity) context)
               .runOnUiThread(
-                      () -> {
-                        try {
-                          ControllerToBotEventBus.emitEvent(
-                              new JSONObject("{command: \"CONNECTED\"}"));
-                        } catch (JSONException e) {
-                          e.printStackTrace();
-                        }
-                      });
+                  () -> {
+                    try {
+                      ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"CONNECTED\"}"));
+                    } catch (JSONException e) {
+                      e.printStackTrace();
+                    }
+                  });
 
           new Thread("Receiver Thread") {
             public void run() {
@@ -285,9 +283,7 @@ public class NetworkServiceConnection implements ILocalConnection {
           String msg = reader.nextLine().trim();
 
           if (!stopped) {
-            ((Activity) context)
-                    .runOnUiThread(
-                            () -> dataReceivedCallback.dataReceived(msg));
+            ((Activity) context).runOnUiThread(() -> dataReceivedCallback.dataReceived(msg));
           }
         }
       } catch (Exception e) {
@@ -332,14 +328,14 @@ public class NetworkServiceConnection implements ILocalConnection {
 
         ((Activity) context)
             .runOnUiThread(
-                    () -> {
-                      try {
-                        ControllerToBotEventBus.emitEvent(
-                            new JSONObject("{command: \"DISCONNECTED\"}"));
-                      } catch (JSONException e) {
-                        e.printStackTrace();
-                      }
-                    });
+                () -> {
+                  try {
+                    ControllerToBotEventBus.emitEvent(
+                        new JSONObject("{command: \"DISCONNECTED\"}"));
+                  } catch (JSONException e) {
+                    e.printStackTrace();
+                  }
+                });
       } catch (IOException e) {
         e.printStackTrace();
       }

@@ -17,8 +17,6 @@ import net.majorkernelpanic.streaming.SessionBuilder;
 import net.majorkernelpanic.streaming.audio.AudioQuality;
 import net.majorkernelpanic.streaming.gl.SurfaceView;
 import net.majorkernelpanic.streaming.video.VideoQuality;
-
-import org.json.JSONObject;
 import org.openbot.common.Utils;
 import org.openbot.customview.AutoFitSurfaceView;
 
@@ -99,7 +97,7 @@ class RtspServer implements Session.Callback, SurfaceHolder.Callback {
       session.release();
       session = null;
     }
-    sendVideoStoppedStatus ();
+    sendVideoStoppedStatus();
   }
 
   public void sendConnectionParams() {

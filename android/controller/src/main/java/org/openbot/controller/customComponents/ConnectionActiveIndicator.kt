@@ -22,10 +22,7 @@ import org.openbot.controller.StatusEventBus
 
 class ConnectionActiveIndicator @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-)
-  : com.google.android.material.imageview.ShapeableImageView (context, attrs, defStyleAttr) {
- // : androidx.appcompat.widget.AppCompatImageView (context, attrs, defStyleAttr) {
-
+) : com.google.android.material.imageview.ShapeableImageView (context, attrs, defStyleAttr) {
 
     init {
         offState()

@@ -17,5 +17,6 @@ public interface ILocalConnection {
   void sendMessage(String message);
 
   void stop();
+
   void start();
 }

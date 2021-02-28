@@ -18,7 +18,6 @@
 
 package org.openbot.robot;
 
-import static android.Manifest.permission.RECORD_AUDIO;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -50,7 +49,6 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.os.Trace;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -1355,32 +1353,32 @@ public abstract class CameraActivity extends AppCompatActivity
                   controllerHandler.handleDriveMode();
                   break;
 
-                      // We re connected to the controller, send back status info
-                    case "CONNECTED":
-                      // PhoneController class will receive this event and resent it to the
-                      // controller.
-                      // Other controllers can subscribe to this event as well.
-                      // That is why we are not calling phoneController.send() here directly.
-                      BotToControllerEventBus.emitEvent(
-                          Utils.getStatus(
-                              loggingEnabled,
-                              noiseEnabled,
-                              networkEnabled,
-                              driveMode.toString(),
-                              vehicle.getIndicator()));
+                  // We re connected to the controller, send back status info
+                case "CONNECTED":
+                  // PhoneController class will receive this event and resent it to the
+                  // controller.
+                  // Other controllers can subscribe to this event as well.
+                  // That is why we are not calling phoneController.send() here directly.
+                  BotToControllerEventBus.emitEvent(
+                      Utils.getStatus(
+                          loggingEnabled,
+                          noiseEnabled,
+                          networkEnabled,
+                          driveMode.toString(),
+                          vehicle.getIndicator()));
 
-                      PhoneController.getInstance().startVideo();
-                      break;
-                    case "DISCONNECTED":
-                      controllerHandler.handleDriveCommand(0.f, 0.f);
-                      setControlMode(ControlMode.GAMEPAD);
-                      PhoneController.getInstance().stopVideo();
-                      break;
-                  }
-                },
-                error -> {
-                  Log.d(null, "Error occurred in ControllerToBotEventBus");
-                });
+                  PhoneController.getInstance().startVideo();
+                  break;
+                case "DISCONNECTED":
+                  controllerHandler.handleDriveCommand(0.f, 0.f);
+                  setControlMode(ControlMode.GAMEPAD);
+                  PhoneController.getInstance().stopVideo();
+                  break;
+              }
+            },
+            error -> {
+              Log.d(null, "Error occurred in ControllerToBotEventBus");
+            });
   }
 
   private void sendIndicatorStatus(Integer status) {

@@ -180,19 +180,19 @@ public abstract class ControlsFragment extends Fragment {
                   toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
                   break;
 
-                      // We re connected to the controller, send back status info
-                    case Constants.CMD_CONNECTED:
-                      // PhoneController class will receive this event and resent it to the
-                      // controller.
-                      // Other controllers can subscribe to this event as well.
-                      // That is why we are not calling phoneController.send() here directly.
-                      BotToControllerEventBus.emitEvent(
-                          Utils.getStatus(
-                              false,
-                              false,
-                              false,
-                              currentDriveMode.toString(),
-                              vehicle.getIndicator()));
+                  // We re connected to the controller, send back status info
+                case Constants.CMD_CONNECTED:
+                  // PhoneController class will receive this event and resent it to the
+                  // controller.
+                  // Other controllers can subscribe to this event as well.
+                  // That is why we are not calling phoneController.send() here directly.
+                  BotToControllerEventBus.emitEvent(
+                      Utils.getStatus(
+                          false,
+                          false,
+                          false,
+                          currentDriveMode.toString(),
+                          vehicle.getIndicator()));
 
                   break;
                 case Constants.CMD_DISCONNECTED:
@@ -219,7 +219,8 @@ public abstract class ControlsFragment extends Fragment {
       case Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {  phoneController.connect(requireContext());
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          phoneController.connect(requireContext());
         } else {
           if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_LOCATION))
             Toast.makeText(
