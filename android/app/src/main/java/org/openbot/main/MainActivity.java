@@ -18,6 +18,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
   private MainViewModel viewModel;
   private BroadcastReceiver localBroadcastReceiver;
   private Vehicle vehicle;
+  private LocalBroadcastManager localBroadcastManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
     localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+
+    localBroadcastManager = LocalBroadcastManager.getInstance(this);
+    localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
+
     registerReceiver(localBroadcastReceiver, localIntentFilter);
 
     NavHostFragment navHostFragment =
@@ -145,6 +151,11 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public synchronized void onDestroy() {
+    if (localBroadcastManager != null) {
+      localBroadcastManager.unregisterReceiver(localBroadcastReceiver);
+      localBroadcastManager = null;
+    }
+
     unregisterReceiver(localBroadcastReceiver);
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     vehicle.disconnectUsb();
