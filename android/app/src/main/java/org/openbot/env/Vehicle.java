@@ -38,7 +38,7 @@ public class Vehicle {
     this.context = context;
     this.baudRate = baudRate;
     gameController = new GameController(driveMode);
-    connectUsb();
+//    connectUsb();
   }
 
   public float getBatteryVoltage() {
