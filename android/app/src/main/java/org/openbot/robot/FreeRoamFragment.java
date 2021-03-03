@@ -86,15 +86,9 @@ public class FreeRoamFragment extends ControlsFragment {
 
     mViewModel
         .getUsbStatus()
-        .observe(
-            getViewLifecycleOwner(),
-            status -> {
-              binding.usbToggle.setChecked(status);
-              binding.usbToggle.setEnabled(!status);
-            });
+        .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
-    binding.usbToggle.setEnabled(!vehicle.isUsbConnected());
 
     binding.usbToggle.setOnClickListener(
         v -> {

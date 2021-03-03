@@ -167,7 +167,9 @@ public class MainActivity extends AppCompatActivity {
     super.onResume();
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
-    vehicle = new Vehicle(this, baudRate);
-    viewModel.setVehicle(vehicle);
+    if (vehicle == null) {
+      vehicle = new Vehicle(this, baudRate);
+      viewModel.setVehicle(vehicle);
+    }
   }
 }
