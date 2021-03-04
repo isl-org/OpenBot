@@ -42,8 +42,6 @@ public class FreeRoamFragment extends ControlsFragment {
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     binding = FragmentFreeRoamBinding.inflate(inflater, container, false);
-
-    handleControllerEvents();
     return binding.getRoot();
   }
 
@@ -307,66 +305,5 @@ public class FreeRoamFragment extends ControlsFragment {
                 Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
         break;
     }
-  }
-
-  private void handleControllerEvents() {
-    ControllerToBotEventBus.getProcessor()
-            .subscribe(
-                    event -> {
-                      JSONObject commandJsn = event;
-                      String commandType = "";
-                      Log.d(null, "Got command from controller: " + commandJsn.toString());
-                      if (commandJsn.has("command")) {
-                        commandType = commandJsn.getString("command");
-                      } else if (commandJsn.has("driveCmd")) {
-                        commandType = "DRIVE_CMD";
-                      } else {
-                        return;
-                      }
-
-                      switch (commandType) {
-                        case "DRIVE_CMD":
-                          JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
-                          handleDriveCommand(
-                                  Float.valueOf(driveValue.getString("l")),
-                                  Float.valueOf(driveValue.getString("r")));
-                          break;
-
-                        case "LOGS":
-                          break;
-
-                        case "NOISE":
-                          break;
-
-                        case "INDICATOR_LEFT":
-                          toggleIndicator(Enums.VehicleIndicator.LEFT.getValue());
-                          break;
-
-                        case "INDICATOR_RIGHT":
-                          toggleIndicator(Enums.VehicleIndicator.RIGHT.getValue());
-                          break;
-
-                        case "INDICATOR_STOP":
-                          toggleIndicator(Enums.VehicleIndicator.STOP.getValue());
-                          break;
-
-                        case "DRIVE_MODE":
-                          break;
-                      }
-                    },
-                    error -> {
-                      Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
-                    });
-  }
-
-  protected void handleDriveCommand(Float l, Float r) {
-    vehicle.setControl(l, r);
-    handleDriveCommand(); // update the UI
-  }
-
-  private void sendIndicatorStatus(Integer status) {
-    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_LEFT", status == -1));
-    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_RIGHT", status == 1));
-    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_STOP", status == 0));
   }
 }
