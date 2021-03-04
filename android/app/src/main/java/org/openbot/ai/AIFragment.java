@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.Constants;
+import org.openbot.common.Enums;
 import org.openbot.databinding.FragmentAiBinding;
 import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
@@ -44,6 +45,7 @@ import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
 public class AIFragment extends CameraFragment implements ServerCommunication.ServerListener {
@@ -89,10 +91,6 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
-
-    binding.controllerContainer.controlMode.setEnabled(false);
-    binding.controllerContainer.driveMode.setEnabled(false);
-    binding.controllerContainer.speedInfo.setEnabled(false);
 
     binding.deviceSpinner.setSelection(preferencesManager.getDevice());
     setNumThreads(preferencesManager.getNumThreads());
@@ -159,6 +157,28 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
+
+    setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
+    setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
+    setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
+
+    binding.controllerContainer.controlMode.setOnClickListener(
+        v -> {
+          Enums.ControlMode controlMode =
+              Enums.ControlMode.getByID(preferencesManager.getControlMode());
+          if (controlMode != null) setControlMode(Enums.switchControlMode(controlMode));
+        });
+    binding.controllerContainer.driveMode.setOnClickListener(
+        v -> setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode())));
+
+    binding.controllerContainer.speedMode.setOnClickListener(
+        v ->
+            setSpeedMode(
+                Enums.toggleSpeed(
+                    Enums.Direction.CYCLIC.getValue(),
+                    Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()))));
+
+    binding.autoSwitch.setOnClickListener(v -> setNetworkEnabled(binding.autoSwitch.isChecked()));
   }
 
   private void updateCropImageInfo() {
@@ -304,26 +324,15 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   @Override
   protected void processControllerKeyData(String commandType) {
     switch (commandType) {
-      case Constants.CMD_DRIVE:
-        //        handleDriveCommand();
-        break;
-
-      case Constants.CMD_LOGS:
-        break;
-        //      case "Constants.CMD_NOISE":
-        //        handleNoise();
-        //        break;
-      case Constants.CMD_INDICATOR_LEFT:
-      case Constants.CMD_INDICATOR_RIGHT:
-
       case Constants.CMD_NETWORK:
-        setNetworkEnabled(!binding.autoSwitch.isChecked());
+        setNetworkEnabledWithAudio(!binding.autoSwitch.isChecked());
         break;
     }
   }
 
-  private void setNetworkEnabled(boolean b) {
-    binding.autoSwitch.setChecked(b);
+  private void setNetworkEnabledWithAudio(boolean b) {
+    setNetworkEnabled(b);
+
     if (b) {
       audioPlayer.play(voice, "network_enabled.mp3");
       runInBackground(
@@ -338,6 +347,19 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
             }
           });
     } else audioPlayer.playDriveMode(voice, vehicle.getDriveMode());
+  }
+
+  private void setNetworkEnabled(boolean b) {
+    binding.autoSwitch.setChecked(b);
+    binding.controllerContainer.controlMode.setEnabled(!b);
+    binding.controllerContainer.driveMode.setEnabled(!b);
+    binding.controllerContainer.speedInfo.setEnabled(!b);
+
+    binding.controllerContainer.controlMode.setAlpha(b ? 0.5f : 1f);
+    binding.controllerContainer.driveMode.setAlpha(b ? 0.5f : 1f);
+    binding.controllerContainer.speedMode.setAlpha(b ? 0.5f : 1f);
+
+    if (!b) handler.postDelayed(() -> vehicle.setControl(0, 0), 500);
   }
 
   private long frameNum = 0;
@@ -501,5 +523,89 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
 
   private String[] getModelFiles() {
     return requireActivity().getFilesDir().list((dir1, name) -> name.endsWith(".tflite"));
+  }
+
+  private void setSpeedMode(Enums.SpeedMode speedMode) {
+    if (speedMode != null) {
+      switch (speedMode) {
+        case SLOW:
+          binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_low);
+          break;
+        case NORMAL:
+          binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_medium);
+          break;
+        case FAST:
+          binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_high);
+          break;
+      }
+
+      Timber.d("Updating  controlSpeed: %s", speedMode);
+      preferencesManager.setSpeedMode(speedMode.getValue());
+      vehicle.setSpeedMultiplier(speedMode.getValue());
+    }
+  }
+
+  private void setControlMode(Enums.ControlMode controlMode) {
+    if (controlMode != null) {
+      switch (controlMode) {
+        case GAMEPAD:
+          binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_controller);
+          disconnectPhoneController();
+          break;
+        case PHONE:
+          binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
+          if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
+            PermissionUtils.requestPermissions(
+                this,
+                new String[] {Constants.PERMISSION_LOCATION},
+                Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
+          else connectPhoneController();
+
+          break;
+      }
+      Timber.d("Updating  controlMode: %s", controlMode);
+      preferencesManager.setControlMode(controlMode.getValue());
+    }
+  }
+
+  protected void setDriveMode(Enums.DriveMode driveMode) {
+    if (vehicle.getDriveMode() != driveMode && driveMode != null) {
+      switch (driveMode) {
+        case DUAL:
+          binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_dual);
+          break;
+        case GAME:
+          binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_game);
+          break;
+        case JOYSTICK:
+          binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_joystick);
+          break;
+      }
+
+      Timber.d("Updating  driveMode: %s", driveMode);
+      vehicle.setDriveMode(driveMode);
+      preferencesManager.setDriveMode(driveMode.getValue());
+    }
+  }
+
+  private void connectPhoneController() {
+    if (!phoneController.isConnected()) {
+      phoneController.connect(requireContext());
+    }
+    Enums.DriveMode oldDriveMode = vehicle.getDriveMode();
+    // Currently only dual drive mode supported
+    setDriveMode(Enums.DriveMode.DUAL);
+    binding.controllerContainer.driveMode.setAlpha(0.5f);
+    binding.controllerContainer.driveMode.setEnabled(false);
+    preferencesManager.setDriveMode(oldDriveMode.getValue());
+  }
+
+  private void disconnectPhoneController() {
+    if (phoneController.isConnected()) {
+      phoneController.disconnect(getContext());
+    }
+    setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
+    binding.controllerContainer.driveMode.setEnabled(true);
+    binding.controllerContainer.driveMode.setAlpha(1.0f);
   }
 }
