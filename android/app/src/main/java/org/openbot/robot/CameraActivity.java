@@ -927,7 +927,7 @@ public abstract class CameraActivity extends AppCompatActivity
           disconnectPhoneController();
           break;
         case PHONE:
-          handleControllerEvents();
+          // handleControllerEvents();
           if (!hasLocationPermission()) requestLocationPermissionController();
           else connectPhoneController();
           break;
@@ -1298,11 +1298,6 @@ public abstract class CameraActivity extends AppCompatActivity
   */
 
   private void handleControllerEvents() {
-    // Prevent multiple subscriptions. This happens if we select "Phone control multiple times.
-    if (ControllerToBotEventBus.getProcessor().hasObservers()) {
-      return;
-    }
-
     ControllerToBotEventBus.getProcessor()
         .subscribe(
             event -> {
@@ -1369,6 +1364,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
                   PhoneController.getInstance().startVideo();
                   break;
+
                 case "DISCONNECTED":
                   controllerHandler.handleDriveCommand(0.f, 0.f);
                   setControlMode(ControlMode.GAMEPAD);
@@ -1377,7 +1373,7 @@ public abstract class CameraActivity extends AppCompatActivity
               }
             },
             error -> {
-              Log.d(null, "Error occurred in ControllerToBotEventBus");
+              Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
             });
   }
 

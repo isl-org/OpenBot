@@ -3,6 +3,7 @@ package org.openbot.env;
 import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openbot.common.Utils;
 import org.openbot.customview.AutoFitSurfaceView;
 import timber.log.Timber;
 
@@ -15,7 +16,7 @@ public class PhoneController {
       // new NearbyConnection();
       new NetworkServiceConnection();
 
-  private RtspServer rtspServer = new RtspServer();
+  private IVideoServer videoServer = new RtspServer();
   private Context context;
 
   {
@@ -24,17 +25,17 @@ public class PhoneController {
   }
 
   public void setView(AutoFitSurfaceView videoWondow) {
-    rtspServer.setView(videoWondow);
+    videoServer.setView(videoWondow);
   }
 
   public void startVideo() {
-    if (rtspServer.isRunning()) {
-      rtspServer.sendConnectionParams();
+    if (videoServer.isRunning()) {
+      videoServer.sendServerUrl();
     }
   }
 
   public void stopVideo() {
-    rtspServer.sendVideoStoppedStatus();
+    videoServer.sendVideoStoppedStatus();
   }
 
   class DataReceived implements IDataReceived {
@@ -50,7 +51,7 @@ public class PhoneController {
 
   public void init(Context context) {
     this.context = context;
-    rtspServer.init(context);
+    videoServer.init(context);
   }
 
   public void connect(Context context) {
@@ -59,6 +60,9 @@ public class PhoneController {
       connection.connect(context);
     } else {
       connection.start();
+    }
+    if (videoServer.isRunning()) {
+      videoServer.startClient();
     }
   }
 

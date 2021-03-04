@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -122,12 +124,16 @@ public class NetworkServiceConnection implements ILocalConnection {
           d("Host = %s", service.getServiceName());
           d("port = %s", String.valueOf(service.getPort()));
 
-          if (!service.getServiceType().equals(SERVICE_TYPE)) {
-            mNsdManager.resolveService(service, mResolveListener);
-          } else if (service.getServiceName().equals(MY_SERVICE_NAME)) {
-            d("Same machine: " + MY_SERVICE_NAME);
-          } else {
-            mNsdManager.resolveService(service, mResolveListener);
+          try {
+            if (!service.getServiceType().equals(SERVICE_TYPE)) {
+              mNsdManager.resolveService(service, mResolveListener);
+            } else if (service.getServiceName().equals(MY_SERVICE_NAME)) {
+              d("Same machine: " + MY_SERVICE_NAME);
+            } else {
+              mNsdManager.resolveService(service, mResolveListener);
+            }
+          } catch (java.lang.IllegalArgumentException e) {
+            Log.d(TAG, "Got exception: " + e);
           }
         }
 
