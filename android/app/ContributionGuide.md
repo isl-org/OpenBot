@@ -6,16 +6,63 @@ It launches with `MainActivity.java` which holds `MainFragment.java` as it's def
 
 `MainFragment.java` has a recyclerview which is used to route to different screens and features using Android's Navigation component. The recycler view adapter is loaded with data curated from `FeatureList.java` class.
 
-The project contains two abstract classes `ControlsFragment.java` and `CameraFragment.java` which can be extended to inherit the relvevant functionalities.
+The project contains two `abstract` classes `ControlsFragment.java` and `CameraFragment.java` which can be extended to inherit the relvevant functionalities.
 
 ### `ControlsFragment.java`
 
-This class contains all relevant code required to operate the robot via a controller. Just extending this class will give your feature the ability to control the robot in one go.
+This class contains all relevant code required to operate the robot via a controller. Just extending this class will give your feature the ability to control the robot in one go. It uses two `private` methods,
+
+```
+private void processKeyEvent(KeyEvent keyCode)
+```
+
+and 
+
+```
+private void handlePhoneControllerEvents()
+```
+
+ to process phone controller, and  game controller key actions, and pass the processed String data to 
+`protected abstract void processControllerKeyData(String data)` which is exposed to inheriting classes, which can be used to update the UI accordingly. 
 
 ### `CameraFragment.java`
 
-This class extends the functionality of `ControlsFragment.java`, and itself offers ability to enable camera preview in your feature.
+This class uses CameraX API to enable camera preview in the app. It extends the functionality of `ControlsFragment.java` to support robot connection and integration by default. 
 
+To add camera preview to your feature:
+
+1. Replace `extends Fragment`  with `extends CameraFragment` like this:
+
+   ​	`public class AIFragment extends CameraFragment`
+   
+2. To overlay your own UI over this camera preview, `CameraFragment.java` offers two protected methods.
+
+   ​	a.) `View inflateFragment(ViewBinding viewBinding, LayoutInflater inflater, ViewGroup container)`
+   ​	b.) `View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container)`
+
+    Depending on whether you use ViewBinding or resource file to inflate your view, use the relevant method, and in the `onCreateView` method of your fragment, return it like this:
+
+    ```
+    @Override
+    public View onCreateView(
+        @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      // Inflate the layout for this fragment
+      binding = FragmentAiBinding.inflate(inflater, container, false);
+    
+      return inflateFragment(binding, inflater, container);
+    }
+    ```
+    or
+    ```
+     @Override
+     public View onCreateView(
+         @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View mView = inflater.inflate(R.layout.fragment_ai, container, false);
+        
+        return inflateFragment(mView, inflater, container);
+     }
+    ```
 ## To add a new feature:
 
 1. Create a new fragment and it's respective layout file.
