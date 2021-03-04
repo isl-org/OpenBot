@@ -8,7 +8,7 @@ It launches with `MainActivity.java` which holds `MainFragment.java` as it's def
 
 The project contains two `abstract` classes `ControlsFragment.java` and `CameraFragment.java` which can be extended to inherit the relvevant functionalities.
 
-## `ControlsFragment.java`
+#### `ControlsFragment.java`
 
 This class contains all relevant code required to operate the robot via a controller. Just extending this class will give your feature the ability to control the robot in one go. It uses two `private` methods,
 
@@ -26,7 +26,7 @@ private void handlePhoneControllerEvents()
 `protected abstract void processControllerKeyData(String data)` which is exposed to inheriting classes, which can be used to update the UI accordingly. 
 
 
-## `CameraFragment.java`
+#### `CameraFragment.java`
 
 This class uses CameraX API to enable camera preview in the app. It extends the functionality of `ControlsFragment.java` to support robot connection and integration by default. 
 
