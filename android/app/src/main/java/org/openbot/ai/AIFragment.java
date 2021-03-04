@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
+import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -146,6 +147,18 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
         });
     BottomSheetBehavior.from(binding.loggerBottomSheet)
         .setState(BottomSheetBehavior.STATE_EXPANDED);
+
+    mViewModel
+        .getUsbStatus()
+        .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
+
+    binding.usbToggle.setChecked(vehicle.isUsbConnected());
+
+    binding.usbToggle.setOnClickListener(
+        v -> {
+          binding.usbToggle.setChecked(vehicle.isUsbConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+        });
   }
 
   private void updateCropImageInfo() {
