@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.view.InputDevice;
@@ -27,8 +28,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import org.openbot.R;
 import org.openbot.common.Constants;
+import org.openbot.env.UsbConnection;
 import org.openbot.env.Vehicle;
-import org.openbot.robot.DefaultActivity;
 import timber.log.Timber;
 
 // For a library module, uncomment the following line
@@ -70,6 +71,24 @@ public class MainActivity extends AppCompatActivity {
                   }
                   Timber.i("USB device attached");
                   break;
+
+                  // Case activated when app is not set to open default when usb is connected
+                case UsbConnection.ACTION_USB_PERMISSION:
+                  synchronized (this) {
+                    UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                      if (usbDevice != null) {
+                        // call method to set up device communication
+                        if (!vehicle.isUsbConnected()) {
+                          vehicle.connectUsb();
+                        }
+                        viewModel.setUsbStatus(vehicle.isUsbConnected());
+                        Timber.i("USB device attached");
+                      }
+                    }
+                  }
+
+                  break;
                 case UsbManager.ACTION_USB_DEVICE_DETACHED:
                   vehicle.disconnectUsb();
                   viewModel.setUsbStatus(vehicle.isUsbConnected());
@@ -86,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+    localIntentFilter.addAction(UsbConnection.ACTION_USB_PERMISSION);
 
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);

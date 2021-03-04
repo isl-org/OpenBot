@@ -192,7 +192,7 @@ public class Vehicle {
   }
 
   public void connectUsb() {
-    usbConnection = new UsbConnection(context, baudRate);
+    if (usbConnection == null) usbConnection = new UsbConnection(context, baudRate);
     usbConnected = usbConnection.startUsbConnection();
   }
 

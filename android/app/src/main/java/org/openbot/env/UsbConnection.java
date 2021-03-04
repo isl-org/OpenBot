@@ -29,7 +29,7 @@ public class UsbConnection {
   private final UsbManager usbManager;
   // private UsbDevice usbDevice;
   PendingIntent usbPermissionIntent;
-  private static final String ACTION_USB_PERMISSION = "UsbConnection.USB_PERMISSION";
+  public static final String ACTION_USB_PERMISSION = "UsbConnection.USB_PERMISSION";
 
   private UsbDeviceConnection connection;
   private UsbSerialDevice serialDevice;
@@ -106,6 +106,7 @@ public class UsbConnection {
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
     localIntentFilter.addAction(ACTION_USB_PERMISSION);
     localBroadcastManager.registerReceiver(usbReceiver, localIntentFilter);
+    context.registerReceiver(usbReceiver, localIntentFilter);
 
     Map<String, UsbDevice> connectedDevices = usbManager.getDeviceList();
     if (!connectedDevices.isEmpty()) {
@@ -179,6 +180,13 @@ public class UsbConnection {
       connection = null;
     }
     localBroadcastManager.unregisterReceiver(usbReceiver);
+    try {
+
+      // Register or UnRegister your broadcast receiver here
+      context.unregisterReceiver(usbReceiver);
+    } catch (IllegalArgumentException e) {
+      e.printStackTrace();
+    }
   }
 
   public void send(String msg) {
