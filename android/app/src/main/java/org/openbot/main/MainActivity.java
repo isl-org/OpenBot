@@ -30,6 +30,7 @@ import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.env.UsbConnection;
 import org.openbot.env.Vehicle;
+import org.openbot.robot.DefaultActivity;
 import timber.log.Timber;
 
 // For a library module, uncomment the following line
