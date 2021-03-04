@@ -40,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.OpenBotApplication;
-import org.openbot.robot.CameraActivity;
 import timber.log.Timber;
 
 public class NearbyConnection implements ILocalConnection {
