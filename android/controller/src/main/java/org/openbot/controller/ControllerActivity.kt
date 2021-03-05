@@ -53,6 +53,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         createAppEventsSubscription()
+        subscribeToStatusInfo()
 
         binding.leftDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.LEFT)
         binding.rightDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.RIGHT)
@@ -81,6 +82,14 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         )
     }
 
+    @SuppressLint("CheckResult")
+    private fun subscribeToStatusInfo () {
+        StatusEventBus.addSubject("CONNECTION_ACTIVE")
+        StatusEventBus.getProcessor("CONNECTION_ACTIVE")?.subscribe {
+            if (it.toBoolean()) screenManager.showControls() else screenManager.hideControls()
+        }
+    }
+
     private fun createAppEventsSubscription(): Disposable =
             EventProcessor.connectionEventFlowable
                     .observeOn(AndroidSchedulers.mainThread())
@@ -103,7 +112,6 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
                             EventProcessor.ProgressEvents.Disconnected -> {
                                 screenManager.hideControls()
                                 ConnectionFactory.get().connect(this)
-
                             }
                             EventProcessor.ProgressEvents.StopAdvertising -> {
                             }

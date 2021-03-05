@@ -8,7 +8,6 @@ import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -71,7 +70,7 @@ public class NetworkServiceConnection implements ILocalConnection {
     try {
       mNsdManager.stopServiceDiscovery(mDiscoveryListener);
     } catch (IllegalArgumentException e) {
-      d("disconnect: Already discovering: %s", e);
+      Log.d(TAG,"disconnect: Already discovering: " + e);
     }
   }
 
@@ -105,7 +104,7 @@ public class NetworkServiceConnection implements ILocalConnection {
     try {
       mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
     } catch (IllegalArgumentException e) {
-      d("runConnection: Already discovering: %s", e);
+      Log.d(TAG,"runConnection: Already discovering: " + e);
     }
   }
 
@@ -128,7 +127,7 @@ public class NetworkServiceConnection implements ILocalConnection {
             if (!service.getServiceType().equals(SERVICE_TYPE)) {
               mNsdManager.resolveService(service, mResolveListener);
             } else if (service.getServiceName().equals(MY_SERVICE_NAME)) {
-              d("Same machine: " + MY_SERVICE_NAME);
+              Log.d(TAG, "Same machine: " + MY_SERVICE_NAME);
             } else {
               mNsdManager.resolveService(service, mResolveListener);
             }

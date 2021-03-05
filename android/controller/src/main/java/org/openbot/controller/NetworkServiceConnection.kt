@@ -127,8 +127,6 @@ object NetworkServiceConnection : ILocalConnection {
             try {
                 while (true) {
                     val payload: String? = reader?.nextLine()
-                    Log.d(TAG, "Got payload ${payload}")
-
                     if (payload != null) {
 
                         (context as Activity).runOnUiThread {

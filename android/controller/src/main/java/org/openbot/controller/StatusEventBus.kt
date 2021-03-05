@@ -15,6 +15,9 @@ object StatusEventBus {
     private val subjects = HashMap<String, PublishSubject<String?>>()
 
     fun addSubject(name: String) {
+        if (subjects[name] != null) {
+            return
+        }
         val subject: PublishSubject<String?> = PublishSubject.create()
         subjects[name] = subject
     }

@@ -3,21 +3,20 @@ package org.openbot.env;
 import android.content.Context;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import net.majorkernelpanic.streaming.Session;
 
 public interface IVideoServer extends Session.Callback, SurfaceHolder.Callback {
-    void stopServer();
+  void stopServer();
 
-    void init(Context context);
+  void init(Context context);
 
-    boolean isRunning();
+  boolean isRunning();
 
-    void startClient ();
+  void startClient();
 
-    void sendServerUrl();
+  void sendServerUrl();
 
-    void sendVideoStoppedStatus();
+  void sendVideoStoppedStatus();
 
-    void setView (SurfaceView view);
+  void setView(SurfaceView view);
 }

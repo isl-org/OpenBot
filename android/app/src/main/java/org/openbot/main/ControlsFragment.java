@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -141,67 +142,61 @@ public abstract class ControlsFragment extends Fragment {
   }
 
   private void handlePhoneControllerEvents() {
-    // Prevent multiple subscriptions. This happens if we select "Phone control multiple times.
-    if (ControllerToBotEventBus.getProcessor().hasObservers()) {
-      return;
-    }
+    ControllerToBotEventBus.subscribe(
+        this.getClass().getSimpleName(),
+        event -> {
+          String commandType;
+          if (event.has("command")) {
+            commandType = event.getString("command");
+          } else if (event.has("driveCmd")) {
+            commandType = Constants.CMD_DRIVE;
+          } else {
+            Timber.d("Got invalid command from controller: %s", event.toString());
+            return;
+          }
 
-    ControllerToBotEventBus.getProcessor()
-        .subscribe(
-            event -> {
-              String commandType = "";
-              if (event.has("command")) {
-                commandType = event.getString("command");
-              } else if (event.has("driveCmd")) {
-                commandType = Constants.CMD_DRIVE;
-              } else {
-                Timber.d("Got invalid command from controller: %s", event.toString());
-                return;
-              }
+          switch (commandType) {
+            case Constants.CMD_DRIVE:
+              JSONObject driveValue = event.getJSONObject("driveCmd");
+              vehicle.setControl(
+                  new Control(
+                      Float.parseFloat(driveValue.getString("l")),
+                      Float.parseFloat(driveValue.getString("r"))));
+              break;
 
-              switch (commandType) {
-                case Constants.CMD_DRIVE:
-                  JSONObject driveValue = event.getJSONObject("driveCmd");
-                  vehicle.setControl(
-                      new Control(
-                          Float.parseFloat(driveValue.getString("l")),
-                          Float.parseFloat(driveValue.getString("r"))));
-                  break;
+            case Constants.CMD_INDICATOR_LEFT:
+              toggleIndicatorEvent(Enums.VehicleIndicator.LEFT.getValue());
+              break;
 
-                case Constants.CMD_INDICATOR_LEFT:
-                  toggleIndicatorEvent(Enums.VehicleIndicator.LEFT.getValue());
-                  break;
+            case Constants.CMD_INDICATOR_RIGHT:
+              toggleIndicatorEvent(Enums.VehicleIndicator.RIGHT.getValue());
+              break;
 
-                case Constants.CMD_INDICATOR_RIGHT:
-                  toggleIndicatorEvent(Enums.VehicleIndicator.RIGHT.getValue());
-                  break;
+            case Constants.CMD_INDICATOR_STOP:
+              toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
+              break;
 
-                case Constants.CMD_INDICATOR_STOP:
-                  toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
-                  break;
+              // We re connected to the controller, send back status info
+            case Constants.CMD_CONNECTED:
+              // PhoneController class will receive this event and resent it to the
+              // controller.
+              // Other controllers can subscribe to this event as well.
+              // That is why we are not calling phoneController.send() here directly.
+              BotToControllerEventBus.emitEvent(
+                  Utils.getStatus(
+                      false, false, false, currentDriveMode.toString(), vehicle.getIndicator()));
+              break;
 
-                  // We re connected to the controller, send back status info
-                case Constants.CMD_CONNECTED:
-                  // PhoneController class will receive this event and resent it to the
-                  // controller.
-                  // Other controllers can subscribe to this event as well.
-                  // That is why we are not calling phoneController.send() here directly.
-                  BotToControllerEventBus.emitEvent(
-                      Utils.getStatus(
-                          false,
-                          false,
-                          false,
-                          currentDriveMode.toString(),
-                          vehicle.getIndicator()));
+            case Constants.CMD_DISCONNECTED:
+              vehicle.setControl(0, 0);
+              break;
+          }
 
-                  break;
-                case Constants.CMD_DISCONNECTED:
-                  vehicle.setControl(0, 0);
-                  break;
-              }
-
-              processControllerKeyData(commandType);
-            });
+          processControllerKeyData(commandType);
+        },
+        error -> {
+          Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
+        });
   }
 
   private void toggleIndicatorEvent(int value) {
@@ -245,7 +240,7 @@ public abstract class ControlsFragment extends Fragment {
   public void onDestroy() {
     super.onDestroy();
     vehicle.setControl(0, 0);
-    if (phoneControllerEventObserver != null) phoneControllerEventObserver.dispose();
+    ControllerToBotEventBus.unsubscribe(this.getClass().getSimpleName());
   }
 
   @Override

@@ -7,7 +7,6 @@ import static org.openbot.common.Enums.SpeedMode;
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +17,10 @@ import com.github.anastr.speedviewlib.components.Section;
 import com.google.android.material.internal.ViewUtils;
 import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.Enums;
-import org.openbot.common.Utils;
 import org.openbot.databinding.FragmentFreeRoamBinding;
-import org.openbot.env.AudioPlayer;
-import org.openbot.env.BotToControllerEventBus;
-import org.openbot.env.Control;
-import org.openbot.env.ControllerToBotEventBus;
-import org.openbot.env.PhoneController;
 import org.openbot.main.ControlsFragment;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
@@ -250,6 +242,7 @@ public class FreeRoamFragment extends ControlsFragment {
 
   private void connectPhoneController() {
     phoneController.connect(requireContext());
+
     DriveMode oldDriveMode = currentDriveMode;
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);

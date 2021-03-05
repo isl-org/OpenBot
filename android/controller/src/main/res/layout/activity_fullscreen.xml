@@ -174,7 +174,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/button"
                     />
-
+<!--
                 <LinearLayout
                     android:id="@+id/camera_buttons"
                     android:layout_width="wrap_content"
@@ -208,6 +208,7 @@
                         app:icon="@drawable/ic_flip_camera_ios_24px" />
 
                 </LinearLayout>
+-->
 
             </RelativeLayout>
 

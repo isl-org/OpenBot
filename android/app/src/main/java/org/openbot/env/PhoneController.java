@@ -3,7 +3,6 @@ package org.openbot.env;
 import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openbot.common.Utils;
 import org.openbot.customview.AutoFitSurfaceView;
 import timber.log.Timber;
 
@@ -24,8 +23,8 @@ public class PhoneController {
     handleBotEvents();
   }
 
-  public void setView(AutoFitSurfaceView videoWondow) {
-    videoServer.setView(videoWondow);
+  public void setView(AutoFitSurfaceView videoWindow) {
+    videoServer.setView(videoWindow);
   }
 
   public void startVideo() {
@@ -61,9 +60,6 @@ public class PhoneController {
     } else {
       connection.start();
     }
-    if (videoServer.isRunning()) {
-      videoServer.startClient();
-    }
   }
 
   public void disconnect(Context context) {
@@ -81,7 +77,7 @@ public class PhoneController {
   private void handleBotEvents() {
     BotToControllerEventBus.getProcessor()
         .subscribe(
-            this::send, error -> Timber.d("Error occurred in BotToControllerEventBus: " + error));
+            this::send, error -> Timber.d("Error occurred in BotToControllerEventBus: %s", error));
   }
 
   private PhoneController() {
