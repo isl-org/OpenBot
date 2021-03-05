@@ -319,11 +319,22 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   }
 
   @Override
-  protected void processUSBData(String data) {}
+  protected void processUSBData(String data) {
+    binding.controllerContainer.speedInfo.setText(
+        getString(
+            R.string.speedInfo,
+            String.format(
+                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRPM(), vehicle.getRightWheelRPM())));
+  }
 
   @Override
   protected void processControllerKeyData(String commandType) {
     switch (commandType) {
+      case Constants.CMD_DRIVE:
+        binding.controllerContainer.controlInfo.setText(
+            String.format(Locale.US, "%.0f,%.0f", vehicle.getLeftSpeed(), vehicle.getRightSpeed()));
+        break;
+
       case Constants.CMD_NETWORK:
         setNetworkEnabledWithAudio(!binding.autoSwitch.isChecked());
         break;

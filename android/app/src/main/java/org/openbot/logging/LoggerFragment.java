@@ -362,6 +362,11 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
 
   @Override
   protected void processUSBData(String data) {
+    binding.controllerContainer.speedInfo.setText(
+        getString(
+            R.string.speedInfo,
+            String.format(
+                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRPM(), vehicle.getRightWheelRPM())));
     sendVehicleDataToSensorService(SystemClock.elapsedRealtimeNanos(), data);
   }
 
