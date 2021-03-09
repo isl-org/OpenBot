@@ -24,7 +24,7 @@ public final class ControllerToBotEventBus {
       String subscriberName,
       @NonNull Consumer<? super JSONObject> onNext,
       @NonNull Consumer<? super Throwable> onError) {
-    if (subscribers.get(subscriberName) != null) {
+    if (subscribers.containsKey(subscriberName)) {
       // This name already subscribed, cannot subscribe multiple times;
       return;
     }

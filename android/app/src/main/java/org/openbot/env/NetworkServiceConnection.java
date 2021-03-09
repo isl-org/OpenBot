@@ -70,7 +70,7 @@ public class NetworkServiceConnection implements ILocalConnection {
     try {
       mNsdManager.stopServiceDiscovery(mDiscoveryListener);
     } catch (IllegalArgumentException e) {
-      Log.d(TAG,"disconnect: Already discovering: " + e);
+      Log.d(TAG, "disconnect: Already discovering: " + e);
     }
   }
 
@@ -104,7 +104,7 @@ public class NetworkServiceConnection implements ILocalConnection {
     try {
       mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
     } catch (IllegalArgumentException e) {
-      Log.d(TAG,"runConnection: Already discovering: " + e);
+      Log.d(TAG, "runConnection: Already discovering: " + e);
     }
   }
 

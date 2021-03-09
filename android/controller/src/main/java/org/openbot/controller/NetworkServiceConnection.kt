@@ -7,6 +7,7 @@ import android.net.nsd.NsdManager.RegistrationListener
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
 import org.openbot.controller.utils.EventProcessor
+import org.openbot.controller.utils.Utils
 import java.io.BufferedInputStream
 import java.io.DataInputStream
 import java.io.OutputStream
@@ -103,7 +104,14 @@ object NetworkServiceConnection : ILocalConnection {
             serverSocket = ServerSocket(port)
             serverSocket.reuseAddress = true
             try {
-                client = serverSocket.accept()
+                while (true) {
+                    client = serverSocket.accept()
+
+                    // only connect if the app is NOT running on this device.
+                    if (client.inetAddress.hostAddress != Utils.getIPAddress(true)) {
+                        break
+                    }
+                }
 
                 val reader = Scanner(DataInputStream(BufferedInputStream(client.getInputStream())))
                 val writer = client.getOutputStream()

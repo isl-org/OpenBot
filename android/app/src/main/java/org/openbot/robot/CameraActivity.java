@@ -18,6 +18,8 @@
 
 package org.openbot.robot;
 
+import static android.Manifest.permission.RECORD_AUDIO;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -683,6 +685,20 @@ public abstract class CameraActivity extends AppCompatActivity
           }
         }
         break;
+
+      case REQUEST_RECORD_PERMISSION_CONTROLLER:
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          // ask for recording permissions here
+
+          ActivityCompat.requestPermissions(
+              this, new String[] {RECORD_AUDIO}, REQUEST_RECORD_PERMISSION_CONTROLLER);
+
+        } else {
+          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
+            Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
+                .show();
+          }
+        }
 
       case REQUEST_STORAGE_PERMISSION:
         // If the permission is granted, start logging,
@@ -1359,7 +1375,7 @@ public abstract class CameraActivity extends AppCompatActivity
                       driveMode.toString(),
                       vehicle.getIndicator()));
 
-              phoneController.startVideo();
+              // phoneController.startVideo();
               break;
 
             case "DISCONNECTED":
