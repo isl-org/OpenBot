@@ -4,6 +4,7 @@ import android.content.Context;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.openbot.common.Enums;
 
 public class Vehicle {
 
@@ -29,10 +30,15 @@ public class Vehicle {
   private final Context context;
   private final int baudRate;
 
+  protected Enums.DriveMode driveMode = Enums.DriveMode.GAME;
+  private boolean isNoiseEnabled = false;
+  private final GameController gameController;
+
   public Vehicle(Context context, int baudRate) {
     this.context = context;
     this.baudRate = baudRate;
-    connectUsb();
+    gameController = new GameController(driveMode);
+    //    connectUsb();
   }
 
   public float getBatteryVoltage() {
@@ -120,6 +126,29 @@ public class Vehicle {
 
   private Timer noiseTimer;
 
+  public void toggleNoise() {
+    isNoiseEnabled = !isNoiseEnabled;
+    if (isNoiseEnabled) startNoise();
+    else stopNoise();
+  }
+
+  public boolean isNoiseEnabled() {
+    return isNoiseEnabled;
+  }
+
+  public void setDriveMode(Enums.DriveMode driveMode) {
+    this.driveMode = driveMode;
+    gameController.setDriveMode(driveMode);
+  }
+
+  public Enums.DriveMode getDriveMode() {
+    return driveMode;
+  }
+
+  public GameController getGameController() {
+    return gameController;
+  }
+
   private class NoiseTask extends TimerTask {
     @Override
     public void run() {
@@ -163,7 +192,7 @@ public class Vehicle {
   }
 
   public void connectUsb() {
-    usbConnection = new UsbConnection(context, baudRate);
+    if (usbConnection == null) usbConnection = new UsbConnection(context, baudRate);
     usbConnected = usbConnection.startUsbConnection();
   }
 

@@ -309,10 +309,7 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
             try {
               TimeUnit.MILLISECONDS.sleep(lastProcessingTimeMs);
               controllerHandler.handleDriveCommand(0.f, 0.f);
-              runOnUiThread(
-                  () -> {
-                    inferenceTimeTextView.setText(R.string.time_ms);
-                  });
+              runOnUiThread(() -> inferenceTimeTextView.setText(R.string.time_ms));
             } catch (InterruptedException e) {
               LOGGER.e(e, "Got interrupted.");
             }

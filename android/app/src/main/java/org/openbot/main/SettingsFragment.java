@@ -1,7 +1,10 @@
 package org.openbot.main;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -10,15 +13,18 @@ import org.openbot.env.Vehicle;
 import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+  private MainViewModel mViewModel;
+  private SwitchPreferenceCompat connection;
+  private Vehicle vehicle;
 
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-    MainViewModel mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-    Vehicle vehicle = mViewModel.getVehicle().getValue();
+    mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+    vehicle = mViewModel.getVehicle().getValue();
 
-    SwitchPreferenceCompat connection = findPreference("connection");
+    connection = findPreference("connection");
     if (connection != null) {
       connection.setTitle("No Device");
       if (vehicle != null && vehicle.isUsbConnected()) {
@@ -51,5 +57,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
           });
     }
+  }
+
+  @Override
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    mViewModel
+        .getUsbStatus()
+        .observe(
+            getViewLifecycleOwner(),
+            status -> {
+              if (connection != null) {
+                connection.setChecked(status);
+                connection.setTitle(
+                    status ? vehicle.getUsbConnection().getProductName() : "No Device");
+              }
+            });
   }
 }

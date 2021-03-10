@@ -11,6 +11,7 @@ public class FeatureList {
 
   // Global
   public static final String ALL = "All";
+  public static final String LEGACY = "Legacy";
   public static final String DEFAULT = "Default";
   public static final String CONTROLLER = "Controller";
 
@@ -64,6 +65,9 @@ public class FeatureList {
 
     ArrayList<SubCategory> subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(DEFAULT, R.drawable.openbot_icon, "#4B7BFF"));
+    categories.add(new Category(LEGACY, subCategories));
+
+    subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
     subCategories.add(new SubCategory(DATA_COLLECTION, R.drawable.ic_storage, "#93C47D"));
     subCategories.add(new SubCategory(AI_MODELS, R.drawable.ic_person_search, "#FFD966"));

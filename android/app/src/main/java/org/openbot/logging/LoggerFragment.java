@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
+import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -86,7 +87,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
           if (controlMode != null) setControlMode(Enums.switchControlMode(controlMode));
         });
     binding.controllerContainer.driveMode.setOnClickListener(
-        v -> setDriveMode(Enums.switchDriveMode(currentDriveMode)));
+        v -> setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode())));
 
     binding.controllerContainer.speedMode.setOnClickListener(
         v ->
@@ -133,6 +134,18 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
         });
     BottomSheetBehavior.from(binding.loggerBottomSheet)
         .setState(BottomSheetBehavior.STATE_EXPANDED);
+
+    mViewModel
+        .getUsbStatus()
+        .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
+
+    binding.usbToggle.setChecked(vehicle.isUsbConnected());
+
+    binding.usbToggle.setOnClickListener(
+        v -> {
+          binding.usbToggle.setChecked(vehicle.isUsbConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+        });
   }
 
   private void updateCropImageInfo(String selected) {
@@ -194,16 +207,6 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
     if (sensorMessenger != null) {
       try {
         sensorMessenger.send(LogDataUtils.generateFrameNumberMessage(frameNumber));
-      } catch (RemoteException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  protected void sendInferenceTimeToSensorService(long frameNumber, long inferenceTime) {
-    if (sensorMessenger != null) {
-      try {
-        sensorMessenger.send(LogDataUtils.generateInferenceTimeMessage(frameNumber, inferenceTime));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -354,11 +357,16 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
 
   protected void handleLogging() {
     setIsLoggingActive(!loggingEnabled);
-    //    audioPlayer.playLogging(voice, loggingEnabled);
+    audioPlayer.playLogging(voice, loggingEnabled);
   }
 
   @Override
   protected void processUSBData(String data) {
+    binding.controllerContainer.speedInfo.setText(
+        getString(
+            R.string.speedInfo,
+            String.format(
+                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRPM(), vehicle.getRightWheelRPM())));
     sendVehicleDataToSensorService(SystemClock.elapsedRealtimeNanos(), data);
   }
 
@@ -381,7 +389,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
         sendIndicatorToSensorService();
         break;
       case Constants.CMD_DRIVE_MODE:
-        setDriveMode(Enums.switchDriveMode(currentDriveMode));
+        setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode()));
         break;
 
       case Constants.CMD_DISCONNECTED:
@@ -459,7 +467,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   }
 
   protected void setDriveMode(Enums.DriveMode driveMode) {
-    if (this.currentDriveMode != driveMode && driveMode != null) {
+    if (vehicle.getDriveMode() != driveMode && driveMode != null) {
       switch (driveMode) {
         case DUAL:
           binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_dual);
@@ -473,9 +481,8 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
       }
 
       Timber.d("Updating  driveMode: %s", driveMode);
-      this.currentDriveMode = driveMode;
+      vehicle.setDriveMode(driveMode);
       preferencesManager.setDriveMode(driveMode.getValue());
-      gameController.setDriveMode(driveMode);
     }
   }
 
@@ -483,7 +490,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
     if (!phoneController.isConnected()) {
       phoneController.connect(requireContext());
     }
-    Enums.DriveMode oldDriveMode = currentDriveMode;
+    Enums.DriveMode oldDriveMode = vehicle.getDriveMode();
     // Currently only dual drive mode supported
     setDriveMode(Enums.DriveMode.DUAL);
     binding.controllerContainer.driveMode.setAlpha(0.5f);

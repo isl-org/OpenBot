@@ -1,7 +1,5 @@
 package org.openbot.main;
 
-import static org.openbot.common.Constants.USB_ACTION_CONNECTION_CLOSED;
-import static org.openbot.common.Constants.USB_ACTION_CONNECTION_ESTABLISHED;
 import static org.openbot.common.Constants.USB_ACTION_DATA_RECEIVED;
 
 import android.content.BroadcastReceiver;
@@ -9,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.view.InputDevice;
 import android.view.KeyEvent;
@@ -28,8 +28,10 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import org.openbot.R;
 import org.openbot.common.Constants;
+import org.openbot.env.UsbConnection;
 import org.openbot.env.Vehicle;
 import org.openbot.robot.DefaultActivity;
+import timber.log.Timber;
 
 // For a library module, uncomment the following line
 // import org.openbot.controller.ControllerActivity;
@@ -37,9 +39,9 @@ import org.openbot.robot.DefaultActivity;
 public class MainActivity extends AppCompatActivity {
 
   private MainViewModel viewModel;
-  private LocalBroadcastManager localBroadcastManager;
   private BroadcastReceiver localBroadcastReceiver;
   private Vehicle vehicle;
+  private LocalBroadcastManager localBroadcastManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+    if (vehicle == null) {
+      SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+      int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
+      vehicle = new Vehicle(this, baudRate);
+      vehicle.connectUsb();
+      viewModel.setVehicle(vehicle);
+    }
 
     localBroadcastReceiver =
         new BroadcastReceiver() {
@@ -56,11 +65,36 @@ public class MainActivity extends AppCompatActivity {
 
             if (action != null) {
               switch (action) {
-                case USB_ACTION_CONNECTION_ESTABLISHED:
-
-                case USB_ACTION_CONNECTION_CLOSED:
+                case UsbManager.ACTION_USB_DEVICE_ATTACHED:
+                  if (!vehicle.isUsbConnected()) {
+                    vehicle.connectUsb();
+                    viewModel.setUsbStatus(vehicle.isUsbConnected());
+                  }
+                  Timber.i("USB device attached");
                   break;
 
+                  // Case activated when app is not set to open default when usb is connected
+                case UsbConnection.ACTION_USB_PERMISSION:
+                  synchronized (this) {
+                    UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                      if (usbDevice != null) {
+                        // call method to set up device communication
+                        if (!vehicle.isUsbConnected()) {
+                          vehicle.connectUsb();
+                        }
+                        viewModel.setUsbStatus(vehicle.isUsbConnected());
+                        Timber.i("USB device attached");
+                      }
+                    }
+                  }
+
+                  break;
+                case UsbManager.ACTION_USB_DEVICE_DETACHED:
+                  vehicle.disconnectUsb();
+                  viewModel.setUsbStatus(vehicle.isUsbConnected());
+                  Timber.i("USB device detached");
+                  break;
                 case USB_ACTION_DATA_RECEIVED:
                   viewModel.setUsbData(intent.getStringExtra("data"));
                   break;
@@ -69,11 +103,15 @@ public class MainActivity extends AppCompatActivity {
           }
         };
     IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction(USB_ACTION_CONNECTION_ESTABLISHED);
-    localIntentFilter.addAction(USB_ACTION_CONNECTION_CLOSED);
     localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
+    localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+    localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+    localIntentFilter.addAction(UsbConnection.ACTION_USB_PERMISSION);
+
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
+
+    registerReceiver(localBroadcastReceiver, localIntentFilter);
 
     NavHostFragment navHostFragment =
         (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
@@ -145,6 +183,8 @@ public class MainActivity extends AppCompatActivity {
       localBroadcastManager.unregisterReceiver(localBroadcastReceiver);
       localBroadcastManager = null;
     }
+
+    unregisterReceiver(localBroadcastReceiver);
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     vehicle.disconnectUsb();
     super.onDestroy();
@@ -153,9 +193,5 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
-    vehicle = new Vehicle(this, baudRate);
-    viewModel.setVehicle(vehicle);
   }
 }

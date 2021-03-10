@@ -20,10 +20,10 @@ import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.Enums;
 import org.openbot.common.Utils;
+import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.Control;
 import org.openbot.env.ControllerToBotEventBus;
-import org.openbot.env.GameController;
 import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
@@ -36,18 +36,21 @@ public abstract class ControlsFragment extends Fragment {
   protected Animation startAnimation;
   protected SharedPreferencesManager preferencesManager;
   protected final PhoneController phoneController = new PhoneController();
-  protected Enums.DriveMode currentDriveMode = Enums.DriveMode.GAME;
-  protected GameController gameController = new GameController(currentDriveMode);
 
   private Handler handler;
   private HandlerThread handlerThread;
   private Disposable phoneControllerEventObserver;
+
+  protected AudioPlayer audioPlayer;
+
+  protected final String voice = "matthew";
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
     preferencesManager = new SharedPreferencesManager(requireContext());
+    audioPlayer = new AudioPlayer(requireContext());
 
     requireActivity()
         .getSupportFragmentManager()
@@ -56,7 +59,7 @@ public abstract class ControlsFragment extends Fragment {
             this,
             (requestKey, result) -> {
               MotionEvent motionEvent = result.getParcelable(Constants.DATA);
-              vehicle.setControl(gameController.processJoystickInput(motionEvent, -1));
+              vehicle.setControl(vehicle.getGameController().processJoystickInput(motionEvent, -1));
               processControllerKeyData(Constants.CMD_DRIVE);
             });
     requireActivity()
@@ -118,6 +121,7 @@ public abstract class ControlsFragment extends Fragment {
           processControllerKeyData(Constants.CMD_LOGS);
           break;
         case KeyEvent.KEYCODE_BUTTON_START: // options
+          toggleNoise();
           processControllerKeyData(Constants.CMD_NOISE);
           break;
         case KeyEvent.KEYCODE_BUTTON_L1:
@@ -180,6 +184,9 @@ public abstract class ControlsFragment extends Fragment {
                       toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
                       break;
 
+                    case Constants.CMD_NOISE:
+                      toggleNoise();
+                      break;
                       // We re connected to the controller, send back status info
                     case Constants.CMD_CONNECTED:
                       // PhoneController class will receive this event and resent it to the
@@ -191,7 +198,7 @@ public abstract class ControlsFragment extends Fragment {
                               false,
                               false,
                               false,
-                              currentDriveMode.toString(),
+                              vehicle.getDriveMode().toString(),
                               vehicle.getIndicator()));
 
                       break;
@@ -202,6 +209,12 @@ public abstract class ControlsFragment extends Fragment {
 
                   processControllerKeyData(commandType);
                 });
+  }
+
+  protected void toggleNoise() {
+    BotToControllerEventBus.emitEvent(Utils.createStatus("NOISE", vehicle.isNoiseEnabled()));
+    audioPlayer.playNoise(voice, vehicle.isNoiseEnabled());
+    vehicle.toggleNoise();
   }
 
   private void toggleIndicatorEvent(int value) {
@@ -246,21 +259,29 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public void onDestroy() {
     super.onDestroy();
+    Timber.d("onDestroy");
     vehicle.setControl(0, 0);
+    phoneController.disconnect(getContext());
     if (phoneControllerEventObserver != null) phoneControllerEventObserver.dispose();
   }
 
   @Override
   public synchronized void onPause() {
     super.onPause();
+    Timber.d("onpause");
     handlerThread.quitSafely();
-    phoneController.disconnect(getContext());
     try {
       handlerThread.join();
       handlerThread = null;
       handler = null;
     } catch (final InterruptedException e) {
     }
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    Timber.d("onStop");
   }
 
   protected synchronized void runInBackground(final Runnable r) {
