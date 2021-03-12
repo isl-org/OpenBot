@@ -73,7 +73,7 @@ There are a lot of cool projects using OpenBot already. Below is a small selecti
 
 ## Citation
 
-Please cite our [paper](docs/paper/OpenBot.pdf) if you use OpenBot.
+Please cite our [paper](https://arxiv.org/abs/2008.10631) if you use OpenBot.
 
 ```bib
 @article{openbot2020,
