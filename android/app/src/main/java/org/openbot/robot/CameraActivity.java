@@ -404,8 +404,6 @@ public abstract class CameraActivity extends AppCompatActivity
     localIntentFilter.addAction(Constants.USB_ACTION_DATA_RECEIVED);
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
-
-    handleControllerEvents();
   }
 
   @SuppressLint("SetTextI18n")
@@ -940,7 +938,7 @@ public abstract class CameraActivity extends AppCompatActivity
           disconnectPhoneController();
           break;
         case PHONE:
-          // handleControllerEvents();
+          handleControllerEvents();
           if (!hasLocationPermission()) requestLocationPermissionController();
           else connectPhoneController();
           break;

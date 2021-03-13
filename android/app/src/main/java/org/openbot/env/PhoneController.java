@@ -24,7 +24,11 @@ public class PhoneController {
   }
 
   public void setView(AutoFitSurfaceView videoWindow) {
-    videoServer.setView(videoWindow);
+
+    // Setting the view causes the RtspServer to start running
+
+    // ****************** Disable video for now. ***************************
+    // videoServer.setView(videoWindow);
   }
 
   public void startVideo() {

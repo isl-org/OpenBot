@@ -8,7 +8,7 @@
     tools:context=".robot.FreeRoamFragment">
 
     <org.openbot.customview.AutoFitSurfaceView
-        android:id="@+id/video_wondow"
+        android:id="@+id/video_window"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/feed_padding"

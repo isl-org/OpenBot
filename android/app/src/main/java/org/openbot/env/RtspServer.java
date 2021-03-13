@@ -32,8 +32,8 @@ class RtspServer implements SurfaceHolder.Callback, IVideoServer {
   public RtspServer() {}
 
   public void startServer(Context context, SurfaceView surfaceView) {
-    // default use port 1234
 
+    // set the port to 1234
     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
     editor.putString(net.majorkernelpanic.streaming.rtsp.RtspServer.KEY_PORT, String.valueOf(PORT));
     editor.apply();
@@ -42,7 +42,7 @@ class RtspServer implements SurfaceHolder.Callback, IVideoServer {
         SessionBuilder.getInstance()
             .setSurfaceView((net.majorkernelpanic.streaming.gl.SurfaceView) surfaceView)
             .setContext(context)
-            .setAudioEncoder(SessionBuilder.AUDIO_NONE)
+            .setAudioEncoder(SessionBuilder.AUDIO_AAC)
             .setVideoEncoder(SessionBuilder.VIDEO_H264)
             .build();
 

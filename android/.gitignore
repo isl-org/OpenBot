@@ -3,7 +3,7 @@
 *.ap_
 *.aab
 
-notes.txt
+*.txt
 
 # Files for the ART/Dalvik VM
 *.dex
