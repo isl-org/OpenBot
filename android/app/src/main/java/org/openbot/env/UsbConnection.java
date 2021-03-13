@@ -29,7 +29,7 @@ public class UsbConnection {
   private final UsbManager usbManager;
   // private UsbDevice usbDevice;
   PendingIntent usbPermissionIntent;
-  private static final String ACTION_USB_PERMISSION = "UsbConnection.USB_PERMISSION";
+  public static final String ACTION_USB_PERMISSION = "UsbConnection.USB_PERMISSION";
 
   private UsbDeviceConnection connection;
   private UsbSerialDevice serialDevice;
@@ -70,7 +70,7 @@ public class UsbConnection {
         }
       };
 
-  private final BroadcastReceiver usbPermissionReceiver =
+  private final BroadcastReceiver usbReceiver =
       new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
           String action = intent.getAction();
@@ -91,19 +91,10 @@ public class UsbConnection {
                     .show();
               }
             }
-          }
-        }
-      };
-
-  private final BroadcastReceiver usbDetachedReceiver =
-      new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-          String action = intent.getAction();
-
-          if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+          } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+            LOGGER.i("USB device detached");
             UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
             if (device != null) {
-              LOGGER.i("USB device detached");
               stopUsbConnection();
             }
           }
@@ -111,11 +102,11 @@ public class UsbConnection {
       };
 
   public boolean startUsbConnection() {
-    IntentFilter usbPermissionFilter = new IntentFilter(ACTION_USB_PERMISSION);
-    localBroadcastManager.registerReceiver(usbPermissionReceiver, usbPermissionFilter);
-    // Detach events are sent as a system-wide broadcast
-    IntentFilter usbDetachedFilter = new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED);
-    localBroadcastManager.registerReceiver(usbDetachedReceiver, usbDetachedFilter);
+    IntentFilter localIntentFilter = new IntentFilter();
+    localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+    localIntentFilter.addAction(ACTION_USB_PERMISSION);
+    localBroadcastManager.registerReceiver(usbReceiver, localIntentFilter);
+    context.registerReceiver(usbReceiver, localIntentFilter);
 
     Map<String, UsbDevice> connectedDevices = usbManager.getDeviceList();
     if (!connectedDevices.isEmpty()) {
@@ -188,8 +179,14 @@ public class UsbConnection {
       serialDevice = null;
       connection = null;
     }
-    localBroadcastManager.unregisterReceiver(usbPermissionReceiver);
-    localBroadcastManager.unregisterReceiver(usbDetachedReceiver);
+    localBroadcastManager.unregisterReceiver(usbReceiver);
+    try {
+
+      // Register or UnRegister your broadcast receiver here
+      context.unregisterReceiver(usbReceiver);
+    } catch (IllegalArgumentException e) {
+      e.printStackTrace();
+    }
   }
 
   public void send(String msg) {

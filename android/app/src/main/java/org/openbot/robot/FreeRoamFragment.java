@@ -21,6 +21,7 @@ import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.Enums;
 import org.openbot.databinding.FragmentFreeRoamBinding;
+import org.openbot.env.PhoneController;
 import org.openbot.main.ControlsFragment;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
@@ -28,6 +29,7 @@ import timber.log.Timber;
 public class FreeRoamFragment extends ControlsFragment {
 
   private FragmentFreeRoamBinding binding;
+  private PhoneController phoneController = PhoneController.getInstance();
 
   @Override
   public View onCreateView(
@@ -58,7 +60,7 @@ public class FreeRoamFragment extends ControlsFragment {
           if (controlMode != null) setControlMode(Enums.switchControlMode(controlMode));
         });
     binding.controllerContainer.driveMode.setOnClickListener(
-        v -> setDriveMode(Enums.switchDriveMode(currentDriveMode)));
+        v -> setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode())));
 
     binding.controllerContainer.speedMode.setOnClickListener(
         v ->
@@ -87,15 +89,9 @@ public class FreeRoamFragment extends ControlsFragment {
 
     mViewModel
         .getUsbStatus()
-        .observe(
-            getViewLifecycleOwner(),
-            status -> {
-              binding.usbToggle.setChecked(status);
-              binding.usbToggle.setEnabled(!status);
-            });
+        .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
-    binding.usbToggle.setEnabled(!vehicle.isUsbConnected());
 
     binding.usbToggle.setOnClickListener(
         v -> {
@@ -220,7 +216,7 @@ public class FreeRoamFragment extends ControlsFragment {
   }
 
   protected void setDriveMode(DriveMode driveMode) {
-    if (this.currentDriveMode != driveMode && driveMode != null) {
+    if (vehicle.getDriveMode() != driveMode && driveMode != null) {
       switch (driveMode) {
         case DUAL:
           binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_dual);
@@ -234,15 +230,13 @@ public class FreeRoamFragment extends ControlsFragment {
       }
 
       Timber.d("Updating  driveMode: %s", driveMode);
-      this.currentDriveMode = driveMode;
+      vehicle.setDriveMode(driveMode);
       preferencesManager.setDriveMode(driveMode.getValue());
-      gameController.setDriveMode(driveMode);
     }
   }
 
   private void connectPhoneController() {
     phoneController.connect(requireContext());
-
     DriveMode oldDriveMode = currentDriveMode;
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
@@ -278,7 +272,7 @@ public class FreeRoamFragment extends ControlsFragment {
         break;
 
       case Constants.CMD_DRIVE_MODE:
-        setDriveMode(Enums.switchDriveMode(currentDriveMode));
+        setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode()));
         break;
 
       case Constants.CMD_DISCONNECTED:

@@ -21,10 +21,10 @@ import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.Enums;
 import org.openbot.common.Utils;
+import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.Control;
 import org.openbot.env.ControllerToBotEventBus;
-import org.openbot.env.GameController;
 import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
@@ -38,11 +38,14 @@ public abstract class ControlsFragment extends Fragment {
   protected SharedPreferencesManager preferencesManager;
   protected final PhoneController phoneController = PhoneController.getInstance();
   protected Enums.DriveMode currentDriveMode = Enums.DriveMode.GAME;
-  protected GameController gameController = new GameController(currentDriveMode);
 
   private Handler handler;
   private HandlerThread handlerThread;
   private Disposable phoneControllerEventObserver;
+
+  protected AudioPlayer audioPlayer;
+
+  protected final String voice = "matthew";
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public abstract class ControlsFragment extends Fragment {
 
     phoneController.init(requireContext());
     preferencesManager = new SharedPreferencesManager(requireContext());
+    audioPlayer = new AudioPlayer(requireContext());
 
     requireActivity()
         .getSupportFragmentManager()
@@ -58,7 +62,7 @@ public abstract class ControlsFragment extends Fragment {
             this,
             (requestKey, result) -> {
               MotionEvent motionEvent = result.getParcelable(Constants.DATA);
-              vehicle.setControl(gameController.processJoystickInput(motionEvent, -1));
+              vehicle.setControl(vehicle.getGameController().processJoystickInput(motionEvent, -1));
               processControllerKeyData(Constants.CMD_DRIVE);
             });
     requireActivity()
@@ -120,6 +124,7 @@ public abstract class ControlsFragment extends Fragment {
           processControllerKeyData(Constants.CMD_LOGS);
           break;
         case KeyEvent.KEYCODE_BUTTON_START: // options
+          toggleNoise();
           processControllerKeyData(Constants.CMD_NOISE);
           break;
         case KeyEvent.KEYCODE_BUTTON_L1:
@@ -199,6 +204,12 @@ public abstract class ControlsFragment extends Fragment {
         });
   }
 
+  protected void toggleNoise() {
+    BotToControllerEventBus.emitEvent(Utils.createStatus("NOISE", vehicle.isNoiseEnabled()));
+    audioPlayer.playNoise(voice, vehicle.isNoiseEnabled());
+    vehicle.toggleNoise();
+  }
+
   private void toggleIndicatorEvent(int value) {
     vehicle.setIndicator(value);
     BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_LEFT", value == -1));
@@ -239,6 +250,7 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public void onDestroy() {
     super.onDestroy();
+    Timber.d("onDestroy");
     vehicle.setControl(0, 0);
     ControllerToBotEventBus.unsubscribe(this.getClass().getSimpleName());
   }
@@ -246,14 +258,20 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public synchronized void onPause() {
     super.onPause();
+    Timber.d("onpause");
     handlerThread.quitSafely();
-    phoneController.disconnect(getContext());
     try {
       handlerThread.join();
       handlerThread = null;
       handler = null;
     } catch (final InterruptedException e) {
     }
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    Timber.d("onStop");
   }
 
   protected synchronized void runInBackground(final Runnable r) {
