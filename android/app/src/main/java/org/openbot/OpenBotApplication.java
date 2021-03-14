@@ -2,13 +2,17 @@ package org.openbot;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import org.jetbrains.annotations.NotNull;
+import org.openbot.env.Vehicle;
 import timber.log.Timber;
 
 public class OpenBotApplication extends Application {
 
   static Context context;
+  public static Vehicle vehicle;
 
   public static Context getContext() {
     return context;
@@ -18,6 +22,11 @@ public class OpenBotApplication extends Application {
   public void onCreate() {
     super.onCreate();
     context = getApplicationContext();
+
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
+    vehicle = new Vehicle(this, baudRate);
+    vehicle.connectUsb();
     if (BuildConfig.DEBUG) {
       Timber.plant(
           new Timber.DebugTree() {

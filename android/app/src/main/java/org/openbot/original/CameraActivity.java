@@ -81,6 +81,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.json.JSONObject;
+import org.openbot.OpenBotApplication;
 import org.openbot.R;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
@@ -106,6 +107,7 @@ import org.openbot.utils.Enums.SpeedMode;
 import org.openbot.utils.Utils;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
+import timber.log.Timber;
 
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
@@ -204,7 +206,8 @@ public abstract class CameraActivity extends AppCompatActivity
     super.onCreate(null);
     context = getApplicationContext();
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    vehicle = new Vehicle(this, baudRate);
+    //    vehicle = new Vehicle(this, baudRate);
+    vehicle = OpenBotApplication.vehicle;
 
     setContentView(R.layout.activity_camera);
     Toolbar toolbar = findViewById(R.id.toolbar);
@@ -623,7 +626,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   @Override
   public synchronized void onDestroy() {
-    toggleConnection(false);
+    //    toggleConnection(false);
     if (localBroadcastManager != null) {
       localBroadcastManager.unregisterReceiver(localBroadcastReceiver);
       localBroadcastManager = null;
@@ -1214,7 +1217,10 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void toggleConnection(boolean isChecked) {
     if (isChecked) {
-      vehicle.connectUsb();
+      if (!vehicle.isUsbConnected()) {
+        Timber.d("isConnecting");
+        vehicle.connectUsb();
+      } else Timber.d("already connected");
     } else {
       vehicle.disconnectUsb();
     }
