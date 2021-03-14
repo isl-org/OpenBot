@@ -467,7 +467,7 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
   }
 
   protected void setDriveMode(Enums.DriveMode driveMode) {
-    if (vehicle.getDriveMode() != driveMode && driveMode != null) {
+    if (driveMode != null) {
       switch (driveMode) {
         case DUAL:
           binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_dual);

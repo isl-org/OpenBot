@@ -44,9 +44,9 @@ import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
-import org.openbot.utils.Constants;
 import timber.log.Timber;
 
 public class AIFragment extends CameraFragment implements ServerListener {
@@ -581,7 +581,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
   }
 
   protected void setDriveMode(Enums.DriveMode driveMode) {
-    if (vehicle.getDriveMode() != driveMode && driveMode != null) {
+    if (driveMode != null) {
       switch (driveMode) {
         case DUAL:
           binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_dual);

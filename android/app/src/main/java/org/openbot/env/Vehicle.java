@@ -41,13 +41,6 @@ public class Vehicle {
     //    connectUsb();
   }
 
-  public Vehicle(Context context, int baudRate, int driveMode) {
-    this.context = context;
-    this.baudRate = baudRate;
-    gameController = new GameController(Enums.DriveMode.getByID(driveMode));
-    connectUsb();
-  }
-
   public float getBatteryVoltage() {
     return batteryVoltage.getReading();
   }
