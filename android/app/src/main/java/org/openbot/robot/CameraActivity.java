@@ -18,7 +18,6 @@
 
 package org.openbot.robot;
 
-import static android.Manifest.permission.RECORD_AUDIO;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -128,7 +127,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
   private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
   private static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
-  private static final String PERMISSION_AUDIO = RECORD_AUDIO;
+  private static final String PERMISSION_AUDIO = Manifest.permission.RECORD_AUDIO;
 
   private static Context context;
   private int cameraSelection = CameraCharacteristics.LENS_FACING_BACK;

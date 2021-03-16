@@ -201,7 +201,9 @@ public class FreeRoamFragment extends ControlsFragment {
           break;
         case PHONE:
           binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
-          if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
+          if (!PermissionUtils.hasPermissions(
+              requireContext(),
+              new String[] {Constants.PERMISSION_LOCATION, Constants.PERMISSION_AUDIO_RECORDING}))
             PermissionUtils.requestPermissions(
                 this,
                 new String[] {Constants.PERMISSION_LOCATION, Constants.PERMISSION_AUDIO_RECORDING},
