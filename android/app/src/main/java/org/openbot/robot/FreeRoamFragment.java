@@ -204,8 +204,8 @@ public class FreeRoamFragment extends ControlsFragment {
           if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
             PermissionUtils.requestPermissions(
                 this,
-                new String[] {Constants.PERMISSION_LOCATION},
-                Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
+                new String[] {Constants.PERMISSION_LOCATION, Constants.PERMISSION_AUDIO_RECORDING},
+                Constants.REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER);
           else connectPhoneController();
 
           break;
@@ -246,7 +246,7 @@ public class FreeRoamFragment extends ControlsFragment {
   }
 
   private void disconnectPhoneController() {
-    phoneController.disconnect(getContext());
+    phoneController.disconnect();
     setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
     binding.controllerContainer.driveMode.setAlpha(1.0f);

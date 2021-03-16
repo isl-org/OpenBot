@@ -66,7 +66,7 @@ public class PhoneController {
     }
   }
 
-  public void disconnect(Context context) {
+  public void disconnect(/*Context context*/ ) {
     connection.stop();
   }
 

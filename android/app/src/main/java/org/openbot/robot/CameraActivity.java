@@ -120,15 +120,15 @@ public abstract class CameraActivity extends AppCompatActivity
   // Constants
   private static final int REQUEST_CAMERA_PERMISSION = 1;
   private static final int REQUEST_LOCATION_PERMISSION_LOGGING = 2;
-  private static final int REQUEST_LOCATION_PERMISSION_CONTROLLER = 3;
+  private static final int REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER = 3;
   private static final int REQUEST_STORAGE_PERMISSION = 4;
   private static final int REQUEST_BLUETOOTH_PERMISSION = 5;
-  private static final int REQUEST_RECORD_PERMISSION_CONTROLLER = 6;
 
   private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
   private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
   private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
   private static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
+  private static final String PERMISSION_AUDIO = RECORD_AUDIO;
 
   private static Context context;
   private int cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
@@ -610,7 +610,7 @@ public abstract class CameraActivity extends AppCompatActivity
       LOGGER.e(e, "Exception!");
     }
 
-    phoneController.disconnect(this);
+    phoneController.disconnect();
     super.onPause();
   }
 
@@ -670,32 +670,25 @@ public abstract class CameraActivity extends AppCompatActivity
         }
         break;
 
-      case REQUEST_LOCATION_PERMISSION_CONTROLLER:
+      case REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.length > 1
+            && (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
           phoneController.connect(this);
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
             Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
                 .show();
           }
-        }
-        break;
-
-      case REQUEST_RECORD_PERMISSION_CONTROLLER:
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          // ask for recording permissions here
-
-          ActivityCompat.requestPermissions(
-              this, new String[] {RECORD_AUDIO}, REQUEST_RECORD_PERMISSION_CONTROLLER);
-
-        } else {
-          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
-            Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
+          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_AUDIO)) {
+            Toast.makeText(
+                    this, R.string.record_audio_permission_denied_controller, Toast.LENGTH_LONG)
                 .show();
           }
         }
+        break;
 
       case REQUEST_STORAGE_PERMISSION:
         // If the permission is granted, start logging,
@@ -745,9 +738,11 @@ public abstract class CameraActivity extends AppCompatActivity
         this, new String[] {PERMISSION_LOCATION}, REQUEST_LOCATION_PERMISSION_LOGGING);
   }
 
-  private void requestLocationPermissionController() {
+  private void requestPermissionsLocationAndAudioController() {
     ActivityCompat.requestPermissions(
-        this, new String[] {PERMISSION_LOCATION}, REQUEST_LOCATION_PERMISSION_CONTROLLER);
+        this,
+        new String[] {PERMISSION_LOCATION, PERMISSION_AUDIO},
+        REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER);
   }
 
   private void requestStoragePermission() {
@@ -938,8 +933,9 @@ public abstract class CameraActivity extends AppCompatActivity
           break;
         case PHONE:
           handleControllerEvents();
-          if (!hasLocationPermission()) requestLocationPermissionController();
-          else connectPhoneController();
+          if (!hasLocationPermission()) {
+            requestPermissionsLocationAndAudioController();
+          } else connectPhoneController();
           break;
         case WEBRTC:
           break;
@@ -962,7 +958,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void disconnectPhoneController() {
     if (phoneController.isConnected()) {
-      phoneController.disconnect(this);
+      phoneController.disconnect();
     }
     setDriveMode(DriveMode.values()[preferencesManager.getDriveMode()]);
     driveModeSpinner.setEnabled(true);

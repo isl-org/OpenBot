@@ -222,18 +222,30 @@ public abstract class ControlsFragment extends Fragment {
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     switch (requestCode) {
-      case Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER:
+      case Constants.REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.length > 1
+            && (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
           phoneController.connect(requireContext());
         } else {
-          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_LOCATION))
+          if (PermissionUtils.shouldShowRational(
+              requireActivity(), Constants.PERMISSION_LOCATION)) {
             Toast.makeText(
                     requireActivity().getApplicationContext(),
                     R.string.location_permission_denied_controller,
                     Toast.LENGTH_LONG)
                 .show();
+          }
+          if (PermissionUtils.shouldShowRational(
+              requireActivity(), Constants.PERMISSION_AUDIO_RECORDING)) {
+            Toast.makeText(
+                    requireActivity().getApplicationContext(),
+                    R.string.record_audio_permission_denied_controller,
+                    Toast.LENGTH_LONG)
+                .show();
+          }
         }
         break;
     }
