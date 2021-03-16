@@ -487,10 +487,9 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   }
 
   private void connectPhoneController() {
-    if (!phoneController.isConnected()) {
-      phoneController.connect(requireContext());
-    }
-    Enums.DriveMode oldDriveMode = vehicle.getDriveMode();
+    phoneController.connect(requireContext());
+    Enums.DriveMode oldDriveMode = currentDriveMode;
+
     // Currently only dual drive mode supported
     setDriveMode(Enums.DriveMode.DUAL);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
@@ -499,9 +498,7 @@ public class LoggerFragment extends CameraFragment implements ServerCommunicatio
   }
 
   private void disconnectPhoneController() {
-    if (phoneController.isConnected()) {
-      phoneController.disconnect(getContext());
-    }
+    phoneController.disconnect();
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
     binding.controllerContainer.driveMode.setAlpha(1.0f);

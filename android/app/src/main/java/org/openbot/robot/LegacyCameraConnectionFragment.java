@@ -132,6 +132,7 @@ public class LegacyCameraConnectionFragment extends Fragment {
         @Override
         public void onSurfaceTextureUpdated(final SurfaceTexture texture) {}
       };
+
   /** An additional thread for running tasks that shouldn't block the UI. */
   private HandlerThread backgroundThread;
 

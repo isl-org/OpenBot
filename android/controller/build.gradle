@@ -47,7 +47,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0'
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -61,6 +60,9 @@ dependencies {
 
     // material design
     implementation 'com.google.android.material:material:1.3.0'
+
+    // vlc for rtsp streaming display
+    implementation 'org.videolan.android:libvlc-all:3.3.12'
 
     // For a library module, uncomment the following line and comment the one after
     // apply plugin: 'com.android.library'

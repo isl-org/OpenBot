@@ -45,7 +45,6 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         binding = ActivityFullscreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         setupPermissions()
 
         screenManager = ScreenManager(binding)
@@ -54,6 +53,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         createAppEventsSubscription()
+        subscribeToStatusInfo()
 
         binding.leftDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.LEFT)
         binding.rightDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.RIGHT)
@@ -62,6 +62,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         hideSystemUI()
 
         BotDataListener.init()
+        binding.videoView.init(binding)
     }
 
     private fun setupPermissions() {
@@ -79,6 +80,14 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 PERMISSION_REQUEST_LOCATION
         )
+    }
+
+    @SuppressLint("CheckResult")
+    private fun subscribeToStatusInfo () {
+        StatusEventBus.addSubject("CONNECTION_ACTIVE")
+        StatusEventBus.getProcessor("CONNECTION_ACTIVE")?.subscribe {
+            if (it.toBoolean()) screenManager.showControls() else screenManager.hideControls()
+        }
     }
 
     private fun createAppEventsSubscription(): Disposable =

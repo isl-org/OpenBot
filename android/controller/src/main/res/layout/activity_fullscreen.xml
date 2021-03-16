@@ -110,7 +110,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:layout_toEndOf="@+id/left_slider"
+                android:layout_toStartOf="@+id/right_slider"
                 android:orientation="horizontal">
 
                 <org.openbot.controller.customComponents.LeftIndicator
@@ -139,7 +141,76 @@
                     android:background="@drawable/button"
                     android:rotation="180"
                     app:icon="@drawable/direction_indicator" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <org.openbot.controller.customComponents.ConnectionActiveIndicator
+                    android:id="@+id/connectionActiveIndicator"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:src="@drawable/ic_circle" />
+
             </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/video"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_toRightOf="@id/left_slider"
+                android:layout_toLeftOf="@id/right_slider"
+                android:layout_below="@id/top_buttons"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+                <org.openbot.controller.customComponents.VideoView
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button"
+                    />
+<!--
+                <LinearLayout
+                    android:id="@+id/camera_buttons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+
+                    <org.openbot.controller.customComponents.Flashlight
+                        android:id="@+id/flashlight"
+                        style="@style/IconOnlyButton"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/button"
+                        app:icon="@drawable/ic_flashlight_on_24px" />
+
+                    <org.openbot.controller.customComponents.Flash
+                        android:id="@+id/flash"
+                        style="@style/IconOnlyButton"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/button"
+                        app:icon="@drawable/ic_flash_on_24px" />
+
+                    <org.openbot.controller.customComponents.FlipCamera
+                        android:id="@+id/flip_camera"
+                        style="@style/IconOnlyButton"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/button"
+                        app:icon="@drawable/ic_flip_camera_ios_24px" />
+
+                </LinearLayout>
+-->
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/bottom_buttons"
@@ -250,7 +321,5 @@
                 </LinearLayout>
 
             </org.openbot.controller.customComponents.BotSetupControlsLayout>
-
     </org.openbot.controller.customComponents.MainFrameLayout>
-
 </FrameLayout>

@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,7 +36,8 @@ public abstract class ControlsFragment extends Fragment {
   protected Vehicle vehicle;
   protected Animation startAnimation;
   protected SharedPreferencesManager preferencesManager;
-  protected final PhoneController phoneController = new PhoneController();
+  protected final PhoneController phoneController = PhoneController.getInstance();
+  protected Enums.DriveMode currentDriveMode = Enums.DriveMode.GAME;
 
   private Handler handler;
   private HandlerThread handlerThread;
@@ -49,6 +51,7 @@ public abstract class ControlsFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    phoneController.init(requireContext());
     preferencesManager = new SharedPreferencesManager(requireContext());
     audioPlayer = new AudioPlayer(requireContext());
 
@@ -144,71 +147,61 @@ public abstract class ControlsFragment extends Fragment {
   }
 
   private void handlePhoneControllerEvents() {
-    // Prevent multiple subscriptions. This happens if we select "Phone control multiple times.
-    if (ControllerToBotEventBus.getProcessor().hasObservers()) {
-      return;
-    }
-    phoneControllerEventObserver =
-        ControllerToBotEventBus.getProcessor()
-            .subscribe(
-                event -> {
-                  String commandType = "";
-                  if (event.has("command")) {
-                    commandType = event.getString("command");
-                  } else if (event.has("driveCmd")) {
-                    commandType = Constants.CMD_DRIVE;
-                  } else {
-                    Timber.d("Got invalid command from controller: %s", event.toString());
-                    return;
-                  }
+    ControllerToBotEventBus.subscribe(
+        this.getClass().getSimpleName(),
+        event -> {
+          String commandType;
+          if (event.has("command")) {
+            commandType = event.getString("command");
+          } else if (event.has("driveCmd")) {
+            commandType = Constants.CMD_DRIVE;
+          } else {
+            Timber.d("Got invalid command from controller: %s", event.toString());
+            return;
+          }
 
-                  switch (commandType) {
-                    case Constants.CMD_DRIVE:
-                      JSONObject driveValue = event.getJSONObject("driveCmd");
-                      vehicle.setControl(
-                          new Control(
-                              Float.parseFloat(driveValue.getString("l")),
-                              Float.parseFloat(driveValue.getString("r"))));
-                      break;
+          switch (commandType) {
+            case Constants.CMD_DRIVE:
+              JSONObject driveValue = event.getJSONObject("driveCmd");
+              vehicle.setControl(
+                  new Control(
+                      Float.parseFloat(driveValue.getString("l")),
+                      Float.parseFloat(driveValue.getString("r"))));
+              break;
 
-                    case Constants.CMD_INDICATOR_LEFT:
-                      Timber.i("left");
-                      toggleIndicatorEvent(Enums.VehicleIndicator.LEFT.getValue());
-                      break;
+            case Constants.CMD_INDICATOR_LEFT:
+              toggleIndicatorEvent(Enums.VehicleIndicator.LEFT.getValue());
+              break;
 
-                    case Constants.CMD_INDICATOR_RIGHT:
-                      toggleIndicatorEvent(Enums.VehicleIndicator.RIGHT.getValue());
-                      break;
+            case Constants.CMD_INDICATOR_RIGHT:
+              toggleIndicatorEvent(Enums.VehicleIndicator.RIGHT.getValue());
+              break;
 
-                    case Constants.CMD_INDICATOR_STOP:
-                      toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
-                      break;
+            case Constants.CMD_INDICATOR_STOP:
+              toggleIndicatorEvent(Enums.VehicleIndicator.STOP.getValue());
+              break;
 
-                    case Constants.CMD_NOISE:
-                      toggleNoise();
-                      break;
-                      // We re connected to the controller, send back status info
-                    case Constants.CMD_CONNECTED:
-                      // PhoneController class will receive this event and resent it to the
-                      // controller.
-                      // Other controllers can subscribe to this event as well.
-                      // That is why we are not calling phoneController.send() here directly.
-                      BotToControllerEventBus.emitEvent(
-                          Utils.getStatus(
-                              false,
-                              false,
-                              false,
-                              vehicle.getDriveMode().toString(),
-                              vehicle.getIndicator()));
+              // We re connected to the controller, send back status info
+            case Constants.CMD_CONNECTED:
+              // PhoneController class will receive this event and resent it to the
+              // controller.
+              // Other controllers can subscribe to this event as well.
+              // That is why we are not calling phoneController.send() here directly.
+              BotToControllerEventBus.emitEvent(
+                  Utils.getStatus(
+                      false, false, false, currentDriveMode.toString(), vehicle.getIndicator()));
+              break;
 
-                      break;
-                    case Constants.CMD_DISCONNECTED:
-                      vehicle.setControl(0, 0);
-                      break;
-                  }
+            case Constants.CMD_DISCONNECTED:
+              vehicle.setControl(0, 0);
+              break;
+          }
 
-                  processControllerKeyData(commandType);
-                });
+          processControllerKeyData(commandType);
+        },
+        error -> {
+          Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
+        });
   }
 
   protected void toggleNoise() {
@@ -229,20 +222,30 @@ public abstract class ControlsFragment extends Fragment {
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     switch (requestCode) {
-      case Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER:
+      case Constants.REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          if (!phoneController.isConnected()) {
-            phoneController.connect(requireContext());
-          }
+        if (grantResults.length > 1
+            && (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+          phoneController.connect(requireContext());
         } else {
-          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_LOCATION))
+          if (PermissionUtils.shouldShowRational(
+              requireActivity(), Constants.PERMISSION_LOCATION)) {
             Toast.makeText(
                     requireActivity().getApplicationContext(),
                     R.string.location_permission_denied_controller,
                     Toast.LENGTH_LONG)
                 .show();
+          }
+          if (PermissionUtils.shouldShowRational(
+              requireActivity(), Constants.PERMISSION_AUDIO_RECORDING)) {
+            Toast.makeText(
+                    requireActivity().getApplicationContext(),
+                    R.string.record_audio_permission_denied_controller,
+                    Toast.LENGTH_LONG)
+                .show();
+          }
         }
         break;
     }
@@ -261,8 +264,7 @@ public abstract class ControlsFragment extends Fragment {
     super.onDestroy();
     Timber.d("onDestroy");
     vehicle.setControl(0, 0);
-    phoneController.disconnect(getContext());
-    if (phoneControllerEventObserver != null) phoneControllerEventObserver.dispose();
+    ControllerToBotEventBus.unsubscribe(this.getClass().getSimpleName());
   }
 
   @Override

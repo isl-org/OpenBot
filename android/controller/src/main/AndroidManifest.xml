@@ -14,6 +14,11 @@
     <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" />
     <uses-permission android:name="android.permission.REQUEST_COMPANION_USE_DATA_IN_BACKGROUND" />
 
+    <!-- Related to WiFi direct -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <!-- If your app targets Android 9 or lower, you can declare
          ACCESS_COARSE_LOCATION instead. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

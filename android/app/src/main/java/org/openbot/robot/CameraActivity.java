@@ -70,7 +70,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import io.reactivex.rxjava3.disposables.Disposable;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
@@ -114,10 +113,12 @@ public abstract class CameraActivity extends AppCompatActivity
         AdapterView.OnItemSelectedListener {
   private static final Logger LOGGER = new Logger();
 
+  private static final String TAG = "CameraActivity";
+
   // Constants
   private static final int REQUEST_CAMERA_PERMISSION = 1;
   private static final int REQUEST_LOCATION_PERMISSION_LOGGING = 2;
-  private static final int REQUEST_LOCATION_PERMISSION_CONTROLLER = 3;
+  private static final int REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER = 3;
   private static final int REQUEST_STORAGE_PERMISSION = 4;
   private static final int REQUEST_BLUETOOTH_PERMISSION = 5;
 
@@ -125,6 +126,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
   private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
   private static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
+  private static final String PERMISSION_AUDIO = Manifest.permission.RECORD_AUDIO;
 
   private static Context context;
   private int cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
@@ -186,13 +188,12 @@ public abstract class CameraActivity extends AppCompatActivity
   private ServerCommunication serverCommunication;
   private SharedPreferencesManager preferencesManager;
   protected final GameController gameController = new GameController(driveMode);
-  private final PhoneController phoneController = new PhoneController();
+  private final PhoneController phoneController = PhoneController.getInstance();
   protected final ControllerHandler controllerHandler = new ControllerHandler();
   private final AudioPlayer audioPlayer = new AudioPlayer(this);
   private final String voice = "matthew";
 
   protected Vehicle vehicle;
-  private Disposable phoneControllerEventObserver;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -607,7 +608,7 @@ public abstract class CameraActivity extends AppCompatActivity
       LOGGER.e(e, "Exception!");
     }
 
-    phoneController.disconnect(this);
+    phoneController.disconnect();
     super.onPause();
   }
 
@@ -627,7 +628,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     LOGGER.d("onDestroy " + this);
 
-    if (phoneControllerEventObserver != null) phoneControllerEventObserver.dispose();
+    ControllerToBotEventBus.unsubscribe(this.getClass().getSimpleName());
 
     super.onDestroy();
   }
@@ -667,16 +668,21 @@ public abstract class CameraActivity extends AppCompatActivity
         }
         break;
 
-      case REQUEST_LOCATION_PERMISSION_CONTROLLER:
+      case REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          if (!phoneController.isConnected()) {
-            phoneController.connect(this);
-          }
+        if (grantResults.length > 1
+            && (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+          phoneController.connect(this);
         } else {
           if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
             Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
+                .show();
+          }
+          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_AUDIO)) {
+            Toast.makeText(
+                    this, R.string.record_audio_permission_denied_controller, Toast.LENGTH_LONG)
                 .show();
           }
         }
@@ -730,9 +736,11 @@ public abstract class CameraActivity extends AppCompatActivity
         this, new String[] {PERMISSION_LOCATION}, REQUEST_LOCATION_PERMISSION_LOGGING);
   }
 
-  private void requestLocationPermissionController() {
+  private void requestPermissionsLocationAndAudioController() {
     ActivityCompat.requestPermissions(
-        this, new String[] {PERMISSION_LOCATION}, REQUEST_LOCATION_PERMISSION_CONTROLLER);
+        this,
+        new String[] {PERMISSION_LOCATION, PERMISSION_AUDIO},
+        REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER);
   }
 
   private void requestStoragePermission() {
@@ -923,8 +931,9 @@ public abstract class CameraActivity extends AppCompatActivity
           break;
         case PHONE:
           handleControllerEvents();
-          if (!hasLocationPermission()) requestLocationPermissionController();
-          else connectPhoneController();
+          if (!hasLocationPermission()) {
+            requestPermissionsLocationAndAudioController();
+          } else connectPhoneController();
           break;
         case WEBRTC:
           break;
@@ -937,9 +946,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   private void connectPhoneController() {
-    if (!phoneController.isConnected()) {
-      phoneController.connect(this);
-    }
+    phoneController.connect(this);
     DriveMode oldDriveMode = driveMode;
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
@@ -949,7 +956,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void disconnectPhoneController() {
     if (phoneController.isConnected()) {
-      phoneController.disconnect(this);
+      phoneController.disconnect();
     }
     setDriveMode(DriveMode.values()[preferencesManager.getDriveMode()]);
     driveModeSpinner.setEnabled(true);
@@ -1295,85 +1302,83 @@ public abstract class CameraActivity extends AppCompatActivity
   */
 
   private void handleControllerEvents() {
-    // Prevent multiple subscriptions. This happens if we select "Phone control multiple times.
-    if (ControllerToBotEventBus.getProcessor().hasObservers()) {
-      return;
-    }
+    ControllerToBotEventBus.subscribe(
+        this.getClass().getSimpleName(),
+        event -> {
+          JSONObject commandJsn = event;
+          String commandType = "";
+          Log.d(null, "Got command from controller: " + commandJsn.toString());
+          if (commandJsn.has("command")) {
+            commandType = commandJsn.getString("command");
+          } else if (commandJsn.has("driveCmd")) {
+            commandType = "DRIVE_CMD";
+          } else {
+            return;
+          }
 
-    phoneControllerEventObserver =
-        ControllerToBotEventBus.getProcessor()
-            .subscribe(
-                event -> {
-                  JSONObject commandJsn = event;
-                  String commandType = "";
-                  if (commandJsn.has("command")) {
-                    commandType = commandJsn.getString("command");
-                  } else if (commandJsn.has("driveCmd")) {
-                    commandType = "DRIVE_CMD";
-                  } else {
-                    Log.d(null, "Got invalid command from controller: " + commandJsn.toString());
-                    return;
-                  }
+          switch (commandType) {
+            case "DRIVE_CMD":
+              JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
+              controllerHandler.handleDriveCommand(
+                  Float.valueOf(driveValue.getString("l")),
+                  Float.valueOf(driveValue.getString("r")));
+              break;
 
-                  switch (commandType) {
-                    case "DRIVE_CMD":
-                      JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
-                      controllerHandler.handleDriveCommand(
-                          Float.valueOf(driveValue.getString("l")),
-                          Float.valueOf(driveValue.getString("r")));
-                      break;
+            case "LOGS":
+              controllerHandler.handleLogging();
+              break;
 
-                    case "LOGS":
-                      controllerHandler.handleLogging();
-                      break;
+            case "NOISE":
+              controllerHandler.handleNoise();
+              break;
 
-                    case "NOISE":
-                      controllerHandler.handleNoise();
-                      break;
+            case "INDICATOR_LEFT":
+              controllerHandler.handleIndicatorLeft();
+              break;
 
-                    case "INDICATOR_LEFT":
-                      controllerHandler.handleIndicatorLeft();
-                      break;
+            case "INDICATOR_RIGHT":
+              controllerHandler.handleIndicatorRight();
+              break;
 
-                    case "INDICATOR_RIGHT":
-                      controllerHandler.handleIndicatorRight();
-                      break;
+            case "INDICATOR_STOP":
+              controllerHandler.handleIndicatorStop();
+              break;
 
-                    case "INDICATOR_STOP":
-                      controllerHandler.handleIndicatorStop();
-                      break;
+            case "NETWORK":
+              controllerHandler.handleNetwork();
+              break;
 
-                    case "NETWORK":
-                      controllerHandler.handleNetwork();
-                      break;
+            case "DRIVE_MODE":
+              controllerHandler.handleDriveMode();
+              break;
 
-                    case "DRIVE_MODE":
-                      controllerHandler.handleDriveMode();
-                      break;
+              // We re connected to the controller, send back status info
+            case "CONNECTED":
+              // PhoneController class will receive this event and resent it to the
+              // controller.
+              // Other controllers can subscribe to this event as well.
+              // That is why we are not calling phoneController.send() here directly.
+              BotToControllerEventBus.emitEvent(
+                  Utils.getStatus(
+                      loggingEnabled,
+                      noiseEnabled,
+                      networkEnabled,
+                      driveMode.toString(),
+                      vehicle.getIndicator()));
 
-                      // We re connected to the controller, send back status info
-                    case "CONNECTED":
-                      // PhoneController class will receive this event and resent it to the
-                      // controller.
-                      // Other controllers can subscribe to this event as well.
-                      // That is why we are not calling phoneController.send() here directly.
-                      BotToControllerEventBus.emitEvent(
-                          Utils.getStatus(
-                              loggingEnabled,
-                              noiseEnabled,
-                              networkEnabled,
-                              driveMode.toString(),
-                              vehicle.getIndicator()));
-                      break;
-                    case "DISCONNECTED":
-                      controllerHandler.handleDriveCommand(0.f, 0.f);
-                      setControlMode(ControlMode.GAMEPAD);
-                      break;
-                  }
-                },
-                error -> {
-                  Log.d(null, "Error occurred in ControllerToBotEventBus");
-                });
+              // phoneController.startVideo();
+              break;
+
+            case "DISCONNECTED":
+              controllerHandler.handleDriveCommand(0.f, 0.f);
+              setControlMode(ControlMode.GAMEPAD);
+              phoneController.stopVideo();
+              break;
+          }
+        },
+        error -> {
+          Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
+        });
   }
 
   private void sendIndicatorStatus(Integer status) {

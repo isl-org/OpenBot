@@ -9,6 +9,7 @@
     <string name="location_permission_denied_logging">Location permission is necessary for logging GPS data.</string>
     <string name="location_permission_denied_controller">Location permission is necessary for finding the controller phone.</string>
     <string name="storage_permission_denied">External storage permission is necessary for logging.</string>
+    <string name="record_audio_permission_denied_controller">Recording audio is necessary for sending Audio/Visual stream to the controller.</string>
     <string name="off">Off</string>
     <string name="on">On</string>
 

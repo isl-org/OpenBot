@@ -613,7 +613,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
 
   private void disconnectPhoneController() {
     if (phoneController.isConnected()) {
-      phoneController.disconnect(getContext());
+      phoneController.disconnect();
     }
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);

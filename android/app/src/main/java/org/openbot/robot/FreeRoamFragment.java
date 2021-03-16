@@ -21,6 +21,7 @@ import org.openbot.R;
 import org.openbot.common.Constants;
 import org.openbot.common.Enums;
 import org.openbot.databinding.FragmentFreeRoamBinding;
+import org.openbot.env.PhoneController;
 import org.openbot.main.ControlsFragment;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
@@ -28,13 +29,13 @@ import timber.log.Timber;
 public class FreeRoamFragment extends ControlsFragment {
 
   private FragmentFreeRoamBinding binding;
+  private PhoneController phoneController = PhoneController.getInstance();
 
   @Override
   public View onCreateView(
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     binding = FragmentFreeRoamBinding.inflate(inflater, container, false);
-
     return binding.getRoot();
   }
 
@@ -42,6 +43,8 @@ public class FreeRoamFragment extends ControlsFragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    phoneController.setView(binding.videoWindow);
 
     binding.voltageInfo.setText(getString(R.string.voltageInfo, "--.-"));
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
@@ -198,11 +201,13 @@ public class FreeRoamFragment extends ControlsFragment {
           break;
         case PHONE:
           binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
-          if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
+          if (!PermissionUtils.hasPermissions(
+              requireContext(),
+              new String[] {Constants.PERMISSION_LOCATION, Constants.PERMISSION_AUDIO_RECORDING}))
             PermissionUtils.requestPermissions(
                 this,
-                new String[] {Constants.PERMISSION_LOCATION},
-                Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
+                new String[] {Constants.PERMISSION_LOCATION, Constants.PERMISSION_AUDIO_RECORDING},
+                Constants.REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER);
           else connectPhoneController();
 
           break;
@@ -233,10 +238,8 @@ public class FreeRoamFragment extends ControlsFragment {
   }
 
   private void connectPhoneController() {
-    if (!phoneController.isConnected()) {
-      phoneController.connect(requireContext());
-    }
-    DriveMode oldDriveMode = vehicle.getDriveMode();
+    phoneController.connect(requireContext());
+    DriveMode oldDriveMode = currentDriveMode;
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
@@ -245,9 +248,7 @@ public class FreeRoamFragment extends ControlsFragment {
   }
 
   private void disconnectPhoneController() {
-    if (phoneController.isConnected()) {
-      phoneController.disconnect(getContext());
-    }
+    phoneController.disconnect();
     setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
     binding.controllerContainer.driveMode.setAlpha(1.0f);

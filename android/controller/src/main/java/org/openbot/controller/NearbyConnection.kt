@@ -182,4 +182,10 @@ object NearbyConnection : ILocalConnection {
             Payload.fromBytes(message!!.toByteArray(StandardCharsets.UTF_8))
         )
     }
+
+    override fun start() {
+    }
+
+    override fun stop() {
+    }
 }

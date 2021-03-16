@@ -15,4 +15,8 @@ public interface ILocalConnection {
   boolean isConnected();
 
   void sendMessage(String message);
+
+  void stop();
+
+  void start();
 }
