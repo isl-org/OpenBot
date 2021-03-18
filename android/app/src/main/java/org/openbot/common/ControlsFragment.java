@@ -30,6 +30,9 @@ import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.utils.Utils;
+
+import java.util.Objects;
+
 import timber.log.Timber;
 
 public abstract class ControlsFragment extends Fragment {
@@ -51,6 +54,7 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    requireActivity().getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     phoneController.init(requireContext());
     preferencesManager = new SharedPreferencesManager(requireContext());
