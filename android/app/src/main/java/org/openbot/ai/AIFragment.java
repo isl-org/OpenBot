@@ -32,23 +32,24 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
-import org.openbot.common.Constants;
-import org.openbot.common.Enums;
+import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentAiBinding;
 import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
-import org.openbot.robot.CameraFragment;
-import org.openbot.robot.ServerCommunication;
+import org.openbot.server.ServerCommunication;
+import org.openbot.server.ServerListener;
 import org.openbot.tflite.Autopilot;
 import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.Constants;
+import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
-public class AIFragment extends CameraFragment implements ServerCommunication.ServerListener {
+public class AIFragment extends CameraFragment implements ServerListener {
 
   private FragmentAiBinding binding;
   private Handler handler;
@@ -580,7 +581,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   }
 
   protected void setDriveMode(Enums.DriveMode driveMode) {
-    if (vehicle.getDriveMode() != driveMode && driveMode != null) {
+    if (driveMode != null) {
       switch (driveMode) {
         case DUAL:
           binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_dual);
@@ -600,10 +601,8 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   }
 
   private void connectPhoneController() {
-    if (!phoneController.isConnected()) {
-      phoneController.connect(requireContext());
-    }
-    Enums.DriveMode oldDriveMode = vehicle.getDriveMode();
+    phoneController.connect(requireContext());
+    Enums.DriveMode oldDriveMode = currentDriveMode;
     // Currently only dual drive mode supported
     setDriveMode(Enums.DriveMode.DUAL);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
@@ -612,9 +611,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   }
 
   private void disconnectPhoneController() {
-    if (phoneController.isConnected()) {
-      phoneController.disconnect();
-    }
+    phoneController.disconnect();
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
     binding.controllerContainer.driveMode.setAlpha(1.0f);

@@ -3,7 +3,6 @@ package org.openbot.logging;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.SystemClock;
-import org.openbot.robot.SensorService;
 
 public class LogDataUtils {
 

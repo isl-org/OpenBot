@@ -4,7 +4,7 @@ import android.content.Context;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.openbot.common.Enums;
+import org.openbot.utils.Enums;
 
 public class Vehicle {
 

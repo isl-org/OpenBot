@@ -1,6 +1,6 @@
 // Created by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
-package org.openbot.robot;
+package org.openbot.logging;
 
 import android.app.Service;
 import android.content.Context;

@@ -1,8 +1,8 @@
 package org.openbot.robot;
 
-import static org.openbot.common.Enums.ControlMode;
-import static org.openbot.common.Enums.DriveMode;
-import static org.openbot.common.Enums.SpeedMode;
+import static org.openbot.utils.Enums.ControlMode;
+import static org.openbot.utils.Enums.DriveMode;
+import static org.openbot.utils.Enums.SpeedMode;
 
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
@@ -18,11 +18,11 @@ import com.google.android.material.internal.ViewUtils;
 import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
-import org.openbot.common.Constants;
-import org.openbot.common.Enums;
+import org.openbot.common.ControlsFragment;
 import org.openbot.databinding.FragmentFreeRoamBinding;
 import org.openbot.env.PhoneController;
-import org.openbot.main.ControlsFragment;
+import org.openbot.utils.Constants;
+import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
@@ -218,7 +218,7 @@ public class FreeRoamFragment extends ControlsFragment {
   }
 
   protected void setDriveMode(DriveMode driveMode) {
-    if (vehicle.getDriveMode() != driveMode && driveMode != null) {
+    if (driveMode != null) {
       switch (driveMode) {
         case DUAL:
           binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_dual);

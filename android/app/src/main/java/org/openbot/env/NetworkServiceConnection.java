@@ -20,7 +20,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openbot.common.Utils;
+import org.openbot.utils.Utils;
 import timber.log.Timber;
 
 public class NetworkServiceConnection implements ILocalConnection {

@@ -50,7 +50,7 @@
                 android:resource="@xml/device_filter" />
         </activity>
         <activity
-            android:name=".robot.DefaultActivity"
+            android:name=".original.DefaultActivity"
             android:label="@string/activity_name"
             android:noHistory="false">
 <!--
@@ -66,7 +66,7 @@
         </activity>
 
         <service
-            android:name=".robot.SensorService"
+            android:name=".logging.SensorService"
             android:enabled="true"
             android:launchMode="singleTask" />
 

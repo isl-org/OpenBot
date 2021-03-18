@@ -2,9 +2,9 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import org.openbot.common.Enums;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
+import org.openbot.utils.Enums;
 
 public class SharedPreferencesManager {
 

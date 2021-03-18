@@ -13,10 +13,9 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import org.openbot.R;
 import org.openbot.common.FeatureList;
-import org.openbot.common.OnItemClickListener;
 import org.openbot.databinding.FragmentMainBinding;
 import org.openbot.model.SubCategory;
-import org.openbot.robot.DefaultActivity;
+import org.openbot.original.DefaultActivity;
 import timber.log.Timber;
 
 public class MainFragment extends Fragment implements OnItemClickListener<SubCategory> {
