@@ -299,8 +299,8 @@ public class AIFragment extends CameraFragment implements ServerListener {
   }
 
   @Override
-  public synchronized void onPause() {
-
+  public synchronized void onDestroy() {
+    super.onDestroy();
     handlerThread.quitSafely();
     try {
       handlerThread.join();
@@ -308,9 +308,8 @@ public class AIFragment extends CameraFragment implements ServerListener {
       handler = null;
       serverCommunication.stop();
     } catch (final InterruptedException e) {
+      e.printStackTrace();
     }
-
-    super.onPause();
   }
 
   protected synchronized void runInBackground(final Runnable r) {
