@@ -175,9 +175,9 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
 
   @Override
   public synchronized void onResume() {
-    super.onResume();
     serverCommunication = new ServerCommunication(requireContext(), this);
     serverCommunication.start();
+    super.onResume();
   }
 
   @Override

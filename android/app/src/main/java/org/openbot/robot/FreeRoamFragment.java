@@ -34,7 +34,6 @@ public class FreeRoamFragment extends ControlsFragment {
   @Override
   public View onCreateView(
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
     binding = FragmentFreeRoamBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }

@@ -289,27 +289,26 @@ public class AIFragment extends CameraFragment implements ServerListener {
 
   @Override
   public synchronized void onResume() {
-    super.onResume();
-
+    serverCommunication = new ServerCommunication(requireContext(), this);
+    serverCommunication.start();
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
-    serverCommunication = new ServerCommunication(requireContext(), this);
-    serverCommunication.start();
+    super.onResume();
   }
 
   @Override
-  public synchronized void onDestroy() {
-    super.onDestroy();
+  public synchronized void onPause() {
     handlerThread.quitSafely();
     try {
       handlerThread.join();
       handlerThread = null;
       handler = null;
-      serverCommunication.stop();
     } catch (final InterruptedException e) {
       e.printStackTrace();
     }
+    serverCommunication.stop();
+    super.onPause();
   }
 
   protected synchronized void runInBackground(final Runnable r) {

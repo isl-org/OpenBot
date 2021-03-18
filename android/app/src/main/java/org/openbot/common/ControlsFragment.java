@@ -30,9 +30,6 @@ import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.utils.Utils;
-
-import java.util.Objects;
-
 import timber.log.Timber;
 
 public abstract class ControlsFragment extends Fragment {
@@ -54,7 +51,9 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    requireActivity().getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    requireActivity()
+        .getWindow()
+        .addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     phoneController.init(requireContext());
     preferencesManager = new SharedPreferencesManager(requireContext());
@@ -259,36 +258,27 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
-    handlerThread = new HandlerThread("inference");
-    handlerThread.start();
-    handler = new Handler(handlerThread.getLooper());
   }
 
   @Override
   public void onDestroy() {
-    super.onDestroy();
     Timber.d("onDestroy");
-    vehicle.setControl(0, 0);
     ControllerToBotEventBus.unsubscribe(this.getClass().getSimpleName());
+    vehicle.setControl(0, 0);
+    super.onDestroy();
   }
 
   @Override
   public synchronized void onPause() {
+    Timber.d("onPause");
+    vehicle.setControl(0, 0);
     super.onPause();
-    Timber.d("onpause");
-    handlerThread.quitSafely();
-    try {
-      handlerThread.join();
-      handlerThread = null;
-      handler = null;
-    } catch (final InterruptedException e) {
-    }
   }
 
   @Override
   public void onStop() {
-    super.onStop();
     Timber.d("onStop");
+    super.onStop();
   }
 
   protected synchronized void runInBackground(final Runnable r) {
