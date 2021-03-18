@@ -601,10 +601,8 @@ public class AIFragment extends CameraFragment implements ServerListener {
   }
 
   private void connectPhoneController() {
-    if (!phoneController.isConnected()) {
-      phoneController.connect(requireContext());
-    }
-    Enums.DriveMode oldDriveMode = vehicle.getDriveMode();
+    phoneController.connect(requireContext());
+    Enums.DriveMode oldDriveMode = currentDriveMode;
     // Currently only dual drive mode supported
     setDriveMode(Enums.DriveMode.DUAL);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
@@ -613,9 +611,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
   }
 
   private void disconnectPhoneController() {
-    if (phoneController.isConnected()) {
-      phoneController.disconnect();
-    }
+    phoneController.disconnect();
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
     binding.controllerContainer.driveMode.setAlpha(1.0f);

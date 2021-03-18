@@ -489,7 +489,6 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
   private void connectPhoneController() {
     phoneController.connect(requireContext());
     Enums.DriveMode oldDriveMode = currentDriveMode;
-
     // Currently only dual drive mode supported
     setDriveMode(Enums.DriveMode.DUAL);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
