@@ -43,6 +43,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private Size analyserResolution = Enums.Preview.SD.getValue();
   private YuvToRgbConverter converter;
   private Bitmap bitmapBuffer;
+  private int rotationDegrees;
 
   protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
@@ -114,6 +115,7 @@ public abstract class CameraFragment extends ControlsFragment {
             bitmapBuffer =
                 Bitmap.createBitmap(image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
 
+          rotationDegrees = image.getImageInfo().getRotationDegrees();
           converter.yuvToRgb(image.getImage(), bitmapBuffer);
           image.close();
           processFrame(bitmapBuffer, image);
@@ -126,6 +128,10 @@ public abstract class CameraFragment extends ControlsFragment {
     } catch (Exception e) {
       LOGGER.e("Use case binding failed: %s", e);
     }
+  }
+
+  public int getRotationDegrees() {
+    return rotationDegrees;
   }
 
   @Override
