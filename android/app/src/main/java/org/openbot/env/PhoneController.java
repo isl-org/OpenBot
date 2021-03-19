@@ -28,7 +28,7 @@ public class PhoneController {
     // Setting the view causes the RtspServer to start running
 
     // ****************** Disable video for now. ***************************
-    videoServer.setView(videoWindow);
+    // videoServer.setView(videoWindow);
   }
 
   public void startVideo() {
