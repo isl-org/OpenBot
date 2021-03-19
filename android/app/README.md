@@ -93,7 +93,9 @@ Pressing the back button opens up the menu screen that shows all available activ
 <img src="../../docs/images/menu_selector.jpg" alt="App GUI" width="50%"/>
 </p>
 
-- **Free Roam**: Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
+### Free Roam 
+
+Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
 
 <p align="left">
 <img src="../../docs/images/game_screen.jpg" alt="Alt text" width="50%" />
@@ -111,7 +113,9 @@ Pressing the back button opens up the menu screen that shows all available activ
 ​	**Sonar**: The sonar view distance of robot from an oncoming object in cm.
 ​	**Control**: Controller, Drive Mode and Speed are used to control robot settings as described above in Control section.
 
-- **Data Collection**: Simple UI for collection of data sets.
+### Data Collection
+
+Simple UI for collection of data sets.
 
 <p align="left">
 <img src="../../docs/images/logger_screen.jpg" alt="Alt text" width="50%" />
@@ -125,7 +129,13 @@ Pressing the back button opens up the menu screen that shows all available activ
 
 ​	**Training Resolution**: Used to switch between resolutions of images saved for training different models.
 
-- **AI Models**: Simple UI for running AI models.
+### AI Models 
+
+Simple UI for running AI models.
+
+<p align="left">
+<img src="../../docs/images/ai_screen.jpg" alt="Alt text" width="50%" />
+</p>
 
 ## Add your own fragment
 
