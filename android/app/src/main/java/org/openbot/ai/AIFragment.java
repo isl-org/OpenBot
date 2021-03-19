@@ -145,8 +145,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
           setNumThreads(--numThreads);
           binding.threads.setText(String.valueOf(numThreads));
         });
-    BottomSheetBehavior.from(binding.loggerBottomSheet)
-        .setState(BottomSheetBehavior.STATE_EXPANDED);
+    BottomSheetBehavior.from(binding.aiBottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
 
     mViewModel
         .getUsbStatus()

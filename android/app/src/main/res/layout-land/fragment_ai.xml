@@ -23,7 +23,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/loggerBottomSheet"
+        android:id="@+id/aiBottomSheet"
         android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_bg"
