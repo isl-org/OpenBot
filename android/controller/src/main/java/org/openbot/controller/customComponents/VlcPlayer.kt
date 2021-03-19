@@ -34,7 +34,6 @@ data class VlcPlayer(
         val args = ArrayList<String>()
         args.add("-vvv")
         args.add("--file-caching=2000");
-        //args.add("--low-delay")
 
         mLibVLC = LibVLC(this.context, args)
         mMediaPlayer = MediaPlayer(mLibVLC)
@@ -52,7 +51,6 @@ data class VlcPlayer(
         media.addOption(":network-caching=150")
         media.addOption(":clock-jitter=0")
         media.addOption(":clock-synchro=0")
-        // media.addOption(":sout=\"#transcode{vcodec=theo,vb=300,fps=30,scale=0.2}\"")
         Log.i(TAG, "media.state: " + media.state)
 
         mMediaPlayer!!.media = media
