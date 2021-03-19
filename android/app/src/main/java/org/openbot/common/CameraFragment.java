@@ -40,7 +40,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private Preview preview;
   private static int lensFacing = CameraSelector.LENS_FACING_BACK;
   private ProcessCameraProvider cameraProvider;
-  private Size analyserResolution = Enums.Preview.SD.getValue();
+  private Size analyserResolution = Enums.Preview.HD.getValue();
   private YuvToRgbConverter converter;
   private Bitmap bitmapBuffer;
   private int rotationDegrees;
@@ -94,25 +94,18 @@ public abstract class CameraFragment extends ControlsFragment {
   private void bindCameraUseCases() {
     converter = new YuvToRgbConverter(requireContext());
     bitmapBuffer = null;
-    preview =
-        new Preview.Builder()
-            //            .setTargetResolution(new Size(720,1280))
-            .setTargetAspectRatio(AspectRatio.RATIO_16_9)
-            .build();
+    preview = new Preview.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).build();
+    previewView.setScaleType(PreviewView.ScaleType.FIT_CENTER);
     preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
     CameraSelector cameraSelector =
         new CameraSelector.Builder().requireLensFacing(lensFacing).build();
     ImageAnalysis imageAnalysis;
 
     if (analyserResolution == null)
       imageAnalysis =
-          new ImageAnalysis.Builder()
-              .setTargetAspectRatio(AspectRatio.RATIO_16_9)
-              .build();
+          new ImageAnalysis.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).build();
     else
       imageAnalysis = new ImageAnalysis.Builder().setTargetResolution(analyserResolution).build();
-
     // insert your code here.
     imageAnalysis.setAnalyzer(
         cameraExecutor,
@@ -124,9 +117,9 @@ public abstract class CameraFragment extends ControlsFragment {
           rotationDegrees = image.getImageInfo().getRotationDegrees();
           converter.yuvToRgb(image.getImage(), bitmapBuffer);
           image.close();
+
           processFrame(bitmapBuffer, image);
         });
-
     try {
       cameraProvider.unbindAll();
 
