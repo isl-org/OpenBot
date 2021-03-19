@@ -11,6 +11,8 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.os.RemoteException;
@@ -50,6 +52,8 @@ import timber.log.Timber;
 public class LoggerFragment extends CameraFragment implements ServerListener {
 
   private FragmentLoggerBinding binding;
+  private Handler handler;
+  private HandlerThread handlerThread;
   private Intent intentSensorService;
   private ServerCommunication serverCommunication;
   protected String logFolder;
@@ -175,15 +179,32 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
 
   @Override
   public synchronized void onResume() {
-    super.onResume();
     serverCommunication = new ServerCommunication(requireContext(), this);
     serverCommunication.start();
+    handlerThread = new HandlerThread("logging");
+    handlerThread.start();
+    handler = new Handler(handlerThread.getLooper());
+    super.onResume();
   }
 
   @Override
   public synchronized void onPause() {
+    handlerThread.quitSafely();
+    try {
+      handlerThread.join();
+      handlerThread = null;
+      handler = null;
+    } catch (final InterruptedException e) {
+      e.printStackTrace();
+    }
     serverCommunication.stop();
     super.onPause();
+  }
+
+  protected synchronized void runInBackground(final Runnable r) {
+    if (handler != null) {
+      handler.post(r);
+    }
   }
 
   Messenger sensorMessenger;

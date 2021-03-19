@@ -2,8 +2,6 @@ package org.openbot.common;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -15,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import io.reactivex.rxjava3.disposables.Disposable;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.env.AudioPlayer;
@@ -40,10 +37,6 @@ public abstract class ControlsFragment extends Fragment {
   protected final PhoneController phoneController = PhoneController.getInstance();
   protected Enums.DriveMode currentDriveMode = Enums.DriveMode.GAME;
 
-  private Handler handler;
-  private HandlerThread handlerThread;
-  private Disposable phoneControllerEventObserver;
-
   protected AudioPlayer audioPlayer;
 
   protected final String voice = "matthew";
@@ -51,6 +44,9 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    requireActivity()
+        .getWindow()
+        .addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     phoneController.init(requireContext());
     preferencesManager = new SharedPreferencesManager(requireContext());
@@ -255,42 +251,27 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
-    handlerThread = new HandlerThread("inference");
-    handlerThread.start();
-    handler = new Handler(handlerThread.getLooper());
   }
 
   @Override
   public void onDestroy() {
-    super.onDestroy();
     Timber.d("onDestroy");
-    vehicle.setControl(0, 0);
     ControllerToBotEventBus.unsubscribe(this.getClass().getSimpleName());
+    vehicle.setControl(0, 0);
+    super.onDestroy();
   }
 
   @Override
   public synchronized void onPause() {
+    Timber.d("onPause");
+    vehicle.setControl(0, 0);
     super.onPause();
-    Timber.d("onpause");
-    handlerThread.quitSafely();
-    try {
-      handlerThread.join();
-      handlerThread = null;
-      handler = null;
-    } catch (final InterruptedException e) {
-    }
   }
 
   @Override
   public void onStop() {
-    super.onStop();
     Timber.d("onStop");
-  }
-
-  protected synchronized void runInBackground(final Runnable r) {
-    if (handler != null) {
-      handler.post(r);
-    }
+    super.onStop();
   }
 
   protected abstract void processControllerKeyData(String command);

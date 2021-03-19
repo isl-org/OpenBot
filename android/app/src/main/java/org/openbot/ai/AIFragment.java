@@ -105,6 +105,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
     modelAdapter.setDropDownViewResource(android.R.layout.simple_list_item_checked);
     binding.modelSpinner.setAdapter(modelAdapter);
 
+    setAnalyserResolution(Enums.Preview.HD.getValue());
     binding.modelSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
@@ -144,8 +145,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
           setNumThreads(--numThreads);
           binding.threads.setText(String.valueOf(numThreads));
         });
-    BottomSheetBehavior.from(binding.loggerBottomSheet)
-        .setState(BottomSheetBehavior.STATE_EXPANDED);
+    BottomSheetBehavior.from(binding.aiBottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
 
     mViewModel
         .getUsbStatus()
@@ -289,27 +289,25 @@ public class AIFragment extends CameraFragment implements ServerListener {
 
   @Override
   public synchronized void onResume() {
-    super.onResume();
-
+    serverCommunication = new ServerCommunication(requireContext(), this);
+    serverCommunication.start();
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
-    serverCommunication = new ServerCommunication(requireContext(), this);
-    serverCommunication.start();
+    super.onResume();
   }
 
   @Override
   public synchronized void onPause() {
-
     handlerThread.quitSafely();
     try {
       handlerThread.join();
       handlerThread = null;
       handler = null;
-      serverCommunication.stop();
     } catch (final InterruptedException e) {
+      e.printStackTrace();
     }
-
+    serverCommunication.stop();
     super.onPause();
   }
 

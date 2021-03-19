@@ -603,7 +603,6 @@ public abstract class CameraActivity extends AppCompatActivity
   @Override
   public synchronized void onPause() {
     LOGGER.d("onPause " + this);
-
     handlerThread.quitSafely();
     try {
       handlerThread.join();
@@ -613,8 +612,8 @@ public abstract class CameraActivity extends AppCompatActivity
     } catch (final InterruptedException e) {
       LOGGER.e(e, "Exception!");
     }
-
     phoneController.disconnect();
+    vehicle.setControl(0, 0);
     super.onPause();
   }
 
@@ -633,9 +632,8 @@ public abstract class CameraActivity extends AppCompatActivity
     }
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     LOGGER.d("onDestroy " + this);
-
     ControllerToBotEventBus.unsubscribe(this.getClass().getSimpleName());
-
+    vehicle.setControl(0, 0);
     super.onDestroy();
   }
 

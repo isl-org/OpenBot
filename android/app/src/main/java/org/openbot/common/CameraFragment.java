@@ -40,9 +40,10 @@ public abstract class CameraFragment extends ControlsFragment {
   private Preview preview;
   private static int lensFacing = CameraSelector.LENS_FACING_BACK;
   private ProcessCameraProvider cameraProvider;
-  private Size analyserResolution = Enums.Preview.SD.getValue();
+  private Size analyserResolution = Enums.Preview.HD.getValue();
   private YuvToRgbConverter converter;
   private Bitmap bitmapBuffer;
+  private int rotationDegrees;
 
   protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
@@ -93,19 +94,18 @@ public abstract class CameraFragment extends ControlsFragment {
   private void bindCameraUseCases() {
     converter = new YuvToRgbConverter(requireContext());
     bitmapBuffer = null;
-    preview =
-        new Preview.Builder()
-            //            .setTargetResolution(new Size(720,1280))
-            .setTargetAspectRatio(AspectRatio.RATIO_16_9)
-            .build();
+    preview = new Preview.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).build();
+    previewView.setScaleType(PreviewView.ScaleType.FIT_CENTER);
     preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
     CameraSelector cameraSelector =
         new CameraSelector.Builder().requireLensFacing(lensFacing).build();
+    ImageAnalysis imageAnalysis;
 
-    ImageAnalysis imageAnalysis =
-        new ImageAnalysis.Builder().setTargetResolution(analyserResolution).build();
-
+    if (analyserResolution == null)
+      imageAnalysis =
+          new ImageAnalysis.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).build();
+    else
+      imageAnalysis = new ImageAnalysis.Builder().setTargetResolution(analyserResolution).build();
     // insert your code here.
     imageAnalysis.setAnalyzer(
         cameraExecutor,
@@ -114,11 +114,12 @@ public abstract class CameraFragment extends ControlsFragment {
             bitmapBuffer =
                 Bitmap.createBitmap(image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
 
+          rotationDegrees = image.getImageInfo().getRotationDegrees();
           converter.yuvToRgb(image.getImage(), bitmapBuffer);
           image.close();
+
           processFrame(bitmapBuffer, image);
         });
-
     try {
       cameraProvider.unbindAll();
 
@@ -126,6 +127,10 @@ public abstract class CameraFragment extends ControlsFragment {
     } catch (Exception e) {
       LOGGER.e("Use case binding failed: %s", e);
     }
+  }
+
+  public int getRotationDegrees() {
+    return rotationDegrees;
   }
 
   @Override
@@ -163,9 +168,12 @@ public abstract class CameraFragment extends ControlsFragment {
   }
 
   public void setAnalyserResolution(Size resolutionSize) {
-    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-      this.analyserResolution = new Size(resolutionSize.getHeight(), resolutionSize.getWidth());
-    else this.analyserResolution = resolutionSize;
+    if (resolutionSize == null) analyserResolution = null;
+    else {
+      if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        this.analyserResolution = new Size(resolutionSize.getHeight(), resolutionSize.getWidth());
+      else this.analyserResolution = resolutionSize;
+    }
     bindCameraUseCases();
   }
 
