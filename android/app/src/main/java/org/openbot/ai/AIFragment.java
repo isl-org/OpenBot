@@ -105,6 +105,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
     modelAdapter.setDropDownViewResource(android.R.layout.simple_list_item_checked);
     binding.modelSpinner.setAdapter(modelAdapter);
 
+    setAnalyserResolution(null);
     binding.modelSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override

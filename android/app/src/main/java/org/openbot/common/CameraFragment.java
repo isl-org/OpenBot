@@ -103,9 +103,15 @@ public abstract class CameraFragment extends ControlsFragment {
 
     CameraSelector cameraSelector =
         new CameraSelector.Builder().requireLensFacing(lensFacing).build();
+    ImageAnalysis imageAnalysis;
 
-    ImageAnalysis imageAnalysis =
-        new ImageAnalysis.Builder().setTargetResolution(analyserResolution).build();
+    if (analyserResolution == null)
+      imageAnalysis =
+          new ImageAnalysis.Builder()
+              .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+              .build();
+    else
+      imageAnalysis = new ImageAnalysis.Builder().setTargetResolution(analyserResolution).build();
 
     // insert your code here.
     imageAnalysis.setAnalyzer(
@@ -169,9 +175,12 @@ public abstract class CameraFragment extends ControlsFragment {
   }
 
   public void setAnalyserResolution(Size resolutionSize) {
-    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-      this.analyserResolution = new Size(resolutionSize.getHeight(), resolutionSize.getWidth());
-    else this.analyserResolution = resolutionSize;
+    if (resolutionSize == null) analyserResolution = null;
+    else {
+      if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        this.analyserResolution = new Size(resolutionSize.getHeight(), resolutionSize.getWidth());
+      else this.analyserResolution = resolutionSize;
+    }
     bindCameraUseCases();
   }
 
