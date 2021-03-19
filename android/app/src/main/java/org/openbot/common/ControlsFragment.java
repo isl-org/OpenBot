@@ -2,8 +2,6 @@ package org.openbot.common;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -15,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import io.reactivex.rxjava3.disposables.Disposable;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.env.AudioPlayer;

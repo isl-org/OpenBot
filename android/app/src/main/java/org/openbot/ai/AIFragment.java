@@ -55,6 +55,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
   private Handler handler;
   private HandlerThread handlerThread;
   private ServerCommunication serverCommunication;
+
   private long lastProcessingTimeMs;
   private boolean computingNetwork = false;
   private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
