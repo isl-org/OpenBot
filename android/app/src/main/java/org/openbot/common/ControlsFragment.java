@@ -40,10 +40,6 @@ public abstract class ControlsFragment extends Fragment {
   protected final PhoneController phoneController = PhoneController.getInstance();
   protected Enums.DriveMode currentDriveMode = Enums.DriveMode.GAME;
 
-  private Handler handler;
-  private HandlerThread handlerThread;
-  private Disposable phoneControllerEventObserver;
-
   protected AudioPlayer audioPlayer;
 
   protected final String voice = "matthew";
@@ -279,12 +275,6 @@ public abstract class ControlsFragment extends Fragment {
   public void onStop() {
     Timber.d("onStop");
     super.onStop();
-  }
-
-  protected synchronized void runInBackground(final Runnable r) {
-    if (handler != null) {
-      handler.post(r);
-    }
   }
 
   protected abstract void processControllerKeyData(String command);
