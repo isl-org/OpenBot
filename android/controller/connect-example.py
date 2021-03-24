@@ -27,8 +27,8 @@ class ServerSocket:
                     raise RuntimeError("socket connection broken")
                 totalsent = totalsent + sent
                 print (f'Total sent: {totalsent}')
-            except e:
-                print(f"An exception occurred {e}")
+            except:
+                print(f"An exception occurred...")
                 return
 
     def receive(self):
