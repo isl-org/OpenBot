@@ -366,7 +366,14 @@ public class AIFragment extends CameraFragment implements ServerListener {
     } catch (IllegalArgumentException | IOException e) {
       String msg = "Failed to create network.";
       Timber.e(e, msg);
-      Toast.makeText(requireContext().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+      requireActivity()
+          .runOnUiThread(
+              () ->
+                  Toast.makeText(
+                          requireContext().getApplicationContext(),
+                          e.getMessage(),
+                          Toast.LENGTH_LONG)
+                      .show());
     }
   }
 
