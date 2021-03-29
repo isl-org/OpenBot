@@ -1,5 +1,6 @@
 package org.openbot.utils;
 
+import android.app.Activity;
 import android.util.Log;
 import android.util.Pair;
 import java.io.File;
@@ -12,6 +13,8 @@ import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -148,5 +151,17 @@ public class Utils {
     } catch (Exception e) {
       Log.e("tag", e.getMessage());
     }
+  }
+
+  public static boolean checkFileExistence(Activity activity, String name) {
+    boolean found = false;
+    for(String s: Objects.requireNonNull(activity.getFilesDir().list()))
+      if(s.equals(name))
+      {
+        found = true;
+        break;
+      }
+    return found;
+
   }
 }
