@@ -1,6 +1,9 @@
 import zeroconf # DO: pip3 install zeroconf
-import os
+import os, sys
 import socket
+import random, time
+import threading
+import click
 
 class ServerSocket:
     MSGLEN = 512
@@ -8,6 +11,7 @@ class ServerSocket:
     def __init__(self, sock=None):
         if sock is None:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.sock.bind(("0.0.0.0", 19400))
             self.sock.listen()
 
@@ -26,26 +30,105 @@ class ServerSocket:
                 if sent == 0:
                     raise RuntimeError("socket connection broken")
                 totalsent = totalsent + sent
-                print (f'Total sent: {totalsent}')
-            except:
-                print(f"An exception occurred...")
+            except Exception as e:
+                # print(f"An exception occurred: {e}")
                 return
 
     def receive(self):
         chunks = []
-        bytes_recd = 0
-        while bytes_recd < self.MSGLEN:
-            chunk = self.server_socket.recv(min(self.MSGLEN - bytes_recd, self.MSGLEN))
-            if chunk == b'':
-                raise RuntimeError("socket connection broken")
+        while True:
+            chunk = self.server_socket.recv(1)
             chunks.append(chunk)
-            bytes_recd = bytes_recd + len(chunk)
+            if chunk == b'\n' or chunk == b'':
+                break
         return b''.join(chunks).decode('utf-8')
+
+    def close(self):
+        try:
+            self.sock.close()
+            self.server_socket.close()
+        except:
+            print("Could not close all sockets")
+
+s_socket = ServerSocket()
 
 def get_ip():
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         s.connect(('1.2.3.4', 1))  # dummy connect
         return s.getsockname()[0]
+
+class CommandHandler:
+
+    class DriveValue:
+        """
+        This represents a drive value for either left or with control. Valid values are between -1.0 and 1.0
+        """
+
+        MAX = 1.0
+        MIN = -1.0
+        DELTA = .05
+
+        value = 0.0
+
+        def reset(self):
+            self.value = 0.0
+            return self.value
+
+        def incr(self):
+            self.value = min(self.MAX, self.value + self.DELTA)
+            return self.value
+
+        def decr(self):
+            self.value = max(self.MIN, self.value - self.DELTA)
+            return self.value
+
+    left = DriveValue()
+    right = DriveValue()
+
+    def send_command(self, command):
+        s_socket.send('{{command: {command} }}\n'.format(command=command))
+
+    def send_drive_command(self, left, right):
+        s_socket.send('{{driveCmd: {{l:{l}, r:{r} }} }}\n'.format(l=left, r=right))
+
+    def reset(self):
+        self.send_drive_command(self.left.reset(), self.right.reset())
+
+    def turn_left(self):
+        self.send_drive_command(self.left.decr(), self.right.incr())
+
+    def turn_right(self):
+        self.send_drive_command(self.left.incr(), self.right.decr())
+
+    def go_forward(self):
+        self.send_drive_command(self.left.incr(), self.right.incr())
+
+    def go_backward(self):
+        self.send_drive_command(self.left.decr(), self.right.decr())
+
+    def handle_keys(self):
+        # keypad control codes
+        K_PREFIX = '\x1b'
+        K_RT = '[C'
+        K_LF = '[D'
+        K_UP = '[A'
+        K_DN = '[B'
+
+        while True:
+            key = click.getchar()
+            if key == K_PREFIX + K_RT: self.turn_right()
+            if key == K_PREFIX + K_LF: self.turn_left()
+            if key == K_PREFIX + K_UP: self.go_forward()
+            if key == K_PREFIX + K_DN: self.go_backward()
+            if key == 'n': self.send_command("NOISE")
+            if key == 'o': self.send_command("LOGS")
+            if key == 'r': self.send_command("INDICATOR_RIGHT")
+            if key == 'l': self.send_command("INDICATOR_LEFT")
+            if key == 's': self.send_command("INDICATOR_STOP")
+            if key == 'e': self.send_command("NETWORK")
+            if key == 'd': self.send_command("DRIVE_MODE")
+            if key == 'q':
+                break
 
 def register(name, port, properties={}):
     type_="_openbot._tcp.local."
@@ -68,20 +151,26 @@ def register(name, port, properties={}):
 
 (zc, info) = register("OPEN_BOT_CONTROLLER", 19400)
 
-try:
-    s_socket = ServerSocket()
+def run_reciever ():
     while True:
-        s_socket.accept()
+        try:
+            data = s_socket.receive()
+            print(f'{data}\r')
+        except:
+            break
 
-        s_socket.send('{command: NOISE}\n') # make sure you have \n at end of command.
+def run():
+    s_socket.accept()
 
-        # Consider running this async
-        # data = s_socket.myreceive()
-        # print(f'Got data: {data}')
+    t = threading.Thread(target=run_reciever)
+    t.start()
 
-    input("Press enter to exit...\n\n")
+    cmd_handler = CommandHandler ()
+    cmd_handler.handle_keys ()
 
-finally:
+    s_socket.close()
     zc.unregister_service(info)
     zc.close()
-    print('unregistered zeroconf')
+    print('Exiting...')
+
+run ()
