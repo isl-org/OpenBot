@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -155,13 +154,11 @@ public class Utils {
 
   public static boolean checkFileExistence(Activity activity, String name) {
     boolean found = false;
-    for(String s: Objects.requireNonNull(activity.getFilesDir().list()))
-      if(s.equals(name))
-      {
+    for (String s : Objects.requireNonNull(activity.getFilesDir().list()))
+      if (s.equals(name)) {
         found = true;
         break;
       }
     return found;
-
   }
 }

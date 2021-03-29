@@ -1,7 +1,6 @@
 package org.openbot.ai;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -40,7 +39,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
@@ -107,42 +105,46 @@ public class AIFragment extends CameraFragment implements ServerListener {
                 List<Uri> files = Utils.getSelectedFilesFromResult(intent);
 
                 String fileName = new File(files.get(0).getPath()).getName();
-                if(org.openbot.utils.Utils.checkFileExistence(requireActivity(),fileName))
-                {
+                if (org.openbot.utils.Utils.checkFileExistence(requireActivity(), fileName)) {
                   AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
                   builder.setTitle(R.string.file_available_title);
                   builder.setMessage(R.string.file_available_body);
-                  builder.setPositiveButton("Yes", (dialog, id) -> {
-                    try {
-                      InputStream inputStream =
+                  builder.setPositiveButton(
+                      "Yes",
+                      (dialog, id) -> {
+                        try {
+                          InputStream inputStream =
                               requireActivity().getContentResolver().openInputStream(files.get(0));
-                      org.openbot.utils.Utils.copyFile(
-                              inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
-                    } catch (IOException e) {
-                      e.printStackTrace();
-                    }
+                          org.openbot.utils.Utils.copyFile(
+                              inputStream,
+                              fileName,
+                              requireActivity().getFilesDir().getAbsolutePath());
+                        } catch (IOException e) {
+                          e.printStackTrace();
+                        }
 
-                    modelAdapter.clear();
-                    modelAdapter.addAll(Arrays.asList(getResources().getTextArray(R.array.models)));
-                    modelAdapter.addAll(getModelFiles());
-                    modelAdapter.add("Choose From Device");
-                    modelAdapter.notifyDataSetChanged();
-                    binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
-                    setModel(new Model(fileName));
+                        modelAdapter.clear();
+                        modelAdapter.addAll(
+                            Arrays.asList(getResources().getTextArray(R.array.models)));
+                        modelAdapter.addAll(getModelFiles());
+                        modelAdapter.add("Choose From Device");
+                        modelAdapter.notifyDataSetChanged();
+                        binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
+                        setModel(new Model(fileName));
 
-                    Toast.makeText(
-                            requireContext().getApplicationContext(),
-                            "Model added: " + model,
-                            Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                                requireContext().getApplicationContext(),
+                                "Model added: " + model,
+                                Toast.LENGTH_SHORT)
                             .show();
-
-                  });
-                  builder.setNegativeButton("Cancel", (dialog, id) -> {
-                    // User cancelled the dialog
-                  });
+                      });
+                  builder.setNegativeButton(
+                      "Cancel",
+                      (dialog, id) -> {
+                        // User cancelled the dialog
+                      });
                   AlertDialog dialog = builder.create();
                   dialog.show();
-
                 }
               }
             });
