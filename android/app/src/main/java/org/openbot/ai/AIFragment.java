@@ -143,9 +143,8 @@ public class AIFragment extends CameraFragment implements ServerListener {
     modelAdapter.addAll(getModelFiles());
     modelAdapter.add("Choose From Device");
     modelAdapter.notifyDataSetChanged();
-    binding.modelSpinner.setSelection(
-        modelAdapter.getPosition(fileName.substring(0, fileName.lastIndexOf('.'))));
-    setModel(new Model(fileName.substring(0, fileName.lastIndexOf('.'))));
+    binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
+    setModel(new Model(fileName));
 
     Toast.makeText(
             requireContext().getApplicationContext(), "Model added: " + model, Toast.LENGTH_SHORT)
