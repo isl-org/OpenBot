@@ -37,7 +37,9 @@ class ServerSocket:
     def receive(self):
         chunks = []
         while True:
+            # OK, I know, we are not going for efficiency here...
             chunk = self.server_socket.recv(1)
+
             chunks.append(chunk)
             if chunk == b'\n' or chunk == b'':
                 break
@@ -61,7 +63,7 @@ class CommandHandler:
 
     class DriveValue:
         """
-        This represents a drive value for either left or with control. Valid values are between -1.0 and 1.0
+        This represents a drive value for either left or right control. Valid values are between -1.0 and 1.0
         """
 
         MAX = 1.0
@@ -155,12 +157,33 @@ def run_reciever ():
     while True:
         try:
             data = s_socket.receive()
-            print(f'{data}\r')
+            print(f'Received: {data}\r')
         except:
             break
 
+def print_usage():
+    usageStr = """
+    Usage: Use arrow keys (▲ ▼ ► ◄) on keyboard to drive robot.
+
+    Other keys:
+
+    \tn:    Toggle noise
+    \to:    Toggle logs
+    \tr:    Right direction indicator
+    \tl:    Left direction indicator
+    \ts:    Cancel indicators
+    \te:    Network mode
+    \td:    Drive mode
+    \tq:    Quit
+    """
+    print (usageStr)
+
 def run():
+    print_usage()
+
+    print('Waiting for connection...\n')
     s_socket.accept()
+    print('Connected! 😃\n')
 
     t = threading.Thread(target=run_reciever)
     t.start()
