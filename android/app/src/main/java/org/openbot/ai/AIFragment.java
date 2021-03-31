@@ -112,31 +112,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
                   builder.setPositiveButton(
                       "Yes",
                       (dialog, id) -> {
-                        try {
-                          InputStream inputStream =
-                              requireActivity().getContentResolver().openInputStream(files.get(0));
-                          org.openbot.utils.Utils.copyFile(
-                              inputStream,
-                              fileName,
-                              requireActivity().getFilesDir().getAbsolutePath());
-                        } catch (IOException e) {
-                          e.printStackTrace();
-                        }
-
-                        modelAdapter.clear();
-                        modelAdapter.addAll(
-                            Arrays.asList(getResources().getTextArray(R.array.models)));
-                        modelAdapter.addAll(getModelFiles());
-                        modelAdapter.add("Choose From Device");
-                        modelAdapter.notifyDataSetChanged();
-                        binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
-                        setModel(new Model(fileName));
-
-                        Toast.makeText(
-                                requireContext().getApplicationContext(),
-                                "Model added: " + model,
-                                Toast.LENGTH_SHORT)
-                            .show();
+                        processModelFromStorage(files, fileName);
                       });
                   builder.setNegativeButton(
                       "Cancel",
@@ -145,9 +121,34 @@ public class AIFragment extends CameraFragment implements ServerListener {
                       });
                   AlertDialog dialog = builder.create();
                   dialog.show();
+                } else {
+                  processModelFromStorage(files, fileName);
                 }
               }
             });
+  }
+
+  private void processModelFromStorage(List<Uri> files, String fileName) {
+    try {
+      InputStream inputStream =
+          requireActivity().getContentResolver().openInputStream(files.get(0));
+      org.openbot.utils.Utils.copyFile(
+          inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    modelAdapter.clear();
+    modelAdapter.addAll(Arrays.asList(getResources().getTextArray(R.array.models)));
+    modelAdapter.addAll(getModelFiles());
+    modelAdapter.add("Choose From Device");
+    modelAdapter.notifyDataSetChanged();
+    binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
+    setModel(new Model(fileName));
+
+    Toast.makeText(
+            requireContext().getApplicationContext(), "Model added: " + model, Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override
