@@ -14,6 +14,7 @@ public class FeatureList {
   public static final String LEGACY = "Legacy";
   public static final String DEFAULT = "Default";
   public static final String CONTROLLER = "Controller";
+  public static final String CONTROLLER_MAPPING = "Controller Mapping";
 
   // Game
   public static final String GAME = "Game";

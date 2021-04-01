@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_mainFragment_to_AIFragment"
             app:destination="@id/AIFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_controllerMappingFragment"
+            app:destination="@id/controllerMappingFragment" />
     </fragment>
     <fragment
         android:id="@+id/robotCommunicationFragment"
@@ -45,5 +48,11 @@
         android:name="org.openbot.ai.AIFragment"
         android:label="fragment_ai"
         tools:layout="@layout/fragment_ai" />
+
+    <fragment
+        android:id="@+id/controllerMappingFragment"
+        android:name="org.openbot.controller.ControllerMappingFragment"
+        android:label="fragment_controller_mapping"
+        tools:layout="@layout/fragment_controller_mapping" />
 
 </navigation>
