@@ -1,7 +1,5 @@
 import zeroconf # DO: pip3 install zeroconf
-import os, sys
 import socket
-import random, time
 import threading
 import click
 
@@ -153,7 +151,7 @@ def register(name, port, properties={}):
 
 (zc, info) = register("OPEN_BOT_CONTROLLER", 19400)
 
-def run_reciever ():
+def run_receiver ():
     while True:
         try:
             data = s_socket.receive()
@@ -171,7 +169,7 @@ def print_usage():
     \to:    Toggle logs
     \tr:    Right direction indicator
     \tl:    Left direction indicator
-    \ts:    Cancel indicators
+    \tc:    Cancel indicators
     \te:    Network mode
     \td:    Drive mode
     \tq:    Quit
@@ -185,7 +183,7 @@ def run():
     s_socket.accept()
     print('Connected! 😃\n')
 
-    t = threading.Thread(target=run_reciever)
+    t = threading.Thread(target=run_receiver)
     t.start()
 
     cmd_handler = CommandHandler ()
