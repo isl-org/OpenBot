@@ -1,7 +1,5 @@
 package org.openbot.main;
 
-import static org.openbot.utils.Constants.USB_ACTION_DATA_RECEIVED;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,13 +23,17 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 import org.openbot.OpenBotApplication;
 import org.openbot.R;
 import org.openbot.env.UsbConnection;
 import org.openbot.env.Vehicle;
 import org.openbot.original.DefaultActivity;
 import org.openbot.utils.Constants;
+
 import timber.log.Timber;
+
+import static org.openbot.utils.Constants.USB_ACTION_DATA_RECEIVED;
 
 // For a library module, uncomment the following line
 // import org.openbot.controller.ControllerActivity;
@@ -154,9 +157,12 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean dispatchGenericMotionEvent(MotionEvent event) {
+    Bundle bundle = new Bundle();
+    bundle.putParcelable(Constants.DATA_CONTINUOUS, event);
+    getSupportFragmentManager().setFragmentResult(Constants.GENERIC_MOTION_EVENT_CONTINUOUS, bundle);
+
     if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
-        && event.getAction() == MotionEvent.ACTION_MOVE) {
-      Bundle bundle = new Bundle();
+            && event.getAction() == MotionEvent.ACTION_MOVE) {
       bundle.putParcelable(Constants.DATA, event);
       getSupportFragmentManager().setFragmentResult(Constants.GENERIC_MOTION_EVENT, bundle);
       return true;
@@ -166,10 +172,13 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean dispatchKeyEvent(KeyEvent event) {
+    Bundle bundle = new Bundle();
+    bundle.putParcelable(Constants.DATA_CONTINUOUS, event);
+    getSupportFragmentManager().setFragmentResult(Constants.KEY_EVENT_CONTINUOUS, bundle);
+
     // Check that the event came from a game controller
     if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) {
       if (event.getAction() == KeyEvent.ACTION_UP) {
-        Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.DATA, event);
         getSupportFragmentManager().setFragmentResult(Constants.KEY_EVENT, bundle);
       }
