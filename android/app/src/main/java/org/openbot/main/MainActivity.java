@@ -157,12 +157,9 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean dispatchGenericMotionEvent(MotionEvent event) {
-    Bundle bundle = new Bundle();
-    bundle.putParcelable(Constants.DATA_CONTINUOUS, event);
-    getSupportFragmentManager().setFragmentResult(Constants.GENERIC_MOTION_EVENT_CONTINUOUS, bundle);
-
     if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
             && event.getAction() == MotionEvent.ACTION_MOVE) {
+      Bundle bundle = new Bundle();
       bundle.putParcelable(Constants.DATA, event);
       getSupportFragmentManager().setFragmentResult(Constants.GENERIC_MOTION_EVENT, bundle);
       return true;

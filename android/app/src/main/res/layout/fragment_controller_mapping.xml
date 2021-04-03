@@ -94,27 +94,47 @@
         app:layout_constraintVertical_bias="0.42" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/joyLeft"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="24dp"
-        android:src="@drawable/circle"
-        app:layout_constraintEnd_toStartOf="@+id/imageView6"
+        android:src="@drawable/ic_outline_circle"
+        app:layout_constraintEnd_toStartOf="@+id/joyRight"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/joyLeftTip"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_circle_selected"
+        app:layout_constraintBottom_toBottomOf="@+id/joyLeft"
+        app:layout_constraintEnd_toEndOf="@+id/joyLeft"
+        app:layout_constraintStart_toStartOf="@+id/joyLeft"
+        app:layout_constraintTop_toTopOf="@+id/joyLeft" />
+
+    <ImageView
+        android:id="@+id/joyRight"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="8dp"
-        android:src="@drawable/circle"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        android:src="@drawable/ic_outline_circle"
+        app:layout_constraintBottom_toBottomOf="@+id/joyLeft"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toTopOf="@+id/imageView5" />
+        app:layout_constraintStart_toEndOf="@+id/joyLeft"
+        app:layout_constraintTop_toTopOf="@+id/joyLeft" />
+
+    <ImageView
+        android:id="@+id/joyRightTip"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_circle_selected"
+        app:layout_constraintBottom_toBottomOf="@+id/joyRight"
+        app:layout_constraintEnd_toEndOf="@+id/joyRight"
+        app:layout_constraintStart_toStartOf="@+id/joyRight"
+        app:layout_constraintTop_toTopOf="@+id/joyRight" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
