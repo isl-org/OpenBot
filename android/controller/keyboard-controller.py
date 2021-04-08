@@ -2,7 +2,7 @@ import zeroconf # DO: pip3 install zeroconf
 import socket
 import threading
 import click
-
+import sched, time
 class ServerSocket:
     MSGLEN = 512
 
@@ -21,16 +21,9 @@ class ServerSocket:
         self.server_socket = conn
 
     def send(self, msg):
-        totalsent = 0
-        while totalsent < self.MSGLEN:
-            try:
-                sent = self.server_socket.send(msg[totalsent:].encode('utf-8'))
-                if sent == 0:
-                    raise RuntimeError("socket connection broken")
-                totalsent = totalsent + sent
-            except Exception as e:
-                # print(f"An exception occurred: {e}")
-                return
+        sent = self.server_socket.send(msg.encode('utf-8'))
+        if sent == 0:
+            print ("socket connection broken")
 
     def receive(self):
         chunks = []
@@ -74,22 +67,75 @@ class CommandHandler:
             self.value = 0.0
             return self.value
 
-        def incr(self):
-            self.value = min(self.MAX, self.value + self.DELTA)
-            return self.value
+        def incr(self, by_value = 0):
+            self.value = min(self.MAX, self.value + (by_value if by_value != 0 else self.DELTA))
+            return round(self.value, 3)
 
-        def decr(self):
-            self.value = max(self.MIN, self.value - self.DELTA)
-            return self.value
+        def decr(self, by_value = 0):
+            self.value = max(self.MIN, self.value - (by_value if by_value != 0 else self.DELTA))
+            return round(self.value, 3)
+
+        def getValue(self):
+            return round(self.value, 3)
+
+    class ZeroReverter:
+        def __init__(self, left, right, duration, steps):
+            """
+            We like to revert left abd right DriveValues to zero in `duration` miliseconds in `steps` steps.
+            """
+
+            if duration < steps:
+                raise Exception('Duration too small')
+
+            self.left = left
+            self.right = right
+            self.duration = duration
+            self.steps = steps
+            self.interval = duration / steps
+            self.event = None
+            self.scheduler = sched.scheduler(time.time, time.sleep)
+
+        def reset(self):
+            if self.event is not None and not self.scheduler.empty() :
+                self.scheduler.cancel(self.event)
+
+            self.delta_left = self.left.getValue() / self.steps
+            self.delta_right = self.right.getValue() / self.steps
+
+            self.event = self.scheduler.enter(self.interval, 1, self.send_command)
+
+            t = threading.Thread(target=self.scheduler.run)
+            t.start()
+
+        def send_command(self):
+            ROUND_ERROR = 0.001
+            self.left.decr(self.delta_left)
+            self.right.decr(self.delta_right)
+
+            if abs(self.left.getValue()) < ROUND_ERROR:
+                self.left.reset()
+                self.right.reset()
+            else:
+                self.event = self.scheduler.enter(self.interval, 1, self.send_command)
+
+            try:
+                s_socket.send('{{driveCmd: {{l:{l}, r:{r} }} }}\n'.format(l=self.left.getValue(), r=self.right.getValue()))    
+            except:
+                print(f'Stopping scheduler...\r')
+                if self.event is not None and not self.scheduler.empty() :
+                    self.scheduler.cancel(self.event)
 
     left = DriveValue()
     right = DriveValue()
+
+    reverter = ZeroReverter(left, right, 4, 4)
 
     def send_command(self, command):
         s_socket.send('{{command: {command} }}\n'.format(command=command))
 
     def send_drive_command(self, left, right):
         s_socket.send('{{driveCmd: {{l:{l}, r:{r} }} }}\n'.format(l=left, r=right))
+        self.reverter.reset()
 
     def reset(self):
         self.send_drive_command(self.left.reset(), self.right.reset())
@@ -124,7 +170,7 @@ class CommandHandler:
             if key == 'o': self.send_command("LOGS")
             if key == 'r': self.send_command("INDICATOR_RIGHT")
             if key == 'l': self.send_command("INDICATOR_LEFT")
-            if key == 's': self.send_command("INDICATOR_STOP")
+            if key == 'c': self.send_command("INDICATOR_STOP")
             if key == 'e': self.send_command("NETWORK")
             if key == 'd': self.send_command("DRIVE_MODE")
             if key == 'q':
@@ -156,32 +202,35 @@ def run_receiver ():
         try:
             data = s_socket.receive()
             print(f'Received: {data}\r')
+            if data in ["", None]:
+                break
         except:
             break
 
 def print_usage():
     usageStr = """
-    Usage: Use arrow keys (▲ ▼ ► ◄) on keyboard to drive robot.
-
-    Other keys:
-
-    \tn:    Toggle noise
-    \to:    Toggle logs
-    \tr:    Right direction indicator
-    \tl:    Left direction indicator
-    \tc:    Cancel indicators
-    \te:    Network mode
-    \td:    Drive mode
-    \tq:    Quit
+    \r
+    \rUsage: Use arrow keys (▲ ▼ ► ◄) on keyboard to drive robot.\r
+\r
+    Other keys:\r
+\r
+    \tn:    Toggle noise\r
+    \to:    Toggle logs\r
+    \tr:    Right direction indicator\r
+    \tl:    Left direction indicator\r
+    \tc:    Cancel indicators\r
+    \te:    Network mode\r
+    \td:    Drive mode\r
+    \tq:    Quit\r
     """
     print (usageStr)
 
 def run():
     print_usage()
 
-    print('Waiting for connection...\n')
+    print('Waiting for connection...\r\n')
     s_socket.accept()
-    print('Connected! 😃\n')
+    print('Connected! 😃\n\r')
 
     t = threading.Thread(target=run_receiver)
     t.start()
@@ -192,6 +241,6 @@ def run():
     s_socket.close()
     zc.unregister_service(info)
     zc.close()
-    print('Exiting...')
+    print('Exiting...\r\n')
 
 run ()
