@@ -70,7 +70,7 @@ Here is the usage:
         o:    Toggle logs
         r:    Right direction indicator
         l:    Left direction indicator
-        s:    Cancel indicators
+        c:    Cancel indicators
         e:    Network mode
         d:    Drive mode
         q:    Quit
