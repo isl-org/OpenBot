@@ -7,7 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openbot.common.Enums;
+import org.openbot.utils.Enums;
 
 @RunWith(AndroidJUnit4.class)
 public class VehicleTest {

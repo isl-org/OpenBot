@@ -11,7 +11,7 @@ import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.openbot.common.Utils;
+import org.openbot.utils.Utils;
 
 public class ConnectionMonitor {
 

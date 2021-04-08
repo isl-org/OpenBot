@@ -1,8 +1,8 @@
-name: Move assigned issues into OpenBot - To do
+name: Move opened issues into OpenBot - To do
 
 on:
   issues:
-    types: [assigned]
+    types: [opened]
 
 jobs:
   automate-project-columns:

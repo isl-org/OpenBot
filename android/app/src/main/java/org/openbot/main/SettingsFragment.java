@@ -30,6 +30,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       if (vehicle != null && vehicle.isUsbConnected()) {
         connection.setChecked(true);
         connection.setTitle(vehicle.getUsbConnection().getProductName());
+      } else {
+        connection.setTitle("No Device");
+        connection.setChecked(false);
       }
       connection.setOnPreferenceClickListener(
           preference -> {

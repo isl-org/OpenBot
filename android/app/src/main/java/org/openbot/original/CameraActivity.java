@@ -16,7 +16,7 @@
 
 // Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
-package org.openbot.robot;
+package org.openbot.original;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -81,14 +81,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.json.JSONObject;
+import org.openbot.OpenBotApplication;
 import org.openbot.R;
-import org.openbot.common.Constants;
-import org.openbot.common.Enums;
-import org.openbot.common.Enums.ControlMode;
-import org.openbot.common.Enums.DriveMode;
-import org.openbot.common.Enums.LogMode;
-import org.openbot.common.Enums.SpeedMode;
-import org.openbot.common.Utils;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.Control;
@@ -99,16 +93,27 @@ import org.openbot.env.Logger;
 import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
+import org.openbot.logging.SensorService;
+import org.openbot.server.ServerCommunication;
+import org.openbot.server.ServerListener;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network.Device;
+import org.openbot.utils.Constants;
+import org.openbot.utils.Enums;
+import org.openbot.utils.Enums.ControlMode;
+import org.openbot.utils.Enums.DriveMode;
+import org.openbot.utils.Enums.LogMode;
+import org.openbot.utils.Enums.SpeedMode;
+import org.openbot.utils.Utils;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
+import timber.log.Timber;
 
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
         Camera.PreviewCallback,
         CompoundButton.OnCheckedChangeListener,
-        ServerCommunication.ServerListener,
+        ServerListener,
         View.OnClickListener,
         AdapterView.OnItemSelectedListener {
   private static final Logger LOGGER = new Logger();
@@ -201,7 +206,8 @@ public abstract class CameraActivity extends AppCompatActivity
     super.onCreate(null);
     context = getApplicationContext();
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    vehicle = new Vehicle(this, baudRate);
+    //    vehicle = new Vehicle(this, baudRate);
+    vehicle = OpenBotApplication.vehicle;
 
     setContentView(R.layout.activity_camera);
     Toolbar toolbar = findViewById(R.id.toolbar);
@@ -597,7 +603,6 @@ public abstract class CameraActivity extends AppCompatActivity
   @Override
   public synchronized void onPause() {
     LOGGER.d("onPause " + this);
-
     handlerThread.quitSafely();
     try {
       handlerThread.join();
@@ -607,8 +612,8 @@ public abstract class CameraActivity extends AppCompatActivity
     } catch (final InterruptedException e) {
       LOGGER.e(e, "Exception!");
     }
-
     phoneController.disconnect();
+    vehicle.setControl(0, 0);
     super.onPause();
   }
 
@@ -620,16 +625,15 @@ public abstract class CameraActivity extends AppCompatActivity
 
   @Override
   public synchronized void onDestroy() {
-    toggleConnection(false);
+    //    toggleConnection(false);
     if (localBroadcastManager != null) {
       localBroadcastManager.unregisterReceiver(localBroadcastReceiver);
       localBroadcastManager = null;
     }
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
     LOGGER.d("onDestroy " + this);
-
     ControllerToBotEventBus.unsubscribe(this.getClass().getSimpleName());
-
+    vehicle.setControl(0, 0);
     super.onDestroy();
   }
 
@@ -1211,7 +1215,10 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void toggleConnection(boolean isChecked) {
     if (isChecked) {
-      vehicle.connectUsb();
+      if (!vehicle.isUsbConnected()) {
+        Timber.d("isConnecting");
+        vehicle.connectUsb();
+      } else Timber.d("already connected");
     } else {
       vehicle.disconnectUsb();
     }

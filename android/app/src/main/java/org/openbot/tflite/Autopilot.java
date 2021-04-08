@@ -9,6 +9,7 @@ import android.os.Trace;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 import org.openbot.env.Control;
 
 public abstract class Autopilot extends Network {
@@ -27,14 +28,20 @@ public abstract class Autopilot extends Network {
   protected ByteBuffer indicatorBuffer = null;
 
   public static Autopilot create(Activity activity, Model model, Device device, int numThreads)
-      throws IOException {
+      throws IOException, IllegalArgumentException {
     return new AutopilotFloat(activity, model, device, numThreads);
   }
 
   /** Initializes a {@code Autopilot}. */
   protected Autopilot(Activity activity, Model model, Device device, int numThreads)
-      throws IOException {
+      throws IOException, IllegalArgumentException {
     super(activity, model, device, numThreads);
+    tflite.getInputIndex("cmd_input");
+    if (!Arrays.equals(
+        tflite.getInputTensor(tflite.getInputIndex("img_input")).shape(),
+        new int[] {1, getImageSizeY(), getImageSizeX(), 3}))
+      throw new IllegalArgumentException("Invalid tensor dimensions");
+
     indicatorBuffer = ByteBuffer.allocateDirect(4);
     indicatorBuffer.order(ByteOrder.nativeOrder());
     LOGGER.d("Created a Tensorflow Lite Autopilot.");

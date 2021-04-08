@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.openbot.common.OnItemClickListener;
 import org.openbot.databinding.ItemSubCategoryBinding;
 import org.openbot.model.SubCategory;
 
