@@ -1,12 +1,11 @@
 package org.openbot.main;
 
-import static org.openbot.common.Constants.USB_ACTION_DATA_RECEIVED;
+import static org.openbot.utils.Constants.USB_ACTION_DATA_RECEIVED;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
@@ -25,12 +24,12 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.preference.PreferenceManager;
+import org.openbot.OpenBotApplication;
 import org.openbot.R;
-import org.openbot.common.Constants;
 import org.openbot.env.UsbConnection;
 import org.openbot.env.Vehicle;
-import org.openbot.robot.DefaultActivity;
+import org.openbot.original.DefaultActivity;
+import org.openbot.utils.Constants;
 import timber.log.Timber;
 
 // For a library module, uncomment the following line
@@ -49,13 +48,15 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-    if (vehicle == null) {
-      SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-      int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
-      vehicle = new Vehicle(this, baudRate);
-      vehicle.connectUsb();
-      viewModel.setVehicle(vehicle);
-    }
+    vehicle = OpenBotApplication.vehicle;
+    //    if (vehicle == null) {
+    //      SharedPreferences sharedPreferences =
+    // PreferenceManager.getDefaultSharedPreferences(this);
+    //      int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
+    //      vehicle = new Vehicle(this, baudRate);
+    //      vehicle.connectUsb();
+    viewModel.setVehicle(vehicle);
+    //    }
 
     localBroadcastReceiver =
         new BroadcastReceiver() {
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
     unregisterReceiver(localBroadcastReceiver);
     if (localBroadcastReceiver != null) localBroadcastReceiver = null;
-    vehicle.disconnectUsb();
+    if (!isChangingConfigurations()) vehicle.disconnectUsb();
     super.onDestroy();
   }
 

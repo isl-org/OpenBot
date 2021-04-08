@@ -1,5 +1,7 @@
 package org.openbot.ai;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,7 +9,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
@@ -18,12 +22,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.nononsenseapps.filepicker.Utils;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -32,23 +42,24 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
-import org.openbot.common.Constants;
-import org.openbot.common.Enums;
+import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentAiBinding;
 import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
-import org.openbot.robot.CameraFragment;
-import org.openbot.robot.ServerCommunication;
+import org.openbot.server.ServerCommunication;
+import org.openbot.server.ServerListener;
 import org.openbot.tflite.Autopilot;
 import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.Constants;
+import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
-public class AIFragment extends CameraFragment implements ServerCommunication.ServerListener {
+public class AIFragment extends CameraFragment implements ServerListener {
 
   private FragmentAiBinding binding;
   private Handler handler;
@@ -77,6 +88,68 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   private int numThreads = -1;
 
   private ArrayAdapter<CharSequence> modelAdapter;
+  private ActivityResultLauncher<Intent> mStartForResult;
+  private int selectedModelIndex = 0;
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mStartForResult =
+        registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+              if (result.getResultCode() == Activity.RESULT_OK) {
+
+                Intent intent = result.getData();
+                // Handle the Intent
+                List<Uri> files = Utils.getSelectedFilesFromResult(intent);
+
+                String fileName = new File(files.get(0).getPath()).getName();
+                if (org.openbot.utils.Utils.checkFileExistence(requireActivity(), fileName)) {
+                  AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                  builder.setTitle(R.string.file_available_title);
+                  builder.setMessage(R.string.file_available_body);
+                  builder.setPositiveButton(
+                      "Yes",
+                      (dialog, id) -> {
+                        processModelFromStorage(files, fileName);
+                      });
+                  builder.setNegativeButton(
+                      "Cancel",
+                      (dialog, id) -> {
+                        // User cancelled the dialog
+                      });
+                  AlertDialog dialog = builder.create();
+                  dialog.show();
+                } else {
+                  processModelFromStorage(files, fileName);
+                }
+              }
+            });
+  }
+
+  private void processModelFromStorage(List<Uri> files, String fileName) {
+    try {
+      InputStream inputStream =
+          requireActivity().getContentResolver().openInputStream(files.get(0));
+      org.openbot.utils.Utils.copyFile(
+          inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    modelAdapter.clear();
+    modelAdapter.addAll(Arrays.asList(getResources().getTextArray(R.array.models)));
+    modelAdapter.addAll(getModelFiles());
+    modelAdapter.add("Choose From Device");
+    modelAdapter.notifyDataSetChanged();
+    binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
+    setModel(new Model(fileName));
+
+    Toast.makeText(
+            requireContext().getApplicationContext(), "Model added: " + model, Toast.LENGTH_SHORT)
+        .show();
+  }
 
   @Override
   public View onCreateView(
@@ -101,15 +174,26 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
     modelAdapter =
         new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
     modelAdapter.addAll(getModelFiles());
-    modelAdapter.setDropDownViewResource(android.R.layout.simple_list_item_checked);
+    modelAdapter.add("Choose From Device");
+    modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
 
+    setAnalyserResolution(Enums.Preview.HD.getValue());
     binding.modelSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selected = parent.getItemAtPosition(position).toString();
-            setModel(Model.fromId(selected.toUpperCase()));
+            if (selected.equals("Choose From Device")) {
+              binding.modelSpinner.setSelection(selectedModelIndex);
+              openPicker();
+            } else
+              try {
+                setModel(Model.fromId(selected.toUpperCase()));
+              } catch (IllegalArgumentException e) {
+                setModel(new Model(selected));
+              }
+            selectedModelIndex = position;
           }
 
           @Override
@@ -143,8 +227,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
           setNumThreads(--numThreads);
           binding.threads.setText(String.valueOf(numThreads));
         });
-    BottomSheetBehavior.from(binding.loggerBottomSheet)
-        .setState(BottomSheetBehavior.STATE_EXPANDED);
+    BottomSheetBehavior.from(binding.aiBottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
 
     mViewModel
         .getUsbStatus()
@@ -179,6 +262,28 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
                     Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()))));
 
     binding.autoSwitch.setOnClickListener(v -> setNetworkEnabled(binding.autoSwitch.isChecked()));
+  }
+
+  private void openPicker() {
+
+    Intent i = new Intent(requireActivity(), BackHandlingFilePickerActivity.class);
+    // This works if you defined the intent filter
+    // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+
+    // Set these depending on your use case. These are the defaults.
+    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+    i.putExtra(BackHandlingFilePickerActivity.EXTRA_MODE, BackHandlingFilePickerActivity.MODE_FILE);
+
+    // Configure initial directory by specifying a String.
+    // You could specify a String like "/storage/emulated/0/", but that can
+    // dangerous. Always use Android's API calls to get paths to the SD-card or
+    // internal memory.
+    i.putExtra(
+        BackHandlingFilePickerActivity.EXTRA_START_PATH,
+        Environment.getExternalStorageDirectory().getPath());
+
+    mStartForResult.launch(i);
   }
 
   private void updateCropImageInfo() {
@@ -282,33 +387,38 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
     } catch (IllegalArgumentException | IOException e) {
       String msg = "Failed to create network.";
       Timber.e(e, msg);
-      Toast.makeText(requireContext().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+      requireActivity()
+          .runOnUiThread(
+              () ->
+                  Toast.makeText(
+                          requireContext().getApplicationContext(),
+                          e.getMessage(),
+                          Toast.LENGTH_LONG)
+                      .show());
     }
   }
 
   @Override
   public synchronized void onResume() {
-    super.onResume();
-
+    serverCommunication = new ServerCommunication(requireContext(), this);
+    serverCommunication.start();
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
-    serverCommunication = new ServerCommunication(requireContext(), this);
-    serverCommunication.start();
+    super.onResume();
   }
 
   @Override
   public synchronized void onPause() {
-
     handlerThread.quitSafely();
     try {
       handlerThread.join();
       handlerThread = null;
       handler = null;
-      serverCommunication.stop();
     } catch (final InterruptedException e) {
+      e.printStackTrace();
     }
-
+    serverCommunication.stop();
     super.onPause();
   }
 
@@ -580,7 +690,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   }
 
   protected void setDriveMode(Enums.DriveMode driveMode) {
-    if (vehicle.getDriveMode() != driveMode && driveMode != null) {
+    if (driveMode != null) {
       switch (driveMode) {
         case DUAL:
           binding.controllerContainer.driveMode.setImageResource(R.drawable.ic_dual);
@@ -600,10 +710,8 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   }
 
   private void connectPhoneController() {
-    if (!phoneController.isConnected()) {
-      phoneController.connect(requireContext());
-    }
-    Enums.DriveMode oldDriveMode = vehicle.getDriveMode();
+    phoneController.connect(requireContext());
+    Enums.DriveMode oldDriveMode = currentDriveMode;
     // Currently only dual drive mode supported
     setDriveMode(Enums.DriveMode.DUAL);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
@@ -612,9 +720,7 @@ public class AIFragment extends CameraFragment implements ServerCommunication.Se
   }
 
   private void disconnectPhoneController() {
-    if (phoneController.isConnected()) {
-      phoneController.disconnect();
-    }
+    phoneController.disconnect();
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
     binding.controllerContainer.driveMode.setAlpha(1.0f);

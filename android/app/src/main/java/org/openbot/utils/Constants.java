@@ -1,4 +1,4 @@
-package org.openbot.common;
+package org.openbot.utils;
 
 import android.Manifest;
 

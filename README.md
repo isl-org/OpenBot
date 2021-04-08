@@ -76,11 +76,11 @@ There are a lot of cool projects using OpenBot already. Below is a small selecti
 Please cite our [paper](https://arxiv.org/abs/2008.10631) if you use OpenBot.
 
 ```bib
-@article{openbot2020,
-    author    = {Matthias M\"uller and Vladlen Koltun},
-    title     = {{OpenBot}: Turning Smartphones into Robots},
-    journal   = {arXiv:2008.10631},
-    year      = {2020},
+@inproceedings{mueller2021openbot,
+    title     = {OpenBot: Turning Smartphones into Robots},
+    author    = {M{\"u}ller, Matthias and Koltun, Vladlen},
+    booktitle = {Proceedings of the International Conference on Robotics and Automation (ICRA)},
+    year = {2021},
 }
 ```
 

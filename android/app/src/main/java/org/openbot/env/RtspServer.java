@@ -1,6 +1,6 @@
 package org.openbot.env;
 
-import static org.openbot.common.Utils.getIPAddress;
+import static org.openbot.utils.Utils.getIPAddress;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.majorkernelpanic.streaming.Session;
 import net.majorkernelpanic.streaming.SessionBuilder;
-import org.openbot.common.Utils;
 import org.openbot.customview.AutoFitSurfaceView;
+import org.openbot.utils.Utils;
 
 class RtspServer implements SurfaceHolder.Callback, IVideoServer {
   private final String TAG = "RtspServer";

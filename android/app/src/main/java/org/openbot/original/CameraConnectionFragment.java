@@ -16,7 +16,7 @@
 
 // Modified by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
-package org.openbot.robot;
+package org.openbot.original;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

@@ -1,8 +1,8 @@
-name: Move opened issues into OpenBot - Triage
+name: Move assigned issues into OpenBot - In progress
 
 on:
   issues:
-    types: [opened]
+    types: [assigned]
 
 jobs:
   automate-project-columns:
@@ -11,5 +11,5 @@ jobs:
       - uses: alex-page/github-project-automation-plus@v0.3.0
         with:
           project: OpenBot
-          column: Triage
+          column: In progress
           repo-token: ${{ secrets.GH_TOKEN }}
