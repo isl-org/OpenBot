@@ -124,7 +124,8 @@ public class NetworkServiceConnection implements ILocalConnection {
           d("port = %s", String.valueOf(service.getPort()));
 
           try {
-            if (service.getServiceType().equals(SERVICE_TYPE) && service.getServiceName().equals(SERVICE_NAME_CONTROLLER)) {
+            if (service.getServiceType().equals(SERVICE_TYPE)
+                && service.getServiceName().equals(SERVICE_NAME_CONTROLLER)) {
               mNsdManager.resolveService(service, mResolveListener);
             } else if (service.getServiceName().equals(MY_SERVICE_NAME)) {
               Log.d(TAG, "Same machine: " + MY_SERVICE_NAME);
