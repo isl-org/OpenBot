@@ -1,6 +1,7 @@
 package org.openbot.controller;
 
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -92,10 +93,40 @@ public class ControllerMappingFragment extends Fragment {
 					toggleView(binding.btnA,keyCode);
 					break;
 				case KeyEvent.KEYCODE_BUTTON_START: // options
+					if (keyCode.getAction() == KeyEvent.ACTION_DOWN)
+						binding.startButton.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.openBotBlue)));
+					if (keyCode.getAction() == KeyEvent.ACTION_UP)
+					{
+						binding.startButton.setImageResource(R.drawable.circle);
+						binding.startButton.setImageTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.darker_gray)));
+					}
+
 					break;
 				case KeyEvent.KEYCODE_BUTTON_L1:
+					if (keyCode.getAction() == KeyEvent.ACTION_DOWN)
+						binding.btnL1.setBackgroundColor(getResources().getColor(R.color.openBotBlue));
+					if (keyCode.getAction() == KeyEvent.ACTION_UP)
+						binding.btnL1.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 					break;
 				case KeyEvent.KEYCODE_BUTTON_R1:
+					if (keyCode.getAction() == KeyEvent.ACTION_DOWN)
+						binding.btnR1.setBackgroundColor(getResources().getColor(R.color.openBotBlue));
+					if (keyCode.getAction() == KeyEvent.ACTION_UP)
+						binding.btnR1.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+					break;
+
+				case KeyEvent.KEYCODE_BUTTON_L2:
+					if (keyCode.getAction() == KeyEvent.ACTION_DOWN)
+						binding.btnL2.setBackgroundColor(getResources().getColor(R.color.openBotBlue));
+					if (keyCode.getAction() == KeyEvent.ACTION_UP)
+						binding.btnL2.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+					break;
+				case KeyEvent.KEYCODE_BUTTON_R2:
+					if (keyCode.getAction() == KeyEvent.ACTION_DOWN)
+						binding.btnR2.setBackgroundColor(getResources().getColor(R.color.openBotBlue));
+					if (keyCode.getAction() == KeyEvent.ACTION_UP)
+						binding.btnR2.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
 					break;
 				case KeyEvent.KEYCODE_BUTTON_THUMBL:
 					toggleView(binding.joyLeft,keyCode);
