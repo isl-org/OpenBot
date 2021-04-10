@@ -111,23 +111,7 @@ public class DetectorQuantizedMobileNetV1 extends Detector {
   }
 
   @Override
-  protected float getProbability(int labelIndex) {
-    return labelProbArray[0][labelIndex];
-  }
-
-  @Override
-  protected void setProbability(int labelIndex, Number value) {
-    labelProbArray[0][labelIndex] = value.byteValue();
-  }
-
-  @Override
-  protected float getNormalizedProbability(int labelIndex) {
-    return (labelProbArray[0][labelIndex] & 0xff) / 255.0f;
-  }
-
-  @Override
   protected void runInference() {
-    // tflite.run(imgData, labelProbArray);
     Object[] inputArray = {imgData};
     tflite.runForMultipleInputsOutputs(inputArray, outputMap);
   }
@@ -172,6 +156,6 @@ public class DetectorQuantizedMobileNetV1 extends Detector {
                 detection));
       }
     }
-    return recognitions;
+    return nms(recognitions);
   }
 }
