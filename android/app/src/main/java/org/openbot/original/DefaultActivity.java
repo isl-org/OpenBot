@@ -359,7 +359,7 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
     }
 
     try {
-      if (model == Model.DETECTOR_V1_1_0_Q || model == Model.DETECTOR_V3_S_Q) {
+      if (model.type == Model.TYPE.DETECTOR) {
         LOGGER.d(
             "Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
         detector = Detector.create(this, model, device, numThreads);
@@ -397,9 +397,9 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
       frameToCropTransform.invert(cropToFrameTransform);
 
     } catch (IllegalArgumentException | IOException e) {
-      String msg = "Failed to create network.";
+      String msg = "Failed to create network: ";
       LOGGER.e(e, msg);
-      Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, msg + e.toString(), Toast.LENGTH_LONG).show();
     }
   }
 

@@ -23,7 +23,7 @@ public class SharedPreferencesManager {
   private static final String MODEL = "MODEL_NAME";
   private static final int DEFAULT_DEVICE = Network.Device.CPU.ordinal();
   private static final String DEVICE = "DEVICE";
-  private static final int DEFAULT_NUM_THREAD = 1;
+  private static final int DEFAULT_NUM_THREAD = 4;
   private static final String NUM_THREAD = "NUM_THREAD";
   private static final String CAMERA_SWITCH = "CAMERA_SWITCH";
   private static final String SHEET_EXPANDED = "SHEET_EXPANDED";

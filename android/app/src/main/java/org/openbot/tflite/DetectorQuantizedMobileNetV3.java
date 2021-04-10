@@ -43,12 +43,6 @@ public class DetectorQuantizedMobileNetV3 extends Detector {
   private float[] numDetections;
 
   /**
-   * An array to hold inference results, to be feed into Tensorflow Lite as outputs. This isn't part
-   * of the super class, because we need a primitive array here.
-   */
-  private byte[][] labelProbArray = null;
-
-  /**
    * Initializes a {@code ClassifierQuantizedMobileNet}.
    *
    * @param activity
@@ -56,7 +50,6 @@ public class DetectorQuantizedMobileNetV3 extends Detector {
   public DetectorQuantizedMobileNetV3(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
     super(activity, model, device, numThreads);
-    labelProbArray = new byte[1][getNumLabels()];
   }
 
   @Override
@@ -111,23 +104,7 @@ public class DetectorQuantizedMobileNetV3 extends Detector {
   }
 
   @Override
-  protected float getProbability(int labelIndex) {
-    return labelProbArray[0][labelIndex];
-  }
-
-  @Override
-  protected void setProbability(int labelIndex, Number value) {
-    labelProbArray[0][labelIndex] = value.byteValue();
-  }
-
-  @Override
-  protected float getNormalizedProbability(int labelIndex) {
-    return (labelProbArray[0][labelIndex] & 0xff) / 255.0f;
-  }
-
-  @Override
   protected void runInference() {
-    // tflite.run(imgData, labelProbArray);
     Object[] inputArray = {imgData};
     tflite.runForMultipleInputsOutputs(inputArray, outputMap);
   }
@@ -139,8 +116,6 @@ public class DetectorQuantizedMobileNetV3 extends Detector {
     outputScores = new float[1][getNumDetections()];
     numDetections = new float[1];
 
-    // Object[] inputArray = {imgData};
-    //    Map<Integer, Object> outputMap = new HashMap<>();
     outputMap.put(0, outputLocations);
     outputMap.put(1, outputClasses);
     outputMap.put(2, outputScores);
@@ -172,6 +147,6 @@ public class DetectorQuantizedMobileNetV3 extends Detector {
                 detection));
       }
     }
-    return recognitions;
+    return nms(recognitions);
   }
 }
