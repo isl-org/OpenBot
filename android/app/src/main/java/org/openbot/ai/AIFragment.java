@@ -243,7 +243,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
     }
 
     try {
-      if (model == Model.DETECTOR_V1_1_0_Q || model == Model.DETECTOR_V3_S_Q) {
+      if (model.type == Model.TYPE.DETECTOR) {
         Timber.d(
             "Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
         detector = Detector.create(requireActivity(), model, device, numThreads);
