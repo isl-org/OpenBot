@@ -21,7 +21,7 @@ import java.util.*
 data class VlcPlayer(
         val context: Context, val layout: VLCVideoLayout
 ) : IVideoPlayer {
-    private val TAG: String = "VlcView"
+    private val TAG: String = "VlcPlayer"
 
     private var mLibVLC: LibVLC? = null
     private var mMediaPlayer: MediaPlayer? = null

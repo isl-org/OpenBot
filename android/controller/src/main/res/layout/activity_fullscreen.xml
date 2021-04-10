@@ -174,7 +174,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/button"
                     />
-<!--
+
                 <LinearLayout
                     android:id="@+id/camera_buttons"
                     android:layout_width="wrap_content"
@@ -183,32 +183,7 @@
                     android:layout_margin="10dp"
                     android:orientation="vertical">
 
-                    <org.openbot.controller.customComponents.Flashlight
-                        android:id="@+id/flashlight"
-                        style="@style/IconOnlyButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@drawable/button"
-                        app:icon="@drawable/ic_flashlight_on_24px" />
-
-                    <org.openbot.controller.customComponents.Flash
-                        android:id="@+id/flash"
-                        style="@style/IconOnlyButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@drawable/button"
-                        app:icon="@drawable/ic_flash_on_24px" />
-
-                    <org.openbot.controller.customComponents.FlipCamera
-                        android:id="@+id/flip_camera"
-                        style="@style/IconOnlyButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@drawable/button"
-                        app:icon="@drawable/ic_flip_camera_ios_24px" />
-
                 </LinearLayout>
--->
 
             </RelativeLayout>
 

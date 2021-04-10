@@ -10,6 +10,7 @@ import timber.log.Timber;
 public class PhoneController {
   private static final String TAG = "PhoneController";
   private static PhoneController _phoneController;
+  private AndGate andGate = new AndGate();
 
   final ILocalConnection connection =
       // new NearbyConnection();
@@ -28,7 +29,7 @@ public class PhoneController {
     // Setting the view causes the RtspServer to start running
 
     // ****************** Disable video for now. ***************************
-    // videoServer.setView(videoWindow);
+    // andGate.setView(videoWindow);
   }
 
   public void startVideo() {
@@ -64,9 +65,11 @@ public class PhoneController {
     } else {
       connection.start();
     }
+    andGate.setConnected(true);
   }
 
   public void disconnect() {
+    andGate.setConnected(false);
     connection.stop();
   }
 
@@ -101,5 +104,24 @@ public class PhoneController {
     }
 
     return _phoneController;
+  }
+
+  private class AndGate {
+    private boolean connected = false;
+    private AutoFitSurfaceView view = null;
+
+    void setConnected(boolean connected) {
+      this.connected = connected;
+      if (this.connected && this.view != null) {
+        videoServer.setView(view);
+      }
+    }
+
+    void setView(AutoFitSurfaceView view) {
+      this.view = view;
+      if (this.connected && this.view != null) {
+        videoServer.setView(view);
+      }
+    }
   }
 }

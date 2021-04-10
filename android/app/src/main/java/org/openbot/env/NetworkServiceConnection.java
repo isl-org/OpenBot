@@ -30,7 +30,7 @@ public class NetworkServiceConnection implements ILocalConnection {
 
   private String SERVICE_NAME_CONTROLLER = "OPEN_BOT_CONTROLLER";
   private String MY_SERVICE_NAME = "OPEN_BOT";
-  private String SERVICE_TYPE = "_openbot._tcp";
+  private String SERVICE_TYPE = "_openbot._tcp.";
   private int port = 19400;
 
   private InetAddress hostAddress;
@@ -124,12 +124,11 @@ public class NetworkServiceConnection implements ILocalConnection {
           d("port = %s", String.valueOf(service.getPort()));
 
           try {
-            if (!service.getServiceType().equals(SERVICE_TYPE)) {
+            if (service.getServiceType().equals(SERVICE_TYPE)
+                && service.getServiceName().equals(SERVICE_NAME_CONTROLLER)) {
               mNsdManager.resolveService(service, mResolveListener);
             } else if (service.getServiceName().equals(MY_SERVICE_NAME)) {
               Log.d(TAG, "Same machine: " + MY_SERVICE_NAME);
-            } else {
-              mNsdManager.resolveService(service, mResolveListener);
             }
           } catch (java.lang.IllegalArgumentException e) {
             Log.d(TAG, "Got exception: " + e);
