@@ -23,32 +23,6 @@ public class DetectorFloatYoloV4 extends Detector {
   // contains the scores of detected boxes
   private float[][][] outputScores;
 
-  //  //config yolov4
-  //  private static final int INPUT_SIZE = 416;
-  //  private static final int[] OUTPUT_WIDTH = new int[]{52, 26, 13};
-  //
-  //  private static final int[][] MASKS = new int[][]{{0, 1, 2}, {3, 4, 5}, {6, 7, 8}};
-  //  private static final int[] ANCHORS = new int[]{
-  //          12, 16, 19, 36, 40, 28, 36, 75, 76, 55, 72, 146, 142, 110, 192, 243, 459, 401
-  //  };
-  //  private static final float[] XYSCALE = new float[]{1.2f, 1.1f, 1.05f};
-  //
-  //  private static final int NUM_BOXES_PER_BLOCK = 3;
-  //
-  //  // config yolov4 tiny
-  //  private static final int[] OUTPUT_WIDTH_TINY = new int[]{2535, 2535};
-  //  private static final int[] OUTPUT_WIDTH_FULL = new int[]{10647, 10647};
-  //  private static final int[][] MASKS_TINY = new int[][]{{3, 4, 5}, {1, 2, 3}};
-  //  private static final int[] ANCHORS_TINY = new int[]{
-  //          23, 27, 37, 58, 81, 82, 81, 82, 135, 169, 344, 319};
-  //  private static final float[] XYSCALE_TINY = new float[]{1.05f, 1.05f};
-
-  /**
-   * An array to hold inference results, to be feed into Tensorflow Lite as outputs. This isn't part
-   * of the super class, because we need a primitive array here.
-   */
-  private byte[][] labelProbArray = null;
-
   /**
    * Initializes a {@code ClassifierQuantizedMobileNet}.
    *
@@ -57,7 +31,6 @@ public class DetectorFloatYoloV4 extends Detector {
   public DetectorFloatYoloV4(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
     super(activity, model, device, numThreads);
-    labelProbArray = new byte[1][getNumLabels()];
   }
 
   @Override
@@ -113,7 +86,6 @@ public class DetectorFloatYoloV4 extends Detector {
 
   @Override
   protected void runInference() {
-    // tflite.run(imgData, labelProbArray);
     Object[] inputArray = {imgData};
     tflite.runForMultipleInputsOutputs(inputArray, outputMap);
   }

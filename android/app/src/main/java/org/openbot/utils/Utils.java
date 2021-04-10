@@ -9,7 +9,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ConnectionUtils {
+public class Utils {
 
   public static JSONObject createStatus(String name, Boolean value) {
     return createStatus(name, value ? "true" : "false");
