@@ -81,6 +81,62 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <Button
+        android:id="@+id/btnL1"
+        android:layout_width="64dp"
+        android:layout_height="20dp"
+        android:background="@drawable/button_item_background_black"
+        android:backgroundTint="@android:color/transparent"
+        tools:backgroundTint="@color/openBotBlue"
+        android:rotationX="45"
+        android:text="L1"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="@+id/imageView4"
+        app:layout_constraintStart_toStartOf="@+id/imageView4"
+        app:layout_constraintTop_toTopOf="@+id/front" />
+
+    <Button
+        android:id="@+id/btnR1"
+        android:layout_width="64dp"
+        android:layout_height="20dp"
+        android:background="@drawable/button_item_background_black"
+        android:backgroundTint="@android:color/transparent"
+        tools:backgroundTint="@color/openBotBlue"
+        android:rotationX="45"
+        android:text="R1"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="@+id/buttonContainer"
+        app:layout_constraintStart_toStartOf="@+id/buttonContainer"
+        app:layout_constraintTop_toTopOf="@+id/front" />
+    <Button
+        android:id="@+id/btnL2"
+        android:layout_width="64dp"
+        android:layout_height="20dp"
+        android:background="@drawable/button_item_background_black"
+        android:backgroundTint="@android:color/transparent"
+        tools:backgroundTint="@color/openBotBlue"
+        android:rotationX="56"
+        android:text="L2"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="@+id/imageView4"
+        app:layout_constraintStart_toStartOf="@+id/imageView4"
+        app:layout_constraintBottom_toTopOf="@+id/btnL1" />
+
+    <Button
+        android:id="@+id/btnR2"
+        android:layout_width="64dp"
+        android:layout_height="20dp"
+        android:background="@drawable/button_item_background_black"
+        android:backgroundTint="@android:color/transparent"
+        tools:backgroundTint="@color/openBotBlue"
+        android:rotationX="56"
+        android:text="R2"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="@+id/buttonContainer"
+        app:layout_constraintStart_toStartOf="@+id/buttonContainer"
+        app:layout_constraintBottom_toTopOf="@+id/btnR1" />
+
+
 
     <ImageView
         android:id="@+id/imageView4"
@@ -160,63 +216,5 @@
         app:layout_constraintStart_toEndOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@+id/startButton" />
 
-    <ImageView
-        android:id="@+id/top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:padding="16dp"
-        android:rotation="180"
-        android:src="@drawable/top"
-        app:layout_constraintBottom_toTopOf="@+id/front"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/triggerButtonContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/top"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/top">
-
-
-        <ImageView
-            android:id="@+id/btnL1"
-            android:layout_width="94dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="32dp"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnL2" />
-
-        <ImageView
-            android:id="@+id/btnR1"
-            android:layout_width="98dp"
-            android:layout_height="34dp"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnR2" />
-
-        <ImageView
-            android:id="@+id/btnL2"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="22dp"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/btnR2"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="22dp"
-            android:layout_marginEnd="62dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

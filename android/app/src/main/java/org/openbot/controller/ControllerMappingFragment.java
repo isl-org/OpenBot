@@ -104,28 +104,28 @@ public class ControllerMappingFragment extends Fragment {
 					break;
 				case KeyEvent.KEYCODE_BUTTON_L1:
 					if (keyCode.getAction() == KeyEvent.ACTION_DOWN)
-						binding.btnL1.setBackgroundColor(getResources().getColor(R.color.openBotBlue));
+						binding.btnL1.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.openBotBlue)));
 					if (keyCode.getAction() == KeyEvent.ACTION_UP)
-						binding.btnL1.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+						binding.btnL1.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.transparent)));
 					break;
 				case KeyEvent.KEYCODE_BUTTON_R1:
 					if (keyCode.getAction() == KeyEvent.ACTION_DOWN)
-						binding.btnR1.setBackgroundColor(getResources().getColor(R.color.openBotBlue));
+						binding.btnR1.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.openBotBlue)));
 					if (keyCode.getAction() == KeyEvent.ACTION_UP)
-						binding.btnR1.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+						binding.btnR1.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.transparent)));
 					break;
 
 				case KeyEvent.KEYCODE_BUTTON_L2:
 					if (keyCode.getAction() == KeyEvent.ACTION_DOWN)
-						binding.btnL2.setBackgroundColor(getResources().getColor(R.color.openBotBlue));
+						binding.btnL2.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.openBotBlue)));
 					if (keyCode.getAction() == KeyEvent.ACTION_UP)
-						binding.btnL2.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+						binding.btnL2.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.transparent)));
 					break;
 				case KeyEvent.KEYCODE_BUTTON_R2:
 					if (keyCode.getAction() == KeyEvent.ACTION_DOWN)
-						binding.btnR2.setBackgroundColor(getResources().getColor(R.color.openBotBlue));
+						binding.btnR2.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.openBotBlue)));
 					if (keyCode.getAction() == KeyEvent.ACTION_UP)
-						binding.btnR2.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+						binding.btnR2.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.transparent)));
 
 					break;
 				case KeyEvent.KEYCODE_BUTTON_THUMBL:
