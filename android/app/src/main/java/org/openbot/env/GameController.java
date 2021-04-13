@@ -2,6 +2,7 @@
 
 package org.openbot.env;
 
+import android.util.Pair;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -170,4 +171,35 @@ public class GameController {
 
     return new Control(left, right);
   }
+
+  public static Pair<Float, Float> processJoystickInputLeft(MotionEvent event, int historyPos) {
+
+    // Calculate the horizontal distance to move by
+    // using the input value from one of these physical controls:
+    // the left control stick, hat axis, or the right control stick.
+    float x = getCenteredAxis(event, MotionEvent.AXIS_X, historyPos);
+
+    // Calculate the vertical distance to move by
+    // using the input value from one of these physical controls:
+    // the left control stick, hat switch, or the right control stick.
+    float y = getCenteredAxis(event, MotionEvent.AXIS_Y, historyPos);
+
+    return new Pair<>(x, y);
+  }
+
+  public static Pair<Float, Float> processJoystickInputRight(MotionEvent event, int historyPos) {
+
+    // Calculate the horizontal distance to move by
+    // using the input value from one of these physical controls:
+    // the left control stick, hat axis, or the right control stick.
+    float x = getCenteredAxis(event, MotionEvent.AXIS_Z, historyPos);
+
+    // Calculate the vertical distance to move by
+    // using the input value from one of these physical controls:
+    // the left control stick, hat switch, or the right control stick.
+    float y = getCenteredAxis(event, MotionEvent.AXIS_RZ, historyPos);
+
+    return new Pair<>(x, y);
+  }
+
 }
