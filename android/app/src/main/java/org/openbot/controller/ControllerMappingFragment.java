@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.internal.ViewUtils;
 import org.openbot.R;
 import org.openbot.databinding.FragmentControllerMappingBinding;
+import org.openbot.env.GameController;
 import org.openbot.utils.Constants;
 
 public class ControllerMappingFragment extends Fragment {
@@ -65,20 +66,24 @@ public class ControllerMappingFragment extends Fragment {
 
   @SuppressLint("RestrictedApi")
   private void processJoyStickInput(MotionEvent motionEvent) {
-    Pair<Float, Float> pair = JoyStickProcessor.processJoystickInputLeft(motionEvent, -1);
 
-    binding.joyLeftTip.animate().translationX(ViewUtils.dpToPx(requireContext(), 15) * pair.first);
-    binding.joyLeftTip.animate().translationY(ViewUtils.dpToPx(requireContext(), 15) * pair.second);
+    for (int i = 0; i < motionEvent.getHistorySize(); i++) {
 
-    Pair<Float, Float> pair2 = JoyStickProcessor.processJoystickInputRight(motionEvent, -1);
-    binding
-        .joyRightTip
-        .animate()
-        .translationX(ViewUtils.dpToPx(requireContext(), 15) * pair2.first);
-    binding
-        .joyRightTip
-        .animate()
-        .translationY(ViewUtils.dpToPx(requireContext(), 15) * pair2.second);
+      Pair<Float, Float> pairLeft = GameController.processJoystickInputLeft(motionEvent, i);
+
+      binding.joyLeftTip.animate().translationX(ViewUtils.dpToPx(requireContext(), 15) * pairLeft.first);
+      binding.joyLeftTip.animate().translationY(ViewUtils.dpToPx(requireContext(), 15) * pairLeft.second);
+
+      Pair<Float, Float> pairRight = GameController.processJoystickInputRight(motionEvent, -1);
+      binding
+              .joyRightTip
+              .animate()
+              .translationX(ViewUtils.dpToPx(requireContext(), 15) * pairRight.first);
+      binding
+              .joyRightTip
+              .animate()
+              .translationY(ViewUtils.dpToPx(requireContext(), 15) * pairRight.second);
+    }
   }
 
   private void processKeyEvent(KeyEvent keyCode) {
