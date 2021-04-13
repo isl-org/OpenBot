@@ -166,10 +166,13 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean dispatchKeyEvent(KeyEvent event) {
+    Bundle bundle = new Bundle();
+    bundle.putParcelable(Constants.DATA_CONTINUOUS, event);
+    getSupportFragmentManager().setFragmentResult(Constants.KEY_EVENT_CONTINUOUS, bundle);
+
     // Check that the event came from a game controller
     if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) {
       if (event.getAction() == KeyEvent.ACTION_UP) {
-        Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.DATA, event);
         getSupportFragmentManager().setFragmentResult(Constants.KEY_EVENT, bundle);
       }

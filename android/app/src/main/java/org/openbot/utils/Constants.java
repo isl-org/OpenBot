@@ -21,6 +21,9 @@ public class Constants {
   public static final String KEY_EVENT = "dispatchKeyEvent";
   public static final String DATA = "data";
 
+  public static final String KEY_EVENT_CONTINUOUS = "dispatchKeyEvent_continuous";
+  public static final String DATA_CONTINUOUS = "data_continuous";
+
   // Controller Commands
   public static final String CMD_DRIVE = "DRIVE_CMD";
   public static final String CMD_LOGS = "LOGS";
