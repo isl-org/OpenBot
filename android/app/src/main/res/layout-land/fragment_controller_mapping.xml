@@ -16,7 +16,7 @@
         android:adjustViewBounds="true"
         android:padding="16dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/front3"
+        android:src="@drawable/gamepad_outline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
