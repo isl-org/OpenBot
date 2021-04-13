@@ -201,5 +201,4 @@ public class GameController {
 
     return new Pair<>(x, y);
   }
-
 }

@@ -71,18 +71,24 @@ public class ControllerMappingFragment extends Fragment {
 
       Pair<Float, Float> pairLeft = GameController.processJoystickInputLeft(motionEvent, i);
 
-      binding.joyLeftTip.animate().translationX(ViewUtils.dpToPx(requireContext(), 15) * pairLeft.first);
-      binding.joyLeftTip.animate().translationY(ViewUtils.dpToPx(requireContext(), 15) * pairLeft.second);
+      binding
+          .joyLeftTip
+          .animate()
+          .translationX(ViewUtils.dpToPx(requireContext(), 15) * pairLeft.first);
+      binding
+          .joyLeftTip
+          .animate()
+          .translationY(ViewUtils.dpToPx(requireContext(), 15) * pairLeft.second);
 
       Pair<Float, Float> pairRight = GameController.processJoystickInputRight(motionEvent, -1);
       binding
-              .joyRightTip
-              .animate()
-              .translationX(ViewUtils.dpToPx(requireContext(), 15) * pairRight.first);
+          .joyRightTip
+          .animate()
+          .translationX(ViewUtils.dpToPx(requireContext(), 15) * pairRight.first);
       binding
-              .joyRightTip
-              .animate()
-              .translationY(ViewUtils.dpToPx(requireContext(), 15) * pairRight.second);
+          .joyRightTip
+          .animate()
+          .translationY(ViewUtils.dpToPx(requireContext(), 15) * pairRight.second);
     }
   }
 
