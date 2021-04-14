@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,7 +21,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -27,47 +31,52 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.nononsenseapps.filepicker.Utils;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
-import org.openbot.databinding.FragmentAiBinding;
+import org.openbot.databinding.FragmentObjectNavBinding;
 import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
 import org.openbot.server.ServerCommunication;
 import org.openbot.server.ServerListener;
-import org.openbot.tflite.Autopilot;
+import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 import timber.log.Timber;
 
-public class AIFragment extends CameraFragment implements ServerListener {
-
-  private FragmentAiBinding binding;
+public class ObjectNavFragment extends CameraFragment implements ServerListener {
+  private FragmentObjectNavBinding binding;
   private Handler handler;
   private HandlerThread handlerThread;
   private ServerCommunication serverCommunication;
 
   private long lastProcessingTimeMs;
   private boolean computingNetwork = false;
+  private static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
 
   private static final float TEXT_SIZE_DIP = 10;
 
-  private Autopilot autoPilot;
+  private Detector detector;
 
   private Matrix frameToCropTransform;
   private Bitmap croppedBitmap;
@@ -149,7 +158,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
   public View onCreateView(
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    binding = FragmentAiBinding.inflate(inflater, container, false);
+    binding = FragmentObjectNavBinding.inflate(inflater, container, false);
 
     return inflateFragment(binding, inflater, container);
   }
@@ -157,6 +166,27 @@ public class AIFragment extends CameraFragment implements ServerListener {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    binding.confidence.setProgress((int) (MINIMUM_CONFIDENCE_TF_OD_API*100));
+    binding.confidenceValue.setText((int) (MINIMUM_CONFIDENCE_TF_OD_API * 100) + '%');
+
+    binding.confidence.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        binding.confidenceValue.setText(progress + '%');
+        MINIMUM_CONFIDENCE_TF_OD_API = progress / 100f;
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) {
+
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) {
+
+      }
+    });
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
 
     binding.deviceSpinner.setSelection(preferencesManager.getDevice());
@@ -299,7 +329,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
     Timber.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
     recreateNetwork(getModel(), getDevice(), getNumThreads());
-    if (autoPilot == null) {
+    if (detector == null) {
       Timber.e("No network on preview!");
       return;
     }
@@ -329,19 +359,18 @@ public class AIFragment extends CameraFragment implements ServerListener {
 
   private void recreateNetwork(Model model, Network.Device device, int numThreads) {
     tracker.clearTrackedObjects();
-    if (autoPilot != null) {
-      Timber.d("Closing autoPilot.");
-      autoPilot.close();
-      autoPilot = null;
+    if (detector != null) {
+      Timber.d("Closing detector.");
+      detector.close();
+      detector = null;
     }
 
     try {
-      Timber.d(
-          "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-      autoPilot = Autopilot.create(requireActivity(), model, device, numThreads);
+      Timber.d("Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
+      detector = Detector.create(requireActivity(), model, device, numThreads);
       croppedBitmap =
           Bitmap.createBitmap(
-              autoPilot.getImageSizeX(), autoPilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
+              detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
       frameToCropTransform =
           ImageUtils.getTransformationMatrix(
               getMaxAnalyseImageSize().getWidth(),
@@ -349,10 +378,8 @@ public class AIFragment extends CameraFragment implements ServerListener {
               croppedBitmap.getWidth(),
               croppedBitmap.getHeight(),
               sensorOrientation,
-              autoPilot.getCropRect(),
-              autoPilot.getMaintainAspect());
-      binding.inputResolution.setText(
-          "Input: " + autoPilot.getImageSizeX() + 'x' + autoPilot.getImageSizeY());
+              detector.getCropRect(),
+              detector.getMaintainAspect());
 
       cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
@@ -418,24 +445,6 @@ public class AIFragment extends CameraFragment implements ServerListener {
             String.format(Locale.US, "%.0f,%.0f", vehicle.getLeftSpeed(), vehicle.getRightSpeed()));
         break;
 
-      case Constants.CMD_DRIVE_MODE:
-        setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode()));
-        break;
-
-      case Constants.CMD_SPEED_DOWN:
-        setSpeedMode(
-            Enums.toggleSpeed(
-                Enums.Direction.DOWN.getValue(),
-                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
-        break;
-
-      case Constants.CMD_SPEED_UP:
-        setSpeedMode(
-            Enums.toggleSpeed(
-                Enums.Direction.UP.getValue(),
-                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
-        break;
-
       case Constants.CMD_NETWORK:
         setNetworkEnabledWithAudio(!binding.autoSwitch.isChecked());
         break;
@@ -495,11 +504,45 @@ public class AIFragment extends CameraFragment implements ServerListener {
             final Canvas canvas = new Canvas(croppedBitmap);
             canvas.drawBitmap(bitmap, frameToCropTransform, null);
 
-            if (autoPilot != null) {
-              Timber.i("Running autopilot on image %s", frameNum);
+            if (detector != null) {
+              Timber.i("Running detection on image %s", frameNum);
               final long startTime = SystemClock.elapsedRealtime();
-              handleDriveCommand(autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+              final List<Detector.Recognition> results = detector.recognizeImage(croppedBitmap);
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
+
+              if (!results.isEmpty())
+                Timber.i(
+                    "Object: "
+                        + results.get(0).getLocation().centerX()
+                        + ", "
+                        + results.get(0).getLocation().centerY()
+                        + ", "
+                        + results.get(0).getLocation().height()
+                        + ", "
+                        + results.get(0).getLocation().width());
+
+              cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
+              final Canvas canvas1 = new Canvas(cropCopyBitmap);
+              final Paint paint = new Paint();
+              paint.setColor(Color.RED);
+              paint.setStyle(Paint.Style.STROKE);
+              paint.setStrokeWidth(2.0f);
+
+              final List<Detector.Recognition> mappedRecognitions = new LinkedList<>();
+
+              for (final Detector.Recognition result : results) {
+                final RectF location = result.getLocation();
+                if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
+                  canvas1.drawRect(location, paint);
+                  cropToFrameTransform.mapRect(location);
+                  result.setLocation(location);
+                  mappedRecognitions.add(result);
+                }
+              }
+
+              tracker.trackResults(mappedRecognitions, frameNum);
+              handleDriveCommand(tracker.updateTarget());
+              binding.trackingOverlay.postInvalidate();
             }
 
             computingNetwork = false;

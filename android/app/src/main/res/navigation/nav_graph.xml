@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_mainFragment_to_controllerMappingFragment"
             app:destination="@id/controllerMappingFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_objectNavFragment"
+            app:destination="@id/objectNavFragment" />
     </fragment>
     <fragment
         android:id="@+id/robotCommunicationFragment"
@@ -54,5 +57,10 @@
         android:name="org.openbot.controller.ControllerMappingFragment"
         android:label="fragment_controller_mapping"
         tools:layout="@layout/fragment_controller_mapping" />
+    <fragment
+        android:id="@+id/objectNavFragment"
+        android:name="org.openbot.ai.ObjectNavFragment"
+        android:label="fragment_blank"
+        tools:layout="@layout/fragment_object_nav" />
 
 </navigation>

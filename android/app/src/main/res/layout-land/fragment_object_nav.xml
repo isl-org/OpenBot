@@ -4,19 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ai.AIFragment">
+    tools:context=".ai.ObjectNavFragment">
 
-    <org.openbot.customview.OverlayView
-        android:id="@+id/tracking_overlay"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <org.openbot.customview.OverlayView
+            android:id="@+id/tracking_overlay"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/aiBottomSheet"
-        android:layout_width="match_parent"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_bg"
         app:behavior_hideable="false"
+        android:layout_gravity="end"
         app:behavior_peekHeight="48dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         tools:behavior_peekHeight="480dp">
@@ -47,9 +59,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginBottom="32dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/controllerContainer"
+            app:layout_constraintBottom_toTopOf="@+id/seekbarContainer"
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
@@ -57,7 +68,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:paddingVertical="12dp"
-                android:text="Inference Time:"
+                android:text="Inference Time: "
                 android:textColor="@android:color/black" />
 
             <TextView
@@ -90,7 +101,6 @@
             android:id="@+id/linearLayout2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginEnd="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +118,7 @@
                 android:textColor="@android:color/black" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
@@ -176,6 +186,40 @@
                     android:padding="4dp"
                     android:src="@drawable/ic_baseline_add" />
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/seekbarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            android:paddingVertical="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/controllerContainer">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confidence"
+                android:textColor="@android:color/black" />
+
+            <SeekBar
+                android:id="@+id/confidence"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                tools:progress="70" />
+
+            <TextView
+                android:id="@+id/confidenceValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="50%"
+                android:gravity="center"
+                android:textColor="@android:color/black" />
 
         </LinearLayout>
 

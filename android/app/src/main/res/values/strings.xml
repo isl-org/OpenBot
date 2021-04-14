@@ -109,4 +109,6 @@
     <string name="preview_resolution">Preview Resolution</string>
     <string name="file_available_body">A model with the same name already exists. Would you like to replace it?</string>
     <string name="file_available_title">File found</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

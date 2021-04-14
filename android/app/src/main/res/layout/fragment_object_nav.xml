@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ai.AIFragment">
+    tools:context=".ai.ObjectNavFragment">
 
     <org.openbot.customview.OverlayView
         android:id="@+id/tracking_overlay"
@@ -47,9 +47,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginBottom="32dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/controllerContainer"
+            app:layout_constraintBottom_toTopOf="@+id/seekbarContainer"
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
@@ -85,6 +84,7 @@
                 android:textColor="@android:color/black" />
 
         </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -179,12 +179,45 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/seekbarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="horizontal"
+            android:paddingVertical="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/controllerContainer">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confidence"
+                android:textColor="@android:color/black" />
+
+            <SeekBar
+                android:id="@+id/confidence"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                tools:progress="70" />
+
+            <TextView
+                android:id="@+id/confidenceValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="50%"
+                android:gravity="center"
+                android:textColor="@android:color/black" />
+
+        </LinearLayout>
+
         <CheckBox
             android:id="@+id/usbToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:button="@drawable/usb_toggle"
             android:layout_marginEnd="16dp"
+            android:button="@drawable/usb_toggle"
             app:layout_constraintBottom_toBottomOf="@+id/camera_toggle"
             app:layout_constraintEnd_toStartOf="@+id/camera_toggle"
             app:layout_constraintTop_toTopOf="@+id/camera_toggle" />

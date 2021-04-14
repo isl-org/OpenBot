@@ -69,7 +69,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:paddingVertical="12dp"
-                android:text="Inference Time"
+                android:text="Inference Time: "
                 android:textColor="@android:color/black" />
 
             <TextView
@@ -100,11 +100,11 @@
 
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="32dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/linearLayout"
             app:layout_constraintTop_toTopOf="@+id/linearLayout">
 
@@ -118,13 +118,30 @@
                 android:text="@string/time_ms"
                 android:textColor="@android:color/black" />
 
-            <Spinner
-                android:id="@+id/model_spinner"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:entries="@array/models"
-                android:prompt="@string/model" />
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/model_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:entries="@array/models"
+                    android:prompt="@string/model" />
+
+                <TextView
+                    android:id="@+id/inputResolution"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center|start"
+                    android:textColor="@android:color/black"
+                    tools:text="Input: 256x96" />
+
+            </LinearLayout>
 
             <Spinner
                 android:id="@+id/device_spinner"
