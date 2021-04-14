@@ -14,7 +14,7 @@ Click on the links below to read about the features of the apps.
 
 ## Install the apps
 
-The easiest way to get either of the apps is to download it direclty to the phone using the corresponding QR code. If you are on the phone browser, you can also just click on the QR code. You can then open the apk on your phone and [install](https://www.lifewire.com/install-apk-on-android-4177185) it. Note that the apk is only signed with a debug key.
+The easiest way to get either of the apps is to download it directly to the phone using the corresponding QR code. If you are on the phone browser, you can also just click on the QR code. You can then open the apk on your phone and [install](https://www.lifewire.com/install-apk-on-android-4177185) it. Note that the apk is only signed with a debug key.
 
 <table style="width:100%;border:none;text-align:center">
   <tr>
