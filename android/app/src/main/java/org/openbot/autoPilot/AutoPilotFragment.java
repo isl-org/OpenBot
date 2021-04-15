@@ -128,7 +128,7 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
     }
 
     modelAdapter.clear();
-    modelAdapter.addAll(Arrays.asList(getResources().getTextArray(R.array.models)));
+    modelAdapter.addAll(Arrays.asList(getResources().getTextArray(R.array.auto_pilot_models)));
     modelAdapter.addAll(getModelFiles());
     modelAdapter.add("Choose From Device");
     modelAdapter.notifyDataSetChanged();
@@ -161,7 +161,7 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    List<CharSequence> models = Arrays.asList(getResources().getTextArray(R.array.models));
+    List<CharSequence> models = Arrays.asList(getResources().getTextArray(R.array.auto_pilot_models));
     modelAdapter =
         new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
     modelAdapter.addAll(getModelFiles());
@@ -348,8 +348,12 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
               sensorOrientation,
               autoPilot.getCropRect(),
               autoPilot.getMaintainAspect());
-      binding.inputResolution.setText(
-          "Input: " + autoPilot.getImageSizeX() + 'x' + autoPilot.getImageSizeY());
+      requireActivity()
+              .runOnUiThread(
+                      () -> binding.inputResolution.setText(
+                              "Input: " + autoPilot.getImageSizeX() + 'x' + autoPilot.getImageSizeY())
+              );
+
 
       Matrix cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
@@ -556,7 +560,7 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;
-      preferencesManager.setModel(model.toString());
+      preferencesManager.setAutoPilotModel(model.toString());
       onInferenceConfigurationChanged();
     }
   }

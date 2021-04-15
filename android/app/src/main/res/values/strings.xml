@@ -21,6 +21,16 @@
         <item>YOLO_V4_TINY_F</item>
     </string-array>
 
+    <string-array name="auto_pilot_models">
+        <item>AUTOPILOT_F</item>
+    </string-array>
+
+    <string-array name="detector_models">
+        <item>DETECTOR_V1_1_0_Q</item>
+        <item>DETECTOR_V3_S_Q</item>
+        <item>YOLO_V4_TINY_F</item>
+    </string-array>
+
     <string name="device">Device</string>
     <string-array name="devices">
         <item>CPU</item>

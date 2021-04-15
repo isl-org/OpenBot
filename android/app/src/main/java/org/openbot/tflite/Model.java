@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 
 /** The model. */
 public class Model {
+
   public enum ID {
     AUTOPILOT_F,
     DETECTOR_V1_1_0_Q,
@@ -17,10 +18,10 @@ public class Model {
     DETECTOR
   }
 
-  protected static final Model AUTOPILOT_F = new Model(ID.AUTOPILOT_F);
-  protected static final Model DETECTOR_V1_1_0_Q = new Model(ID.DETECTOR_V1_1_0_Q);
-  protected static final Model DETECTOR_V3_S_Q = new Model(ID.DETECTOR_V3_S_Q);
-  protected static final Model YOLO_V4_TINY_F = new Model(ID.YOLO_V4_TINY_F);
+  public static final Model AUTOPILOT_F = new Model(ID.AUTOPILOT_F);
+  public static final Model DETECTOR_V1_1_0_Q = new Model(ID.DETECTOR_V1_1_0_Q);
+  public static final Model DETECTOR_V3_S_Q = new Model(ID.DETECTOR_V3_S_Q);
+  public static final Model YOLO_V4_TINY_F = new Model(ID.YOLO_V4_TINY_F);
 
   public final ID id;
   public final TYPE type;
@@ -61,6 +62,12 @@ public class Model {
   public Model(String filename) {
     this.id = ID.AUTOPILOT_F;
     this.type = TYPE.AUTOPILOT;
+    this.filename = filename;
+  }
+
+  public Model(String filename,ID id, TYPE type) {
+    this.id = id;
+    this.type = type;
     this.filename = filename;
   }
 

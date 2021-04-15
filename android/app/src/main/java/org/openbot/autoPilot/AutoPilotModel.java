@@ -7,14 +7,6 @@ import org.openbot.tflite.Model;
 /** The model. */
 public class AutoPilotModel extends Model {
 
-  public enum ID {
-    AUTOPILOT_F
-  }
-
-  public enum TYPE {
-    AUTOPILOT
-  }
-
   public static final AutoPilotModel AUTOPILOT_F =
       new AutoPilotModel(null, ID.AUTOPILOT_F, TYPE.AUTOPILOT);
 
@@ -30,14 +22,14 @@ public class AutoPilotModel extends Model {
   }
 
   public AutoPilotModel(String filename, ID id, TYPE type) {
-    super(filename);
+    super(filename,id,type);
     this.id = id;
     this.type = type;
     this.filename = filename;
   }
 
   public AutoPilotModel(String filename) {
-    super(filename);
+    super(filename,ID.AUTOPILOT_F,TYPE.AUTOPILOT);
     this.id = ID.AUTOPILOT_F;
     this.type = TYPE.AUTOPILOT;
     this.filename = filename;

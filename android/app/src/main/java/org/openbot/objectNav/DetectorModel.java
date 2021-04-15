@@ -1,20 +1,13 @@
 package org.openbot.objectNav;
 
 import android.util.Size;
+
 import androidx.annotation.NonNull;
+
 import org.openbot.tflite.Model;
 
 /** The model. */
 public class DetectorModel extends Model {
-  public enum ID {
-    DETECTOR_V1_1_0_Q,
-    DETECTOR_V3_S_Q,
-    YOLO_V4_TINY_F
-  }
-
-  public enum TYPE {
-    DETECTOR
-  }
 
   public static final DetectorModel DETECTOR_V1_1_0_Q =
       new DetectorModel(null, ID.DETECTOR_V1_1_0_Q, TYPE.DETECTOR);
@@ -40,23 +33,23 @@ public class DetectorModel extends Model {
   }
 
   public DetectorModel(String filename, ID id, TYPE type) {
-    super(filename);
+    super(filename,id,type);
     this.id = id;
     switch (id) {
       case DETECTOR_V1_1_0_Q:
       case DETECTOR_V3_S_Q:
       case YOLO_V4_TINY_F:
-        this.type = TYPE.DETECTOR;
+        this.type = type;
         break;
       default:
         this.type = null;
         break;
     }
-    this.filename = null;
+    this.filename = filename;
   }
 
   public DetectorModel(String filename) {
-    super(filename);
+    super(filename, ID.DETECTOR_V1_1_0_Q, TYPE.DETECTOR);
     this.id = ID.DETECTOR_V1_1_0_Q;
     this.type = TYPE.DETECTOR;
     this.filename = filename;

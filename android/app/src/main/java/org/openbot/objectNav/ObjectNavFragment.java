@@ -95,13 +95,13 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
     super.onViewCreated(view, savedInstanceState);
 
     binding.confidence.setProgress((int) (MINIMUM_CONFIDENCE_TF_OD_API * 100));
-    binding.confidenceValue.setText((int) (MINIMUM_CONFIDENCE_TF_OD_API * 100) + '%');
+    binding.confidenceValue.setText((int) (MINIMUM_CONFIDENCE_TF_OD_API * 100) + "%");
 
     binding.confidence.setOnSeekBarChangeListener(
         new SeekBar.OnSeekBarChangeListener() {
           @Override
           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            binding.confidenceValue.setText(progress + '%');
+            binding.confidenceValue.setText(progress + "%");
             MINIMUM_CONFIDENCE_TF_OD_API = progress / 100f;
           }
 
@@ -118,10 +118,10 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    List<CharSequence> models = Arrays.asList(getResources().getTextArray(R.array.models));
+    List<CharSequence> models = Arrays.asList(getResources().getTextArray(R.array.detector_models));
     modelAdapter =
         new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
-    modelAdapter.addAll(getModelFiles());
+//    modelAdapter.addAll(getModelFiles());
 
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
@@ -265,7 +265,7 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
     try {
       Timber.d("Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
       detector = Detector.create(requireActivity(), model, device, numThreads);
-      detector.getLabels();
+
       croppedBitmap =
           Bitmap.createBitmap(
               detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
@@ -281,8 +281,23 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
 
       cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
-      binding.inputResolution.setText(
-          "Input: " + detector.getImageSizeX() + 'x' + detector.getImageSizeY());
+      requireActivity()
+              .runOnUiThread(
+                      () ->{
+                        ArrayAdapter<String> adapter =
+                                new ArrayAdapter<>(
+                                        getContext(),
+                                        android.R.layout.simple_dropdown_item_1line,
+                                        detector.getLabels());
+
+                        binding.classType.setAdapter(adapter);
+
+                        binding.inputResolution.setText(
+                                "Input: " + detector.getImageSizeX() + 'x' + detector.getImageSizeY());
+
+                      }
+              );
+
 
     } catch (IllegalArgumentException | IOException e) {
       String msg = "Failed to create network.";
@@ -502,7 +517,7 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;
-      preferencesManager.setModel(model.toString());
+      preferencesManager.setDetectorModel(model.toString());
       onInferenceConfigurationChanged();
     }
   }

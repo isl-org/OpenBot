@@ -26,9 +26,9 @@
         android:id="@+id/aiBottomSheet"
         android:layout_width="400dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:background="@drawable/bottom_sheet_bg"
         app:behavior_hideable="false"
-        android:layout_gravity="end"
         app:behavior_peekHeight="48dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         tools:behavior_peekHeight="480dp">
@@ -64,14 +64,14 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:paddingVertical="12dp"
                     android:text="Inference Time:"
                     android:textColor="@android:color/black" />
@@ -81,12 +81,34 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center|start"
+                    android:gravity="center"
                     android:paddingHorizontal="8dp"
                     android:text="@string/time_ms"
                     android:textColor="@android:color/black" />
 
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/classContainer"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.75"
+                    android:hint="Class"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:errorEnabled="true">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/classType"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/button_item_background_black"
+                        android:backgroundTint="@android:color/white" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/seekbarContainer"
                 android:layout_width="match_parent"
@@ -113,56 +135,48 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    tools:text="50%"
                     android:gravity="center"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    tools:text="50%" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1.25"
                     android:paddingVertical="12dp"
                     android:text="@string/model"
                     android:textColor="@android:color/black" />
 
-                <LinearLayout
+                <Spinner
+                    android:id="@+id/model_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:entries="@array/models"
+                    android:prompt="@string/model" />
 
-                    <Spinner
-                        android:id="@+id/model_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:entries="@array/models"
-                        android:prompt="@string/model" />
-
-                    <TextView
-                        android:id="@+id/inputResolution"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|start"
-                        android:textColor="@android:color/black"
-                        tools:text="Input: 256x96" />
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/inputResolution"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    android:gravity="center|end"
+                    android:textColor="@android:color/black"
+                    tools:text="Input: 256x96" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -246,8 +260,8 @@
             android:id="@+id/usbToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:button="@drawable/usb_toggle"
             android:layout_marginEnd="16dp"
+            android:button="@drawable/usb_toggle"
             app:layout_constraintBottom_toBottomOf="@+id/camera_toggle"
             app:layout_constraintEnd_toStartOf="@+id/camera_toggle"
             app:layout_constraintTop_toTopOf="@+id/camera_toggle" />
