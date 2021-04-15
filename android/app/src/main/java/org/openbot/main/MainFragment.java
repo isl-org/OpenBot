@@ -68,8 +68,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
         // intent = new Intent(this, ControllerActivity.class);
         // startActivity(intent);
         break;
-
-      case FeatureList.AI_MODELS:
+      case FeatureList.AUTO_PILOT:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_AIFragment);
         break;
