@@ -48,11 +48,10 @@ import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
-public class ObjectNavFragment extends CameraFragment implements ServerListener {
+public class ObjectNavFragment extends CameraFragment {
   private FragmentObjectNavBinding binding;
   private Handler handler;
   private HandlerThread handlerThread;
-  private ServerCommunication serverCommunication;
 
   private long lastProcessingTimeMs;
   private boolean computingNetwork = false;
@@ -291,7 +290,7 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
                                         detector.getLabels());
 
                         binding.classType.setAdapter(adapter);
-
+                        binding.classType.setThreshold(0);
                         binding.inputResolution.setText(
                                 "Input: " + detector.getImageSizeX() + 'x' + detector.getImageSizeY());
 
@@ -315,8 +314,6 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
 
   @Override
   public synchronized void onResume() {
-    serverCommunication = new ServerCommunication(requireContext(), this);
-    serverCommunication.start();
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
@@ -333,7 +330,6 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
     } catch (final InterruptedException e) {
       e.printStackTrace();
     }
-    serverCommunication.stop();
     super.onPause();
   }
 
@@ -476,37 +472,6 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
     float right = vehicle.getRightSpeed();
     binding.controllerContainer.controlInfo.setText(
         String.format(Locale.US, "%.0f,%.0f", left, right));
-  }
-
-  @Override
-  public void onConnectionEstablished(String ipAddress) {}
-
-  @Override
-  public void onAddModel(String model) {
-    if (modelAdapter != null && modelAdapter.getPosition(model) == -1) {
-      modelAdapter.add(model);
-    } else {
-      if (model.equals(binding.modelSpinner.getSelectedItem())) {
-        setModel(new DetectorModel(model));
-      }
-    }
-    Toast.makeText(
-            requireContext().getApplicationContext(),
-            "DetectorModel added: " + model,
-            Toast.LENGTH_SHORT)
-        .show();
-  }
-
-  @Override
-  public void onRemoveModel(String model) {
-    if (modelAdapter != null && modelAdapter.getPosition(model) != -1) {
-      modelAdapter.remove(model);
-    }
-    Toast.makeText(
-            requireContext().getApplicationContext(),
-            "DetectorModel removed: " + model,
-            Toast.LENGTH_SHORT)
-        .show();
   }
 
   protected DetectorModel getModel() {
