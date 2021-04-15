@@ -38,8 +38,6 @@ import org.openbot.databinding.FragmentObjectNavBinding;
 import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
-import org.openbot.server.ServerCommunication;
-import org.openbot.server.ServerListener;
 import org.openbot.tflite.Detector;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
@@ -120,7 +118,7 @@ public class ObjectNavFragment extends CameraFragment {
     List<CharSequence> models = Arrays.asList(getResources().getTextArray(R.array.detector_models));
     modelAdapter =
         new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
-//    modelAdapter.addAll(getModelFiles());
+    //    modelAdapter.addAll(getModelFiles());
 
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
@@ -281,22 +279,19 @@ public class ObjectNavFragment extends CameraFragment {
       cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
       requireActivity()
-              .runOnUiThread(
-                      () ->{
-                        ArrayAdapter<String> adapter =
-                                new ArrayAdapter<>(
-                                        getContext(),
-                                        android.R.layout.simple_dropdown_item_1line,
-                                        detector.getLabels());
+          .runOnUiThread(
+              () -> {
+                ArrayAdapter<String> adapter =
+                    new ArrayAdapter<>(
+                        getContext(),
+                        android.R.layout.simple_dropdown_item_1line,
+                        detector.getLabels());
 
-                        binding.classType.setAdapter(adapter);
-                        binding.classType.setThreshold(0);
-                        binding.inputResolution.setText(
-                                "Input: " + detector.getImageSizeX() + 'x' + detector.getImageSizeY());
-
-                      }
-              );
-
+                binding.classType.setAdapter(adapter);
+                binding.classType.setThreshold(0);
+                binding.inputResolution.setText(
+                    "Input: " + detector.getImageSizeX() + 'x' + detector.getImageSizeY());
+              });
 
     } catch (IllegalArgumentException | IOException e) {
       String msg = "Failed to create network.";

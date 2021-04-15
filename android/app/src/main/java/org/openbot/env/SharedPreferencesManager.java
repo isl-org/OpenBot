@@ -2,7 +2,6 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import org.openbot.autoPilot.AutoPilotModel;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
@@ -50,7 +49,6 @@ public class SharedPreferencesManager {
   public int getBaudrate() {
     return preferences.getInt(BAUD_RATE, DEFAULT_BAUD_RATE);
   }
-
 
   public int getDevice() {
     return preferences.getInt(DEVICE, DEFAULT_DEVICE);
@@ -103,6 +101,7 @@ public class SharedPreferencesManager {
   public String getAutoPilotModel() {
     return preferences.getString(MODEL_AUTOPILOT, DEFAULT_MODEL_AUTO);
   }
+
   public void setDetectorModel(String model) {
     preferences.edit().putString(MODEL_DETECTOR, model).apply();
   }

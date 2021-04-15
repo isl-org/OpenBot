@@ -1,9 +1,7 @@
 package org.openbot.objectNav;
 
 import android.util.Size;
-
 import androidx.annotation.NonNull;
-
 import org.openbot.tflite.Model;
 
 /** The model. */
@@ -33,7 +31,7 @@ public class DetectorModel extends Model {
   }
 
   public DetectorModel(String filename, ID id, TYPE type) {
-    super(filename,id,type);
+    super(filename, id, type);
     this.id = id;
     switch (id) {
       case DETECTOR_V1_1_0_Q:

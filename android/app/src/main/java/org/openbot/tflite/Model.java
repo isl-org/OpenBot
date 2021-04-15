@@ -65,7 +65,7 @@ public class Model {
     this.filename = filename;
   }
 
-  public Model(String filename,ID id, TYPE type) {
+  public Model(String filename, ID id, TYPE type) {
     this.id = id;
     this.type = type;
     this.filename = filename;

@@ -161,7 +161,8 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    List<CharSequence> models = Arrays.asList(getResources().getTextArray(R.array.auto_pilot_models));
+    List<CharSequence> models =
+        Arrays.asList(getResources().getTextArray(R.array.auto_pilot_models));
     modelAdapter =
         new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
     modelAdapter.addAll(getModelFiles());
@@ -349,11 +350,10 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
               autoPilot.getCropRect(),
               autoPilot.getMaintainAspect());
       requireActivity()
-              .runOnUiThread(
-                      () -> binding.inputResolution.setText(
-                              "Input: " + autoPilot.getImageSizeX() + 'x' + autoPilot.getImageSizeY())
-              );
-
+          .runOnUiThread(
+              () ->
+                  binding.inputResolution.setText(
+                      "Input: " + autoPilot.getImageSizeX() + 'x' + autoPilot.getImageSizeY()));
 
       Matrix cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
