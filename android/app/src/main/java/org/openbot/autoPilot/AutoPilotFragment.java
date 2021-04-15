@@ -56,7 +56,6 @@ import timber.log.Timber;
 
 public class AutoPilotFragment extends CameraFragment implements ServerListener {
 
-  // create separate AutoPilotModel classes? yes
   // options for drop down in object nav?
   private FragmentAutoPilotBinding binding;
   private Handler handler;
