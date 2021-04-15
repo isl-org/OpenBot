@@ -30,7 +30,7 @@ public class FeatureList {
 
   // AI
   public static final String AI = "AI";
-  public static final String AI_MODELS = "AI Models";
+  public static final String AUTO_PILOT = "Auto Pilot";
   public static final String PERSON_FOLLOWING = "Person Following";
   public static final String OBJECT_NAV = "Object Nav (follow/search)";
   public static final String AUTONOMOUS_DRIVING = "Autonomous Driving";
@@ -71,7 +71,7 @@ public class FeatureList {
     subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
     subCategories.add(new SubCategory(DATA_COLLECTION, R.drawable.ic_storage, "#93C47D"));
-    subCategories.add(new SubCategory(AI_MODELS, R.drawable.ic_person_search, "#4B7BFF"));
+    subCategories.add(new SubCategory(AUTO_PILOT, R.drawable.ic_person_search, "#4B7BFF"));
     subCategories.add(new SubCategory(OBJECT_NAV, R.drawable.ic_person_search, "#FFD966"));
     subCategories.add(new SubCategory(CONTROLLER_MAPPING, R.drawable.ic_joystick, "#7268A6"));
     categories.add(new Category(ALL, subCategories));
