@@ -445,6 +445,24 @@ public class AIFragment extends CameraFragment implements ServerListener {
             String.format(Locale.US, "%.0f,%.0f", vehicle.getLeftSpeed(), vehicle.getRightSpeed()));
         break;
 
+      case Constants.CMD_DRIVE_MODE:
+        setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode()));
+        break;
+
+      case Constants.CMD_SPEED_DOWN:
+        setSpeedMode(
+            Enums.toggleSpeed(
+                Enums.Direction.DOWN.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+        break;
+
+      case Constants.CMD_SPEED_UP:
+        setSpeedMode(
+            Enums.toggleSpeed(
+                Enums.Direction.UP.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+        break;
+
       case Constants.CMD_NETWORK:
         setNetworkEnabledWithAudio(!binding.autoSwitch.isChecked());
         break;

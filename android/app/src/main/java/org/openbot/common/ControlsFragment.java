@@ -116,7 +116,6 @@ public abstract class ControlsFragment extends Fragment {
           toggleIndicatorEvent(Enums.VehicleIndicator.RIGHT.getValue());
           processControllerKeyData(Constants.CMD_INDICATOR_RIGHT);
           break;
-
         case KeyEvent.KEYCODE_BUTTON_A: // x
           processControllerKeyData(Constants.CMD_LOGS);
           break;
@@ -126,15 +125,20 @@ public abstract class ControlsFragment extends Fragment {
           break;
         case KeyEvent.KEYCODE_BUTTON_L1:
           processControllerKeyData(Constants.CMD_DRIVE_MODE);
+          audioPlayer.playDriveMode(voice, vehicle.getDriveMode());
           break;
         case KeyEvent.KEYCODE_BUTTON_R1:
           processControllerKeyData(Constants.CMD_NETWORK);
           break;
         case KeyEvent.KEYCODE_BUTTON_THUMBL:
           processControllerKeyData(Constants.CMD_SPEED_DOWN);
+          audioPlayer.playSpeedMode(
+              voice, Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
           break;
         case KeyEvent.KEYCODE_BUTTON_THUMBR:
           processControllerKeyData(Constants.CMD_SPEED_UP);
+          audioPlayer.playSpeedMode(
+              voice, Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
           break;
 
         default:
@@ -202,9 +206,9 @@ public abstract class ControlsFragment extends Fragment {
   }
 
   protected void toggleNoise() {
+    vehicle.toggleNoise();
     BotToControllerEventBus.emitEvent(Utils.createStatus("NOISE", vehicle.isNoiseEnabled()));
     audioPlayer.playNoise(voice, vehicle.isNoiseEnabled());
-    vehicle.toggleNoise();
   }
 
   private void toggleIndicatorEvent(int value) {

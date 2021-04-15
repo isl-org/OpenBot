@@ -401,9 +401,7 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
       case Constants.CMD_LOGS:
         handleLogging();
         break;
-        //      case "Constants.CMD_NOISE":
-        //        handleNoise();
-        //        break;
+
       case Constants.CMD_INDICATOR_LEFT:
       case Constants.CMD_INDICATOR_RIGHT:
       case Constants.CMD_INDICATOR_STOP:
