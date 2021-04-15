@@ -1,4 +1,4 @@
-package org.openbot.ai;
+package org.openbot.autoPilot;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,9 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.SeekBar;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -31,62 +27,56 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
-
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.nononsenseapps.filepicker.Utils;
-
-import org.jetbrains.annotations.NotNull;
-import org.openbot.R;
-import org.openbot.common.CameraFragment;
-import org.openbot.databinding.FragmentObjectNavBinding;
-import org.openbot.env.BorderedText;
-import org.openbot.env.Control;
-import org.openbot.env.ImageUtils;
-import org.openbot.server.ServerCommunication;
-import org.openbot.server.ServerListener;
-import org.openbot.tflite.Detector;
-import org.openbot.tflite.Model;
-import org.openbot.tflite.Network;
-import org.openbot.tracking.MultiBoxTracker;
-import org.openbot.utils.Constants;
-import org.openbot.utils.Enums;
-import org.openbot.utils.PermissionUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
+import org.jetbrains.annotations.NotNull;
+import org.openbot.R;
+import org.openbot.common.CameraFragment;
+import org.openbot.databinding.FragmentAutoPilotBinding;
+import org.openbot.env.BorderedText;
+import org.openbot.env.Control;
+import org.openbot.env.ImageUtils;
+import org.openbot.server.ServerCommunication;
+import org.openbot.server.ServerListener;
+import org.openbot.tflite.Autopilot;
+import org.openbot.tflite.Network;
+import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.Constants;
+import org.openbot.utils.Enums;
+import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
-public class ObjectNavFragment extends CameraFragment implements ServerListener {
-  private FragmentObjectNavBinding binding;
+public class AutoPilotFragment extends CameraFragment implements ServerListener {
+
+  // create separate AutoPilotModel classes? yes
+  // options for drop down in object nav?
+  private FragmentAutoPilotBinding binding;
   private Handler handler;
   private HandlerThread handlerThread;
   private ServerCommunication serverCommunication;
 
   private long lastProcessingTimeMs;
   private boolean computingNetwork = false;
-  private static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
 
   private static final float TEXT_SIZE_DIP = 10;
 
-  private Detector detector;
+  private Autopilot autoPilot;
 
   private Matrix frameToCropTransform;
   private Bitmap croppedBitmap;
   private int sensorOrientation;
-  private Bitmap cropCopyBitmap;
-  private Matrix cropToFrameTransform;
 
   private MultiBoxTracker tracker;
 
-  private Model model = Model.DETECTOR_V1_1_0_Q;
+  private AutoPilotModel model = AutoPilotModel.AUTOPILOT_F;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
 
@@ -113,10 +103,7 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
                   builder.setTitle(R.string.file_available_title);
                   builder.setMessage(R.string.file_available_body);
                   builder.setPositiveButton(
-                      "Yes",
-                      (dialog, id) -> {
-                        processModelFromStorage(files, fileName);
-                      });
+                      "Yes", (dialog, id) -> processModelFromStorage(files, fileName));
                   builder.setNegativeButton(
                       "Cancel",
                       (dialog, id) -> {
@@ -147,10 +134,12 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
     modelAdapter.add("Choose From Device");
     modelAdapter.notifyDataSetChanged();
     binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
-    setModel(new Model(fileName));
+    setModel(new AutoPilotModel(fileName));
 
     Toast.makeText(
-            requireContext().getApplicationContext(), "Model added: " + model, Toast.LENGTH_SHORT)
+            requireContext().getApplicationContext(),
+            "AutoPilotModel added: " + model,
+            Toast.LENGTH_SHORT)
         .show();
   }
 
@@ -158,7 +147,7 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
   public View onCreateView(
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    binding = FragmentObjectNavBinding.inflate(inflater, container, false);
+    binding = FragmentAutoPilotBinding.inflate(inflater, container, false);
 
     return inflateFragment(binding, inflater, container);
   }
@@ -166,27 +155,6 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
-    binding.confidence.setProgress((int) (MINIMUM_CONFIDENCE_TF_OD_API*100));
-    binding.confidenceValue.setText((int) (MINIMUM_CONFIDENCE_TF_OD_API * 100) + '%');
-
-    binding.confidence.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override
-      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        binding.confidenceValue.setText(progress + '%');
-        MINIMUM_CONFIDENCE_TF_OD_API = progress / 100f;
-      }
-
-      @Override
-      public void onStartTrackingTouch(SeekBar seekBar) {
-
-      }
-
-      @Override
-      public void onStopTrackingTouch(SeekBar seekBar) {
-
-      }
-    });
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
 
     binding.deviceSpinner.setSelection(preferencesManager.getDevice());
@@ -213,9 +181,9 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
               openPicker();
             } else
               try {
-                setModel(Model.fromId(selected.toUpperCase()));
+                setModel(AutoPilotModel.fromId(selected.toUpperCase()));
               } catch (IllegalArgumentException e) {
-                setModel(new Model(selected));
+                setModel(new AutoPilotModel(selected));
               }
             selectedModelIndex = position;
           }
@@ -329,7 +297,7 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
     Timber.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
     recreateNetwork(getModel(), getDevice(), getNumThreads());
-    if (detector == null) {
+    if (autoPilot == null) {
       Timber.e("No network on preview!");
       return;
     }
@@ -352,25 +320,26 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
       return;
     }
     final Network.Device device = getDevice();
-    final Model model = getModel();
+    final AutoPilotModel model = getModel();
     final int numThreads = getNumThreads();
     runInBackground(() -> recreateNetwork(model, device, numThreads));
   }
 
-  private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+  private void recreateNetwork(AutoPilotModel model, Network.Device device, int numThreads) {
     tracker.clearTrackedObjects();
-    if (detector != null) {
-      Timber.d("Closing detector.");
-      detector.close();
-      detector = null;
+    if (autoPilot != null) {
+      Timber.d("Closing autoPilot.");
+      autoPilot.close();
+      autoPilot = null;
     }
 
     try {
-      Timber.d("Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-      detector = Detector.create(requireActivity(), model, device, numThreads);
+      Timber.d(
+          "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
+      autoPilot = Autopilot.create(requireActivity(), model, device, numThreads);
       croppedBitmap =
           Bitmap.createBitmap(
-              detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
+              autoPilot.getImageSizeX(), autoPilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
       frameToCropTransform =
           ImageUtils.getTransformationMatrix(
               getMaxAnalyseImageSize().getWidth(),
@@ -378,10 +347,12 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
               croppedBitmap.getWidth(),
               croppedBitmap.getHeight(),
               sensorOrientation,
-              detector.getCropRect(),
-              detector.getMaintainAspect());
+              autoPilot.getCropRect(),
+              autoPilot.getMaintainAspect());
+      binding.inputResolution.setText(
+          "Input: " + autoPilot.getImageSizeX() + 'x' + autoPilot.getImageSizeY());
 
-      cropToFrameTransform = new Matrix();
+      Matrix cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
 
     } catch (IllegalArgumentException | IOException e) {
@@ -445,6 +416,24 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
             String.format(Locale.US, "%.0f,%.0f", vehicle.getLeftSpeed(), vehicle.getRightSpeed()));
         break;
 
+      case Constants.CMD_DRIVE_MODE:
+        setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode()));
+        break;
+
+      case Constants.CMD_SPEED_DOWN:
+        setSpeedMode(
+            Enums.toggleSpeed(
+                Enums.Direction.DOWN.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+        break;
+
+      case Constants.CMD_SPEED_UP:
+        setSpeedMode(
+            Enums.toggleSpeed(
+                Enums.Direction.UP.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+        break;
+
       case Constants.CMD_NETWORK:
         setNetworkEnabledWithAudio(!binding.autoSwitch.isChecked());
         break;
@@ -504,45 +493,11 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
             final Canvas canvas = new Canvas(croppedBitmap);
             canvas.drawBitmap(bitmap, frameToCropTransform, null);
 
-            if (detector != null) {
-              Timber.i("Running detection on image %s", frameNum);
+            if (autoPilot != null) {
+              Timber.i("Running autopilot on image %s", frameNum);
               final long startTime = SystemClock.elapsedRealtime();
-              final List<Detector.Recognition> results = detector.recognizeImage(croppedBitmap);
+              handleDriveCommand(autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
-
-              if (!results.isEmpty())
-                Timber.i(
-                    "Object: "
-                        + results.get(0).getLocation().centerX()
-                        + ", "
-                        + results.get(0).getLocation().centerY()
-                        + ", "
-                        + results.get(0).getLocation().height()
-                        + ", "
-                        + results.get(0).getLocation().width());
-
-              cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
-              final Canvas canvas1 = new Canvas(cropCopyBitmap);
-              final Paint paint = new Paint();
-              paint.setColor(Color.RED);
-              paint.setStyle(Paint.Style.STROKE);
-              paint.setStrokeWidth(2.0f);
-
-              final List<Detector.Recognition> mappedRecognitions = new LinkedList<>();
-
-              for (final Detector.Recognition result : results) {
-                final RectF location = result.getLocation();
-                if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
-                  canvas1.drawRect(location, paint);
-                  cropToFrameTransform.mapRect(location);
-                  result.setLocation(location);
-                  mappedRecognitions.add(result);
-                }
-              }
-
-              tracker.trackResults(mappedRecognitions, frameNum);
-              handleDriveCommand(tracker.updateTarget());
-              binding.trackingOverlay.postInvalidate();
             }
 
             computingNetwork = false;
@@ -572,11 +527,13 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
       modelAdapter.add(model);
     } else {
       if (model.equals(binding.modelSpinner.getSelectedItem())) {
-        setModel(new Model(model));
+        setModel(new AutoPilotModel(model));
       }
     }
     Toast.makeText(
-            requireContext().getApplicationContext(), "Model added: " + model, Toast.LENGTH_SHORT)
+            requireContext().getApplicationContext(),
+            "AutoPilotModel added: " + model,
+            Toast.LENGTH_SHORT)
         .show();
   }
 
@@ -586,15 +543,17 @@ public class ObjectNavFragment extends CameraFragment implements ServerListener 
       modelAdapter.remove(model);
     }
     Toast.makeText(
-            requireContext().getApplicationContext(), "Model removed: " + model, Toast.LENGTH_SHORT)
+            requireContext().getApplicationContext(),
+            "AutoPilotModel removed: " + model,
+            Toast.LENGTH_SHORT)
         .show();
   }
 
-  protected Model getModel() {
+  protected AutoPilotModel getModel() {
     return model;
   }
 
-  private void setModel(Model model) {
+  private void setModel(AutoPilotModel model) {
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;

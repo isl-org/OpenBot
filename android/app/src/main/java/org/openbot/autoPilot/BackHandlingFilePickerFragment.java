@@ -1,4 +1,4 @@
-package org.openbot.ai;
+package org.openbot.autoPilot;
 
 import androidx.annotation.NonNull;
 import com.nononsenseapps.filepicker.FilePickerFragment;

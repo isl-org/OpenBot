@@ -48,9 +48,9 @@
         tools:layout="@layout/fragment_logger" />
     <fragment
         android:id="@+id/AIFragment"
-        android:name="org.openbot.ai.AIFragment"
+        android:name="org.openbot.autoPilot.AutoPilotFragment"
         android:label="fragment_ai"
-        tools:layout="@layout/fragment_ai" />
+        tools:layout="@layout/fragment_auto_pilot" />
 
     <fragment
         android:id="@+id/controllerMappingFragment"
@@ -59,7 +59,7 @@
         tools:layout="@layout/fragment_controller_mapping" />
     <fragment
         android:id="@+id/objectNavFragment"
-        android:name="org.openbot.ai.ObjectNavFragment"
+        android:name="org.openbot.objectNav.ObjectNavFragment"
         android:label="fragment_blank"
         tools:layout="@layout/fragment_object_nav" />
 

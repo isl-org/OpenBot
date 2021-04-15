@@ -311,6 +311,9 @@ public abstract class Detector extends Network {
     return labels.size();
   }
 
+  public List<String> getLabels() {
+    return labels;
+  }
   /**
    * Get the number of detections.
    *

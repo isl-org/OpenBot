@@ -1,15 +1,13 @@
-package org.openbot.ai;
+package org.openbot.objectNav;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
@@ -19,35 +17,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 import android.widget.Toast;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.nononsenseapps.filepicker.Utils;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
-import org.openbot.databinding.FragmentAiBinding;
+import org.openbot.databinding.FragmentObjectNavBinding;
 import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
 import org.openbot.server.ServerCommunication;
 import org.openbot.server.ServerListener;
-import org.openbot.tflite.Autopilot;
-import org.openbot.tflite.Model;
+import org.openbot.tflite.Detector;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
@@ -55,19 +48,19 @@ import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
-public class AIFragment extends CameraFragment implements ServerListener {
-
-  private FragmentAiBinding binding;
+public class ObjectNavFragment extends CameraFragment implements ServerListener {
+  private FragmentObjectNavBinding binding;
   private Handler handler;
   private HandlerThread handlerThread;
   private ServerCommunication serverCommunication;
 
   private long lastProcessingTimeMs;
   private boolean computingNetwork = false;
+  private static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
 
   private static final float TEXT_SIZE_DIP = 10;
 
-  private Autopilot autoPilot;
+  private Detector detector;
 
   private Matrix frameToCropTransform;
   private Bitmap croppedBitmap;
@@ -77,79 +70,22 @@ public class AIFragment extends CameraFragment implements ServerListener {
 
   private MultiBoxTracker tracker;
 
-  private Model model = Model.DETECTOR_V1_1_0_Q;
+  private DetectorModel model = DetectorModel.DETECTOR_V1_1_0_Q;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
 
   private ArrayAdapter<CharSequence> modelAdapter;
-  private ActivityResultLauncher<Intent> mStartForResult;
-  private int selectedModelIndex = 0;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mStartForResult =
-        registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-              if (result.getResultCode() == Activity.RESULT_OK) {
-
-                Intent intent = result.getData();
-                // Handle the Intent
-                List<Uri> files = Utils.getSelectedFilesFromResult(intent);
-
-                String fileName = new File(files.get(0).getPath()).getName();
-                if (org.openbot.utils.Utils.checkFileExistence(requireActivity(), fileName)) {
-                  AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-                  builder.setTitle(R.string.file_available_title);
-                  builder.setMessage(R.string.file_available_body);
-                  builder.setPositiveButton(
-                      "Yes",
-                      (dialog, id) -> {
-                        processModelFromStorage(files, fileName);
-                      });
-                  builder.setNegativeButton(
-                      "Cancel",
-                      (dialog, id) -> {
-                        // User cancelled the dialog
-                      });
-                  AlertDialog dialog = builder.create();
-                  dialog.show();
-                } else {
-                  processModelFromStorage(files, fileName);
-                }
-              }
-            });
-  }
-
-  private void processModelFromStorage(List<Uri> files, String fileName) {
-    try {
-      InputStream inputStream =
-          requireActivity().getContentResolver().openInputStream(files.get(0));
-      org.openbot.utils.Utils.copyFile(
-          inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    modelAdapter.clear();
-    modelAdapter.addAll(Arrays.asList(getResources().getTextArray(R.array.models)));
-    modelAdapter.addAll(getModelFiles());
-    modelAdapter.add("Choose From Device");
-    modelAdapter.notifyDataSetChanged();
-    binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
-    setModel(new Model(fileName));
-
-    Toast.makeText(
-            requireContext().getApplicationContext(), "Model added: " + model, Toast.LENGTH_SHORT)
-        .show();
   }
 
   @Override
   public View onCreateView(
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    binding = FragmentAiBinding.inflate(inflater, container, false);
+    binding = FragmentObjectNavBinding.inflate(inflater, container, false);
 
     return inflateFragment(binding, inflater, container);
   }
@@ -157,6 +93,24 @@ public class AIFragment extends CameraFragment implements ServerListener {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    binding.confidence.setProgress((int) (MINIMUM_CONFIDENCE_TF_OD_API * 100));
+    binding.confidenceValue.setText((int) (MINIMUM_CONFIDENCE_TF_OD_API * 100) + '%');
+
+    binding.confidence.setOnSeekBarChangeListener(
+        new SeekBar.OnSeekBarChangeListener() {
+          @Override
+          public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            binding.confidenceValue.setText(progress + '%');
+            MINIMUM_CONFIDENCE_TF_OD_API = progress / 100f;
+          }
+
+          @Override
+          public void onStartTrackingTouch(SeekBar seekBar) {}
+
+          @Override
+          public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
 
     binding.deviceSpinner.setSelection(preferencesManager.getDevice());
@@ -168,7 +122,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
     modelAdapter =
         new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
     modelAdapter.addAll(getModelFiles());
-    modelAdapter.add("Choose From Device");
+
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
 
@@ -178,16 +132,11 @@ public class AIFragment extends CameraFragment implements ServerListener {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selected = parent.getItemAtPosition(position).toString();
-            if (selected.equals("Choose From Device")) {
-              binding.modelSpinner.setSelection(selectedModelIndex);
-              openPicker();
-            } else
-              try {
-                setModel(Model.fromId(selected.toUpperCase()));
-              } catch (IllegalArgumentException e) {
-                setModel(new Model(selected));
-              }
-            selectedModelIndex = position;
+            try {
+              setModel(DetectorModel.fromId(selected.toUpperCase()));
+            } catch (IllegalArgumentException e) {
+              setModel(new DetectorModel(selected));
+            }
           }
 
           @Override
@@ -258,28 +207,6 @@ public class AIFragment extends CameraFragment implements ServerListener {
     binding.autoSwitch.setOnClickListener(v -> setNetworkEnabled(binding.autoSwitch.isChecked()));
   }
 
-  private void openPicker() {
-
-    Intent i = new Intent(requireActivity(), BackHandlingFilePickerActivity.class);
-    // This works if you defined the intent filter
-    // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-
-    // Set these depending on your use case. These are the defaults.
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_MODE, BackHandlingFilePickerActivity.MODE_FILE);
-
-    // Configure initial directory by specifying a String.
-    // You could specify a String like "/storage/emulated/0/", but that can
-    // dangerous. Always use Android's API calls to get paths to the SD-card or
-    // internal memory.
-    i.putExtra(
-        BackHandlingFilePickerActivity.EXTRA_START_PATH,
-        Environment.getExternalStorageDirectory().getPath());
-
-    mStartForResult.launch(i);
-  }
-
   private void updateCropImageInfo() {
     //    Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
     //    Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
@@ -299,7 +226,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
     Timber.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
     recreateNetwork(getModel(), getDevice(), getNumThreads());
-    if (autoPilot == null) {
+    if (detector == null) {
       Timber.e("No network on preview!");
       return;
     }
@@ -322,26 +249,26 @@ public class AIFragment extends CameraFragment implements ServerListener {
       return;
     }
     final Network.Device device = getDevice();
-    final Model model = getModel();
+    final DetectorModel model = getModel();
     final int numThreads = getNumThreads();
     runInBackground(() -> recreateNetwork(model, device, numThreads));
   }
 
-  private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+  private void recreateNetwork(DetectorModel model, Network.Device device, int numThreads) {
     tracker.clearTrackedObjects();
-    if (autoPilot != null) {
-      Timber.d("Closing autoPilot.");
-      autoPilot.close();
-      autoPilot = null;
+    if (detector != null) {
+      Timber.d("Closing detector.");
+      detector.close();
+      detector = null;
     }
 
     try {
-      Timber.d(
-          "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-      autoPilot = Autopilot.create(requireActivity(), model, device, numThreads);
+      Timber.d("Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
+      detector = Detector.create(requireActivity(), model, device, numThreads);
+      detector.getLabels();
       croppedBitmap =
           Bitmap.createBitmap(
-              autoPilot.getImageSizeX(), autoPilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
+              detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
       frameToCropTransform =
           ImageUtils.getTransformationMatrix(
               getMaxAnalyseImageSize().getWidth(),
@@ -349,13 +276,13 @@ public class AIFragment extends CameraFragment implements ServerListener {
               croppedBitmap.getWidth(),
               croppedBitmap.getHeight(),
               sensorOrientation,
-              autoPilot.getCropRect(),
-              autoPilot.getMaintainAspect());
-      binding.inputResolution.setText(
-          "Input: " + autoPilot.getImageSizeX() + 'x' + autoPilot.getImageSizeY());
+              detector.getCropRect(),
+              detector.getMaintainAspect());
 
       cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
+      binding.inputResolution.setText(
+          "Input: " + detector.getImageSizeX() + 'x' + detector.getImageSizeY());
 
     } catch (IllegalArgumentException | IOException e) {
       String msg = "Failed to create network.";
@@ -418,24 +345,6 @@ public class AIFragment extends CameraFragment implements ServerListener {
             String.format(Locale.US, "%.0f,%.0f", vehicle.getLeftSpeed(), vehicle.getRightSpeed()));
         break;
 
-      case Constants.CMD_DRIVE_MODE:
-        setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode()));
-        break;
-
-      case Constants.CMD_SPEED_DOWN:
-        setSpeedMode(
-            Enums.toggleSpeed(
-                Enums.Direction.DOWN.getValue(),
-                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
-        break;
-
-      case Constants.CMD_SPEED_UP:
-        setSpeedMode(
-            Enums.toggleSpeed(
-                Enums.Direction.UP.getValue(),
-                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
-        break;
-
       case Constants.CMD_NETWORK:
         setNetworkEnabledWithAudio(!binding.autoSwitch.isChecked());
         break;
@@ -495,11 +404,45 @@ public class AIFragment extends CameraFragment implements ServerListener {
             final Canvas canvas = new Canvas(croppedBitmap);
             canvas.drawBitmap(bitmap, frameToCropTransform, null);
 
-            if (autoPilot != null) {
-              Timber.i("Running autopilot on image %s", frameNum);
+            if (detector != null) {
+              Timber.i("Running detection on image %s", frameNum);
               final long startTime = SystemClock.elapsedRealtime();
-              handleDriveCommand(autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+              final List<Detector.Recognition> results = detector.recognizeImage(croppedBitmap);
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
+
+              if (!results.isEmpty())
+                Timber.i(
+                    "Object: "
+                        + results.get(0).getLocation().centerX()
+                        + ", "
+                        + results.get(0).getLocation().centerY()
+                        + ", "
+                        + results.get(0).getLocation().height()
+                        + ", "
+                        + results.get(0).getLocation().width());
+
+              cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
+              final Canvas canvas1 = new Canvas(cropCopyBitmap);
+              final Paint paint = new Paint();
+              paint.setColor(Color.RED);
+              paint.setStyle(Paint.Style.STROKE);
+              paint.setStrokeWidth(2.0f);
+
+              final List<Detector.Recognition> mappedRecognitions = new LinkedList<>();
+
+              for (final Detector.Recognition result : results) {
+                final RectF location = result.getLocation();
+                if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
+                  canvas1.drawRect(location, paint);
+                  cropToFrameTransform.mapRect(location);
+                  result.setLocation(location);
+                  mappedRecognitions.add(result);
+                }
+              }
+
+              tracker.trackResults(mappedRecognitions, frameNum);
+              handleDriveCommand(tracker.updateTarget());
+              binding.trackingOverlay.postInvalidate();
             }
 
             computingNetwork = false;
@@ -529,11 +472,13 @@ public class AIFragment extends CameraFragment implements ServerListener {
       modelAdapter.add(model);
     } else {
       if (model.equals(binding.modelSpinner.getSelectedItem())) {
-        setModel(new Model(model));
+        setModel(new DetectorModel(model));
       }
     }
     Toast.makeText(
-            requireContext().getApplicationContext(), "Model added: " + model, Toast.LENGTH_SHORT)
+            requireContext().getApplicationContext(),
+            "DetectorModel added: " + model,
+            Toast.LENGTH_SHORT)
         .show();
   }
 
@@ -543,15 +488,17 @@ public class AIFragment extends CameraFragment implements ServerListener {
       modelAdapter.remove(model);
     }
     Toast.makeText(
-            requireContext().getApplicationContext(), "Model removed: " + model, Toast.LENGTH_SHORT)
+            requireContext().getApplicationContext(),
+            "DetectorModel removed: " + model,
+            Toast.LENGTH_SHORT)
         .show();
   }
 
-  protected Model getModel() {
+  protected DetectorModel getModel() {
     return model;
   }
 
-  private void setModel(Model model) {
+  private void setModel(DetectorModel model) {
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;

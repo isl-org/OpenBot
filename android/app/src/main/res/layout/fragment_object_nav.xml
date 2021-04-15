@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ai.ObjectNavFragment">
+    tools:context=".objectNav.ObjectNavFragment">
 
     <org.openbot.customview.OverlayView
         android:id="@+id/tracking_overlay"
@@ -199,7 +199,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
-                tools:progress="70" />
+                tools:progress="50" />
 
             <TextView
                 android:id="@+id/confidenceValue"
