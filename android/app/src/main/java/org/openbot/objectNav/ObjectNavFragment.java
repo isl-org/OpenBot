@@ -106,7 +106,7 @@ public class ObjectNavFragment extends CameraFragment {
           String trimConfVaue = binding.confidenceValue.getText().toString().trim();
           int confValue = Integer.parseInt(trimConfVaue.substring(0, trimConfVaue.length() - 1));
           if (confValue < 5) return;
-            confValue -= 5;
+          confValue -= 5;
 
           binding.confidenceValue.setText(confValue + "%");
           MINIMUM_CONFIDENCE_TF_OD_API = confValue / 100f;
