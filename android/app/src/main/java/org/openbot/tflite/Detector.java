@@ -312,7 +312,9 @@ public abstract class Detector extends Network {
   }
 
   public List<String> getLabels() {
-    return labels;
+    List<String> list = new ArrayList<>();
+    for (String label : labels) if (!label.equals("???")) list.add(label);
+    return list;
   }
   /**
    * Get the number of detections.

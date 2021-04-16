@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.SeekBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -91,23 +90,28 @@ public class ObjectNavFragment extends CameraFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    binding.confidence.setProgress((int) (MINIMUM_CONFIDENCE_TF_OD_API * 100));
     binding.confidenceValue.setText((int) (MINIMUM_CONFIDENCE_TF_OD_API * 100) + "%");
 
-    binding.confidence.setOnSeekBarChangeListener(
-        new SeekBar.OnSeekBarChangeListener() {
-          @Override
-          public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            binding.confidenceValue.setText(progress + "%");
-            MINIMUM_CONFIDENCE_TF_OD_API = progress / 100f;
-          }
-
-          @Override
-          public void onStartTrackingTouch(SeekBar seekBar) {}
-
-          @Override
-          public void onStopTrackingTouch(SeekBar seekBar) {}
+    binding.plusConfidence.setOnClickListener(
+        v -> {
+          String trimConfVaue = binding.confidenceValue.getText().toString().trim();
+          int confValue = Integer.parseInt(trimConfVaue.substring(0, trimConfVaue.length() - 1));
+          if (confValue > 100) return;
+          confValue += 5;
+          binding.confidenceValue.setText(confValue + "%");
+          MINIMUM_CONFIDENCE_TF_OD_API = confValue / 100f;
         });
+    binding.minusConfidence.setOnClickListener(
+        v -> {
+          String trimConfVaue = binding.confidenceValue.getText().toString().trim();
+          int confValue = Integer.parseInt(trimConfVaue.substring(0, trimConfVaue.length() - 1));
+          if (confValue < 5) return;
+            confValue -= 5;
+
+          binding.confidenceValue.setText(confValue + "%");
+          MINIMUM_CONFIDENCE_TF_OD_API = confValue / 100f;
+        });
+
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
 
     binding.deviceSpinner.setSelection(preferencesManager.getDevice());
