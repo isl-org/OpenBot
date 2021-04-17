@@ -82,7 +82,6 @@ public class FeatureList {
     subCategories.add(new SubCategory(OBJECT_NAV, R.drawable.ic_person_search, "#FFD966"));
     categories.add(new Category(AI, subCategories));
 
-
     //    subCategories = new ArrayList<>();
     //    subCategories.add(new SubCategory(CONTROLLER, R.drawable.ic_controller));
     //    subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));

@@ -509,7 +509,10 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
           .runOnUiThread(
               () ->
                   binding.inferenceInfo.setText(
-                          String.format(Locale.US, "%d fps", lastProcessingTimeMs > 0 ? 1000 / lastProcessingTimeMs : 0)));
+                      String.format(
+                          Locale.US,
+                          "%d fps",
+                          lastProcessingTimeMs > 0 ? 1000 / lastProcessingTimeMs : 0)));
     }
   }
 

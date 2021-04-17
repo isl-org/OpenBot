@@ -97,7 +97,8 @@ public abstract class CameraFragment extends ControlsFragment {
     bitmapBuffer = null;
     preview = new Preview.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).build();
     final boolean rotated = ImageUtils.getScreenOrientation(requireActivity()) % 180 == 90;
-    final PreviewView.ScaleType scaleType = rotated ? PreviewView.ScaleType.FIT_CENTER : PreviewView.ScaleType.FIT_START;
+    final PreviewView.ScaleType scaleType =
+        rotated ? PreviewView.ScaleType.FIT_CENTER : PreviewView.ScaleType.FIT_START;
     previewView.setScaleType(scaleType);
     preview.setSurfaceProvider(previewView.getSurfaceProvider());
     CameraSelector cameraSelector =
