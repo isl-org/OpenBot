@@ -353,7 +353,7 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
           .runOnUiThread(
               () ->
                   binding.inputResolution.setText(
-                      "Input: " + autoPilot.getImageSizeX() + 'x' + autoPilot.getImageSizeY()));
+                      autoPilot.getImageSizeX() + "x" + autoPilot.getImageSizeY()));
 
       Matrix cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
@@ -454,7 +454,7 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
               TimeUnit.MILLISECONDS.sleep(lastProcessingTimeMs);
               vehicle.setControl(0, 0);
               requireActivity()
-                  .runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_ms));
+                  .runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_fps));
             } catch (InterruptedException e) {
               Timber.e(e, "Got interrupted.");
             }

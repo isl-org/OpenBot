@@ -292,9 +292,9 @@ public class ObjectNavFragment extends CameraFragment {
                         detector.getLabels());
 
                 binding.classType.setAdapter(adapter);
-                binding.classType.setThreshold(0);
+                //                binding.classType.setThreshold(0);
                 binding.inputResolution.setText(
-                    "Input: " + detector.getImageSizeX() + 'x' + detector.getImageSizeY());
+                    detector.getImageSizeX() + "x" + detector.getImageSizeY());
               });
 
     } catch (IllegalArgumentException | IOException e) {
@@ -372,7 +372,7 @@ public class ObjectNavFragment extends CameraFragment {
               TimeUnit.MILLISECONDS.sleep(lastProcessingTimeMs);
               vehicle.setControl(0, 0);
               requireActivity()
-                  .runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_ms));
+                  .runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_fps));
             } catch (InterruptedException e) {
               Timber.e(e, "Got interrupted.");
             }
@@ -457,11 +457,12 @@ public class ObjectNavFragment extends CameraFragment {
 
             computingNetwork = false;
           });
-      requireActivity()
-          .runOnUiThread(
-              () ->
-                  binding.inferenceInfo.setText(
-                      String.format(Locale.US, "%d ms", lastProcessingTimeMs)));
+      if (lastProcessingTimeMs > 0)
+        requireActivity()
+            .runOnUiThread(
+                () ->
+                    binding.inferenceInfo.setText(
+                        String.format(Locale.US, "%d fps", 10000 / lastProcessingTimeMs)));
     }
   }
 

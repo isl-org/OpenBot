@@ -84,9 +84,9 @@
 
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"
+                    android:layout_weight="0.8"
                     android:gravity="center_vertical"
                     android:paddingVertical="12dp"
                     android:paddingStart="16dp"
@@ -95,22 +95,30 @@
 
                 <TextView
                     android:id="@+id/inference_info"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"
+                    android:layout_weight="1.2"
                     android:gravity="center_vertical|start"
                     android:paddingHorizontal="8dp"
                     android:text="@string/time_ms"
                     android:textColor="@android:color/black" />
 
                 <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:text="Input:"
+                    android:textColor="@android:color/black" />
+
+                <TextView
                     android:id="@+id/inputResolution"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="start|center_vertical"
                     android:textColor="@android:color/black"
-                    tools:text="Input: 256x96" />
+                    tools:text="256x96" />
 
             </LinearLayout>
 
@@ -118,48 +126,58 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="4">
 
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/classContainer"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                <TextView
+                    android:id="@+id/object"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1.5"
-                    android:hint="Class Type"
-                    app:boxStrokeWidth="0dp"
-                    app:boxStrokeWidthFocused="0dp"
-                    app:errorEnabled="false"
-                    app:hintTextColor="@color/lightGray">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/classType"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:text="Person"
-                        android:background="@drawable/button_item_background_black"
-                        android:backgroundTint="@android:color/white"
-                        android:cursorVisible="false" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.8"
+                    android:background="@drawable/button_item_background_black"
+                    android:backgroundTint="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:text="Object:"
+                    android:textColor="@android:color/black" />
 
 
-                </com.google.android.material.textfield.TextInputLayout>
+                <Spinner
+                    android:id="@+id/classType"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    tools:entries="@array/baud_rates"
+                    tools:prompt="Object" />
+
+<!--                <AutoCompleteTextView-->
+<!--                    android:id="@+id/classType"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="48dp"-->
+<!--                    android:layout_weight="1.2"-->
+<!--                    android:background="@drawable/button_item_background_black"-->
+<!--                    android:backgroundTint="@android:color/white"-->
+<!--                    android:cursorVisible="false"-->
+<!--                    android:drawableEnd="@drawable/ic_arrow_drop_down"-->
+<!--                    android:paddingHorizontal="10dp"-->
+<!--                    android:textSize="14sp"-->
+<!--                    tools:text="Person" />-->
 
 
                 <TextView
                     android:id="@+id/seekbarContainer"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:gravity="start|center_vertical"
-                    android:text="Confidence"
+                    android:text="Confidence:"
                     android:textColor="@android:color/black" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:background="@drawable/spinner_bg"
                     android:orientation="horizontal"
                     android:weightSum="6">
@@ -248,8 +266,8 @@
                         android:layout_weight="3"
                         android:gravity="center"
                         android:padding="4dp"
-                        android:textColor="@android:color/black"
-                        android:text="@string/_1" />
+                        android:text="@string/_1"
+                        android:textColor="@android:color/black" />
 
                     <ImageView
                         android:id="@+id/plus"
