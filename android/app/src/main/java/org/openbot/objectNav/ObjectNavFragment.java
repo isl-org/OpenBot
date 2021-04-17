@@ -304,7 +304,8 @@ public class ObjectNavFragment extends CameraFragment {
                         android.R.layout.simple_dropdown_item_1line,
                         detector.getLabels());
                 binding.classType.setAdapter(adapter);
-                binding.classType.setSelection(detector.getLabels().indexOf(preferencesManager.getObjectType()));
+                binding.classType.setSelection(
+                    detector.getLabels().indexOf(preferencesManager.getObjectType()));
                 binding.inputResolution.setText(
                     detector.getImageSizeX() + "x" + detector.getImageSizeY());
               });

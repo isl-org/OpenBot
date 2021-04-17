@@ -120,7 +120,6 @@ public class SharedPreferencesManager {
     return preferences.getString(OBJECT_TYPE, DEFAULT_OBJECT_TYPE);
   }
 
-
   public void setDevice(int device) {
     preferences.edit().putInt(DEVICE, device).apply();
   }
