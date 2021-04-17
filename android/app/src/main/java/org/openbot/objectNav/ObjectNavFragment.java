@@ -122,7 +122,6 @@ public class ObjectNavFragment extends CameraFragment {
     List<CharSequence> models = Arrays.asList(getResources().getTextArray(R.array.detector_models));
     modelAdapter =
         new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
-    //    modelAdapter.addAll(getModelFiles());
 
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
@@ -282,6 +281,7 @@ public class ObjectNavFragment extends CameraFragment {
 
       cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
+
       requireActivity()
           .runOnUiThread(
               () -> {
@@ -290,9 +290,7 @@ public class ObjectNavFragment extends CameraFragment {
                         getContext(),
                         android.R.layout.simple_dropdown_item_1line,
                         detector.getLabels());
-
                 binding.classType.setAdapter(adapter);
-                //                binding.classType.setThreshold(0);
                 binding.inputResolution.setText(
                     detector.getImageSizeX() + "x" + detector.getImageSizeY());
               });
@@ -417,7 +415,8 @@ public class ObjectNavFragment extends CameraFragment {
             if (detector != null) {
               Timber.i("Running detection on image %s", frameNum);
               final long startTime = SystemClock.elapsedRealtime();
-              final List<Detector.Recognition> results = detector.recognizeImage(croppedBitmap);
+              final List<Detector.Recognition> results =
+                  detector.recognizeImage(croppedBitmap, "person");
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
 
               if (!results.isEmpty())
