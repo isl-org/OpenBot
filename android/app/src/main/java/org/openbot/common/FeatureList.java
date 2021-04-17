@@ -11,6 +11,7 @@ public class FeatureList {
 
   // Global
   public static final String ALL = "All";
+  public static final String GENERAL = "General";
   public static final String LEGACY = "Legacy";
   public static final String DEFAULT = "Default";
   public static final String CONTROLLER = "Controller";
@@ -30,9 +31,9 @@ public class FeatureList {
 
   // AI
   public static final String AI = "AI";
-  public static final String AI_MODELS = "AI Models";
+  public static final String AUTOPILOT = "Autopilot";
   public static final String PERSON_FOLLOWING = "Person Following";
-  public static final String OBJECT_NAV = "Object Nav (follow/search)";
+  public static final String OBJECT_NAV = "Object Tracking";
   public static final String AUTONOMOUS_DRIVING = "Autonomous Driving";
   public static final String VISUAL_GOALS = "Visual Goals";
   public static final String SMART_VOICE = "Smart Voice (left/right/straight, Ar Core)";
@@ -64,16 +65,22 @@ public class FeatureList {
   public static ArrayList<Category> getCategories() {
     ArrayList<Category> categories = new ArrayList<>();
 
-    ArrayList<SubCategory> subCategories = new ArrayList<>();
+    ArrayList<SubCategory> subCategories;
+
+    subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(DEFAULT, R.drawable.openbot_icon, "#4B7BFF"));
     categories.add(new Category(LEGACY, subCategories));
 
     subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
     subCategories.add(new SubCategory(DATA_COLLECTION, R.drawable.ic_storage, "#93C47D"));
-    subCategories.add(new SubCategory(AI_MODELS, R.drawable.ic_person_search, "#FFD966"));
     subCategories.add(new SubCategory(CONTROLLER_MAPPING, R.drawable.ic_joystick, "#7268A6"));
-    categories.add(new Category(ALL, subCategories));
+    categories.add(new Category(GENERAL, subCategories));
+
+    subCategories = new ArrayList<>();
+    subCategories.add(new SubCategory(AUTOPILOT, R.drawable.ic_autopilot, "#4B7BFF"));
+    subCategories.add(new SubCategory(OBJECT_NAV, R.drawable.ic_person_search, "#FFD966"));
+    categories.add(new Category(AI, subCategories));
 
     //    subCategories = new ArrayList<>();
     //    subCategories.add(new SubCategory(CONTROLLER, R.drawable.ic_controller));

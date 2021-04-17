@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.openbot.R;
+import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
 import org.openbot.utils.Enums;
 import org.openbot.utils.YuvToRgbConverter;
@@ -95,7 +96,10 @@ public abstract class CameraFragment extends ControlsFragment {
     converter = new YuvToRgbConverter(requireContext());
     bitmapBuffer = null;
     preview = new Preview.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).build();
-    previewView.setScaleType(PreviewView.ScaleType.FIT_CENTER);
+    final boolean rotated = ImageUtils.getScreenOrientation(requireActivity()) % 180 == 90;
+    final PreviewView.ScaleType scaleType =
+        rotated ? PreviewView.ScaleType.FIT_CENTER : PreviewView.ScaleType.FIT_START;
+    previewView.setScaleType(scaleType);
     preview.setSurfaceProvider(previewView.getSurfaceProvider());
     CameraSelector cameraSelector =
         new CameraSelector.Builder().requireLensFacing(lensFacing).build();
@@ -121,9 +125,10 @@ public abstract class CameraFragment extends ControlsFragment {
           processFrame(bitmapBuffer, image);
         });
     try {
-      cameraProvider.unbindAll();
-
-      cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
+      if (cameraProvider != null) {
+        cameraProvider.unbindAll();
+        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
+      }
     } catch (Exception e) {
       LOGGER.e("Use case binding failed: %s", e);
     }

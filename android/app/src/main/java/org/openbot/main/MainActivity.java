@@ -28,7 +28,6 @@ import org.openbot.OpenBotApplication;
 import org.openbot.R;
 import org.openbot.env.UsbConnection;
 import org.openbot.env.Vehicle;
-import org.openbot.original.DefaultActivity;
 import org.openbot.utils.Constants;
 import timber.log.Timber;
 
@@ -131,11 +130,11 @@ public class MainActivity extends AppCompatActivity {
           else toolbar.setVisibility(View.GONE);
         });
 
-    if (savedInstanceState == null) {
-      // Default to open this when app opens
-      Intent intent = new Intent(this, DefaultActivity.class);
-      startActivity(intent);
-    }
+    //    if (savedInstanceState == null) {
+    //      // Default to open this when app opens
+    //      Intent intent = new Intent(this, DefaultActivity.class);
+    //      startActivity(intent);
+    //    }
   }
 
   @Override

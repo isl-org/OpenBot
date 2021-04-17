@@ -194,7 +194,8 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
             if (detector != null) {
               LOGGER.i("Running detection on image " + currFrameNum);
               final long startTime = SystemClock.elapsedRealtime();
-              final List<Detector.Recognition> results = detector.recognizeImage(croppedBitmap);
+              final List<Detector.Recognition> results =
+                  detector.recognizeImage(croppedBitmap, "person");
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
 
               if (!results.isEmpty())

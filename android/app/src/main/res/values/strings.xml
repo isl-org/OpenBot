@@ -21,6 +21,16 @@
         <item>YOLO_V4_TINY_F</item>
     </string-array>
 
+    <string-array name="auto_pilot_models">
+        <item>AUTOPILOT_F</item>
+    </string-array>
+
+    <string-array name="detector_models">
+        <item>DETECTOR_V1_1_0_Q</item>
+        <item>DETECTOR_V3_S_Q</item>
+        <item>YOLO_V4_TINY_F</item>
+    </string-array>
+
     <string name="device">Device</string>
     <string-array name="devices">
         <item>CPU</item>
@@ -84,6 +94,7 @@
     <string name="voltage">**.* V</string>
     <string name="distance">*** cm</string>
     <string name="time_ms">*** ms</string>
+    <string name="time_fps">*** fps</string>
     <string name="resolution">*** x ***</string>
     <string name="drive_mode">Drive Mode</string>
     <string name="speed_mode">Speed Mode</string>
@@ -96,6 +107,10 @@
     <string name="frame">Frame</string>
     <string name="_1">1</string>
     <string name="settings">Settings</string>
+    <string name="inference">Speed</string>
+    <string name="input">Input</string>
+    <string name="confidence">Confidence</string>
+    <string name="object">Object</string>
     <string-array name="speed_modes">
         <item>Slow</item>
         <item>Normal</item>
@@ -109,4 +124,5 @@
     <string name="preview_resolution">Preview Resolution</string>
     <string name="file_available_body">A model with the same name already exists. Would you like to replace it?</string>
     <string name="file_available_title">File found</string>
+
 </resources>

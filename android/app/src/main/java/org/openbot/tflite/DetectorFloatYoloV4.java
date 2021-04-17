@@ -100,23 +100,23 @@ public class DetectorFloatYoloV4 extends Detector {
   }
 
   @Override
-  protected List<Recognition> getRecognitions() {
+  protected List<Recognition> getRecognitions(String className) {
     // Show the best detections.
     // after scaling them back to the input size.
     final ArrayList<Recognition> recognitions = new ArrayList<>(getNumDetections());
     for (int i = 0; i < getNumDetections(); ++i) {
       float maxClass = 0;
-      int detectedClass = -1;
+      int classId = -1;
       final float[] classes = new float[labels.size()];
       System.arraycopy(outputScores[0][i], 0, classes, 0, labels.size());
       for (int c = 0; c < labels.size(); ++c) {
         if (classes[c] > maxClass) {
-          detectedClass = c;
+          classId = c;
           maxClass = classes[c];
         }
       }
       final float score = maxClass;
-      if (detectedClass == 0) { // only consider persons
+      if (classId == 0) { // only consider persons
         final float xPos = outputLocations[0][i][0];
         final float yPos = outputLocations[0][i][1];
         final float w = outputLocations[0][i][2];
@@ -127,8 +127,9 @@ public class DetectorFloatYoloV4 extends Detector {
                 Math.max(0, yPos - h / 2),
                 Math.min(getImageSizeX() - 1, xPos + w / 2),
                 Math.min(getImageSizeY() - 1, yPos + h / 2));
-        recognitions.add(
-            new Recognition("" + i, labels.get(detectedClass), score, detection, detectedClass));
+        if (labels.get(classId).contentEquals(className)) {
+          recognitions.add(new Recognition("" + i, labels.get(classId), score, detection, classId));
+        }
       }
     }
     return nms(recognitions);
