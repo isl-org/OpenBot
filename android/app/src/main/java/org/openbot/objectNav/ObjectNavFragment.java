@@ -476,7 +476,7 @@ public class ObjectNavFragment extends CameraFragment {
             .runOnUiThread(
                 () ->
                     binding.inferenceInfo.setText(
-                        String.format(Locale.US, "%d fps", 1000 / lastProcessingTimeMs)));
+                            String.format(Locale.US, "%d fps", lastProcessingTimeMs > 0 ? 1000 / lastProcessingTimeMs : 0)));
     }
   }
 
