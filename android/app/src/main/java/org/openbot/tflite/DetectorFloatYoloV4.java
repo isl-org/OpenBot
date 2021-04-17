@@ -116,20 +116,18 @@ public class DetectorFloatYoloV4 extends Detector {
         }
       }
       final float score = maxClass;
-      if (classId == 0) { // only consider persons
-        final float xPos = outputLocations[0][i][0];
-        final float yPos = outputLocations[0][i][1];
-        final float w = outputLocations[0][i][2];
-        final float h = outputLocations[0][i][3];
-        final RectF detection =
-            new RectF(
-                Math.max(0, xPos - w / 2),
-                Math.max(0, yPos - h / 2),
-                Math.min(getImageSizeX() - 1, xPos + w / 2),
-                Math.min(getImageSizeY() - 1, yPos + h / 2));
-        if (labels.get(classId).contentEquals(className)) {
-          recognitions.add(new Recognition("" + i, labels.get(classId), score, detection, classId));
-        }
+      final float xPos = outputLocations[0][i][0];
+      final float yPos = outputLocations[0][i][1];
+      final float w = outputLocations[0][i][2];
+      final float h = outputLocations[0][i][3];
+      final RectF detection =
+          new RectF(
+              Math.max(0, xPos - w / 2),
+              Math.max(0, yPos - h / 2),
+              Math.min(getImageSizeX() - 1, xPos + w / 2),
+              Math.min(getImageSizeY() - 1, yPos + h / 2));
+      if (labels.get(classId).contentEquals(className)) {
+        recognitions.add(new Recognition("" + i, labels.get(classId), score, detection, classId));
       }
     }
     return nms(recognitions);
