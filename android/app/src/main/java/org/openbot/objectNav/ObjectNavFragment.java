@@ -69,6 +69,7 @@ public class ObjectNavFragment extends CameraFragment {
   private DetectorModel model = DetectorModel.DETECTOR_V1_1_0_Q;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
+  private String classType = "person";
 
   private ArrayAdapter<CharSequence> modelAdapter;
 
@@ -114,6 +115,16 @@ public class ObjectNavFragment extends CameraFragment {
 
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
 
+    binding.classType.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            classType = parent.getItemAtPosition(position).toString();
+          }
+
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
     binding.deviceSpinner.setSelection(preferencesManager.getDevice());
     setNumThreads(preferencesManager.getNumThreads());
 
@@ -416,7 +427,7 @@ public class ObjectNavFragment extends CameraFragment {
               Timber.i("Running detection on image %s", frameNum);
               final long startTime = SystemClock.elapsedRealtime();
               final List<Detector.Recognition> results =
-                  detector.recognizeImage(croppedBitmap, "person");
+                  detector.recognizeImage(croppedBitmap, classType);
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
 
               if (!results.isEmpty())

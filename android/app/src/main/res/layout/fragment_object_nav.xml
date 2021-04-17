@@ -86,7 +86,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.8"
+                    android:layout_weight="0.7"
                     android:gravity="center_vertical"
                     android:paddingVertical="12dp"
                     android:paddingStart="16dp"
@@ -97,7 +97,7 @@
                     android:id="@+id/inference_info"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.3"
                     android:gravity="center_vertical|start"
                     android:paddingHorizontal="8dp"
                     android:text="@string/time_ms"
@@ -126,6 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:paddingVertical="8dp"
                 android:weightSum="4">
 
 
@@ -133,7 +134,7 @@
                     android:id="@+id/object"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.8"
+                    android:layout_weight="0.7"
                     android:background="@drawable/button_item_background_black"
                     android:backgroundTint="@android:color/white"
                     android:gravity="center_vertical"
@@ -146,7 +147,7 @@
                     android:id="@+id/classType"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.3"
                     tools:entries="@array/baud_rates"
                     tools:prompt="Object" />
 
@@ -221,7 +222,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.8"
+                    android:layout_weight="0.7"
                     android:gravity="center_vertical"
                     android:paddingStart="16dp"
                     android:text="@string/device"
@@ -231,7 +232,7 @@
                     android:id="@+id/device_spinner"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.3"
                     android:entries="@array/devices"
                     android:prompt="@string/device" />
 
