@@ -505,14 +505,12 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
             computingNetwork = false;
           });
-      requireActivity()
-          .runOnUiThread(
-              () ->
-                  binding.inferenceInfo.setText(
-                      String.format(
-                          Locale.US,
-                          "%d fps",
-                          lastProcessingTimeMs > 0 ? 1000 / lastProcessingTimeMs : 0)));
+      if (lastProcessingTimeMs > 0)
+        requireActivity()
+            .runOnUiThread(
+                () ->
+                    binding.inferenceInfo.setText(
+                        String.format(Locale.US, "%d fps", 1000 / lastProcessingTimeMs)));
     }
   }
 
