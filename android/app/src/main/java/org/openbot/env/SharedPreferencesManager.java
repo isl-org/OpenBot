@@ -2,7 +2,7 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import org.openbot.autoPilot.AutoPilotModel;
+import org.openbot.autopilot.AutopilotModel;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.utils.Enums;
@@ -24,7 +24,7 @@ public class SharedPreferencesManager {
   private static final String DEFAULT_MODEL = Model.DETECTOR_V1_1_0_Q.toString();
   private static final String MODEL = "MODEL_NAME";
 
-  private static final String DEFAULT_MODEL_AUTO = AutoPilotModel.AUTOPILOT_F.toString();
+  private static final String DEFAULT_MODEL_AUTO = AutopilotModel.AUTOPILOT_F.toString();
   private static final String MODEL_AUTOPILOT = "MODEL_NAME_AUTOPILOT";
 
   private static final String DEFAULT_MODEL_DETECTOR = Model.DETECTOR_V1_1_0_Q.toString();

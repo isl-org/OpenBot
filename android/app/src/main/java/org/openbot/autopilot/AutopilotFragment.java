@@ -1,4 +1,4 @@
-package org.openbot.autoPilot;
+package org.openbot.autopilot;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
-import org.openbot.databinding.FragmentAutoPilotBinding;
+import org.openbot.databinding.FragmentAutopilotBinding;
 import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
@@ -54,10 +54,10 @@ import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
-public class AutoPilotFragment extends CameraFragment implements ServerListener {
+public class AutopilotFragment extends CameraFragment implements ServerListener {
 
   // options for drop down in object nav?
-  private FragmentAutoPilotBinding binding;
+  private FragmentAutopilotBinding binding;
   private Handler handler;
   private HandlerThread handlerThread;
   private ServerCommunication serverCommunication;
@@ -75,7 +75,7 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
 
   private MultiBoxTracker tracker;
 
-  private AutoPilotModel model = AutoPilotModel.AUTOPILOT_F;
+  private AutopilotModel model = AutopilotModel.AUTOPILOT_F;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
 
@@ -133,7 +133,7 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
     modelAdapter.add("Choose From Device");
     modelAdapter.notifyDataSetChanged();
     binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
-    setModel(new AutoPilotModel(fileName));
+    setModel(new AutopilotModel(fileName));
 
     Toast.makeText(
             requireContext().getApplicationContext(),
@@ -146,7 +146,7 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
   public View onCreateView(
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    binding = FragmentAutoPilotBinding.inflate(inflater, container, false);
+    binding = FragmentAutopilotBinding.inflate(inflater, container, false);
 
     return inflateFragment(binding, inflater, container);
   }
@@ -181,9 +181,9 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
               openPicker();
             } else
               try {
-                setModel(AutoPilotModel.fromId(selected.toUpperCase()));
+                setModel(AutopilotModel.fromId(selected.toUpperCase()));
               } catch (IllegalArgumentException e) {
-                setModel(new AutoPilotModel(selected));
+                setModel(new AutopilotModel(selected));
               }
             selectedModelIndex = position;
           }
@@ -320,12 +320,12 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
       return;
     }
     final Network.Device device = getDevice();
-    final AutoPilotModel model = getModel();
+    final AutopilotModel model = getModel();
     final int numThreads = getNumThreads();
     runInBackground(() -> recreateNetwork(model, device, numThreads));
   }
 
-  private void recreateNetwork(AutoPilotModel model, Network.Device device, int numThreads) {
+  private void recreateNetwork(AutopilotModel model, Network.Device device, int numThreads) {
     tracker.clearTrackedObjects();
     if (autoPilot != null) {
       Timber.d("Closing autoPilot.");
@@ -530,7 +530,7 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
       modelAdapter.add(model);
     } else {
       if (model.equals(binding.modelSpinner.getSelectedItem())) {
-        setModel(new AutoPilotModel(model));
+        setModel(new AutopilotModel(model));
       }
     }
     Toast.makeText(
@@ -552,11 +552,11 @@ public class AutoPilotFragment extends CameraFragment implements ServerListener 
         .show();
   }
 
-  protected AutoPilotModel getModel() {
+  protected AutopilotModel getModel() {
     return model;
   }
 
-  private void setModel(AutoPilotModel model) {
+  private void setModel(AutopilotModel model) {
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;
