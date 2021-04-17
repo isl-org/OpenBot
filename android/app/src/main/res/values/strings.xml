@@ -107,6 +107,10 @@
     <string name="frame">Frame</string>
     <string name="_1">1</string>
     <string name="settings">Settings</string>
+    <string name="inference">Speed</string>
+    <string name="input">Input</string>
+    <string name="confidence">Confidence</string>
+    <string name="object">Object</string>
     <string-array name="speed_modes">
         <item>Slow</item>
         <item>Normal</item>

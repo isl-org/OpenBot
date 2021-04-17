@@ -102,7 +102,7 @@
                     android:gravity="center_vertical"
                     android:paddingVertical="12dp"
                     android:paddingStart="16dp"
-                    android:text="FPS:"
+                    android:text="@string/inference"
                     android:textColor="@android:color/black" />
 
                 <TextView
@@ -112,7 +112,7 @@
                     android:layout_weight="1.2"
                     android:gravity="center_vertical|start"
                     android:paddingHorizontal="8dp"
-                    android:text="@string/time_ms"
+                    android:text="@string/time_fps"
                     android:textColor="@android:color/black" />
 
                 <TextView
@@ -120,7 +120,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="start|center_vertical"
-                    android:text="Input:"
+                    android:text="@string/input"
                     android:textColor="@android:color/black" />
 
                 <TextView

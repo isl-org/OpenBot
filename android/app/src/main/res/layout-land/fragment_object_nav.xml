@@ -102,7 +102,7 @@
                     android:gravity="center_vertical"
                     android:paddingVertical="12dp"
                     android:paddingStart="16dp"
-                    android:text="FPS:"
+                    android:text="@string/inference"
                     android:textColor="@android:color/black" />
 
                 <TextView
@@ -112,7 +112,7 @@
                     android:layout_weight="1.3"
                     android:gravity="center_vertical|start"
                     android:paddingHorizontal="8dp"
-                    android:text="@string/time_ms"
+                    android:text="@string/time_fps"
                     android:textColor="@android:color/black" />
 
                 <TextView
@@ -120,7 +120,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="start|center_vertical"
-                    android:text="Input:"
+                    android:text="@string/input"
                     android:textColor="@android:color/black" />
 
                 <TextView
@@ -151,7 +151,7 @@
                     android:backgroundTint="@android:color/white"
                     android:gravity="center_vertical"
                     android:paddingStart="16dp"
-                    android:text="Object:"
+                    android:text="@string/object"
                     android:textColor="@android:color/black" />
 
 
@@ -182,7 +182,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="start|center_vertical"
-                    android:text="Confidence:"
+                    android:text="@string/confidence"
                     android:textColor="@android:color/black" />
 
                 <LinearLayout
