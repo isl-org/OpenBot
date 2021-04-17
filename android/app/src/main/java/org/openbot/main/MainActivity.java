@@ -131,11 +131,11 @@ public class MainActivity extends AppCompatActivity {
           else toolbar.setVisibility(View.GONE);
         });
 
-    if (savedInstanceState == null) {
-      // Default to open this when app opens
-      Intent intent = new Intent(this, DefaultActivity.class);
-      startActivity(intent);
-    }
+//    if (savedInstanceState == null) {
+//      // Default to open this when app opens
+//      Intent intent = new Intent(this, DefaultActivity.class);
+//      startActivity(intent);
+//    }
   }
 
   @Override
