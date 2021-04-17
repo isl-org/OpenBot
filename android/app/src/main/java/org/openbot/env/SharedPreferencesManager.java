@@ -29,6 +29,8 @@ public class SharedPreferencesManager {
 
   private static final String DEFAULT_MODEL_DETECTOR = Model.DETECTOR_V1_1_0_Q.toString();
   private static final String MODEL_DETECTOR = "MODEL_NAME";
+  private static final String OBJECT_TYPE = "OBJECT_TYPE";
+  private static final String DEFAULT_OBJECT_TYPE = "person";
 
   private static final int DEFAULT_DEVICE = Network.Device.CPU.ordinal();
   private static final String DEVICE = "DEVICE";
@@ -109,6 +111,15 @@ public class SharedPreferencesManager {
   public String getDetectorModel() {
     return preferences.getString(MODEL_DETECTOR, DEFAULT_MODEL_DETECTOR);
   }
+
+  public void setObjectType(String model) {
+    preferences.edit().putString(OBJECT_TYPE, model).apply();
+  }
+
+  public String getObjectType() {
+    return preferences.getString(OBJECT_TYPE, DEFAULT_OBJECT_TYPE);
+  }
+
 
   public void setDevice(int device) {
     preferences.edit().putInt(DEVICE, device).apply();

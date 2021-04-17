@@ -115,11 +115,13 @@ public class ObjectNavFragment extends CameraFragment {
 
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
 
+    classType = preferencesManager.getObjectType();
     binding.classType.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             classType = parent.getItemAtPosition(position).toString();
+            preferencesManager.setObjectType(classType);
           }
 
           @Override
@@ -302,6 +304,7 @@ public class ObjectNavFragment extends CameraFragment {
                         android.R.layout.simple_dropdown_item_1line,
                         detector.getLabels());
                 binding.classType.setAdapter(adapter);
+                binding.classType.setSelection(detector.getLabels().indexOf(preferencesManager.getObjectType()));
                 binding.inputResolution.setText(
                     detector.getImageSizeX() + "x" + detector.getImageSizeY());
               });
