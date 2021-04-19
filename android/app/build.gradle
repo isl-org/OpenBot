@@ -63,6 +63,13 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.android.gms:play-services-nearby:17.0.0'
 
+    // WiFi-direct
+    implementation 'com.abemart.wroup:wroup:0.9'
+
+    // Alt RTSP server
+    implementation 'com.github.pedroSG94:RTSP-Server:1.0.0'
+    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:1.9.3' // do not
+
     // RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
