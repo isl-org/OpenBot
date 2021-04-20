@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class ModelManagementFragment extends Fragment {
 
 	private FragmentModelManagementBinding binding;
-	private List<ModelInfo> modelList;
+	public static final String ALL = "ALL";
 
 	@Nullable
 	@Override
@@ -31,7 +32,6 @@ public class ModelManagementFragment extends Fragment {
 			@NonNull LayoutInflater inflater,
 			@Nullable ViewGroup container,
 			@Nullable Bundle savedInstanceState) {
-		modelList = new ArrayList<>();
 		binding = FragmentModelManagementBinding.inflate(inflater, container, false);
 		return binding.getRoot();
 	}
@@ -39,16 +39,29 @@ public class ModelManagementFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-      List<String> modelTypes = Arrays.stream(ModelInfo.MODEL_TYPE.values()).map(Enum::toString).collect(Collectors.toList());
-      modelTypes.add(0,"ALL");
+		List<String> modelTypes = Arrays.stream(ModelInfo.MODEL_TYPE.values()).map(Enum::toString).collect(Collectors.toList());
+		modelTypes.add(0, ALL);
 
-      ArrayAdapter<String> modelAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, modelTypes);
+		ArrayAdapter<String> modelAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, modelTypes);
 		binding.modelSpinner.setAdapter(modelAdapter);
-		modelList.addAll(loadAllModels());
-		showModels(modelList);
+
+		showModels(loadModelList(ALL));
+
+		binding.modelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				showModels(loadModelList(parent.getItemAtPosition(position).toString()));
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+
+			}
+		});
 	}
 
 	private void showModels(List<ModelInfo> modelList) {
+		binding.modelContainer.removeAllViews();
 		for (ModelInfo modelInfo : modelList) {
 			RadioButton radioButton =
 					(RadioButton)
@@ -59,25 +72,30 @@ public class ModelManagementFragment extends Fragment {
 		}
 	}
 
-	private List<ModelInfo> loadAllModels() {
+	private List<ModelInfo> loadModelList(String filter) {
 
-		List<ModelInfo> modelInfoList =
-				Arrays.stream(getModelFiles())
-						.map(f -> new ModelInfo(f, ModelInfo.MODEL_TYPE.AUTOPILOT))
-						.collect(Collectors.toList());
-		try {
-			List<ModelInfo> list =
-					Arrays.stream(requireContext().getAssets().list("networks"))
-							.filter(f -> f.endsWith(".tflite"))
-							.map(f -> new ModelInfo(f, ModelInfo.MODEL_TYPE.DETECTOR))
-							.collect(Collectors.toList());
+		List<ModelInfo> modelInfoList = new ArrayList<>();
 
-			modelInfoList.addAll(list);
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (filter.equals(ModelInfo.MODEL_TYPE.AUTOPILOT.toString()) || filter.equals(ALL)) {
+			List<ModelInfo> autoList = Arrays.stream(getModelFiles())
+					.map(f -> new ModelInfo(f, ModelInfo.MODEL_TYPE.AUTOPILOT))
+					.collect(Collectors.toList());
+			modelInfoList.addAll(autoList);
 		}
+		if (filter.equals(ModelInfo.MODEL_TYPE.DETECTOR.toString()) || filter.equals(ALL)) {
+			try {
+				List<ModelInfo> list =
+						Arrays.stream(requireContext().getAssets().list("networks"))
+								.filter(f -> f.endsWith(".tflite"))
+								.map(f -> new ModelInfo(f, ModelInfo.MODEL_TYPE.DETECTOR))
+								.collect(Collectors.toList());
 
+				modelInfoList.addAll(list);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return modelInfoList;
 	}
 
