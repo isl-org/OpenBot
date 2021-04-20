@@ -34,6 +34,8 @@ android {
         noCompress "tflite", "mp3"
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
@@ -139,4 +141,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.nononsenseapps:filepicker:4.1.0'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
 }
