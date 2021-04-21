@@ -1,12 +1,16 @@
 package org.openbot.env;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.customview.AutoFitSurfaceGlView;
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
+import org.openbot.utils.Constants;
+import org.openbot.utils.Enums;
+import org.openbot.utils.Utils;
 
 import timber.log.Timber;
 
@@ -16,9 +20,7 @@ public class PhoneController {
     private static PhoneController _phoneController;
     private final AndGate andGate = new AndGate();
 
-    final ILocalConnection connection =
-            // new NearbyConnection();
-            new NetworkServiceConnection();
+    final ILocalConnection connection = new ConnectionManager().getConnection();
 
     private final IVideoServer videoServer = new RtspServerPedro();
     private Context context;
@@ -26,28 +28,32 @@ public class PhoneController {
     {
         connection.setDataCallback(new DataReceived());
         handleBotEvents();
+        handlePhoneControllerEvents();
     }
 
     public void setView(AutoFitSurfaceView videoWindow) {
-        videoServer.setView(videoWindow);
-    }
-
-    public void setView(AutoFitSurfaceGlView videoWindow) {
-        videoServer.setView(videoWindow);
-    }
-
-    public void setView(AutoFitTextureView videoWindow) {
-        videoServer.setView(videoWindow);
-    }
-
-    public void startVideo() {
-        if (videoServer.isRunning()) {
-            videoServer.sendServerUrl();
+        if (connection.isVideoCapable()) {
+            videoServer.setView(videoWindow);
         }
     }
 
+    public void setView(AutoFitSurfaceGlView videoWindow) {
+        if (connection.isVideoCapable()) {
+            videoServer.setView(videoWindow);
+        }
+    }
+
+    public void setView(AutoFitTextureView videoWindow) {
+        if (connection.isVideoCapable()) {
+            videoServer.setView(videoWindow);
+        }
+    }
+
+    public void startVideo() {
+        videoServer.startServer();
+    }
     public void stopVideo() {
-        videoServer.sendVideoStoppedStatus();
+        videoServer.stopServer();
     }
 
     class DataReceived implements IDataReceived {
@@ -73,12 +79,13 @@ public class PhoneController {
         } else {
             connection.start();
         }
-        andGate.setConnected(true);
     }
 
     public void disconnect() {
         andGate.setConnected(false);
         connection.stop();
+        videoServer.setConnected(false);
+        stopVideo();
     }
 
     public void send(JSONObject info) {
@@ -93,6 +100,32 @@ public class PhoneController {
         BotToControllerEventBus.getProcessor()
                 .subscribe(
                         this::send, error -> Timber.d("Error occurred in BotToControllerEventBus: %s", error));
+    }
+
+    private void handlePhoneControllerEvents() {
+        ControllerToBotEventBus.subscribe(
+                this.getClass().getSimpleName(),
+                event -> {
+                    String commandType = "";
+                    if (event.has("command")) {
+                        commandType = event.getString("command");
+                    }
+
+                    switch (commandType) {
+
+                        // We re connected to the controller, send back status info
+                        case Constants.CMD_CONNECTED:
+                            videoServer.setConnected(true);
+                            andGate.setConnected(true);
+                            break;
+
+                        case Constants.CMD_DISCONNECTED:
+                            break;
+                    }
+                },
+                error -> {
+                    Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
+                });
     }
 
     private PhoneController() {

@@ -84,14 +84,18 @@ data class AndroidMediaPlayer(
     override fun stop() {
         try {
             mPlayer?.stop()
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "Got exception $e trying to stop player.")
         }
     }
 
     override fun release() {
-        mPlayer?.reset()
-        mPlayer?.release()
+        try {
+            mPlayer?.reset()
+            mPlayer?.release()
+        } catch (e: Exception) {
+            Log.d(TAG, "Got exception $e trying to release player.")
+        }
     }
 
     override fun setDisplay(holder: SurfaceHolder?) {

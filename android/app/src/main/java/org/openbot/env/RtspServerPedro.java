@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -23,9 +24,9 @@ import static org.openbot.utils.Utils.getIPAddress;
 public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callback, TextureView.SurfaceTextureListener, IVideoServer {
     private final String TAG = "RtspServerPedroOpenGL";
     private RtspServerCamera1 rtspServerCamera1;
-    private OpenGlView openGlView;
-    private AutoFitTextureView textureView;
-    private AutoFitSurfaceView surfaceView;
+    private View view;
+    private boolean surfaceCreated = false;
+    private boolean connected = false;
 
     private Context context;
 
@@ -72,28 +73,56 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
 
     @Override
     public void setView(SurfaceView view) {
-        this.surfaceView = (AutoFitSurfaceView) view;
-        this.surfaceView.getHolder().addCallback(this);
+        this.view = view;
+        ((AutoFitSurfaceView)this.view).getHolder().addCallback(this);
     }
 
     @Override
     public void setView(TextureView view) {
-        this.textureView = (AutoFitTextureView) view;
-        this.textureView.setSurfaceTextureListener(this);
+        this.view = view;
+        ((AutoFitTextureView)this.view).setSurfaceTextureListener(this);
     }
 
     @Override
     public void setView(OpenGlView view) {
-        this.openGlView = (OpenGlView) view;
-        this.openGlView.getHolder().addCallback(this);
+        this.view = view;
+        ((OpenGlView)this.view).getHolder().addCallback(this);
     }
 
+    @Override
+    public void startServer() {
+        startServer(WIDTH, HEIGHT, PORT);
+    }
+
+    @Override
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+        if (connected) {
+            startServer();
+        } else {
+            stopServer();
+        }
+    }
     // end Interface
 
     // Local methods
     private void startServer(int width, int height, int port) {
+        if (!connected || !surfaceCreated || this.view == null) {
+            return;
+        }
+
         if (rtspServerCamera1 == null) {
-            rtspServerCamera1 = new RtspServerCamera1(openGlView, this, port);
+            String viewType = this.view.getClass().getName();
+
+            if ( viewType.contains("AutoFitTextureView")) {
+                rtspServerCamera1 = new RtspServerCamera1((TextureView)view, this, port);
+            }
+            if ( viewType.contains("AutoFitSurfaceView")) {
+                rtspServerCamera1 = new RtspServerCamera1((SurfaceView)view, this, port);
+            }
+            if ( viewType.contains("AutoFitSurfaceGlView")) {
+                rtspServerCamera1 = new RtspServerCamera1((OpenGlView)view, this, port);
+            }
         }
 
         if (!rtspServerCamera1.isStreaming()) {
@@ -162,6 +191,7 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         Log.d(TAG, "Surface created...");
+        this.surfaceCreated = true;
         startServer(WIDTH, HEIGHT, PORT);
     }
 
@@ -174,6 +204,7 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+        this.surfaceCreated = false;
         sendVideoStoppedStatus();
         stopServer();
     }
@@ -181,8 +212,8 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
     // SurfaceTextureListener callbacks
     @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+        this.surfaceCreated = true;
         startServer(WIDTH, HEIGHT, PORT);
-        rtspServerCamera1.startPreview();
     }
 
     @Override
@@ -191,6 +222,7 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+        this.surfaceCreated = false;
         sendVideoStoppedStatus();
         stopServer();
         return false;

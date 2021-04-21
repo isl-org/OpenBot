@@ -20,7 +20,6 @@ import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
 import kotlin.concurrent.thread
 
-
 object NetworkServiceConnection : ILocalConnection {
 
     private val TAG = "NetworkServiceConn"

@@ -7,7 +7,10 @@ import android.view.TextureView;
 import com.pedro.rtplibrary.view.OpenGlView;
 
 public interface IVideoServer {
+  void startServer();
   void stopServer();
+
+  void setConnected(boolean connected);
 
   void init(Context context);
 

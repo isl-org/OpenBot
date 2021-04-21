@@ -12,9 +12,7 @@ package org.openbot.controller
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.net.wifi.p2p.WifiP2pManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -22,7 +20,6 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -111,13 +108,13 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
                             }
                             EventProcessor.ProgressEvents.Disconnected -> {
                                 screenManager.hideControls()
-                                ConnectionFactory.get().connect(this)
+                                ConnectionManager.get().connect(this)
                             }
                             EventProcessor.ProgressEvents.StopAdvertising -> {
                             }
                             EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
                                 screenManager.hideControls()
-                                ConnectionFactory.get().connect(this)
+                                ConnectionManager.get().connect(this)
                             }
                             EventProcessor.ProgressEvents.AdvertisingFailed -> {
                                 screenManager.hideControls()
@@ -157,7 +154,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
     @Override
     override fun onPause() {
         super.onPause()
-        ConnectionFactory.get().disconnect()
+        ConnectionManager.get().disconnect()
     }
 
     @Override
@@ -165,8 +162,8 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         super.onResume()
         hideSystemUI()
 
-        ConnectionFactory.get().init(this)
-        ConnectionFactory.get().connect(this)
+        ConnectionManager.get().init(this)
+        ConnectionManager.get().connect(this)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,

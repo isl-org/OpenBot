@@ -62,9 +62,18 @@ class RtspServer implements SurfaceHolder.Callback, IVideoServer {
   }
 
   @Override
+  public void startServer() {
+  }
+
+  @Override
   public void stopServer() {
     session.stop();
     context.stopService(new Intent(context, net.majorkernelpanic.streaming.rtsp.RtspServer.class));
+  }
+
+  @Override
+  public void setConnected(boolean connected) {
+
   }
 
   @Override

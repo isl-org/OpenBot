@@ -22,6 +22,7 @@ import com.abemart.wroup.service.WroupService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openbot.utils.Utils;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class WiFiDirectConnection implements ILocalConnection {
 
     private IDataReceived dataReceivedCallback = null;
     private WiFiDirectBroadcastReceiver wiFiDirectBroadcastReceiver = null;
+    private boolean stopped = true;
 
     @Override
     public void init(Context context) {
@@ -91,18 +93,27 @@ public class WiFiDirectConnection implements ILocalConnection {
 
     @Override
     public void stop() {
-
+        stopped = true;
+        BotToControllerEventBus.emitEvent(Utils.createStatus("CONNECTION_ACTIVE", false));
     }
 
     @Override
     public void start() {
+        stopped = false;
+        BotToControllerEventBus.emitEvent(Utils.createStatus("CONNECTION_ACTIVE", true));
+    }
 
+    @Override
+    public boolean isVideoCapable() {
+        return true;
     }
 
     class DataReceiver implements DataReceivedListener {
         @Override
         public void onDataReceived(MessageWrapper messageWrapper) {
-            dataReceivedCallback.dataReceived(messageWrapper.getMessage());
+            if (!stopped) {
+                dataReceivedCallback.dataReceived(messageWrapper.getMessage());
+            }
         }
     }
 

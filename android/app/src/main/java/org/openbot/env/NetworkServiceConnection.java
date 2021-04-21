@@ -88,6 +88,11 @@ public class NetworkServiceConnection implements ILocalConnection {
   }
 
   @Override
+  public boolean isVideoCapable() {
+    return true;
+  }
+
+  @Override
   public boolean isConnected() {
     return socketHandler != null && socketHandler.isConnected();
   }
