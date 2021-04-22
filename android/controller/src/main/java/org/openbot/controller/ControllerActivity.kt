@@ -45,6 +45,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         setupPermissions()
 
         screenManager = ScreenManager(binding)
+        ConnectionManager.init(this)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -59,6 +60,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         hideSystemUI()
 
         BotDataListener.init()
+
         binding.videoView.init(binding)
     }
 
@@ -108,13 +110,13 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
                             }
                             EventProcessor.ProgressEvents.Disconnected -> {
                                 screenManager.hideControls()
-                                ConnectionManager.get().connect(this)
+                                ConnectionManager.getConnection().connect(this)
                             }
                             EventProcessor.ProgressEvents.StopAdvertising -> {
                             }
                             EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
                                 screenManager.hideControls()
-                                ConnectionManager.get().connect(this)
+                                ConnectionManager.getConnection().connect(this)
                             }
                             EventProcessor.ProgressEvents.AdvertisingFailed -> {
                                 screenManager.hideControls()
@@ -154,7 +156,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
     @Override
     override fun onPause() {
         super.onPause()
-        ConnectionManager.get().disconnect()
+        ConnectionManager.getConnection().disconnect()
     }
 
     @Override
@@ -162,8 +164,8 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         super.onResume()
         hideSystemUI()
 
-        ConnectionManager.get().init(this)
-        ConnectionManager.get().connect(this)
+        ConnectionManager.getConnection().init(this)
+        ConnectionManager.getConnection().connect(this)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,

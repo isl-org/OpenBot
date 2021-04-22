@@ -35,7 +35,7 @@ open class Button @JvmOverloads constructor(
     }
 
     protected fun sendMessage(message: String) {
-        ConnectionManager.get().sendMessage(message)
+        ConnectionManager.getConnection().sendMessage(message)
     }
 
     inner class OnTouchListener(private val command: String) : View.OnTouchListener {

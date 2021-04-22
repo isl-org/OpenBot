@@ -26,7 +26,7 @@ class ExitButton @JvmOverloads constructor(
 
     inner class OnTouchListener : View.OnTouchListener {
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-            ConnectionManager.get().disconnect()
+            ConnectionManager.getConnection().disconnect()
             (context as Activity).finish()
             System.exit(0)
             return true

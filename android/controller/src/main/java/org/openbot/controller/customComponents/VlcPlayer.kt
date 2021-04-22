@@ -78,5 +78,6 @@ data class VlcPlayer(
     }
 
     override fun setSurfaceChangedCallback(surfaceChangedCallback: (SurfaceHolder, Int, Int) -> Unit) {
+        Log.i(TAG, "surfaceChangedCallback: ")
     }
 }

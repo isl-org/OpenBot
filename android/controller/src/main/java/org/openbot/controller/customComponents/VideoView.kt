@@ -90,6 +90,9 @@ class VideoView @JvmOverloads constructor(
     }
 
     private fun setSurfaceDimensions (holder: SurfaceHolder, width: Int, height: Int) {
+        if (width == 0 || height == 0) {
+            return
+        }
         val aspectRatio: kotlin.Float = height.toFloat()/width.toFloat()
         val surfaceWidth = this.width
         val surfaceHeight = (surfaceWidth * aspectRatio).toInt()
@@ -102,6 +105,7 @@ class VideoView @JvmOverloads constructor(
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+        // setSurfaceDimensions(holder, width, height)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {

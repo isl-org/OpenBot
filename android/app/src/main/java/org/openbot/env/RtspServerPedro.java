@@ -17,16 +17,20 @@ import com.pedro.rtspserver.RtspServerCamera1;
 
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
+import org.openbot.utils.AndGate;
 import org.openbot.utils.Utils;
+
+import java.util.ArrayList;
 
 import static org.openbot.utils.Utils.getIPAddress;
 
-public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callback, TextureView.SurfaceTextureListener, IVideoServer {
+public class RtspServerPedro implements ConnectCheckerRtsp, SurfaceHolder.Callback, TextureView.SurfaceTextureListener, IVideoServer {
     private final String TAG = "RtspServerPedroOpenGL";
     private RtspServerCamera1 rtspServerCamera1;
     private View view;
-    private boolean surfaceCreated = false;
-    private boolean connected = false;
+
+    private AndGate andGate;
+    private AndGate.Action action;
 
     private Context context;
 
@@ -40,8 +44,22 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
     // IVideoServer Interface
     @Override
     public void init(Context context) {
-
         this.context = context;
+
+        /*
+        AndGate will run 'startServer()' if all its input conditions are met.
+        This is useful if we do not know the order of the updates to the conditions.
+        */
+        action = new AndGate.Action() {
+            @Override
+            public void runIt() {
+                startServer();
+            }
+        };
+        andGate = new AndGate(new ArrayList(), action);
+        andGate.addCondition("connected");
+        andGate.addCondition("surfaceCreated");
+        andGate.addCondition("view set");
     }
 
     @Override
@@ -74,19 +92,22 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
     @Override
     public void setView(SurfaceView view) {
         this.view = view;
-        ((AutoFitSurfaceView)this.view).getHolder().addCallback(this);
+        ((AutoFitSurfaceView) this.view).getHolder().addCallback(this);
+        andGate.update("view set", true);
     }
 
     @Override
     public void setView(TextureView view) {
         this.view = view;
-        ((AutoFitTextureView)this.view).setSurfaceTextureListener(this);
+        ((AutoFitTextureView) this.view).setSurfaceTextureListener(this);
+        andGate.update("view set", true);
     }
 
     @Override
     public void setView(OpenGlView view) {
         this.view = view;
-        ((OpenGlView)this.view).getHolder().addCallback(this);
+        ((OpenGlView) this.view).getHolder().addCallback(this);
+        andGate.update("view set", true);
     }
 
     @Override
@@ -96,38 +117,29 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
 
     @Override
     public void setConnected(boolean connected) {
-        this.connected = connected;
-        if (connected) {
-            startServer();
-        } else {
-            stopServer();
-        }
+        andGate.update("connected", connected);
     }
     // end Interface
 
     // Local methods
     private void startServer(int width, int height, int port) {
-        if (!connected || !surfaceCreated || this.view == null) {
-            return;
-        }
-
         if (rtspServerCamera1 == null) {
             String viewType = this.view.getClass().getName();
 
-            if ( viewType.contains("AutoFitTextureView")) {
-                rtspServerCamera1 = new RtspServerCamera1((TextureView)view, this, port);
+            if (viewType.contains("AutoFitTextureView")) {
+                rtspServerCamera1 = new RtspServerCamera1((TextureView) view, this, port);
             }
-            if ( viewType.contains("AutoFitSurfaceView")) {
-                rtspServerCamera1 = new RtspServerCamera1((SurfaceView)view, this, port);
+            if (viewType.contains("AutoFitSurfaceView")) {
+                rtspServerCamera1 = new RtspServerCamera1((SurfaceView) view, this, port);
             }
-            if ( viewType.contains("AutoFitSurfaceGlView")) {
-                rtspServerCamera1 = new RtspServerCamera1((OpenGlView)view, this, port);
+            if (viewType.contains("AutoFitSurfaceGlView")) {
+                rtspServerCamera1 = new RtspServerCamera1((OpenGlView) view, this, port);
             }
         }
 
         if (!rtspServerCamera1.isStreaming()) {
             if (
-                rtspServerCamera1.prepareAudio(64 * 1024, 32000, false, false, false)
+                    rtspServerCamera1.prepareAudio(64 * 1024, 32000, false, false, false)
                             && rtspServerCamera1.prepareVideo(width, height, 30, 1200 * 1024, 2, 0)) {
 
                 rtspServerCamera1.startStream("");
@@ -191,8 +203,7 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         Log.d(TAG, "Surface created...");
-        this.surfaceCreated = true;
-        startServer(WIDTH, HEIGHT, PORT);
+        andGate.update("surfaceCreated", true);
     }
 
     @Override
@@ -204,7 +215,7 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-        this.surfaceCreated = false;
+        andGate.update("surfaceCreated", false);
         sendVideoStoppedStatus();
         stopServer();
     }
@@ -212,8 +223,7 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
     // SurfaceTextureListener callbacks
     @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
-        this.surfaceCreated = true;
-        startServer(WIDTH, HEIGHT, PORT);
+        andGate.update("surfaceCreated", true);
     }
 
     @Override
@@ -222,7 +232,7 @@ public class RtspServerPedro implements ConnectCheckerRtsp,  SurfaceHolder.Callb
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
-        this.surfaceCreated = false;
+        andGate.update("surfaceCreated", false);
         sendVideoStoppedStatus();
         stopServer();
         return false;

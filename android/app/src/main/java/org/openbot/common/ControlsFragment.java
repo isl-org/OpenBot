@@ -48,7 +48,6 @@ public abstract class ControlsFragment extends Fragment {
         .getWindow()
         .addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-    phoneController.init(requireContext());
     preferencesManager = new SharedPreferencesManager(requireContext());
     audioPlayer = new AudioPlayer(requireContext());
 
