@@ -612,7 +612,7 @@ public abstract class CameraActivity extends AppCompatActivity
     } catch (final InterruptedException e) {
       LOGGER.e(e, "Exception!");
     }
-    phoneController.disconnect();
+    phoneController.disconnect(this);
     vehicle.setControl(0, 0);
     super.onPause();
   }
@@ -960,7 +960,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void disconnectPhoneController() {
     if (phoneController.isConnected()) {
-      phoneController.disconnect();
+      phoneController.disconnect(this);
     }
     setDriveMode(DriveMode.values()[preferencesManager.getDriveMode()]);
     driveModeSpinner.setEnabled(true);

@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import com.pedro.rtplibrary.view.OpenGlView;
 import com.pedro.rtsp.utils.ConnectCheckerRtsp;
 import com.pedro.rtspserver.RtspServerCamera1;
-import java.util.ArrayList;
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
 import org.openbot.utils.AndGate;
@@ -50,7 +49,7 @@ public class RtspServer
     This is useful if we do not know the order of the updates to the conditions.
     */
     action = () -> startServer();
-    andGate = new AndGate(new ArrayList<>(), action);
+    andGate = new AndGate(action);
     andGate.addCondition("connected");
     andGate.addCondition("surfaceCreated");
     andGate.addCondition("view set");

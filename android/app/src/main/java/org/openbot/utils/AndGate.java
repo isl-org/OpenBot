@@ -1,5 +1,6 @@
 package org.openbot.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -10,7 +11,10 @@ We can add an arbitrary number of conditions, initially set to false. These cond
 be updated in the future, and if all are true, the action will be executed.
  */
 public class AndGate {
-  public AndGate(List<Condition> conditions, Action action) {
+  private List<Condition> conditions = new ArrayList<>();
+  private Action action;
+
+  public AndGate(Action action) {
     this.conditions = conditions;
     this.action = action;
   }
@@ -47,31 +51,11 @@ public class AndGate {
     public void runIt();
   }
 
-  private List<Condition> conditions;
-  private Action action;
-
   public void reset() {
     conditions.clear();
   }
 
   public void addCondition(String name) {
     conditions.add(new Condition(name, false));
-  }
-
-  void set(String name, boolean value) {
-    for (Condition condition : conditions) {
-      if (condition.name.equals(name)) {
-        condition.value = value;
-        break;
-      }
-    }
-
-    for (Condition condition : conditions) {
-      if (condition.value == false) {
-        return;
-      }
-    }
-
-    // run action
   }
 }

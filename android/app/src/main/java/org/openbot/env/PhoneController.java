@@ -78,7 +78,10 @@ public class PhoneController {
     videoServer.setConnected(true);
   }
 
-  public void disconnect() {
+  public void disconnect(Context context) {
+    if (connectionManager == null) {
+      init(context);
+    }
     connectionManager.getConnection().stop();
     videoServer.setConnected(false);
     stopVideo();

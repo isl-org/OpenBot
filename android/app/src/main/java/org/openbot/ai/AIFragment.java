@@ -720,7 +720,7 @@ public class AIFragment extends CameraFragment implements ServerListener {
   }
 
   private void disconnectPhoneController() {
-    phoneController.disconnect();
+    phoneController.disconnect(requireContext());
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
     binding.controllerContainer.driveMode.setAlpha(1.0f);
