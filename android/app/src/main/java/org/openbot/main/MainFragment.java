@@ -61,15 +61,27 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
       case FeatureList.DATA_COLLECTION:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_loggerFragment);
+        break;
 
       case FeatureList.CONTROLLER:
         // For a library module, uncomment the following line
         // intent = new Intent(this, ControllerActivity.class);
         // startActivity(intent);
         break;
-      case FeatureList.AI_MODELS:
+      case FeatureList.AUTOPILOT:
         Navigation.findNavController(requireView())
-            .navigate(R.id.action_mainFragment_to_AIFragment);
+            .navigate(R.id.action_mainFragment_to_autopilotFragment);
+        break;
+
+      case FeatureList.OBJECT_NAV:
+        Navigation.findNavController(requireView())
+            .navigate(R.id.action_mainFragment_to_objectNavFragment);
+        break;
+
+      case FeatureList.CONTROLLER_MAPPING:
+        Navigation.findNavController(requireView())
+            .navigate(R.id.action_mainFragment_to_controllerMappingFragment);
+        break;
     }
   }
 }

@@ -5,11 +5,37 @@
   <a href="README_CN.md">简体中文</a>
 </p>
 
+## Features
+
+Click on the links below to read about the features of the apps.
+
 - [OpenBot app](app/README.md)
 - [Controller app](controller/README.md)
 
 ## Install the apps
-You can download the apks from the assets of the [latest release](https://github.com/intel-isl/OpenBot/releases/latest) and just [install](https://www.lifewire.com/install-apk-on-android-4177185) it on your phone directly. Note that that apk is signed with a debug key. If you want the latest app from the master branch, you can also download it from the build artifacts [here](https://github.com/intel-isl/OpenBot/actions?query=workflow%3A%22Java+CI+with+Gradle%22). Note, that it may not be stable. If you would like to make changes to the app later, follow the steps below to compile the app and deploy it on your phone.
+
+The easiest way to get either of the apps is to download it directly to the phone using the corresponding QR code. If you are on the phone browser, you can also just click on the QR code. You can then open the apk on your phone and [install](https://www.lifewire.com/install-apk-on-android-4177185) it. Note that the apk is only signed with a debug key.
+
+<table style="width:100%;border:none;text-align:center">
+  <tr>
+    <td>  <a href="https://app.openbot.org/robot" target="_blank">
+    <img alt="Robot App" width="50%" src="../docs/images/robot_app_qr_code.png" style ="padding-right: 50%;" />
+  </a>
+    </td>
+    <td>
+  <a href="https://app.openbot.org/controller" target="_blank">
+    <img alt="Controller App" width="50%" src="../docs/images/controller_app_qr_code.png" />
+  </a>
+      </td>
+  </tr>
+  <tr>
+    <td>Robot App</td>
+    <td>Controller App</td>
+  </tr>
+</table>
+
+
+Alternatively, you can download the apks from the assets of any [release](https://github.com/intel-isl/OpenBot/releases). If you want the latest app from the master branch, you can also download it from the build artifacts [here](https://github.com/intel-isl/OpenBot/actions?query=workflow%3A%22Java+CI+with+Gradle%22). Note, that it may not be stable. If you would like to make changes to the app later, follow the steps below to compile the app and deploy it on your phone.
 
 ## Build the apps
 

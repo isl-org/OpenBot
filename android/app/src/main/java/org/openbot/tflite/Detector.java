@@ -79,31 +79,23 @@ public abstract class Detector extends Network {
      */
     private final Float confidence;
 
-    /** Optional location within the source image for the location of the recognized object. */
+    /** Location within the source image for the location of the recognized object. */
     private RectF location;
 
-    /** Optional detected class of the recognized object. */
-    private int detectedClass;
-
-    public Recognition(
-        final String id, final String title, final Float confidence, final RectF location) {
-      this.id = id;
-      this.title = title;
-      this.confidence = confidence;
-      this.location = location;
-    }
+    /** Detected class of the recognized object. */
+    private int classId;
 
     public Recognition(
         final String id,
         final String title,
         final Float confidence,
         final RectF location,
-        int detectedClass) {
+        int classId) {
       this.id = id;
       this.title = title;
       this.confidence = confidence;
       this.location = location;
-      this.detectedClass = detectedClass;
+      this.classId = classId;
     }
 
     public String getId() {
@@ -126,12 +118,8 @@ public abstract class Detector extends Network {
       this.location = location;
     }
 
-    public int getDetectedClass() {
-      return detectedClass;
-    }
-
-    public void setDetectedClass(int detectedClass) {
-      this.detectedClass = detectedClass;
+    public int getClassId() {
+      return classId;
     }
 
     @Override
@@ -178,7 +166,7 @@ public abstract class Detector extends Network {
     return labels;
   }
 
-  public List<Recognition> recognizeImage(final Bitmap bitmap) {
+  public List<Recognition> recognizeImage(final Bitmap bitmap, String className) {
     // Log this method so that it can be analyzed with systrace.
     Trace.beginSection("recognizeImage");
 
@@ -200,7 +188,7 @@ public abstract class Detector extends Network {
     LOGGER.v("Timecost to run model inference: " + (endTime - startTime));
 
     Trace.endSection(); // "recognizeImage"
-    return getRecognitions();
+    return getRecognitions(className);
   }
 
   protected float mNmsThresh = 0.25f;
@@ -223,7 +211,7 @@ public abstract class Detector extends Network {
               });
 
       for (int i = 0; i < list.size(); ++i) {
-        if (list.get(i).getDetectedClass() == k) {
+        if (list.get(i).getClassId() == k) {
           pq.add(list.get(i));
         }
       }
@@ -311,6 +299,11 @@ public abstract class Detector extends Network {
     return labels.size();
   }
 
+  public List<String> getLabels() {
+    List<String> list = new ArrayList<>();
+    for (String label : labels) if (!label.equals("???")) list.add(label);
+    return list;
+  }
   /**
    * Get the number of detections.
    *
@@ -323,5 +316,5 @@ public abstract class Detector extends Network {
    *
    * @return
    */
-  protected abstract List<Recognition> getRecognitions();
+  protected abstract List<Recognition> getRecognitions(String className);
 }
