@@ -41,7 +41,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.OpenBotApplication;
 import org.openbot.utils.Utils;
-
 import timber.log.Timber;
 
 public class NearbyConnection implements ILocalConnection {

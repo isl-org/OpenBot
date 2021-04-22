@@ -186,8 +186,7 @@ public class CameraConnectionFragment extends Fragment {
         }
 
         @Override
-        public void onSurfaceTextureUpdated(final SurfaceTexture texture) {
-        }
+        public void onSurfaceTextureUpdated(final SurfaceTexture texture) {}
       };
 
   private CameraConnectionFragment(

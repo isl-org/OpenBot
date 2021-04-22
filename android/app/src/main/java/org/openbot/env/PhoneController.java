@@ -1,124 +1,119 @@
 package org.openbot.env;
 
 import android.content.Context;
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.customview.AutoFitSurfaceGlView;
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
-import org.openbot.utils.Constants;
-import org.openbot.utils.Enums;
-import org.openbot.utils.Utils;
-
 import timber.log.Timber;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class PhoneController {
-    private static final String TAG = "PhoneController";
-    private static PhoneController _phoneController;
-    private ConnectionManager connectionManager;
+  private static final String TAG = "PhoneController";
+  private static PhoneController _phoneController;
+  private ConnectionManager connectionManager;
 
-    private final IVideoServer videoServer = new RtspServerPedro();
-    private Context context;
+  private final IVideoServer videoServer = new RtspServer();
+  private Context context;
 
-    public void setView(AutoFitSurfaceView videoWindow) {
-        if (connectionManager.getConnection().isVideoCapable()) {
-            videoServer.setView(videoWindow);
-        }
+  public void setView(AutoFitSurfaceView videoWindow) {
+    if (connectionManager.getConnection().isVideoCapable()) {
+      videoServer.setView(videoWindow);
+    }
+  }
+
+  public void setView(AutoFitSurfaceGlView videoWindow) {
+    if (connectionManager.getConnection().isVideoCapable()) {
+      videoServer.setView(videoWindow);
+    }
+  }
+
+  public void setView(AutoFitTextureView videoWindow) {
+    if (connectionManager.getConnection().isVideoCapable()) {
+      videoServer.setView(videoWindow);
+    }
+  }
+
+  public void startVideo() {
+    videoServer.startServer();
+  }
+
+  public void stopVideo() {
+    videoServer.stopServer();
+  }
+
+  class DataReceived implements IDataReceived {
+    @Override
+    public void dataReceived(String commandStr) {
+      try {
+        ControllerToBotEventBus.emitEvent(new JSONObject(commandStr));
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void init(Context context) {
+    this.context = context;
+    videoServer.init(context);
+    this.connectionManager = ConnectionManager.getInstance(context);
+    connectionManager.getConnection().setDataCallback(new DataReceived());
+    handleBotEvents();
+  }
+
+  public void connect(Context context) {
+    if (connectionManager == null) {
+      init(context);
+    }
+    ILocalConnection connection = connectionManager.getConnection();
+
+    if (!connection.isConnected()) {
+      connection.init(context);
+      connection.connect(context);
+    } else {
+      connection.start();
     }
 
-    public void setView(AutoFitSurfaceGlView videoWindow) {
-        if (connectionManager.getConnection().isVideoCapable()) {
-            videoServer.setView(videoWindow);
-        }
+    videoServer.setConnected(true);
+  }
+
+  public void disconnect() {
+    connectionManager.getConnection().stop();
+    videoServer.setConnected(false);
+    stopVideo();
+  }
+
+  public void send(JSONObject info) {
+    connectionManager.getConnection().sendMessage(info.toString());
+  }
+
+  public boolean isConnected() {
+    return connectionManager.getConnection().isConnected();
+  }
+
+  private void handleBotEvents() {
+    BotToControllerEventBus.getProcessor()
+        .subscribe(
+            this::send, error -> Timber.d("Error occurred in BotToControllerEventBus: %s", error));
+  }
+
+  private PhoneController() {
+    if (_phoneController != null) {
+      throw new RuntimeException(
+          "Use getInstance() method to get the single instance of this class.");
+    }
+  }
+
+  public static PhoneController getInstance() {
+    if (_phoneController == null) { // Check for the first time
+
+      synchronized (PhoneController.class) { // Check for the second time.
+        // if there is no instance available... create new one
+        if (_phoneController == null) _phoneController = new PhoneController();
+      }
     }
 
-    public void setView(AutoFitTextureView videoWindow) {
-        if (connectionManager.getConnection().isVideoCapable()) {
-            videoServer.setView(videoWindow);
-        }
-    }
-
-    public void startVideo() {
-        videoServer.startServer();
-    }
-    public void stopVideo() {
-        videoServer.stopServer();
-    }
-
-    class DataReceived implements IDataReceived {
-        @Override
-        public void dataReceived(String commandStr) {
-            try {
-                ControllerToBotEventBus.emitEvent(new JSONObject(commandStr));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void init(Context context) {
-        this.context = context;
-        videoServer.init(context);
-        this.connectionManager = ConnectionManager.getInstance(context);
-        connectionManager.getConnection().setDataCallback(new DataReceived());
-        handleBotEvents();
-    }
-
-    public void connect(Context context) {
-        if (connectionManager == null) {
-            init(context);
-        }
-        ILocalConnection connection = connectionManager.getConnection();
-
-        if (!connection.isConnected()) {
-            connection.init(context);
-            connection.connect(context);
-        } else {
-            connection.start();
-        }
-
-        videoServer.setConnected(true);
-    }
-
-    public void disconnect() {
-        connectionManager.getConnection().stop();
-        videoServer.setConnected(false);
-        stopVideo();
-    }
-
-    public void send(JSONObject info) {
-        connectionManager.getConnection().sendMessage(info.toString());
-    }
-
-    public boolean isConnected() {
-        return connectionManager.getConnection().isConnected();
-    }
-
-    private void handleBotEvents() {
-        BotToControllerEventBus.getProcessor()
-                .subscribe(
-                        this::send, error -> Timber.d("Error occurred in BotToControllerEventBus: %s", error));
-    }
-
-    private PhoneController() {
-        if (_phoneController != null) {
-            throw new RuntimeException(
-                    "Use getInstance() method to get the single instance of this class.");
-        }
-    }
-
-    public static PhoneController getInstance() {
-        if (_phoneController == null) { // Check for the first time
-
-            synchronized (PhoneController.class) { // Check for the second time.
-                // if there is no instance available... create new one
-                if (_phoneController == null) _phoneController = new PhoneController();
-            }
-        }
-
-        return _phoneController;
-    }
+    return _phoneController;
+  }
 }

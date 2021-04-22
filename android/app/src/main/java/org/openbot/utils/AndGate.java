@@ -1,6 +1,5 @@
 package org.openbot.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -11,68 +10,68 @@ We can add an arbitrary number of conditions, initially set to false. These cond
 be updated in the future, and if all are true, the action will be executed.
  */
 public class AndGate {
-    public AndGate(List<Condition> conditions, Action action) {
-        this.conditions = conditions;
-        this.action = action;
+  public AndGate(List<Condition> conditions, Action action) {
+    this.conditions = conditions;
+    this.action = action;
+  }
+
+  public void update(String name, boolean value) {
+    for (Condition condition : conditions) {
+      if (condition.name.equals(name)) {
+        condition.value = value;
+        break;
+      }
+    }
+    // if all conditions match
+    for (Condition condition : conditions) {
+      if (!condition.value) {
+        return;
+      }
     }
 
-    public void update(String name, boolean value) {
-        for (Condition condition : conditions) {
-            if (condition.name.equals(name)) {
-                condition.value = value;
-                break;
-            }
-        }
-        // if all conditions match
-        for (Condition condition : conditions) {
-            if (!condition.value) {
-                return;
-            }
-        }
+    // and run the action
+    action.runIt();
+  }
 
-        // and run the action
-        action.runIt();
+  private class Condition {
+    String name;
+    boolean value;
+
+    public Condition(String name, boolean value) {
+      this.name = name;
+      this.value = value;
+    }
+  }
+
+  public interface Action {
+    public void runIt();
+  }
+
+  private List<Condition> conditions;
+  private Action action;
+
+  public void reset() {
+    conditions.clear();
+  }
+
+  public void addCondition(String name) {
+    conditions.add(new Condition(name, false));
+  }
+
+  void set(String name, boolean value) {
+    for (Condition condition : conditions) {
+      if (condition.name.equals(name)) {
+        condition.value = value;
+        break;
+      }
     }
 
-    private class Condition {
-        String name;
-        boolean value;
-
-        public Condition(String name, boolean value) {
-            this.name = name;
-            this.value = value;
-        }
+    for (Condition condition : conditions) {
+      if (condition.value == false) {
+        return;
+      }
     }
 
-    public interface Action {
-        public void runIt();
-    }
-
-    private List<Condition> conditions;
-    private Action action;
-
-    public void reset () {
-        conditions.clear();
-    }
-
-    public void addCondition(String name) {
-        conditions.add(new Condition(name, false));
-    }
-
-    void set (String name, boolean value) {
-        for (Condition condition : conditions) {
-            if (condition.name.equals(name)) {
-                condition.value = value;
-                break;
-            }
-        }
-
-        for (Condition condition : conditions) {
-            if (condition.value == false) {
-                return;
-            }
-        }
-
-        // run action
-    }
+    // run action
+  }
 }

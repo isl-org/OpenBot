@@ -8,11 +8,14 @@
  */
 package org.openbot.controller.customComponents
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
+import androidx.annotation.RequiresApi
 import org.openbot.controller.ConnectionManager
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -54,9 +57,6 @@ class DualDriveSeekBar @JvmOverloads constructor(
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        ControlSize.width = w
-        ControlSize.height = h
-
         super.onSizeChanged(h, w, oldh, oldw)
     }
 
@@ -64,14 +64,21 @@ class DualDriveSeekBar @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(heightMeasureSpec, widthMeasureSpec)
         setMeasuredDimension(measuredHeight, measuredWidth)
+
+        ControlSize.width = measuredWidth
+        ControlSize.height = measuredHeight
     }
 
     override fun onDraw(c: Canvas) {
+        onSizeChanged(ControlSize.width, ControlSize.height, 0, 0)
+
         c.rotate(-90f)
         c.translate((-height).toFloat(), 0f)
         super.onDraw(c)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isEnabled) {
             return false
@@ -82,7 +89,7 @@ class DualDriveSeekBar @JvmOverloads constructor(
                 val safeValue = ((progress - 50) / 50f).coerceIn(-1f, 1f)
                 driveValue.invoke(safeValue)
                 zeroReverter.cancel()
-                zeroReverter.schedule(3)
+                zeroReverter.schedule(1)
                 onSizeChanged(width, height, 0, 0)
             }
             MotionEvent.ACTION_CANCEL -> {
@@ -122,7 +129,6 @@ class DualDriveSeekBar @JvmOverloads constructor(
             resetToHomePosition()
             val safeValue = ((progress - 50) / 50f).coerceIn(-1f, 1f)
             driveValue.invoke(safeValue)
-            onSizeChanged(ControlSize.width, ControlSize.height, 0, 0)
         }
 
         fun schedule(delay: Long) {

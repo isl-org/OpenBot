@@ -4,10 +4,9 @@ import android.content.Context;
 import android.view.SurfaceView;
 import android.view.TextureView;
 
-import com.pedro.rtplibrary.view.OpenGlView;
-
 public interface IVideoServer {
   void startServer();
+
   void stopServer();
 
   void setConnected(boolean connected);
@@ -23,6 +22,8 @@ public interface IVideoServer {
   void sendVideoStoppedStatus();
 
   void setView(SurfaceView view);
+
   void setView(TextureView view);
+
   void setView(com.pedro.rtplibrary.view.OpenGlView view);
 }
