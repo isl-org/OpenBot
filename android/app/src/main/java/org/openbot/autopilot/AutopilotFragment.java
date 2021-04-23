@@ -369,7 +369,8 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
           .runOnUiThread(
               () ->
                   binding.inputResolution.setText(
-                          String.format("%dx%d", autopilot.getImageSizeX(), autopilot.getImageSizeY())));
+                      String.format(
+                          "%dx%d", autopilot.getImageSizeX(), autopilot.getImageSizeY())));
 
       Matrix cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
