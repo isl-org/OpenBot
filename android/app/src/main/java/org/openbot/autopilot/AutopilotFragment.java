@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
+import android.util.Size;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ import org.openbot.env.ImageUtils;
 import org.openbot.server.ServerCommunication;
 import org.openbot.server.ServerListener;
 import org.openbot.tflite.Autopilot;
+import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
@@ -67,7 +69,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
   private static final float TEXT_SIZE_DIP = 10;
 
-  private Autopilot autoPilot;
+  private Autopilot autopilot;
 
   private Matrix frameToCropTransform;
   private Bitmap croppedBitmap;
@@ -75,7 +77,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
   private MultiBoxTracker tracker;
 
-  private AutopilotModel model = AutopilotModel.AUTOPILOT_F;
+  private Model model = Model.Autopilot_F;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
 
@@ -128,12 +130,19 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     }
 
     modelAdapter.clear();
-    modelAdapter.addAll(Arrays.asList(getResources().getTextArray(R.array.auto_pilot_models)));
+    modelAdapter.addAll(Arrays.asList(getResources().getTextArray(R.array.autopilot_models)));
     modelAdapter.addAll(getModelFiles());
     modelAdapter.add("Choose From Device");
     modelAdapter.notifyDataSetChanged();
     binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
-    setModel(new AutopilotModel(fileName));
+    setModel(
+        new Model(
+            Model.ID.AUTOPILOT_F,
+            Model.TYPE.AUTOPILOT,
+            fileName,
+            null,
+            fileName,
+            new Size(256, 96)));
 
     Toast.makeText(
             requireContext().getApplicationContext(),
@@ -162,7 +171,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
     List<CharSequence> models =
-        Arrays.asList(getResources().getTextArray(R.array.auto_pilot_models));
+        Arrays.asList(getResources().getTextArray(R.array.autopilot_models));
     modelAdapter =
         new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
     modelAdapter.addAll(getModelFiles());
@@ -181,9 +190,16 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
               openPicker();
             } else
               try {
-                setModel(AutopilotModel.fromId(selected.toUpperCase()));
+                setModel(Model.fromId(selected.toUpperCase()));
               } catch (IllegalArgumentException e) {
-                setModel(new AutopilotModel(selected));
+                setModel(
+                    new Model(
+                        Model.ID.AUTOPILOT_F,
+                        Model.TYPE.AUTOPILOT,
+                        selected,
+                        null,
+                        selected,
+                        new Size(256, 96)));
               }
             selectedModelIndex = position;
           }
@@ -297,7 +313,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     Timber.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
     recreateNetwork(getModel(), getDevice(), getNumThreads());
-    if (autoPilot == null) {
+    if (autopilot == null) {
       Timber.e("No network on preview!");
       return;
     }
@@ -320,26 +336,26 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
       return;
     }
     final Network.Device device = getDevice();
-    final AutopilotModel model = getModel();
+    final Model model = getModel();
     final int numThreads = getNumThreads();
     runInBackground(() -> recreateNetwork(model, device, numThreads));
   }
 
-  private void recreateNetwork(AutopilotModel model, Network.Device device, int numThreads) {
+  private void recreateNetwork(Model model, Network.Device device, int numThreads) {
     tracker.clearTrackedObjects();
-    if (autoPilot != null) {
+    if (autopilot != null) {
       Timber.d("Closing autoPilot.");
-      autoPilot.close();
-      autoPilot = null;
+      autopilot.close();
+      autopilot = null;
     }
 
     try {
       Timber.d(
           "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-      autoPilot = Autopilot.create(requireActivity(), model, device, numThreads);
+      autopilot = Autopilot.create(requireActivity(), model, device, numThreads);
       croppedBitmap =
           Bitmap.createBitmap(
-              autoPilot.getImageSizeX(), autoPilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
+              autopilot.getImageSizeX(), autopilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
       frameToCropTransform =
           ImageUtils.getTransformationMatrix(
               getMaxAnalyseImageSize().getWidth(),
@@ -347,13 +363,13 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
               croppedBitmap.getWidth(),
               croppedBitmap.getHeight(),
               sensorOrientation,
-              autoPilot.getCropRect(),
-              autoPilot.getMaintainAspect());
+              autopilot.getCropRect(),
+              autopilot.getMaintainAspect());
       requireActivity()
           .runOnUiThread(
               () ->
                   binding.inputResolution.setText(
-                      autoPilot.getImageSizeX() + "x" + autoPilot.getImageSizeY()));
+                          String.format("%dx%d", autopilot.getImageSizeX(), autopilot.getImageSizeY())));
 
       Matrix cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
@@ -496,10 +512,10 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
             final Canvas canvas = new Canvas(croppedBitmap);
             canvas.drawBitmap(bitmap, frameToCropTransform, null);
 
-            if (autoPilot != null) {
+            if (autopilot != null) {
               Timber.i("Running autopilot on image %s", frameNum);
               final long startTime = SystemClock.elapsedRealtime();
-              handleDriveCommand(autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+              handleDriveCommand(autopilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
             }
 
@@ -531,7 +547,9 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
       modelAdapter.add(model);
     } else {
       if (model.equals(binding.modelSpinner.getSelectedItem())) {
-        setModel(new AutopilotModel(model));
+        setModel(
+            new Model(
+                Model.ID.AUTOPILOT_F, Model.TYPE.AUTOPILOT, model, null, model, new Size(256, 96)));
       }
     }
     Toast.makeText(
@@ -553,11 +571,11 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
         .show();
   }
 
-  protected AutopilotModel getModel() {
+  protected Model getModel() {
     return model;
   }
 
-  private void setModel(AutopilotModel model) {
+  private void setModel(Model model) {
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;

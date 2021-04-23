@@ -154,21 +154,22 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
 
   private void updateCropImageInfo(String selected) {
     frameToCropTransform = null;
+
     binding.cropInfo.setText(
         String.format(
             Locale.US,
             "%d x %d",
-            Model.getCroppedImageSize(selected).getWidth(),
-            Model.getCroppedImageSize(selected).getHeight()));
+            Model.fromId(selected).inputSize.getWidth(),
+            Model.fromId(selected).inputSize.getHeight()));
 
     croppedBitmap =
         Bitmap.createBitmap(
-            Model.getCroppedImageSize(selected).getWidth(),
-            Model.getCroppedImageSize(selected).getHeight(),
+            Model.fromId(selected).inputSize.getWidth(),
+            Model.fromId(selected).inputSize.getHeight(),
             Bitmap.Config.ARGB_8888);
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
-    if (Model.fromId(selected) == Model.AUTOPILOT_F) {
+    if (Model.fromId(selected) == Model.Autopilot_F) {
       cropRect = new RectF(0.0f, 240.0f / 720.0f, 0.0f, 0.0f);
       maintainAspectRatio = true;
     } else {
