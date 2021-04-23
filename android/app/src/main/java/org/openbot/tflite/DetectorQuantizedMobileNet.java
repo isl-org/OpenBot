@@ -19,13 +19,12 @@ package org.openbot.tflite;
 
 import android.app.Activity;
 import android.graphics.RectF;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /** This TensorFlow Lite classifier works with the quantized MobileNet model. */
-public class DetectorQuantizedMobileNetV1 extends Detector {
+public class DetectorQuantizedMobileNet extends Detector {
 
   // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
   // contains the location of detected boxes
@@ -51,7 +50,7 @@ public class DetectorQuantizedMobileNetV1 extends Detector {
    *
    * @param activity
    */
-  public DetectorQuantizedMobileNetV1(Activity activity, Model model, Device device, int numThreads)
+  public DetectorQuantizedMobileNet(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
     super(activity, model, device, numThreads);
   }
@@ -64,24 +63,6 @@ public class DetectorQuantizedMobileNetV1 extends Detector {
   @Override
   public RectF getCropRect() {
     return new RectF(0.0f, 0.0f, 0.0f, 0.0f);
-  }
-
-  @Override
-  public int getImageSizeX() {
-    return imageSizeX;
-  }
-
-  @Override
-  public int getImageSizeY() {
-    return imageSizeY;
-  }
-
-  @Override
-  protected String getModelPath() {
-    // you can download this file from
-    // see build.gradle for where to obtain this file. It should be auto
-    // downloaded into assets.
-    return modelPath;
   }
 
   @Override

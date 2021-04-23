@@ -13,15 +13,16 @@ public class DetectorFloatYoloV4 extends Detector {
 
   private static final float IMAGE_STD = 255.0f;
 
-  // Only return this many results.
-  private static final int NUM_DETECTIONS = 2535;
-
   // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
   // contains the location of detected boxes
   private float[][][] outputLocations;
   // outputScores: array of shape [Batchsize, NUM_DETECTIONS,labels.size()]
   // contains the scores of detected boxes
   private float[][][] outputScores;
+
+  // indices in tflite model
+  private int outputLocationsIdx;
+  private int outputScoresIdx;
 
   /**
    * Initializes a {@code ClassifierQuantizedMobileNet}.
@@ -44,24 +45,6 @@ public class DetectorFloatYoloV4 extends Detector {
   }
 
   @Override
-  public int getImageSizeX() {
-    return 416;
-  }
-
-  @Override
-  public int getImageSizeY() {
-    return 416;
-  }
-
-  @Override
-  protected String getModelPath() {
-    // you can download this file from
-    // see build.gradle for where to obtain this file. It should be auto
-    // downloaded into assets.
-    return "networks/yolo_v4_tiny_float_coco.tflite";
-  }
-
-  @Override
   protected String getLabelPath() {
     return "networks/coco.txt";
   }
@@ -75,6 +58,13 @@ public class DetectorFloatYoloV4 extends Detector {
   @Override
   protected final int getNumDetections() {
     return NUM_DETECTIONS;
+  }
+
+  @Override
+  protected final void parseTflite() {
+    outputLocationsIdx = tflite.getOutputIndex("Identity");
+    outputScoresIdx = tflite.getOutputIndex("Identity_1");
+    NUM_DETECTIONS = tflite.getOutputTensor(outputLocationsIdx).shape()[1];
   }
 
   @Override
@@ -95,8 +85,8 @@ public class DetectorFloatYoloV4 extends Detector {
     outputLocations = new float[1][getNumDetections()][4];
     outputScores = new float[1][getNumDetections()][labels.size()];
 
-    outputMap.put(0, outputLocations);
-    outputMap.put(1, outputScores);
+    outputMap.put(outputLocationsIdx, outputLocations);
+    outputMap.put(outputScoresIdx, outputScores);
   }
 
   @Override
@@ -126,7 +116,7 @@ public class DetectorFloatYoloV4 extends Detector {
               Math.max(0, yPos - h / 2),
               Math.min(getImageSizeX() - 1, xPos + w / 2),
               Math.min(getImageSizeY() - 1, yPos + h / 2));
-      if (labels.get(classId).contentEquals(className)) {
+      if (classId > -1 && labels.get(classId).contentEquals(className)) {
         recognitions.add(new Recognition("" + i, labels.get(classId), score, detection, classId));
       }
     }

@@ -36,6 +36,7 @@ public abstract class Autopilot extends Network {
   protected Autopilot(Activity activity, Model model, Device device, int numThreads)
       throws IOException, IllegalArgumentException {
     super(activity, model, device, numThreads);
+
     tflite.getInputIndex("cmd_input");
     if (!Arrays.equals(
         tflite.getInputTensor(tflite.getInputIndex("img_input")).shape(),
@@ -44,6 +45,7 @@ public abstract class Autopilot extends Network {
 
     indicatorBuffer = ByteBuffer.allocateDirect(4);
     indicatorBuffer.order(ByteOrder.nativeOrder());
+
     LOGGER.d("Created a Tensorflow Lite Autopilot.");
   }
 
