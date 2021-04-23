@@ -64,9 +64,9 @@ public class Model {
           ID.YOLOV4,
           TYPE.DETECTOR,
           "YoloV4",
-          "networks/yolov4-tiny-256-int8.tflite",
+          "networks/yolo_v4_tiny_float_coco.tflite",
           null,
-          new Size(256, 256));
+          new Size(416, 416));
 
   // TODO: Change this hacky code
   public static Model fromId(String id) {
