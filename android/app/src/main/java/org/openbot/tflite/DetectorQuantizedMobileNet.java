@@ -24,10 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** This TensorFlow Lite classifier works with the quantized MobileNet model. */
-public class DetectorQuantizedMobileNetV1 extends Detector {
-
-  // Only return this many results.
-  private static final int NUM_DETECTIONS = 10;
+public class DetectorQuantizedMobileNet extends Detector {
 
   // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
   // contains the location of detected boxes
@@ -42,12 +39,18 @@ public class DetectorQuantizedMobileNetV1 extends Detector {
   // contains the number of detected boxes
   private float[] numDetections;
 
+  // indices in tflite model
+  private int outputLocationsIdx;
+  private int outputClassesIdx;
+  private int outputScoresIdx;
+  private int numDetectionsIdx;
+
   /**
    * Initializes a {@code ClassifierQuantizedMobileNet}.
    *
    * @param activity
    */
-  public DetectorQuantizedMobileNetV1(Activity activity, Model model, Device device, int numThreads)
+  public DetectorQuantizedMobileNet(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
     super(activity, model, device, numThreads);
   }
@@ -60,24 +63,6 @@ public class DetectorQuantizedMobileNetV1 extends Detector {
   @Override
   public RectF getCropRect() {
     return new RectF(0.0f, 0.0f, 0.0f, 0.0f);
-  }
-
-  @Override
-  public int getImageSizeX() {
-    return 300;
-  }
-
-  @Override
-  public int getImageSizeY() {
-    return 300;
-  }
-
-  @Override
-  protected String getModelPath() {
-    // you can download this file from
-    // see build.gradle for where to obtain this file. It should be auto
-    // downloaded into assets.
-    return "networks/mobile_ssd_v1_1.0_quant_coco.tflite";
   }
 
   @Override
@@ -94,6 +79,15 @@ public class DetectorQuantizedMobileNetV1 extends Detector {
   @Override
   protected final int getNumDetections() {
     return NUM_DETECTIONS;
+  }
+
+  @Override
+  protected final void parseTflite() {
+    outputLocationsIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess");
+    outputClassesIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess:1");
+    outputScoresIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess:2");
+    numDetectionsIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess:3");
+    NUM_DETECTIONS = tflite.getOutputTensor(outputLocationsIdx).shape()[1];
   }
 
   @Override
@@ -116,10 +110,10 @@ public class DetectorQuantizedMobileNetV1 extends Detector {
     outputScores = new float[1][getNumDetections()];
     numDetections = new float[1];
 
-    outputMap.put(0, outputLocations);
-    outputMap.put(1, outputClasses);
-    outputMap.put(2, outputScores);
-    outputMap.put(3, numDetections);
+    outputMap.put(outputLocationsIdx, outputLocations);
+    outputMap.put(outputClassesIdx, outputClasses);
+    outputMap.put(outputScoresIdx, outputScores);
+    outputMap.put(numDetectionsIdx, numDetections);
   }
 
   @Override

@@ -40,6 +40,13 @@ public abstract class Detector extends Network {
   /** Labels corresponding to the output of the vision model. */
   protected List<String> labels;
 
+  // Number of output detections
+  protected int NUM_DETECTIONS;
+
+  protected String modelPath;
+  protected int imageSizeX;
+  protected int imageSizeY;
+
   /**
    * Creates a detector with the provided configuration.
    *
@@ -52,11 +59,10 @@ public abstract class Detector extends Network {
   public static Detector create(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
     switch (model.id) {
-      case DETECTOR_V1_1_0_Q:
-        return new DetectorQuantizedMobileNetV1(activity, model, device, numThreads);
-      case DETECTOR_V3_S_Q:
-        return new DetectorQuantizedMobileNetV3(activity, model, device, numThreads);
-      case YOLO_V4_TINY_F:
+      case MOBILENETV1_1_0_Q:
+      case MOBILENETV3_S_Q:
+        return new DetectorQuantizedMobileNet(activity, model, device, numThreads);
+      case YOLOV4:
         return new DetectorFloatYoloV4(activity, model, device, numThreads);
       default:
         return null;
@@ -149,7 +155,9 @@ public abstract class Detector extends Network {
   protected Detector(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
     super(activity, model, device, numThreads);
+
     labels = loadLabelList(activity);
+    parseTflite();
     LOGGER.d("Created a Tensorflow Lite Detector.");
   }
 
@@ -166,7 +174,8 @@ public abstract class Detector extends Network {
     return labels;
   }
 
-  public List<Recognition> recognizeImage(final Bitmap bitmap, String className) {
+  public List<Recognition> recognizeImage(final Bitmap bitmap, String className)
+      throws IllegalArgumentException {
     // Log this method so that it can be analyzed with systrace.
     Trace.beginSection("recognizeImage");
 
@@ -310,6 +319,9 @@ public abstract class Detector extends Network {
    * @return
    */
   protected abstract int getNumDetections();
+
+  /** Get specs from tflite file */
+  protected abstract void parseTflite();
 
   /**
    * Get the recognitions.

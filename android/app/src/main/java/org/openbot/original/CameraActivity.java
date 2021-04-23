@@ -171,7 +171,7 @@ public abstract class CameraActivity extends AppCompatActivity
       speedModeSpinner;
   private TextView threadsTextView, voltageTextView, speedTextView, sonarTextView;
   private ArrayAdapter<CharSequence> modelAdapter;
-  private Model model = Model.DETECTOR_V1_1_0_Q;
+  private Model model = Model.MobileNetV1_1_0_Q;
   private Device device = Device.CPU;
   private int numThreads = -1;
 
@@ -583,7 +583,9 @@ public abstract class CameraActivity extends AppCompatActivity
       modelAdapter.add(model);
     } else {
       if (model.equals(modelSpinner.getSelectedItem())) {
-        setModel(new Model(model));
+        setModel(
+            new Model(
+                Model.ID.AUTOPILOT_F, Model.TYPE.AUTOPILOT, model, null, model, new Size(256, 96)));
       }
     }
     Toast.makeText(context, "Model added: " + model, Toast.LENGTH_SHORT).show();
@@ -1282,7 +1284,14 @@ public abstract class CameraActivity extends AppCompatActivity
       try {
         setModel(Model.fromId(selected.toUpperCase()));
       } catch (IllegalArgumentException e) {
-        setModel(new Model(selected));
+        setModel(
+            new Model(
+                Model.ID.AUTOPILOT_F,
+                Model.TYPE.AUTOPILOT,
+                selected,
+                null,
+                selected,
+                new Size(256, 96)));
       }
     } else if (parent == deviceSpinner) {
       setDevice(Device.valueOf(selected.toUpperCase()));

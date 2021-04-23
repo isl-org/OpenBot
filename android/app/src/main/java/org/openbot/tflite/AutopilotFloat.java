@@ -24,11 +24,6 @@ class AutopilotFloat extends Autopilot {
   }
 
   @Override
-  protected String getModelPath() {
-    return "networks/autopilot_float.tflite";
-  }
-
-  @Override
   public boolean getMaintainAspect() {
     return true;
   }
@@ -36,16 +31,6 @@ class AutopilotFloat extends Autopilot {
   @Override
   public RectF getCropRect() {
     return new RectF(0.0f, 240.0f / 720.0f, 0.0f, 0.0f);
-  }
-
-  @Override
-  public int getImageSizeX() {
-    return 256;
-  }
-
-  @Override
-  public int getImageSizeY() {
-    return 96;
   }
 
   @Override

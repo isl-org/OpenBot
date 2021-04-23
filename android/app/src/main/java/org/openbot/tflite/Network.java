@@ -22,6 +22,7 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.os.SystemClock;
+import android.util.Size;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -52,8 +53,10 @@ public abstract class Network {
 
   protected static final int DIM_PIXEL_SIZE = 3;
 
+  private final Size imageSize;
+
   /** Preallocated buffers for storing image data in. */
-  protected final int[] intValues = new int[getImageSizeX() * getImageSizeY()];
+  protected final int[] intValues;
 
   /** Options for configuring the Interpreter. */
   protected final Interpreter.Options tfliteOptions = new Interpreter.Options();
@@ -72,6 +75,10 @@ public abstract class Network {
   /** Initializes a {@code Network}. */
   protected Network(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
+
+    imageSize = model.inputSize;
+    intValues = new int[getImageSizeX() * getImageSizeY()];
+
     switch (device) {
       case NNAPI:
         tfliteOptions.setUseNNAPI(true);
@@ -84,13 +91,17 @@ public abstract class Network {
         break;
     }
     tfliteOptions.setNumThreads(numThreads);
-    if (model.filename != null) {
+
+    if (model.filePath != null) {
       File modelFile = getModelFile(activity, model);
       tflite = new Interpreter(modelFile, tfliteOptions);
-    } else {
-      MappedByteBuffer tfliteModel = loadModelFile(activity);
+    } else if (model.assetPath != null) {
+      MappedByteBuffer tfliteModel = loadModelFile(activity, model);
       tflite = new Interpreter(tfliteModel, tfliteOptions);
+    } else {
+      throw (new IOException("No model file specified!"));
     }
+
     imgData =
         ByteBuffer.allocateDirect(
             DIM_BATCH_SIZE
@@ -104,12 +115,12 @@ public abstract class Network {
 
   @NotNull
   private File getModelFile(Activity activity, Model model) {
-    return new File(activity.getFilesDir() + File.separator + model.filename);
+    return new File(activity.getFilesDir() + File.separator + model.filePath);
   }
 
   /** Memory-map the model file in Assets. */
-  protected MappedByteBuffer loadModelFile(Activity activity) throws IOException {
-    AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(getModelPath());
+  protected MappedByteBuffer loadModelFile(Activity activity, Model model) throws IOException {
+    AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(model.assetPath);
     FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
     FileChannel fileChannel = inputStream.getChannel();
     long startOffset = fileDescriptor.getStartOffset();
@@ -154,21 +165,18 @@ public abstract class Network {
    *
    * @return
    */
-  public abstract int getImageSizeX();
+  public int getImageSizeX() {
+    return imageSize.getWidth();
+  }
 
   /**
    * Get the image size along the y axis.
    *
    * @return
    */
-  public abstract int getImageSizeY();
-
-  /**
-   * Get the name of the model file stored in Assets.
-   *
-   * @return
-   */
-  protected abstract String getModelPath();
+  public int getImageSizeY() {
+    return imageSize.getHeight();
+  }
 
   /**
    * Get the number of bytes that is used to store a single color channel value.

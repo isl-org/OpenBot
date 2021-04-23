@@ -38,6 +38,7 @@ import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
 import org.openbot.tflite.Detector;
+import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
@@ -66,7 +67,7 @@ public class ObjectNavFragment extends CameraFragment {
 
   private MultiBoxTracker tracker;
 
-  private DetectorModel model = DetectorModel.DETECTOR_V1_1_0_Q;
+  private Model model = Model.MobileNetV1_1_0_Q;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
   private String classType = "person";
@@ -146,9 +147,9 @@ public class ObjectNavFragment extends CameraFragment {
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selected = parent.getItemAtPosition(position).toString();
             try {
-              setModel(DetectorModel.fromId(selected.toUpperCase()));
+              setModel(Model.fromId(selected.toUpperCase()));
             } catch (IllegalArgumentException e) {
-              setModel(new DetectorModel(selected));
+              setModel(Model.MobileNetV1_1_0_Q);
             }
           }
 
@@ -262,12 +263,12 @@ public class ObjectNavFragment extends CameraFragment {
       return;
     }
     final Network.Device device = getDevice();
-    final DetectorModel model = getModel();
+    final Model model = getModel();
     final int numThreads = getNumThreads();
     runInBackground(() -> recreateNetwork(model, device, numThreads));
   }
 
-  private void recreateNetwork(DetectorModel model, Network.Device device, int numThreads) {
+  private void recreateNetwork(Model model, Network.Device device, int numThreads) {
     tracker.clearTrackedObjects();
     if (detector != null) {
       Timber.d("Closing detector.");
@@ -307,7 +308,7 @@ public class ObjectNavFragment extends CameraFragment {
                 binding.classType.setSelection(
                     detector.getLabels().indexOf(preferencesManager.getObjectType()));
                 binding.inputResolution.setText(
-                    detector.getImageSizeX() + "x" + detector.getImageSizeY());
+                    String.format("%dx%d", detector.getImageSizeX(), detector.getImageSizeY()));
               });
 
     } catch (IllegalArgumentException | IOException e) {
@@ -476,7 +477,7 @@ public class ObjectNavFragment extends CameraFragment {
             .runOnUiThread(
                 () ->
                     binding.inferenceInfo.setText(
-                        String.format(Locale.US, "%d fps", 1000 / lastProcessingTimeMs)));
+                        String.format(Locale.US, "%.1f fps", 1000.f / lastProcessingTimeMs)));
     }
   }
 
@@ -488,11 +489,11 @@ public class ObjectNavFragment extends CameraFragment {
         String.format(Locale.US, "%.0f,%.0f", left, right));
   }
 
-  protected DetectorModel getModel() {
+  protected Model getModel() {
     return model;
   }
 
-  private void setModel(DetectorModel model) {
+  private void setModel(Model model) {
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;

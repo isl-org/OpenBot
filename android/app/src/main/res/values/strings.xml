@@ -15,20 +15,20 @@
 
     <string name="model">Model</string>
     <string-array name="models">
-        <item>AUTOPILOT_F</item>
-        <item>DETECTOR_V1_1_0_Q</item>
-        <item>DETECTOR_V3_S_Q</item>
-        <item>YOLO_V4_TINY_F</item>
+        <item>Autopilot_F</item>
+        <item>MobileNetV1_1_0_Q</item>
+        <item>MobileNetV3_S_Q</item>
+        <item>YoloV4</item>
     </string-array>
 
-    <string-array name="auto_pilot_models">
-        <item>AUTOPILOT_F</item>
+    <string-array name="autopilot_models">
+        <item>Autopilot_F</item>
     </string-array>
 
     <string-array name="detector_models">
-        <item>DETECTOR_V1_1_0_Q</item>
-        <item>DETECTOR_V3_S_Q</item>
-        <item>YOLO_V4_TINY_F</item>
+        <item>MobileNetV1_1_0_Q</item>
+        <item>MobileNetV3_S_Q</item>
+        <item>YoloV4</item>
     </string-array>
 
     <string name="device">Device</string>
