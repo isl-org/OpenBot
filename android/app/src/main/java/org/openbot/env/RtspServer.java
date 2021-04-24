@@ -130,7 +130,7 @@ public class RtspServer
 
     if (!rtspServerCamera1.isStreaming()) {
       if (rtspServerCamera1.prepareAudio(64 * 1024, 32000, false, false, false)
-          && rtspServerCamera1.prepareVideo(width, height, 30, 1200 * 1024, 2, 0)) {
+          && rtspServerCamera1.prepareVideo(width, height, 20, 1200 * 1024, 2, 0)) {
 
         rtspServerCamera1.startStream("");
         startClient();
@@ -197,6 +197,7 @@ public class RtspServer
 
   @Override
   public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+
     if (rtspServerCamera1 != null) {
       rtspServerCamera1.startPreview();
     }

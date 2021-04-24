@@ -29,7 +29,7 @@ import timber.log.Timber;
 public class FreeRoamFragment extends ControlsFragment {
 
   private FragmentFreeRoamBinding binding;
-  private PhoneController phoneController = PhoneController.getInstance();
+  private PhoneController phoneController;
 
   @Override
   public View onCreateView(
@@ -43,6 +43,7 @@ public class FreeRoamFragment extends ControlsFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    phoneController = PhoneController.getInstance(requireContext());
     phoneController.setView(binding.videoWindow);
 
     binding.voltageInfo.setText(getString(R.string.voltageInfo, "--.-"));
@@ -247,7 +248,7 @@ public class FreeRoamFragment extends ControlsFragment {
   }
 
   private void disconnectPhoneController() {
-    phoneController.disconnect(requireContext());
+    phoneController.disconnect();
     setDriveMode(DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
     binding.controllerContainer.driveMode.setAlpha(1.0f);

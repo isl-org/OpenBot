@@ -34,7 +34,7 @@ public abstract class ControlsFragment extends Fragment {
   protected Vehicle vehicle;
   protected Animation startAnimation;
   protected SharedPreferencesManager preferencesManager;
-  protected final PhoneController phoneController = PhoneController.getInstance();
+  protected PhoneController phoneController;
   protected Enums.DriveMode currentDriveMode = Enums.DriveMode.GAME;
 
   protected AudioPlayer audioPlayer;
@@ -47,6 +47,8 @@ public abstract class ControlsFragment extends Fragment {
     requireActivity()
         .getWindow()
         .addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+    phoneController = PhoneController.getInstance(requireContext());
 
     preferencesManager = new SharedPreferencesManager(requireContext());
     audioPlayer = new AudioPlayer(requireContext());

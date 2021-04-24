@@ -676,7 +676,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
   }
 
   private void disconnectPhoneController() {
-    phoneController.disconnect(requireContext());
+    phoneController.disconnect();
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
     binding.controllerContainer.driveMode.setEnabled(true);
     binding.controllerContainer.driveMode.setAlpha(1.0f);

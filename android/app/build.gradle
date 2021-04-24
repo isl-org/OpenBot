@@ -63,9 +63,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.android.gms:play-services-nearby:17.0.0'
 
-    // Alt RTSP server
-    implementation 'com.github.pedroSG94:RTSP-Server:1.0.0'
-    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:1.9.3' // do not
+    // RTSP server
+    implementation 'com.github.pedroSG94:RTSP-Server:1.0.8'
+    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:2.0.2' // do not upgrade!
 
     // RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'

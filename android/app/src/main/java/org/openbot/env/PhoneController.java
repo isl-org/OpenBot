@@ -15,7 +15,19 @@ public class PhoneController {
   private ConnectionManager connectionManager;
 
   private final IVideoServer videoServer = new RtspServer();
-  private Context context;
+
+  public static PhoneController getInstance(Context context) {
+    if (_phoneController == null) { // Check for the first time
+
+      synchronized (PhoneController.class) { // Check for the second time.
+        // if there is no instance available... create new one
+        if (_phoneController == null) _phoneController = new PhoneController();
+        _phoneController.init(context);
+      }
+    }
+
+    return _phoneController;
+  }
 
   public void setView(AutoFitSurfaceView videoWindow) {
     if (connectionManager.getConnection().isVideoCapable()) {
@@ -54,8 +66,7 @@ public class PhoneController {
     }
   }
 
-  public void init(Context context) {
-    this.context = context;
+  private void init(Context context) {
     videoServer.init(context);
     this.connectionManager = ConnectionManager.getInstance(context);
     connectionManager.getConnection().setDataCallback(new DataReceived());
@@ -63,9 +74,6 @@ public class PhoneController {
   }
 
   public void connect(Context context) {
-    if (connectionManager == null) {
-      init(context);
-    }
     ILocalConnection connection = connectionManager.getConnection();
 
     if (!connection.isConnected()) {
@@ -78,10 +86,7 @@ public class PhoneController {
     videoServer.setConnected(true);
   }
 
-  public void disconnect(Context context) {
-    if (connectionManager == null) {
-      init(context);
-    }
+  public void disconnect() {
     connectionManager.getConnection().stop();
     videoServer.setConnected(false);
     stopVideo();
@@ -106,17 +111,5 @@ public class PhoneController {
       throw new RuntimeException(
           "Use getInstance() method to get the single instance of this class.");
     }
-  }
-
-  public static PhoneController getInstance() {
-    if (_phoneController == null) { // Check for the first time
-
-      synchronized (PhoneController.class) { // Check for the second time.
-        // if there is no instance available... create new one
-        if (_phoneController == null) _phoneController = new PhoneController();
-      }
-    }
-
-    return _phoneController;
   }
 }

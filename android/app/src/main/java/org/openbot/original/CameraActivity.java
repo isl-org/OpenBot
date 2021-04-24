@@ -193,7 +193,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private ServerCommunication serverCommunication;
   private SharedPreferencesManager preferencesManager;
   protected final GameController gameController = new GameController(driveMode);
-  private final PhoneController phoneController = PhoneController.getInstance();
+  private PhoneController phoneController;
   protected final ControllerHandler controllerHandler = new ControllerHandler();
   private final AudioPlayer audioPlayer = new AudioPlayer(this);
   private final String voice = "matthew";
@@ -208,6 +208,8 @@ public abstract class CameraActivity extends AppCompatActivity
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     //    vehicle = new Vehicle(this, baudRate);
     vehicle = OpenBotApplication.vehicle;
+
+    phoneController = PhoneController.getInstance(this);
 
     setContentView(R.layout.activity_camera);
     Toolbar toolbar = findViewById(R.id.toolbar);
@@ -612,7 +614,7 @@ public abstract class CameraActivity extends AppCompatActivity
     } catch (final InterruptedException e) {
       LOGGER.e(e, "Exception!");
     }
-    phoneController.disconnect(this);
+    phoneController.disconnect();
     vehicle.setControl(0, 0);
     super.onPause();
   }
@@ -960,7 +962,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void disconnectPhoneController() {
     if (phoneController.isConnected()) {
-      phoneController.disconnect(this);
+      phoneController.disconnect();
     }
     setDriveMode(DriveMode.values()[preferencesManager.getDriveMode()]);
     driveModeSpinner.setEnabled(true);

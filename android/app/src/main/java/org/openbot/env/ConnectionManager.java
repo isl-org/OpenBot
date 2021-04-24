@@ -10,6 +10,9 @@ public class ConnectionManager {
   private static Context _context;
   private ILocalConnection connection;
 
+  private final ILocalConnection networkConnection = new NetworkServiceConnection();
+  private final ILocalConnection nearbyConnection = new NearbyConnection();
+
   private ConnectionManager() {
     if (_connectionManager != null) {
       throw new RuntimeException(
@@ -35,9 +38,9 @@ public class ConnectionManager {
     }
 
     if (isConnectedViaWifi()) {
-      connection = new NetworkServiceConnection();
+      connection = networkConnection;
     } else {
-      connection = new NearbyConnection();
+      connection = nearbyConnection;
     }
 
     return connection;
