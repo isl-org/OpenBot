@@ -65,7 +65,7 @@ dependencies {
 
     // RTSP server
     implementation 'com.github.pedroSG94:RTSP-Server:1.0.8'
-    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:2.0.2' // do not upgrade!
+    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:2.0.2'
 
     // RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
