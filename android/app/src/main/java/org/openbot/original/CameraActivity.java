@@ -123,7 +123,7 @@ public abstract class CameraActivity extends AppCompatActivity
   // Constants
   private static final int REQUEST_CAMERA_PERMISSION = 1;
   private static final int REQUEST_LOCATION_PERMISSION_LOGGING = 2;
-  private static final int REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER = 3;
+  private static final int REQUEST_CONTROLLER_PERMISSIONS = 3;
   private static final int REQUEST_STORAGE_PERMISSION = 4;
   private static final int REQUEST_BLUETOOTH_PERMISSION = 5;
 
@@ -674,7 +674,7 @@ public abstract class CameraActivity extends AppCompatActivity
         }
         break;
 
-      case REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER:
+      case REQUEST_CONTROLLER_PERMISSIONS:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
         if (grantResults.length > 1
@@ -690,6 +690,9 @@ public abstract class CameraActivity extends AppCompatActivity
             Toast.makeText(
                     this, R.string.record_audio_permission_denied_controller, Toast.LENGTH_LONG)
                 .show();
+          }
+          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_CAMERA)) {
+            Toast.makeText(this, R.string.camera_permission_denied, Toast.LENGTH_LONG).show();
           }
         }
         break;
@@ -745,8 +748,8 @@ public abstract class CameraActivity extends AppCompatActivity
   private void requestPermissionsLocationAndAudioController() {
     ActivityCompat.requestPermissions(
         this,
-        new String[] {PERMISSION_LOCATION, PERMISSION_AUDIO},
-        REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER);
+        new String[] {PERMISSION_LOCATION, PERMISSION_AUDIO, PERMISSION_CAMERA},
+        REQUEST_CONTROLLER_PERMISSIONS);
   }
 
   private void requestStoragePermission() {

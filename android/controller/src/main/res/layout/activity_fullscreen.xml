@@ -85,7 +85,6 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <!-- This could be either VideoView or VideoViewVlc. The latter is faster -->
             <org.openbot.controller.customComponents.VideoViewVlc
                 android:id="@+id/videoView"
                 android:layout_width="match_parent"

@@ -77,20 +77,19 @@ class DualDriveSeekBar @JvmOverloads constructor(
         super.onDraw(c)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isEnabled) {
             return false
         }
         when (event.action) {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
                 this.progress = max - (max * event.y / height).toInt()
                 val safeValue = ((progress - 50) / 50f).coerceIn(-1f, 1f)
                 driveValue.invoke(safeValue)
+            }
+            MotionEvent.ACTION_UP -> {
                 zeroReverter.cancel()
-                zeroReverter.schedule(1)
-                onSizeChanged(width, height, 0, 0)
+                zeroReverter.schedule(500)
             }
             MotionEvent.ACTION_CANCEL -> {
             }
@@ -113,7 +112,8 @@ class DualDriveSeekBar @JvmOverloads constructor(
         fun controlInput(value: Float, leftOrRight: LeftOrRight) {
             if (leftOrRight == LeftOrRight.LEFT) lastLeftValue = value else lastRightValue = value
 
-            if ((System.currentTimeMillis() - lastTransmitted) >= MIN_TIME_BETWEEN_TRANSMISSIONS) {
+            if ((System.currentTimeMillis() - lastTransmitted) >= MIN_TIME_BETWEEN_TRANSMISSIONS
+                    || lastRightValue == 0f || lastLeftValue == 0f) { // if home command, send, do not wait for a time lapsed.
                 val msg = "{driveCmd: {r:$lastRightValue, l:$lastLeftValue}}"
                 ConnectionManager.getConnection().sendMessage(msg)
                 lastTransmitted = System.currentTimeMillis()
@@ -132,7 +132,7 @@ class DualDriveSeekBar @JvmOverloads constructor(
         }
 
         fun schedule(delay: Long) {
-            this.runningTask = executor.schedule(task, delay, TimeUnit.SECONDS)
+            this.runningTask = executor.schedule(task, delay, TimeUnit.MILLISECONDS)
         }
 
         fun cancel() {

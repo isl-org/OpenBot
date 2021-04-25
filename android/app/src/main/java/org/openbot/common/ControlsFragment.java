@@ -224,7 +224,7 @@ public abstract class ControlsFragment extends Fragment {
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     switch (requestCode) {
-      case Constants.REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER:
+      case Constants.REQUEST_CONTROLLER_PERMISSIONS:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
         if (grantResults.length > 1
@@ -248,8 +248,15 @@ public abstract class ControlsFragment extends Fragment {
                     Toast.LENGTH_LONG)
                 .show();
           }
+          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_CAMERA)) {
+            Toast.makeText(
+                    requireActivity().getApplicationContext(),
+                    R.string.camera_permission_denied,
+                    Toast.LENGTH_LONG)
+                .show();
+          }
+          break;
         }
-        break;
     }
   }
 

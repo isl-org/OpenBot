@@ -11,7 +11,7 @@ public class Constants {
   public static final int REQUEST_LOCATION_PERMISSION_CONTROLLER = 3;
   public static final int REQUEST_STORAGE_PERMISSION = 4;
   public static final int REQUEST_BLUETOOTH_PERMISSION = 5;
-  public static final int REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER = 6;
+  public static final int REQUEST_CONTROLLER_PERMISSIONS = 6;
   public static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
   public static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
   public static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;

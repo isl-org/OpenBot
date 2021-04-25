@@ -3,6 +3,7 @@ package org.openbot.env;
 import static org.openbot.utils.Utils.getIPAddress;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.media.ToneGenerator;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import com.pedro.rtplibrary.view.OpenGlView;
 import com.pedro.rtsp.utils.ConnectCheckerRtsp;
 import com.pedro.rtspserver.RtspServerCamera1;
@@ -33,8 +35,8 @@ public class RtspServer
 
   private Context context;
 
-  private final int WIDTH = 1280;
-  private final int HEIGHT = 720;
+  private final int WIDTH = 640;
+  private final int HEIGHT = 360;
   private final int PORT = 1935;
 
   public RtspServer() {}
@@ -53,6 +55,10 @@ public class RtspServer
     andGate.addCondition("connected");
     andGate.addCondition("surfaceCreated");
     andGate.addCondition("view set");
+    andGate.addCondition("camera permission");
+
+    int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
+    andGate.update("camera permission", camera == PackageManager.PERMISSION_GRANTED);
   }
 
   @Override
@@ -108,6 +114,9 @@ public class RtspServer
 
   @Override
   public void setConnected(boolean connected) {
+    int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
+    andGate.update("camera permission", camera == PackageManager.PERMISSION_GRANTED);
+
     andGate.update("connected", connected);
   }
   // end Interface
