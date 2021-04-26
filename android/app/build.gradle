@@ -63,15 +63,14 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.android.gms:play-services-nearby:17.0.0'
 
+    // RTSP server
+    implementation 'com.github.pedroSG94:RTSP-Server:1.0.8'
+    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:2.0.2'
+
     // RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'org.jetbrains:annotations:16.0.1'
-
-    // Video streaming
-    // This could be an imported directly from the libstrieaming library, but must be included as a bub-project
-    // simplementation project(path: ':libstreaming')
-    implementation 'com.github.ar-android:libstreaming:1.0.0'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'

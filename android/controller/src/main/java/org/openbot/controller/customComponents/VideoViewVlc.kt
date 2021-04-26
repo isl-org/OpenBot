@@ -13,25 +13,23 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
-import android.view.SurfaceHolder
-import android.view.SurfaceView
 import android.widget.FrameLayout
 import org.openbot.controller.StatusEventBus
 import org.openbot.controller.databinding.ActivityFullscreenBinding
-import java.util.*
+import org.videolan.libvlc.interfaces.IVLCVout
 
 @SuppressLint("CheckResult")
-class VideoView @JvmOverloads constructor(
+class VideoViewVlc @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : SurfaceView(context, attrs, defStyleAttr), SurfaceHolder.Callback {
+) :
+        org.videolan.libvlc.util.VLCVideoLayout(context, attrs, defStyleAttr), IVLCVout.Callback {
 
     private val TAG: String = "VideoView"
-    private val player = AndroidMediaPlayer(context, this)
+    private val player = VlcPlayer(context, this)
 
     private var serverUrl: String? = ""
 
     init {
-        holder.addCallback(this)
         hide()
 
         StatusEventBus.addSubject("VIDEO_SERVER_URL")
@@ -50,9 +48,6 @@ class VideoView @JvmOverloads constructor(
     fun init(binding: ActivityFullscreenBinding) {
         hide()
         player.init()
-        player.setSurfaceChangedCallback { holder: SurfaceHolder, width: Int, height: Int ->
-            setSurfaceDimensions(holder, width, height)
-        }
     }
 
     private fun processVideoCommand(command: String) {
@@ -89,26 +84,12 @@ class VideoView @JvmOverloads constructor(
         visibility = GONE
     }
 
-    private fun setSurfaceDimensions (holder: SurfaceHolder, width: Int, height: Int) {
-        if (width == 0 || height == 0) {
-            return
-        }
-        val aspectRatio: kotlin.Float = height.toFloat()/width.toFloat()
-        val surfaceWidth = this.width
-        val surfaceHeight = (surfaceWidth * aspectRatio).toInt()
-        val params = FrameLayout.LayoutParams(surfaceWidth, surfaceHeight)
-        this.layoutParams = params
-        player.setDisplay(holder)
+    override fun onSurfacesCreated(vlcVout: IVLCVout?) {
+        Log.i(TAG, "onSurfacesCreated")
+        // setSurfaceDimensions()
     }
 
-    override fun surfaceCreated(holder: SurfaceHolder) {
-    }
-
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        // setSurfaceDimensions(holder, width, height)
-    }
-
-    override fun surfaceDestroyed(holder: SurfaceHolder) {
-        player.release()
+    override fun onSurfacesDestroyed(vlcVout: IVLCVout?) {
+        Log.i(TAG, "onSurfacesDestroyed")
     }
 }

@@ -21,21 +21,22 @@ import android.util.AttributeSet;
 import android.view.SurfaceView;
 
 /** A {@link SurfaceView} that can be adjusted to a specified aspect ratio. */
-public class AutoFitSurfaceView
-    extends SurfaceView { // net.majorkernelpanic.streaming.gl.SurfaceView {
+public class AutoFitSurfaceGlView
+    extends com.pedro.rtplibrary.view
+        .OpenGlView { // net.majorkernelpanic.streaming.gl.SurfaceView {
 
   private int ratioWidth = 0;
   private int ratioHeight = 0;
 
-  public AutoFitSurfaceView(final Context context) {
+  public AutoFitSurfaceGlView(final Context context) {
     this(context, null);
   }
 
-  public AutoFitSurfaceView(final Context context, final AttributeSet attrs) {
+  public AutoFitSurfaceGlView(final Context context, final AttributeSet attrs) {
     this(context, attrs, 0);
   }
 
-  public AutoFitSurfaceView(final Context context, final AttributeSet attrs, final int defStyle) {
+  public AutoFitSurfaceGlView(final Context context, final AttributeSet attrs, final int defStyle) {
     super(context, attrs);
   }
 

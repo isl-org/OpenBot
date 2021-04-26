@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.OpenBotApplication;
+import org.openbot.utils.Utils;
 import timber.log.Timber;
 
 public class NearbyConnection implements ILocalConnection {
@@ -51,6 +52,7 @@ public class NearbyConnection implements ILocalConnection {
   private final CancelableDiscovery discovery = new CancelableDiscovery(this);
   private boolean isConnected = false;
   private IDataReceived dataReceivedCallback;
+  private boolean stopped = true;
 
   // Our handle to Nearby Connections
   private ConnectionsClient connectionsClient;
@@ -63,8 +65,10 @@ public class NearbyConnection implements ILocalConnection {
       new PayloadCallback() {
         @Override
         public void onPayloadReceived(@NotNull String endpointId, Payload payload) {
-          String commandStr = new String(payload.asBytes(), StandardCharsets.UTF_8);
-          dataReceivedCallback.dataReceived(commandStr);
+          if (!stopped) {
+            String commandStr = new String(payload.asBytes(), StandardCharsets.UTF_8);
+            dataReceivedCallback.dataReceived(commandStr);
+          }
         }
 
         @Override
@@ -257,10 +261,21 @@ public class NearbyConnection implements ILocalConnection {
   }
 
   @Override
-  public void stop() {}
+  public void stop() {
+    stopped = true;
+    BotToControllerEventBus.emitEvent(Utils.createStatus("CONNECTION_ACTIVE", false));
+  }
 
   @Override
-  public void start() {}
+  public void start() {
+    stopped = false;
+    BotToControllerEventBus.emitEvent(Utils.createStatus("CONNECTION_ACTIVE", true));
+  }
+
+  @Override
+  public boolean isVideoCapable() {
+    return false;
+  }
 
   public class CancelableDiscovery {
     Timer timer;

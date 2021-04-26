@@ -19,4 +19,6 @@ public interface ILocalConnection {
   void stop();
 
   void start();
+
+  boolean isVideoCapable();
 }

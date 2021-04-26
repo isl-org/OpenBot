@@ -2,73 +2,76 @@ package org.openbot.env;
 
 import static org.openbot.utils.Utils.getIPAddress;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.SurfaceTexture;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ToneGenerator;
 import android.util.Log;
-import android.util.Pair;
+import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
+import android.view.View;
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
-import java.util.ArrayList;
-import java.util.List;
-import net.majorkernelpanic.streaming.Session;
-import net.majorkernelpanic.streaming.SessionBuilder;
+import androidx.core.content.ContextCompat;
+import com.pedro.rtplibrary.view.OpenGlView;
+import com.pedro.rtsp.utils.ConnectCheckerRtsp;
+import com.pedro.rtspserver.RtspServerCamera1;
 import org.openbot.customview.AutoFitSurfaceView;
+import org.openbot.customview.AutoFitTextureView;
+import org.openbot.original.CameraConnectionFragment;
+import org.openbot.utils.AndGate;
 import org.openbot.utils.Utils;
+import timber.log.Timber;
 
-class RtspServer implements SurfaceHolder.Callback, IVideoServer {
-  private final String TAG = "RtspServer";
-  private AutoFitSurfaceView serfaceView;
+public class RtspServer
+    implements ConnectCheckerRtsp,
+        SurfaceHolder.Callback,
+        TextureView.SurfaceTextureListener,
+        IVideoServer {
+  private final String TAG = "RtspServerPedroOpenGL";
+  private RtspServerCamera1 rtspServerCamera1;
+  private View view;
+
+  private AndGate andGate;
+  private AndGate.Action action;
+
   private Context context;
 
-  private final int WIDTH = 320;
-  private final int HEIGHT = 240;
-  private final int PORT = 1234;
-  private Session session;
+  private final int WIDTH = 640;
+  private final int HEIGHT = 360;
+  private final int PORT = 1935;
 
   public RtspServer() {}
 
-  public void startServer(Context context, SurfaceView surfaceView) {
-
-    // set the port to 1234
-    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-    editor.putString(net.majorkernelpanic.streaming.rtsp.RtspServer.KEY_PORT, String.valueOf(PORT));
-    editor.apply();
-
-    this.session =
-        SessionBuilder.getInstance()
-            .setSurfaceView((net.majorkernelpanic.streaming.gl.SurfaceView) surfaceView)
-            .setContext(context)
-            .setAudioEncoder(SessionBuilder.AUDIO_AAC)
-            .setVideoEncoder(SessionBuilder.VIDEO_H264)
-            .build();
-
-    serfaceView.getHolder().addCallback(this);
-    context.startService(new Intent(context, net.majorkernelpanic.streaming.rtsp.RtspServer.class));
-  }
-
-  @Override
-  public void stopServer() {
-    session.stop();
-    context.stopService(new Intent(context, net.majorkernelpanic.streaming.rtsp.RtspServer.class));
-  }
-
+  // IVideoServer Interface
   @Override
   public void init(Context context) {
     this.context = context;
+
+    /*
+    AndGate will run 'startServer()' if all its input conditions are met.
+    This is useful if we do not know the order of the updates to the conditions.
+    */
+    action = () -> startServer();
+    andGate = new AndGate(action);
+    andGate.addCondition("connected");
+    andGate.addCondition("surfaceCreated");
+    andGate.addCondition("view set");
+    andGate.addCondition("camera permission");
+
+    int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
+    andGate.update("camera permission", camera == PackageManager.PERMISSION_GRANTED);
   }
 
   @Override
   public boolean isRunning() {
-    return session != null && session.isStreaming();
-  }
-
-  @Override
-  public void surfaceCreated(@NonNull SurfaceHolder holder) {
-    startClient();
+    return rtspServerCamera1 != null && rtspServerCamera1.isStreaming();
   }
 
   @Override
@@ -78,44 +81,196 @@ class RtspServer implements SurfaceHolder.Callback, IVideoServer {
   }
 
   @Override
-  public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-    Log.d(TAG, "surfaceChanged...");
-  }
-
-  @Override
-  public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-    sendVideoStoppedStatus();
-  }
-
-  @Override
   public void sendServerUrl() {
     BotToControllerEventBus.emitEvent(
         Utils.createStatus(
-            "VIDEO_SERVER_URL",
-            "rtsp://"
-                + getIPAddress(true)
-                + ":"
-                + PORT
-                + "?trackId=0&h264=200-20-"
-                + WIDTH
-                + "-"
-                + HEIGHT));
+            "VIDEO_SERVER_URL", "rtsp://" + getIPAddress(true) + ":" + PORT
+            // "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+            ));
   }
 
   @Override
   public void sendVideoStoppedStatus() {
-    List<Pair<String, String>> nameValues = new ArrayList<>();
-    nameValues.add(new Pair<>("VIDEO_COMMAND", "STOP"));
-
-    BotToControllerEventBus.emitEvent(Utils.createStatusBulk(nameValues));
+    BotToControllerEventBus.emitEvent(Utils.createStatus("VIDEO_COMMAND", "STOP"));
   }
 
   @Override
-  public void setView(android.view.SurfaceView view) {
-    this.serfaceView = (AutoFitSurfaceView) view;
-    startServer(this.context, this.serfaceView);
+  public void setView(SurfaceView view) {
+    this.view = view;
+    ((AutoFitSurfaceView) this.view).getHolder().addCallback(this);
+    andGate.update("view set", true);
   }
 
+  @Override
+  public void setView(TextureView view) {
+    this.view = view;
+    ((AutoFitTextureView) this.view).setSurfaceTextureListener(this);
+    andGate.update("view set", true);
+  }
+
+  @Override
+  public void setView(OpenGlView view) {
+    this.view = view;
+    ((OpenGlView) this.view).getHolder().addCallback(this);
+    andGate.update("view set", true);
+  }
+
+  @Override
+  public void startServer() {
+    startServer(WIDTH, HEIGHT, PORT);
+  }
+
+  @Override
+  public void setConnected(boolean connected) {
+    int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
+    andGate.update("camera permission", camera == PackageManager.PERMISSION_GRANTED);
+
+    andGate.update("connected", connected);
+  }
+  // end Interface
+
+  // Local methods
+  private void startServer(int width, int height, int port) {
+    if (rtspServerCamera1 == null) {
+      final Activity activity = (Activity) context;
+      final CameraManager manager =
+          (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+      try {
+        for (final String cameraId : manager.getCameraIdList()) {
+          final CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
+          final Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
+          if (facing != CameraCharacteristics.LENS_FACING_BACK) {
+            continue;
+          }
+          final StreamConfigurationMap map =
+              characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+          Size previewSize =
+              CameraConnectionFragment.chooseOptimalSize(
+                  map.getOutputSizes(SurfaceTexture.class), width, height);
+          width = previewSize.getWidth();
+          height = previewSize.getHeight();
+          Timber.d("Resolution %dx%d", width, height);
+        }
+
+        String viewType = this.view.getClass().getName();
+
+        if (viewType.contains("AutoFitTextureView")) {
+          rtspServerCamera1 = new RtspServerCamera1((TextureView) view, this, port);
+        }
+        if (viewType.contains("AutoFitSurfaceView")) {
+          rtspServerCamera1 = new RtspServerCamera1((SurfaceView) view, this, port);
+        }
+        if (viewType.contains("AutoFitSurfaceGlView")) {
+          rtspServerCamera1 = new RtspServerCamera1((OpenGlView) view, this, port);
+        }
+      } catch (final CameraAccessException e) {
+        Timber.e(e, "Unable to open the camera.");
+      }
+    }
+
+    if (!rtspServerCamera1.isStreaming()) {
+      if (rtspServerCamera1.prepareAudio(64 * 1024, 32000, false, false, false)
+          && rtspServerCamera1.prepareVideo(width, height, 20, 1200 * 1024, 2, 0)) {
+
+        rtspServerCamera1.startStream("");
+        startClient();
+      }
+    }
+  }
+
+  public void stopServer() {
+    try {
+      if (rtspServerCamera1 != null) {
+        if (rtspServerCamera1.isRecording()) {
+          rtspServerCamera1.stopRecord();
+        }
+
+        if (rtspServerCamera1.isStreaming()) {
+          rtspServerCamera1.stopStream();
+        }
+
+        rtspServerCamera1.stopPreview();
+        rtspServerCamera1 = null;
+      }
+    } catch (Exception e) {
+      Log.d(TAG, "Got error stopping server: " + e);
+    }
+  }
+
+  // ConnectCheckerRtsp callbacks
+  @Override
+  public void onConnectionSuccessRtsp() {
+
+    Log.i(TAG, "onConnectionSuccessRtsp");
+  }
+
+  @Override
+  public void onConnectionFailedRtsp(final String reason) {
+    rtspServerCamera1.stopStream();
+    beep();
+  }
+
+  @Override
+  public void onNewBitrateRtsp(long bitrate) {
+    Log.i(TAG, "Bitrate set to " + bitrate);
+  }
+
+  @Override
+  public void onDisconnectRtsp() {
+    Log.i(TAG, "onDisconnectRtsp");
+  }
+
+  @Override
+  public void onAuthErrorRtsp() {
+    beep();
+  }
+
+  @Override
+  public void onAuthSuccessRtsp() {}
+
+  // SurfaceHolder.Callback callbacks
+  @Override
+  public void surfaceCreated(@NonNull SurfaceHolder holder) {
+    Log.d(TAG, "Surface created...");
+    andGate.update("surfaceCreated", true);
+  }
+
+  @Override
+  public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+
+    if (rtspServerCamera1 != null) {
+      rtspServerCamera1.startPreview();
+    }
+  }
+
+  @Override
+  public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+    andGate.update("surfaceCreated", false);
+    sendVideoStoppedStatus();
+    stopServer();
+  }
+
+  // SurfaceTextureListener callbacks
+  @Override
+  public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+    andGate.update("surfaceCreated", true);
+  }
+
+  @Override
+  public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {}
+
+  @Override
+  public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+    andGate.update("surfaceCreated", false);
+    sendVideoStoppedStatus();
+    stopServer();
+    return false;
+  }
+
+  @Override
+  public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {}
+
+  // Utils
   private void beep() {
     final ToneGenerator tg = new ToneGenerator(6, 100);
     tg.startTone(ToneGenerator.TONE_CDMA_ALERT_NETWORK_LITE);

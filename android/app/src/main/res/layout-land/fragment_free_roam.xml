@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".robot.FreeRoamFragment">
 
-    <org.openbot.customview.AutoFitSurfaceView
-        android:id="@+id/video_wondow"
+    <org.openbot.customview.AutoFitSurfaceGlView
+        android:id="@+id/video_window"
         android:layout_width="200dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/controllerContainer"
@@ -52,7 +52,6 @@
         app:sv_unit=""
         app:sv_unitUnderSpeedText="false"
         app:sv_withTremble="false" />
-
 
     <ProgressBar
         android:id="@+id/sonar"

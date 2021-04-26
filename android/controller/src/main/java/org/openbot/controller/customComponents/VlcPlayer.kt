@@ -12,9 +12,13 @@ package org.openbot.controller.customComponents
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.view.Surface
+import android.view.SurfaceHolder
+import android.widget.FrameLayout
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
+import org.videolan.libvlc.interfaces.IVLCVout
 import org.videolan.libvlc.util.VLCVideoLayout
 import java.util.*
 
@@ -38,11 +42,14 @@ data class VlcPlayer(
         mLibVLC = LibVLC(this.context, args)
         mMediaPlayer = MediaPlayer(mLibVLC)
 
-        mVideoLayout = this.layout
+        setLayout(this.layout)
+    }
+
+    fun setLayout(layout: VLCVideoLayout) {
+        mVideoLayout = layout
         mMediaPlayer!!.detachViews()
         mMediaPlayer!!.attachViews(mVideoLayout!!, null, true, true)
     }
-
     override fun start(url: String) {
         Log.i(null, "Stated the player..., playState: " + mMediaPlayer!!.playerState)
 
@@ -61,5 +68,16 @@ data class VlcPlayer(
 
     override fun stop() {
         mMediaPlayer!!.stop()
+    }
+
+    // These are not needed but are created to satisfy IVideoPlayer interface.
+    override fun release() {
+    }
+
+    override fun setDisplay(holder: SurfaceHolder?) {
+    }
+
+    override fun setSurfaceChangedCallback(surfaceChangedCallback: (SurfaceHolder, Int, Int) -> Unit) {
+        Log.i(TAG, "surfaceChangedCallback: ")
     }
 }

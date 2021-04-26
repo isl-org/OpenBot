@@ -29,7 +29,7 @@ import timber.log.Timber;
 public class FreeRoamFragment extends ControlsFragment {
 
   private FragmentFreeRoamBinding binding;
-  private PhoneController phoneController = PhoneController.getInstance();
+  private PhoneController phoneController;
 
   @Override
   public View onCreateView(
@@ -43,6 +43,7 @@ public class FreeRoamFragment extends ControlsFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    phoneController = PhoneController.getInstance(requireContext());
     phoneController.setView(binding.videoWindow);
 
     binding.voltageInfo.setText(getString(R.string.voltageInfo, "--.-"));
@@ -202,11 +203,19 @@ public class FreeRoamFragment extends ControlsFragment {
           binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
           if (!PermissionUtils.hasPermissions(
               requireContext(),
-              new String[] {Constants.PERMISSION_LOCATION, Constants.PERMISSION_AUDIO_RECORDING}))
+              new String[] {
+                Constants.PERMISSION_LOCATION,
+                Constants.PERMISSION_AUDIO_RECORDING,
+                Constants.PERMISSION_CAMERA
+              }))
             PermissionUtils.requestPermissions(
                 this,
-                new String[] {Constants.PERMISSION_LOCATION, Constants.PERMISSION_AUDIO_RECORDING},
-                Constants.REQUEST_LOCATION_AND_AUDIO_PERMISSION_CONTROLLER);
+                new String[] {
+                  Constants.PERMISSION_LOCATION,
+                  Constants.PERMISSION_AUDIO_RECORDING,
+                  Constants.PERMISSION_CAMERA
+                },
+                Constants.REQUEST_CONTROLLER_PERMISSIONS);
           else connectPhoneController();
 
           break;

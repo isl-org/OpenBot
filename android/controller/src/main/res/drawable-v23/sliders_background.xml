@@ -27,11 +27,12 @@
 
     <item>
         <shape android:shape="rectangle">
+            <solid android:color="#bf000000" />
             <stroke
                 android:width="2dp"
                 android:color="@color/colorPrimary" />
             <corners android:radius="10dp" />
-            <solid android:color="#00000000" />
+            <solid android:color="#26000000" />
         </shape>
     </item>
 

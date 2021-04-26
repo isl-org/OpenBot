@@ -3,7 +3,7 @@
     <string name="app_name">OpenBot</string>
     <string name="activity_name">OpenBot</string>
     <string name="description_info">Info</string>
-    <string name="camera_permission_denied">Camera permission is necessary to run this application.</string>
+    <string name="camera_permission_denied">Camera permission is necessary to run this application. It allows streaming video to remote devices such as controllers. Without it, you cannot drive the robot by video.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="threads">Threads</string>
     <string name="location_permission_denied_logging">Location permission is necessary for logging GPS data.</string>

@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.SocketHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.utils.Utils;
@@ -30,6 +31,7 @@ public class NetworkServiceConnection implements ILocalConnection {
 
   private String SERVICE_NAME_CONTROLLER = "OPEN_BOT_CONTROLLER";
   private String MY_SERVICE_NAME = "OPEN_BOT";
+  private String ALL_SERVICE_TYPES = "_services._dns-sd._udp";
   private String SERVICE_TYPE = "_openbot._tcp.";
   private int port = 19400;
 
@@ -88,6 +90,11 @@ public class NetworkServiceConnection implements ILocalConnection {
   }
 
   @Override
+  public boolean isVideoCapable() {
+    return true;
+  }
+
+  @Override
   public boolean isConnected() {
     return socketHandler != null && socketHandler.isConnected();
   }
@@ -102,7 +109,8 @@ public class NetworkServiceConnection implements ILocalConnection {
 
   private void runConnection() {
     try {
-      mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
+      mNsdManager.discoverServices(
+          /*ALL_SERVICE_TYPES*/ SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
     } catch (IllegalArgumentException e) {
       Log.d(TAG, "runConnection: Already discovering: " + e);
     }
