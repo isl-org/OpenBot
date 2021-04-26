@@ -2,11 +2,17 @@ package org.openbot.env;
 
 import static org.openbot.utils.Utils.getIPAddress;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ToneGenerator;
 import android.util.Log;
+import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
@@ -18,8 +24,10 @@ import com.pedro.rtsp.utils.ConnectCheckerRtsp;
 import com.pedro.rtspserver.RtspServerCamera1;
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
+import org.openbot.original.CameraConnectionFragment;
 import org.openbot.utils.AndGate;
 import org.openbot.utils.Utils;
+import timber.log.Timber;
 
 public class RtspServer
     implements ConnectCheckerRtsp,
@@ -124,16 +132,39 @@ public class RtspServer
   // Local methods
   private void startServer(int width, int height, int port) {
     if (rtspServerCamera1 == null) {
-      String viewType = this.view.getClass().getName();
+      final Activity activity = (Activity) context;
+      final CameraManager manager =
+          (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+      try {
+        for (final String cameraId : manager.getCameraIdList()) {
+          final CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
+          final Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
+          if (facing != CameraCharacteristics.LENS_FACING_BACK) {
+            continue;
+          }
+          final StreamConfigurationMap map =
+              characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+          Size previewSize =
+              CameraConnectionFragment.chooseOptimalSize(
+                  map.getOutputSizes(SurfaceTexture.class), width, height);
+          width = previewSize.getWidth();
+          height = previewSize.getHeight();
+          Timber.d("Resolution %dx%d", width, height);
+        }
 
-      if (viewType.contains("AutoFitTextureView")) {
-        rtspServerCamera1 = new RtspServerCamera1((TextureView) view, this, port);
-      }
-      if (viewType.contains("AutoFitSurfaceView")) {
-        rtspServerCamera1 = new RtspServerCamera1((SurfaceView) view, this, port);
-      }
-      if (viewType.contains("AutoFitSurfaceGlView")) {
-        rtspServerCamera1 = new RtspServerCamera1((OpenGlView) view, this, port);
+        String viewType = this.view.getClass().getName();
+
+        if (viewType.contains("AutoFitTextureView")) {
+          rtspServerCamera1 = new RtspServerCamera1((TextureView) view, this, port);
+        }
+        if (viewType.contains("AutoFitSurfaceView")) {
+          rtspServerCamera1 = new RtspServerCamera1((SurfaceView) view, this, port);
+        }
+        if (viewType.contains("AutoFitSurfaceGlView")) {
+          rtspServerCamera1 = new RtspServerCamera1((OpenGlView) view, this, port);
+        }
+      } catch (final CameraAccessException e) {
+        Timber.e(e, "Unable to open the camera.");
       }
     }
 
