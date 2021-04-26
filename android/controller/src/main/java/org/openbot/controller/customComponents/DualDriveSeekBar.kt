@@ -89,7 +89,7 @@ class DualDriveSeekBar @JvmOverloads constructor(
             }
             MotionEvent.ACTION_UP -> {
                 zeroReverter.cancel()
-                zeroReverter.schedule(500)
+                zeroReverter.schedule(50)
             }
             MotionEvent.ACTION_CANCEL -> {
             }
