@@ -12,9 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
+
 import org.openbot.R;
 import org.openbot.databinding.FragmentModelManagementBinding;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +104,21 @@ public class ModelManagementFragment extends Fragment {
 		return modelInfoList;
 	}
 
+	private void downloadFile(String url, String savepPath){
+		Ion.with(this)
+				.load(url)
+				.progress((downloaded, total) -> System.out.println("" + downloaded + " / " + total))
+//				.write(new File("/sdcard/really-big-file.zip"))
+				.write(new File(savepPath))
+				.setCallback(new FutureCallback<File>() {
+					@Override
+					public void onCompleted(Exception e, File file) {
+						// download done...
+						// do stuff with the File or error
+					}
+				});
+
+	}
 	private String[] getModelFiles() {
 		return requireActivity().getFilesDir().list((dir1, name) -> name.endsWith(".tflite"));
 	}

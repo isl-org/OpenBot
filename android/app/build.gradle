@@ -143,5 +143,6 @@ dependencies {
     implementation 'com.nononsenseapps:filepicker:4.1.0'
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    implementation 'com.koushikdutta.ion:ion:3.0.8'
 
 }

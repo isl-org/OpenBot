@@ -137,7 +137,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
     setModel(
         new Model(
-            Model.ID.AUTOPILOT_F,
+            Model.CLASS.AUTOPILOT_F,
             Model.TYPE.AUTOPILOT,
             fileName,
             null,
@@ -194,7 +194,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
               } catch (IllegalArgumentException e) {
                 setModel(
                     new Model(
-                        Model.ID.AUTOPILOT_F,
+                        Model.CLASS.AUTOPILOT_F,
                         Model.TYPE.AUTOPILOT,
                         selected,
                         null,
@@ -550,7 +550,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
       if (model.equals(binding.modelSpinner.getSelectedItem())) {
         setModel(
             new Model(
-                Model.ID.AUTOPILOT_F, Model.TYPE.AUTOPILOT, model, null, model, new Size(256, 96)));
+                Model.CLASS.AUTOPILOT_F, Model.TYPE.AUTOPILOT, model, null, model, new Size(256, 96)));
       }
     }
     Toast.makeText(
