@@ -3,13 +3,14 @@
     <string name="app_name">OpenBot</string>
     <string name="activity_name">OpenBot</string>
     <string name="description_info">Info</string>
-    <string name="camera_permission_denied">Camera permission is necessary to run this application. It allows streaming video to remote devices such as controllers. Without it, you cannot drive the robot by video.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="threads">Threads</string>
+    <string name="camera_permission_denied_logging">Camera permission is necessary for logging.</string>
+    <string name="storage_permission_denied_logging">External storage permission is necessary for logging.</string>
     <string name="location_permission_denied_logging">Location permission is necessary for logging GPS data.</string>
-    <string name="location_permission_denied_controller">Location permission is necessary for finding the controller phone.</string>
-    <string name="storage_permission_denied">External storage permission is necessary for logging.</string>
-    <string name="record_audio_permission_denied_controller">Recording audio is necessary for sending Audio/Visual stream to the controller.</string>
+    <string name="location_permission_denied_controller">Location permission is necessary for finding the the controller.</string>
+    <string name="camera_permission_denied_controller">Camera permission is necessary to stream video to the controller.</string>
+    <string name="record_audio_permission_denied_controller">Recording audio is necessary to stream audio to the controller.</string>
     <string name="off">Off</string>
     <string name="on">On</string>
 
