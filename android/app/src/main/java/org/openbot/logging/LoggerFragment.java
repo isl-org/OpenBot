@@ -41,10 +41,10 @@ import org.openbot.env.ImageUtils;
 import org.openbot.server.ServerCommunication;
 import org.openbot.server.ServerListener;
 import org.openbot.tflite.Model;
+import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
-import org.openbot.utils.Utils;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 import timber.log.Timber;
@@ -333,7 +333,7 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
       stopLogging();
       loggingEnabled = false;
     }
-    BotToControllerEventBus.emitEvent(Utils.createStatus("LOGS", loggingEnabled));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("LOGS", loggingEnabled));
 
     binding.loggerSwitch.setChecked(loggingEnabled);
   }
@@ -368,7 +368,7 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
           if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_STORAGE)) {
             Toast.makeText(
                     requireContext().getApplicationContext(),
-                    R.string.storage_permission_denied,
+                    R.string.storage_permission_denied_logging,
                     Toast.LENGTH_LONG)
                 .show();
           }

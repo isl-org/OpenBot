@@ -45,7 +45,6 @@ import android.media.ImageReader.OnImageAvailableListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.text.TextUtils;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -54,16 +53,13 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import org.openbot.R;
 import org.openbot.customview.AutoFitTextureView;
 import org.openbot.env.Logger;
+import org.openbot.utils.CameraUtils;
 
 @SuppressLint("ValidFragment")
 public class CameraConnectionFragment extends Fragment {
@@ -200,67 +196,6 @@ public class CameraConnectionFragment extends Fragment {
     this.inputSize = inputSize;
   }
 
-  /**
-   * Given {@code choices} of {@code Size}s supported by a camera, chooses the smallest one whose
-   * width and height are at least as large as the minimum of both, or an exact match if possible.
-   *
-   * @param choices The list of sizes that the camera supports for the intended output class
-   * @param width The minimum desired width
-   * @param height The minimum desired height
-   * @return The optimal {@code Size}, or an arbitrary one if none were big enough
-   */
-  public static Size chooseOptimalSize(final Size[] choices, final int width, final int height) {
-    final int minSize = Math.max(Math.min(width, height), MINIMUM_PREVIEW_SIZE);
-    final Size desiredSize = new Size(width, height);
-
-    // Collect the supported resolutions that are at least as big as the preview Surface
-    boolean exactSizeFound = false;
-    final List<Size> correctAspect = new ArrayList<Size>();
-    final List<Size> bigEnough = new ArrayList<Size>();
-    final List<Size> tooSmall = new ArrayList<Size>();
-    for (final Size option : choices) {
-      LOGGER.i("Size: " + option.getWidth() + "x" + option.getHeight());
-      if (option.equals(desiredSize)) {
-        // Set the size but don't return yet so that remaining sizes will still be logged.
-        exactSizeFound = true;
-      }
-
-      if (option.getHeight() >= minSize && option.getWidth() >= minSize) {
-        // Check for aspect ratio
-        if (desiredSize.getWidth() / option.getWidth()
-            == desiredSize.getHeight() / option.getHeight()) {
-          correctAspect.add(option);
-        }
-        bigEnough.add(option);
-      } else {
-        tooSmall.add(option);
-      }
-    }
-
-    LOGGER.i("Desired size: " + desiredSize + ", min size: " + minSize + "x" + minSize);
-    LOGGER.i("Valid preview sizes: [" + TextUtils.join(", ", bigEnough) + "]");
-    LOGGER.i("Rejected preview sizes: [" + TextUtils.join(", ", tooSmall) + "]");
-
-    if (exactSizeFound) {
-      LOGGER.i("Exact size match found.");
-      return desiredSize;
-    }
-
-    // Pick the smallest of those, assuming we found any
-    if (correctAspect.size() > 0) {
-      final Size chosenSize = Collections.min(correctAspect, new CompareSizesByArea());
-      LOGGER.i("Chosen size: " + chosenSize.getWidth() + "x" + chosenSize.getHeight());
-      return chosenSize;
-    } else if (bigEnough.size() > 0) {
-      final Size chosenSize = Collections.min(bigEnough, new CompareSizesByArea());
-      LOGGER.i("Chosen size: " + chosenSize.getWidth() + "x" + chosenSize.getHeight());
-      return chosenSize;
-    } else {
-      LOGGER.e("Couldn't find any suitable preview size");
-      return choices[0];
-    }
-  }
-
   public static CameraConnectionFragment newInstance(
       final ConnectionCallback callback,
       final OnImageAvailableListener imageListener,
@@ -346,10 +281,10 @@ public class CameraConnectionFragment extends Fragment {
       // bus' bandwidth limitation, resulting in gorgeous previews but the storage of
       // garbage capture data.
       previewSize =
-          chooseOptimalSize(
+          CameraUtils.chooseOptimalSize(
               map.getOutputSizes(SurfaceTexture.class),
-              inputSize.getWidth(),
-              inputSize.getHeight());
+              inputSize,
+              new Size(MINIMUM_PREVIEW_SIZE, MINIMUM_PREVIEW_SIZE));
 
       // We fit the aspect ratio of TextureView to the size of preview we picked.
       final int orientation = getResources().getConfiguration().orientation;
@@ -546,16 +481,6 @@ public class CameraConnectionFragment extends Fragment {
    */
   public interface ConnectionCallback {
     void onPreviewSizeChosen(Size size, int cameraRotation);
-  }
-
-  /** Compares two {@code Size}s based on their areas. */
-  static class CompareSizesByArea implements Comparator<Size> {
-    @Override
-    public int compare(final Size lhs, final Size rhs) {
-      // We cast here to ensure the multiplications won't overflow
-      return Long.signum(
-          (long) lhs.getWidth() * lhs.getHeight() - (long) rhs.getWidth() * rhs.getHeight());
-    }
   }
 
   /** Shows an error message dialog. */

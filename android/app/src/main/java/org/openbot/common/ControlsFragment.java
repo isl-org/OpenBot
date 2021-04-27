@@ -23,10 +23,11 @@ import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
 import org.openbot.main.MainViewModel;
+import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
+import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
-import org.openbot.utils.Utils;
 import timber.log.Timber;
 
 public abstract class ControlsFragment extends Fragment {
@@ -82,16 +83,16 @@ public abstract class ControlsFragment extends Fragment {
             data -> {
               String[] itemList = data.split(",");
               if (itemList.length == 4) {
-                if (Utils.isNumeric(itemList[0]))
+                if (FormatUtils.isNumeric(itemList[0]))
                   vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
 
-                if (Utils.isNumeric(itemList[1]))
+                if (FormatUtils.isNumeric(itemList[1]))
                   vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
 
-                if (Utils.isNumeric(itemList[2]))
+                if (FormatUtils.isNumeric(itemList[2]))
                   vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
 
-                if (Utils.isNumeric(itemList[3]))
+                if (FormatUtils.isNumeric(itemList[3]))
                   vehicle.setSonarReading(Float.parseFloat(itemList[3]));
 
                 processUSBData(data);
@@ -190,7 +191,7 @@ public abstract class ControlsFragment extends Fragment {
               // Other controllers can subscribe to this event as well.
               // That is why we are not calling phoneController.send() here directly.
               BotToControllerEventBus.emitEvent(
-                  Utils.getStatus(
+                  ConnectionUtils.getStatus(
                       false, false, false, currentDriveMode.toString(), vehicle.getIndicator()));
               break;
 
@@ -208,15 +209,16 @@ public abstract class ControlsFragment extends Fragment {
 
   protected void toggleNoise() {
     vehicle.toggleNoise();
-    BotToControllerEventBus.emitEvent(Utils.createStatus("NOISE", vehicle.isNoiseEnabled()));
+    BotToControllerEventBus.emitEvent(
+        ConnectionUtils.createStatus("NOISE", vehicle.isNoiseEnabled()));
     audioPlayer.playNoise(voice, vehicle.isNoiseEnabled());
   }
 
   private void toggleIndicatorEvent(int value) {
     vehicle.setIndicator(value);
-    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_LEFT", value == -1));
-    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_RIGHT", value == 1));
-    BotToControllerEventBus.emitEvent(Utils.createStatus("INDICATOR_STOP", value == 0));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("INDICATOR_LEFT", value == -1));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("INDICATOR_RIGHT", value == 1));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("INDICATOR_STOP", value == 0));
   }
 
   @Override
@@ -251,7 +253,7 @@ public abstract class ControlsFragment extends Fragment {
           if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_CAMERA)) {
             Toast.makeText(
                     requireActivity().getApplicationContext(),
-                    R.string.camera_permission_denied,
+                    R.string.camera_permission_denied_controller,
                     Toast.LENGTH_LONG)
                 .show();
           }

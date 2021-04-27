@@ -39,9 +39,16 @@ import org.openbot.R;
 import org.openbot.customview.AutoFitTextureView;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
+import org.openbot.utils.CameraUtils;
 
 @SuppressLint("ValidFragment")
 public class LegacyCameraConnectionFragment extends Fragment {
+
+  /**
+   * The camera preview size will be chosen to be the smallest frame by pixel size capable of
+   * containing a DESIRED_SIZE x DESIRED_SIZE square.
+   */
+  private static final int MINIMUM_PREVIEW_SIZE = 320;
 
   private static int mFacing = CameraInfo.CAMERA_FACING_BACK;
   private static final Logger LOGGER = new Logger();
@@ -101,8 +108,8 @@ public class LegacyCameraConnectionFragment extends Fragment {
               sizes[i++] = new Size(size.width, size.height);
             }
             Size previewSize =
-                CameraConnectionFragment.chooseOptimalSize(
-                    sizes, desiredSize.getWidth(), desiredSize.getHeight());
+                CameraUtils.chooseOptimalSize(
+                    sizes, desiredSize, new Size(MINIMUM_PREVIEW_SIZE, MINIMUM_PREVIEW_SIZE));
             parameters.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
             camera.setDisplayOrientation(90);
             camera.setParameters(parameters);

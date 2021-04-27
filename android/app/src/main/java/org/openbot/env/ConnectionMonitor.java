@@ -11,7 +11,7 @@ import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.openbot.utils.Utils;
+import org.openbot.utils.ConnectionUtils;
 
 public class ConnectionMonitor {
 
@@ -68,8 +68,9 @@ public class ConnectionMonitor {
       if (!myCurrentAddress.equals(ipAddress)) {
         myCurrentAddress = ipAddress;
         if (!"".equals(ipAddress) && connection.isConnected()) {
-          BotToControllerEventBus.emitEvent(Utils.createStatus("PORT", "1935"));
-          BotToControllerEventBus.emitEvent(Utils.createStatus("NEW_IP_ADDRESS", ipAddress));
+          BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("PORT", "1935"));
+          BotToControllerEventBus.emitEvent(
+              ConnectionUtils.createStatus("NEW_IP_ADDRESS", ipAddress));
         }
       }
     }
