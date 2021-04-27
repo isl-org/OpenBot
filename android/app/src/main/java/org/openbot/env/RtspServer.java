@@ -1,15 +1,10 @@
 package org.openbot.env;
 
-import static org.openbot.utils.Utils.getIPAddress;
+import static org.openbot.utils.ConnectionUtils.getIPAddress;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ToneGenerator;
 import android.util.Log;
 import android.util.Size;
@@ -24,9 +19,9 @@ import com.pedro.rtsp.utils.ConnectCheckerRtsp;
 import com.pedro.rtspserver.RtspServerCamera1;
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
-import org.openbot.original.CameraConnectionFragment;
 import org.openbot.utils.AndGate;
-import org.openbot.utils.Utils;
+import org.openbot.utils.CameraUtils;
+import org.openbot.utils.ConnectionUtils;
 import timber.log.Timber;
 
 public class RtspServer
@@ -43,8 +38,7 @@ public class RtspServer
 
   private Context context;
 
-  private final int WIDTH = 640;
-  private final int HEIGHT = 360;
+  private final Size RESOLUTION = new Size(640, 360);
   private final int PORT = 1935;
 
   public RtspServer() {}
@@ -77,13 +71,13 @@ public class RtspServer
   @Override
   public void startClient() {
     sendServerUrl();
-    BotToControllerEventBus.emitEvent(Utils.createStatus("VIDEO_COMMAND", "START"));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
   }
 
   @Override
   public void sendServerUrl() {
     BotToControllerEventBus.emitEvent(
-        Utils.createStatus(
+        ConnectionUtils.createStatus(
             "VIDEO_SERVER_URL", "rtsp://" + getIPAddress(true) + ":" + PORT
             // "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
             ));
@@ -91,7 +85,7 @@ public class RtspServer
 
   @Override
   public void sendVideoStoppedStatus() {
-    BotToControllerEventBus.emitEvent(Utils.createStatus("VIDEO_COMMAND", "STOP"));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "STOP"));
   }
 
   @Override
@@ -117,7 +111,7 @@ public class RtspServer
 
   @Override
   public void startServer() {
-    startServer(WIDTH, HEIGHT, PORT);
+    startServer(RESOLUTION, PORT);
   }
 
   @Override
@@ -130,47 +124,28 @@ public class RtspServer
   // end Interface
 
   // Local methods
-  private void startServer(int width, int height, int port) {
+  private void startServer(Size resolution, int port) {
     if (rtspServerCamera1 == null) {
-      final Activity activity = (Activity) context;
-      final CameraManager manager =
-          (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
-      try {
-        for (final String cameraId : manager.getCameraIdList()) {
-          final CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
-          final Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
-          if (facing != CameraCharacteristics.LENS_FACING_BACK) {
-            continue;
-          }
-          final StreamConfigurationMap map =
-              characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-          Size previewSize =
-              CameraConnectionFragment.chooseOptimalSize(
-                  map.getOutputSizes(SurfaceTexture.class), width, height);
-          width = previewSize.getWidth();
-          height = previewSize.getHeight();
-          Timber.d("Resolution %dx%d", width, height);
-        }
+      resolution = CameraUtils.getClosestCameraResolution(context, resolution);
+      Timber.d("Resolution %dx%d", resolution.getWidth(), resolution.getHeight());
 
-        String viewType = this.view.getClass().getName();
+      String viewType = this.view.getClass().getName();
 
-        if (viewType.contains("AutoFitTextureView")) {
-          rtspServerCamera1 = new RtspServerCamera1((TextureView) view, this, port);
-        }
-        if (viewType.contains("AutoFitSurfaceView")) {
-          rtspServerCamera1 = new RtspServerCamera1((SurfaceView) view, this, port);
-        }
-        if (viewType.contains("AutoFitSurfaceGlView")) {
-          rtspServerCamera1 = new RtspServerCamera1((OpenGlView) view, this, port);
-        }
-      } catch (final CameraAccessException e) {
-        Timber.e(e, "Unable to open the camera.");
+      if (viewType.contains("AutoFitTextureView")) {
+        rtspServerCamera1 = new RtspServerCamera1((AutoFitTextureView) view, this, port);
+      }
+      if (viewType.contains("AutoFitSurfaceView")) {
+        rtspServerCamera1 = new RtspServerCamera1((SurfaceView) view, this, port);
+      }
+      if (viewType.contains("AutoFitSurfaceGlView")) {
+        rtspServerCamera1 = new RtspServerCamera1((OpenGlView) view, this, port);
       }
     }
 
     if (!rtspServerCamera1.isStreaming()) {
-      if (rtspServerCamera1.prepareAudio(64 * 1024, 32000, false, false, false)
-          && rtspServerCamera1.prepareVideo(width, height, 20, 1200 * 1024, 2, 0)) {
+      if (rtspServerCamera1.prepareAudio(64 * 1024, 32000, false, true, true)
+          && rtspServerCamera1.prepareVideo(
+              resolution.getWidth(), resolution.getHeight(), 20, 1200 * 1024, 2, 0)) {
 
         rtspServerCamera1.startStream("");
         startClient();
