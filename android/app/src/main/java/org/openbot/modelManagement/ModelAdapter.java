@@ -58,7 +58,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
                 new File(
                     holder.itemView.getContext().getFilesDir()
                         + File.separator
-                        + holder.mItem.path))
+                        + holder.mItem.name))
             .setCallback(
                     (e, file) -> {
                       itemClickListener.onModelDownloaded(e==null);
