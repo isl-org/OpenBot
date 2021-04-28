@@ -137,6 +137,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
     setModel(
         new Model(
+            1,
             Model.CLASS.AUTOPILOT_F,
             Model.TYPE.AUTOPILOT,
             fileName,
@@ -194,6 +195,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
               } catch (IllegalArgumentException e) {
                 setModel(
                     new Model(
+                        1,
                         Model.CLASS.AUTOPILOT_F,
                         Model.TYPE.AUTOPILOT,
                         selected,
@@ -550,6 +552,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
       if (model.equals(binding.modelSpinner.getSelectedItem())) {
         setModel(
             new Model(
+                1,
                 Model.CLASS.AUTOPILOT_F,
                 Model.TYPE.AUTOPILOT,
                 model,

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -103,5 +104,17 @@ public class ModelManagementFragment extends Fragment
   public void onItemClick(Model item) {}
 
   @Override
-  public void onModelDownloaded(boolean status) {}
+  public void onModelDownloaded(boolean status, Model mItem) {
+    if (status) {
+      for (Model model : masterList) {
+        if (model.id.equals(mItem.id)) {
+          model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
+          model.setPathType(Model.PATH_TYPE.FILE);
+          adapter.notifyDataSetChanged();
+          FileUtils.updateModelConfig(requireActivity(), masterList);
+          break;
+        }
+      }
+    }
+  }
 }

@@ -1,36 +1,38 @@
-{
-  "models": [
-    {
-      "class": "MOBILENETV1_1_0_Q",
-      "type": "DETECTOR",
-      "name": "MobileNetV1_1_0_Q",
-      "pathType": "ASSET",
-      "path": "https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite",
-      "inputSize": "300x300"
-    },
-    {
-      "class": "MOBILENETV3_S_Q",
-      "type": "DETECTOR",
-      "name": "MobileNetV3_S_Q",
-      "pathType": "URL",
-      "path": "https://storage.googleapis.com/openbot_models/mobile_ssd_v3_small_quant_coco.tflite",
-      "inputSize": "320x320"
-    },
-    {
-      "class": "YOLOV4",
-      "type": "DETECTOR",
-      "name": "YoloV4",
-      "pathType": "URL",
-      "path": "https://storage.googleapis.com/openbot_models/yolo_v4_tiny_float_coco.tflite",
-      "inputSize": "416x416"
-    },
-    {
-      "class": "AUTOPILOT_F",
-      "type": "AUTOPILOT",
-      "name": "Autopilot_F",
-      "pathType": "URL",
-      "path": "https://storage.googleapis.com/openbot_models/autopilot_float.tflite",
-      "inputSize": "256x96"
-    }
-  ]
-}
+[
+  {
+    "id": 1,
+    "class": "AUTOPILOT_F",
+    "type": "AUTOPILOT",
+    "name": "Autopilot_F",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/autopilot_float.tflite",
+    "inputSize": "256x96"
+  },
+  {
+    "id": 2,
+    "class": "MOBILENETV1_1_0_Q",
+    "type": "DETECTOR",
+    "name": "MobileNetV1_1_0_Q",
+    "pathType": "ASSET",
+    "path": "https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite",
+    "inputSize": "300x300"
+  },
+  {
+    "id": 3,
+    "class": "MOBILENETV3_S_Q",
+    "type": "DETECTOR",
+    "name": "MobileNetV3_S_Q",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/mobile_ssd_v3_small_quant_coco.tflite",
+    "inputSize": "320x320"
+  },
+  {
+    "id": 4,
+    "class": "YOLOV4",
+    "type": "DETECTOR",
+    "name": "YoloV4",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/yolo_v4_tiny_float_coco.tflite",
+    "inputSize": "416x416"
+  }
+]

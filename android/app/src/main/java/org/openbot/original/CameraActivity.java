@@ -588,6 +588,7 @@ public abstract class CameraActivity extends AppCompatActivity
       if (model.equals(modelSpinner.getSelectedItem())) {
         setModel(
             new Model(
+                1,
                 Model.CLASS.AUTOPILOT_F,
                 Model.TYPE.AUTOPILOT,
                 model,
@@ -1301,6 +1302,7 @@ public abstract class CameraActivity extends AppCompatActivity
       } catch (IllegalArgumentException e) {
         setModel(
             new Model(
+                1,
                 Model.CLASS.AUTOPILOT_F,
                 Model.TYPE.AUTOPILOT,
                 selected,

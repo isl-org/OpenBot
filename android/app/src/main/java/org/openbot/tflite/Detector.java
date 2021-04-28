@@ -58,7 +58,7 @@ public abstract class Detector extends Network {
    */
   public static Detector create(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
-    switch (model.id) {
+    switch (model.classType) {
       case MOBILENETV1_1_0_Q:
       case MOBILENETV3_S_Q:
         return new DetectorQuantizedMobileNet(activity, model, device, numThreads);

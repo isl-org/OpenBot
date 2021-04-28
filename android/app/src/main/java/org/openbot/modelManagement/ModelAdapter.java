@@ -22,7 +22,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
   public interface OnItemClickListener<T> {
     void onItemClick(T item);
 
-    void onModelDownloaded(boolean status);
+    void onModelDownloaded(boolean status, Model mItem);
   }
 
   public ModelAdapter(List<Model> items, OnItemClickListener<Model> itemClickListener) {
@@ -59,7 +59,8 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
                             + holder.mItem.name))
                 .setCallback(
                     (e, file) -> {
-                      itemClickListener.onModelDownloaded(e == null);
+                      holder.progressBar.setProgress(0);
+                      itemClickListener.onModelDownloaded(e == null, holder.mItem);
                     }));
 
     holder.imgDownload.setVisibility(

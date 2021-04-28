@@ -10,10 +10,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
@@ -79,8 +81,7 @@ public class FileUtils {
             gson.fromJson(
                     new FileReader(activity.getFilesDir() + File.separator + configFile),
                     JsonElement.class)
-                .getAsJsonObject()
-                .get("models");
+                .getAsJsonArray();
 
         return gson.fromJson(jsonElement, listType);
 
@@ -98,13 +99,28 @@ public class FileUtils {
       jsonElement =
           gson.fromJson(
                   new InputStreamReader(activity.getAssets().open(configFile)), JsonElement.class)
-              .getAsJsonObject()
-              .get("models");
+              .getAsJsonArray();
     } catch (IOException ex) {
       ex.printStackTrace();
       return null;
     }
 
     return gson.fromJson(jsonElement, listType);
+  }
+
+  public static boolean updateModelConfig(Activity activity, List<Model> modelList) {
+    String configFile = "config.json";
+
+    try {
+      Writer writer = new FileWriter(activity.getFilesDir() + File.separator + configFile);
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      gson.toJson(modelList, writer);
+      writer.flush();
+      writer.close();
+      return true;
+    } catch (IOException e) {
+      e.printStackTrace();
+      return false;
+    }
   }
 }

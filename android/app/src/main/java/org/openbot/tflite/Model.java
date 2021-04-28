@@ -7,8 +7,16 @@ import com.google.gson.annotations.SerializedName;
 /** The model. */
 public class Model {
 
-  public Model(CLASS id, TYPE type, String name, PATH_TYPE pathType, String path, Size inputSize) {
+  public Model(
+      Integer id,
+      CLASS classType,
+      TYPE type,
+      String name,
+      PATH_TYPE pathType,
+      String path,
+      Size inputSize) {
     this.id = id;
+    this.classType = classType;
     this.type = type;
     this.name = name;
     this.pathType = pathType;
@@ -35,13 +43,15 @@ public class Model {
   }
 
   @SerializedName("class")
-  public final CLASS id;
+  public CLASS classType;
 
-  public final TYPE type;
-  public final String name;
-  public final PATH_TYPE pathType;
-  public final String path;
-  private final Size inputSizeObject;
+  public Integer id;
+
+  public TYPE type;
+  public String name;
+  public PATH_TYPE pathType;
+  public String path;
+  private Size inputSizeObject;
 
   @SerializedName("inputSize")
   private String inputSizeString;
@@ -49,6 +59,7 @@ public class Model {
   // TODO: Change this hacky code
   public static final Model Autopilot_F =
       new Model(
+          1,
           CLASS.AUTOPILOT_F,
           TYPE.AUTOPILOT,
           "Autopilot_F",
@@ -57,6 +68,7 @@ public class Model {
           new Size(256, 96));
   public static final Model MobileNetV1_1_0_Q =
       new Model(
+          2,
           CLASS.MOBILENETV1_1_0_Q,
           TYPE.DETECTOR,
           "MobileNetV1_1.0_Q",
@@ -65,6 +77,7 @@ public class Model {
           new Size(300, 300));
   public static final Model MobileNetV3_S_Q =
       new Model(
+          3,
           CLASS.MOBILENETV3_S_Q,
           TYPE.DETECTOR,
           "MobileNetV3_S_Q",
@@ -73,6 +86,7 @@ public class Model {
           new Size(320, 320));
   public static final Model YoloV4 =
       new Model(
+          4,
           CLASS.YOLOV4,
           TYPE.DETECTOR,
           "YoloV4",
@@ -102,7 +116,7 @@ public class Model {
     if (path != null) {
       return path;
     }
-    return id.name();
+    return classType.name();
   }
 
   public String getName() {
@@ -113,5 +127,13 @@ public class Model {
     if (inputSizeObject != null) return inputSizeObject;
 
     return Size.parseSize(inputSizeString);
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  public void setPathType(PATH_TYPE pathType) {
+    this.pathType = pathType;
   }
 }
