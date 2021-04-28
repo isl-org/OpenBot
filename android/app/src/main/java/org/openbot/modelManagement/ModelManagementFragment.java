@@ -93,7 +93,7 @@ public class ModelManagementFragment extends Fragment
 
     masterList.add(
         new Model(
-            masterList.size(),
+            masterList.size() + 1,
             Model.CLASS.AUTOPILOT_F,
             Model.TYPE.AUTOPILOT,
             fileName,
