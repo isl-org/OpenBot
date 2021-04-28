@@ -69,13 +69,26 @@ class DriveValue:
         self.value = max(self.MIN, self.value - (by_value if by_value != 0 else self.DELTA))
         return round(self.value, 3)
 
-    def getValue(self):
+    def max(self):
+        self.value = self.MAX
+        return self.value
+
+    def min(self):
+        self.value = self.MIN
+        return self.value
+
+    def write(self, value):
+        self.value = value
+        return self.value
+
+    def read(self):
         return round(self.value, 3)
+
 
 class ZeroReverter:
     def __init__(self, left, right, duration, steps, s_socket):
         """
-        We like to revert left abd right DriveValues to zero in `duration` miliseconds in `steps` steps.
+        We like to revert left and right DriveValues to zero in `duration` milliseconds in `steps` steps.
         """
 
         if duration < steps:
