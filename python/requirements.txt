@@ -1,0 +1,4 @@
+pygame
+opencv-python
+zeroconf
+click
