@@ -46,36 +46,6 @@ If you like to control some other settings on the robot, such as `Noise`, `Logs`
 They also show the current settings, so if the `Noise` button is highlighted, this means this setting on the robot is `ON`. If you change the setting manually from
  the robot menu, this should be reflected on the controller app as well.
 
-## Keyboard Controller
-
-This python program allows you to control the robot from a computer keyboard. The app can run on any computer connected to the same LAN as the robot's phone. 
-It was developed and tested on Raspberry Pi 3.
-
-The app can be used to quickly test and prototype controlling the robot remotely. It can also be used to drive the robot from a wireless keyboard.
-
-Start the program like this:
-
-`python3 keyboard-controller.py`
-
-...and set your phone as with the the android controller app. This will allow the robot app to connect to this controller.
-
-Here is the usage:
-
-```
- Usage: use arrows (▲ ▼ ► ◄) keys on keyboard to drive robot.
-
-    Other keys:
-
-        n:    Toggle noise
-        o:    Toggle logs
-        r:    Right direction indicator
-        l:    Left direction indicator
-        c:    Cancel indicators
-        e:    Network mode
-        d:    Drive mode
-        q:    Quit
-```
-
 ## Future Development
 
 Some of the features we are looking to add are:
