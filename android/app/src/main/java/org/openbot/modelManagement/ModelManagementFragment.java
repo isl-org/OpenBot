@@ -11,8 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.koushikdutta.ion.Ion;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -125,15 +123,7 @@ public class ModelManagementFragment extends Fragment
   public void onItemClick(Model item) {}
 
   @Override
-  public void onDownloadClick(Model item) {
-    Ion.with(this)
-        .load(item.path)
-        .progress((downloaded, total) -> System.out.println("" + downloaded + " / " + total))
-        .write(new File("/sdcard/openbot/tf.tflite"))
-        .setCallback(
-            (e, file) -> {
-              // download done...
-              // do stuff with the File or error
-            });
+  public void onModelDownloaded(boolean status) {
+
   }
 }

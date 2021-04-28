@@ -17,14 +17,32 @@
         android:textSize="18sp"
         tools:text="Category" />
 
-    <ImageView
-        android:id="@+id/downloadModel"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="?android:attr/actionBarItemBackground"
-        android:paddingHorizontal="16dp"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/ic_download"
-        tools:visibility="visible" />
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/downloadModel"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:background="?android:attr/actionBarItemBackground"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_download"
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:indeterminate="false"
+            android:max="100"
+            tools:progress="45"
+            android:progressDrawable="@drawable/circular_progress_bar" />
+
+    </FrameLayout>
 
 </LinearLayout>

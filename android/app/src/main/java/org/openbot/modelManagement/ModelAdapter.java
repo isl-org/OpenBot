@@ -4,8 +4,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.koushikdutta.async.future.DoneCallback;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import java.io.File;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.databinding.ItemModelBinding;
@@ -19,7 +25,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
   public interface OnItemClickListener<T> {
     void onItemClick(T item);
 
-    void onDownloadClick(T item);
+    void onModelDownloaded(boolean status);
   }
 
   public ModelAdapter(List<Model> items, OnItemClickListener<Model> itemClickListener) {
@@ -39,7 +45,24 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
     holder.mItem = mValues.get(position);
     holder.title.setText(mValues.get(position).getName());
     holder.title.setOnClickListener(v -> itemClickListener.onItemClick(holder.mItem));
-    holder.imgDownload.setOnClickListener(v -> itemClickListener.onDownloadClick(holder.mItem));
+    holder.imgDownload.setOnClickListener(
+        v -> Ion.with(holder.itemView.getContext())
+            .load(holder.mItem.path)
+            .progress(
+                (downloaded, total) -> {
+                  System.out.println("" + downloaded + " / " + total);
+                  holder.progressBar.setProgress((int) (downloaded * 100 / total));
+                })
+            //              .write(new File("/sdcard/openbot/tf.tflite"))
+            .write(
+                new File(
+                    holder.itemView.getContext().getFilesDir()
+                        + File.separator
+                        + holder.mItem.path))
+            .setCallback(
+                    (e, file) -> {
+                      itemClickListener.onModelDownloaded(e==null);
+                    }));
 
     holder.imgDownload.setVisibility(
         (holder.mItem.pathType == Model.PATH_TYPE.URL) ? View.VISIBLE : View.GONE);
@@ -60,12 +83,14 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
     public final TextView title;
     public final ImageView imgDownload;
     public Model mItem;
+    public ProgressBar progressBar;
 
     public ViewHolder(ItemModelBinding binding) {
       super(binding.getRoot());
 
       title = binding.title;
       imgDownload = binding.downloadModel;
+      progressBar = binding.progressBar;
     }
   }
 }
