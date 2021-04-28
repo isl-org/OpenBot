@@ -26,6 +26,7 @@ public class ModelManagementFragment extends Fragment
   private FragmentModelManagementBinding binding;
   public static final String ALL = "ALL";
   private ModelAdapter adapter;
+  private List<Model> masterList;
 
   @Nullable
   @Override
@@ -40,6 +41,8 @@ public class ModelManagementFragment extends Fragment
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
+
     List<String> modelTypes =
         Arrays.stream(Model.TYPE.values()).map(Enum::toString).collect(Collectors.toList());
     modelTypes.add(0, ALL);
@@ -72,7 +75,6 @@ public class ModelManagementFragment extends Fragment
 
   private List<Model> loadModelList(String filter) {
 
-    List<Model> masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
     if (masterList == null) masterList = new ArrayList<>();
 
     List<Model> modelInfoList = new ArrayList<>();
@@ -88,28 +90,6 @@ public class ModelManagementFragment extends Fragment
           masterList.stream()
               .filter(f -> f.type.equals(Model.TYPE.DETECTOR))
               .collect(Collectors.toList()));
-      /*
-            try {
-              List<Model> list =
-                  Arrays.stream(requireContext().getAssets().list("networks"))
-                      .filter(f -> f.endsWith(".tflite"))
-                      .map(
-                          f ->
-                              new Model(
-                                  Model.CLASS.MOBILENETV1_1_0_Q,
-                                  Model.TYPE.DETECTOR,
-                                  f,
-                                  null,
-                                  f,
-                                  new Size(256, 96)))
-                      .collect(Collectors.toList());
-
-              modelInfoList.addAll(list);
-
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-      */
     }
 
     return modelInfoList;
@@ -123,7 +103,5 @@ public class ModelManagementFragment extends Fragment
   public void onItemClick(Model item) {}
 
   @Override
-  public void onModelDownloaded(boolean status) {
-
-  }
+  public void onModelDownloaded(boolean status) {}
 }

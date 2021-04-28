@@ -7,9 +7,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.koushikdutta.async.future.DoneCallback;
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import java.io.File;
 import java.util.List;
@@ -46,22 +43,23 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
     holder.title.setText(mValues.get(position).getName());
     holder.title.setOnClickListener(v -> itemClickListener.onItemClick(holder.mItem));
     holder.imgDownload.setOnClickListener(
-        v -> Ion.with(holder.itemView.getContext())
-            .load(holder.mItem.path)
-            .progress(
-                (downloaded, total) -> {
-                  System.out.println("" + downloaded + " / " + total);
-                  holder.progressBar.setProgress((int) (downloaded * 100 / total));
-                })
-            //              .write(new File("/sdcard/openbot/tf.tflite"))
-            .write(
-                new File(
-                    holder.itemView.getContext().getFilesDir()
-                        + File.separator
-                        + holder.mItem.name))
-            .setCallback(
+        v ->
+            Ion.with(holder.itemView.getContext())
+                .load(holder.mItem.path)
+                .progress(
+                    (downloaded, total) -> {
+                      System.out.println("" + downloaded + " / " + total);
+                      holder.progressBar.setProgress((int) (downloaded * 100 / total));
+                    })
+                //              .write(new File("/sdcard/openbot/tf.tflite"))
+                .write(
+                    new File(
+                        holder.itemView.getContext().getFilesDir()
+                            + File.separator
+                            + holder.mItem.name))
+                .setCallback(
                     (e, file) -> {
-                      itemClickListener.onModelDownloaded(e==null);
+                      itemClickListener.onModelDownloaded(e == null);
                     }));
 
     holder.imgDownload.setVisibility(

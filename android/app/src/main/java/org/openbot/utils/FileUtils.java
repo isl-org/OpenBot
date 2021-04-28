@@ -9,11 +9,12 @@ import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import org.openbot.tflite.Model;
@@ -66,24 +67,43 @@ public class FileUtils {
   }
 
   public static List<Model> loadConfigJSONFromAsset(Activity activity) {
-    String json;
+    String configFile = "config.json";
+    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new PostProcessingEnabler()).create();
+    JsonElement jsonElement;
+    Type listType = new TypeToken<List<Model>>() {}.getType();
+
+    boolean fileExists = checkFileExistence(activity, configFile);
+    if (fileExists) {
+      try {
+        jsonElement =
+            gson.fromJson(
+                    new FileReader(activity.getFilesDir() + File.separator + configFile),
+                    JsonElement.class)
+                .getAsJsonObject()
+                .get("models");
+
+        return gson.fromJson(jsonElement, listType);
+
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+        return null;
+      }
+    }
+
     try {
-      InputStream is = activity.getAssets().open("config.json");
-      int size = is.available();
-      byte[] buffer = new byte[size];
-      is.read(buffer);
-      is.close();
-      json = new String(buffer, StandardCharsets.UTF_8);
+      copyFile(
+          activity.getAssets().open(configFile),
+          configFile,
+          activity.getFilesDir().getAbsolutePath());
+      jsonElement =
+          gson.fromJson(
+                  new InputStreamReader(activity.getAssets().open(configFile)), JsonElement.class)
+              .getAsJsonObject()
+              .get("models");
     } catch (IOException ex) {
       ex.printStackTrace();
       return null;
     }
-    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new PostProcessingEnabler()).create();
-
-    JsonElement jsonElement =
-        gson.fromJson(json, JsonElement.class).getAsJsonObject().get("models");
-
-    Type listType = new TypeToken<List<Model>>() {}.getType();
 
     return gson.fromJson(jsonElement, listType);
   }
