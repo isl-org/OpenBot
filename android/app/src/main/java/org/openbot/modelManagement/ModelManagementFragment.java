@@ -54,7 +54,8 @@ public class ModelManagementFragment extends Fragment
     adapter = new ModelAdapter(loadModelList(ALL), this);
     binding.modelListContainer.setLayoutManager(new LinearLayoutManager(requireContext()));
     binding.modelListContainer.setAdapter(adapter);
-    binding.modelListContainer.addItemDecoration(new DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL));
+    binding.modelListContainer.addItemDecoration(
+        new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
     binding.modelSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
@@ -128,7 +129,7 @@ public class ModelManagementFragment extends Fragment
     Ion.with(this)
         .load(item.path)
         .progress((downloaded, total) -> System.out.println("" + downloaded + " / " + total))
-            .write(new File("/sdcard/openbot/tf.tflite"))
+        .write(new File("/sdcard/openbot/tf.tflite"))
         .setCallback(
             (e, file) -> {
               // download done...

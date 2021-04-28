@@ -5,14 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.databinding.ItemModelBinding;
 import org.openbot.tflite.Model;
-
-import java.util.List;
 
 public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> {
 

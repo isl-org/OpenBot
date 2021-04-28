@@ -1,16 +1,13 @@
 package org.openbot.tflite;
 
 import android.util.Size;
-
 import androidx.annotation.NonNull;
-
 import com.google.gson.annotations.SerializedName;
 
 /** The model. */
 public class Model {
 
-  public Model(
-      CLASS id, TYPE type, String name, PATH_TYPE pathType, String path, Size inputSize) {
+  public Model(CLASS id, TYPE type, String name, PATH_TYPE pathType, String path, Size inputSize) {
     this.id = id;
     this.type = type;
     this.name = name;
@@ -39,6 +36,7 @@ public class Model {
 
   @SerializedName("class")
   public final CLASS id;
+
   public final TYPE type;
   public final String name;
   public final PATH_TYPE pathType;
@@ -112,8 +110,7 @@ public class Model {
   }
 
   public Size getInputSize() {
-    if (inputSizeObject != null)
-      return inputSizeObject;
+    if (inputSizeObject != null) return inputSizeObject;
 
     return Size.parseSize(inputSizeString);
   }

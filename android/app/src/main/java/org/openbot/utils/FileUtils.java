@@ -2,8 +2,6 @@ package org.openbot.utils;
 
 import android.app.Activity;
 import android.util.Log;
-import android.util.Size;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
