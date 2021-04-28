@@ -1,11 +1,13 @@
 package org.openbot.modelManagement;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,10 +18,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.openbot.R;
 import org.openbot.databinding.FragmentModelManagementBinding;
 import org.openbot.main.OnItemClickListener;
 import org.openbot.tflite.Model;
+import org.openbot.utils.Constants;
 import org.openbot.utils.FileUtils;
+import org.openbot.utils.PermissionUtils;
 
 public class ModelManagementFragment extends Fragment
     implements OnItemClickListener<Model>, ModelAdapter.OnItemClickListener<Model> {
@@ -42,7 +47,9 @@ public class ModelManagementFragment extends Fragment
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
+    if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_STORAGE))
+      PermissionUtils.requestStoragePermission(this);
+    else masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
 
     List<String> modelTypes =
         Arrays.stream(Model.TYPE.values()).map(Enum::toString).collect(Collectors.toList());
@@ -96,10 +103,6 @@ public class ModelManagementFragment extends Fragment
     return modelInfoList;
   }
 
-  private String[] getModelFiles() {
-    return requireActivity().getFilesDir().list((dir1, name) -> name.endsWith(".tflite"));
-  }
-
   @Override
   public void onItemClick(Model item) {}
 
@@ -115,6 +118,30 @@ public class ModelManagementFragment extends Fragment
           break;
         }
       }
+    }
+  }
+
+  @Override
+  public void onRequestPermissionsResult(
+      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    switch (requestCode) {
+      case Constants.REQUEST_STORAGE_PERMISSION:
+        // If the permission is granted, start logging,
+        // otherwise, show a Toast
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
+          showModels(loadModelList(ALL));
+        } else {
+          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_STORAGE)) {
+            Toast.makeText(
+                    requireContext().getApplicationContext(),
+                    R.string.storage_permission_denied_logging,
+                    Toast.LENGTH_LONG)
+                .show();
+          }
+        }
+        break;
     }
   }
 }
