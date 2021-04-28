@@ -13,6 +13,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.databinding.ItemModelBinding;
 import org.openbot.tflite.Model;
+import org.openbot.utils.FileUtils;
 
 public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> {
 
@@ -40,7 +41,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
   @Override
   public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mValues.get(position);
-    holder.title.setText(mValues.get(position).getName());
+    holder.title.setText(FileUtils.nameWithoutExtension(mValues.get(position).getName()));
     holder.title.setOnClickListener(v -> itemClickListener.onItemClick(holder.mItem));
     holder.imgDownload.setOnClickListener(
         v ->

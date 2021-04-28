@@ -123,4 +123,8 @@ public class FileUtils {
       return false;
     }
   }
+
+  public static String nameWithoutExtension(String name) {
+    return name.replaceFirst("[.][^.]+$", "");
+  }
 }
