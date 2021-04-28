@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="24dp"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        tools:text="Category" />
+
+    <ImageView
+        android:id="@+id/downloadModel"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="?android:attr/actionBarItemBackground"
+        android:paddingHorizontal="16dp"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_download"
+        tools:visibility="visible" />
+
+</LinearLayout>

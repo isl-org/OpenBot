@@ -159,13 +159,13 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
         String.format(
             Locale.US,
             "%d x %d",
-            Model.fromId(selected).inputSize.getWidth(),
-            Model.fromId(selected).inputSize.getHeight()));
+            Model.fromId(selected).getInputSize().getWidth(),
+            Model.fromId(selected).getInputSize().getHeight()));
 
     croppedBitmap =
         Bitmap.createBitmap(
-            Model.fromId(selected).inputSize.getWidth(),
-            Model.fromId(selected).inputSize.getHeight(),
+            Model.fromId(selected).getInputSize().getWidth(),
+            Model.fromId(selected).getInputSize().getHeight(),
             Bitmap.Config.ARGB_8888);
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());

@@ -1,19 +1,22 @@
 package org.openbot.tflite;
 
 import android.util.Size;
+
 import androidx.annotation.NonNull;
+
+import com.google.gson.annotations.SerializedName;
 
 /** The model. */
 public class Model {
 
   public Model(
-      CLASS id, TYPE type, String name, PATH_TYPE pathType, String filePath, Size inputSize) {
+      CLASS id, TYPE type, String name, PATH_TYPE pathType, String path, Size inputSize) {
     this.id = id;
     this.type = type;
     this.name = name;
     this.pathType = pathType;
-    this.filePath = filePath;
-    this.inputSize = inputSize;
+    this.path = path;
+    this.inputSizeObject = inputSize;
   }
 
   public enum CLASS {
@@ -34,12 +37,16 @@ public class Model {
     FILE
   }
 
+  @SerializedName("class")
   public final CLASS id;
   public final TYPE type;
   public final String name;
   public final PATH_TYPE pathType;
-  public final String filePath;
-  public final Size inputSize;
+  public final String path;
+  private final Size inputSizeObject;
+
+  @SerializedName("inputSize")
+  private String inputSizeString;
 
   // TODO: Change this hacky code
   public static final Model Autopilot_F =
@@ -94,13 +101,20 @@ public class Model {
   @NonNull
   @Override
   public String toString() {
-    if (filePath != null) {
-      return filePath;
+    if (path != null) {
+      return path;
     }
     return id.name();
   }
 
   public String getName() {
     return name;
+  }
+
+  public Size getInputSize() {
+    if (inputSizeObject != null)
+      return inputSizeObject;
+
+    return Size.parseSize(inputSizeString);
   }
 }

@@ -76,7 +76,7 @@ public abstract class Network {
   protected Network(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
 
-    imageSize = model.inputSize;
+    imageSize = model.getInputSize();
     intValues = new int[getImageSizeX() * getImageSizeY()];
 
     switch (device) {
@@ -115,12 +115,12 @@ public abstract class Network {
 
   @NotNull
   private File getModelFile(Activity activity, Model model) {
-    return new File(activity.getFilesDir() + File.separator + model.filePath);
+    return new File(activity.getFilesDir() + File.separator + model.path);
   }
 
   /** Memory-map the model file in Assets. */
   protected MappedByteBuffer loadModelFile(Activity activity, Model model) throws IOException {
-    AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(model.filePath);
+    AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(model.path);
     FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
     FileChannel fileChannel = inputStream.getChannel();
     long startOffset = fileDescriptor.getStartOffset();
