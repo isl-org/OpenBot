@@ -140,7 +140,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
             Model.CLASS.AUTOPILOT_F,
             Model.TYPE.AUTOPILOT,
             fileName,
-            null,
+            Model.PATH_TYPE.FILE,
             fileName,
             new Size(256, 96)));
 
@@ -197,7 +197,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
                         Model.CLASS.AUTOPILOT_F,
                         Model.TYPE.AUTOPILOT,
                         selected,
-                        null,
+                        Model.PATH_TYPE.FILE,
                         selected,
                         new Size(256, 96)));
               }
@@ -550,7 +550,12 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
       if (model.equals(binding.modelSpinner.getSelectedItem())) {
         setModel(
             new Model(
-                Model.CLASS.AUTOPILOT_F, Model.TYPE.AUTOPILOT, model, null, model, new Size(256, 96)));
+                Model.CLASS.AUTOPILOT_F,
+                Model.TYPE.AUTOPILOT,
+                model,
+                Model.PATH_TYPE.FILE,
+                model,
+                new Size(256, 96)));
       }
     }
     Toast.makeText(

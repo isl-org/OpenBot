@@ -588,7 +588,12 @@ public abstract class CameraActivity extends AppCompatActivity
       if (model.equals(modelSpinner.getSelectedItem())) {
         setModel(
             new Model(
-                Model.CLASS.AUTOPILOT_F, Model.TYPE.AUTOPILOT, model, null, model, new Size(256, 96)));
+                Model.CLASS.AUTOPILOT_F,
+                Model.TYPE.AUTOPILOT,
+                model,
+                Model.PATH_TYPE.FILE,
+                model,
+                new Size(256, 96)));
       }
     }
     Toast.makeText(context, "Model added: " + model, Toast.LENGTH_SHORT).show();
@@ -1299,7 +1304,7 @@ public abstract class CameraActivity extends AppCompatActivity
                 Model.CLASS.AUTOPILOT_F,
                 Model.TYPE.AUTOPILOT,
                 selected,
-                null,
+                Model.PATH_TYPE.FILE,
                 selected,
                 new Size(256, 96)));
       }

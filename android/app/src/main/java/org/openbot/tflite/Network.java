@@ -92,10 +92,10 @@ public abstract class Network {
     }
     tfliteOptions.setNumThreads(numThreads);
 
-    if (model.filePath != null) {
+    if (model.pathType == Model.PATH_TYPE.FILE) {
       File modelFile = getModelFile(activity, model);
       tflite = new Interpreter(modelFile, tfliteOptions);
-    } else if (model.assetPath != null) {
+    } else if (model.pathType == Model.PATH_TYPE.ASSET) {
       MappedByteBuffer tfliteModel = loadModelFile(activity, model);
       tflite = new Interpreter(tfliteModel, tfliteOptions);
     } else {
@@ -120,7 +120,7 @@ public abstract class Network {
 
   /** Memory-map the model file in Assets. */
   protected MappedByteBuffer loadModelFile(Activity activity, Model model) throws IOException {
-    AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(model.assetPath);
+    AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(model.filePath);
     FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
     FileChannel fileChannel = inputStream.getChannel();
     long startOffset = fileDescriptor.getStartOffset();

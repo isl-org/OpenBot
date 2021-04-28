@@ -6,11 +6,12 @@ import androidx.annotation.NonNull;
 /** The model. */
 public class Model {
 
-  public Model(CLASS id, TYPE type, String name, String assetPath, String filePath, Size inputSize) {
+  public Model(
+      CLASS id, TYPE type, String name, PATH_TYPE pathType, String filePath, Size inputSize) {
     this.id = id;
     this.type = type;
     this.name = name;
-    this.assetPath = assetPath;
+    this.pathType = pathType;
     this.filePath = filePath;
     this.inputSize = inputSize;
   }
@@ -27,10 +28,16 @@ public class Model {
     DETECTOR
   }
 
+  public enum PATH_TYPE {
+    URL,
+    ASSET,
+    FILE
+  }
+
   public final CLASS id;
   public final TYPE type;
   public final String name;
-  public final String assetPath;
+  public final PATH_TYPE pathType;
   public final String filePath;
   public final Size inputSize;
 
@@ -40,32 +47,32 @@ public class Model {
           CLASS.AUTOPILOT_F,
           TYPE.AUTOPILOT,
           "Autopilot_F",
+          PATH_TYPE.ASSET,
           "networks/autopilot_float.tflite",
-          null,
           new Size(256, 96));
   public static final Model MobileNetV1_1_0_Q =
       new Model(
           CLASS.MOBILENETV1_1_0_Q,
           TYPE.DETECTOR,
           "MobileNetV1_1.0_Q",
+          PATH_TYPE.ASSET,
           "networks/mobile_ssd_v1_1.0_quant_coco.tflite",
-          null,
           new Size(300, 300));
   public static final Model MobileNetV3_S_Q =
       new Model(
           CLASS.MOBILENETV3_S_Q,
           TYPE.DETECTOR,
           "MobileNetV3_S_Q",
+          PATH_TYPE.ASSET,
           "networks/mobile_ssd_v3_small_quant_coco.tflite",
-          null,
           new Size(320, 320));
   public static final Model YoloV4 =
       new Model(
           CLASS.YOLOV4,
           TYPE.DETECTOR,
           "YoloV4",
+          PATH_TYPE.ASSET,
           "networks/yolo_v4_tiny_float_coco.tflite",
-          null,
           new Size(416, 416));
 
   // TODO: Change this hacky code
@@ -91,5 +98,9 @@ public class Model {
       return filePath;
     }
     return id.name();
+  }
+
+  public String getName() {
+    return name;
   }
 }
