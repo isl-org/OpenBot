@@ -13,7 +13,7 @@ conda activate openbot
 To install the dependencies, you can use the following command. 
 
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Controlling the robot
