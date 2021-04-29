@@ -53,6 +53,7 @@ import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
+import org.openbot.utils.FileUtils;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
@@ -99,7 +100,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
                 List<Uri> files = Utils.getSelectedFilesFromResult(intent);
 
                 String fileName = new File(files.get(0).getPath()).getName();
-                if (org.openbot.utils.Utils.checkFileExistence(requireActivity(), fileName)) {
+                if (FileUtils.checkFileExistence(requireActivity(), fileName)) {
                   AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
                   builder.setTitle(R.string.file_available_title);
                   builder.setMessage(R.string.file_available_body);
@@ -123,8 +124,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     try {
       InputStream inputStream =
           requireActivity().getContentResolver().openInputStream(files.get(0));
-      org.openbot.utils.Utils.copyFile(
-          inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
+      FileUtils.copyFile(inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
     } catch (IOException e) {
       e.printStackTrace();
     }

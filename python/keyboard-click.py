@@ -3,19 +3,17 @@ import click
 from common import *
 
 s_socket = ServerSocket()
+
 class CommandHandler:
-
-    left = DriveValue()
-    right = DriveValue()
-
-    reverter = ZeroReverter(left, right, 1, 1, s_socket)
+    def __init__(self):
+        self.left = DriveValue()
+        self.right = DriveValue()
 
     def send_command(self, command):
         s_socket.send('{{command: {command} }}\n'.format(command=command))
 
     def send_drive_command(self, left, right):
         s_socket.send('{{driveCmd: {{l:{l}, r:{r} }} }}\n'.format(l=left, r=right))
-        self.reverter.reset()
 
     def reset(self):
         self.send_drive_command(self.left.reset(), self.right.reset())
@@ -34,26 +32,27 @@ class CommandHandler:
 
     def handle_keys(self):
         # keypad control codes
-        K_PREFIX = '\x1b'
-        K_RT = '[C'
-        K_LF = '[D'
-        K_UP = '[A'
-        K_DN = '[B'
+        K_ESC = '\x1b'
+        K_RT = K_ESC + '[C'
+        K_LT = K_ESC + '[D'
+        K_UP = K_ESC + '[A'
+        K_DN = K_ESC + '[B'
 
         while True:
             key = click.getchar()
-            if key == K_PREFIX + K_RT: self.turn_right()
-            if key == K_PREFIX + K_LF: self.turn_left()
-            if key == K_PREFIX + K_UP: self.go_forward()
-            if key == K_PREFIX + K_DN: self.go_backward()
+            if key == 'd': self.turn_right()
+            if key == 'a': self.turn_left()
+            if key == 'w': self.go_forward()
+            if key == 's': self.go_backward()
+            if key == 'r': self.reset()
             if key == 'n': self.send_command("NOISE")
-            if key == 'o': self.send_command("LOGS")
-            if key == 'r': self.send_command("INDICATOR_RIGHT")
-            if key == 'l': self.send_command("INDICATOR_LEFT")
-            if key == 'c': self.send_command("INDICATOR_STOP")
-            if key == 'e': self.send_command("NETWORK")
-            if key == 'd': self.send_command("DRIVE_MODE")
-            if key == 'q':
+            if key == ' ': self.send_command("LOGS")
+            if key == K_RT: self.send_command("INDICATOR_RIGHT")
+            if key == K_LT: self.send_command("INDICATOR_LEFT")
+            if key == K_UP: self.send_command("INDICATOR_STOP")
+            if key == K_DN: self.send_command("NETWORK")
+            if key == 'm': self.send_command("DRIVE_MODE")
+            if key == K_ESC:
                 break
 
 
@@ -72,19 +71,24 @@ def run_receiver ():
 
 def print_usage():
     usageStr = """
-    \r
-    \rUsage: Use arrow keys (▲ ▼ ► ◄) on keyboard to drive robot.\r
-\r
-    Other keys:\r
-\r
-    \tn:    Toggle noise\r
-    \to:    Toggle logs\r
-    \tr:    Right direction indicator\r
-    \tl:    Left direction indicator\r
-    \tc:    Cancel indicators\r
-    \te:    Network mode\r
-    \td:    Drive mode\r
-    \tq:    Quit\r
+    Make sure to keep the terminal window in focus!\r
+    
+    Use the following keys to drive the robot:\r
+
+    \tW:        Increase speed\r
+    \tS:        Decrease speed\r
+    \tA:        Turn more left\r
+    \tD:        Turn more right\r
+    \tR:        Reset controls\r
+
+    \tM:        Drive mode\r
+    \tN:        Toggle noise\r
+    \t►:        Left indicator\r
+    \t◄:        Right indicator\r
+    \t▲:        Cancel indicators\r
+    \t▼:        Network mode\r
+    \tSPACE:    Toggle logging\r
+    \tESC:      Quit\r
     """
     print (usageStr)
 
@@ -106,4 +110,6 @@ def run():
     zc.close()
     print('Exiting...\r\n')
 
-run ()
+if __name__ == "__main__":
+    # cli
+    run ()

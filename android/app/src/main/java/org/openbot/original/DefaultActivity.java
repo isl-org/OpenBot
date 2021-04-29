@@ -53,9 +53,9 @@ import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network.Device;
 import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Enums.ControlMode;
 import org.openbot.utils.Enums.LogMode;
-import org.openbot.utils.Utils;
 
 /**
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
@@ -282,7 +282,7 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
 
   protected void toggleNoise() {
     noiseEnabled = !noiseEnabled;
-    BotToControllerEventBus.emitEvent(Utils.createStatus("NOISE", noiseEnabled));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("NOISE", noiseEnabled));
     if (noiseEnabled) {
       vehicle.startNoise();
     } else vehicle.stopNoise();

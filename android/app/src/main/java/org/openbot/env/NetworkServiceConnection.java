@@ -18,10 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.SocketHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openbot.utils.Utils;
+import org.openbot.utils.ConnectionUtils;
 import timber.log.Timber;
 
 public class NetworkServiceConnection implements ILocalConnection {
@@ -79,14 +78,14 @@ public class NetworkServiceConnection implements ILocalConnection {
   @Override
   public void stop() {
     stopped = true;
-    BotToControllerEventBus.emitEvent(Utils.createStatus("CONNECTION_ACTIVE", false));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("CONNECTION_ACTIVE", false));
   }
 
   @Override
   public void start() {
 
     stopped = false;
-    BotToControllerEventBus.emitEvent(Utils.createStatus("CONNECTION_ACTIVE", true));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("CONNECTION_ACTIVE", true));
   }
 
   @Override

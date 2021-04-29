@@ -1,31 +1,27 @@
 package org.openbot.env;
 
+import static org.openbot.utils.ConnectionUtils.getIPAddress;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.media.ToneGenerator;
 import android.util.Log;
+import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-
 import com.pedro.rtplibrary.view.OpenGlView;
 import com.pedro.rtsp.utils.ConnectCheckerRtsp;
 import com.pedro.rtspserver.RtspServerCamera1;
-
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
 import org.openbot.utils.AndGate;
-import org.openbot.utils.DelayedRunner;
-import org.openbot.utils.Utils;
-
-import java.util.concurrent.TimeUnit;
-
-import static org.openbot.utils.Utils.getIPAddress;
+import org.openbot.utils.ConnectionUtils;
+import timber.log.Timber;
 
 public class RtspServer
         implements ConnectCheckerRtsp,
@@ -41,12 +37,10 @@ public class RtspServer
 
     private Context context;
 
-    private int width = 640;
-    private int height = 360;
+    private Size resolution = new Size(640, 360);
     private final int PORT = 1935;
 
-    public RtspServer() {
-    }
+    public RtspServer() {}
 
     // IVideoServer Interface
     @Override
@@ -63,6 +57,7 @@ public class RtspServer
         andGate.addCondition("surfaceCreated");
         andGate.addCondition("view set");
         andGate.addCondition("camera permission");
+        andGate.addCondition("resolution set");
 
         int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
         andGate.update("camera permission", camera == PackageManager.PERMISSION_GRANTED);
@@ -76,22 +71,21 @@ public class RtspServer
     @Override
     public void startClient() {
         sendServerUrl();
-        BotToControllerEventBus.emitEvent(Utils.createStatus("VIDEO_COMMAND", "START"));
+        BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
     }
 
     @Override
     public void sendServerUrl() {
         BotToControllerEventBus.emitEvent(
-                Utils.createStatus(
-                        "VIDEO_SERVER_URL",
-                        "rtsp://" + getIPAddress(true) + ":" + PORT
+                ConnectionUtils.createStatus(
+                        "VIDEO_SERVER_URL", "rtsp://" + getIPAddress(true) + ":" + PORT
                         // "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
                 ));
     }
 
     @Override
     public void sendVideoStoppedStatus() {
-        BotToControllerEventBus.emitEvent(Utils.createStatus("VIDEO_COMMAND", "STOP"));
+        BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "STOP"));
     }
 
     @Override
@@ -115,6 +109,10 @@ public class RtspServer
         andGate.update("view set", true);
     }
 
+    private void startServer() {
+        startServer(resolution, PORT);
+    }
+
     @Override
     public void setConnected(boolean connected) {
         int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
@@ -125,16 +123,14 @@ public class RtspServer
     // end Interface
 
     // Local methods
-    private void startServer() {
-        startServer(this.width, this.height, this.PORT);
-    }
-
-    private void startServer(int width, int height, int port) {
+    private void startServer(Size resolution, int port) {
         if (rtspServerCamera1 == null) {
+            Timber.d("Resolution %dx%d", resolution.getWidth(), resolution.getHeight());
+
             String viewType = this.view.getClass().getName();
 
             if (viewType.contains("AutoFitTextureView")) {
-                rtspServerCamera1 = new RtspServerCamera1((TextureView) view, this, port);
+                rtspServerCamera1 = new RtspServerCamera1((AutoFitTextureView) view, this, port);
             }
             if (viewType.contains("AutoFitSurfaceView")) {
                 rtspServerCamera1 = new RtspServerCamera1((SurfaceView) view, this, port);
@@ -145,19 +141,12 @@ public class RtspServer
         }
 
         if (!rtspServerCamera1.isStreaming()) {
-            if (rtspServerCamera1.prepareAudio(64 * 1024, 32000, false, false, false)
-                    && rtspServerCamera1.prepareVideo(width, height, 20, 1200 * 1024, 2, 0)) {
+            if (rtspServerCamera1.prepareAudio(64 * 1024, 32000, false, true, true)
+                    && rtspServerCamera1.prepareVideo(
+                    resolution.getWidth(), resolution.getHeight(), 20, 1200 * 1024, 2, 0)) {
 
                 rtspServerCamera1.startStream("");
-
-                // Delay staring the client for a second to make sure the server is started.
-                Runnable action = new Runnable() {
-                    @Override
-                    public void run() {
-                        startClient();
-                    }
-                };
-                new DelayedRunner().runAfter(action, 1000L, TimeUnit.MILLISECONDS);
+                startClient();
             }
         }
     }
@@ -183,13 +172,14 @@ public class RtspServer
 
     @Override
     public void setResolution(int w, int h) {
-        this.width = w;
-        this.height = h;
+        resolution = new Size(w, h);
+        andGate.update("resolution set", true);
     }
 
     // ConnectCheckerRtsp callbacks
     @Override
     public void onConnectionSuccessRtsp() {
+
         Log.i(TAG, "onConnectionSuccessRtsp");
     }
 
@@ -215,12 +205,12 @@ public class RtspServer
     }
 
     @Override
-    public void onAuthSuccessRtsp() {
-    }
+    public void onAuthSuccessRtsp() {}
 
     // SurfaceHolder.Callback callbacks
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
+        Log.d(TAG, "Surface created...");
         andGate.update("surfaceCreated", true);
     }
 
@@ -246,8 +236,7 @@ public class RtspServer
     }
 
     @Override
-    public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
-    }
+    public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {}
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
@@ -258,8 +247,7 @@ public class RtspServer
     }
 
     @Override
-    public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
-    }
+    public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {}
 
     // Utils
     private void beep() {
