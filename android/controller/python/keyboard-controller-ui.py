@@ -4,6 +4,7 @@ import cv2 # pip3 install opencv-python
 import os
 import threading
 import json
+import time
 from common import *
 
 s_socket = ServerSocket()
@@ -16,6 +17,7 @@ class CommandHandler:
 
     def __init__(self):
         pygame.key.set_repeat(200)
+        # fourcc = cv2.cv.CV_FOURCC(*'H264')
 
     left = DriveValue()
     right = DriveValue()
@@ -99,7 +101,6 @@ class VideoPlayer:
         print(f'before transpose...')
 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = cv2.flip(img, 1)
         img = cv2.transpose(img)
 
         # display its width, height, color_depth
@@ -130,7 +131,6 @@ class VideoPlayer:
 
             else:
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                img = cv2.flip(img, 1)
                 img = cv2.transpose(img)
 
                 # blit directly on screen         
@@ -196,6 +196,7 @@ def handle_status(data):
     try:
         if 'VIDEO_SERVER_URL' in status:
             stream = status ['VIDEO_SERVER_URL']
+            print(f'Setting URL to {stream}')
             video_player.set_stream(stream)
 
         if 'VIDEO_COMMAND' in status:
@@ -209,6 +210,7 @@ def handle_status(data):
         print (f"handle_status exception: {e}")
 
 def setup_screen ():
+
     pygame.display.set_caption('OpenBot keyboard controller')
     screen = pygame.display.set_mode([1280, 720])
     screen.fill(white)
@@ -216,8 +218,8 @@ def setup_screen ():
 def run():
 
     os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
-    pygame.init()
 
+    pygame.init()
     setup_screen()
 
     print('Waiting for connection...\r\n')
