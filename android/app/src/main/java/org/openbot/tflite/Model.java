@@ -136,4 +136,20 @@ public class Model {
   public void setPathType(PATH_TYPE pathType) {
     this.pathType = pathType;
   }
+
+  public void setInputSize(Size inputSize) {
+    this.inputSizeObject = inputSize;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setClassType(CLASS classType) {
+    this.classType = classType;
+  }
+
+  public void setType(TYPE type) {
+    this.type = type;
+  }
 }

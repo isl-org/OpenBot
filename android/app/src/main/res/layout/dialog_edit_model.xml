@@ -34,10 +34,10 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:gravity="center"
                 android:padding="16dp"
-                android:textStyle="bold"
                 android:text="Model Details"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -63,10 +63,12 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?android:attr/selectableItemBackground"
+                    android:drawableEnd="@drawable/ic_edit_24"
                     android:gravity="center|start"
-                    android:padding="16dp"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="16dp"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title"
@@ -75,12 +77,11 @@
             </LinearLayout>
 
 
-
             <LinearLayout
                 android:id="@+id/linearLayout5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/nameContainer">
+                app:layout_constraintTop_toBottomOf="@id/linearLayout6">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -104,7 +105,7 @@
                 android:id="@+id/linearLayout6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+                app:layout_constraintTop_toBottomOf="@+id/nameContainer">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -133,7 +134,7 @@
                 android:layout_marginBottom="16dp"
                 android:weightSum="6"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
                 <TextView
                     android:layout_width="0dp"
@@ -150,6 +151,8 @@
                     android:layout_weight="1"
                     android:background="@drawable/rectangle"
                     android:gravity="center"
+                    android:inputType="number"
+                    android:lines="1"
                     android:textColor="@android:color/black"
                     tools:text="256" />
 
@@ -168,6 +171,8 @@
                     android:layout_weight="1"
                     android:background="@drawable/rectangle"
                     android:gravity="center"
+                    android:inputType="number"
+                    android:lines="1"
                     android:textColor="@android:color/black"
                     tools:text="96" />
 

@@ -206,7 +206,8 @@ public class ModelManagementFragment extends Fragment
   @Override
   public void onItemClick(Model item) {
 
-    EditModelDialogFragment edMbS = new EditModelDialogFragment(item);
+    EditModelDialogFragment edMbS = new EditModelDialogFragment(item,
+            item1 -> adapter.notifyDataSetChanged());
     edMbS.show(getChildFragmentManager(), edMbS.getTag());
   }
 

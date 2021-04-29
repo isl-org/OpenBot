@@ -2,6 +2,7 @@ package org.openbot.modelManagement;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.openbot.R;
 import org.openbot.databinding.DialogEditModelBinding;
+import org.openbot.main.OnItemClickListener;
 import org.openbot.tflite.Model;
 
 public class EditModelDialogFragment extends DialogFragment {
 
   private DialogEditModelBinding binding;
   private final Model model;
+  private final OnItemClickListener<Model> itemClickListener;
 
-  public EditModelDialogFragment(Model model) {
+  public EditModelDialogFragment(Model model, OnItemClickListener<Model> itemClickListener) {
     this.model = model;
+    this.itemClickListener = itemClickListener;
   }
 
   @Override
@@ -53,12 +57,14 @@ public class EditModelDialogFragment extends DialogFragment {
         new ArrayAdapter<>(
             requireContext(), android.R.layout.simple_dropdown_item_1line, modelTypes);
     binding.typeSpinner.setAdapter(modelAdapter);
+    binding.typeSpinner.setSelection(model.type.ordinal());
 
     List<String> classes =
         Arrays.stream(Model.CLASS.values()).map(Enum::toString).collect(Collectors.toList());
     ArrayAdapter<String> classAdapter =
         new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, classes);
     binding.classSpinner.setAdapter(classAdapter);
+    binding.classSpinner.setSelection(model.classType.ordinal());
 
     binding.name.setText(model.getName());
     binding.inputWidth.setText(String.valueOf(model.getInputSize().getWidth()));
@@ -66,6 +72,12 @@ public class EditModelDialogFragment extends DialogFragment {
 
     binding.btnSubmit.setOnClickListener(
         v -> {
+          model.setName(binding.name.getText().toString());
+          model.setType(Model.TYPE.valueOf(binding.typeSpinner.getSelectedItem().toString()));
+          model.setClassType(Model.CLASS.valueOf(binding.classSpinner.getSelectedItem().toString()));
+          model.setInputSize(new Size(Integer.parseInt(binding.inputWidth.getText().toString()),
+                  Integer.parseInt(binding.inputHeight.getText().toString())));
+          itemClickListener.onItemClick(model);
           dismiss();
         });
     binding.dismiss.setOnClickListener(v -> dismiss());
