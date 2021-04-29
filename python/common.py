@@ -151,7 +151,7 @@ def register(name, port, properties={}):
         priority=0,
         properties=properties)
 
-    zc = zeroconf.Zeroconf()
+    zc = zeroconf.Zeroconf([get_ip()])
     zc.register_service(info)
 
     return (zc, info)
