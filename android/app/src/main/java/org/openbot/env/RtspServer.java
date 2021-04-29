@@ -1,7 +1,5 @@
 package org.openbot.env;
 
-import static org.openbot.utils.ConnectionUtils.getIPAddress;
-
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
@@ -12,16 +10,25 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+
 import com.pedro.rtplibrary.view.OpenGlView;
 import com.pedro.rtsp.utils.ConnectCheckerRtsp;
 import com.pedro.rtspserver.RtspServerCamera1;
+
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
 import org.openbot.utils.AndGate;
 import org.openbot.utils.ConnectionUtils;
+import org.openbot.utils.DelayedRunner;
+
+import java.util.concurrent.TimeUnit;
+
 import timber.log.Timber;
+
+import static org.openbot.utils.ConnectionUtils.getIPAddress;
 
 public class RtspServer
         implements ConnectCheckerRtsp,
@@ -40,7 +47,8 @@ public class RtspServer
     private Size resolution = new Size(640, 360);
     private final int PORT = 1935;
 
-    public RtspServer() {}
+    public RtspServer() {
+    }
 
     // IVideoServer Interface
     @Override
@@ -146,7 +154,15 @@ public class RtspServer
                     resolution.getWidth(), resolution.getHeight(), 20, 1200 * 1024, 2, 0)) {
 
                 rtspServerCamera1.startStream("");
-                startClient();
+
+                // Delay starting the client for a second to make sure the server is started.
+                Runnable action = new Runnable() {
+                    @Override
+                    public void run() {
+                        startClient();
+                    }
+                };
+                new DelayedRunner().runAfter(action, 1000L, TimeUnit.MILLISECONDS);
             }
         }
     }
@@ -205,7 +221,8 @@ public class RtspServer
     }
 
     @Override
-    public void onAuthSuccessRtsp() {}
+    public void onAuthSuccessRtsp() {
+    }
 
     // SurfaceHolder.Callback callbacks
     @Override
@@ -236,7 +253,8 @@ public class RtspServer
     }
 
     @Override
-    public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {}
+    public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
+    }
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
@@ -247,7 +265,8 @@ public class RtspServer
     }
 
     @Override
-    public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {}
+    public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+    }
 
     // Utils
     private void beep() {
