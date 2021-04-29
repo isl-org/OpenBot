@@ -215,7 +215,7 @@
             android:background="@drawable/button_item_background_black"
             android:backgroundTint="@color/openBotBlue"
             android:imeOptions="actionGo"
-            android:text="Submit"
+            android:text="Done"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
