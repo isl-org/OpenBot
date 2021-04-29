@@ -204,7 +204,11 @@ public class ModelManagementFragment extends Fragment
   }
 
   @Override
-  public void onItemClick(Model item) {}
+  public void onItemClick(Model item) {
+
+    EditModelDialogFragment edMbS = new EditModelDialogFragment(item);
+    edMbS.show(getChildFragmentManager(), edMbS.getTag());
+  }
 
   @Override
   public void onModelDownloaded(boolean status, Model mItem) {
