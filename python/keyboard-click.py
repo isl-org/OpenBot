@@ -95,15 +95,15 @@ def print_usage():
 def run():
     print_usage()
 
-    # print('Waiting for connection...\r\n')
-    # s_socket.accept()
-    # print('Connected! 😃\n\r')
+    print('Waiting for connection...\r\n')
+    s_socket.accept()
+    print('Connected! 😃\n\r')
 
-    # t = threading.Thread(target=run_receiver)
-    # t.start()
+    t = threading.Thread(target=run_receiver)
+    t.start()
 
     cmd_handler = CommandHandler ()
-    cmd_handler.handle_keys (args)
+    cmd_handler.handle_keys ()
 
     s_socket.close()
     zc.unregister_service(info)
