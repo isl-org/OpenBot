@@ -17,11 +17,12 @@ import androidx.core.content.ContextCompat;
 import com.pedro.rtplibrary.view.OpenGlView;
 import com.pedro.rtsp.utils.ConnectCheckerRtsp;
 import com.pedro.rtspserver.RtspServerCamera1;
+import java.util.concurrent.TimeUnit;
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
 import org.openbot.utils.AndGate;
-import org.openbot.utils.CameraUtils;
 import org.openbot.utils.ConnectionUtils;
+import org.openbot.utils.DelayedRunner;
 import timber.log.Timber;
 
 public class RtspServer
@@ -38,7 +39,7 @@ public class RtspServer
 
   private Context context;
 
-  private final Size RESOLUTION = new Size(640, 360);
+  private Size resolution = new Size(640, 360);
   private final int PORT = 1935;
 
   public RtspServer() {}
@@ -58,6 +59,7 @@ public class RtspServer
     andGate.addCondition("surfaceCreated");
     andGate.addCondition("view set");
     andGate.addCondition("camera permission");
+    andGate.addCondition("resolution set");
 
     int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
     andGate.update("camera permission", camera == PackageManager.PERMISSION_GRANTED);
@@ -111,7 +113,7 @@ public class RtspServer
 
   @Override
   public void startServer() {
-    startServer(RESOLUTION, PORT);
+    startServer(resolution, PORT);
   }
 
   @Override
@@ -126,7 +128,6 @@ public class RtspServer
   // Local methods
   private void startServer(Size resolution, int port) {
     if (rtspServerCamera1 == null) {
-      resolution = CameraUtils.getClosestCameraResolution(context, resolution);
       Timber.d("Resolution %dx%d", resolution.getWidth(), resolution.getHeight());
 
       String viewType = this.view.getClass().getName();
@@ -148,7 +149,16 @@ public class RtspServer
               resolution.getWidth(), resolution.getHeight(), 20, 1200 * 1024, 2, 0)) {
 
         rtspServerCamera1.startStream("");
-        startClient();
+
+        // Delay starting the client for a second to make sure the server is started.
+        Runnable action =
+            new Runnable() {
+              @Override
+              public void run() {
+                startClient();
+              }
+            };
+        new DelayedRunner().runAfter(action, 1000L, TimeUnit.MILLISECONDS);
       }
     }
   }
@@ -170,6 +180,12 @@ public class RtspServer
     } catch (Exception e) {
       Log.d(TAG, "Got error stopping server: " + e);
     }
+  }
+
+  @Override
+  public void setResolution(int w, int h) {
+    resolution = new Size(w, h);
+    andGate.update("resolution set", true);
   }
 
   // ConnectCheckerRtsp callbacks

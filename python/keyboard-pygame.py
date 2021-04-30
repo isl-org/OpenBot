@@ -168,7 +168,6 @@ class VideoPlayer:
 
             else:
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                #img = cv2.flip(img, 1)
                 img = cv2.transpose(img)
 
                 # blit directly on screen         
@@ -237,7 +236,6 @@ def handle_status(data):
         if 'VIDEO_COMMAND' in status:
             if status['VIDEO_COMMAND'] == 'START':
                 print(f'Starting video...')
-                time.sleep(1)
                 video_player.play_video()
             if status['VIDEO_COMMAND'] == 'STOP':
                 video_player.stop_video()

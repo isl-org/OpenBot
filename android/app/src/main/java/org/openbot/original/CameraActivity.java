@@ -1392,7 +1392,6 @@ public abstract class CameraActivity extends AppCompatActivity
                       driveMode.toString(),
                       vehicle.getIndicator()));
 
-              // phoneController.startVideo();
               break;
 
             case "DISCONNECTED":

@@ -25,9 +25,9 @@ object ConnectionManager {
     private fun isConnectedViaWifi(context: Context): Boolean {
 
         val wifiManager = context.getSystemService(WIFI_SERVICE) as WifiManager?
-        val info = wifiManager!!.connectionInfo
-        val ssid = info.ssid
+        val info = wifiManager!!.connectionInfo ?: return false
+        val networkId = info.networkId
 
-        return ssid != "<unknown ssid>"
+        return networkId > 0
     }
 }

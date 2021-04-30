@@ -9,6 +9,8 @@ public interface IVideoServer {
 
   void stopServer();
 
+  void setResolution(int w, int h);
+
   void setConnected(boolean connected);
 
   void init(Context context);
