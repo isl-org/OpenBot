@@ -111,7 +111,8 @@ public class RtspServer
     andGate.update("view set", true);
   }
 
-  private void startServer() {
+  @Override
+  public void startServer() {
     startServer(resolution, PORT);
   }
 
