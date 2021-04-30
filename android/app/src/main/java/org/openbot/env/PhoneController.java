@@ -7,7 +7,6 @@ import org.openbot.customview.AutoFitSurfaceGlView;
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
 import org.openbot.utils.CameraUtils;
-
 import timber.log.Timber;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -67,7 +66,8 @@ public class PhoneController {
     videoServer.init(context);
     this.connectionManager = ConnectionManager.getInstance(context);
     connectionManager.getConnection().setDataCallback(new DataReceived());
-    android.util.Size resolution = CameraUtils.getClosestCameraResolution(context, new android.util.Size(640, 360));
+    android.util.Size resolution =
+        CameraUtils.getClosestCameraResolution(context, new android.util.Size(640, 360));
 
     videoServer.setResolution(resolution.getWidth(), resolution.getHeight());
 

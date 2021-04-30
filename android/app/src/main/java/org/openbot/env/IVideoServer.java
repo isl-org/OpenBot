@@ -7,7 +7,7 @@ import android.view.TextureView;
 public interface IVideoServer {
   void stopServer();
 
-  void setResolution (int w, int h);
+  void setResolution(int w, int h);
 
   void setConnected(boolean connected);
 
