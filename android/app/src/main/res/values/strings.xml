@@ -22,16 +22,6 @@
         <item>YoloV4</item>
     </string-array>
 
-    <string-array name="autopilot_models">
-        <item>Autopilot_F</item>
-    </string-array>
-
-    <string-array name="detector_models">
-        <item>MobileNetV1_1_0_Q</item>
-        <item>MobileNetV3_S_Q</item>
-        <item>YoloV4</item>
-    </string-array>
-
     <string name="device">Device</string>
     <string-array name="devices">
         <item>CPU</item>

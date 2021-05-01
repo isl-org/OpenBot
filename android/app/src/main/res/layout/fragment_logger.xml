@@ -123,7 +123,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:entries="@array/models"
+            tools:entries="@array/models"
             android:prompt="@string/model"
             app:layout_constraintBottom_toBottomOf="@+id/crop_info"
             app:layout_constraintEnd_toEndOf="parent"

@@ -14,7 +14,7 @@
     "type": "DETECTOR",
     "name": "MobileNetV1_1_0_Q.tflite",
     "pathType": "ASSET",
-    "path": "https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite",
+    "path": "networks/mobile_ssd_v1_1.0_quant_coco.tflite",
     "inputSize": "300x300"
   },
   {
