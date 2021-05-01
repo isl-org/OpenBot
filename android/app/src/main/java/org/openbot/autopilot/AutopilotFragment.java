@@ -13,7 +13,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
-import android.util.Size;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +32,10 @@ import com.nononsenseapps.filepicker.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -78,11 +76,11 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
   private MultiBoxTracker tracker;
 
-  private Model model = Model.Autopilot_F;
+  private Model model;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
 
-  private ArrayAdapter<CharSequence> modelAdapter;
+  private ArrayAdapter<String> modelAdapter;
   private ActivityResultLauncher<Intent> mStartForResult;
   private int selectedModelIndex = 0;
 
@@ -130,20 +128,23 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     }
 
     modelAdapter.clear();
-    modelAdapter.addAll(Arrays.asList(getResources().getTextArray(R.array.autopilot_models)));
-    modelAdapter.addAll(getModelFiles());
+    modelAdapter.addAll(
+        masterList.stream()
+            .filter(f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL)
+            .map(f -> f.name)
+            .collect(Collectors.toList()));
     modelAdapter.add("Choose From Device");
     modelAdapter.notifyDataSetChanged();
     binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
     setModel(
         new Model(
-            1,
+            masterList.size() + 1,
             Model.CLASS.AUTOPILOT_F,
             Model.TYPE.AUTOPILOT,
             fileName,
             Model.PATH_TYPE.FILE,
             fileName,
-            new Size(256, 96)));
+            "256x96"));
 
     Toast.makeText(
             requireContext().getApplicationContext(),
@@ -171,11 +172,13 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    List<CharSequence> models =
-        Arrays.asList(getResources().getTextArray(R.array.autopilot_models));
-    modelAdapter =
-        new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
-    modelAdapter.addAll(getModelFiles());
+    List<String> models =
+        masterList.stream()
+            .filter(f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL)
+            .map(f -> FileUtils.nameWithoutExtension(f.name))
+            .collect(Collectors.toList());
+    modelAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item, models);
+
     modelAdapter.add("Choose From Device");
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
@@ -191,7 +194,11 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
               openPicker();
             } else
               try {
-                setModel(Model.fromId(selected.toUpperCase()));
+                masterList.stream()
+                    .filter(f -> f.name.contains(selected))
+                    .findFirst()
+                    .ifPresent(value -> setModel(value));
+
               } catch (IllegalArgumentException e) {
                 setModel(
                     new Model(
@@ -201,7 +208,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
                         selected,
                         Model.PATH_TYPE.FILE,
                         selected,
-                        new Size(256, 96)));
+                        "256x96"));
               }
             selectedModelIndex = position;
           }
@@ -344,6 +351,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
   }
 
   private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+    if (model == null) return;
     tracker.clearTrackedObjects();
     if (autopilot != null) {
       Timber.d("Closing autoPilot.");
@@ -552,13 +560,13 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
       if (model.equals(binding.modelSpinner.getSelectedItem())) {
         setModel(
             new Model(
-                1,
+                masterList.size() + 1,
                 Model.CLASS.AUTOPILOT_F,
                 Model.TYPE.AUTOPILOT,
                 model,
                 Model.PATH_TYPE.FILE,
                 model,
-                new Size(256, 96)));
+                "256x96"));
       }
     }
     Toast.makeText(
@@ -588,7 +596,6 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;
-      preferencesManager.setAutoPilotModel(model.toString());
       onInferenceConfigurationChanged();
     }
   }
@@ -623,10 +630,6 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
       preferencesManager.setNumThreads(numThreads);
       onInferenceConfigurationChanged();
     }
-  }
-
-  private String[] getModelFiles() {
-    return requireActivity().getFilesDir().list((dir1, name) -> name.endsWith(".tflite"));
   }
 
   private void setSpeedMode(Enums.SpeedMode speedMode) {

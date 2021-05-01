@@ -2,7 +2,6 @@ package org.openbot.modelManagement;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,9 +73,12 @@ public class EditModelDialogFragment extends DialogFragment {
         v -> {
           model.setName(binding.name.getText().toString());
           model.setType(Model.TYPE.valueOf(binding.typeSpinner.getSelectedItem().toString()));
-          model.setClassType(Model.CLASS.valueOf(binding.classSpinner.getSelectedItem().toString()));
-          model.setInputSize(new Size(Integer.parseInt(binding.inputWidth.getText().toString()),
-                  Integer.parseInt(binding.inputHeight.getText().toString())));
+          model.setClassType(
+              Model.CLASS.valueOf(binding.classSpinner.getSelectedItem().toString()));
+          model.setInputSize(
+              binding.inputWidth.getText().toString()
+                  + "x"
+                  + binding.inputHeight.getText().toString());
           itemClickListener.onItemClick(model);
           dismiss();
         });

@@ -80,6 +80,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.json.JSONObject;
 import org.openbot.OpenBotApplication;
 import org.openbot.R;
@@ -244,9 +245,14 @@ public abstract class CameraActivity extends AppCompatActivity
     baudRateSpinner.setAdapter(baudRateAdapter);
 
     modelSpinner = findViewById(R.id.model_spinner);
-    List<CharSequence> models = Arrays.asList(context.getResources().getTextArray(R.array.models));
+    List<Model> masterList = org.openbot.utils.FileUtils.loadConfigJSONFromAsset(this);
+    List<String> models =
+        masterList.stream()
+            .filter(f -> f.pathType != Model.PATH_TYPE.URL)
+            .map(f -> org.openbot.utils.FileUtils.nameWithoutExtension(f.name))
+            .collect(Collectors.toList());
+
     modelAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, new ArrayList<>(models));
-    modelAdapter.addAll(getModelFiles());
     modelAdapter.setDropDownViewResource(android.R.layout.simple_list_item_checked);
     modelSpinner.setAdapter(modelAdapter);
 
@@ -594,7 +600,7 @@ public abstract class CameraActivity extends AppCompatActivity
                 model,
                 Model.PATH_TYPE.FILE,
                 model,
-                new Size(256, 96)));
+                "256x96"));
       }
     }
     Toast.makeText(context, "Model added: " + model, Toast.LENGTH_SHORT).show();
@@ -1298,7 +1304,7 @@ public abstract class CameraActivity extends AppCompatActivity
       setBaudRate(Integer.parseInt(selected));
     } else if (parent == modelSpinner) {
       try {
-        setModel(Model.fromId(selected.toUpperCase()));
+        //        setModel(Model.fromId(selected.toUpperCase()));
       } catch (IllegalArgumentException e) {
         setModel(
             new Model(
@@ -1308,7 +1314,7 @@ public abstract class CameraActivity extends AppCompatActivity
                 selected,
                 Model.PATH_TYPE.FILE,
                 selected,
-                new Size(256, 96)));
+                "256x96"));
       }
     } else if (parent == deviceSpinner) {
       setDevice(Device.valueOf(selected.toUpperCase()));

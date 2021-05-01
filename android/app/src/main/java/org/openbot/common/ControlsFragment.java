@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import java.util.List;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.env.AudioPlayer;
@@ -23,9 +24,11 @@ import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
 import org.openbot.main.MainViewModel;
+import org.openbot.tflite.Model;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
+import org.openbot.utils.FileUtils;
 import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
@@ -41,6 +44,7 @@ public abstract class ControlsFragment extends Fragment {
   protected AudioPlayer audioPlayer;
 
   protected final String voice = "matthew";
+  protected List<Model> masterList;
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -53,6 +57,7 @@ public abstract class ControlsFragment extends Fragment {
 
     preferencesManager = new SharedPreferencesManager(requireContext());
     audioPlayer = new AudioPlayer(requireContext());
+    masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
 
     requireActivity()
         .getSupportFragmentManager()

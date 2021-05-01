@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +98,7 @@ public class ModelManagementFragment extends Fragment
             fileName,
             Model.PATH_TYPE.FILE,
             fileName,
-            new Size(256, 96)));
+            "256x96"));
     showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
     FileUtils.updateModelConfig(requireActivity(), masterList);
 

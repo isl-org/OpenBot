@@ -115,7 +115,7 @@ public abstract class Network {
 
   @NotNull
   private File getModelFile(Activity activity, Model model) {
-    return new File(activity.getFilesDir() + File.separator + model.path);
+    return new File(activity.getFilesDir() + File.separator + model.name);
   }
 
   /** Memory-map the model file in Assets. */

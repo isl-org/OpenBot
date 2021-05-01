@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,8 +31,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -105,12 +108,25 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
+    List<String> models =
+        masterList.stream()
+            .filter(f -> f.pathType != Model.PATH_TYPE.URL)
+            .map(f -> org.openbot.utils.FileUtils.nameWithoutExtension(f.name))
+            .collect(Collectors.toList());
+
+    ArrayAdapter<String> modelAdapter =
+        new ArrayAdapter<>(requireContext(), R.layout.spinner_item, models);
+    modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+    binding.modelSpinner.setAdapter(modelAdapter);
     binding.modelSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selected = parent.getItemAtPosition(position).toString();
-            updateCropImageInfo(selected);
+            masterList.stream()
+                .filter(f -> f.name.contains(selected))
+                .findFirst()
+                .ifPresent(f -> updateCropImageInfo(f));
           }
 
           @Override
@@ -152,24 +168,23 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
         });
   }
 
-  private void updateCropImageInfo(String selected) {
+  private void updateCropImageInfo(Model selected) {
     frameToCropTransform = null;
-
     binding.cropInfo.setText(
         String.format(
             Locale.US,
             "%d x %d",
-            Model.fromId(selected).getInputSize().getWidth(),
-            Model.fromId(selected).getInputSize().getHeight()));
+            selected.getInputSize().getWidth(),
+            selected.getInputSize().getHeight()));
 
     croppedBitmap =
         Bitmap.createBitmap(
-            Model.fromId(selected).getInputSize().getWidth(),
-            Model.fromId(selected).getInputSize().getHeight(),
+            selected.getInputSize().getWidth(),
+            selected.getInputSize().getHeight(),
             Bitmap.Config.ARGB_8888);
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
-    if (Model.fromId(selected) == Model.Autopilot_F) {
+    if (selected.type == Model.TYPE.AUTOPILOT) {
       cropRect = new RectF(0.0f, 240.0f / 720.0f, 0.0f, 0.0f);
       maintainAspectRatio = true;
     } else {
