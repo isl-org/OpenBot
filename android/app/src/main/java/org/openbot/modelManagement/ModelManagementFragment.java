@@ -145,9 +145,7 @@ public class ModelManagementFragment extends Fragment
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_STORAGE))
-      PermissionUtils.requestStoragePermission(this);
-    else masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
+    masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
 
     List<String> modelTypes =
         Arrays.stream(Model.TYPE.values()).map(Enum::toString).collect(Collectors.toList());
@@ -174,7 +172,12 @@ public class ModelManagementFragment extends Fragment
           public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-    binding.addModel.setOnClickListener(v -> openPicker());
+    binding.addModel.setOnClickListener(
+        v -> {
+          if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_STORAGE))
+            PermissionUtils.requestStoragePermission(this);
+          else openPicker();
+        });
   }
 
   private void showModels(List<Model> modelList) {
@@ -206,8 +209,13 @@ public class ModelManagementFragment extends Fragment
   @Override
   public void onItemClick(Model item) {
 
-    EditModelDialogFragment edMbS = new EditModelDialogFragment(item,
-            item1 -> adapter.notifyDataSetChanged());
+    EditModelDialogFragment edMbS =
+        new EditModelDialogFragment(
+            item,
+            item1 -> {
+              adapter.notifyDataSetChanged();
+              FileUtils.updateModelConfig(requireActivity(), masterList);
+            });
     edMbS.show(getChildFragmentManager(), edMbS.getTag());
   }
 
@@ -235,8 +243,7 @@ public class ModelManagementFragment extends Fragment
         // If the permission is granted, start logging,
         // otherwise, show a Toast
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
-          showModels(loadModelList(ALL));
+          openPicker();
         } else {
           if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_STORAGE)) {
             Toast.makeText(
