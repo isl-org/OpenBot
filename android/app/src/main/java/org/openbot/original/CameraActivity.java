@@ -173,7 +173,7 @@ public abstract class CameraActivity extends AppCompatActivity
       speedModeSpinner;
   private TextView threadsTextView, voltageTextView, speedTextView, sonarTextView;
   private ArrayAdapter<CharSequence> modelAdapter;
-  private Model model = Model.MobileNetV1_1_0_Q;
+  private Model model;
   private Device device = Device.CPU;
   private int numThreads = -1;
 
@@ -423,7 +423,9 @@ public abstract class CameraActivity extends AppCompatActivity
     cameraSwitchCompat.setChecked(preferencesManager.getCameraSwitch());
 
     baudRateSpinner.setSelection(Arrays.binarySearch(BaudRates, preferencesManager.getBaudrate()));
-    modelSpinner.setSelection(Math.max(0, modelAdapter.getPosition(preferencesManager.getModel())));
+    if (!preferencesManager.getModel().isEmpty())
+      modelSpinner.setSelection(
+          Math.max(0, modelAdapter.getPosition(preferencesManager.getModel())));
     deviceSpinner.setSelection(preferencesManager.getDevice());
     logSpinner.setSelection(preferencesManager.getLogMode());
     if (ControlMode.getByID(preferencesManager.getControlMode()) != null)

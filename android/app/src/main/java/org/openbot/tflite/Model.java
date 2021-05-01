@@ -52,16 +52,6 @@ public class Model {
   public String path;
   private String inputSize;
 
-  public static final Model MobileNetV1_1_0_Q =
-      new Model(
-          2,
-          CLASS.MOBILENETV1_1_0_Q,
-          TYPE.DETECTOR,
-          "MobileNetV1_1.0_Q",
-          PATH_TYPE.ASSET,
-          "networks/mobile_ssd_v1_1.0_quant_coco.tflite",
-          "300x300");
-
   public String getName() {
     return name;
   }

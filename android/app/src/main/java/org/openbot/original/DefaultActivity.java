@@ -347,6 +347,7 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
   }
 
   private void recreateNetwork(Model model, Device device, int numThreads) {
+    if (model == null) return;
     tracker.clearTrackedObjects();
     if (detector != null) {
       LOGGER.d("Closing detector.");

@@ -67,7 +67,7 @@ public class ObjectNavFragment extends CameraFragment {
 
   private MultiBoxTracker tracker;
 
-  private Model model = Model.MobileNetV1_1_0_Q;
+  private Model model;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
   private String classType = "person";
@@ -154,7 +154,6 @@ public class ObjectNavFragment extends CameraFragment {
                   .findFirst()
                   .ifPresent(value -> setModel(value));
             } catch (IllegalArgumentException e) {
-              setModel(Model.MobileNetV1_1_0_Q);
             }
           }
 
@@ -274,6 +273,7 @@ public class ObjectNavFragment extends CameraFragment {
   }
 
   private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+    if (model == null) return;
     tracker.clearTrackedObjects();
     if (detector != null) {
       Timber.d("Closing detector.");

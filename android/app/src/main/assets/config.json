@@ -4,8 +4,8 @@
     "class": "AUTOPILOT_F",
     "type": "AUTOPILOT",
     "name": "Autopilot_F.tflite",
-    "pathType": "URL",
-    "path": "https://storage.googleapis.com/openbot_models/autopilot_float.tflite",
+    "pathType": "ASSET",
+    "path": "networks/autopilot_float.tflite",
     "inputSize": "256x96"
   },
   {

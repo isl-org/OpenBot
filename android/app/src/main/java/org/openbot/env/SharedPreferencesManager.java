@@ -2,7 +2,6 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.utils.Enums;
 
@@ -20,7 +19,7 @@ public class SharedPreferencesManager {
   private static final int DEFAULT_DRIVE_MODE = Enums.DriveMode.GAME.getValue();
   private static final String DRIVE_MODE = "DRIVE_MODE";
 
-  private static final String DEFAULT_MODEL = Model.MobileNetV1_1_0_Q.toString();
+  private static final String DEFAULT_MODEL = "";
   private static final String MODEL = "MODEL_NAME";
 
   private static final String OBJECT_TYPE = "OBJECT_TYPE";
