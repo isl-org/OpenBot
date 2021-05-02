@@ -24,6 +24,8 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
     void onItemClick(T item);
 
     void onModelDownloaded(boolean status, Model mItem);
+
+    void onModelDelete(Model mItem);
   }
 
   public ModelAdapter(List<Model> items, OnItemClickListener<Model> itemClickListener) {
@@ -66,6 +68,9 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
 
     holder.imgDownload.setVisibility(
         (holder.mItem.pathType == Model.PATH_TYPE.URL) ? View.VISIBLE : View.GONE);
+    holder.imgDelete.setVisibility(
+        (holder.mItem.pathType == Model.PATH_TYPE.FILE) ? View.VISIBLE : View.GONE);
+    holder.imgDelete.setOnClickListener(v -> itemClickListener.onModelDelete(holder.mItem));
     holder.title.setAlpha((holder.mItem.pathType == Model.PATH_TYPE.URL) ? 0.7f : 1f);
   }
 
@@ -82,6 +87,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
   public static class ViewHolder extends RecyclerView.ViewHolder {
     public final TextView title;
     public final ImageView imgDownload;
+    public final ImageView imgDelete;
     public Model mItem;
     public ProgressBar progressBar;
 
@@ -91,6 +97,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
       title = binding.title;
       imgDownload = binding.downloadModel;
       progressBar = binding.progressBar;
+      imgDelete = binding.deleteModel;
     }
   }
 }

@@ -28,7 +28,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:background="?android:attr/actionBarItemBackground"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_download"
             tools:visibility="visible" />
 
@@ -44,5 +44,15 @@
             android:progressDrawable="@drawable/circular_progress_bar" />
 
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/deleteModel"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="28dp"
+        android:background="?android:attr/actionBarItemBackground"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_delete_24"
+        tools:visibility="visible" />
 
 </LinearLayout>
