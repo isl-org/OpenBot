@@ -238,13 +238,15 @@ public class ModelManagementFragment extends Fragment
     AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
     builder.setTitle(R.string.model_delete_title);
     builder.setMessage(R.string.model_delete_body);
-    builder.setPositiveButton("Yes", (dialog, id) -> {
-      new File(mItem.path).delete();
-      masterList.remove(mItem);
-      showModels(masterList);
-      FileUtils.updateModelConfig(requireActivity(), masterList);
-    });
-    builder.setNegativeButton("Cancel", (dialog, id) -> { });
+    builder.setPositiveButton(
+        "Yes",
+        (dialog, id) -> {
+          new File(mItem.path).delete();
+          masterList.remove(mItem);
+          showModels(masterList);
+          FileUtils.updateModelConfig(requireActivity(), masterList);
+        });
+    builder.setNegativeButton("Cancel", (dialog, id) -> {});
     AlertDialog dialog = builder.create();
     dialog.show();
   }
