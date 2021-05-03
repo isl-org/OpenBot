@@ -200,15 +200,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
                     .ifPresent(value -> setModel(value));
 
               } catch (IllegalArgumentException e) {
-                setModel(
-                    new Model(
-                        1,
-                        Model.CLASS.AUTOPILOT_F,
-                        Model.TYPE.AUTOPILOT,
-                        selected,
-                        Model.PATH_TYPE.FILE,
-                        selected,
-                        "256x96"));
+                e.printStackTrace();
               }
             selectedModelIndex = position;
           }

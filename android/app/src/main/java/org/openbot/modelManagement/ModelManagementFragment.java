@@ -90,17 +90,24 @@ public class ModelManagementFragment extends Fragment
       e.printStackTrace();
     }
 
-    masterList.add(
+    Model item =
         new Model(
             masterList.size() + 1,
             Model.CLASS.AUTOPILOT_F,
             Model.TYPE.AUTOPILOT,
             fileName,
             Model.PATH_TYPE.FILE,
-            fileName,
-            "256x96"));
-    showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
-    FileUtils.updateModelConfig(requireActivity(), masterList);
+            requireActivity().getFilesDir() + File.separator + fileName,
+            "256x96");
+    EditModelDialogFragment edMbS =
+        new EditModelDialogFragment(
+            item,
+            item1 -> {
+              masterList.add(item1);
+              showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
+              FileUtils.updateModelConfig(requireActivity(), masterList);
+            });
+    edMbS.show(getChildFragmentManager(), edMbS.getTag());
 
     Toast.makeText(
             requireContext().getApplicationContext(),
