@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -59,11 +60,38 @@ public class EditModelDialogFragment extends DialogFragment {
     binding.typeSpinner.setSelection(model.type.ordinal());
 
     List<String> classes =
-        Arrays.stream(Model.CLASS.values()).map(Enum::toString).collect(Collectors.toList());
+        Arrays.stream(Model.CLASS.values())
+            .map(Enum::toString)
+            .filter(
+                f ->
+                    model.type.equals(Model.TYPE.AUTOPILOT)
+                        == f.equals(Model.CLASS.AUTOPILOT_F.toString()))
+            .collect(Collectors.toList());
     ArrayAdapter<String> classAdapter =
         new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, classes);
     binding.classSpinner.setAdapter(classAdapter);
     binding.classSpinner.setSelection(model.classType.ordinal());
+
+    binding.typeSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String selected = parent.getItemAtPosition(position).toString();
+            classAdapter.clear();
+            classAdapter.addAll(
+                Arrays.stream(Model.CLASS.values())
+                    .map(Enum::toString)
+                    .filter(
+                        f ->
+                            selected.equals(Model.TYPE.AUTOPILOT.name())
+                                == f.equals(Model.CLASS.AUTOPILOT_F.toString()))
+                    .collect(Collectors.toList()));
+            classAdapter.notifyDataSetChanged();
+          }
+
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
     binding.name.setText(model.getName());
     binding.inputWidth.setText(String.valueOf(model.getInputSize().getWidth()));
