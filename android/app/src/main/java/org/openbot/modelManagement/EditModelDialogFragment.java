@@ -17,6 +17,7 @@ import org.openbot.R;
 import org.openbot.databinding.DialogEditModelBinding;
 import org.openbot.main.OnItemClickListener;
 import org.openbot.tflite.Model;
+import org.openbot.utils.FileUtils;
 
 public class EditModelDialogFragment extends DialogFragment {
 
@@ -93,13 +94,13 @@ public class EditModelDialogFragment extends DialogFragment {
           public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-    binding.name.setText(model.getName());
+    binding.name.setText(FileUtils.nameWithoutExtension(model.getName()));
     binding.inputWidth.setText(String.valueOf(model.getInputSize().getWidth()));
     binding.inputHeight.setText(String.valueOf(model.getInputSize().getHeight()));
 
     binding.btnSubmit.setOnClickListener(
         v -> {
-          model.setName(binding.name.getText().toString());
+          model.setName(binding.name.getText().toString() + ".tflite");
           model.setType(Model.TYPE.valueOf(binding.typeSpinner.getSelectedItem().toString()));
           model.setClassType(
               Model.CLASS.valueOf(binding.classSpinner.getSelectedItem().toString()));

@@ -46,12 +46,13 @@
                 android:id="@+id/nameContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:weightSum="3"
                 app:layout_constraintTop_toBottomOf="@id/title">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:paddingVertical="24dp"
                     android:paddingStart="16dp"
                     android:text="Name"
@@ -59,11 +60,10 @@
 
                 <EditText
                     android:id="@+id/name"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.2"
                     android:background="?android:attr/selectableItemBackground"
-                    android:drawableEnd="@drawable/ic_edit_24"
                     android:gravity="center|start"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="16dp"
@@ -73,6 +73,22 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     tools:text="Auto Pilot" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:drawablePadding="8dp"
+                    android:layout_weight="0.8"
+                    android:gravity="center|start"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="16dp"
+                    android:text=".tflite"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    app:drawableEndCompat="@drawable/ic_edit_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title" />
 
             </LinearLayout>
 
