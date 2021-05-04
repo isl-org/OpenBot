@@ -31,7 +31,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="?android:attr/selectableItemBackground"
                 android:gravity="center"
                 android:padding="16dp"
                 android:text="Model Details"
@@ -63,7 +62,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.2"
-                    android:background="?android:attr/selectableItemBackground"
+                    android:background="@null"
                     android:gravity="center|start"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="16dp"
@@ -75,10 +74,12 @@
                     tools:text="Auto Pilot" />
 
                 <TextView
+                    android:id="@+id/edit"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:drawablePadding="8dp"
                     android:layout_weight="0.8"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawablePadding="8dp"
                     android:gravity="center|start"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="16dp"

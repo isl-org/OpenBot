@@ -1,10 +1,12 @@
 package org.openbot.modelManagement;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
@@ -94,6 +96,13 @@ public class EditModelDialogFragment extends DialogFragment {
           public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+    binding.edit.setOnClickListener(
+        v -> {
+          binding.name.requestFocus();
+          InputMethodManager imm =
+              (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+          imm.showSoftInput(binding.name, InputMethodManager.SHOW_IMPLICIT);
+        });
     binding.name.setText(FileUtils.nameWithoutExtension(model.getName()));
     binding.inputWidth.setText(String.valueOf(model.getInputSize().getWidth()));
     binding.inputHeight.setText(String.valueOf(model.getInputSize().getHeight()));

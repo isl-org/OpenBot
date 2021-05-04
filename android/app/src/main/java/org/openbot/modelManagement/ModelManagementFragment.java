@@ -82,13 +82,6 @@ public class ModelManagementFragment extends Fragment
   }
 
   private void processModelFromStorage(List<Uri> files, String fileName) {
-    try {
-      InputStream inputStream =
-          requireActivity().getContentResolver().openInputStream(files.get(0));
-      FileUtils.copyFile(inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     Model item =
         new Model(
@@ -103,6 +96,14 @@ public class ModelManagementFragment extends Fragment
         new EditModelDialogFragment(
             item,
             item1 -> {
+              try {
+                InputStream inputStream =
+                    requireActivity().getContentResolver().openInputStream(files.get(0));
+                FileUtils.copyFile(
+                    inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
               masterList.add(item1);
               showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
               FileUtils.updateModelConfig(requireActivity(), masterList);
