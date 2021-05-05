@@ -1,15 +1,11 @@
 package org.openbot.autopilot;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
@@ -20,18 +16,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.nononsenseapps.filepicker.Utils;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -81,76 +71,10 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
   private int numThreads = -1;
 
   private ArrayAdapter<String> modelAdapter;
-  private ActivityResultLauncher<Intent> mStartForResult;
-  private int selectedModelIndex = 0;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mStartForResult =
-        registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-              if (result.getResultCode() == Activity.RESULT_OK) {
-
-                Intent intent = result.getData();
-                // Handle the Intent
-                List<Uri> files = Utils.getSelectedFilesFromResult(intent);
-
-                String fileName = new File(files.get(0).getPath()).getName();
-                if (FileUtils.checkFileExistence(requireActivity(), fileName)) {
-                  AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-                  builder.setTitle(R.string.file_available_title);
-                  builder.setMessage(R.string.file_available_body);
-                  builder.setPositiveButton(
-                      "Yes", (dialog, id) -> processModelFromStorage(files, fileName));
-                  builder.setNegativeButton(
-                      "Cancel",
-                      (dialog, id) -> {
-                        // User cancelled the dialog
-                      });
-                  AlertDialog dialog = builder.create();
-                  dialog.show();
-                } else {
-                  processModelFromStorage(files, fileName);
-                }
-              }
-            });
-  }
-
-  private void processModelFromStorage(List<Uri> files, String fileName) {
-    try {
-      InputStream inputStream =
-          requireActivity().getContentResolver().openInputStream(files.get(0));
-      FileUtils.copyFile(inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    modelAdapter.clear();
-    modelAdapter.addAll(
-        masterList.stream()
-            .filter(f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL)
-            .map(f -> f.name)
-            .collect(Collectors.toList()));
-    modelAdapter.add("Choose From Device");
-    modelAdapter.notifyDataSetChanged();
-    binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
-    setModel(
-        new Model(
-            masterList.size() + 1,
-            Model.CLASS.AUTOPILOT_F,
-            Model.TYPE.AUTOPILOT,
-            fileName,
-            Model.PATH_TYPE.FILE,
-            fileName,
-            "256x96"));
-
-    Toast.makeText(
-            requireContext().getApplicationContext(),
-            "AutoPilotModel added: " + model,
-            Toast.LENGTH_SHORT)
-        .show();
   }
 
   @Override
@@ -179,7 +103,6 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
             .collect(Collectors.toList());
     modelAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item, models);
 
-    modelAdapter.add("Choose From Device");
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
 
@@ -189,20 +112,15 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selected = parent.getItemAtPosition(position).toString();
-            if (selected.equals("Choose From Device")) {
-              binding.modelSpinner.setSelection(selectedModelIndex);
-              openPicker();
-            } else
-              try {
-                masterList.stream()
-                    .filter(f -> f.name.contains(selected))
-                    .findFirst()
-                    .ifPresent(value -> setModel(value));
+            try {
+              masterList.stream()
+                  .filter(f -> f.name.contains(selected))
+                  .findFirst()
+                  .ifPresent(value -> setModel(value));
 
-              } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-              }
-            selectedModelIndex = position;
+            } catch (IllegalArgumentException e) {
+              e.printStackTrace();
+            }
           }
 
           @Override
@@ -271,28 +189,6 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
                     Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()))));
 
     binding.autoSwitch.setOnClickListener(v -> setNetworkEnabled(binding.autoSwitch.isChecked()));
-  }
-
-  private void openPicker() {
-
-    Intent i = new Intent(requireActivity(), BackHandlingFilePickerActivity.class);
-    // This works if you defined the intent filter
-    // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-
-    // Set these depending on your use case. These are the defaults.
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_MODE, BackHandlingFilePickerActivity.MODE_FILE);
-
-    // Configure initial directory by specifying a String.
-    // You could specify a String like "/storage/emulated/0/", but that can
-    // dangerous. Always use Android's API calls to get paths to the SD-card or
-    // internal memory.
-    i.putExtra(
-        BackHandlingFilePickerActivity.EXTRA_START_PATH,
-        Environment.getExternalStorageDirectory().getPath());
-
-    mStartForResult.launch(i);
   }
 
   private void updateCropImageInfo() {
