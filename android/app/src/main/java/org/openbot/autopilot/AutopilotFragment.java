@@ -105,6 +105,12 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
+    if (!preferencesManager.getAutoPilotModel().isEmpty())
+      binding.modelSpinner.setSelection(
+          Math.max(
+              0,
+              modelAdapter.getPosition(
+                  FileUtils.nameWithoutExtension(preferencesManager.getAutoPilotModel()))));
 
     setAnalyserResolution(Enums.Preview.HD.getValue());
     binding.modelSpinner.setOnItemSelectedListener(
@@ -484,6 +490,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;
+      preferencesManager.setAutoPilotModel(model.name);
       onInferenceConfigurationChanged();
     }
   }

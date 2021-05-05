@@ -21,6 +21,7 @@ public class SharedPreferencesManager {
 
   private static final String DEFAULT_MODEL = "";
   private static final String MODEL = "MODEL_NAME";
+  private static final String AUTO_MODEL = "AUTO_MODEL_NAME";
 
   private static final String OBJECT_TYPE = "OBJECT_TYPE";
   private static final String DEFAULT_OBJECT_TYPE = "person";
@@ -87,6 +88,14 @@ public class SharedPreferencesManager {
 
   public String getModel() {
     return preferences.getString(MODEL, DEFAULT_MODEL);
+  }
+
+  public void setAutoPilotModel(String model) {
+    preferences.edit().putString(AUTO_MODEL, model).apply();
+  }
+
+  public String getAutoPilotModel() {
+    return preferences.getString(AUTO_MODEL, DEFAULT_MODEL);
   }
 
   public void setObjectType(String model) {
