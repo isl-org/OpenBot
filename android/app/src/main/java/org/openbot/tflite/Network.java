@@ -93,7 +93,7 @@ public abstract class Network {
     tfliteOptions.setNumThreads(numThreads);
 
     if (model.pathType == Model.PATH_TYPE.FILE) {
-      File modelFile = getModelFile(activity, model);
+      File modelFile = new File(model.path);
       tflite = new Interpreter(modelFile, tfliteOptions);
     } else if (model.pathType == Model.PATH_TYPE.ASSET) {
       MappedByteBuffer tfliteModel = loadModelFile(activity, model);
@@ -113,10 +113,6 @@ public abstract class Network {
     LOGGER.d("Created a Tensorflow Lite Network.");
   }
 
-  @NotNull
-  private File getModelFile(Activity activity, Model model) {
-    return new File(activity.getFilesDir() + File.separator + model.name);
-  }
 
   /** Memory-map the model file in Assets. */
   protected MappedByteBuffer loadModelFile(Activity activity, Model model) throws IOException {
