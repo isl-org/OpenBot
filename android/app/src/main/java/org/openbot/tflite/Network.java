@@ -32,7 +32,6 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
 import org.openbot.env.Logger;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.gpu.GpuDelegate;
@@ -112,7 +111,6 @@ public abstract class Network {
     imgData.order(ByteOrder.nativeOrder());
     LOGGER.d("Created a Tensorflow Lite Network.");
   }
-
 
   /** Memory-map the model file in Assets. */
   protected MappedByteBuffer loadModelFile(Activity activity, Model model) throws IOException {
