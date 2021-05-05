@@ -3,6 +3,7 @@ package org.openbot.modelManagement;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -86,7 +87,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
     public final TextView title;
-    public final ImageView imgDownload;
+    public final FrameLayout imgDownload;
     public final ImageView imgDelete;
     public Model mItem;
     public ProgressBar progressBar;

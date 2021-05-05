@@ -47,7 +47,7 @@ public class ModelManagementFragment extends Fragment
   private ActivityResultLauncher<Intent> mStartForResult;
 
   @Override
-  public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     mStartForResult =
@@ -107,14 +107,13 @@ public class ModelManagementFragment extends Fragment
               masterList.add(item1);
               showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
               FileUtils.updateModelConfig(requireActivity(), masterList);
+              Toast.makeText(
+                      requireContext().getApplicationContext(),
+                      "Model added: " + fileName,
+                      Toast.LENGTH_SHORT)
+                  .show();
             });
     edMbS.show(getChildFragmentManager(), edMbS.getTag());
-
-    Toast.makeText(
-            requireContext().getApplicationContext(),
-            "AutoPilotModel added: " + fileName,
-            Toast.LENGTH_SHORT)
-        .show();
   }
 
   private void openPicker() {

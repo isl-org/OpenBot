@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,18 +63,10 @@ public class EditModelDialogFragment extends DialogFragment {
     binding.typeSpinner.setAdapter(modelAdapter);
     binding.typeSpinner.setSelection(model.type.ordinal());
 
-    List<String> classes =
-        Arrays.stream(Model.CLASS.values())
-            .map(Enum::toString)
-            .filter(
-                f ->
-                    model.type.equals(Model.TYPE.AUTOPILOT)
-                        == f.equals(Model.CLASS.AUTOPILOT_F.toString()))
-            .collect(Collectors.toList());
+    List<String> classes = new ArrayList<>();
     ArrayAdapter<String> classAdapter =
         new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, classes);
     binding.classSpinner.setAdapter(classAdapter);
-    binding.classSpinner.setSelection(model.classType.ordinal());
 
     binding.typeSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
@@ -90,6 +83,7 @@ public class EditModelDialogFragment extends DialogFragment {
                                 == f.equals(Model.CLASS.AUTOPILOT_F.toString()))
                     .collect(Collectors.toList()));
             classAdapter.notifyDataSetChanged();
+            binding.classSpinner.setSelection(classAdapter.getPosition(model.classType.toString()));
           }
 
           @Override

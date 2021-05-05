@@ -18,19 +18,19 @@
         tools:text="Category" />
 
     <FrameLayout
+        android:id="@+id/downloadModel"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="16dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
-            android:id="@+id/downloadModel"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:background="?android:attr/actionBarItemBackground"
-            android:visibility="gone"
-            app:srcCompat="@drawable/ic_download"
-            tools:visibility="visible" />
+            app:srcCompat="@drawable/ic_download" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -40,8 +40,8 @@
             android:layout_gravity="center"
             android:indeterminate="false"
             android:max="100"
-            tools:progress="45"
-            android:progressDrawable="@drawable/circular_progress_bar" />
+            android:progressDrawable="@drawable/circular_progress_bar"
+            tools:progress="45" />
 
     </FrameLayout>
 
@@ -49,8 +49,8 @@
         android:id="@+id/deleteModel"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingHorizontal="28dp"
         android:background="?android:attr/actionBarItemBackground"
+        android:paddingHorizontal="28dp"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_delete_24"
         tools:visibility="visible" />
