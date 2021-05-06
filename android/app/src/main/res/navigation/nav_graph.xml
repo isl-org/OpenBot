@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_mainFragment_to_objectNavFragment"
             app:destination="@id/objectNavFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_modelManagementFragment"
+            app:destination="@id/modelManagementFragment" />
     </fragment>
     <fragment
         android:id="@+id/robotCommunicationFragment"
@@ -60,7 +63,12 @@
     <fragment
         android:id="@+id/objectNavFragment"
         android:name="org.openbot.objectNav.ObjectNavFragment"
-        android:label="fragment_blank"
+        android:label="fragment_object_nav"
         tools:layout="@layout/fragment_object_nav" />
 
+    <fragment
+        android:id="@+id/modelManagementFragment"
+        android:name="org.openbot.modelManagement.ModelManagementFragment"
+        android:label="fragment_model_management"
+        tools:layout="@layout/fragment_model_management" />
 </navigation>

@@ -2,7 +2,6 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.utils.Enums;
 
@@ -20,14 +19,9 @@ public class SharedPreferencesManager {
   private static final int DEFAULT_DRIVE_MODE = Enums.DriveMode.GAME.getValue();
   private static final String DRIVE_MODE = "DRIVE_MODE";
 
-  private static final String DEFAULT_MODEL = Model.MobileNetV1_1_0_Q.toString();
-  private static final String MODEL = "MODEL_NAME";
-
-  private static final String DEFAULT_MODEL_AUTOPILOT = Model.Autopilot_F.toString();
-  private static final String MODEL_AUTOPILOT = "MODEL_NAME_AUTOPILOT";
-
-  private static final String DEFAULT_MODEL_DETECTOR = Model.MobileNetV1_1_0_Q.toString();
-  private static final String MODEL_DETECTOR = "MODEL_NAME_DETECTOR";
+  private static final String DEFAULT_MODEL = "DEFAULT_MODEL_NAME";
+  private static final String OBJECT_NAV_MODEL = "OBJECT_NAV_MODEL_NAME";
+  private static final String AUTOPILOT_MODEL = "AUTOPILOT_MODEL_NAME";
 
   private static final String OBJECT_TYPE = "OBJECT_TYPE";
   private static final String DEFAULT_OBJECT_TYPE = "person";
@@ -88,28 +82,28 @@ public class SharedPreferencesManager {
     preferences.edit().putInt(BAUD_RATE, baudRate).apply();
   }
 
-  public void setModel(String model) {
-    preferences.edit().putString(MODEL, model).apply();
+  public void setDefaultModel(String model) {
+    preferences.edit().putString(DEFAULT_MODEL, model).apply();
   }
 
-  public String getModel() {
-    return preferences.getString(MODEL, DEFAULT_MODEL);
+  public String getDefaultModel() {
+    return preferences.getString(DEFAULT_MODEL, "");
   }
 
-  public void setAutoPilotModel(String model) {
-    preferences.edit().putString(MODEL_AUTOPILOT, model).apply();
+  public void setObjectNavModel(String model) {
+    preferences.edit().putString(OBJECT_NAV_MODEL, model).apply();
   }
 
-  public String getAutoPilotModel() {
-    return preferences.getString(MODEL_AUTOPILOT, DEFAULT_MODEL_AUTOPILOT);
+  public String getObjectNavModel() {
+    return preferences.getString(OBJECT_NAV_MODEL, "");
   }
 
-  public void setDetectorModel(String model) {
-    preferences.edit().putString(MODEL_DETECTOR, model).apply();
+  public void setAutopilotModel(String model) {
+    preferences.edit().putString(AUTOPILOT_MODEL, model).apply();
   }
 
-  public String getDetectorModel() {
-    return preferences.getString(MODEL_DETECTOR, DEFAULT_MODEL_DETECTOR);
+  public String getAutopilotModel() {
+    return preferences.getString(AUTOPILOT_MODEL, "");
   }
 
   public void setObjectType(String model) {

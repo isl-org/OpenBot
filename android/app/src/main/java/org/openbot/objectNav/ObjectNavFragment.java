@@ -24,12 +24,11 @@ import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -43,6 +42,7 @@ import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
+import org.openbot.utils.FileUtils;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
@@ -67,12 +67,10 @@ public class ObjectNavFragment extends CameraFragment {
 
   private MultiBoxTracker tracker;
 
-  private Model model = Model.MobileNetV1_1_0_Q;
+  private Model model;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
   private String classType = "person";
-
-  private ArrayAdapter<CharSequence> modelAdapter;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,15 +128,26 @@ public class ObjectNavFragment extends CameraFragment {
         });
     binding.deviceSpinner.setSelection(preferencesManager.getDevice());
     setNumThreads(preferencesManager.getNumThreads());
+    binding.threads.setText(String.valueOf(getNumThreads()));
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    List<CharSequence> models = Arrays.asList(getResources().getTextArray(R.array.detector_models));
-    modelAdapter =
-        new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
+    List<String> models =
+        masterList.stream()
+            .filter(f -> f.type.equals(Model.TYPE.DETECTOR) && f.pathType != Model.PATH_TYPE.URL)
+            .map(f -> FileUtils.nameWithoutExtension(f.name))
+            .collect(Collectors.toList());
+    ArrayAdapter<String> modelAdapter =
+        new ArrayAdapter<>(requireContext(), R.layout.spinner_item, models);
 
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
+    if (!preferencesManager.getObjectNavModel().isEmpty())
+      binding.modelSpinner.setSelection(
+          Math.max(
+              0,
+              modelAdapter.getPosition(
+                  FileUtils.nameWithoutExtension(preferencesManager.getObjectNavModel()))));
 
     setAnalyserResolution(Enums.Preview.HD.getValue());
     binding.modelSpinner.setOnItemSelectedListener(
@@ -147,9 +156,11 @@ public class ObjectNavFragment extends CameraFragment {
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selected = parent.getItemAtPosition(position).toString();
             try {
-              setModel(Model.fromId(selected.toUpperCase()));
+              masterList.stream()
+                  .filter(f -> f.name.contains(selected))
+                  .findFirst()
+                  .ifPresent(value -> setModel(value));
             } catch (IllegalArgumentException e) {
-              setModel(Model.MobileNetV1_1_0_Q);
             }
           }
 
@@ -269,6 +280,7 @@ public class ObjectNavFragment extends CameraFragment {
   }
 
   private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+    if (model == null) return;
     tracker.clearTrackedObjects();
     if (detector != null) {
       Timber.d("Closing detector.");
@@ -497,7 +509,7 @@ public class ObjectNavFragment extends CameraFragment {
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;
-      preferencesManager.setDetectorModel(model.toString());
+      preferencesManager.setObjectNavModel(model.name);
       onInferenceConfigurationChanged();
     }
   }

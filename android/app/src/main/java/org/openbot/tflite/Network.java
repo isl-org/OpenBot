@@ -32,7 +32,6 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
 import org.openbot.env.Logger;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.gpu.GpuDelegate;
@@ -76,7 +75,7 @@ public abstract class Network {
   protected Network(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
 
-    imageSize = model.inputSize;
+    imageSize = model.getInputSize();
     intValues = new int[getImageSizeX() * getImageSizeY()];
 
     switch (device) {
@@ -92,10 +91,10 @@ public abstract class Network {
     }
     tfliteOptions.setNumThreads(numThreads);
 
-    if (model.filePath != null) {
-      File modelFile = getModelFile(activity, model);
+    if (model.pathType == Model.PATH_TYPE.FILE) {
+      File modelFile = new File(model.path);
       tflite = new Interpreter(modelFile, tfliteOptions);
-    } else if (model.assetPath != null) {
+    } else if (model.pathType == Model.PATH_TYPE.ASSET) {
       MappedByteBuffer tfliteModel = loadModelFile(activity, model);
       tflite = new Interpreter(tfliteModel, tfliteOptions);
     } else {
@@ -113,14 +112,9 @@ public abstract class Network {
     LOGGER.d("Created a Tensorflow Lite Network.");
   }
 
-  @NotNull
-  private File getModelFile(Activity activity, Model model) {
-    return new File(activity.getFilesDir() + File.separator + model.filePath);
-  }
-
   /** Memory-map the model file in Assets. */
   protected MappedByteBuffer loadModelFile(Activity activity, Model model) throws IOException {
-    AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(model.assetPath);
+    AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(model.path);
     FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
     FileChannel fileChannel = inputStream.getChannel();
     long startOffset = fileDescriptor.getStartOffset();

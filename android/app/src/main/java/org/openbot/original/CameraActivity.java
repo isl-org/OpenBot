@@ -80,6 +80,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.json.JSONObject;
 import org.openbot.OpenBotApplication;
 import org.openbot.R;
@@ -105,9 +106,9 @@ import org.openbot.utils.Enums.ControlMode;
 import org.openbot.utils.Enums.DriveMode;
 import org.openbot.utils.Enums.LogMode;
 import org.openbot.utils.Enums.SpeedMode;
+import org.openbot.utils.FileUtils;
 import org.openbot.utils.FormatUtils;
 import org.zeroturnaround.zip.ZipUtil;
-import org.zeroturnaround.zip.commons.FileUtils;
 import timber.log.Timber;
 
 public abstract class CameraActivity extends AppCompatActivity
@@ -172,7 +173,8 @@ public abstract class CameraActivity extends AppCompatActivity
       speedModeSpinner;
   private TextView threadsTextView, voltageTextView, speedTextView, sonarTextView;
   private ArrayAdapter<CharSequence> modelAdapter;
-  private Model model = Model.MobileNetV1_1_0_Q;
+  private List<Model> masterList;
+  private Model model;
   private Device device = Device.CPU;
   private int numThreads = -1;
 
@@ -207,7 +209,6 @@ public abstract class CameraActivity extends AppCompatActivity
     super.onCreate(null);
     context = getApplicationContext();
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    //    vehicle = new Vehicle(this, baudRate);
     vehicle = OpenBotApplication.vehicle;
 
     phoneController = PhoneController.getInstance(this);
@@ -244,9 +245,18 @@ public abstract class CameraActivity extends AppCompatActivity
     baudRateSpinner.setAdapter(baudRateAdapter);
 
     modelSpinner = findViewById(R.id.model_spinner);
-    List<CharSequence> models = Arrays.asList(context.getResources().getTextArray(R.array.models));
+    masterList = FileUtils.loadConfigJSONFromAsset(this);
+    List<String> models =
+        masterList.stream()
+            .filter(f -> f.pathType != Model.PATH_TYPE.URL)
+            .map(f -> FileUtils.nameWithoutExtension(f.name))
+            .collect(Collectors.toList());
+    masterList.stream()
+        .filter(f -> f.name.contains(preferencesManager.getDefaultModel()))
+        .findFirst()
+        .ifPresent(f -> model = f);
+
     modelAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, new ArrayList<>(models));
-    modelAdapter.addAll(getModelFiles());
     modelAdapter.setDropDownViewResource(android.R.layout.simple_list_item_checked);
     modelSpinner.setAdapter(modelAdapter);
 
@@ -417,7 +427,12 @@ public abstract class CameraActivity extends AppCompatActivity
     cameraSwitchCompat.setChecked(preferencesManager.getCameraSwitch());
 
     baudRateSpinner.setSelection(Arrays.binarySearch(BaudRates, preferencesManager.getBaudrate()));
-    modelSpinner.setSelection(Math.max(0, modelAdapter.getPosition(preferencesManager.getModel())));
+    if (!preferencesManager.getDefaultModel().isEmpty())
+      modelSpinner.setSelection(
+          Math.max(
+              0,
+              modelAdapter.getPosition(
+                  FileUtils.nameWithoutExtension(preferencesManager.getDefaultModel()))));
     deviceSpinner.setSelection(preferencesManager.getDevice());
     logSpinner.setSelection(preferencesManager.getLogMode());
     if (ControlMode.getByID(preferencesManager.getControlMode()) != null)
@@ -582,16 +597,25 @@ public abstract class CameraActivity extends AppCompatActivity
 
   @Override
   public void onAddModel(String model) {
+    Model item =
+        new Model(
+            masterList.size() + 1,
+            Model.CLASS.AUTOPILOT_F,
+            Model.TYPE.AUTOPILOT,
+            model,
+            Model.PATH_TYPE.FILE,
+            getFilesDir() + File.separator + model,
+            "256x96");
     if (modelAdapter != null && modelAdapter.getPosition(model) == -1) {
       modelAdapter.add(model);
+      masterList.add(item);
+      FileUtils.updateModelConfig(this, masterList);
     } else {
       if (model.equals(modelSpinner.getSelectedItem())) {
-        setModel(
-            new Model(
-                Model.ID.AUTOPILOT_F, Model.TYPE.AUTOPILOT, model, null, model, new Size(256, 96)));
+        setModel(item);
       }
     }
-    Toast.makeText(context, "Model added: " + model, Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, "AutopilotModel added: " + model, Toast.LENGTH_SHORT).show();
   }
 
   @Override
@@ -599,7 +623,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (modelAdapter != null && modelAdapter.getPosition(model) != -1) {
       modelAdapter.remove(model);
     }
-    Toast.makeText(context, "Model removed: " + model, Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, "AutopilotModel removed: " + model, Toast.LENGTH_SHORT).show();
   }
 
   @Override
@@ -717,10 +741,6 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
-  private String[] getModelFiles() {
-    return this.getFilesDir().list((dir1, name) -> name.endsWith(".tflite"));
-  }
-
   private boolean hasCameraPermission() {
     return ContextCompat.checkSelfPermission(this, PERMISSION_CAMERA)
         == PackageManager.PERMISSION_GRANTED;
@@ -829,13 +849,10 @@ public abstract class CameraActivity extends AppCompatActivity
     if (useCamera2API) {
       CameraConnectionFragment camera2Fragment =
           CameraConnectionFragment.newInstance(
-              new CameraConnectionFragment.ConnectionCallback() {
-                @Override
-                public void onPreviewSizeChosen(final Size size, final int rotation) {
-                  previewHeight = size.getHeight();
-                  previewWidth = size.getWidth();
-                  CameraActivity.this.onPreviewSizeChosen(size, rotation);
-                }
+              (size, rotation) -> {
+                previewHeight = size.getHeight();
+                previewWidth = size.getWidth();
+                CameraActivity.this.onPreviewSizeChosen(size, rotation);
               },
               this,
               getLayoutId(),
@@ -998,7 +1015,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.model != model) {
       LOGGER.d("Updating  model: " + model);
       this.model = model;
-      preferencesManager.setModel(model.toString());
+      preferencesManager.setDefaultModel(model.name);
       onInferenceConfigurationChanged();
     }
   }
@@ -1164,7 +1181,7 @@ public abstract class CameraActivity extends AppCompatActivity
           try {
             TimeUnit.MILLISECONDS.sleep(500);
             ZipUtil.pack(folder, zip);
-            FileUtils.deleteQuietly(folder);
+            org.zeroturnaround.zip.commons.FileUtils.deleteQuietly(folder);
             serverCommunication.upload(zip);
           } catch (InterruptedException e) {
             LOGGER.e(e, "Got interrupted.");
@@ -1292,16 +1309,13 @@ public abstract class CameraActivity extends AppCompatActivity
       setBaudRate(Integer.parseInt(selected));
     } else if (parent == modelSpinner) {
       try {
-        setModel(Model.fromId(selected.toUpperCase()));
+        masterList.stream()
+            .filter(f -> f.name.contains(selected))
+            .findFirst()
+            .ifPresent(this::setModel);
+
       } catch (IllegalArgumentException e) {
-        setModel(
-            new Model(
-                Model.ID.AUTOPILOT_F,
-                Model.TYPE.AUTOPILOT,
-                selected,
-                null,
-                selected,
-                new Size(256, 96)));
+        e.printStackTrace();
       }
     } else if (parent == deviceSpinner) {
       setDevice(Device.valueOf(selected.toUpperCase()));
