@@ -141,12 +141,12 @@ public class ObjectNavFragment extends CameraFragment {
 
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
-    if (!preferencesManager.getModel().isEmpty())
+    if (!preferencesManager.getObjectNavModel().isEmpty())
       binding.modelSpinner.setSelection(
           Math.max(
               0,
               modelAdapter.getPosition(
-                  FileUtils.nameWithoutExtension(preferencesManager.getModel()))));
+                  FileUtils.nameWithoutExtension(preferencesManager.getObjectNavModel()))));
 
     setAnalyserResolution(Enums.Preview.HD.getValue());
     binding.modelSpinner.setOnItemSelectedListener(
@@ -508,7 +508,7 @@ public class ObjectNavFragment extends CameraFragment {
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;
-      preferencesManager.setModel(model.name);
+      preferencesManager.setObjectNavModel(model.name);
       onInferenceConfigurationChanged();
     }
   }

@@ -19,9 +19,9 @@ public class SharedPreferencesManager {
   private static final int DEFAULT_DRIVE_MODE = Enums.DriveMode.GAME.getValue();
   private static final String DRIVE_MODE = "DRIVE_MODE";
 
-  private static final String DEFAULT_MODEL = "";
-  private static final String MODEL = "MODEL_NAME";
-  private static final String AUTO_MODEL = "AUTO_MODEL_NAME";
+  private static final String DEFAULT_MODEL = "DEFAULT_MODEL_NAME";
+  private static final String OBJECT_NAV_MODEL = "OBJECT_NAV_MODEL_NAME";
+  private static final String AUTOPILOT_MODEL = "AUTOPILOT_MODEL_NAME";
 
   private static final String OBJECT_TYPE = "OBJECT_TYPE";
   private static final String DEFAULT_OBJECT_TYPE = "person";
@@ -82,20 +82,28 @@ public class SharedPreferencesManager {
     preferences.edit().putInt(BAUD_RATE, baudRate).apply();
   }
 
-  public void setModel(String model) {
-    preferences.edit().putString(MODEL, model).apply();
+  public void setDefaultModel(String model) {
+    preferences.edit().putString(DEFAULT_MODEL, model).apply();
   }
 
-  public String getModel() {
-    return preferences.getString(MODEL, DEFAULT_MODEL);
+  public String getDefaultModel() {
+    return preferences.getString(DEFAULT_MODEL, "");
   }
 
-  public void setAutoPilotModel(String model) {
-    preferences.edit().putString(AUTO_MODEL, model).apply();
+  public void setObjectNavModel(String model) {
+    preferences.edit().putString(OBJECT_NAV_MODEL, model).apply();
   }
 
-  public String getAutoPilotModel() {
-    return preferences.getString(AUTO_MODEL, DEFAULT_MODEL);
+  public String getObjectNavModel() {
+    return preferences.getString(OBJECT_NAV_MODEL, "");
+  }
+
+  public void setAutopilotModel(String model) {
+    preferences.edit().putString(AUTOPILOT_MODEL, model).apply();
+  }
+
+  public String getAutopilotModel() {
+    return preferences.getString(AUTOPILOT_MODEL, "");
   }
 
   public void setObjectType(String model) {

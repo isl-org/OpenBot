@@ -107,8 +107,8 @@ import org.openbot.utils.Enums.DriveMode;
 import org.openbot.utils.Enums.LogMode;
 import org.openbot.utils.Enums.SpeedMode;
 import org.openbot.utils.FormatUtils;
+import org.openbot.utils.FileUtils;
 import org.zeroturnaround.zip.ZipUtil;
-import org.zeroturnaround.zip.commons.FileUtils;
 import timber.log.Timber;
 
 public abstract class CameraActivity extends AppCompatActivity
@@ -173,6 +173,7 @@ public abstract class CameraActivity extends AppCompatActivity
       speedModeSpinner;
   private TextView threadsTextView, voltageTextView, speedTextView, sonarTextView;
   private ArrayAdapter<CharSequence> modelAdapter;
+  private List<Model> masterList;
   private Model model;
   private Device device = Device.CPU;
   private int numThreads = -1;
@@ -245,11 +246,11 @@ public abstract class CameraActivity extends AppCompatActivity
     baudRateSpinner.setAdapter(baudRateAdapter);
 
     modelSpinner = findViewById(R.id.model_spinner);
-    List<Model> masterList = org.openbot.utils.FileUtils.loadConfigJSONFromAsset(this);
+    masterList = FileUtils.loadConfigJSONFromAsset(this);
     List<String> models =
         masterList.stream()
             .filter(f -> f.pathType != Model.PATH_TYPE.URL)
-            .map(f -> org.openbot.utils.FileUtils.nameWithoutExtension(f.name))
+            .map(f -> FileUtils.nameWithoutExtension(f.name))
             .collect(Collectors.toList());
 
     modelAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, new ArrayList<>(models));
@@ -423,9 +424,9 @@ public abstract class CameraActivity extends AppCompatActivity
     cameraSwitchCompat.setChecked(preferencesManager.getCameraSwitch());
 
     baudRateSpinner.setSelection(Arrays.binarySearch(BaudRates, preferencesManager.getBaudrate()));
-    if (!preferencesManager.getModel().isEmpty())
+    if (!preferencesManager.getDefaultModel().isEmpty())
       modelSpinner.setSelection(
-          Math.max(0, modelAdapter.getPosition(preferencesManager.getModel())));
+          Math.max(0, modelAdapter.getPosition(FileUtils.nameWithoutExtension(preferencesManager.getDefaultModel()))));
     deviceSpinner.setSelection(preferencesManager.getDevice());
     logSpinner.setSelection(preferencesManager.getLogMode());
     if (ControlMode.getByID(preferencesManager.getControlMode()) != null)
@@ -595,8 +596,7 @@ public abstract class CameraActivity extends AppCompatActivity
     } else {
       if (model.equals(modelSpinner.getSelectedItem())) {
         setModel(
-            new Model(
-                1,
+            new Model(masterList.size() + 1,
                 Model.CLASS.AUTOPILOT_F,
                 Model.TYPE.AUTOPILOT,
                 model,
@@ -605,7 +605,7 @@ public abstract class CameraActivity extends AppCompatActivity
                 "256x96"));
       }
     }
-    Toast.makeText(context, "Model added: " + model, Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, "AutopilotModel added: " + model, Toast.LENGTH_SHORT).show();
   }
 
   @Override
@@ -613,7 +613,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (modelAdapter != null && modelAdapter.getPosition(model) != -1) {
       modelAdapter.remove(model);
     }
-    Toast.makeText(context, "Model removed: " + model, Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, "AutopilotModel removed: " + model, Toast.LENGTH_SHORT).show();
   }
 
   @Override
@@ -729,10 +729,6 @@ public abstract class CameraActivity extends AppCompatActivity
         }
         break;
     }
-  }
-
-  private String[] getModelFiles() {
-    return this.getFilesDir().list((dir1, name) -> name.endsWith(".tflite"));
   }
 
   private boolean hasCameraPermission() {
@@ -1012,7 +1008,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (this.model != model) {
       LOGGER.d("Updating  model: " + model);
       this.model = model;
-      preferencesManager.setModel(model.toString());
+      preferencesManager.setDefaultModel(model.name);
       onInferenceConfigurationChanged();
     }
   }
@@ -1178,7 +1174,7 @@ public abstract class CameraActivity extends AppCompatActivity
           try {
             TimeUnit.MILLISECONDS.sleep(500);
             ZipUtil.pack(folder, zip);
-            FileUtils.deleteQuietly(folder);
+            org.zeroturnaround.zip.commons.FileUtils.deleteQuietly(folder);
             serverCommunication.upload(zip);
           } catch (InterruptedException e) {
             LOGGER.e(e, "Got interrupted.");
@@ -1306,17 +1302,13 @@ public abstract class CameraActivity extends AppCompatActivity
       setBaudRate(Integer.parseInt(selected));
     } else if (parent == modelSpinner) {
       try {
-        //        setModel(Model.fromId(selected.toUpperCase()));
+        masterList.stream()
+                .filter(f -> f.name.contains(selected))
+                .findFirst()
+                .ifPresent(value -> setModel(value));
+
       } catch (IllegalArgumentException e) {
-        setModel(
-            new Model(
-                1,
-                Model.CLASS.AUTOPILOT_F,
-                Model.TYPE.AUTOPILOT,
-                selected,
-                Model.PATH_TYPE.FILE,
-                selected,
-                "256x96"));
+        e.printStackTrace();
       }
     } else if (parent == deviceSpinner) {
       setDevice(Device.valueOf(selected.toUpperCase()));

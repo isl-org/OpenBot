@@ -105,12 +105,12 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
-    if (!preferencesManager.getAutoPilotModel().isEmpty())
+    if (!preferencesManager.getAutopilotModel().isEmpty())
       binding.modelSpinner.setSelection(
           Math.max(
               0,
               modelAdapter.getPosition(
-                  FileUtils.nameWithoutExtension(preferencesManager.getAutoPilotModel()))));
+                  FileUtils.nameWithoutExtension(preferencesManager.getAutopilotModel()))));
 
     setAnalyserResolution(Enums.Preview.HD.getValue());
     binding.modelSpinner.setOnItemSelectedListener(
@@ -465,7 +465,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     }
     Toast.makeText(
             requireContext().getApplicationContext(),
-            "AutoPilotModel added: " + model,
+            "AutopilotModel added: " + model,
             Toast.LENGTH_SHORT)
         .show();
   }
@@ -477,7 +477,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     }
     Toast.makeText(
             requireContext().getApplicationContext(),
-            "AutoPilotModel removed: " + model,
+            "AutopilotModel removed: " + model,
             Toast.LENGTH_SHORT)
         .show();
   }
@@ -490,7 +490,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;
-      preferencesManager.setAutoPilotModel(model.name);
+      preferencesManager.setAutopilotModel(model.name);
       onInferenceConfigurationChanged();
     }
   }
