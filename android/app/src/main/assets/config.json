@@ -30,9 +30,27 @@
     "id": 4,
     "class": "YOLOV4",
     "type": "DETECTOR",
-    "name": "YoloV4.tflite",
+    "name": "YoloV4-tiny-224.tflite",
     "pathType": "URL",
-    "path": "https://storage.googleapis.com/openbot_models/yolo_v4_tiny_float_coco.tflite",
+    "path": "https://storage.googleapis.com/openbot_models/yolov4-tiny-224-int8.tflite",
+    "inputSize": "224x224"
+  },
+  {
+    "id": 5,
+    "class": "YOLOV4",
+    "type": "DETECTOR",
+    "name": "YoloV4-tiny-416.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/yolov4-tiny-416-int8.tflite",
     "inputSize": "416x416"
+  },
+  {
+    "id": 6,
+    "class": "YOLOV4",
+    "type": "DETECTOR",
+    "name": "YoloV4-224.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/yolov4-224-int8.tflite",
+    "inputSize": "224x224"
   }
 ]
