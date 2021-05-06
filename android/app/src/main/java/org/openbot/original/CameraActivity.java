@@ -106,8 +106,8 @@ import org.openbot.utils.Enums.ControlMode;
 import org.openbot.utils.Enums.DriveMode;
 import org.openbot.utils.Enums.LogMode;
 import org.openbot.utils.Enums.SpeedMode;
-import org.openbot.utils.FormatUtils;
 import org.openbot.utils.FileUtils;
+import org.openbot.utils.FormatUtils;
 import org.zeroturnaround.zip.ZipUtil;
 import timber.log.Timber;
 
@@ -425,7 +425,10 @@ public abstract class CameraActivity extends AppCompatActivity
     baudRateSpinner.setSelection(Arrays.binarySearch(BaudRates, preferencesManager.getBaudrate()));
     if (!preferencesManager.getDefaultModel().isEmpty())
       modelSpinner.setSelection(
-          Math.max(0, modelAdapter.getPosition(FileUtils.nameWithoutExtension(preferencesManager.getDefaultModel()))));
+          Math.max(
+              0,
+              modelAdapter.getPosition(
+                  FileUtils.nameWithoutExtension(preferencesManager.getDefaultModel()))));
     deviceSpinner.setSelection(preferencesManager.getDevice());
     logSpinner.setSelection(preferencesManager.getLogMode());
     if (ControlMode.getByID(preferencesManager.getControlMode()) != null)
@@ -595,7 +598,8 @@ public abstract class CameraActivity extends AppCompatActivity
     } else {
       if (model.equals(modelSpinner.getSelectedItem())) {
         setModel(
-            new Model(masterList.size() + 1,
+            new Model(
+                masterList.size() + 1,
                 Model.CLASS.AUTOPILOT_F,
                 Model.TYPE.AUTOPILOT,
                 model,
@@ -838,11 +842,11 @@ public abstract class CameraActivity extends AppCompatActivity
     if (useCamera2API) {
       CameraConnectionFragment camera2Fragment =
           CameraConnectionFragment.newInstance(
-                  (size, rotation) -> {
-                    previewHeight = size.getHeight();
-                    previewWidth = size.getWidth();
-                    CameraActivity.this.onPreviewSizeChosen(size, rotation);
-                  },
+              (size, rotation) -> {
+                previewHeight = size.getHeight();
+                previewWidth = size.getWidth();
+                CameraActivity.this.onPreviewSizeChosen(size, rotation);
+              },
               this,
               getLayoutId(),
               getDesiredPreviewFrameSize());
@@ -1299,9 +1303,9 @@ public abstract class CameraActivity extends AppCompatActivity
     } else if (parent == modelSpinner) {
       try {
         masterList.stream()
-                .filter(f -> f.name.contains(selected))
-                .findFirst()
-                .ifPresent(value -> setModel(value));
+            .filter(f -> f.name.contains(selected))
+            .findFirst()
+            .ifPresent(value -> setModel(value));
 
       } catch (IllegalArgumentException e) {
         e.printStackTrace();
