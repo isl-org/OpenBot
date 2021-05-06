@@ -94,7 +94,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
     binding.deviceSpinner.setSelection(preferencesManager.getDevice());
     setNumThreads(preferencesManager.getNumThreads());
-
+    binding.threads.setText(String.valueOf(getNumThreads()));
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
     List<String> models =

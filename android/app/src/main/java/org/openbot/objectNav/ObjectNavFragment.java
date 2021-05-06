@@ -128,6 +128,7 @@ public class ObjectNavFragment extends CameraFragment {
         });
     binding.deviceSpinner.setSelection(preferencesManager.getDevice());
     setNumThreads(preferencesManager.getNumThreads());
+    binding.threads.setText(String.valueOf(getNumThreads()));
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
