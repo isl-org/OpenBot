@@ -73,7 +73,7 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
   private Integer sensorOrientation;
 
   private Detector detector;
-  private Autopilot autoPilot;
+  private Autopilot autopilot;
 
   private long lastProcessingTimeMs;
   private Bitmap rgbFrameBitmap = null;
@@ -101,8 +101,6 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
 
     tracker = new MultiBoxTracker(this);
 
-    // int cropSize = TF_OD_API_INPUT_SIZE;
-
     previewWidth = size.getWidth();
     previewHeight = size.getHeight();
 
@@ -113,7 +111,7 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
     rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Config.ARGB_8888);
 
     recreateNetwork(getModel(), getDevice(), getNumThreads());
-    if (detector == null && autoPilot == null) {
+    if (detector == null && autopilot == null) {
       LOGGER.e("No network on preview!");
       return;
     }
@@ -234,11 +232,11 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
               tracker.trackResults(mappedRecognitions, currFrameNum);
               controllerHandler.handleDriveCommand(tracker.updateTarget());
               trackingOverlay.postInvalidate();
-            } else if (autoPilot != null) {
+            } else if (autopilot != null) {
               LOGGER.i("Running autopilot on image " + currFrameNum);
               final long startTime = SystemClock.elapsedRealtime();
               controllerHandler.handleDriveCommand(
-                  autoPilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+                  autopilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
               lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
             }
 
@@ -354,10 +352,10 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
       detector.close();
       detector = null;
     }
-    if (autoPilot != null) {
+    if (autopilot != null) {
       LOGGER.d("Closing autoPilot.");
-      autoPilot.close();
-      autoPilot = null;
+      autopilot.close();
+      autopilot = null;
     }
 
     try {
@@ -380,10 +378,10 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
       } else {
         LOGGER.d(
             "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-        autoPilot = Autopilot.create(this, model, device, numThreads);
+        autopilot = Autopilot.create(this, model, device, numThreads);
         croppedBitmap =
             Bitmap.createBitmap(
-                autoPilot.getImageSizeX(), autoPilot.getImageSizeY(), Config.ARGB_8888);
+                autopilot.getImageSizeX(), autopilot.getImageSizeY(), Config.ARGB_8888);
         frameToCropTransform =
             ImageUtils.getTransformationMatrix(
                 previewWidth,
@@ -391,8 +389,8 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
                 croppedBitmap.getWidth(),
                 croppedBitmap.getHeight(),
                 sensorOrientation,
-                autoPilot.getCropRect(),
-                autoPilot.getMaintainAspect());
+                autopilot.getCropRect(),
+                autopilot.getMaintainAspect());
       }
 
       cropToFrameTransform = new Matrix();
