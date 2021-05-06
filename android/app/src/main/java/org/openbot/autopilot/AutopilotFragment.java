@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -448,19 +449,23 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
   @Override
   public void onAddModel(String model) {
+    Model item =
+        new Model(
+            masterList.size() + 1,
+            Model.CLASS.AUTOPILOT_F,
+            Model.TYPE.AUTOPILOT,
+            model,
+            Model.PATH_TYPE.FILE,
+            requireActivity().getFilesDir() + File.separator + model,
+            "256x96");
+
     if (modelAdapter != null && modelAdapter.getPosition(model) == -1) {
       modelAdapter.add(model);
+      masterList.add(item);
+      FileUtils.updateModelConfig(requireActivity(), masterList);
     } else {
       if (model.equals(binding.modelSpinner.getSelectedItem())) {
-        setModel(
-            new Model(
-                masterList.size() + 1,
-                Model.CLASS.AUTOPILOT_F,
-                Model.TYPE.AUTOPILOT,
-                model,
-                Model.PATH_TYPE.FILE,
-                model,
-                "256x96"));
+        setModel(item);
       }
     }
     Toast.makeText(

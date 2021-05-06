@@ -251,6 +251,10 @@ public abstract class CameraActivity extends AppCompatActivity
             .filter(f -> f.pathType != Model.PATH_TYPE.URL)
             .map(f -> FileUtils.nameWithoutExtension(f.name))
             .collect(Collectors.toList());
+    masterList.stream()
+        .filter(f -> f.name.contains(preferencesManager.getDefaultModel()))
+        .findFirst()
+        .ifPresent(f -> model = f);
 
     modelAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, new ArrayList<>(models));
     modelAdapter.setDropDownViewResource(android.R.layout.simple_list_item_checked);
@@ -593,19 +597,22 @@ public abstract class CameraActivity extends AppCompatActivity
 
   @Override
   public void onAddModel(String model) {
+    Model item =
+        new Model(
+            masterList.size() + 1,
+            Model.CLASS.AUTOPILOT_F,
+            Model.TYPE.AUTOPILOT,
+            model,
+            Model.PATH_TYPE.FILE,
+            getFilesDir() + File.separator + model,
+            "256x96");
     if (modelAdapter != null && modelAdapter.getPosition(model) == -1) {
       modelAdapter.add(model);
+      masterList.add(item);
+      FileUtils.updateModelConfig(this, masterList);
     } else {
       if (model.equals(modelSpinner.getSelectedItem())) {
-        setModel(
-            new Model(
-                masterList.size() + 1,
-                Model.CLASS.AUTOPILOT_F,
-                Model.TYPE.AUTOPILOT,
-                model,
-                Model.PATH_TYPE.FILE,
-                model,
-                "256x96"));
+        setModel(item);
       }
     }
     Toast.makeText(context, "AutopilotModel added: " + model, Toast.LENGTH_SHORT).show();
@@ -1305,7 +1312,7 @@ public abstract class CameraActivity extends AppCompatActivity
         masterList.stream()
             .filter(f -> f.name.contains(selected))
             .findFirst()
-            .ifPresent(value -> setModel(value));
+            .ifPresent(this::setModel);
 
       } catch (IllegalArgumentException e) {
         e.printStackTrace();
