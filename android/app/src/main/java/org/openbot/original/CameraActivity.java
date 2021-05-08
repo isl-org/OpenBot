@@ -970,9 +970,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   private void disconnectPhoneController() {
-    if (phoneController.isConnected()) {
-      phoneController.disconnect();
-    }
+    phoneController.disconnect();
     setDriveMode(DriveMode.values()[preferencesManager.getDriveMode()]);
     driveModeSpinner.setEnabled(true);
     driveModeSpinner.setAlpha(1.0f);
@@ -1397,7 +1395,6 @@ public abstract class CameraActivity extends AppCompatActivity
             case "DISCONNECTED":
               controllerHandler.handleDriveCommand(0.f, 0.f);
               setControlMode(ControlMode.GAMEPAD);
-              phoneController.stopVideo();
               break;
           }
         },

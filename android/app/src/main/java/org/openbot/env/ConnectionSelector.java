@@ -4,32 +4,32 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-public class ConnectionManager {
+public class ConnectionSelector {
   private static final String TAG = "ConnectionManager";
-  private static ConnectionManager _connectionManager;
+  private static ConnectionSelector _connectionSelector;
   private static Context _context;
   private ILocalConnection connection;
 
   private final ILocalConnection networkConnection = new NetworkServiceConnection();
   private final ILocalConnection nearbyConnection = new NearbyConnection();
 
-  private ConnectionManager() {
-    if (_connectionManager != null) {
+  private ConnectionSelector() {
+    if (_connectionSelector != null) {
       throw new RuntimeException(
           "Use getInstance() method to get the single instance of this class.");
     }
   }
 
-  public static ConnectionManager getInstance(Context context) {
+  public static ConnectionSelector getInstance(Context context) {
     _context = context;
-    if (_connectionManager == null) {
+    if (_connectionSelector == null) {
 
-      synchronized (ConnectionManager.class) {
-        if (_connectionManager == null) _connectionManager = new ConnectionManager();
+      synchronized (ConnectionSelector.class) {
+        if (_connectionSelector == null) _connectionSelector = new ConnectionSelector();
       }
     }
 
-    return _connectionManager;
+    return _connectionSelector;
   }
 
   ILocalConnection getConnection() {

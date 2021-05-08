@@ -23,6 +23,8 @@ import org.openbot.customview.AutoFitTextureView;
 import org.openbot.utils.AndGate;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.DelayedRunner;
+import org.webrtc.SurfaceViewRenderer;
+
 import timber.log.Timber;
 
 public class RtspServer
@@ -35,7 +37,6 @@ public class RtspServer
   private View view;
 
   private AndGate andGate;
-  private AndGate.Action action;
 
   private Context context;
 
@@ -53,8 +54,9 @@ public class RtspServer
     AndGate will run 'startServer()' if all its input conditions are met.
     This is useful if we do not know the order of the updates to the conditions.
     */
-    action = () -> startServer();
-    andGate = new AndGate(action);
+    AndGate.Action startAction = () -> startServer();
+    AndGate.Action stopAction = () -> stopServer();
+    andGate = new AndGate(startAction, stopAction);
     andGate.addCondition("connected");
     andGate.addCondition("surfaceCreated");
     andGate.addCondition("view set");
@@ -62,7 +64,7 @@ public class RtspServer
     andGate.addCondition("resolution set");
 
     int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
-    andGate.update("camera permission", camera == PackageManager.PERMISSION_GRANTED);
+    andGate.set("camera permission", camera == PackageManager.PERMISSION_GRANTED);
   }
 
   @Override
@@ -94,38 +96,63 @@ public class RtspServer
   public void setView(SurfaceView view) {
     this.view = view;
     ((AutoFitSurfaceView) this.view).getHolder().addCallback(this);
-    andGate.update("view set", true);
+    andGate.set("view set", true);
   }
 
   @Override
   public void setView(TextureView view) {
     this.view = view;
     ((AutoFitTextureView) this.view).setSurfaceTextureListener(this);
-    andGate.update("view set", true);
+    andGate.set("view set", true);
+  }
+
+  @Override
+  public void setView(SurfaceViewRenderer view) {
+    this.view = view;
+    andGate.set("view set", true);
   }
 
   @Override
   public void setView(OpenGlView view) {
     this.view = view;
     ((OpenGlView) this.view).getHolder().addCallback(this);
-    andGate.update("view set", true);
-  }
-
-  @Override
-  public void startServer() {
-    startServer(resolution, PORT);
+    andGate.set("view set", true);
   }
 
   @Override
   public void setConnected(boolean connected) {
     int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
-    andGate.update("camera permission", camera == PackageManager.PERMISSION_GRANTED);
+    andGate.set("camera permission", camera == PackageManager.PERMISSION_GRANTED);
 
-    andGate.update("connected", connected);
+    andGate.set("connected", connected);
   }
   // end Interface
 
   // Local methods
+  private void stopServer() {
+    andGate.set("is not running", true);
+    try {
+      if (rtspServerCamera1 != null) {
+        if (rtspServerCamera1.isRecording()) {
+          rtspServerCamera1.stopRecord();
+        }
+
+        if (rtspServerCamera1.isStreaming()) {
+          rtspServerCamera1.stopStream();
+        }
+
+        rtspServerCamera1.stopPreview();
+        rtspServerCamera1 = null;
+      }
+    } catch (Exception e) {
+      Log.d(TAG, "Got error stopping server: " + e);
+    }
+  }
+
+  private void startServer() {
+    startServer(resolution, PORT);
+  }
+
   private void startServer(Size resolution, int port) {
     if (rtspServerCamera1 == null) {
       Timber.d("Resolution %dx%d", resolution.getWidth(), resolution.getHeight());
@@ -163,29 +190,10 @@ public class RtspServer
     }
   }
 
-  public void stopServer() {
-    try {
-      if (rtspServerCamera1 != null) {
-        if (rtspServerCamera1.isRecording()) {
-          rtspServerCamera1.stopRecord();
-        }
-
-        if (rtspServerCamera1.isStreaming()) {
-          rtspServerCamera1.stopStream();
-        }
-
-        rtspServerCamera1.stopPreview();
-        rtspServerCamera1 = null;
-      }
-    } catch (Exception e) {
-      Log.d(TAG, "Got error stopping server: " + e);
-    }
-  }
-
   @Override
   public void setResolution(int w, int h) {
     resolution = new Size(w, h);
-    andGate.update("resolution set", true);
+    andGate.set("resolution set", true);
   }
 
   // ConnectCheckerRtsp callbacks
@@ -223,7 +231,7 @@ public class RtspServer
   @Override
   public void surfaceCreated(@NonNull SurfaceHolder holder) {
     Log.d(TAG, "Surface created...");
-    andGate.update("surfaceCreated", true);
+    andGate.set("surfaceCreated", true);
   }
 
   @Override
@@ -236,15 +244,15 @@ public class RtspServer
 
   @Override
   public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-    andGate.update("surfaceCreated", false);
+    andGate.set("surfaceCreated", false);
     sendVideoStoppedStatus();
-    stopServer();
+    andGate.set("surfaceCreated", false);
   }
 
   // SurfaceTextureListener callbacks
   @Override
   public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
-    andGate.update("surfaceCreated", true);
+    andGate.set("surfaceCreated", true);
   }
 
   @Override
@@ -252,9 +260,9 @@ public class RtspServer
 
   @Override
   public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
-    andGate.update("surfaceCreated", false);
+    andGate.set("surfaceCreated", false);
     sendVideoStoppedStatus();
-    stopServer();
+    andGate.set("surfaceCreated", false);
     return false;
   }
 

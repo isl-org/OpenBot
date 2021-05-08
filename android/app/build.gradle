@@ -139,4 +139,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.nononsenseapps:filepicker:4.1.0'
+
+    // WebRTC
+    implementation('io.socket:socket.io-client:1.0.0') {
+        exclude group: 'org.json', module: 'json'
+    }
+    implementation 'org.webrtc:google-webrtc:1.0.+'
 }

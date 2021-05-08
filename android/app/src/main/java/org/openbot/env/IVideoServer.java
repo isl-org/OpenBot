@@ -3,12 +3,9 @@ package org.openbot.env;
 import android.content.Context;
 import android.view.SurfaceView;
 import android.view.TextureView;
+import org.webrtc.SurfaceViewRenderer;
 
 public interface IVideoServer {
-  void startServer();
-
-  void stopServer();
-
   void setResolution(int w, int h);
 
   void setConnected(boolean connected);
@@ -26,6 +23,8 @@ public interface IVideoServer {
   void setView(SurfaceView view);
 
   void setView(TextureView view);
+
+  void setView (SurfaceViewRenderer view);
 
   void setView(com.pedro.rtplibrary.view.OpenGlView view);
 }

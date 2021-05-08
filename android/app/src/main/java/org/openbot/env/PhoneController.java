@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.openbot.customview.AutoFitSurfaceGlView;
 import org.openbot.customview.AutoFitSurfaceView;
 import org.openbot.customview.AutoFitTextureView;
+import org.openbot.customview.WebRTCSurfaceView;
 import org.openbot.utils.CameraUtils;
 import timber.log.Timber;
 
@@ -13,8 +14,8 @@ import timber.log.Timber;
 public class PhoneController {
   private static final String TAG = "PhoneController";
   private static PhoneController _phoneController;
-  private ConnectionManager connectionManager;
-  private final IVideoServer videoServer = new RtspServer();
+  private ConnectionSelector connectionSelector;
+  private final IVideoServer videoServer = new WebRtcServer();
 
   public static PhoneController getInstance(Context context) {
     if (_phoneController == null) { // Check for the first time
@@ -30,25 +31,27 @@ public class PhoneController {
   }
 
   public void setView(AutoFitSurfaceView videoWindow) {
-    if (connectionManager.getConnection().isVideoCapable()) {
+    if (connectionSelector.getConnection().isVideoCapable()) {
+      videoServer.setView(videoWindow);
+    }
+  }
+
+  public void setView(WebRTCSurfaceView videoWindow) {
+    if (connectionSelector.getConnection().isVideoCapable()) {
       videoServer.setView(videoWindow);
     }
   }
 
   public void setView(AutoFitSurfaceGlView videoWindow) {
-    if (connectionManager.getConnection().isVideoCapable()) {
+    if (connectionSelector.getConnection().isVideoCapable()) {
       videoServer.setView(videoWindow);
     }
   }
 
   public void setView(AutoFitTextureView videoWindow) {
-    if (connectionManager.getConnection().isVideoCapable()) {
+    if (connectionSelector.getConnection().isVideoCapable()) {
       videoServer.setView(videoWindow);
     }
-  }
-
-  public void stopVideo() {
-    videoServer.stopServer();
   }
 
   class DataReceived implements IDataReceived {
@@ -64,18 +67,18 @@ public class PhoneController {
 
   private void init(Context context) {
     videoServer.init(context);
-    this.connectionManager = ConnectionManager.getInstance(context);
-    connectionManager.getConnection().setDataCallback(new DataReceived());
+    this.connectionSelector = ConnectionSelector.getInstance(context);
+    connectionSelector.getConnection().setDataCallback(new DataReceived());
+
     android.util.Size resolution =
         CameraUtils.getClosestCameraResolution(context, new android.util.Size(640, 360));
-
     videoServer.setResolution(resolution.getWidth(), resolution.getHeight());
 
     handleBotEvents();
   }
 
   public void connect(Context context) {
-    ILocalConnection connection = connectionManager.getConnection();
+    ILocalConnection connection = connectionSelector.getConnection();
 
     if (!connection.isConnected()) {
       connection.init(context);
@@ -88,17 +91,16 @@ public class PhoneController {
   }
 
   public void disconnect() {
-    connectionManager.getConnection().stop();
+    connectionSelector.getConnection().stop();
     videoServer.setConnected(false);
-    stopVideo();
   }
 
   public void send(JSONObject info) {
-    connectionManager.getConnection().sendMessage(info.toString());
+    connectionSelector.getConnection().sendMessage(info.toString());
   }
 
   public boolean isConnected() {
-    return connectionManager.getConnection().isConnected();
+    return connectionSelector.getConnection().isConnected();
   }
 
   private void handleBotEvents() {
