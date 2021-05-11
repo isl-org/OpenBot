@@ -67,12 +67,6 @@ class VideoViewWebRTC @JvmOverloads constructor(
             processVideoCommand(it as String)
         }
 
-        StatusEventBus.getProcessor("TOGGLE_SOUND")?.subscribe({
-
-        }, {
-            Log.i(null, "Failed to send...")
-        })
-
         rootEglBase = EglBase.create()
     }
 
@@ -139,19 +133,12 @@ class VideoViewWebRTC @JvmOverloads constructor(
         val rtcConfig = PeerConnection.RTCConfiguration(iceServers)
         val pcConstraints = MediaConstraints()
         val pcObserver: PeerConnection.Observer = object : PeerConnection.Observer {
-            override fun onSignalingChange(signalingState: PeerConnection.SignalingState) {
-            }
-
-            override fun onIceConnectionChange(iceConnectionState: PeerConnection.IceConnectionState) {
-            }
-
+            override fun onSignalingChange(signalingState: PeerConnection.SignalingState) {}
+            override fun onIceConnectionChange(iceConnectionState: PeerConnection.IceConnectionState) {}
             override fun onStandardizedIceConnectionChange(newState: PeerConnection.IceConnectionState) {}
             override fun onConnectionChange(newState: PeerConnection.PeerConnectionState) {}
-            override fun onIceConnectionReceivingChange(b: Boolean) {
-            }
-
-            override fun onIceGatheringChange(iceGatheringState: PeerConnection.IceGatheringState) {
-            }
+            override fun onIceConnectionReceivingChange(b: Boolean) {}
+            override fun onIceGatheringChange(iceGatheringState: PeerConnection.IceGatheringState) {}
 
             override fun onIceCandidate(iceCandidate: IceCandidate) {
                 val message = JSONObject()
@@ -180,15 +167,9 @@ class VideoViewWebRTC @JvmOverloads constructor(
                 remoteVideoTrack.addSink(this@VideoViewWebRTC)
             }
 
-            override fun onRemoveStream(mediaStream: MediaStream) {
-            }
-
-            override fun onDataChannel(dataChannel: DataChannel) {
-            }
-
-            override fun onRenegotiationNeeded() {
-            }
-
+            override fun onRemoveStream(mediaStream: MediaStream) {}
+            override fun onDataChannel(dataChannel: DataChannel) {}
+            override fun onRenegotiationNeeded() {}
             override fun onAddTrack(rtpReceiver: RtpReceiver, mediaStreams: Array<MediaStream>) {}
             override fun onTrack(transceiver: RtpTransceiver) {}
         }
@@ -217,65 +198,21 @@ class VideoViewWebRTC @JvmOverloads constructor(
         ConnectionSelector.getConnection().sendMessage(eventMessage.toString())
     }
 
-    override fun onCreateSuccess(p0: SessionDescription?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onSetSuccess() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onCreateFailure(p0: String?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onSetFailure(p0: String?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onSignalingChange(p0: PeerConnection.SignalingState?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onIceConnectionChange(p0: PeerConnection.IceConnectionState?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onIceConnectionReceivingChange(p0: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onIceGatheringChange(p0: PeerConnection.IceGatheringState?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onIceCandidate(p0: IceCandidate?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onIceCandidatesRemoved(p0: Array<out IceCandidate>?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onAddStream(p0: MediaStream?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onRemoveStream(p0: MediaStream?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onDataChannel(p0: DataChannel?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onRenegotiationNeeded() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onAddTrack(p0: RtpReceiver?, p1: Array<out MediaStream>?) {
-        TODO("Not yet implemented")
-    }
+    override fun onCreateSuccess(p0: SessionDescription?) {}
+    override fun onSetSuccess() {}
+    override fun onCreateFailure(p0: String?) {}
+    override fun onSetFailure(p0: String?) {}
+    override fun onSignalingChange(p0: PeerConnection.SignalingState?) {}
+    override fun onIceConnectionChange(p0: PeerConnection.IceConnectionState?) {}
+    override fun onIceConnectionReceivingChange(p0: Boolean) {}
+    override fun onIceGatheringChange(p0: PeerConnection.IceGatheringState?) {}
+    override fun onIceCandidate(p0: IceCandidate?) {}
+    override fun onIceCandidatesRemoved(p0: Array<out IceCandidate>?) {}
+    override fun onAddStream(p0: MediaStream?) {}
+    override fun onRemoveStream(p0: MediaStream?) {}
+    override fun onDataChannel(p0: DataChannel?) {}
+    override fun onRenegotiationNeeded() {}
+    override fun onAddTrack(p0: RtpReceiver?, p1: Array<out MediaStream>?) {}
 
     open inner class SimpleSdpObserver : SdpObserver {
         override fun onCreateSuccess(sessionDescription: SessionDescription) {

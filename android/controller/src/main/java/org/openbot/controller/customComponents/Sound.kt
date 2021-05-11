@@ -15,7 +15,6 @@ import android.util.AttributeSet
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import org.openbot.controller.R
 
-
 class Sound @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : Button(context, attrs, defStyleAttr) {
