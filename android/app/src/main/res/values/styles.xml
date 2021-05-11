@@ -51,4 +51,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="FullScreenDialog" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimaryDark">@color/lightGray</item>
+    </style>
+
 </resources>

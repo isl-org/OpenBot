@@ -1,21 +1,29 @@
 package org.openbot.tflite;
 
 import android.util.Size;
-import androidx.annotation.NonNull;
+import com.google.gson.annotations.SerializedName;
 
 /** The model. */
 public class Model {
 
-  public Model(ID id, TYPE type, String name, String assetPath, String filePath, Size inputSize) {
+  public Model(
+      Integer id,
+      CLASS classType,
+      TYPE type,
+      String name,
+      PATH_TYPE pathType,
+      String path,
+      String inputSize) {
     this.id = id;
+    this.classType = classType;
     this.type = type;
     this.name = name;
-    this.assetPath = assetPath;
-    this.filePath = filePath;
+    this.pathType = pathType;
+    this.path = path;
     this.inputSize = inputSize;
   }
 
-  public enum ID {
+  public enum CLASS {
     AUTOPILOT_F,
     MOBILENETV1_1_0_Q,
     MOBILENETV3_S_Q,
@@ -27,69 +35,52 @@ public class Model {
     DETECTOR
   }
 
-  public final ID id;
-  public final TYPE type;
-  public final String name;
-  public final String assetPath;
-  public final String filePath;
-  public final Size inputSize;
-
-  // TODO: Change this hacky code
-  public static final Model Autopilot_F =
-      new Model(
-          ID.AUTOPILOT_F,
-          TYPE.AUTOPILOT,
-          "Autopilot_F",
-          "networks/autopilot_float.tflite",
-          null,
-          new Size(256, 96));
-  public static final Model MobileNetV1_1_0_Q =
-      new Model(
-          ID.MOBILENETV1_1_0_Q,
-          TYPE.DETECTOR,
-          "MobileNetV1_1.0_Q",
-          "networks/mobile_ssd_v1_1.0_quant_coco.tflite",
-          null,
-          new Size(300, 300));
-  public static final Model MobileNetV3_S_Q =
-      new Model(
-          ID.MOBILENETV3_S_Q,
-          TYPE.DETECTOR,
-          "MobileNetV3_S_Q",
-          "networks/mobile_ssd_v3_small_quant_coco.tflite",
-          null,
-          new Size(320, 320));
-  public static final Model YoloV4 =
-      new Model(
-          ID.YOLOV4,
-          TYPE.DETECTOR,
-          "YoloV4",
-          "networks/yolo_v4_tiny_float_coco.tflite",
-          null,
-          new Size(416, 416));
-
-  // TODO: Change this hacky code
-  public static Model fromId(String id) {
-    switch (ID.valueOf(id.toUpperCase())) {
-      case AUTOPILOT_F:
-        return Autopilot_F;
-      case MOBILENETV1_1_0_Q:
-        return MobileNetV1_1_0_Q;
-      case MOBILENETV3_S_Q:
-        return MobileNetV3_S_Q;
-      case YOLOV4:
-        return YoloV4;
-    }
-    throw new IllegalArgumentException("No model with id " + id);
+  public enum PATH_TYPE {
+    URL,
+    ASSET,
+    FILE
   }
 
-  // TODO: Change this hacky code
-  @NonNull
-  @Override
-  public String toString() {
-    if (filePath != null) {
-      return filePath;
-    }
-    return id.name();
+  @SerializedName("class")
+  public CLASS classType;
+
+  public Integer id;
+
+  public TYPE type;
+  public String name;
+  public PATH_TYPE pathType;
+  public String path;
+  private String inputSize;
+
+  public String getName() {
+    return name;
+  }
+
+  public Size getInputSize() {
+    return Size.parseSize(inputSize);
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  public void setPathType(PATH_TYPE pathType) {
+    this.pathType = pathType;
+  }
+
+  public void setInputSize(String inputSize) {
+    this.inputSize = inputSize;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setClassType(CLASS classType) {
+    this.classType = classType;
+  }
+
+  public void setType(TYPE type) {
+    this.type = type;
   }
 }

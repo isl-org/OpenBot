@@ -1,19 +1,14 @@
 package org.openbot.autopilot;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
-import android.util.Size;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,23 +16,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.nononsenseapps.filepicker.Utils;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -78,77 +67,15 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
   private MultiBoxTracker tracker;
 
-  private Model model = Model.Autopilot_F;
+  private Model model;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
 
-  private ArrayAdapter<CharSequence> modelAdapter;
-  private ActivityResultLauncher<Intent> mStartForResult;
-  private int selectedModelIndex = 0;
+  private ArrayAdapter<String> modelAdapter;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mStartForResult =
-        registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-              if (result.getResultCode() == Activity.RESULT_OK) {
-
-                Intent intent = result.getData();
-                // Handle the Intent
-                List<Uri> files = Utils.getSelectedFilesFromResult(intent);
-
-                String fileName = new File(files.get(0).getPath()).getName();
-                if (FileUtils.checkFileExistence(requireActivity(), fileName)) {
-                  AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-                  builder.setTitle(R.string.file_available_title);
-                  builder.setMessage(R.string.file_available_body);
-                  builder.setPositiveButton(
-                      "Yes", (dialog, id) -> processModelFromStorage(files, fileName));
-                  builder.setNegativeButton(
-                      "Cancel",
-                      (dialog, id) -> {
-                        // User cancelled the dialog
-                      });
-                  AlertDialog dialog = builder.create();
-                  dialog.show();
-                } else {
-                  processModelFromStorage(files, fileName);
-                }
-              }
-            });
-  }
-
-  private void processModelFromStorage(List<Uri> files, String fileName) {
-    try {
-      InputStream inputStream =
-          requireActivity().getContentResolver().openInputStream(files.get(0));
-      FileUtils.copyFile(inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    modelAdapter.clear();
-    modelAdapter.addAll(Arrays.asList(getResources().getTextArray(R.array.autopilot_models)));
-    modelAdapter.addAll(getModelFiles());
-    modelAdapter.add("Choose From Device");
-    modelAdapter.notifyDataSetChanged();
-    binding.modelSpinner.setSelection(modelAdapter.getPosition(fileName));
-    setModel(
-        new Model(
-            Model.ID.AUTOPILOT_F,
-            Model.TYPE.AUTOPILOT,
-            fileName,
-            null,
-            fileName,
-            new Size(256, 96)));
-
-    Toast.makeText(
-            requireContext().getApplicationContext(),
-            "AutoPilotModel added: " + model,
-            Toast.LENGTH_SHORT)
-        .show();
   }
 
   @Override
@@ -167,17 +94,24 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
     binding.deviceSpinner.setSelection(preferencesManager.getDevice());
     setNumThreads(preferencesManager.getNumThreads());
-
+    binding.threads.setText(String.valueOf(getNumThreads()));
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    List<CharSequence> models =
-        Arrays.asList(getResources().getTextArray(R.array.autopilot_models));
-    modelAdapter =
-        new ArrayAdapter<>(requireContext(), R.layout.spinner_item, new ArrayList<>(models));
-    modelAdapter.addAll(getModelFiles());
-    modelAdapter.add("Choose From Device");
+    List<String> models =
+        masterList.stream()
+            .filter(f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL)
+            .map(f -> FileUtils.nameWithoutExtension(f.name))
+            .collect(Collectors.toList());
+    modelAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item, models);
+
     modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
     binding.modelSpinner.setAdapter(modelAdapter);
+    if (!preferencesManager.getAutopilotModel().isEmpty())
+      binding.modelSpinner.setSelection(
+          Math.max(
+              0,
+              modelAdapter.getPosition(
+                  FileUtils.nameWithoutExtension(preferencesManager.getAutopilotModel()))));
 
     setAnalyserResolution(Enums.Preview.HD.getValue());
     binding.modelSpinner.setOnItemSelectedListener(
@@ -185,23 +119,15 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selected = parent.getItemAtPosition(position).toString();
-            if (selected.equals("Choose From Device")) {
-              binding.modelSpinner.setSelection(selectedModelIndex);
-              openPicker();
-            } else
-              try {
-                setModel(Model.fromId(selected.toUpperCase()));
-              } catch (IllegalArgumentException e) {
-                setModel(
-                    new Model(
-                        Model.ID.AUTOPILOT_F,
-                        Model.TYPE.AUTOPILOT,
-                        selected,
-                        null,
-                        selected,
-                        new Size(256, 96)));
-              }
-            selectedModelIndex = position;
+            try {
+              masterList.stream()
+                  .filter(f -> f.name.contains(selected))
+                  .findFirst()
+                  .ifPresent(value -> setModel(value));
+
+            } catch (IllegalArgumentException e) {
+              e.printStackTrace();
+            }
           }
 
           @Override
@@ -272,28 +198,6 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     binding.autoSwitch.setOnClickListener(v -> setNetworkEnabled(binding.autoSwitch.isChecked()));
   }
 
-  private void openPicker() {
-
-    Intent i = new Intent(requireActivity(), BackHandlingFilePickerActivity.class);
-    // This works if you defined the intent filter
-    // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-
-    // Set these depending on your use case. These are the defaults.
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_MODE, BackHandlingFilePickerActivity.MODE_FILE);
-
-    // Configure initial directory by specifying a String.
-    // You could specify a String like "/storage/emulated/0/", but that can
-    // dangerous. Always use Android's API calls to get paths to the SD-card or
-    // internal memory.
-    i.putExtra(
-        BackHandlingFilePickerActivity.EXTRA_START_PATH,
-        Environment.getExternalStorageDirectory().getPath());
-
-    mStartForResult.launch(i);
-  }
-
   private void updateCropImageInfo() {
     //    Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
     //    Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
@@ -342,6 +246,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
   }
 
   private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+    if (model == null) return;
     tracker.clearTrackedObjects();
     if (autopilot != null) {
       Timber.d("Closing autoPilot.");
@@ -544,18 +449,28 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
   @Override
   public void onAddModel(String model) {
+    Model item =
+        new Model(
+            masterList.size() + 1,
+            Model.CLASS.AUTOPILOT_F,
+            Model.TYPE.AUTOPILOT,
+            model,
+            Model.PATH_TYPE.FILE,
+            requireActivity().getFilesDir() + File.separator + model,
+            "256x96");
+
     if (modelAdapter != null && modelAdapter.getPosition(model) == -1) {
       modelAdapter.add(model);
+      masterList.add(item);
+      FileUtils.updateModelConfig(requireActivity(), masterList);
     } else {
       if (model.equals(binding.modelSpinner.getSelectedItem())) {
-        setModel(
-            new Model(
-                Model.ID.AUTOPILOT_F, Model.TYPE.AUTOPILOT, model, null, model, new Size(256, 96)));
+        setModel(item);
       }
     }
     Toast.makeText(
             requireContext().getApplicationContext(),
-            "AutoPilotModel added: " + model,
+            "AutopilotModel added: " + model,
             Toast.LENGTH_SHORT)
         .show();
   }
@@ -567,7 +482,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     }
     Toast.makeText(
             requireContext().getApplicationContext(),
-            "AutoPilotModel removed: " + model,
+            "AutopilotModel removed: " + model,
             Toast.LENGTH_SHORT)
         .show();
   }
@@ -580,7 +495,7 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;
-      preferencesManager.setAutoPilotModel(model.toString());
+      preferencesManager.setAutopilotModel(model.name);
       onInferenceConfigurationChanged();
     }
   }
@@ -615,10 +530,6 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
       preferencesManager.setNumThreads(numThreads);
       onInferenceConfigurationChanged();
     }
-  }
-
-  private String[] getModelFiles() {
-    return requireActivity().getFilesDir().list((dir1, name) -> name.endsWith(".tflite"));
   }
 
   private void setSpeedMode(Enums.SpeedMode speedMode) {

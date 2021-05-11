@@ -34,6 +34,8 @@ android {
         noCompress "tflite", "mp3"
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
@@ -142,4 +144,7 @@ dependencies {
 
     // WebRTC
     implementation 'org.webrtc:google-webrtc:1.0.+'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    implementation 'com.koushikdutta.ion:ion:3.1.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

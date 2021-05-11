@@ -22,16 +22,6 @@
         <item>YoloV4</item>
     </string-array>
 
-    <string-array name="autopilot_models">
-        <item>Autopilot_F</item>
-    </string-array>
-
-    <string-array name="detector_models">
-        <item>MobileNetV1_1_0_Q</item>
-        <item>MobileNetV3_S_Q</item>
-        <item>YoloV4</item>
-    </string-array>
-
     <string name="device">Device</string>
     <string-array name="devices">
         <item>CPU</item>
@@ -125,5 +115,7 @@
     <string name="preview_resolution">Preview Resolution</string>
     <string name="file_available_body">A model with the same name already exists. Would you like to replace it?</string>
     <string name="file_available_title">File found</string>
+    <string name="model_delete_body">Are you sure you want to delete this model?</string>
+    <string name="model_delete_title">Confirm</string>
 
 </resources>
