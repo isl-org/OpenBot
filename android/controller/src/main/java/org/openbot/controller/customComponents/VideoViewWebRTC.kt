@@ -1,14 +1,37 @@
+/*
+ * Developed for the OpenBot project (https://openbot.org) by:
+ *
+ * Ivo Zivkov
+ * izivkov@gmail.com
+ *
+ * Date: 2021-05-08, 10:56 p.m.
+ */
+
 package org.openbot.controller.customComponents
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject
-import org.openbot.controller.ConnectionManager
+import org.openbot.controller.ConnectionSelector
 import org.openbot.controller.StatusEventBus
 import org.openbot.controller.databinding.ActivityFullscreenBinding
 import org.webrtc.*
+
+/*
+This class waits for a WebRTC call from the BOT, and sends an "answer", providing its A/V capabilities.
+The two sides then exchange ICE candidates until a suitable common capabilities are found, and
+then media is streamed from the BOT to this class.
+
+Note that the media is streamed only one way from the Robot to this class.
+
+WebRTC does not specify signaling protocol. Usually, a separate signaling server is used
+witch mediates between the two WebRTC peers, and communication from and to this server is
+carried over WebSocket. However, we already have a communication channel between the peers
+(NetworkServiceConnection) so we are using it instead. No separate signaling server is required.
+*/
 
 class VideoViewWebRTC @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -19,7 +42,7 @@ class VideoViewWebRTC @JvmOverloads constructor(
     private var factory: PeerConnectionFactory? = null
 
     companion object {
-        private const val TAG = "CompleteActivity"
+        private const val TAG = "VideoViewWebRTC"
         private const val RC_CALL = 111
         const val VIDEO_TRACK_ID = "ARDAMSv0"
         const val VIDEO_RESOLUTION_WIDTH = 640
@@ -30,6 +53,7 @@ class VideoViewWebRTC @JvmOverloads constructor(
     init {
     }
 
+    @SuppressLint("CheckResult")
     fun init(binding: ActivityFullscreenBinding) {
         StatusEventBus.addSubject("WEB_RTC_EVENT")
         StatusEventBus.getProcessor("WEB_RTC_EVENT")?.subscribe({
@@ -43,11 +67,13 @@ class VideoViewWebRTC @JvmOverloads constructor(
             processVideoCommand(it as String)
         }
 
-        initializeSurfaceViews()
-        initializePeerConnectionFactory()
-        initializePeerConnections()
+        StatusEventBus.getProcessor("TOGGLE_SOUND")?.subscribe({
 
-        show()
+        }, {
+            Log.i(null, "Failed to send...")
+        })
+
+        rootEglBase = EglBase.create()
     }
 
     private fun processVideoCommand(command: String) {
@@ -64,6 +90,7 @@ class VideoViewWebRTC @JvmOverloads constructor(
 
     fun stop() {
         hide()
+        release()
     }
 
     fun show() {
@@ -75,58 +102,23 @@ class VideoViewWebRTC @JvmOverloads constructor(
     }
 
     private fun start() {
+        initializeSurfaceViews()
+        initializePeerConnectionFactory()
+        initializePeerConnections()
+
         show()
     }
 
-    private fun doAnswer() {
-        peerConnection!!.createAnswer(object : SimpleSdpObserver() {
-            override fun onCreateSuccess(sessionDescription: SessionDescription) {
-                peerConnection!!.setLocalDescription(SimpleSdpObserver(), sessionDescription)
-                val message = JSONObject()
-                try {
-                    message.put("type", "answer")
-                    message.put("sdp", sessionDescription.description)
-                    sendMessage(message)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            }
-        }, MediaConstraints())
-    }
-
-    private fun doCall() {
-        val sdpMediaConstraints = MediaConstraints()
-        sdpMediaConstraints.mandatory.add(
-                MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
-        sdpMediaConstraints.mandatory.add(
-                MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
-
-        peerConnection!!.createOffer(object : SimpleSdpObserver() {
-            override fun onCreateSuccess(sessionDescription: SessionDescription) {
-                peerConnection!!.setLocalDescription(SimpleSdpObserver(), sessionDescription)
-                val message = JSONObject()
-                try {
-                    message.put("type", "offer")
-                    message.put("sdp", sessionDescription.description)
-                    sendMessage(message)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            }
-        }, sdpMediaConstraints)
-    }
-
-    private fun sendMessage(message: JSONObject) {
-        val eventMessage = JSONObject()
-        eventMessage.put("webrtc_event", message)
-        ConnectionManager.getConnection().sendMessage(eventMessage.toString())
-    }
-
     private fun initializeSurfaceViews() {
-        rootEglBase = EglBase.create()
+        release() // just in case
+
         init(rootEglBase?.eglBaseContext, null)
         setEnableHardwareScaler(true)
         setMirror(true)
+    }
+
+    private fun toggleAudio(audioEnabled: Boolean) {
+        peerConnection?.setAudioPlayout(audioEnabled)
     }
 
     private fun initializePeerConnectionFactory() {
@@ -180,9 +172,11 @@ class VideoViewWebRTC @JvmOverloads constructor(
             override fun onSelectedCandidatePairChanged(event: CandidatePairChangeEvent) {}
             override fun onAddStream(mediaStream: MediaStream) {
                 val remoteVideoTrack = mediaStream.videoTracks[0]
+                remoteVideoTrack.setEnabled(true)
+
                 val remoteAudioTrack = mediaStream.audioTracks[0]
                 remoteAudioTrack.setEnabled(true)
-                remoteVideoTrack.setEnabled(true)
+
                 remoteVideoTrack.addSink(this@VideoViewWebRTC)
             }
 
@@ -199,6 +193,28 @@ class VideoViewWebRTC @JvmOverloads constructor(
             override fun onTrack(transceiver: RtpTransceiver) {}
         }
         return factory!!.createPeerConnection(rtcConfig, pcConstraints, pcObserver)
+    }
+
+    private fun doAnswer() {
+        peerConnection!!.createAnswer(object : SimpleSdpObserver() {
+            override fun onCreateSuccess(sessionDescription: SessionDescription) {
+                peerConnection!!.setLocalDescription(SimpleSdpObserver(), sessionDescription)
+                val message = JSONObject()
+                try {
+                    message.put("type", "answer")
+                    message.put("sdp", sessionDescription.description)
+                    sendMessage(message)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+        }, MediaConstraints())
+    }
+
+    private fun sendMessage(message: JSONObject) {
+        val eventMessage = JSONObject()
+        eventMessage.put("webrtc_event", message)
+        ConnectionSelector.getConnection().sendMessage(eventMessage.toString())
     }
 
     override fun onCreateSuccess(p0: SessionDescription?) {
@@ -273,7 +289,7 @@ class VideoViewWebRTC @JvmOverloads constructor(
     }
 
     inner class SignalingHandler {
-         fun handleWebRtcEvent(webRtcEvent: JSONObject) {
+        fun handleWebRtcEvent(webRtcEvent: JSONObject) {
             val type = webRtcEvent.getString("type")
             when (type) {
                 "offer" -> {
@@ -285,6 +301,7 @@ class VideoViewWebRTC @JvmOverloads constructor(
                     peerConnection!!.addIceCandidate(candidate)
                 }
                 "bye" -> {
+                    // Not yet used.
                     Log.i(TAG, "got bye")
                 }
             }

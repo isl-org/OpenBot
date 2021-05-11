@@ -16,7 +16,7 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import org.openbot.controller.ConnectionManager
+import org.openbot.controller.ConnectionSelector
 import org.openbot.controller.StatusEventBus
 
 open class Button @JvmOverloads constructor(
@@ -35,7 +35,7 @@ open class Button @JvmOverloads constructor(
     }
 
     protected fun sendMessage(message: String) {
-        ConnectionManager.getConnection().sendMessage(message)
+        ConnectionSelector.getConnection().sendMessage(message)
     }
 
     inner class OnTouchListener(private val command: String) : View.OnTouchListener {

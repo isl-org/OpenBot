@@ -18,13 +18,8 @@ package org.openbot.customview;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.SurfaceView;
-import android.view.View;
 
-import org.webrtc.EglBase;
-
-public class WebRTCSurfaceView
-    extends org.webrtc.SurfaceViewRenderer {
+public class WebRTCSurfaceView extends org.webrtc.SurfaceViewRenderer {
 
   private int ratioWidth = 0;
   private int ratioHeight = 0;

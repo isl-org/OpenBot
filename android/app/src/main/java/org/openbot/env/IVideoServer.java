@@ -24,7 +24,7 @@ public interface IVideoServer {
 
   void setView(TextureView view);
 
-  void setView (SurfaceViewRenderer view);
+  void setView(SurfaceViewRenderer view);
 
   void setView(com.pedro.rtplibrary.view.OpenGlView view);
 }

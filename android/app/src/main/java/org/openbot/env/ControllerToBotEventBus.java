@@ -3,6 +3,7 @@ package org.openbot.env;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Predicate;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,11 +25,23 @@ public final class ControllerToBotEventBus {
       String subscriberName,
       @NonNull Consumer<? super JSONObject> onNext,
       @NonNull Consumer<? super Throwable> onError) {
+    subscribe(
+        subscriberName,
+        onNext,
+        onError,
+        (jsonObject) -> true); // do not filter if no filter passed. Always return true.
+  }
+
+  public static void subscribe(
+      String subscriberName,
+      @NonNull Consumer<? super JSONObject> onNext,
+      @NonNull Consumer<? super Throwable> onError,
+      Predicate<? super JSONObject> filterPredicate) {
     if (subscribers.containsKey(subscriberName)) {
       // This name already subscribed, cannot subscribe multiple times;
       return;
     }
-    @NonNull Disposable subscriber = subject.subscribe(onNext, onError);
+    @NonNull Disposable subscriber = subject.filter(filterPredicate).subscribe(onNext, onError);
     subscribers.put(subscriberName, subscriber);
   }
 

@@ -7,11 +7,9 @@ import android.util.Log;
 import android.util.Size;
 import android.view.SurfaceView;
 import android.view.TextureView;
-
 import androidx.core.content.ContextCompat;
-
 import com.pedro.rtplibrary.view.OpenGlView;
-
+import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.utils.AndGate;
@@ -31,7 +29,6 @@ import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStream;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
-import org.webrtc.RendererCommon;
 import org.webrtc.RtpReceiver;
 import org.webrtc.RtpTransceiver;
 import org.webrtc.SessionDescription;
@@ -40,435 +37,495 @@ import org.webrtc.SurfaceViewRenderer;
 import org.webrtc.VideoCapturer;
 import org.webrtc.VideoDecoderFactory;
 import org.webrtc.VideoEncoderFactory;
-import org.webrtc.VideoSink;
 import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
+import timber.log.Timber;
 
-import java.util.ArrayList;
+/*
+This class initiates a WebRTC call to the controller, by sending an WebRTC "offer"
+to the controller, providing its A/V capabilities. It then waits for an "answer" with
+controller's capabilities. The two sides then exchange ICE candidates until a suitable
+common capabilities are found, and then media is streamed from this class to the controller.
 
-public class WebRtcServer
-        implements IVideoServer {
-    private final String TAG = "WebRtcPeer";
-    private SurfaceViewRenderer view;
-    private Size resolution = new Size(640, 360);
+Note that the media is streamed only one way from this class to the controller.
 
-    public static final String VIDEO_TRACK_ID = "ARDAMSv0";
-    public static final int VIDEO_RESOLUTION_WIDTH = 640;
-    public static final int VIDEO_RESOLUTION_HEIGHT = 360;
-    public static final int FPS = 30;
+WebRTC does not specify signaling protocol. Usually, a separate signaling server is used
+witch mediates between the two WebRTC peers, and communication from and to this server is
+carried over WebSocket. However, we already have a communication channel between the peers
+(NetworkServiceConnection) so we are using it instead. No separate signaling server is required.
 
-    // WebRTC-specific
-    private EglBase rootEglBase;
-    private PeerConnectionFactory factory;
-    private VideoTrack videoTrackFromCamera;
-    MediaConstraints audioConstraints;
-    AudioSource audioSource;
-    AudioTrack localAudioTrack;
-    SurfaceTextureHelper surfaceTextureHelper;
-    private PeerConnection peerConnection;
-    MediaStream mediaStream;
+It is possible in the future to factor out signaling into a separate class and provide
+various signalling types, such as to separate signalling server.
+ */
+public class WebRtcServer implements IVideoServer {
+  private final String TAG = "WebRtcPeer";
+  private SurfaceViewRenderer view;
+  private Size resolution = new Size(640, 360);
 
-    private AndGate andGate;
-    private Context context;
+  public static final String VIDEO_TRACK_ID = "ARDAMSv0";
+  public static final int VIDEO_RESOLUTION_WIDTH = 640;
+  public static final int VIDEO_RESOLUTION_HEIGHT = 360;
+  public static final int FPS = 30;
 
-    public WebRtcServer() {
-    }
+  // WebRTC-specific
+  private EglBase rootEglBase;
+  private PeerConnectionFactory factory;
+  private VideoTrack videoTrackFromCamera;
+  MediaConstraints audioConstraints;
+  AudioSource audioSource;
+  AudioTrack localAudioTrack;
+  SurfaceTextureHelper surfaceTextureHelper;
+  private PeerConnection peerConnection;
+  MediaStream mediaStream;
 
-    // IVideoServer Interface
-    @Override
-    public void init(Context context) {
-        this.context = context;
+  private AndGate andGate;
+  private Context context;
 
-        andGate = new AndGate(() -> startServer(), () -> stopServer());
-        andGate.addCondition("connected");
-        andGate.addCondition("view set");
-        andGate.addCondition("camera permission");
-        andGate.addCondition("resolution set");
+  private CameraControlHandler cameraControlHandler = new CameraControlHandler();
+  private SignalingHandler signalingHandler = new SignalingHandler();
 
-        int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
-        andGate.set("camera permission", camera == PackageManager.PERMISSION_GRANTED);
+  public WebRtcServer() {}
 
-        new SignalingHandler().handleControllerWebRtcEvents();
-    }
+  // IVideoServer Interface
+  @Override
+  public void init(Context context) {
+    this.context = context;
 
-    @Override
-    public boolean isRunning() {
-        return false;
-    }
+    andGate = new AndGate(() -> startServer(), () -> stopServer());
+    andGate.addCondition("connected");
+    andGate.addCondition("view set");
+    andGate.addCondition("camera permission");
+    andGate.addCondition("resolution set");
 
-    @Override
-    public void startClient() {
-        sendServerUrl();
-        BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
-    }
+    int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
+    andGate.set("camera permission", camera == PackageManager.PERMISSION_GRANTED);
 
-    @Override
-    public void sendServerUrl() {
-        BotToControllerEventBus.emitEvent(
-                ConnectionUtils.createStatus(
-                        "VIDEO_SERVER_URL", ""
-                ));
-    }
+    rootEglBase = EglBase.create();
 
-    @Override
-    public void sendVideoStoppedStatus() {
-        BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "STOP"));
-    }
+    cameraControlHandler.handleCameraControlEvents();
+    signalingHandler.handleControllerWebRtcEvents();
+  }
 
-    @Override
-    public void setView(SurfaceView view) {
-    }
+  @Override
+  public boolean isRunning() {
+    return false;
+  }
 
-    @Override
-    public void setView(TextureView view) {
-    }
+  @Override
+  public void startClient() {
+    sendServerUrl();
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
+  }
 
-    @Override
-    public void setView(SurfaceViewRenderer view) {
-        if (this.view != null) {
-            return;
-        }
+  @Override
+  public void sendServerUrl() {
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_SERVER_URL", ""));
+  }
 
-        this.view = view;
+  @Override
+  public void sendVideoStoppedStatus() {
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "STOP"));
+  }
 
-        initializeSurfaceViews();
-        initializePeerConnectionFactory();
-        createVideoTrackFromCameraAndShowIt();
-        initializePeerConnections();
+  @Override
+  public void setView(SurfaceView view) {}
 
-        startStreamingVideo();
+  @Override
+  public void setView(TextureView view) {}
 
-        andGate.set("view set", true);
-    }
+  @Override
+  public void setView(SurfaceViewRenderer view) {
+    this.view = view;
+    this.view.setEnabled(false);
+    andGate.set("view set", true);
+  }
 
-    @Override
-    public void setView(OpenGlView view) {
-    }
+  @Override
+  public void setView(OpenGlView view) {}
 
-    @Override
-    public void setConnected(boolean connected) {
-        andGate.set("connected", connected);
+  @Override
+  public void setConnected(boolean connected) {
+    andGate.set("connected", connected);
 
-        int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
-        andGate.set("camera permission", camera == PackageManager.PERMISSION_GRANTED);
-    }
+    int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
+    andGate.set("camera permission", camera == PackageManager.PERMISSION_GRANTED);
+  }
 
-    @Override
-    public void setResolution(int w, int h) {
-        resolution = new Size(w, h);
-        andGate.set("resolution set", true);
-    }
-    // end Interface
+  @Override
+  public void setResolution(int w, int h) {
+    resolution = new Size(w, h);
+    andGate.set("resolution set", true);
+  }
+  // end Interface
 
-    // local methods
+  // local methods
+  private void startServer() {
 
-    private void startServer() {
-        startServer(resolution);
-        doCall();
-    }
+    initializeSurfaceViews();
+    initializePeerConnectionFactory();
+    createVideoTrackFromCameraAndShowIt();
+    initializePeerConnections();
 
-    private void doAnswer() {
-        peerConnection.createAnswer(new SimpleSdpObserver() {
-            @Override
-            public void onCreateSuccess(SessionDescription sessionDescription) {
-                peerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
-                JSONObject message = new JSONObject();
-                try {
-                    message.put("type", "answer");
-                    message.put("sdp", sessionDescription.description);
-                    sendMessage(message);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new MediaConstraints());
-    }
+    startStreamingVideo();
+    doCall();
+    startClient();
+  }
 
-    private void startStreamingVideo() {
-        mediaStream = factory.createLocalMediaStream("ARDAMS");
-        mediaStream.addTrack(videoTrackFromCamera);
-        mediaStream.addTrack(localAudioTrack);
-        peerConnection.addStream(mediaStream);
-        try {
+  private void doAnswer() {
+    peerConnection.createAnswer(
+        new SimpleSdpObserver() {
+          @Override
+          public void onCreateSuccess(SessionDescription sessionDescription) {
+            peerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
             JSONObject message = new JSONObject();
-            message.put("type", "action");
-            message.put("value", "got user media");
-            sendMessage(message);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void stopStreamingVideo() {
-        peerConnection.removeStream(mediaStream);
-    }
-
-    private void stopServer() {
-    }
-
-    private void startServer(Size resolution) {
-        startClient();
-    }
-
-    private void doCall() {
-        MediaConstraints sdpMediaConstraints = new MediaConstraints();
-
-        sdpMediaConstraints.mandatory.add(
-                new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "false"));
-        sdpMediaConstraints.mandatory.add(
-                new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "false"));
-
-        peerConnection.createOffer(new SimpleSdpObserver() {
-            @Override
-            public void onCreateSuccess(SessionDescription sessionDescription) {
-                Log.d(TAG, "onCreateSuccess: ");
-                peerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
-                JSONObject message = new JSONObject();
-                try {
-                    message.put("type", "offer");
-                    message.put("sdp", sessionDescription.description);
-
-                    sendMessage(message);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            try {
+              message.put("type", "answer");
+              message.put("sdp", sessionDescription.description);
+              sendMessage(message);
+            } catch (JSONException e) {
+              e.printStackTrace();
             }
-        }, sdpMediaConstraints);
-    }
+          }
+        },
+        new MediaConstraints());
+  }
 
-    private void initializePeerConnections() {
-        peerConnection = createPeerConnection(factory);
-    }
+  private void startStreamingVideo() {
+    mediaStream = factory.createLocalMediaStream("ARDAMS");
+    mediaStream.addTrack(videoTrackFromCamera);
+    mediaStream.addTrack(localAudioTrack);
+    peerConnection.addStream(mediaStream);
 
-    private PeerConnection createPeerConnection(PeerConnectionFactory factory) {
-        ArrayList<PeerConnection.IceServer> iceServers = new ArrayList<>();
+    cameraControlHandler.disableAudio();
+  }
 
-        PeerConnection.IceServer stunServer =
-                PeerConnection.IceServer.builder("stun:stun.l.google.com:19302")
-                        .createIceServer();
-        iceServers.add(stunServer);
+  private void stopStreamingVideo() {
+    peerConnection.removeStream(mediaStream);
+  }
 
-        PeerConnection.RTCConfiguration rtcConfig = new PeerConnection.RTCConfiguration(iceServers);
-        MediaConstraints pcConstraints = new MediaConstraints();
+  private void stopServer() {
+    mediaStream.removeTrack(videoTrackFromCamera);
+    mediaStream.removeTrack(localAudioTrack);
+    view.release();
+    stopClient();
+  }
 
-        PeerConnection.Observer pcObserver = new PeerConnection.Observer() {
-            @Override
-            public void onSignalingChange(PeerConnection.SignalingState signalingState) {
-                Log.d(TAG, "onSignalingChange: ");
+  private void stopClient() {
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "STOP"));
+  }
+
+  private void doCall() {
+    MediaConstraints sdpMediaConstraints = new MediaConstraints();
+
+    sdpMediaConstraints.mandatory.add(
+        new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "false"));
+    sdpMediaConstraints.mandatory.add(
+        new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "false"));
+
+    peerConnection.createOffer(
+        new SimpleSdpObserver() {
+          @Override
+          public void onCreateSuccess(SessionDescription sessionDescription) {
+            peerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
+            JSONObject message = new JSONObject();
+            try {
+              message.put("type", "offer");
+              message.put("sdp", sessionDescription.description);
+
+              sendMessage(message);
+            } catch (JSONException e) {
+              e.printStackTrace();
             }
+          }
+        },
+        sdpMediaConstraints);
+  }
 
-            @Override
-            public void onIceConnectionChange(PeerConnection.IceConnectionState iceConnectionState) {
-                Log.d(TAG, "onIceConnectionChange: ");
+  private void initializePeerConnections() {
+    peerConnection = createPeerConnection(factory);
+  }
+
+  private PeerConnection createPeerConnection(PeerConnectionFactory factory) {
+    ArrayList<PeerConnection.IceServer> iceServers = new ArrayList<>();
+
+    PeerConnection.IceServer stunServer =
+        PeerConnection.IceServer.builder("stun:stun.l.google.com:19302").createIceServer();
+    iceServers.add(stunServer);
+
+    PeerConnection.RTCConfiguration rtcConfig = new PeerConnection.RTCConfiguration(iceServers);
+    MediaConstraints pcConstraints = new MediaConstraints();
+
+    PeerConnection.Observer pcObserver =
+        new PeerConnection.Observer() {
+          @Override
+          public void onSignalingChange(PeerConnection.SignalingState signalingState) {
+            Log.d(TAG, "onSignalingChange: ");
+          }
+
+          @Override
+          public void onIceConnectionChange(PeerConnection.IceConnectionState iceConnectionState) {
+            Log.d(TAG, "onIceConnectionChange: ");
+          }
+
+          @Override
+          public void onStandardizedIceConnectionChange(
+              PeerConnection.IceConnectionState newState) {}
+
+          @Override
+          public void onConnectionChange(PeerConnection.PeerConnectionState newState) {}
+
+          @Override
+          public void onIceConnectionReceivingChange(boolean b) {
+            Log.d(TAG, "onIceConnectionReceivingChange: ");
+          }
+
+          @Override
+          public void onIceGatheringChange(PeerConnection.IceGatheringState iceGatheringState) {
+            Log.d(TAG, "onIceGatheringChange: ");
+          }
+
+          @Override
+          public void onIceCandidate(IceCandidate iceCandidate) {
+            Log.d(TAG, "onIceCandidate: ");
+            JSONObject message = new JSONObject();
+
+            try {
+              message.put("type", "candidate");
+              message.put("label", iceCandidate.sdpMLineIndex);
+              message.put("id", iceCandidate.sdpMid);
+              message.put("candidate", iceCandidate.sdp);
+
+              Log.d(TAG, "onIceCandidate: sending candidate " + message);
+              sendMessage(message);
+            } catch (JSONException e) {
+              e.printStackTrace();
             }
+          }
 
-            @Override
-            public void onStandardizedIceConnectionChange(PeerConnection.IceConnectionState newState) {
+          @Override
+          public void onIceCandidatesRemoved(IceCandidate[] iceCandidates) {
+            Log.d(TAG, "onIceCandidatesRemoved: ");
+          }
 
-            }
+          @Override
+          public void onSelectedCandidatePairChanged(CandidatePairChangeEvent event) {}
 
-            @Override
-            public void onConnectionChange(PeerConnection.PeerConnectionState newState) {
+          @Override
+          public void onAddStream(MediaStream mediaStream) {
+            Log.d(TAG, "onAddStream: " + mediaStream.videoTracks.size());
+            VideoTrack remoteVideoTrack = mediaStream.videoTracks.get(0);
+            AudioTrack remoteAudioTrack = mediaStream.audioTracks.get(0);
+            remoteAudioTrack.setEnabled(true);
+            remoteVideoTrack.setEnabled(true);
+            remoteVideoTrack.addSink(view);
+          }
 
-            }
+          @Override
+          public void onRemoveStream(MediaStream mediaStream) {
+            Log.d(TAG, "onRemoveStream: ");
+          }
 
-            @Override
-            public void onIceConnectionReceivingChange(boolean b) {
-                Log.d(TAG, "onIceConnectionReceivingChange: ");
-            }
+          @Override
+          public void onDataChannel(DataChannel dataChannel) {
+            Log.d(TAG, "onDataChannel: ");
+          }
 
-            @Override
-            public void onIceGatheringChange(PeerConnection.IceGatheringState iceGatheringState) {
-                Log.d(TAG, "onIceGatheringChange: ");
-            }
+          @Override
+          public void onRenegotiationNeeded() {
+            Log.d(TAG, "onRenegotiationNeeded: ");
+          }
 
-            @Override
-            public void onIceCandidate(IceCandidate iceCandidate) {
-                Log.d(TAG, "onIceCandidate: ");
-                JSONObject message = new JSONObject();
+          @Override
+          public void onAddTrack(RtpReceiver rtpReceiver, MediaStream[] mediaStreams) {}
 
-                try {
-                    message.put("type", "candidate");
-                    message.put("label", iceCandidate.sdpMLineIndex);
-                    message.put("id", iceCandidate.sdpMid);
-                    message.put("candidate", iceCandidate.sdp);
-
-                    Log.d(TAG, "onIceCandidate: sending candidate " + message);
-                    sendMessage(message);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onIceCandidatesRemoved(IceCandidate[] iceCandidates) {
-                Log.d(TAG, "onIceCandidatesRemoved: ");
-            }
-
-            @Override
-            public void onSelectedCandidatePairChanged(CandidatePairChangeEvent event) {
-
-            }
-
-            @Override
-            public void onAddStream(MediaStream mediaStream) {
-                Log.d(TAG, "onAddStream: " + mediaStream.videoTracks.size());
-                VideoTrack remoteVideoTrack = mediaStream.videoTracks.get(0);
-                AudioTrack remoteAudioTrack = mediaStream.audioTracks.get(0);
-                remoteAudioTrack.setEnabled(true);
-                remoteVideoTrack.setEnabled(true);
-                remoteVideoTrack.addSink(view);
-            }
-
-            @Override
-            public void onRemoveStream(MediaStream mediaStream) {
-                Log.d(TAG, "onRemoveStream: ");
-            }
-
-            @Override
-            public void onDataChannel(DataChannel dataChannel) {
-                Log.d(TAG, "onDataChannel: ");
-            }
-
-            @Override
-            public void onRenegotiationNeeded() {
-                Log.d(TAG, "onRenegotiationNeeded: ");
-            }
-
-            @Override
-            public void onAddTrack(RtpReceiver rtpReceiver, MediaStream[] mediaStreams) {
-            }
-
-            @Override
-            public void onTrack(RtpTransceiver transceiver) {
-
-            }
+          @Override
+          public void onTrack(RtpTransceiver transceiver) {}
         };
 
-        return factory.createPeerConnection(rtcConfig, pcConstraints, pcObserver);
+    return factory.createPeerConnection(rtcConfig, pcConstraints, pcObserver);
+  }
+
+  private void sendMessage(JSONObject message) {
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("WEB_RTC_EVENT", message));
+  }
+
+  private void createVideoTrackFromCameraAndShowIt() {
+    audioConstraints = new MediaConstraints();
+    VideoCapturer videoCapturer = createVideoCapturer();
+    VideoSource videoSource = factory.createVideoSource(videoCapturer.isScreencast());
+
+    surfaceTextureHelper =
+        SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
+    videoCapturer.initialize(
+        surfaceTextureHelper,
+        context /*getApplicationContext()*/,
+        videoSource.getCapturerObserver());
+
+    videoCapturer.startCapture(VIDEO_RESOLUTION_WIDTH, VIDEO_RESOLUTION_HEIGHT, FPS);
+
+    videoTrackFromCamera = factory.createVideoTrack(VIDEO_TRACK_ID, videoSource);
+    videoTrackFromCamera.setEnabled(true);
+    videoTrackFromCamera.addSink(view);
+
+    // create an AudioSource instance
+    audioSource = factory.createAudioSource(audioConstraints);
+    localAudioTrack = factory.createAudioTrack("101", audioSource);
+  }
+
+  private void initializePeerConnectionFactory() {
+    VideoEncoderFactory encoderFactory =
+        new DefaultVideoEncoderFactory(rootEglBase.getEglBaseContext(), true, true);
+    VideoDecoderFactory decoderFactory =
+        new DefaultVideoDecoderFactory(rootEglBase.getEglBaseContext());
+
+    PeerConnectionFactory.InitializationOptions initializationOptions =
+        PeerConnectionFactory.InitializationOptions.builder(context).createInitializationOptions();
+    PeerConnectionFactory.initialize(initializationOptions);
+
+    factory =
+        PeerConnectionFactory.builder()
+            .setVideoEncoderFactory(encoderFactory)
+            .setVideoDecoderFactory(decoderFactory)
+            .createPeerConnectionFactory();
+  }
+
+  private void initializeSurfaceViews() {
+    view.init(rootEglBase.getEglBaseContext(), null);
+    view.setEnableHardwareScaler(true);
+    view.setMirror(true);
+  }
+
+  private VideoCapturer createVideoCapturer() {
+    VideoCapturer videoCapturer;
+    if (useCamera2()) {
+      videoCapturer = createCameraCapturer(new Camera2Enumerator(context));
+    } else {
+      videoCapturer = createCameraCapturer(new Camera1Enumerator(true));
     }
+    return videoCapturer;
+  }
 
-    private void sendMessage(JSONObject message) {
-        BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("WEB_RTC_EVENT", message));
-    }
+  private boolean useCamera2() {
+    return Camera2Enumerator.isSupported(context);
+  }
 
-    private void createVideoTrackFromCameraAndShowIt() {
-        audioConstraints = new MediaConstraints();
-        VideoCapturer videoCapturer = createVideoCapturer();
-        VideoSource videoSource = factory.createVideoSource(videoCapturer.isScreencast());
+  private VideoCapturer createCameraCapturer(CameraEnumerator enumerator) {
+    final String[] deviceNames = enumerator.getDeviceNames();
 
-        surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
-        videoCapturer.initialize(surfaceTextureHelper, context /*getApplicationContext()*/, videoSource.getCapturerObserver());
-
-        videoCapturer.startCapture(VIDEO_RESOLUTION_WIDTH, VIDEO_RESOLUTION_HEIGHT, FPS);
-
-        videoTrackFromCamera = factory.createVideoTrack(VIDEO_TRACK_ID, videoSource);
-        videoTrackFromCamera.setEnabled(true);
-        videoTrackFromCamera.addSink(view);
-
-        //create an AudioSource instance
-        audioSource = factory.createAudioSource(audioConstraints);
-        localAudioTrack = factory.createAudioTrack("101", audioSource);
-    }
-
-    private void initializePeerConnectionFactory() {
-        VideoEncoderFactory encoderFactory = new DefaultVideoEncoderFactory(rootEglBase.getEglBaseContext(), true, true);
-        VideoDecoderFactory decoderFactory = new DefaultVideoDecoderFactory(rootEglBase.getEglBaseContext());
-
-        PeerConnectionFactory.InitializationOptions initializationOptions =
-                PeerConnectionFactory.InitializationOptions.builder(context).createInitializationOptions();
-        PeerConnectionFactory.initialize(initializationOptions);
-
-        factory = PeerConnectionFactory.builder().
-                setVideoEncoderFactory(encoderFactory).
-                setVideoDecoderFactory(decoderFactory).
-                createPeerConnectionFactory();
-    }
-
-    private void initializeSurfaceViews() {
-        rootEglBase = EglBase.create();
-        view.init(rootEglBase.getEglBaseContext(), null);
-        view.setEnableHardwareScaler(true);
-        view.setMirror(true);
-    }
-
-    private VideoCapturer createVideoCapturer() {
-        VideoCapturer videoCapturer;
-        if (useCamera2()) {
-            videoCapturer = createCameraCapturer(new Camera2Enumerator(context));
-        } else {
-            videoCapturer = createCameraCapturer(new Camera1Enumerator(true));
+    for (String deviceName : deviceNames) {
+      if (enumerator.isBackFacing(deviceName)) {
+        VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
+        if (videoCapturer != null) {
+          return videoCapturer;
         }
-        return videoCapturer;
+      }
     }
 
-    private boolean useCamera2() {
-        return Camera2Enumerator.isSupported(context);
+    return null;
+  }
+
+  // Other commands
+  class CameraControlHandler {
+
+    private void disableAudio() {
+      if (mediaStream.audioTracks.size() > 0) {
+        AudioTrack audio = mediaStream.audioTracks.get(0);
+        audio.setEnabled(false);
+
+        // inform the controller of current state
+        BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("TOGGLE_SOUND", false));
+      }
     }
 
-    private VideoCapturer createCameraCapturer(CameraEnumerator enumerator) {
-        final String[] deviceNames = enumerator.getDeviceNames();
+    private void handleCameraControlEvents() {
+      ControllerToBotEventBus.subscribe(
+          this.getClass().getSimpleName(),
+          event -> {
+            String commandType = event.getString("command");
 
-        for (String deviceName : deviceNames) {
-            if (enumerator.isBackFacing(deviceName)) {
-                VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
-                if (videoCapturer != null) {
-                    return videoCapturer;
+            switch (commandType) {
+              case "TOGGLE_SOUND":
+                if (mediaStream.audioTracks.size() > 0) {
+                  AudioTrack audio = mediaStream.audioTracks.get(0);
+                  audio.setEnabled(!audio.enabled());
+
+                  // inform the controller of current state
+                  BotToControllerEventBus.emitEvent(
+                      ConnectionUtils.createStatus("TOGGLE_SOUND", audio.enabled()));
                 }
+
+                break;
             }
-        }
+          },
+          error -> {
+            Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
+          },
+          event ->
+              event.has("command")
+                  && "TOGGLE_SOUND"
+                      .equals(
+                          event.getString("command")) // filter out all non "webrtc_event" messages.
+          );
+    }
+  }
 
-        return null;
+  // Utils
+  private void beep() {
+    final ToneGenerator tg = new ToneGenerator(6, 100);
+    tg.startTone(ToneGenerator.TONE_CDMA_ALERT_NETWORK_LITE);
+  }
+
+  class SignalingHandler {
+    void handleControllerWebRtcEvents() {
+      ControllerToBotEventBus.subscribe(
+          "WEB_RTC_COMMANDS",
+          event -> {
+            String commandType = "";
+            if (!event.has("webrtc_event")) {
+              return;
+            }
+
+            JSONObject webRtcEvent = event.getJSONObject("webrtc_event");
+            String type = webRtcEvent.getString("type");
+            switch (type) {
+              case "offer":
+                Timber.d("connectToSignallingServer: received an offer $isInitiator $isStarted");
+                peerConnection.setRemoteDescription(
+                    new SimpleSdpObserver(),
+                    new SessionDescription(
+                        SessionDescription.Type.OFFER, webRtcEvent.getString("sdp")));
+                doAnswer();
+                break;
+
+              case "answer":
+                String remoteDescr = webRtcEvent.getString("sdp");
+                Timber.i("Got remote description %s", remoteDescr);
+                peerConnection.setRemoteDescription(
+                    new SimpleSdpObserver(),
+                    new SessionDescription(SessionDescription.Type.ANSWER, remoteDescr));
+                break;
+
+              case "candidate":
+                IceCandidate candidate =
+                    new IceCandidate(
+                        webRtcEvent.getString("id"),
+                        webRtcEvent.getInt("label"),
+                        webRtcEvent.getString("candidate"));
+                peerConnection.addIceCandidate(candidate);
+                break;
+            }
+          },
+          error -> {
+            Timber.d(error, "Error occurred in handleControllerWebRtcEvents: %s");
+          },
+          commandJsn ->
+              commandJsn.has("webrtc_event") // filter out all non "webrtc_event" messages.
+          );
     }
 
-    // Utils
-    private void beep() {
-        final ToneGenerator tg = new ToneGenerator(6, 100);
-        tg.startTone(ToneGenerator.TONE_CDMA_ALERT_NETWORK_LITE);
+    public void shutDown() {
+      // Not used
+      ControllerToBotEventBus.unsubscribe("WEB_RTC_COMMANDS");
     }
-
-    class SignalingHandler {
-        SignalingHandler () {
-            handleControllerWebRtcEvents();
-        }
-
-        private void handleControllerWebRtcEvents() {
-            ControllerToBotEventBus.subscribe(
-                    this.getClass().getSimpleName(),
-                    event -> {
-                        JSONObject commandJsn = event;
-                        String commandType = "";
-                        Log.d(null, "Got command from controller: " + commandJsn.toString());
-                        if (!commandJsn.has("webrtc_event")) {
-                            return;
-                        }
-
-                        JSONObject webRtcEvent = commandJsn.getJSONObject("webrtc_event");
-                        String type = webRtcEvent.getString("type");
-                        switch (type) {
-                            case "offer":
-                                Log.d(TAG, "connectToSignallingServer: received an offer $isInitiator $isStarted");
-                                peerConnection.setRemoteDescription(new SimpleSdpObserver(), new SessionDescription(SessionDescription.Type.OFFER, webRtcEvent.getString("sdp")));
-                                doAnswer();
-                                break;
-
-                            case "answer":
-                                String remoteDescr = webRtcEvent.getString("sdp");
-                                Log.i(TAG, "Got remote description " + remoteDescr);
-                                peerConnection.setRemoteDescription(new SimpleSdpObserver(), new SessionDescription(SessionDescription.Type.ANSWER, remoteDescr));
-                                break;
-
-                            case "candidate":
-                                IceCandidate candidate = new IceCandidate(webRtcEvent.getString("id"), webRtcEvent.getInt("label"), webRtcEvent.getString("candidate"));
-                                peerConnection.addIceCandidate(candidate);
-                                break;
-                        }
-                    },
-                    error -> {
-                        Log.d(null, "Error occurred in handleControllerWebRtcEvents: " + error);
-                    });
-        }
-
-    }
+  }
 }

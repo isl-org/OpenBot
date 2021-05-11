@@ -24,7 +24,6 @@ import org.openbot.utils.AndGate;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.DelayedRunner;
 import org.webrtc.SurfaceViewRenderer;
-
 import timber.log.Timber;
 
 public class RtspServer

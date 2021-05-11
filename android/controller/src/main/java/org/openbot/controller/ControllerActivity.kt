@@ -45,7 +45,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         setupPermissions()
 
         screenManager = ScreenManager(binding)
-        ConnectionManager.init(this)
+        ConnectionSelector.init(this)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -85,7 +85,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
     private fun subscribeToStatusInfo () {
         StatusEventBus.addSubject("CONNECTION_ACTIVE")
         StatusEventBus.getProcessor("CONNECTION_ACTIVE")?.subscribe {
-            if (it.toBoolean()) screenManager.showControls() else screenManager.hideControls()
+            if (it.toBoolean()) screenManager.showControlsImmediately() else screenManager.hideControls()
         }
     }
 
@@ -110,13 +110,13 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
                             }
                             EventProcessor.ProgressEvents.Disconnected -> {
                                 screenManager.hideControls()
-                                ConnectionManager.getConnection().connect(this)
+                                ConnectionSelector.getConnection().connect(this)
                             }
                             EventProcessor.ProgressEvents.StopAdvertising -> {
                             }
                             EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
                                 screenManager.hideControls()
-                                ConnectionManager.getConnection().connect(this)
+                                ConnectionSelector.getConnection().connect(this)
                             }
                             EventProcessor.ProgressEvents.AdvertisingFailed -> {
                                 screenManager.hideControls()
@@ -156,7 +156,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
     @Override
     override fun onPause() {
         super.onPause()
-        ConnectionManager.getConnection().disconnect()
+        ConnectionSelector.getConnection().disconnect()
     }
 
     @Override
@@ -164,8 +164,8 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         super.onResume()
         hideSystemUI()
 
-        ConnectionManager.getConnection().init(this)
-        ConnectionManager.getConnection().connect(this)
+        ConnectionSelector.getConnection().init(this)
+        ConnectionSelector.getConnection().connect(this)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
