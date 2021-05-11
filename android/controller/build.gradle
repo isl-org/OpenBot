@@ -78,9 +78,6 @@ dependencies {
     implementation 'org.videolan.android:libvlc-all:3.3.14'
 
     // WebRTC
-    implementation('io.socket:socket.io-client:1.0.0') {
-        exclude group: 'org.json', module: 'json'
-    }
     implementation 'org.webrtc:google-webrtc:1.0.+'
 
     // For a library module, uncomment the following line and comment the one after
