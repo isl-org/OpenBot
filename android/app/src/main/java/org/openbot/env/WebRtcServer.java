@@ -81,8 +81,8 @@ public class WebRtcServer implements IVideoServer {
   private AndGate andGate;
   private Context context;
 
-  private CameraControlHandler cameraControlHandler = new CameraControlHandler();
-  private SignalingHandler signalingHandler = new SignalingHandler();
+  private final CameraControlHandler cameraControlHandler = new CameraControlHandler();
+  private final SignalingHandler signalingHandler = new SignalingHandler();
 
   public WebRtcServer() {}
 
@@ -464,7 +464,8 @@ public class WebRtcServer implements IVideoServer {
               event.has("command")
                   && "TOGGLE_SOUND"
                       .equals(
-                          event.getString("command")) // filter out all non "webrtc_event" messages.
+                          event.getString(
+                              "command")) // filter out all but the "TOGGLE_SOUND" commands..
           );
     }
   }
@@ -481,10 +482,6 @@ public class WebRtcServer implements IVideoServer {
           "WEB_RTC_COMMANDS",
           event -> {
             String commandType = "";
-            if (!event.has("webrtc_event")) {
-              return;
-            }
-
             JSONObject webRtcEvent = event.getJSONObject("webrtc_event");
             String type = webRtcEvent.getString("type");
             switch (type) {

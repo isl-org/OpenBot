@@ -163,7 +163,7 @@ class VideoViewWebRTC @JvmOverloads constructor(
 
                 val remoteAudioTrack = mediaStream.audioTracks[0]
                 remoteAudioTrack.setEnabled(true)
-
+                
                 remoteVideoTrack.addSink(this@VideoViewWebRTC)
             }
 

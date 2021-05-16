@@ -138,7 +138,6 @@ class VideoPlayer:
             return
 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        #img = cv2.flip(img, 1)
         img = cv2.transpose(img)
 
         # display its width, height, color_depth
