@@ -1,10 +1,13 @@
 package org.openbot.main;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -60,6 +63,31 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
           });
     }
+
+    SwitchPreferenceCompat camera = findPreference("camera");
+    if (camera != null)
+      camera.setChecked(
+          ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+              == PackageManager.PERMISSION_GRANTED);
+
+    SwitchPreferenceCompat storage = findPreference("storage");
+    if (storage != null)
+      storage.setChecked(
+          ContextCompat.checkSelfPermission(
+                  requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+              == PackageManager.PERMISSION_GRANTED);
+    SwitchPreferenceCompat location = findPreference("location");
+    if (location != null)
+      location.setChecked(
+          ContextCompat.checkSelfPermission(
+                  requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+              == PackageManager.PERMISSION_GRANTED);
+
+    SwitchPreferenceCompat mic = findPreference("mic");
+    if (mic != null)
+      mic.setChecked(
+          ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO)
+              == PackageManager.PERMISSION_GRANTED);
   }
 
   @Override
