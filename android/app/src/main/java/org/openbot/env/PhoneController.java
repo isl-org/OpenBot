@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
+import org.openbot.customview.AutoFitSurfaceGlView;
 import org.openbot.customview.WebRTCSurfaceView;
 import org.openbot.utils.CameraUtils;
 import timber.log.Timber;
@@ -70,7 +71,11 @@ public class PhoneController {
     videoView.setAlpha(0);
     viewGroup.addView(videoView, 0); // send to back
 
-    videoServer.setView((WebRTCSurfaceView) videoView);
+    if (videoView instanceof WebRTCSurfaceView) {
+      videoServer.setView((WebRTCSurfaceView) videoView);
+    } else if (videoView instanceof AutoFitSurfaceGlView) {
+      videoServer.setView((AutoFitSurfaceGlView) videoView);
+    }
   }
 
   public void connect(Context context) {
