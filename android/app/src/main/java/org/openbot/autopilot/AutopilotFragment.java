@@ -445,7 +445,9 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
   }
 
   @Override
-  public void onConnectionEstablished(String ipAddress) {}
+  public void onConnectionEstablished(String ipAddress) {
+    requireActivity().runOnUiThread(() -> binding.ipAddress.setText(ipAddress));
+  }
 
   @Override
   public void onAddModel(String model) {

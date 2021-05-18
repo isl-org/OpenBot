@@ -52,23 +52,23 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
         v -> {
           itemClickListener.onModelDownloadClicked();
           Ion.with(holder.itemView.getContext())
-                  .load(holder.mItem.path)
-                  .progress(
-                          (downloaded, total) -> {
-                            System.out.println("" + downloaded + " / " + total);
-                            holder.progressBar.setProgress((int) (downloaded * 100 / total));
-                          })
-                  //              .write(new File("/sdcard/openbot/tf.tflite"))
-                  .write(
-                          new File(
-                                  holder.itemView.getContext().getFilesDir()
-                                          + File.separator
-                                          + holder.mItem.name))
-                  .setCallback(
-                          (e, file) -> {
-                            holder.progressBar.setProgress(0);
-                            itemClickListener.onModelDownloaded(e == null, holder.mItem);
-                          });
+              .load(holder.mItem.path)
+              .progress(
+                  (downloaded, total) -> {
+                    System.out.println("" + downloaded + " / " + total);
+                    holder.progressBar.setProgress((int) (downloaded * 100 / total));
+                  })
+              //              .write(new File("/sdcard/openbot/tf.tflite"))
+              .write(
+                  new File(
+                      holder.itemView.getContext().getFilesDir()
+                          + File.separator
+                          + holder.mItem.name))
+              .setCallback(
+                  (e, file) -> {
+                    holder.progressBar.setProgress(0);
+                    itemClickListener.onModelDownloaded(e == null, holder.mItem);
+                  });
         });
 
     holder.imgDownload.setVisibility(

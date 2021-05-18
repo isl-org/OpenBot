@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -83,32 +82,29 @@ public class ModelManagementFragment extends Fragment
               }
             });
 
-    onBackPressedCallback = new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        if(isDownloading) {
-          AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-          builder.setTitle(R.string.model_download_title);
-          builder.setMessage(R.string.model_download_body);
-          builder.setPositiveButton(
-                  "Yes", (dialog, id) -> {
+    onBackPressedCallback =
+        new OnBackPressedCallback(true) {
+          @Override
+          public void handleOnBackPressed() {
+            if (isDownloading) {
+              AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+              builder.setTitle(R.string.model_download_title);
+              builder.setMessage(R.string.model_download_body);
+              builder.setPositiveButton(
+                  "Yes",
+                  (dialog, id) -> {
                     onBackPressedCallback.setEnabled(false);
                     requireActivity().onBackPressed();
                   });
-          builder.setNegativeButton(
-                  "Cancel",
-                  (dialog, id) -> {
-                  });
-          AlertDialog dialog = builder.create();
-          dialog.show();
-        }
-        else
-        {
-          onBackPressedCallback.setEnabled(false);
-          requireActivity().onBackPressed();
-        }
-      }
-    };
+              builder.setNegativeButton("Cancel", (dialog, id) -> {});
+              AlertDialog dialog = builder.create();
+              dialog.show();
+            } else {
+              onBackPressedCallback.setEnabled(false);
+              requireActivity().onBackPressed();
+            }
+          }
+        };
     requireActivity().getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
   }
 

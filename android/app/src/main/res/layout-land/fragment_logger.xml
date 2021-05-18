@@ -173,23 +173,28 @@
                 android:id="@+id/server"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:padding="16dp"
                 android:text="Server :"
                 android:textColor="@android:color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/ipAddress"
+                app:layout_constraintStart_toEndOf="@+id/previewCheckBox"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/ipAddress"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="x.x.x.x"
                 android:layout_marginEnd="16dp"
+                android:padding="16dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="182.158.2.13423489123480192384018340"
                 android:textColor="@android:color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/server"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/server"
                 app:layout_constraintTop_toTopOf="@+id/server" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
