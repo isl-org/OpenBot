@@ -24,6 +24,8 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
   public interface OnItemClickListener<T> {
     void onItemClick(T item);
 
+    void onModelDownloadClicked();
+
     void onModelDownloaded(boolean status, Model mItem);
 
     void onModelDelete(Model mItem);
@@ -47,25 +49,27 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
     holder.title.setText(FileUtils.nameWithoutExtension(mValues.get(position).getName()));
     holder.title.setOnClickListener(v -> itemClickListener.onItemClick(holder.mItem));
     holder.imgDownload.setOnClickListener(
-        v ->
-            Ion.with(holder.itemView.getContext())
-                .load(holder.mItem.path)
-                .progress(
-                    (downloaded, total) -> {
-                      System.out.println("" + downloaded + " / " + total);
-                      holder.progressBar.setProgress((int) (downloaded * 100 / total));
-                    })
-                //              .write(new File("/sdcard/openbot/tf.tflite"))
-                .write(
-                    new File(
-                        holder.itemView.getContext().getFilesDir()
-                            + File.separator
-                            + holder.mItem.name))
-                .setCallback(
-                    (e, file) -> {
-                      holder.progressBar.setProgress(0);
-                      itemClickListener.onModelDownloaded(e == null, holder.mItem);
-                    }));
+        v -> {
+          itemClickListener.onModelDownloadClicked();
+          Ion.with(holder.itemView.getContext())
+                  .load(holder.mItem.path)
+                  .progress(
+                          (downloaded, total) -> {
+                            System.out.println("" + downloaded + " / " + total);
+                            holder.progressBar.setProgress((int) (downloaded * 100 / total));
+                          })
+                  //              .write(new File("/sdcard/openbot/tf.tflite"))
+                  .write(
+                          new File(
+                                  holder.itemView.getContext().getFilesDir()
+                                          + File.separator
+                                          + holder.mItem.name))
+                  .setCallback(
+                          (e, file) -> {
+                            holder.progressBar.setProgress(0);
+                            itemClickListener.onModelDownloaded(e == null, holder.mItem);
+                          });
+        });
 
     holder.imgDownload.setVisibility(
         (holder.mItem.pathType == Model.PATH_TYPE.URL) ? View.VISIBLE : View.GONE);
