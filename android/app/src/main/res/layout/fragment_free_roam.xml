@@ -7,14 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".robot.FreeRoamFragment">
 
-    <org.openbot.customview.WebRTCSurfaceView
-        android:id="@+id/video_window"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.0"
-        android:layout_margin="@dimen/feed_padding"
-        android:gravity="center"
-         />
+<!--    <org.openbot.customview.WebRTCSurfaceView-->
+<!--        android:id="@+id/video_window"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:alpha="1.0"-->
+<!--        android:layout_margin="@dimen/feed_padding"-->
+<!--        android:gravity="center"-->
+<!--         />-->
 
     <ProgressBar
         android:id="@+id/battery"

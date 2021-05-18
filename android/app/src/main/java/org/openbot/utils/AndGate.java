@@ -33,9 +33,9 @@ public class AndGate {
     for (Condition condition : conditions) {
       if (!condition.value) {
         if (isRunning && stopAction != null) {
+          isRunning = false;
           stopAction.runIt();
         }
-        isRunning = false;
         return;
       }
     }

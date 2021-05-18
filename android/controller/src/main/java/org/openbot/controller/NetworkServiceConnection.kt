@@ -1,5 +1,6 @@
 package org.openbot.controller
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.net.nsd.NsdManager
@@ -20,6 +21,7 @@ import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
 import kotlin.concurrent.thread
 
+@SuppressLint("StaticFieldLeak")
 object NetworkServiceConnection : ILocalConnection {
 
     private val TAG = "NetworkServiceConn"
@@ -69,6 +71,7 @@ object NetworkServiceConnection : ILocalConnection {
     }
     // end of interface
 
+    @SuppressLint("StaticFieldLeak")
     private fun runConnection() {
         socketHandler = SocketHandler(messageQueue)
 

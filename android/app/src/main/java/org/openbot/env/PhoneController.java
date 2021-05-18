@@ -1,11 +1,13 @@
 package org.openbot.env;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openbot.customview.AutoFitSurfaceGlView;
-import org.openbot.customview.AutoFitSurfaceView;
-import org.openbot.customview.AutoFitTextureView;
+import org.openbot.R;
 import org.openbot.customview.WebRTCSurfaceView;
 import org.openbot.utils.CameraUtils;
 import timber.log.Timber;
@@ -15,6 +17,7 @@ public class PhoneController {
   private static final String TAG = "PhoneController";
   private static PhoneController _phoneController;
   private ConnectionSelector connectionSelector;
+  // private final IVideoServer videoServer = new RtspServer();
   private final IVideoServer videoServer = new WebRtcServer();
 
   public static PhoneController getInstance(Context context) {
@@ -28,30 +31,6 @@ public class PhoneController {
     }
 
     return _phoneController;
-  }
-
-  public void setView(AutoFitSurfaceView videoWindow) {
-    if (connectionSelector.getConnection().isVideoCapable()) {
-      videoServer.setView(videoWindow);
-    }
-  }
-
-  public void setView(WebRTCSurfaceView videoWindow) {
-    if (connectionSelector.getConnection().isVideoCapable()) {
-      videoServer.setView(videoWindow);
-    }
-  }
-
-  public void setView(AutoFitSurfaceGlView videoWindow) {
-    if (connectionSelector.getConnection().isVideoCapable()) {
-      videoServer.setView(videoWindow);
-    }
-  }
-
-  public void setView(AutoFitTextureView videoWindow) {
-    if (connectionSelector.getConnection().isVideoCapable()) {
-      videoServer.setView(videoWindow);
-    }
   }
 
   class DataReceived implements IDataReceived {
@@ -75,6 +54,23 @@ public class PhoneController {
     videoServer.setResolution(resolution.getWidth(), resolution.getHeight());
 
     handleBotEvents();
+
+    addVideoView(new org.openbot.customview.WebRTCSurfaceView(context), context);
+    // addVideoView(new org.openbot.customview.AutoFitSurfaceGlView(context), context);
+  }
+
+  private void addVideoView(View videoView, Context context) {
+    ViewGroup viewGroup = (ViewGroup) ((Activity) context).getWindow().getDecorView();
+
+    ViewGroup.LayoutParams layoutParams =
+        new ViewGroup.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+    videoView.setLayoutParams(layoutParams);
+    videoView.setId(R.id.video_window);
+    videoView.setAlpha(0);
+    viewGroup.addView(videoView, 0); // send to back
+
+    videoServer.setView((WebRTCSurfaceView) videoView);
   }
 
   public void connect(Context context) {
