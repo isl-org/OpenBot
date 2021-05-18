@@ -44,7 +44,7 @@ class VideoViewVlc @JvmOverloads constructor(
         }
     }
 
-    fun init(binding: ActivityFullscreenBinding) {
+    fun init() {
         hide()
         player.init()
     }

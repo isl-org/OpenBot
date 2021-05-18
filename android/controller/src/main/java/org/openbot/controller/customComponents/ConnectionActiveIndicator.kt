@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat
 import org.openbot.controller.R
 import org.openbot.controller.StatusEventBus
 
-class ConnectionActiveIndicator @JvmOverloads constructor(
+open class ConnectionActiveIndicator @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : com.google.android.material.imageview.ShapeableImageView (context, attrs, defStyleAttr) {
 

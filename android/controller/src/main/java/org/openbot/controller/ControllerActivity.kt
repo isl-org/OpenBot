@@ -16,19 +16,20 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
+import android.view.*
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import org.openbot.controller.customComponents.DualDriveSeekBar
+import org.openbot.controller.customComponents.VideoViewVlc
+import org.openbot.controller.customComponents.VideoViewWebRTC
 import org.openbot.controller.databinding.ActivityFullscreenBinding
 import org.openbot.controller.utils.EventProcessor
 import org.openbot.controller.utils.Utils
+import kotlin.system.exitProcess
 
 class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppCompatActivity gives errors in the IDE, but it does compile,
     private val PERMISSION_REQUEST_LOCATION = 101
@@ -61,7 +62,40 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
 
         BotDataListener.init()
 
-        binding.videoView.init(binding)
+        subscribe("VIDEO_PROTOCOL", ::onDataReceived)
+    }
+
+    @SuppressLint("CheckResult")
+    private fun subscribe(subject: String, onDataReceived: (String) -> Unit) {
+        StatusEventBus.addSubject(subject)
+        StatusEventBus.getProcessor(subject)?.subscribe {
+            onDataReceived(it as String)
+        }
+    }
+
+    private fun onDataReceived(data: String) {
+        // Create the type of video view programmatically based on info from the Bot app.
+        when (data) {
+            "WEBRTC" -> {
+                val view: VideoViewWebRTC = createView(VideoViewWebRTC(this)) as VideoViewWebRTC
+                view.init()
+            }
+            "RTSP" -> {
+                val view: VideoViewVlc = createView(VideoViewVlc(this)) as VideoViewVlc
+                view.init()
+            }
+        }
+    }
+
+    private fun createView(view: View): View {
+        view.id = R.id.video_view
+
+        val layoutParams = ViewGroup.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        view.layoutParams = layoutParams
+
+        binding.video.addView(view)
+        return view
     }
 
     private fun setupPermissions() {
@@ -82,7 +116,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
     }
 
     @SuppressLint("CheckResult")
-    private fun subscribeToStatusInfo () {
+    private fun subscribeToStatusInfo() {
         StatusEventBus.addSubject("CONNECTION_ACTIVE")
         StatusEventBus.getProcessor("CONNECTION_ACTIVE")?.subscribe {
             if (it.toBoolean()) screenManager.showControlsImmediately() else screenManager.hideControls()
@@ -177,7 +211,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
 
                     Log.i(TAG, "Permission has been denied by user")
                     finish()
-                    System.exit(0)
+                    exitProcess(0)
                 } else {
                     Log.i(TAG, "Permission has been granted by user")
                 }

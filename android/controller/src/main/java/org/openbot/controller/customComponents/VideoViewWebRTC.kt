@@ -54,7 +54,7 @@ class VideoViewWebRTC @JvmOverloads constructor(
     }
 
     @SuppressLint("CheckResult")
-    fun init(binding: ActivityFullscreenBinding) {
+    fun init() {
         StatusEventBus.addSubject("WEB_RTC_EVENT")
         StatusEventBus.getProcessor("WEB_RTC_EVENT")?.subscribe({
             SignalingHandler().handleWebRtcEvent(JSONObject(it))

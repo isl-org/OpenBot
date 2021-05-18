@@ -56,8 +56,9 @@ public class PhoneController {
 
     handleBotEvents();
 
-    addVideoView(new org.openbot.customview.WebRTCSurfaceView(context), context);
-    // addVideoView(new org.openbot.customview.AutoFitSurfaceGlView(context), context);
+    View view = new org.openbot.customview.WebRTCSurfaceView(context);
+    // View view = new org.openbot.customview.AutoFitSurfaceGlView(context);
+    addVideoView(view, context);
   }
 
   private void addVideoView(View videoView, Context context) {

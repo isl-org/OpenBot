@@ -113,6 +113,7 @@ public class WebRtcServer implements IVideoServer {
 
   @Override
   public void startClient() {
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_PROTOCOL", "WEBRTC"));
     sendServerUrl();
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
   }

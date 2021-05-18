@@ -73,6 +73,7 @@ public class RtspServer
 
   @Override
   public void startClient() {
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_PROTOCOL", "RTSP"));
     sendServerUrl();
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
   }
