@@ -1,20 +1,21 @@
 package org.openbot.main;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
-import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.env.Vehicle;
 import org.openbot.utils.Constants;
@@ -80,7 +81,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     {
       camera.setChecked(PermissionUtils.hasPermission(requireContext(), Manifest.permission.CAMERA));
       camera.setOnPreferenceChangeListener((preference, newValue) -> {
-        PermissionUtils.requestPermissions(
+        if (camera.isChecked())
+          startInstalledAppDetailsActivity(requireActivity());
+        else
+          PermissionUtils.requestPermissions(
                 SettingsFragment.this,
                 new String[] {Constants.PERMISSION_CAMERA},
                 Constants.REQUEST_CAMERA_PERMISSION);
@@ -94,10 +98,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     {
       storage.setChecked(PermissionUtils.hasPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE));
       storage.setOnPreferenceChangeListener((preference, newValue) -> {
-        PermissionUtils.requestPermissions(
-                SettingsFragment.this,
-                new String[] {Constants.PERMISSION_STORAGE},
-                Constants.REQUEST_STORAGE_PERMISSION);
+        if (storage.isChecked())
+          startInstalledAppDetailsActivity(requireActivity());
+        else
+          PermissionUtils.requestPermissions(
+                  SettingsFragment.this,
+                  new String[]{Constants.PERMISSION_STORAGE},
+                  Constants.REQUEST_STORAGE_PERMISSION);
 
         return false;
       });
@@ -109,7 +116,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     {
       location.setChecked(PermissionUtils.hasPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION));
       location.setOnPreferenceChangeListener((preference, newValue) -> {
-        PermissionUtils.requestPermissions(
+        if (location.isChecked())
+          startInstalledAppDetailsActivity(requireActivity());
+        else
+          PermissionUtils.requestPermissions(
                 SettingsFragment.this,
                 new String[] {Constants.PERMISSION_LOCATION},
                 Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
@@ -124,7 +134,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     {
       mic.setChecked(PermissionUtils.hasPermission(requireContext(), Manifest.permission.RECORD_AUDIO));
       mic.setOnPreferenceChangeListener((preference, newValue) -> {
-        PermissionUtils.requestPermissions(
+        if (mic.isChecked())
+          startInstalledAppDetailsActivity(requireActivity());
+        else
+          PermissionUtils.requestPermissions(
                 SettingsFragment.this,
                 new String[] {Constants.PERMISSION_AUDIO_RECORDING},
                 Constants.REQUEST_AUDIO_RECORDING_PERMISSIONS);
@@ -216,6 +229,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         break;
     }
 
+  }
+  public void startInstalledAppDetailsActivity(final Activity context) {
+    if (context == null) {
+      return;
+    }
+    final Intent i = new Intent();
+    i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+    i.addCategory(Intent.CATEGORY_DEFAULT);
+    i.setData(Uri.parse("package:" + context.getPackageName()));
+    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+    context.startActivity(i);
   }
 
 }
