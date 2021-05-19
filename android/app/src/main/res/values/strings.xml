@@ -118,5 +118,8 @@
     <string name="model_delete_body">Are you sure you want to delete this model?</string>
     <string name="model_delete_title">Confirm</string>
     <string name="permissions">Permissions</string>
+    <string name="model_download_body">Going back would cancel the download. Are you sure?</string>
+    <string name="model_download_title">Model Download In Progress</string>
+
 
 </resources>
