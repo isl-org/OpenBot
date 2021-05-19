@@ -55,38 +55,19 @@
             android:id="@+id/logger_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:padding="8dp"
+            android:layout_margin="8dp"
             android:text="Log Data"
-            app:layout_constraintBottom_toTopOf="@+id/server"
+            app:layout_constraintBottom_toTopOf="@+id/previewText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
-
-        <TextView
-            android:id="@+id/server"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Server :"
-            android:textColor="@android:color/black"
-            app:layout_constraintBottom_toTopOf="@+id/previewText"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/ipAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="x.x.x.x"
-            android:textColor="@android:color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/server"
-            app:layout_constraintStart_toEndOf="@id/server"
-            app:layout_constraintTop_toTopOf="@+id/server" />
 
         <TextView
             android:id="@+id/previewText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:layout_marginStart="8dp"
+            android:padding="8dp"
             android:text="@string/preview_resolution"
             android:textColor="@android:color/black"
             app:layout_constraintBottom_toTopOf="@+id/analyseText"
@@ -134,7 +115,8 @@
             android:id="@+id/analyseText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:layout_marginStart="8dp"
+            android:padding="8dp"
             android:text="Model Resolution"
             android:textColor="@android:color/black"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
@@ -152,38 +134,69 @@
             app:layout_constraintStart_toEndOf="@+id/analyseText"
             app:layout_constraintTop_toTopOf="@+id/analyseText" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:orientation="vertical"
+            android:layout_margin="8dp"
             app:layout_constraintBottom_toTopOf="@+id/controllerContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
             <CheckBox
+                android:id="@+id/checkBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:enabled="false"
-                android:text="Sensor Data" />
+                android:layout_marginEnd="16dp"
+                android:text="Sensor Data"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ipAddress"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <CheckBox
                 android:id="@+id/previewCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Preview Images" />
+                android:text="Preview Images"
+                app:layout_constraintStart_toStartOf="@id/checkBox"
+                app:layout_constraintTop_toBottomOf="@id/checkBox" />
 
             <CheckBox
                 android:id="@+id/trainingDataCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Training Images" />
+                android:text="Training Images"
+                app:layout_constraintStart_toStartOf="@id/previewCheckBox"
+                app:layout_constraintTop_toBottomOf="@+id/previewCheckBox" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/server"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Server Address"
+                android:textColor="@android:color/black"
+                app:layout_constraintEnd_toStartOf="@+id/ipAddress"
+                app:layout_constraintTop_toTopOf="@id/previewCheckBox"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/ipAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="x.x.x.x"
+                android:textColor="@android:color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/server"
+                app:layout_constraintStart_toEndOf="@+id/server"
+                app:layout_constraintTop_toTopOf="@+id/server" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <include
