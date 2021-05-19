@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -44,6 +45,8 @@ public class ModelManagementFragment extends Fragment
   private ModelAdapter adapter;
   private List<Model> masterList;
   private ActivityResultLauncher<Intent> mStartForResult;
+  private OnBackPressedCallback onBackPressedCallback;
+  private boolean isDownloading = false;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,6 +81,31 @@ public class ModelManagementFragment extends Fragment
                 }
               }
             });
+
+    onBackPressedCallback =
+        new OnBackPressedCallback(true) {
+          @Override
+          public void handleOnBackPressed() {
+            if (isDownloading) {
+              AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+              builder.setTitle(R.string.model_download_title);
+              builder.setMessage(R.string.model_download_body);
+              builder.setPositiveButton(
+                  "Yes",
+                  (dialog, id) -> {
+                    onBackPressedCallback.setEnabled(false);
+                    requireActivity().onBackPressed();
+                  });
+              builder.setNegativeButton("Cancel", (dialog, id) -> {});
+              AlertDialog dialog = builder.create();
+              dialog.show();
+            } else {
+              onBackPressedCallback.setEnabled(false);
+              requireActivity().onBackPressed();
+            }
+          }
+        };
+    requireActivity().getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
   }
 
   private void processModelFromStorage(List<Uri> files, String fileName) {
@@ -225,8 +253,14 @@ public class ModelManagementFragment extends Fragment
   }
 
   @Override
+  public void onModelDownloadClicked() {
+    isDownloading = true;
+  }
+
+  @Override
   public void onModelDownloaded(boolean status, Model mItem) {
-    if (status) {
+    if (status && isAdded()) {
+      isDownloading = false;
       for (Model model : masterList) {
         if (model.id.equals(mItem.id)) {
           model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
