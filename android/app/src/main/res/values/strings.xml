@@ -5,12 +5,18 @@
     <string name="description_info">Info</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="threads">Threads</string>
-    <string name="camera_permission_denied_logging">Camera permission is necessary for logging.</string>
-    <string name="storage_permission_denied_logging">External storage permission is necessary for logging.</string>
-    <string name="location_permission_denied_logging">Location permission is necessary for logging GPS data.</string>
-    <string name="location_permission_denied_controller">Location permission is necessary for finding the the controller.</string>
-    <string name="camera_permission_denied_controller">Camera permission is necessary to stream video to the controller.</string>
-    <string name="record_audio_permission_denied_controller">Recording audio is necessary to stream audio to the controller.</string>
+    <string name="camera_permission_denied">Camera permission is necessary</string>
+    <string name="storage_permission_denied">External storage permission is necessary</string>
+    <string name="location_permission_denied">Location permission is necessary</string>
+    <string name="record_audio_permission_denied">Recording audio permission is necessary</string>
+    <string name="permission_reason_logging"> to log datasets.</string>
+    <string name="permission_reason_ai"> to run AI models.</string>
+    <string name="permission_reason_stream_video"> to stream video to the controller.</string>
+    <string name="permission_reason_stream_audio"> to stream audio to the controller.</string>
+    <string name="permission_reason_find_controller"> to find the controller.</string>
+    <string name="permission_reason_model_from_phone"> to select a model from phone storage.</string>
+    <string name="permission_reason_settings"> to use all features of the app.</string>
+
     <string name="off">Off</string>
     <string name="on">On</string>
 

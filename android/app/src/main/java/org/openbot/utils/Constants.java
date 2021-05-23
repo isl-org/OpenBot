@@ -7,17 +7,17 @@ public class Constants {
   public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
 
   public static final int REQUEST_CAMERA_PERMISSION = 1;
-  public static final int REQUEST_LOCATION_PERMISSION_LOGGING = 2;
-  public static final int REQUEST_LOCATION_PERMISSION_CONTROLLER = 3;
-  public static final int REQUEST_STORAGE_PERMISSION = 4;
+  public static final int REQUEST_AUDIO_PERMISSION = 2;
+  public static final int REQUEST_STORAGE_PERMISSION = 3;
+  public static final int REQUEST_LOCATION_PERMISSION = 4;
   public static final int REQUEST_BLUETOOTH_PERMISSION = 5;
-  public static final int REQUEST_CONTROLLER_PERMISSIONS = 6;
-  public static final int REQUEST_AUDIO_RECORDING_PERMISSIONS = 7;
+  public static final int REQUEST_LOGGING_PERMISSIONS = 6;
+  public static final int REQUEST_CONTROLLER_PERMISSIONS = 7;
   public static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
   public static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
   public static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
   public static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
-  public static final String PERMISSION_AUDIO_RECORDING = Manifest.permission.RECORD_AUDIO;
+  public static final String PERMISSION_AUDIO = Manifest.permission.RECORD_AUDIO;
   public static final String GENERIC_MOTION_EVENT = "dispatchGenericMotionEvent";
   public static final String KEY_EVENT = "dispatchKeyEvent";
   public static final String DATA = "data";

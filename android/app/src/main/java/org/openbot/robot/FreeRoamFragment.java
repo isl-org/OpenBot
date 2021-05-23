@@ -201,23 +201,9 @@ public class FreeRoamFragment extends ControlsFragment {
           break;
         case PHONE:
           binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
-          if (!PermissionUtils.hasPermissions(
-              requireContext(),
-              new String[] {
-                Constants.PERMISSION_LOCATION,
-                Constants.PERMISSION_AUDIO_RECORDING,
-                Constants.PERMISSION_CAMERA
-              }))
-            PermissionUtils.requestPermissions(
-                this,
-                new String[] {
-                  Constants.PERMISSION_LOCATION,
-                  Constants.PERMISSION_AUDIO_RECORDING,
-                  Constants.PERMISSION_CAMERA
-                },
-                Constants.REQUEST_CONTROLLER_PERMISSIONS);
+          if (!PermissionUtils.hasControllerPermissions(requireActivity()))
+            PermissionUtils.requestControllerPermissions(requireActivity());
           else connectPhoneController();
-
           break;
       }
       Timber.d("Updating  controlMode: %s", controlMode);

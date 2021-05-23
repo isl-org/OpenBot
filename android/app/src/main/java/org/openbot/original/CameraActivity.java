@@ -18,7 +18,6 @@
 
 package org.openbot.original;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
@@ -67,7 +66,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.File;
@@ -108,6 +106,7 @@ import org.openbot.utils.Enums.LogMode;
 import org.openbot.utils.Enums.SpeedMode;
 import org.openbot.utils.FileUtils;
 import org.openbot.utils.FormatUtils;
+import org.openbot.utils.PermissionUtils;
 import org.zeroturnaround.zip.ZipUtil;
 import timber.log.Timber;
 
@@ -121,19 +120,6 @@ public abstract class CameraActivity extends AppCompatActivity
   private static final Logger LOGGER = new Logger();
 
   private static final String TAG = "CameraActivity";
-
-  // Constants
-  private static final int REQUEST_CAMERA_PERMISSION = 1;
-  private static final int REQUEST_LOCATION_PERMISSION_LOGGING = 2;
-  private static final int REQUEST_CONTROLLER_PERMISSIONS = 3;
-  private static final int REQUEST_STORAGE_PERMISSION = 4;
-  private static final int REQUEST_BLUETOOTH_PERMISSION = 5;
-
-  private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
-  private static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-  private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-  private static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
-  private static final String PERMISSION_AUDIO = Manifest.permission.RECORD_AUDIO;
 
   private static Context context;
   private int cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
@@ -218,10 +204,10 @@ public abstract class CameraActivity extends AppCompatActivity
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-    if (hasCameraPermission()) {
+    if (PermissionUtils.hasCameraPermission(this)) {
       setFragment();
     } else {
-      requestCameraPermission();
+      PermissionUtils.requestCameraPermission(this);
     }
 
     preferencesManager = new SharedPreferencesManager(this);
@@ -677,115 +663,37 @@ public abstract class CameraActivity extends AppCompatActivity
       final int requestCode, final String[] permissions, final int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     switch (requestCode) {
-      case REQUEST_CAMERA_PERMISSION:
+      case Constants.REQUEST_CAMERA_PERMISSION:
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           setFragment();
         } else {
-          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_CAMERA)) {
-            Toast.makeText(this, R.string.camera_permission_denied_logging, Toast.LENGTH_LONG)
+          if (ActivityCompat.shouldShowRequestPermissionRationale(
+              this, Constants.PERMISSION_CAMERA)) {
+            Toast.makeText(
+                    this.getApplicationContext(),
+                    getResources().getString(R.string.camera_permission_denied)
+                        + " "
+                        + getResources().getString(R.string.permission_reason_ai),
+                    Toast.LENGTH_LONG)
                 .show();
           }
-          // requestCameraPermission();
         }
         break;
 
-      case REQUEST_LOCATION_PERMISSION_LOGGING:
+      case Constants.REQUEST_LOGGING_PERMISSIONS:
         // If the permission is granted, start logging,
         // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          setIsLoggingActive(true);
-        } else {
-          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
-            Toast.makeText(this, R.string.location_permission_denied_logging, Toast.LENGTH_LONG)
-                .show();
-          }
-        }
+        if (PermissionUtils.checkLoggingPermissions(grantResults)) setIsLoggingActive(true);
+        else PermissionUtils.showLoggingPermissionsToast(this);
         break;
 
-      case REQUEST_CONTROLLER_PERMISSIONS:
+      case Constants.REQUEST_CONTROLLER_PERMISSIONS:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
-        if (grantResults.length > 1
-            && (grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-          phoneController.connect(this);
-        } else {
-          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
-            Toast.makeText(this, R.string.location_permission_denied_controller, Toast.LENGTH_LONG)
-                .show();
-          }
-          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_AUDIO)) {
-            Toast.makeText(
-                    this, R.string.record_audio_permission_denied_controller, Toast.LENGTH_LONG)
-                .show();
-          }
-          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_CAMERA)) {
-            Toast.makeText(this, R.string.camera_permission_denied_logging, Toast.LENGTH_LONG)
-                .show();
-          }
-        }
-        break;
-
-      case REQUEST_STORAGE_PERMISSION:
-        // If the permission is granted, start logging,
-        // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          setIsLoggingActive(true);
-        } else {
-          if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_STORAGE)) {
-            Toast.makeText(this, R.string.storage_permission_denied_logging, Toast.LENGTH_LONG)
-                .show();
-          }
-        }
+        if (PermissionUtils.checkControllerPermissions(grantResults)) phoneController.connect(this);
+        else PermissionUtils.showControllerPermissionsToast(this);
         break;
     }
-  }
-
-  private boolean hasCameraPermission() {
-    return ContextCompat.checkSelfPermission(this, PERMISSION_CAMERA)
-        == PackageManager.PERMISSION_GRANTED;
-  }
-
-  private boolean hasLocationPermission() {
-    return ContextCompat.checkSelfPermission(this, PERMISSION_LOCATION)
-        == PackageManager.PERMISSION_GRANTED;
-  }
-
-  private boolean hasStoragePermission() {
-    return ContextCompat.checkSelfPermission(this, PERMISSION_STORAGE)
-        == PackageManager.PERMISSION_GRANTED;
-  }
-
-  private boolean hasBluetoothPermission() {
-    return ContextCompat.checkSelfPermission(this, PERMISSION_BLUETOOTH)
-        == PackageManager.PERMISSION_GRANTED;
-  }
-
-  private void requestCameraPermission() {
-    ActivityCompat.requestPermissions(
-        this, new String[] {PERMISSION_CAMERA}, REQUEST_CAMERA_PERMISSION);
-  }
-
-  private void requestLocationPermissionLogging() {
-    ActivityCompat.requestPermissions(
-        this, new String[] {PERMISSION_LOCATION}, REQUEST_LOCATION_PERMISSION_LOGGING);
-  }
-
-  private void requestPermissionsLocationAndAudioController() {
-    ActivityCompat.requestPermissions(
-        this,
-        new String[] {PERMISSION_LOCATION, PERMISSION_AUDIO, PERMISSION_CAMERA},
-        REQUEST_CONTROLLER_PERMISSIONS);
-  }
-
-  private void requestStoragePermission() {
-    ActivityCompat.requestPermissions(
-        this, new String[] {PERMISSION_STORAGE}, REQUEST_STORAGE_PERMISSION);
-  }
-
-  private void requestBluetoothPermission() {
-    ActivityCompat.requestPermissions(
-        this, new String[] {PERMISSION_BLUETOOTH}, REQUEST_BLUETOOTH_PERMISSION);
   }
 
   // Returns true if the device supports the required hardware level, or better.
@@ -963,8 +871,8 @@ public abstract class CameraActivity extends AppCompatActivity
           break;
         case PHONE:
           handleControllerEvents();
-          if (!hasLocationPermission()) {
-            requestPermissionsLocationAndAudioController();
+          if (!PermissionUtils.hasControllerPermissions(this)) {
+            PermissionUtils.requestControllerPermissions(this);
           } else connectPhoneController();
           break;
         case WEBRTC:
@@ -1191,14 +1099,8 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void setIsLoggingActive(boolean loggingActive) {
     if (loggingActive && !loggingEnabled) {
-      if (!hasCameraPermission() && logMode != LogMode.ONLY_SENSORS) {
-        requestCameraPermission();
-        loggingEnabled = false;
-      } else if (!hasLocationPermission()) {
-        requestLocationPermissionLogging();
-        loggingEnabled = false;
-      } else if (!hasStoragePermission()) {
-        requestStoragePermission();
+      if (!PermissionUtils.hasLoggingPermissions(this)) {
+        PermissionUtils.requestLoggingPermissions(this);
         loggingEnabled = false;
       } else {
         startLogging();

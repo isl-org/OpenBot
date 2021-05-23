@@ -563,11 +563,8 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
           break;
         case PHONE:
           binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
-          if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
-            PermissionUtils.requestPermissions(
-                this,
-                new String[] {Constants.PERMISSION_LOCATION},
-                Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
+          if (!PermissionUtils.hasControllerPermissions(requireActivity()))
+            PermissionUtils.requestControllerPermissions(requireActivity());
           else connectPhoneController();
 
           break;

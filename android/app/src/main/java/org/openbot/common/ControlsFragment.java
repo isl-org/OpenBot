@@ -1,6 +1,5 @@
 package org.openbot.common;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -8,7 +7,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -234,36 +232,10 @@ public abstract class ControlsFragment extends Fragment {
       case Constants.REQUEST_CONTROLLER_PERMISSIONS:
         // If the permission is granted, start advertising to controller,
         // otherwise, show a Toast
-        if (grantResults.length > 1
-            && (grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+        if (PermissionUtils.checkControllerPermissions(grantResults))
           phoneController.connect(requireContext());
-        } else {
-          if (PermissionUtils.shouldShowRational(
-              requireActivity(), Constants.PERMISSION_LOCATION)) {
-            Toast.makeText(
-                    requireActivity().getApplicationContext(),
-                    R.string.location_permission_denied_controller,
-                    Toast.LENGTH_LONG)
-                .show();
-          }
-          if (PermissionUtils.shouldShowRational(
-              requireActivity(), Constants.PERMISSION_AUDIO_RECORDING)) {
-            Toast.makeText(
-                    requireActivity().getApplicationContext(),
-                    R.string.record_audio_permission_denied_controller,
-                    Toast.LENGTH_LONG)
-                .show();
-          }
-          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_CAMERA)) {
-            Toast.makeText(
-                    requireActivity().getApplicationContext(),
-                    R.string.camera_permission_denied_controller,
-                    Toast.LENGTH_LONG)
-                .show();
-          }
-          break;
-        }
+        else PermissionUtils.showControllerPermissionsToast(requireActivity());
+        break;
     }
   }
 

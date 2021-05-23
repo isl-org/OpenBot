@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
@@ -330,15 +328,8 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
 
   protected void setIsLoggingActive(boolean loggingActive) {
     if (loggingActive && !loggingEnabled) {
-      if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_CAMERA)
-          && (binding.previewCheckBox.isChecked() || binding.trainingDataCheckBox.isChecked())) {
-        PermissionUtils.requestCameraPermission(this);
-        loggingEnabled = false;
-      } else if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION)) {
-        PermissionUtils.requestLocationPermissionLogging(this);
-        loggingEnabled = false;
-      } else if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_STORAGE)) {
-        PermissionUtils.requestStoragePermission(this);
+      if (!PermissionUtils.hasLoggingPermissions(requireActivity())) {
+        PermissionUtils.requestLoggingPermissions(requireActivity());
         loggingEnabled = false;
       } else {
         startLogging();
@@ -358,36 +349,11 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     switch (requestCode) {
-      case Constants.REQUEST_LOCATION_PERMISSION_LOGGING:
+      case Constants.REQUEST_LOGGING_PERMISSIONS:
         // If the permission is granted, start logging,
         // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          setIsLoggingActive(true);
-        } else {
-          if (PermissionUtils.shouldShowRational(
-              requireActivity(), Constants.PERMISSION_LOCATION)) {
-            Toast.makeText(
-                    requireContext().getApplicationContext(),
-                    R.string.location_permission_denied_logging,
-                    Toast.LENGTH_LONG)
-                .show();
-          }
-        }
-        break;
-      case Constants.REQUEST_STORAGE_PERMISSION:
-        // If the permission is granted, start logging,
-        // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          setIsLoggingActive(true);
-        } else {
-          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_STORAGE)) {
-            Toast.makeText(
-                    requireContext().getApplicationContext(),
-                    R.string.storage_permission_denied_logging,
-                    Toast.LENGTH_LONG)
-                .show();
-          }
-        }
+        if (PermissionUtils.checkLoggingPermissions(grantResults)) setIsLoggingActive(true);
+        else PermissionUtils.showLoggingPermissionsToast(requireActivity());
         break;
     }
   }
@@ -487,13 +453,9 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
           break;
         case PHONE:
           binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
-          if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_LOCATION))
-            PermissionUtils.requestPermissions(
-                this,
-                new String[] {Constants.PERMISSION_LOCATION},
-                Constants.REQUEST_LOCATION_PERMISSION_CONTROLLER);
+          if (!PermissionUtils.hasControllerPermissions(requireActivity()))
+            PermissionUtils.requestControllerPermissions(requireActivity());
           else connectPhoneController();
-
           break;
       }
       Timber.d("Updating  controlMode: %s", controlMode);
