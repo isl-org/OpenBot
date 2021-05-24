@@ -1,5 +1,6 @@
 package org.openbot.main;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -78,7 +79,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       camera.setOnPreferenceChangeListener(
           (preference, newValue) -> {
             if (camera.isChecked()) startInstalledAppDetailsActivity(requireActivity());
-            else PermissionUtils.requestCameraPermission(requireActivity());
+            else {
+              if (PermissionUtils.shouldShowRational(requireActivity(), Manifest.permission.CAMERA))
+                startInstalledAppDetailsActivity(requireActivity());
+              else PermissionUtils.requestCameraPermission(requireActivity());
+            }
 
             return false;
           });
@@ -90,7 +95,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       storage.setOnPreferenceChangeListener(
           (preference, newValue) -> {
             if (storage.isChecked()) startInstalledAppDetailsActivity(requireActivity());
-            else PermissionUtils.requestStoragePermission(requireActivity());
+            else {
+              if (PermissionUtils.shouldShowRational(
+                  requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                startInstalledAppDetailsActivity(requireActivity());
+              else PermissionUtils.requestStoragePermission(requireActivity());
+            }
 
             return false;
           });
@@ -102,7 +112,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       location.setOnPreferenceChangeListener(
           (preference, newValue) -> {
             if (location.isChecked()) startInstalledAppDetailsActivity(requireActivity());
-            else PermissionUtils.requestLocationPermission(requireActivity());
+            else {
+              if (PermissionUtils.shouldShowRational(
+                  requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION))
+                startInstalledAppDetailsActivity(requireActivity());
+              else PermissionUtils.requestLocationPermission(requireActivity());
+            }
 
             return false;
           });
@@ -114,7 +129,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       mic.setOnPreferenceChangeListener(
           (preference, newValue) -> {
             if (mic.isChecked()) startInstalledAppDetailsActivity(requireActivity());
-            else PermissionUtils.requestAudioPermission(getActivity());
+            else {
+              if (PermissionUtils.shouldShowRational(
+                  requireActivity(), Manifest.permission.RECORD_AUDIO))
+                startInstalledAppDetailsActivity(requireActivity());
+              else PermissionUtils.requestAudioPermission(getActivity());
+            }
             return false;
           });
     }
