@@ -18,8 +18,8 @@ public class PhoneController {
   private static final String TAG = "PhoneController";
   private static PhoneController _phoneController;
   private ConnectionSelector connectionSelector;
-  // private final IVideoServer videoServer = new RtspServer();
-  private final IVideoServer videoServer = new WebRtcServer();
+  private final IVideoServer videoServer = new RtspServer();
+  // private final IVideoServer videoServer = new WebRtcServer();
 
   public static PhoneController getInstance(Context context) {
     if (_phoneController == null) { // Check for the first time
@@ -56,9 +56,15 @@ public class PhoneController {
 
     handleBotEvents();
 
-    View view = new org.openbot.customview.WebRTCSurfaceView(context);
-    // View view = new org.openbot.customview.AutoFitSurfaceGlView(context);
-    addVideoView(view, context);
+    View view = null;
+    if (videoServer instanceof WebRtcServer) {
+      view = new org.openbot.customview.WebRTCSurfaceView(context);
+    } else if (videoServer instanceof RtspServer) {
+      view = new org.openbot.customview.AutoFitSurfaceGlView(context);
+    }
+    if (view != null) {
+      addVideoView(view, context);
+    }
   }
 
   private void addVideoView(View videoView, Context context) {

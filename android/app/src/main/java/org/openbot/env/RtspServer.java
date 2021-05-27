@@ -260,14 +260,15 @@ public class RtspServer
 
   @Override
   public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
-    andGate.set("surfaceCreated", false);
     sendVideoStoppedStatus();
     andGate.set("surfaceCreated", false);
     return false;
   }
 
   @Override
-  public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {}
+  public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+    Log.i(TAG, "onSurfaceTextureUpdated called");
+  }
 
   // Utils
   private void beep() {
