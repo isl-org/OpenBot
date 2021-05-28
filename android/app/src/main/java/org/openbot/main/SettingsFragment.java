@@ -1,15 +1,17 @@
 package org.openbot.main;
 
-import android.Manifest;
+import static org.openbot.utils.Constants.PERMISSION_AUDIO;
+import static org.openbot.utils.Constants.PERMISSION_CAMERA;
+import static org.openbot.utils.Constants.PERMISSION_LOCATION;
+import static org.openbot.utils.Constants.PERMISSION_STORAGE;
+
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -17,18 +19,11 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
-
 import org.openbot.R;
 import org.openbot.env.Vehicle;
 import org.openbot.utils.Constants;
 import org.openbot.utils.PermissionUtils;
-
 import timber.log.Timber;
-
-import static org.openbot.utils.Constants.PERMISSION_AUDIO;
-import static org.openbot.utils.Constants.PERMISSION_CAMERA;
-import static org.openbot.utils.Constants.PERMISSION_LOCATION;
-import static org.openbot.utils.Constants.PERMISSION_STORAGE;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
   private MainViewModel mViewModel;
@@ -40,71 +35,67 @@ public class SettingsFragment extends PreferenceFragmentCompat {
   private SwitchPreferenceCompat mic;
 
   private final ActivityResultLauncher<String[]> requestPermissionLauncher =
-        registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-          result.forEach((permission, granted) -> {
-            switch (permission) {
-              case PERMISSION_CAMERA:
-                if (granted)
-                  camera.setChecked(true);
-                else {
-                  camera.setChecked(false);
-                  Toast.makeText(
-                          requireActivity().getApplicationContext(),
-                          getResources().getString(R.string.camera_permission_denied)
-                                  + " "
-                                  + getResources().getString(R.string.permission_reason_settings),
-                          Toast.LENGTH_LONG)
-                          .show();
-                }
-                break;
-              case PERMISSION_STORAGE:
-                if (granted)
-                  storage.setChecked(true);
-                else {
-                  storage.setChecked(false);
-                  Toast.makeText(
-                          requireContext().getApplicationContext(),
-                          getResources().getString(R.string.storage_permission_denied)
-                                  + " "
-                                  + getResources().getString(R.string.permission_reason_settings),
-                          Toast.LENGTH_LONG)
-                          .show();
-                }
-                break;
-              case PERMISSION_LOCATION:
-                if (granted)
-                  location.setChecked(true);
-                else {
-                  location.setChecked(false);
-                  Toast.makeText(
-                          requireActivity().getApplicationContext(),
-                          getResources().getString(R.string.location_permission_denied)
-                                  + " "
-                                  + getResources().getString(R.string.permission_reason_settings),
-                          Toast.LENGTH_LONG)
-                          .show();
-                }
-                break;
-              case PERMISSION_AUDIO:
-                if (granted)
-                  mic.setChecked(true);
-                else {
-                  mic.setChecked(false);
-                  Toast.makeText(
-                          requireActivity().getApplicationContext(),
-                          getResources().getString(R.string.record_audio_permission_denied)
-                                  + " "
-                                  + getResources().getString(R.string.permission_reason_settings),
-                          Toast.LENGTH_LONG)
-                          .show();
-                }
-                break;
-            }
-
+      registerForActivityResult(
+          new ActivityResultContracts.RequestMultiplePermissions(),
+          result -> {
+            result.forEach(
+                (permission, granted) -> {
+                  switch (permission) {
+                    case PERMISSION_CAMERA:
+                      if (granted) camera.setChecked(true);
+                      else {
+                        camera.setChecked(false);
+                        Toast.makeText(
+                                requireActivity().getApplicationContext(),
+                                getResources().getString(R.string.camera_permission_denied)
+                                    + " "
+                                    + getResources().getString(R.string.permission_reason_settings),
+                                Toast.LENGTH_LONG)
+                            .show();
+                      }
+                      break;
+                    case PERMISSION_STORAGE:
+                      if (granted) storage.setChecked(true);
+                      else {
+                        storage.setChecked(false);
+                        Toast.makeText(
+                                requireContext().getApplicationContext(),
+                                getResources().getString(R.string.storage_permission_denied)
+                                    + " "
+                                    + getResources().getString(R.string.permission_reason_settings),
+                                Toast.LENGTH_LONG)
+                            .show();
+                      }
+                      break;
+                    case PERMISSION_LOCATION:
+                      if (granted) location.setChecked(true);
+                      else {
+                        location.setChecked(false);
+                        Toast.makeText(
+                                requireActivity().getApplicationContext(),
+                                getResources().getString(R.string.location_permission_denied)
+                                    + " "
+                                    + getResources().getString(R.string.permission_reason_settings),
+                                Toast.LENGTH_LONG)
+                            .show();
+                      }
+                      break;
+                    case PERMISSION_AUDIO:
+                      if (granted) mic.setChecked(true);
+                      else {
+                        mic.setChecked(false);
+                        Toast.makeText(
+                                requireActivity().getApplicationContext(),
+                                getResources().getString(R.string.record_audio_permission_denied)
+                                    + " "
+                                    + getResources().getString(R.string.permission_reason_settings),
+                                Toast.LENGTH_LONG)
+                            .show();
+                      }
+                      break;
+                  }
+                });
           });
-
-
-        });
 
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -161,7 +152,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                   requireActivity(), Constants.PERMISSION_CAMERA)) {
                 startInstalledAppDetailsActivity(requireActivity());
               } else {
-                requestPermissionLauncher.launch(new String[]{Constants.PERMISSION_CAMERA});
+                requestPermissionLauncher.launch(new String[] {Constants.PERMISSION_CAMERA});
               }
             }
 
@@ -179,8 +170,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
               if (PermissionUtils.shouldShowRational(
                   requireActivity(), Constants.PERMISSION_STORAGE)) {
                 startInstalledAppDetailsActivity(requireActivity());
-              } else
-                requestPermissionLauncher.launch(new String[]{Constants.PERMISSION_STORAGE});
+              } else requestPermissionLauncher.launch(new String[] {Constants.PERMISSION_STORAGE});
             }
 
             return false;
@@ -197,8 +187,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
               if (PermissionUtils.shouldShowRational(requireActivity(), PERMISSION_LOCATION)) {
 
                 startInstalledAppDetailsActivity(requireActivity());
-              } else
-                requestPermissionLauncher.launch(new String[]{PERMISSION_LOCATION});
+              } else requestPermissionLauncher.launch(new String[] {PERMISSION_LOCATION});
             }
 
             return false;
@@ -222,7 +211,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         Toast.LENGTH_LONG)
                     .show();
                 startInstalledAppDetailsActivity(requireActivity());
-              } else requestPermissionLauncher.launch(new String[]{Constants.PERMISSION_AUDIO});
+              } else requestPermissionLauncher.launch(new String[] {Constants.PERMISSION_AUDIO});
             }
             return false;
           });
