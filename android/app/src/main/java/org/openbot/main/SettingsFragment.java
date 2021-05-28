@@ -80,18 +80,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
           (preference, newValue) -> {
             if (camera.isChecked()) startInstalledAppDetailsActivity(requireActivity());
             else {
-              if (PermissionUtils.shouldShowRational(requireActivity(), Manifest.permission.CAMERA))
-              {
+              if (PermissionUtils.shouldShowRational(
+                  requireActivity(), Manifest.permission.CAMERA)) {
                 Toast.makeText(
                         requireActivity().getApplicationContext(),
                         getResources().getString(R.string.camera_permission_denied)
-                                + " "
-                                + getResources().getString(R.string.permission_reason_settings),
+                            + " "
+                            + getResources().getString(R.string.permission_reason_settings),
                         Toast.LENGTH_LONG)
-                        .show();
+                    .show();
                 startInstalledAppDetailsActivity(requireActivity());
-              }
-              else PermissionUtils.requestCameraPermission(requireActivity());
+              } else PermissionUtils.requestCameraPermission(requireActivity());
             }
 
             return false;
@@ -106,18 +105,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             if (storage.isChecked()) startInstalledAppDetailsActivity(requireActivity());
             else {
               if (PermissionUtils.shouldShowRational(
-                  requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE))
-              {
+                  requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 startInstalledAppDetailsActivity(requireActivity());
                 Toast.makeText(
                         requireContext().getApplicationContext(),
                         getResources().getString(R.string.storage_permission_denied)
-                                + " "
-                                + getResources().getString(R.string.permission_reason_settings),
+                            + " "
+                            + getResources().getString(R.string.permission_reason_settings),
                         Toast.LENGTH_LONG)
-                        .show();
-              }
-              else PermissionUtils.requestStoragePermission(requireActivity());
+                    .show();
+              } else PermissionUtils.requestStoragePermission(requireActivity());
             }
 
             return false;
@@ -132,18 +129,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             if (location.isChecked()) startInstalledAppDetailsActivity(requireActivity());
             else {
               if (PermissionUtils.shouldShowRational(
-                  requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION))
-              {
+                  requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
                 Toast.makeText(
                         requireActivity().getApplicationContext(),
                         getResources().getString(R.string.location_permission_denied)
-                                + " "
-                                + getResources().getString(R.string.permission_reason_settings),
+                            + " "
+                            + getResources().getString(R.string.permission_reason_settings),
                         Toast.LENGTH_LONG)
-                        .show();
+                    .show();
                 startInstalledAppDetailsActivity(requireActivity());
-              }
-              else PermissionUtils.requestLocationPermission(requireActivity());
+              } else PermissionUtils.requestLocationPermission(requireActivity());
             }
 
             return false;
@@ -158,18 +153,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             if (mic.isChecked()) startInstalledAppDetailsActivity(requireActivity());
             else {
               if (PermissionUtils.shouldShowRational(
-                  requireActivity(), Manifest.permission.RECORD_AUDIO))
-              {
+                  requireActivity(), Manifest.permission.RECORD_AUDIO)) {
                 Toast.makeText(
                         requireActivity().getApplicationContext(),
                         getResources().getString(R.string.record_audio_permission_denied)
-                                + " "
-                                + getResources().getString(R.string.permission_reason_settings),
+                            + " "
+                            + getResources().getString(R.string.permission_reason_settings),
                         Toast.LENGTH_LONG)
-                        .show();
+                    .show();
                 startInstalledAppDetailsActivity(requireActivity());
-              }
-              else PermissionUtils.requestAudioPermission(getActivity());
+              } else PermissionUtils.requestAudioPermission(getActivity());
             }
             return false;
           });
