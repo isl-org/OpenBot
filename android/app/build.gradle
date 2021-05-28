@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'de.undercouch.download'
 apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 30
