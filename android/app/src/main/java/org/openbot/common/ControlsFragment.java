@@ -1,5 +1,10 @@
 package org.openbot.common;
 
+import static org.openbot.utils.Constants.PERMISSION_AUDIO;
+import static org.openbot.utils.Constants.PERMISSION_CAMERA;
+import static org.openbot.utils.Constants.PERMISSION_LOCATION;
+import static org.openbot.utils.Constants.PERMISSION_STORAGE;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -7,6 +12,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -224,20 +232,66 @@ public abstract class ControlsFragment extends Fragment {
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("INDICATOR_STOP", value == 0));
   }
 
-  @Override
-  public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    switch (requestCode) {
-      case Constants.REQUEST_CONTROLLER_PERMISSIONS:
-        // If the permission is granted, start advertising to controller,
-        // otherwise, show a Toast
-        if (PermissionUtils.checkControllerPermissions(grantResults))
-          phoneController.connect(requireContext());
-        else PermissionUtils.showControllerPermissionsToast(requireActivity());
-        break;
-    }
-  }
+  protected final ActivityResultLauncher<String[]> requestPermissionLauncher =
+      registerForActivityResult(
+          new ActivityResultContracts.RequestMultiplePermissions(),
+          result -> {
+            result.forEach(
+                (permission, granted) -> {
+                  switch (permission) {
+                    case PERMISSION_CAMERA:
+                      if (!granted) {
+                        Toast.makeText(
+                                requireActivity().getApplicationContext(),
+                                R.string.camera_permission_denied
+                                    + " "
+                                    + R.string.permission_reason_stream_video,
+                                Toast.LENGTH_LONG)
+                            .show();
+                      }
+                      break;
+                    case PERMISSION_STORAGE:
+                      if (!granted) {
+                        Toast.makeText(
+                                requireActivity().getApplicationContext(),
+                                requireActivity()
+                                        .getResources()
+                                        .getString(R.string.storage_permission_denied)
+                                    + " "
+                                    + requireActivity()
+                                        .getResources()
+                                        .getString(R.string.permission_reason_logging),
+                                Toast.LENGTH_LONG)
+                            .show();
+                      }
+                      break;
+                    case PERMISSION_LOCATION:
+                      if (!granted) {
+                        Toast.makeText(
+                                requireActivity().getApplicationContext(),
+                                R.string.location_permission_denied
+                                    + " "
+                                    + R.string.permission_reason_find_controller,
+                                Toast.LENGTH_LONG)
+                            .show();
+                      }
+                      break;
+                    case PERMISSION_AUDIO:
+                      if (!granted) {
+                        Toast.makeText(
+                                requireActivity().getApplicationContext(),
+                                R.string.record_audio_permission_denied
+                                    + " "
+                                    + R.string.permission_reason_stream_audio,
+                                Toast.LENGTH_LONG)
+                            .show();
+                      }
+                      break;
+                  }
+                });
+            if (PermissionUtils.hasControllerPermissions(requireActivity()))
+              phoneController.connect(requireContext());
+          });
 
   @Override
   public void onResume() {
