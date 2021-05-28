@@ -74,7 +74,7 @@ public abstract class CameraFragment extends ControlsFragment {
               Toast.LENGTH_LONG)
           .show();
     } else {
-      requestPermissionLauncher.launch(Constants.PERMISSION_CAMERA);
+      requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
     }
 
     return cameraView;
@@ -150,7 +150,7 @@ public abstract class CameraFragment extends ControlsFragment {
     return rotationDegrees;
   }
 
-  private final ActivityResultLauncher<String> requestPermissionLauncher =
+  private final ActivityResultLauncher<String> requestPermissionLauncherCamera =
       registerForActivityResult(
           new ActivityResultContracts.RequestPermission(),
           isGranted -> {

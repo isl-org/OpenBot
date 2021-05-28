@@ -1,5 +1,10 @@
 package org.openbot.logging;
 
+import static org.openbot.utils.Constants.PERMISSION_AUDIO;
+import static org.openbot.utils.Constants.PERMISSION_CAMERA;
+import static org.openbot.utils.Constants.PERMISSION_LOCATION;
+import static org.openbot.utils.Constants.PERMISSION_STORAGE;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
@@ -329,7 +336,8 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
   protected void setIsLoggingActive(boolean loggingActive) {
     if (loggingActive && !loggingEnabled) {
       if (!PermissionUtils.hasLoggingPermissions(requireActivity())) {
-        PermissionUtils.requestLoggingPermissions(requireActivity());
+        requestPermissionLauncherLogging.launch(
+            new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE, PERMISSION_LOCATION});
         loggingEnabled = false;
       } else {
         startLogging();
@@ -344,19 +352,18 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
     binding.loggerSwitch.setChecked(loggingEnabled);
   }
 
-  @Override
-  public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    switch (requestCode) {
-      case Constants.REQUEST_LOGGING_PERMISSIONS:
-        // If the permission is granted, start logging,
-        // otherwise, show a Toast
-        if (PermissionUtils.checkLoggingPermissions(grantResults)) setIsLoggingActive(true);
-        else PermissionUtils.showLoggingPermissionsToast(requireActivity());
-        break;
-    }
-  }
+  boolean allGranted = false;
+  protected final ActivityResultLauncher<String[]> requestPermissionLauncherLogging =
+      registerForActivityResult(
+          new ActivityResultContracts.RequestMultiplePermissions(),
+          result -> {
+            result.forEach((permission, granted) -> allGranted = allGranted && granted);
+
+            if (allGranted) setIsLoggingActive(true);
+            else {
+              PermissionUtils.showLoggingPermissionsToast(requireActivity());
+            }
+          });
 
   protected void handleLogging() {
     setIsLoggingActive(!loggingEnabled);
@@ -454,7 +461,8 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
         case PHONE:
           binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
           if (!PermissionUtils.hasControllerPermissions(requireActivity()))
-            PermissionUtils.requestControllerPermissions(requireActivity());
+            requestPermissionLauncher.launch(
+                new String[] {PERMISSION_CAMERA, PERMISSION_AUDIO, PERMISSION_LOCATION});
           else connectPhoneController();
           break;
       }

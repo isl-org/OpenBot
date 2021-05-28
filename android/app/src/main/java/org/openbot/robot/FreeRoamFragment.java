@@ -1,5 +1,8 @@
 package org.openbot.robot;
 
+import static org.openbot.utils.Constants.PERMISSION_AUDIO;
+import static org.openbot.utils.Constants.PERMISSION_CAMERA;
+import static org.openbot.utils.Constants.PERMISSION_LOCATION;
 import static org.openbot.utils.Enums.ControlMode;
 import static org.openbot.utils.Enums.DriveMode;
 import static org.openbot.utils.Enums.SpeedMode;
@@ -202,7 +205,8 @@ public class FreeRoamFragment extends ControlsFragment {
         case PHONE:
           binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
           if (!PermissionUtils.hasControllerPermissions(requireActivity()))
-            PermissionUtils.requestControllerPermissions(requireActivity());
+            requestPermissionLauncher.launch(
+                new String[] {PERMISSION_CAMERA, PERMISSION_AUDIO, PERMISSION_LOCATION});
           else connectPhoneController();
           break;
       }
