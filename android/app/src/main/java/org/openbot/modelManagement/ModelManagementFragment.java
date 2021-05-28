@@ -210,12 +210,8 @@ public class ModelManagementFragment extends Fragment
             requestPermissionLauncher.launch(Constants.PERMISSION_STORAGE);
           else if (PermissionUtils.shouldShowRational(
               requireActivity(), Constants.PERMISSION_STORAGE)) {
-            Toast.makeText(
-                    requireContext().getApplicationContext(),
-                    getResources().getString(R.string.storage_permission_denied)
-                        + getResources().getString(R.string.permission_reason_model_from_phone),
-                    Toast.LENGTH_LONG)
-                .show();
+            PermissionUtils.showPermissionsModelManagementToast(
+                requireActivity(), getResources().getString(R.string.storage_permission_denied));
           } else openPicker();
         });
   }
@@ -305,12 +301,8 @@ public class ModelManagementFragment extends Fragment
             if (isGranted) {
               openPicker();
             } else {
-              Toast.makeText(
-                      requireContext().getApplicationContext(),
-                      getResources().getString(R.string.storage_permission_denied)
-                          + getResources().getString(R.string.permission_reason_model_from_phone),
-                      Toast.LENGTH_LONG)
-                  .show();
+              PermissionUtils.showPermissionsModelManagementToast(
+                  requireActivity(), getResources().getString(R.string.storage_permission_denied));
             }
           });
 }

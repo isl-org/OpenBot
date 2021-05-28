@@ -218,4 +218,24 @@ public class PermissionUtils {
         .putBoolean(permission, true)
         .apply();
   }
+
+  public static void showPermissionsSettingsToast(Activity activity, String permission) {
+    Toast.makeText(
+            activity.getApplicationContext(),
+            permission
+                + " "
+                + activity.getResources().getString(R.string.permission_reason_settings),
+            Toast.LENGTH_LONG)
+        .show();
+  }
+
+  public static void showPermissionsModelManagementToast(Activity activity, String permission) {
+    Toast.makeText(
+            activity.getApplicationContext(),
+            permission
+                + " "
+                + activity.getResources().getString(R.string.permission_reason_model_from_phone),
+            Toast.LENGTH_LONG)
+        .show();
+  }
 }
