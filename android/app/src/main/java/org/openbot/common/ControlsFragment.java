@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -241,50 +240,22 @@ public abstract class ControlsFragment extends Fragment {
                   switch (permission) {
                     case PERMISSION_CAMERA:
                       if (!granted) {
-                        Toast.makeText(
-                                requireActivity().getApplicationContext(),
-                                R.string.camera_permission_denied
-                                    + " "
-                                    + R.string.permission_reason_stream_video,
-                                Toast.LENGTH_LONG)
-                            .show();
+                        PermissionUtils.showCameraPermissionsControllerToast(requireActivity());
                       }
                       break;
                     case PERMISSION_STORAGE:
                       if (!granted) {
-                        Toast.makeText(
-                                requireActivity().getApplicationContext(),
-                                requireActivity()
-                                        .getResources()
-                                        .getString(R.string.storage_permission_denied)
-                                    + " "
-                                    + requireActivity()
-                                        .getResources()
-                                        .getString(R.string.permission_reason_logging),
-                                Toast.LENGTH_LONG)
-                            .show();
+                        PermissionUtils.showStoragePermissionsLoggingToast(requireActivity());
                       }
                       break;
                     case PERMISSION_LOCATION:
                       if (!granted) {
-                        Toast.makeText(
-                                requireActivity().getApplicationContext(),
-                                R.string.location_permission_denied
-                                    + " "
-                                    + R.string.permission_reason_find_controller,
-                                Toast.LENGTH_LONG)
-                            .show();
+                        PermissionUtils.showLocationPermissionsLoggingToast(requireActivity());
                       }
                       break;
                     case PERMISSION_AUDIO:
                       if (!granted) {
-                        Toast.makeText(
-                                requireActivity().getApplicationContext(),
-                                R.string.record_audio_permission_denied
-                                    + " "
-                                    + R.string.permission_reason_stream_audio,
-                                Toast.LENGTH_LONG)
-                            .show();
+                        PermissionUtils.showAudioPermissionsControllerToast(requireActivity());
                       }
                       break;
                   }

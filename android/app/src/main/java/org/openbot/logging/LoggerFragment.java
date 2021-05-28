@@ -1,9 +1,5 @@
 package org.openbot.logging;
 
-import static org.openbot.utils.Constants.PERMISSION_AUDIO;
-import static org.openbot.utils.Constants.PERMISSION_CAMERA;
-import static org.openbot.utils.Constants.PERMISSION_LOCATION;
-import static org.openbot.utils.Constants.PERMISSION_STORAGE;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -336,8 +332,7 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
   protected void setIsLoggingActive(boolean loggingActive) {
     if (loggingActive && !loggingEnabled) {
       if (!PermissionUtils.hasLoggingPermissions(requireActivity())) {
-        requestPermissionLauncherLogging.launch(
-            new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE, PERMISSION_LOCATION});
+        requestPermissionLauncherLogging.launch(Constants.PERMISSIONS_LOGGING);
         loggingEnabled = false;
       } else {
         startLogging();
@@ -461,8 +456,7 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
         case PHONE:
           binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_phone);
           if (!PermissionUtils.hasControllerPermissions(requireActivity()))
-            requestPermissionLauncher.launch(
-                new String[] {PERMISSION_CAMERA, PERMISSION_AUDIO, PERMISSION_LOCATION});
+            requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
           else connectPhoneController();
           break;
       }

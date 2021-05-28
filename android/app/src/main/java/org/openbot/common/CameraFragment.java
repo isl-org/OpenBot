@@ -32,6 +32,7 @@ import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
+import org.openbot.utils.PermissionUtils;
 import org.openbot.utils.YuvToRgbConverter;
 
 public abstract class CameraFragment extends ControlsFragment {
@@ -67,12 +68,7 @@ public abstract class CameraFragment extends ControlsFragment {
         == PackageManager.PERMISSION_GRANTED) {
       setupCamera();
     } else if (shouldShowRequestPermissionRationale(Constants.PERMISSION_CAMERA)) {
-
-      Toast.makeText(
-              requireActivity().getApplicationContext(),
-              R.string.camera_permission_denied + " " + R.string.permission_reason_stream_video,
-              Toast.LENGTH_LONG)
-          .show();
+      PermissionUtils.showCameraPermissionsControllerToast(requireActivity());
     } else {
       requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
     }
