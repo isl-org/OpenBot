@@ -243,11 +243,6 @@ public abstract class ControlsFragment extends Fragment {
                         PermissionUtils.showCameraPermissionsControllerToast(requireActivity());
                       }
                       break;
-                    case PERMISSION_STORAGE:
-                      if (!granted) {
-                        PermissionUtils.showStoragePermissionsLoggingToast(requireActivity());
-                      }
-                      break;
                     case PERMISSION_LOCATION:
                       if (!granted) {
                         PermissionUtils.showLocationPermissionsControllerToast(requireActivity());
