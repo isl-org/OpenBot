@@ -1,6 +1,5 @@
 package org.openbot.autopilot;
 
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;

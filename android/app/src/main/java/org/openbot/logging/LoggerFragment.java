@@ -1,6 +1,5 @@
 package org.openbot.logging;
 
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
