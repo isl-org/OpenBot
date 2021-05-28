@@ -250,7 +250,7 @@ public abstract class ControlsFragment extends Fragment {
                       break;
                     case PERMISSION_LOCATION:
                       if (!granted) {
-                        PermissionUtils.showLocationPermissionsLoggingToast(requireActivity());
+                        PermissionUtils.showLocationPermissionsControllerToast(requireActivity());
                       }
                       break;
                     case PERMISSION_AUDIO:
