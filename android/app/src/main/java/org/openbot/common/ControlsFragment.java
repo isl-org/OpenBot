@@ -3,7 +3,6 @@ package org.openbot.common;
 import static org.openbot.utils.Constants.PERMISSION_AUDIO;
 import static org.openbot.utils.Constants.PERMISSION_CAMERA;
 import static org.openbot.utils.Constants.PERMISSION_LOCATION;
-import static org.openbot.utils.Constants.PERMISSION_STORAGE;
 
 import android.os.Bundle;
 import android.util.Log;
