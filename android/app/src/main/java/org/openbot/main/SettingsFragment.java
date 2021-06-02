@@ -132,7 +132,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
           (preference, newValue) -> {
             if (camera.isChecked()) startInstalledAppDetailsActivity(requireActivity());
             else {
-              if (PermissionUtils.shouldShowRational(
+              if (!PermissionUtils.shouldShowRational(
                   requireActivity(), Constants.PERMISSION_CAMERA)) {
                 startInstalledAppDetailsActivity(requireActivity());
               } else {
@@ -151,7 +151,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
           (preference, newValue) -> {
             if (storage.isChecked()) startInstalledAppDetailsActivity(requireActivity());
             else {
-              if (PermissionUtils.shouldShowRational(
+              if (!PermissionUtils.shouldShowRational(
                   requireActivity(), Constants.PERMISSION_STORAGE)) {
                 startInstalledAppDetailsActivity(requireActivity());
               } else requestPermissionLauncher.launch(new String[] {Constants.PERMISSION_STORAGE});
@@ -168,7 +168,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
           (preference, newValue) -> {
             if (location.isChecked()) startInstalledAppDetailsActivity(requireActivity());
             else {
-              if (PermissionUtils.shouldShowRational(requireActivity(), PERMISSION_LOCATION)) {
+              if (!PermissionUtils.shouldShowRational(requireActivity(), PERMISSION_LOCATION)) {
 
                 startInstalledAppDetailsActivity(requireActivity());
               } else requestPermissionLauncher.launch(new String[] {PERMISSION_LOCATION});
@@ -185,7 +185,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
           (preference, newValue) -> {
             if (mic.isChecked()) startInstalledAppDetailsActivity(requireActivity());
             else {
-              if (PermissionUtils.shouldShowRational(
+              if (!PermissionUtils.shouldShowRational(
                   requireActivity(), Constants.PERMISSION_AUDIO)) {
                 startInstalledAppDetailsActivity(requireActivity());
               } else requestPermissionLauncher.launch(new String[] {Constants.PERMISSION_AUDIO});

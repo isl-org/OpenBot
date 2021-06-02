@@ -12,6 +12,7 @@
     <string name="permission_reason_logging"> to log datasets.</string>
     <string name="permission_reason_ai"> to run AI models.</string>
     <string name="permission_reason_stream_video"> to stream video to the controller.</string>
+    <string name="permission_reason_preview"> to preview video.</string>
     <string name="permission_reason_stream_audio"> to stream audio to the controller.</string>
     <string name="permission_reason_find_controller"> to find the controller.</string>
     <string name="permission_reason_model_from_phone"> to select a model from phone storage.</string>

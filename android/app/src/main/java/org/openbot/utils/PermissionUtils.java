@@ -160,6 +160,16 @@ public class PermissionUtils {
         .show();
   }
 
+  public static void showCameraPermissionsPreviewToast(Activity activity) {
+    Toast.makeText(
+            activity.getApplicationContext(),
+            activity.getResources().getString(R.string.camera_permission_denied)
+                + " "
+                + activity.getResources().getString(R.string.permission_reason_preview),
+            Toast.LENGTH_LONG)
+        .show();
+  }
+
   public static void showLoggingPermissionsToast(Activity activity) {
     if (shouldShowRational(activity, Constants.PERMISSION_LOCATION)) {
       showLocationPermissionsLoggingToast(activity);
