@@ -1,4 +1,4 @@
-# OpenBot App
+# Robot App
 
 ## DISCLAIMERS
 
@@ -6,23 +6,24 @@
 care is neccessary when using automated control (e.g. person following or driving policy). Make sure you always have a game controller connected and are familiar with the key mapping so you can stop the vehicle at any time. Use at your own risk!
 2. **App under development:** The application is under development and may crash or exhibit unexpected behaviour depending on your phone model and version of the operating system. Make sure to test all functionalities with no wheels connected. Use at your own risk!
 
-## Default Activity
+## App Screens
 
-The app starts with the [DefaultActivity](src/main/java/org/openbot/robot/DefaultActivity.java) which includes the most important features of the OpenBot app in a single screen. It displays the connection status to the vehicle and reports measurements from vehicle sensors. The robot can be controlled by standard BT game controllers or another smartphone running the OpenBot [controller app](../controller). We have also implemented a data logger to collect datasets with the robot. Currently, we record readings from following sensors: camera, gyroscope, accelerometer, magnetometer, ambient light sensor, and barometer. Using the Android API, we are able to obtain the following sensor readings: RGB images, angular speed, linear acceleration, gravity, magnetic field strength, light intensity, atmospheric pressure, latitude, longitude, altitude, bearing, and speed. In addition to the phone sensors, we record body sensor readings (wheel odometry, obstacle distance and battery voltage), which are transmitted via the serial link. We also record and timestamp control signals received from a connected controller, if present. Lastly, we integrate several neural networks for person following and autonomous navigation.
+### Main Menu
 
-### Code Structure
+The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon at the top right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
 
-The [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android) was used as starting point to integrate TFLite models and obtain the camera feed. The [DefaultActivity](src/main/java/org/openbot/robot/DefaultActivity.java) runs the main thread and inherits from the [CameraActivity](src/main/java/org/openbot/robot/CameraActivity.java) to manage the camera and UI. The [SensorService](src/main/java/org/openbot/robot/SensorService.java) reads all other phone sensors and logs them. The [ServerService](src/main/java/org/openbot/robot/ServerService.java) and [NsdService](src/main/java/org/openbot/robot/NsdService.java) establish a connection to a local [Python server](../../policy/README.md#web-app) with a React frontend. If you collect data it can be uploaded automatically for visualization, training ML models and downloading trained models to the robot. The [env](src/main/java/org/openbot/env) folder contains utility classes such as the [Vehicle](src/main/java/org/openbot/env/Vehicle.java) interface, [GameController](src/main/java/org/openbot/env/GameController.java) interface, [PhoneController](src/main/java/org/openbot/env/PhoneController.java) interface and an [AudioPlayer](src/main/java/org/openbot/env/AudioPlayer.java) for the audible feedback. The [tflite](src/main/java/org/openbot/tflite) folder contains the model definitions for the [Autopilot](src/main/java/org/openbot/tflite/Autopilot.java) and [Detector](src/main/java/org/openbot/tflite/Detector.java) networks.
-
-### User Interface
-
-In the following we briefly explain the user interface.
-
-<p align="center">
-  <img src="../../docs/images/app_gui_1.jpg" alt="App GUI" width="49%"/>
-  <img src="../../docs/images/app_gui_2.jpg" alt="App GUI" width="50%"/>
+<p align="left">
+<img style="padding-right: 2%;" src="../../docs/images/screen_main.jpg" alt="Main Menu" width="25%"/>
+<img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="25%"/>
 </p>
 
+### Default
+
+The [DefaultActivity](src/main/java/org/openbot/original/DefaultActivity.java) includes the most important features of the OpenBot app in a single screen. It displays the connection status to the vehicle and reports measurements from vehicle sensors. The robot can be controlled by standard BT game controllers or another smartphone running the OpenBot [controller app](../controller). We have also implemented a data logger to collect datasets with the robot. Currently, we record readings from following sensors: camera, gyroscope, accelerometer, magnetometer, ambient light sensor, and barometer. Using the Android API, we are able to obtain the following sensor readings: RGB images, angular speed, linear acceleration, gravity, magnetic field strength, light intensity, atmospheric pressure, latitude, longitude, altitude, bearing, and speed. In addition to the phone sensors, we record body sensor readings (wheel odometry, obstacle distance and battery voltage), which are transmitted via the serial link. We also record and timestamp control signals received from a connected controller, if present. Lastly, we integrate several neural networks for person following and autonomous navigation.
+
+<p align="left">
+  <img src="../../docs/images/screen_default.jpg" alt="App GUI" width="50%"/>
+</p>
 
 #### USB Connection
 
@@ -34,7 +35,10 @@ The field **Battery** displays the battery voltage as measured by the Arduino vi
 
 #### Control
 
-The first button is for selecting the **control mode**. Currenlty, the only control mode is **Gamepad**. In the future, it will be possible to control the robot with another smartphone, i.e. **Phone** or via **WebRTC**. 
+The first button is for selecting the **control mode**. There are two different control modes:
+
+- **Gamepad**: The app receives controls from a connected BT controller.
+- **Phone**:  The robot can be controlled via another smartphone with the controller app installed or though a Python script running on a computer connected to the same network.
 
 The second button is for selecting the **drive mode**. There are three different drive modes when using a game controller (e.g. PS4):
 
@@ -63,15 +67,16 @@ The switch on the right is used to toggle logging on and off. On the game contro
 
 #### Camera
 
-The first item shows the preview resolution. The second item shows the crop resolution. This is the image that is used as input to the neural networks. You will notice that this resolution changes depending on which model you select below. If you train your own autopilot, make sure to select the `AUTOPILOT_F` model. The crop resolution should show `256x96`. The switch on the right is used to toggle between the rear and the front camera. 
+The first item shows the preview resolution. The second item shows the crop resolution. This is the image that is used as input to the neural networks. You will notice that this resolution changes depending on which model you select below. If you train your own autopilot, make sure to select the `AUTOPILOT_F` model. The crop resolution should show `256x96`. The switch on the right is used to toggle between the rear and the front camera.
 
 #### Model
 
-There are three models that come with the app:
+There are two models that come with the app:
 
-- **DETECTOR_V1_1_0_Q**: This model is used for person following. It uses a SSD object detector with MobileNet V1 backbone. The model is quantized for better performance on embedded devices.
-- **DETECTOR_V3_S_Q**: This model is used for person following. It uses a SSD object detector with MobileNet V3 backbone. The model is quantized for better performance on embedded devices.
-- **AUTOPILOT_F**: This model is used for autonomous navigation. It will predict controls directly from the camera input. Chances are that it will not work in your environment. You should follow our instructions to train your own [Driving Policy](../../policy) and replace it.
+- **MobileNetV1-300**: This model is used for person following. It uses a SSD object detector with MobileNet V1 backbone. The model is quantized for better performance on embedded devices. It comes with the app.
+- **CIL-Mobile**: This model is used for autonomous navigation. It will predict controls directly from the camera input. Chances are that it will not work in your environment. You should follow our instructions to train your own [Driving Policy](../../policy) and replace it.
+
+Additonal models can be downloaded from the Model Management screen.
 
 The switch on the right is used to turn the network on and off. When the network is running, it produces the controls for the robot and the game controller is disabled. However, you may still use the buttons on the game controller, for example to toggle this switch with the R1 trigger button to regain control of the robot. 
 
@@ -85,20 +90,12 @@ Use the drop-down menu to select the device on which the neural network should b
 
 If a model is active, the inference speed in [ms] will be displayed next to the device which is running the model.
 
-## Additional fragments
-
-Pressing the back button opens up the menu screen that shows all available activities and fragments. Users may choose a custom screen to use specific features rather than the default activity.
-
-<p align="left">
-<img src="../../docs/images/menu_selector.jpg" alt="App GUI" width="50%"/>
-</p>
-
-### Free Roam 
+### Free Roam
 
 Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
 
 <p align="left">
-<img src="../../docs/images/game_screen.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_free_roam.jpg" alt="Alt text" width="50%" />
 </p>
 
 - **Battery**: The battery icon shows realtime battery levels of the connected robot.
@@ -115,32 +112,61 @@ Free Roam offers simple robot control with real time updates and information abo
 
 - **Sonar**: The sonar view distance of robot from an oncoming object in cm.
 
-- **Control**: Controller, Drive Mode and Speed are used to control robot settings as described above in Control section.
+- **Control**: Controller, Drive Mode and Speed are used to control robot settings as described above in the Control section.
 
 ### Data Collection
 
 Simple UI for collection of data sets.
 
 <p align="left">
-<img src="../../docs/images/logger_screen.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_data_collection.jpg" alt="Alt text" width="50%" />
 </p>
-
 
 - **Preview Resolution**: Used to switch between resolutions of camera preview. There are 3 settings:
     - ***FULL_HD*** (1920x1080p)
     - ***HD*** (1280x720p)
     - ***SD*** (640x360)
 
-- **Training Resolution**: Used to switch between resolutions of images saved for training different models.
+- **Model Resolution**: Used to switch between resolutions of images saved for training different models.
 
-### AI Models 
+### Controller Mapping
 
-Simple UI for running AI models.
+Simple UI to check the button and joystick mapping of a connected BT controller.
 
 <p align="left">
-<img src="../../docs/images/ai_screen.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_controller_mapping.jpg" alt="Alt text" width="50%" />
 </p>
 
+### Autopilot
+
+Simple UI for running autopilot models.
+
+<p align="left">
+<img src="../../docs/images/screen_autopilot.jpg" alt="Alt text" width="50%" />
+</p>
+
+### Object Tracking
+
+Simple UI for tracking objects of 80 different classes.
+
+<p align="left">
+<img src="../../docs/images/screen_object_tracking_1.jpg" alt="Alt text" width="49%" />
+<img src="../../docs/images/screen_object_tracking_2.jpg" alt="Alt text" width="49%" />
+</p>
+
+### Model Management
+
+<p align="left">
+<img src="../../docs/images/screen_model_management.jpg" alt="Alt text" width="25%" />
+</p>
+
+The following AI models can be downloaded:
+
+- **MobileNetV3-320**: This model is used for person following. It uses a SSD object detector with MobileNet V3 backbone. The model is quantized for better performance on embedded devices.
+- **YoloV4-tiny-224**: This model is used for person following. It uses the tiny version of YoloV4, a state-of-the-art object detector. The model is quantized for better performance on embedded devices. 
+- **YoloV4-tiny-416**: This model is used for person following. It uses the tiny version of YoloV4, a state-of-the-art object detector. The model is quantized for better performance on embedded devices.
+- **YoloV4-224**: This model is used for person following. It uses the state-of-the-art object detector YoloV4. The model is quantized for better performance on embedded devices.
+- 
 ## Add your own fragment
 
 Please refer to the [ContributionGuide](ContributionGuide.md) to learn how to add your own fragments to the OpenBot app.
