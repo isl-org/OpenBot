@@ -32,7 +32,6 @@ import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.utils.YuvToRgbConverter;
-
 import timber.log.Timber;
 
 public abstract class CameraFragment extends ControlsFragment {
