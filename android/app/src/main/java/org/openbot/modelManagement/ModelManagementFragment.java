@@ -210,8 +210,7 @@ public class ModelManagementFragment extends Fragment
             requestPermissionLauncher.launch(Constants.PERMISSION_STORAGE);
           else if (PermissionUtils.shouldShowRational(
               requireActivity(), Constants.PERMISSION_STORAGE)) {
-            PermissionUtils.showPermissionsModelManagementToast(
-                requireActivity(), getResources().getString(R.string.storage_permission_denied));
+            PermissionUtils.showStoragePermissionModelManagementToast(requireActivity());
           } else openPicker();
         });
   }

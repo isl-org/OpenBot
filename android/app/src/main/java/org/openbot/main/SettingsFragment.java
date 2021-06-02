@@ -45,36 +45,28 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                       if (granted) camera.setChecked(true);
                       else {
                         camera.setChecked(false);
-                        PermissionUtils.showPermissionsSettingsToast(
-                            requireActivity(),
-                            getResources().getString(R.string.camera_permission_denied));
+                        PermissionUtils.showCameraPermissionSettingsToast(requireActivity());
                       }
                       break;
                     case PERMISSION_STORAGE:
                       if (granted) storage.setChecked(true);
                       else {
                         storage.setChecked(false);
-                        PermissionUtils.showPermissionsSettingsToast(
-                            requireActivity(),
-                            getResources().getString(R.string.storage_permission_denied));
+                        PermissionUtils.showStoragePermissionSettingsToast(requireActivity());
                       }
                       break;
                     case PERMISSION_LOCATION:
                       if (granted) location.setChecked(true);
                       else {
                         location.setChecked(false);
-                        PermissionUtils.showPermissionsSettingsToast(
-                            requireActivity(),
-                            getResources().getString(R.string.location_permission_denied));
+                        PermissionUtils.showLocationPermissionSettingsToast(requireActivity());
                       }
                       break;
                     case PERMISSION_AUDIO:
                       if (granted) mic.setChecked(true);
                       else {
                         mic.setChecked(false);
-                        PermissionUtils.showPermissionsSettingsToast(
-                            requireActivity(),
-                            getResources().getString(R.string.record_audio_permission_denied));
+                        PermissionUtils.showAudioPermissionSettingsToast(requireActivity());
                       }
                       break;
                   }

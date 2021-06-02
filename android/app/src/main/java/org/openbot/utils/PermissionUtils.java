@@ -184,36 +184,6 @@ public class PermissionUtils {
     }
   }
 
-  public static void showStoragePermissionLoggingToast(Activity activity) {
-    Toast.makeText(
-            activity.getApplicationContext(),
-            activity.getResources().getString(R.string.storage_permission_denied)
-                + " "
-                + activity.getResources().getString(R.string.permission_reason_logging),
-            Toast.LENGTH_LONG)
-        .show();
-  }
-
-  public static void showCameraPermissionLoggingToast(Activity activity) {
-    Toast.makeText(
-            activity.getApplicationContext(),
-            activity.getResources().getString(R.string.camera_permission_denied)
-                + " "
-                + activity.getResources().getString(R.string.permission_reason_logging),
-            Toast.LENGTH_LONG)
-        .show();
-  }
-
-  public static void showLocationPermissionLoggingToast(Activity activity) {
-    Toast.makeText(
-            activity.getApplicationContext(),
-            activity.getResources().getString(R.string.location_permission_denied)
-                + " "
-                + activity.getResources().getString(R.string.permission_reason_logging),
-            Toast.LENGTH_LONG)
-        .show();
-  }
-
   public static boolean shouldShowRational(Activity activity, String permission) {
     return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission);
   }
@@ -253,5 +223,55 @@ public class PermissionUtils {
                 + activity.getResources().getString(R.string.permission_reason_model_from_phone),
             Toast.LENGTH_LONG)
         .show();
+  }
+
+  public static void showPermissionsLoggingToast(Activity activity, String permission) {
+    Toast.makeText(
+            activity.getApplicationContext(),
+            permission
+                + " "
+                + activity.getResources().getString(R.string.permission_reason_logging),
+            Toast.LENGTH_LONG)
+        .show();
+  }
+
+  public static void showStoragePermissionSettingsToast(Activity activity) {
+    showPermissionsSettingsToast(
+        activity, activity.getResources().getString(R.string.storage_permission_denied));
+  }
+
+  public static void showCameraPermissionSettingsToast(Activity activity) {
+    showPermissionsSettingsToast(
+        activity, activity.getResources().getString(R.string.camera_permission_denied));
+  }
+
+  public static void showLocationPermissionSettingsToast(Activity activity) {
+    showPermissionsSettingsToast(
+        activity, activity.getResources().getString(R.string.location_permission_denied));
+  }
+
+  public static void showAudioPermissionSettingsToast(Activity activity) {
+    showPermissionsSettingsToast(
+        activity, activity.getResources().getString(R.string.record_audio_permission_denied));
+  }
+
+  public static void showStoragePermissionModelManagementToast(Activity activity) {
+    showPermissionsModelManagementToast(
+        activity, activity.getResources().getString(R.string.storage_permission_denied));
+  }
+
+  public static void showStoragePermissionLoggingToast(Activity activity) {
+    showPermissionsLoggingToast(
+        activity, activity.getResources().getString(R.string.storage_permission_denied));
+  }
+
+  public static void showCameraPermissionLoggingToast(Activity activity) {
+    showPermissionsLoggingToast(
+        activity, activity.getResources().getString(R.string.camera_permission_denied));
+  }
+
+  public static void showLocationPermissionLoggingToast(Activity activity) {
+    showPermissionsLoggingToast(
+        activity, activity.getResources().getString(R.string.location_permission_denied));
   }
 }
