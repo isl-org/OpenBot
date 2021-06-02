@@ -28,16 +28,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.openbot.R;
 import org.openbot.env.ImageUtils;
-import org.openbot.env.Logger;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.utils.YuvToRgbConverter;
 
+import timber.log.Timber;
+
 public abstract class CameraFragment extends ControlsFragment {
 
   private ExecutorService cameraExecutor;
-  private static final Logger LOGGER = new Logger();
   private PreviewView previewView;
   private Preview preview;
   private static int lensFacing = CameraSelector.LENS_FACING_BACK;
@@ -92,7 +92,7 @@ public abstract class CameraFragment extends ControlsFragment {
             cameraProvider = cameraProviderFuture.get();
             bindCameraUseCases();
           } catch (ExecutionException | InterruptedException e) {
-            LOGGER.e(e.toString());
+            Timber.e("Camera setup failed: %s", e.toString());
           }
         },
         ContextCompat.getMainExecutor(requireContext()));
@@ -137,7 +137,7 @@ public abstract class CameraFragment extends ControlsFragment {
         cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
       }
     } catch (Exception e) {
-      LOGGER.e("Use case binding failed: %s", e);
+      Timber.e("Use case binding failed: %s", e.toString());
     }
   }
 
