@@ -239,17 +239,17 @@ public abstract class ControlsFragment extends Fragment {
                   switch (permission) {
                     case PERMISSION_CAMERA:
                       if (!granted) {
-                        PermissionUtils.showCameraPermissionsControllerToast(requireActivity());
+                        PermissionUtils.showCameraPermissionControllerToast(requireActivity());
                       }
                       break;
                     case PERMISSION_LOCATION:
                       if (!granted) {
-                        PermissionUtils.showLocationPermissionsControllerToast(requireActivity());
+                        PermissionUtils.showLocationPermissionControllerToast(requireActivity());
                       }
                       break;
                     case PERMISSION_AUDIO:
                       if (!granted) {
-                        PermissionUtils.showAudioPermissionsControllerToast(requireActivity());
+                        PermissionUtils.showAudioPermissionControllerToast(requireActivity());
                       }
                       break;
                   }

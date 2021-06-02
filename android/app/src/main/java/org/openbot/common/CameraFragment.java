@@ -67,7 +67,7 @@ public abstract class CameraFragment extends ControlsFragment {
         == PackageManager.PERMISSION_GRANTED) {
       setupCamera();
     } else if (shouldShowRequestPermissionRationale(Constants.PERMISSION_CAMERA)) {
-      PermissionUtils.showCameraPermissionsControllerToast(requireActivity());
+      PermissionUtils.showCameraPermissionControllerToast(requireActivity());
     } else {
       requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
     }
@@ -152,7 +152,7 @@ public abstract class CameraFragment extends ControlsFragment {
             if (isGranted) {
               setupCamera();
             } else {
-              PermissionUtils.showCameraPermissionsControllerToast(requireActivity());
+              PermissionUtils.showCameraPermissionControllerToast(requireActivity());
             }
           });
 
