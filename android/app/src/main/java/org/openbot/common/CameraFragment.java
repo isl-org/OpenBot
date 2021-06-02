@@ -1,8 +1,6 @@
 package org.openbot.common;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -10,6 +8,8 @@ import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.AspectRatio;
@@ -27,16 +27,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.openbot.R;
 import org.openbot.env.ImageUtils;
-import org.openbot.env.Logger;
+import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
+import org.openbot.utils.PermissionUtils;
 import org.openbot.utils.YuvToRgbConverter;
+import timber.log.Timber;
 
 public abstract class CameraFragment extends ControlsFragment {
 
   private ExecutorService cameraExecutor;
-  private final int PERMISSIONS_REQUEST_CODE = 10;
-  private final String[] PERMISSIONS_REQUIRED = new String[] {Manifest.permission.CAMERA};
-  private static final Logger LOGGER = new Logger();
   private PreviewView previewView;
   private Preview preview;
   private static int lensFacing = CameraSelector.LENS_FACING_BACK;
@@ -62,9 +61,13 @@ public abstract class CameraFragment extends ControlsFragment {
     previewView = cameraView.findViewById(R.id.viewFinder);
     rootView.addView(view);
 
-    if (allPermissionsGranted()) setupCamera();
-    else requestPermissions(PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE);
-
+    if (!PermissionUtils.hasCameraPermission(requireActivity())) {
+      requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
+    } else if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_CAMERA)) {
+      PermissionUtils.showCameraPermissionsPreviewToast(requireActivity());
+    } else {
+      setupCamera();
+    }
     return cameraView;
   }
 
@@ -85,13 +88,13 @@ public abstract class CameraFragment extends ControlsFragment {
             cameraProvider = cameraProviderFuture.get();
             bindCameraUseCases();
           } catch (ExecutionException | InterruptedException e) {
-            LOGGER.e(e.toString());
+            Timber.e("Camera setup failed: %s", e.toString());
           }
         },
         ContextCompat.getMainExecutor(requireContext()));
   }
 
-  @SuppressLint("UnsafeExperimentalUsageError")
+  @SuppressLint({"UnsafeExperimentalUsageError", "UnsafeOptInUsageError"})
   private void bindCameraUseCases() {
     converter = new YuvToRgbConverter(requireContext());
     bitmapBuffer = null;
@@ -130,7 +133,7 @@ public abstract class CameraFragment extends ControlsFragment {
         cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
       }
     } catch (Exception e) {
-      LOGGER.e("Use case binding failed: %s", e);
+      Timber.e("Use case binding failed: %s", e.toString());
     }
   }
 
@@ -138,16 +141,19 @@ public abstract class CameraFragment extends ControlsFragment {
     return rotationDegrees;
   }
 
-  @Override
-  public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if (requestCode == PERMISSIONS_REQUEST_CODE) {
-      if (allPermissionsGranted()) {
-        setupCamera();
-      }
-    }
-  }
+  private final ActivityResultLauncher<String> requestPermissionLauncherCamera =
+      registerForActivityResult(
+          new ActivityResultContracts.RequestPermission(),
+          isGranted -> {
+            if (isGranted) {
+              setupCamera();
+            } else if (PermissionUtils.shouldShowRational(
+                requireActivity(), Constants.PERMISSION_CAMERA)) {
+              PermissionUtils.showCameraPermissionsPreviewToast(requireActivity());
+            } else {
+
+            }
+          });
 
   @Override
   public void onDestroy() {
@@ -180,16 +186,6 @@ public abstract class CameraFragment extends ControlsFragment {
       else this.analyserResolution = resolutionSize;
     }
     bindCameraUseCases();
-  }
-
-  private boolean allPermissionsGranted() {
-    boolean permissionsGranted = false;
-    for (String permission : PERMISSIONS_REQUIRED)
-      permissionsGranted =
-          ContextCompat.checkSelfPermission(requireContext(), permission)
-              == PackageManager.PERMISSION_GRANTED;
-
-    return permissionsGranted;
   }
 
   protected abstract void processFrame(Bitmap image, ImageProxy imageProxy);

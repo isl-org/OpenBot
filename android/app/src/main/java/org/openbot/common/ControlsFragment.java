@@ -1,6 +1,5 @@
 package org.openbot.common;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -8,7 +7,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -226,46 +226,18 @@ public abstract class ControlsFragment extends Fragment {
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("INDICATOR_STOP", value == 0));
   }
 
-  @Override
-  public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    switch (requestCode) {
-      case Constants.REQUEST_CONTROLLER_PERMISSIONS:
-        // If the permission is granted, start advertising to controller,
-        // otherwise, show a Toast
-        if (grantResults.length > 1
-            && (grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-          phoneController.connect(requireContext());
-        } else {
-          if (PermissionUtils.shouldShowRational(
-              requireActivity(), Constants.PERMISSION_LOCATION)) {
-            Toast.makeText(
-                    requireActivity().getApplicationContext(),
-                    R.string.location_permission_denied_controller,
-                    Toast.LENGTH_LONG)
-                .show();
-          }
-          if (PermissionUtils.shouldShowRational(
-              requireActivity(), Constants.PERMISSION_AUDIO_RECORDING)) {
-            Toast.makeText(
-                    requireActivity().getApplicationContext(),
-                    R.string.record_audio_permission_denied_controller,
-                    Toast.LENGTH_LONG)
-                .show();
-          }
-          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_CAMERA)) {
-            Toast.makeText(
-                    requireActivity().getApplicationContext(),
-                    R.string.camera_permission_denied_controller,
-                    Toast.LENGTH_LONG)
-                .show();
-          }
-          break;
-        }
-    }
-  }
+  private boolean allGranted = true;
+  protected final ActivityResultLauncher<String[]> requestPermissionLauncher =
+      registerForActivityResult(
+          new ActivityResultContracts.RequestMultiplePermissions(),
+          result -> {
+            result.forEach((permission, granted) -> allGranted = allGranted && granted);
+
+            if (allGranted) phoneController.connect(requireContext());
+            else {
+              PermissionUtils.showControllerPermissionsToast(requireActivity());
+            }
+          });
 
   @Override
   public void onResume() {

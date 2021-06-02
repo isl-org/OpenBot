@@ -2,7 +2,6 @@ package org.openbot.modelManagement;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -207,9 +206,12 @@ public class ModelManagementFragment extends Fragment
 
     binding.addModel.setOnClickListener(
         v -> {
-          if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_STORAGE))
-            PermissionUtils.requestStoragePermission(this);
-          else openPicker();
+          if (!PermissionUtils.hasStoragePermission(requireActivity()))
+            requestPermissionLauncher.launch(Constants.PERMISSION_STORAGE);
+          else if (PermissionUtils.shouldShowRational(
+              requireActivity(), Constants.PERMISSION_STORAGE)) {
+            PermissionUtils.showStoragePermissionModelManagementToast(requireActivity());
+          } else openPicker();
         });
   }
 
@@ -291,26 +293,14 @@ public class ModelManagementFragment extends Fragment
     dialog.show();
   }
 
-  @Override
-  public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    switch (requestCode) {
-      case Constants.REQUEST_STORAGE_PERMISSION:
-        // If the permission is granted, start logging,
-        // otherwise, show a Toast
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          openPicker();
-        } else {
-          if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_STORAGE)) {
-            Toast.makeText(
-                    requireContext().getApplicationContext(),
-                    R.string.storage_permission_denied_logging,
-                    Toast.LENGTH_LONG)
-                .show();
-          }
-        }
-        break;
-    }
-  }
+  private final ActivityResultLauncher<String> requestPermissionLauncher =
+      registerForActivityResult(
+          new ActivityResultContracts.RequestPermission(),
+          isGranted -> {
+            if (isGranted) {
+              openPicker();
+            } else {
+              PermissionUtils.showStoragePermissionModelManagementToast(requireActivity());
+            }
+          });
 }
