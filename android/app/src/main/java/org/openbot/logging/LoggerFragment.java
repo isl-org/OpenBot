@@ -346,7 +346,7 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
     binding.loggerSwitch.setChecked(loggingEnabled);
   }
 
-  boolean allGranted = false;
+  private boolean allGranted = true;
   protected final ActivityResultLauncher<String[]> requestPermissionLauncherLogging =
       registerForActivityResult(
           new ActivityResultContracts.RequestMultiplePermissions(),

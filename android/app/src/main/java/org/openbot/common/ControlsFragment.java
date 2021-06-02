@@ -226,7 +226,7 @@ public abstract class ControlsFragment extends Fragment {
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("INDICATOR_STOP", value == 0));
   }
 
-  private boolean allGranted = false;
+  private boolean allGranted = true;
   protected final ActivityResultLauncher<String[]> requestPermissionLauncher =
       registerForActivityResult(
           new ActivityResultContracts.RequestMultiplePermissions(),

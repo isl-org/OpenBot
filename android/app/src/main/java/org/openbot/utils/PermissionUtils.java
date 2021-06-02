@@ -25,11 +25,8 @@ public class PermissionUtils {
   }
 
   public static boolean hasPermissions(Context context, String[] permissions) {
-    boolean status = false;
-    for (String permission : permissions)
-      status =
-          ContextCompat.checkSelfPermission(context, permission)
-              == PackageManager.PERMISSION_GRANTED;
+    boolean status = true;
+    for (String permission : permissions) status = hasPermission(context, permission) && status;
     return status;
   }
 
