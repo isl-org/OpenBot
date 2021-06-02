@@ -1,7 +1,6 @@
 package org.openbot.common;
 
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -62,15 +61,13 @@ public abstract class CameraFragment extends ControlsFragment {
     previewView = cameraView.findViewById(R.id.viewFinder);
     rootView.addView(view);
 
-    if (ContextCompat.checkSelfPermission(requireContext(), Constants.PERMISSION_CAMERA)
-        == PackageManager.PERMISSION_GRANTED) {
-      setupCamera();
-    } else if (shouldShowRequestPermissionRationale(Constants.PERMISSION_CAMERA)) {
+    if (!PermissionUtils.hasCameraPermission(requireActivity())) {
+      requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
+    } else if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_CAMERA)) {
       PermissionUtils.showCameraPermissionsPreviewToast(requireActivity());
     } else {
-      requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
+      setupCamera();
     }
-
     return cameraView;
   }
 
@@ -150,8 +147,11 @@ public abstract class CameraFragment extends ControlsFragment {
           isGranted -> {
             if (isGranted) {
               setupCamera();
-            } else {
+            } else if (PermissionUtils.shouldShowRational(
+                requireActivity(), Constants.PERMISSION_CAMERA)) {
               PermissionUtils.showCameraPermissionsPreviewToast(requireActivity());
+            } else {
+
             }
           });
 

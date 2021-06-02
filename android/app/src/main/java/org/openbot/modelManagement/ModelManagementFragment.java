@@ -206,7 +206,7 @@ public class ModelManagementFragment extends Fragment
 
     binding.addModel.setOnClickListener(
         v -> {
-          if (!PermissionUtils.hasPermission(requireContext(), Constants.PERMISSION_STORAGE))
+          if (!PermissionUtils.hasStoragePermission(requireActivity()))
             requestPermissionLauncher.launch(Constants.PERMISSION_STORAGE);
           else if (PermissionUtils.shouldShowRational(
               requireActivity(), Constants.PERMISSION_STORAGE)) {
@@ -300,8 +300,7 @@ public class ModelManagementFragment extends Fragment
             if (isGranted) {
               openPicker();
             } else {
-              PermissionUtils.showPermissionsModelManagementToast(
-                  requireActivity(), getResources().getString(R.string.storage_permission_denied));
+              PermissionUtils.showStoragePermissionModelManagementToast(requireActivity());
             }
           });
 }
