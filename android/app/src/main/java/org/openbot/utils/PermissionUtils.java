@@ -133,7 +133,9 @@ public class PermissionUtils {
   public static void showLocationPermissionsControllerToast(Activity activity) {
     Toast.makeText(
             activity.getApplicationContext(),
-            R.string.location_permission_denied + " " + R.string.permission_reason_find_controller,
+            activity.getResources().getString(R.string.location_permission_denied)
+                + " "
+                + activity.getResources().getString(R.string.permission_reason_find_controller),
             Toast.LENGTH_LONG)
         .show();
   }
@@ -141,7 +143,9 @@ public class PermissionUtils {
   public static void showAudioPermissionsControllerToast(Activity activity) {
     Toast.makeText(
             activity.getApplicationContext(),
-            R.string.record_audio_permission_denied + " " + R.string.permission_reason_stream_audio,
+            activity.getResources().getString(R.string.record_audio_permission_denied)
+                + " "
+                + activity.getResources().getString(R.string.permission_reason_stream_audio),
             Toast.LENGTH_LONG)
         .show();
   }
@@ -149,7 +153,9 @@ public class PermissionUtils {
   public static void showCameraPermissionsControllerToast(Activity activity) {
     Toast.makeText(
             activity.getApplicationContext(),
-            R.string.camera_permission_denied + " " + R.string.permission_reason_stream_video,
+            activity.getResources().getString(R.string.camera_permission_denied)
+                + " "
+                + activity.getResources().getString(R.string.permission_reason_stream_video),
             Toast.LENGTH_LONG)
         .show();
   }
