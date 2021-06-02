@@ -1,9 +1,5 @@
 package org.openbot.common;
 
-import static org.openbot.utils.Constants.PERMISSION_AUDIO;
-import static org.openbot.utils.Constants.PERMISSION_CAMERA;
-import static org.openbot.utils.Constants.PERMISSION_LOCATION;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -230,32 +226,17 @@ public abstract class ControlsFragment extends Fragment {
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("INDICATOR_STOP", value == 0));
   }
 
+  private boolean allGranted = false;
   protected final ActivityResultLauncher<String[]> requestPermissionLauncher =
       registerForActivityResult(
           new ActivityResultContracts.RequestMultiplePermissions(),
           result -> {
-            result.forEach(
-                (permission, granted) -> {
-                  switch (permission) {
-                    case PERMISSION_CAMERA:
-                      if (!granted) {
-                        PermissionUtils.showCameraPermissionControllerToast(requireActivity());
-                      }
-                      break;
-                    case PERMISSION_LOCATION:
-                      if (!granted) {
-                        PermissionUtils.showLocationPermissionControllerToast(requireActivity());
-                      }
-                      break;
-                    case PERMISSION_AUDIO:
-                      if (!granted) {
-                        PermissionUtils.showAudioPermissionControllerToast(requireActivity());
-                      }
-                      break;
-                  }
-                });
-            if (PermissionUtils.hasControllerPermissions(requireActivity()))
-              phoneController.connect(requireContext());
+            result.forEach((permission, granted) -> allGranted = allGranted && granted);
+
+            if (allGranted) phoneController.connect(requireContext());
+            else {
+              PermissionUtils.showControllerPermissionsToast(requireActivity());
+            }
           });
 
   @Override
