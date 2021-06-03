@@ -9,8 +9,8 @@
 
 Click on the links below to read about the features of the apps.
 
-- [OpenBot app](app/README.md)
-- [Controller app](controller/README.md)
+- [Robot App](app/README.md)
+- [Controller App](controller/README.md)
 
 ## Install the apps
 
