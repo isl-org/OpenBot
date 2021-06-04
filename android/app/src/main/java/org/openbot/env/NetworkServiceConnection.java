@@ -322,7 +322,7 @@ public class NetworkServiceConnection implements ILocalConnection {
           close();
 
           // reconnect again
-          if (isConnected()) {
+          if (!isConnected()) {
             runConnection();
           }
           break;

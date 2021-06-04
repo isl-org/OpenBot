@@ -207,7 +207,7 @@ public abstract class ControlsFragment extends Fragment {
         error -> {
           Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
         },
-        event -> event.has("command") || event.has("driveCmd") // filter everything else
+        event -> event.has("command") || event.has("driveCmd") // filter out everything else
         );
   }
 

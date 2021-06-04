@@ -2,6 +2,7 @@ package org.openbot.env;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ public class PhoneController {
   private ConnectionSelector connectionSelector;
   // private final IVideoServer videoServer = new RtspServer();
   private final IVideoServer videoServer = new WebRtcServer();
+  private View view = null;
 
   public static PhoneController getInstance(Context context) {
     if (_phoneController == null) { // Check for the first time
@@ -55,8 +57,14 @@ public class PhoneController {
     videoServer.setResolution(resolution.getWidth(), resolution.getHeight());
 
     handleBotEvents();
+    waitForConnectionToCreateView(context);
+  }
 
-    View view = null;
+  private void createAndSetView(Context context) {
+    if (view != null) {
+      return;
+    }
+
     if (videoServer instanceof WebRtcServer) {
       view = new org.openbot.customview.WebRTCSurfaceView(context);
     } else if (videoServer instanceof RtspServer) {
@@ -83,6 +91,18 @@ public class PhoneController {
     } else if (videoView instanceof AutoFitSurfaceGlView) {
       videoServer.setView((AutoFitSurfaceGlView) videoView);
     }
+  }
+
+  private void waitForConnectionToCreateView(Context context) {
+    ControllerToBotEventBus.subscribe(
+        this.getClass().getSimpleName(), // unique name
+        event -> createAndSetView(context), // run this
+        error ->
+            Log.d(null, "Error occurred in ControllerToBotEventBus: " + error), // if error occurs
+        event ->
+            event.has("command")
+                && "CONNECTED".equals(event.getString("command")) // filter out all but CONNECTED
+        );
   }
 
   public void connect(Context context) {
