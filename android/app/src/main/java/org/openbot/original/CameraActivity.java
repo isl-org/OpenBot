@@ -1350,10 +1350,7 @@ public abstract class CameraActivity extends AppCompatActivity
             commandType = commandJsn.getString("command");
           } else if (commandJsn.has("driveCmd")) {
             commandType = "DRIVE_CMD";
-          } else {
-            return;
           }
-
           switch (commandType) {
             case "DRIVE_CMD":
               JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
@@ -1414,7 +1411,9 @@ public abstract class CameraActivity extends AppCompatActivity
         },
         error -> {
           Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
-        });
+        },
+        event -> event.has("command") || event.has("driveCmd") // filter everything else
+        );
   }
 
   private void sendIndicatorStatus(Integer status) {
