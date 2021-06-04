@@ -1,19 +1,32 @@
 package org.openbot.env;
 
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.BackpressureStrategy;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import org.json.JSONObject;
 
 public final class BotToControllerEventBus {
 
-  private BotToControllerEventBus() {}
+  private static final PublishSubject<JSONObject> subject = PublishSubject.create();
 
-  private static PublishSubject<JSONObject> subject = PublishSubject.create();
-
-  public static PublishSubject<JSONObject> getProcessor() {
+  private static PublishSubject<JSONObject> getProcessor() {
     return subject;
+  }
+
+  public static @NonNull Disposable subscribe(
+      @NonNull Consumer<? super JSONObject> onNext, @NonNull Consumer<? super Throwable> onError) {
+    return getProcessor()
+        .toFlowable(BackpressureStrategy.DROP)
+        .observeOn(Schedulers.computation())
+        .subscribe(onNext, onError);
   }
 
   public static void emitEvent(JSONObject event) {
     subject.onNext(event);
   }
+
+  private BotToControllerEventBus() {}
 }

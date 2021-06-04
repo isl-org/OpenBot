@@ -2,7 +2,6 @@ package org.openbot.env;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -57,7 +56,7 @@ public class PhoneController {
     videoServer.setResolution(resolution.getWidth(), resolution.getHeight());
 
     handleBotEvents();
-    waitForConnectionToCreateView(context);
+    createAndSetView(context);
   }
 
   private void createAndSetView(Context context) {
@@ -93,18 +92,6 @@ public class PhoneController {
     }
   }
 
-  private void waitForConnectionToCreateView(Context context) {
-    ControllerToBotEventBus.subscribe(
-        this.getClass().getSimpleName(), // unique name
-        event -> createAndSetView(context), // run this
-        error ->
-            Log.d(null, "Error occurred in ControllerToBotEventBus: " + error), // if error occurs
-        event ->
-            event.has("command")
-                && "CONNECTED".equals(event.getString("command")) // filter out all but CONNECTED
-        );
-  }
-
   public void connect(Context context) {
     ILocalConnection connection = connectionSelector.getConnection();
 
@@ -132,9 +119,8 @@ public class PhoneController {
   }
 
   private void handleBotEvents() {
-    BotToControllerEventBus.getProcessor()
-        .subscribe(
-            this::send, error -> Timber.d("Error occurred in BotToControllerEventBus: %s", error));
+    BotToControllerEventBus.subscribe(
+        this::send, error -> Timber.d("Error occurred in BotToControllerEventBus: %s", error));
   }
 
   private PhoneController() {
