@@ -74,6 +74,11 @@
         <item>High</item>
     </string-array>
 
+    <string-array name="stream_server">
+        <item>WebRTC</item>
+        <item>RTSP</item>
+    </string-array>
+
     <string name="log_setting">Log Setting</string>
     <string name="camera_facing_back">Back</string>
     <string name="camera_facing_front">Front</string>

@@ -3,9 +3,12 @@ package org.openbot.env;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import androidx.preference.PreferenceManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
@@ -24,6 +27,9 @@ public class PhoneController {
   private View view = null;
 
   public static PhoneController getInstance(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    boolean isRTSP = preferences.getString("video_server", "WebRTC").equals("RTSP");
+
     if (_phoneController == null) { // Check for the first time
 
       synchronized (PhoneController.class) { // Check for the second time.
