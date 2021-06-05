@@ -2,6 +2,7 @@ package org.openbot.env;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -57,6 +58,7 @@ public class PhoneController {
 
     handleBotEvents();
     createAndSetView(context);
+    monitorConnection();
   }
 
   private void createAndSetView(Context context) {
@@ -101,13 +103,10 @@ public class PhoneController {
     } else {
       connection.start();
     }
-
-    videoServer.setConnected(true);
   }
 
   public void disconnect() {
     connectionSelector.getConnection().stop();
-    videoServer.setConnected(false);
   }
 
   public void send(JSONObject info) {
@@ -121,6 +120,27 @@ public class PhoneController {
   private void handleBotEvents() {
     BotToControllerEventBus.subscribe(
         this::send, error -> Timber.d("Error occurred in BotToControllerEventBus: %s", error));
+  }
+
+  private void monitorConnection() {
+    ControllerToBotEventBus.subscribe(
+        this.getClass().getSimpleName(),
+        event -> {
+          switch (event.getString("command")) {
+            case "CONNECTED":
+              videoServer.setConnected(true);
+              break;
+
+            case "DISCONNECTED":
+              videoServer.setConnected(false);
+              break;
+          }
+        },
+        error -> {
+          Log.d(null, "Error occurred in monitorConnection: " + error);
+        },
+        event -> event.has("command") // filter everything else
+        );
   }
 
   private PhoneController() {
