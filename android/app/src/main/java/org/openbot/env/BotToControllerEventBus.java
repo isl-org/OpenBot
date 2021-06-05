@@ -12,13 +12,9 @@ public final class BotToControllerEventBus {
 
   private static final PublishSubject<JSONObject> subject = PublishSubject.create();
 
-  private static PublishSubject<JSONObject> getProcessor() {
-    return subject;
-  }
-
   public static @NonNull Disposable subscribe(
       @NonNull Consumer<? super JSONObject> onNext, @NonNull Consumer<? super Throwable> onError) {
-    return getProcessor()
+    return subject
         .toFlowable(BackpressureStrategy.DROP)
         .observeOn(Schedulers.computation())
         .subscribe(onNext, onError);
