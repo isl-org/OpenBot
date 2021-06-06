@@ -67,10 +67,6 @@ public class PhoneController {
   }
 
   private void createAndSetView(Context context) {
-    if (view != null) {
-      return;
-    }
-
     if (videoServer instanceof WebRtcServer) {
       view = new org.openbot.customview.WebRTCSurfaceView(context);
     } else if (videoServer instanceof RtspServer) {
