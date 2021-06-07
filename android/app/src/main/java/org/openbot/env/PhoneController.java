@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import androidx.preference.PreferenceManager;
 import org.json.JSONException;
 import org.json.JSONObject;

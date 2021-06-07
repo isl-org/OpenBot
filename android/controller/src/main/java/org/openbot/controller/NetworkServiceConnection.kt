@@ -24,14 +24,11 @@ import kotlin.concurrent.thread
 @SuppressLint("StaticFieldLeak")
 object NetworkServiceConnection : ILocalConnection {
 
-    private val TAG = "NetworkServiceConn"
-
+    private const val TAG = "NetworkServiceConn"
     private var mNsdManager: NsdManager? = null
-
     private var SERVICE_NAME = "OPEN_BOT_CONTROLLER"
     private val SERVICE_TYPE = "_openbot._tcp."
     private var dataReceivedCallback: IDataReceived? = null
-
     private const val port = 19400
     private lateinit var socketHandler: SocketHandler
     private val messageQueue: BlockingQueue<String> = ArrayBlockingQueue(100)
@@ -76,10 +73,7 @@ object NetworkServiceConnection : ILocalConnection {
         socketHandler = SocketHandler(messageQueue)
 
         thread {
-            val client: SocketHandler.ClientInfo? = socketHandler.connect(this.port)
-            if (client == null) {
-                return@thread
-            }
+            val client: SocketHandler.ClientInfo = socketHandler.connect(this.port) ?: return@thread
 
             thread {
                 socketHandler.runSender(client.writer)
@@ -126,7 +120,7 @@ object NetworkServiceConnection : ILocalConnection {
 
                 println("Client connected: ${client.inetAddress.hostAddress}")
             } catch (e: Exception) {
-                Log.d(TAG, "Got exception: " + e)
+                Log.d(TAG, "Got exception: $e")
                 close()
                 return null
             }
@@ -150,7 +144,7 @@ object NetworkServiceConnection : ILocalConnection {
 
             } catch (ex: Exception) {
                 reader?.close()
-                Log.d(TAG, "got exception ${ex}")
+                Log.d(TAG, "got exception $ex")
                 close()
 
             } finally {
@@ -166,9 +160,7 @@ object NetworkServiceConnection : ILocalConnection {
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "runSender InterruptedException: {e}")
-                if (writer != null) {
-                    writer.close()
-                }
+                writer?.close()
             } finally {
             }
             Log.i(TAG, "end of runSender thread...")
@@ -225,7 +217,7 @@ object NetworkServiceConnection : ILocalConnection {
         }
 
         override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
-            Log.d(TAG, "onUnregistrationFailed : " + errorCode)
+            Log.d(TAG, "onUnregistrationFailed : $errorCode")
         }
     }
 }

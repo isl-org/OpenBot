@@ -127,7 +127,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
             EventProcessor.connectionEventFlowable
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnNext {
-                        Log.i(TAG, "Got ${it} event")
+                        Log.i(TAG, "Got $it event")
 
                         when (it) {
                             EventProcessor.ProgressEvents.ConnectionSuccessful -> {

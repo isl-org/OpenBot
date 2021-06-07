@@ -15,7 +15,7 @@ public final class BotToControllerEventBus {
   public static @NonNull Disposable subscribe(
       @NonNull Consumer<? super JSONObject> onNext, @NonNull Consumer<? super Throwable> onError) {
     return subject
-        .toFlowable(BackpressureStrategy.DROP)
+        .toFlowable(BackpressureStrategy.BUFFER)
         .observeOn(Schedulers.computation())
         .subscribe(onNext, onError);
   }
