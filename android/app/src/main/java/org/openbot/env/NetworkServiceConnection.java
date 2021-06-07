@@ -18,7 +18,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.utils.ConnectionUtils;
@@ -110,7 +109,7 @@ public class NetworkServiceConnection implements ILocalConnection {
   private void runConnection() {
     try {
       mNsdManager.discoverServices(
-              /*ALL_SERVICE_TYPES*/ SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
+          /*ALL_SERVICE_TYPES*/ SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
     } catch (IllegalArgumentException e) {
       Log.d(TAG, "runConnection: Already discovering: " + e);
     }
