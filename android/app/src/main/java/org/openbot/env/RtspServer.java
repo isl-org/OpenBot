@@ -61,6 +61,7 @@ public class RtspServer
     andGate.addCondition("view set");
     andGate.addCondition("camera permission");
     andGate.addCondition("resolution set");
+    andGate.addCondition("can start");
 
     int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
     andGate.set("camera permission", camera == PackageManager.PERMISSION_GRANTED);
@@ -120,6 +121,11 @@ public class RtspServer
   }
 
   @Override
+  public void setCanStart(boolean canStart) {
+    andGate.set("can start", canStart);
+  }
+
+  @Override
   public void setConnected(boolean connected) {
     int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
     andGate.set("camera permission", camera == PackageManager.PERMISSION_GRANTED);
@@ -130,7 +136,6 @@ public class RtspServer
 
   // Local methods
   private void stopServer() {
-    andGate.set("is not running", true);
     try {
       if (rtspServerCamera1 != null) {
         if (rtspServerCamera1.isRecording()) {
@@ -199,7 +204,6 @@ public class RtspServer
   // ConnectCheckerRtsp callbacks
   @Override
   public void onConnectionSuccessRtsp() {
-
     Log.i(TAG, "onConnectionSuccessRtsp");
   }
 

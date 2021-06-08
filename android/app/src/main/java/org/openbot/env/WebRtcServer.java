@@ -96,6 +96,7 @@ public class WebRtcServer implements IVideoServer {
     andGate.addCondition("view set");
     andGate.addCondition("camera permission");
     andGate.addCondition("resolution set");
+    andGate.addCondition("can start");
 
     int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
     andGate.set("camera permission", camera == PackageManager.PERMISSION_GRANTED);
@@ -109,6 +110,11 @@ public class WebRtcServer implements IVideoServer {
   @Override
   public boolean isRunning() {
     return false;
+  }
+
+  @Override
+  public void setCanStart(boolean canStart) {
+    andGate.set("can start", canStart);
   }
 
   @Override

@@ -27,4 +27,6 @@ public interface IVideoServer {
   void setView(SurfaceViewRenderer view);
 
   void setView(com.pedro.rtplibrary.view.OpenGlView view);
+
+  void setCanStart(boolean canStart);
 }

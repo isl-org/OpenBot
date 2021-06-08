@@ -23,6 +23,12 @@ public class PhoneController {
   private ConnectionSelector connectionSelector;
   private IVideoServer videoServer;
   private View view = null;
+  private Config config = new Config();
+
+  private enum VIDEO_SERVER_TYPE {
+    WEBRTC,
+    RTSP
+  };
 
   public static PhoneController getInstance(Context context) {
     if (_phoneController == null) { // Check for the first time
@@ -34,7 +40,43 @@ public class PhoneController {
       }
     }
 
+    // The function bellow will attempt to switch server types if another is selected in settings.
+    // However, this is not reliable at the moment so it is not used here.
+    // The user can change the setting once when the app is started, then select FreeRoam fragment.
+    // Future changes will not be detected until app is restarted..
+
+    // _phoneController.config.checkForConfigChange(context);
+
     return _phoneController;
+  }
+
+  private class Config {
+    VIDEO_SERVER_TYPE currentServerType;
+
+    void init(Context context) {
+      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+      currentServerType =
+          preferences.getString("video_server", "WebRTC").equals("RTSP")
+              ? VIDEO_SERVER_TYPE.RTSP
+              : VIDEO_SERVER_TYPE.WEBRTC;
+    }
+
+    private void checkForConfigChange(Context context) {
+      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+      VIDEO_SERVER_TYPE serverType =
+          preferences.getString("video_server", "WebRTC").equals("RTSP")
+              ? VIDEO_SERVER_TYPE.RTSP
+              : VIDEO_SERVER_TYPE.WEBRTC;
+      if (serverType != currentServerType) {
+        currentServerType = serverType;
+        if (videoServer != null) {
+          videoServer.setCanStart(false); // stop old server
+        }
+        // we have a new video server, we must re-init the Phone Controller so the server will start
+        // properly.
+        PhoneController.this.init(context);
+      }
+    }
   }
 
   class DataReceived implements IDataReceived {
@@ -49,11 +91,17 @@ public class PhoneController {
   }
 
   private void init(Context context) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    boolean isRTSP = preferences.getString("video_server", "WebRTC").equals("RTSP");
-    videoServer = isRTSP ? new RtspServer() : new WebRtcServer();
+    config.init(context);
 
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    VIDEO_SERVER_TYPE serverType =
+        preferences.getString("video_server", "WebRTC").equals("RTSP")
+            ? VIDEO_SERVER_TYPE.RTSP
+            : VIDEO_SERVER_TYPE.WEBRTC;
+    videoServer = serverType == VIDEO_SERVER_TYPE.RTSP ? new RtspServer() : new WebRtcServer();
     videoServer.init(context);
+    videoServer.setCanStart(true);
+
     this.connectionSelector = ConnectionSelector.getInstance(context);
     connectionSelector.getConnection().setDataCallback(new DataReceived());
 
