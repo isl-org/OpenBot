@@ -133,7 +133,7 @@ public class PhoneController {
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
     videoView.setLayoutParams(layoutParams);
     videoView.setId(R.id.video_window);
-    videoView.setAlpha(0);
+    videoView.setAlpha(0f);
     viewGroup.addView(videoView, 0); // send to back
 
     if (videoView instanceof WebRTCSurfaceView) {

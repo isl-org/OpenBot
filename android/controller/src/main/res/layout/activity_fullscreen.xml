@@ -198,6 +198,15 @@
                     android:layout_gravity="center"
                     app:icon="@drawable/volume_off_24" />
 
+                <org.openbot.controller.customComponents.MirrorImage
+                    android:id="@+id/mirror_image"
+                    style="@style/IconOnlyButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/button"
+                    android:layout_gravity="center"
+                    app:icon="@drawable/toggle_mirror" />
+
             </LinearLayout>
 
             <LinearLayout

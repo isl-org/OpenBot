@@ -10,21 +10,19 @@
 package org.openbot.controller.customComponents
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import org.json.JSONObject
 import org.openbot.controller.R
-import org.openbot.controller.StatusEventBus
 
-class Sound @JvmOverloads constructor(
+class MirrorImage @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : Button(context, attrs, defStyleAttr) {
 
     init {
-        setOnTouchListener(OnTouchListener("{command: TOGGLE_SOUND}"))
-        subscribe("TOGGLE_SOUND", ::onDataReceived)
+        setOnTouchListener(OnTouchListener("{command: TOGGLE_MIRROR}"))
+        subscribe("TOGGLE_MIRROR", ::onDataReceived)
         subscribe("WEB_RTC_EVENT", ::orWebRTCReceived)
 
         hide()
@@ -37,12 +35,11 @@ class Sound @JvmOverloads constructor(
     private fun onDataReceived(data: String) {
         setOnOffStateConditions(data)
     }
-
     override fun offState() {
-        setCompoundDrawablesWithIntrinsicBounds( R.drawable.volume_off_24, 0, 0, 0)
+        animate().rotation(0F).start()
     }
 
     override fun onState() {
-        setCompoundDrawablesWithIntrinsicBounds( R.drawable.volume_up_24, 0, 0, 0)
+        animate().rotation(180F).start()
     }
 }

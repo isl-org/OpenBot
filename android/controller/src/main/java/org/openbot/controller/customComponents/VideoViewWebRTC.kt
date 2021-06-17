@@ -67,6 +67,11 @@ class VideoViewWebRTC @JvmOverloads constructor(
             processVideoCommand(it as String)
         }
 
+        StatusEventBus.addSubject("TOGGLE_MIRROR")
+        StatusEventBus.getProcessor("TOGGLE_MIRROR")?.subscribe {
+            setMirror(it as String == "true")
+        }
+
         rootEglBase = EglBase.create()
     }
 
@@ -108,11 +113,6 @@ class VideoViewWebRTC @JvmOverloads constructor(
 
         init(rootEglBase?.eglBaseContext, null)
         setEnableHardwareScaler(true)
-        setMirror(true)
-    }
-
-    private fun toggleAudio(audioEnabled: Boolean) {
-        peerConnection?.setAudioPlayout(audioEnabled)
     }
 
     private fun initializePeerConnectionFactory() {

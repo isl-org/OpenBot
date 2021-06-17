@@ -61,6 +61,7 @@ public class WebRtcServer implements IVideoServer {
   private final String TAG = "WebRtcPeer";
   private SurfaceViewRenderer view;
   private Size resolution = new Size(640, 360);
+  private boolean isMirrored = true;
 
   public static final String VIDEO_TRACK_ID = "ARDAMSv0";
   public static final int VIDEO_RESOLUTION_WIDTH = 640;
@@ -122,6 +123,7 @@ public class WebRtcServer implements IVideoServer {
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_PROTOCOL", "WEBRTC"));
     sendServerUrl();
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("TOGGLE_MIRROR", isMirrored));
   }
 
   @Override
@@ -399,7 +401,6 @@ public class WebRtcServer implements IVideoServer {
   private void initializeSurfaceViews() {
     view.init(rootEglBase.getEglBaseContext(), null);
     view.setEnableHardwareScaler(true);
-    view.setMirror(true);
   }
 
   private VideoCapturer createVideoCapturer() {
@@ -462,6 +463,14 @@ public class WebRtcServer implements IVideoServer {
                 }
 
                 break;
+
+              case "TOGGLE_MIRROR":
+                isMirrored = !isMirrored;
+
+                // inform the controller of current state
+                BotToControllerEventBus.emitEvent(
+                    ConnectionUtils.createStatus("TOGGLE_MIRROR", isMirrored));
+                break;
             }
           },
           error -> {
@@ -469,10 +478,12 @@ public class WebRtcServer implements IVideoServer {
           },
           event ->
               event.has("command")
-                  && "TOGGLE_SOUND"
-                      .equals(
-                          event.getString(
-                              "command")) // filter out all but the "TOGGLE_SOUND" commands..
+                  && ("TOGGLE_SOUND".equals(event.getString("command"))
+                      || "TOGGLE_MIRROR"
+                          .equals(
+                              event.getString(
+                                  "command"))) // filter out all but the "TOGGLE_SOUND" and
+                                               // "TOGGLE_MIRROR" commands..
           );
     }
   }
@@ -520,7 +531,7 @@ public class WebRtcServer implements IVideoServer {
             }
           },
           error -> {
-            Timber.d(error, "Error occurred in handleControllerWebRtcEvents: %s");
+            Log.d(TAG, "Error occurred in handleControllerWebRtcEvents: %s", error);
           },
           commandJsn ->
               commandJsn.has("webrtc_event") // filter out all non "webrtc_event" messages.
