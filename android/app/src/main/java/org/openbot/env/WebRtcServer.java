@@ -483,7 +483,7 @@ public class WebRtcServer implements IVideoServer {
                           .equals(
                               event.getString(
                                   "command"))) // filter out all but the "TOGGLE_SOUND" and
-                                               // "TOGGLE_MIRROR" commands..
+          // "TOGGLE_MIRROR" commands..
           );
     }
   }
