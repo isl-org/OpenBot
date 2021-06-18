@@ -142,10 +142,11 @@ public class SensorService extends Service implements SensorEventListener {
       // appendLog(mProximityLog, mProximity.getName());
       appendLog(proximityLog, "timestamp[ns],proximity[cm]");
     }
-    pressureLog = openLog(logFolder, "pressureLog.txt");
-    // appendLog(mPressureLog, mPressure.getName());
-    appendLog(pressureLog, "timestamp[ns],pressure[hPa]");
-
+    if (preferencesManager.getSensorStatus(SharedPreferencesManager.PRESSURE)) {
+      pressureLog = openLog(logFolder, "pressureLog.txt");
+      // appendLog(mPressureLog, mPressure.getName());
+      appendLog(pressureLog, "timestamp[ns],pressure[hPa]");
+    }
     poseLog = openLog(logFolder, "poseLog.txt");
     // appendLog(mPoseLog, mPose.getName());
     appendLog(poseLog, "timestamp[ns],x,y,z,w,x,y,z,dx,dy,dz,dw,dx,dy,dz,id");
@@ -154,8 +155,10 @@ public class SensorService extends Service implements SensorEventListener {
     // appendLog(mMotionLog, mMotion.getName());
     appendLog(motionLog, "timestamp[ns],motion");
 
-    gpsLog = openLog(logFolder, "gpsLog.txt");
-    appendLog(gpsLog, "timestamp[ns],latitude,longitude,altitude[m],bearing,speed[m/s]");
+    if (preferencesManager.getSensorStatus(SharedPreferencesManager.GPS)) {
+      gpsLog = openLog(logFolder, "gpsLog.txt");
+      appendLog(gpsLog, "timestamp[ns],latitude,longitude,altitude[m],bearing,speed[m/s]");
+    }
 
     frameLog = openLog(logFolder, "rgbFrames.txt");
     appendLog(frameLog, "timestamp[ns],frame");

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
@@ -35,7 +36,10 @@ public class SensorsDialog extends DialogFragment {
         (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
     List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ALL);
 
-    HashMap<String, Boolean> list = new HashMap<>();
+    HashMap<String, Boolean> list = new LinkedHashMap<>();
+    list.put(
+        SharedPreferencesManager.GPS,
+        preferencesManager.getSensorStatus(SharedPreferencesManager.GPS));
 
     for (Sensor sensor : sensorList) {
       if (sensor
@@ -80,7 +84,16 @@ public class SensorsDialog extends DialogFragment {
             SharedPreferencesManager.PROXIMITY,
             preferencesManager.getSensorStatus(SharedPreferencesManager.PROXIMITY));
       }
+      if (sensor
+          .getName()
+          .toLowerCase()
+          .contains(SharedPreferencesManager.PRESSURE.toLowerCase())) {
+        list.put(
+            SharedPreferencesManager.PRESSURE,
+            preferencesManager.getSensorStatus(SharedPreferencesManager.PRESSURE));
+      }
     }
+
     SensorListAdapter adapter = new SensorListAdapter(list, preferencesManager);
 
     binding.listView.setLayoutManager(new LinearLayoutManager(requireContext()));

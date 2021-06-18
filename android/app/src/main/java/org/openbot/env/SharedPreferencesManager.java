@@ -39,6 +39,8 @@ public class SharedPreferencesManager {
   public static final String GRAVITY = "Gravity";
   public static final String MAGNETIC = "Magnetic";
   public static final String LIGHT = "Light";
+  public static final String PRESSURE = "Pressure";
+  public static final String GPS = "Gps";
 
   private final SharedPreferences preferences;
 
