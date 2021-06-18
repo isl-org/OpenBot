@@ -11,7 +11,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import java.util.HashMap;
 import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.databinding.DialogSensorsBinding;
@@ -29,7 +28,7 @@ public class SensorsDialog extends DialogFragment {
 
   @Override
   public View onCreateView(
-          @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     SharedPreferencesManager preferencesManager = new SharedPreferencesManager(requireContext());
     DialogSensorsBinding binding = DialogSensorsBinding.inflate(LayoutInflater.from(getContext()));
     SensorManager sensorManager =

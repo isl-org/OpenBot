@@ -136,7 +136,7 @@ public class SensorService extends Service implements SensorEventListener {
       // appendLog(mLightLog, mLight.getName());
       appendLog(lightLog, "timestamp[ns],light[lux]");
     }
-    
+
     if (preferencesManager.getSensorStatus(SharedPreferencesManager.PROXIMITY)) {
       proximityLog = openLog(logFolder, "proximityLog.txt");
       // appendLog(mProximityLog, mProximity.getName());
