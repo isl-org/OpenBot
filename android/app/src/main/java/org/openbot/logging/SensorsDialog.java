@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.databinding.DialogSensorsBinding;
 import org.openbot.env.SharedPreferencesManager;
+import org.openbot.utils.Enums;
 
 public class SensorsDialog extends DialogFragment {
 
@@ -38,60 +39,15 @@ public class SensorsDialog extends DialogFragment {
 
     HashMap<String, Boolean> list = new LinkedHashMap<>();
     list.put(
-        SharedPreferencesManager.GPS,
-        preferencesManager.getSensorStatus(SharedPreferencesManager.GPS));
+        Enums.SensorType.GPS.getSensor(),
+        preferencesManager.getSensorStatus(Enums.SensorType.GPS.getSensor()));
 
     for (Sensor sensor : sensorList) {
-      if (sensor
-          .getName()
-          .toLowerCase()
-          .contains(SharedPreferencesManager.ACCELEROMETER.toLowerCase())) {
-        list.put(
-            SharedPreferencesManager.ACCELEROMETER,
-            preferencesManager.getSensorStatus(SharedPreferencesManager.ACCELEROMETER));
-      }
-      if (sensor
-          .getName()
-          .toLowerCase()
-          .contains(SharedPreferencesManager.GYROSCOPE.toLowerCase())) {
-        list.put(
-            SharedPreferencesManager.GYROSCOPE,
-            preferencesManager.getSensorStatus(SharedPreferencesManager.GYROSCOPE));
-      }
-      if (sensor
-          .getName()
-          .toLowerCase()
-          .contains(SharedPreferencesManager.MAGNETIC.toLowerCase())) {
-        list.put(
-            SharedPreferencesManager.MAGNETIC,
-            preferencesManager.getSensorStatus(SharedPreferencesManager.MAGNETIC));
-      }
-      if (sensor.getName().toLowerCase().contains(SharedPreferencesManager.LIGHT.toLowerCase())) {
-        list.put(
-            SharedPreferencesManager.LIGHT,
-            preferencesManager.getSensorStatus(SharedPreferencesManager.LIGHT));
-      }
-      if (sensor.getName().toLowerCase().contains(SharedPreferencesManager.GRAVITY.toLowerCase())) {
-        list.put(
-            SharedPreferencesManager.GRAVITY,
-            preferencesManager.getSensorStatus(SharedPreferencesManager.GRAVITY));
-      }
-      if (sensor
-          .getName()
-          .toLowerCase()
-          .contains(SharedPreferencesManager.PROXIMITY.toLowerCase())) {
-        list.put(
-            SharedPreferencesManager.PROXIMITY,
-            preferencesManager.getSensorStatus(SharedPreferencesManager.PROXIMITY));
-      }
-      if (sensor
-          .getName()
-          .toLowerCase()
-          .contains(SharedPreferencesManager.PRESSURE.toLowerCase())) {
-        list.put(
-            SharedPreferencesManager.PRESSURE,
-            preferencesManager.getSensorStatus(SharedPreferencesManager.PRESSURE));
-      }
+      for (Enums.SensorType name : Enums.SensorType.values())
+        if (sensor.getName().toLowerCase().contains(name.getSensor().toLowerCase())) {
+          list.put(name.getSensor(), preferencesManager.getSensorStatus(name.getSensor()));
+          break;
+        }
     }
 
     SensorListAdapter adapter = new SensorListAdapter(list, preferencesManager);

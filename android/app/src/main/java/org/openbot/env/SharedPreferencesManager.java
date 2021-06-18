@@ -33,15 +33,6 @@ public class SharedPreferencesManager {
   private static final String CAMERA_SWITCH = "CAMERA_SWITCH";
   private static final String SHEET_EXPANDED = "SHEET_EXPANDED";
 
-  public static final String ACCELEROMETER = "Accelerometer";
-  public static final String GYROSCOPE = "Gyroscope";
-  public static final String PROXIMITY = "Proximity";
-  public static final String GRAVITY = "Gravity";
-  public static final String MAGNETIC = "Magnetic";
-  public static final String LIGHT = "Light";
-  public static final String PRESSURE = "Pressure";
-  public static final String GPS = "Gps";
-
   private final SharedPreferences preferences;
 
   public SharedPreferencesManager(Context context) {

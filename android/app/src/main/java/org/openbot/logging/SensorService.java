@@ -28,6 +28,7 @@ import java.io.IOException;
 import org.openbot.R;
 import org.openbot.env.Logger;
 import org.openbot.env.SharedPreferencesManager;
+import org.openbot.utils.Enums;
 
 public class SensorService extends Service implements SensorEventListener {
   private SensorManager sensorManager;
@@ -107,42 +108,42 @@ public class SensorService extends Service implements SensorEventListener {
       logFolder = (String) extras.get("logFolder");
     }
 
-    if (preferencesManager.getSensorStatus(SharedPreferencesManager.ACCELEROMETER)) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.ACCELEROMETER.getSensor())) {
       accelerometerLog = openLog(logFolder, "accelerometerLog.txt");
       // appendLog(mAccelerometerLog, mAccelerometer.getName());
       appendLog(accelerometerLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
     }
 
-    if (preferencesManager.getSensorStatus(SharedPreferencesManager.GYROSCOPE)) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.GYROSCOPE.getSensor())) {
       gyroscopeLog = openLog(logFolder, "gyroscopeLog.txt");
       // appendLog(mGyroscopeLog, mGyroscope.getName());
       appendLog(gyroscopeLog, "timestamp[ns],x[rad/s],y[rad/s],z[rad/s]");
     }
 
-    if (preferencesManager.getSensorStatus(SharedPreferencesManager.GRAVITY)) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.GRAVITY.getSensor())) {
       gravityLog = openLog(logFolder, "gravityLog.txt");
       // appendLog(mGravityLog, mGravity.getName());
       appendLog(gravityLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
     }
 
-    if (preferencesManager.getSensorStatus(SharedPreferencesManager.MAGNETIC)) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.MAGNETIC.getSensor())) {
       magneticLog = openLog(logFolder, "magneticLog.txt");
       // appendLog(mMagneticLog, mMagnetic.getName());
       appendLog(magneticLog, "timestamp[ns],x[uT],y[uT],z[uT]");
     }
 
-    if (preferencesManager.getSensorStatus(SharedPreferencesManager.LIGHT)) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.LIGHT.getSensor())) {
       lightLog = openLog(logFolder, "lightLog.txt");
       // appendLog(mLightLog, mLight.getName());
       appendLog(lightLog, "timestamp[ns],light[lux]");
     }
 
-    if (preferencesManager.getSensorStatus(SharedPreferencesManager.PROXIMITY)) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.PROXIMITY.getSensor())) {
       proximityLog = openLog(logFolder, "proximityLog.txt");
       // appendLog(mProximityLog, mProximity.getName());
       appendLog(proximityLog, "timestamp[ns],proximity[cm]");
     }
-    if (preferencesManager.getSensorStatus(SharedPreferencesManager.PRESSURE)) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.PRESSURE.getSensor())) {
       pressureLog = openLog(logFolder, "pressureLog.txt");
       // appendLog(mPressureLog, mPressure.getName());
       appendLog(pressureLog, "timestamp[ns],pressure[hPa]");
@@ -155,7 +156,7 @@ public class SensorService extends Service implements SensorEventListener {
     // appendLog(mMotionLog, mMotion.getName());
     appendLog(motionLog, "timestamp[ns],motion");
 
-    if (preferencesManager.getSensorStatus(SharedPreferencesManager.GPS)) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.GPS.getSensor())) {
       gpsLog = openLog(logFolder, "gpsLog.txt");
       appendLog(gpsLog, "timestamp[ns],latitude,longitude,altitude[m],bearing,speed[m/s]");
     }
