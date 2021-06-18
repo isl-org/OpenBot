@@ -42,6 +42,11 @@ class VideoViewVlc @JvmOverloads constructor(
         StatusEventBus.getProcessor("VIDEO_COMMAND")?.subscribe {
             processVideoCommand(it as String)
         }
+
+        StatusEventBus.addSubject("TOGGLE_MIRROR")
+        StatusEventBus.getProcessor("TOGGLE_MIRROR")?.subscribe {
+            scaleX = if (it as String == "true") 1f else -1f // RTSP is already mirrored by default.
+        }
     }
 
     fun init() {

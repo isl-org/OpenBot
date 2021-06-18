@@ -61,7 +61,7 @@ public class WebRtcServer implements IVideoServer {
   private final String TAG = "WebRtcPeer";
   private SurfaceViewRenderer view;
   private Size resolution = new Size(640, 360);
-  private boolean isMirrored = true;
+  private MirrorImageSetter mirror = new MirrorImageSetter();
 
   public static final String VIDEO_TRACK_ID = "ARDAMSv0";
   public static final int VIDEO_RESOLUTION_WIDTH = 640;
@@ -123,7 +123,8 @@ public class WebRtcServer implements IVideoServer {
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_PROTOCOL", "WEBRTC"));
     sendServerUrl();
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
-    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("TOGGLE_MIRROR", isMirrored));
+    BotToControllerEventBus.emitEvent(
+        ConnectionUtils.createStatus("TOGGLE_MIRROR", mirror.isMirrored()));
   }
 
   @Override
@@ -465,11 +466,11 @@ public class WebRtcServer implements IVideoServer {
                 break;
 
               case "TOGGLE_MIRROR":
-                isMirrored = !isMirrored;
+                mirror.setMirrored(!mirror.isMirrored());
 
                 // inform the controller of current state
                 BotToControllerEventBus.emitEvent(
-                    ConnectionUtils.createStatus("TOGGLE_MIRROR", isMirrored));
+                    ConnectionUtils.createStatus("TOGGLE_MIRROR", mirror.isMirrored()));
                 break;
             }
           },
@@ -492,6 +493,18 @@ public class WebRtcServer implements IVideoServer {
   private void beep() {
     final ToneGenerator tg = new ToneGenerator(6, 100);
     tg.startTone(ToneGenerator.TONE_CDMA_ALERT_NETWORK_LITE);
+  }
+
+  class MirrorImageSetter {
+    public boolean isMirrored() {
+      return isMirrored;
+    }
+
+    public void setMirrored(boolean mirrored) {
+      isMirrored = mirrored;
+    }
+
+    private boolean isMirrored = true;
   }
 
   class SignalingHandler {

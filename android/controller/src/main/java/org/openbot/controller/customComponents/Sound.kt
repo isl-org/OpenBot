@@ -25,13 +25,6 @@ class Sound @JvmOverloads constructor(
     init {
         setOnTouchListener(OnTouchListener("{command: TOGGLE_SOUND}"))
         subscribe("TOGGLE_SOUND", ::onDataReceived)
-        subscribe("WEB_RTC_EVENT", ::orWebRTCReceived)
-
-        hide()
-    }
-
-    private fun orWebRTCReceived(data: String) {
-        show()
     }
 
     private fun onDataReceived(data: String) {

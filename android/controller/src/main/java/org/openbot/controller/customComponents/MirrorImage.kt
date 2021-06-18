@@ -23,13 +23,6 @@ class MirrorImage @JvmOverloads constructor(
     init {
         setOnTouchListener(OnTouchListener("{command: TOGGLE_MIRROR}"))
         subscribe("TOGGLE_MIRROR", ::onDataReceived)
-        subscribe("WEB_RTC_EVENT", ::orWebRTCReceived)
-
-        hide()
-    }
-
-    private fun orWebRTCReceived(data: String) {
-        show()
     }
 
     private fun onDataReceived(data: String) {
