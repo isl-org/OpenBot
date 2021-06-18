@@ -33,6 +33,13 @@ public class SharedPreferencesManager {
   private static final String CAMERA_SWITCH = "CAMERA_SWITCH";
   private static final String SHEET_EXPANDED = "SHEET_EXPANDED";
 
+  public static final String ACCELEROMETER = "Accelerometer";
+  public static final String GYROSCOPE = "Gyroscope";
+  public static final String PROXIMITY = "Proximity";
+  public static final String GRAVITY = "Gravity";
+  public static final String MAGNETIC = "Magnetic";
+  public static final String LIGHT = "Light";
+
   private final SharedPreferences preferences;
 
   public SharedPreferencesManager(Context context) {
@@ -144,5 +151,13 @@ public class SharedPreferencesManager {
 
   public void setSheetExpanded(boolean expanded) {
     preferences.edit().putBoolean(SHEET_EXPANDED, expanded).apply();
+  }
+
+  public void setSensorStatus(boolean status, String sensor) {
+    preferences.edit().putBoolean(sensor, status).apply();
+  }
+
+  public boolean getSensorStatus(String sensor) {
+    return preferences.getBoolean(sensor, false);
   }
 }

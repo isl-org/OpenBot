@@ -27,6 +27,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import org.openbot.R;
 import org.openbot.env.Logger;
+import org.openbot.env.SharedPreferencesManager;
 
 public class SensorService extends Service implements SensorEventListener {
   private SensorManager sensorManager;
@@ -72,6 +73,8 @@ public class SensorService extends Service implements SensorEventListener {
   private static final Logger LOGGER = new Logger();
   Messenger messenger = new Messenger(new SensorMessageHandler());
 
+  private SharedPreferencesManager preferencesManager;
+
   @Override
   public final void onCreate() {
     super.onCreate();
@@ -88,6 +91,7 @@ public class SensorService extends Service implements SensorEventListener {
     stationarySensor = sensorManager.getDefaultSensor(Sensor.TYPE_STATIONARY_DETECT);
     // Initialize the FusedLocationClient.
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    preferencesManager = new SharedPreferencesManager(this);
   }
 
   @Override
@@ -103,30 +107,41 @@ public class SensorService extends Service implements SensorEventListener {
       logFolder = (String) extras.get("logFolder");
     }
 
-    accelerometerLog = openLog(logFolder, "accelerometerLog.txt");
-    // appendLog(mAccelerometerLog, mAccelerometer.getName());
-    appendLog(accelerometerLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
+    if (preferencesManager.getSensorStatus(SharedPreferencesManager.ACCELEROMETER)) {
+      accelerometerLog = openLog(logFolder, "accelerometerLog.txt");
+      // appendLog(mAccelerometerLog, mAccelerometer.getName());
+      appendLog(accelerometerLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
+    }
 
-    gyroscopeLog = openLog(logFolder, "gyroscopeLog.txt");
-    // appendLog(mGyroscopeLog, mGyroscope.getName());
-    appendLog(gyroscopeLog, "timestamp[ns],x[rad/s],y[rad/s],z[rad/s]");
+    if (preferencesManager.getSensorStatus(SharedPreferencesManager.GYROSCOPE)) {
+      gyroscopeLog = openLog(logFolder, "gyroscopeLog.txt");
+      // appendLog(mGyroscopeLog, mGyroscope.getName());
+      appendLog(gyroscopeLog, "timestamp[ns],x[rad/s],y[rad/s],z[rad/s]");
+    }
 
-    gravityLog = openLog(logFolder, "gravityLog.txt");
-    // appendLog(mGravityLog, mGravity.getName());
-    appendLog(gravityLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
+    if (preferencesManager.getSensorStatus(SharedPreferencesManager.GRAVITY)) {
+      gravityLog = openLog(logFolder, "gravityLog.txt");
+      // appendLog(mGravityLog, mGravity.getName());
+      appendLog(gravityLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
+    }
 
-    magneticLog = openLog(logFolder, "magneticLog.txt");
-    // appendLog(mMagneticLog, mMagnetic.getName());
-    appendLog(magneticLog, "timestamp[ns],x[uT],y[uT],z[uT]");
+    if (preferencesManager.getSensorStatus(SharedPreferencesManager.MAGNETIC)) {
+      magneticLog = openLog(logFolder, "magneticLog.txt");
+      // appendLog(mMagneticLog, mMagnetic.getName());
+      appendLog(magneticLog, "timestamp[ns],x[uT],y[uT],z[uT]");
+    }
 
-    lightLog = openLog(logFolder, "lightLog.txt");
-    // appendLog(mLightLog, mLight.getName());
-    appendLog(lightLog, "timestamp[ns],light[lux]");
-
-    proximityLog = openLog(logFolder, "proximityLog.txt");
-    // appendLog(mProximityLog, mProximity.getName());
-    appendLog(proximityLog, "timestamp[ns],proximity[cm]");
-
+    if (preferencesManager.getSensorStatus(SharedPreferencesManager.LIGHT)) {
+      lightLog = openLog(logFolder, "lightLog.txt");
+      // appendLog(mLightLog, mLight.getName());
+      appendLog(lightLog, "timestamp[ns],light[lux]");
+    }
+    
+    if (preferencesManager.getSensorStatus(SharedPreferencesManager.PROXIMITY)) {
+      proximityLog = openLog(logFolder, "proximityLog.txt");
+      // appendLog(mProximityLog, mProximity.getName());
+      appendLog(proximityLog, "timestamp[ns],proximity[cm]");
+    }
     pressureLog = openLog(logFolder, "pressureLog.txt");
     // appendLog(mPressureLog, mPressure.getName());
     appendLog(pressureLog, "timestamp[ns],pressure[hPa]");
