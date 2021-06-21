@@ -37,7 +37,7 @@ data class VlcPlayer(
     override fun init() {
         val args = ArrayList<String>()
         args.add("-vvv")
-        args.add("--file-caching=2000");
+        args.add("--file-caching=2000")
 
         mLibVLC = LibVLC(this.context, args)
         mMediaPlayer = MediaPlayer(mLibVLC)
@@ -50,6 +50,7 @@ data class VlcPlayer(
         mMediaPlayer!!.detachViews()
         mMediaPlayer!!.attachViews(mVideoLayout!!, null, true, true)
     }
+
     override fun start(url: String) {
         Log.i(null, "Stated the player..., playState: " + mMediaPlayer!!.playerState)
 

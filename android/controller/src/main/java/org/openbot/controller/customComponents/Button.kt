@@ -52,9 +52,9 @@ open class Button @JvmOverloads constructor(
     @SuppressLint("CheckResult")
     protected fun subscribe(subject: String, onDataReceived: (String) -> Unit) {
         StatusEventBus.addSubject(subject)
-        StatusEventBus.getProcessor(subject)?.subscribe {
+        StatusEventBus.subscribe(this.javaClass.simpleName, subject, onNext = {
             onDataReceived(it as String)
-        }
+        })
     }
 
     protected fun setOnOffStateConditions(value: String) {

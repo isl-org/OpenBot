@@ -77,7 +77,7 @@ public class RtspServer
     sendServerUrl();
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
     BotToControllerEventBus.emitEvent(
-        ConnectionUtils.createStatus("TOGGLE_MIRROR", mirror.isMirrored));
+        ConnectionUtils.createStatus("TOGGLE_MIRROR", true)); // start as mirrored
   }
 
   @Override
@@ -188,12 +188,7 @@ public class RtspServer
 
         // Delay starting the client for a second to make sure the server is started.
         Runnable action =
-            new Runnable() {
-              @Override
-              public void run() {
-                startClient();
-              }
-            };
+                () -> startClient();
         new DelayedRunner().runAfter(action, 1000L, TimeUnit.MILLISECONDS);
       }
     }
@@ -326,9 +321,7 @@ public class RtspServer
                 break;
             }
           },
-          error -> {
-            Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
-          },
+          error -> Log.d(null, "Error occurred in ControllerToBotEventBus: " + error),
           event ->
               event.has("command")
                   && ("TOGGLE_SOUND".equals(event.getString("command"))

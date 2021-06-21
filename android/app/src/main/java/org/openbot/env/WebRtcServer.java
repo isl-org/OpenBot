@@ -123,8 +123,7 @@ public class WebRtcServer implements IVideoServer {
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_PROTOCOL", "WEBRTC"));
     sendServerUrl();
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
-    BotToControllerEventBus.emitEvent(
-        ConnectionUtils.createStatus("TOGGLE_MIRROR", mirror.isMirrored()));
+    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("TOGGLE_MIRROR", true));
   }
 
   @Override
@@ -474,9 +473,7 @@ public class WebRtcServer implements IVideoServer {
                 break;
             }
           },
-          error -> {
-            Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
-          },
+          error -> Log.d(null, "Error occurred in ControllerToBotEventBus: " + error),
           event ->
               event.has("command")
                   && ("TOGGLE_SOUND".equals(event.getString("command"))
@@ -543,9 +540,7 @@ public class WebRtcServer implements IVideoServer {
                 break;
             }
           },
-          error -> {
-            Log.d(TAG, "Error occurred in handleControllerWebRtcEvents: %s", error);
-          },
+          error -> Log.d(TAG, "Error occurred in handleControllerWebRtcEvents: %s", error),
           commandJsn ->
               commandJsn.has("webrtc_event") // filter out all non "webrtc_event" messages.
           );
