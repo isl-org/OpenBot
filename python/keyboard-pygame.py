@@ -122,7 +122,7 @@ class VideoPlayer:
 
     def play_video(self):
         if not self.stream:
-            print(f'Sream not set')
+            print(f'Stream not set')
             return
 
         print(f'Opening the stream...')
@@ -138,7 +138,6 @@ class VideoPlayer:
             return
 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        #img = cv2.flip(img, 1)
         img = cv2.transpose(img)
 
         # display its width, height, color_depth
@@ -240,34 +239,54 @@ def handle_status(data):
             if status['VIDEO_COMMAND'] == 'STOP':
                 video_player.stop_video()
 
+        if 'VIDEO_PROTOCOL' in status:
+            if status['VIDEO_PROTOCOL'] == 'WEBRTC':
+                screen.add_text("WebRTC video not supported. Please set your Android app to use RTSP.")
+
     except Exception as e:
         print (f"handle_status exception: {e}")
 
-def setup_screen ():
-    pygame.display.set_caption('OpenBot keyboard controller')
-    font = pygame.font.Font(None, 32) #Use system font
-    screen = pygame.display.set_mode([1280, 720])
-    screen.fill(white)
-    text = usage()
-    print(text)
-    lines = text.strip().split('\r')
-    x_pos = 50
-    y_pos = 50
-    delimiter=':'
-    for line in lines:
-        # create a text suface object
-        if delimiter in line:
-            space = '   ' if '\t' in line else ''
-            elements = line.strip().split(delimiter)
-            text = font.render(space + elements[0].strip() + delimiter, True, blue)
-            screen.blit(text, (x_pos, y_pos))
-            text = font.render(elements[1].strip(), True, black)
-            screen.blit(text, (x_pos+200, y_pos))
-        else:
-            text = font.render(line, True, red)
-            screen.blit(text, (x_pos, y_pos))
+class Screen:
+
+    screen = None
+    font = None
+    y_pos = 0
+    x_pos = 0
+
+    def setup_screen (self):
+        pygame.display.set_caption('OpenBot keyboard controller')
+        self.font = pygame.font.Font(None, 32) #Use system font
+        self.screen = pygame.display.set_mode([1280, 760], pygame.RESIZABLE)
+        self.screen.fill(white)
+        text = usage()
+        print(text)
+        lines = text.strip().split('\r')
+        self.x_pos = 50
+        self.y_pos = 50
+        delimiter=':'
+        for line in lines:
+            # create a text suface object
+            if delimiter in line:
+                space = '   ' if '\t' in line else ''
+                elements = line.strip().split(delimiter)
+                text = self.font.render(space + elements[0].strip() + delimiter, True, blue)
+                self.screen.blit(text, (self.x_pos, self.y_pos))
+                text = self.font.render(elements[1].strip(), True, black)
+                self.screen.blit(text, (self.x_pos+200, self.y_pos))
+            else:
+                text = self.font.render(line, True, red)
+                self.screen.blit(text, (self.x_pos, self.y_pos))
+            pygame.display.update()
+            self.y_pos += 40
+
+    def add_text(self, message):
+        text = self.font.render(message, True, red)
+        self.y_pos += 20
+        self.screen.blit(text, (self.x_pos, self.y_pos))
         pygame.display.update()
-        y_pos=y_pos+40
+
+
+screen = Screen()
 
 def run(args):
 
@@ -278,7 +297,7 @@ def run(args):
     print('Connected! 😃\n\r')
 
     pygame.init()
-    setup_screen()
+    screen.setup_screen()
 
     if (args.video):
         t = threading.Thread(target=run_receiver)

@@ -9,15 +9,38 @@
 
 package org.openbot.controller.utils
 
+import android.annotation.SuppressLint
 import android.util.Log
 import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
 import io.reactivex.processors.PublishProcessor
+import java.util.*
 
 object EventProcessor {
+
+    val subscriber = Subscriber()
+
     private val eventProcessor: PublishProcessor<ProgressEvents> =
         PublishProcessor.create()
 
-    val connectionEventFlowable = eventProcessor as Flowable<ProgressEvents>
+    class Subscriber {
+        private val subscribers: Set<String> =
+            LinkedHashSet<String>()
+
+        fun start (name: String, onNext:Consumer<in ProgressEvents>, onError: Consumer<in Throwable>) {
+            if (subscribers.contains(name)) {
+                return // do not allow multiple subscribers with same name
+            }
+
+            eventProcessor.observeOn(AndroidSchedulers.mainThread()).doOnNext(onNext).doOnError(onError).subscribe({},onError )
+            (subscribers as LinkedHashSet).add(name)
+        }
+    }
+    val connectionEventFlowable = (eventProcessor as Flowable<ProgressEvents>)
+
+    init {
+    }
 
     fun onNext(e: ProgressEvents) {
         if (eventProcessor.hasSubscribers()) {

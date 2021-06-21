@@ -14,7 +14,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import org.openbot.controller.ConnectionManager
+import org.openbot.controller.ConnectionSelector
+import kotlin.system.exitProcess
 
 class ExitButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -26,9 +27,9 @@ class ExitButton @JvmOverloads constructor(
 
     inner class OnTouchListener : View.OnTouchListener {
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-            ConnectionManager.getConnection().disconnect()
+            ConnectionSelector.getConnection().disconnect()
             (context as Activity).finish()
-            System.exit(0)
+            exitProcess(0)
             return true
         }
     }
