@@ -187,8 +187,7 @@ public class RtspServer
         cameraControlHandler.disableAudio();
 
         // Delay starting the client for a second to make sure the server is started.
-        Runnable action =
-                () -> startClient();
+        Runnable action = () -> startClient();
         new DelayedRunner().runAfter(action, 1000L, TimeUnit.MILLISECONDS);
       }
     }
