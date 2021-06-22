@@ -35,6 +35,7 @@ dataset_name = "my_openbot"
 
 train_data_dir = os.path.join(dataset_dir, "train_data")
 test_data_dir = os.path.join(dataset_dir, "test_data")
+load_from_tf_record = False
 
 
 @dataclass
@@ -171,6 +172,101 @@ def process_data(tr: Training):
     )
 
 
+def augment_img(img):
+    """Color augmentation
+
+    Args:
+      img: input image
+
+    Returns:
+      img: augmented image
+    """
+    img = tf.image.random_hue(img, 0.08)
+    img = tf.image.random_saturation(img, 0.6, 1.6)
+    img = tf.image.random_brightness(img, 0.05)
+    img = tf.image.random_contrast(img, 0.7, 1.3)
+    return img
+
+
+def augment_cmd(cmd):
+    """
+    Command augmentation
+
+    Args:
+      cmd: input command
+
+    Returns:
+      cmd: augmented command
+    """
+    if not (cmd > 0 or cmd < 0):
+        coin = tf.random.uniform(
+            shape=[1], minval=0, maxval=1, dtype=tf.dtypes.float32
+        )
+        if coin < 0.25:
+            cmd = -1.0
+        elif coin < 0.5:
+            cmd = 1.0
+    return cmd
+
+
+def flip_sample(img, cmd, label):
+    coin = tf.random.uniform(shape=[1], minval=0, maxval=1, dtype=tf.dtypes.float32)
+    if coin < 0.5:
+        img = tf.image.flip_left_right(img)
+        cmd = -cmd
+        label = tf.reverse(label, axis=[0])
+    return img, cmd, label
+
+
+def load_tfrecord_data(tr: Training, verbose=0):
+    def parse_tfrecord_fn(example):
+        feature_description = {
+            "image": tf.io.FixedLenFeature([], tf.string),
+            "path": tf.io.FixedLenFeature([], tf.string),
+            "left": tf.io.FixedLenFeature([], tf.int64),
+            "right": tf.io.FixedLenFeature([], tf.int64),
+            "cmd": tf.io.FixedLenFeature([], tf.int64),
+        }
+        example = tf.io.parse_single_example(example, feature_description)
+        example["image"] = tf.io.decode_jpeg(example["image"], channels=3)
+        return example
+
+    def process_train_sample(features):
+        #image = tf.image.resize(features["image"], size=(224, 224))
+        image = features["image"]
+        cmd, label = features["cmd"], (features["left"], features["right"])
+        image = augment_img(image)
+        if tr.hyperparameters.FLIP_AUG:
+            img, cmd, label = flip_sample(img, cmd, label)
+        if tr.hyperparameters.CMD_AUG:
+            cmd = augment_cmd(cmd)
+
+        return (image, cmd), label
+
+    def process_test_sample(features):
+        image = features["image"]
+        cmd, label = features["cmd"], (features["left"], features["right"])
+        return (image, cmd), label
+
+    tr.train_ds = (
+        tf.data.TFRecordDataset(train_data_dir, num_parallel_reads=AUTOTUNE)
+        .map(parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
+        .map(process_train_sample, num_parallel_calls=AUTOTUNE)
+        .shuffle(tr.hyperparameters.TRAIN_BATCH_SIZE * 10)
+        .batch(tr.hyperparameters.TRAIN_BATCH_SIZE)
+        .prefetch(AUTOTUNE)
+    )
+
+    tr.test_ds = (
+        tf.data.TFRecordDataset(test_data_dir, num_parallel_reads=AUTOTUNE)
+        .map(parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
+        .map(process_test_sample, num_parallel_calls=AUTOTUNE)
+        .shuffle(tr.hyperparameters.TRAIN_BATCH_SIZE * 10)
+        .batch(tr.hyperparameters.TRAIN_BATCH_SIZE)
+        .prefetch(AUTOTUNE)
+    )
+
+
 def load_data(tr: Training, verbose=0):
     # list_train_ds = tf.data.Dataset.list_files(train_frames)
     # list_test_ds = tf.data.Dataset.list_files(test_frames)
@@ -192,48 +288,6 @@ def load_data(tr: Training, verbose=0):
         print("Number of train samples: %d" % len(train_data.labels))
         print("Number of test samples: %d" % len(test_data.labels))
 
-    def augment_img(img):
-        """Color augmentation
-
-        Args:
-          img: input image
-
-        Returns:
-          img: augmented image
-        """
-        img = tf.image.random_hue(img, 0.08)
-        img = tf.image.random_saturation(img, 0.6, 1.6)
-        img = tf.image.random_brightness(img, 0.05)
-        img = tf.image.random_contrast(img, 0.7, 1.3)
-        return img
-
-    def augment_cmd(cmd):
-        """
-        Command augmentation
-
-        Args:
-          cmd: input command
-
-        Returns:
-          cmd: augmented command
-        """
-        if not (cmd > 0 or cmd < 0):
-            coin = tf.random.uniform(
-                shape=[1], minval=0, maxval=1, dtype=tf.dtypes.float32
-            )
-            if coin < 0.25:
-                cmd = -1.0
-            elif coin < 0.5:
-                cmd = 1.0
-        return cmd
-
-    def flip_sample(img, cmd, label):
-        coin = tf.random.uniform(shape=[1], minval=0, maxval=1, dtype=tf.dtypes.float32)
-        if coin < 0.5:
-            img = tf.image.flip_left_right(img)
-            cmd = -cmd
-            label = tf.reverse(label, axis=[0])
-        return img, cmd, label
 
     def process_train_path(file_path):
         cmd, label = train_data.get_label(
@@ -427,10 +481,14 @@ def savefig(path):
 
 def start_train(params: Hyperparameters, callback: MyCallback, verbose=0):
     tr = Training(params)
-    callback.broadcast("message", "Processing data...")
-    process_data(tr)
-    callback.broadcast("message", "Loading data...")
-    load_data(tr, verbose)
+    if load_from_tf_record:
+        callback.broadcast("message", "Loading data from tfrecord...")
+        load_tfrecord_data(tr, verbose)
+    else:
+        callback.broadcast("message", "Processing data...")
+        process_data(tr)
+        callback.broadcast("message", "Loading data...")
+        load_data(tr, verbose)
     callback.broadcast("preview")
     do_training(tr, callback, verbose)
     do_evaluation(tr, callback, verbose)
