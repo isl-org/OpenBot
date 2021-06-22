@@ -223,18 +223,21 @@ def load_tfrecord_data(tr: Training, verbose=0):
         feature_description = {
             "image": tf.io.FixedLenFeature([], tf.string),
             "path": tf.io.FixedLenFeature([], tf.string),
-            "left": tf.io.FixedLenFeature([], tf.int64),
-            "right": tf.io.FixedLenFeature([], tf.int64),
-            "cmd": tf.io.FixedLenFeature([], tf.int64),
+            "left": tf.io.FixedLenFeature([], tf.float32),
+            "right": tf.io.FixedLenFeature([], tf.float32),
+            "cmd": tf.io.FixedLenFeature([], tf.float32),
         }
         example = tf.io.parse_single_example(example, feature_description)
-        example["image"] = tf.io.decode_jpeg(example["image"], channels=3)
+        img = tf.io.decode_jpeg(example["image"], channels=3)
+        img = tf.image.convert_image_dtype(img, tf.float32)
+        example["image"] = img
         return example
 
     def process_train_sample(features):
         #image = tf.image.resize(features["image"], size=(224, 224))
         image = features["image"]
-        cmd, label = features["cmd"], (features["left"], features["right"])
+        cmd  = features["cmd"]
+        label = [features["left"], features["right"]]
         image = augment_img(image)
         if tr.hyperparameters.FLIP_AUG:
             img, cmd, label = flip_sample(img, cmd, label)
@@ -245,7 +248,8 @@ def load_tfrecord_data(tr: Training, verbose=0):
 
     def process_test_sample(features):
         image = features["image"]
-        cmd, label = features["cmd"], (features["left"], features["right"])
+        cmd = features["cmd"]
+        label = [features["left"], features["right"]]
         return (image, cmd), label
 
     tr.train_ds = (
@@ -257,12 +261,24 @@ def load_tfrecord_data(tr: Training, verbose=0):
         .prefetch(AUTOTUNE)
     )
 
+    # Obtains the images shapes of records from .tfrecords.
+    for (image, cmd), label in tr.train_ds.take(1):
+        shape = image.numpy().shape
+        tr.NETWORK_IMG_HEIGHT = shape[1]
+        tr.NETWORK_IMG_WIDTH = shape[2]
+        print("Image shape: ", shape)
+
+    # Obtains the total number of records from .tfrecords file
+    # https://stackoverflow.com/questions/40472139/obtaining-total-number-of-records-from-tfrecords-file-in-tensorflow
+    tr.image_count_train = sum(1 for _ in tr.train_ds)
+    print ("Number of training instances: ", tr.image_count_train)
+
     tr.test_ds = (
         tf.data.TFRecordDataset(test_data_dir, num_parallel_reads=AUTOTUNE)
         .map(parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
         .map(process_test_sample, num_parallel_calls=AUTOTUNE)
         .shuffle(tr.hyperparameters.TRAIN_BATCH_SIZE * 10)
-        .batch(tr.hyperparameters.TRAIN_BATCH_SIZE)
+        .batch(tr.hyperparameters.TEST_BATCH_SIZE)
         .prefetch(AUTOTUNE)
     )
 
