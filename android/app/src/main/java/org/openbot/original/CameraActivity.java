@@ -895,9 +895,7 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   private void disconnectPhoneController() {
-    if (phoneController.isConnected()) {
-      phoneController.disconnect();
-    }
+    phoneController.disconnect();
     setDriveMode(DriveMode.values()[preferencesManager.getDriveMode()]);
     driveModeSpinner.setEnabled(true);
     driveModeSpinner.setAlpha(1.0f);
@@ -1254,10 +1252,7 @@ public abstract class CameraActivity extends AppCompatActivity
             commandType = commandJsn.getString("command");
           } else if (commandJsn.has("driveCmd")) {
             commandType = "DRIVE_CMD";
-          } else {
-            return;
           }
-
           switch (commandType) {
             case "DRIVE_CMD":
               JSONObject driveValue = commandJsn.getJSONObject("driveCmd");
@@ -1313,13 +1308,14 @@ public abstract class CameraActivity extends AppCompatActivity
             case "DISCONNECTED":
               controllerHandler.handleDriveCommand(0.f, 0.f);
               setControlMode(ControlMode.GAMEPAD);
-              phoneController.stopVideo();
               break;
           }
         },
         error -> {
           Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
-        });
+        },
+        event -> event.has("command") || event.has("driveCmd") // filter everything else
+        );
   }
 
   private void sendIndicatorStatus(Integer status) {
