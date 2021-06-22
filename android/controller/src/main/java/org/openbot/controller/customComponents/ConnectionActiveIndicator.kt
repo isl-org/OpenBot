@@ -33,22 +33,22 @@ class ConnectionActiveIndicator @JvmOverloads constructor(
         setOnOffStateConditions(data)
     }
 
-    protected open fun offState() {
-        setColorFilter(ContextCompat.getColor(context, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
+    private fun offState() {
+        setColorFilter(ContextCompat.getColor(context, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN)
     }
 
-    protected open fun onState() {
-        setColorFilter(ContextCompat.getColor(context, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
+    private fun onState() {
+        setColorFilter(ContextCompat.getColor(context, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN)
     }
 
-    protected fun subscribe(subject: String, onDataReceived: (String) -> Unit) {
+    private fun subscribe(subject: String, onDataReceived: (String) -> Unit) {
         StatusEventBus.addSubject(subject)
-        StatusEventBus.getProcessor(subject)?.subscribe {
+        StatusEventBus.subscribe(this.javaClass.simpleName, subject, onNext = {
             onDataReceived(it as String)
-        }
+        })
     }
 
-    protected fun setOnOffStateConditions(value: String) {
+    private fun setOnOffStateConditions(value: String) {
         if (value == "true") onState() else offState()
     }
 }

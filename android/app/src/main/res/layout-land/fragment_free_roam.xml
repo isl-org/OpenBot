@@ -7,17 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".robot.FreeRoamFragment">
 
-    <org.openbot.customview.AutoFitSurfaceGlView
-        android:id="@+id/video_window"
-        android:layout_width="200dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/controllerContainer"
-        app:layout_constraintTop_toBottomOf="@+id/indicatorLeft"
-        android:gravity="center"
-        android:alpha="0.0"
-        android:layout_margin="@dimen/feed_padding"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <ProgressBar
         android:id="@+id/battery"
         style="@android:style/Widget.ProgressBar.Horizontal"

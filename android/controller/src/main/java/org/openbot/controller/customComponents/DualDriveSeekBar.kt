@@ -8,15 +8,11 @@
  */
 package org.openbot.controller.customComponents
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
-import androidx.annotation.RequiresApi
-import org.openbot.controller.ConnectionManager
+import org.openbot.controller.ConnectionSelector
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -115,7 +111,7 @@ class DualDriveSeekBar @JvmOverloads constructor(
             if ((System.currentTimeMillis() - lastTransmitted) >= MIN_TIME_BETWEEN_TRANSMISSIONS
                     || lastRightValue == 0f || lastLeftValue == 0f) { // if home command, send, do not wait for a time lapsed.
                 val msg = "{driveCmd: {r:$lastRightValue, l:$lastLeftValue}}"
-                ConnectionManager.getConnection().sendMessage(msg)
+                ConnectionSelector.getConnection().sendMessage(msg)
                 lastTransmitted = System.currentTimeMillis()
             }
         }
