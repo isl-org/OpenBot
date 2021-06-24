@@ -460,7 +460,7 @@ public class SensorService extends Service implements SensorEventListener {
       writer.append(text);
       writer.newLine();
       writer.flush();
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
