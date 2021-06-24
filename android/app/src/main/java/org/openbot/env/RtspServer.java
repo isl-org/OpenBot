@@ -34,7 +34,6 @@ public class RtspServer
   private final String TAG = "RtspServerPedroOpenGL";
   private RtspServerCamera1 rtspServerCamera1;
   private View view;
-  private final MirrorImageSetter mirror = new MirrorImageSetter();
   private AndGate andGate;
   private Context context;
   private Size resolution = new Size(640, 360);
@@ -184,7 +183,10 @@ public class RtspServer
               resolution.getWidth(), resolution.getHeight(), 20, 1200 * 1024, 2, 0)) {
 
         rtspServerCamera1.startStream("");
-        cameraControlHandler.disableAudio();
+        boolean isMute = ControllerConfig.getInstance().isMute();
+        if (isMute) {
+          cameraControlHandler.disableAudio();
+        }
 
         // Delay starting the client for a second to make sure the server is started.
         Runnable action = () -> startClient();
@@ -197,18 +199,6 @@ public class RtspServer
   public void setResolution(int w, int h) {
     resolution = new Size(w, h);
     andGate.set("resolution set", true);
-  }
-
-  class MirrorImageSetter {
-    public boolean isMirrored() {
-      return isMirrored;
-    }
-
-    public void setMirrored(boolean mirrored) {
-      isMirrored = mirrored;
-    }
-
-    private boolean isMirrored = true;
   }
 
   // ConnectCheckerRtsp callbacks
@@ -291,6 +281,8 @@ public class RtspServer
     }
 
     private void handleCameraControlEvents() {
+      ControllerConfig config = ControllerConfig.getInstance();
+
       ControllerToBotEventBus.subscribe(
           this.getClass().getSimpleName(),
           event -> {
@@ -303,6 +295,9 @@ public class RtspServer
                 if (rtspServerCamera1.isAudioMuted()) rtspServerCamera1.enableAudio();
                 else rtspServerCamera1.disableAudio();
 
+                // store in settings
+                config.setMute(!config.isMute());
+
                 // inform the controller of current state
                 BotToControllerEventBus.emitEvent(
                     ConnectionUtils.createStatus(
@@ -311,12 +306,11 @@ public class RtspServer
 
               case "TOGGLE_MIRROR":
                 Log.i(TAG, "TOGGLE_MIRROR");
-
-                mirror.setMirrored(!mirror.isMirrored());
+                config.setMirrored(!config.isMirrored());
 
                 // inform the controller of current state
                 BotToControllerEventBus.emitEvent(
-                    ConnectionUtils.createStatus("TOGGLE_MIRROR", mirror.isMirrored()));
+                    ConnectionUtils.createStatus("TOGGLE_MIRROR", config.isMirrored()));
                 break;
             }
           },

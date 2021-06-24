@@ -100,26 +100,6 @@ class ControllerActivity : /*AppCompat*/
         return view
     }
 
-//    private fun createView(view: View): View {
-//        val existingView = findViewById<View>(R.id.video_view)
-//        if (existingView != null && existingView::class == view::class) {
-//            return existingView // already exist and of same type
-//        }
-//        view.id = R.id.video_view
-//
-//        val layoutParams = ViewGroup.LayoutParams(
-//            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
-//        )
-//        view.layoutParams = layoutParams
-//
-//        if (binding.video.childCount > 0) {
-//            binding.video.removeAllViews()
-//        }
-//        binding.video.addView(view)
-//
-//        return view
-//    }
-
     private fun setupPermissions() {
         val permission = ContextCompat.checkSelfPermission(
             this,
