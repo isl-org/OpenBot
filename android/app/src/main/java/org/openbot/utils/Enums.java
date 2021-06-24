@@ -13,7 +13,10 @@ public class Enums {
     MAGNETIC("Magnetic"),
     LIGHT("Light"),
     PRESSURE("Pressure"),
-    GPS("Gps");
+    GPS("Gps"),
+    VEHICLE("Vehicle"),
+    POSE("Pose"),
+    MOTION("Motion");
 
     private String sensor;
 

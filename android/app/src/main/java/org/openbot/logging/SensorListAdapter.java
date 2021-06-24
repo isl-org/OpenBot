@@ -3,7 +3,6 @@ package org.openbot.logging;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +33,7 @@ public class SensorListAdapter extends RecyclerView.Adapter<SensorListAdapter.Vi
 
   @Override
   public void onBindViewHolder(final ViewHolder holder, int position) {
-    holder.name.setText(names.get(position));
+    holder.checkBox.setText(names.get(position));
     holder.checkBox.setChecked(status.get(position));
     holder.checkBox.setOnClickListener(
         v -> preferencesManager.setSensorStatus(holder.checkBox.isChecked(), names.get(position)));
@@ -46,13 +45,10 @@ public class SensorListAdapter extends RecyclerView.Adapter<SensorListAdapter.Vi
   }
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
-    public final TextView name;
     public CheckBox checkBox;
 
     public ViewHolder(ItemSensorBinding binding) {
       super(binding.getRoot());
-
-      name = binding.name;
       checkBox = binding.check;
     }
   }

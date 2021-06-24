@@ -127,6 +127,7 @@
     <string name="permissions">Permissions</string>
     <string name="model_download_body">Going back would cancel the download. Are you sure?</string>
     <string name="model_download_title">Model Download In Progress</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>

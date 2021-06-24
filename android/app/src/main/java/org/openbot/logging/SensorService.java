@@ -148,14 +148,18 @@ public class SensorService extends Service implements SensorEventListener {
       // appendLog(mPressureLog, mPressure.getName());
       appendLog(pressureLog, "timestamp[ns],pressure[hPa]");
     }
-    poseLog = openLog(logFolder, "poseLog.txt");
-    // appendLog(mPoseLog, mPose.getName());
-    appendLog(poseLog, "timestamp[ns],x,y,z,w,x,y,z,dx,dy,dz,dw,dx,dy,dz,id");
 
-    motionLog = openLog(logFolder, "motionLog.txt");
-    // appendLog(mMotionLog, mMotion.getName());
-    appendLog(motionLog, "timestamp[ns],motion");
+    if (preferencesManager.getSensorStatus(Enums.SensorType.POSE.getSensor())) {
+      poseLog = openLog(logFolder, "poseLog.txt");
+      // appendLog(mPoseLog, mPose.getName());
+      appendLog(poseLog, "timestamp[ns],x,y,z,w,x,y,z,dx,dy,dz,dw,dx,dy,dz,id");
+    }
 
+    if (preferencesManager.getSensorStatus(Enums.SensorType.MOTION.getSensor())) {
+      motionLog = openLog(logFolder, "motionLog.txt");
+      // appendLog(mMotionLog, mMotion.getName());
+      appendLog(motionLog, "timestamp[ns],motion");
+    }
     if (preferencesManager.getSensorStatus(Enums.SensorType.GPS.getSensor())) {
       gpsLog = openLog(logFolder, "gpsLog.txt");
       appendLog(gpsLog, "timestamp[ns],latitude,longitude,altitude[m],bearing,speed[m/s]");
@@ -173,9 +177,10 @@ public class SensorService extends Service implements SensorEventListener {
     indicatorLog = openLog(logFolder, "indicatorLog.txt");
     appendLog(indicatorLog, "timestamp[ns],signal");
 
-    vehicleLog = openLog(logFolder, "vehicleLog.txt");
-    appendLog(vehicleLog, "timestamp[ns],batteryVoltage,leftWheel,rightWheel,obstacle");
-
+    if (preferencesManager.getSensorStatus(Enums.SensorType.VEHICLE.getSensor())) {
+      vehicleLog = openLog(logFolder, "vehicleLog.txt");
+      appendLog(vehicleLog, "timestamp[ns],batteryVoltage,leftWheel,rightWheel,obstacle");
+    }
     sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
     sensorManager.registerListener(
         this, gyroscopeSensor, android.hardware.SensorManager.SENSOR_DELAY_NORMAL);

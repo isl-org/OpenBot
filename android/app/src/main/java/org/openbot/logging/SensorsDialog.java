@@ -41,6 +41,15 @@ public class SensorsDialog extends DialogFragment {
     list.put(
         Enums.SensorType.GPS.getSensor(),
         preferencesManager.getSensorStatus(Enums.SensorType.GPS.getSensor()));
+    list.put(
+        Enums.SensorType.VEHICLE.getSensor(),
+        preferencesManager.getSensorStatus(Enums.SensorType.VEHICLE.getSensor()));
+    list.put(
+        Enums.SensorType.MOTION.getSensor(),
+        preferencesManager.getSensorStatus(Enums.SensorType.MOTION.getSensor()));
+    list.put(
+        Enums.SensorType.POSE.getSensor(),
+        preferencesManager.getSensorStatus(Enums.SensorType.POSE.getSensor()));
 
     for (Sensor sensor : sensorList) {
       for (Enums.SensorType name : Enums.SensorType.values())
