@@ -36,6 +36,6 @@ object BotDataListener {
             }
         }
 
-        ConnectionManager.getConnection().setDataCallback(dataReceived)
+        ConnectionSelector.getConnection().setDataCallback(dataReceived)
     }
 }

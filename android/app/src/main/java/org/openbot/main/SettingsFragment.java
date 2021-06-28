@@ -7,8 +7,10 @@ import static org.openbot.utils.Constants.PERMISSION_STORAGE;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
@@ -16,7 +18,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 import org.openbot.R;
@@ -37,41 +41,40 @@ public class SettingsFragment extends PreferenceFragmentCompat {
   private final ActivityResultLauncher<String[]> requestPermissionLauncher =
       registerForActivityResult(
           new ActivityResultContracts.RequestMultiplePermissions(),
-          result -> {
-            result.forEach(
-                (permission, granted) -> {
-                  switch (permission) {
-                    case PERMISSION_CAMERA:
-                      if (granted) camera.setChecked(true);
-                      else {
-                        camera.setChecked(false);
-                        PermissionUtils.showCameraPermissionSettingsToast(requireActivity());
-                      }
-                      break;
-                    case PERMISSION_STORAGE:
-                      if (granted) storage.setChecked(true);
-                      else {
-                        storage.setChecked(false);
-                        PermissionUtils.showStoragePermissionSettingsToast(requireActivity());
-                      }
-                      break;
-                    case PERMISSION_LOCATION:
-                      if (granted) location.setChecked(true);
-                      else {
-                        location.setChecked(false);
-                        PermissionUtils.showLocationPermissionSettingsToast(requireActivity());
-                      }
-                      break;
-                    case PERMISSION_AUDIO:
-                      if (granted) mic.setChecked(true);
-                      else {
-                        mic.setChecked(false);
-                        PermissionUtils.showAudioPermissionSettingsToast(requireActivity());
-                      }
-                      break;
-                  }
-                });
-          });
+          result ->
+              result.forEach(
+                  (permission, granted) -> {
+                    switch (permission) {
+                      case PERMISSION_CAMERA:
+                        if (granted) camera.setChecked(true);
+                        else {
+                          camera.setChecked(false);
+                          PermissionUtils.showCameraPermissionSettingsToast(requireActivity());
+                        }
+                        break;
+                      case PERMISSION_STORAGE:
+                        if (granted) storage.setChecked(true);
+                        else {
+                          storage.setChecked(false);
+                          PermissionUtils.showStoragePermissionSettingsToast(requireActivity());
+                        }
+                        break;
+                      case PERMISSION_LOCATION:
+                        if (granted) location.setChecked(true);
+                        else {
+                          location.setChecked(false);
+                          PermissionUtils.showLocationPermissionSettingsToast(requireActivity());
+                        }
+                        break;
+                      case PERMISSION_AUDIO:
+                        if (granted) mic.setChecked(true);
+                        else {
+                          mic.setChecked(false);
+                          PermissionUtils.showAudioPermissionSettingsToast(requireActivity());
+                        }
+                        break;
+                    }
+                  }));
 
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -185,6 +188,41 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return false;
           });
     }
+
+    ListPreference streamMode = findPreference("video_server");
+
+    if (streamMode != null)
+      streamMode.setOnPreferenceChangeListener(
+          (preference, newValue) -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder.setTitle(R.string.confirm_title);
+            builder.setMessage(R.string.stream_change_body);
+            builder.setPositiveButton(
+                "Yes",
+                (dialog, id) -> {
+                  streamMode.setValue(newValue.toString());
+                  restartApp();
+                });
+            builder.setNegativeButton(
+                "Cancel", (dialog, id) -> streamMode.setValue(streamMode.getEntry().toString()));
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return false;
+          });
+  }
+
+  private void restartApp() {
+    new Handler()
+        .postDelayed(
+            () -> {
+              final PackageManager pm = requireActivity().getPackageManager();
+              final Intent intent =
+                  pm.getLaunchIntentForPackage(requireActivity().getPackageName());
+              requireActivity().finishAffinity(); // Finishes all activities.
+              requireActivity().startActivity(intent); // Start the launch activity
+              System.exit(0); // System finishes and automatically relaunches us.
+            },
+            100);
   }
 
   @Override

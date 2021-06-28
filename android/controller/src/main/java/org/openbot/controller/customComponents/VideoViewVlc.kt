@@ -13,9 +13,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
-import android.widget.FrameLayout
+import io.reactivex.functions.Consumer
 import org.openbot.controller.StatusEventBus
 import org.openbot.controller.databinding.ActivityFullscreenBinding
+import org.openbot.controller.utils.EventProcessor
 import org.videolan.libvlc.interfaces.IVLCVout
 
 @SuppressLint("CheckResult")
@@ -33,20 +34,25 @@ class VideoViewVlc @JvmOverloads constructor(
         hide()
 
         StatusEventBus.addSubject("VIDEO_SERVER_URL")
-        StatusEventBus.getProcessor("VIDEO_SERVER_URL")?.subscribe({
+        StatusEventBus.subscribe(this.javaClass.simpleName,"VIDEO_SERVER_URL", {
             this.serverUrl = it
         }, {
             Log.i(null, "Failed to send...")
         })
 
         StatusEventBus.addSubject("VIDEO_COMMAND")
-        StatusEventBus.getProcessor("VIDEO_COMMAND")?.subscribe {
-            processVideoCommand(it as String)
-        }
+        StatusEventBus.subscribe (this.javaClass.simpleName, "VIDEO_COMMAND",
+            onNext = { processVideoCommand(it as String) })
+
+        StatusEventBus.addSubject("TOGGLE_MIRROR")
+        StatusEventBus.subscribe(this.javaClass.simpleName, "TOGGLE_MIRROR", onNext = {
+            scaleX = if (it as String == "true") 1f else -1f // RTSP is already mirrored by default.
+        })
+
+        monitorConnection()
     }
 
-    fun init(binding: ActivityFullscreenBinding) {
-        hide()
+    fun init() {
         player.init()
     }
 
@@ -63,12 +69,13 @@ class VideoViewVlc @JvmOverloads constructor(
     }
 
     private fun start() {
+        show()
+
         if (this.serverUrl == null) {
             Log.d(TAG, "Cannot start video, serverUrl: {serverUrl}")
             return
         }
         player.start(this.serverUrl!!)
-        show()
     }
 
     fun stop() {
@@ -81,15 +88,33 @@ class VideoViewVlc @JvmOverloads constructor(
     }
 
     fun hide() {
-        visibility = GONE
+        visibility = INVISIBLE
     }
 
     override fun onSurfacesCreated(vlcVout: IVLCVout?) {
         Log.i(TAG, "onSurfacesCreated")
-        // setSurfaceDimensions()
     }
 
     override fun onSurfacesDestroyed(vlcVout: IVLCVout?) {
         Log.i(TAG, "onSurfacesDestroyed")
+    }
+
+    private fun monitorConnection() {
+
+        EventProcessor.subscriber.start(
+            this.javaClass.simpleName,
+            {
+                when (it) {
+                    EventProcessor.ProgressEvents.Disconnected -> {
+                        stop()
+                    }
+                }
+            },
+            { throwable ->
+                Log.d(
+                    "EventsSubscription",
+                    "Got error on subscribe: $throwable"
+                )
+            })
     }
 }

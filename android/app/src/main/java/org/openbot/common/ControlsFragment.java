@@ -158,14 +158,11 @@ public abstract class ControlsFragment extends Fragment {
     ControllerToBotEventBus.subscribe(
         this.getClass().getSimpleName(),
         event -> {
-          String commandType;
+          String commandType = "";
           if (event.has("command")) {
             commandType = event.getString("command");
           } else if (event.has("driveCmd")) {
             commandType = Constants.CMD_DRIVE;
-          } else {
-            Timber.d("Got invalid command from controller: %s", event.toString());
-            return;
           }
 
           switch (commandType) {
@@ -209,7 +206,9 @@ public abstract class ControlsFragment extends Fragment {
         },
         error -> {
           Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
-        });
+        },
+        event -> event.has("command") || event.has("driveCmd") // filter out everything else
+        );
   }
 
   protected void toggleNoise() {

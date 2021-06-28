@@ -44,7 +44,6 @@ public class FreeRoamFragment extends ControlsFragment {
     super.onViewCreated(view, savedInstanceState);
 
     phoneController = PhoneController.getInstance(requireContext());
-    phoneController.setView(binding.videoWindow);
 
     binding.voltageInfo.setText(getString(R.string.voltageInfo, "--.-"));
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
