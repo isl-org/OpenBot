@@ -41,9 +41,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView">
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <TextView
                     android:layout_width="0dp"
@@ -69,11 +70,13 @@
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_margin="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/delayContainer"
+                app:layout_constraintTop_toBottomOf="@id/textView"
+                app:layout_constraintBottom_toTopOf="@+id/delayContainer"
                 tools:listitem="@layout/item_sensor" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
