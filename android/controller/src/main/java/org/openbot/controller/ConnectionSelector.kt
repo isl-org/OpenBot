@@ -6,7 +6,7 @@ import android.content.Context.WIFI_SERVICE
 import android.net.wifi.WifiManager
 
 @SuppressLint("StaticFieldLeak")
-object ConnectionManager {
+object ConnectionSelector {
 
     private val connection: ILocalConnection? = null
     private const val TAG = "ConnectionManager"
@@ -14,7 +14,7 @@ object ConnectionManager {
     private lateinit var context: Context
 
     fun init (context: Context) {
-        this.context = context;
+        this.context = context
     }
 
     fun getConnection(): ILocalConnection {

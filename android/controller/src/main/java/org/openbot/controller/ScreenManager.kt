@@ -69,4 +69,9 @@ data class ScreenManager (val binding: ActivityFullscreenBinding) {
 
         showButtons(3000)
     }
+
+    fun showControlsImmediately () {
+        binding.splashScreen.hide()
+        binding.mainScreen.show()
+    }
 }

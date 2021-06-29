@@ -35,16 +35,16 @@ class VideoView @JvmOverloads constructor(
         hide()
 
         StatusEventBus.addSubject("VIDEO_SERVER_URL")
-        StatusEventBus.getProcessor("VIDEO_SERVER_URL")?.subscribe({
+        StatusEventBus.subscribe(this.javaClass.simpleName, "VIDEO_SERVER_URL", onNext = {
             this.serverUrl = it
         }, {
             Log.i(null, "Failed to send...")
         })
 
         StatusEventBus.addSubject("VIDEO_COMMAND")
-        StatusEventBus.getProcessor("VIDEO_COMMAND")?.subscribe {
+        StatusEventBus.subscribe (this.javaClass.simpleName,"VIDEO_COMMAND", onNext = {
             processVideoCommand(it as String)
-        }
+        })
     }
 
     fun init(binding: ActivityFullscreenBinding) {
@@ -93,7 +93,7 @@ class VideoView @JvmOverloads constructor(
         if (width == 0 || height == 0) {
             return
         }
-        val aspectRatio: kotlin.Float = height.toFloat()/width.toFloat()
+        val aspectRatio: Float = height.toFloat()/width.toFloat()
         val surfaceWidth = this.width
         val surfaceHeight = (surfaceWidth * aspectRatio).toInt()
         val params = FrameLayout.LayoutParams(surfaceWidth, surfaceHeight)

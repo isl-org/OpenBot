@@ -104,7 +104,7 @@ public class NetworkServiceConnection implements ILocalConnection {
       socketHandler.put(message);
     }
   }
-  // end of interface //////////////////////////////
+  // end of interface
 
   private void runConnection() {
     try {

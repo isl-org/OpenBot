@@ -16,21 +16,21 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
+import android.view.*
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import org.openbot.controller.customComponents.DualDriveSeekBar
+import org.openbot.controller.customComponents.VideoViewVlc
+import org.openbot.controller.customComponents.VideoViewWebRTC
 import org.openbot.controller.databinding.ActivityFullscreenBinding
 import org.openbot.controller.utils.EventProcessor
 import org.openbot.controller.utils.Utils
+import kotlin.system.exitProcess
 
-class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppCompatActivity gives errors in the IDE, but it does compile,
+class ControllerActivity : /*AppCompat*/
+    Activity() { // for some reason AppCompatActivity gives errors in the IDE, but it does compile,
     private val PERMISSION_REQUEST_LOCATION = 101
     private val TAG = "ControllerActivity"
     private lateinit var binding: ActivityFullscreenBinding
@@ -45,7 +45,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         setupPermissions()
 
         screenManager = ScreenManager(binding)
-        ConnectionManager.init(this)
+        ConnectionSelector.init(this)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -61,12 +61,70 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
 
         BotDataListener.init()
 
-        binding.videoView.init(binding)
+        subscribe("VIDEO_PROTOCOL", ::onDataReceived)
     }
 
+    @SuppressLint("CheckResult")
+    private fun subscribe(subject: String, onDataReceived: (String) -> Unit) {
+        StatusEventBus.addSubject(subject)
+        StatusEventBus.subscribe(this.javaClass.simpleName, subject, onNext = {
+            onDataReceived(it as String)
+        })
+    }
+
+    private fun onDataReceived(data: String) {
+        // Create the type of video view programmatically based on info from the Bot app.
+        when (data) {
+            "WEBRTC" -> {
+                val view: VideoViewWebRTC = createView(VideoViewWebRTC(this)) as VideoViewWebRTC
+                view.init()
+            }
+            "RTSP" -> {
+                val view: VideoViewVlc = createView(VideoViewVlc(this)) as VideoViewVlc
+                view.init()
+            }
+        }
+    }
+
+    private fun createView(view: View): View {
+        view.id = R.id.video_view
+
+        val layoutParams = ViewGroup.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        view.layoutParams = layoutParams
+
+        if (binding.video.childCount > 0) {
+            binding.video.removeAllViews()
+        }
+        binding.video.addView(view)
+        return view
+    }
+
+//    private fun createView(view: View): View {
+//        val existingView = findViewById<View>(R.id.video_view)
+//        if (existingView != null && existingView::class == view::class) {
+//            return existingView // already exist and of same type
+//        }
+//        view.id = R.id.video_view
+//
+//        val layoutParams = ViewGroup.LayoutParams(
+//            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
+//        )
+//        view.layoutParams = layoutParams
+//
+//        if (binding.video.childCount > 0) {
+//            binding.video.removeAllViews()
+//        }
+//        binding.video.addView(view)
+//
+//        return view
+//    }
+
     private fun setupPermissions() {
-        val permission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
+        val permission = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "Permission to get location denied")
@@ -75,69 +133,71 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
     }
 
     private fun makeRequest() {
-        ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                PERMISSION_REQUEST_LOCATION
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            PERMISSION_REQUEST_LOCATION
         )
     }
 
     @SuppressLint("CheckResult")
-    private fun subscribeToStatusInfo () {
+    private fun subscribeToStatusInfo() {
         StatusEventBus.addSubject("CONNECTION_ACTIVE")
-        StatusEventBus.getProcessor("CONNECTION_ACTIVE")?.subscribe {
-            if (it.toBoolean()) screenManager.showControls() else screenManager.hideControls()
-        }
+        StatusEventBus.subscribe(this.javaClass.simpleName, "CONNECTION_ACTIVE", onNext = {
+            if (it.toBoolean()) screenManager.showControlsImmediately() else screenManager.hideControls()
+        })
     }
 
-    private fun createAppEventsSubscription(): Disposable =
-            EventProcessor.connectionEventFlowable
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnNext {
-                        Log.i(TAG, "Got ${it} event")
+    @SuppressLint("CheckResult")
+    private fun createAppEventsSubscription() {
+        EventProcessor.subscriber.start(
+            this.javaClass.simpleName,
 
-                        when (it) {
-                            EventProcessor.ProgressEvents.ConnectionSuccessful -> {
-                                Utils.beep()
-                                screenManager.showControls()
-                            }
-                            EventProcessor.ProgressEvents.ConnectionStarted -> {
-                            }
-                            EventProcessor.ProgressEvents.ConnectionFailed -> {
-                                screenManager.hideControls()
-                            }
-                            EventProcessor.ProgressEvents.StartAdvertising -> {
-                                screenManager.hideControls()
-                            }
-                            EventProcessor.ProgressEvents.Disconnected -> {
-                                screenManager.hideControls()
-                                ConnectionManager.getConnection().connect(this)
-                            }
-                            EventProcessor.ProgressEvents.StopAdvertising -> {
-                            }
-                            EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
-                                screenManager.hideControls()
-                                ConnectionManager.getConnection().connect(this)
-                            }
-                            EventProcessor.ProgressEvents.AdvertisingFailed -> {
-                                screenManager.hideControls()
-                            }
-                        }
+            {
+                Log.i(TAG, "Got $it event")
+
+                when (it) {
+                    EventProcessor.ProgressEvents.ConnectionSuccessful -> {
+                        Utils.beep()
+                        screenManager.showControls()
                     }
-                    .subscribe(
-                            { },
-                            { throwable ->
-                                Log.d(
-                                        "EventsSubscription",
-                                        "Got error on subscribe: $throwable"
-                                )
-                            })
+                    EventProcessor.ProgressEvents.ConnectionStarted -> {
+                    }
+                    EventProcessor.ProgressEvents.ConnectionFailed -> {
+                        screenManager.hideControls()
+                    }
+                    EventProcessor.ProgressEvents.StartAdvertising -> {
+                        screenManager.hideControls()
+                    }
+                    EventProcessor.ProgressEvents.Disconnected -> {
+                        screenManager.hideControls()
+                        ConnectionSelector.getConnection().connect(this)
+                    }
+                    EventProcessor.ProgressEvents.StopAdvertising -> {
+                    }
+                    EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
+                        screenManager.hideControls()
+                        ConnectionSelector.getConnection().connect(this)
+                    }
+                    EventProcessor.ProgressEvents.AdvertisingFailed -> {
+                        screenManager.hideControls()
+                    }
+                }
+            },
+            { throwable ->
+                Log.d(
+                    "EventsSubscription",
+                    "Got error on subscribe: $throwable"
+                )
+            })
+    }
 
     private fun hideSystemUI() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.let {
-                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            window.insetsController.let {
+                it?.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
                 window.navigationBarColor = getColor(R.color.colorPrimaryDark)
-                it.hide(WindowInsets.Type.systemBars())
+                it?.hide(WindowInsets.Type.systemBars())
             }
         } else {
             @Suppress("DEPRECATION")
@@ -156,7 +216,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
     @Override
     override fun onPause() {
         super.onPause()
-        ConnectionManager.getConnection().disconnect()
+        ConnectionSelector.getConnection().disconnect()
     }
 
     @Override
@@ -164,12 +224,14 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
         super.onResume()
         hideSystemUI()
 
-        ConnectionManager.getConnection().init(this)
-        ConnectionManager.getConnection().connect(this)
+        ConnectionSelector.getConnection().init(this)
+        ConnectionSelector.getConnection().connect(this)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
+    ) {
         when (requestCode) {
             PERMISSION_REQUEST_LOCATION -> {
 
@@ -177,7 +239,7 @@ class ControllerActivity : /*AppCompat*/ Activity() { // for some reason AppComp
 
                     Log.i(TAG, "Permission has been denied by user")
                     finish()
-                    System.exit(0)
+                    exitProcess(0)
                 } else {
                     Log.i(TAG, "Permission has been granted by user")
                 }

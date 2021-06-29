@@ -45,6 +45,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
+    }
 }
 
 dependencies {
@@ -72,6 +76,9 @@ dependencies {
 
     // vlc for rtsp streaming display
     implementation 'org.videolan.android:libvlc-all:3.3.14'
+
+    // WebRTC
+    implementation 'org.webrtc:google-webrtc:1.0.+'
 
     // For a library module, uncomment the following line and comment the one after
     // apply plugin: 'com.android.library'

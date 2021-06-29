@@ -11,15 +11,18 @@ We can add an arbitrary number of conditions, initially set to false. These cond
 be updated in the future, and if all are true, the action will be executed.
  */
 public class AndGate {
+  private boolean isRunning = false;
   private List<Condition> conditions = new ArrayList<>();
-  private Action action;
+  private Action startAction;
+  private Action stopAction;
 
-  public AndGate(Action action) {
+  public AndGate(Action startAction, Action stopAction) {
     this.conditions = conditions;
-    this.action = action;
+    this.startAction = startAction;
+    this.stopAction = stopAction;
   }
 
-  public void update(String name, boolean value) {
+  public void set(String name, boolean value) {
     for (Condition condition : conditions) {
       if (condition.name.equals(name)) {
         condition.value = value;
@@ -29,12 +32,19 @@ public class AndGate {
     // if all conditions match
     for (Condition condition : conditions) {
       if (!condition.value) {
+        if (isRunning && stopAction != null) {
+          isRunning = false;
+          stopAction.runIt();
+        }
         return;
       }
     }
 
     // and run the action
-    action.runIt();
+    if (!isRunning && startAction != null) {
+      isRunning = true;
+      startAction.runIt();
+    }
   }
 
   private class Condition {
