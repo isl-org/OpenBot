@@ -4,6 +4,8 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +66,21 @@ public class SensorsDialog extends DialogFragment {
     binding.listView.setLayoutManager(new LinearLayoutManager(requireContext()));
     binding.listView.setAdapter(adapter);
     binding.dismiss.setOnClickListener(v -> dismiss());
+
+    binding.delay.setText(String.valueOf(preferencesManager.getDelay()));
+    binding.delay.addTextChangedListener(
+        new TextWatcher() {
+          @Override
+          public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+          @Override
+          public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+          @Override
+          public void afterTextChanged(Editable s) {
+            preferencesManager.setDelay(Integer.parseInt(s.toString()));
+          }
+        });
     return binding.getRoot();
   }
 }
