@@ -78,7 +78,8 @@ public class SensorsDialog extends DialogFragment {
 
           @Override
           public void afterTextChanged(Editable s) {
-            preferencesManager.setDelay(Integer.parseInt(s.toString()));
+            if(!s.toString().isEmpty())
+              preferencesManager.setDelay(Integer.parseInt(s.toString()));
           }
         });
     return binding.getRoot();
