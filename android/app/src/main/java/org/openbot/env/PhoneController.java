@@ -13,6 +13,7 @@ import org.openbot.R;
 import org.openbot.customview.AutoFitSurfaceGlView;
 import org.openbot.customview.WebRTCSurfaceView;
 import org.openbot.utils.CameraUtils;
+import org.openbot.utils.ConnectionUtils;
 
 import timber.log.Timber;
 
@@ -50,6 +51,7 @@ public class PhoneController {
 
     private void init(Context context) {
         ControllerConfig.getInstance().init(context);
+
         videoServer = "RTSP" == ControllerConfig.getInstance().getVideoServerType() ? new RtspServer() : new WebRtcServer();
 
         videoServer.init(context);
@@ -131,6 +133,10 @@ public class PhoneController {
                     switch (event.getString("command")) {
                         case "CONNECTED":
                             videoServer.setConnected(true);
+
+                            BotToControllerEventBus.emitEvent(
+                                    ConnectionUtils.createStatus("CONTROL_MODE", ControllerConfig.getInstance().getControlMode()));
+
                             break;
 
                         case "DISCONNECTED":

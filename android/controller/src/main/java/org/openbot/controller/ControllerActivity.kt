@@ -34,7 +34,7 @@ class ControllerActivity : /*AppCompat*/
     private val PERMISSION_REQUEST_LOCATION = 101
     private val TAG = "ControllerActivity"
     private lateinit var binding: ActivityFullscreenBinding
-    private lateinit var screenManager: ScreenManager
+    private lateinit var screenSelector: ScreenSelector
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,10 +44,10 @@ class ControllerActivity : /*AppCompat*/
 
         setupPermissions()
 
-        screenManager = ScreenManager(binding)
+        screenSelector = ScreenSelector(binding)
         ConnectionSelector.init(this)
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         createAppEventsSubscription()
@@ -56,7 +56,8 @@ class ControllerActivity : /*AppCompat*/
         binding.leftDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.LEFT)
         binding.rightDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.RIGHT)
 
-        screenManager.hideControls()
+        screenSelector.hideControls()
+
         hideSystemUI()
 
         BotDataListener.init()
@@ -124,7 +125,13 @@ class ControllerActivity : /*AppCompat*/
     private fun subscribeToStatusInfo() {
         StatusEventBus.addSubject("CONNECTION_ACTIVE")
         StatusEventBus.subscribe(this.javaClass.simpleName, "CONNECTION_ACTIVE", onNext = {
-            if (it.toBoolean()) screenManager.showControlsImmediately() else screenManager.hideControls()
+            if (it.toBoolean()) {
+                screenSelector.showControls()
+            } else {
+                screenSelector.hideControls()
+                binding.controlModeTiltLayout.stop()
+            }
+
         })
     }
 
@@ -139,28 +146,29 @@ class ControllerActivity : /*AppCompat*/
                 when (it) {
                     EventProcessor.ProgressEvents.ConnectionSuccessful -> {
                         Utils.beep()
-                        screenManager.showControls()
+                        screenSelector.showControls()
                     }
                     EventProcessor.ProgressEvents.ConnectionStarted -> {
                     }
                     EventProcessor.ProgressEvents.ConnectionFailed -> {
-                        screenManager.hideControls()
+                        screenSelector.hideControls()
                     }
                     EventProcessor.ProgressEvents.StartAdvertising -> {
-                        screenManager.hideControls()
+                        screenSelector.hideControls()
                     }
                     EventProcessor.ProgressEvents.Disconnected -> {
-                        screenManager.hideControls()
+                        screenSelector.hideControls()
+                        binding.controlModeTiltLayout.stop()
                         ConnectionSelector.getConnection().connect(this)
                     }
                     EventProcessor.ProgressEvents.StopAdvertising -> {
                     }
                     EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
-                        screenManager.hideControls()
+                        screenSelector.hideControls()
                         ConnectionSelector.getConnection().connect(this)
                     }
                     EventProcessor.ProgressEvents.AdvertisingFailed -> {
-                        screenManager.hideControls()
+                        screenSelector.hideControls()
                     }
                 }
             },

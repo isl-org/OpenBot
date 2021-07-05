@@ -14,4 +14,6 @@
     <string name="logs">Logs</string>
     <string name="openbot_icon">OpenBot Icon</string>
     <string name="app_icon">App Icon</string>
+    <string name="drive_by_tilting_the_phone">Drive by tilting the phone</string>
+    <string name="use_controls_to_drive">Use on-screen controls to drive</string>
 </resources>
