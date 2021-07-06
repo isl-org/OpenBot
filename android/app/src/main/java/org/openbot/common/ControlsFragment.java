@@ -198,6 +198,7 @@ public abstract class ControlsFragment extends Fragment {
               break;
 
             case Constants.CMD_DISCONNECTED:
+            case Constants.CMD_SOFT_DISCONNECTED:
               vehicle.setControl(0, 0);
               break;
           }

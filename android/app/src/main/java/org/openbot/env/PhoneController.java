@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.customview.AutoFitSurfaceGlView;
@@ -41,18 +40,14 @@ public class PhoneController {
     class DataReceived implements IDataReceived {
         @Override
         public void dataReceived(String commandStr) {
-            try {
-                ControllerToBotEventBus.emitEvent(new JSONObject(commandStr));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            ControllerToBotEventBus.emitEvent(commandStr);
         }
     }
 
     private void init(Context context) {
         ControllerConfig.getInstance().init(context);
 
-        videoServer = "RTSP" == ControllerConfig.getInstance().getVideoServerType() ? new RtspServer() : new WebRtcServer();
+        videoServer = "RTSP".equals(ControllerConfig.getInstance().getVideoServerType()) ? new RtspServer() : new WebRtcServer();
 
         videoServer.init(context);
         videoServer.setCanStart(true);
@@ -111,6 +106,7 @@ public class PhoneController {
 
     public void disconnect() {
         connectionSelector.getConnection().stop();
+        ControllerToBotEventBus.emitEvent("{command: \"SOFT_DISCONNECTED\"}");
     }
 
     public void send(JSONObject info) {
@@ -133,10 +129,6 @@ public class PhoneController {
                     switch (event.getString("command")) {
                         case "CONNECTED":
                             videoServer.setConnected(true);
-
-                            BotToControllerEventBus.emitEvent(
-                                    ConnectionUtils.createStatus("CONTROL_MODE", ControllerConfig.getInstance().getControlMode()));
-
                             break;
 
                         case "DISCONNECTED":

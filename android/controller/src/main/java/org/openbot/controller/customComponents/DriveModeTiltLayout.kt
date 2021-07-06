@@ -14,6 +14,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.widget.RelativeLayout
 import org.openbot.controller.ConnectionSelector
+import org.openbot.controller.utils.EventProcessor
 import org.openbot.controller.utils.SensorReader
 import java.util.*
 import kotlin.math.absoluteValue
@@ -38,7 +39,7 @@ class DriveModeTiltLayout @JvmOverloads constructor(
     }
 
     fun stop() {
-        sensorSampler.stop()
+        ConnectionSelector.getConnection().sendMessage("{driveCmd: {l:0, r:0}}")
         SensorReader.stop(context)
         hide()
     }
@@ -100,12 +101,13 @@ class DriveModeTiltLayout @JvmOverloads constructor(
                     val roll = SensorReader.values.roll
 
                     if (phoneOnTableChecker.phoneOnTable(azimuth, pitch, roll)) {
-                        // stop()
+                        timer.cancel()
+                        stop()
 
-                        if (isRunning) {
-                            ConnectionSelector.getConnection().sendMessage("{driveCmd: {l:0, r:0}}")
-                            isRunning = false
-                        }
+                        val event: EventProcessor.ProgressEvents =
+                            EventProcessor.ProgressEvents.PhoneOnTable
+                        EventProcessor.onNext(event)
+
                         return
                     }
 
@@ -118,13 +120,6 @@ class DriveModeTiltLayout @JvmOverloads constructor(
             }
 
             timer.schedule(task, 0, 100 /*MS*/)
-        }
-
-        fun stop() {
-            if (this::timer.isInitialized) {
-                timer.cancel()
-                ConnectionSelector.getConnection().sendMessage("{driveCmd: {l:0, r:0}}")
-            }
         }
 
         inner class DualDriveValues(var left: Float, var right: Float) {

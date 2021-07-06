@@ -156,11 +156,7 @@ public class NearbyConnection implements ILocalConnection {
 
             pairedDeviceEndpointId = endpointId;
             isConnected = true;
-            try {
-              ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"CONNECTED\"}"));
-            } catch (JSONException e) {
-              e.printStackTrace();
-            }
+              ControllerToBotEventBus.emitEvent("{command: \"CONNECTED\"}");
           } else {
             Timber.i("onConnectionResult: connection failed");
             isConnected = false;
@@ -181,11 +177,7 @@ public class NearbyConnection implements ILocalConnection {
                   Toast.LENGTH_LONG)
               .show();
           Timber.i("onDisconnected: disconnected from the opponent");
-          try {
-            ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"DISCONNECTED\"}"));
-          } catch (JSONException e) {
-            e.printStackTrace();
-          }
+            ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}");
         }
       };
 

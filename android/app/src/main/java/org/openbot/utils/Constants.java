@@ -42,6 +42,7 @@ public class Constants {
   public static final String CMD_DRIVE_MODE = "DRIVE_MODE";
   public static final String CMD_CONNECTED = "CONNECTED";
   public static final String CMD_DISCONNECTED = "DISCONNECTED";
+  public static final String CMD_SOFT_DISCONNECTED = "SOFT_DISCONNECTED";
   public static final String CMD_SPEED_UP = "SPEED_UP";
   public static final String CMD_SPEED_DOWN = "SPEED_DOWN";
   // endregion

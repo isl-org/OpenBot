@@ -32,7 +32,6 @@ data class ScreenSelector (val binding: ActivityFullscreenBinding) {
 
     private fun showButtons() {
         binding.botSetupButtons.show()
-
         hideSliders()
     }
 

@@ -131,7 +131,6 @@ class ControllerActivity : /*AppCompat*/
                 screenSelector.hideControls()
                 binding.controlModeTiltLayout.stop()
             }
-
         })
     }
 
@@ -166,6 +165,9 @@ class ControllerActivity : /*AppCompat*/
                     EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
                         screenSelector.hideControls()
                         ConnectionSelector.getConnection().connect(this)
+                    }
+                    EventProcessor.ProgressEvents.PhoneOnTable -> {
+                        screenSelector.showControls()
                     }
                     EventProcessor.ProgressEvents.AdvertisingFailed -> {
                         screenSelector.hideControls()
@@ -224,7 +226,6 @@ class ControllerActivity : /*AppCompat*/
             PERMISSION_REQUEST_LOCATION -> {
 
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
                     Log.i(TAG, "Permission has been denied by user")
                     finish()
                     exitProcess(0)

@@ -148,14 +148,7 @@ public class NetworkServiceConnection implements ILocalConnection {
           // Internal bookkeeping code goes here.
           ((Activity) context)
               .runOnUiThread(
-                  () -> {
-                    try {
-                      ControllerToBotEventBus.emitEvent(
-                          new JSONObject("{command: \"DISCONNECTED\"}"));
-                    } catch (JSONException e) {
-                      e.printStackTrace();
-                    }
-                  });
+                  () -> { ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}"); });
         }
 
         @Override
@@ -208,13 +201,7 @@ public class NetworkServiceConnection implements ILocalConnection {
 
           ((Activity) context)
               .runOnUiThread(
-                  () -> {
-                    try {
-                      ControllerToBotEventBus.emitEvent(new JSONObject("{command: \"CONNECTED\"}"));
-                    } catch (JSONException e) {
-                      e.printStackTrace();
-                    }
-                  });
+                  () -> { ControllerToBotEventBus.emitEvent ("{command: \"CONNECTED\"}"); });
 
           new Thread("Receiver Thread") {
             public void run() {
@@ -339,14 +326,7 @@ public class NetworkServiceConnection implements ILocalConnection {
 
         ((Activity) context)
             .runOnUiThread(
-                () -> {
-                  try {
-                    ControllerToBotEventBus.emitEvent(
-                        new JSONObject("{command: \"DISCONNECTED\"}"));
-                  } catch (JSONException e) {
-                    e.printStackTrace();
-                  }
-                });
+                () -> { ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}"); });
       } catch (IOException e) {
         e.printStackTrace();
       }

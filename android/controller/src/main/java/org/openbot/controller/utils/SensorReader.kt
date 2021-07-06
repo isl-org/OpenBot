@@ -20,6 +20,12 @@ object SensorReader {
         var azimuth: Float? = 0f
         var pitch: Float? = 0f
         var roll: Float? = 0f
+
+        fun reset () {
+            azimuth = 0f
+            pitch = 0f
+            roll = 0f
+        }
     }
     val values: Values = Values()
 
@@ -38,15 +44,12 @@ object SensorReader {
     }
 
     fun stop(context: Context) {
+        values.reset()
         (eventListener as EventListener).stop(context)
     }
 
     class EventListener : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
-//            Log.i(TAG, event?.values?.get(0).toString())
-//            Log.i(TAG, event?.values?.get(2).toString())
-//            Log.i(TAG, event?.values?.get(2).toString())
-
             values.azimuth = event?.values?.get(0)
             values.pitch = event?.values?.get(1)
             values.roll = event?.values?.get(2)
