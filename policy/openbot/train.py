@@ -33,9 +33,13 @@ AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 dataset_name = "my_openbot"
 
-train_data_dir = os.path.join(dataset_dir, "train_data")
-test_data_dir = os.path.join(dataset_dir, "test_data")
-load_from_tf_record = False
+load_from_tf_record = True
+if (load_from_tf_record):
+    train_data_dir = os.path.join(dataset_dir, "tfrecords/train.tfrec")
+    test_data_dir = os.path.join(dataset_dir, "tfrecords/test.tfrec")
+else:
+    train_data_dir = os.path.join(dataset_dir, "train_data")
+    test_data_dir = os.path.join(dataset_dir, "test_data")
 
 
 @dataclass
@@ -97,6 +101,7 @@ class Training:
         self.log_path = ""
         self.loss_fn = None
         self.metric_list = None
+        self.custom_objects = None
 
 
 class CancelledException(BaseException):
@@ -350,7 +355,7 @@ def load_data(tr: Training, verbose=0):
 def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     tr.model_name = dataset_name + "_" + str(tr.hyperparameters)
     tr.checkpoint_path = os.path.join(models_dir, tr.model_name, "checkpoints")
-
+    tr.custom_objects = {'direction_metric':metrics.direction_metric, 'angle_metric':metrics.angle_metric}
     append_logs = False
     model: tf.keras.Model
     if tr.hyperparameters.USE_LAST:
@@ -359,7 +364,7 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
         last_checkpoint = sorted(dirs)[-1]
         model = tf.keras.models.load_model(
             os.path.join(tr.checkpoint_path, last_checkpoint),
-            custom_objects=None,
+            custom_objects=tr.custom_objects,
             compile=False,
         )
     else:
@@ -370,10 +375,10 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
         )
 
     tr.loss_fn = losses.sq_weighted_mse_angle
-    metric_list = ["MeanAbsoluteError", metrics.direction_metric, metrics.angle_metric]
+    tr.metric_list = ["mean_absolute_error", tr.custom_objects['direction_metric'], tr.custom_objects['angle_metric']]
     optimizer = tf.keras.optimizers.Adam(lr=tr.hyperparameters.LEARNING_RATE)
 
-    model.compile(optimizer=optimizer, loss=tr.loss_fn, metrics=metric_list)
+    model.compile(optimizer=optimizer, loss=tr.loss_fn, metrics=tr.metric_list)
     if verbose:
         print(model.summary())
 
@@ -404,8 +409,8 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
     callback.broadcast("message", "Generate plots...")
     history = tr.history
     log_path = tr.log_path
-    plt.plot(history.history["MeanAbsoluteError"], label="mean_absolute_error")
-    plt.plot(history.history["val_MeanAbsoluteError"], label="val_mean_absolute_error")
+    plt.plot(history.history["mean_absolute_error"], label="mean_absolute_error")
+    plt.plot(history.history["val_mean_absolute_error"], label="val_mean_absolute_error")
     plt.xlabel("Epoch")
     plt.ylabel("Mean Absolute Error")
     plt.legend(loc="lower right")
@@ -465,7 +470,7 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
 
     callback.broadcast("message", "Evaluate model...")
     best_model = utils.load_model(
-        os.path.join(checkpoint_path, best_checkpoint), tr.loss_fn, tr.metric_list
+        os.path.join(checkpoint_path, best_checkpoint), tr.loss_fn, tr.metric_list, tr.custom_objects
     )
     # test_loss, test_acc, test_dir, test_ang = best_model.evaluate(tr.test_ds,
     res = best_model.evaluate(

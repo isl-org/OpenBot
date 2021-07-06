@@ -82,8 +82,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     data_dir = args.dataset_dir
+    print(f'Reading dataset from {data_dir}')
     tfrecords_dir = args.output_dir
     tfrecords_name = args.tfrecord_name
+    print(f'TFRecord will be saved at {tfrecords_dir}/{tfrecords_name}')
 
     # load the datasets avaible.
     datasets = [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))] 
@@ -94,7 +96,7 @@ if __name__ == "__main__":
     frames = associate_frames.match_frame_ctrl_cmd(data_dir, 
                                                    datasets, 
                                                    max_offset, 
-                                                   redo_matching=False, 
+                                                   redo_matching=True,
                                                    remove_zeros=True)
 
     # creating TFRecords output folder.
