@@ -52,9 +52,9 @@ def create_example(image, path, ctrl_cmd):
     feature = {
         "image": image_feature(image),
         "path": bytes_feature(path),
-        "left": float_feature(int(ctrl_cmd[0])),
-        "right": float_feature(int(ctrl_cmd[1])),
-        "cmd": float_feature(int(ctrl_cmd[2])),
+        "left": float_feature(float(ctrl_cmd[0])/255.0),
+        "right": float_feature(float(ctrl_cmd[1])/255.0),
+        "cmd": float_feature(float(ctrl_cmd[2])),
     }
     return tf.train.Example(features=tf.train.Features(feature=feature))
 
