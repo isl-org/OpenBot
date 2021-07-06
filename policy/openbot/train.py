@@ -257,26 +257,33 @@ def load_tfrecord_data(tr: Training, verbose=0):
         label = [features["left"], features["right"]]
         return (image, cmd), label
 
-    tr.train_ds = (
+    train_dataset = ( 
         tf.data.TFRecordDataset(train_data_dir, num_parallel_reads=AUTOTUNE)
         .map(parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
         .map(process_train_sample, num_parallel_calls=AUTOTUNE)
-        .shuffle(tr.hyperparameters.TRAIN_BATCH_SIZE * 10)
-        .batch(tr.hyperparameters.TRAIN_BATCH_SIZE)
-        .prefetch(AUTOTUNE)
     )
 
     # Obtains the images shapes of records from .tfrecords.
-    for (image, cmd), label in tr.train_ds.take(1):
+    for (image, cmd), label in train_dataset.take(1):
         shape = image.numpy().shape
-        tr.NETWORK_IMG_HEIGHT = shape[1]
-        tr.NETWORK_IMG_WIDTH = shape[2]
+        tr.NETWORK_IMG_HEIGHT = shape[0]
+        tr.NETWORK_IMG_WIDTH = shape[1]
         print("Image shape: ", shape)
+        print("Command: ", cmd.numpy())
+        print("Label: ", label.numpy())
 
     # Obtains the total number of records from .tfrecords file
     # https://stackoverflow.com/questions/40472139/obtaining-total-number-of-records-from-tfrecords-file-in-tensorflow
-    tr.image_count_train = sum(1 for _ in tr.train_ds)
+    tr.image_count_train = sum(1 for _ in train_dataset)
     print ("Number of training instances: ", tr.image_count_train)
+
+    # Prepare dataset for training
+    tr.train_ds = (
+        train_dataset.shuffle(tr.hyperparameters.TRAIN_BATCH_SIZE * 10)
+        .repeat()
+        .batch(tr.hyperparameters.TRAIN_BATCH_SIZE)
+        .prefetch(AUTOTUNE)
+    )
 
     tr.test_ds = (
         tf.data.TFRecordDataset(test_data_dir, num_parallel_reads=AUTOTUNE)
