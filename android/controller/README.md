@@ -24,7 +24,7 @@ To connect the controller to the robot, place the robot's app control setting in
 You can also connect to the controller from the `FreeRoamFragment` by selecting the phone as the controller:
 
 <p float="left">
-  <img src="../../docs/images/free-roam-fragment-selection.png" width="25%" />
+  <img src="../../docs/images/free-roam-fragment-selection.png" width="50%" />
 </p>
 
 
@@ -57,7 +57,7 @@ the video showing and no other controls. To exit this mode, either double-tap on
 Here is a picture of the orientation access of the controller:
 
 <p float="left">
-  <img src="../../docs/images/orientation_axis.png" width="25%" />
+  <img src="../../docs/images/orientation_axis.png" width="50%" />
 </p>
 
 Start with the controller in the up-right position in landscape mode. To move forward, increase the `roll` angle (rotate forward around the `Y` access). To turn left or right,
