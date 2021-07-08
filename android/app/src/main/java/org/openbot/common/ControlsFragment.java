@@ -48,7 +48,7 @@ public abstract class ControlsFragment extends Fragment {
 
   protected final String voice = "matthew";
   protected List<Model> masterList;
-  private final Transmission transmission = new Transmission();
+  private final KillSwitch killSwitch = new KillSwitch();
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -174,7 +174,7 @@ public abstract class ControlsFragment extends Fragment {
               JSONObject driveValue = event.getJSONObject("driveCmd");
 
               vehicle.setControl(
-                  transmission.convert(
+                  killSwitch.convert(
                       new Control(
                           Float.parseFloat(driveValue.getString("l")),
                           Float.parseFloat(driveValue.getString("r")))));
@@ -217,7 +217,7 @@ public abstract class ControlsFragment extends Fragment {
         );
   }
 
-  class Transmission {
+  class KillSwitch {
     private Timer lastReceivedTimer = null;
 
     Control convert(Control input) {
@@ -227,7 +227,7 @@ public abstract class ControlsFragment extends Fragment {
 
       lastReceivedTimer = new Timer();
 
-      TimerTask killSwitch =
+      TimerTask killSwitchTask =
           new TimerTask() {
             @Override
             public void run() {
@@ -240,7 +240,7 @@ public abstract class ControlsFragment extends Fragment {
             }
           };
 
-      lastReceivedTimer.schedule(killSwitch, 500L);
+      lastReceivedTimer.schedule(killSwitchTask, 500L);
       return input;
     }
   }
