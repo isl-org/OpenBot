@@ -31,6 +31,7 @@ data class ScreenSelector (val binding: ActivityFullscreenBinding) {
     }
 
     private fun showButtons() {
+        binding.controlModeTiltLayout.stop()
         binding.botSetupButtons.show()
         hideSliders()
     }
@@ -63,6 +64,7 @@ data class ScreenSelector (val binding: ActivityFullscreenBinding) {
         if (data == "tilt") {
             binding.driveModeSlidersLayout.hide()
             binding.controlModeTiltLayout.start()
+            binding.doubleTapMessage.start()
         }
 
         binding.botSetupButtons.hide()

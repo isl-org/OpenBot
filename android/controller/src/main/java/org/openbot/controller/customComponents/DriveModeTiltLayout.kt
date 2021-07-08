@@ -11,14 +11,14 @@ package org.openbot.controller.customComponents
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.widget.RelativeLayout
 import org.openbot.controller.ConnectionSelector
+import org.openbot.controller.PhoneSensorToDualDriveConverter
 import org.openbot.controller.utils.EventProcessor
 import org.openbot.controller.utils.SensorReader
+import org.openbot.controller.utils.Utils
 import java.util.*
 import kotlin.math.absoluteValue
-import kotlin.math.round
 
 class DriveModeTiltLayout @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -28,6 +28,8 @@ class DriveModeTiltLayout @JvmOverloads constructor(
     private val sensorSampler: SensorSampler = SensorSampler()
     private val g = 9.81f
     private val phoneOnTableChecker = PhoneOnTableChecker()
+    private val phoneAccelerometerToDualDriveConverted =
+        PhoneSensorToDualDriveConverter()
 
     init {
     }
@@ -39,7 +41,8 @@ class DriveModeTiltLayout @JvmOverloads constructor(
     }
 
     fun stop() {
-        ConnectionSelector.getConnection().sendMessage("{driveCmd: {l:0, r:0}}")
+        // ConnectionSelector.getConnection().sendMessage("{driveCmd: {l:0, r:0}}")
+        sensorSampler.stop()
         SensorReader.stop(context)
         hide()
     }
@@ -61,9 +64,9 @@ class DriveModeTiltLayout @JvmOverloads constructor(
         private val minTimeOnTableMs = 1000L
 
         fun phoneOnTable(azimuth: Float?, pitch: Float?, roll: Float?): Boolean {
-            if (isWithin(roll?.absoluteValue, g, 1.0f)
-                && isWithin(pitch, lastPitch, 0.2f)
-                && isWithin(azimuth, lastAzimuth, 0.2f)
+            if (Utils.isWithin(roll?.absoluteValue, g, 1.0f)
+                && Utils.isWithin(pitch, lastPitch, 0.2f)
+                && Utils.isWithin(azimuth, lastAzimuth, 0.2f)
             ) {
                 if (lastTransmitted == 0L) {
                     lastTransmitted = System.currentTimeMillis()
@@ -83,14 +86,14 @@ class DriveModeTiltLayout @JvmOverloads constructor(
         }
     }
 
-    private fun isWithin(value: Float?, desiredValue: Float?, tolerance: Float?): Boolean {
-        return value!! in (desiredValue!! - tolerance!!)..(desiredValue + tolerance)
-    }
-
     inner class SensorSampler {
         private lateinit var timer: Timer
 
         fun start() {
+            if (this::timer.isInitialized) {
+                timer.cancel()
+            }
+
             timer = Timer()
             var isRunning = false
 
@@ -112,81 +115,20 @@ class DriveModeTiltLayout @JvmOverloads constructor(
                     }
 
                     isRunning = true
-                    val sliderValues = phoneAccelerometerToDualDriveValues(azimuth, pitch, roll)
+                    val sliderValues = phoneAccelerometerToDualDriveConverted.convert(azimuth, pitch, roll)
 
                     val msg = "{driveCmd: {l:${sliderValues.left}, r:${sliderValues.right}}}"
                     ConnectionSelector.getConnection().sendMessage(msg)
                 }
             }
 
-            timer.schedule(task, 0, 100 /*MS*/)
+            timer.schedule(task, 0, 50 /*MS*/)
         }
 
-        inner class DualDriveValues(var left: Float, var right: Float) {
-            private val MAX = 1.0f
-            private val MIN = -1.0f
-
-            init {
-                left = clean(left)
-                right = clean(right)
+        fun stop() {
+            if (this::timer.isInitialized) {
+                timer.cancel()
             }
-
-            private fun clean(value: Float): Float {
-                var ret = value
-
-                if (value > MAX) {
-                    ret = MAX
-                }
-                if (value < MIN) {
-                    ret = MIN
-                }
-                return ret.round(3)
-            }
-
-            private fun Float.round(decimals: Int): Float {
-                var multiplier = 1.0f
-                repeat(decimals) { multiplier *= 10 }
-                return round(this * multiplier) / multiplier
-            }
-
-            fun reset() {
-                left = 0f
-                right = 0f
-            }
-        }
-
-        fun phoneAccelerometerToDualDriveValues(
-            azimuth: Float?,
-            pitch: Float?,
-            roll: Float?
-        ): DualDriveValues {
-            var left = 0f
-            var right = 0f
-            var forwardSpeed = 0f
-
-            if (inDeadZone(roll!!)) {
-                return DualDriveValues(0f, 0f)
-            }
-
-            // get forward speed
-            forwardSpeed = roll.div(g) // could be negative
-
-            // adjust for turning
-            left = forwardSpeed + (pitch?.div(g) ?: 0f) * forwardSpeed
-            right = forwardSpeed - (pitch?.div(g) ?: 0f) * forwardSpeed
-
-            var values = DualDriveValues(left, right)
-
-            Log.i(
-                tag,
-                "azimuth: $azimuth, pitch: $pitch, roll: $roll -> left: ${values.left}, right: ${values.right}"
-            )
-
-            return values
-        }
-
-        private fun inDeadZone(roll: Float): Boolean {
-            return isWithin(roll, 0f, 1f)
         }
     }
 }

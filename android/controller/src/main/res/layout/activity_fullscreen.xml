@@ -256,12 +256,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/double_tap"
+            <LinearLayout
+                android:id="@+id/tilt_mode_components"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+            <org.openbot.controller.customComponents.FadeableTextView
+                android:id="@+id/double_tap_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Double-tab to go back"
-                android:textSize="24sp" />
+                android:text="@string/double_tab_to_go_back"
+                android:gravity="center"
+                android:textSize="32sp" />
+            </LinearLayout>
 
         </org.openbot.controller.customComponents.DriveModeTiltLayout>
 
@@ -338,16 +349,6 @@
                         style="@style/buttonWithBorderStyle"
                         android:layout_margin="20dp"
                         android:text="@string/drive_by_tilting_the_phone" />
-
-                    <TextView
-                        android:id="@+id/tap_to_switch_screens_message"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginTop="40dp"
-                        android:gravity="center"
-                        android:text="@string/switch_screens"
-                        android:textSize="16sp" />
 
                 </LinearLayout>
 

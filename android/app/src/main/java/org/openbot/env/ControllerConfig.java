@@ -3,148 +3,145 @@ package org.openbot.env;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-
 import androidx.preference.PreferenceManager;
-
 import org.json.JSONObject;
 import org.openbot.utils.ConnectionUtils;
 
 public class ControllerConfig {
-    private static ControllerConfig _controllerConfig;
-    SharedPreferences preferences;
+  private static ControllerConfig _controllerConfig;
+  SharedPreferences preferences;
 
-    enum VIDEO_SERVER_TYPE {
-        WEBRTC,
-        RTSP
+  enum VIDEO_SERVER_TYPE {
+    WEBRTC,
+    RTSP
+  }
+
+  private final boolean isMirrored = true;
+  private final boolean mute = true;
+  private String controlsMode = "sliders";
+
+  private String currentServerType;
+
+  public static ControllerConfig getInstance() {
+    if (_controllerConfig == null) {
+      synchronized (PhoneController.class) {
+        if (_controllerConfig == null) _controllerConfig = new ControllerConfig();
+      }
     }
 
-    private final boolean isMirrored = true;
-    private final boolean mute = true;
-    private String controlsMode = "sliders";
+    return _controllerConfig;
+  }
 
-    private String currentServerType;
+  void init(Context context) {
+    preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    currentServerType = get("video_server", "WEBRTC");
+    controlsMode = get("CONTROL_MODE", "sliders");
 
-    public static ControllerConfig getInstance() {
-        if (_controllerConfig == null) {
-            synchronized (PhoneController.class) {
-                if (_controllerConfig == null) _controllerConfig = new ControllerConfig();
-            }
-        }
+    monitorSettingUpdates();
+  }
 
-        return _controllerConfig;
+  private void set(String name, String value) {
+    SharedPreferences.Editor editor = preferences.edit();
+    editor.putString(name, value);
+    editor.apply();
+  }
+
+  private String get(String name, String defaultValue) {
+    try {
+      return preferences.getString(name, defaultValue);
+    } catch (ClassCastException e) {
+      return defaultValue;
     }
+  }
 
-    void init(Context context) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        currentServerType = get("video_server", "WEBRTC");
-        controlsMode = get("CONTROL_MODE", "sliders");
-
-        monitorSettingUpdates();
+  private Boolean getBoolean(String name, Boolean defaultValue) {
+    try {
+      return preferences.getBoolean(name, defaultValue);
+    } catch (ClassCastException e) {
+      return defaultValue;
     }
+  }
 
-    private void set(String name, String value) {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(name, value);
-        editor.apply();
-    }
+  private void setBoolean(String name, boolean value) {
+    SharedPreferences.Editor editor = preferences.edit();
+    editor.putBoolean(name, value);
+    editor.apply();
+  }
 
-    private String get(String name, String defaultValue) {
-        try {
-            return preferences.getString(name, defaultValue);
-        } catch (ClassCastException e) {
-            return defaultValue;
-        }
-    }
+  // specific settings
+  public boolean isMirrored() {
+    return getBoolean("MIRRORED", true);
+  }
 
-    private Boolean getBoolean(String name, Boolean defaultValue) {
-        try {
-            return preferences.getBoolean(name, defaultValue);
-        } catch (ClassCastException e) {
-            return defaultValue;
-        }
-    }
+  public void setMirrored(boolean mirrored) {
+    setBoolean("MIRRORED", mirrored);
+  }
 
-    private void setBoolean(String name, boolean value) {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(name, value);
-        editor.apply();
-    }
+  public boolean isMute() {
+    return getBoolean("MUTE", true);
+  }
 
-    // specific settings
-    public boolean isMirrored() {
-        return getBoolean("MIRRORED", true);
-    }
+  public void setMute(boolean mute) {
+    setBoolean("MUTE", mute);
+  }
 
-    public void setMirrored(boolean mirrored) {
-        setBoolean("MIRRORED", mirrored);
-    }
+  public String getVideoServerType() {
+    return get("video_server", "WEBRTC");
+  }
 
-    public boolean isMute() {
-        return getBoolean("MUTE", true);
-    }
+  public void setVideoServerType(String type) {
+    set("video_server", type);
+  }
 
-    public void setMute(boolean mute) {
-        setBoolean("MUTE", mute);
-    }
+  public String getControlMode() {
+    return get("CONTROL_MODE", "sliders");
+  }
 
-    public String getVideoServerType() {
-        return get("video_server", "WEBRTC");
-    }
+  public void setControlMode(String controlMode) {
+    set("CONTROL_MODE", controlMode);
+  }
 
-    public void setVideoServerType(String type) {
-        set("video_server", type);
-    }
+  private void monitorSettingUpdates() {
+    ControllerToBotEventBus.subscribe(
+        this.getClass().getSimpleName(),
+        event -> {
+          String commandType = event.getString("command");
 
-    public String getControlMode() {
-        return get("CONTROL_MODE", "sliders");
-    }
+          if (commandType.contains("CONTROL_MODE")) { // {"CONTROL_MODE":"sliders|tilt"}
+            String controlType =
+                (new JSONObject(String.valueOf(event.getJSONObject("command"))))
+                    .getString("CONTROL_MODE");
+            setControlMode(controlType);
 
-    public void setControlMode(String controlMode) {
-        set("CONTROL_MODE", controlMode);
-    }
+            BotToControllerEventBus.emitEvent(
+                ConnectionUtils.createStatus("CONTROL_MODE", getControlMode()));
+          }
 
-    private void monitorSettingUpdates() {
-        ControllerToBotEventBus.subscribe(
-                this.getClass().getSimpleName(),
-                event -> {
-                    String commandType = event.getString("command");
+          switch (commandType) {
+            case "TOGGLE_MIRROR":
+              setMirrored(!isMirrored());
 
-                    if (commandType.contains("CONTROL_MODE")) {  // {"CONTROL_MODE":"sliders|tilt"}
-                        String controlType = (new JSONObject(String.valueOf(event.getJSONObject("command")))).getString("CONTROL_MODE");
-                        setControlMode(controlType);
+              // inform the controller of current state
+              BotToControllerEventBus.emitEvent(
+                  ConnectionUtils.createStatus("TOGGLE_MIRROR", isMirrored()));
+              break;
 
-                        BotToControllerEventBus.emitEvent(
-                                ConnectionUtils.createStatus("CONTROL_MODE", getControlMode()));
-                    }
+            case "TOGGLE_SOUND":
+              setMute(!isMute());
 
-                    switch (commandType) {
-                        case "TOGGLE_MIRROR":
-                            setMirrored(!isMirrored());
-
-                            // inform the controller of current state
-                            BotToControllerEventBus.emitEvent(
-                                    ConnectionUtils.createStatus("TOGGLE_MIRROR", isMirrored()));
-                            break;
-
-                        case "TOGGLE_SOUND":
-                            setMute(!isMute());
-
-                            // inform the controller of current state
-                            BotToControllerEventBus.emitEvent(
-                                    ConnectionUtils.createStatus(
-                                            "TOGGLE_SOUND", isMute()));
-                            break;
-                    }
-                },
-
-                error -> {
-                    Log.d(null, "Error occurred in monitorConnection: " + error);
-                },
-                event ->
-                        event.has("command") &&
-                                (event.getString("command").contains("CONTROL_MODE") ||
-                                        event.getString("command").contains("TOGGLE_MIRROR") ||
-                                        event.getString("command").contains("TOGGLE_SOUND")
-                                ));
-    }
+              // inform the controller of current state
+              BotToControllerEventBus.emitEvent(
+                  ConnectionUtils.createStatus("TOGGLE_SOUND", isMute()));
+              break;
+          }
+        },
+        error -> {
+          Log.d(null, "Error occurred in monitorConnection: " + error);
+        },
+        event ->
+            event.has("command")
+                && (event.getString("command").contains("CONTROL_MODE")
+                    || event.getString("command").contains("TOGGLE_MIRROR")
+                    || event.getString("command").contains("TOGGLE_SOUND")));
+  }
 }

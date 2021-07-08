@@ -18,8 +18,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.openbot.utils.ConnectionUtils;
 import timber.log.Timber;
 
@@ -148,7 +146,9 @@ public class NetworkServiceConnection implements ILocalConnection {
           // Internal bookkeeping code goes here.
           ((Activity) context)
               .runOnUiThread(
-                  () -> { ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}"); });
+                  () -> {
+                    ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}");
+                  });
         }
 
         @Override
@@ -201,7 +201,9 @@ public class NetworkServiceConnection implements ILocalConnection {
 
           ((Activity) context)
               .runOnUiThread(
-                  () -> { ControllerToBotEventBus.emitEvent ("{command: \"CONNECTED\"}"); });
+                  () -> {
+                    ControllerToBotEventBus.emitEvent("{command: \"CONNECTED\"}");
+                  });
 
           new Thread("Receiver Thread") {
             public void run() {
@@ -326,7 +328,9 @@ public class NetworkServiceConnection implements ILocalConnection {
 
         ((Activity) context)
             .runOnUiThread(
-                () -> { ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}"); });
+                () -> {
+                  ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}");
+                });
       } catch (IOException e) {
         e.printStackTrace();
       }
