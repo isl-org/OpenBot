@@ -162,9 +162,6 @@ public class FreeRoamFragment extends ControlsFragment {
   protected void handleDriveCommand() {
     float left = vehicle.getLeftSpeed();
     float right = vehicle.getRightSpeed();
-    if (left == 0f && right == 0f) {
-      Log.d("handleDriveCommand", "Got 0,0");
-    }
     binding.controllerContainer.controlInfo.setText(
         String.format(Locale.US, "%.0f,%.0f", left, right));
 
