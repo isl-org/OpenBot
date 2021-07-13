@@ -272,12 +272,21 @@ def load_tfrecord_data(tr: Training, verbose=0):
         print("Command: ", cmd.numpy())
         print("Label: ", label.numpy())
 
+    test_dataset = (
+        tf.data.TFRecordDataset(test_data_dir, num_parallel_reads=AUTOTUNE)
+        .map(parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
+        .map(process_test_sample, num_parallel_calls=AUTOTUNE)
+    )
+
     # Obtains the total number of records from .tfrecords file
     # https://stackoverflow.com/questions/40472139/obtaining-total-number-of-records-from-tfrecords-file-in-tensorflow
     tr.image_count_train = sum(1 for _ in train_dataset)
     print ("Number of training instances: ", tr.image_count_train)
 
-    # Prepare dataset for training
+    tr.image_count_test = sum(1 for _ in test_dataset)
+    print ("Number of test instances: ", tr.image_count_test)
+
+    # Prepare train and test datasets for training
     tr.train_ds = (
         train_dataset.shuffle(tr.hyperparameters.TRAIN_BATCH_SIZE * 10)
         .repeat()
@@ -285,12 +294,8 @@ def load_tfrecord_data(tr: Training, verbose=0):
         .prefetch(AUTOTUNE)
     )
 
-    tr.test_ds = (
-        tf.data.TFRecordDataset(test_data_dir, num_parallel_reads=AUTOTUNE)
-        .map(parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
-        .map(process_test_sample, num_parallel_calls=AUTOTUNE)
-        .shuffle(tr.hyperparameters.TRAIN_BATCH_SIZE * 10)
-        .batch(tr.hyperparameters.TEST_BATCH_SIZE)
+    tr.test_ds = ( 
+        test_dataset.batch(tr.hyperparameters.TEST_BATCH_SIZE)
         .prefetch(AUTOTUNE)
     )
 
