@@ -12,10 +12,12 @@ from . import (
     callbacks,
     dataloader,
     dataset_dir,
+    data_augmentation,
     losses,
     metrics,
     models,
     models_dir,
+    tfrecord_utils,
     utils,
 )
 
@@ -177,77 +179,17 @@ def process_data(tr: Training):
     )
 
 
-def augment_img(img):
-    """Color augmentation
-
-    Args:
-      img: input image
-
-    Returns:
-      img: augmented image
-    """
-    img = tf.image.random_hue(img, 0.08)
-    img = tf.image.random_saturation(img, 0.6, 1.6)
-    img = tf.image.random_brightness(img, 0.05)
-    img = tf.image.random_contrast(img, 0.7, 1.3)
-    return img
-
-
-def augment_cmd(cmd):
-    """
-    Command augmentation
-
-    Args:
-      cmd: input command
-
-    Returns:
-      cmd: augmented command
-    """
-    if not (cmd > 0 or cmd < 0):
-        coin = tf.random.uniform(
-            shape=[1], minval=0, maxval=1, dtype=tf.dtypes.float32
-        )
-        if coin < 0.25:
-            cmd = -1.0
-        elif coin < 0.5:
-            cmd = 1.0
-    return cmd
-
-
-def flip_sample(img, cmd, label):
-    coin = tf.random.uniform(shape=[1], minval=0, maxval=1, dtype=tf.dtypes.float32)
-    if coin < 0.5:
-        img = tf.image.flip_left_right(img)
-        cmd = -cmd
-        label = tf.reverse(label, axis=[0])
-    return img, cmd, label
-
-
 def load_tfrecord_data(tr: Training, verbose=0):
-    def parse_tfrecord_fn(example):
-        feature_description = {
-            "image": tf.io.FixedLenFeature([], tf.string),
-            "path": tf.io.FixedLenFeature([], tf.string),
-            "left": tf.io.FixedLenFeature([], tf.float32),
-            "right": tf.io.FixedLenFeature([], tf.float32),
-            "cmd": tf.io.FixedLenFeature([], tf.float32),
-        }
-        example = tf.io.parse_single_example(example, feature_description)
-        img = tf.io.decode_jpeg(example["image"], channels=3)
-        img = tf.image.convert_image_dtype(img, tf.float32)
-        example["image"] = img
-        return example
-
     def process_train_sample(features):
         #image = tf.image.resize(features["image"], size=(224, 224))
         image = features["image"]
         cmd  = features["cmd"]
         label = [features["left"], features["right"]]
-        image = augment_img(image)
+        image = data_augmentation.augment_img(image)
         if tr.hyperparameters.FLIP_AUG:
-            img, cmd, label = flip_sample(img, cmd, label)
+            img, cmd, label = data_augmentation.flip_sample(img, cmd, label)
         if tr.hyperparameters.CMD_AUG:
-            cmd = augment_cmd(cmd)
+            cmd = data_augmentation.augment_cmd(cmd)
 
         return (image, cmd), label
 
@@ -259,7 +201,7 @@ def load_tfrecord_data(tr: Training, verbose=0):
 
     train_dataset = ( 
         tf.data.TFRecordDataset(train_data_dir, num_parallel_reads=AUTOTUNE)
-        .map(parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
+        .map(tfrecord_utils.parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
         .map(process_train_sample, num_parallel_calls=AUTOTUNE)
     )
 
@@ -274,7 +216,7 @@ def load_tfrecord_data(tr: Training, verbose=0):
 
     test_dataset = (
         tf.data.TFRecordDataset(test_data_dir, num_parallel_reads=AUTOTUNE)
-        .map(parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
+        .map(tfrecord_utils.parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
         .map(process_test_sample, num_parallel_calls=AUTOTUNE)
     )
 
@@ -327,11 +269,11 @@ def load_data(tr: Training, verbose=0):
             tf.strings.regex_replace(file_path, "[/\\\\]", "/")
         )
         img = utils.load_img(file_path)
-        img = augment_img(img)
+        img = data_augmentation.augment_img(img)
         if tr.hyperparameters.FLIP_AUG:
-            img, cmd, label = flip_sample(img, cmd, label)
+            img, cmd, label = data_augmentation.flip_sample(img, cmd, label)
         if tr.hyperparameters.CMD_AUG:
-            cmd = augment_cmd(cmd)
+            cmd = data_augmentation.augment_cmd(cmd)
         return (img, cmd), label
 
     def process_test_path(file_path):

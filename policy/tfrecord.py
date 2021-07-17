@@ -11,6 +11,7 @@ import json
 import tensorflow as tf
 
 from openbot import associate_frames
+from openbot.tfrecord_utils import create_example
 
 
 def get_parser():
@@ -19,44 +20,6 @@ def get_parser():
     parser.add_argument("--output-dir", "-o", type=str, required=True, help="Path for storing the output file")
     parser.add_argument("--tfrecord-name", "-n", type=str, default="dataset.tfrec")
     return parser
-
-
-def image_feature(value):
-    """Returns a bytes_list from a string / byte."""
-    return tf.train.Feature(
-        bytes_list=tf.train.BytesList(value=[tf.io.encode_jpeg(value).numpy()])
-    )
-
-
-def bytes_feature(value):
-    """Returns a bytes_list from a string / byte."""
-    return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value.encode()]))
-
-
-def float_feature(value):
-    """Returns a float_list from a float / double."""
-    return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
-
-
-def int64_feature(value):
-    """Returns an int64_list from a bool / enum / int / uint."""
-    return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
-
-
-def float_feature_list(value):
-    """Returns a list of float_list from a float / double."""
-    return tf.train.Feature(float_list=tf.train.FloatList(value=value))
-
-
-def create_example(image, path, ctrl_cmd):
-    feature = {
-        "image": image_feature(image),
-        "path": bytes_feature(path),
-        "left": float_feature(float(ctrl_cmd[0])/255.0),
-        "right": float_feature(float(ctrl_cmd[1])/255.0),
-        "cmd": float_feature(float(ctrl_cmd[2])),
-    }
-    return tf.train.Example(features=tf.train.Features(feature=feature))
 
 
 def load_labels(data_dir, datasets):
@@ -76,6 +39,7 @@ def load_labels(data_dir, datasets):
                 data = [(l[1],l[2:]) for l in data if len(l)>1]
                 corpus.extend(data)
     return dict(corpus)
+
 
 if __name__ == "__main__":
     parser = get_parser()
@@ -111,4 +75,4 @@ if __name__ == "__main__":
             example = create_example(image, image_path, ctrl_cmd)
             writer.write(example.SerializeToString())
 
-    print("tf-record file created successfully.")
+    print("tfrecord file created successfully.")
