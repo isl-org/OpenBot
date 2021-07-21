@@ -330,7 +330,7 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
 
     tr.loss_fn = losses.sq_weighted_mse_angle
     tr.metric_list = ["mean_absolute_error", tr.custom_objects['direction_metric'], tr.custom_objects['angle_metric']]
-    optimizer = tf.keras.optimizers.Adam(lr=tr.hyperparameters.LEARNING_RATE)
+    optimizer = tf.keras.optimizers.Adam(learning_rate=tr.hyperparameters.LEARNING_RATE)
 
     model.compile(optimizer=optimizer, loss=tr.loss_fn, metrics=tr.metric_list)
     if verbose:
