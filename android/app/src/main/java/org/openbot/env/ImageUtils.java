@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
+import android.os.Build;
 import android.view.Surface;
 import java.io.File;
 import java.io.FileOutputStream;
