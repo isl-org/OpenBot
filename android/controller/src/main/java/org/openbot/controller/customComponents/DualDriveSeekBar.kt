@@ -121,7 +121,7 @@ class DualDriveSeekBar @JvmOverloads constructor(
         var executor: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
         lateinit var runningTask: ScheduledFuture<*>
 
-        val task = Runnable {
+        private val task = Runnable {
             resetToHomePosition()
             val safeValue = ((progress - 50) / 50f).coerceIn(-1f, 1f)
             driveValue.invoke(safeValue)

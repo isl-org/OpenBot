@@ -1,6 +1,5 @@
 package org.openbot.common;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,8 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.env.AudioPlayer;
@@ -48,7 +45,6 @@ public abstract class ControlsFragment extends Fragment {
 
   protected final String voice = "matthew";
   protected List<Model> masterList;
-  private final KillSwitch killSwitch = new KillSwitch();
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -174,10 +170,9 @@ public abstract class ControlsFragment extends Fragment {
               JSONObject driveValue = event.getJSONObject("driveCmd");
 
               vehicle.setControl(
-                  killSwitch.convert(
-                      new Control(
-                          Float.parseFloat(driveValue.getString("l")),
-                          Float.parseFloat(driveValue.getString("r")))));
+                  new Control(
+                      Float.parseFloat(driveValue.getString("l")),
+                      Float.parseFloat(driveValue.getString("r"))));
               break;
 
             case Constants.CMD_INDICATOR_LEFT:
@@ -215,34 +210,6 @@ public abstract class ControlsFragment extends Fragment {
         },
         event -> event.has("command") || event.has("driveCmd") // filter out everything else
         );
-  }
-
-  class KillSwitch {
-    private Timer lastReceivedTimer = null;
-
-    Control convert(Control input) {
-      if (lastReceivedTimer != null) {
-        lastReceivedTimer.cancel();
-      }
-
-      lastReceivedTimer = new Timer();
-
-      TimerTask killSwitchTask =
-          new TimerTask() {
-            @Override
-            public void run() {
-              ((Activity) requireContext())
-                  .runOnUiThread(
-                      () -> {
-                        vehicle.setControl(0, 0);
-                        processControllerKeyData(Constants.CMD_DRIVE);
-                      });
-            }
-          };
-
-      lastReceivedTimer.schedule(killSwitchTask, 500L);
-      return input;
-    }
   }
 
   protected void toggleNoise() {

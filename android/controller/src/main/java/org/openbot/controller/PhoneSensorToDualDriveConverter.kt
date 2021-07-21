@@ -1,7 +1,5 @@
 package org.openbot.controller
 
-import android.util.Log
-
 class PhoneSensorToDualDriveConverter  {
     private val g = 9.81f
 
@@ -19,20 +17,13 @@ class PhoneSensorToDualDriveConverter  {
         }
 
         // get forward speed
-        forwardSpeed = roll.div(g) // could be negative
+        forwardSpeed = ForwardSpeed.value
 
         // adjust for turning
-        leftSpeed = forwardSpeed + (pitch?.div(g/2) ?: 0f) * forwardSpeed
-        rightSpeed = forwardSpeed - (pitch?.div(g/2) ?: 0f) * forwardSpeed
+        leftSpeed = forwardSpeed + (pitch?.div(g / 2) ?: 0f) * forwardSpeed
+        rightSpeed = forwardSpeed - (pitch?.div(g / 2) ?: 0f) * forwardSpeed
 
-        var values = DualDriveValues(leftSpeed, rightSpeed)
-
-        Log.i(
-            "Converting",
-            "azimuth: $azimuth, pitch: $pitch, roll: $roll -> left: ${values.left}, right: ${values.right}"
-        )
-
-        return values
+        return DualDriveValues(leftSpeed, rightSpeed)
     }
 
     inner class DualDriveValues(var left: Float, var right: Float) {

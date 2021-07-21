@@ -27,7 +27,6 @@ class DriveModeTiltLayout @JvmOverloads constructor(
     private val tag: String = "DriveModeTiltLayout"
     private val sensorSampler: SensorSampler = SensorSampler()
     private val g = 9.81f
-    private val phoneOnTableChecker = PhoneOnTableChecker()
     private val phoneAccelerometerToDualDriveConverted =
         PhoneSensorToDualDriveConverter()
 
@@ -55,37 +54,6 @@ class DriveModeTiltLayout @JvmOverloads constructor(
         visibility = INVISIBLE
     }
 
-    inner class PhoneOnTableChecker {
-
-        private var lastTransmitted = 0L
-        private var lastAzimuth: Float? = null
-        private var lastPitch: Float? = null
-        private var lastRoll: Float? = null
-        private val minTimeOnTableMs = 1000L
-
-        fun phoneOnTable(azimuth: Float?, pitch: Float?, roll: Float?): Boolean {
-            if (Utils.isWithin(roll?.absoluteValue, g, 1.0f)
-                && Utils.isWithin(pitch, lastPitch, 0.2f)
-                && Utils.isWithin(azimuth, lastAzimuth, 0.2f)
-            ) {
-                if (lastTransmitted == 0L) {
-                    lastTransmitted = System.currentTimeMillis()
-                }
-                if (System.currentTimeMillis() > (lastTransmitted + minTimeOnTableMs)) {
-                    return true
-                }
-            } else {
-                lastTransmitted = 0L
-            }
-
-            lastPitch = pitch
-            lastRoll = roll
-            lastAzimuth = azimuth
-
-            return false
-        }
-    }
-
     inner class SensorSampler {
         private lateinit var timer: Timer
 
@@ -102,17 +70,6 @@ class DriveModeTiltLayout @JvmOverloads constructor(
                     val azimuth = SensorReader.values.azimuth
                     val pitch = SensorReader.values.pitch
                     val roll = SensorReader.values.roll
-
-                    if (phoneOnTableChecker.phoneOnTable(azimuth, pitch, roll)) {
-                        timer.cancel()
-                        stop()
-
-                        val event: EventProcessor.ProgressEvents =
-                            EventProcessor.ProgressEvents.PhoneOnTable
-                        EventProcessor.onNext(event)
-
-                        return
-                    }
 
                     isRunning = true
                     val sliderValues = phoneAccelerometerToDualDriveConverted.convert(azimuth, pitch, roll)

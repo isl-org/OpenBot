@@ -256,22 +256,55 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <RelativeLayout
+                android:id="@+id/pedals_layout"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <org.openbot.controller.customComponents.Break
+                    android:id="@+id/breakPedal"
+                    style="@style/iconWithBorderStyle"
+                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_gravity="left"
+                    android:rotation="90"
+                    android:layout_marginLeft="30dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    app:icon="@drawable/pedal_break" />
+
+                <org.openbot.controller.customComponents.Accelerator
+                    android:id="@+id/acceleratorPedal"
+                    style="@style/iconWithBorderStyle"
+                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_gravity="right"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:icon="@drawable/pedal_accelerator" />
+
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/tilt_mode_components"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
+                android:gravity="center"
                 android:orientation="vertical">
 
-            <org.openbot.controller.customComponents.FadeableTextView
-                android:id="@+id/double_tap_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/double_tab_to_go_back"
-                android:gravity="center"
-                android:textSize="32sp" />
+                <org.openbot.controller.customComponents.FadeableTextView
+                    android:id="@+id/double_tap_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/double_tab_to_go_back"
+                    android:textSize="32sp" />
             </LinearLayout>
 
         </org.openbot.controller.customComponents.DriveModeTiltLayout>
