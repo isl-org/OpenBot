@@ -227,8 +227,10 @@ public class ImageUtils {
   }
 
   public static int getScreenOrientation(Activity activity) {
-    int rotation = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R?
-            activity.getDisplay().getRotation() : activity.getWindowManager().getDefaultDisplay().getRotation();
+    int rotation =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+            ? activity.getDisplay().getRotation()
+            : activity.getWindowManager().getDefaultDisplay().getRotation();
     switch (rotation) {
       case Surface.ROTATION_270:
         return 270;
