@@ -4,7 +4,6 @@ import android.util.Size;
 import java.util.EnumSet;
 
 public class Enums {
-
   public enum SensorType {
     ACCELEROMETER("Accelerometer"),
     GYROSCOPE("Gyroscope"),
@@ -13,6 +12,7 @@ public class Enums {
     MAGNETIC("Magnetic"),
     LIGHT("Light"),
     PRESSURE("Pressure"),
+    TEMPERATURE("Temperature"),
     GPS("Gps"),
     VEHICLE("Vehicle"),
     POSE("Pose"),

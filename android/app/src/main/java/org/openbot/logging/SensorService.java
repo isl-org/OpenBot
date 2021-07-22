@@ -10,12 +10,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.SystemClock;
+import androidx.annotation.RequiresApi;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -39,9 +41,9 @@ public class SensorService extends Service implements SensorEventListener {
   private Sensor lightSensor;
   private Sensor proximitySensor;
   private Sensor pressureSensor;
+  private Sensor temperatureSensor;
   private Sensor poseSensor;
   private Sensor motionSensor;
-  private Sensor stationarySensor;
 
   private BufferedWriter accelerometerLog;
   private BufferedWriter gyroscopeLog;
@@ -50,6 +52,7 @@ public class SensorService extends Service implements SensorEventListener {
   private BufferedWriter lightLog;
   private BufferedWriter proximityLog;
   private BufferedWriter pressureLog;
+  private BufferedWriter temperatureLog;
   private BufferedWriter poseLog;
   private BufferedWriter motionLog;
   private BufferedWriter gpsLog;
@@ -76,6 +79,7 @@ public class SensorService extends Service implements SensorEventListener {
 
   private SharedPreferencesManager preferencesManager;
 
+  @RequiresApi(api = Build.VERSION_CODES.N)
   @Override
   public final void onCreate() {
     super.onCreate();
@@ -87,9 +91,9 @@ public class SensorService extends Service implements SensorEventListener {
     lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
     proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
     pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+    temperatureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
     poseSensor = sensorManager.getDefaultSensor(Sensor.TYPE_POSE_6DOF);
     motionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MOTION_DETECT);
-    stationarySensor = sensorManager.getDefaultSensor(Sensor.TYPE_STATIONARY_DETECT);
     // Initialize the FusedLocationClient.
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     preferencesManager = new SharedPreferencesManager(this);
@@ -109,67 +113,72 @@ public class SensorService extends Service implements SensorEventListener {
     }
 
     int delay = (int) (preferencesManager.getDelay() * 1000);
-    if (preferencesManager.getSensorStatus(Enums.SensorType.ACCELEROMETER.getSensor())) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.ACCELEROMETER.getSensor())
+        && accelerometerSensor != null) {
       accelerometerLog = openLog(logFolder, "accelerometerLog.txt");
-      // appendLog(mAccelerometerLog, mAccelerometer.getName());
       appendLog(accelerometerLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
       sensorManager.registerListener(this, accelerometerSensor, delay);
     }
 
-    if (preferencesManager.getSensorStatus(Enums.SensorType.GYROSCOPE.getSensor())) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.GYROSCOPE.getSensor())
+        && gyroscopeSensor != null) {
       gyroscopeLog = openLog(logFolder, "gyroscopeLog.txt");
-      // appendLog(mGyroscopeLog, mGyroscope.getName());
       appendLog(gyroscopeLog, "timestamp[ns],x[rad/s],y[rad/s],z[rad/s]");
       sensorManager.registerListener(this, gyroscopeSensor, delay);
     }
 
-    if (preferencesManager.getSensorStatus(Enums.SensorType.GRAVITY.getSensor())) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.GRAVITY.getSensor())
+        && gravitySensor != null) {
       gravityLog = openLog(logFolder, "gravityLog.txt");
-      // appendLog(mGravityLog, mGravity.getName());
       appendLog(gravityLog, "timestamp[ns],x[m/s^2],y[m/s^2],z[m/s^2]");
       sensorManager.registerListener(this, gravitySensor, delay);
     }
 
-    if (preferencesManager.getSensorStatus(Enums.SensorType.MAGNETIC.getSensor())) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.MAGNETIC.getSensor())
+        && magneticSensor != null) {
       magneticLog = openLog(logFolder, "magneticLog.txt");
-      // appendLog(mMagneticLog, mMagnetic.getName());
       appendLog(magneticLog, "timestamp[ns],x[uT],y[uT],z[uT]");
       sensorManager.registerListener(this, magneticSensor, delay);
     }
 
-    if (preferencesManager.getSensorStatus(Enums.SensorType.LIGHT.getSensor())) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.LIGHT.getSensor())
+        && lightSensor != null) {
       lightLog = openLog(logFolder, "lightLog.txt");
-      // appendLog(mLightLog, mLight.getName());
       appendLog(lightLog, "timestamp[ns],light[lux]");
       sensorManager.registerListener(this, lightSensor, delay);
     }
 
-    if (preferencesManager.getSensorStatus(Enums.SensorType.PROXIMITY.getSensor())) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.PROXIMITY.getSensor())
+        && proximitySensor != null) {
       proximityLog = openLog(logFolder, "proximityLog.txt");
-      // appendLog(mProximityLog, mProximity.getName());
       appendLog(proximityLog, "timestamp[ns],proximity[cm]");
       sensorManager.registerListener(this, proximitySensor, delay);
     }
 
-    if (preferencesManager.getSensorStatus(Enums.SensorType.PRESSURE.getSensor())) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.PRESSURE.getSensor())
+        && pressureSensor != null) {
       pressureLog = openLog(logFolder, "pressureLog.txt");
-      // appendLog(mPressureLog, mPressure.getName());
       appendLog(pressureLog, "timestamp[ns],pressure[hPa]");
       sensorManager.registerListener(this, pressureSensor, delay);
     }
 
-    if (preferencesManager.getSensorStatus(Enums.SensorType.POSE.getSensor())) {
-      poseLog = openLog(logFolder, "poseLog.txt");
-      // appendLog(mPoseLog, mPose.getName());
-      appendLog(
-          poseLog,
-          "timestamp[ns],x,y,z,w,x,y,z,dx,dy,dz,dw,dx,dy,dz,"
-              + "sensorManager.registerListener(this, poseSensor, delay);id");
+    if (preferencesManager.getSensorStatus(Enums.SensorType.TEMPERATURE.getSensor())
+        && temperatureSensor != null) {
+      temperatureLog = openLog(logFolder, "temperatureLog.txt");
+      appendLog(temperatureLog, "timestamp[ns],temperature[degrees]");
+      sensorManager.registerListener(this, temperatureSensor, delay);
     }
 
-    if (preferencesManager.getSensorStatus(Enums.SensorType.MOTION.getSensor())) {
+    if (preferencesManager.getSensorStatus(Enums.SensorType.POSE.getSensor())
+        && poseSensor != null) {
+      poseLog = openLog(logFolder, "poseLog.txt");
+      appendLog(poseLog, "timestamp[ns],x,y,z,w,x,y,z,dx,dy,dz,dw,dx,dy,dz,id");
+      sensorManager.registerListener(this, poseSensor, delay);
+    }
+
+    if (preferencesManager.getSensorStatus(Enums.SensorType.MOTION.getSensor())
+        && motionSensor != null) {
       motionLog = openLog(logFolder, "motionLog.txt");
-      // appendLog(mMotionLog, mMotion.getName());
       appendLog(motionLog, "timestamp[ns],motion");
       sensorManager.registerListener(this, motionSensor, delay);
     }
@@ -195,7 +204,6 @@ public class SensorService extends Service implements SensorEventListener {
       vehicleLog = openLog(logFolder, "vehicleLog.txt");
       appendLog(vehicleLog, "timestamp[ns],batteryVoltage,leftWheel,rightWheel,obstacle");
     }
-    sensorManager.registerListener(this, stationarySensor, delay);
 
     locationCallback =
         new LocationCallback() {
@@ -310,6 +318,10 @@ public class SensorService extends Service implements SensorEventListener {
         // Atmospheric pressure in mPa (millibar)
         appendLog(pressureLog, event.timestamp + "," + event.values[0]);
         break;
+      case Sensor.TYPE_AMBIENT_TEMPERATURE:
+        // Ambient temperature in degrees
+        appendLog(temperatureLog, event.timestamp + "," + event.values[0]);
+        break;
       case Sensor.TYPE_POSE_6DOF:
         // values[0]: x*sin(θ/2)
         // values[1]: y*sin(θ/2)
@@ -415,6 +427,7 @@ public class SensorService extends Service implements SensorEventListener {
     if (lightLog != null) closeLog(lightLog);
     if (proximityLog != null) closeLog(proximityLog);
     if (pressureLog != null) closeLog(pressureLog);
+    if (temperatureLog != null) closeLog(temperatureLog);
     if (poseLog != null) closeLog(poseLog);
     if (motionLog != null) closeLog(motionLog);
     if (gpsLog != null) closeLog(gpsLog);

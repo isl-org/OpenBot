@@ -41,21 +41,17 @@ public class SensorsDialog extends DialogFragment {
 
     HashMap<String, Boolean> list = new LinkedHashMap<>();
     list.put(
-        Enums.SensorType.GPS.getSensor(),
-        preferencesManager.getSensorStatus(Enums.SensorType.GPS.getSensor()));
-    list.put(
         Enums.SensorType.VEHICLE.getSensor(),
         preferencesManager.getSensorStatus(Enums.SensorType.VEHICLE.getSensor()));
+
+    // Every modern phone has GPS
     list.put(
-        Enums.SensorType.MOTION.getSensor(),
-        preferencesManager.getSensorStatus(Enums.SensorType.MOTION.getSensor()));
-    list.put(
-        Enums.SensorType.POSE.getSensor(),
-        preferencesManager.getSensorStatus(Enums.SensorType.POSE.getSensor()));
+        Enums.SensorType.GPS.getSensor(),
+        preferencesManager.getSensorStatus(Enums.SensorType.GPS.getSensor()));
 
     for (Sensor sensor : sensorList) {
       for (Enums.SensorType name : Enums.SensorType.values())
-        if (sensor.getName().toLowerCase().contains(name.getSensor().toLowerCase())) {
+        if (sensor.getStringType().toLowerCase().contains(name.getSensor().toLowerCase())) {
           list.put(name.getSensor(), preferencesManager.getSensorStatus(name.getSensor()));
           break;
         }
