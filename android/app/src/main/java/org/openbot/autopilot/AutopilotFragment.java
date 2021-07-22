@@ -440,8 +440,11 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     vehicle.setControl(control);
     float left = vehicle.getLeftSpeed();
     float right = vehicle.getRightSpeed();
-    binding.controllerContainer.controlInfo.setText(
-        String.format(Locale.US, "%.0f,%.0f", left, right));
+    requireActivity()
+        .runOnUiThread(
+            () ->
+                binding.controllerContainer.controlInfo.setText(
+                    String.format(Locale.US, "%.0f,%.0f", left, right)));
   }
 
   @Override
