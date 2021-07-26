@@ -11,6 +11,9 @@ package org.openbot.controller.customComponents
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
+import org.openbot.controller.ForwardSpeed
+import org.openbot.controller.utils.EventProcessor
 import org.openbot.controller.utils.SensorReader
 
 class ControllerModeTilt @JvmOverloads constructor(
@@ -19,16 +22,23 @@ class ControllerModeTilt @JvmOverloads constructor(
 
     init {
         SensorReader.init(context)
-        setOnTouchListener(OnTouchListener("{command: {CONTROL_MODE: \"tilt\"}}"))
-        subscribe("CONTROL_MODE", ::onDataReceived)
         offState()
     }
 
-    private fun onDataReceived(data: String) {
-        setOnOffStateConditions(data)
-    }
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                onState()
 
-    override fun setOnOffStateConditions(value: String) {
-        if (value == "tilt") onState() else offState()
+                val event: EventProcessor.ProgressEvents =
+                    EventProcessor.ProgressEvents.TiltControl
+                EventProcessor.onNext(event)
+            }
+
+            MotionEvent.ACTION_UP -> {
+                offState()
+            }
+        }
+        return true
     }
 }

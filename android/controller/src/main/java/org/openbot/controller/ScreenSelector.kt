@@ -12,17 +12,19 @@ package org.openbot.controller
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import org.openbot.controller.databinding.ActivityFullscreenBinding
+import org.openbot.controller.utils.EventProcessor
 
 data class ScreenSelector (val binding: ActivityFullscreenBinding) {
 
     init {
         binding.mainScreen.setupDoubleTap(::showButtons)
-        subscribe("CONTROL_MODE", ::onDataReceived)
+        monitorDriveMode()
     }
 
     private fun hideButtons() {
-        binding.botSetupButtons.hide()
+        binding.botSetupButtons?.hide()
     }
 
     private fun hideSliders() {
@@ -32,7 +34,7 @@ data class ScreenSelector (val binding: ActivityFullscreenBinding) {
 
     private fun showButtons() {
         binding.controlModeTiltLayout.stop()
-        binding.botSetupButtons.show()
+        binding.botSetupButtons?.show()
         hideSliders()
     }
 
@@ -56,17 +58,30 @@ data class ScreenSelector (val binding: ActivityFullscreenBinding) {
         })
     }
 
-    private fun onDataReceived(data: String) {
-        if (data == "sliders") {
-            binding.driveModeSlidersLayout.show()
-            binding.controlModeTiltLayout.stop()
-        }
-        if (data == "tilt") {
-            binding.driveModeSlidersLayout.hide()
-            binding.controlModeTiltLayout.start()
-            binding.doubleTapMessage.start()
-        }
+    private fun monitorDriveMode() {
 
-        binding.botSetupButtons.hide()
+        EventProcessor.subscriber.start(
+            this.javaClass.simpleName,
+            {
+                when (it) {
+                    EventProcessor.ProgressEvents.TiltControl -> {
+                        binding.driveModeSlidersLayout.hide()
+                        binding.controlModeTiltLayout.start()
+                        binding.doubleTapMessage?.start()
+                    }
+                    EventProcessor.ProgressEvents.SlidersControl -> {
+                        binding.driveModeSlidersLayout.show()
+                        binding.controlModeTiltLayout.stop()
+                    }
+                }
+
+                binding.botSetupButtons?.hide()
+            },
+            { throwable ->
+                Log.d(
+                    "EventsSubscription",
+                    "Got error on subscribe: $throwable"
+                )
+            })
     }
 }

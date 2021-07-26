@@ -27,6 +27,6 @@ class DriveModeSlidersLayout @JvmOverloads constructor(
     }
 
     fun hide() {
-        visibility = INVISIBLE
+        visibility = GONE
     }
 }

@@ -18,8 +18,9 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
+import kotlin.math.absoluteValue
 
-class Break @JvmOverloads constructor(
+class Brake @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ButtonWithBorder(context, attrs, defStyleAttr) {
 
@@ -27,33 +28,42 @@ class Break @JvmOverloads constructor(
         @IntRange(
             from = 0,
             to = 5000
-        ) val decelerationTime: Long = 300, // how many milliseconds to decelerate to min speed.
+        ) val timeToReverse: Long = 1000, // time before going into reverse.
 
         @IntRange(
             from = 1,
             to = 10
-        ) val stepsToFullStop: Int = 3, // in haw many steps to get to min speed after releasing the accelerator
+        ) val stepsToFinalValue: Int = 3, // in haw many steps do we get to min value
     )
 
-    private val drivingCharacteristics: DrivingCharacteristics = DrivingCharacteristics()
+    init {
+        offState()
+    }
 
+    private val drivingCharacteristics: DrivingCharacteristics = DrivingCharacteristics()
     private lateinit var deceleratorStepTask: DeceleratorStepTask
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 onState()
-
-                val decelerationPeriod = drivingCharacteristics.decelerationTime / drivingCharacteristics.stepsToFullStop
-                val decrementValue = if (ForwardSpeed.value <= 0) { .1f } else { (ForwardSpeed.value / drivingCharacteristics.stepsToFullStop).toFloat() }
+                ForwardSpeed.reset()
+                val decelerationPeriod =
+                    drivingCharacteristics.timeToReverse / drivingCharacteristics.stepsToFinalValue
+                val decrementValue =
+                    (ForwardSpeed.minNegative / drivingCharacteristics.stepsToFinalValue).absoluteValue
 
                 deceleratorStepTask = DeceleratorStepTask(decrementValue)
-                deceleratorStepTask.schedule(decelerationPeriod)
+                deceleratorStepTask.schedule(
+                    drivingCharacteristics.timeToReverse,
+                    decelerationPeriod
+                )
             }
 
             MotionEvent.ACTION_UP -> {
                 offState()
                 deceleratorStepTask.cancel()
+                ForwardSpeed.reset()
             }
         }
         return true
@@ -64,11 +74,12 @@ class Break @JvmOverloads constructor(
         private lateinit var runningTask: ScheduledFuture<*>
 
         private val task = Runnable {
-            ForwardSpeed.decrement(decrementValue)
+            ForwardSpeed.decrementNegative(decrementValue)
         }
 
-        fun schedule(delay: Long) {
-            this.runningTask = executor.scheduleAtFixedRate(task, 0, delay, TimeUnit.MILLISECONDS)
+        fun schedule(delay: Long, period: Long) {
+            this.runningTask =
+                executor.scheduleAtFixedRate(task, delay, period, TimeUnit.MILLISECONDS)
         }
 
         fun cancel() {
@@ -77,5 +88,4 @@ class Break @JvmOverloads constructor(
             }
         }
     }
-
 }

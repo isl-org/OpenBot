@@ -52,20 +52,21 @@ turn indicators by clicking on the arrows on the top-left of the screen, and the
 
 ### Tilt to drive
 The controller can also use its accelerometer motion sensor to drive the robot. If you select this option, the controller will enter a full-screen (Zen) mode with only 
-the video showing and no other controls. To exit this mode, either double-tap on the screen, or place the controler on a flat surface.
+the video showing and a `brake` and `accelerator` pedals. To exit this mode, double-tap on the screen.
 
-Here is a picture of the orientation access of the controller:
+Here is a picture of the `tilt mode` screen:
 
 <p float="left">
-  <img src="../../docs/images/orientation_axis.png" width="50%" />
+  <img src="../../docs/images/tilt-mode-controller.png" width="50%" />
 </p>
 
-Start with the controller in the up-right position in landscape mode. To move forward, increase the `roll` angle (rotate forward around the `Y` access). To turn left or right,
-tilt the phone around the `X` access. 
+Use the `brake` and `accelerator` buttons to move forward/backword. 
 
-If you like to control some other settings on the robot, such as `Noise`, `Logs`, etc, double-tap in the middle of the screen, and you will see the buttons on the left.
-They also show the current settings, so if the `Noise` button is highlighted, this means this setting on the robot is `ON`. If you change the setting manually from
- the robot menu, this should be reflected on the controller app as well.
+- Pressing the `acceletator` will accelerate the robot to full speed within 2 seconds. Wnen you release the button, the robot will slow down to speed currently set at 10% of the maximum speed.
+
+- Pressing the `brake` button will immedately stop the robot. If we hold the brake for another second, the reobot will start moving backword until it reaches the maximim reverse speed in one second. When we let go of the brake, the robot will come to a stop.
+
+- We steer the robot by tilting the controller left or right.
 
 ## Future Development
 

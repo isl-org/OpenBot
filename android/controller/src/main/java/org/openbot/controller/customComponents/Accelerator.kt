@@ -36,33 +36,34 @@ class Accelerator @JvmOverloads constructor(
             to = 10
         ) val stepsToFullAcceleration: Int = 5, // in haw many steps we like to get to max acceleration
 
-        val decelerateAfterReleasingTheButton: Boolean = false, // do we want to slow down when the button is released?
+        val decelerateAfterReleasingTheButton: Boolean = true, // do we want to slow down when the button is released?
         @IntRange(
             from = 0,
             to = 5000
-        ) val decelerationTime: Long = 5000, // how many milliseconds to decelerate to min speed.
+        ) val decelerationTime: Long = 1000, // how many milliseconds to decelerate to min speed.
 
         @FloatRange(
             from = 0.0,
             to = 1.0
         ) val minSpeed: Float = .1f, // what percentage of full speed is our final decelerated speed (.1 means 10%)
-
-        @IntRange(
-            from = 1,
-            to = 10
-        ) val stepsToFullStop: Int = 3, // in haw many steps to get to min speed after releasing the accelerator
     )
 
     private val drivingCharacteristics: DrivingCharacteristics = DrivingCharacteristics()
     private lateinit var acceleratorStepTask: AcceleratorStepTask
+
+    init {
+        offState()
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 onState()
 
+                ForwardSpeed.reset()
+
                 val accelerationPeriod = drivingCharacteristics.accelerationTime / drivingCharacteristics.stepsToFullAcceleration
-                val incrementValue = ((1.0 - ForwardSpeed.value) / drivingCharacteristics.stepsToFullAcceleration).toFloat()
+                val incrementValue = ((ForwardSpeed.max - ForwardSpeed.value) / drivingCharacteristics.stepsToFullAcceleration).toFloat()
 
                 acceleratorStepTask = AcceleratorStepTask(incrementValue)
                 acceleratorStepTask.schedule(accelerationPeriod)
@@ -70,17 +71,8 @@ class Accelerator @JvmOverloads constructor(
 
             MotionEvent.ACTION_UP -> {
                 offState()
-
                 acceleratorStepTask.cancel()
-
-                if (drivingCharacteristics.decelerateAfterReleasingTheButton) {
-                    val decelerationPeriod = drivingCharacteristics.decelerationTime / drivingCharacteristics.stepsToFullStop
-                    val decelerationSpeedDifference = (ForwardSpeed.value - drivingCharacteristics.minSpeed).toFloat()
-                    val decrementValue = if (decelerationSpeedDifference <= 0) { .1f } else { (decelerationSpeedDifference / drivingCharacteristics.stepsToFullStop).toFloat() }
-                    val deceleratorStepTask: DeceleratorStepTask = DeceleratorStepTask(decrementValue, drivingCharacteristics.minSpeed)
-
-                    deceleratorStepTask.schedule(decelerationPeriod)
-                }
+                ForwardSpeed.setTo (drivingCharacteristics.minSpeed)
             }
         }
         return true
@@ -94,34 +86,11 @@ class Accelerator @JvmOverloads constructor(
             ForwardSpeed.increment(incrementValue)
         }
 
-        fun schedule(delay: Long) {
-            this.runningTask = executor.scheduleAtFixedRate(task, 0, delay, TimeUnit.MILLISECONDS)
+        fun schedule(period: Long) {
+            this.runningTask = executor.scheduleAtFixedRate(task, 0, period, TimeUnit.MILLISECONDS)
         }
 
         fun cancel() {
-            if (this::runningTask.isInitialized && !runningTask.isCancelled) {
-                this.runningTask.cancel(false)
-            }
-        }
-    }
-
-    inner class DeceleratorStepTask(decrementValue: Float, minSpeed: Float) {
-        private var executor: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
-        private lateinit var runningTask: ScheduledFuture<*>
-
-        private val task = Runnable {
-            if (ForwardSpeed.value > minSpeed) {
-                ForwardSpeed.decrement(decrementValue)
-            } else {
-                cancel()
-            }
-        }
-
-        fun schedule(delay: Long) {
-            this.runningTask = executor.scheduleAtFixedRate(task, 0, delay, TimeUnit.MILLISECONDS)
-        }
-
-        private fun cancel() {
             if (this::runningTask.isInitialized && !runningTask.isCancelled) {
                 this.runningTask.cancel(false)
             }

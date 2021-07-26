@@ -64,5 +64,7 @@ object EventProcessor {
         object AdvertisingFailed : ProgressEvents()
         object TemporaryConnectionProblem : ProgressEvents()
         object PhoneOnTable : ProgressEvents()
+        object TiltControl : ProgressEvents()
+        object SlidersControl : ProgressEvents()
     }
 }

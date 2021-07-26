@@ -40,7 +40,6 @@ class DriveModeTiltLayout @JvmOverloads constructor(
     }
 
     fun stop() {
-        // ConnectionSelector.getConnection().sendMessage("{driveCmd: {l:0, r:0}}")
         sensorSampler.stop()
         SensorReader.stop(context)
         hide()
@@ -51,7 +50,7 @@ class DriveModeTiltLayout @JvmOverloads constructor(
     }
 
     fun hide() {
-        visibility = INVISIBLE
+        visibility = GONE
     }
 
     inner class SensorSampler {

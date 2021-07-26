@@ -11,22 +11,32 @@ package org.openbot.controller.customComponents
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
+import org.openbot.controller.utils.EventProcessor
 
 class ControllerModeSliders @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ButtonWithBorder(context, attrs, defStyleAttr) {
 
     init {
-        setOnTouchListener(OnTouchListener("{command: {CONTROL_MODE: \"sliders\"}}"))
-        subscribe("CONTROL_MODE", ::onDataReceived)
         offState()
     }
 
-    private fun onDataReceived(data: String) {
-        setOnOffStateConditions(data)
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                onState()
+
+                val event: EventProcessor.ProgressEvents =
+                    EventProcessor.ProgressEvents.SlidersControl
+                EventProcessor.onNext(event)
+            }
+
+            MotionEvent.ACTION_UP -> {
+                offState()
+            }
+        }
+        return true
     }
 
-    override fun setOnOffStateConditions(value: String) {
-        if (value == "sliders") onState() else offState()
-    }
 }

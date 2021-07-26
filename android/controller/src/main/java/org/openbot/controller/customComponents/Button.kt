@@ -26,7 +26,7 @@ open class Button @JvmOverloads constructor(
     init {
     }
 
-    fun show() {
+    open fun show() {
         visibility = VISIBLE
     }
 
