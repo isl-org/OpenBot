@@ -12,8 +12,7 @@ package org.openbot.controller.customComponents
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
-import org.openbot.controller.ForwardSpeed
-import org.openbot.controller.utils.EventProcessor
+import org.openbot.controller.utils.LocalEventBus
 import org.openbot.controller.utils.SensorReader
 
 class ControllerModeTilt @JvmOverloads constructor(
@@ -30,9 +29,9 @@ class ControllerModeTilt @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {
                 onState()
 
-                val event: EventProcessor.ProgressEvents =
-                    EventProcessor.ProgressEvents.TiltControl
-                EventProcessor.onNext(event)
+                val event: LocalEventBus.ProgressEvents =
+                    LocalEventBus.ProgressEvents.TiltControl
+                LocalEventBus.onNext(event)
             }
 
             MotionEvent.ACTION_UP -> {

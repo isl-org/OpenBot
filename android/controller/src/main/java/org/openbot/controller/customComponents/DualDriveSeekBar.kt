@@ -12,7 +12,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.MotionEvent
-import org.openbot.controller.ConnectionSelector
+import org.openbot.controller.DriveCommandReducer
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -110,8 +110,7 @@ class DualDriveSeekBar @JvmOverloads constructor(
 
             if ((System.currentTimeMillis() - lastTransmitted) >= MIN_TIME_BETWEEN_TRANSMISSIONS
                     || lastRightValue == 0f || lastLeftValue == 0f) { // if home command, send, do not wait for a time lapsed.
-                val msg = "{driveCmd: {r:$lastRightValue, l:$lastLeftValue}}"
-                ConnectionSelector.getConnection().sendMessage(msg)
+                        DriveCommandReducer.filter(lastRightValue, lastLeftValue)
                 lastTransmitted = System.currentTimeMillis()
             }
         }

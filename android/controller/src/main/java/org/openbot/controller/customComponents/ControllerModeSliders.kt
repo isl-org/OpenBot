@@ -12,7 +12,7 @@ package org.openbot.controller.customComponents
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
-import org.openbot.controller.utils.EventProcessor
+import org.openbot.controller.utils.LocalEventBus
 
 class ControllerModeSliders @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -27,9 +27,9 @@ class ControllerModeSliders @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {
                 onState()
 
-                val event: EventProcessor.ProgressEvents =
-                    EventProcessor.ProgressEvents.SlidersControl
-                EventProcessor.onNext(event)
+                val event: LocalEventBus.ProgressEvents =
+                    LocalEventBus.ProgressEvents.SlidersControl
+                LocalEventBus.onNext(event)
             }
 
             MotionEvent.ACTION_UP -> {

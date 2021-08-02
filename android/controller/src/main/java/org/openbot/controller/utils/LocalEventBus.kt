@@ -17,7 +17,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.processors.PublishProcessor
 import java.util.*
 
-object EventProcessor {
+object LocalEventBus {
 
     val subscriber = Subscriber()
 

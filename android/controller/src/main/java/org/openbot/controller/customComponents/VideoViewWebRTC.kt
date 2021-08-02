@@ -17,7 +17,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.openbot.controller.ConnectionSelector
 import org.openbot.controller.StatusEventBus
-import org.openbot.controller.utils.EventProcessor
+import org.openbot.controller.utils.LocalEventBus
 import org.webrtc.*
 
 /*
@@ -266,13 +266,13 @@ class VideoViewWebRTC @JvmOverloads constructor(
 
     private fun monitorConnection() {
 
-        EventProcessor.subscriber.start(
+        LocalEventBus.subscriber.start(
             this.javaClass.simpleName,
             {
                 Log.i(TAG, "Got $it event")
 
                 when (it) {
-                    EventProcessor.ProgressEvents.Disconnected -> {
+                    LocalEventBus.ProgressEvents.Disconnected -> {
                         stop()
                     }
                 }

@@ -10,11 +10,9 @@
 package org.openbot.controller
 
 import android.annotation.SuppressLint
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import org.openbot.controller.databinding.ActivityFullscreenBinding
-import org.openbot.controller.utils.EventProcessor
+import org.openbot.controller.utils.LocalEventBus
 
 data class ScreenSelector (val binding: ActivityFullscreenBinding) {
 
@@ -60,16 +58,16 @@ data class ScreenSelector (val binding: ActivityFullscreenBinding) {
 
     private fun monitorDriveMode() {
 
-        EventProcessor.subscriber.start(
+        LocalEventBus.subscriber.start(
             this.javaClass.simpleName,
             {
                 when (it) {
-                    EventProcessor.ProgressEvents.TiltControl -> {
+                    LocalEventBus.ProgressEvents.TiltControl -> {
                         binding.driveModeSlidersLayout.hide()
                         binding.controlModeTiltLayout.start()
                         binding.doubleTapMessage?.start()
                     }
-                    EventProcessor.ProgressEvents.SlidersControl -> {
+                    LocalEventBus.ProgressEvents.SlidersControl -> {
                         binding.driveModeSlidersLayout.show()
                         binding.controlModeTiltLayout.stop()
                     }

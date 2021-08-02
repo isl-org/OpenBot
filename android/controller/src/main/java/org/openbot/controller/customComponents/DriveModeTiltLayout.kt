@@ -13,12 +13,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import org.openbot.controller.ConnectionSelector
+import org.openbot.controller.DriveCommandReducer
 import org.openbot.controller.PhoneSensorToDualDriveConverter
-import org.openbot.controller.utils.EventProcessor
 import org.openbot.controller.utils.SensorReader
-import org.openbot.controller.utils.Utils
 import java.util.*
-import kotlin.math.absoluteValue
 
 class DriveModeTiltLayout @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -73,8 +71,7 @@ class DriveModeTiltLayout @JvmOverloads constructor(
                     isRunning = true
                     val sliderValues = phoneAccelerometerToDualDriveConverted.convert(azimuth, pitch, roll)
 
-                    val msg = "{driveCmd: {l:${sliderValues.left}, r:${sliderValues.right}}}"
-                    ConnectionSelector.getConnection().sendMessage(msg)
+                    DriveCommandReducer.filter(sliderValues.right, sliderValues.left)
                 }
             }
 

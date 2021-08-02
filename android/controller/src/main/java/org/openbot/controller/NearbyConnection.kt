@@ -13,10 +13,9 @@ import android.content.Context
 import android.util.Log
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
-import org.openbot.controller.utils.EventProcessor
+import org.openbot.controller.utils.LocalEventBus
 import org.openbot.controller.utils.Utils
 import java.nio.charset.StandardCharsets
-import kotlin.reflect.KProperty0
 
 object NearbyConnection : ILocalConnection {
     private var dataReceivedCallback: IDataReceived? = null
@@ -84,9 +83,9 @@ object NearbyConnection : ILocalConnection {
                         TAG,
                         "onConnectionResult: connection successful"
                     )
-                    val event: EventProcessor.ProgressEvents =
-                        EventProcessor.ProgressEvents.ConnectionSuccessful
-                    EventProcessor.onNext(event)
+                    val event: LocalEventBus.ProgressEvents =
+                        LocalEventBus.ProgressEvents.ConnectionSuccessful
+                    LocalEventBus.onNext(event)
 
                     connectionsClient!!.stopAdvertising()
                     pairedDeviceEndpointId = endpointId
@@ -94,9 +93,9 @@ object NearbyConnection : ILocalConnection {
                 } else {
                     abortConnection()
 
-                    val event: EventProcessor.ProgressEvents =
-                        EventProcessor.ProgressEvents.ConnectionFailed
-                    EventProcessor.onNext(event)
+                    val event: LocalEventBus.ProgressEvents =
+                        LocalEventBus.ProgressEvents.ConnectionFailed
+                    LocalEventBus.onNext(event)
 
                     Log.i(
                         TAG,
@@ -106,9 +105,9 @@ object NearbyConnection : ILocalConnection {
             }
 
             override fun onDisconnected(endpointId: String) {
-                val event: EventProcessor.ProgressEvents =
-                    EventProcessor.ProgressEvents.Disconnected
-                EventProcessor.onNext(event)
+                val event: LocalEventBus.ProgressEvents =
+                    LocalEventBus.ProgressEvents.Disconnected
+                LocalEventBus.onNext(event)
 
                 Log.i(
                     TAG,
@@ -123,9 +122,9 @@ object NearbyConnection : ILocalConnection {
     }
 
     override fun disconnect(context: Context?) {
-        val event: EventProcessor.ProgressEvents =
-                EventProcessor.ProgressEvents.Disconnecting
-        EventProcessor.onNext(event)
+        val event: LocalEventBus.ProgressEvents =
+                LocalEventBus.ProgressEvents.Disconnecting
+        LocalEventBus.onNext(event)
 
         connectionsClient?.stopAdvertising()
 
@@ -150,16 +149,16 @@ object NearbyConnection : ILocalConnection {
             .addOnSuccessListener {
                 Log.d("startAdvertising", "We're advertising")
 
-                val event: EventProcessor.ProgressEvents =
-                    EventProcessor.ProgressEvents.StartAdvertising
-                EventProcessor.onNext(event)
+                val event: LocalEventBus.ProgressEvents =
+                    LocalEventBus.ProgressEvents.StartAdvertising
+                LocalEventBus.onNext(event)
 
             }.addOnFailureListener {
                 abortConnection()
 
-                val event: EventProcessor.ProgressEvents =
-                    EventProcessor.ProgressEvents.AdvertisingFailed
-                EventProcessor.onNext(event)
+                val event: LocalEventBus.ProgressEvents =
+                    LocalEventBus.ProgressEvents.AdvertisingFailed
+                LocalEventBus.onNext(event)
 
                 Log.d(
                     "startAdvertising",

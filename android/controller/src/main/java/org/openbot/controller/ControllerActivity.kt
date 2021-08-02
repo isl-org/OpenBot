@@ -25,7 +25,7 @@ import org.openbot.controller.customComponents.DualDriveSeekBar
 import org.openbot.controller.customComponents.VideoViewVlc
 import org.openbot.controller.customComponents.VideoViewWebRTC
 import org.openbot.controller.databinding.ActivityFullscreenBinding
-import org.openbot.controller.utils.EventProcessor
+import org.openbot.controller.utils.LocalEventBus
 import org.openbot.controller.utils.Utils
 import kotlin.system.exitProcess
 
@@ -136,40 +136,40 @@ class ControllerActivity : /*AppCompat*/
 
     @SuppressLint("CheckResult")
     private fun createAppEventsSubscription() {
-        EventProcessor.subscriber.start(
+        LocalEventBus.subscriber.start(
             this.javaClass.simpleName,
 
             {
                 Log.i(TAG, "Got $it event")
 
                 when (it) {
-                    EventProcessor.ProgressEvents.ConnectionSuccessful -> {
+                    LocalEventBus.ProgressEvents.ConnectionSuccessful -> {
                         Utils.beep()
                         screenSelector.showControls()
                     }
-                    EventProcessor.ProgressEvents.ConnectionStarted -> {
+                    LocalEventBus.ProgressEvents.ConnectionStarted -> {
                     }
-                    EventProcessor.ProgressEvents.ConnectionFailed -> {
+                    LocalEventBus.ProgressEvents.ConnectionFailed -> {
                         screenSelector.hideControls()
                     }
-                    EventProcessor.ProgressEvents.StartAdvertising -> {
+                    LocalEventBus.ProgressEvents.StartAdvertising -> {
                         screenSelector.hideControls()
                     }
-                    EventProcessor.ProgressEvents.Disconnected -> {
+                    LocalEventBus.ProgressEvents.Disconnected -> {
                         screenSelector.hideControls()
                         binding.controlModeTiltLayout.stop()
                         ConnectionSelector.getConnection().connect(this)
                     }
-                    EventProcessor.ProgressEvents.StopAdvertising -> {
+                    LocalEventBus.ProgressEvents.StopAdvertising -> {
                     }
-                    EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
+                    LocalEventBus.ProgressEvents.TemporaryConnectionProblem -> {
                         screenSelector.hideControls()
                         ConnectionSelector.getConnection().connect(this)
                     }
-                    EventProcessor.ProgressEvents.PhoneOnTable -> {
+                    LocalEventBus.ProgressEvents.PhoneOnTable -> {
                         screenSelector.showControls()
                     }
-                    EventProcessor.ProgressEvents.AdvertisingFailed -> {
+                    LocalEventBus.ProgressEvents.AdvertisingFailed -> {
                         screenSelector.hideControls()
                     }
                 }
