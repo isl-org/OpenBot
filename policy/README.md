@@ -49,7 +49,7 @@ NOTES:
 In order to train an autonomous driving policy, you will first need to collect a dataset. The more data you collect, the better the resulting driving policy. For the experiments in our paper, we collected about 30 minutes worth of data. Note that the network will imitate your driving behaviour. The better and more consistent you drive, the better the network will learn to drive.
 
 1. Connect a bluetooth game controller to the phone (e.g. PS4 controller: to enter pairing mode press the PS and share buttons until the LED flashes quickly).
-2. Select the AUTOPILOT_F network in the app.
+2. Select the `CIL-Mobile` model in the app.
 3. Now drive drive the car via a game controller and record a dataset. On the PS4 controller logging can be toggled with the **X** button.
 
 You will now find a folder called *Openbot* on the internal storage of your smartphone. For each recording, there will be zip file. The name of the zip file will be in the format *yyyymmdd_hhmmss.zip* corresponding to the timestamp of when the recording was started.
