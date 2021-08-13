@@ -16,35 +16,48 @@ You first need to setup your training environment.
 
 ## Dependencies
 
-We recommend to create a conda environment for OpenBot. Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/).
-If you do not have a dedicated GPU (e.g. using your laptop) you can create a new environment with the following command:
+We recommend to create a conda environment for OpenBot. Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). You can create a new environment with the following command:
 
 ```bash
-conda create -n openbot python=3.7 tensorflow=2.0.0 notebook=6.1.1 matplotlib=3.3.1 pillow=7.2.0
+conda create -n openbot python=3.7
 ```
 
-Note that training will be very slow. So if you have access to a computer with dedicated GPU, we highly recommend to use it. In this case, you will need Tensorflow with GPU support. Run the following command to setup the conda environment:
+If you do not want install the dependencies globally, activate your conda environment first:
 
 ```bash
-conda create -n openbot python=3.7 tensorflow-gpu=2.0.0 notebook=6.1.1 matplotlib=3.3.1 pillow=7.2.0
+conda activate openbot
 ```
+
+Make sure you are in the folder `policy` within your local OpenBot repository. Now, you can install all the dependencies with the following command:
+
+```bash
+pip install -r requirements.txt
+```
+
+Note that training will be very slow on a laptop. So if you have access to a computer with dedicated GPU, we highly recommend to use it.
 
 If you prefer to setup the environment manually, here is a list of the dependencies:
 
-- Tensorflow
-- Jupyter Notebook
-- Matplotlib
-- Numpy
+- tensorflow
+- jupyter notebook
+- matplotlib
+- numpy
 - PIL
 
-After setting up the conda environment navigate to the folder `policy` within your local OpenBot repository.
+If you want to use the web interface you also need:
+
+- AIOHTTP
+- aiozeroconf
+- imageio
 
 NOTES:
-- Whenever you want to run the Jupyter notebook you need the activate the environment first: `conda activate openbot`
-- If you want to use tensorflow=2.2.0 you may need to pass the custom metrics as custom objects dictionary. (See this [issue](https://github.com/intel-isl/OpenBot/issues/39).)
+
+- Remember to activate the environment before running commands in the terminal: `conda activate openbot`
 - If your tensorflow import does not work, try installing via `pip install tensorflow --user`. (See this [issue](https://github.com/intel-isl/OpenBot/issues/98).)
 
-## Data Collection
+## Dataset
+
+### Data Collection
 
 In order to train an autonomous driving policy, you will first need to collect a dataset. The more data you collect, the better the resulting driving policy. For the experiments in our paper, we collected about 30 minutes worth of data. Note that the network will imitate your driving behaviour. The better and more consistent you drive, the better the network will learn to drive.
 
@@ -60,7 +73,27 @@ The Jupyter notebook expects a folder called `dataset` in the same folder. In th
 
 Rather than copying all files manually from the phone, you can also upload the logs automatically to a [Python server](#web-app) on your computer. In this case, the zip files will be uploaded and unpacked into the folder `dataset/uploaded`. You will still need to move them into the folder structure for training. You can simply treat the `uploaded` folder as a recording session and move it into `train_data`. The recordings will then be recognized as training data by the Jupyter notebook. If you do not already have a recording session in the `test_data` folder, you also need to move at least one recording from `train_data/uploaded` into `test_data/uploaded`.
 
+### Data Conversion (optional)
+
+For better training performance, you can convert the collected dataset into a specialized format. You can create a tfrecord of the train and test datasets with the following commands:
+
+```bash
+conda activate openbot
+python -m openbot.tfrecord -i dataset/train_data -o dataset/tfrecords -n train.tfrec
+python -m openbot.tfrecord -i dataset/test_data -o dataset/tfrecords -n test.tfrec
+```
+
+By default this conversion will be done automatically at the start of training.
+
 ## Policy Training
+
+Make sure your conda environment for openbot is activated by executing the following command:
+
+```bash
+conda activate openbot
+```
+
+### Jupyter Notebook
 
 We provide a [Jupyter Notebook](policy_learning.ipynb) that guides you through the steps for training an autonomous driving policy. Open the notebook with the following command.
 
@@ -68,7 +101,52 @@ We provide a [Jupyter Notebook](policy_learning.ipynb) that guides you through t
 jupyter notebook policy_learning.ipynb
 ```
 
-Now a web-browser window will open automatically and load the Jupyter notebook. Follow the steps in order to train a model with your own data. At the end, two tflite files are generated: one corresponds to the best checkpoint according to the validation metrics and the other to the last checkpoint. Pick one of them and rename it to autopilot_float.tflite. Replace the existing model in Android Studio and recompile the app.
+Now a web-browser window will open automatically and load the Jupyter notebook. Follow the steps in order to train a model with your own data.
+
+### Shell
+
+This method assumes that the data is in the correct place. To adjust the hyperparameters you can pass the following arguments.
+
+```bash
+'--no_tf_record', action='store_true', help='do not load a tfrecord but a directory of files'
+'--create_tf_record', action='store_true', help='create a new tfrecord'
+'--model', type=str, default='pilot_net', choices=['cil_mobile', 'cil_mobile_fast', 'cil', 'pilot_net'], help='network architecture (default: cil_mobile)'
+'--batch_size', type=int, default=16, help='number of training epochs (default: 16)'
+'--learning_rate', type=float, default=0.0001, help='learning rate (default: 0.0001)'
+'--num_epochs', type=int, default=10, help='number of epochs (default: 10)'
+'--batch_norm', action='store_true', help='use batch norm'
+'--flip_aug', action='store_true', help='randomly flip images and controls for augmentation'
+'--cmd_aug', action='store_true', help='add noise to command input for augmentation'
+'--resume', action='store_true', help='resume previous training'
+```
+
+If your dataset has already been converted to a tfrecord, you can train the policy from the shell with the command:
+
+```bash
+python -m openbot.train
+```
+
+If you would like to convert your dataset to a tfrecord, before training, you need to add the following flag:
+
+```bash
+python -m openbot.train --create_tf_record
+```
+
+If you do not want to convert the dataset to a tfrecord, and train using the files direclty, you need to add the following flag:
+
+```bash
+python -m openbot.train --no_tf_record
+```
+
+To train a model for final deployment, you want to use a large batch size and number of epochs. Enabling batch norm usually improves training as well. The model `pilot_net` is larger than the default `cil_mobile` but can achieve better performance on some tasks while still runnining in real time on most smartphones.
+
+```bash
+python -m openbot.train --model pilot_net --batch_size 128 --num_epochs 100 --batch_norm
+```
+
+### Deployment
+
+At the end of the training process, two tflite files are generated: one corresponds to the best checkpoint according to the validation metrics and the other to the last checkpoint. Pick one of them and rename it to autopilot_float.tflite. Replace the existing model in Android Studio and recompile the app.
 
 <p align="center">
   <img src="../docs/images/android_studio_tflite_dir.jpg" width="200" alt="App GUI" />
@@ -78,60 +156,44 @@ If you are looking for the folder in your local directory, you will find it at: 
 
 ## Web App
 
-We provide a web app and a python web server for easier policy training. (Beta)
+We provide a web app and a python web server for easy policy training. (Beta)
 
 ### Features
 
-* Automatic log (session) upload 
-  * see Troubleshooting for details
-* List uploaded sessions, with GIF preview 
-* List datasets, with basic info
-* Move session to a dataset
-* Delete session
-* List trained models, and show plots about training
-* Train a model with basic parameters, show progress bar
+- Automatic log (session) upload 
+  - see Troubleshooting for details
+- List uploaded sessions, with GIF preview 
+- List datasets, with basic info
+- Move session to a dataset
+- Delete session
+- List trained models, and show plots about training
+- Train a model with basic parameters, show progress bar
 
 ### Preview
 
 <img src="../docs/images/web-app.gif" width="100%" alt="Web App preview" />
 
-
 ### Quickstart
 
-```
+```bash
 conda activate openbot
-pip install -r requirements.txt
 python -m openbot.server
 ```
 
-You can now open your browser to visualize the dataset and see incoming uploads by going to: 
+You can now open your browser to visualize the dataset and see incoming uploads by going to:
 [http://localhost:8000/#/uploaded](http://localhost:8000/#/uploaded)
-
-### Dependencies
-
-If you do not want install the dependencies globally, activate your conda environment first:
-
-```
-conda activate openbot
-```
-
-Make sure you are in the folder `policy`. Now, you can install all the dependencies with the following command:
-
-```
-pip install -r requirements.txt
-```
 
 ### Running the server
 
 You can run the python server with the command:
 
-```
+```bash
 python -m openbot.server
 ```
 
 There is also a developer mode:
 
-```
+```bash
 adev runserver openbot/server
 ```
 
