@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import org.openbot.env.Control;
-
 import timber.log.Timber;
 
 public abstract class Autopilot extends Network {
@@ -28,6 +27,7 @@ public abstract class Autopilot extends Network {
 
   /** A ByteBuffer to hold data, to be feed into Tensorflow Lite as inputs. */
   protected ByteBuffer cmdBuffer = null;
+
   private int cmdIndex;
   private int imgIndex;
 
@@ -43,8 +43,7 @@ public abstract class Autopilot extends Network {
     try {
       cmdIndex = tflite.getInputIndex("serving_default_cmd_input:0");
       imgIndex = tflite.getInputIndex("serving_default_img_input:0");
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       cmdIndex = tflite.getInputIndex("cmd_input");
       imgIndex = tflite.getInputIndex("img_input");
     }
