@@ -10,8 +10,8 @@ import os
 import json
 import tensorflow as tf
 
-from openbot import associate_frames
-from openbot.tfrecord_utils import create_example
+from . import associate_frames
+from . import tfrecord_utils
 
 
 def get_parser():
@@ -40,15 +40,8 @@ def load_labels(data_dir, datasets):
                 corpus.extend(data)
     return dict(corpus)
 
-
-if __name__ == "__main__":
-    parser = get_parser()
-    args = parser.parse_args()
-
-    data_dir = args.dataset_dir
+def convert_dataset(data_dir, tfrecords_dir, tfrecords_name, redo_matching=False, remove_zeros=True):
     print(f'Reading dataset from {data_dir}')
-    tfrecords_dir = args.output_dir
-    tfrecords_name = args.tfrecord_name
     print(f'TFRecord will be saved at {tfrecords_dir}/{tfrecords_name}')
 
     # load the datasets avaible.
@@ -60,8 +53,8 @@ if __name__ == "__main__":
     frames = associate_frames.match_frame_ctrl_cmd(data_dir, 
                                                    datasets, 
                                                    max_offset, 
-                                                   redo_matching=True,
-                                                   remove_zeros=True)
+                                                   redo_matching=redo_matching,
+                                                   remove_zeros=remove_zeros)
 
     # creating TFRecords output folder.
     if not os.path.exists(tfrecords_dir):
@@ -71,8 +64,20 @@ if __name__ == "__main__":
     samples = load_labels(data_dir, datasets)
     with tf.io.TFRecordWriter(tfrecords_dir + "/" + tfrecords_name) as writer:
         for image_path, ctrl_cmd in samples.items():
-            image = tf.io.decode_jpeg(tf.io.read_file(image_path))
-            example = create_example(image, image_path, ctrl_cmd)
-            writer.write(example.SerializeToString())
+            try:
+                image = tf.io.decode_jpeg(tf.io.read_file(image_path))
+                example = tfrecord_utils.create_example(image, image_path, ctrl_cmd)
+                writer.write(example.SerializeToString())
+            except:
+                print(f"Oops! Image {image_path} cannot be found.")
 
-    print("tfrecord file created successfully.")
+    print("TFRecord file created successfully.")
+
+if __name__ == "__main__":
+    parser = get_parser()
+    args = parser.parse_args()
+    data_dir = args.dataset_dir
+    tfrecords_dir = args.output_dir
+    tfrecords_name = args.tfrecord_name
+ 
+    convert_dataset(data_dir, tfrecords_dir, tfrecords_name)
