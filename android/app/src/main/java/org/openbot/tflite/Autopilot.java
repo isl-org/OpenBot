@@ -12,6 +12,8 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 import org.openbot.env.Control;
 
+import timber.log.Timber;
+
 public abstract class Autopilot extends Network {
 
   /**
@@ -24,8 +26,10 @@ public abstract class Autopilot extends Network {
    * @return A detector with the desired configuration.
    */
 
-  /** A ByteBuffer to hold image data, to be feed into Tensorflow Lite as inputs. */
-  protected ByteBuffer indicatorBuffer = null;
+  /** A ByteBuffer to hold data, to be feed into Tensorflow Lite as inputs. */
+  protected ByteBuffer cmdBuffer = null;
+  private int cmdIndex;
+  private int imgIndex;
 
   public static Autopilot create(Activity activity, Model model, Device device, int numThreads)
       throws IOException, IllegalArgumentException {
@@ -36,25 +40,31 @@ public abstract class Autopilot extends Network {
   protected Autopilot(Activity activity, Model model, Device device, int numThreads)
       throws IOException, IllegalArgumentException {
     super(activity, model, device, numThreads);
-
-    tflite.getInputIndex("cmd_input");
+    try {
+      cmdIndex = tflite.getInputIndex("serving_default_cmd_input:0");
+      imgIndex = tflite.getInputIndex("serving_default_img_input:0");
+    }
+    catch (Exception e) {
+      cmdIndex = tflite.getInputIndex("cmd_input");
+      imgIndex = tflite.getInputIndex("img_input");
+    }
     if (!Arrays.equals(
-        tflite.getInputTensor(tflite.getInputIndex("img_input")).shape(),
+        tflite.getInputTensor(imgIndex).shape(),
         new int[] {1, getImageSizeY(), getImageSizeX(), 3}))
       throw new IllegalArgumentException("Invalid tensor dimensions");
 
-    indicatorBuffer = ByteBuffer.allocateDirect(4);
-    indicatorBuffer.order(ByteOrder.nativeOrder());
+    cmdBuffer = ByteBuffer.allocateDirect(4);
+    cmdBuffer.order(ByteOrder.nativeOrder());
 
-    LOGGER.d("Created a Tensorflow Lite Autopilot.");
+    Timber.d("Created a Tensorflow Lite Autopilot.");
   }
 
   private void convertIndicatorToByteBuffer(int indicator) {
-    if (indicatorBuffer == null) {
+    if (cmdBuffer == null) {
       return;
     }
-    indicatorBuffer.rewind();
-    indicatorBuffer.putFloat(indicator);
+    cmdBuffer.rewind();
+    cmdBuffer.putFloat(indicator);
   }
 
   public Control recognizeImage(final Bitmap bitmap, final int indicator) {
@@ -69,10 +79,10 @@ public abstract class Autopilot extends Network {
     Trace.beginSection("runInference");
     long startTime = SystemClock.elapsedRealtime();
     Object[] inputArray;
-    if (tflite.getInputIndex("cmd_input") == 0) {
-      inputArray = new Object[] {indicatorBuffer, imgData};
+    if (cmdIndex == 0) {
+      inputArray = new Object[] {cmdBuffer, imgData};
     } else {
-      inputArray = new Object[] {imgData, indicatorBuffer};
+      inputArray = new Object[] {imgData, cmdBuffer};
     }
 
     float[][] predicted_ctrl = new float[1][2];
@@ -80,7 +90,7 @@ public abstract class Autopilot extends Network {
     tflite.runForMultipleInputsOutputs(inputArray, outputMap);
     long endTime = SystemClock.elapsedRealtime();
     Trace.endSection();
-    LOGGER.v("Timecost to run model inference: " + (endTime - startTime));
+    Timber.v("Timecost to run model inference: %s", (endTime - startTime));
 
     Trace.endSection(); // "recognizeImage"
     return new Control(predicted_ctrl[0][0], predicted_ctrl[0][1]);

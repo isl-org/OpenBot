@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.PriorityQueue;
 
+import timber.log.Timber;
+
 /**
  * Wrapper for frozen detection models trained using the Tensorflow Object Detection API:
  * github.com/tensorflow/models/tree/master/research/object_detection
@@ -158,7 +160,7 @@ public abstract class Detector extends Network {
 
     labels = loadLabelList(activity);
     parseTflite();
-    LOGGER.d("Created a Tensorflow Lite Detector.");
+    Timber.d("Created a Tensorflow Lite Detector.");
   }
 
   /** Reads label list from Assets. */
@@ -194,7 +196,7 @@ public abstract class Detector extends Network {
     runInference();
     long endTime = SystemClock.elapsedRealtime();
     Trace.endSection();
-    LOGGER.v("Timecost to run model inference: " + (endTime - startTime));
+    Timber.v("Timecost to run model inference: %s", (endTime - startTime));
 
     Trace.endSection(); // "recognizeImage"
     return getRecognitions(className);
