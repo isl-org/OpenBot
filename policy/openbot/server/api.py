@@ -15,7 +15,7 @@ from .preview import handle_preview
 from .prediction import getPrediction
 from .upload import handle_file_upload
 from .. import base_dir, dataset_dir, models_dir
-from ..train import CancelledException, Hyperparameters, MyCallback, start_train
+from ..train import CancelledException, Hyperparameters, MyCallback, start_train, create_tfrecord
 
 event_cancelled = threading.Event()
 json_encoder = NumpyEncoder()
@@ -189,7 +189,8 @@ async def start(params):
 def train(params, broadcast, cancelled):
     try:
         broadcast("started", params.__dict__)
-        my_callback = MyCallback(broadcast, cancelled)
+        my_callback = MyCallback(broadcast, cancelled, True)
+        create_tfrecord(my_callback)
         tr = start_train(params, my_callback)
         broadcast("done", {"model": tr.model_name})
     except CancelledException:

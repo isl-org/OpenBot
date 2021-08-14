@@ -95,9 +95,9 @@ def load_tflite(*parts):
     return interpreter
 
 
-def load_model(model_path, loss_fn, metric_list):
+def load_model(model_path, loss_fn, metric_list, custom_objects):
     model: tf.keras.Model = tf.keras.models.load_model(
-        model_path, custom_objects=None, compile=False
+        model_path, custom_objects=custom_objects, compile=False
     )
     model.compile(loss=loss_fn, metrics=metric_list)
     return model
@@ -115,17 +115,22 @@ def compare_tf_tflite(model, tflite_model, img=None, cmd=None):
     # Test the TensorFlow Lite model on input data. If no data provided, generate random data.
     input_data = {}
     for input_detail in input_details:
-        if input_detail["name"] == "img_input" and img is not None:
-            print(img)
-            input_data[input_detail["name"]] = img
-        elif input_detail["name"] == "cmd_input" and cmd is not None:
-            print(cmd)
-            input_data[input_detail["name"]] = cmd[0]
+        if "img_input" in input_detail["name"]:
+            if img is None:
+                input_data["img_input"] = np.array(np.random.random_sample(input_detail["shape"]), dtype=np.float32)
+            else:
+                print(img)
+                input_data["img_input"] = img
+            interpreter.set_tensor(input_detail["index"], input_data["img_input"])
+        elif "cmd_input" in input_detail["name"]: 
+            if cmd is None:
+                input_data["cmd_input"] = np.array(np.random.random_sample(input_detail["shape"]), dtype=np.float32)
+            else:
+                print(cmd)
+                input_data[input_detail["name"]] = cmd[0]
+            interpreter.set_tensor(input_detail["index"], input_data["cmd_input"])
         else:
-            input_data[input_detail["name"]] = np.array(
-                np.random.random_sample(input_detail["shape"]), dtype=np.float32
-            )
-        interpreter.set_tensor(input_detail["index"], input_data[input_detail["name"]])
+            ValueError("Unknown input")
 
     interpreter.invoke()
 
