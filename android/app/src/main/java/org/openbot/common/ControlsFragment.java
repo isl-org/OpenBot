@@ -301,8 +301,7 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
     modelSpinner.setAdapter(modelAdapter);
     if (!selected.isEmpty())
       modelSpinner.setSelection(
-          Math.max(0, modelAdapter.getPosition(FileUtils.nameWithoutExtension(selected)))
-      );
+          Math.max(0, modelAdapter.getPosition(FileUtils.nameWithoutExtension(selected))));
     modelSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
@@ -320,8 +319,7 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
           }
 
           @Override
-          public void onNothingSelected(AdapterView<?> parent) {
-          }
+          public void onNothingSelected(AdapterView<?> parent) {}
         });
   }
 
@@ -359,14 +357,17 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
     if (serverAdapter == null) {
       return;
     }
-    requireActivity().runOnUiThread(() -> {
-      serverAdapter.clear();
-      serverAdapter.add(NO_SERVER);
-      serverAdapter.addAll(servers);
-      if (!preferencesManager.getServer().isEmpty()) {
-        serverSpinner.setSelection(Math.max(0, serverAdapter.getPosition(preferencesManager.getServer())));
-      }
-    });
+    requireActivity()
+        .runOnUiThread(
+            () -> {
+              serverAdapter.clear();
+              serverAdapter.add(NO_SERVER);
+              serverAdapter.addAll(servers);
+              if (!preferencesManager.getServer().isEmpty()) {
+                serverSpinner.setSelection(
+                    Math.max(0, serverAdapter.getPosition(preferencesManager.getServer())));
+              }
+            });
   }
 
   @Override
@@ -391,9 +392,9 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
       }
     }
     Toast.makeText(
-        requireContext().getApplicationContext(),
-        "AutopilotModel added: " + model,
-        Toast.LENGTH_SHORT)
+            requireContext().getApplicationContext(),
+            "AutopilotModel added: " + model,
+            Toast.LENGTH_SHORT)
         .show();
   }
 
@@ -403,9 +404,9 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
       modelAdapter.remove(model);
     }
     Toast.makeText(
-        requireContext().getApplicationContext(),
-        "AutopilotModel removed: " + model,
-        Toast.LENGTH_SHORT)
+            requireContext().getApplicationContext(),
+            "AutopilotModel removed: " + model,
+            Toast.LENGTH_SHORT)
         .show();
   }
 

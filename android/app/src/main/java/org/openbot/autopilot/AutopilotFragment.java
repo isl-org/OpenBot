@@ -88,7 +88,9 @@ public class AutopilotFragment extends CameraFragment {
     binding.threads.setText(String.valueOf(getNumThreads()));
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    List<String> models = getModelNames(f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL);
+    List<String> models =
+        getModelNames(
+            f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL);
     initModelSpinner(binding.modelSpinner, models, preferencesManager.getAutopilotModel());
     initServerSpinner(binding.serverSpinner);
 

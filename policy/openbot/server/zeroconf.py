@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import os
 import socket
 import sys
 
@@ -19,18 +20,19 @@ async def run_test(zc):
     global info, desc
     desc = {}
     local_ip = ip4_address()
+    name = "Openbot_" + os.getenv("OPENBOT_NAME", socket.gethostname())
 
     info = ServiceInfo(
         "_http._tcp.local.",
-        "Openbot Web Site._http._tcp.local.",
+        name+"._http._tcp.local.",
         address=socket.inet_aton(local_ip),
         port=8000,
         weight=0,
         priority=0,
         properties=desc,
-        server="openbot.local.",
+        #server="openbot.local.",
     )
-    print("Registration of a service, press Ctrl-C to exit...")
+    print("Registration of the service with name:", name)
     await zc.register_service(info)
 
 

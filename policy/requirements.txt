@@ -8,5 +8,5 @@ aiohttp_json_rpc
 aiozeroconf
 imageio
 aiohttp_json_rpc
-openbot_frontend==0.6.0
+openbot_frontend==0.7.0
 numpyencoder
