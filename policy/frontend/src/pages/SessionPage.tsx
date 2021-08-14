@@ -1,8 +1,19 @@
 import {styled} from 'goober';
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useRouteMatch} from 'react-router-dom';
-import {FlexboxGrid, Icon, IconButton, InputNumber, Loader, Message, Panel, SelectPicker, Slider} from 'rsuite';
+import {
+    Dropdown,
+    FlexboxGrid,
+    Icon,
+    IconButton,
+    InputNumber,
+    Loader,
+    Message,
+    Panel,
+    SelectPicker,
+    Slider,
+} from 'rsuite';
 import {Direction} from 'src/components/Direction';
 import {formatTime} from 'src/utils/formatTime';
 import {Session} from 'src/utils/useDatasets';
@@ -25,7 +36,7 @@ export function SessionPage() {
     return <>
         <h3>{match.params.path}</h3>
         <Panel shaded>
-            {session ? <SessionComp session={session}/> : <Loader/>}
+            {session ? <SessionComp session={session} reload={info.reload}/> : <Loader/>}
         </Panel>
     </>;
 
@@ -48,7 +59,7 @@ const PreviewCont = styled('div')`
     }
 `;
 
-function SessionComp({session}: {session: Session}) {
+function SessionComp({session, reload}: {session: Session, reload: () => any}) {
     const max = session.ctrl.length - 1;
     const models = useModels();
     const [playing, togglePlaying] = useToggle(false);
@@ -63,6 +74,10 @@ function SessionComp({session}: {session: Session}) {
     useHotkeys('space', togglePlaying);
     useHotkeys('right', () => setCurrent(c => c === max ? 0 : c + 1), [max]);
     useHotkeys('left', () => setCurrent(c => c === 0 ? max : c - 1), [max]);
+    const redoMatching = useCallback(async () => {
+        await jsonRpc('redoMatching', session.path);
+        reload();
+    }, [reload, session.path]);
 
     const prediction = usePrediction(session.path, model, indicator, current);
     const [predLeft, predRight] = prediction.value[current] || [];
@@ -92,6 +107,10 @@ function SessionComp({session}: {session: Session}) {
                         onChange={setIndicator}
                         searchable={false}
                     />
+                    <br/>
+                    <Dropdown title="Actions" placement="bottomEnd">
+                        <Dropdown.Item onSelect={redoMatching}>Redo matching</Dropdown.Item>
+                    </Dropdown>
                 </FlexboxGrid.Item>
             </FlexboxGrid>
 
@@ -99,10 +118,12 @@ function SessionComp({session}: {session: Session}) {
                 <img src={`${session.path}/images/${img}`} alt=""/>
                 <Panel header="Recorded" bordered>
                     <Direction left={+left} right={+right}/>
+                    {left} {right}<br/>
                     Indicator: {ind}
                 </Panel>
                 <Panel header="Model" bordered>
                     <Direction left={predLeft} right={predRight}/>
+                    {predLeft} {predRight}<br/>
                     {prediction.pending > 0 && <Loader/>}
                 </Panel>
             </PreviewCont>
@@ -146,7 +167,7 @@ function usePrediction(path: string, model: string | null, indicator: string | n
         batch++;
     }
     useEffect(() => {
-        if (valid.current[batch]) {
+        if (!model || valid.current[batch]) {
             return;
         }
         valid.current[batch] = true;

@@ -6,6 +6,8 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
+import wandb
+from wandb.keras import WandbCallback
 
 from . import (
     associate_frames,
@@ -87,6 +89,8 @@ class Training:
         self.test_data_dir = ""
         self.train_datasets = []
         self.test_datasets = []
+        self.redo_matching = False
+        self.remove_zeros = True
         self.image_count_train = 0
         self.image_count_test = 0
         self.train_ds = None
@@ -136,13 +140,13 @@ class MyCallback(tf.keras.callbacks.Callback):
             self.broadcast(
                 "progress",
                 dict(
-                    epoch=int(100 * self.step / steps),
-                    train=int(100 * (self.epoch * steps + self.step) / (epochs * steps)),
+                epoch=round(100 * self.step / steps, 1),
+                train=round(100 * (self.epoch * steps + self.step) / (epochs * steps), 1),
                 ),
             )
 
 
-def process_data(tr: Training, redo_matching=False, remove_zeros=True):
+def process_data(tr: Training):
     tr.train_datasets = utils.list_dirs(tr.train_data_dir)
     tr.test_datasets = utils.list_dirs(tr.test_data_dir)
 
@@ -155,15 +159,15 @@ def process_data(tr: Training, redo_matching=False, remove_zeros=True):
         tr.train_data_dir,
         tr.train_datasets,
         max_offset,
-        redo_matching=redo_matching,
-        remove_zeros=remove_zeros,
+        redo_matching=tr.redo_matching,
+        remove_zeros=tf.remove_zeros,
     )
     test_frames = associate_frames.match_frame_ctrl_cmd(
         tr.test_data_dir,
         tr.test_datasets,
         max_offset,
-        redo_matching=redo_matching,
-        remove_zeros=remove_zeros,
+        redo_matching=tr.redo_matching,
+        remove_zeros=tf.remove_zeros,
     )
 
     tr.image_count_train = len(train_frames)
@@ -194,7 +198,7 @@ def load_tfrecord(tr: Training, verbose=0):
         label = [features["left"], features["right"]]
         return (image, cmd), label
 
-    train_dataset = ( 
+    train_dataset = (
         tf.data.TFRecordDataset(tr.train_data_dir, num_parallel_reads=AUTOTUNE)
         .map(tfrecord_utils.parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
         .map(process_train_sample, num_parallel_calls=AUTOTUNE)
@@ -231,7 +235,7 @@ def load_tfrecord(tr: Training, verbose=0):
         .prefetch(AUTOTUNE)
     )
 
-    tr.test_ds = ( 
+    tr.test_ds = (
         test_dataset.batch(tr.hyperparameters.TEST_BATCH_SIZE)
         .prefetch(AUTOTUNE)
     )
@@ -306,14 +310,22 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     tr.model_name = dataset_name + "_" + str(tr.hyperparameters)
     tr.checkpoint_path = os.path.join(models_dir, tr.model_name, "checkpoints")
     tr.custom_objects = {'direction_metric':metrics.direction_metric, 'angle_metric':metrics.angle_metric}
+    model_path = os.path.join(models_dir, tr.model_name, "model")
+
+    wandb.init(project="openbot")
+
+    config = wandb.config
+    config.epochs = tr.hyperparameters.NUM_EPOCHS
+    config.learning_rate = tr.hyperparameters.LEARNING_RATE
+    config.batch_size = tr.hyperparameters.TRAIN_BATCH_SIZE
+    config["model_name"] = tr.model_name
+
     append_logs = False
     model: tf.keras.Model
     if tr.hyperparameters.USE_LAST:
         append_logs = True
-        dirs = utils.list_dirs(tr.checkpoint_path)
-        last_checkpoint = sorted(dirs)[-1]
         model = tf.keras.models.load_model(
-            os.path.join(tr.checkpoint_path, last_checkpoint),
+            model_path,
             custom_objects=tr.custom_objects,
             compile=False,
         )
@@ -323,6 +335,10 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
             tr.NETWORK_IMG_HEIGHT,
             tr.hyperparameters.BATCH_NORM,
         )
+        dot_img_file = os.path.join(models_dir, tr.model_name, "model.png")
+        tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True)
+
+    callback.broadcast("model", tr.model_name)
 
     tr.loss_fn = losses.sq_weighted_mse_angle
     tr.metric_list = ["mean_absolute_error", tr.custom_objects['direction_metric'], tr.custom_objects['angle_metric']]
@@ -350,49 +366,51 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
             callbacks.checkpoint_cb(tr.checkpoint_path),
             callbacks.tensorboard_cb(tr.log_path),
             callbacks.logger_cb(tr.log_path, append_logs),
+            WandbCallback(),
             callback,
         ],
     )
+    model.save(model_path)
+    wandb.save(model_path)
+    wandb.finish()
 
 
 def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     callback.broadcast("message", "Generate plots...")
-    history = tr.history
-    log_path = tr.log_path
-    plt.plot(history.history["mean_absolute_error"], label="mean_absolute_error")
-    plt.plot(history.history["val_mean_absolute_error"], label="val_mean_absolute_error")
+    plt.plot(tr.history.history["mean_absolute_error"], label="mean_absolute_error")
+    plt.plot(tr.history.history["val_mean_absolute_error"], label="val_mean_absolute_error")
     plt.xlabel("Epoch")
     plt.ylabel("Mean Absolute Error")
     plt.legend(loc="lower right")
-    savefig(os.path.join(log_path, "error.png"))
+    savefig(os.path.join(tr.log_path, "error.png"))
 
-    plt.plot(history.history["direction_metric"], label="direction_metric")
-    plt.plot(history.history["val_direction_metric"], label="val_direction_metric")
+    plt.plot(tr.history.history["direction_metric"], label="direction_metric")
+    plt.plot(tr.history.history["val_direction_metric"], label="val_direction_metric")
     plt.xlabel("Epoch")
     plt.ylabel("Direction Metric")
     plt.legend(loc="lower right")
-    savefig(os.path.join(log_path, "direction.png"))
+    savefig(os.path.join(tr.log_path, "direction.png"))
 
-    plt.plot(history.history["angle_metric"], label="angle_metric")
-    plt.plot(history.history["val_angle_metric"], label="val_angle_metric")
+    plt.plot(tr.history.history["angle_metric"], label="angle_metric")
+    plt.plot(tr.history.history["val_angle_metric"], label="val_angle_metric")
     plt.xlabel("Epoch")
     plt.ylabel("Angle Metric")
     plt.legend(loc="lower right")
-    savefig(os.path.join(log_path, "angle.png"))
+    savefig(os.path.join(tr.log_path, "angle.png"))
 
-    plt.plot(history.history["loss"], label="loss")
-    plt.plot(history.history["val_loss"], label="val_loss")
+    plt.plot(tr.history.history["loss"], label="loss")
+    plt.plot(tr.history.history["val_loss"], label="val_loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend(loc="lower right")
-    savefig(os.path.join(log_path, "loss.png"))
+    savefig(os.path.join(tr.log_path, "loss.png"))
 
     callback.broadcast("message", "Generate tflite models...")
     checkpoint_path = tr.checkpoint_path
     print("checkpoint_path", checkpoint_path)
     best_index = np.argmax(
-        np.array(history.history["val_angle_metric"])
-        + np.array(history.history["val_direction_metric"])
+        np.array(tr.history.history["val_angle_metric"])
+        + np.array(tr.history.history["val_direction_metric"])
     )
     best_checkpoint = str("cp-%04d.ckpt" % (best_index + 1))
     best_tflite = utils.generate_tflite(checkpoint_path, best_checkpoint)
@@ -400,8 +418,8 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
     print(
         "Best Checkpoint (val_angle: %s, val_direction: %s): %s"
         % (
-            history.history["val_angle_metric"][best_index],
-            history.history["val_direction_metric"][best_index],
+            tr.history.history["val_angle_metric"][best_index],
+            tr.history.history["val_direction_metric"][best_index],
             best_checkpoint,
         )
     )
@@ -412,8 +430,8 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
     print(
         "Last Checkpoint (val_angle: %s, val_direction: %s): %s"
         % (
-            history.history["val_angle_metric"][-1],
-            history.history["val_direction_metric"][-1],
+            tr.history.history["val_angle_metric"][-1],
+            tr.history.history["val_direction_metric"][-1],
             last_checkpoint,
         )
     )
@@ -441,7 +459,7 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
     utils.show_test_batch(
         image_batch.numpy(), cmd_batch.numpy(), label_batch.numpy(), pred_batch
     )
-    savefig(os.path.join(log_path, "test_preview.png"))
+    savefig(os.path.join(tr.log_path, "test_preview.png"))
     utils.compare_tf_tflite(best_model, best_tflite)
 
 
@@ -506,7 +524,7 @@ if __name__ == "__main__":
     def broadcast(event, payload=None):
         print()
         print(event, payload)
-    
+
     event = threading.Event()
     my_callback = MyCallback(broadcast, event)
 

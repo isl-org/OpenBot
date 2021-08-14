@@ -25,9 +25,9 @@ export function Direction({left, right}: { left: number; right: number }) {
             </defs>
             <line
                 x1={width}
-                x2={width + (left - right) / 2}
-                y1={width + (left + right) / 4}
-                y2={width - (left + right) / 4}
+                x2={width + (left - right) / 4}
+                y1={width + (left + right) / 7}
+                y2={width - (left + right) / 7}
                 stroke="#000"
                 strokeWidth={3}
                 markerEnd="url(#arrowhead)"
