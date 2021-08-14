@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -34,7 +33,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -113,30 +111,10 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    List<String> models =
-        masterList.stream()
-            .filter(f -> f.pathType != Model.PATH_TYPE.URL)
-            .map(f -> org.openbot.utils.FileUtils.nameWithoutExtension(f.name))
-            .collect(Collectors.toList());
+    List<String> models = getModelNames(f -> f.pathType != Model.PATH_TYPE.URL);
+    initModelSpinner(binding.modelSpinner, models, "");
+    initServerSpinner(binding.serverSpinner);
 
-    ArrayAdapter<String> modelAdapter =
-        new ArrayAdapter<>(requireContext(), R.layout.spinner_item, models);
-    modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-    binding.modelSpinner.setAdapter(modelAdapter);
-    binding.modelSpinner.setOnItemSelectedListener(
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String selected = parent.getItemAtPosition(position).toString();
-            masterList.stream()
-                .filter(f -> f.name.contains(selected))
-                .findFirst()
-                .ifPresent(f -> updateCropImageInfo(f));
-          }
-
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
-        });
     binding.resolutionSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
@@ -173,7 +151,8 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
         });
   }
 
-  private void updateCropImageInfo(Model selected) {
+  @Override
+  protected void setModel(Model selected) {
     frameToCropTransform = null;
     binding.cropInfo.setText(
         String.format(
@@ -553,10 +532,4 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
   public void onConnectionEstablished(String ipAddress) {
     requireActivity().runOnUiThread(() -> binding.ipAddress.setText(ipAddress));
   }
-
-  @Override
-  public void onAddModel(String model) {}
-
-  @Override
-  public void onRemoveModel(String model) {}
 }

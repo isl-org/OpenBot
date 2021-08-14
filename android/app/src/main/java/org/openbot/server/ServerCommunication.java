@@ -11,7 +11,10 @@ import com.loopj.android.http.RequestParams;
 import cz.msebera.android.httpclient.Header;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.json.JSONArray;
@@ -25,6 +28,7 @@ public class ServerCommunication {
   private final AsyncHttpClient client;
   private final Context context;
   private final NsdService nsdService;
+  private final Map<String, NsdServiceInfo> servers = new HashMap<>();
   private final NsdManager.ResolveListener resolveListener =
       new NsdManager.ResolveListener() {
         @Override
@@ -35,13 +39,12 @@ public class ServerCommunication {
 
         @Override
         public void onServiceResolved(NsdServiceInfo serviceInfo) {
-          nsdService.stop();
-          serverUrl =
-              "http://" + serviceInfo.getHost().getHostAddress() + ":" + serviceInfo.getPort();
-          Timber.d("Resolved address: %s", serverUrl);
-
-          client.get(context, serverUrl + "/test", testResponseHandler);
-          serverListener.onConnectionEstablished(serverUrl);
+          servers.put(serviceInfo.getServiceName(), serviceInfo);
+          try {
+            serverListener.onServerListChange(servers.keySet());
+          } catch (Exception e) {
+            Timber.w(e);
+          }
         }
       };
   private final JsonHttpResponseHandler testResponseHandler =
@@ -163,6 +166,26 @@ public class ServerCommunication {
         10000);
   }
 
+  public void connect(String server) {
+    NsdServiceInfo serviceInfo = servers.get(server);
+    if (serviceInfo == null) {
+      Timber.e("Server not found: %s", server);
+      return;
+    }
+    String ipAddress = serviceInfo.getHost().getHostAddress();
+    serverUrl = "http://" + ipAddress + ":" + serviceInfo.getPort();
+    Timber.d("Resolved address: %s", serverUrl);
+
+    client.get(context, serverUrl + "/test", testResponseHandler);
+    serverListener.onConnectionEstablished(ipAddress);
+  }
+
+  public void disconnect() {
+    client.cancelRequests(context, true);
+    serverUrl = null;
+    serverListener.onConnectionEstablished(context.getString(R.string.ip_placeholder));
+  }
+
   public void upload(File file) {
     if (serverUrl == null) {
       return;
@@ -202,7 +225,12 @@ public class ServerCommunication {
 
   public void stop() {
     client.cancelRequests(context, true);
+    nsdService.stop();
     timer.cancel();
+  }
+
+  public Set<String> getServers() {
+    return servers.keySet();
   }
 
   static class UploadResponseHandler extends JsonHttpResponseHandler {

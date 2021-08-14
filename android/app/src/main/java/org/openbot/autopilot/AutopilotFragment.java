@@ -14,19 +14,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -34,25 +31,21 @@ import org.openbot.databinding.FragmentAutopilotBinding;
 import org.openbot.env.BorderedText;
 import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
-import org.openbot.server.ServerCommunication;
-import org.openbot.server.ServerListener;
 import org.openbot.tflite.Autopilot;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
-import org.openbot.utils.FileUtils;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
-public class AutopilotFragment extends CameraFragment implements ServerListener {
+public class AutopilotFragment extends CameraFragment {
 
   // options for drop down in object nav?
   private FragmentAutopilotBinding binding;
   private Handler handler;
   private HandlerThread handlerThread;
-  private ServerCommunication serverCommunication;
 
   private long lastProcessingTimeMs;
   private boolean computingNetwork = false;
@@ -70,8 +63,6 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
   private Model model;
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
-
-  private ArrayAdapter<String> modelAdapter;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,42 +88,11 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     binding.threads.setText(String.valueOf(getNumThreads()));
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    List<String> models =
-        masterList.stream()
-            .filter(f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL)
-            .map(f -> FileUtils.nameWithoutExtension(f.name))
-            .collect(Collectors.toList());
-    modelAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item, models);
-
-    modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-    binding.modelSpinner.setAdapter(modelAdapter);
-    if (!preferencesManager.getAutopilotModel().isEmpty())
-      binding.modelSpinner.setSelection(
-          Math.max(
-              0,
-              modelAdapter.getPosition(
-                  FileUtils.nameWithoutExtension(preferencesManager.getAutopilotModel()))));
+    List<String> models = getModelNames(f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL);
+    initModelSpinner(binding.modelSpinner, models, preferencesManager.getAutopilotModel());
+    initServerSpinner(binding.serverSpinner);
 
     setAnalyserResolution(Enums.Preview.HD.getValue());
-    binding.modelSpinner.setOnItemSelectedListener(
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String selected = parent.getItemAtPosition(position).toString();
-            try {
-              masterList.stream()
-                  .filter(f -> f.name.contains(selected))
-                  .findFirst()
-                  .ifPresent(value -> setModel(value));
-
-            } catch (IllegalArgumentException e) {
-              e.printStackTrace();
-            }
-          }
-
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
-        });
     binding.deviceSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
@@ -296,8 +256,6 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
 
   @Override
   public synchronized void onResume() {
-    serverCommunication = new ServerCommunication(requireContext(), this);
-    serverCommunication.start();
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
@@ -314,7 +272,6 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     } catch (final InterruptedException e) {
       e.printStackTrace();
     }
-    serverCommunication.stop();
     super.onPause();
   }
 
@@ -452,51 +409,11 @@ public class AutopilotFragment extends CameraFragment implements ServerListener 
     requireActivity().runOnUiThread(() -> binding.ipAddress.setText(ipAddress));
   }
 
-  @Override
-  public void onAddModel(String model) {
-    Model item =
-        new Model(
-            masterList.size() + 1,
-            Model.CLASS.AUTOPILOT_F,
-            Model.TYPE.AUTOPILOT,
-            model,
-            Model.PATH_TYPE.FILE,
-            requireActivity().getFilesDir() + File.separator + model,
-            "256x96");
-
-    if (modelAdapter != null && modelAdapter.getPosition(model) == -1) {
-      modelAdapter.add(model);
-      masterList.add(item);
-      FileUtils.updateModelConfig(requireActivity(), masterList);
-    } else {
-      if (model.equals(binding.modelSpinner.getSelectedItem())) {
-        setModel(item);
-      }
-    }
-    Toast.makeText(
-            requireContext().getApplicationContext(),
-            "AutopilotModel added: " + model,
-            Toast.LENGTH_SHORT)
-        .show();
-  }
-
-  @Override
-  public void onRemoveModel(String model) {
-    if (modelAdapter != null && modelAdapter.getPosition(model) != -1) {
-      modelAdapter.remove(model);
-    }
-    Toast.makeText(
-            requireContext().getApplicationContext(),
-            "AutopilotModel removed: " + model,
-            Toast.LENGTH_SHORT)
-        .show();
-  }
-
   protected Model getModel() {
     return model;
   }
 
-  private void setModel(Model model) {
+  protected void setModel(Model model) {
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;

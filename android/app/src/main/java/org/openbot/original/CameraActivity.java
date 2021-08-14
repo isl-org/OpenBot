@@ -77,6 +77,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
@@ -611,6 +612,9 @@ public abstract class CameraActivity extends AppCompatActivity
     }
     Toast.makeText(context, "AutopilotModel removed: " + model, Toast.LENGTH_SHORT).show();
   }
+
+  @Override
+  public void onServerListChange(Set<String> servers) {}
 
   @Override
   public void onConnectionEstablished(String ipAddress) {}
