@@ -45,7 +45,7 @@ class Accelerator @JvmOverloads constructor(
         @FloatRange(
             from = 0.0,
             to = 1.0
-        ) val minSpeed: Float = .1f, // what percentage of full speed is our final decelerated speed (.1 means 10%)
+        ) val minSpeed: Float = .0f, // what percentage of full speed is our final decelerated speed (.1 means 10%)
     )
 
     private val drivingCharacteristics: DrivingCharacteristics = DrivingCharacteristics()
@@ -63,7 +63,7 @@ class Accelerator @JvmOverloads constructor(
                 ForwardSpeed.reset()
 
                 val accelerationPeriod = drivingCharacteristics.accelerationTime / drivingCharacteristics.stepsToFullAcceleration
-                val incrementValue = ((ForwardSpeed.max - ForwardSpeed.value) / drivingCharacteristics.stepsToFullAcceleration).toFloat()
+                val incrementValue = ((ForwardSpeed.max - ForwardSpeed.value) / drivingCharacteristics.stepsToFullAcceleration)
 
                 acceleratorStepTask = AcceleratorStepTask(incrementValue)
                 acceleratorStepTask.schedule(accelerationPeriod)
