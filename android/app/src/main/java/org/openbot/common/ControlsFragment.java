@@ -168,6 +168,7 @@ public abstract class ControlsFragment extends Fragment {
           switch (commandType) {
             case Constants.CMD_DRIVE:
               JSONObject driveValue = event.getJSONObject("driveCmd");
+
               vehicle.setControl(
                   new Control(
                       Float.parseFloat(driveValue.getString("l")),

@@ -13,10 +13,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
-import io.reactivex.functions.Consumer
 import org.openbot.controller.StatusEventBus
-import org.openbot.controller.databinding.ActivityFullscreenBinding
-import org.openbot.controller.utils.EventProcessor
+import org.openbot.controller.utils.LocalEventBus
 import org.videolan.libvlc.interfaces.IVLCVout
 
 @SuppressLint("CheckResult")
@@ -101,11 +99,11 @@ class VideoViewVlc @JvmOverloads constructor(
 
     private fun monitorConnection() {
 
-        EventProcessor.subscriber.start(
+        LocalEventBus.subscriber.start(
             this.javaClass.simpleName,
             {
                 when (it) {
-                    EventProcessor.ProgressEvents.Disconnected -> {
+                    LocalEventBus.ProgressEvents.Disconnected -> {
                         stop()
                     }
                 }

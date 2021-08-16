@@ -7,7 +7,7 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdManager.RegistrationListener
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
-import org.openbot.controller.utils.EventProcessor
+import org.openbot.controller.utils.LocalEventBus
 import org.openbot.controller.utils.Utils
 import java.io.BufferedInputStream
 import java.io.DataInputStream
@@ -114,9 +114,9 @@ object NetworkServiceConnection : ILocalConnection {
 
                 clientInfo = ClientInfo(reader, writer)
 
-                val event: EventProcessor.ProgressEvents =
-                        EventProcessor.ProgressEvents.ConnectionSuccessful
-                EventProcessor.onNext(event)
+                val event: LocalEventBus.ProgressEvents =
+                        LocalEventBus.ProgressEvents.ConnectionSuccessful
+                LocalEventBus.onNext(event)
 
                 println("Client connected: ${client.inetAddress.hostAddress}")
             } catch (e: Exception) {
@@ -172,9 +172,9 @@ object NetworkServiceConnection : ILocalConnection {
             }
             serverSocket.close()
 
-            val event: EventProcessor.ProgressEvents =
-                    EventProcessor.ProgressEvents.Disconnected
-            EventProcessor.onNext(event)
+            val event: LocalEventBus.ProgressEvents =
+                    LocalEventBus.ProgressEvents.Disconnected
+            LocalEventBus.onNext(event)
         }
 
         fun put(message: String?) {
@@ -207,9 +207,9 @@ object NetworkServiceConnection : ILocalConnection {
         override fun onRegistrationFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
             Log.d(TAG, "onRegistrationFailed")
 
-            val event: EventProcessor.ProgressEvents =
-                    EventProcessor.ProgressEvents.ConnectionFailed
-            EventProcessor.onNext(event)
+            val event: LocalEventBus.ProgressEvents =
+                    LocalEventBus.ProgressEvents.ConnectionFailed
+            LocalEventBus.onNext(event)
         }
 
         override fun onServiceUnregistered(serviceInfo: NsdServiceInfo) {
