@@ -57,7 +57,7 @@ the video showing and a `brake` and `accelerator` pedals. To exit this mode, dou
 Here is a picture of the `tilt mode` screen:
 
 <p float="left">
-  <img src="../../docs/images/tilt-mode-controller.png" width="50%" />
+  <img src="../../docs/images/tilt-mode-controller.jpg" width="50%" />
 </p>
 
 Use the `brake` and `accelerator` buttons to move forward/backword. 
