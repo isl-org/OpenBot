@@ -1,6 +1,6 @@
 # Controller App
 
-This Android app serves as a `remote controller` for the [OpenBot](https://www.openbot.org) vehicle.  Basically it preforms similar function as PS3/4 or Xbox remote controller, but running on another Android device.
+This Android app serves as a `remote controller` for the [OpenBot](https://www.openbot.org) vehicle.  Basically it performs similar function as PS3/4 or Xbox remote controller, but running on another Android device.
 
 ## Connection
 
@@ -42,9 +42,10 @@ This mode allows the user to control the robot car via two sliders in `Dual Driv
   <img src="../../docs/images/controller_main_screen.png" width="50%" />
 </p>
 
-You can also set the left/right turn indicators by clicking on the arrows on the top-left of the screen, and the red button between them to cancel.
+You can also set the left/right turn indicators 
 <img src="../../docs/images/keyboard_arrow_left-24px.svg" height="24"/> 
 <img src="../../docs/images/keyboard_arrow_right-24px.svg" height="24"/> 
+by clicking on the arrows on the top-left of the screen, and the red button between them to cancel.
 
 ### Tilt to drive
 The controller can also use its accelerometer motion sensor to drive the robot. If you select this option, the controller will enter a full-screen (Zen) mode with only the video showing and a `brake` and `accelerator` pedals. To exit this mode, double-tap on the screen.
@@ -55,7 +56,7 @@ Here is a picture of the `tilt mode` screen:
   <img src="../../docs/images/tilt-mode-controller.jpg" width="50%" />
 </p>
 
-Use the `brake` and `accelerator` buttons to move forward/backword.
+Use the `accelerator` and `brake` buttons to move forward/backward.
 
 - Pressing the `acceletator` will accelerate the robot to full speed within 2 seconds. When you release the button, the robot will slow down to a stop (stop speed set to 0% of the maximum speed, can be adjusted).
 - Pressing the `brake` button will immedately stop the robot. If we hold the brake for another second, the robot will start moving backwards until it reaches the maximim reverse speed in one second. When we let go of the brake, the robot will come to a stop.
