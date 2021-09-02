@@ -8,4 +8,5 @@
     <color name="green">#00ff00</color>
     <color name="white">#ffffff</color>
     <color name="shade">#59000000</color>
+    <color name="shade_dark">#80000000</color>
 </resources>

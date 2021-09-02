@@ -25,7 +25,7 @@ import org.openbot.controller.customComponents.DualDriveSeekBar
 import org.openbot.controller.customComponents.VideoViewVlc
 import org.openbot.controller.customComponents.VideoViewWebRTC
 import org.openbot.controller.databinding.ActivityFullscreenBinding
-import org.openbot.controller.utils.EventProcessor
+import org.openbot.controller.utils.LocalEventBus
 import org.openbot.controller.utils.Utils
 import kotlin.system.exitProcess
 
@@ -34,7 +34,7 @@ class ControllerActivity : /*AppCompat*/
     private val PERMISSION_REQUEST_LOCATION = 101
     private val TAG = "ControllerActivity"
     private lateinit var binding: ActivityFullscreenBinding
-    private lateinit var screenManager: ScreenManager
+    private lateinit var screenSelector: ScreenSelector
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,10 +44,10 @@ class ControllerActivity : /*AppCompat*/
 
         setupPermissions()
 
-        screenManager = ScreenManager(binding)
+        screenSelector = ScreenSelector(binding)
         ConnectionSelector.init(this)
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         createAppEventsSubscription()
@@ -56,7 +56,8 @@ class ControllerActivity : /*AppCompat*/
         binding.leftDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.LEFT)
         binding.rightDriveControl.setDirection(DualDriveSeekBar.LeftOrRight.RIGHT)
 
-        screenManager.hideControls()
+        screenSelector.hideControls()
+
         hideSystemUI()
 
         BotDataListener.init()
@@ -100,26 +101,6 @@ class ControllerActivity : /*AppCompat*/
         return view
     }
 
-//    private fun createView(view: View): View {
-//        val existingView = findViewById<View>(R.id.video_view)
-//        if (existingView != null && existingView::class == view::class) {
-//            return existingView // already exist and of same type
-//        }
-//        view.id = R.id.video_view
-//
-//        val layoutParams = ViewGroup.LayoutParams(
-//            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
-//        )
-//        view.layoutParams = layoutParams
-//
-//        if (binding.video.childCount > 0) {
-//            binding.video.removeAllViews()
-//        }
-//        binding.video.addView(view)
-//
-//        return view
-//    }
-
     private fun setupPermissions() {
         val permission = ContextCompat.checkSelfPermission(
             this,
@@ -144,43 +125,52 @@ class ControllerActivity : /*AppCompat*/
     private fun subscribeToStatusInfo() {
         StatusEventBus.addSubject("CONNECTION_ACTIVE")
         StatusEventBus.subscribe(this.javaClass.simpleName, "CONNECTION_ACTIVE", onNext = {
-            if (it.toBoolean()) screenManager.showControlsImmediately() else screenManager.hideControls()
+            if (it.toBoolean()) {
+                screenSelector.showControls()
+            } else {
+                screenSelector.hideControls()
+                binding.controlModeTiltLayout.stop()
+            }
         })
     }
 
     @SuppressLint("CheckResult")
     private fun createAppEventsSubscription() {
-        EventProcessor.subscriber.start(
+        LocalEventBus.subscriber.start(
             this.javaClass.simpleName,
 
             {
                 Log.i(TAG, "Got $it event")
 
                 when (it) {
-                    EventProcessor.ProgressEvents.ConnectionSuccessful -> {
+                    LocalEventBus.ProgressEvents.ConnectionSuccessful -> {
                         Utils.beep()
-                        screenManager.showControls()
+                        screenSelector.showControls()
                     }
-                    EventProcessor.ProgressEvents.ConnectionStarted -> {
+                    LocalEventBus.ProgressEvents.ConnectionStarted -> {
                     }
-                    EventProcessor.ProgressEvents.ConnectionFailed -> {
-                        screenManager.hideControls()
+                    LocalEventBus.ProgressEvents.ConnectionFailed -> {
+                        screenSelector.hideControls()
                     }
-                    EventProcessor.ProgressEvents.StartAdvertising -> {
-                        screenManager.hideControls()
+                    LocalEventBus.ProgressEvents.StartAdvertising -> {
+                        screenSelector.hideControls()
                     }
-                    EventProcessor.ProgressEvents.Disconnected -> {
-                        screenManager.hideControls()
+                    LocalEventBus.ProgressEvents.Disconnected -> {
+                        screenSelector.hideControls()
+                        binding.controlModeTiltLayout.stop()
                         ConnectionSelector.getConnection().connect(this)
                     }
-                    EventProcessor.ProgressEvents.StopAdvertising -> {
+                    LocalEventBus.ProgressEvents.StopAdvertising -> {
                     }
-                    EventProcessor.ProgressEvents.TemporaryConnectionProblem -> {
-                        screenManager.hideControls()
+                    LocalEventBus.ProgressEvents.TemporaryConnectionProblem -> {
+                        screenSelector.hideControls()
                         ConnectionSelector.getConnection().connect(this)
                     }
-                    EventProcessor.ProgressEvents.AdvertisingFailed -> {
-                        screenManager.hideControls()
+                    LocalEventBus.ProgressEvents.PhoneOnTable -> {
+                        screenSelector.showControls()
+                    }
+                    LocalEventBus.ProgressEvents.AdvertisingFailed -> {
+                        screenSelector.hideControls()
                     }
                 }
             },
@@ -236,7 +226,6 @@ class ControllerActivity : /*AppCompat*/
             PERMISSION_REQUEST_LOCATION -> {
 
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
                     Log.i(TAG, "Permission has been denied by user")
                     finish()
                     exitProcess(0)

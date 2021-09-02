@@ -17,7 +17,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.processors.PublishProcessor
 import java.util.*
 
-object EventProcessor {
+object LocalEventBus {
 
     val subscriber = Subscriber()
 
@@ -63,5 +63,8 @@ object EventProcessor {
         object StopAdvertising : ProgressEvents()
         object AdvertisingFailed : ProgressEvents()
         object TemporaryConnectionProblem : ProgressEvents()
+        object PhoneOnTable : ProgressEvents()
+        object TiltControl : ProgressEvents()
+        object SlidersControl : ProgressEvents()
     }
 }
