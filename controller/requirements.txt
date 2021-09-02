@@ -2,3 +2,4 @@ pygame
 opencv-python
 zeroconf
 click
+black
