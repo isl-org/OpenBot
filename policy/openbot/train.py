@@ -163,14 +163,14 @@ def process_data(tr: Training):
         tr.train_datasets,
         max_offset,
         redo_matching=tr.redo_matching,
-        remove_zeros=tf.remove_zeros,
+        remove_zeros=tr.remove_zeros,
     )
     test_frames = associate_frames.match_frame_ctrl_cmd(
         tr.test_data_dir,
         tr.test_datasets,
         max_offset,
         redo_matching=tr.redo_matching,
-        remove_zeros=tf.remove_zeros,
+        remove_zeros=tr.remove_zeros,
     )
 
     tr.image_count_train = len(train_frames)
