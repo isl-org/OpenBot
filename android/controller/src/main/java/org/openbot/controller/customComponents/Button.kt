@@ -26,7 +26,7 @@ open class Button @JvmOverloads constructor(
     init {
     }
 
-    fun show() {
+    open fun show() {
         visibility = VISIBLE
     }
 
@@ -57,7 +57,7 @@ open class Button @JvmOverloads constructor(
         })
     }
 
-    protected fun setOnOffStateConditions(value: String) {
+    protected open fun setOnOffStateConditions(value: String) {
         if (value == "true") onState() else offState()
     }
 

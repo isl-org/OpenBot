@@ -144,14 +144,13 @@ def match_frame_session(
         with open(os.path.join(sensor_path, "matched_frame_ctrl.txt"), "w") as f:
             f.write("timestamp (frame),time_offset (ctrl-frame),frame,left,right\n")
             for a, b in matches:
-                ctrl = ctrl_list[b]
                 f.write(
                     "%d,%d,%s,%s\n"
                     % (
                         a,
                         b - a,
                         ",".join(frame_list[a]),
-                        ",".join(ctrl),
+                        ",".join(ctrl_list[b]),
                     )
                 )
         print(" Frames and controls matched.")

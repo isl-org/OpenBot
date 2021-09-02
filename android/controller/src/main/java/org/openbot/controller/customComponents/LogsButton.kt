@@ -19,6 +19,7 @@ class LogsButton @JvmOverloads constructor(
     init {
         setOnTouchListener(OnTouchListener("{command: LOGS}"))
         subscribe("LOGS", ::onDataReceived)
+        offState()
     }
 
     private fun onDataReceived(data: String) {

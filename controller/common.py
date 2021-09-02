@@ -1,12 +1,14 @@
 import socket
-import zeroconf # DO: pip3 install zeroconf
+import zeroconf  # DO: pip3 install zeroconf
 import threading
 import sched, time
 
+
 def get_ip():
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-        s.connect(('1.2.3.4', 1))  # dummy connect
+        s.connect(("1.2.3.4", 1))  # dummy connect
         return s.getsockname()[0]
+
 
 class ServerSocket:
     MSGLEN = 512
@@ -26,7 +28,7 @@ class ServerSocket:
         self.server_socket = conn
 
     def send(self, msg):
-        sent = self.server_socket.send(msg.encode('utf-8'))
+        sent = self.server_socket.send(msg.encode("utf-8"))
 
     def receive(self):
         chunks = []
@@ -35,9 +37,9 @@ class ServerSocket:
             chunk = self.server_socket.recv(1)
 
             chunks.append(chunk)
-            if chunk == b'\n' or chunk == b'':
+            if chunk == b"\n" or chunk == b"":
                 break
-        return b''.join(chunks).decode('utf-8')
+        return b"".join(chunks).decode("utf-8")
 
     def close(self):
         try:
@@ -46,6 +48,7 @@ class ServerSocket:
         except:
             print("Could not close all sockets")
 
+
 class DriveValue:
     """
     This represents a drive value for either left or right control. Valid values are between -1.0 and 1.0
@@ -53,7 +56,7 @@ class DriveValue:
 
     MAX = 1.0
     MIN = -1.0
-    DELTA = .05
+    DELTA = 0.05
 
     value = 0.0
 
@@ -61,12 +64,16 @@ class DriveValue:
         self.value = 0.0
         return self.value
 
-    def incr(self, by_value = 0):
-        self.value = min(self.MAX, self.value + (by_value if by_value != 0 else self.DELTA))
+    def incr(self, by_value=0):
+        self.value = min(
+            self.MAX, self.value + (by_value if by_value != 0 else self.DELTA)
+        )
         return round(self.value, 3)
 
-    def decr(self, by_value = 0):
-        self.value = max(self.MIN, self.value - (by_value if by_value != 0 else self.DELTA))
+    def decr(self, by_value=0):
+        self.value = max(
+            self.MIN, self.value - (by_value if by_value != 0 else self.DELTA)
+        )
         return round(self.value, 3)
 
     def max(self):
@@ -92,7 +99,7 @@ class ZeroReverter:
         """
 
         if duration < steps:
-            raise Exception('Duration too small')
+            raise Exception("Duration too small")
 
         self.left = left
         self.right = right
@@ -127,10 +134,14 @@ class ZeroReverter:
             self.event = self.scheduler.enter(self.interval, 1, self.send_command)
 
         try:
-            self.s_socket.send('{{driveCmd: {{l:{l}, r:{r} }} }}\n'.format(l=self.left.getValue(), r=self.right.getValue()))    
+            self.s_socket.send(
+                "{{driveCmd: {{l:{l}, r:{r} }} }}\n".format(
+                    l=self.left.getValue(), r=self.right.getValue()
+                )
+            )
         except Exception as e:
-            print(f'Stopping scheduler...got exception {e}\r')
-            if self.event is not None and not self.scheduler.empty() :
+            print(f"Stopping scheduler...got exception {e}\r")
+            if self.event is not None and not self.scheduler.empty():
                 self.scheduler.cancel(self.event)
         finally:
             if not self.scheduler.empty():
@@ -138,21 +149,21 @@ class ZeroReverter:
 
 
 def register(name, port, properties={}):
-    type_="_openbot._tcp.local."
+    type_ = "_openbot._tcp.local."
 
     ipAddr = socket.inet_pton(socket.AF_INET, get_ip())
 
     info = zeroconf.ServiceInfo(
         type_="_openbot._tcp.local.",
-        name=name + '.' + type_,
+        name=name + "." + type_,
         addresses=[ipAddr],
         port=port,
         weight=0,
         priority=0,
-        properties=properties)
+        properties=properties,
+    )
 
     zc = zeroconf.Zeroconf([get_ip()])
     zc.register_service(info)
 
     return (zc, info)
-

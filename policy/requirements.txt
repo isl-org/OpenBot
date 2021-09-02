@@ -1,4 +1,4 @@
-tensorflow==2.5.0
+tensorflow==2.5.1
 notebook
 matplotlib
 pillow
@@ -10,3 +10,4 @@ imageio
 aiohttp_json_rpc
 openbot_frontend==0.7.0
 numpyencoder
+black[jupyter]>=21.8b0

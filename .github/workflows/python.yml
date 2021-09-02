@@ -1,0 +1,35 @@
+# This workflow will check the python code using black
+
+name: Python style check
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+    - 'controller/**'
+    - 'policy/**'
+    - '.github/workflows/python.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+    - 'controller/**'
+    - 'policy/**'
+    - '.github/workflows/python.yml'
+
+jobs:
+  style-check:
+    name: Python style check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run: | 
+          python -m pip install 'black[jupyter]'
+      - name: Check style
+        run: |
+          black --check .
