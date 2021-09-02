@@ -10,12 +10,24 @@ import numpy as np
 from numpyencoder import NumpyEncoder
 
 from .dataset import get_dataset_list, get_dir_info, get_info
-from .models import get_model_info, get_models, getModelFiles, publishModel, deleteModelFile
+from .models import (
+    get_model_info,
+    get_models,
+    getModelFiles,
+    publishModel,
+    deleteModelFile,
+)
 from .preview import handle_preview
 from .prediction import getPrediction
 from .upload import handle_file_upload
 from .. import base_dir, dataset_dir, models_dir
-from ..train import CancelledException, Hyperparameters, MyCallback, start_train, create_tfrecord
+from ..train import (
+    CancelledException,
+    Hyperparameters,
+    MyCallback,
+    start_train,
+    create_tfrecord,
+)
 
 event_cancelled = threading.Event()
 json_encoder = NumpyEncoder()

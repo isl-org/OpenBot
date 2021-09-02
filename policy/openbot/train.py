@@ -36,6 +36,7 @@ AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 dataset_name = "my_openbot"
 
+
 @dataclass
 class Hyperparameters:
     MODEL: str = "cil_mobile"
@@ -137,7 +138,9 @@ class MyCallback(tf.keras.callbacks.Callback):
                 "progress",
                 dict(
                     epoch=int(100 * self.step / steps),
-                    train=int(100 * (self.epoch * steps + self.step) / (epochs * steps)),
+                    train=int(
+                        100 * (self.epoch * steps + self.step) / (epochs * steps)
+                    ),
                 ),
             )
 
@@ -176,9 +179,9 @@ def process_data(tr: Training, redo_matching=False, remove_zeros=True):
 
 def load_tfrecord(tr: Training, verbose=0):
     def process_train_sample(features):
-        #image = tf.image.resize(features["image"], size=(224, 224))
+        # image = tf.image.resize(features["image"], size=(224, 224))
         image = features["image"]
-        cmd  = features["cmd"]
+        cmd = features["cmd"]
         label = [features["left"], features["right"]]
         image = data_augmentation.augment_img(image)
         if tr.hyperparameters.FLIP_AUG:
@@ -194,7 +197,7 @@ def load_tfrecord(tr: Training, verbose=0):
         label = [features["left"], features["right"]]
         return (image, cmd), label
 
-    train_dataset = ( 
+    train_dataset = (
         tf.data.TFRecordDataset(tr.train_data_dir, num_parallel_reads=AUTOTUNE)
         .map(tfrecord_utils.parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
         .map(process_train_sample, num_parallel_calls=AUTOTUNE)
@@ -218,10 +221,10 @@ def load_tfrecord(tr: Training, verbose=0):
     # Obtains the total number of records from .tfrecords file
     # https://stackoverflow.com/questions/40472139/obtaining-total-number-of-records-from-tfrecords-file-in-tensorflow
     tr.image_count_train = sum(1 for _ in train_dataset)
-    print ("Number of training instances: ", tr.image_count_train)
+    print("Number of training instances: ", tr.image_count_train)
 
     tr.image_count_test = sum(1 for _ in test_dataset)
-    print ("Number of test instances: ", tr.image_count_test)
+    print("Number of test instances: ", tr.image_count_test)
 
     # Prepare train and test datasets for training
     tr.train_ds = (
@@ -231,9 +234,8 @@ def load_tfrecord(tr: Training, verbose=0):
         .prefetch(AUTOTUNE)
     )
 
-    tr.test_ds = ( 
-        test_dataset.batch(tr.hyperparameters.TEST_BATCH_SIZE)
-        .prefetch(AUTOTUNE)
+    tr.test_ds = test_dataset.batch(tr.hyperparameters.TEST_BATCH_SIZE).prefetch(
+        AUTOTUNE
     )
 
 
@@ -257,7 +259,6 @@ def load_data(tr: Training, verbose=0):
             print(f.numpy())
         print("Number of train samples: %d" % len(train_data.labels))
         print("Number of test samples: %d" % len(test_data.labels))
-
 
     def process_train_path(file_path):
         cmd, label = train_data.get_label(
@@ -297,15 +298,20 @@ def load_data(tr: Training, verbose=0):
     test_ds = test_ds.batch(tr.hyperparameters.TEST_BATCH_SIZE)
     tr.test_ds = test_ds.prefetch(buffer_size=10 * tr.hyperparameters.TRAIN_BATCH_SIZE)
 
+
 def visualize_train_data(tr: Training):
     (image_batch, cmd_batch), label_batch = next(iter(tr.train_ds))
     utils.show_train_batch(image_batch.numpy(), cmd_batch.numpy(), label_batch.numpy())
     savefig(os.path.join(models_dir, "train_preview.png"))
 
+
 def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     tr.model_name = dataset_name + "_" + str(tr.hyperparameters)
     tr.checkpoint_path = os.path.join(models_dir, tr.model_name, "checkpoints")
-    tr.custom_objects = {'direction_metric':metrics.direction_metric, 'angle_metric':metrics.angle_metric}
+    tr.custom_objects = {
+        "direction_metric": metrics.direction_metric,
+        "angle_metric": metrics.angle_metric,
+    }
     append_logs = False
     model: tf.keras.Model
     if tr.hyperparameters.USE_LAST:
@@ -325,7 +331,11 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
         )
 
     tr.loss_fn = losses.sq_weighted_mse_angle
-    tr.metric_list = ["mean_absolute_error", tr.custom_objects['direction_metric'], tr.custom_objects['angle_metric']]
+    tr.metric_list = [
+        "mean_absolute_error",
+        tr.custom_objects["direction_metric"],
+        tr.custom_objects["angle_metric"],
+    ]
     optimizer = tf.keras.optimizers.Adam(learning_rate=tr.hyperparameters.LEARNING_RATE)
 
     model.compile(optimizer=optimizer, loss=tr.loss_fn, metrics=tr.metric_list)
@@ -360,7 +370,9 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
     history = tr.history
     log_path = tr.log_path
     plt.plot(history.history["mean_absolute_error"], label="mean_absolute_error")
-    plt.plot(history.history["val_mean_absolute_error"], label="val_mean_absolute_error")
+    plt.plot(
+        history.history["val_mean_absolute_error"], label="val_mean_absolute_error"
+    )
     plt.xlabel("Epoch")
     plt.ylabel("Mean Absolute Error")
     plt.legend(loc="lower right")
@@ -420,7 +432,10 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
 
     callback.broadcast("message", "Evaluate model...")
     best_model = utils.load_model(
-        os.path.join(checkpoint_path, best_checkpoint), tr.loss_fn, tr.metric_list, tr.custom_objects
+        os.path.join(checkpoint_path, best_checkpoint),
+        tr.loss_fn,
+        tr.metric_list,
+        tr.custom_objects,
     )
     # test_loss, test_acc, test_dir, test_ang = best_model.evaluate(tr.test_ds,
     res = best_model.evaluate(
@@ -450,7 +465,9 @@ def savefig(path):
     plt.clf()
 
 
-def start_train(params: Hyperparameters, callback: MyCallback, verbose=0, no_tf_record=False):
+def start_train(
+    params: Hyperparameters, callback: MyCallback, verbose=0, no_tf_record=False
+):
     tr = Training(params)
     if no_tf_record:
         callback.broadcast("message", "Processing data...")
@@ -472,23 +489,69 @@ def start_train(params: Hyperparameters, callback: MyCallback, verbose=0, no_tf_
 
     return tr
 
+
 def create_tfrecord(callback: MyCallback):
-    callback.broadcast("message", "Converting data to tfrecord (this may take some time)...")
-    tfrecord.convert_dataset(os.path.join(dataset_dir, "train_data"), os.path.join(dataset_dir, "tfrecords"), "train.tfrec")
-    tfrecord.convert_dataset(os.path.join(dataset_dir, "test_data"), os.path.join(dataset_dir, "tfrecords"), "test.tfrec")
+    callback.broadcast(
+        "message", "Converting data to tfrecord (this may take some time)..."
+    )
+    tfrecord.convert_dataset(
+        os.path.join(dataset_dir, "train_data"),
+        os.path.join(dataset_dir, "tfrecords"),
+        "train.tfrec",
+    )
+    tfrecord.convert_dataset(
+        os.path.join(dataset_dir, "test_data"),
+        os.path.join(dataset_dir, "tfrecords"),
+        "test.tfrec",
+    )
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Input Arguments")
-    parser.add_argument('--no_tf_record', action='store_true', help='do not load a tfrecord but a directory of files')
-    parser.add_argument('--create_tf_record', action='store_true', help='create a new tfrecord')
-    parser.add_argument('--model', type=str, default='pilot_net', choices=['cil_mobile', 'cil_mobile_fast', 'cil', 'pilot_net'], help='network architecture (default: cil_mobile)')
-    parser.add_argument('--batch_size', type=int, default=16, help='number of training epochs (default: 16)')
-    parser.add_argument('--learning_rate', type=float, default=0.0001, help='learning rate (default: 0.0001)')
-    parser.add_argument('--num_epochs', type=int, default=10, help='number of epochs (default: 10)')
-    parser.add_argument('--batch_norm', action='store_true', help='use batch norm')
-    parser.add_argument('--flip_aug', action='store_true', help='randomly flip images and controls for augmentation')
-    parser.add_argument('--cmd_aug', action='store_true', help='add noise to command input for augmentation')
-    parser.add_argument('--resume', action='store_true', help='resume previous training')
+    parser.add_argument(
+        "--no_tf_record",
+        action="store_true",
+        help="do not load a tfrecord but a directory of files",
+    )
+    parser.add_argument(
+        "--create_tf_record", action="store_true", help="create a new tfrecord"
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="pilot_net",
+        choices=["cil_mobile", "cil_mobile_fast", "cil", "pilot_net"],
+        help="network architecture (default: cil_mobile)",
+    )
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=16,
+        help="number of training epochs (default: 16)",
+    )
+    parser.add_argument(
+        "--learning_rate",
+        type=float,
+        default=0.0001,
+        help="learning rate (default: 0.0001)",
+    )
+    parser.add_argument(
+        "--num_epochs", type=int, default=10, help="number of epochs (default: 10)"
+    )
+    parser.add_argument("--batch_norm", action="store_true", help="use batch norm")
+    parser.add_argument(
+        "--flip_aug",
+        action="store_true",
+        help="randomly flip images and controls for augmentation",
+    )
+    parser.add_argument(
+        "--cmd_aug",
+        action="store_true",
+        help="add noise to command input for augmentation",
+    )
+    parser.add_argument(
+        "--resume", action="store_true", help="resume previous training"
+    )
 
     args = parser.parse_args()
 
@@ -506,7 +569,7 @@ if __name__ == "__main__":
     def broadcast(event, payload=None):
         print()
         print(event, payload)
-    
+
     event = threading.Event()
     my_callback = MyCallback(broadcast, event)
 
