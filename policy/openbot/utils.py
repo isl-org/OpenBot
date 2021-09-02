@@ -117,14 +117,18 @@ def compare_tf_tflite(model, tflite_model, img=None, cmd=None):
     for input_detail in input_details:
         if "img_input" in input_detail["name"]:
             if img is None:
-                input_data["img_input"] = np.array(np.random.random_sample(input_detail["shape"]), dtype=np.float32)
+                input_data["img_input"] = np.array(
+                    np.random.random_sample(input_detail["shape"]), dtype=np.float32
+                )
             else:
                 print(img)
                 input_data["img_input"] = img
             interpreter.set_tensor(input_detail["index"], input_data["img_input"])
-        elif "cmd_input" in input_detail["name"]: 
+        elif "cmd_input" in input_detail["name"]:
             if cmd is None:
-                input_data["cmd_input"] = np.array(np.random.random_sample(input_detail["shape"]), dtype=np.float32)
+                input_data["cmd_input"] = np.array(
+                    np.random.random_sample(input_detail["shape"]), dtype=np.float32
+                )
             else:
                 print(cmd)
                 input_data[input_detail["name"]] = cmd[0]

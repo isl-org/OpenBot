@@ -24,13 +24,13 @@ async def run_test(zc):
 
     info = ServiceInfo(
         "_http._tcp.local.",
-        name+"._http._tcp.local.",
+        name + "._http._tcp.local.",
         address=socket.inet_aton(local_ip),
         port=8000,
         weight=0,
         priority=0,
         properties=desc,
-        #server="openbot.local.",
+        # server="openbot.local.",
     )
     print("Registration of the service with name:", name)
     await zc.register_service(info)

@@ -4,6 +4,7 @@ This script implements several routines for data augmentation.
 """
 import tensorflow as tf
 
+
 def augment_img(img):
     """Color augmentation
 
@@ -31,9 +32,7 @@ def augment_cmd(cmd):
       cmd: augmented command
     """
     if not (cmd > 0 or cmd < 0):
-        coin = tf.random.uniform(
-            shape=[1], minval=0, maxval=1, dtype=tf.dtypes.float32
-        )
+        coin = tf.random.uniform(shape=[1], minval=0, maxval=1, dtype=tf.dtypes.float32)
         if coin < 0.25:
             cmd = -1.0
         elif coin < 0.5:
