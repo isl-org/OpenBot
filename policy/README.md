@@ -16,7 +16,7 @@ You first need to setup your training environment.
 
 ## Dependencies
 
-We recommend to create a conda environment for OpenBot. Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). You can create a new environment with the following command:
+We recommend to create a conda environment for OpenBot (if not already done). Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). You can create a new environment with the following command:
 
 ```bash
 conda create -n openbot python=3.7
@@ -43,6 +43,7 @@ If you prefer to setup the environment manually, here is a list of the dependenc
 - matplotlib
 - numpy
 - PIL
+- black[jupyter]
 
 If you want to use the web interface you also need:
 
