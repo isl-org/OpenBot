@@ -136,8 +136,8 @@ public class ServerCommunication {
           }
         }
       };
-  private final Timer timer;
   private final ServerListener serverListener;
+  private Timer timer;
 
   private String serverUrl;
 
@@ -146,12 +146,12 @@ public class ServerCommunication {
     this.context = context;
     this.nsdService = new NsdService();
     this.serverListener = serverListener;
-    this.timer = new Timer();
   }
 
   public void start() {
     Timber.d("service started");
     nsdService.start(context, resolveListener);
+    timer = new Timer();
     timer.scheduleAtFixedRate(
         new TimerTask() {
           @Override

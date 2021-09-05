@@ -93,7 +93,7 @@ def pilot_net(img_width, img_height, bn=False):
     )
 
     # fuse input MLP and CNN
-    combinedInput = tf.keras.layers.concatenate([mlp.output, cnn.output])
+    combinedInput = tf.keras.layers.concatenate([mlp.input, cnn.output])
 
     # output MLP
     x = tf.keras.layers.Dense(50, activation="relu")(combinedInput)
