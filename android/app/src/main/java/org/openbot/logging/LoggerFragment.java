@@ -50,7 +50,7 @@ import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 import timber.log.Timber;
 
-public class LoggerFragment extends CameraFragment implements ServerListener {
+public class LoggerFragment extends CameraFragment {
 
   private FragmentLoggerBinding binding;
   private Handler handler;
@@ -179,8 +179,6 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
 
   @Override
   public synchronized void onResume() {
-    serverCommunication = new ServerCommunication(requireContext(), this);
-    serverCommunication.start();
     handlerThread = new HandlerThread("logging");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
@@ -197,7 +195,6 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
     } catch (final InterruptedException e) {
       e.printStackTrace();
     }
-    serverCommunication.stop();
     super.onPause();
   }
 
