@@ -24,7 +24,11 @@ async def register(app: web.Application):
 async def run_test(zc):
     desc = {}
     local_ip = ip4_address()
-    name = os.getenv("OPENBOT_NAME", socket.gethostname())
+    name = (
+        os.getenv("OPENBOT_NAME", socket.gethostname())
+        .replace(".local", "")
+        .replace(".", "-")
+    )
 
     info = ServiceInfo(
         SERVICE_TYPE,
