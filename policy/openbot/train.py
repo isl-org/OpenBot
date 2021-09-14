@@ -6,8 +6,6 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
-import wandb
-from wandb.keras import WandbCallback
 
 from . import (
     associate_frames,
@@ -53,6 +51,8 @@ class Hyperparameters:
     CMD_AUG: bool = False
 
     USE_LAST: bool = False
+
+    WANDB: bool = False
 
     @classmethod
     def parse(cls, name):
@@ -318,13 +318,17 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     }
     model_path = os.path.join(models_dir, tr.model_name, "model")
 
-    wandb.init(project="openbot")
+    if tr.hyperparameters.WANDB:
+        import wandb
+        from wandb.keras import WandbCallback
 
-    config = wandb.config
-    config.epochs = tr.hyperparameters.NUM_EPOCHS
-    config.learning_rate = tr.hyperparameters.LEARNING_RATE
-    config.batch_size = tr.hyperparameters.TRAIN_BATCH_SIZE
-    config["model_name"] = tr.model_name
+        wandb.init(project="openbot")
+
+        config = wandb.config
+        config.epochs = tr.hyperparameters.NUM_EPOCHS
+        config.learning_rate = tr.hyperparameters.LEARNING_RATE
+        config.batch_size = tr.hyperparameters.TRAIN_BATCH_SIZE
+        config["model_name"] = tr.model_name
 
     append_logs = False
     model: tf.keras.Model
@@ -366,23 +370,29 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
         tr.image_count_train / tr.hyperparameters.TRAIN_BATCH_SIZE
     )
     callback.broadcast("message", "Fit model...")
+    callback_list = [
+        callbacks.checkpoint_cb(tr.checkpoint_path),
+        callbacks.tensorboard_cb(tr.log_path),
+        callbacks.logger_cb(tr.log_path, append_logs),
+        callback,
+    ]
+
+    if tr.hyperparameters.WANDB:
+        callback_list += [WandbCallback()]
+
     tr.history = model.fit(
         tr.train_ds,
         epochs=tr.hyperparameters.NUM_EPOCHS,
         steps_per_epoch=STEPS_PER_EPOCH,
         validation_data=tr.test_ds,
         verbose=verbose,
-        callbacks=[
-            callbacks.checkpoint_cb(tr.checkpoint_path),
-            callbacks.tensorboard_cb(tr.log_path),
-            callbacks.logger_cb(tr.log_path, append_logs),
-            WandbCallback(),
-            callback,
-        ],
+        callbacks=callback_list,
     )
     model.save(model_path)
-    wandb.save(model_path)
-    wandb.finish()
+
+    if tr.hyperparameters.WANDB:
+        wandb.save(model_path)
+        wandb.finish()
 
 
 def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
@@ -570,6 +580,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--resume", action="store_true", help="resume previous training"
     )
+    parser.add_argument(
+        "--wandb", action="store_true", help="training logs with weights & biases"
+    )
 
     args = parser.parse_args()
 
@@ -583,6 +596,7 @@ if __name__ == "__main__":
     params.FLIP_AUG = args.flip_aug
     params.CMD_AUG = args.cmd_aug
     params.USE_LAST = args.resume
+    params.WANDB = args.wandb
 
     def broadcast(event, payload=None):
         print()
