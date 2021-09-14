@@ -193,15 +193,15 @@ def match_frame_session(
             os.path.join(sensor_path, "matched_frame_ctrl_cmd_processed.txt"), "w"
         ) as f:
             f.write("timestamp,frame,left,right,cmd\n")
-            #max_ctrl = get_max_ctrl(frame_list)
+            # max_ctrl = get_max_ctrl(frame_list)
             for timestamp in list(frame_list):
                 frame = frame_list[timestamp]
                 if len(frame) < 6:
                     continue
                 left = int(frame[3])
                 right = int(frame[4])
-                #left = normalize(max_ctrl, frame[3])
-                #right = normalize(max_ctrl, frame[4])
+                # left = normalize(max_ctrl, frame[3])
+                # right = normalize(max_ctrl, frame[4])
                 if remove_zeros and left == 0 and right == 0:
                     print(f" Removed timestamp: {timestamp}")
                     del frame
