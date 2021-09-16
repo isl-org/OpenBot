@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
+import android.os.Build;
 import android.view.Surface;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -227,7 +228,11 @@ public class ImageUtils {
   }
 
   public static int getScreenOrientation(Activity activity) {
-    switch (activity.getDisplay().getRotation()) {
+    int rotation =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+            ? activity.getDisplay().getRotation()
+            : activity.getWindowManager().getDefaultDisplay().getRotation();
+    switch (rotation) {
       case Surface.ROTATION_270:
         return 270;
       case Surface.ROTATION_180:

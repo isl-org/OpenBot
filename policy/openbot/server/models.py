@@ -34,7 +34,10 @@ def getModelFiles():
 
 
 async def publishModel(params):
-    src = os.path.join(models_dir, params["model"], "checkpoints", params["checkpoint"]) + ".tflite"
+    src = (
+        os.path.join(models_dir, params["model"], "checkpoints", params["checkpoint"])
+        + ".tflite"
+    )
     dst = os.path.join(models_dir, params["name"]) + ".tflite"
     print(src, dst)
     shutil.copyfile(src, dst)

@@ -2,25 +2,31 @@
 
 This python program allows you to control the robot from a (wireless) keyboard and receive a video stream from the camera. The program can run on any computer connected to the same network as the robot's phone. It was developed and tested on a Raspberry Pi 3 and a MacBook.
 
-## Install dependencies
+## Dependencies
 
-If you have already installed the conda environment, make sure it is activated.
+We recommend to create a conda environment for OpenBot (if not already done). Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). You can create a new environment with the following command:
 
+```bash
+conda create -n openbot python=3.7
 ```
+
+If you do not want install the dependencies globally, activate your conda environment first:
+
+```bash
 conda activate openbot
 ```
 
-To install the dependencies, you can use the following command. 
+Make sure you are in the folder `controller` within your local OpenBot repository. Now, you can install all the dependencies with the following command:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
 ## Controlling the robot
 
-NOTE: After a successful connection, it may not be possible to connect again unless the robot app is restarted. 
+NOTE: After a successful connection, it may not be possible to connect again unless the robot app is restarted.
 
-The python scripts will wait for an incoming connection. On the phone with the robot app, go to the FreeRoam fragment and toggle the control mode to the phone icon. The robot will now try to connect to the Python script (same way as it would connect to the controller app). Alternatively, you can also use the DefaultActivity and select `Phone` as controller. 
+The python scripts will wait for an incoming connection. On the phone with the robot app, go to the FreeRoam fragment and toggle the control mode to the phone icon. The robot will now try to connect to the Python script (same way as it would connect to the controller app). Alternatively, you can also use the DefaultActivity and select `Phone` as controller.
 
 ### Using Pygame
 
@@ -64,7 +70,7 @@ Run the controller:
 
 Here is the usage:
 
-```
+```bash
     W:        Increase speed
     S:        Decrease speed
     A:        Turn more left

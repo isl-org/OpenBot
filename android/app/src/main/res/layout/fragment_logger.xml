@@ -55,8 +55,8 @@
             android:id="@+id/logger_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
             android:padding="8dp"
+            android:layout_margin="8dp"
             android:text="Log Data"
             app:layout_constraintBottom_toTopOf="@+id/previewText"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,29 +139,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/controllerContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <CheckBox
-                android:id="@+id/checkBox"
+            <Button
+                android:id="@+id/sensorDataButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:checked="true"
-                android:enabled="false"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/button_background_border"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingHorizontal="32dp"
                 android:text="Sensor Data"
-                app:layout_constraintBottom_toBottomOf="@+id/trainingDataCheckBox"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <CheckBox
-                android:id="@+id/videoCaptureCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Capture Video"
-                app:layout_constraintStart_toStartOf="@id/previewCheckBox"
-                app:layout_constraintTop_toBottomOf="@id/previewCheckBox" />
+                android:textAllCaps="false"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/server"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <CheckBox
                 android:id="@+id/previewCheckBox"
@@ -171,6 +171,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/ipAddress"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/videoCaptureCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Capture Video"
+                app:layout_constraintStart_toStartOf="@id/previewCheckBox"
+                app:layout_constraintTop_toBottomOf="@id/previewCheckBox" />
 
             <CheckBox
                 android:id="@+id/trainingDataCheckBox"
@@ -189,17 +198,18 @@
                 android:padding="8dp"
                 android:text="Server Address"
                 android:textColor="@android:color/black"
-                app:layout_constraintBottom_toTopOf="@+id/checkBox"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/ipAddress"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sensorDataButton" />
 
             <TextView
                 android:id="@+id/ipAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:padding="8dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="x.x.x.x"
                 android:textColor="@android:color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/server"
