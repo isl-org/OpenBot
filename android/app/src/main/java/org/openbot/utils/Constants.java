@@ -20,7 +20,7 @@ public class Constants {
   public static final String PERMISSION_AUDIO = Manifest.permission.RECORD_AUDIO;
 
   public static final String[] PERMISSIONS_LOGGING =
-      new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE, PERMISSION_LOCATION};
+      new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE, PERMISSION_AUDIO, PERMISSION_LOCATION};
   public static final String[] PERMISSIONS_CONTROLLER =
       new String[] {PERMISSION_CAMERA, PERMISSION_AUDIO, PERMISSION_LOCATION};
 

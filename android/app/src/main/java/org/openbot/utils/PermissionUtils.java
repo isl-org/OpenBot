@@ -56,7 +56,10 @@ public class PermissionUtils {
 
   public static boolean hasLoggingPermissions(Activity activity) {
     return hasPermissions(
-        activity, new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE, PERMISSION_LOCATION});
+        activity,
+        new String[] {
+          PERMISSION_CAMERA, PERMISSION_AUDIO, PERMISSION_STORAGE, PERMISSION_LOCATION
+        });
   }
 
   public static boolean hasControllerPermissions(Activity activity) {

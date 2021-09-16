@@ -3,11 +3,14 @@ package org.openbot.common;
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -17,14 +20,20 @@ import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
+import androidx.camera.core.VideoCapture;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.viewbinding.ViewBinding;
 import com.google.common.util.concurrent.ListenableFuture;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.env.ImageUtils;
 import org.openbot.utils.Constants;
@@ -44,6 +53,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private YuvToRgbConverter converter;
   private Bitmap bitmapBuffer;
   private int rotationDegrees;
+  private VideoCapture videoCapture;
 
   protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
@@ -60,6 +70,7 @@ public abstract class CameraFragment extends ControlsFragment {
 
     previewView = cameraView.findViewById(R.id.viewFinder);
     rootView.addView(view);
+    videoCapture = new VideoCapture.Builder().build();
 
     if (!PermissionUtils.hasCameraPermission(requireActivity())) {
       requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
@@ -130,7 +141,7 @@ public abstract class CameraFragment extends ControlsFragment {
     try {
       if (cameraProvider != null) {
         cameraProvider.unbindAll();
-        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
+        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis, videoCapture);
       }
     } catch (Exception e) {
       Timber.e("Use case binding failed: %s", e.toString());
@@ -186,6 +197,63 @@ public abstract class CameraFragment extends ControlsFragment {
       else this.analyserResolution = resolutionSize;
     }
     bindCameraUseCases();
+  }
+
+  @SuppressLint("RestrictedApi")
+  public void startVideoRecording() {
+    videoCapture = new VideoCapture.Builder().build();
+    bindCameraUseCases();
+    String outputDirectory =
+        Environment.getExternalStorageDirectory().getAbsolutePath()
+            + File.separator
+            + getString(R.string.app_name)
+            + File.separator
+            + new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date())
+            + File.separator
+            + "videos";
+    final File myDir = new File(outputDirectory);
+
+    if (!myDir.exists()) {
+      if (!myDir.mkdirs()) {
+        Timber.i("Make dir failed");
+      }
+    }
+
+    File videoFile =
+        new File(
+            outputDirectory,
+            new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                    .format(System.currentTimeMillis())
+                + ".mp4");
+    VideoCapture.OutputFileOptions outputOptions =
+        new VideoCapture.OutputFileOptions.Builder(videoFile).build();
+
+    videoCapture.startRecording(
+        outputOptions,
+        ContextCompat.getMainExecutor(requireContext()),
+        new VideoCapture.OnVideoSavedCallback() {
+          @Override
+          public void onVideoSaved(
+              @NonNull @NotNull VideoCapture.OutputFileResults outputFileResults) {
+            Uri savedUri = Uri.fromFile(videoFile);
+            Toast.makeText(
+                    requireContext(), "Video capture succeeded:" + savedUri, Toast.LENGTH_SHORT)
+                .show();
+          }
+
+          @Override
+          public void onError(
+              int videoCaptureError,
+              @NonNull @NotNull String message,
+              @Nullable @org.jetbrains.annotations.Nullable Throwable cause) {
+            Timber.e("Video capture failed: " + message);
+          }
+        });
+  }
+
+  @SuppressLint("RestrictedApi")
+  public void stopVideoRecording() {
+    videoCapture.stopRecording();
   }
 
   protected abstract void processFrame(Bitmap image, ImageProxy imageProxy);

@@ -303,11 +303,14 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
             Timber.e(e, "Got interrupted.");
           }
         });
+    if (binding.videoCaptureCheckBox.isChecked()) startVideoRecording();
   }
 
   private void stopLogging() {
     if (sensorConnection != null) requireActivity().unbindService(sensorConnection);
     requireActivity().stopService(intentSensorService);
+
+    if (binding.videoCaptureCheckBox.isChecked()) stopVideoRecording();
 
     // Pack and upload the collected data
     runInBackground(

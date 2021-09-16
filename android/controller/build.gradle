@@ -78,7 +78,7 @@ dependencies {
     implementation 'org.videolan.android:libvlc-all:3.3.14'
 
     // WebRTC
-    implementation 'org.webrtc:google-webrtc:1.0.+'
+    implementation 'org.webrtc:google-webrtc:1.0.32006'
 
     // For a library module, uncomment the following line and comment the one after
     // apply plugin: 'com.android.library'
