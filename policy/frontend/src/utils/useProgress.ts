@@ -14,6 +14,7 @@ export interface Hyperparametes {
 }
 
 export interface ProgressState {
+    startTime: Date;
     status: 'success' | 'fail' | 'active' | undefined;
     epoch: number;
     percent: number;
@@ -26,6 +27,7 @@ export interface ProgressState {
 }
 
 const defaultState: ProgressState = {
+    startTime: new Date(),
     status: undefined,
     epoch: 0,
     percent: 0,
@@ -51,6 +53,7 @@ function progressReducer(state: ProgressState, msg: any): ProgressState {
     switch (msg.event) {
         case 'started':
             return {
+                startTime: new Date(),
                 status: 'active',
                 epoch: 0,
                 percent: 0,
@@ -61,6 +64,11 @@ function progressReducer(state: ProgressState, msg: any): ProgressState {
             return {
                 ...state,
                 rnd: Date.now(),
+            };
+        case 'model':
+            return {
+                ...state,
+                model: msg.payload,
             };
         case 'logs':
             return {
@@ -98,11 +106,11 @@ function progressReducer(state: ProgressState, msg: any): ProgressState {
                 ...state,
                 rnd: Date.now(),
                 status: 'success',
-                model: msg.payload.model,
                 message: 'Done',
             };
         case 'clear':
             return {
+                startTime: new Date(),
                 status: undefined,
                 epoch: 0,
                 percent: 0,

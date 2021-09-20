@@ -1,3 +1,4 @@
+import {differenceInMinutes} from 'date-fns';
 import NoSleep from 'nosleep.js';
 import {useEffect} from 'react';
 import {Button, Panel, Progress} from 'rsuite';
@@ -36,8 +37,11 @@ function TrainProgress({state, clear}: { state: ProgressState, clear: () => any 
             noSleep.disable();
         }
     }, [active]);
+    const now = new Date();
+    const end = predictEndDate(state, now);
     return <>
         <Panel shaded header="Progress">
+            <p>Current step: {state.message}</p>
             <div>
                 Current epoch:
                 <Progress.Line percent={state.epoch} status={state.status}/>
@@ -46,7 +50,9 @@ function TrainProgress({state, clear}: { state: ProgressState, clear: () => any 
                 Training:
                 <Progress.Line percent={state.percent} status={state.status}/>
             </div>
-            <h5>{state.message}</h5>
+            <div>Full time: {differenceInMinutes(end, state.startTime)} minutes</div>
+            <div>Elapsed time: {differenceInMinutes(now, state.startTime)} minutes</div>
+            <div>Remaining time: {differenceInMinutes(end, now)} minutes</div>
             <ButtonBar>
                 {active ? (
                     <Button onClick={() => jsonRpc('stop')}>Stop</Button>
@@ -56,7 +62,7 @@ function TrainProgress({state, clear}: { state: ProgressState, clear: () => any 
             </ButtonBar>
         </Panel>
         <GridView>
-            <Plot logs={state.logs} metric="MeanAbsoluteError"/>
+            <Plot logs={state.logs} metric="mean_absolute_error"/>
             <Plot logs={state.logs} metric="direction_metric"/>
             <Plot logs={state.logs} metric="angle_metric"/>
             <Plot logs={state.logs} metric="loss"/>
@@ -71,10 +77,23 @@ function TrainProgress({state, clear}: { state: ProgressState, clear: () => any 
                 <img alt="preview thumbnails" src={`/models/train_preview.png?rnd=${state.rnd}`}/>
             </Panel>
         )}
-        {state.model && (
+        {!!state.model && (
+            <Panel bodyFill shaded header="Model preview" collapsible defaultExpanded>
+                <img alt="preview thumbnails" src={`/models/${state.model}/model.png?rnd=${state.rnd}`}/>
+            </Panel>
+        )}
+        {state.status === 'success' && (
             <Panel bodyFill shaded header="Test preview" collapsible defaultExpanded>
                 <img alt="preview thumbnails" src={`/models/${state.model}/logs/test_preview.png?rnd=${state.rnd}`}/>
             </Panel>
         )}
     </>
+}
+
+function predictEndDate(state: ProgressState, now: Date) {
+    const start = state.startTime.getTime();
+    const elapsed = now.getTime() - start;
+    const fullTime = elapsed / state.percent * 100;
+
+    return new Date(start + fullTime);
 }

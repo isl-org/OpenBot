@@ -1,19 +1,22 @@
 # Created by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
 import os
+from typing import List
 import tensorflow as tf
 
 
 class dataloader:
-    def __init__(self, data_dir, datasets):
+    def __init__(self, data_dir: str, datasets: List[str]):
         self.data_dir = data_dir
         self.datasets = datasets
         self.labels = self.load_labels()
         self.index_table = self.lookup_table()
         self.label_values = tf.constant(
-            [(float(l[0]), float(l[1])) for l in self.labels.values()]
+            [(float(label[0]), float(label[1])) for label in self.labels.values()]
         )
-        self.cmd_values = tf.constant([(float(l[2])) for l in self.labels.values()])
+        self.cmd_values = tf.constant(
+            [(float(label[2])) for label in self.labels.values()]
+        )
 
     # Load labels
     def load_labels(self):
@@ -33,7 +36,8 @@ class dataloader:
                         "matched_frame_ctrl_cmd_processed.txt",
                     )
                 ) as f_input:
-                    header = f_input.readline()  # discard header
+                    # discard header
+                    header = f_input.readline()
                     data = f_input.read()
                     lines = (
                         data.replace(",", " ")
@@ -48,7 +52,7 @@ class dataloader:
                         if len(line) > 0 and line[0] != "#"
                     ]
                     # Tuples containing id: framepath and label: left,right,cmd
-                    data = [(l[1], l[2:]) for l in data if len(l) > 1]
+                    data = [(line[1], line[2:]) for line in data if len(line) > 1]
                     corpus.extend(data)
         return dict(corpus)
 

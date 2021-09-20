@@ -38,13 +38,11 @@
 Modified and extended by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 The controls are event-based and not synchronized to the frames.
 This script matches the control signals to frames.
-Specifically, if there was no control signal event within some threshold (default: 1ms), the last control signal before the frame is used.
+Specifically, if there was no control signal event within some threshold (default: 1ms),
+the last control signal before the frame is used.
 """
 
-import argparse
-import sys
 import os
-import numpy
 
 from . import utils
 
@@ -65,7 +63,8 @@ def read_file_list(filename):
 
     """
     f = open(filename)
-    header = f.readline()  # discard header
+    # discard header
+    header = f.readline()
     data = f.read()
     lines = data.replace(",", " ").replace("\t", " ").split("\n")
     data = [
@@ -73,7 +72,7 @@ def read_file_list(filename):
         for line in lines
         if len(line) > 0 and line[0] != "#"
     ]
-    data = [(int(l[0]), l[1:]) for l in data if len(l) > 1]
+    data = [(int(line[0]), line[1:]) for line in data if len(line) > 1]
     return dict(data)
 
 
@@ -146,8 +145,13 @@ def match_frame_session(
             f.write("timestamp (frame),time_offset (ctrl-frame),frame,left,right\n")
             for a, b in matches:
                 f.write(
-                    "%d %d %s %s \n"
-                    % (a, b - a, " ".join(frame_list[a]), " ".join(ctrl_list[b]))
+                    "%d,%d,%s,%s\n"
+                    % (
+                        a,
+                        b - a,
+                        ",".join(frame_list[a]),
+                        ",".join(ctrl_list[b]),
+                    )
                 )
         print(" Frames and controls matched.")
 
@@ -171,8 +175,8 @@ def match_frame_session(
             )
             for a, b in matches:
                 f.write(
-                    "%d %d %s %s \n"
-                    % (a, b - a, " ".join(frame_list[a]), " ".join(cmd_list[b]))
+                    "%d,%d,%s,%s\n"
+                    % (a, b - a, ",".join(frame_list[a]), ",".join(cmd_list[b]))
                 )
         print(" Frames and commands matched.")
 
@@ -189,22 +193,21 @@ def match_frame_session(
             os.path.join(sensor_path, "matched_frame_ctrl_cmd_processed.txt"), "w"
         ) as f:
             f.write("timestamp,frame,left,right,cmd\n")
+            # max_ctrl = get_max_ctrl(frame_list)
             for timestamp in list(frame_list):
-                if len(frame_list[timestamp]) < 6:
+                frame = frame_list[timestamp]
+                if len(frame) < 6:
                     continue
-                left = int(frame_list[timestamp][3])
-                right = int(frame_list[timestamp][4])
-                if remove_zeros and left - right == 0 and left + right == 0:
-                    print(
-                        " Removed timestamp:%s, left:%d, right:%d"
-                        % (timestamp, left, right)
-                    )
-                    del frame_list[timestamp]
+                left = int(frame[3])
+                right = int(frame[4])
+                # left = normalize(max_ctrl, frame[3])
+                # right = normalize(max_ctrl, frame[4])
+                if remove_zeros and left == 0 and right == 0:
+                    print(f" Removed timestamp: {timestamp}")
+                    del frame
                 else:
-                    frame_name = os.path.join(
-                        img_path, frame_list[timestamp][2] + "_crop.jpeg"
-                    )
-                    cmd = int(frame_list[timestamp][5])
+                    frame_name = os.path.join(img_path, frame[2] + "_crop.jpeg")
+                    cmd = int(frame[5])
                     f.write(
                         "%s,%s,%d,%d,%d\n" % (timestamp, frame_name, left, right, cmd)
                     )
@@ -213,3 +216,21 @@ def match_frame_session(
     return read_file_list(
         os.path.join(sensor_path, "matched_frame_ctrl_cmd_processed.txt")
     )
+
+
+def normalize(max_ctrl, val):
+    return int(int(val) / max_ctrl * 255)
+
+
+def get_max_ctrl(frame_list):
+    max_val = 0
+    for timestamp in list(frame_list):
+        frame = frame_list[timestamp]
+        if len(frame) < 6:
+            continue
+        left = int(frame[3])
+        right = int(frame[4])
+        max_val = max(max_val, abs(left), abs(right))
+    if max_val == 0:
+        max_val = 255
+    return max_val

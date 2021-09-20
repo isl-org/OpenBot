@@ -89,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:entries="@array/preview_resolutions"
             android:gravity="center"
             android:prompt="@string/preview_resolution"
@@ -102,14 +102,27 @@
             android:id="@+id/model_spinner"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:prompt="@string/model"
             app:layout_constraintBottom_toBottomOf="@+id/crop_info"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/crop_info"
+            app:layout_constraintStart_toStartOf="@+id/resolution_spinner"
             app:layout_constraintTop_toTopOf="@+id/crop_info"
             tools:entries="@array/models" />
+
+        <Spinner
+            android:id="@+id/server_spinner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:prompt="@string/server"
+            app:layout_constraintBottom_toBottomOf="@+id/ipAddress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/model_spinner"
+            app:layout_constraintTop_toTopOf="@+id/ipAddress"
+            app:layout_constraintVertical_bias="0.0"
+            tools:entries="@array/servers" />
 
         <TextView
             android:id="@+id/analyseText"
@@ -119,7 +132,7 @@
             android:padding="8dp"
             android:text="Model Resolution"
             android:textColor="@android:color/black"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintBottom_toTopOf="@+id/server"
             app:layout_constraintEnd_toEndOf="@+id/previewText"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -133,6 +146,29 @@
             app:layout_constraintBottom_toBottomOf="@+id/analyseText"
             app:layout_constraintStart_toEndOf="@+id/analyseText"
             app:layout_constraintTop_toTopOf="@+id/analyseText" />
+
+        <TextView
+            android:id="@+id/server"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:padding="8dp"
+            android:text="@string/server"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toStartOf="@+id/ipAddress"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/ipAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="@string/ip_placeholder"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/server"
+            app:layout_constraintEnd_toEndOf="@+id/crop_info"
+            app:layout_constraintTop_toTopOf="@+id/server" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout2"
@@ -159,7 +195,7 @@
                 android:textAllCaps="false"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toTopOf="@+id/server"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -169,7 +205,7 @@
                 android:layout_height="wrap_content"
                 android:text="Preview Images"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/ipAddress"
+                app:layout_constraintStart_toEndOf="@+id/sensorDataButton"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <CheckBox
@@ -180,31 +216,6 @@
                 android:text="Training Images"
                 app:layout_constraintStart_toStartOf="@id/previewCheckBox"
                 app:layout_constraintTop_toBottomOf="@+id/previewCheckBox" />
-
-            <TextView
-                android:id="@+id/server"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Server Address"
-                android:textColor="@android:color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/ipAddress"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sensorDataButton" />
-
-            <TextView
-                android:id="@+id/ipAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:text="x.x.x.x"
-                android:textColor="@android:color/black"
-                app:layout_constraintBottom_toBottomOf="@+id/server"
-                app:layout_constraintStart_toEndOf="@+id/server"
-                app:layout_constraintTop_toTopOf="@+id/server" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

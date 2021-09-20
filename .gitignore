@@ -5,6 +5,7 @@ composer.lock
 /phpunit.xml
 .DS_Store
 Thumbs.db
+wandb/
 
 # IDE's
 .idea/

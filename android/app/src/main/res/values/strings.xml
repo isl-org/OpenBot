@@ -21,6 +21,12 @@
     <string name="off">Off</string>
     <string name="on">On</string>
 
+    <string name="server">Server</string>
+    <string-array name="servers">
+        <item>No server</item>
+    </string-array>
+    <string name="ip_placeholder">x.x.x.x</string>
+
     <string name="model">Model</string>
     <string-array name="models">
         <item>Autopilot_F</item>

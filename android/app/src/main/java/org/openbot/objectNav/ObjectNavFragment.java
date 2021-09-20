@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -42,7 +41,6 @@ import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
-import org.openbot.utils.FileUtils;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
@@ -133,40 +131,10 @@ public class ObjectNavFragment extends CameraFragment {
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
     List<String> models =
-        masterList.stream()
-            .filter(f -> f.type.equals(Model.TYPE.DETECTOR) && f.pathType != Model.PATH_TYPE.URL)
-            .map(f -> FileUtils.nameWithoutExtension(f.name))
-            .collect(Collectors.toList());
-    ArrayAdapter<String> modelAdapter =
-        new ArrayAdapter<>(requireContext(), R.layout.spinner_item, models);
-
-    modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-    binding.modelSpinner.setAdapter(modelAdapter);
-    if (!preferencesManager.getObjectNavModel().isEmpty())
-      binding.modelSpinner.setSelection(
-          Math.max(
-              0,
-              modelAdapter.getPosition(
-                  FileUtils.nameWithoutExtension(preferencesManager.getObjectNavModel()))));
+        getModelNames(f -> f.type.equals(Model.TYPE.DETECTOR) && f.pathType != Model.PATH_TYPE.URL);
+    initModelSpinner(binding.modelSpinner, models, preferencesManager.getObjectNavModel());
 
     setAnalyserResolution(Enums.Preview.HD.getValue());
-    binding.modelSpinner.setOnItemSelectedListener(
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String selected = parent.getItemAtPosition(position).toString();
-            try {
-              masterList.stream()
-                  .filter(f -> f.name.contains(selected))
-                  .findFirst()
-                  .ifPresent(value -> setModel(value));
-            } catch (IllegalArgumentException e) {
-            }
-          }
-
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
-        });
     binding.deviceSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
@@ -508,7 +476,8 @@ public class ObjectNavFragment extends CameraFragment {
     return model;
   }
 
-  private void setModel(Model model) {
+  @Override
+  protected void setModel(Model model) {
     if (this.model != model) {
       Timber.d("Updating  model: %s", model);
       this.model = model;
