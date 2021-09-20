@@ -7,13 +7,22 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import java.io.File;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.env.AudioPlayer;
@@ -24,6 +33,8 @@ import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.env.Vehicle;
 import org.openbot.main.MainViewModel;
+import org.openbot.server.ServerCommunication;
+import org.openbot.server.ServerListener;
 import org.openbot.tflite.Model;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
@@ -33,7 +44,9 @@ import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
 
-public abstract class ControlsFragment extends Fragment {
+public abstract class ControlsFragment extends Fragment implements ServerListener {
+  private static final String NO_SERVER = "No server";
+
   protected MainViewModel mViewModel;
   protected Vehicle vehicle;
   protected Animation startAnimation;
@@ -45,6 +58,13 @@ public abstract class ControlsFragment extends Fragment {
 
   protected final String voice = "matthew";
   protected List<Model> masterList;
+
+  protected ServerCommunication serverCommunication;
+
+  private ArrayAdapter<String> modelAdapter;
+  private ArrayAdapter<String> serverAdapter;
+  private Spinner modelSpinner;
+  private Spinner serverSpinner;
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -58,6 +78,7 @@ public abstract class ControlsFragment extends Fragment {
     preferencesManager = new SharedPreferencesManager(requireContext());
     audioPlayer = new AudioPlayer(requireContext());
     masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
+    serverCommunication = new ServerCommunication(requireContext(), this);
 
     requireActivity()
         .getSupportFragmentManager()
@@ -239,8 +260,17 @@ public abstract class ControlsFragment extends Fragment {
             }
           });
 
+  @NotNull
+  protected List<String> getModelNames(Predicate<Model> filter) {
+    return masterList.stream()
+        .filter(filter)
+        .map(f -> FileUtils.nameWithoutExtension(f.name))
+        .collect(Collectors.toList());
+  }
+
   @Override
   public void onResume() {
+    serverCommunication.start();
     super.onResume();
   }
 
@@ -255,6 +285,7 @@ public abstract class ControlsFragment extends Fragment {
   @Override
   public synchronized void onPause() {
     Timber.d("onPause");
+    serverCommunication.stop();
     vehicle.setControl(0, 0);
     super.onPause();
   }
@@ -264,6 +295,127 @@ public abstract class ControlsFragment extends Fragment {
     Timber.d("onStop");
     super.onStop();
   }
+
+  protected void initModelSpinner(Spinner spinner, List<String> models, String selected) {
+    modelAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item, models);
+    modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+    modelSpinner = spinner;
+    modelSpinner.setAdapter(modelAdapter);
+    if (!selected.isEmpty())
+      modelSpinner.setSelection(
+          Math.max(0, modelAdapter.getPosition(FileUtils.nameWithoutExtension(selected))));
+    modelSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String selected = parent.getItemAtPosition(position).toString();
+            try {
+              masterList.stream()
+                  .filter(f -> f.name.contains(selected))
+                  .findFirst()
+                  .ifPresent(value -> setModel(value));
+
+            } catch (IllegalArgumentException e) {
+              e.printStackTrace();
+            }
+          }
+
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
+  }
+
+  protected void initServerSpinner(Spinner spinner) {
+    serverAdapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item);
+    serverAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+    serverSpinner = spinner;
+    serverSpinner.setAdapter(serverAdapter);
+    serverSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String selected = parent.getItemAtPosition(position).toString();
+            if (selected.equals(NO_SERVER)) {
+              serverCommunication.disconnect();
+              if (serverAdapter.getPosition(preferencesManager.getServer()) > -1) {
+                preferencesManager.setServer(selected);
+              }
+            } else {
+              serverCommunication.connect(selected);
+              preferencesManager.setServer(selected);
+            }
+          }
+
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {
+            serverCommunication.disconnect();
+          }
+        });
+    onServerListChange(serverCommunication.getServers());
+  }
+
+  @Override
+  public void onServerListChange(Set<String> servers) {
+    if (serverAdapter == null) {
+      return;
+    }
+    requireActivity()
+        .runOnUiThread(
+            () -> {
+              serverAdapter.clear();
+              serverAdapter.add(NO_SERVER);
+              serverAdapter.addAll(servers);
+              if (!preferencesManager.getServer().isEmpty()) {
+                serverSpinner.setSelection(
+                    Math.max(0, serverAdapter.getPosition(preferencesManager.getServer())));
+              }
+            });
+  }
+
+  @Override
+  public void onAddModel(String model) {
+    Model item =
+        new Model(
+            masterList.size() + 1,
+            Model.CLASS.AUTOPILOT_F,
+            Model.TYPE.AUTOPILOT,
+            model,
+            Model.PATH_TYPE.FILE,
+            requireActivity().getFilesDir() + File.separator + model,
+            "256x96");
+
+    if (modelAdapter != null && modelAdapter.getPosition(model) == -1) {
+      modelAdapter.add(model);
+      masterList.add(item);
+      FileUtils.updateModelConfig(requireActivity(), masterList);
+    } else {
+      if (model.equals(modelSpinner.getSelectedItem())) {
+        setModel(item);
+      }
+    }
+    Toast.makeText(
+            requireContext().getApplicationContext(),
+            "AutopilotModel added: " + model,
+            Toast.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override
+  public void onRemoveModel(String model) {
+    if (modelAdapter != null && modelAdapter.getPosition(model) != -1) {
+      modelAdapter.remove(model);
+    }
+    Toast.makeText(
+            requireContext().getApplicationContext(),
+            "AutopilotModel removed: " + model,
+            Toast.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override
+  public void onConnectionEstablished(String ipAddress) {}
+
+  protected void setModel(Model model) {}
 
   protected abstract void processControllerKeyData(String command);
 

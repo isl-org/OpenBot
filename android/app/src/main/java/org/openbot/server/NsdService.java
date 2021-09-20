@@ -5,12 +5,11 @@ import android.net.nsd.NsdManager;
 import android.net.nsd.NsdManager.DiscoveryListener;
 import android.net.nsd.NsdManager.ResolveListener;
 import android.net.nsd.NsdServiceInfo;
-import android.util.Log;
+import timber.log.Timber;
 
 class NsdService {
 
-  private static final String TAG = "NSD";
-  private static final String SERVICE_TYPE = "_http._tcp.";
+  private static final String SERVICE_TYPE = "_openbot-server._tcp.";
 
   private final DiscoveryListener mDiscoveryListener =
       new DiscoveryListener() {
@@ -23,13 +22,12 @@ class NsdService {
           // A service was found!  Do something with it.
           String name = service.getServiceName();
           String type = service.getServiceType();
-          Log.d(TAG, "Service Name=" + name);
-          Log.d(TAG, "Service Type=" + type);
-          if (type.equals(SERVICE_TYPE) && name.contains("Openbot")) {
+          Timber.d("Service Name=%s, Type=%s", name, type);
+          if (type.equals(SERVICE_TYPE)) {
             try {
               mNsdManager.resolveService(service, mResolveListener);
             } catch (IllegalArgumentException e) {
-              Log.w(TAG, e);
+              Timber.w(e, "Unable to resolve openbot server service");
             }
           }
         }
@@ -59,13 +57,13 @@ class NsdService {
 
   public void start(Context context, ResolveListener resolveListener) {
     this.mResolveListener = resolveListener;
-    Log.d(TAG, "Start discovery");
+    Timber.d("Start discovery");
     mNsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
     mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
   }
 
   public void stop() {
-    Log.d(TAG, "Stop discovery");
+    Timber.d("Stop discovery");
     mNsdManager.stopServiceDiscovery(mDiscoveryListener);
   }
 }

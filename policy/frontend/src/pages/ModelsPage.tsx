@@ -52,7 +52,7 @@ export function ListView() {
                         <List.Item key={name}>
                             <div>
                                 <h6>{name}</h6>
-                                {distanceInWordsToNow(new Date(mtime * 1000).toISOString())}
+                                {distanceInWordsToNow(new Date(mtime * 1000))}
                             </div>
                             <DeleteModalWithButton path={name} type="model file"/>
                         </List.Item>
@@ -79,7 +79,7 @@ function ModelDetails() {
             <PublishModalWithButton model={model.name}/>
         </Panel>
         <GridView>
-            <Plot logs={model.logs} metric="MeanAbsoluteError"/>
+            <Plot logs={model.logs} metric="mean_absolute_error"/>
             <Plot logs={model.logs} metric="direction_metric"/>
             <Plot logs={model.logs} metric="angle_metric"/>
             <Plot logs={model.logs} metric="loss"/>

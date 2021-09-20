@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -34,15 +33,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentLoggerBinding;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.ImageUtils;
-import org.openbot.server.ServerCommunication;
-import org.openbot.server.ServerListener;
 import org.openbot.tflite.Model;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
@@ -52,13 +48,12 @@ import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 import timber.log.Timber;
 
-public class LoggerFragment extends CameraFragment implements ServerListener {
+public class LoggerFragment extends CameraFragment {
 
   private FragmentLoggerBinding binding;
   private Handler handler;
   private HandlerThread handlerThread;
   private Intent intentSensorService;
-  private ServerCommunication serverCommunication;
   protected String logFolder;
 
   protected boolean loggingEnabled;
@@ -113,30 +108,10 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    List<String> models =
-        masterList.stream()
-            .filter(f -> f.pathType != Model.PATH_TYPE.URL)
-            .map(f -> org.openbot.utils.FileUtils.nameWithoutExtension(f.name))
-            .collect(Collectors.toList());
+    List<String> models = getModelNames(f -> f.pathType != Model.PATH_TYPE.URL);
+    initModelSpinner(binding.modelSpinner, models, "");
+    initServerSpinner(binding.serverSpinner);
 
-    ArrayAdapter<String> modelAdapter =
-        new ArrayAdapter<>(requireContext(), R.layout.spinner_item, models);
-    modelAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-    binding.modelSpinner.setAdapter(modelAdapter);
-    binding.modelSpinner.setOnItemSelectedListener(
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String selected = parent.getItemAtPosition(position).toString();
-            masterList.stream()
-                .filter(f -> f.name.contains(selected))
-                .findFirst()
-                .ifPresent(f -> updateCropImageInfo(f));
-          }
-
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
-        });
     binding.resolutionSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           @Override
@@ -173,7 +148,8 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
         });
   }
 
-  private void updateCropImageInfo(Model selected) {
+  @Override
+  protected void setModel(Model selected) {
     frameToCropTransform = null;
     binding.cropInfo.setText(
         String.format(
@@ -200,8 +176,6 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
 
   @Override
   public synchronized void onResume() {
-    serverCommunication = new ServerCommunication(requireContext(), this);
-    serverCommunication.start();
     handlerThread = new HandlerThread("logging");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
@@ -218,7 +192,6 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
     } catch (final InterruptedException e) {
       e.printStackTrace();
     }
-    serverCommunication.stop();
     super.onPause();
   }
 
@@ -317,11 +290,11 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
     // Pack and upload the collected data
     runInBackground(
         () -> {
-          String logZipFile = logFolder + ".zip";
-          // Zip the log folder and then delete it
-          File folder = new File(logFolder);
-          File zip = new File(logZipFile);
           try {
+            String logZipFile = logFolder + ".zip";
+            // Zip the log folder and then delete it
+            File folder = new File(logFolder);
+            File zip = new File(logZipFile);
             TimeUnit.MILLISECONDS.sleep(500);
             // These two lines below are messy and may cause bugs. needs to be looked into
             ZipUtil.pack(folder, zip);
@@ -553,10 +526,4 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
   public void onConnectionEstablished(String ipAddress) {
     requireActivity().runOnUiThread(() -> binding.ipAddress.setText(ipAddress));
   }
-
-  @Override
-  public void onAddModel(String model) {}
-
-  @Override
-  public void onRemoveModel(String model) {}
 }

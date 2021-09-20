@@ -1,15 +1,12 @@
 import asyncio
-import glob
 import os
 import shutil
 import threading
-
 from aiohttp import web
 from aiohttp_json_rpc import JsonRpc
 import numpy as np
 from numpyencoder import NumpyEncoder
-
-from .dataset import get_dataset_list, get_dir_info, get_info
+from .dataset import get_dataset_list, get_dir_info, get_info, redoMatching
 from .models import (
     get_model_info,
     get_models,
@@ -20,7 +17,7 @@ from .models import (
 from .preview import handle_preview
 from .prediction import getPrediction
 from .upload import handle_file_upload
-from .. import base_dir, dataset_dir, models_dir
+from .. import base_dir, dataset_dir
 from ..train import (
     CancelledException,
     Hyperparameters,
@@ -94,6 +91,7 @@ async def init_api(app: web.Application):
         ("", getSession),
         ("", moveSession),
         ("", deleteSession),
+        ("", redoMatching),
         ("", start),
         ("", stop),
     )

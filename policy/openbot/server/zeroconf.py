@@ -2,12 +2,18 @@
 
 import asyncio
 import logging
+import os
 import socket
 import sys
 
 from aiohttp import web
 from aiozeroconf import ServiceInfo, Zeroconf
 from netifaces import interfaces, ifaddresses, AF_INET
+
+SERVICE_TYPE = "_openbot-server._tcp.local."
+
+loop = asyncio.get_event_loop()
+zc = Zeroconf(loop)
 
 
 async def register(app: web.Application):
@@ -16,21 +22,24 @@ async def register(app: web.Application):
 
 
 async def run_test(zc):
-    global info, desc
     desc = {}
     local_ip = ip4_address()
+    name = (
+        os.getenv("OPENBOT_NAME", socket.gethostname())
+        .replace(".local", "")
+        .replace(".", "-")
+    )
 
     info = ServiceInfo(
-        "_http._tcp.local.",
-        "Openbot Web Site._http._tcp.local.",
+        SERVICE_TYPE,
+        f"{name}.{SERVICE_TYPE}",
         address=socket.inet_aton(local_ip),
         port=8000,
         weight=0,
         priority=0,
         properties=desc,
-        server="openbot.local.",
     )
-    print("Registration of a service, press Ctrl-C to exit...")
+    print("Registration of the service with name:", name)
     await zc.register_service(info)
 
 
@@ -60,9 +69,6 @@ async def on_shutdown(app):
     print("Unregistering...")
     await do_close(zc)
 
-
-loop = asyncio.get_event_loop()
-zc = Zeroconf(loop)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)

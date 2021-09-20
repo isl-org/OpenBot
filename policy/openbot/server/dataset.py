@@ -45,8 +45,8 @@ def get_info(path, basename=None):
     if not os.path.isdir(real_path):
         return None
 
-    isSession = is_session(real_path)
-    if isSession:
+    is_session = os.path.isdir(real_path + "/images")
+    if is_session:
         try:
             max_offset = 1e3
             frames = associate_frames.match_frame_session(
@@ -72,7 +72,7 @@ def get_info(path, basename=None):
         return {
             "path": "/" + path,
             "name": basename,
-            "is_session": isSession,
+            "is_session": is_session,
             "ctrl": ctrl,
             "seconds": seconds,
             "error": error,
@@ -86,14 +86,16 @@ def get_info(path, basename=None):
     return {
         "path": "/" + path,
         "name": basename,
-        "is_session": isSession,
+        "is_session": is_session,
         "files": file_count - dir_count,
         "dirs": dir_count,
     }
 
 
-def is_session(path):
-    return os.path.isdir(path + "/images")
+def redoMatching(path):
+    max_offset = 1e3
+    associate_frames.match_frame_session(dataset_dir + path, max_offset, True, True)
+    return True
 
 
 def count_lines(path):
