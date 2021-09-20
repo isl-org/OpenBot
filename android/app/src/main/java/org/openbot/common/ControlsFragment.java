@@ -59,7 +59,8 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
   protected final String voice = "matthew";
   protected List<Model> masterList;
 
-  private ServerCommunication serverCommunication;
+  protected ServerCommunication serverCommunication;
+
   private ArrayAdapter<String> modelAdapter;
   private ArrayAdapter<String> serverAdapter;
   private Spinner modelSpinner;

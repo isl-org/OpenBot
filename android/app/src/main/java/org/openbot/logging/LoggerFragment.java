@@ -39,7 +39,6 @@ import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentLoggerBinding;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.ImageUtils;
-import org.openbot.server.ServerCommunication;
 import org.openbot.tflite.Model;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
@@ -55,7 +54,6 @@ public class LoggerFragment extends CameraFragment {
   private Handler handler;
   private HandlerThread handlerThread;
   private Intent intentSensorService;
-  private ServerCommunication serverCommunication;
   protected String logFolder;
 
   protected boolean loggingEnabled;
@@ -292,11 +290,11 @@ public class LoggerFragment extends CameraFragment {
     // Pack and upload the collected data
     runInBackground(
         () -> {
-          String logZipFile = logFolder + ".zip";
-          // Zip the log folder and then delete it
-          File folder = new File(logFolder);
-          File zip = new File(logZipFile);
           try {
+            String logZipFile = logFolder + ".zip";
+            // Zip the log folder and then delete it
+            File folder = new File(logFolder);
+            File zip = new File(logZipFile);
             TimeUnit.MILLISECONDS.sleep(500);
             // These two lines below are messy and may cause bugs. needs to be looked into
             ZipUtil.pack(folder, zip);
