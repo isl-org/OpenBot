@@ -120,20 +120,27 @@ public class ServerCommunication {
             }
           }
 
-          String[] list = dir.list((dir1, name) -> name.endsWith(".tflite"));
-          if (list != null) {
-            for (String name : list) {
-              if (!valid.contains(name)) {
-                File file = new File(dir + File.separator + name);
-                if (file.delete()) {
-                  serverListener.onRemoveModel(name);
-                  Timber.d("deleted: %s", name);
-                } else {
-                  Timber.e("delete error: %s", name);
-                }
-              }
-            }
-          }
+          // TODO: Fix the commented code.
+          //  Currently all models that were not added by server (e.g. object detection) are
+          //  removed. The file delete should probably be handled in onRemoveModel in
+          //  ControlsFragment. MasterList/ModelManager needs to be updated and it needs be checked
+          //  that only autopilot models that were added from the server are removed.
+
+          //          String[] list = dir.list((dir1, name) -> name.endsWith(".tflite"));
+          //          if (list != null) {
+          //            for (String name : list) {
+          //              if (!valid.contains(name)) {
+          //                File file = new File(dir + File.separator + name);
+          //                if (file.delete()) {
+          //                  serverListener.onRemoveModel(name);
+          //                  Timber.d("deleted: %s", name);
+          //                } else {
+          //                  Timber.e("delete error: %s", name);
+          //                }
+          //              }
+          //            }
+          //          }
+
         }
       };
   private final ServerListener serverListener;
