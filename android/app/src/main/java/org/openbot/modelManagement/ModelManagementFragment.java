@@ -284,8 +284,13 @@ public class ModelManagementFragment extends Fragment
         "Yes",
         (dialog, id) -> {
           new File(mItem.path).delete();
-          masterList.remove(mItem);
-          showModels(masterList);
+          Model originalModelConfig =
+              FileUtils.getOriginalModelFromConfig(requireActivity(), mItem);
+          if (originalModelConfig != null) {
+            mItem.setPath(originalModelConfig.path);
+            mItem.setPathType(originalModelConfig.pathType);
+            showModels(masterList);
+          }
           FileUtils.updateModelConfig(requireActivity(), masterList);
         });
     builder.setNegativeButton("Cancel", (dialog, id) -> {});

@@ -124,6 +124,29 @@ public class FileUtils {
     }
   }
 
+  public static Model getOriginalModelFromConfig(Activity activity, Model model) {
+    String configFile = "config.json";
+    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new PostProcessingEnabler()).create();
+    JsonElement jsonElement = null;
+    try {
+      jsonElement =
+          gson.fromJson(
+                  new InputStreamReader(activity.getAssets().open(configFile)), JsonElement.class)
+              .getAsJsonArray();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    Type listType = new TypeToken<List<Model>>() {}.getType();
+    List<Model> modelList = gson.fromJson(jsonElement, listType);
+    if (modelList != null)
+      for (Model modelInfo : modelList)
+        if (Objects.equals(model.id, modelInfo.id)) {
+          return modelInfo;
+        }
+    return null;
+  }
+
   public static String nameWithoutExtension(String name) {
     return name.replaceFirst("[.][^.]+$", "");
   }
