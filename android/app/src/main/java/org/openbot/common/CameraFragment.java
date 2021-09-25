@@ -10,7 +10,6 @@ import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -28,7 +27,6 @@ import androidx.viewbinding.ViewBinding;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -208,8 +206,6 @@ public abstract class CameraFragment extends ControlsFragment {
             + File.separator
             + getString(R.string.app_name)
             + File.separator
-            + new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date())
-            + File.separator
             + "videos";
     final File myDir = new File(outputDirectory);
 
@@ -236,9 +232,7 @@ public abstract class CameraFragment extends ControlsFragment {
           public void onVideoSaved(
               @NonNull @NotNull VideoCapture.OutputFileResults outputFileResults) {
             Uri savedUri = Uri.fromFile(videoFile);
-            Toast.makeText(
-                    requireContext(), "Video capture succeeded:" + savedUri, Toast.LENGTH_SHORT)
-                .show();
+            Timber.d("Video capture succeeded:" + savedUri);
           }
 
           @Override
