@@ -61,7 +61,14 @@
                         android:padding="16dp"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
-                        tools:text="Accelerometer" />
+                        tools:text="@string/selectAll" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:background="@android:color/darker_gray" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/listView"
@@ -69,6 +76,7 @@
                         android:layout_height="wrap_content"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior"
                         tools:listitem="@layout/item_sensor" />
+
                 </LinearLayout>
 
             </androidx.core.widget.NestedScrollView>
