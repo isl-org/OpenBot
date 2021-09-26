@@ -1,5 +1,6 @@
 package org.openbot.logging;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -11,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.databinding.DialogSensorsBinding;
@@ -30,6 +33,7 @@ public class SensorsDialog extends DialogFragment {
     setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog);
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   @Override
   public View onCreateView(
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,11 +61,41 @@ public class SensorsDialog extends DialogFragment {
         }
     }
 
-    SensorListAdapter adapter = new SensorListAdapter(list, preferencesManager);
+    SensorListAdapter adapter =
+        new SensorListAdapter(list, binding.selectAllCheck, preferencesManager);
 
     binding.listView.setLayoutManager(new LinearLayoutManager(requireContext()));
     binding.listView.setAdapter(adapter);
     binding.dismiss.setOnClickListener(v -> dismiss());
+
+    int sensorStatusCount = 0;
+
+    for (boolean b : new ArrayList<>(list.values()))
+      if (b) sensorStatusCount++;
+      else break;
+
+    if (list.values().size() == sensorStatusCount) {
+      binding.selectAllCheck.setChecked(true);
+      binding.selectAllCheck.setText(getResources().getText(R.string.clearAll));
+    } else {
+      binding.selectAllCheck.setChecked(false);
+      binding.selectAllCheck.setText(getResources().getText(R.string.selectAll));
+    }
+
+    binding.selectAllCheck.setOnClickListener(
+        v -> {
+          for (Map.Entry<String, Boolean> entry : list.entrySet())
+            preferencesManager.setSensorStatus(binding.selectAllCheck.isChecked(), entry.getKey());
+
+          binding.selectAllCheck.setChecked(binding.selectAllCheck.isChecked());
+          binding.selectAllCheck.setText(
+              binding.selectAllCheck.isChecked()
+                  ? getResources().getText(R.string.clearAll)
+                  : getResources().getText(R.string.selectAll));
+
+          adapter.updateStatusValue(binding.selectAllCheck.isChecked());
+          adapter.notifyDataSetChanged();
+        });
 
     binding.delay.setText(String.valueOf(preferencesManager.getDelay()));
     binding.delay.addTextChangedListener(

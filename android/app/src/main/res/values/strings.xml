@@ -142,5 +142,6 @@
     <string name="confirm_title">Are you sure?</string>
     <string name="stream_change_body">The app needs to be restarted for this setting to take effect</string>
 
-
+    <string name="selectAll">Select All</string>
+    <string name="clearAll">Clear All</string>
 </resources>
