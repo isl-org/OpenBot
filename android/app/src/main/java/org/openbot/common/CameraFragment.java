@@ -52,6 +52,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private Bitmap bitmapBuffer;
   private int rotationDegrees;
   private VideoCapture videoCapture;
+  private boolean freshPermissionsGranted = false;
 
   protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
@@ -107,6 +108,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private void bindCameraUseCases() {
     converter = new YuvToRgbConverter(requireContext());
     bitmapBuffer = null;
+    videoCapture = new VideoCapture.Builder().build();
     preview = new Preview.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).build();
     final boolean rotated = ImageUtils.getScreenOrientation(requireActivity()) % 180 == 90;
     final PreviewView.ScaleType scaleType =
@@ -156,6 +158,7 @@ public abstract class CameraFragment extends ControlsFragment {
           isGranted -> {
             if (isGranted) {
               setupCamera();
+              freshPermissionsGranted = true;
             } else if (PermissionUtils.shouldShowRational(
                 requireActivity(), Constants.PERMISSION_CAMERA)) {
               PermissionUtils.showCameraPermissionsPreviewToast(requireActivity());
@@ -199,8 +202,10 @@ public abstract class CameraFragment extends ControlsFragment {
 
   @SuppressLint("RestrictedApi")
   public void startVideoRecording() {
-    videoCapture = new VideoCapture.Builder().build();
-    bindCameraUseCases();
+    if (freshPermissionsGranted) {
+      videoCapture = new VideoCapture.Builder().build();
+      bindCameraUseCases();
+    }
     String outputDirectory =
         Environment.getExternalStorageDirectory().getAbsolutePath()
             + File.separator
