@@ -1,6 +1,8 @@
 package org.openbot.common;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -52,6 +55,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private Bitmap bitmapBuffer;
   private int rotationDegrees;
   private VideoCapture videoCapture;
+  private Dialog loadingDialog;
 
   protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
@@ -231,6 +235,7 @@ public abstract class CameraFragment extends ControlsFragment {
           public void onVideoSaved(
               @NonNull @NotNull VideoCapture.OutputFileResults outputFileResults) {
             Uri savedUri = Uri.fromFile(videoFile);
+            if (loadingDialog != null) loadingDialog.cancel();
             Timber.d("Video capture succeeded:" + savedUri);
           }
 
@@ -247,6 +252,16 @@ public abstract class CameraFragment extends ControlsFragment {
   @SuppressLint("RestrictedApi")
   public void stopVideoRecording() {
     videoCapture.stopRecording();
+    showLoading(requireContext());
+  }
+
+  public void showLoading(final Context context) {
+    loadingDialog = new Dialog(context);
+    loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    loadingDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    loadingDialog.getWindow().setDimAmount(0.1f);
+    loadingDialog.setContentView(R.layout.dialog_loader);
+    loadingDialog.show();
   }
 
   protected abstract void processFrame(Bitmap image, ImageProxy imageProxy);
