@@ -267,7 +267,7 @@ public class ModelManagementFragment extends Fragment
         if (model.id.equals(mItem.id)) {
           model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
           model.setPathType(Model.PATH_TYPE.FILE);
-          adapter.notifyDataSetChanged();
+          //          adapter.notifyDataSetChanged();
           FileUtils.updateModelConfig(requireActivity(), masterList);
           break;
         }
@@ -284,16 +284,20 @@ public class ModelManagementFragment extends Fragment
         "Yes",
         (dialog, id) -> {
           new File(mItem.path).delete();
+          int index = masterList.indexOf(mItem);
           Model originalModelConfig =
               FileUtils.getOriginalModelFromConfig(requireActivity(), mItem);
           if (originalModelConfig == null) {
-            if (mItem.pathType == Model.PATH_TYPE.FILE) masterList.remove(mItem);
+            if (mItem.pathType == Model.PATH_TYPE.FILE) {
+              masterList.remove(mItem);
+              adapter.notifyItemRemoved(index);
+            }
           } else {
             mItem.setPath(originalModelConfig.path);
             mItem.setPathType(originalModelConfig.pathType);
+            adapter.notifyItemChanged(index);
           }
           FileUtils.updateModelConfig(requireActivity(), masterList);
-          showModels(masterList);
         });
     builder.setNegativeButton("Cancel", (dialog, id) -> {});
     AlertDialog dialog = builder.create();
