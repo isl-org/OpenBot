@@ -92,7 +92,7 @@ public class PermissionUtils {
   public static void requestLoggingPermissions(Activity activity) {
     requestPermissions(
         activity,
-        new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE, PERMISSION_LOCATION},
+        new String[] {PERMISSION_CAMERA, PERMISSION_AUDIO, PERMISSION_STORAGE, PERMISSION_LOCATION},
         REQUEST_LOGGING_PERMISSIONS);
   }
 
@@ -111,10 +111,11 @@ public class PermissionUtils {
   }
 
   public static boolean checkLoggingPermissions(int[] grantResults) {
-    return grantResults.length > 2
+    return grantResults.length > 3
         && grantResults[0] == PackageManager.PERMISSION_GRANTED
         && grantResults[1] == PackageManager.PERMISSION_GRANTED
-        && grantResults[2] == PackageManager.PERMISSION_GRANTED;
+        && grantResults[2] == PackageManager.PERMISSION_GRANTED
+        && grantResults[3] == PackageManager.PERMISSION_GRANTED;
   }
 
   public static void showControllerPermissionsToast(Activity activity) {
@@ -150,6 +151,16 @@ public class PermissionUtils {
         .show();
   }
 
+  public static void showAudioPermissionLoggingToast(Activity activity) {
+    Toast.makeText(
+            activity.getApplicationContext(),
+            activity.getResources().getString(R.string.record_audio_permission_denied)
+                + " "
+                + activity.getResources().getString(R.string.permission_reason_save_audio),
+            Toast.LENGTH_LONG)
+        .show();
+  }
+
   public static void showCameraPermissionControllerToast(Activity activity) {
     Toast.makeText(
             activity.getApplicationContext(),
@@ -165,7 +176,7 @@ public class PermissionUtils {
             activity.getApplicationContext(),
             activity.getResources().getString(R.string.camera_permission_denied)
                 + " "
-                + activity.getResources().getString(R.string.permission_reason_preview),
+                + activity.getResources().getString(R.string.permission_reason_preview_video),
             Toast.LENGTH_LONG)
         .show();
   }
@@ -181,6 +192,10 @@ public class PermissionUtils {
 
     if (shouldShowRational(activity, Constants.PERMISSION_STORAGE)) {
       showStoragePermissionLoggingToast(activity);
+    }
+
+    if (shouldShowRational(activity, PERMISSION_AUDIO)) {
+      showAudioPermissionLoggingToast(activity);
     }
   }
 

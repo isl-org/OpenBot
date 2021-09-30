@@ -360,8 +360,10 @@ public class LoggerFragment extends CameraFragment implements ServerListener {
           new ActivityResultContracts.RequestMultiplePermissions(),
           result -> {
             result.forEach((permission, granted) -> allGranted = allGranted && granted);
-            if (allGranted) setIsLoggingActive(true);
-            else {
+            if (allGranted) {
+              bindCameraUseCases();
+              setIsLoggingActive(true);
+            } else {
               PermissionUtils.showLoggingPermissionsToast(requireActivity());
             }
           });

@@ -52,7 +52,6 @@ public abstract class CameraFragment extends ControlsFragment {
   private Bitmap bitmapBuffer;
   private int rotationDegrees;
   private VideoCapture videoCapture;
-  private boolean freshPermissionsGranted = false;
 
   protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
@@ -105,7 +104,7 @@ public abstract class CameraFragment extends ControlsFragment {
   }
 
   @SuppressLint({"UnsafeExperimentalUsageError", "UnsafeOptInUsageError"})
-  private void bindCameraUseCases() {
+  protected void bindCameraUseCases() {
     converter = new YuvToRgbConverter(requireContext());
     bitmapBuffer = null;
     videoCapture = new VideoCapture.Builder().build();
@@ -124,7 +123,7 @@ public abstract class CameraFragment extends ControlsFragment {
           new ImageAnalysis.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).build();
     else
       imageAnalysis = new ImageAnalysis.Builder().setTargetResolution(analyserResolution).build();
-    // insert your code here.
+
     imageAnalysis.setAnalyzer(
         cameraExecutor,
         image -> {
@@ -158,7 +157,6 @@ public abstract class CameraFragment extends ControlsFragment {
           isGranted -> {
             if (isGranted) {
               setupCamera();
-              freshPermissionsGranted = true;
             } else if (PermissionUtils.shouldShowRational(
                 requireActivity(), Constants.PERMISSION_CAMERA)) {
               PermissionUtils.showCameraPermissionsPreviewToast(requireActivity());
@@ -201,11 +199,7 @@ public abstract class CameraFragment extends ControlsFragment {
   }
 
   @SuppressLint("RestrictedApi")
-  public void startVideoRecording() {
-    if (freshPermissionsGranted) {
-      videoCapture = new VideoCapture.Builder().build();
-      bindCameraUseCases();
-    }
+  protected void startVideoRecording() {
     String outputDirectory =
         Environment.getExternalStorageDirectory().getAbsolutePath()
             + File.separator
