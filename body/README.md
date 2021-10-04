@@ -8,6 +8,11 @@
 We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware.
 ![Assembly](../docs/images/assembly.gif)
 
+
+We also have a [body](cad/rc_truck_body/) designed for commercially available 1:16 RC-Trucks (such as [this](https://www.amazon.de/dp/B00M3J7DJW) on Amazon). 
+
+Build instructions for OpenBot RC-Truck can be found [here](cad/rc_truck_body/README.md).  
+
 ## Chassis
 
 ### 3D printing
