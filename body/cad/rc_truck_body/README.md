@@ -11,3 +11,46 @@ We have designed a body for commercially available 1:16 RC-Trucks (such as [this
 
 ![RC-Truck-Banner](/docs/images/rc-truck-banner.jpg)
 
+We also have a [body](/body/) designed for a wheeled robot which relies on low-cost, readily available hobby hardware. Instructions [here](/body/README.md). 
+
+## Chassis
+
+### 3D printing
+
+You will need to print the following parts in order to build your OpenBot RC-Truck.
+
+1) main_frame ([STL](/body/cad/rc_truck_body/main_frame.stl), [STEP](/body/cad/rc_truck_body/main_frame.stp))
+2) side_cover \[x2\] ([STL](/body/cad/rc_truck_body/side_cover.stl), [STEP](/body/cad/rc_truck_body/side_cover.stp))
+3) phone_mount_bottom ([STL](/body/cad/phone_mount/phone_mount_bottom.stl), [STEP](/body/cad/phone_mount/phone_mount_bottom.stp))
+4) phone_mount_top ([STL](/body/cad/phone_mount/phone_mount_top.stl), [STEP](/body/cad/phone_mount/phone_mount_top.stp))
+
+Notice that \[xN\] indicates the number of copies (i.e., N) of a particular part (wherever applicable).
+
+Following parts are optional (but recommended) to make your OpenBot RC-Truck more compact and aesthetically pleasing.
+
+5) camera_elevator ([STL](/body/cad/rc_truck_body/camera_elevator.stl), [STEP](/body/cad/rc_truck_body/camera_elevator.stp))
+6) electronics_cover \[x2\] ([STL](/body/cad/rc_truck_body/electronics_cover.stl), [STEP](/body/cad/rc_truck_body/electronics_cover.stp))
+7) spacer \[x4\] ([STL](/body/cad/rc_truck_body/spacer.stl), [STEP](/body/cad/rc_truck_body/spacer.stp))
+8) front_light_spacer \[x2\] ([STL](/body/cad/rc_truck_body/front_light_spacer.stl), [STEP](/body/cad/rc_truck_body/front_light_spacer.stp))
+
+For all the above parts, your build plate needs to be at least 260mmx220mm, which is the print size of the ```main_frame``` part.
+
+Since a lot of common 3D printers have a smaller build volume (usually 220mmx220mm), there are two more options that can work. 
+First option is to print the ```main_frame``` part at 45 degrees with additional support material. 
+Second option requires modifying the original ```main_frame``` part file. We recommend Autodesk Fusion for such CAD modifications. 
+For this option, we make its [STEP](/body/cad/rc_truck_body/main_frame.stp) file available, which you can cut into two/three smaller parts. 
+The resulting sub-parts will then fit on a standard (i.e., 220mmx220mm) build plate and can be joined together after printing. 
+In future, we may also release such a modular version of the ```main_frame``` part here. All other parts require a minimum build plate of 220mmx60mm.
+
+On an Ultimaker S5, we achieved good results with the following settings:
+
+- layer height: 0.2mm
+- wall thickness: 1.5mm
+- infill density: 20%
+- infill pattern: grid
+- print speed 80 mm/s
+- no support
+
+We were able to print the chassis with PLA, CPE and ABS. In our experience the print was not affected very much by the print settings. However, if you have the patience, printing slower and with smaller layer height will improve the print. Also adding a support structure can improve the print, but it will require additional work to remove afterwards.
+
+Before you proceed with the build, you may need to clean the 3D print. However, using the above settings, we did not have to perform any filing/cleaning during the build process.
