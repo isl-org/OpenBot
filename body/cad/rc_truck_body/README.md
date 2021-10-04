@@ -24,7 +24,7 @@ You will need to print the following parts in order to build your OpenBot RC-Tru
 3) phone_mount_bottom ([STL](/body/cad/phone_mount/phone_mount_bottom.stl), [STEP](/body/cad/phone_mount/phone_mount_bottom.stp))
 4) phone_mount_top ([STL](/body/cad/phone_mount/phone_mount_top.stl), [STEP](/body/cad/phone_mount/phone_mount_top.stp))
 
-Notice that \[xN\] indicates the number of copies (i.e., N) of a particular part (wherever applicable).
+Notice that \[xN\] indicates the number of copies (i.e., N) you need to print of a particular part (wherever applicable).
 
 Following parts are optional (but recommended) to make your OpenBot RC-Truck more compact and aesthetically pleasing.
 
@@ -37,7 +37,7 @@ For all the above parts, your build plate needs to be at least 260mmx220mm, whic
 
 Since a lot of common 3D printers have a smaller build volume (usually 220mmx220mm), there are two more options that can work. 
 First option is to print the ```main_frame``` part at 45 degrees with additional support material. 
-Second option requires modifying the original ```main_frame``` part file. We recommend Autodesk Fusion for such CAD modifications. 
+Second option requires modifying the original ```main_frame``` part file. We recommend using Autodesk Fusion 360 for such CAD modifications. 
 For this option, we make its [STEP](/body/cad/rc_truck_body/main_frame.stp) file available, which you can cut into two/three smaller parts. 
 The resulting sub-parts will then fit on a standard (i.e., 220mmx220mm) build plate and can be joined together after printing. 
 In future, we may also release such a modular version of the ```main_frame``` part here. All other parts require a minimum build plate of 220mmx60mm.
@@ -53,4 +53,10 @@ On an Ultimaker S5, we achieved good results with the following settings:
 
 We were able to print the chassis with PLA, CPE and ABS. In our experience the print was not affected very much by the print settings. However, if you have the patience, printing slower and with smaller layer height will improve the print. Also adding a support structure can improve the print, but it will require additional work to remove afterwards.
 
-Before you proceed with the build, you may need to clean the 3D print. However, using the above settings, we did not have to perform any filing/cleaning during the build process.
+Before you proceed with the build, you may need to clean the 3D print. However, using the above settings, we did not need any filing or cleaning during our build process. If possible, we recommend using a combination of two different colors (for example green/black or red/black) for printing different parts of the same OpenBot RC-Truck build (as shown below for red/black combo).
+
+<p float="left">
+  <img src="/docs/images/3d_print_rc_1.jpg" width="32%" />
+  <img src="/docs/images/3d_print_rc_2.jpg" width="32%" /> 
+  <img src="/docs/images/3d_print_rc_3.jpg" width="32%" />
+</p>
