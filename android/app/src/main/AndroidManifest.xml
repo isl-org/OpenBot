@@ -7,35 +7,52 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- RTSP Video streaming -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!-- RTSP Video streaming -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="true"/>
-    <uses-feature android:name="android.hardware.camera.front" android:required="true" />
-    <uses-feature android:name="android.hardware.usb.host" android:required="true"/>
-    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false"/>
-    <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="false"/>
-    <uses-feature android:name="android.hardware.sensor.light" android:required="false"/>
-
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.sensor.gyroscope"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.sensor.light"
+        android:required="false" />
 
     <application
+        android:name=".OpenBotApplication"
         android:allowBackup="false"
         android:icon="@drawable/openbot_icon"
         android:label="@string/app_name"
-        android:name=".OpenBotApplication"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/openbot_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".main.MainActivity"
+        <activity
+            android:name=".original.PlayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".original.DefaultActivity$PlayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".main.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,7 +70,8 @@
             android:name=".original.DefaultActivity"
             android:label="@string/activity_name"
             android:noHistory="false">
-<!--
+
+            <!--
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
@@ -61,16 +79,16 @@
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
--->
+            -->
 
         </activity>
-
         <activity
             android:name=".modelManagement.BackHandlingFilePickerActivity"
             android:label="@string/app_name"
             android:theme="@style/FilePickerTheme">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -79,19 +97,17 @@
             android:name=".logging.SensorService"
             android:enabled="true"
             android:launchMode="singleTask" />
-
-        <service android:name="net.majorkernelpanic.streaming.rtsp.RtspServer"/>
+        <service android:name="net.majorkernelpanic.streaming.rtsp.RtspServer" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
     </application>
 
 </manifest>

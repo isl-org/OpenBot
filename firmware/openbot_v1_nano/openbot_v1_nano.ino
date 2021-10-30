@@ -52,7 +52,7 @@
 #define HAS_SPEED_SENSORS 0
 
 // Enable/Disable sonar (1,0)
-#define HAS_SONAR 0
+#define HAS_SONAR 1
 
 // Enable/Disable median filter for sonar measurements (1,0)
 #define USE_MEDIAN 0
@@ -74,15 +74,17 @@
 
 //Setup the pin definitions
 #if (OPENBOT == DIY)
-  #define PIN_PWM_L1 5
-  #define PIN_PWM_L2 6
-  #define PIN_PWM_R1 9
-  #define PIN_PWM_R2 10
+  #define RightMotor_E_pin 5
+  #define LeftMotor_E_pin 6
+  #define PIN_PWM_L1 10
+  #define PIN_PWM_L2 11
+  #define PIN_PWM_R1 8
+  #define PIN_PWM_R2 9
   #define PIN_SPEED_L 2
   #define PIN_SPEED_R 3
   #define PIN_VIN A7
-  #define PIN_TRIGGER 12
-  #define PIN_ECHO 11
+  #define PIN_TRIGGER 13
+  #define PIN_ECHO 12
   #define PIN_LED_LB 4
   #define PIN_LED_RB 7
 #elif (OPENBOT == PCB_V1)
@@ -116,7 +118,7 @@
 //------------------------------------------------------//
 
 #include <limits.h>
-const unsigned int STOP_THRESHOLD = 32; //cm
+const unsigned int STOP_THRESHOLD = 7; //cm
 
 #if NO_PHONE_MODE
   int turn_direction = 0; // right
@@ -202,6 +204,8 @@ String inString = "";
 void setup()
 {
   //Outputs
+  pinMode(RightMotor_E_pin, OUTPUT);
+  pinMode(LeftMotor_E_pin, OUTPUT);
   pinMode(PIN_PWM_L1,OUTPUT);
   pinMode(PIN_PWM_L2,OUTPUT);
   pinMode(PIN_PWM_R1,OUTPUT);
@@ -299,8 +303,8 @@ void loop() {
     if (distance_estimate > 4*STOP_THRESHOLD) {
       ctrl_left = distance_estimate;
       ctrl_right = ctrl_left;
-      digitalWrite(PIN_LED_LB, LOW);
-      digitalWrite(PIN_LED_RB, LOW);
+//      digitalWrite(PIN_LED_LB, LOW);
+//      digitalWrite(PIN_LED_RB, LOW);
     }
     // turn slightly
     else if (distance_estimate > 2*STOP_THRESHOLD) {
@@ -316,8 +320,8 @@ void loop() {
     else {
         ctrl_left = -96;
         ctrl_right = -96;
-        digitalWrite(PIN_LED_LB, HIGH);
-        digitalWrite(PIN_LED_RB, HIGH);
+//        digitalWrite(PIN_LED_LB, HIGH);
+//        digitalWrite(PIN_LED_RB, HIGH);
     }
     // flip controls if needed and set indicator light
     if (ctrl_left != ctrl_right) {
@@ -325,12 +329,12 @@ void loop() {
         int temp = ctrl_left;
         ctrl_left = ctrl_right;
         ctrl_right = temp;
-        digitalWrite(PIN_LED_LB, HIGH);
-        digitalWrite(PIN_LED_RB, LOW);
+//        digitalWrite(PIN_LED_LB, HIGH);
+//        digitalWrite(PIN_LED_RB, LOW);
       }
       else {
-        digitalWrite(PIN_LED_LB, LOW);
-        digitalWrite(PIN_LED_RB, HIGH);
+//        digitalWrite(PIN_LED_LB, LOW);
+//        digitalWrite(PIN_LED_RB, HIGH);
       }
     }
     // enforce limits
@@ -358,31 +362,33 @@ void loop() {
 
 void update_left_motors() {
     if (ctrl_left < 0) {
-      analogWrite(PIN_PWM_L1,-ctrl_left);
-      analogWrite(PIN_PWM_L2,0);
+      digitalWrite(PIN_PWM_L1,LOW);
+      digitalWrite(PIN_PWM_L2,HIGH);
+      analogWrite(LeftMotor_E_pin,-ctrl_left);
     }
     else if (ctrl_left > 0) {
-      analogWrite(PIN_PWM_L1,0);
-      analogWrite(PIN_PWM_L2,ctrl_left);
+      digitalWrite(PIN_PWM_L1,HIGH);
+      digitalWrite(PIN_PWM_L2,LOW);
+      analogWrite(LeftMotor_E_pin,ctrl_left);
     }
     else { //Motor brake
-      analogWrite(PIN_PWM_L1,255);
-      analogWrite(PIN_PWM_L2,255);
+      analogWrite(LeftMotor_E_pin,0);
     }
 }
 
 void update_right_motors() {
     if (ctrl_right < 0) {
-      analogWrite(PIN_PWM_R1,-ctrl_right);
-      analogWrite(PIN_PWM_R2,0);
+      digitalWrite(PIN_PWM_R1,LOW);
+      digitalWrite(PIN_PWM_R2,HIGH);
+      analogWrite(RightMotor_E_pin,-ctrl_right);
     }
     else if (ctrl_right > 0) {
-      analogWrite(PIN_PWM_R1,0);
-      analogWrite(PIN_PWM_R2,ctrl_right);
+      digitalWrite(PIN_PWM_R1,HIGH);
+      digitalWrite(PIN_PWM_R2,LOW);
+      analogWrite(RightMotor_E_pin,ctrl_right);
     }
     else { //Motor brake
-      analogWrite(PIN_PWM_R1,255);
-      analogWrite(PIN_PWM_R2,255);
+      analogWrite(RightMotor_E_pin,0);
     }
 }
 

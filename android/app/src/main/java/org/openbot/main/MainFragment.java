@@ -16,6 +16,8 @@ import org.openbot.common.FeatureList;
 import org.openbot.databinding.FragmentMainBinding;
 import org.openbot.model.SubCategory;
 import org.openbot.original.DefaultActivity;
+import org.openbot.original.PlayActivity;
+
 import timber.log.Timber;
 
 public class MainFragment extends Fragment implements OnItemClickListener<SubCategory> {
@@ -85,6 +87,10 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
       case FeatureList.MODEL_MANAGEMENT:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_modelManagementFragment);
+        break;
+      case FeatureList.PLAY:
+        Intent intent2 = new Intent(requireActivity(), PlayActivity.class);
+        startActivity(intent2);
         break;
     }
   }

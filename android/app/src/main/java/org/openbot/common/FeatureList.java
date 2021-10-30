@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.model.Category;
 import org.openbot.model.SubCategory;
+import org.openbot.original.PlayActivity;
 
 public class FeatureList {
   // region Properties
@@ -16,6 +17,7 @@ public class FeatureList {
   public static final String DEFAULT = "Default";
   public static final String CONTROLLER = "Controller";
   public static final String CONTROLLER_MAPPING = "Controller Mapping";
+  public static final String PLAY = "PlayActivity";
 
   // Game
   public static final String GAME = "Game";
@@ -70,6 +72,7 @@ public class FeatureList {
 
     subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(DEFAULT, R.drawable.openbot_icon, "#4B7BFF"));
+    subCategories.add(new SubCategory(PLAY, R.drawable.openbot_icon, "#4B7BFF"));
     categories.add(new Category(LEGACY, subCategories));
 
     subCategories = new ArrayList<>();
