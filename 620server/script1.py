@@ -11,8 +11,9 @@ import random
 
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
-show_animation = True
+show_animation = False
 
 
 class RRT:
@@ -249,8 +250,7 @@ class RRT:
         return d, theta
 
 
-def main(gx=6.0, gy=10.0):
-    print("start " + __file__)
+def main(gx=10.0, gy=10.0):
 
     # ====Search Path with RRT====
     obstacleList = [(5, 5, 1), (3, 6, 2), (3, 8, 2), (3, 10, 2), (7, 5, 2),
@@ -268,8 +268,8 @@ def main(gx=6.0, gy=10.0):
     if path is None:
         print("Cannot find path")
     else:
-        print("found path!!")
-
+        print(path)
+        sys.stdout.flush();
         # Draw final path
         if show_animation:
             rrt.draw_graph()
@@ -277,8 +277,7 @@ def main(gx=6.0, gy=10.0):
             plt.grid(True)
             plt.pause(0.01)  # Need for Mac
             plt.show()
-            print(path[1][1])
-            return path
+            
 
 
 if __name__ == '__main__':
