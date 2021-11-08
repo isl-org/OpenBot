@@ -34,17 +34,20 @@ public class PlayActivity extends AppCompatActivity {
     final Bundle bundle = new Bundle();
     ArrayList x_list = new ArrayList();
     ArrayList y_list = new ArrayList();
-
+    ArrayList angle = new ArrayList();
+    ArrayList distance = new ArrayList();
+    double degree;
+    double gyro;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
-        init();
+        request();
 
 
     }
 
-    private void init() {
+    private void request() {
         EditText gx_num = findViewById(R.id.gx);
         EditText gy_num = findViewById(R.id.gy);
         Button sendBtn = findViewById(R.id.SendBtn);
@@ -117,7 +120,8 @@ public class PlayActivity extends AppCompatActivity {
                 };
 
 
-                new Thread() {
+               Thread t1 =  new Thread() {
+
                     @Override
                     public void run() {
                         String title = "";
@@ -137,19 +141,56 @@ public class PlayActivity extends AppCompatActivity {
                             msg.setData(bundle);
                             handler.sendMessage(msg);
 
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
 
-                        super.run();
+//                        super.run();
                     }
-                }.start();
+                };
+                t1.start();
 
 
             }
         });
 
+
+    }
+
+    private void tracking(){
+        angle();
+        distance();
+
+        for (int i = 0; i<angle.size();i++){
+            //회전 명령
+            //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
+
+            while(getGyro()) {//gyro 데이터 값 가져옴 -> 계속 한번 가져올 때마다 degree에 저장
+                degree += gyro;
+                if ((Double)angle.get(i) * 0.9 < degree && degree < (Double)angle.get(i) * 1.1) {
+                    //아두이노 회전 멈추기신호 send
+                    break;
+                }
+                try {
+                    Thread.sleep(1000);
+                }catch (InterruptedException e){
+
+                }
+            }
+            //직진 명령
+            //거리 계산한것 만큼 아두이노로 start 신호 보냄.
+        }
+    }
+
+    private void angle(){
+
+    }
+
+    private void distance(){
+
+    }
+
+    private void getGyro(){
 
     }
 }
