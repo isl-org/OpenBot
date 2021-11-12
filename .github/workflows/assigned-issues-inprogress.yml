@@ -12,4 +12,4 @@ jobs:
         with:
           project: OpenBot
           column: In progress
-          repo-token: ${{ secrets.GH_TOKEN }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
