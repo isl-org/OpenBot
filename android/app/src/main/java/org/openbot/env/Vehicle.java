@@ -235,4 +235,8 @@ public class Vehicle {
       right = (int) ((control.getRight() - noise.getValue()) * speedMultiplier);
     sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
   }
+
+  public void sendControl(int left, int right){
+    sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
+  }
 }
