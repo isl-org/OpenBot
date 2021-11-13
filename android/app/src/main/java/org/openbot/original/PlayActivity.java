@@ -31,15 +31,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openbot.R;
-import org.openbot.env.SharedPreferencesManager;
-import org.openbot.utils.Enums;
-import org.openbot.env.Vehicle;
-import org.openbot.OpenBotApplication;
-import org.openbot.env.Control;
+//import org.openbot.env.SharedPreferencesManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+
 
 public class PlayActivity extends AppCompatActivity {
 
@@ -48,11 +45,14 @@ public class PlayActivity extends AppCompatActivity {
     ArrayList y_list = new ArrayList();
     ArrayList angle = new ArrayList();
     ArrayList distance = new ArrayList();
+
+
+    ArrayList<Double> movingLength = new ArrayList<Double>();
+    ArrayList<Double> movingDegree = new ArrayList<Double>();
+
+
     double degree;
     double gyro;
-
-    //아두이노 로봇
-    private Vehicle vehicle;
 
     //센서 받아오는 변수들
 
@@ -75,14 +75,21 @@ public class PlayActivity extends AppCompatActivity {
 
     // for radian -> dgree
     private double RAD2DGR = 180 / Math.PI;
-    private static final float NS2S = 1.0f/1000000000.0f;
+    private static final float NS2S = 1.0f / 1000000000.0f;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         request();
         getGyro();
-        vehicle = OpenBotApplication.vehicle;
+
+        //movingLength.clear();
+
+        angle();
+        distance();
+
+
     }
 
     private void request() {
@@ -134,9 +141,39 @@ public class PlayActivity extends AppCompatActivity {
                         Collections.reverse(y_list);
 
 
+                        //테스트용
+
+//                        x_list.clear();
+//                        y_list.clear();
+//
+//                        x_list.add(0);
+//                        x_list.add(1);
+//                        x_list.add(2);
+//                        x_list.add(3);
+//                        x_list.add(4);
+//                        x_list.add(5);
+//                        x_list.add(6);
+//                        x_list.add(7);
+//                        x_list.add(8);
+//
+//
+//
+//                        y_list.add(0);
+//                        y_list.add(1);
+//                        y_list.add(4);
+//                        y_list.add(5);
+//                        y_list.add(6);
+//                        y_list.add(3);
+//                        y_list.add(4);
+//                        y_list.add(5);
+//                        y_list.add(3);
+
+
+                        //테스트용
+
+
                         System.out.println("사이즈는 " + x_list.size());
                         System.out.println("사이즈는 " + y_list.size());
-
 
 
                         System.out.println("x임다");
@@ -152,13 +189,16 @@ public class PlayActivity extends AppCompatActivity {
                         }
 
 
+                        tracking();
+
+
                         Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
 
                     }
                 };
 
 
-               Thread t1 =  new Thread() {
+                Thread t1 = new Thread() {
 
                     @Override
                     public void run() {
@@ -181,6 +221,8 @@ public class PlayActivity extends AppCompatActivity {
 
                         } catch (IOException e) {
                             e.printStackTrace();
+                        } finally {
+                            System.out.println("쓰레드종료됨");
                         }
 
 //                        super.run();
@@ -195,35 +237,85 @@ public class PlayActivity extends AppCompatActivity {
 
     }
 
-    private void tracking(){
+    private void tracking() {
         angle();
         distance();
 
-        for (int i = 0; i<angle.size();i++){
-            //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
-            while(degree < angle.get(i)*1.03 || degree > angle.get(i)*0.97) {
-                if (angle.get(i)>0)
-                    vehicle.sendControl(-130, 0);
-                else
-                    vehicle.sendControl(0,-130);
-                getGyro();
-                degree +=gyro;
-            }
-            //직진 명령
-            
-            //거리 계산한것 만큼 아두이노로 start 신호 보냄.
+//        for (int i = 0; i<angle.size();i++){
+//            //회전 명령
+//            //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
+//
+//            while(getGyro()==1) {//gyro 데이터 값 가져옴 -> 계속 한번 가져올 때마다 degree에 저장
+//                degree += gyro;
+//                if ((Double)angle.get(i) * 0.9 < degree && degree < (Double)angle.get(i) * 1.1) {
+//                    //아두이노 회전 멈추기신호 send
+//                    break;
+//                }
+//                try {
+//                    Thread.sleep(1000);
+//                }catch (InterruptedException e){
+//
+//                }
+//            }
+//            //직진 명령
+//            //거리 계산한것 만큼 아두이노로 start 신호 보냄.
+//        }
+    }
+
+    private void angle() {
+        //ArrayList<Double> initialDegree = new ArrayList<Double>();
+        for (int i = 0; i < x_list.size() - 1; i++) {
+            double current = 0;
+
+            double gap_y = Double.parseDouble(y_list.get(i + 1).toString()) - Double.parseDouble(y_list.get(i).toString());
+            double gap_x = Double.parseDouble(x_list.get(i + 1).toString()) - Double.parseDouble(x_list.get(i).toString());
+
+
+            current = (Math.atan2(gap_y, gap_x) * 180) / Math.PI;
+            //initialDegree.add(current);
+            movingDegree.add(current);
+        }
+
+//        for (int i = 0; i < initialDegree.size(); i++) {
+//            double movingAngle = initialDegree.get(i);
+//            if (i == 0) {
+//                movingDegree.add(movingAngle);
+//            } else {
+//                movingAngle -= initialDegree.get(i - 1);
+//                movingDegree.add(movingAngle);
+//            }
+//        }
+
+
+        System.out.println("앵글값");
+
+        for (int i = 0; i < movingDegree.size(); i++) {
+            System.out.println(movingDegree.get(i));
+        }
+
+
+    }
+
+    private void distance() {
+        for (int i = 0; i < x_list.size() - 1; i++) {
+
+            double gap_y = Double.parseDouble(y_list.get(i + 1).toString()) - Double.parseDouble(y_list.get(i).toString());
+            double gap_x = Double.parseDouble(x_list.get(i + 1).toString()) - Double.parseDouble(x_list.get(i).toString());
+
+            double current = Math.sqrt(((gap_x) * (gap_x)) + ((gap_y) * (gap_y)));
+            movingLength.add(current);
+        }
+
+
+        System.out.println("거리값");
+
+        for (int i = 0; i < movingLength.size(); i++) {
+            System.out.println(movingLength.get(i));
         }
     }
 
-   private void angle(){
+    private int getGyro() {
 
-    }
-
-   private void distance(){
-
-    }
-
-    private int getGyro(){
 
         //Using the Gyroscope & Accelometer
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -237,9 +329,10 @@ public class PlayActivity extends AppCompatActivity {
         findViewById(R.id.getBtn).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
+                switch (event.getAction()) {
 
                     case MotionEvent.ACTION_DOWN:
+                        roll = 0;
                         mSensorManager.registerListener(mGyroLis, mGgyroSensor, SensorManager.SENSOR_DELAY_UI);
                         getBtn.setText("GETTING...");
                         break;
@@ -259,6 +352,7 @@ public class PlayActivity extends AppCompatActivity {
 
     }
 
+
     private class GyroscopeListener implements SensorEventListener {
 
         @Override
@@ -276,17 +370,17 @@ public class PlayActivity extends AppCompatActivity {
             timestamp = event.timestamp;
 
             /* 맨 센서 인식을 활성화 하여 처음 timestamp가 0일때는 dt값이 올바르지 않으므로 넘어간다. */
-            if (dt - timestamp*NS2S != 0) {
+            if (dt - timestamp * NS2S != 0) {
 
                 /* 각속도 성분을 적분 -> 회전각(pitch, roll)으로 변환.
                  * 여기까지의 pitch, roll의 단위는 '라디안'이다.
                  * SO 아래 로그 출력부분에서 멤버변수 'RAD2DGR'를 곱해주어 degree로 변환해줌.  */
-                pitch = pitch + gyroY*dt;
-                roll = roll + gyroX*dt;
-                yaw = yaw + gyroZ*dt;
+                pitch = pitch + gyroY * dt;
+                roll = roll + gyroX * dt;
+                yaw = yaw + gyroZ * dt;
 
 
-                degree = roll*RAD2DGR;
+                degree = roll * RAD2DGR;
 
                 TextView sensor_text = findViewById(R.id.sensorText);
                 String dtos = String.valueOf(degree);
@@ -296,9 +390,9 @@ public class PlayActivity extends AppCompatActivity {
                 Log.e("LOG", "GYROSCOPE           [X]:" + String.format("%.4f", event.values[0])
                         + "           [Y]:" + String.format("%.4f", event.values[1])
                         + "           [Z]:" + String.format("%.4f", event.values[2])
-                        + "           [Pitch]: " + String.format("%.1f", pitch*RAD2DGR)
-                        + "           [Roll]: " + String.format("%.1f", roll*RAD2DGR)
-                        + "           [Yaw]: " + String.format("%.1f", yaw*RAD2DGR)
+                        + "           [Pitch]: " + String.format("%.1f", pitch * RAD2DGR)
+                        + "           [Roll]: " + String.format("%.1f", roll * RAD2DGR)
+                        + "           [Yaw]: " + String.format("%.1f", yaw * RAD2DGR)
                         + "           [dt]: " + String.format("%.4f", dt));
 
             }
@@ -309,5 +403,6 @@ public class PlayActivity extends AppCompatActivity {
 
         }
     }
+
 }
 
