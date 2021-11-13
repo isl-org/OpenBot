@@ -16,4 +16,6 @@ public class Control {
   public float getRight() {
     return right;
   }
+
+
 }

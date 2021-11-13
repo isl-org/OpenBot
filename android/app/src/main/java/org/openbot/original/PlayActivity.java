@@ -35,6 +35,7 @@ import org.openbot.env.SharedPreferencesManager;
 import org.openbot.utils.Enums;
 import org.openbot.env.Vehicle;
 import org.openbot.OpenBotApplication;
+import org.openbot.env.Control;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -199,23 +200,17 @@ public class PlayActivity extends AppCompatActivity {
         distance();
 
         for (int i = 0; i<angle.size();i++){
-            //회전 명령
-            vehicle.setIndicator()
             //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
-
-            while(getGyro()==1) {//gyro 데이터 값 가져옴 -> 계속 한번 가져올 때마다 degree에 저장
-                degree += gyro;
-                if ((Double)angle.get(i) * 0.9 < degree && degree < (Double)angle.get(i) * 1.1) {
-                    //아두이노 회전 멈추기신호 send
-                    break;
-                }
-                try {
-                    Thread.sleep(1000);
-                }catch (InterruptedException e){
-
-                }
+            while(degree < angle.get(i)*1.03 || degree > angle.get(i)*0.97) {
+                if (angle.get(i)>0)
+                    vehicle.sendControl(-130, 0);
+                else
+                    vehicle.sendControl(0,-130);
+                getGyro();
+                degree +=gyro;
             }
             //직진 명령
+            
             //거리 계산한것 만큼 아두이노로 start 신호 보냄.
         }
     }
