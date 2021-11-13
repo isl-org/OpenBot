@@ -197,10 +197,12 @@ public class PlayActivity extends AppCompatActivity {
                     }
                 };
                 t1.start();
-                tracking();
 
             }
         });
+
+        tracking();
+
 
 
     }
@@ -208,16 +210,21 @@ public class PlayActivity extends AppCompatActivity {
     private void tracking() {
         angle();
         distance();
+        getGyro();
+
+
+
 
         for (int i = 0; i<angle.size();i++){
             double range = (Double.parseDouble(angle.get(i).toString()));
             //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
             while(degree < range *0.97) {
-                if (range>0) 
+                if (range>0) {
+                    Toast.makeText(this, "돌아감", Toast.LENGTH_LONG).show();
                     vehicle.sendControl(-130, 0);
+                }
                 else
                     vehicle.sendControl(0,-130);
-                getGyro();
                 degree +=gyro;
             }
             //직진 명령
@@ -294,6 +301,8 @@ public class PlayActivity extends AppCompatActivity {
         mGgyroSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         mGyroLis = new GyroscopeListener();
         Button getBtn = findViewById(R.id.getBtn);
+        mSensorManager.registerListener(mGyroLis, mGgyroSensor, SensorManager.SENSOR_DELAY_UI);
+
 
         //Touch Listener for Accelometer
         findViewById(R.id.getBtn).setOnTouchListener(new View.OnTouchListener() {
@@ -304,11 +313,12 @@ public class PlayActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         roll = 0;
                         mSensorManager.registerListener(mGyroLis, mGgyroSensor, SensorManager.SENSOR_DELAY_UI);
+                        vehicle.sendControl(-130, 0);
                         getBtn.setText("GETTING...");
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        mSensorManager.unregisterListener(mGyroLis);
+                        //mSensorManager.unregisterListener(mGyroLis);
                         getBtn.setText("GET_SENSOR");
                         break;
 
