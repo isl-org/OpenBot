@@ -31,6 +31,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openbot.R;
+import org.openbot.env.Vehicle;
+import org.openbot.utils.Enums;
+import org.openbot.OpenBotApplication;
+
 //import org.openbot.env.SharedPreferencesManager;
 
 import java.io.IOException;
@@ -45,6 +49,7 @@ public class PlayActivity extends AppCompatActivity {
     ArrayList y_list = new ArrayList();
     ArrayList angle = new ArrayList();
     ArrayList distance = new ArrayList();
+    private Vehicle vehicle;
 
 
     ArrayList<Double> movingLength = new ArrayList<Double>();
@@ -82,13 +87,7 @@ public class PlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         request();
-        getGyro();
-
-        //movingLength.clear();
-
-        angle();
-        distance();
-
+        vehicle = OpenBotApplication.vehicle;
 
     }
 
@@ -139,37 +138,6 @@ public class PlayActivity extends AppCompatActivity {
 
                         Collections.reverse(x_list);
                         Collections.reverse(y_list);
-
-
-                        //테스트용
-
-//                        x_list.clear();
-//                        y_list.clear();
-//
-//                        x_list.add(0);
-//                        x_list.add(1);
-//                        x_list.add(2);
-//                        x_list.add(3);
-//                        x_list.add(4);
-//                        x_list.add(5);
-//                        x_list.add(6);
-//                        x_list.add(7);
-//                        x_list.add(8);
-//
-//
-//
-//                        y_list.add(0);
-//                        y_list.add(1);
-//                        y_list.add(4);
-//                        y_list.add(5);
-//                        y_list.add(6);
-//                        y_list.add(3);
-//                        y_list.add(4);
-//                        y_list.add(5);
-//                        y_list.add(3);
-
-
-                        //테스트용
 
 
                         System.out.println("사이즈는 " + x_list.size());
@@ -229,7 +197,7 @@ public class PlayActivity extends AppCompatActivity {
                     }
                 };
                 t1.start();
-
+                tracking();
 
             }
         });
@@ -241,25 +209,27 @@ public class PlayActivity extends AppCompatActivity {
         angle();
         distance();
 
-//        for (int i = 0; i<angle.size();i++){
-//            //회전 명령
-//            //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
-//
-//            while(getGyro()==1) {//gyro 데이터 값 가져옴 -> 계속 한번 가져올 때마다 degree에 저장
-//                degree += gyro;
-//                if ((Double)angle.get(i) * 0.9 < degree && degree < (Double)angle.get(i) * 1.1) {
-//                    //아두이노 회전 멈추기신호 send
-//                    break;
-//                }
-//                try {
-//                    Thread.sleep(1000);
-//                }catch (InterruptedException e){
-//
-//                }
+        for (int i = 0; i<angle.size();i++){
+            double range = (Double.parseDouble(angle.get(i).toString()));
+            //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
+            while(degree < range *0.97) {
+                if (range>0) 
+                    vehicle.sendControl(-130, 0);
+                else
+                    vehicle.sendControl(0,-130);
+                getGyro();
+                degree +=gyro;
+            }
+            //직진 명령
+//            long t= System.currentTimeMillis();
+//            long end = t+15000;
+//            while(System.currentTimeMillis() < end) {
+//                 do something
+//                 pause to avoid churning
+//                Thread.sleep( xxx );
 //            }
-//            //직진 명령
-//            //거리 계산한것 만큼 아두이노로 start 신호 보냄.
-//        }
+            //거리 계산한것 만큼 아두이노로 start 신호 보냄.
+        }
     }
 
     private void angle() {
