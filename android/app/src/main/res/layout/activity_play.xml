@@ -50,4 +50,17 @@
         android:id="@+id/bottom_sheet_layout"
         layout="@layout/layout_play_bottom_sheet" />
 
+    <Button
+        android:id="@+id/getBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#673AB7"
+        android:text="GET_SENSOR" />
+
+    <TextView
+        android:id="@+id/sensorText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
 </LinearLayout>

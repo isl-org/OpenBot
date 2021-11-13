@@ -7,15 +7,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -24,6 +32,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openbot.R;
 import org.openbot.env.SharedPreferencesManager;
+import org.openbot.utils.Enums;
+import org.openbot.env.Vehicle;
+import org.openbot.OpenBotApplication;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,12 +50,38 @@ public class PlayActivity extends AppCompatActivity {
     double degree;
     double gyro;
 
+    //아두이노 로봇
+    private Vehicle vehicle;
+
+    //센서 받아오는 변수들
+
+
+    //Using the Accelometer & Gyroscoper
+    private SensorManager mSensorManager = null;
+
+    //Using the Gyroscope
+    private SensorEventListener mGyroLis;
+    private Sensor mGgyroSensor = null;
+
+    //Roll and Pitch
+    private double pitch;
+    private double roll;
+    private double yaw;
+
+    //timestamp and dt
+    private double timestamp;
+    private double dt;
+
+    // for radian -> dgree
+    private double RAD2DGR = 180 / Math.PI;
+    private static final float NS2S = 1.0f/1000000000.0f;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         request();
-
-
+        getGyro();
+        vehicle = OpenBotApplication.vehicle;
     }
 
     private void request() {
@@ -163,9 +200,10 @@ public class PlayActivity extends AppCompatActivity {
 
         for (int i = 0; i<angle.size();i++){
             //회전 명령
+            vehicle.setIndicator()
             //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
 
-            while(getGyro()) {//gyro 데이터 값 가져옴 -> 계속 한번 가져올 때마다 degree에 저장
+            while(getGyro()==1) {//gyro 데이터 값 가져옴 -> 계속 한번 가져올 때마다 degree에 저장
                 degree += gyro;
                 if ((Double)angle.get(i) * 0.9 < degree && degree < (Double)angle.get(i) * 1.1) {
                     //아두이노 회전 멈추기신호 send
@@ -182,16 +220,99 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
-    private void angle(){
+   private void angle(){
 
     }
 
-    private void distance(){
+   private void distance(){
 
     }
 
-    private void getGyro(){
+    private int getGyro(){
 
+        //Using the Gyroscope & Accelometer
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        //Using the Accelometer
+        mGgyroSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mGyroLis = new GyroscopeListener();
+        Button getBtn = findViewById(R.id.getBtn);
+
+        //Touch Listener for Accelometer
+        findViewById(R.id.getBtn).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+
+                    case MotionEvent.ACTION_DOWN:
+                        mSensorManager.registerListener(mGyroLis, mGgyroSensor, SensorManager.SENSOR_DELAY_UI);
+                        getBtn.setText("GETTING...");
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        mSensorManager.unregisterListener(mGyroLis);
+                        getBtn.setText("GET_SENSOR");
+                        break;
+
+                }
+                return false;
+            }
+        });
+
+
+        return 1;
+
+    }
+
+    private class GyroscopeListener implements SensorEventListener {
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+
+            /* 각 축의 각속도 성분을 받는다. */
+            double gyroX = event.values[0];
+            double gyroY = event.values[1];
+            double gyroZ = event.values[2];
+
+            /* 각속도를 적분하여 회전각을 추출하기 위해 적분 간격(dt)을 구한다.
+             * dt : 센서가 현재 상태를 감지하는 시간 간격
+             * NS2S : nano second -> second */
+            dt = (event.timestamp - timestamp) * NS2S;
+            timestamp = event.timestamp;
+
+            /* 맨 센서 인식을 활성화 하여 처음 timestamp가 0일때는 dt값이 올바르지 않으므로 넘어간다. */
+            if (dt - timestamp*NS2S != 0) {
+
+                /* 각속도 성분을 적분 -> 회전각(pitch, roll)으로 변환.
+                 * 여기까지의 pitch, roll의 단위는 '라디안'이다.
+                 * SO 아래 로그 출력부분에서 멤버변수 'RAD2DGR'를 곱해주어 degree로 변환해줌.  */
+                pitch = pitch + gyroY*dt;
+                roll = roll + gyroX*dt;
+                yaw = yaw + gyroZ*dt;
+
+
+                degree = roll*RAD2DGR;
+
+                TextView sensor_text = findViewById(R.id.sensorText);
+                String dtos = String.valueOf(degree);
+                sensor_text.setText(dtos);
+
+
+                Log.e("LOG", "GYROSCOPE           [X]:" + String.format("%.4f", event.values[0])
+                        + "           [Y]:" + String.format("%.4f", event.values[1])
+                        + "           [Z]:" + String.format("%.4f", event.values[2])
+                        + "           [Pitch]: " + String.format("%.1f", pitch*RAD2DGR)
+                        + "           [Roll]: " + String.format("%.1f", roll*RAD2DGR)
+                        + "           [Yaw]: " + String.format("%.1f", yaw*RAD2DGR)
+                        + "           [dt]: " + String.format("%.4f", dt));
+
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
     }
 }
 
