@@ -38,13 +38,13 @@
     <!--    </RelativeLayout>-->
 
 
-    <ImageView
+    <!--    <ImageView-->
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        app:srcCompat="@drawable/rrtcap" />
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="30dp"-->
+    <!--        android:layout_marginBottom="30dp"-->
+    <!--        app:srcCompat="@drawable/rrtcap" />-->
 
     <include
         android:id="@+id/bottom_sheet_layout"
@@ -62,5 +62,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />
+
+    <Button
+        android:id="@+id/trackingBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#673AB7"
+        android:text="TRACKING" />
+
+    <TextView
+        android:id="@+id/trackText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
 
 </LinearLayout>

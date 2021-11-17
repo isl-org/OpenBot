@@ -34,6 +34,7 @@ import org.openbot.R;
 import org.openbot.env.Vehicle;
 import org.openbot.utils.Enums;
 import org.openbot.OpenBotApplication;
+import org.w3c.dom.Text;
 
 //import org.openbot.env.SharedPreferencesManager;
 
@@ -88,6 +89,15 @@ public class PlayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_play);
         request();
         vehicle = OpenBotApplication.vehicle;
+
+        Button track = findViewById(R.id.trackingBtn);
+
+        track.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tracking();
+            }
+        });
 
     }
 
@@ -157,7 +167,7 @@ public class PlayActivity extends AppCompatActivity {
                         }
 
 
-                        tracking();
+                        //tracking();
 
 
                         Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
@@ -198,10 +208,12 @@ public class PlayActivity extends AppCompatActivity {
                 };
                 t1.start();
 
+                //vehicle.sendControl(130, 130);
+
             }
         });
 
-        tracking();
+        //tracking();
 
 
 
@@ -213,30 +225,113 @@ public class PlayActivity extends AppCompatActivity {
         getGyro();
 
 
+        TextView trackText = findViewById(R.id.trackText);
+        TextView sensorText = findViewById(R.id.sensorText);
 
 
-        for (int i = 0; i<angle.size();i++){
-            double range = (Double.parseDouble(angle.get(i).toString()));
-            //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
-            while(degree < range *0.97) {
-                if (range>0) {
-                    Toast.makeText(this, "돌아감", Toast.LENGTH_LONG).show();
-                    vehicle.sendControl(-130, 0);
-                }
-                else
-                    vehicle.sendControl(0,-130);
-                degree +=gyro;
-            }
-            //직진 명령
-//            long t= System.currentTimeMillis();
-//            long end = t+15000;
-//            while(System.currentTimeMillis() < end) {
-//                 do something
-//                 pause to avoid churning
-//                Thread.sleep( xxx );
+        Thread t2 = new Thread() {
+
+
+            @Override
+            public void run() {
+                for (int i = 0; i<movingDegree.size();i++){
+
+                    double range = (Double.parseDouble(movingDegree.get(i).toString()));
+
+                    trackText.setText(movingDegree.get(i).toString());
+                    //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
+                    while(degree < range - 10 || degree > range + 10) {
+                        if (range > degree) {
+                            vehicle.sendControl(-130, 0);
+                        }
+                        else
+                            vehicle.sendControl(0,-130);
+                        //degree +=gyro;
+
+                        sensorText.setText(Double.toString(degree));
+
+                        try {
+                            System.out.println("멈춤");
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+
+                    try {
+                        System.out.println("도착함멈춤");
+                        vehicle.sendControl(0, 0);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    //Toast.makeText(getApplicationContext(), i+"번째 돌아감", Toast.LENGTH_LONG).show();
+//            try {
+//                Thread.sleep(5000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
 //            }
-            //거리 계산한것 만큼 아두이노로 start 신호 보냄.
-        }
+                    //직진 명령
+                    long t= System.currentTimeMillis();
+                    long end = t+(new Double(Double.parseDouble(movingLength.get(i).toString())*1000*0.16)).longValue();
+                    while(System.currentTimeMillis() < end) {
+                        vehicle.sendControl(255, 255);
+
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    //거리 계산한것 만큼 아두이노로 start 신호 보냄.
+                }
+            }
+        };
+        t2.start();
+
+
+
+
+
+//        for (int i = 0; i<movingDegree.size();i++){
+//
+//            double range = (Double.parseDouble(movingDegree.get(i).toString()));
+//
+//            trackText.setText(movingDegree.get(i).toString());
+//            //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
+//            while(degree < range *0.9 || degree > range *1.1) {
+//                if (range > degree) {
+//                    vehicle.sendControl(-130, 0);
+//                }
+//                else
+//                    vehicle.sendControl(0,-130);
+//                //degree +=gyro;
+//
+//                try {
+//                    sleep(500);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            //Toast.makeText(getApplicationContext(), i+"번째 돌아감", Toast.LENGTH_LONG).show();
+////            try {
+////                Thread.sleep(5000);
+////            } catch (InterruptedException e) {
+////                e.printStackTrace();
+////            }
+//            //직진 명령
+////            long t= System.currentTimeMillis();
+////            long end = t+15000;
+////            while(System.currentTimeMillis() < end) {
+////                 do something
+////                 pause to avoid churning
+////                Thread.sleep( xxx );
+////            }
+//            //거리 계산한것 만큼 아두이노로 start 신호 보냄.
+//        }
     }
 
     private void angle() {
@@ -269,8 +364,6 @@ public class PlayActivity extends AppCompatActivity {
         for (int i = 0; i < movingDegree.size(); i++) {
             System.out.println(movingDegree.get(i));
         }
-
-
     }
 
     private void distance() {
@@ -313,12 +406,13 @@ public class PlayActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         roll = 0;
                         mSensorManager.registerListener(mGyroLis, mGgyroSensor, SensorManager.SENSOR_DELAY_UI);
-                        vehicle.sendControl(-130, 0);
+                        //vehicle.sendControl(-130, -130);
                         getBtn.setText("GETTING...");
                         break;
 
                     case MotionEvent.ACTION_UP:
                         //mSensorManager.unregisterListener(mGyroLis);
+                        //vehicle.sendControl(0, 0);
                         getBtn.setText("GET_SENSOR");
                         break;
 
@@ -360,6 +454,10 @@ public class PlayActivity extends AppCompatActivity {
                 yaw = yaw + gyroZ * dt;
 
 
+                if(roll<-360||roll>360){
+                    roll=0;
+                }
+
                 degree = roll * RAD2DGR;
 
                 TextView sensor_text = findViewById(R.id.sensorText);
@@ -385,4 +483,3 @@ public class PlayActivity extends AppCompatActivity {
     }
 
 }
-
