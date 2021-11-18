@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="assets">
+  <property name="assets.list.name" value="assets.lst"/>
+  <property name="assets.dir" value="src/main/assets/sync"/>
+  <property name="assets.hash.type" value="md5"/>
+  <property name="assets.ctl.files"
+    value="**/*.${assets.hash.type},${assets.list.name}"/>
+
+  <fileset id="assets" dir="${assets.dir}" excludes="${assets.ctl.files}"/>
+
+  <target name="clean_assets">
+    <delete>
+      <fileset dir="${assets.dir}" includes="${assets.ctl.files}"/>
+    </delete>
+  </target>
+
+  <target name="list">
+    <pathconvert
+      dirsep="/" pathsep="${line.separator}"
+      refid="assets" property="asset.list">
+      <map from="${basedir}/${assets.dir}/" to=""/>
+    </pathconvert>
+    <echo message="${asset.list}" file="${assets.dir}/${assets.list.name}"/>
+  </target>
+
+  <target name="checksum">
+    <checksum algorithm="${assets.hash.type}">
+      <fileset refid="assets"/>
+    </checksum>
+  </target>
+</project>

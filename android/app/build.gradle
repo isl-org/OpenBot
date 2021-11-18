@@ -48,6 +48,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
 
 dependencies {
+    implementation project(':aars')
+    implementation project(':models')
 
     implementation 'org.jsoup:jsoup:1.11.3'
 
@@ -82,6 +84,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.3.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation project(path: ':models')
 
     def nav_version = "2.3.5"
     // Java language implementation

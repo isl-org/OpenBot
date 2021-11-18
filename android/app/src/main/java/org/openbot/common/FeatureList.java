@@ -19,6 +19,8 @@ public class FeatureList {
   public static final String CONTROLLER_MAPPING = "Controller Mapping";
   public static final String PLAY = "PlayActivity";
 
+  public static final String VOICE = "Voice Recognition";
+
   // Game
   public static final String GAME = "Game";
   public static final String FREE_ROAM = "Free Roam";
@@ -73,6 +75,7 @@ public class FeatureList {
     subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(DEFAULT, R.drawable.openbot_icon, "#4B7BFF"));
     subCategories.add(new SubCategory(PLAY, R.drawable.openbot_icon, "#4B7BFF"));
+    subCategories.add(new SubCategory(VOICE, R.drawable.ic_voice_over, "#4B7BFF"));
     categories.add(new Category(LEGACY, subCategories));
 
     subCategories = new ArrayList<>();
