@@ -1,8 +1,53 @@
 package org.openbot.original;
 
-import androidx.annotation.NonNull;
+
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.graphics.RectF;
+import android.graphics.Typeface;
+import android.media.ImageReader.OnImageAvailableListener;
+import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
+import android.util.Size;
+import android.util.TypedValue;
+import android.view.InputDevice;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+import org.openbot.R;
+import org.openbot.customview.OverlayView;
+import org.openbot.customview.OverlayView.DrawCallback;
+import org.openbot.env.BorderedText;
+import org.openbot.env.BotToControllerEventBus;
+import org.openbot.env.ImageUtils;
+import org.openbot.env.Logger;
+import org.openbot.tflite.Autopilot;
+import org.openbot.tflite.Detector;
+import org.openbot.tflite.Model;
+import org.openbot.tflite.Network.Device;
+import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.ConnectionUtils;
+import org.openbot.utils.Enums.ControlMode;
+import org.openbot.utils.Enums.LogMode;
+
+
+
+import androidx.annotation.NonNull;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,38 +57,52 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
-import org.jsoup.nodes.Element;
+
 import org.jsoup.select.Elements;
-import org.openbot.R;
 import org.openbot.env.Vehicle;
-import org.openbot.utils.Enums;
-import org.openbot.OpenBotApplication;
-import org.w3c.dom.Text;
 
 //import org.openbot.env.SharedPreferencesManager;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 
-public class PlayActivity extends AppCompatActivity {
+public class PlayActivity extends CameraActivity2 implements OnImageAvailableListener {
+    private static final Logger LOGGER = new Logger();
+
+    // Minimum detection confidence to track a detection.
+    private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
+    private static final Size DESIRED_PREVIEW_SIZE = new Size(1280, 720); // 16:9
+
+    private static final float TEXT_SIZE_DIP = 10;
+    OverlayView trackingOverlay;
+    private Integer sensorOrientation;
+
+    private Detector detector;
+    private Autopilot autopilot;
+
+    private long lastProcessingTimeMs;
+    private Bitmap rgbFrameBitmap = null;
+    private Bitmap croppedBitmap = null;
+    private Bitmap cropCopyBitmap = null;
+
+    private boolean computingNetwork = false;
+    private long frameNum = 0;
+
+    private Matrix frameToCropTransform;
+    private Matrix cropToFrameTransform;
+
+    private MultiBoxTracker tracker;
+    private BorderedText borderedText;
 
     final Bundle bundle = new Bundle();
     ArrayList x_list = new ArrayList();
@@ -86,18 +145,17 @@ public class PlayActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play);
-        request();
-        vehicle = OpenBotApplication.vehicle;
+//        setContentView(R.layout.activity_play);
+//        request();
 
-        Button track = findViewById(R.id.trackingBtn);
+//        Button track = findViewById(R.id.trackingBtn);
 
-        track.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tracking();
-            }
-        });
+//        track.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                tracking();
+//            }
+//        });
 
     }
 
@@ -246,7 +304,6 @@ public class PlayActivity extends AppCompatActivity {
                         }
                         else
                             vehicle.sendControl(0,-130);
-                        //degree +=gyro;
 
                         sensorText.setText(Double.toString(degree));
 
@@ -258,22 +315,6 @@ public class PlayActivity extends AppCompatActivity {
                         }
                     }
 
-
-
-                    try {
-                        System.out.println("도착함멈춤");
-                        vehicle.sendControl(0, 0);
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    //Toast.makeText(getApplicationContext(), i+"번째 돌아감", Toast.LENGTH_LONG).show();
-//            try {
-//                Thread.sleep(5000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
                     //직진 명령
                     long t= System.currentTimeMillis();
                     long end = t+(new Double(Double.parseDouble(movingLength.get(i).toString())*1000*0.16)).longValue();
@@ -296,42 +337,6 @@ public class PlayActivity extends AppCompatActivity {
 
 
 
-//        for (int i = 0; i<movingDegree.size();i++){
-//
-//            double range = (Double.parseDouble(movingDegree.get(i).toString()));
-//
-//            trackText.setText(movingDegree.get(i).toString());
-//            //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
-//            while(degree < range *0.9 || degree > range *1.1) {
-//                if (range > degree) {
-//                    vehicle.sendControl(-130, 0);
-//                }
-//                else
-//                    vehicle.sendControl(0,-130);
-//                //degree +=gyro;
-//
-//                try {
-//                    sleep(500);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            //Toast.makeText(getApplicationContext(), i+"번째 돌아감", Toast.LENGTH_LONG).show();
-////            try {
-////                Thread.sleep(5000);
-////            } catch (InterruptedException e) {
-////                e.printStackTrace();
-////            }
-//            //직진 명령
-////            long t= System.currentTimeMillis();
-////            long end = t+15000;
-////            while(System.currentTimeMillis() < end) {
-////                 do something
-////                 pause to avoid churning
-////                Thread.sleep( xxx );
-////            }
-//            //거리 계산한것 만큼 아두이노로 start 신호 보냄.
-//        }
     }
 
     private void angle() {
@@ -482,4 +487,379 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void processImage() {
+        ++frameNum;
+        final long currFrameNum = frameNum;
+        // trackingOverlay.postInvalidate();
+
+        // If network is busy and we don't need to log any image, return.
+        if (computingNetwork && !loggingEnabled) {
+            readyForNextImage();
+            return;
+        }
+
+        final boolean SAVE_PREVIEW_BITMAP =
+                logMode.equals(LogMode.ALL_IMGS) || logMode.equals(LogMode.PREVIEW_IMG);
+        final boolean SAVE_CROP_BITMAP =
+                logMode.equals(LogMode.ALL_IMGS) || logMode.equals(LogMode.CROP_IMG);
+
+        rgbFrameBitmap.setPixels(getRgbBytes(), 0, previewWidth, 0, 0, previewWidth, previewHeight);
+        if (loggingEnabled && SAVE_PREVIEW_BITMAP) {
+            runInBackground(
+                    () ->
+                            ImageUtils.saveBitmap(
+                                    rgbFrameBitmap,
+                                    logFolder + File.separator + "images",
+                                    currFrameNum + "_preview.jpeg"));
+            if (!SAVE_CROP_BITMAP) sendFrameNumberToSensorService(currFrameNum);
+        }
+
+        readyForNextImage();
+        // If network is busy and we don't need to log the crop, return.
+        if (computingNetwork && !SAVE_CROP_BITMAP) {
+            return;
+        }
+
+        final Canvas canvas = new Canvas(croppedBitmap);
+        canvas.drawBitmap(rgbFrameBitmap, frameToCropTransform, null);
+        // For examining the actual TF input.
+        if (loggingEnabled && SAVE_CROP_BITMAP) {
+            runInBackground(
+                    () ->
+                            ImageUtils.saveBitmap(
+                                    croppedBitmap,
+                                    logFolder + File.separator + "images",
+                                    currFrameNum + "_crop.jpeg"));
+            sendFrameNumberToSensorService(currFrameNum);
+        }
+
+        // Network is control of the vehicle
+        if (networkEnabled) {
+            // If network is busy, return.
+            if (computingNetwork) {
+                return;
+            }
+
+            computingNetwork = true;
+            LOGGER.i("Putting image " + currFrameNum + " for detection in bg thread.");
+
+            runInBackground(
+                    () -> {
+                        if (detector != null) {
+                            LOGGER.i("Running detection on image " + currFrameNum);
+                            final long startTime = SystemClock.elapsedRealtime();
+                            final List<Detector.Recognition> results =
+                                    detector.recognizeImage(croppedBitmap, "person");
+                            lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
+
+                            if (!results.isEmpty())
+                                LOGGER.i(
+                                        "Object: "
+                                                + results.get(0).getLocation().centerX()
+                                                + ", "
+                                                + results.get(0).getLocation().centerY()
+                                                + ", "
+                                                + results.get(0).getLocation().height()
+                                                + ", "
+                                                + results.get(0).getLocation().width());
+
+                            cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
+                            final Canvas canvas1 = new Canvas(cropCopyBitmap);
+                            final Paint paint = new Paint();
+                            paint.setColor(Color.RED);
+                            paint.setStyle(Style.STROKE);
+                            paint.setStrokeWidth(2.0f);
+
+                            float minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API;
+
+                            final List<Detector.Recognition> mappedRecognitions =
+                                    new LinkedList<Detector.Recognition>();
+
+                            for (final Detector.Recognition result : results) {
+                                final RectF location = result.getLocation();
+                                if (location != null && result.getConfidence() >= minimumConfidence) {
+                                    canvas1.drawRect(location, paint);
+                                    cropToFrameTransform.mapRect(location);
+                                    result.setLocation(location);
+                                    mappedRecognitions.add(result);
+                                }
+                            }
+
+                            tracker.trackResults(mappedRecognitions, currFrameNum);
+                            controllerHandler.handleDriveCommand(tracker.updateTarget());
+                            trackingOverlay.postInvalidate();
+                        } else if (autopilot != null) {
+                            LOGGER.i("Running autopilot on image " + currFrameNum);
+                            final long startTime = SystemClock.elapsedRealtime();
+                            controllerHandler.handleDriveCommand(
+                                    autopilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+                            lastProcessingTimeMs = SystemClock.elapsedRealtime() - startTime;
+                        }
+
+                        computingNetwork = false;
+
+                        if (loggingEnabled) {
+                            sendInferenceTimeToSensorService(currFrameNum, lastProcessingTimeMs);
+                        }
+                    });
+        }
+
+        runOnUiThread(
+                () -> {
+                    frameValueTextView.setText(
+                            String.format(Locale.US, "%d x %d", previewWidth, previewHeight));
+                    cropValueTextView.setText(
+                            String.format(
+                                    Locale.US, "%d x %d", croppedBitmap.getWidth(), croppedBitmap.getHeight()));
+                    if (networkEnabled)
+                        inferenceTimeTextView.setText(String.format(Locale.US, "%d ms", lastProcessingTimeMs));
+                });
+    }
+
+    @Override
+    protected void onPreviewSizeChosen(final Size size,final int rotation) {
+        final float textSizePx =
+                TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
+        borderedText = new BorderedText(textSizePx);
+        borderedText.setTypeface(Typeface.MONOSPACE);
+
+        tracker = new MultiBoxTracker(this);
+
+        previewWidth = size.getWidth();
+        previewHeight = size.getHeight();
+
+        sensorOrientation = rotation - getScreenOrientation();
+        LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
+
+        LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);
+        rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Config.ARGB_8888);
+
+        recreateNetwork(getModel(), getDevice(), getNumThreads());
+        if (detector == null && autopilot == null) {
+            LOGGER.e("No network on preview!");
+            return;
+        }
+
+        trackingOverlay = findViewById(R.id.tracking_overlay);
+        trackingOverlay.addCallback(
+                new DrawCallback() {
+                    @Override
+                    public void drawCallback(final Canvas canvas) {
+                        tracker.draw(canvas);
+                        if (isDebug()) {
+                            tracker.drawDebug(canvas);
+                        }
+                    }
+                });
+        tracker.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.camera_connection_fragment_tracking;
+    }
+
+    @Override
+    protected Size getDesiredPreviewFrameSize() {
+        return DESIRED_PREVIEW_SIZE;
+    }
+
+    @Override
+    protected void onInferenceConfigurationChanged() {
+        computingNetwork = false;
+        if (croppedBitmap == null) {
+            // Defer creation until we're getting camera frames.
+            return;
+        }
+        final Device device = getDevice();
+        final Model model = getModel();
+        final int numThreads = getNumThreads();
+        runInBackground(() -> recreateNetwork(model, device, numThreads));
+    }
+
+    @Override
+    protected void toggleNoise() {
+        noiseEnabled = !noiseEnabled;
+        BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("NOISE", noiseEnabled));
+        if (noiseEnabled) {
+            vehicle.startNoise();
+        } else vehicle.stopNoise();
+        updateVehicleControl();
+    }
+
+    @Override
+    protected void updateVehicleControl() {
+
+        // Log controls
+        if (loggingEnabled) {
+            runInBackground(this::sendControlToSensorService);
+        }
+
+        // Update GUI
+//        runOnUiThread(
+//            () -> {
+//                Log.i("display_ctrl", "runnable");
+//                if (controlValueTextView != null)
+//                    controlValueTextView.setText(
+//                            String.format(
+//                                    Locale.US, "%.0f,%.0f", vehicle.getLeftSpeed(), vehicle.getRightSpeed()));
+//            });
+    }
+
+    @Override
+    protected void setNetworkEnabled(boolean isChecked) {
+        networkEnabled = isChecked;
+        if (networkEnabled) {
+            networkSwitchCompat.setText(R.string.on);
+        } else {
+            runInBackground(
+                    () -> {
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(lastProcessingTimeMs);
+                            controllerHandler.handleDriveCommand(0.f, 0.f);
+                            runOnUiThread(() -> inferenceTimeTextView.setText(R.string.time_ms));
+                        } catch (InterruptedException e) {
+                            LOGGER.e(e, "Got interrupted.");
+                        }
+                    });
+            networkSwitchCompat.setText(R.string.off);
+        }
+
+        networkSwitchCompat.setChecked(networkEnabled);
+        if (networkEnabled) {
+            controlModeSpinner.setAlpha(0.5f);
+            driveModeSpinner.setAlpha(0.5f);
+            speedModeSpinner.setAlpha(0.5f);
+        } else {
+            controlModeSpinner.setAlpha(1.0f);
+            driveModeSpinner.setAlpha(1.0f);
+            speedModeSpinner.setAlpha(1.0f);
+        }
+        controlModeSpinner.setEnabled(!networkEnabled);
+        driveModeSpinner.setEnabled(!networkEnabled);
+        speedModeSpinner.setEnabled(!networkEnabled);
+    }
+
+    private void recreateNetwork(Model model, Device device, int numThreads) {
+        if (model == null) return;
+        tracker.clearTrackedObjects();
+        if (detector != null) {
+            LOGGER.d("Closing detector.");
+            detector.close();
+            detector = null;
+        }
+        if (autopilot != null) {
+            LOGGER.d("Closing autoPilot.");
+            autopilot.close();
+            autopilot = null;
+        }
+
+        try {
+            if (model.type == Model.TYPE.DETECTOR) {
+                LOGGER.d(
+                        "Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
+                detector = Detector.create(this, model, device, numThreads);
+                croppedBitmap =
+                        Bitmap.createBitmap(
+                                detector.getImageSizeX(), detector.getImageSizeY(), Config.ARGB_8888);
+                frameToCropTransform =
+                        ImageUtils.getTransformationMatrix(
+                                previewWidth,
+                                previewHeight,
+                                croppedBitmap.getWidth(),
+                                croppedBitmap.getHeight(),
+                                sensorOrientation,
+                                detector.getCropRect(),
+                                detector.getMaintainAspect());
+            } else {
+                LOGGER.d(
+                        "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
+                autopilot = Autopilot.create(this, model, device, numThreads);
+                croppedBitmap =
+                        Bitmap.createBitmap(
+                                autopilot.getImageSizeX(), autopilot.getImageSizeY(), Config.ARGB_8888);
+                frameToCropTransform =
+                        ImageUtils.getTransformationMatrix(
+                                previewWidth,
+                                previewHeight,
+                                croppedBitmap.getWidth(),
+                                croppedBitmap.getHeight(),
+                                sensorOrientation,
+                                autopilot.getCropRect(),
+                                autopilot.getMaintainAspect());
+            }
+
+            cropToFrameTransform = new Matrix();
+            frameToCropTransform.invert(cropToFrameTransform);
+
+        } catch (IllegalArgumentException | IOException e) {
+            String msg = "Failed to create network: ";
+            LOGGER.e(e, msg);
+            Toast.makeText(this, msg + e.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public boolean dispatchGenericMotionEvent(MotionEvent event) {
+        // Make sure vehicle is not controlled by network
+        if (!networkEnabled) {
+            // Check that the event came from a game controller
+            if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
+                    && event.getAction() == MotionEvent.ACTION_MOVE
+                    && controlMode == ControlMode.GAMEPAD) {
+                // Process the current movement sample in the batch (position -1)
+                controllerHandler.handleDriveCommand(gameController.processJoystickInput(event, -1));
+                return true;
+            }
+        }
+        return super.dispatchGenericMotionEvent(event);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        // Check that the event came from a game controller
+        if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
+                && controlMode == ControlMode.GAMEPAD) {
+            // Only handle key once (when released)
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                switch (event.getKeyCode()) {
+                    case KeyEvent.KEYCODE_BUTTON_A: // x
+                        controllerHandler.handleLogging();
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_X: // square
+                        controllerHandler.handleIndicatorLeft();
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_Y: // triangle
+                        controllerHandler.handleIndicatorStop();
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_B: // circle
+                        controllerHandler.handleIndicatorRight();
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_START: // options
+                        controllerHandler.handleNoise();
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_L1:
+                        controllerHandler.handleDriveMode();
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_R1:
+                        controllerHandler.handleNetwork();
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_THUMBL:
+                        controllerHandler.handleSpeedDown();
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_THUMBR:
+                        controllerHandler.handleSpeedUp();
+                        break;
+                    default:
+                        //               makeText(this,"Key " + event.getKeyCode() + " not recognized",
+                        //                       LENGTH_SHORT).show();
+                        break;
+                }
+            }
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
 }

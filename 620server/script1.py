@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
-show_animation = False
+show_animation = True
 
 
 class RRT:
@@ -193,7 +193,7 @@ class RRT:
         plt.plot(self.start.x, self.start.y, "xr")
         plt.plot(self.end.x, self.end.y, "xr")
         plt.axis("equal")
-        plt.axis([-2, 15, -2, 15])
+        plt.axis([-2, 50, -2, 50])
         plt.grid(True)
         plt.pause(0.01)
 
@@ -250,7 +250,7 @@ class RRT:
         return d, theta
 
 
-def main(gx=10.0, gy=10.0):
+def main(gx=20.0, gy=20.0):
 
     # ====Search Path with RRT====
     obstacleList = [(5, 5, 1), (3, 6, 2), (3, 8, 2), (3, 10, 2), (7, 5, 2),
@@ -259,7 +259,7 @@ def main(gx=10.0, gy=10.0):
     rrt = RRT(
         start=[0, 0],
         goal=[gx, gy],
-        rand_area=[-2, 15],
+        rand_area=[-2, 50],
         obstacle_list=obstacleList,
         # play_area=[0, 10, 0, 14]
         )
@@ -283,5 +283,6 @@ def main(gx=10.0, gy=10.0):
 if __name__ == '__main__':
     x = sys.argv[1];
     y = sys.argv[2];
+    main()
     main(int(x),int(y))
     
