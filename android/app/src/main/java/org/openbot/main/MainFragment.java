@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import org.openbot.R;
 import org.openbot.common.FeatureList;
 import org.openbot.databinding.FragmentMainBinding;
+import org.openbot.model.Category;
 import org.openbot.model.SubCategory;
 import org.openbot.original.DefaultActivity;
 import org.openbot.original.PlayActivity;
@@ -53,6 +55,9 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
 
   private MainViewModel mViewModel;
   private FragmentMainBinding binding;
+  private CategoryAdapter adapter;
+
+  private SetupTask voiceThread;
 
   @Nullable
   @Override
@@ -70,7 +75,8 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
 
     mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
     binding.list.setLayoutManager(new LinearLayoutManager(requireContext()));
-    binding.list.setAdapter(new CategoryAdapter(FeatureList.getCategories(), this));
+    adapter = new CategoryAdapter(FeatureList.getCategories(), this);
+    binding.list.setAdapter(adapter);
   }
 
   @Override
@@ -125,16 +131,29 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
         break;
 
       case FeatureList.VOICE:
+        ArrayList<Category> categories = FeatureList.getCategories();
         initPermission();
         if(!canVoiceRec) {
-          Toast.makeText(getContext(), "활성화", Toast.LENGTH_SHORT).show();
-          new SetupTask(this).execute();
-          canVoiceRec = true;
+          categories.get(0).getSubCategories().get(2).setBackgroundColor("#01DF3A");
+          adapter = new CategoryAdapter(categories, this);
+          binding.list.setAdapter(adapter);
+//          Toast.makeText(getContext(), "활성화", Toast.LENGTH_SHORT).show();
+          voiceThread = new SetupTask(this);
+          voiceThread.execute();
         }
         else {
-          Toast.makeText(getContext(), "비활성화", Toast.LENGTH_SHORT).show();
-          new SetupTask(this).cancel(true);
+          categories.get(0).getSubCategories().get(2).setBackgroundColor("#FF4000");
+          adapter = new CategoryAdapter(categories, this);
+          binding.list.setAdapter(adapter);
+//          Toast.makeText(getContext(), "비활성화", Toast.LENGTH_SHORT).show();
           canVoiceRec = false;
+          try {
+            if(voiceThread != null && voiceThread.getStatus() == AsyncTask.Status.RUNNING) {
+              voiceThread.cancel(true);
+            }
+          } catch (Exception ignored) {}
+          recognizer.cancel();
+          recognizer.shutdown();
         }
         break;
     }
@@ -142,16 +161,18 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
 
   public static Boolean canVoiceRec = false;
 
-  private SpeechRecognizer recognizer;
+  private static SpeechRecognizer recognizer; // 앱이 종료되지 않는 이상 종료되지 않게 유지
   private TimeAlarmManager timeAlarmManager = new TimeAlarmManager();
   private WeatherGetter weatherGetter = new WeatherGetter();
 
   private static final String FAIL = "fail";
   private static final String SUCCESS = "success";
-  private static final String KEYPHRASE = "ya max"; // 야 맥스
+  private static final String KEYPHRASE = "max"; // 야 맥스
 
   /* Used to handle permission request */
   private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
+
+  private static String command;
 
   public void initPermission() {
     // Check if user has given permission to record audio
@@ -176,14 +197,15 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     }
   }
 
+  // 이게 앱 종료되는 것인지 잘 모르겠음. 스레드도 같이 종료되나??
   @Override
   public void onDestroyView() {
     super.onDestroyView();
 
-    if (recognizer != null) {
-      recognizer.cancel();
-      recognizer.shutdown();
-    }
+//    if (recognizer != null) {
+//      recognizer.cancel();
+//      recognizer.shutdown();
+//    }
   }
 
   @Override
@@ -216,6 +238,8 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     if (searchName.equals(FAIL)) {
       recognizer.startListening(searchName);
     } else {
+      Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
+
       Handler handler = new Handler();
       handler.postDelayed(new Runnable() {
         public void run() {
@@ -229,7 +253,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
           speechRecognizer.setRecognitionListener(listener);
           speechRecognizer.startListening(intent);
         }
-      }, 1000);
+      }, 500);
     }
   }
 
@@ -266,7 +290,14 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     }
 
     @Override
+    protected void onPreExecute() {
+      canVoiceRec = true;
+      super.onPreExecute();
+    }
+
+    @Override
     protected Exception doInBackground(Void... params) {
+      if(!canVoiceRec || isCancelled()) return null;
       try {
         Assets assets = new Assets(activityReference.get().getActivity());
         File assetDir = assets.syncAssets();
@@ -274,6 +305,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
       } catch (IOException e) {
         return e;
       }
+      if(!canVoiceRec || isCancelled()) return null;
       return null;
     }
 
@@ -307,10 +339,12 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     recognizer.addKeyphraseSearch(SUCCESS, KEYPHRASE);
   }
 
+  boolean singleResult = true;
 
   private android.speech.RecognitionListener listener = new android.speech.RecognitionListener() {
     @Override
     public void onReadyForSpeech(Bundle params) {
+      Log.i("voice", "start");
 //            ((TextView) findViewById(R.id.ListeningTextView)).setText("Listening...");
       Toast.makeText(getContext(), "음성인식을 시작합니다.", Toast.LENGTH_SHORT).show();
     }
@@ -329,7 +363,11 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
 
     @Override
     public void onEndOfSpeech() {
+      Log.i("voice", "end");
+
+      singleResult = true;
       Toast.makeText(getContext(), "음성인식을 종료합니다.", Toast.LENGTH_SHORT).show();
+
       Handler handler = new Handler();
       handler.postDelayed(new Runnable() {
         @Override
@@ -356,7 +394,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
           message = "네트워크 에러";
           break;
         case android.speech.SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
-          message = "네트웍 타임아웃";
+          message = "네트워크 타임아웃";
           break;
         case android.speech.SpeechRecognizer.ERROR_NO_MATCH:
           message = "찾을 수 없음";
@@ -377,69 +415,19 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
       Toast.makeText(getContext(), "에러가 발생하였습니다. : " + message, Toast.LENGTH_SHORT).show();
     }
 
+
     @Override
     public void onResults(Bundle results) {
-//      ArrayList<String> matches = results.getStringArrayList(android.speech.SpeechRecognizer.RESULTS_RECOGNITION);
-//
-//      for (int i = 0; i < matches.size(); i++) {
-//        ((TextView) findViewById(R.id.ListeningTextView)).setText(matches.get(i));
-//      }
-//
-//      TextView listeningText = (TextView)findViewById(R.id.ListeningTextView);
-//      String str = listeningText.getText().toString();
-//      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA);
-//      Calendar calendar = Calendar.getInstance();
-//
-//      int alarmByHour = 0;
-//      int alarmByMin = 0;
-//
-//      if (str.contains("시간 뒤 알림") || str.contains("시간 뒤에 알림")) {  //시간 알림
-//        alarmByHour = str.charAt(0) - '0';
-//        //int hour = calendar.get(Calendar.HOUR);
-//
-//        calendar.add(Calendar.HOUR, alarmByHour);
-//        calendar.set(Calendar.SECOND, 3);
-//        calendar.set(Calendar.MILLISECOND, 0);
-//
-//        String reservationTime = dateFormat.format(calendar.getTime());
-//        Toast.makeText(getApplicationContext(), reservationTime + "에 알림 예약되었습니다", Toast.LENGTH_SHORT).show();
-//
-//        try {
-//          timeAlarmManager.reservationTimeByHour(calendar.getTime(), getApplicationContext());
-//        } catch (NullPointerException ex) {
-//          Toast.makeText(getApplicationContext(), "몇 시간 후인지 정확히 인식되지 않았습니다.", Toast.LENGTH_SHORT).show();
-//        }
-//
-//      } else if (str.contains("분 뒤 알림") || str.contains("분 뒤에 알림")) { // 분 알림
-//        alarmByMin = str.charAt(0) - '0';
-//
-//        calendar.add(Calendar.MINUTE, alarmByMin);
-//        calendar.set(Calendar.SECOND, 3);
-//        calendar.set(Calendar.MILLISECOND, 0);
-//
-//        String reservationTime = dateFormat.format(calendar.getTime());
-//        Toast.makeText(getApplicationContext(), reservationTime + "에 알림 예약되었습니다", Toast.LENGTH_SHORT).show();
-//
-//        try {
-//          timeAlarmManager.reservationTimeByMin(calendar.getTime(), getApplicationContext());
-//          System.out.println(reservationTime + "에 알림 설정되었다");
-//        } catch (NullPointerException ex) {
-//          if (getApplicationContext() == null) {
-//            Toast.makeText(getApplicationContext(), "context null error", Toast.LENGTH_SHORT).show();
-//          } else {
-//            Toast.makeText(getApplicationContext(), "몇 분 후인지 정확히 인식되지 않았습니다.", Toast.LENGTH_SHORT).show();
-//          }
-//        }
-//      }
-//            else if (str.contains("날씨 어때")) {
-//                String weatherStr = weatherGetter.getWeatherInfo();
-//
-//                if (weatherStr == null)
-//                    Toast.makeText(getApplicationContext(), "날씨를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show();
-//            }
-//
+      if (singleResult) {
+        ArrayList<String> matches = results.getStringArrayList(android.speech.SpeechRecognizer.RESULTS_RECOGNITION);
 
-
+        if (matches != null && matches.size() > 0) {
+          command = matches.get(0);
+          doCommand(command);
+          Log.i("voice", "command : " + matches.get(0));
+        }
+        singleResult=false;
+      }
     }
 
     @Override
@@ -450,4 +438,57 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     public void onEvent(int eventType, Bundle params) {
     }
   };
+
+  private void doCommand(String command) {
+    if(command != null) {
+      String str = command;
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA);
+      Calendar calendar = Calendar.getInstance();
+
+      int alarmByHour = 0;
+      int alarmByMin = 0;
+
+      if (str.contains("시간 뒤 알림") || str.contains("시간 뒤에 알림")) {  //시간 알림
+        alarmByHour = str.charAt(0) - '0';
+        //int hour = calendar.get(Calendar.HOUR);
+
+        calendar.add(Calendar.HOUR, alarmByHour);
+        calendar.set(Calendar.SECOND, 3);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        String reservationTime = dateFormat.format(calendar.getTime());
+        Toast.makeText(getContext(), reservationTime + "에 알림 예약되었습니다", Toast.LENGTH_SHORT).show();
+
+        try {
+          timeAlarmManager.reservationTimeByHour(calendar.getTime(), getContext());
+        } catch (NullPointerException ex) {
+          Toast.makeText(getContext(), "몇 시간 후인지 정확히 인식되지 않았습니다.", Toast.LENGTH_SHORT).show();
+        }
+
+      } else if (str.contains("분 뒤 알림") || str.contains("분 뒤에 알림")) { // 분 알림
+        alarmByMin = str.charAt(0) - '0';
+
+        calendar.add(Calendar.MINUTE, alarmByMin);
+        calendar.set(Calendar.SECOND, 3);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        String reservationTime = dateFormat.format(calendar.getTime());
+        Toast.makeText(getContext(), reservationTime + "에 알림 예약되었습니다", Toast.LENGTH_SHORT).show();
+
+        try {
+          timeAlarmManager.reservationTimeByMin(calendar.getTime(), getContext());
+          System.out.println(reservationTime + "에 알림 설정되었다");
+        } catch (NullPointerException ex) {
+          if (getContext() == null) {
+            Toast.makeText(getContext(), "context null error", Toast.LENGTH_SHORT).show();
+          } else {
+            Toast.makeText(getContext(), "몇 분 후인지 정확히 인식되지 않았습니다.", Toast.LENGTH_SHORT).show();
+          }
+        }
+      }
+    }
+    else {
+      Toast.makeText(getContext(), "null", Toast.LENGTH_SHORT).show();
+    }
+  }
 }

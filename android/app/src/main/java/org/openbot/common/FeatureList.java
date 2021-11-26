@@ -75,7 +75,7 @@ public class FeatureList {
     subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(DEFAULT, R.drawable.openbot_icon, "#4B7BFF"));
     subCategories.add(new SubCategory(PLAY, R.drawable.openbot_icon, "#4B7BFF"));
-    subCategories.add(new SubCategory(VOICE, R.drawable.ic_voice_over, "#4B7BFF"));
+    subCategories.add(new SubCategory(VOICE, R.drawable.ic_voice_over, "#FF4000")); // green #01DF3A
     categories.add(new Category(LEGACY, subCategories));
 
     subCategories = new ArrayList<>();
