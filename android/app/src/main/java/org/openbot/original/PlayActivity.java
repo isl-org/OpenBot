@@ -148,26 +148,20 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
 //        setContentView(R.layout.activity_play);
 //        request();
 
-//        Button track = findViewById(R.id.trackingBtn);
+        Button sendBtn = findViewById(R.id.SendBtn);
 
-//        track.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                tracking();
-//            }
-//        });
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                request();
+            }
+        });
 
     }
 
     private void request() {
         EditText gx_num = findViewById(R.id.gx);
         EditText gy_num = findViewById(R.id.gy);
-        Button sendBtn = findViewById(R.id.SendBtn);
-
-
-        sendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
                 x_list.clear();
                 y_list.clear();
@@ -176,7 +170,7 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
                 String str = gx_num.getText().toString() + "/" + gy_num.getText().toString();
                 String url = "https://mysterious-sea-88696.herokuapp.com/" + str;
 
-                //Toast.makeText(getApplicationContext(), url, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), url, Toast.LENGTH_SHORT).show();
 
 
                 //Toast.makeText(getApplicationContext(), title, Toast.LENGTH_SHORT).show();
@@ -193,7 +187,6 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
                         temp = temp.replace("]", "");
 
                         String[] arr = temp.split(",");
-
 
                         for (int i = 0; i < arr.length; i++) {
                             if (i % 2 == 0) {
@@ -225,8 +218,6 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
                         }
 
 
-                        //tracking();
-
 
                         Toast.makeText(getApplicationContext(), temp, Toast.LENGTH_SHORT).show();
 
@@ -234,10 +225,8 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
                 };
 
 
-                Thread t1 = new Thread() {
-
-                    @Override
-                    public void run() {
+                runInBackground(
+                    () -> {
                         String title = "";
 
 
@@ -249,7 +238,6 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
 //                            for(Element elem : mElementDatas){
 //                                title = elem.select("body").text();
 //                            }
-                            //System.out.print(title);
                             bundle.putString("hi", title);
                             Message msg = handler.obtainMessage();
                             msg.setData(bundle);
@@ -257,23 +245,10 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
 
                         } catch (IOException e) {
                             e.printStackTrace();
-                        } finally {
-                            System.out.println("쓰레드종료됨");
                         }
+                });
 
-//                        super.run();
-                    }
-                };
-                t1.start();
-
-                //vehicle.sendControl(130, 130);
-
-            }
-        });
-
-        //tracking();
-
-
+        tracking();
 
     }
 
@@ -282,65 +257,16 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
         distance();
         getGyro();
 
-
         TextView trackText = findViewById(R.id.trackText);
         TextView sensorText = findViewById(R.id.sensorText);
 
 
-        Thread t2 = new Thread() {
 
-
-            @Override
-            public void run() {
-                for (int i = 0; i<movingDegree.size();i++){
-
-                    double range = (Double.parseDouble(movingDegree.get(i).toString()));
-
-                    trackText.setText(movingDegree.get(i).toString());
-                    //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
-                    while(degree < range - 10 || degree > range + 10) {
-                        if (range > degree) {
-                            vehicle.sendControl(-130, 0);
-                        }
-                        else
-                            vehicle.sendControl(0,-130);
-
-                        sensorText.setText(Double.toString(degree));
-
-                        try {
-                            System.out.println("멈춤");
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    //직진 명령
-                    long t= System.currentTimeMillis();
-                    long end = t+(new Double(Double.parseDouble(movingLength.get(i).toString())*1000*0.16)).longValue();
-                    while(System.currentTimeMillis() < end) {
-                        vehicle.sendControl(255, 255);
-
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    //거리 계산한것 만큼 아두이노로 start 신호 보냄.
-                }
-            }
-        };
-        t2.start();
-
-
-
-
+        runInBackground(t2);
 
     }
 
     private void angle() {
-        //ArrayList<Double> initialDegree = new ArrayList<Double>();
         for (int i = 0; i < x_list.size() - 1; i++) {
             double current = 0;
 
@@ -391,7 +317,6 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
 
     private int getGyro() {
 
-
         //Using the Gyroscope & Accelometer
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -400,32 +325,6 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
         mGyroLis = new GyroscopeListener();
         Button getBtn = findViewById(R.id.getBtn);
         mSensorManager.registerListener(mGyroLis, mGgyroSensor, SensorManager.SENSOR_DELAY_UI);
-
-
-        //Touch Listener for Accelometer
-        findViewById(R.id.getBtn).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        roll = 0;
-                        mSensorManager.registerListener(mGyroLis, mGgyroSensor, SensorManager.SENSOR_DELAY_UI);
-                        //vehicle.sendControl(-130, -130);
-                        getBtn.setText("GETTING...");
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        //mSensorManager.unregisterListener(mGyroLis);
-                        //vehicle.sendControl(0, 0);
-                        getBtn.setText("GET_SENSOR");
-                        break;
-
-                }
-                return false;
-            }
-        });
-
 
         return 1;
 
@@ -458,17 +357,13 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
                 roll = roll + gyroX * dt;
                 yaw = yaw + gyroZ * dt;
 
-
                 if(roll<-360||roll>360){
                     roll=0;
                 }
 
                 degree = roll * RAD2DGR;
 
-                TextView sensor_text = findViewById(R.id.sensorText);
                 String dtos = String.valueOf(degree);
-                sensor_text.setText(dtos);
-
 
                 Log.e("LOG", "GYROSCOPE           [X]:" + String.format("%.4f", event.values[0])
                         + "           [Y]:" + String.format("%.4f", event.values[1])
@@ -486,6 +381,48 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
 
         }
     }
+
+    Thread t2 = new Thread() {
+
+
+        @Override
+        public void run() {
+            for (int i = 0; i<movingDegree.size();i++){
+
+                double range = (Double.parseDouble(movingDegree.get(i).toString()));
+
+                //아두이노에 회전 명령(왼쪽이면 양수, 오른쪽 회전이면 음수)
+                while(degree < range - 10 || degree > range + 10) {
+                    if (range > degree) {
+                        vehicle.sendControl(-130, 0);
+                    }
+                    else
+                        vehicle.sendControl(0,-130);
+
+                    try {
+                        System.out.println("멈춤");
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //직진 명령
+                long t= System.currentTimeMillis();
+                long end = t+(new Double(Double.parseDouble(movingLength.get(i).toString())*1000*0.16)).longValue();
+                while(System.currentTimeMillis() < end) {
+                    vehicle.sendControl(255, 255);
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //거리 계산한것 만큼 아두이노로 start 신호 보냄.
+            }
+        }
+    };
 
     @Override
     protected void processImage() {
@@ -579,6 +516,8 @@ public class PlayActivity extends CameraActivity2 implements OnImageAvailableLis
                             for (final Detector.Recognition result : results) {
                                 final RectF location = result.getLocation();
                                 if (location != null && result.getConfidence() >= minimumConfidence) {
+                                    if (t2.isAlive())
+                                        t2.interrupt();
                                     canvas1.drawRect(location, paint);
                                     cropToFrameTransform.mapRect(location);
                                     result.setLocation(location);
