@@ -7,13 +7,26 @@
 </p>
 --->
 
-We have designed a body for commercially available 1:16 RC-Trucks (such as [this](https://www.amazon.de/dp/B00M3J7DJW) on Amazon).
+We have designed a body for widely available 1:16 scale RC-toy trucks (such as [this](https://www.amazon.de/dp/B00M3J7DJW) on Amazon (EU)).
 
 ![RC-Truck-Banner](/docs/images/rc-truck-banner.jpg)
 
-We also have a [body](/body/) designed for a wheeled robot which relies on low-cost, readily available hobby hardware. Instructions [here](/body/README.md). 
+We also have a generic [body](/body/) designed for a simple wheeled robot which relies on low-cost, readily available hobby hardware. Instructions [here](/body/README.md). 
 
 ## Chassis
+
+The chassis of OpenBot RC-Truck consists of two main components: (a) A 1:16 scale RC-toy truck and (b) some custom-designed parts which we provide and can be 3D-printed.
+
+### RC-toy truck
+
+To build your own OpenBot RC-Truck, you will need a 1:16 RC-toy truck/buggy. We provide Amazon links to compatible RC-toy trucks for Germany ([EU](https://www.amazon.de/dp/B00M3J7DJW)) and the United States ([US](https://www.amazon.com/gp/product/B09C8XMPQ9/)) with fast shipping. A wide variety of similar trucks can also be found on other online retailers such as ebay, Alibaba, AliExpress etc. often for a discounted price but with slow shipping speed. However, while purchasing one for your build (using our 3D-printed parts), please ensure that it is indeed a 1:16 scale RC-truck.
+
+<p float="left">
+  <img src="/docs/images/rc_toy_1.jpg" width="32%" />
+  <img src="/docs/images/rc_toy_2.jpg" width="32%" /> 
+  <img src="/docs/images/rc_toy_3.jpg" width="32%" />
+</p>
+
 
 ### 3D printing
 
@@ -53,10 +66,14 @@ On an Ultimaker S5, we achieved good results with the following settings:
 
 We were able to print the chassis with PLA, CPE and ABS. In our experience the print was not affected very much by the print settings. However, if you have the patience, printing slower and with smaller layer height will improve the print. Also adding a support structure can improve the print, but it will require additional work to remove afterwards.
 
-Before you proceed with the build, you may need to clean the 3D print. However, using the above settings, we did not need any filing or cleaning during our build process. If possible, we recommend using a combination of two different colors (for example green/black or red/black) for printing different parts of the same OpenBot RC-Truck build (as shown below for red/black combo).
+Before you proceed with the build, you may need to clean the 3D print. However, using the above settings, we did not need any filing or cleaning during our build process. If possible, we recommend using a combination of two different colors (for example green/black or red/black) for printing different parts of the same OpenBot RC-Truck build (as shown below for green/black combo).
 
 <p float="left">
   <img src="/docs/images/3d_print_rc_1.jpg" width="32%" />
   <img src="/docs/images/3d_print_rc_2.jpg" width="32%" /> 
   <img src="/docs/images/3d_print_rc_3.jpg" width="32%" />
 </p>
+
+
+## Assembly
+
