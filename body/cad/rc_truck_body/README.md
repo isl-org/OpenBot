@@ -71,7 +71,9 @@ On an Ultimaker S5, we achieved good results with the following settings:
 
 We were able to print the chassis with PLA, CPE and ABS. In our experience the print was not affected very much by the print settings. However, if you have the patience, printing slower and with smaller layer height will improve the print. Also adding a support structure can improve the print, but it will require additional work to remove afterwards.
 
-Before you proceed with the build, you may need to clean the 3D print. However, using the above settings, we did not need any filing or cleaning during our build process. If possible, we recommend using a combination of two different colors (for example green/black or red/black) for printing different parts of the same OpenBot RC-Truck build as shown below.
+Before you proceed with the build, you may need to clean the 3D print. However, using the above settings, we did not need any filing or cleaning during our build process. If possible, we recommend using a combination of two different colors (for example green/black or red/black) for printing different parts of the same OpenBot RC-Truck build as shown below. 
+
+**Tip:** Click on the images to open them in full resolution in a new tab.
 
 <p float="left">
   <img src="/docs/images/3d_print_rc_1.png" width="32%" />
@@ -82,23 +84,21 @@ Before you proceed with the build, you may need to clean the 3D print. However, 
 
 ## Assembly
 
-While it is possible to build your OpenBot RC-Truck with a DIY approach similar to the regular OpenBot (please see DIY build components and instructions for OpenBot [here](/body/README.md)), we recommend using the OpenBot [custom PCB](pcb) for building and assembling the OpenBot RC-Truck. This option is recommended if you desire a cleaner build or want to build multiple OpenBot RC-Trucks. An additional advantage of using our [custom PCB](pcb) is that you can use the same components to build and switch between different OpenBot variations.
-
+While it is possible to build your OpenBot RC-Truck with a DIY approach similar to the regular OpenBot (see DIY build components and instructions for OpenBot [here](/body/README.md)), we recommend using the OpenBot [custom PCB](/body/pcb) for building and assembling the OpenBot RC-Truck. This option is recommended if you desire a cleaner build or want to build multiple OpenBot RC-Trucks. An additional advantage of using our [custom PCB](/body/pcb) is that you can use the same components to build and switch between different OpenBot bodies.
 
 ### Bill of materials
 
-OpenBot RC-Truck body relies on readily available hobby electronics. We provide links for Germany (EU) and the United States (US) with fast shipping. If you have the patience to wait a bit longer, you can also get the components a lot cheaper from AliExpress (AE). You will need the following components.
+OpenBot RC-Truck mainly relies on readily available hobby electronics. We provide Amazon links for Germany (EU) and the United States (US) with fast shipping. If you have the patience to wait a bit longer, you can also get the components a lot cheaper from AliExpress (AE). You will need the following components.
 
 #### Required components
 
-- 1x RC-toy truck or buggy ([EU](https://www.amazon.de/dp/B00M3J7DJW), [US](https://www.amazon.com/gp/product/B09C8XMPQ9/))
+- 1x RC-toy truck/buggy ([EU](https://www.amazon.de/dp/B00M3J7DJW), [EU](https://www.amazon.de/dp/B088FGVYNW), [US](https://www.amazon.com/gp/product/B09C8XMPQ9))
 - 1x Arduino Nano ([EU](https://www.amazon.de/dp/B01MS7DUEM), [US](https://www.amazon.com/dp/B00NLAMS9C), [AE](https://www.aliexpress.com/item/32866959979.html))
-- 1x [Custom PCB](pcb)
+- 1x OpenBot [Custom PCB](/body/pcb)
 - 1x USB OTG cable ([EU](https://www.amazon.de/gp/product/B075M4CQHZ) ,[US](https://www.amazon.com/dp/B07LBHKTMM), [AE](https://www.aliexpress.com/item/10000330515850.html))
 - 1x spring or rubber band ([EU](https://www.amazon.de/gp/product/B01N30EAZO/), [US](https://www.amazon.com/dp/B008RFVWU2), [AE](https://www.aliexpress.com/item/33043769059.html))
-- 16x M3x25 screw ([EU](https://www.amazon.de/dp/B07KFL3SSV), [US](https://www.amazon.com/dp/B07WJL3P3X), [AE](https://www.aliexpress.com/item/4000173341865.html))
-- 16x M3 nut ([EU](https://www.amazon.de/dp/B07JMF3KMD), [US](https://www.amazon.com/dp/B071NLDW56), [AE](https://www.aliexpress.com/item/32977174437.html))
-- 6x M3x5 screw ([EU](https://www.amazon.de/dp/B01HBRG3W8), [US](https://www.amazon.com/dp/B07MBHMLL2), [AE](https://www.aliexpress.com/item/32892594230.html))
+- 2x M3x25 screw ([EU](https://www.amazon.de/dp/B07KFL3SSV), [US](https://www.amazon.com/dp/B07WJL3P3X), [AE](https://www.aliexpress.com/item/4000173341865.html))
+- 2x M3 nut ([EU](https://www.amazon.de/dp/B07JMF3KMD), [US](https://www.amazon.com/dp/B071NLDW56), [AE](https://www.aliexpress.com/item/32977174437.html))
 - Dupont cables ([EU](https://www.amazon.de/dp/B07KYHBVR7), [US](https://www.amazon.com/dp/B07GD2BWPY), [AE](https://www.aliexpress.com/item/4000766001685.html))
 
 #### Optional components
@@ -106,10 +106,10 @@ OpenBot RC-Truck body relies on readily available hobby electronics. We provide 
 - 1x Ultrasonic Sensor ([EU](https://www.amazon.de/dp/B00LSJWRXU), [US](https://www.amazon.com/dp/B0852V181G/), [AE](https://www.aliexpress.com/item/32713522570.html))
 - 2x On/Off Switch ([EU](https://www.amazon.de/dp/B07QB22J62), [US](https://www.amazon.com/dp/B01N2U8PK0), [AE](https://www.aliexpress.com/item/1000005699023.html))
 - 4x Orange LED 5mm ([EU](https://www.amazon.de/gp/product/B01NCL0UTQ), [US](https://www.amazon.com/dp/B077XD7MVB), [AE](https://www.aliexpress.com/item/4000329069943.html))
-- 4x Red LED 5mm ([EU](https://www.amazon.de/gp/product/B01NCL0UTQ), [US](https://www.amazon.com/dp/B077XD7MVB), [AE](https://www.aliexpress.com/item/4000329069943.html))
-- 2x White LED lamps ([EU](https://www.amazon.de/gp/product/B01NCL0UTQ), [US](https://www.amazon.com/dp/B077XD7MVB), [AE](https://www.aliexpress.com/item/4000329069943.html))
-- (Optional) Resistors (2x 150<span>&#8486;</span> for the LEDs and a 20 k<span>&#8486;</span> and 10k<span>&#8486;</span> for the voltage divider)
-- (Optional) 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B07449V33P), [AE](https://www.aliexpress.com/item/32963304134.html))
+- 4x Red LED 5mm ([EU](https://www.amazon.de/dp/B083HN3CLY), [US](https://www.amazon.com/dp/B077X95F7C), [AE](https://www.aliexpress.com/item/4000329069943.html))
+- 2x White LED lamps ([EU](https://www.amazon.de/-/en/gp/product/B06XTQSZDX), [US](https://www.amazon.com/gp/product/B01N2UPAD8), [AE](https://de.aliexpress.com/item/1005002991235830.html))
+- Variable Resistors for LEDs ([EU](https://www.amazon.de/gp/product/B081TXJJGV), [US](https://www.amazon.com/dp/B0711MB4TL), [AE](https://de.aliexpress.com/item/1005003610664176.html))
+- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B07449V33P), [AE](https://www.aliexpress.com/item/32963304134.html))
 
 
 ### Build instructions
