@@ -126,60 +126,60 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 
 1. Solder wires to the motors and add the encoder disks to the two front motors if you intend to use the speed sensors.
     <p float="left">
-      <img src="/docs/images/add_wires_motor.jpg" width="32%" />
-      <img src="/docs/images/add_disk_motor.jpg" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
     </p>
 2. Insert the positive and negative leads of the two left motors into OUT1 (+) and OUT2 (-) of the L298N board. Insert the positive and negative leads of the two right motors into OUT4 (+) and OUT3 (-) of the L298N board.
 3. Mount the motors with eight M3x25 screws and nuts.
     <p float="left">
-      <img src="/docs/images/attach_motors_1.jpg" width="32%" />
-      <img src="/docs/images/attach_motors_2.jpg" width="32%" /> 
-      <img src="/docs/images/attach_motors_3.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 4. Mount the L298N with four M3x5 screws
 5. (Optional) Install the ultrasonic sensor and replace the angled connector with a straigt one (or carefully bend the pins).
     <p float="left">
-      <img src="/docs/images/sonar_front.jpg" width="32%" />
-      <img src="/docs/images/sonar_back.jpg" width="32%" /> 
-      <img src="/docs/images/sonar_bend_pins.jpg" width="32%" />
+      <img src="/docs/images/blah" width="32%" />
+      <img src="/docs/images/blah" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 6. (Optional) Install the orange LEDs for the indicator signals.
     <p float="left">
-      <img src="/docs/images/led_insert.jpg" width="32%" />
-      <img src="/docs/images/led_left.jpg" width="32%" /> 
-      <img src="/docs/images/led_right.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 7. Mount the bottom of the phone mount to the top plate using two M3x25 screws and nuts.
     <p float="left">
-      <img src="/docs/images/install_camera_mount_1.jpg" width="32%" />
-      <img src="/docs/images/install_camera_mount_2.jpg" width="32%" /> 
-      <img src="/docs/images/install_camera_mount_3.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 8. Insert the top of the phone mount and install the spring or rubber band.
     <p float="left">
-      <img src="/docs/images/install_spring_1.jpg" width="32%" />
-      <img src="/docs/images/install_spring_2.jpg" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
     </p>
 9. Replace the angled connector with a straigt one (or carefully bend the pins) and then mount the speed sensors with one M3x5 screw each.
     <p float="left">
-      <img src="/docs/images/install_speed_sensor_1.jpg" width="32%" />
-      <img src="/docs/images/install_speed_sensor_2.jpg" width="32%" /> 
-      <img src="/docs/images/install_speed_sensor_3.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 10. Install the battery case (e.g. velcro).
     <p float="left">
-      <img src="/docs/images/install_battery_1.jpg" width="32%" />
-      <img src="/docs/images/install_battery_2.jpg" width="32%" /> 
-      <img src="/docs/images/install_battery_3.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 11. (Optional) Insert the on/off switch put it in the current path.
     1. Push the switch into the appropriate opening until you hear a click.
     2. Solder the red wires (12V) of the battery case and the power cable each to one of the pins of the switch. Connect the black wires (GND), and cover the connection with some heatshrink.
     3. Fix the cables with some tape.
     <p float="left">
-      <img src="/docs/images/install_switch_1.jpg" width="32%" />
-      <img src="/docs/images/install_switch_2.jpg" width="32%" /> 
-      <img src="/docs/images/install_switch_3.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 12. (Optional) Attach the OLED display.
 13. Connect the PWM inputs of the L298N to pins D5, D6, D9 and D10 of the Arduino.
@@ -201,28 +201,28 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 
 1. Solder wires with Micro JST PH 2.0 connectors to the motors and add the encoder disks to the two front motors if you intend to use the speed sensors.
     <p float="left">
-      <img src="/docs/images/add_wires_motor.jpg" width="32%" />
-      <img src="/docs/images/add_disk_motor.jpg" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
     </p>
 2. Mount the motors with eight M3x25 screws and nuts.
     <p float="left">
-      <img src="/docs/images/attach_motors_1.jpg" width="32%" />
-      <img src="/docs/images/attach_motors_2.jpg" width="32%" /> 
-      <img src="/docs/images/attach_motors_3.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 3. Connect the left two motors to M3 and M4 and the right two motors to M1 and M2.
     <p float="left">
-      <img src="/docs/images/connect_motors_pcb.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 4. Mount the PCB with four M3x5 screws and the motors with eight M3x25 screws and nuts.
     <p float="left">
-      <img src="/docs/images/attach_pcb.jpg" width="32%" />
-      <img src="/docs/images/chassis_motors_pcb.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 5. Follow steps 5-12 from the DIY option.
 6. Connect the ultrasonic sensor (VCC/+, Trig, Echo, GND/-) to the 4-pin header labeled *SONAR* on the PCB.
     <p float="left">
-      <img src="/docs/images/connect_sonar_sensor.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" />
     </p>
 7. Connect the left and right indicator signals (orange LEDs) to the 2-pin headers labeled *SIGNAL_L* and *SIGNAL_R* on the PCB. The longer leg is + and the shorter one -.
 8. Connect the left and right speed sensors (VCC/+, GND/-, D0) to the 3-pin headers labeled *SPEED_L* and *SPEED_R*.
@@ -235,6 +235,6 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 
 ## Next
 
-Flash the [Arduino Firmware](../firmware/README.md)
+Flash the [Arduino Firmware](/firmware/README.md)
 
 
