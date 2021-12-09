@@ -7,15 +7,15 @@
 </p>
 --->
 
-We have designed a body for widely available 1:16 scale RC-toy trucks (such as [this](https://www.amazon.de/dp/B00M3J7DJW) on Amazon (EU)).
+We have designed a robot body for widely available 1:16 scale RC-toy trucks (such as [this](https://www.amazon.de/dp/B00M3J7DJW) on Amazon).
 
 ![RC-Truck-Banner](/docs/images/rc-truck-banner.jpg)
 
-We also have a generic [body](/body/) designed for a simple wheeled robot which relies on low-cost, readily available hobby hardware. Instructions [here](/body/README.md). 
+We also have a generic [body](/body/) designed for a simple wheeled robot which relies on low-cost, readily available hobby hardware. Build instructions for simple OpenBot can be found [here](/body/README.md). 
 
 ## Chassis
 
-The chassis of OpenBot RC-Truck consists of two main components: (a) A 1:16 scale RC-toy truck and (b) some custom-designed parts which we provide and can be 3D-printed.
+The chassis of OpenBot RC-Truck consists of two main components: (a) A 1:16 scale RC-toy truck of your choice and (b) a number of custom-designed parts which we provide and can be 3D-printed.
 
 ### RC-toy truck
 
