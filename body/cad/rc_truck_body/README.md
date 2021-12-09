@@ -55,7 +55,7 @@ For all the above parts, your build plate needs to be at least 260mmx220mm, whic
 
 Since a lot of common 3D printers have a smaller build volume (usually 220mmx220mm), there are two more options that can work. 
 First option is to print the ```main_frame``` part at 45 degrees with additional support material. 
-Second option requires modifying the original ```main_frame``` part file. We recommend using [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/overview) for such CAD modifications (which has a free 1-year academic license available). 
+Second option requires modifying the original ```main_frame``` part file. We recommend using [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/overview) for such CAD modifications (Fusion 360 has a free 1-year academic license available). 
 For this option, we make its [STEP](/body/cad/rc_truck_body/main_frame.stp) file available, which you can cut into two/three smaller parts. 
 The resulting sub-parts will then fit on a standard (i.e., 220mmx220mm) build plate and can be joined together after printing. 
 In future, we may also release such a modular version of the ```main_frame``` part here. All other parts require a minimum build plate of 220mmx60mm.
