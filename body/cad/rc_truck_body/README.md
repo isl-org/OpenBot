@@ -177,14 +177,19 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
       <img src="/docs/images/add_side_covers.png" width="32%" />
       <img src="/docs/images/add_side_covers_2.png" width="32%" />
     </p>    
+12. Mount the ```main_frame``` onto the RC-truck body using the four mounting pins and their respective screws. Make sure all cables and connectors and the power switch for the robot are accessible through the rectangular opening on the back side of the ```main_frame``` for PCB connections.
+    <p float="left">
+      <img src="/docs/images/add_side_covers.png" width="32%" />
+      <img src="/docs/images/add_side_covers_2.png" width="32%" />
+    </p>
 12. Mount the PCB with four M3x25 screws and nuts with four ```spacers``` in between. Mount an Arduino Nano on the PCB and attach the USB OTG cable via usb port on the Arduino Nano.
     <p float="left">
       <img src="/docs/images/pcb_assembly.JPG" width="32%" />
     </p>
 13. Connect all the wires (add details)
 14. Connect the battery pack and keep in place with a velcro.
-15. Put on the side and front and back covers.
-16. Add details and images!!
+15. Put on the front and back ```electronics_covers```.
+16. Insert the android phone in the phone mount and connect it with the robot via the USB OTG cable.
 
 
 ## Next
