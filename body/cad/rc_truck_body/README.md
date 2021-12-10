@@ -188,9 +188,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
     </p>
 13. Connect all the wires (add details)
 14. Connect the battery pack and keep in place with a velcro.
-15. Put on the front and back ```electronics_covers```.
-16. Insert the android phone in the phone mount and connect it with the robot via the USB OTG cable.
-
+15. Put on the front and back ```electronics_covers```. Pull out the USB OTG cable from the rear ```electronics_cover``` through the provided gap for connecting to an android smartphone.
 
 ## Next
 
