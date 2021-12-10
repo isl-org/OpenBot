@@ -108,7 +108,7 @@ Our robot body relies on readily available hobby electronics. We provide links f
 #### PCB components (Option 2)
 
 - 1x [Custom PCB](pcb)
-- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B07449V33P), [AE](https://www.aliexpress.com/item/32963304134.html))
+- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B01DUC1O68), [AE](https://www.aliexpress.com/item/32963304134.html))
 
 ### Build instructions
 
