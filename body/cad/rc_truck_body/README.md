@@ -116,31 +116,34 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 
 **Tip:** Click on the images to open them in full resolution in a new tab.
 
-1. Disassemble the RC-toy truck. Remove its top cover and unscrew the four mouting pins from the base as shown in the figures below. Keep all four mounting pins and their respective screws safe since you will be using them to mount the ```main_frame``` onto the RC-Truck body after all the wiring and connections are done. All compatible RC-toy trucks come with two motors: one for throttle and the other for steering, a speed controller (with a built-in 5-7V BEC) for the throttle motor, and a 2S 7.4V LiPo battery pack. Unmount and remove the battery pack from the base of the truck and recharge it with the charger that came with the box. Expose/losen the wire connectors for both motors as well the BEC output from the controller as shown.
+1. Disassemble the RC-toy truck. Remove its top cover and unscrew the four mouting pins from the base as shown in the figures below. Keep all four mounting pins and their respective screws safe, since you will be using them to mount the ```main_frame``` onto the RC-Truck body after all the wiring is done. All compatible RC-toy trucks come with two motors: one for throttle and the other for steering, a speed controller (with a built-in 5-7V UBEC) for the throttle motor, and a 2S 7.4V LiPo battery pack. Unmount and remove the battery pack from the base of the truck and recharge it with the charger that came with the truck. Expose/losen the wire connectors for both motors as well as the UBEC output from the speed controller. In our case, the UBEC output was 6V.
     <p float="left">
       <img src="/docs/images/rc_truck_disassembly_1.JPG" width="32%" />
       <img src="/docs/images/rc_truck_disassembly_2.JPG" width="32%" /> 
       <img src="/docs/images/rc_truck_disassembly_3.JPG" width="32%" />
     </p>
-2. Notice that the two dimensions ```d1``` amd ```d2``` (as shown below) on the ```main_frame``` are dependent on the model of the RC-toy truck used. We designed our ```main_frame``` part for [this](https://www.amazon.de/dp/B00M3J7DJW) RC-toy truck model. Based on what 1:16 scale truck you use, you may need to adjust these dimensions slightly using the ```main_frame``` [STEP](/body/cad/rc_truck_body/main_frame.stp) file. We recommend using [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/overview) for such CAD modifications (Fusion 360 has a free 1-year academic license available). Also, note that the small wedge/triangle on the ```main_frame``` represents the forward direction.
+2. Notice that the two dimensions d1 amd d2 (as shown below) on the ```main_frame``` are dependent on the model of the RC-toy truck used. We designed our ```main_frame``` part for [this](https://www.amazon.de/dp/B00M3J7DJW) RC-toy truck model. Based on what (1:16 scale) truck you use, you may need to adjust these dimensions slightly using the ```main_frame``` [STEP](/body/cad/rc_truck_body/main_frame.stp) file. We recommend using [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/overview) for such CAD modifications (Fusion 360 has a free 1-year academic license available). Also, note that the small wedge/triangle on the ```main_frame``` represents the forward direction.
     <p float="left">
       <img src="/docs/images/main-frame-dimensions.png" width="32%" />
       <img src="/docs/images/main-frame-direction.png" width="32%" />
+    </p>   
+3. (Optional) Install the ON/OFF switch for powering the robot. You can simply do this by cutting the positive wire that goes from speed controller to the battery and soldering the switch in-between the two split parts. Please ensure that the switch connectors are insulated via shrink tube or electric tape and the power cable is long enough that the switch can fit through the rectangular opening on the back side of the ```main_frame``` after assembly (see the figure below).
+    <p float="left">
       <img src="/docs/images/main-frame-switch.png" width="32%" />
     </p>
-4. (Optional) Install the ON/OFF switch for powering the robot. You can simply do this by splitting the positive wire that goes from speed controller to the battery and soldering the switch in-between. Please ensure that the cable is long enough that the switch can fit through the rectangular opening on the back side of the ```main_frame``` after assembly (see the right figure above).
-5. (Optional) Install the ultrasonic sensor. You can use hot glue to keep them in place if needed.
+4. (Optional) Install the ultrasonic sensor through the front grill of the ```main_frame```. You can use hot glue to keep it in place if needed. Run the dupont cables from the ultrasonic connector all the way back to the rectangular opening on the back side of the ```main_frame```.
     <p float="left">
-      <img src="/docs/images/blah" width="32%" />
-      <img src="/docs/images/blah" width="32%" /> 
-      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/install-ultrasonic-1.png" width="32%" />
+      <img src="/docs/images/install-ultrasonic-2.png" width="32%" />
     </p>
-6. (Optional) Install the orange LEDs for the indicator signals. You can use hot glue to keep them in place if needed.
+5. (Optional) Install the orange LEDs for the indicator signals both at front and back of the ```main_frame```. You can use hot glue to keep them in place if needed. For each side i.e., left and right, you need to connect the front and back LEDs in parallel. To achieve this, simply connect their positive and negative terminals together respectively. The negative terminals will be connected to the ground (of the microcontroller) while each of the positive terminals i.e., left and right will connect to their respective indicator signal pins on the PCB. 
     <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-      <img src="/docs/images/blah.jpg" width="32%" /> 
-      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/insert-leds-orange-1.png" width="32%" />
+      <img src="/docs/images/insert-leds-orange-2.png" width="32%" /> 
     </p>
+**Tip:** To avoid cluttering and potential grounding mistakes during wiring, it is recommended to form a unified ground loop for the negative terminals of all the LEDs. This simply means running a wire underneath the ```main_frame``` which connects all the negative terminals of the LEDs. This ground can then be connected to the microcontroller ground pin using a single dupont cable, which is run to the rectangular opening on the back side of the ```main_frame```.
+
+6. (Optional) Note that most color LEDs (e.g. Red, Orange, Yellow etc.) operate on 2-3V and not the traditional 5V, which is the operating voltage of the microcontroller. Therefore, a voltage divider is needed in order to operate these LEDs safely. For indicator signals, we already have a built-in voltage divider in our custom PCB. So, you donot need to do anything for safely operating the indicator signal (i.e., orange) LEDs. However, if you choose to add rear light i.e., Red LEDs as well, then an external voltage divider is required. We recommend using a variable resistor of 10k
 7. (Optional) Install the Red LEDs for rear lights. You can use hot glue to keep them in place if needed.
     <p float="left">
       <img src="/docs/images/blah.jpg" width="32%" />
@@ -174,7 +177,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 13. Connect the battery pack and keep in place with a velcro.
 
 
-14. Put on the front and back covers
+14. Put on the side and front and back covers.
 15. Details and images!!
 
 
