@@ -109,7 +109,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 - 4x Red LED 5mm ([EU](https://www.amazon.de/dp/B083HN3CLY), [US](https://www.amazon.com/dp/B077X95F7C), [AE](https://www.aliexpress.com/item/4000329069943.html))
 - 2x White LED lamps ([EU](https://www.amazon.de/-/en/gp/product/B06XTQSZDX), [US](https://www.amazon.com/gp/product/B01N2UPAD8), [AE](https://de.aliexpress.com/item/1005002991235830.html))
 - Variable Resistors for LEDs ([EU](https://www.amazon.de/gp/product/B081TXJJGV), [US](https://www.amazon.com/dp/B0711MB4TL), [AE](https://de.aliexpress.com/item/1005003610664176.html))
-- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B07449V33P), [AE](https://www.aliexpress.com/item/32963304134.html))
+- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B01DUC1O68), [AE](https://www.aliexpress.com/item/32963304134.html))
 
 
 ### Build instructions
@@ -132,28 +132,31 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
       <img src="/docs/images/main-frame-switch.png" width="32%" />
       <img src="/docs/images/switch-power.jpg" width="32%" />
     </p>
-4. (Optional) Install the ultrasonic sensor through the front grill of the ```main_frame```. You can use hot glue to keep it in place if needed. Run the dupont cables from the ultrasonic connector all the way back to the rectangular opening on the back side of the ```main_frame```.
+4. (Optional) Install the ultrasonic sensor through the front grill of the ```main_frame```. You can use hot glue to keep it in place if needed. Gently push the connector into a straight position before putting it in place. This will make accessing the connector easier after assembly. Run the dupont cables from the ultrasonic connector all the way back to the rectangular opening on the back side of the ```main_frame```.
     <p float="left">
       <img src="/docs/images/install-ultrasonic-1.png" width="32%" />
+      <img src="/docs/images/ultrasonic-sensor.jpg" width="32%" />
       <img src="/docs/images/install-ultrasonic-2.png" width="32%" />
     </p>
-5. (Optional) Install the orange LEDs for the indicator signals both at front and back of the ```main_frame```. You can use hot glue to keep them in place if needed. For each side i.e., left and right, you need to connect the front and back LEDs in parallel. To achieve this, simply connect their positive and negative terminals together respectively. The negative terminals will be connected to the ground (of the microcontroller) while each of the positive terminals i.e., left and right will connect to their respective indicator signal pins on the PCB. 
+5. (Optional) Install the orange LEDs for the indicator signals both at front and back of the ```main_frame```. You can use hot glue to keep them in place if needed. For each side i.e., left and right, you need to connect the front and back LEDs in parallel. To achieve this, simply connect their positive and negative terminals together respectively. Similar to the ultrasonic sensor cable, run the postive and negative dupont cables from both left and right indicator signals all the way back to the rectangular opening on the back side of the ```main_frame```. There these will connect to their respective indicator signal pins (both +ve and -ve) on the PCB. 
     <p float="left">
       <img src="/docs/images/insert-leds-orange-1.png" width="32%" />
-      <img src="/docs/images/insert-leds-orange-2.png" width="32%" /> 
+      <img src="/docs/images/orange-led.jpg" width="32%" />
+      <img src="/docs/images/insert-leds-orange-2.png" width="32%" />
     </p>
 **Tip:** To avoid cluttering and potential grounding mistakes during wiring, it is recommended to form a unified ground loop for the negative terminals of all the LEDs. This simply means running a wire underneath the ```main_frame``` which connects all the negative terminals of the LEDs. This ground can then be connected to the microcontroller ground pin using a single dupont cable, which is run to the rectangular opening on the back side of the ```main_frame```.
 
-6. (Optional) Install the front big-LED lamps. You can use hot glue to keep the base in place and screw the lamp into its respective base through the front opening on each side. Connect both front LED lamps in parallel by connecting their positive and negative terminals together respectively. Since these lamps operate on 6V, you can connect them directly to the UBEC output by their positive terminals. Connect the negative terminals to the ground loop.
+6. (Optional) Install the front big-LED lamps. You can use hot glue to keep the base in place and screw the lamp into its respective base through the front opening on each side. Connect both front LED lamps in parallel by connecting their positive and negative terminals together respectively. Since these lamps operate on 6V, you can connect them directly to the UBEC output by their positive terminals. Connect the negative terminals to the ground loop (see the tip above).
     <p float="left">
+      <img src="/docs/images/led-lamp.jpg" width="32%" />
       <img src="/docs/images/insert-lamps-1.png" width="32%" />
-      <img src="/docs/images/insert-lamps-2.png" width="32%" />
+      <img src="/docs/images/led-lamp-wiring.jpg" width="32%" />
     </p>
 7. (Optional) Install the Red LEDs for rear lights. You can use hot glue to keep them in place if needed. Connect all four Red LEDs in parallel; i.e., connect their positive and negative terminals together repectively. The negative terminals will go to the ground, while the positive terminals will be collectively connected to the UBEC output via an appropriate voltage divider (see the next step for details on voltage divider). 
     <p float="left">
       <img src="/docs/images/insert-leds-red.png" width="32%" />
     </p>
-8. (Optional) Most color LEDs (e.g. Red, Orange, Yellow etc.) operate on 2-3V and not the traditional 5V, which is the normal operating voltage of the microcontroller. Therefore, a voltage divider is needed in order to operate these LEDs safely. For indicator signals, we already have a built-in voltage divider in our custom PCB. So, you donot need to do anything for using the indicator signal (i.e., orange) LEDs. However, if you choose to add rear light i.e., Red LEDs as well, then an external voltage divider is required for them. We recommend using a variable resistor of 10k<span>&#8486 or higher for making your voltage divider. Based on your UBEC output voltage (6V in our case), you need to set up a voltage divider with 2-3V output. This can be done by applying the UBEC output on the external ends of the resistor and by turning the screw on its top and monitoring the output voltage using a digital multimeter in between the ground and the middle terminal (see figure below). Once the output voltage of the variable resistance i.e., the voltage divider is set to the appropriate 2-3V range, lock its screw in place using some hot glue and fix its position underneath the ```main_frame``` in a convenient position.
+8. (Optional) Install the voltage divider for rear Red LEDs. Most color LEDs (e.g. Red, Orange, Yellow etc.) operate on 2-3V and not the traditional 5V, which is the normal operating voltage of the microcontroller. Therefore, a voltage divider is needed in order to operate these LEDs safely. For indicator signals, we already have a built-in voltage divider in our custom PCB. So, you donot need to do anything for using the indicator signal (i.e., orange) LEDs. However, if you choose to add rear light i.e., Red LEDs as well, then an external voltage divider is required for them. We recommend using a variable resistor of 10k<span>&#8486 or higher for making your voltage divider. Based on your UBEC output voltage (6V in our case), you need to set up a voltage divider with 2-3V output. This can be done by applying the UBEC output on the external ends of the resistor and by turning the screw on its top and monitoring the output voltage using a digital multimeter in between the ground and the middle terminal (see figure below). Once the output voltage of the variable resistance i.e., the voltage divider is set to the appropriate 2-3V range, lock its screw in place using some hot glue and fix its position underneath the ```main_frame``` in a convenient position.
     <p float="left">
       <img src="/docs/images/insert-red-leds.png" width="32%" />
     </p>
