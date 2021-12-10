@@ -177,17 +177,18 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
       <img src="/docs/images/add_side_covers.png" width="32%" />
       <img src="/docs/images/add_side_covers_2.png" width="32%" />
     </p>    
-12. Mount the ```main_frame``` onto the RC-truck body using the four mounting pins and their respective screws. Make sure all cables and connectors and the power switch for the robot are accessible through the rectangular opening on the back side of the ```main_frame``` for PCB connections.
+12. Mount the ```main_frame``` onto the RC-truck body using the four mounting pins and their respective screws. Make sure all cable connectors and the power switch for the robot are accessible through the rectangular opening on the back side of the ```main_frame``` for PCB connections. In addition, pull out the battery connector from the triangular opening on the front.
     <p float="left">
-      <img src="/docs/images/add_side_covers.png" width="32%" />
-      <img src="/docs/images/add_side_covers_2.png" width="32%" />
+      <img src="/docs/images/add_main_frame_1.JPG" width="32%" />
+      <img src="/docs/images/add_main_frame_2.png" width="32%" />
+      <img src="/docs/images/add_main_frame_3.JPG" width="32%" />
     </p>
-12. Mount the PCB with four M3x25 screws and nuts with four ```spacers``` in between. Mount an Arduino Nano on the PCB and attach the USB OTG cable via usb port on the Arduino Nano.
+12. Mount the PCB with four M3x25 screws and nuts with four ```spacers``` in between on the back side of ```main_frame```. Mount an Arduino Nano on the PCB and attach the USB OTG cable to the Arduino Nano USB port.
     <p float="left">
       <img src="/docs/images/pcb_assembly.JPG" width="32%" />
     </p>
 13. Connect all the wires (add details)
-14. Connect the battery pack and keep in place with a velcro.
+14. Connect the battery pack at the front and keep it in place with a velcro or some mounting tape.
 15. Put on the front and back ```electronics_covers```. Pull out the USB OTG cable from the rear ```electronics_cover``` through the provided gap for connecting to an android smartphone.
 
 ## Next
