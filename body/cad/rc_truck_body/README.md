@@ -162,8 +162,8 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
       <img src="/docs/images/voltage-divider-animation.png" width="32%" />
     </p>
 9. (Optional) You can also use a single or two separate ON/OFF switches for turning the front and rear LEDs ON and OFF. Please follow instructions in Step 3 to install a switch (or multiple switches) for this purpose.
-10. Now you are almost done with the wiring of the robot. At this point, take some time to ensure that all wires and connections underneath the ```main_frame``` are correct and well insulated using shrink tube or electric tape. Use hot glue to keep any loose wires in place so they do not come in contact with the wheels or any moving parts of the robot after assembly.
-11. Mount the bottom of the phone mount to the ```main_frame``` using two M3x25 screws and nuts. (Optional) You can insert one or more camera_elevators in between if you would like to adjust the height of your phone mount. In that case, you will need M3x35 or longer screws to mount the phone mount.
+10. Now you are almost done with the wiring of the robot. At this point, take some time to ensure that all wires and connections underneath the ```main_frame``` are correct and well insulated using either shrink tube or electric tape. Use hot glue to keep any loose wires in place so they do not come in contact with the wheels or any moving parts of the robot after assembly. Make sure all cables from motors, speed controller UBEC, LEDs, and ultrasonic sensor can freely make it out of the rectangular opening on the back side of the ```main_frame```.
+11. Mount the bottom of the phone mount to the ```main_frame``` using two M3x25 screws and nuts. Optionally, you can insert one or more ```camera_elevator```s in between if you would like to adjust the vertical height of your phone mount. In that case, you may need M3x35 or longer screws to attach the phone mount.
     <p float="left">
       <img src="/docs/images/blah.jpg" width="32%" />
       <img src="/docs/images/blah.jpg" width="32%" /> 
