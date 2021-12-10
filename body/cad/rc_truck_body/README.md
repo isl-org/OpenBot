@@ -183,7 +183,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
       <img src="/docs/images/add_main_frame_2.png" width="32%" />
       <img src="/docs/images/add_main_frame_3.JPG" width="32%" />
     </p>
-12. Mount the PCB with four M3x25 screws and nuts with four ```spacers``` in between on the back side of ```main_frame```. Mount an Arduino Nano on the PCB and attach the USB OTG cable to the Arduino Nano USB port.
+12. Mount the PCB with four M3x25 screws and nuts with four ```spacers``` in between on the back side of ```main_frame```. Mount the Arduino Nano onto the PCB and attach the USB OTG cable to the Arduino Nano's USB port.
     <p float="left">
       <img src="/docs/images/pcb_assembly.JPG" width="32%" />
     </p>
