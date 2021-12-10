@@ -108,7 +108,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 - 4x Orange LED 5mm ([EU](https://www.amazon.de/gp/product/B01NCL0UTQ), [US](https://www.amazon.com/dp/B077XD7MVB), [AE](https://www.aliexpress.com/item/4000329069943.html))
 - 4x Red LED 5mm ([EU](https://www.amazon.de/dp/B083HN3CLY), [US](https://www.amazon.com/dp/B077X95F7C), [AE](https://www.aliexpress.com/item/4000329069943.html))
 - 2x White LED lamps ([EU](https://www.amazon.de/-/en/gp/product/B06XTQSZDX), [US](https://www.amazon.com/gp/product/B01N2UPAD8), [AE](https://de.aliexpress.com/item/1005002991235830.html))
-- Variable Resistors for LEDs ([EU](https://www.amazon.de/gp/product/B081TXJJGV), [US](https://www.amazon.com/dp/B0711MB4TL), [AE](https://de.aliexpress.com/item/1005003610664176.html))
+- Variable Resistor for LEDs ([EU](https://www.amazon.de/gp/product/B081TXJJGV), [US](https://www.amazon.com/dp/B0711MB4TL), [AE](https://de.aliexpress.com/item/1005003610664176.html))
 
 
 ### Build instructions
@@ -177,11 +177,9 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
       <img src="/docs/images/add_side_covers.png" width="32%" />
       <img src="/docs/images/add_side_covers_2.png" width="32%" />
     </p>    
-12. Mount the PCB with four M3x25 screws and nuts with spacers in between. 
+12. Mount the PCB with four M3x25 screws and nuts with four ```spacers``` in between. Mount an Arduino Nano on the PCB and attach the USB OTG cable via usb port on the Arduino Nano.
     <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-      <img src="/docs/images/blah.jpg" width="32%" /> 
-      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/pcb_assembly.JPG" width="32%" />
     </p>
 13. Connect all the wires (add details)
 14. Connect the battery pack and keep in place with a velcro.
