@@ -190,10 +190,11 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 13. Connect the ultrasonic sensor cables to the connector marked "sonar" on the PCB. Make sure the +ve/-ve polarity and the data lines are correctly matched between the sensor and the PCB ports.
 14. Connect the left and right indicator LED cables to their respective indicator signal connectors on the PCB. Ensure the correct polarity of +ve and -ve LED terminals.
 15. Connect the UBEC output (+6V) to the Vin pin of the Arduino Nano, and the UBEC ground to the Arduino Ground pin next to Vin.
-16. Also, connect the UBEC output (+6V) to the +ve terminals of the front LED lamps and to that of rear Red LEDs through the voltage divider.
-17. If you have created a unified ground loop for the LED wiring, then connect the ground loop cable to one of the Arduino Ground pins as well. Arduino Nano has three Ground pins available. If you have not constructed a ground loop, then make sure that all LEDs, sensors, the Arduino Nano, and the speed controller's UBEC share the same ground with appropriate wiring and connections.
-18. Connect the battery pack at the front and keep it in place with a velcro or some mounting tape. Having the battery at front makes it more accessible for charging and also helps with balancing the robot weight when a smartphone is mounted on to the robot.
-19. Put on the front and back ```electronics_covers```. Pull out the USB OTG cable from the rear ```electronics_cover``` through the provided gap for connecting to an android smartphone.
+16. Also, connect the UBEC output (+6V) to the +ve terminals of the steering servo, the front LED lamps, and the rear Red LEDs through the voltage divider.
+17. Connect the ground cable of the steering servo to the GND pin of Arduino as well.
+18. If you have created a unified ground loop for the LED wiring, then connect the ground loop cable to one of the Arduino Ground pins as well. Arduino Nano has three Ground pins available. If you have not constructed a ground loop, then make sure that all LEDs, the steering servo, sensors, the Arduino Nano, and the speed controller's UBEC share the same ground with appropriate wiring and connections.
+19. Connect the battery pack at the front and keep it in place using some velcro or mounting tape. Having the battery at front makes it easily accessible for recharging. This placement also helps with balancing the robot weight when a smartphone is mounted on top.
+20. Put on the front and back ```electronics_covers```. Pull out the USB OTG cable from the rear ```electronics_cover``` gap for connecting to an android smartphone.
 
 ## Next
 
