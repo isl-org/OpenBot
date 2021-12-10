@@ -97,8 +97,8 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 - 1x OpenBot [Custom PCB](/body/pcb)
 - 1x USB OTG cable ([EU](https://www.amazon.de/gp/product/B075M4CQHZ) ,[US](https://www.amazon.com/dp/B07LBHKTMM), [AE](https://www.aliexpress.com/item/10000330515850.html))
 - 1x spring or rubber band ([EU](https://www.amazon.de/gp/product/B01N30EAZO/), [US](https://www.amazon.com/dp/B008RFVWU2), [AE](https://www.aliexpress.com/item/33043769059.html))
-- 2x M3x25 screw ([EU](https://www.amazon.de/dp/B07KFL3SSV), [US](https://www.amazon.com/dp/B07WJL3P3X), [AE](https://www.aliexpress.com/item/4000173341865.html))
-- 2x M3 nut ([EU](https://www.amazon.de/dp/B07JMF3KMD), [US](https://www.amazon.com/dp/B071NLDW56), [AE](https://www.aliexpress.com/item/32977174437.html))
+- 6x M3x25 screw ([EU](https://www.amazon.de/dp/B07KFL3SSV), [US](https://www.amazon.com/dp/B07WJL3P3X), [AE](https://www.aliexpress.com/item/4000173341865.html))
+- 6x M3 nut ([EU](https://www.amazon.de/dp/B07JMF3KMD), [US](https://www.amazon.com/dp/B071NLDW56), [AE](https://www.aliexpress.com/item/32977174437.html))
 - Dupont cables ([EU](https://www.amazon.de/dp/B07KYHBVR7), [US](https://www.amazon.com/dp/B07GD2BWPY), [AE](https://www.aliexpress.com/item/4000766001685.html))
 
 #### Optional components
@@ -116,122 +116,67 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 
 **Tip:** Click on the images to open them in full resolution in a new tab.
 
-
-<p float="left">
-  <img src="/docs/images/blah.jpg" height="300" />
-  <img src="/docs/images/blah.png" height="300" /> 
-</p>
-
-**Tip:** To make all the wiring easier you can build a small power distributor for the 5V and GND connections by soldering a 6x2 male header to a perfboard. Then connect the power distributor with the 5V / GND of the motor driver.
-
-1. Solder wires to the motors and add the encoder disks to the two front motors if you intend to use the speed sensors.
+1. Disassemble the RC-toy truck. Remove its top cover and unscrew the four mouting pins from the base as shown in the figures below. Keep all four mounting pins and their respective screws safe since you will be using them to mount the ```main_frame``` onto the RC-Truck body after all the wiring and connections are done. All compatible RC-toy trucks come with two motors: one for throttle and the other for steering, a speed controller (with a built-in 5-7V BEC) for the throttle motor, and a 2S 7.4V LiPo battery pack. Unmount and remove the battery pack from the base of the truck and recharge it with the charger that came with the box. Expose/losen the wire connectors for both motors as well the BEC output from the controller as shown.
     <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-      <img src="/docs/images/blah.jpg" width="32%" /> 
+      <img src="/docs/images/rc_truck_disassembly_1.JPG" width="32%" />
+      <img src="/docs/images/rc_truck_disassembly_2.JPG" width="32%" /> 
+      <img src="/docs/images/rc_truck_disassembly_3.JPG" width="32%" />
     </p>
-2. Insert the positive and negative leads of the two left motors into OUT1 (+) and OUT2 (-) of the L298N board. Insert the positive and negative leads of the two right motors into OUT4 (+) and OUT3 (-) of the L298N board.
-3. Mount the motors with eight M3x25 screws and nuts.
+2. Notice that the two dimensions ```d1``` amd ```d2``` (as shown below) on the ```main_frame``` are dependent on the model of the RC-toy truck used. We designed our ```main_frame``` part for [this](https://www.amazon.de/dp/B00M3J7DJW) RC-toy truck model. Based on what 1:16 scale truck you use, you may need to adjust these dimensions slightly using the ```main_frame``` [STEP](/body/cad/rc_truck_body/main_frame.stp) file. We recommend using [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/overview) for such CAD modifications (Fusion 360 has a free 1-year academic license available). Also, note that the small wedge/triangle on the ```main_frame``` represents the forward direction.
     <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-      <img src="/docs/images/blah.jpg" width="32%" /> 
-      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/main-frame-dimensions.png" width="32%" />
+      <img src="/docs/images/main-frame-direction.png" width="32%" />
+      <img src="/docs/images/main-frame-switch.png" width="32%" />
     </p>
-4. Mount the L298N with four M3x5 screws
-5. (Optional) Install the ultrasonic sensor and replace the angled connector with a straigt one (or carefully bend the pins).
+4. (Optional) Install the ON/OFF switch for powering the robot. You can simply do this by splitting the positive wire that goes from speed controller to the battery and soldering the switch in-between. Please ensure that the cable is long enough that the switch can fit through the rectangular opening on the back side of the ```main_frame``` after assembly (see the right figure above).
+5. (Optional) Install the ultrasonic sensor. You can use hot glue to keep them in place if needed.
     <p float="left">
       <img src="/docs/images/blah" width="32%" />
       <img src="/docs/images/blah" width="32%" /> 
       <img src="/docs/images/blah.jpg" width="32%" />
     </p>
-6. (Optional) Install the orange LEDs for the indicator signals.
+6. (Optional) Install the orange LEDs for the indicator signals. You can use hot glue to keep them in place if needed.
     <p float="left">
       <img src="/docs/images/blah.jpg" width="32%" />
       <img src="/docs/images/blah.jpg" width="32%" /> 
       <img src="/docs/images/blah.jpg" width="32%" />
     </p>
-7. Mount the bottom of the phone mount to the top plate using two M3x25 screws and nuts.
+7. (Optional) Install the Red LEDs for rear lights. You can use hot glue to keep them in place if needed.
     <p float="left">
       <img src="/docs/images/blah.jpg" width="32%" />
       <img src="/docs/images/blah.jpg" width="32%" /> 
       <img src="/docs/images/blah.jpg" width="32%" />
     </p>
-8. Insert the top of the phone mount and install the spring or rubber band.
-    <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-      <img src="/docs/images/blah.jpg" width="32%" /> 
-    </p>
-9. Replace the angled connector with a straigt one (or carefully bend the pins) and then mount the speed sensors with one M3x5 screw each.
+8. (Optional) Install the front LED lamps. You can use hot glue to keep them in place if needed. (Optional) You can use a second ON/OFF switch to manually turn on the front lamps ON or OFF.
     <p float="left">
       <img src="/docs/images/blah.jpg" width="32%" />
       <img src="/docs/images/blah.jpg" width="32%" /> 
       <img src="/docs/images/blah.jpg" width="32%" />
     </p>
-10. Install the battery case (e.g. velcro).
+9. Mount the bottom of the phone mount to the ```main_frame``` using two M3x25 screws and nuts. (Optional) You can insert one or more camera_elevators in between if you would like to adjust the height of your phone mount. In that case, you will need M3x35 or longer screws to mount the phone mount.
     <p float="left">
       <img src="/docs/images/blah.jpg" width="32%" />
       <img src="/docs/images/blah.jpg" width="32%" /> 
       <img src="/docs/images/blah.jpg" width="32%" />
     </p>
-11. (Optional) Insert the on/off switch put it in the current path.
-    1. Push the switch into the appropriate opening until you hear a click.
-    2. Solder the red wires (12V) of the battery case and the power cable each to one of the pins of the switch. Connect the black wires (GND), and cover the connection with some heatshrink.
-    3. Fix the cables with some tape.
+10. Insert the top of the phone mount and install the spring or rubber band.
+    <p float="left">
+      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/blah.jpg" width="32%" /> 
+    </p>
+11. Mount the PCB with four M3x25 screws and nuts with spacers in between. 
     <p float="left">
       <img src="/docs/images/blah.jpg" width="32%" />
       <img src="/docs/images/blah.jpg" width="32%" /> 
       <img src="/docs/images/blah.jpg" width="32%" />
     </p>
-12. (Optional) Attach the OLED display.
-13. Connect the PWM inputs of the L298N to pins D5, D6, D9 and D10 of the Arduino.
-14. Connect the speed sensors and ultrasonic sensor to 5V and GND.
-15. Connect pin D0 of the speed sensors to pins D2 (left) and D3 (right) of the Arduino.
-16. Connect pins Echo and Trigger of the ultrasonic sensor to pins D11 and D12 of the Arduino respectively.
-17. (Optional) Connect the LEDs to pins D4 (left) and D7 (right) of the Arduino and GND. We recommend to add a 150 Ohm resistor in series to limit the current draw.
-18. (Optional) Connect the voltage divider to pin A7 of the Arduino. It is used to measure the battery voltage.
-19. (Optional) Connect the OLED display (SSD1306 chip) via the I2C bus to the Arduino Nano
-    1. Connect the VIN and GND pins of the display to 5V and GND.
-    2. Connect the SCL pin of the display to the A5 pin.
-    3. Connect the SDA pin of the display to the A4 pin.
-20. Connect the power cables to +12V and GND of the L298N.
-21. Connect the USB cable to the Arduino and route it through the top cover.
-22. Insert six M3 nuts into the bottom plate and mount the top cover with six M3x25 screws.
-23. Install the wheels.
+12. Connect all the wires (add details)
+13. Connect the battery pack and keep in place with a velcro.
 
 
+14. Put on the front and back covers
+15. Details and images!!
 
-1. Solder wires with Micro JST PH 2.0 connectors to the motors and add the encoder disks to the two front motors if you intend to use the speed sensors.
-    <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-      <img src="/docs/images/blah.jpg" width="32%" /> 
-    </p>
-2. Mount the motors with eight M3x25 screws and nuts.
-    <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-      <img src="/docs/images/blah.jpg" width="32%" /> 
-      <img src="/docs/images/blah.jpg" width="32%" />
-    </p>
-3. Connect the left two motors to M3 and M4 and the right two motors to M1 and M2.
-    <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-    </p>
-4. Mount the PCB with four M3x5 screws and the motors with eight M3x25 screws and nuts.
-    <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-      <img src="/docs/images/blah.jpg" width="32%" />
-    </p>
-5. Follow steps 5-12 from the DIY option.
-6. Connect the ultrasonic sensor (VCC/+, Trig, Echo, GND/-) to the 4-pin header labeled *SONAR* on the PCB.
-    <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-    </p>
-7. Connect the left and right indicator signals (orange LEDs) to the 2-pin headers labeled *SIGNAL_L* and *SIGNAL_R* on the PCB. The longer leg is + and the shorter one -.
-8. Connect the left and right speed sensors (VCC/+, GND/-, D0) to the 3-pin headers labeled *SPEED_L* and *SPEED_R*.
-9. (Optional) Connect the OLED display (SSD1306 chip) to the IO2 header on the PCB.
-    1. Connect the VIN and GND pins of the display to 5V and GND.
-    2. Connect the SCL pin of the display to the A5 pin.
-    3. Connect the SDA pin of the display to the A4 pin.
-10. Connect the power cables to Vin (Micro JST PH 2.0 connector) of the PCB.
-11. Follow steps 21-23 from the DIY option.
 
 ## Next
 
