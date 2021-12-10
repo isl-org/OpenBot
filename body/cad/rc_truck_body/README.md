@@ -130,6 +130,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 3. (Optional) Install the ON/OFF switch for powering the robot. You can simply do this by cutting the positive wire that goes from speed controller to the battery and soldering the switch in-between the two split parts. Please ensure that the switch connectors are insulated via shrink tube or electric tape and the power cable is long enough that the switch can fit through the rectangular opening on the back side of the ```main_frame``` after assembly (see the figure below).
     <p float="left">
       <img src="/docs/images/main-frame-switch.png" width="32%" />
+      <img src="/docs/images/switch-power.jpg" width="32%" />
     </p>
 4. (Optional) Install the ultrasonic sensor through the front grill of the ```main_frame```. You can use hot glue to keep it in place if needed. Run the dupont cables from the ultrasonic connector all the way back to the rectangular opening on the back side of the ```main_frame```.
     <p float="left">
@@ -143,9 +144,10 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
     </p>
 **Tip:** To avoid cluttering and potential grounding mistakes during wiring, it is recommended to form a unified ground loop for the negative terminals of all the LEDs. This simply means running a wire underneath the ```main_frame``` which connects all the negative terminals of the LEDs. This ground can then be connected to the microcontroller ground pin using a single dupont cable, which is run to the rectangular opening on the back side of the ```main_frame```.
 
-6. (Optional) Install the front LED lamps. You can use hot glue to keep the base in place if needed and screw the lamp into the base through the front opening on each side. Connect both front LEDs in parallel by connecting their positive and negative terminals together respectively. Since these lamps operate on 6V, you can connect them directly to the UBEC output by their positive terminals. The negative terminals connect to the ground.
+6. (Optional) Install the front big-LED lamps. You can use hot glue to keep the base in place and screw the lamp into its respective base through the front opening on each side. Connect both front LED lamps in parallel by connecting their positive and negative terminals together respectively. Since these lamps operate on 6V, you can connect them directly to the UBEC output by their positive terminals. Connect the negative terminals to the ground loop.
     <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/insert-lamps-1.png" width="32%" />
+      <img src="/docs/images/insert-lamps-2.png" width="32%" />
     </p>
 7. (Optional) Install the Red LEDs for rear lights. You can use hot glue to keep them in place if needed. Connect all four Red LEDs in parallel; i.e., connect their positive and negative terminals together repectively. The negative terminals will go to the ground, while the positive terminals will be collectively connected to the UBEC output via an appropriate voltage divider (see the next step for details on voltage divider). 
     <p float="left">
