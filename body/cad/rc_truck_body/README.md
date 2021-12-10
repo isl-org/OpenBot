@@ -145,11 +145,11 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
     </p>
 **Tip:** To avoid cluttering and potential grounding mistakes during wiring, it is recommended to form a unified ground loop for the negative terminals of all the LEDs. This simply means running a wire underneath the ```main_frame``` which connects all the negative terminals of the LEDs. This ground can then be connected to the microcontroller ground pin using a single dupont cable, which is run to the rectangular opening on the back side of the ```main_frame```.
 
-6. (Optional) Install the front LED lamps. You can use hot glue to keep the base in place and screw the lamp into its respective base through the front opening on each side. Connect both front LED lamps in parallel by connecting their positive and negative terminals together respectively. Since these lamps operate on 6V, you can connect them directly to the UBEC output by their positive terminals. Connect the negative terminals to the ground loop (see the tip above). The internal resistance of these LEDs is fairly high so there is no need to add any external resistance.
+6. (Optional) Install the front LED lamps. You can use hot glue to keep the base in place and screw the lamp into its respective base through the front opening on each side. Connect both front LED lamps in parallel by connecting their positive and negative terminals together respectively. Since these lamps operate on 6V, you can connect them directly to the UBEC output by their positive terminals. Connect the negative terminals to the ground loop (see the tip above). The internal resistance of these LEDs is fairly high so there is no need to add any external resistance. After installing the LED lamps, insert and hot glue the two ```front_light_spacers``` on each side to lock the LEDs in place.
     <p float="left">
-      <img src="/docs/images/led-lamp.jpg" width="32%" />
       <img src="/docs/images/insert-lamps-1.png" width="32%" />
       <img src="/docs/images/led-lamp-wiring.jpg" width="32%" />
+      <img src="/docs/images/add_front_light_spacer.png" width="32%" />
     </p>
 7. (Optional) Install the Red LEDs for rear lights. You can use hot glue to keep them in place if needed. Connect all four Red LEDs in parallel; i.e., connect their positive and negative terminals together repectively. The negative terminals will go to the ground, while the positive terminals will be collectively connected to the UBEC output via an appropriate voltage divider (see the next step for details on voltage divider construction). 
     <p float="left">
@@ -165,14 +165,12 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 10. Now you are almost done with the wiring of the robot. At this point, take some time to ensure that all wires and connections underneath the ```main_frame``` are correct and well insulated using either shrink tube or electric tape. Use hot glue to keep any loose wires in place so they do not come in contact with the wheels or any moving parts of the robot after assembly. Make sure all cables from motors, speed controller UBEC, LEDs, and ultrasonic sensor can freely make it out of the rectangular opening on the back side of the ```main_frame```.
 11. Mount the bottom of the phone mount to the ```main_frame``` using two M3x25 screws and nuts. Optionally, you can insert one or more ```camera_elevator```s in between if you would like to adjust the vertical height of your phone mount. In that case, you may need M3x35 or longer screws to attach the phone mount.
     <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-      <img src="/docs/images/blah.jpg" width="32%" /> 
-      <img src="/docs/images/blah.jpg" width="32%" />
+      <img src="/docs/images/add_phone_mount_bottom.png" width="32%" />
+      <img src="/docs/images/add_phone_mount_bottom_elevator.png" width="32%" /> 
     </p>
 10. Insert the top of the phone mount and install the spring or rubber band.
     <p float="left">
-      <img src="/docs/images/blah.jpg" width="32%" />
-      <img src="/docs/images/blah.jpg" width="32%" /> 
+      <img src="/docs/images/add_phone_mount_top.png" width="32%" />
     </p>
 11. Mount the PCB with four M3x25 screws and nuts with spacers in between. 
     <p float="left">
