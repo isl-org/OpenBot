@@ -198,9 +198,11 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 21. Connect the battery pack at the front and keep it in place using some velcro or mounting tape. Having the battery at front makes it easily accessible for recharging. This placement also helps with balancing the robot weight when a smartphone is mounted on top.
 22. Put on the front and back ```electronics_covers```. Pull out the USB OTG cable from the rear ```electronics_cover``` gap for connecting to an android smartphone.
 <p float="left">
-      <img src="/docs/images/add_covers_1.JPG" width="32%" />
-      <img src="/docs/images/add_covers_1.JPG" width="32%" />
+      <img src="/docs/images/add_covers_1.png" width="32%" />
+      <img src="/docs/images/add_covers_2.JPG" width="32%" />
     </p>
+
+
 ## Next
 
 Flash the [Arduino Firmware](/firmware/README.md)
