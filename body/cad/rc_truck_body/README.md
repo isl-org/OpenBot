@@ -145,21 +145,23 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
     </p>
 **Tip:** To avoid cluttering and potential grounding mistakes during wiring, it is recommended to form a unified ground loop for the negative terminals of all the LEDs. This simply means running a wire underneath the ```main_frame``` which connects all the negative terminals of the LEDs. This ground can then be connected to the microcontroller ground pin using a single dupont cable, which is run to the rectangular opening on the back side of the ```main_frame```.
 
-6. (Optional) Install the front big-LED lamps. You can use hot glue to keep the base in place and screw the lamp into its respective base through the front opening on each side. Connect both front LED lamps in parallel by connecting their positive and negative terminals together respectively. Since these lamps operate on 6V, you can connect them directly to the UBEC output by their positive terminals. Connect the negative terminals to the ground loop (see the tip above).
+6. (Optional) Install the front LED lamps. You can use hot glue to keep the base in place and screw the lamp into its respective base through the front opening on each side. Connect both front LED lamps in parallel by connecting their positive and negative terminals together respectively. Since these lamps operate on 6V, you can connect them directly to the UBEC output by their positive terminals. Connect the negative terminals to the ground loop (see the tip above). The internal resistance of these LEDs is fairly high so there is no need to add any external resistance.
     <p float="left">
       <img src="/docs/images/led-lamp.jpg" width="32%" />
       <img src="/docs/images/insert-lamps-1.png" width="32%" />
       <img src="/docs/images/led-lamp-wiring.jpg" width="32%" />
     </p>
-7. (Optional) Install the Red LEDs for rear lights. You can use hot glue to keep them in place if needed. Connect all four Red LEDs in parallel; i.e., connect their positive and negative terminals together repectively. The negative terminals will go to the ground, while the positive terminals will be collectively connected to the UBEC output via an appropriate voltage divider (see the next step for details on voltage divider). 
+7. (Optional) Install the Red LEDs for rear lights. You can use hot glue to keep them in place if needed. Connect all four Red LEDs in parallel; i.e., connect their positive and negative terminals together repectively. The negative terminals will go to the ground, while the positive terminals will be collectively connected to the UBEC output via an appropriate voltage divider (see the next step for details on voltage divider construction). 
     <p float="left">
       <img src="/docs/images/insert-leds-red.png" width="32%" />
+      <img src="/docs/images/red-led.jpg" width="32%" />
     </p>
 8. (Optional) Install the voltage divider for rear Red LEDs. Most color LEDs (e.g. Red, Orange, Yellow etc.) operate on 2-3V and not the traditional 5V, which is the normal operating voltage of the microcontroller. Therefore, a voltage divider is needed in order to operate these LEDs safely. For indicator signals, we already have a built-in voltage divider in our custom PCB. So, you donot need to do anything for using the indicator signal (i.e., orange) LEDs. However, if you choose to add rear light i.e., Red LEDs as well, then an external voltage divider is required for them. We recommend using a variable resistor of 10kΩ or higher for making your voltage divider. Based on your UBEC output voltage (6V in our case), you need to set up a voltage divider with 2-3V output. This can be done by applying the UBEC output on the external ends of the resistor and by turning the screw on its top and monitoring the output voltage using a digital multimeter in between the ground and the middle terminal (see figure below). Once the output voltage of the variable resistance i.e., the voltage divider is set to the appropriate 2-3V range, lock its screw in place using some hot glue and fix its position underneath the ```main_frame``` in a convenient position.
     <p float="left">
-      <img src="/docs/images/insert-red-leds.png" width="32%" />
+      <img src="/docs/images/variable-resistor.jpg" width="32%" />
+      <img src="/docs/images/voltage-divider-animation.png" width="32%" />
     </p>
-9. (Optional) You can also use a second ON/OFF switch for turning the front and rear LEDs ON and OFF. Please follow instructions in Step 3 to install a switch for this purpose.
+9. (Optional) You can also use a single or two separate ON/OFF switches for turning the front and rear LEDs ON and OFF. Please follow instructions in Step 3 to install a switch (or multiple switches) for this purpose.
 10. Mount the bottom of the phone mount to the ```main_frame``` using two M3x25 screws and nuts. (Optional) You can insert one or more camera_elevators in between if you would like to adjust the height of your phone mount. In that case, you will need M3x35 or longer screws to mount the phone mount.
     <p float="left">
       <img src="/docs/images/blah.jpg" width="32%" />
