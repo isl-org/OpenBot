@@ -163,7 +163,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
     </p>
 9. (Optional) You can also use a single or two separate ON/OFF switches for turning the front and rear LEDs ON and OFF. Please follow instructions in Step 3 to install a switch (or multiple switches) for this purpose.
 10. Now you are almost done with the wiring of the robot. At this point, take some time to ensure that all wires and connections underneath the ```main_frame``` are correct and well insulated using either shrink tube or electric tape. Use hot glue to keep any loose wires in place so they do not come in contact with the wheels or any moving parts of the robot after assembly. Make sure all cables from motors, speed controller UBEC, LEDs, and ultrasonic sensor can freely make it out of the rectangular opening on the back side of the ```main_frame```.
-11. Mount the bottom of the phone mount to the ```main_frame``` using two M3x25 screws and nuts. Optionally, you can insert one or more ```camera_elevator```s in between if you would like to adjust the vertical height of your phone mount. In that case, you may need M3x35 or longer screws to attach the phone mount.
+11. Mount the bottom of the phone mount to the ```main_frame``` using two M3x25 screws and nuts. Optionally, you can insert one or more ```camera_elevators``` in between if you would like to adjust the vertical height of your phone mount. If you use a ```camera_elevator``` you will need M3x35 or longer screws for mounting the phone mount onto the ```main_frame```.
     <p float="left">
       <img src="/docs/images/add_phone_mount_bottom.png" width="32%" />
       <img src="/docs/images/add_phone_mount_bottom_elevator.png" width="32%" /> 
@@ -172,16 +172,21 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
     <p float="left">
       <img src="/docs/images/add_phone_mount_top.png" width="32%" />
     </p>
-11. Mount the PCB with four M3x25 screws and nuts with spacers in between. 
+11. Insert the two ```side_covers``` into their respective slots.
+    <p float="left">
+      <img src="/docs/images/add_side_covers.png" width="32%" />
+      <img src="/docs/images/add_side_covers_2.png" width="32%" />
+    </p>    
+12. Mount the PCB with four M3x25 screws and nuts with spacers in between. 
     <p float="left">
       <img src="/docs/images/blah.jpg" width="32%" />
       <img src="/docs/images/blah.jpg" width="32%" /> 
       <img src="/docs/images/blah.jpg" width="32%" />
     </p>
-12. Connect all the wires (add details)
-13. Connect the battery pack and keep in place with a velcro.
-14. Put on the side and front and back covers.
-15. Add details and images!!
+13. Connect all the wires (add details)
+14. Connect the battery pack and keep in place with a velcro.
+15. Put on the side and front and back covers.
+16. Add details and images!!
 
 
 ## Next
