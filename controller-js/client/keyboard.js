@@ -76,8 +76,9 @@ export class Keyboard {
         pressedKeys.add(event.key)
         highlightPressedKeys(keyList)
 
-        const { altKey, code, ctrlKey, key, shiftKey, type } = event
-        const keyPerss = { altKey: altKey, code: code, ctrlKey: ctrlKey, key: key, shiftKey: shiftKey, type: type }
+        const { key, type } = event
+        const keyPerss = { key: key, type: type }
+
         onKeypress(keyPerss)
       }, false)
 
@@ -89,10 +90,6 @@ export class Keyboard {
         pressedKeys.delete(event.key)
         highlightPressedKeys(keyList)
 
-        // const { altKey, code, ctrlKey, key, shiftKey, type } = event
-        // const keyPerss = { altKey: altKey, code: code, ctrlKey: ctrlKey, key: key, shiftKey: shiftKey, type: type }
-
-        // we only need these
         const { key, type } = event
         const keyPerss = { key: key, type: type }
 
