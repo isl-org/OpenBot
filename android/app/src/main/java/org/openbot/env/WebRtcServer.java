@@ -123,6 +123,7 @@ public class WebRtcServer implements IVideoServer {
     sendServerUrl();
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("TOGGLE_MIRROR", true));
+    ControllerConfig.getInstance().setMirrored(true);
   }
 
   @Override
@@ -443,7 +444,7 @@ public class WebRtcServer implements IVideoServer {
         audio.setEnabled(false);
 
         // inform the controller of current state
-        BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("TOGGLE_SOUND", false));
+        BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("TOGGLE_SOUND", true));
       }
     }
 
