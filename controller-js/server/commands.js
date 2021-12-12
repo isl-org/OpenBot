@@ -8,7 +8,7 @@
  */
 
 class Commands {
-  constructor (botConnection, browserConnection) {
+  constructor(botConnection, browserConnection) {
     this.botConnection = botConnection
     this.browserConnection = browserConnection
 
@@ -20,14 +20,13 @@ class Commands {
 
     this.handleStatus = (_status /* Json */) => {
       // forward status and WebRTC negotition to browser
-      // console.log(`handleStatus: forwarding ${JSON.stringify(status)} ro browser`)
       this.browserConnection.send(JSON.stringify(_status))
     }
   }
 }
 
 class DriveValue {
-  constructor () {
+  constructor() {
     const MAX = 1.0
     const MIN = -1.0
 
@@ -71,30 +70,24 @@ class DriveValue {
 }
 
 class CommandHandler {
-  constructor (botConnection) {
+  constructor(botConnection) {
     this.left = new DriveValue()
     this.right = new DriveValue()
     this.timeoutObj = null
+    const commandReducer = new DriveCommandReducer()
 
     this.sendCommand = (command) => {
       botConnection.send(`{command: ${command} }\n`)
     }
 
     this.sendDriveCommand = (left, right) => {
-      if (this.timeoutObj !== null) {
-        clearTimeout(this.timeoutObj)
-      }
-      botConnection.send(`{driveCmd:{l:${left},r:${right}}}\n`)
-
-      this.timeoutObj = setTimeout(() => {
-        this.reset()
-      }, 200)
+      commandReducer.send({ driveCmd: { l: left, r: right } }, botConnection)
     }
 
     this.reset = () => {
       this.left.reset()
       this.right.reset()
-      botConnection.send(`{driveCmd:{l:${this.left.read()},r:${this.right.read()}}}\n`)
+      commandReducer.send({ driveCmd: { l: this.left.read(), r: this.right.read() } }, botConnection)
     }
 
     this.forwardLeft = () => {
@@ -127,6 +120,31 @@ class CommandHandler {
 
     this.goBackward = () => {
       this.sendDriveCommand(this.left.min(), this.right.min())
+    }
+  }
+}
+
+// Utility class to reduce number of commands being sent to the robot
+// by not sending duplicate consecutive commands.
+class DriveCommandReducer {
+  constructor() {
+    this.lastCommand = null
+
+    this.send = (commandAsJson, connection) => {
+      if (isEqual(commandAsJson, this.lastCommand)) {
+        return
+      }
+      this.lastCommand = commandAsJson
+
+      const strCommand = JSON.stringify(commandAsJson) + '\n'
+      connection.send(strCommand)
+    }
+
+    const isEqual = (last, current) => {
+      if (!last || !current) {
+        return false
+      }
+      return last.driveCmd.l === current.driveCmd.l && last.driveCmd.r === current.driveCmd.r
     }
   }
 }
