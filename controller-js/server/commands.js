@@ -8,7 +8,7 @@
  */
 
 class Commands {
-  constructor(botConnection, browserConnection) {
+  constructor (botConnection, browserConnection) {
     this.botConnection = botConnection
     this.browserConnection = browserConnection
 
@@ -26,7 +26,7 @@ class Commands {
 }
 
 class DriveValue {
-  constructor() {
+  constructor () {
     const MAX = 1.0
     const MIN = -1.0
 
@@ -70,7 +70,7 @@ class DriveValue {
 }
 
 class CommandHandler {
-  constructor(botConnection) {
+  constructor (botConnection) {
     this.left = new DriveValue()
     this.right = new DriveValue()
     this.timeoutObj = null
@@ -127,7 +127,7 @@ class CommandHandler {
 // Utility class to reduce number of commands being sent to the robot
 // by not sending duplicate consecutive commands.
 class DriveCommandReducer {
-  constructor() {
+  constructor () {
     this.lastCommand = null
 
     this.send = (commandAsJson, connection) => {

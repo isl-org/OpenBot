@@ -18,6 +18,8 @@ Here are some terms we will be using in this document:
 
 This is a [Node.js](https://nodejs.org/) based project acting as a controller for the [OpenBot](https://www.openbot.org/) vehicle. The software comprises two parts - a server and a client. The server is a Node.js application running on a computer on the same network as the Robot. The client part runs in the browser.
 
+The software is designed to be fast and lightweight. It can run on devices as small as [Pi Zero](https://www.raspberrypi.com/products/raspberry-pi-zero/)
+
 Here is a screenshot of the browser:
 
 ![Screenshot](images/Screenshot.png "image_tooltip")
