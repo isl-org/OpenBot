@@ -163,12 +163,12 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
     </p>
 9. (Optional) You can also use a single or two separate ON/OFF switches for turning the front and rear LEDs ON and OFF. Please follow instructions in Step 3 to install a switch (or multiple switches) for this purpose.
 10. Now you are almost done with the wiring of the robot. At this point, take some time to ensure that all wires and connections underneath the ```main_frame``` are correct and well insulated using either shrink tube or electric tape. Use hot glue to keep any loose wires in place so they do not come in contact with the wheels or any moving parts of the robot after assembly. Make sure all cables from motors, speed controller UBEC, LEDs, and ultrasonic sensor can freely make it out of the rectangular opening on the back side of the ```main_frame```.
-11. Mount the bottom of the phone mount to the ```main_frame``` using two M3x25 screws and nuts. Optionally, you can insert one or more ```camera_elevators``` in between if you would like to adjust the vertical height of your phone mount. If you use a ```camera_elevator``` you will need M3x35 or longer screws for mounting the phone mount onto the ```main_frame```.
+11. Mount the ```phone_mount_bottom``` to the ```main_frame``` using two M3x25 screws and nuts. Optionally, you can insert one or more ```camera_elevators``` in between if you would like to adjust the vertical height of your phone mount. If you use a ```camera_elevator``` you will need M3x35 or longer screws for mounting the phone mount onto the ```main_frame```.
     <p float="left">
       <img src="/docs/images/add_phone_mount_bottom.png" width="32%" />
       <img src="/docs/images/add_phone_mount_bottom_elevator.png" width="32%" /> 
     </p>
-10. Insert the top of the phone mount and install the spring or rubber band.
+10. Insert the ```phone_mount_top``` and install the spring or rubber band.
     <p float="left">
       <img src="/docs/images/add_phone_mount_top.png" width="32%" />
     </p>
@@ -177,7 +177,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
       <img src="/docs/images/add_side_covers.png" width="32%" />
       <img src="/docs/images/add_side_covers_2.png" width="32%" />
     </p>    
-12. Mount the ```main_frame``` onto the RC-truck body using the four mounting pins and their respective screws. Make sure all cable connectors and the power switch for the robot are accessible through the rectangular opening on the back side of the ```main_frame``` for PCB connections. In addition, pull out the battery connector from the triangular opening on the front.
+12. Mount the ```main_frame``` onto the RC-Truck body using the four mounting pins and their respective screws. Make sure all cable connectors and the power switch for the robot are accessible through the rectangular opening on the back side of the ```main_frame``` for PCB connections. Pull out the battery connector from the triangular opening on the front of the ```main_frame```.
     <p float="left">
       <img src="/docs/images/add_main_frame_1.JPG" width="32%" />
       <img src="/docs/images/add_main_frame_2.png" width="32%" />
@@ -189,14 +189,14 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
     </p>
 13. Connect the ultrasonic sensor cables to the connector marked "sonar" on the PCB. Make sure the +ve/-ve polarity and the data lines are correctly matched between the sensor and the PCB ports.
 14. Connect the left and right indicator LED cables to their respective indicator signal connectors on the PCB. Ensure the correct polarity of +ve and -ve LED terminals.
-15. Connect the UBEC output (+6V) to the Vin pin of the Arduino Nano, and the UBEC GND to the Arduino GND pin next to Vin.
-16. Also, connect the UBEC output (+6V) to the +ve terminals of the steering servo, the front LED lamps, and the rear Red LEDs through the voltage divider.
+15. Connect the UBEC output (+6V) to the Vin pin of the Arduino Nano, and the UBEC GND to the Arduino GND pin (next to Vin).
+16. Connect the UBEC output (+6V) to the +ve terminals of the steering servo, the front LED lamps, and the rear Red LEDs through the voltage divider.
 17. Connect the ground cable of the steering servo to the GND pin of Arduino as well.
-18. Connect the PWM cable of the throttle servo (coming from the speed controller) to the pin D10 on the Arduino Nano.
-19. Connect the PWM cable of the steering servo to the pin D9 on the Arduino Nano.
-**Tip:** If you have created a unified ground loop for the LED wiring, then connect the ground loop cable to one of the Arduino Ground pins as well. Arduino Nano has three Ground pins available. If you have not constructed a ground loop, then make sure that all LEDs, the steering servo, sensors, the Arduino Nano, and the speed controller's UBEC share the same ground with appropriate wiring and connections.
+18. Connect the PWM cable of the throttle servo (from the speed controller) to pin D10 on the Arduino Nano.
+19. Connect the PWM cable of the steering servo to pin D9 on the Arduino Nano.
+**Tip:** If you have created a unified ground loop for the LED wiring, then connect the ground loop cable to one of the Arduino GND pins as well. Arduino Nano has three GND pins available. If you have not constructed a ground loop, then make sure that all LEDs, the steering servo, sensors, the Arduino Nano, and the speed controller's UBEC share the same ground with appropriate wiring and connections.
 21. Connect the battery pack at the front and keep it in place using some velcro or mounting tape. Having the battery at front makes it easily accessible for recharging. This placement also helps with balancing the robot weight when a smartphone is mounted on top.
-22. Put on the front and back ```electronics_covers```. Pull out the USB OTG cable from the rear ```electronics_cover``` gap for connecting to an android smartphone.
+22. Put on the front and back ```electronics_covers```. Pull out the USB OTG cable from the rear ```electronics_cover``` gap for connecting it to an android smartphone.
 <p float="left">
       <img src="/docs/images/add_covers_1.png" width="32%" />
       <img src="/docs/images/add_covers_2.JPG" width="32%" />
