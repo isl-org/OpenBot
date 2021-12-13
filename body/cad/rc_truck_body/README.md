@@ -126,7 +126,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
       <img src="/docs/images/main-frame-dimensions.png" width="32%" />
       <img src="/docs/images/main-frame-direction.png" width="32%" />
     </p>   
-3. (Optional) Install the ON/OFF switch for powering the robot. You can simply do this by cutting the positive wire that goes from speed controller to the battery and soldering the switch in-between the two split parts. Please ensure that the switch connectors are insulated via shrink tube or electric tape and the power cable is long enough that the switch can fit through the rectangular opening on the back side of the ```main_frame``` after assembly (see the figure below).
+3. (Optional) Install the ON/OFF switch for powering the robot. You can simply do this by cutting the positive wire that goes from speed controller to the battery and soldering the switch in-between the two split parts of this wire. Please ensure that the switch connectors are insulated via shrink tube or electric tape and the power cable is long enough so that the switch can fit through the rectangular opening on the back side of the ```main_frame``` after assembly (see the figure below).
     <p float="left">
       <img src="/docs/images/main-frame-switch.png" width="32%" />
       <img src="/docs/images/switch-power.jpg" width="32%" />
