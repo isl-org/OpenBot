@@ -19,9 +19,9 @@ The chassis of OpenBot RC-Truck consists of two main components: (a) A 1:16 scal
 
 ### 1:16 RC-toy truck
 
-To build your own OpenBot RC-Truck, you will need a 1:16 scale RC-toy truck/buggy. We provide Amazon links to compatible RC-toy trucks for Germany ([EU](https://www.amazon.de/dp/B00M3J7DJW)), ([EU](https://www.amazon.de/dp/B088FGVYNW)), and the United States ([US](https://www.amazon.com/gp/product/B09C8XMPQ9)) with fast shipping. A number of similar 1:16 scale toy trucks can also be found on other online retailers such as ebay, Alibaba, or AliExpress, often for discounted price but with slow shipping speed. 
+To build your own OpenBot RC-Truck, you will need a 1:16 scale RC-toy truck/buggy. We provide Amazon links to compatible RC-toy trucks for Germany ([EU](https://www.amazon.de/dp/B00M3J7DJW)), ([EU](https://www.amazon.de/dp/B088FGVYNW)), and United States ([US](https://www.amazon.com/gp/product/B09C8XMPQ9)) with fast shipping. A number of similar 1:16 scale toy trucks can also be found on other online retailers such as ebay, Alibaba, or AliExpress, often for discounted price but with slow shipping speed. 
 
-Irrespective of the retailer and the version of RC-toy truck you choose for your build, please ensure that it is indeed a 1:16 scale RC-truck. This is important since our 3D printed parts are currently designed to fit only 1:16 scale RC-toy trucks with some minor adjustments (more on this topic later on). Some examples of compatible 1:16 scale RC-toy trucks/buggies are shown below.
+Irrespective of the retailer and the version of RC-toy truck you choose for your build, make sure that it is indeed a 1:16 scale RC-truck. This is important because the 3D printed parts we provide are currently designed to fit only 1:16 scale trucks with some minor adjustments (more on this later). Some examples of compatible 1:16 scale RC-toy trucks/buggies are shown below.
 
 <p float="left">
   <a href="https://www.amazon.de/dp/B00M3J7DJW" target="_blank"> <img src="/docs/images/rc_toy_1.jpg" width="34%" /> &nbsp
