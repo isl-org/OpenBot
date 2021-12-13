@@ -137,7 +137,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
       <img src="/docs/images/ultrasonic-sensor.jpg" width="32%" />
       <img src="/docs/images/install-ultrasonic-2.png" width="32%" />
     </p>
-5. (Optional) Install the orange LEDs for the indicator signals both at front and back of the ```main_frame```. You can use hot glue to keep them in place if needed. For each side i.e., left and right, you need to connect the front and back LEDs in parallel. To achieve this, simply connect their positive and negative terminals together respectively. Similar to the ultrasonic sensor cable, run the postive and negative dupont cables from both left and right indicator signals all the way back to the rectangular opening on the back side of the ```main_frame```. There these will connect to their respective indicator signal pins (both +ve and -ve) on the PCB. 
+5. (Optional) Install the orange LEDs for the indicator signals both at front and back of the ```main_frame```. You can use hot glue to keep them in place if needed. For each side i.e., left and right, you need to connect the front and back LEDs in parallel. To achieve this, simply connect their positive and negative terminals together respectively. Similar to the ultrasonic sensor cable, run the postive and negative dupont cables from both left and right indicator signals all the way back to the rectangular opening on the back side of the ```main_frame``` where they will connect to their respective indicator signal pins (both +ve and -ve) on the PCB. 
     <p float="left">
       <img src="/docs/images/insert-leds-orange-1.png" width="32%" />
       <img src="/docs/images/orange-led.jpg" width="32%" />
