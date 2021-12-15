@@ -8,7 +8,7 @@
  */
 
 export class Buttons {
-  constructor (connection) {
+  constructor(connection) {
     // mirror button
     const toggleMirror = () => {
       connection.send(JSON.stringify({ command: 'TOGGLE_MIRROR' }))
@@ -17,16 +17,19 @@ export class Buttons {
     const mirrorButton = document.getElementById('mirror_button')
     mirrorButton.onclick = toggleMirror
 
-    // sound button
+    // sound button. toggle 'muted' flag on the video control
     const toggleSound = () => {
-      connection.send(JSON.stringify({ command: 'TOGGLE_SOUND' }))
+      const video = document.getElementById('video')
+      video.muted = !video.muted
+
+      document.getElementById('sound_button').src = video.muted ? 'icons/volume_off_black_24dp.svg' : 'icons/volume_up_black_24dp.svg'
     }
 
-    // turn sound ON. Sound is controlled by the "controlls" in the video element
-    toggleSound()
+    const soundButton = document.getElementById('sound_button')
+    soundButton.onclick = toggleSound
   }
 
-  // we have received a TOGGLE_MIRROR status
+  // We have received a MIRROR status from server
   static toggleMirror = (mirrored) => {
     const video = document.getElementById('video')
 
@@ -35,5 +38,14 @@ export class Buttons {
       : ''
 
     document.getElementById('mirror_button').src = mirrored ? 'icons/flip_black_24dp-mirrored.svg' : 'icons/flip_black_24dp.svg'
+  }
+
+  // getting current state of sound from the server
+  static toggleSound = (muted, connection) => {
+    // Turn ON sound on the server if OFF.
+    // Sound is controlled from the client, 'muted' flag on the video control
+    if (muted) {
+      connection.send(JSON.stringify({ command: 'TOGGLE_SOUND' }))
+    }
   }
 }

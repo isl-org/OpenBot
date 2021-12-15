@@ -72,8 +72,6 @@ We use [eslint](https://eslint.org/) for linting and automatically formatting yo
 
 ## Troubleshooting
 
-* **Sound** is off by default, because Chrome would not automatically start un-muted videos. To turn it on, in Chrome and Firefox browsers, right-click on the video and select ```Show all controls```, and enable sound from there.
-
 * Sometimes the browser will not show the commands menu, just the title. This means the WebSocket connection could not be established. This usually happens right after starting the server. If you examine the browser console, you can find a message about not being able to connect, something like ```WebSocket connection to 'ws://localhost:7071/ws' failed```, Kill all node processes (pkill -9 node)  and restart it. Reload the page and connection should be established.
 
 ## Known Bugs
