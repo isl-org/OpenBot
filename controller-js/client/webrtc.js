@@ -65,14 +65,10 @@ export class WebRTC {
       peerConnection.ontrack = event => {
         video.srcObject = event.streams[0]
       }
-
-      video.play()
     }
 
     this.stop = () => {
       console.log('WebRTC: stop...')
-
-      document.getElementById('video').stop()
 
       peerConnection.close()
       peerConnection = null

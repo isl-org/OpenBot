@@ -18,7 +18,7 @@ Here are some terms we will be using in this document:
 
 This is a [Node.js](https://nodejs.org/) based project acting as a controller for the [OpenBot](https://www.openbot.org/) vehicle. The software comprises two parts - a server and a client. The server is a Node.js application running on a computer on the same network as the Robot. The client part runs in the browser.
 
-The software is designed to be fast and lightweight. It can run on devices as small as [Pi Zero](https://www.raspberrypi.com/products/raspberry-pi-zero/)
+The software is designed to be fast and lightweight.
 
 Here is a screenshot of the browser:
 
@@ -26,7 +26,7 @@ Here is a screenshot of the browser:
 
 ## Getting Started
 
-You can run this software on a PC or a RaspberryPi-type device which support ```Node.js``` environment.  First make sure you have installed [Node.js](https://nodejs.org/), version 10 or newer. Check the version:
+You can run this software on a PC, RaspberryPi-type device or even [Pi Zero](https://www.raspberrypi.com/products/raspberry-pi-zero/) devices which support ```Node.js``` environment. First make sure you have installed [Node.js](https://nodejs.org/), version 10 or newer. Check the version:
 
     node --version
 

@@ -26,7 +26,8 @@ export class Buttons {
     toggleSound()
   }
 
-  static toggleMirror = mirrored => {
+  // we have received a TOGGLE_MIRROR status
+  static toggleMirror = (mirrored) => {
     const video = document.getElementById('video')
 
     video.style.cssText = mirrored
