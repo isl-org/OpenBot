@@ -9,9 +9,11 @@
 
 export class Buttons {
   constructor(connection) {
-    // mirror button
     const toggleMirror = () => {
-      connection.send(JSON.stringify({ command: 'TOGGLE_MIRROR' }))
+      const video = document.getElementById('video')
+
+      let isMirrored = video.style.cssText !== ''
+      this.setMirrored(!isMirrored)
     }
 
     const mirrorButton = document.getElementById('mirror_button')
@@ -27,16 +29,15 @@ export class Buttons {
 
     const soundButton = document.getElementById('sound_button')
     soundButton.onclick = toggleSound
-  }
 
-  // We have received a MIRROR status from server
-  static toggleMirror = (mirrored) => {
-    const video = document.getElementById('video')
+    this.setMirrored = (mirrored) => {
 
-    video.style.cssText = mirrored
-      ? '-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); transform: scale(-1, 1); filter: FlipH;'
-      : ''
-
-    document.getElementById('mirror_button').src = mirrored ? 'icons/flip_black_24dp-mirrored.svg' : 'icons/flip_black_24dp.svg'
+      video.style.cssText = mirrored
+        ? '-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); transform: scale(-1, 1); filter: FlipH;'
+        : ''
+  
+      document.getElementById('mirror_button').src = mirrored ? 'icons/flip_black_24dp-mirrored.svg' : 'icons/flip_black_24dp.svg'
+    }
+  
   }
 }
