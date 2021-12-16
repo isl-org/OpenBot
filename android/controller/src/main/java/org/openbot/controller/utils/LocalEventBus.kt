@@ -66,5 +66,9 @@ object LocalEventBus {
         object PhoneOnTable : ProgressEvents()
         object TiltControl : ProgressEvents()
         object SlidersControl : ProgressEvents()
+        object Mute : ProgressEvents()
+        object Unmute : ProgressEvents()
+        object Mirror : ProgressEvents()
+        object Unmirror : ProgressEvents()
     }
 }

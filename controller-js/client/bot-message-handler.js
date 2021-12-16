@@ -14,6 +14,7 @@ import { Buttons } from './buttons.js'
 export class BotMessageHandler {
   constructor (connection) {
     const webRtc = new WebRTC(connection)
+    const buttons = new Buttons()
 
     this.handle = (msg) => {
       const msgType = Object.keys(msg)[0]
@@ -30,26 +31,12 @@ export class BotMessageHandler {
           switch (msg.VIDEO_COMMAND) {
             case 'START':
               webRtc.start()
+              buttons.setMirrored(true)
               break
 
             case 'STOP':
               webRtc.stop()
               break
-          }
-          break
-
-        case 'TOGGLE_MIRROR':
-          Buttons.toggleMirror(msg.TOGGLE_MIRROR === 'true')
-          break
-
-        case 'TOGGLE_SOUND':
-          {
-            // Turn ON sound on the server if it is muted.
-            // Sound is controlled from the client's 'muted' flag on the video control
-            const muted = msg.TOGGLE_SOUND
-            if (muted) {
-              connection.send(JSON.stringify({ command: 'TOGGLE_SOUND' })) // toggle it right back.
-            }
           }
           break
 

@@ -81,7 +81,6 @@ public class WebRtcServer implements IVideoServer {
   private AndGate andGate;
   private Context context;
 
-  private final CameraControlHandler cameraControlHandler = new CameraControlHandler();
   private final SignalingHandler signalingHandler = new SignalingHandler();
 
   public WebRtcServer() {}
@@ -103,7 +102,6 @@ public class WebRtcServer implements IVideoServer {
 
     rootEglBase = EglBase.create();
 
-    cameraControlHandler.handleCameraControlEvents();
     signalingHandler.handleControllerWebRtcEvents();
   }
 
@@ -122,8 +120,6 @@ public class WebRtcServer implements IVideoServer {
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_PROTOCOL", "WEBRTC"));
     sendServerUrl();
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
-    BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("TOGGLE_MIRROR", true));
-    ControllerConfig.getInstance().setMirrored(true);
   }
 
   @Override
@@ -204,9 +200,6 @@ public class WebRtcServer implements IVideoServer {
     mediaStream.addTrack(videoTrackFromCamera);
     mediaStream.addTrack(localAudioTrack);
     peerConnection.addStream(mediaStream);
-
-    ControllerConfig.getInstance().setMute(true); // always start mute
-    cameraControlHandler.disableAudio();
   }
 
   private void stopStreamingVideo() {
@@ -431,36 +424,6 @@ public class WebRtcServer implements IVideoServer {
     }
 
     return null;
-  }
-
-  // Other commands
-  class CameraControlHandler {
-
-    private void disableAudio() {
-      if (mediaStream.audioTracks.size() > 0) {
-        AudioTrack audio = mediaStream.audioTracks.get(0);
-        audio.setEnabled(false);
-
-        // inform the controller of current state
-        BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("TOGGLE_SOUND", true));
-      }
-    }
-
-    private void handleCameraControlEvents() {
-      ControllerConfig config = ControllerConfig.getInstance();
-      ControllerToBotEventBus.subscribe(
-          this.getClass().getSimpleName(),
-          event -> {
-            String commandType = event.getString("command");
-
-            if (mediaStream.audioTracks.size() > 0) {
-              AudioTrack audio = mediaStream.audioTracks.get(0);
-              audio.setEnabled(!audio.enabled());
-            }
-          },
-          error -> Log.d(null, "Error occurred in ControllerToBotEventBus: " + error),
-          event -> event.has("command") && "TOGGLE_SOUND".equals(event.getString("command")));
-    }
   }
 
   // Utils
