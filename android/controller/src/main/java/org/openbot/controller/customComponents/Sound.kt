@@ -28,7 +28,8 @@ class Sound @JvmOverloads constructor(
     }
 
     private fun onDataReceived(data: String) {
-        setOnOffStateConditions(data)
+        val muted = data == "true"
+        if (muted) offState () else onState()
     }
 
     override fun offState() {

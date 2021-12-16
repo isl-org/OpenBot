@@ -12,7 +12,7 @@ import { ErrorDisplay } from './error-display.js'
 import { Buttons } from './buttons.js'
 
 export class BotMessageHandler {
-  constructor(connection) {
+  constructor (connection) {
     const webRtc = new WebRTC(connection)
 
     this.handle = (msg) => {
@@ -30,9 +30,6 @@ export class BotMessageHandler {
           switch (msg.VIDEO_COMMAND) {
             case 'START':
               webRtc.start()
-              
-              // turn sound on from the server
-              connection.send(JSON.stringify({ command: 'TOGGLE_SOUND' }))
               break
 
             case 'STOP':
@@ -46,7 +43,14 @@ export class BotMessageHandler {
           break
 
         case 'TOGGLE_SOUND':
-          Buttons.toggleSound(msg.TOGGLE_SOUND === 'true', connection)
+          {
+            // Turn ON sound on the server if it is muted.
+            // Sound is controlled from the client's 'muted' flag on the video control
+            const muted = msg.TOGGLE_SOUND
+            if (muted) {
+              connection.send(JSON.stringify({ command: 'TOGGLE_SOUND' })) // toggle it right back.
+            }
+          }
           break
 
         case 'WEB_RTC_EVENT':

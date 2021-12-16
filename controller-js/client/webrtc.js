@@ -8,7 +8,7 @@
  */
 
 export class WebRTC {
-  constructor(connection) {
+  constructor (connection) {
     const { RTCPeerConnection } = window
 
     let peerConnection = null

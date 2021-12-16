@@ -39,13 +39,4 @@ export class Buttons {
 
     document.getElementById('mirror_button').src = mirrored ? 'icons/flip_black_24dp-mirrored.svg' : 'icons/flip_black_24dp.svg'
   }
-
-  // getting current state of sound from the server
-  static toggleSound = (muted, connection) => {
-    // Turn ON sound on the server if OFF.
-    // Sound is controlled from the client, 'muted' flag on the video control
-    if (muted) {
-      connection.send(JSON.stringify({ command: 'TOGGLE_SOUND' }))
-    }
-  }
 }

@@ -205,10 +205,8 @@ public class WebRtcServer implements IVideoServer {
     mediaStream.addTrack(localAudioTrack);
     peerConnection.addStream(mediaStream);
 
-    boolean isMute = ControllerConfig.getInstance().isMute();
-    if (isMute) {
-      cameraControlHandler.disableAudio();
-    }
+    ControllerConfig.getInstance().setMute(true); // always start mute
+    cameraControlHandler.disableAudio();
   }
 
   private void stopStreamingVideo() {
