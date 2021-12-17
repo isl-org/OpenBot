@@ -35,7 +35,7 @@ class Sound @JvmOverloads constructor(
         setOnTouchListener(OnTouchListener())
         offState()
     }
-    
+
     inner class OnTouchListener : View.OnTouchListener {
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
             if (event?.action == MotionEvent.ACTION_DOWN) {
