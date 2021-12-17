@@ -14,11 +14,8 @@ class BrowserConnection {
     this.start = (onData) => {
       const wss = new WebSocket.Server({ port: 7071 })
       wss.on('connection', (ws) => {
-        this.ws = ws
         console.log('Connected to browser! 😃😃')
-        ws.on('message', (messageAsString) => {
-          onData(messageAsString)
-        })
+        ws.on('message', messageAsString => onData(messageAsString))
 
         this.send = data => ws.send(data + '\n')
 

@@ -55,7 +55,7 @@ export class Keyboard {
       return listItems
     }
 
-    const highlightPressedKeys = (list) => {
+    const highlightPressedKeys = list => {
       list.forEach(liItem => {
         const keypressName = liItem.getAttribute('keypressCode')
 

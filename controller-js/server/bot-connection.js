@@ -16,8 +16,8 @@ class BotConnection {
       this.socket = socket
     })
 
-    this.send = (message) => {
-      if (this.socket !== undefined && this.socket !== null) {
+    this.send = message => {
+      if (this.socket) {
         this.socket.write(message + '\n')
       } else {
         console.log('Not connected, please connect to phone first...')
@@ -29,10 +29,10 @@ class BotConnection {
       this.server.close()
     }
 
-    this.start = (onMessageReceived) => {
-      const handleConnection = (conn) => {
+    this.start = onMessageReceived => {
+      const handleConnection = conn => {
         const received = new MessageBuffer('\n')
-        const onConnData = (data) => {
+        const onConnData = data => {
           received.push(data)
           while (!received.isFinished()) {
             const message = received.handleData()
@@ -40,13 +40,9 @@ class BotConnection {
           }
         }
 
-        const onConnClose = () => {
-          console.log('connection from %s closed', remoteAddress)
-        }
+        const onConnClose = () => console.log('connection from %s closed', remoteAddress)
 
-        const onConnError = (err) => {
-          console.log('Connection %s error: %s', remoteAddress, err.message)
-        }
+        const onConnError = err => console.log('Connection %s error: %s', remoteAddress, err.message)
 
         const remoteAddress = conn.remoteAddress + ':' + conn.remotePort
         console.log('Connected to Bot! 😃')
