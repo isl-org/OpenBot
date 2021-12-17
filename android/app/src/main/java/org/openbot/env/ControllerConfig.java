@@ -2,9 +2,7 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import androidx.preference.PreferenceManager;
-import org.openbot.utils.ConnectionUtils;
 
 public class ControllerConfig {
   private static ControllerConfig _controllerConfig;
@@ -14,9 +12,6 @@ public class ControllerConfig {
     WEBRTC,
     RTSP
   }
-
-  private final boolean isMirrored = true;
-  private final boolean mute = true;
 
   private String currentServerType;
 
@@ -33,7 +28,6 @@ public class ControllerConfig {
   void init(Context context) {
     preferences = PreferenceManager.getDefaultSharedPreferences(context);
     currentServerType = get("video_server", "WEBRTC");
-    monitorSettingUpdates();
   }
 
   private void set(String name, String value) {
@@ -64,61 +58,11 @@ public class ControllerConfig {
     editor.apply();
   }
 
-  // specific settings
-  public boolean isMirrored() {
-    return getBoolean("MIRRORED", true);
-  }
-
-  public void setMirrored(boolean mirrored) {
-    setBoolean("MIRRORED", mirrored);
-  }
-
-  public boolean isMute() {
-    return getBoolean("MUTE", true);
-  }
-
-  public void setMute(boolean mute) {
-    setBoolean("MUTE", mute);
-  }
-
   public String getVideoServerType() {
     return get("video_server", "WEBRTC");
   }
 
   public void setVideoServerType(String type) {
     set("video_server", type);
-  }
-
-  private void monitorSettingUpdates() {
-    ControllerToBotEventBus.subscribe(
-        this.getClass().getSimpleName(),
-        event -> {
-          String commandType = event.getString("command");
-
-          switch (commandType) {
-            case "TOGGLE_MIRROR":
-              setMirrored(!isMirrored());
-
-              // inform the controller of current state
-              BotToControllerEventBus.emitEvent(
-                  ConnectionUtils.createStatus("TOGGLE_MIRROR", isMirrored()));
-              break;
-
-            case "TOGGLE_SOUND":
-              setMute(!isMute());
-
-              // inform the controller of current state
-              BotToControllerEventBus.emitEvent(
-                  ConnectionUtils.createStatus("TOGGLE_SOUND", isMute()));
-              break;
-          }
-        },
-        error -> {
-          Log.d(null, "Error occurred in monitorConnection: " + error);
-        },
-        event ->
-            event.has("command")
-                && (event.getString("command").contains("TOGGLE_MIRROR")
-                    || event.getString("command").contains("TOGGLE_SOUND")));
   }
 }
