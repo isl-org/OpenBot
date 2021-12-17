@@ -33,16 +33,9 @@ class Sound @JvmOverloads constructor(
 
     init {
         setOnTouchListener(OnTouchListener())
-        // subscribe("VIDEO_PROTOCOL", ::onDataReceived)
         offState()
     }
-
-//    private fun onDataReceived(data: String) {
-//        if (data == "RTSP") {
-//            hide() // do not support sound on RTSP
-//        }
-//    }
-
+    
     inner class OnTouchListener : View.OnTouchListener {
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
             if (event?.action == MotionEvent.ACTION_DOWN) {

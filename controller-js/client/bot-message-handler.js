@@ -15,15 +15,16 @@ export class BotMessageHandler {
   constructor (connection) {
     const webRtc = new WebRTC(connection)
     const buttons = new Buttons()
+    const errDisplay = new ErrorDisplay()
 
     this.handle = (msg) => {
       const msgType = Object.keys(msg)[0]
       switch (msgType) {
         case 'VIDEO_PROTOCOL':
           if (msg.VIDEO_PROTOCOL !== 'WEBRTC') {
-            ErrorDisplay.set('Only WebRTC video supported. Please set your andoid app for WebRTC')
+            errDisplay.set('Only WebRTC video supported. Please set your andoid app for WebRTC')
           } else {
-            ErrorDisplay.reset()
+            errDisplay.reset()
           }
           break
 

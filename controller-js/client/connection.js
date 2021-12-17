@@ -24,10 +24,11 @@ export class Connection {
 
   async start (onData) {
     const ws = await this.connectToServer()
+    const errDisplay = new ErrorDisplay()
 
     ws.onmessage = webSocketMessage => onData(webSocketMessage.data)
-    ws.onclose = () => ErrorDisplay.set('Disconnected from the server. Please restart your nodejs')
-    ws.onopen = () => ErrorDisplay.reset()
+    ws.onclose = () => errDisplay.set('Disconnected from the server. Please restart your nodejs')
+    ws.onopen = () => errDisplay.reset()
 
     this.send = data => ws.send(data)
   }
