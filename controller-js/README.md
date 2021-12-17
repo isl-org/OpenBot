@@ -30,7 +30,6 @@ You can run this software on a PC, RaspberryPi-type device or even [Pi Zero](htt
 
 The software is located in the ```/controller-js``` directory of the OpenBot project. After checking out the code from [github](https://github.com/isl-org/OpenBot), change into this directory and run the following commands:
 
-    npm run prestart
     npm install
     npm start
 
