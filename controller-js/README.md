@@ -20,7 +20,7 @@ This is a [Node.js](https://nodejs.org/) based project acting as a controller fo
 
 Here is a screenshot of the browser:
 
-![Screenshot](images/Screenshot.png "image_tooltip")
+![Screenshot](images/Screenshot.jpg "image_tooltip")
 
 ## Getting Started
 
