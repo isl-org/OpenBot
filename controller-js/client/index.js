@@ -18,7 +18,6 @@ import { Buttons } from './buttons'
   const botMessageHandler = new BotMessageHandler(connection)
 
   const onData = data => {
-    // console.log(`Got data from server [${data}]`)
     botMessageHandler.handle(JSON.parse(data).status, connection)
   }
 
