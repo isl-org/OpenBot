@@ -46,9 +46,9 @@ export class BotMessageHandler {
           break
 
         default:
-          // process other status information here
-          // This can be used ti enhance the UI, for example
-          // do display a blinking sigan indicator, etc
+          // Process other status information here
+          // This can be used to enhance the UI, for example
+          // to display a blinking signal indicator, etc.
           break
       }
     }
