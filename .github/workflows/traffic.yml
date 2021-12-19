@@ -28,7 +28,7 @@ jobs:
     - name: Get new traffic 
       uses: sangonzal/repository-traffic-action@v0.1.4
       env:
-        TRAFFIC_ACTION_TOKEN: ${{ secrets.TRAFFIC_TOKEN }} 
+        TRAFFIC_ACTION_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
     # Uploads new traffic as artifact 
     - name: Upload new traffic
