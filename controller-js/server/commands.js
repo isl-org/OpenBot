@@ -37,16 +37,6 @@ class DriveValue {
       return this.value
     }
 
-    this.incr = (byValue = 0) => {
-      this.value = Math.min(this.MAX, this.value + (byValue !== 0) ? byValue : this.DELTA)
-      return Math.round(this.value, 3)
-    }
-
-    this.decr = (byValue = 0) => {
-      this.value = Math.max(this.MIN, this.value - (byValue !== 0) ? byValue : this.DELTA)
-      return Math.round(this.value, 3)
-    }
-
     this.max = () => {
       this.value = MAX
       return this.value
@@ -140,7 +130,7 @@ class DriveCommandReducer {
       connection.send(strCommand)
     }
 
-    const isEqual = (last, current) => {
+    const isEqual = (current, last) => {
       if (!last || !current) {
         return false
       }

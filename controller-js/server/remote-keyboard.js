@@ -10,7 +10,7 @@
 class RemoteKeyboard {
   constructor (commandHandler, onQuit) {
     const pressedKeys = new Set()
-    
+
     this.processKey = keyPress => {
       switch (keyPress.type) {
         case 'keyup':

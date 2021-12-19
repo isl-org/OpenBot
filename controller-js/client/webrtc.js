@@ -54,7 +54,7 @@ export class WebRTC {
 
     this.start = () => {
       console.log('WebRTC: start...')
-      
+
       peerConnection = new RTCPeerConnection()
 
       const video = document.getElementById('video')
