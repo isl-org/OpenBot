@@ -81,19 +81,19 @@ class CommandHandler {
     }
 
     this.forwardLeft = () => {
-      this.sendDriveCommand(this.left.write(0.75), this.right.max())
+      this.sendDriveCommand(this.left.write(0.5), this.right.max())
     }
 
     this.forwardRight = () => {
-      this.sendDriveCommand(this.left.max(), this.right.write(0.75))
+      this.sendDriveCommand(this.left.max(), this.right.write(0.5))
     }
 
     this.backwardLeft = () => {
-      this.sendDriveCommand(this.left.min(), this.right.write(-0.75))
+      this.sendDriveCommand(this.right.write(-0.5), this.left.min())
     }
 
     this.backwardRight = () => {
-      this.sendDriveCommand(this.left.write(-0.75), this.right.min())
+      this.sendDriveCommand(this.right.min(), this.left.write(-0.55))
     }
 
     this.rotateLeft = () => {

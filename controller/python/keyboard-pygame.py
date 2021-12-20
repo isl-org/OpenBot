@@ -33,16 +33,16 @@ class CommandHandler:
         self.send_drive_command(self.left.reset(), self.right.reset())
 
     def forward_left(self):
-        self.send_drive_command(self.left.write(0.75), self.right.max())
+        self.send_drive_command(self.left.write(0.5), self.right.max())
 
     def forward_right(self):
-        self.send_drive_command(self.left.max(), self.right.write(0.75))
+        self.send_drive_command(self.left.max(), self.right.write(0.5))
 
     def backward_left(self):
-        self.send_drive_command(self.left.min(), self.right.write(-0.75))
+        self.send_drive_command(self.right.write(-0.5), self.left.min())
 
     def backward_right(self):
-        self.send_drive_command(self.left.write(-0.75), self.right.min())
+        self.send_drive_command(self.right.min(), self.left.write(-0.5))
 
     def rotate_left(self):
         self.send_drive_command(self.left.min(), self.right.max())
@@ -79,10 +79,20 @@ class CommandHandler:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_w:
-                        self.go_forward()
+                        if pygame.key.get_pressed()[pygame.K_a]:
+                            self.forward_left()
+                        elif pygame.key.get_pressed()[pygame.K_d]:
+                            self.forward_right()
+                        else:
+                            self.go_forward()
 
                     elif event.key == K_s:
-                        self.go_backward()
+                        if pygame.key.get_pressed()[pygame.K_a]:
+                            self.backward_left()
+                        elif pygame.key.get_pressed()[pygame.K_d]:
+                            self.backward_right()
+                        else:
+                            self.go_backward()
 
                     elif event.key == K_a:
                         if pygame.key.get_pressed()[pygame.K_w]:

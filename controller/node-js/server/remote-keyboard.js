@@ -25,8 +25,14 @@ class RemoteKeyboard {
             if (pressedKeys.has('w')) {
               commandHandler.goForward()
             }
+            else {
+              commandHandler.reset()
+            }
             if (pressedKeys.has('s')) {
               commandHandler.goBackward()
+            }
+            else {
+              commandHandler.reset()
             }
           }
           break
@@ -36,9 +42,25 @@ class RemoteKeyboard {
 
           switch (keyPress.key) {
             case 'w':
+              if (pressedKeys.has('a')) {
+                commandHandler.forwardLeft()
+                break
+              }
+              if (pressedKeys.has('d')) {
+                commandHandler.forwardRight()
+                break
+              }
               commandHandler.goForward()
               break
             case 's':
+              if (pressedKeys.has('a')) {
+                commandHandler.backwardLeft()
+                break
+              }
+              if (pressedKeys.has('d')) {
+                commandHandler.backwardRight()
+                break
+              }
               commandHandler.goBackward()
               break
             case 'a':
