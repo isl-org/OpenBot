@@ -50,6 +50,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
     holder.title.setOnClickListener(v -> itemClickListener.onItemClick(holder.mItem));
     holder.imgDownload.setOnClickListener(
         v -> {
+          holder.imgDownload.setClickable(false);
           itemClickListener.onModelDownloadClicked();
           Ion.with(holder.itemView.getContext())
               .load(holder.mItem.path)
@@ -66,6 +67,9 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
                           + holder.mItem.name))
               .setCallback(
                   (e, file) -> {
+                    holder.imgDownload.setClickable(true);
+                    holder.imgDownload.setVisibility(View.GONE);
+                    holder.imgDelete.setVisibility(View.VISIBLE);
                     holder.progressBar.setProgress(0);
                     itemClickListener.onModelDownloaded(e == null, holder.mItem);
                   });
