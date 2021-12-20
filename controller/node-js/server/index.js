@@ -12,7 +12,10 @@ const browserConnection = new BrowserConnection()
 const commands = new Commands(botConnection, browserConnection)
 
 const onQuit = () => {
+  // Stop media stream.
   browserConnection.send(JSON.stringify({ status: { VIDEO_COMMAND: 'STOP' } }))
+
+  // Do not disconnect browserConnection, cannot restart without restarting nodejs. 
   // browserConnection.stop()
 }
 
