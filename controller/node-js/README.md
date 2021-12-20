@@ -1,10 +1,6 @@
 # OpenBot Nodejs Controller
 
-<span style="font-size:1.3em;">Ivo Zikkov<span>
-
-[izivkov@gmail.com](mailto:izivkov@gmail.com)
-
-Dec 10, 2021
+Last updated: Dec 20, 2021
 
 ## Nomenclature
 
