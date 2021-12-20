@@ -24,14 +24,12 @@ class RemoteKeyboard {
           if (['a', 'd', 'q', 'e'].includes(keyPress.key)) {
             if (pressedKeys.has('w')) {
               commandHandler.goForward()
-            }
-            else {
+            } else {
               commandHandler.reset()
             }
             if (pressedKeys.has('s')) {
               commandHandler.goBackward()
-            }
-            else {
+            } else {
               commandHandler.reset()
             }
           }

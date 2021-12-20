@@ -24,11 +24,11 @@ class MirrorImage @JvmOverloads constructor(
 ) : Button(context, attrs, defStyleAttr) {
 
     enum class State { MIRRORED, UN_MIRRORED }
-    var state: State = State.MIRRORED
+    var state: State = State.UN_MIRRORED
 
     init {
         setOnTouchListener(OnTouchListener())
-        onState()
+        offState()
     }
 
     inner class OnTouchListener : View.OnTouchListener {

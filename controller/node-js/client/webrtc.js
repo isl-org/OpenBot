@@ -70,7 +70,9 @@ export class WebRTC {
     this.stop = () => {
       console.log('WebRTC: stop...')
 
-      peerConnection.close()
+      if (peerConnection) {
+        peerConnection.close()
+      }
       peerConnection = null
     }
   }

@@ -32,7 +32,7 @@ export class BotMessageHandler {
           switch (msg.VIDEO_COMMAND) {
             case 'START':
               webRtc.start()
-              buttons.setMirrored(true)
+              buttons.setMirrored(false)
               break
 
             case 'STOP':

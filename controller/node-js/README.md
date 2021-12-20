@@ -71,7 +71,7 @@ We use [eslint](https://eslint.org/) for linting and automatically formatting yo
 
 ## Known Bugs
 
-* When the video is mirrored, the controls also appear mirrored. When we select the full screen option from the video controls, the image is un-mirrored. This is due to the way we mirror the video using CSS. A better way would be to mirror it at the source of the WebRTC stream, but currently not working.
+* When the video is mirrored, the controls also appear mirrored. When we select the full screen option from the video controls, the image is un-mirrored. This is due to the way we mirror the video using CSS.
 
 ## Things to do/try
 

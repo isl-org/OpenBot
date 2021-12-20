@@ -69,7 +69,7 @@ class VideoViewVlc @JvmOverloads constructor(
             return
         }
         player.start(this.serverUrl!!)
-        setMirror(true)
+        setMirror(false)
     }
 
     fun stop() {

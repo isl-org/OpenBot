@@ -8,12 +8,15 @@
  */
 
 class ShutdownService {
-  constructor (botConnection, browserConnection) {
+  constructor (botConnection, browserConnection, commandHandler) {
     this.start = () => {
       console.log('ShutdownService started...')
       process.stdin.resume() // so the program will not close instantly
 
       const exitHandler = (options, exitCode) => {
+        console.log('\nResetting Bot...')
+        commandHandler.reset()
+
         if (botConnection && botConnection.stop) {
           botConnection.stop()
         }

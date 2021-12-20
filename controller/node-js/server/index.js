@@ -12,7 +12,8 @@ const browserConnection = new BrowserConnection()
 const commands = new Commands(botConnection, browserConnection)
 
 const onQuit = () => {
-  browserConnection.stop()
+  browserConnection.send(JSON.stringify({ status: { VIDEO_COMMAND: 'STOP' } }))
+  // browserConnection.stop()
 }
 
 const remoteKeyboard = new RemoteKeyboard(commands.getCommandHandler(), onQuit)
@@ -37,4 +38,4 @@ new Dnssd().start(
   botConnection.stop) // onServiceDown
 
 // handle exit gracefully
-new ShutdownService(botConnection, browserConnection).start()
+new ShutdownService(botConnection, browserConnection, commands.getCommandHandler()).start()

@@ -40,7 +40,9 @@ class BotConnection {
           }
         }
 
-        const onConnClose = () => console.log('connection from %s closed', remoteAddress)
+        const onConnClose = () => {
+          console.log('connection from %s closed', remoteAddress)
+        }
 
         const onConnError = err => console.log('Connection %s error: %s', remoteAddress, err.message)
 
@@ -67,41 +69,41 @@ class MessageBuffer {
   constructor (delimiter) {
     this.delimiter = delimiter
     this.buffer = ''
-  }
 
-  isFinished () {
-    if (
-      this.buffer.length === 0 ||
-      this.buffer.indexOf(this.delimiter) === -1
-    ) {
-      return true
+    this.isFinished = () => {
+      if (
+        this.buffer.length === 0 ||
+        this.buffer.indexOf(this.delimiter) === -1
+      ) {
+        return true
+      }
+      return false
     }
-    return false
-  }
 
-  push (data) {
-    this.buffer += data
-  }
+    this.push = (data) => {
+      this.buffer += data
+    }
 
-  getMessage () {
-    const delimiterIndex = this.buffer.indexOf(this.delimiter)
-    if (delimiterIndex !== -1) {
-      const message = this.buffer.slice(0, delimiterIndex)
-      this.buffer = this.buffer.replace(message + this.delimiter, '')
+    const getMessage = () => {
+      const delimiterIndex = this.buffer.indexOf(this.delimiter)
+      if (delimiterIndex !== -1) {
+        const message = this.buffer.slice(0, delimiterIndex)
+        this.buffer = this.buffer.replace(message + this.delimiter, '')
+        return message
+      }
+      return null
+    }
+
+    this.handleData = () => {
+      /**
+           * Try to accumulate the buffer with messages
+           *
+           * If the server isnt sending delimiters for some reason
+           * then nothing will ever come back for these requests
+           */
+      const message = getMessage()
       return message
     }
-    return null
-  }
-
-  handleData () {
-    /**
-         * Try to accumulate the buffer with messages
-         *
-         * If the server isnt sending delimiters for some reason
-         * then nothing will ever come back for these requests
-         */
-    const message = this.getMessage()
-    return message
   }
 }
 

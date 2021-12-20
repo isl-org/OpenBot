@@ -106,7 +106,7 @@ class VideoViewWebRTC @JvmOverloads constructor(
     private fun start() {
         show()
         initializePeerConnections()
-        setMirror(true)
+        setMirror(false)
     }
 
     private fun mute () {
