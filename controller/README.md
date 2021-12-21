@@ -12,10 +12,10 @@ The easiest way to control the robot is to connect a game controller via bluetoo
 
 This controller requires your phone and a computer (e.g. laptop, rasberry PI) to be connected to the same WiFi network. After successful connection you get a live low-latency video feed and can use your keyboard to control the robot from the browser.
 
-Special thanks to Ivo Zikkov [izivkov@gmail.com](mailto:izivkov@gmail.com) for the development.
+Special thanks to Ivo Zivkov [izivkov@gmail.com](mailto:izivkov@gmail.com) for the development.
 
 ## [Python Controller](python)
 
 This controller requires your phone and a computer (e.g. laptop, rasberry PI) to be connected to the same WiFi network. After successful connection you get a live RTSP video stream and can use your keyboard to control the robot from the terminal. You can use the Python script as a template to develop your own controller.
 
-Special thanks to Ivo Zikkov [izivkov@gmail.com](mailto:izivkov@gmail.com) for the development.
+Special thanks to Ivo Zivkov [izivkov@gmail.com](mailto:izivkov@gmail.com) for the development.
