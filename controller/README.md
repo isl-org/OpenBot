@@ -1,88 +1,21 @@
-# Python Controller
+# OpenBot Controllers
 
-This python program allows you to control the robot from a (wireless) keyboard and receive a video stream from the camera. The program can run on any computer connected to the same network as the robot's phone. It was developed and tested on a Raspberry Pi 3 and a MacBook. Before following the steps below, make sure you have the [source code](https://github.com/isl-org/OpenBot#get-the-source-code) and navigate to the `controller` folder.
+Last updated: Dec 20, 2021
 
-## Dependencies
+There are several ways for controlling the OpenBot robot.
 
-We recommend to create a conda environment for OpenBot (if not already done). Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). You can create a new environment with the following command:
+## Bluetooth Controller
 
-```bash
-conda create -n openbot python=3.7
-```
+The easiest way to control the robot is to connect a game controller via bluetooth. Most BT game controllers should work. We have tested the [PS4 controller](https://www.amazon.de/-/en/Sony-Dualshock-Gamepad-Playstation-Black/dp/B01LYWPQUN), [XBox controller](https://www.amazon.de/-/en/QAT-00002/dp/B07SDFLVKD) and several aftermarket controllers such as the [X3](https://www.amazon.com/Controller-Wireless-Joystick-Bluetooth-Android/dp/B08H5MM64P).
 
-If you do not want install the dependencies globally, activate your conda environment first:
+## [Node.js Controller](node-js)
 
-```bash
-conda activate openbot
-```
+This controller requires your phone and a computer (e.g. laptop, rasberry PI) to be connected to the same WiFi network. After successful connection you get a live low-latency video feed and can use your keyboard to control the robot from the browser.
 
-Make sure you are in the folder `controller` within your local OpenBot repository. Now, you can install all the dependencies with the following command:
+Special thanks to Ivo Zivkov [izivkov@gmail.com](mailto:izivkov@gmail.com) for the development.
 
-```bash
-pip install -r requirements.txt
-```
+## [Python Controller](python)
 
-## Controlling the robot
+This controller requires your phone and a computer (e.g. laptop, rasberry PI) to be connected to the same WiFi network. After successful connection you get a live RTSP video stream and can use your keyboard to control the robot from the terminal. You can use the Python script as a template to develop your own controller.
 
-NOTE: After a successful connection, it may not be possible to connect again unless the robot app is restarted.
-
-The python scripts will wait for an incoming connection. On the phone with the robot app, go to the FreeRoam fragment and toggle the control mode to the phone icon. The robot will now try to connect to the Python script (same way as it would connect to the controller app). Alternatively, you can also use the DefaultActivity and select `Phone` as controller.
-
-### Using Pygame
-
-These scripts allow you to drive the robot using the keyboard similar to a car racing game.
-
-Run the controller without video:
-
-`python keyboard-pygame.py`
-
-Run the controller with video:
-
-`python keyboard-pygame.py --video`
-
-Here is the usage:
-
-```
-    W:        Go forward
-    S:        Go backward
-    A:        Turn slightly left (while driving)
-    D:        Turn slightly right (while driving)
-    Q:        Rotate left
-    E:        Rotate right
-
-    M:        Drive mode
-    N:        Toggle noise
-    Left:     Left indicator
-    Right:    Right indicator
-    Up:       Cancel indicators
-    Down:     Network mode
-    SPACE:    Toggle logging
-    ESC:      Quit
-```
-
-### Using Click
-
-There is also a script for prototyping that allows setting the robot control in increments rather than controlling it dynamically. This script uses the click library and requires the terminal to stay in focus. 
-
-Run the controller:
-
-`python keyboard-click.py`
-
-Here is the usage:
-
-```bash
-    W:        Increase speed
-    S:        Decrease speed
-    A:        Turn more left
-    D:        Turn more right
-    R:        Reset controls
-
-    M:        Drive mode
-    N:        Toggle noise
-    Left:     Left indicator
-    Right:    Right indicator
-    Up:       Cancel indicators
-    Down:     Network mode
-    SPACE:    Toggle logging
-    ESC:      Quit
-```
+Special thanks to Ivo Zivkov [izivkov@gmail.com](mailto:izivkov@gmail.com) for the development.

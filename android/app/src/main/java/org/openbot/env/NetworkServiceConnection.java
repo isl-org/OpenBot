@@ -147,7 +147,9 @@ public class NetworkServiceConnection implements ILocalConnection {
           ((Activity) context)
               .runOnUiThread(
                   () -> {
-                    ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}");
+                    // There is no need to disconnect here if this DNS service is no longer active.
+                    // This is only used for initial connection, but we are already connected.
+                    // ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}");
                   });
         }
 

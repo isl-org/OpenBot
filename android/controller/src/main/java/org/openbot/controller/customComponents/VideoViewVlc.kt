@@ -42,12 +42,7 @@ class VideoViewVlc @JvmOverloads constructor(
         StatusEventBus.subscribe (this.javaClass.simpleName, "VIDEO_COMMAND",
             onNext = { processVideoCommand(it as String) })
 
-        StatusEventBus.addSubject("TOGGLE_MIRROR")
-        StatusEventBus.subscribe(this.javaClass.simpleName, "TOGGLE_MIRROR", onNext = {
-            scaleX = if (it as String == "true") 1f else -1f // RTSP is already mirrored by default.
-        })
-
-        monitorConnection()
+        monitorLocalEvents()
     }
 
     fun init() {
@@ -74,6 +69,7 @@ class VideoViewVlc @JvmOverloads constructor(
             return
         }
         player.start(this.serverUrl!!)
+        setMirror(false)
     }
 
     fun stop() {
@@ -89,6 +85,10 @@ class VideoViewVlc @JvmOverloads constructor(
         visibility = INVISIBLE
     }
 
+    private fun setMirror (mirror:Boolean) {
+        scaleX = if (mirror) -1f else 1f
+    }
+
     override fun onSurfacesCreated(vlcVout: IVLCVout?) {
         Log.i(TAG, "onSurfacesCreated")
     }
@@ -97,20 +97,28 @@ class VideoViewVlc @JvmOverloads constructor(
         Log.i(TAG, "onSurfacesDestroyed")
     }
 
-    private fun monitorConnection() {
+    private fun monitorLocalEvents() {
 
         LocalEventBus.subscriber.start(
             this.javaClass.simpleName,
             {
+                Log.i(TAG, "Got $it event")
+
                 when (it) {
                     LocalEventBus.ProgressEvents.Disconnected -> {
                         stop()
+                    }
+                    LocalEventBus.ProgressEvents.Mirror -> {
+                        setMirror(true)
+                    }
+                    LocalEventBus.ProgressEvents.Unmirror -> {
+                        setMirror(false)
                     }
                 }
             },
             { throwable ->
                 Log.d(
-                    "EventsSubscription",
+                    "monitorLocalEvents",
                     "Got error on subscribe: $throwable"
                 )
             })
