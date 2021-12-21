@@ -38,5 +38,20 @@ export class Buttons {
 
       document.getElementById('mirror_button').src = mirrored ? 'icons/flip_black_24dp-mirrored.svg' : 'icons/flip_black_24dp.svg'
     }
+
+    // fullscreen
+    const goFullscreen = () => {
+      const video = document.getElementById('video')
+      if (video.requestFullscreen) {
+        video.requestFullscreen();
+      } else if (video.webkitRequestFullscreen) { /* Safari */
+        video.webkitRequestFullscreen();
+      } else if (video.msRequestFullscreen) { /* IE11 */
+        video.msRequestFullscreen();
+      }
+    }
+
+    const fullscreenButton = document.getElementById('fullscreen')
+    fullscreenButton.onclick = goFullscreen
   }
 }
