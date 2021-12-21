@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.Surface
 import android.view.SurfaceHolder
 import android.widget.FrameLayout
+import org.openbot.controller.utils.LocalEventBus
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
@@ -43,6 +44,7 @@ data class VlcPlayer(
         mMediaPlayer = MediaPlayer(mLibVLC)
 
         setLayout(this.layout)
+        monitorLocalEvents()
     }
 
     fun setLayout(layout: VLCVideoLayout) {
@@ -65,6 +67,7 @@ data class VlcPlayer(
         media.release()
 
         mMediaPlayer!!.play()
+        mute()
     }
 
     override fun stop() {
@@ -80,5 +83,37 @@ data class VlcPlayer(
 
     override fun setSurfaceChangedCallback(surfaceChangedCallback: (SurfaceHolder, Int, Int) -> Unit) {
         Log.i(TAG, "surfaceChangedCallback: ")
+    }
+
+    private fun mute () {
+        mMediaPlayer?.volume = 0
+    }
+
+    private fun unmute () {
+        mMediaPlayer?.volume = 100
+    }
+
+    private fun monitorLocalEvents() {
+
+        LocalEventBus.subscriber.start(
+            this.javaClass.simpleName,
+            {
+                Log.i(TAG, "Got $it event")
+
+                when (it) {
+                    LocalEventBus.ProgressEvents.Mute -> {
+                        mute()
+                    }
+                    LocalEventBus.ProgressEvents.Unmute -> {
+                        unmute()
+                    }
+                }
+            },
+            { throwable ->
+                Log.d(
+                    "monitorLocalEvents",
+                    "Got error on subscribe: $throwable"
+                )
+            })
     }
 }

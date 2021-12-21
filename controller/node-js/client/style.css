@@ -1,0 +1,11 @@
+body {
+    background-color: aliceblue;
+    margin: 3%;
+}
+
+/* Used to suppress error:
+ResizeObserver - loop limit exceeded */
+video::-webkit-media-controls-timeline {
+    align-self: center;
+    width: calc(100% - 64px);
+  }
