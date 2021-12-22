@@ -5,6 +5,11 @@ module.exports = {
   mount: {
     "client": "/"
   },
+  optimize: {
+    bundle: true,
+    minify: true,
+    target: 'es2018',
+  },
   routes: [
     {
       src: '/ws',
@@ -29,5 +34,5 @@ module.exports = {
         );
       },
     },
-  ],
+  ],  
 };

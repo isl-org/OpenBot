@@ -24,7 +24,7 @@ You can run this software on a PC, RaspberryPi-type device or even [Pi Zero](htt
 
     node --version
 
-The software is located in the ```/controller-js``` directory of the OpenBot project. After checking out the code from [github](https://github.com/isl-org/OpenBot), change into this directory and run the following commands:
+The software is located in the ```/controller/node-js``` directory of the OpenBot project. After checking out the code from [github](https://github.com/isl-org/OpenBot), change into this directory and run the following commands:
 
     npm install
     npm start
@@ -65,15 +65,25 @@ We use [eslint](https://eslint.org/) for linting and automatically formatting yo
 
     npm run lint
 
+## Production
+
+To build a production version of the ```client```, run:
+
+    npm run build
+
+This will optimize the client code into a ```build``` directory, which can be deplyed on a server. In addition we need to setup a process manager to restart the server, and possibly a reverse proxy like [nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/), which is not yet done.
+
 ## Troubleshooting
 
 * Sometimes the browser will not show the commands menu, just the title. This means the WebSocket connection could not be established. This usually happens right after starting the server. If you examine the browser console, you can find a message about not being able to connect, something like ```WebSocket connection to 'ws://localhost:7071/ws' failed```, Kill all node processes (pkill -9 node)  and restart it. Reload the page and connection should be established.
+* If you cannot connect the phone to the app, make sure another instance of this application is not running on this machine or another machine on the same network.
 
 ## Known Bugs
 
-* When the video is mirrored, the controls also appear mirrored. When we select the full screen option from the video controls, the image is un-mirrored. This is due to the way we mirror the video using CSS.
+None.
 
 ## Things to do/try
 
 * This software has not been tested on Windows. It would be useful if somebody can test and update this documentation.
 * We need to investigate if we can connect to the server remotely, and if WebRTC will still work. We should document firewall configuration to make this possible.
+* We need to create a ```production``` configuration, possibly using [pm2 process manager](https://www.npmjs.com/package/pm2) and [nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).
