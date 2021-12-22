@@ -10,6 +10,7 @@
     "dev:server": "npm run start --prefix server",
     "dev:start-server-headless": "NODE_ENV=development snowpack build --watch",
     "dev:start-server": "npx snowpack dev --port 8081",
+    "build": "snowpack build",
     "lint": "npx eslint server/*.js --fix && npx eslint client/*.js --fix"
   },
   "author": "Ivo Zivkov",

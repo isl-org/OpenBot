@@ -10,7 +10,7 @@ object DriveCommandReducer {
     private const val withinRange = .02f
 
     fun filter(rightValue: Float, leftValue: Float) {
-        if (isDifferent(rightValue, rightValue)) {
+        if (isDifferent(rightValue, leftValue)) {
             lastLeft = leftValue
             lastRight = rightValue
             val msg = "{driveCmd: {r:${rightValue}, l:${leftValue}}}"
