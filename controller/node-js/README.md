@@ -65,9 +65,9 @@ We use [eslint](https://eslint.org/) for linting and automatically formatting yo
 
     npm run lint
 
-## Productions
+## Production
 
-To build a prodcution version of the ```client```, run:
+To build a production version of the ```client```, run:
 
     npm run build
 
