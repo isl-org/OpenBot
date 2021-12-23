@@ -51,7 +51,7 @@
 //SETTINGS - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR)
-#define OPENBOT DIY
+#define OPENBOT RTR_V1
 
 
 //------------------------------------------------------//
@@ -342,8 +342,8 @@ void setup()
     pinMode(PIN_PWM_T, OUTPUT);
     pinMode(PIN_PWM_S, OUTPUT);
     // Attach the ESC and SERVO
-    ESC.attach(PIN_PWM_T, 1050, 2050);   // (pin, min pulse width, max pulse width in microseconds)
-    SERVO.attach(PIN_PWM_S, 1020, 2050); // (pin, min pulse width, max pulse width in microseconds)
+    ESC.attach(PIN_PWM_T, 1000, 2000);   // (pin, min pulse width, max pulse width in microseconds)
+    SERVO.attach(PIN_PWM_S, 1000, 2000); // (pin, min pulse width, max pulse width in microseconds)
 #else
     pinMode(PIN_PWM_L1, OUTPUT);
     pinMode(PIN_PWM_L2, OUTPUT);
@@ -588,7 +588,7 @@ void update_vehicle()
   
   void update_steering()
   {
-      int steering = map(ctrl_right - ctrl_left, -510, 510, 0, 180);
+      int steering = map(ctrl_left - ctrl_right, -510, 510, 0, 180);
       if (ctrl_left + ctrl_right > 0)
       {
           SERVO.write(steering);
