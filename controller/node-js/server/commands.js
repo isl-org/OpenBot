@@ -9,18 +9,18 @@
 
 class Commands {
   constructor (botConnection, browserConnection) {
-    this.botConnection = botConnection
-    this.browserConnection = browserConnection
+    // this.botConnection = botConnection
+    // this.browserConnection = browserConnection
 
-    this.commandHandler = new CommandHandler(botConnection)
+    const commandHandler = new CommandHandler(botConnection)
 
     this.getCommandHandler = () => {
-      return this.commandHandler
+      return commandHandler
     }
 
     this.handleStatus = (_status /* Json */) => {
       // forward status and WebRTC negotition to browser
-      this.browserConnection.send(JSON.stringify(_status))
+      browserConnection.send(JSON.stringify(_status))
     }
   }
 }
@@ -30,86 +30,80 @@ class DriveValue {
     const MAX = 1.0
     const MIN = -1.0
 
-    const value = 0.0
+    let value = 0.0
 
     this.reset = () => {
-      this.value = 0
-      return this.value
+      value = 0
+      return value
     }
 
     this.max = () => {
-      this.value = MAX
-      return this.value
+      value = MAX
+      return value
     }
 
     this.min = () => {
-      this.value = MIN
-      return this.value
+      value = MIN
+      return value
     }
 
-    this.write = (value) => {
-      this.value = value
-      return this.value
+    this.write = _value => {
+      value = _value
+      return value
     }
 
     this.read = () => {
-      this.value = value
-      return Math.round(this.value, 3)
+      return Math.round(value, 3)
     }
   }
 }
 
 class CommandHandler {
   constructor (botConnection) {
-    this.left = new DriveValue()
-    this.right = new DriveValue()
-    this.timeoutObj = null
+    const left = new DriveValue()
+    const right = new DriveValue()
     const commandReducer = new DriveCommandReducer()
 
-    this.sendCommand = (command) => {
-      botConnection.send(`{command: ${command} }\n`)
-    }
-
-    this.sendDriveCommand = (left, right) => {
+    const sendDriveCommand = (left, right) => {
       commandReducer.send({ driveCmd: { l: left, r: right } }, botConnection)
     }
 
     this.reset = () => {
-      this.left.reset()
-      this.right.reset()
-      commandReducer.send({ driveCmd: { l: this.left.read(), r: this.right.read() } }, botConnection)
+      left.reset()
+      right.reset()
+      commandReducer.send({ driveCmd: { l: left.read(), r: right.read() } }, botConnection)
     }
 
     this.forwardLeft = () => {
-      this.sendDriveCommand(this.left.write(0.5), this.right.max())
+      sendDriveCommand(left.write(0.5), right.max())
     }
 
     this.forwardRight = () => {
-      this.sendDriveCommand(this.left.max(), this.right.write(0.5))
+      sendDriveCommand(left.max(), right.write(0.5))
     }
 
     this.backwardLeft = () => {
-      this.sendDriveCommand(this.right.write(-0.5), this.left.min())
+      sendDriveCommand(right.write(-0.5), left.min())
     }
 
     this.backwardRight = () => {
-      this.sendDriveCommand(this.right.min(), this.left.write(-0.55))
+      sendDriveCommand(right.min(), left.write(-0.55))
     }
 
     this.rotateLeft = () => {
-      this.sendDriveCommand(this.left.min(), this.right.max())
+      sendDriveCommand(left.min(), right.max())
     }
 
     this.rotateRight = () => {
-      this.sendDriveCommand(this.left.max(), this.right.min())
+      sendDriveCommand(left.max(), right.min())
     }
 
     this.goForward = () => {
-      this.sendDriveCommand(this.left.max(), this.right.max())
+      sendDriveCommand(left.max(), right.max())
     }
 
     this.goBackward = () => {
-      this.sendDriveCommand(this.left.min(), this.right.min())
+      sendDriveCommand(left.min(), right.min())
     }
   }
 }
@@ -118,13 +112,13 @@ class CommandHandler {
 // by not sending duplicate consecutive commands.
 class DriveCommandReducer {
   constructor () {
-    this.lastCommand = null
+    let lastCommand = null
 
     this.send = (commandAsJson, connection) => {
-      if (isEqual(commandAsJson, this.lastCommand)) {
+      if (isEqual(commandAsJson, lastCommand)) {
         return
       }
-      this.lastCommand = commandAsJson
+      lastCommand = commandAsJson
 
       const strCommand = JSON.stringify(commandAsJson) + '\n'
       connection.send(strCommand)

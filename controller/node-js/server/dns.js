@@ -21,12 +21,12 @@ is not compatible with the Robot's Android app.
 
 class Dnssd {
   constructor () {
-    this.type = 'openbot'
-    this.name = 'OPEN_BOT_CONTROLLER'
-    this.port = 19400
+    const type = 'openbot'
+    const name = 'OPEN_BOT_CONTROLLER'
+    const port = 19400
 
     this.start = (onServiceUp, onSevideDown) => {
-      const ad = new dnssd.Advertisement(dnssd.tcp(this.type), this.port, { name: this.name, resolve: true })
+      const ad = new dnssd.Advertisement(dnssd.tcp(type), port, { name: name, resolve: true })
       ad.start()
 
       dnssd.Browser(dnssd.tcp('openbot'))

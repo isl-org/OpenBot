@@ -9,6 +9,7 @@ module.exports = {
     bundle: true,
     minify: true,
     target: 'es2018',
+    treeshake: true,
   },
   routes: [
     {

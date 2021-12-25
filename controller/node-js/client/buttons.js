@@ -43,11 +43,11 @@ export class Buttons {
     const goFullscreen = () => {
       const video = document.getElementById('video')
       if (video.requestFullscreen) {
-        video.requestFullscreen();
+        video.requestFullscreen()
       } else if (video.webkitRequestFullscreen) { /* Safari */
-        video.webkitRequestFullscreen();
+        video.webkitRequestFullscreen()
       } else if (video.msRequestFullscreen) { /* IE11 */
-        video.msRequestFullscreen();
+        video.msRequestFullscreen()
       }
     }
 
