@@ -161,7 +161,6 @@ class ControllerActivity : /*AppCompat*/
                     LocalEventBus.ProgressEvents.Disconnected -> {
                         screenSelector.hideControls()
                         binding.controlModeTiltLayout.stop()
-                        ConnectionSelector.getConnection().connect(this)
                     }
                     LocalEventBus.ProgressEvents.StopAdvertising -> {
                     }

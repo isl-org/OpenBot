@@ -18,11 +18,7 @@ import org.json.JSONObject
 import org.openbot.controller.ConnectionSelector
 import org.openbot.controller.StatusEventBus
 import org.openbot.controller.utils.LocalEventBus
-import org.openbot.controller.utils.Utils
 import org.webrtc.*
-import org.webrtc.RtpReceiver
-
-
 
 
 /*
@@ -90,9 +86,17 @@ class VideoViewWebRTC @JvmOverloads constructor(
     }
 
     fun stop() {
-        release()
-        peerConnection?.dispose()
-        hide()
+        try {
+            if (peerConnection != null) {
+                release()
+            }
+        } catch (e: Throwable) {
+            Log.d(TAG, "Got exception $e")
+        } finally {
+            peerConnection?.dispose()
+            peerConnection = null
+            hide()
+        }
     }
 
     fun show() {
@@ -109,11 +113,11 @@ class VideoViewWebRTC @JvmOverloads constructor(
         setMirror(false)
     }
 
-    private fun mute () {
+    private fun mute() {
         peerConnection!!.receivers[0].track()?.setEnabled(false)
     }
 
-    private fun unmute () {
+    private fun unmute() {
         peerConnection!!.receivers[0].track()?.setEnabled(true)
     }
 
@@ -182,6 +186,7 @@ class VideoViewWebRTC @JvmOverloads constructor(
             override fun onRemoveStream(mediaStream: MediaStream) {
                 Log.d(TAG, "Stream removed...")
             }
+
             override fun onDataChannel(dataChannel: DataChannel) {}
             override fun onRenegotiationNeeded() {}
             override fun onAddTrack(rtpReceiver: RtpReceiver, mediaStreams: Array<MediaStream>) {}

@@ -9,101 +9,103 @@
 
 const net = require('net')
 
-class BotConnection {
-  constructor () {
-    this.port = 19400
-    this.server = net.createServer((socket) => {
-      this.socket = socket
+function BotConnection () {
+  const port = 19400
+  let socket = null
+  let server = null
+
+  this.send = message => {
+    if (socket) {
+      socket.write(message + '\n')
+    } else {
+      console.log('Not connected, please connect to phone first...')
+    }
+  }
+
+  this.stop = () => {
+    if (server) {
+      server.close()
+    }
+    if (socket && socket.end) {
+      socket.end()
+    }
+  }
+
+  this.start = onMessageReceived => {
+    server = net.createServer(_socket => {
+      console.log('createServer called...')
+      socket = _socket
     })
 
-    this.send = message => {
-      if (this.socket) {
-        this.socket.write(message + '\n')
-      } else {
-        console.log('Not connected, please connect to phone first...')
-      }
-    }
-
-    this.stop = () => {
-      console.log('Closing BotConnection ...')
-      this.server.close()
-    }
-
-    this.start = onMessageReceived => {
-      const handleConnection = conn => {
-        const received = new MessageBuffer('\n')
-        const onConnData = data => {
-          received.push(data)
-          while (!received.isFinished()) {
-            const message = received.handleData()
-            onMessageReceived(JSON.parse(message))
-          }
+    console.log('botConnection: start...')
+    const handleConnection = conn => {
+      const received = new MessageBuffer('\n')
+      const onConnData = data => {
+        received.push(data)
+        while (!received.isFinished()) {
+          const message = received.handleData()
+          onMessageReceived(JSON.parse(message))
         }
-
-        const onConnClose = () => {
-          console.log('connection from %s closed', remoteAddress)
-        }
-
-        const onConnError = err => console.log('Connection %s error: %s', remoteAddress, err.message)
-
-        const remoteAddress = conn.remoteAddress + ':' + conn.remotePort
-        console.log('Connected to Bot! 😃')
-        conn.on('data', onConnData)
-        conn.once('close', onConnClose)
-        conn.on('error', onConnError)
       }
 
-      this.server.on('connection', handleConnection)
+      const onConnClose = () => {
+        console.log('connection from %s closed', remoteAddress)
+      }
 
-      this.server.listen(this.port, () => {
-        console.log(`listen on port ${this.port}`)
-      })
+      const onConnError = err => console.log('Connection %s error: %s', remoteAddress, err.message)
+
+      const remoteAddress = conn.remoteAddress + ':' + conn.remotePort
+      console.log('Connected to Bot! 😃')
+      conn.on('data', onConnData)
+      conn.once('close', onConnClose)
+      conn.on('error', onConnError)
     }
+
+    server.on('connection', handleConnection)
+
+    server.listen(port, () => {
+      console.log(`listen on port ${port}`)
+    })
   }
 }
 
 /*
-    Utility calss to accumulate data until a full JSON message has been received.
+    Utility function to accumulate data until a full JSON message has been received.
 */
-class MessageBuffer {
-  constructor (delimiter) {
-    this.delimiter = delimiter
-    this.buffer = ''
+function MessageBuffer (delimiter) {
+  let buffer = ''
 
-    this.isFinished = () => {
-      if (
-        this.buffer.length === 0 ||
-        this.buffer.indexOf(this.delimiter) === -1
-      ) {
-        return true
-      }
-      return false
+  this.isFinished = () => {
+    if (
+      buffer.length === 0 ||
+      buffer.indexOf(delimiter) === -1
+    ) {
+      return true
     }
+    return false
+  }
 
-    this.push = (data) => {
-      this.buffer += data
-    }
+  this.push = data => { buffer += data }
 
-    const getMessage = () => {
-      const delimiterIndex = this.buffer.indexOf(this.delimiter)
-      if (delimiterIndex !== -1) {
-        const message = this.buffer.slice(0, delimiterIndex)
-        this.buffer = this.buffer.replace(message + this.delimiter, '')
-        return message
-      }
-      return null
-    }
-
-    this.handleData = () => {
-      /**
-           * Try to accumulate the buffer with messages
-           *
-           * If the server isnt sending delimiters for some reason
-           * then nothing will ever come back for these requests
-           */
-      const message = getMessage()
+  const getMessage = () => {
+    const delimiterIndex = buffer.indexOf(delimiter)
+    if (delimiterIndex !== -1) {
+      const message = buffer.slice(0, delimiterIndex)
+      buffer = buffer.replace(message + delimiter, '')
       return message
     }
+    return null
+  }
+
+  this.handleData = () => {
+    /**
+         * Try to accumulate the buffer with messages
+         *
+         * If the server isnt sending delimiters for some reason
+         * then nothing will ever come back for these requests
+         */
+    const message = getMessage()
+    return message
   }
 }
 

@@ -21,6 +21,10 @@ import { Buttons } from './buttons'
     botMessageHandler.handle(JSON.parse(data).status, connection)
   }
 
+  const onQuit = () => {
+    connection.stop()
+  }
+
   await connection.start(onData)
 
   const onKeyPress = (key) => {
@@ -31,5 +35,5 @@ import { Buttons } from './buttons'
   // eslint-disable-next-line no-new
   new Buttons(connection)
 
-  keyboard.start(onKeyPress)
+  keyboard.start(onKeyPress, onQuit)
 })()

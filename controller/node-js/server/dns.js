@@ -19,21 +19,19 @@ Note: we are using the "dnssd2" package instead of the more common "bounjour" or
 is not compatible with the Robot's Android app.
 */
 
-class Dnssd {
-  constructor () {
-    const type = 'openbot'
-    const name = 'OPEN_BOT_CONTROLLER'
-    const port = 19400
+function Dnssd () {
+  const type = 'openbot'
+  const name = 'OPEN_BOT_CONTROLLER'
+  const port = 19400
 
-    this.start = (onServiceUp, onSevideDown) => {
-      const ad = new dnssd.Advertisement(dnssd.tcp(type), port, { name: name, resolve: true })
-      ad.start()
+  this.start = (onServiceUp, onSevideDown) => {
+    const ad = new dnssd.Advertisement(dnssd.tcp(type), port, { name: name, resolve: true })
+    ad.start()
 
-      dnssd.Browser(dnssd.tcp('openbot'))
-        .on('serviceUp', onServiceUp)
-        .on('serviceDown', onSevideDown)
-        .start()
-    }
+    dnssd.Browser(dnssd.tcp('openbot'))
+      .on('serviceUp', onServiceUp)
+      .on('serviceDown', onSevideDown)
+      .start()
   }
 }
 

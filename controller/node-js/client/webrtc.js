@@ -7,73 +7,71 @@
  * Date: Mon Nov 29 2021
  */
 
-export class WebRTC {
-  constructor (connection) {
-    const { RTCPeerConnection } = window
+export function WebRTC (connection) {
+  const { RTCPeerConnection } = window
 
-    let peerConnection = null
+  let peerConnection = null
 
-    this.handle = (data) => {
-      if (!peerConnection) {
-        console.log('WebRTC: start() not called, cannot handle...')
-        return
-      }
-
-      const { RTCSessionDescription, RTCIceCandidate } = window
-      const webRtcEvent = JSON.parse(data)
-
-      switch (webRtcEvent.type) {
-        case 'offer':
-          peerConnection.setRemoteDescription(new RTCSessionDescription({ sdp: webRtcEvent.sdp, type: 'offer' }))
-          doAnswer()
-          break
-
-        case 'candidate':
-          {
-            const candidate = new RTCIceCandidate({
-              candidate: webRtcEvent.candidate,
-              sdpMid: webRtcEvent.id,
-              sdpMLineIndex: webRtcEvent.label
-            })
-
-            peerConnection.addIceCandidate(candidate)
-          }
-          break
-
-        case 'bye':
-          this.stop()
-          break
-      }
+  this.handle = (data) => {
+    if (!peerConnection) {
+      console.log('WebRTC: start() not called, cannot handle...')
+      return
     }
 
-    const doAnswer = async () => {
-      const answer = await peerConnection.createAnswer()
-      await peerConnection.setLocalDescription(answer)
-      connection.send(JSON.stringify({ webrtc_event: answer }))
+    const { RTCSessionDescription, RTCIceCandidate } = window
+    const webRtcEvent = JSON.parse(data)
+
+    switch (webRtcEvent.type) {
+      case 'offer':
+        peerConnection.setRemoteDescription(new RTCSessionDescription({ sdp: webRtcEvent.sdp, type: 'offer' }))
+        doAnswer()
+        break
+
+      case 'candidate':
+        {
+          const candidate = new RTCIceCandidate({
+            candidate: webRtcEvent.candidate,
+            sdpMid: webRtcEvent.id,
+            sdpMLineIndex: webRtcEvent.label
+          })
+
+          peerConnection.addIceCandidate(candidate)
+        }
+        break
+
+      case 'bye':
+        this.stop()
+        break
     }
+  }
 
-    this.start = () => {
-      console.log('WebRTC: start...')
+  const doAnswer = async () => {
+    const answer = await peerConnection.createAnswer()
+    await peerConnection.setLocalDescription(answer)
+    connection.send(JSON.stringify({ webrtc_event: answer }))
+  }
 
-      peerConnection = new RTCPeerConnection()
+  this.start = () => {
+    console.log('WebRTC: start...')
 
-      const video = document.getElementById('video')
+    peerConnection = new RTCPeerConnection()
 
-      video.srcObject = new MediaStream()
-      video.srcObject.getTracks().forEach(track => peerConnection.addTrack(track))
+    const video = document.getElementById('video')
 
-      peerConnection.ontrack = event => {
-        video.srcObject = event.streams[0]
-      }
+    video.srcObject = new MediaStream()
+    video.srcObject.getTracks().forEach(track => peerConnection.addTrack(track))
+
+    peerConnection.ontrack = event => {
+      video.srcObject = event.streams[0]
     }
+  }
 
-    this.stop = () => {
-      console.log('WebRTC: stop...')
+  this.stop = () => {
+    console.log('WebRTC: stop...')
 
-      if (peerConnection) {
-        peerConnection.close()
-      }
-      peerConnection = null
+    if (peerConnection) {
+      peerConnection.close()
     }
+    peerConnection = null
   }
 }
