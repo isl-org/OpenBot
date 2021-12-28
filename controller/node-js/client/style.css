@@ -1,6 +1,8 @@
 body {
     background-color: aliceblue;
     margin: 3%;
+    font-size: 22px;
+    font-family: 'Roboto';
 }
 
 /* Used to suppress error:
