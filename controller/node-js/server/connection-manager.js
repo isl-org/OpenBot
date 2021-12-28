@@ -33,6 +33,8 @@ function ConnectionManager() {
   }
 
   this.stop = () => {
+    console.log('\nClosing ConnectionManager')
+
     if (botConnection.stop) {
       botConnection.stop()
     }

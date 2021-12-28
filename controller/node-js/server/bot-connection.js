@@ -23,6 +23,7 @@ function BotConnection () {
   }
 
   this.stop = () => {
+    console.log('Closing BotConnection ...')
     if (server) {
       server.close()
     }
@@ -36,7 +37,6 @@ function BotConnection () {
       socket = _socket
     })
 
-    console.log('botConnection: start...')
     const handleConnection = conn => {
       const received = new MessageBuffer('\n')
       const onConnData = data => {
