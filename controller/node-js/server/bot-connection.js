@@ -33,7 +33,6 @@ function BotConnection () {
 
   this.start = onMessageReceived => {
     server = net.createServer(_socket => {
-      console.log('createServer called...')
       socket = _socket
     })
 
@@ -48,9 +47,7 @@ function BotConnection () {
         }
       }
 
-      const onConnClose = () => {
-        console.log('connection from %s closed', remoteAddress)
-      }
+      const onConnClose = () => {}
 
       const onConnError = err => console.log('Connection %s error: %s', remoteAddress, err.message)
 

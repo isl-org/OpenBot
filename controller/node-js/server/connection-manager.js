@@ -10,7 +10,7 @@
 const BotConnection = require('./bot-connection.js')
 const BrowserConnection = require('./browser-connection')
 
-function ConnectionManager () {
+function ConnectionManager() {
   let onBotData = null
 
   const onWsClose = () => {
@@ -18,24 +18,26 @@ function ConnectionManager () {
     botConnection.start(onBotData)
   }
 
+  // Create connections to Bot and Browser
   const botConnection = new BotConnection()
   const browserConnection = new BrowserConnection(onWsClose)
 
   this.start = (_onBotData, onBrowserData) => {
     onBotData = _onBotData
+
     botConnection.start(onBotData)
     browserConnection.start(onBrowserData)
 
-    console.log('ConnectionManager: start() ...')
+    // start video from Bot
     this.toBot(JSON.stringify({ status: { VIDEO_COMMAND: 'START' } }))
   }
 
   this.stop = () => {
-    if (botConnection && botConnection.stop) {
+    if (botConnection.stop) {
       botConnection.stop()
     }
 
-    if (browserConnection && browserConnection.stop) {
+    if (browserConnection.stop) {
       browserConnection.stop()
     }
   }

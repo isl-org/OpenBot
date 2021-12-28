@@ -9,11 +9,9 @@
 
 function ShutdownService (connectionManager, commandHandler) {
   this.start = () => {
-    console.log('ShutdownService started...')
     process.stdin.resume() // so the program will not close instantly
 
     const exitHandler = (options, exitCode) => {
-      console.log('\nResetting Bot...')
       commandHandler.reset()
       connectionManager.stop()
 

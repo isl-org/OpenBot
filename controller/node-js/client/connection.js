@@ -27,7 +27,7 @@ export function Connection () {
     const errDisplay = new ErrorDisplay()
 
     ws.onmessage = webSocketMessage => onData(webSocketMessage.data)
-    ws.onclose = () => errDisplay.set('Disconnected from the server. Please restart your nodejs')
+    ws.onclose = () => errDisplay.set('Disconnected from the server. To reconnect, reload this page.')
     ws.onopen = () => errDisplay.reset()
 
     this.send = data => {
@@ -37,7 +37,6 @@ export function Connection () {
     }
 
     this.stop = () => {
-      console.log('connection stop called...')
       ws.close()
       ws = null
     }
