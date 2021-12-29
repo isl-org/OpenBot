@@ -27,9 +27,6 @@ function ConnectionManager() {
 
     botConnection.start(onBotData)
     browserConnection.start(onBrowserData)
-
-    // start video from Bot
-    this.toBot(JSON.stringify({ status: { VIDEO_COMMAND: 'START' } }))
   }
 
   this.stop = () => {

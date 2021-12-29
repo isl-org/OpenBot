@@ -32,7 +32,7 @@ function BotConnection () {
     }
   }
 
-  this.start = onMessageReceived => {
+  this.start = onBotData => {
     server = net.createServer(_socket => {
       socket = _socket
     })
@@ -42,8 +42,7 @@ function BotConnection () {
       const onConnData = data => {
         received.push(data)
         while (!received.isFinished()) {
-          const message = received.handleData()
-          onMessageReceived(JSON.parse(message))
+          onBotData(JSON.parse(received.handleData()))
         }
       }
 
