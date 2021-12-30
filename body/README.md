@@ -8,6 +8,11 @@
 We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware.
 ![Assembly](../docs/images/assembly.gif)
 
+
+We also have a [body](cad/rc_truck_body/) designed for commercially available 1:16 RC-Trucks (such as [this](https://www.amazon.de/dp/B00M3J7DJW) on Amazon). 
+
+Build instructions for OpenBot RC-Truck can be found [here](cad/rc_truck_body/README.md).  
+
 ## Chassis
 
 ### 3D printing
@@ -70,7 +75,7 @@ There are two different options for assembly of the robot, DIY and PCB. The DIY 
 
 ### Bill of materials
 
-Our robot body relies on readily available hobby electronics. We provide links for Germany (EU) and the United States (US) with fast shipping. If you have the patience to wait a bit longer, you can also get the compoenents a lot cheaper from AliExpress (AE). You will need the following components.
+Our robot body relies on readily available hobby electronics. We provide links for Germany (EU) and the United States (US) with fast shipping. If you have the patience to wait a bit longer, you can also get the components a lot cheaper from AliExpress (AE). You will need the following components.
 
 #### Required components
 
@@ -103,7 +108,7 @@ Our robot body relies on readily available hobby electronics. We provide links f
 #### PCB components (Option 2)
 
 - 1x [Custom PCB](pcb)
-- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B07449V33P), [AE](https://www.aliexpress.com/item/32963304134.html))
+- 5x Micro JST PH 2.0 cable ([EU](https://www.amazon.de/gp/product/B07449V33P), [US](https://www.amazon.com/dp/B09JZC28DP), [AE](https://www.aliexpress.com/item/32963304134.html))
 
 ### Build instructions
 
