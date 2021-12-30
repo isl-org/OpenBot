@@ -205,6 +205,6 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
 
 ## Next
 
-Flash the [Arduino Firmware](/firmware/README.md)
+Flash the [Arduino Firmware](/firmware/README.md) (update to support RC truck coming soon)
 
 
