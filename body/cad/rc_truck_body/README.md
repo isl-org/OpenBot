@@ -37,26 +37,26 @@ Irrespective of the retailer and the version of RC-toy truck you choose for your
 
 You will need to print the following parts in order to build your OpenBot RC-Truck.
 
-1) ```main_frame``` ([STL](/body/cad/rc_truck_body/main_frame.stl), [STEP](/body/cad/rc_truck_body/main_frame.stp))
-2) ```side_cover``` \[x2\] ([STL](/body/cad/rc_truck_body/side_cover.stl), [STEP](/body/cad/rc_truck_body/side_cover.stp))
-3) ```phone_mount_bottom``` ([STL](/body/cad/phone_mount/phone_mount_bottom.stl), [STEP](/body/cad/phone_mount/phone_mount_bottom.stp))
-4) ```phone_mount_top``` ([STL](/body/cad/phone_mount/phone_mount_top.stl), [STEP](/body/cad/phone_mount/phone_mount_top.stp))
+1) ```main_frame``` ([STL](/body/cad/rc_truck_body/main_frame.stl), [STEP](/body/cad/rc_truck_body/main_frame.step))
+2) ```side_cover``` \[x2\] ([STL](/body/cad/rc_truck_body/side_cover.stl), [STEP](/body/cad/rc_truck_body/side_cover.step))
+3) ```phone_mount_bottom``` ([STL](/body/cad/phone_mount/phone_mount_bottom.stl), [STEP](/body/cad/phone_mount/phone_mount_bottom.step))
+4) ```phone_mount_top``` ([STL](/body/cad/phone_mount/phone_mount_top.stl), [STEP](/body/cad/phone_mount/phone_mount_top.step))
 
 Notice that \[xN\] indicates the number of copies (i.e., N) you need to print of a particular part (wherever applicable).
 
 Following parts are optional (but recommended) to make your OpenBot RC-Truck more compact and aesthetically pleasing.
 
-5) ```camera_elevator``` ([STL](/body/cad/rc_truck_body/camera_elevator.stl), [STEP](/body/cad/rc_truck_body/camera_elevator.stp))
-6) ```electronics_cover``` \[x2\] ([STL](/body/cad/rc_truck_body/electronics_cover.stl), [STEP](/body/cad/rc_truck_body/electronics_cover.stp))
-7) ```spacer``` \[x4\] ([STL](/body/cad/rc_truck_body/spacer.stl), [STEP](/body/cad/rc_truck_body/spacer.stp))
-8) ```front_light_spacer``` \[x2\] ([STL](/body/cad/rc_truck_body/front_light_spacer.stl), [STEP](/body/cad/rc_truck_body/front_light_spacer.stp))
+5) ```camera_elevator``` ([STL](/body/cad/rc_truck_body/camera_elevator.stl), [STEP](/body/cad/rc_truck_body/camera_elevator.step))
+6) ```electronics_cover``` \[x2\] ([STL](/body/cad/rc_truck_body/electronics_cover.stl), [STEP](/body/cad/rc_truck_body/electronics_cover.step))
+7) ```spacer``` \[x4\] ([STL](/body/cad/rc_truck_body/spacer.stl), [STEP](/body/cad/rc_truck_body/spacer.step))
+8) ```front_light_spacer``` \[x2\] ([STL](/body/cad/rc_truck_body/front_light_spacer.stl), [STEP](/body/cad/rc_truck_body/front_light_spacer.step))
 
 For all the above parts, your build plate needs to be at least 260mmx220mm, which is the print size of the ```main_frame```.
 
 Since a lot of common 3D printers have a smaller build volume (usually 220mmx220mm), there are two more options that can work. 
 First option is to print the ```main_frame``` at 45 degrees with additional support material. 
 Second option requires modifying the original ```main_frame``` part. We recommend using [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/overview) for such CAD modifications (Fusion 360 has a free 1-year academic license available). 
-For this option, we make its [STEP](/body/cad/rc_truck_body/main_frame.stp) file available, which you can cut into two/three smaller parts. 
+For this option, we make its [STEP](/body/cad/rc_truck_body/main_frame.step) file available, which you can cut into two/three smaller parts. 
 The resulting sub-parts will then fit on a standard (i.e., 220mmx220mm) build plate and can be joined together after printing. 
 In future, we may also release such a modular version of the ```main_frame``` here. All other parts require a minimum build plate of 220mmx60mm.
 
@@ -121,7 +121,7 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
       <img src="/docs/images/rc_truck_disassembly_2.JPG" width="32%" /> 
       <img src="/docs/images/rc_truck_disassembly_3.JPG" width="32%" />
     </p>
-2. Notice that the two dimensions d1 amd d2 (as shown below) on the ```main_frame``` are dependent on the model of the RC-toy truck used. We designed our ```main_frame``` part for [this](https://www.amazon.de/dp/B00M3J7DJW) RC-toy truck model. Based on what (1:16 scale) truck you use, you may need to adjust these dimensions slightly using the ```main_frame``` [STEP](/body/cad/rc_truck_body/main_frame.stp) file. We recommend using [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/overview) for such CAD modifications (Fusion 360 has a free 1-year academic license available). Also, note that the small wedge/triangle on the ```main_frame``` represents the forward direction.
+2. Notice that the two dimensions d1 amd d2 (as shown below) on the ```main_frame``` are dependent on the model of the RC-toy truck used. We designed our ```main_frame``` part for [this](https://www.amazon.de/dp/B00M3J7DJW) RC-toy truck model. Based on what (1:16 scale) truck you use, you may need to adjust these dimensions slightly using the ```main_frame``` [STEP](/body/cad/rc_truck_body/main_frame.step) file. We recommend using [Autodesk Fusion 360](https://www.autodesk.com/products/fusion-360/overview) for such CAD modifications (Fusion 360 has a free 1-year academic license available). Also, note that the small wedge/triangle on the ```main_frame``` represents the forward direction.
     <p float="left">
       <img src="/docs/images/main-frame-dimensions.png" width="32%" />
       <img src="/docs/images/main-frame-direction.png" width="32%" />
