@@ -9,8 +9,8 @@
 
 import { ErrorDisplay } from './error-display.js'
 
-export class Connection {
-  async connectToServer () {
+export function Connection () {
+  const connectToServer = async () => {
     const ws = new WebSocket(`ws://${window.location.hostname}:7071/ws`)
     return new Promise((resolve, reject) => {
       const timer = setInterval(() => {
@@ -22,14 +22,23 @@ export class Connection {
     })
   }
 
-  async start (onData) {
-    const ws = await this.connectToServer()
+  this.start = async (onData) => {
+    let ws = await connectToServer()
     const errDisplay = new ErrorDisplay()
 
     ws.onmessage = webSocketMessage => onData(webSocketMessage.data)
-    ws.onclose = () => errDisplay.set('Disconnected from the server. Please restart your nodejs')
+    ws.onclose = () => errDisplay.set('Disconnected from the server. To reconnect, reload this page.')
     ws.onopen = () => errDisplay.reset()
 
-    this.send = data => ws.send(data)
+    this.send = data => {
+      if (ws) {
+        ws.send(data)
+      }
+    }
+
+    this.stop = () => {
+      ws.close()
+      ws = null
+    }
   }
 }

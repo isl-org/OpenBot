@@ -1,28 +1,15 @@
 const Dnssd = require('./dns.js')
 
-const BotConnection = require('./bot-connection.js')
-const BrowserConnection = require('./browser-connection')
 const { Commands } = require('./commands.js')
 const RemoteKeyboard = require('./remote-keyboard.js')
 const ShutdownService = require('./shutdown-service')
+const ConnectionManager = require('./connection-manager')
 
-const botConnection = new BotConnection()
-const browserConnection = new BrowserConnection()
+const connectionManager = new ConnectionManager()
+const commands = new Commands(connectionManager.toBot)
+const remoteKeyboard = new RemoteKeyboard(commands.getCommandHandler(), connectionManager.onQuit)
 
-const commands = new Commands(botConnection, browserConnection)
-
-const onQuit = () => {
-  // Stop media stream.
-  browserConnection.send(JSON.stringify({ status: { VIDEO_COMMAND: 'STOP' } }))
-
-  // Do not disconnect browserConnection, cannot restart without restarting nodejs. 
-  // browserConnection.stop()
-}
-
-const remoteKeyboard = new RemoteKeyboard(commands.getCommandHandler(), onQuit)
-
-browserConnection.start(data => {
-  // incoming data/commands from browser
+const onBrowserData = data => {
   const dataJson = JSON.parse(data)
 
   switch (Object.keys(dataJson)[0]) {
@@ -32,13 +19,16 @@ browserConnection.start(data => {
 
     // redirect all other data to robot
     default:
-      botConnection.send(data)
+      connectionManager.toBot(data)
   }
-})
+}
+
+// redirect status info from Bot to Browser
+const onBotData = status => connectionManager.toBrowser(JSON.stringify(status))
 
 new Dnssd().start(
-  () => botConnection.start(commands.handleStatus), // onServiceUp
-  botConnection.stop) // onServiceDown
+  () => connectionManager.start(onBotData, onBrowserData), // onServiceUp
+  connectionManager.stop) // onServiceDown
 
 // handle exit gracefully
-new ShutdownService(botConnection, browserConnection, commands.getCommandHandler()).start()
+new ShutdownService(connectionManager, commands.getCommandHandler()).start()
