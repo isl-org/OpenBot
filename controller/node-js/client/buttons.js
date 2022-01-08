@@ -36,6 +36,14 @@ export function Buttons (connection) {
       : ''
 
     document.getElementById('mirror_button').src = mirrored ? 'icons/flip_black_24dp-mirrored.svg' : 'icons/flip_black_24dp.svg'
+
+    // camera switch
+    const switchCamera = () => {
+      connection.send (JSON.stringify({ "command": "SWITCH_CAMERA" }))
+    }
+  
+    const cameraSwitchButton = document.getElementById('camera_switch_button')
+    cameraSwitchButton.onclick = switchCamera
   }
 
   // fullscreen

@@ -32,8 +32,5 @@ import { Buttons } from './buttons'
     connection.send(JSON.stringify({ KEYPRESS: key }))
   }
 
-  // eslint-disable-next-line no-new
-  new Buttons(connection)
-
   keyboard.start(onKeyPress, onQuit)
 })()

@@ -203,6 +203,15 @@
                     android:background="@drawable/button"
                     app:icon="@drawable/toggle_mirror" />
 
+                <org.openbot.controller.customComponents.SwitchCamera
+                    android:id="@+id/switch_camera"
+                    style="@style/IconOnlyButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/button"
+                    app:icon="@drawable/ic_cameraswitch_black_24dp" />
+
             </LinearLayout>
 
             <LinearLayout

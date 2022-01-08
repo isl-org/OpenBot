@@ -13,7 +13,7 @@ import { Buttons } from './buttons.js'
 
 export function BotMessageHandler (connection) {
   const webRtc = new WebRTC(connection)
-  const buttons = new Buttons()
+  const buttons = new Buttons(connection)
   const errDisplay = new ErrorDisplay()
 
   this.handle = (msg) => {
