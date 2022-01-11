@@ -185,7 +185,7 @@ public class WebRtcServer implements IVideoServer {
         event -> {
           switch (event.getString("command")) {
             case "SWITCH_CAMERA":
-              switchCamera();
+              ((CameraVideoCapturer) videoCapturer).switchCamera(null);
               break;
           }
         },
@@ -196,11 +196,6 @@ public class WebRtcServer implements IVideoServer {
             event.has("command")
                 && ("SWITCH_CAMERA".equals(event.getString("command"))) // filter everything else
         );
-  }
-
-  private void switchCamera() {
-    CameraVideoCapturer cameraVideoCapturer = (CameraVideoCapturer) videoCapturer;
-    cameraVideoCapturer.switchCamera(null);
   }
 
   private void doAnswer() {
