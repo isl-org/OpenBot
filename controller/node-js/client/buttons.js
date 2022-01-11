@@ -39,9 +39,9 @@ export function Buttons (connection) {
 
     // camera switch
     const switchCamera = () => {
-      connection.send (JSON.stringify({ "command": "SWITCH_CAMERA" }))
+      connection.send(JSON.stringify({ command: 'SWITCH_CAMERA' }))
     }
-  
+
     const cameraSwitchButton = document.getElementById('camera_switch_button')
     cameraSwitchButton.onclick = switchCamera
   }

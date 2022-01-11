@@ -105,7 +105,7 @@ function DriveCommandReducer () {
     }
     lastCommand = commandAsJson
 
-    const strCommand = JSON.stringify(commandAsJson) + '\n'
+    const strCommand = JSON.stringify(commandAsJson)
     sendToBot(strCommand)
   }
 

@@ -76,9 +76,7 @@ export function Keyboard () {
       highlightPressedKeys(keyList)
 
       const { key, type } = event
-      const keyPerss = { key: key, type: type }
-
-      onKeypress(keyPerss)
+      onKeypress({ key: key, type: type })
 
       // handle special cases
       if (event.key === 'Escape') {
@@ -95,9 +93,7 @@ export function Keyboard () {
       highlightPressedKeys(keyList)
 
       const { key, type } = event
-      const keyPerss = { key: key, type: type }
-
-      onKeypress(keyPerss)
+      onKeypress({ key: key, type: type })
     }, false)
   }
 }

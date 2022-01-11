@@ -16,7 +16,7 @@ function RemoteKeyboard (commandHandler) {
   // Should this ne a state table?
   // const keyUpActions = [
   //   {whenPressedOneOf: ['w', 's'], action: commandHandler.reset() }
-  //   ...  
+  //   ...
   // ]
   // const keyDownActions = [...]
   // ]

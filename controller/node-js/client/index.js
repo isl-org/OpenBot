@@ -10,7 +10,6 @@
 import { Connection } from './connection.js'
 import { Keyboard } from './keyboard.js'
 import { BotMessageHandler } from './bot-message-handler'
-import { Buttons } from './buttons'
 
 (async () => {
   const connection = new Connection()
