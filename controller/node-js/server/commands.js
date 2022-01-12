@@ -51,6 +51,10 @@ function CommandHandler (sendToBot) {
   const right = new DriveValue()
   const commandReducer = new DriveCommandReducer()
 
+  this.sendCommand = (command) => {
+    sendToBot(`{command: ${command} }`)
+  }
+
   const sendDriveCommand = (left, right) => {
     commandReducer.send({ driveCmd: { l: left, r: right } }, sendToBot)
   }
