@@ -10,7 +10,7 @@
 const BotConnection = require('./bot-connection.js')
 const BrowserConnection = require('./browser-connection')
 
-function ConnectionManager() {
+function ConnectionManager () {
   let onBotData = null
 
   const onWsClose = () => {

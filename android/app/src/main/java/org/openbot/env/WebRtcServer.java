@@ -19,6 +19,7 @@ import org.webrtc.AudioTrack;
 import org.webrtc.Camera1Enumerator;
 import org.webrtc.Camera2Enumerator;
 import org.webrtc.CameraEnumerator;
+import org.webrtc.CameraVideoCapturer;
 import org.webrtc.CandidatePairChangeEvent;
 import org.webrtc.DataChannel;
 import org.webrtc.DefaultVideoDecoderFactory;
@@ -80,6 +81,7 @@ public class WebRtcServer implements IVideoServer {
 
   private AndGate andGate;
   private Context context;
+  private VideoCapturer videoCapturer;
 
   private final SignalingHandler signalingHandler = new SignalingHandler();
 
@@ -174,6 +176,26 @@ public class WebRtcServer implements IVideoServer {
     startStreamingVideo();
     doCall();
     startClient();
+    monitorCameraControlEvents();
+  }
+
+  private void monitorCameraControlEvents() {
+    ControllerToBotEventBus.subscribe(
+        this.getClass().getSimpleName(),
+        event -> {
+          switch (event.getString("command")) {
+            case "SWITCH_CAMERA":
+              ((CameraVideoCapturer) videoCapturer).switchCamera(null);
+              break;
+          }
+        },
+        error -> {
+          Log.d(null, "Error occurred in monitorCameraControlEvents: " + error);
+        },
+        event ->
+            event.has("command")
+                && ("SWITCH_CAMERA".equals(event.getString("command"))) // filter everything else
+        );
   }
 
   private void doAnswer() {
@@ -354,7 +376,7 @@ public class WebRtcServer implements IVideoServer {
 
   private void createVideoTrackFromCameraAndShowIt() {
     audioConstraints = new MediaConstraints();
-    VideoCapturer videoCapturer = createVideoCapturer();
+    videoCapturer = createVideoCapturer();
     VideoSource videoSource = factory.createVideoSource(videoCapturer.isScreencast());
 
     surfaceTextureHelper =

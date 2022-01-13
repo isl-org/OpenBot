@@ -10,6 +10,17 @@
 function RemoteKeyboard (commandHandler) {
   const pressedKeys = new Set()
 
+  // This deconstruction does not work. The functions are not called. Why?
+  // const {reset, goForward, goBackward, forwardLeft, forwardRight, backwardLeft, backwardRight} = commandHandler
+
+  // Should this ne a state table?
+  // const keyUpActions = [
+  //   {whenPressedOneOf: ['w', 's'], action: commandHandler.reset() }
+  //   ...
+  // ]
+  // const keyDownActions = [...]
+  // ]
+
   this.processKey = keyPress => {
     switch (keyPress.type) {
       case 'keyup':

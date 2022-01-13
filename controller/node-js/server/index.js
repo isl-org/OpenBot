@@ -7,7 +7,7 @@ const ConnectionManager = require('./connection-manager')
 
 const connectionManager = new ConnectionManager()
 const commands = new Commands(connectionManager.toBot)
-const remoteKeyboard = new RemoteKeyboard(commands.getCommandHandler(), connectionManager.onQuit)
+const remoteKeyboard = new RemoteKeyboard(commands.getCommandHandler())
 
 const onBrowserData = data => {
   const dataJson = JSON.parse(data)

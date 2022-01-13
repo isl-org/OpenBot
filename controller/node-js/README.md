@@ -43,7 +43,7 @@ Make sure your Robot is connected on the same network. On the Robot Android app,
 
 ## How it Works
 
-1. The Node server creates and publishes a DNS service of type ```openbot.tcp``` and a name ```OPEN_BOT_CONTROLLER``` at port 1900. This allows the Robot to automatically find  the server without knowing its IP address. The Robot is looking for this service, and will establish a Socket connection when put into the ```Phone``` controller mode.
+1. The Node server creates and publishes a DNS service of type ```openbot.tcp``` and a name ```OPEN_BOT_CONTROLLER``` at port 19400. This allows the Robot to automatically find  the server without knowing its IP address. The Robot is looking for this service, and will establish a Socket connection when put into the ```Phone``` controller mode.
 
 2. The Node server creates an HTTP server at port 8081, and starts serving requests from the browser.
 
@@ -53,7 +53,7 @@ Make sure your Robot is connected on the same network. On the Robot Android app,
 
 5. The Robot sends status information back to the server on the Socket connection, and the server forwards it to the UI. The UI can use this information to enhance its appearance, like displaying blinking indicators, etc, but currently this status is ignored.
 
-6. The Robot also sends messages to negotiate WebRTC streams (video and audio) to the controller. These messages are sent to the server, and the server proxies them to the UI. The UI sends responses to the server, which are again proxied to the Robot. No external  signalling server is needed. Once WebRTC connection is established, the Robot sends the media stream directly to the browser.
+6. The node server also acts as a WebRTC signalling proxy. It forwards WebRTC negotiation commands between the robot and the browser. It reuses the open socket connections for that purpose, so no additional connection or configuration is required.
 
 ![drawing](images/HowItWorks.png)
 
