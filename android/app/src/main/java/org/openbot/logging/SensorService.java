@@ -60,7 +60,10 @@ public class SensorService extends Service implements SensorEventListener {
   private BufferedWriter inferenceLog;
   private BufferedWriter ctrlLog;
   private BufferedWriter indicatorLog;
-  private BufferedWriter vehicleLog;
+  private BufferedWriter voltageLog;
+  private BufferedWriter sonarLog;
+  private BufferedWriter wheelsLog;
+  private BufferedWriter bumperLog;
 
   private boolean trackingLocation = false;
   private boolean hasStarted = false;
@@ -72,7 +75,10 @@ public class SensorService extends Service implements SensorEventListener {
   public static final int MSG_INFERENCE = 1;
   public static final int MSG_CONTROL = 2;
   public static final int MSG_INDICATOR = 3;
-  public static final int MSG_VEHICLE = 4;
+  public static final int MSG_VOLTAGE = 4;
+  public static final int MSG_SONAR = 5;
+  public static final int MSG_WHEELS = 6;
+  public static final int MSG_BUMPER = 7;
 
   private static final Logger LOGGER = new Logger();
   Messenger messenger = new Messenger(new SensorMessageHandler());
@@ -201,8 +207,14 @@ public class SensorService extends Service implements SensorEventListener {
     appendLog(indicatorLog, "timestamp[ns],signal");
 
     if (preferencesManager.getSensorStatus(Enums.SensorType.VEHICLE.getSensor())) {
-      vehicleLog = openLog(logFolder, "vehicleLog.txt");
-      appendLog(vehicleLog, "timestamp[ns],batteryVoltage,leftWheel,rightWheel,obstacle");
+      voltageLog = openLog(logFolder, "voltageLog.txt");
+      appendLog(voltageLog, "timestamp[ns],batteryVoltage");
+      sonarLog = openLog(logFolder, "sonarLog.txt");
+      appendLog(sonarLog, "timestamp[ns],distance[cm]");
+      wheelsLog = openLog(logFolder, "wheelsLog.txt");
+      appendLog(wheelsLog, "timestamp[ns],leftWheel,rightWheel");
+      bumperLog = openLog(logFolder, "bumperLog.txt");
+      appendLog(bumperLog, "timestamp[ns],bumper");
     }
 
     locationCallback =
@@ -405,12 +417,24 @@ public class SensorService extends Service implements SensorEventListener {
           // msg.arg1 contains indicator signal
           if (indicatorLog != null)
             appendLog(indicatorLog, SystemClock.elapsedRealtimeNanos() + "," + msg.arg1);
-        } else if (msg.what == MSG_VEHICLE) {
+        } else if (msg.what == MSG_VOLTAGE) {
           long timestamp = msg.getData().getLong("timestamp");
           String data = msg.getData().getString("data");
-          if (vehicleLog != null) appendLog(vehicleLog, timestamp + "," + data);
-        }
-      } else LOGGER.d("Message skipped.");
+          if (voltageLog != null) appendLog(voltageLog, timestamp + "," + data);
+        } else if (msg.what == MSG_SONAR) {
+          long timestamp = msg.getData().getLong("timestamp");
+          String data = msg.getData().getString("data");
+          if (sonarLog != null) appendLog(sonarLog, timestamp + "," + data);
+        } else if (msg.what == MSG_WHEELS) {
+          long timestamp = msg.getData().getLong("timestamp");
+          String data = msg.getData().getString("data");
+          if (wheelsLog != null) appendLog(wheelsLog, timestamp + "," + data);
+        } else if (msg.what == MSG_BUMPER) {
+          long timestamp = msg.getData().getLong("timestamp");
+          String data = msg.getData().getString("data");
+          if (bumperLog != null) appendLog(bumperLog, timestamp + "," + data);
+        } else LOGGER.d("Message skipped.");
+      }
     }
   }
 
@@ -435,7 +459,10 @@ public class SensorService extends Service implements SensorEventListener {
     if (inferenceLog != null) closeLog(inferenceLog);
     if (ctrlLog != null) closeLog(ctrlLog);
     if (indicatorLog != null) closeLog(indicatorLog);
-    if (vehicleLog != null) closeLog(vehicleLog);
+    if (voltageLog != null) closeLog(voltageLog);
+    if (sonarLog != null) closeLog(sonarLog);
+    if (wheelsLog != null) closeLog(wheelsLog);
+    if (bumperLog != null) closeLog(bumperLog);
   }
 
   public BufferedWriter openLog(String path, String filename) {

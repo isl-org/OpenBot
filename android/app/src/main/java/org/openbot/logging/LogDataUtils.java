@@ -21,13 +21,13 @@ public class LogDataUtils {
     return msg;
   }
 
-  public static Message generateVehicleDataMessage(long timestamp, String data) {
+  public static Message generateVehicleDataMessage(long timestamp, String data, int type) {
     Message msg = Message.obtain();
     Bundle bundle = new Bundle();
     bundle.putLong("timestamp", timestamp);
     bundle.putString("data", data);
     msg.setData(bundle);
-    msg.what = SensorService.MSG_VEHICLE;
+    msg.what = type;
     return msg;
   }
 

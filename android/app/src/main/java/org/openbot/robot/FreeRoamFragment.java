@@ -101,8 +101,6 @@ public class FreeRoamFragment extends ControlsFragment {
 
   @Override
   protected void processUSBData(String data) {
-    // Data has the following form: voltage, lWheel, rWheel, obstacle
-    //      sendVehicleDataToSensorService(timestamp, data);
 
     binding.controllerContainer.speedInfo.setText(
         getString(

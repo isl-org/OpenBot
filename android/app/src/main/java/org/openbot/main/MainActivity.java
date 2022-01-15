@@ -26,9 +26,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import org.openbot.OpenBotApplication;
 import org.openbot.R;
+import org.openbot.utils.Constants;
 import org.openbot.vehicle.UsbConnection;
 import org.openbot.vehicle.Vehicle;
-import org.openbot.utils.Constants;
 import timber.log.Timber;
 
 // For a library module, uncomment the following line

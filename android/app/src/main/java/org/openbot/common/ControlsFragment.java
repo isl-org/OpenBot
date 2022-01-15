@@ -27,11 +27,9 @@ import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
-import org.openbot.vehicle.Control;
 import org.openbot.env.ControllerToBotEventBus;
 import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
-import org.openbot.vehicle.Vehicle;
 import org.openbot.main.MainViewModel;
 import org.openbot.server.ServerCommunication;
 import org.openbot.server.ServerListener;
@@ -42,6 +40,8 @@ import org.openbot.utils.Enums;
 import org.openbot.utils.FileUtils;
 import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.vehicle.Control;
+import org.openbot.vehicle.Vehicle;
 import timber.log.Timber;
 
 public abstract class ControlsFragment extends Fragment implements ServerListener {
@@ -107,22 +107,35 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
         .observe(
             getViewLifecycleOwner(),
             data -> {
-              String[] itemList = data.split(",");
-              if (itemList.length == 4) {
-                if (FormatUtils.isNumeric(itemList[0]))
-                  vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
+              char header = data.charAt(0);
+              String body = data.substring(1);
 
-                if (FormatUtils.isNumeric(itemList[1]))
-                  vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
-
-                if (FormatUtils.isNumeric(itemList[2]))
-                  vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
-
-                if (FormatUtils.isNumeric(itemList[3]))
-                  vehicle.setSonarReading(Float.parseFloat(itemList[3]));
-
-                processUSBData(data);
+              switch (header) {
+                case 'v':
+                  if (FormatUtils.isNumeric(body)) {
+                    vehicle.setBatteryVoltage(Float.parseFloat(body));
+                  }
+                  break;
+                case 's':
+                  if (FormatUtils.isNumeric(body)) {
+                    vehicle.setSonarReading(Float.parseFloat(body));
+                  }
+                  break;
+                case 'w':
+                  String[] itemList = data.split(",");
+                  if (itemList.length == 2
+                      && FormatUtils.isNumeric(itemList[0])
+                      && FormatUtils.isNumeric(itemList[1])) {
+                    vehicle.setLeftWheelTicks(Float.parseFloat(itemList[0]));
+                    vehicle.setRightWheelTicks(Float.parseFloat(itemList[1]));
+                  }
+                  break;
+                case 'b':
+                  // do nothing
+                  break;
               }
+
+              processUSBData(data);
             });
 
     handlePhoneControllerEvents();

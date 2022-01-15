@@ -19,7 +19,6 @@ import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-
 import org.openbot.env.Logger;
 import org.openbot.utils.Constants;
 

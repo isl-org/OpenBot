@@ -34,10 +34,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
 import org.openbot.env.BorderedText;
-import org.openbot.vehicle.Control;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
 import org.openbot.tflite.Detector.Recognition;
+import org.openbot.vehicle.Control;
 
 /** A tracker that handles non-max suppression and matches existing objects to new detections. */
 public class MultiBoxTracker {
