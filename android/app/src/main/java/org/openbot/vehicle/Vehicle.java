@@ -185,7 +185,17 @@ public class Vehicle {
 
   public void setIndicator(int indicator) {
     this.indicator = indicator;
-    sendStringToUsb(String.format(Locale.US, "i%d\n", indicator));
+    switch (indicator) {
+      case -1:
+        sendStringToUsb(String.format(Locale.US, "i1,0\n"));
+        break;
+      case 0:
+        sendStringToUsb(String.format(Locale.US, "i0,0\n"));
+        break;
+      case 1:
+        sendStringToUsb(String.format(Locale.US, "i0,1\n"));
+        break;
+    }
   }
 
   public UsbConnection getUsbConnection() {
