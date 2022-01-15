@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
 import org.openbot.env.BorderedText;
-import org.openbot.env.Control;
+import org.openbot.vehicle.Control;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
 import org.openbot.tflite.Detector.Recognition;

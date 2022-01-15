@@ -19,10 +19,10 @@
 //  - Servo: Built-In library by Michael Margolis (required for RC truck)
 // Contributors:
 //  - October 2020: OLED display support by Ingmar Stapel
-//  - December 2021: RC truck support by Usan Fiaz
+//  - December 2021: RC truck support by Usman Fiaz
 // ---------------------------------------------------------------------------
 
-// By Matthias Mueller, Embodied AI Lab, 2021
+// By Matthias Mueller, Embodied AI Lab, 2022
 // ---------------------------------------------------------------------------
 
 //------------------------------------------------------//

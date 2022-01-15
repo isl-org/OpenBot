@@ -1,6 +1,6 @@
 // Created by Matthias Mueller - Intel Intelligent Systems Lab - 2020
 
-package org.openbot.env;
+package org.openbot.vehicle;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -19,6 +19,8 @@ import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+
+import org.openbot.env.Logger;
 import org.openbot.utils.Constants;
 
 public class UsbConnection {
