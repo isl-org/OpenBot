@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 import org.openbot.OpenBotApplication;
 import org.openbot.utils.Enums.DriveMode;
+import org.openbot.vehicle.Control;
 
 public class GameController {
   private float left = 0;

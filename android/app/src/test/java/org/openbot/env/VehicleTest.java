@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openbot.utils.Enums;
+import org.openbot.vehicle.Control;
+import org.openbot.vehicle.Vehicle;
 
 @RunWith(AndroidJUnit4.class)
 public class VehicleTest {

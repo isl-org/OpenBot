@@ -24,9 +24,9 @@ import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 import org.openbot.R;
-import org.openbot.env.Vehicle;
 import org.openbot.utils.Constants;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.vehicle.Vehicle;
 import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragmentCompat {

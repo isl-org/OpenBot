@@ -1,4 +1,4 @@
-package org.openbot.env;
+package org.openbot.vehicle;
 
 public class Control {
   private final float left;

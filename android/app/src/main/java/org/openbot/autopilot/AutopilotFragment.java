@@ -29,7 +29,6 @@ import org.openbot.R;
 import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentAutopilotBinding;
 import org.openbot.env.BorderedText;
-import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
 import org.openbot.tflite.Autopilot;
 import org.openbot.tflite.Model;
@@ -38,6 +37,7 @@ import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.vehicle.Control;
 import timber.log.Timber;
 
 public class AutopilotFragment extends CameraFragment {

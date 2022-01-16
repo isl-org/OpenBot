@@ -85,14 +85,13 @@ import org.openbot.OpenBotApplication;
 import org.openbot.R;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
-import org.openbot.env.Control;
 import org.openbot.env.ControllerToBotEventBus;
 import org.openbot.env.GameController;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.Logger;
 import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
-import org.openbot.env.Vehicle;
+import org.openbot.logging.LogDataUtils;
 import org.openbot.logging.SensorService;
 import org.openbot.server.ServerCommunication;
 import org.openbot.server.ServerListener;
@@ -108,6 +107,8 @@ import org.openbot.utils.Enums.SpeedMode;
 import org.openbot.utils.FileUtils;
 import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.vehicle.Control;
+import org.openbot.vehicle.Vehicle;
 import org.zeroturnaround.zip.ZipUtil;
 import timber.log.Timber;
 
@@ -363,41 +364,59 @@ public abstract class CameraActivity extends AppCompatActivity
                 case Constants.USB_ACTION_DATA_RECEIVED:
                   long timestamp = SystemClock.elapsedRealtimeNanos();
                   String data = intent.getStringExtra("data");
-                  // Data has the following form: voltage, lWheel, rWheel, obstacle
-                  sendVehicleDataToSensorService(timestamp, data);
-                  String[] itemList = data.split(",");
-                  if (itemList.length == 4) {
-                    if (FormatUtils.isNumeric(itemList[0]))
-                      vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
+                  char header = data.charAt(0);
+                  String body = data.substring(1);
+                  int type = -1;
 
-                    if (FormatUtils.isNumeric(itemList[1]))
-                      vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
-
-                    if (FormatUtils.isNumeric(itemList[2]))
-                      vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
-
-                    if (FormatUtils.isNumeric(itemList[3]))
-                      vehicle.setSonarReading(Float.parseFloat(itemList[3]));
-                    runOnUiThread(
-                        () -> {
-                          voltageTextView.setText(
-                              String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage()));
-                          speedTextView.setText(
-                              String.format(
-                                  Locale.US,
-                                  "%3.0f,%3.0f rpm",
-                                  vehicle.getLeftWheelRPM(),
-                                  vehicle.getRightWheelRPM()));
-                          sonarTextView.setText(
-                              String.format(Locale.US, "%3.0f cm", vehicle.getSonarReading()));
-                        });
-                  } else {
-                    Toast.makeText(
-                            context,
-                            "Skipping bad USB data, next update in 1s.",
-                            Toast.LENGTH_SHORT)
-                        .show();
+                  switch (header) {
+                    case 'v':
+                      if (FormatUtils.isNumeric(body)) {
+                        type = SensorService.MSG_VOLTAGE;
+                        vehicle.setBatteryVoltage(Float.parseFloat(body));
+                        runOnUiThread(
+                            () -> {
+                              voltageTextView.setText(
+                                  String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage()));
+                            });
+                      }
+                      break;
+                    case 's':
+                      if (FormatUtils.isNumeric(body)) {
+                        type = SensorService.MSG_SONAR;
+                        vehicle.setSonarReading(Float.parseFloat(body));
+                        runOnUiThread(
+                            () -> {
+                              sonarTextView.setText(
+                                  String.format(Locale.US, "%3.0f cm", vehicle.getSonarReading()));
+                            });
+                      }
+                      break;
+                    case 'w':
+                      String[] itemList = body.split(",");
+                      if (itemList.length == 2
+                          && FormatUtils.isNumeric(itemList[0])
+                          && FormatUtils.isNumeric(itemList[1])) {
+                        type = SensorService.MSG_WHEELS;
+                        vehicle.setLeftWheelTicks(Float.parseFloat(itemList[0]));
+                        vehicle.setRightWheelTicks(Float.parseFloat(itemList[1]));
+                        runOnUiThread(
+                            () -> {
+                              speedTextView.setText(
+                                  String.format(
+                                      Locale.US,
+                                      "%3.0f,%3.0f rpm",
+                                      vehicle.getLeftWheelRPM(),
+                                      vehicle.getRightWheelRPM()));
+                            });
+                      }
+                      break;
+                    case 'b':
+                      type = SensorService.MSG_BUMPER;
+                      break;
                   }
+
+                  if (type > 0) sendVehicleDataToSensorService(timestamp, data, type);
+
                   break;
               }
             }
@@ -1038,14 +1057,9 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
-  protected void sendVehicleDataToSensorService(long timestamp, String data) {
+  protected void sendVehicleDataToSensorService(long timestamp, String data, int type) {
     if (sensorMessenger != null) {
-      Message msg = Message.obtain();
-      Bundle bundle = new Bundle();
-      bundle.putLong("timestamp", timestamp);
-      bundle.putString("data", data);
-      msg.setData(bundle);
-      msg.what = SensorService.MSG_VEHICLE;
+      Message msg = LogDataUtils.generateVehicleDataMessage(timestamp, data, type);
       try {
         sensorMessenger.send(msg);
       } catch (RemoteException e) {

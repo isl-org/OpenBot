@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import org.jetbrains.annotations.NotNull;
-import org.openbot.env.Vehicle;
+import org.openbot.vehicle.Vehicle;
 import timber.log.Timber;
 
 public class OpenBotApplication extends Application {

@@ -3,8 +3,8 @@ package org.openbot.main;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import org.openbot.env.Vehicle;
 import org.openbot.model.SubCategory;
+import org.openbot.vehicle.Vehicle;
 
 public class MainViewModel extends ViewModel {
 

@@ -1,15 +1,18 @@
-package org.openbot.env;
+package org.openbot.vehicle;
 
 import android.content.Context;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.openbot.env.GameController;
+import org.openbot.env.SensorReading;
 import org.openbot.utils.Enums;
 
 public class Vehicle {
 
   private final Noise noise = new Noise(1000, 2000, 5000);
   private boolean noiseEnabled = false;
+
   private int indicator = 0;
   private int speedMultiplier = 192; // 128,192,255
   private Control control = new Control(0, 0);
@@ -31,14 +34,13 @@ public class Vehicle {
   private final int baudRate;
 
   protected Enums.DriveMode driveMode = Enums.DriveMode.GAME;
-  private boolean isNoiseEnabled = false;
   private final GameController gameController;
+  private Timer heartbeatTimer;
 
   public Vehicle(Context context, int baudRate) {
     this.context = context;
     this.baudRate = baudRate;
     gameController = new GameController(driveMode);
-    //    connectUsb();
   }
 
   public float getBatteryVoltage() {
@@ -127,13 +129,12 @@ public class Vehicle {
   private Timer noiseTimer;
 
   public void toggleNoise() {
-    isNoiseEnabled = !isNoiseEnabled;
-    if (isNoiseEnabled) startNoise();
-    else stopNoise();
+    if (noiseEnabled) stopNoise();
+    else startNoise();
   }
 
   public boolean isNoiseEnabled() {
-    return isNoiseEnabled;
+    return noiseEnabled;
   }
 
   public void setDriveMode(Enums.DriveMode driveMode) {
@@ -184,7 +185,17 @@ public class Vehicle {
 
   public void setIndicator(int indicator) {
     this.indicator = indicator;
-    sendStringToUsb(String.format(Locale.US, "i%d\n", indicator));
+    switch (indicator) {
+      case -1:
+        sendStringToUsb(String.format(Locale.US, "i1,0\n"));
+        break;
+      case 0:
+        sendStringToUsb(String.format(Locale.US, "i0,0\n"));
+        break;
+      case 1:
+        sendStringToUsb(String.format(Locale.US, "i0,1\n"));
+        break;
+    }
   }
 
   public UsbConnection getUsbConnection() {
@@ -194,12 +205,20 @@ public class Vehicle {
   public void connectUsb() {
     if (usbConnection == null) usbConnection = new UsbConnection(context, baudRate);
     usbConnected = usbConnection.startUsbConnection();
+    if (usbConnected) {
+      if (heartbeatTimer == null) {
+        startHeartbeat();
+      }
+      setSonarFrequency(100);
+      setVoltageFrequency(250);
+      setWheelOdometryFrequency(500);
+    }
   }
 
   public void disconnectUsb() {
     if (usbConnection != null) {
-      usbConnection.send(
-          String.format(Locale.US, "c%d,%d\n", (int) (getLeftSpeed()), (int) (getRightSpeed())));
+      stopBot();
+      stopHeartbeat();
       usbConnection.stopUsbConnection();
       usbConnection = null;
       usbConnected = false;
@@ -234,5 +253,56 @@ public class Vehicle {
     if (noiseEnabled && noise.getDirection() > 0)
       right = (int) ((control.getRight() - noise.getValue()) * speedMultiplier);
     sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
+  }
+
+  protected void sendHeartbeat(int timeout_ms) {
+    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
+      usbConnection.send(String.format(Locale.getDefault(), "h%d\n", timeout_ms));
+    }
+  }
+
+  protected void setSonarFrequency(int interval_ms) {
+    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
+      usbConnection.send(String.format(Locale.getDefault(), "s%d\n", interval_ms));
+    }
+  }
+
+  protected void setVoltageFrequency(int interval_ms) {
+    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
+      usbConnection.send(String.format(Locale.getDefault(), "v%d\n", interval_ms));
+    }
+  }
+
+  protected void setWheelOdometryFrequency(int interval_ms) {
+    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
+      usbConnection.send(String.format(Locale.getDefault(), "w%d\n", interval_ms));
+    }
+  }
+
+  private class HeartBeatTask extends TimerTask {
+
+    @Override
+    public void run() {
+      sendHeartbeat(750);
+    }
+  }
+
+  public void startHeartbeat() {
+    heartbeatTimer = new Timer();
+    HeartBeatTask heartBeatTask = new HeartBeatTask();
+    heartbeatTimer.schedule(heartBeatTask, 250, 250); // 250ms delay and 250ms intervals
+  }
+
+  public void stopHeartbeat() {
+    if (heartbeatTimer != null) {
+      heartbeatTimer.cancel();
+      heartbeatTimer.purge();
+      heartbeatTimer = null;
+    }
+  }
+
+  public void stopBot() {
+    Control control = new Control(0, 0);
+    setControl(control);
   }
 }
