@@ -392,7 +392,7 @@ public abstract class CameraActivity extends AppCompatActivity
                       }
                       break;
                     case 'w':
-                      String[] itemList = data.split(",");
+                      String[] itemList = body.split(",");
                       if (itemList.length == 2
                           && FormatUtils.isNumeric(itemList[0])
                           && FormatUtils.isNumeric(itemList[1])) {
