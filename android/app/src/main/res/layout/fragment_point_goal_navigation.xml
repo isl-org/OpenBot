@@ -5,9 +5,10 @@
   android:layout_height="match_parent"
   tools:context=".pointGoalNavigation.PointGoalNavigationFragment">
 
-  <TextView
+  <android.opengl.GLSurfaceView
+    android:id="@+id/surfaceView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:text="Point Goal Navigation" />
+    android:layout_gravity="center" />
 
 </FrameLayout>
