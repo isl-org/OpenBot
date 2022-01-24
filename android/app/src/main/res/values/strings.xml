@@ -88,7 +88,6 @@
   <string name="stream_change_body">The app needs to be restarted for this setting to take effect</string>
   <string name="selectAll">Select All</string>
   <string name="clearAll">Clear All</string>
-  <string name="hello_blank_fragment">Hello blank fragment</string>
   <string-array name="servers">
     <item>No server</item>
   </string-array>
