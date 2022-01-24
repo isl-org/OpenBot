@@ -78,6 +78,11 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
             .navigate(R.id.action_mainFragment_to_objectNavFragment);
         break;
 
+      case FeatureList.POINT_GOAL_NAVIGATION:
+        Navigation.findNavController(requireView())
+            .navigate(R.id.action_mainFragment_to_pointGoalNavigationFragment);
+        break;
+
       case FeatureList.CONTROLLER_MAPPING:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_controllerMappingFragment);
