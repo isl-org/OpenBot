@@ -2,6 +2,7 @@ package org.openbot.pointGoalNavigation;
 
 import static java.lang.Math.abs;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.google.ar.core.Pose;
 import com.google.ar.core.TrackingFailureReason;
@@ -19,10 +19,21 @@ import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
+import java.io.File;
+import java.io.IOException;
+import org.openbot.R;
 import org.openbot.common.ControlsFragment;
 import org.openbot.databinding.FragmentPointGoalNavigationBinding;
 import org.openbot.main.MainViewModel;
+import org.openbot.tflite.Model;
+import org.openbot.tflite.Model.CLASS;
+import org.openbot.tflite.Model.PATH_TYPE;
+import org.openbot.tflite.Model.TYPE;
+import org.openbot.tflite.Navigation;
+import org.openbot.tflite.Network.Device;
+import org.openbot.vehicle.Control;
 import org.openbot.vehicle.Vehicle;
+import timber.log.Timber;
 
 public class PointGoalNavigationFragment extends ControlsFragment implements ArCoreListener {
 
@@ -32,6 +43,8 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   private ArCore arCore;
   private FragmentPointGoalNavigationBinding binding;
   private boolean isRunning = false;
+  private Navigation navigationPolicy;
+  static final int kMaxChannelValue = 262143;
 
   public PointGoalNavigationFragment() {
     // Required empty public constructor
@@ -77,19 +90,137 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   @Override
   public void onArCoreUpdate(NavigationPoses navigationPoses, ImageFrame rgb,
       CameraIntrinsics cameraIntrinsics, long timestamp) {
-    if(isRunning) {
-      if(computeDistance(navigationPoses.getTargetPose(), navigationPoses.getCurrentPose()) < 0.15f) {
+    if (isRunning) {
+      float goalDistance = computeDistance(navigationPoses.getTargetPose(),
+          navigationPoses.getCurrentPose());
+
+      if (goalDistance < 0.15f) {
+        vehicle.stopBot();
         isRunning = false;
-        // TODO: show stop dialog
+        audioPlayer.playFromStringID(R.string.goal_reached);
+        showInfoDialog(getString(R.string.goal_reached));
       } else {
-        // TODO: execute policy
+        float deltaYaw = computeDeltaYaw(navigationPoses.getCurrentPose(),
+            navigationPoses.getTargetPose());
+
+        Bitmap bitmap = convertRGBFrameToScaledBitmap(rgb, 160.f / 480.f);
+        bitmap = Bitmap.createBitmap(bitmap, 0, 30, 160, 90);
+
+        Control control = navigationPolicy
+            .recognizeImage(bitmap, goalDistance, (float) Math.sin(deltaYaw),
+                (float) Math.cos(deltaYaw));
+
+        Timber.d("control: (" + control.getLeft() + ", " + control.getRight() + ")");
+        vehicle.setControl(control);
       }
     }
   }
 
+  public static Bitmap convertRGBFrameToScaledBitmap(ImageFrame bImg, float resizeFactor) {
+    int previewHeight = bImg.getHeight();
+    int previewWidth = bImg.getWidth();
+    if (bImg == null || previewHeight == 0 || previewWidth == 0 || resizeFactor < 0) {
+      throw new IllegalArgumentException();
+    }
+
+    int width = (int) (resizeFactor * previewWidth);
+    int height = (int) (resizeFactor * previewHeight);
+
+    Bitmap rgbFrameBitmap =
+        Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+    int[] rgbBytes = new int[previewWidth * previewHeight];
+
+    convertYUV420ToARGB8888(
+        bImg.getYuvBytes()[0],
+        bImg.getYuvBytes()[1],
+        bImg.getYuvBytes()[2],
+        previewWidth,
+        previewHeight,
+        bImg.getYRowStride(),
+        bImg.getUvRowStride(),
+        bImg.getUvPixelStride(),
+        rgbBytes);
+
+    rgbFrameBitmap.setPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight);
+    return Bitmap.createScaledBitmap(rgbFrameBitmap, width, height, true);
+  }
+
+  public static void convertYUV420ToARGB8888(
+      byte[] yData,
+      byte[] uData,
+      byte[] vData,
+      int width,
+      int height,
+      int yRowStride,
+      int uvRowStride,
+      int uvPixelStride,
+      int[] out) {
+    int yp = 0;
+    for (int j = 0; j < height; j++) {
+      int pY = yRowStride * j;
+      int pUV = uvRowStride * (j >> 1);
+
+      for (int i = 0; i < width; i++) {
+        int uv_offset = pUV + (i >> 1) * uvPixelStride;
+
+        out[yp++] = YUV2RGB(0xff & yData[pY + i], 0xff & uData[uv_offset], 0xff & vData[uv_offset]);
+      }
+    }
+  }
+
+  public static float computeDeltaYaw(Pose pose, Pose goalPose) {
+    // compute robot forward axis (global coordinate system)
+    float[] forward = new float[]{0.f, 0.f, -1.f};
+    float[] forwardRotated = pose.rotateVector(forward);
+
+    // distance vector to goal (global coordinate system)
+    float dx = goalPose.tx() - pose.tx();
+    float dz = goalPose.tz() - pose.tz();
+
+    double yaw = Math.atan2(forwardRotated[2], forwardRotated[0]) - Math.atan2(dz, dx);
+
+    // fit to range (-pi, pi]
+    if (yaw > Math.PI) {
+      yaw -= 2 * Math.PI;
+    } else if (yaw <= -Math.PI) {
+      yaw += 2 * Math.PI;
+    }
+
+    return (float) yaw;
+  }
+
+  private static int YUV2RGB(int y, int u, int v) {
+    // Adjust and check YUV values
+    y = (y - 16) < 0 ? 0 : (y - 16);
+    u -= 128;
+    v -= 128;
+
+    // This is the floating point equivalent. We do the conversion in integer
+    // because some Android devices do not have floating point in hardware.
+    // nR = (int)(1.164 * nY + 2.018 * nU);
+    // nG = (int)(1.164 * nY - 0.813 * nV - 0.391 * nU);
+    // nB = (int)(1.164 * nY + 1.596 * nV);
+    int y1192 = 1192 * y;
+    int r = (y1192 + 1634 * v);
+    int g = (y1192 - 833 * v - 400 * u);
+    int b = (y1192 + 2066 * u);
+
+    // Clipping RGB values to be inside boundaries [ 0 , kMaxChannelValue ]
+    r = r > kMaxChannelValue ? kMaxChannelValue : (r < 0 ? 0 : r);
+    g = g > kMaxChannelValue ? kMaxChannelValue : (g < 0 ? 0 : g);
+    b = b > kMaxChannelValue ? kMaxChannelValue : (b < 0 ? 0 : b);
+
+    return 0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
+  }
+
   @Override
   public void onArCoreTrackingFailure(long timestamp, TrackingFailureReason trackingFailureReason) {
-
+    if (isRunning) {
+      vehicle.stopBot();
+      isRunning = false;
+      audioPlayer.play(R.string.tracking_lost);
+      showInfoDialog(getString(R.string.tracking_lost));
+    }
   }
 
   private static float computeDistance(Pose goalPose, Pose robotPose) {
@@ -171,22 +302,57 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
             (requestKey, result) -> {
               Boolean start = result.getBoolean("start");
 
-              if(start) {
+              if (start) {
                 Float forward = result.getFloat("forward");
                 Float left = result.getFloat("left");
 
                 // x: right, z: backwards
                 startDriving(-left, -forward);
+              } else {
+                getActivity().onBackPressed();
               }
-              else {
+            });
+  }
+
+  private void showInfoDialog(String message) {
+    if (getChildFragmentManager().findFragmentByTag(InfoDialogFragment.TAG) == null) {
+      InfoDialogFragment dialog = InfoDialogFragment.newInstance(message);
+      dialog.setCancelable(false);
+      dialog.show(getChildFragmentManager(), InfoDialogFragment.TAG);
+    }
+
+    getChildFragmentManager()
+        .setFragmentResultListener(
+            InfoDialogFragment.TAG,
+            getViewLifecycleOwner(),
+            (requestKey, result) -> {
+              Boolean restart = result.getBoolean("restart");
+
+              if (restart) {
+                showStartDialog();
+              } else {
                 getActivity().onBackPressed();
               }
             });
   }
 
   private void startDriving(float goalX, float goalZ) {
+    Timber.i("setting goal at (" + goalX + ", " + goalZ + ")");
+
+    arCore.detachAnchors();
     arCore.setStartAnchorAtCurrentPose();
     arCore.setTargetAnchor(Pose.makeTranslation(goalX, 0.0f, goalZ));
+
+    Model model = new Model(0, CLASS.NAVIGATION, TYPE.NAVIGATION, "navigation.tflite",
+        PATH_TYPE.ASSET,"networks/navigation.tflite", "160x90");
+
+    try {
+      navigationPolicy = new Navigation(requireActivity(), model, Device.CPU, 1);
+    } catch (IOException e) {
+      e.printStackTrace();
+      showInfoDialog("Navigation policy could not be initialized.");
+      return;
+    }
 
     isRunning = true;
   }

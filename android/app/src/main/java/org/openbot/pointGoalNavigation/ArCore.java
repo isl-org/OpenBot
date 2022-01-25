@@ -107,7 +107,9 @@ public class ArCore implements GLSurfaceView.Renderer {
   }
 
   public void setStartAnchorAtCurrentPose() {
-    startAnchor = session.createAnchor(currentPose);
+    if(currentPose != null) {
+      startAnchor = session.createAnchor(currentPose);
+    }
   }
 
   public Pose getTargetPose() {

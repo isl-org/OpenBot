@@ -30,32 +30,34 @@ public class Navigation extends Network {
    * @return A detector with the desired configuration.
    */
 
-  /** A ByteBuffer to hold data, to be feed into Tensorflow Lite as inputs. */
+  /**
+   * A ByteBuffer to hold data, to be feed into Tensorflow Lite as inputs.
+   */
   protected ByteBuffer goalBuffer = null;
 
   private int goalIndex;
   private int imgIndex;
 
-  /** Initializes a {@code Autopilot}. */
-  protected Navigation(Activity activity, Model model, Device device, int numThreads)
+  /**
+   * Initializes a {@code Autopilot}.
+   */
+  public Navigation(Activity activity, Model model, Device device, int numThreads)
       throws IOException, IllegalArgumentException {
     super(activity, model, device, numThreads);
-    try {
-      goalIndex = tflite.getInputIndex("serving_default_goal_input:0");
-      imgIndex = tflite.getInputIndex("serving_default_img_input:0");
-    } catch (Exception e) {
-      goalIndex = tflite.getInputIndex("goal_input");
-      imgIndex = tflite.getInputIndex("img_input");
-    }
+
+    goalIndex = tflite.getInputIndex("serving_default_goal_input:0");
+    imgIndex = tflite.getInputIndex("serving_default_img_input:0");
+
     if (!Arrays.equals(
         tflite.getInputTensor(imgIndex).shape(),
-        new int[] {1, getImageSizeY(), getImageSizeX(), 3}))
+        new int[]{1, getImageSizeY(), getImageSizeX(), 3})) {
       throw new IllegalArgumentException("Invalid tensor dimensions");
+    }
 
     goalBuffer = ByteBuffer.allocateDirect(3 * 4);
     goalBuffer.order(ByteOrder.nativeOrder());
 
-    Timber.d("Created a Tensorflow Lite Autopilot.");
+    Timber.d("Created a tflite navigation policy.");
   }
 
   private void convertGoalToByteBuffer(float goalDistance, float goalSin, float goalCos) {
@@ -68,7 +70,8 @@ public class Navigation extends Network {
     goalBuffer.putFloat(goalCos);
   }
 
-  public Control recognizeImage(final Bitmap bitmap, final float goalDistance, final float goalSin, final float goalCos) {
+  public Control recognizeImage(final Bitmap bitmap, final float goalDistance, final float goalSin,
+      final float goalCos) {
     // Log this method so that it can be analyzed with systrace.
     Trace.beginSection("recognizeImage");
     Trace.beginSection("preprocessBitmap");
@@ -81,9 +84,9 @@ public class Navigation extends Network {
     long startTime = SystemClock.elapsedRealtime();
     Object[] inputArray;
     if (goalIndex == 0) {
-      inputArray = new Object[] {goalBuffer, imgData};
+      inputArray = new Object[]{goalBuffer, imgData};
     } else {
-      inputArray = new Object[] {imgData, goalBuffer};
+      inputArray = new Object[]{imgData, goalBuffer};
     }
 
     float[][] predicted_ctrl = new float[1][2];

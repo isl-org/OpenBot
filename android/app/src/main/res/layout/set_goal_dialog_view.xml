@@ -15,8 +15,8 @@
       android:id="@+id/forward"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:inputType="numberDecimal"
-      android:text="1" />
+      android:inputType="numberDecimal|numberSigned"
+      android:text="0.5" />
 
   </com.google.android.material.textfield.TextInputLayout>
 
@@ -30,7 +30,7 @@
       android:id="@+id/left"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:inputType="numberDecimal"
+      android:inputType="numberDecimal|numberSigned"
       android:text="0" />
 
   </com.google.android.material.textfield.TextInputLayout>
