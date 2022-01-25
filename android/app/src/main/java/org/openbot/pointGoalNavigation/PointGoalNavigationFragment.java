@@ -1,5 +1,7 @@
 package org.openbot.pointGoalNavigation;
 
+import static java.lang.Math.abs;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,26 +12,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.google.ar.core.ArCoreApk;
-import com.google.ar.core.Session;
+import com.google.ar.core.Pose;
 import com.google.ar.core.TrackingFailureReason;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
-import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
+import org.openbot.common.ControlsFragment;
 import org.openbot.databinding.FragmentPointGoalNavigationBinding;
 import org.openbot.main.MainViewModel;
 import org.openbot.vehicle.Vehicle;
 
-public class PointGoalNavigationFragment extends Fragment implements ArCoreListener {
+public class PointGoalNavigationFragment extends ControlsFragment implements ArCoreListener {
 
   private MainViewModel mainViewModel;
   private Vehicle vehicle;
   private Handler handlerMain;
   private ArCore arCore;
   private FragmentPointGoalNavigationBinding binding;
+  private boolean isRunning = false;
 
   public PointGoalNavigationFragment() {
     // Required empty public constructor
@@ -68,17 +70,34 @@ public class PointGoalNavigationFragment extends Fragment implements ArCoreListe
     handlerMain = new Handler(Looper.getMainLooper());
 
     arCore = new ArCore(requireContext(), binding.surfaceView, handlerMain);
+
+    showStartDialog();
   }
 
   @Override
   public void onArCoreUpdate(NavigationPoses navigationPoses, ImageFrame rgb,
       CameraIntrinsics cameraIntrinsics, long timestamp) {
-
+    if(isRunning) {
+      if(computeDistance(navigationPoses.getTargetPose(), navigationPoses.getCurrentPose()) < 0.15f) {
+        isRunning = false;
+        // TODO: show stop dialog
+      } else {
+        // TODO: execute policy
+      }
+    }
   }
 
   @Override
   public void onArCoreTrackingFailure(long timestamp, TrackingFailureReason trackingFailureReason) {
 
+  }
+
+  private static float computeDistance(Pose goalPose, Pose robotPose) {
+    Float dx = abs(goalPose.tx() - robotPose.tx());
+    Float dz = abs(goalPose.tz() - robotPose.tz());
+    float distance = (float) Math.sqrt(dx * dx + dz * dz);
+
+    return distance;
   }
 
   @Override
@@ -108,6 +127,13 @@ public class PointGoalNavigationFragment extends Fragment implements ArCoreListe
   }
 
   @Override
+  public void onPause() {
+    super.onPause();
+
+    arCore.pause();
+  }
+
+  @Override
   public void onStop() {
     super.onStop();
 
@@ -115,9 +141,53 @@ public class PointGoalNavigationFragment extends Fragment implements ArCoreListe
   }
 
   @Override
+  protected void processControllerKeyData(String command) {
+
+  }
+
+  @Override
+  protected void processUSBData(String data) {
+
+  }
+
+  @Override
   public void onDestroy() {
     super.onDestroy();
 
     arCore.closeSession();
+  }
+
+  private void showStartDialog() {
+    if (getChildFragmentManager().findFragmentByTag(SetGoalDialogFragment.TAG) == null) {
+      SetGoalDialogFragment dialog = SetGoalDialogFragment.newInstance();
+      dialog.setCancelable(false);
+      dialog.show(getChildFragmentManager(), SetGoalDialogFragment.TAG);
+    }
+
+    getChildFragmentManager()
+        .setFragmentResultListener(
+            SetGoalDialogFragment.TAG,
+            getViewLifecycleOwner(),
+            (requestKey, result) -> {
+              Boolean start = result.getBoolean("start");
+
+              if(start) {
+                Float forward = result.getFloat("forward");
+                Float left = result.getFloat("left");
+
+                // x: right, z: backwards
+                startDriving(-left, -forward);
+              }
+              else {
+                getActivity().onBackPressed();
+              }
+            });
+  }
+
+  private void startDriving(float goalX, float goalZ) {
+    arCore.setStartAnchorAtCurrentPose();
+    arCore.setTargetAnchor(Pose.makeTranslation(goalX, 0.0f, goalZ));
+
+    isRunning = true;
   }
 }
