@@ -249,6 +249,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
 
     try {
       arCore.resume();
+      return;
     } catch (UnavailableSdkTooOldException e) {
       e.printStackTrace();
     } catch (UnavailableDeviceNotCompatibleException e) {
@@ -260,6 +261,8 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
     } catch (CameraNotAvailableException e) {
       e.printStackTrace();
     }
+
+    showInfoDialog("ARCore failure. Make sure that your device is compatible and the ARCore SDK is installed.");
   }
 
   @Override
