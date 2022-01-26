@@ -262,7 +262,8 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
       e.printStackTrace();
     }
 
-    showInfoDialog("ARCore failure. Make sure that your device is compatible and the ARCore SDK is installed.");
+    showInfoDialog(
+        "ARCore failure. Make sure that your device is compatible and the ARCore SDK is installed.");
   }
 
   @Override
