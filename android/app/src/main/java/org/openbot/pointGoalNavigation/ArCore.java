@@ -107,7 +107,7 @@ public class ArCore implements GLSurfaceView.Renderer {
   }
 
   public void setStartAnchorAtCurrentPose() {
-    if(currentPose != null) {
+    if (currentPose != null) {
       startAnchor = session.createAnchor(currentPose);
     }
   }
@@ -213,7 +213,8 @@ public class ArCore implements GLSurfaceView.Renderer {
               if (arCoreListener != null) {
                 arCoreListener.onArCoreUpdate(
                     new NavigationPoses(currentPose, targetPose, startPose),
-                    imageFrame, new CameraIntrinsics(camera.getImageIntrinsics()),
+                    imageFrame,
+                    new CameraIntrinsics(camera.getImageIntrinsics()),
                     timestamp);
               }
             });
@@ -262,18 +263,18 @@ public class ArCore implements GLSurfaceView.Renderer {
 
   protected synchronized void runOnMainThread(final Runnable r) {
     new Thread(
-        () -> {
-          if (handlerMain != null) {
-            handlerMain.post(r);
-          }
-        })
+            () -> {
+              if (handlerMain != null) {
+                handlerMain.post(r);
+              }
+            })
         .start();
   }
 
   public void resume()
       throws UnavailableSdkTooOldException, UnavailableDeviceNotCompatibleException,
-      UnavailableArcoreNotInstalledException, UnavailableApkTooOldException,
-      CameraNotAvailableException {
+          UnavailableArcoreNotInstalledException, UnavailableApkTooOldException,
+          CameraNotAvailableException {
     session = new Session(appContext);
 
     setConfig();

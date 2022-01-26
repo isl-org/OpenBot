@@ -19,7 +19,6 @@ import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
-import java.io.File;
 import java.io.IOException;
 import org.openbot.R;
 import org.openbot.common.ControlsFragment;
@@ -60,13 +59,12 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (getArguments() != null) {
-    }
+    if (getArguments() != null) {}
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
+  public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     binding = FragmentPointGoalNavigationBinding.inflate(inflater, container, false);
 
@@ -88,27 +86,29 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   }
 
   @Override
-  public void onArCoreUpdate(NavigationPoses navigationPoses, ImageFrame rgb,
-      CameraIntrinsics cameraIntrinsics, long timestamp) {
+  public void onArCoreUpdate(
+      NavigationPoses navigationPoses,
+      ImageFrame rgb,
+      CameraIntrinsics cameraIntrinsics,
+      long timestamp) {
     if (isRunning) {
-      float goalDistance = computeDistance(navigationPoses.getTargetPose(),
-          navigationPoses.getCurrentPose());
+      float goalDistance =
+          computeDistance(navigationPoses.getTargetPose(), navigationPoses.getCurrentPose());
 
       if (goalDistance < 0.15f) {
-        vehicle.stopBot();
-        isRunning = false;
+        stop();
         audioPlayer.playFromStringID(R.string.goal_reached);
         showInfoDialog(getString(R.string.goal_reached));
       } else {
-        float deltaYaw = computeDeltaYaw(navigationPoses.getCurrentPose(),
-            navigationPoses.getTargetPose());
+        float deltaYaw =
+            computeDeltaYaw(navigationPoses.getCurrentPose(), navigationPoses.getTargetPose());
 
         Bitmap bitmap = convertRGBFrameToScaledBitmap(rgb, 160.f / 480.f);
         bitmap = Bitmap.createBitmap(bitmap, 0, 30, 160, 90);
 
-        Control control = navigationPolicy
-            .recognizeImage(bitmap, goalDistance, (float) Math.sin(deltaYaw),
-                (float) Math.cos(deltaYaw));
+        Control control =
+            navigationPolicy.recognizeImage(
+                bitmap, goalDistance, (float) Math.sin(deltaYaw), (float) Math.cos(deltaYaw));
 
         Timber.d("control: (" + control.getLeft() + ", " + control.getRight() + ")");
         vehicle.setControl(control);
@@ -170,7 +170,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
 
   public static float computeDeltaYaw(Pose pose, Pose goalPose) {
     // compute robot forward axis (global coordinate system)
-    float[] forward = new float[]{0.f, 0.f, -1.f};
+    float[] forward = new float[] {0.f, 0.f, -1.f};
     float[] forwardRotated = pose.rotateVector(forward);
 
     // distance vector to goal (global coordinate system)
@@ -216,11 +216,16 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   @Override
   public void onArCoreTrackingFailure(long timestamp, TrackingFailureReason trackingFailureReason) {
     if (isRunning) {
-      vehicle.stopBot();
-      isRunning = false;
+      stop();
       audioPlayer.play(R.string.tracking_lost);
       showInfoDialog(getString(R.string.tracking_lost));
     }
+  }
+
+  private void stop() {
+    arCore.detachAnchors();
+    vehicle.stopBot();
+    isRunning = false;
   }
 
   private static float computeDistance(Pose goalPose, Pose robotPose) {
@@ -272,14 +277,10 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   }
 
   @Override
-  protected void processControllerKeyData(String command) {
-
-  }
+  protected void processControllerKeyData(String command) {}
 
   @Override
-  protected void processUSBData(String data) {
-
-  }
+  protected void processUSBData(String data) {}
 
   @Override
   public void onDestroy() {
@@ -341,10 +342,18 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
 
     arCore.detachAnchors();
     arCore.setStartAnchorAtCurrentPose();
-    arCore.setTargetAnchor(Pose.makeTranslation(goalX, 0.0f, goalZ));
+    Pose startPose = arCore.getStartPose();
+    arCore.setTargetAnchor(startPose.compose(Pose.makeTranslation(goalX, 0.0f, goalZ)));
 
-    Model model = new Model(0, CLASS.NAVIGATION, TYPE.NAVIGATION, "navigation.tflite",
-        PATH_TYPE.ASSET,"networks/navigation.tflite", "160x90");
+    Model model =
+        new Model(
+            0,
+            CLASS.NAVIGATION,
+            TYPE.NAVIGATION,
+            "navigation.tflite",
+            PATH_TYPE.ASSET,
+            "networks/navigation.tflite",
+            "160x90");
 
     try {
       navigationPolicy = new Navigation(requireActivity(), model, Device.CPU, 1);

@@ -30,17 +30,13 @@ public class Navigation extends Network {
    * @return A detector with the desired configuration.
    */
 
-  /**
-   * A ByteBuffer to hold data, to be feed into Tensorflow Lite as inputs.
-   */
+  /** A ByteBuffer to hold data, to be feed into Tensorflow Lite as inputs. */
   protected ByteBuffer goalBuffer = null;
 
   private int goalIndex;
   private int imgIndex;
 
-  /**
-   * Initializes a {@code Autopilot}.
-   */
+  /** Initializes a {@code Autopilot}. */
   public Navigation(Activity activity, Model model, Device device, int numThreads)
       throws IOException, IllegalArgumentException {
     super(activity, model, device, numThreads);
@@ -50,7 +46,7 @@ public class Navigation extends Network {
 
     if (!Arrays.equals(
         tflite.getInputTensor(imgIndex).shape(),
-        new int[]{1, getImageSizeY(), getImageSizeX(), 3})) {
+        new int[] {1, getImageSizeY(), getImageSizeX(), 3})) {
       throw new IllegalArgumentException("Invalid tensor dimensions");
     }
 
@@ -70,8 +66,8 @@ public class Navigation extends Network {
     goalBuffer.putFloat(goalCos);
   }
 
-  public Control recognizeImage(final Bitmap bitmap, final float goalDistance, final float goalSin,
-      final float goalCos) {
+  public Control recognizeImage(
+      final Bitmap bitmap, final float goalDistance, final float goalSin, final float goalCos) {
     // Log this method so that it can be analyzed with systrace.
     Trace.beginSection("recognizeImage");
     Trace.beginSection("preprocessBitmap");
@@ -84,9 +80,9 @@ public class Navigation extends Network {
     long startTime = SystemClock.elapsedRealtime();
     Object[] inputArray;
     if (goalIndex == 0) {
-      inputArray = new Object[]{goalBuffer, imgData};
+      inputArray = new Object[] {goalBuffer, imgData};
     } else {
-      inputArray = new Object[]{imgData, goalBuffer};
+      inputArray = new Object[] {imgData, goalBuffer};
     }
 
     float[][] predicted_ctrl = new float[1][2];

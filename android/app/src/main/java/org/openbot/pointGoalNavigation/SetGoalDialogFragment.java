@@ -3,7 +3,6 @@ package org.openbot.pointGoalNavigation;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.widget.ArrayAdapter;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -30,7 +29,8 @@ public class SetGoalDialogFragment extends DialogFragment {
     MaterialAlertDialogBuilder builder =
         new MaterialAlertDialogBuilder(getActivity())
             .setTitle("Set Goal")
-            .setMessage("Mount the phone on the robot and specify a goal. The robot will try to reach the goal after pressing start.")
+            .setMessage(
+                "Mount the phone on the robot and specify a goal. The robot will try to reach the goal after pressing start.")
             .setView(binding.getRoot())
             .setNeutralButton("Cancel", (dialogInterface, i) -> setFragmentResult(false))
             .setPositiveButton("Start", (dialogInterface, i) -> setFragmentResult(true));
