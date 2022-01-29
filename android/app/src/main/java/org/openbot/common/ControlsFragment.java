@@ -111,6 +111,8 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
               String body = data.substring(1);
 
               switch (header) {
+                case 'f':
+                  vehicle.processVehicleConfig(body);
                 case 'v':
                   if (FormatUtils.isNumeric(body)) {
                     vehicle.setBatteryVoltage(Float.parseFloat(body));

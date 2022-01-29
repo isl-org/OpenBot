@@ -33,6 +33,134 @@ public class Vehicle {
   private final Context context;
   private final int baudRate;
 
+  private String vehicleType = "RTR_V1";
+  private boolean hasVoltageDivider = false;
+  private boolean hasIndicators = false;
+  private boolean hasSonar = false;
+  private boolean hasBumpSensor = false;
+  private boolean hasWheelOdometryFront = false;
+  private boolean hasWheelOdometryBack = false;
+  private boolean hasLedsFront = false;
+  private boolean hasLedsBack = false;
+  private boolean hasLedsStatus = false;
+
+  public boolean isHasVoltageDivider() {
+    return hasVoltageDivider;
+  }
+
+  public void setHasVoltageDivider(boolean hasVoltageDivider) {
+    this.hasVoltageDivider = hasVoltageDivider;
+  }
+
+  public boolean isHasIndicators() {
+    return hasIndicators;
+  }
+
+  public void setHasIndicators(boolean hasIndicators) {
+    this.hasIndicators = hasIndicators;
+  }
+
+  public boolean isHasSonar() {
+    return hasSonar;
+  }
+
+  public void setHasSonar(boolean hasSonar) {
+    this.hasSonar = hasSonar;
+  }
+
+  public boolean isHasBumpSensor() {
+    return hasBumpSensor;
+  }
+
+  public void setHasBumpSensor(boolean hasBumpSensor) {
+    this.hasBumpSensor = hasBumpSensor;
+  }
+
+  public boolean isHasWheelOdometryFront() {
+    return hasWheelOdometryFront;
+  }
+
+  public void setHasWheelOdometryFront(boolean hasWheelOdometryFront) {
+    this.hasWheelOdometryFront = hasWheelOdometryFront;
+  }
+
+  public boolean isHasWheelOdometryBack() {
+    return hasWheelOdometryBack;
+  }
+
+  public void setHasWheelOdometryBack(boolean hasWheelOdometryBack) {
+    this.hasWheelOdometryBack = hasWheelOdometryBack;
+  }
+
+  public boolean isHasLedsFront() {
+    return hasLedsFront;
+  }
+
+  public void setHasLedsFront(boolean hasLedsFront) {
+    this.hasLedsFront = hasLedsFront;
+  }
+
+  public boolean isHasLedsBack() {
+    return hasLedsBack;
+  }
+
+  public void setHasLedsBack(boolean hasLedsBack) {
+    this.hasLedsBack = hasLedsBack;
+  }
+
+  public boolean isHasLedsStatus() {
+    return hasLedsStatus;
+  }
+
+  public void setHasLedsStatus(boolean hasLedsStatus) {
+    this.hasLedsStatus = hasLedsStatus;
+  }
+
+  public String getVehicleType() {
+    return vehicleType;
+  }
+
+  public void setVehicleType(String vehicleType) {
+    this.vehicleType = vehicleType;
+  }
+
+  public void processVehicleConfig(String message) {
+
+    setVehicleType(message.split(":")[0]);
+
+    if (message.contains(":v:")) {
+      setHasVoltageDivider(true);
+      setVoltageFrequency(250);
+    }
+    if (message.contains(":i:")) {
+      setHasIndicators(true);
+    }
+    if (message.contains(":s:")) {
+      setHasSonar(true);
+      setSonarFrequency(100);
+    }
+    if (message.contains(":b:")) {
+      setHasBumpSensor(true);
+    }
+    if (message.contains(":wf:")) {
+      setHasWheelOdometryFront(true);
+      setWheelOdometryFrequency(500);
+    }
+    if (message.contains(":wb:")) {
+      setHasWheelOdometryBack(true);
+      setWheelOdometryFrequency(500);
+    }
+    if (message.contains(":lf:")) {
+      setHasLedsFront(true);
+    }
+    if (message.contains(":lb:")) {
+      setHasLedsBack(true);
+    }
+    if (message.contains(":ls:")) {
+      setHasLedsBack(true);
+    }
+  }
+
   protected Enums.DriveMode driveMode = Enums.DriveMode.GAME;
   private final GameController gameController;
   private Timer heartbeatTimer;
@@ -209,9 +337,6 @@ public class Vehicle {
       if (heartbeatTimer == null) {
         startHeartbeat();
       }
-      setSonarFrequency(100);
-      setVoltageFrequency(250);
-      setWheelOdometryFrequency(500);
     }
   }
 
