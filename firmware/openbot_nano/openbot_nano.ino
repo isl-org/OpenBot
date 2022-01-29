@@ -25,6 +25,8 @@
 // By Matthias Mueller, Embodied AI Lab, 2022
 // ---------------------------------------------------------------------------
 
+#include <limits.h>
+
 //------------------------------------------------------//
 //DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
@@ -85,42 +87,34 @@
 // PIN_LED_Y, PIN_LED_G, PIN_LED_B      Control yellow, green and blue status LEDs
 
 #if (OPENBOT == DIY)
+  const String robot_type = "diy";
   #define HAS_VOLTAGE_DIVIDER 0
   const float VOLTAGE_DIVIDER_FACTOR = (20+10)/10;
   #define HAS_INDICATORS 0
   #define HAS_SONAR 0
   #define SONAR_MEDIAN 0
-  #define HAS_BUMPER 0
   #define HAS_SPEED_SENSORS_FRONT 0
-  #define HAS_SPEED_SENSORS_BACK 0
   #define HAS_OLED 0
-  #define HAS_LEDS_FRONT 0
-  #define HAS_LEDS_BACK 0
-  #define HAS_LEDS_STATUS 0
   const int PIN_PWM_L1 = 5;
   const int PIN_PWM_L2 = 6;
   const int PIN_PWM_R1 = 9;
   const int PIN_PWM_R2 = 10;
-  const int PIN_SPEED_L = 2;
-  const int PIN_SPEED_R = 3;
+  const int PIN_SPEED_LF = 2;
+  const int PIN_SPEED_RF = 3;
   const int PIN_VIN = A7;
   const int PIN_TRIGGER = 12;
   const int PIN_ECHO = 11;
-  const int PIN_LED_LB = 4;
-  const int PIN_LED_RB = 7;
+  const int PIN_LED_LI = 4;
+  const int PIN_LED_RI = 7;
 #elif (OPENBOT == PCB_V1)
+  const String robot_type = "pcb_v1";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (100+33)/33;
   #define HAS_INDICATORS 1
   #define HAS_SONAR 1
   #define SONAR_MEDIAN 0
-  #define HAS_BUMPER 0
   #define HAS_SPEED_SENSORS_FRONT 1
-  #define HAS_SPEED_SENSORS_BACK 0
   #define HAS_OLED 0
-  #define HAS_LEDS_FRONT 0
-  #define HAS_LEDS_BACK 1
-  #define HAS_LEDS_STATUS 0
   const int PIN_PWM_L1 = 9;
   const int PIN_PWM_L2 = 10;
   const int PIN_PWM_R1 = 5;
@@ -130,21 +124,17 @@
   const int PIN_VIN = A7;
   const int PIN_TRIGGER = 3;
   const int PIN_ECHO = 3;
-  const int PIN_LED_LB = 7;
-  const int PIN_LED_RB = 8;
+  const int PIN_LED_LI = 7;
+  const int PIN_LED_RI = 8;
 #elif (OPENBOT == PCB_V2)
+  const String robot_type = "pcb_v2";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (20+10)/10;
   #define HAS_INDICATORS 1
   #define HAS_SONAR 1
   #define SONAR_MEDIAN 0
-  #define HAS_BUMPER 0
   #define HAS_SPEED_SENSORS_FRONT 1
-  #define HAS_SPEED_SENSORS_BACK 0
   #define HAS_OLED 0
-  #define HAS_LEDS_FRONT 0
-  #define HAS_LEDS_BACK 1
-  #define HAS_LEDS_STATUS 0
   const int PIN_PWM_L1 = 9;
   const int PIN_PWM_L2 = 10;
   const int PIN_PWM_R1 = 5;
@@ -154,9 +144,10 @@
   const int PIN_VIN = A7;
   const int PIN_TRIGGER = 4;
   const int PIN_ECHO = 4;
-  const int PIN_LED_LB = 7;
-  const int PIN_LED_RB = 8;
+  const int PIN_LED_LI = 7;
+  const int PIN_LED_RI = 8;
 #elif (OPENBOT == RTR_V1)
+  const String robot_type = "rtr_v1";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (30+10)/10;
   #define HAS_INDICATORS 1
@@ -180,6 +171,8 @@
   const int PIN_VIN = A6;
   const int PIN_TRIGGER = 4;
   const int PIN_ECHO = 2;
+  const int PIN_LED_LI = A5;
+  const int PIN_LED_RI = 12;
   const int PIN_LED_LB = A5;
   const int PIN_LED_RB = 12;
   const int PIN_LED_LF = 3;
@@ -192,6 +185,7 @@
   #include <Servo.h>
   Servo ESC;
   Servo SERVO;
+  const String robot_type = "rc_car";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (20+10)/10;
   #define HAS_INDICATORS 1
@@ -206,13 +200,11 @@
   #define HAS_LEDS_STATUS 0
   const int PIN_PWM_T = 10;
   const int PIN_PWM_S = 9;
-  const int PIN_VIN = A6;
+  const int PIN_VIN = A7;
   const int PIN_TRIGGER = 4;
-  const int PIN_ECHO = 2;
-  const int PIN_LED_LB = A5;
-  const int PIN_LED_RB = 12;
-  const int PIN_LED_LF = 3;
-  const int PIN_LED_RF = 11;
+  const int PIN_ECHO = 4;
+  const int PIN_LED_LI = 7;
+  const int PIN_LED_RI = 8;
 #endif
 //------------------------------------------------------//
 //INITIALIZATION
@@ -225,7 +217,7 @@ const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 
 const unsigned int MAX_SONAR_DISTANCE = 300; //cm
 const unsigned int MAX_SONAR_TIME = MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
 const unsigned int STOP_DISTANCE = 0; //cm
-unsigned int sonar_interval = 1000;   // How frequently to send out a ping (ms).
+unsigned long sonar_interval = ULONG_MAX;   // How frequently to send out a ping (ms).
 unsigned long sonar_time = 0;         // Store last ping time.
 boolean sonar_sent = false;
 boolean ping_success = false;
@@ -239,7 +231,6 @@ unsigned long echo_time = 0;
   unsigned int distance_counter = 0;
   #endif
 #else
-#include <limits.h>
 const unsigned int STOP_DISTANCE = 0;      //cm
 unsigned int distance_estimate = UINT_MAX; //cm
 #endif
@@ -268,7 +259,7 @@ float ADC_FACTOR = 5.0 / 1023;
 unsigned int vin_counter = 0;
 const unsigned int vin_array_sz = 10;
 int vin_array[vin_array_sz] = {0};
-unsigned long voltage_interval = 1000; //Inverval for sending voltage measurements
+unsigned long voltage_interval = ULONG_MAX; //Interval for sending voltage measurements
 unsigned long voltage_time = 0;
 #endif 
 
@@ -283,7 +274,7 @@ volatile int counter_lb = 0;
 volatile int counter_rb = 0;
 float rpm_left = 0;
 float rpm_right = 0;
-unsigned long wheel_interval = 1000; //Inverval for sending wheel odometry
+unsigned long wheel_interval = ULONG_MAX; //Inverval for sending wheel odometry
 unsigned long wheel_time = 0;
 #endif
 
@@ -303,12 +294,12 @@ unsigned int light_back = 0;
 //Bumper
 #if HAS_BUMPER
 bool bumper_event = 0;
-const unsigned int BUMPER_NOISE = 512;
-const unsigned int BUMPER_CF = 970;
-const unsigned int BUMPER_LF = 870; //922
-const unsigned int BUMPER_RF = 770; //820
-const unsigned int BUMPER_LB = 670; //716
-const unsigned int BUMPER_RB = 570; //613
+const int BUMPER_NOISE = 512;
+const int BUMPER_CF = 970;
+const int BUMPER_LF = 870; //922
+const int BUMPER_RF = 770; //820
+const int BUMPER_LB = 670; //716
+const int BUMPER_RB = 570; //613
 bool collision_lf = 0;
 bool collision_rf = 0;
 bool collision_cf = 0;
@@ -316,13 +307,13 @@ bool collision_lb = 0;
 bool collision_rb = 0;
 unsigned long bumper_interval = 750;
 unsigned long bumper_time = 0;
-const unsigned int bumper_array_sz = 5;
+const int bumper_array_sz = 5;
 int bumper_array[bumper_array_sz] = {0};
 int bumper_reading = 0;
 #endif
 
 //Heartbeat
-unsigned long heartbeat_interval = 5000;
+unsigned long heartbeat_interval = ULONG_MAX;
 unsigned long heartbeat_time = 0;
 
 #if (HAS_OLED || DEBUG)
@@ -354,6 +345,10 @@ void setup()
 #if HAS_OLED
 display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 #endif
+#if (HAS_INDICATORS)
+    pinMode(PIN_LED_LI, OUTPUT);
+    pinMode(PIN_LED_RI, OUTPUT);
+#endif
 #if (HAS_LEDS_BACK)
     pinMode(PIN_LED_LB, OUTPUT);
     pinMode(PIN_LED_RB, OUTPUT);
@@ -369,15 +364,15 @@ display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 #endif
   //Test sequence for indicator LEDs
   #if HAS_INDICATORS
-    digitalWrite(PIN_LED_LB,LOW);
-    digitalWrite(PIN_LED_RB,LOW);
+    digitalWrite(PIN_LED_LI,LOW);
+    digitalWrite(PIN_LED_RI,LOW);
     delay(500);
-    digitalWrite(PIN_LED_LB,HIGH);
+    digitalWrite(PIN_LED_LI,HIGH);
     delay(500);
-    digitalWrite(PIN_LED_LB,LOW);
-    digitalWrite(PIN_LED_RB,HIGH);
+    digitalWrite(PIN_LED_LI,LOW);
+    digitalWrite(PIN_LED_RI,HIGH);
     delay(500);
-    digitalWrite(PIN_LED_RB,LOW);
+    digitalWrite(PIN_LED_RI,LOW);
   #endif
 #if (HAS_SONAR)
     pinMode(PIN_TRIGGER, OUTPUT);
@@ -432,7 +427,7 @@ void loop()
     {
         on_serial_rx();
     }
-    if (distance_estimate < STOP_DISTANCE)
+    if (distance_estimate <= STOP_DISTANCE)
     {
         ctrl_left = 0;
         ctrl_right = 0;
@@ -501,7 +496,7 @@ void loop()
     }
 #endif
 
-#if HAS_INDICATOR
+#if HAS_INDICATORS
     // Check indicator signal every indicator_interval
     if ((millis() - indicator_time) >= indicator_interval)
     {
@@ -760,7 +755,7 @@ char header;
 char endChar = '\n';
 const char MAX_MSG_SZ = 32;
 char msg_buf[MAX_MSG_SZ];
-char msg_idx = 0;
+int msg_idx = 0;
 
 void process_ctrl_msg()
 {
@@ -829,7 +824,7 @@ void process_indicator_msg()
       tmp = strtok(msg_buf, ",:"); // replace delimiter with \0
       char led = tmp[0];
       tmp = strtok(NULL, ",:"); // continues where the previous call left off
-      bool state = atoi(tmp);   // convert to int
+      int state = atoi(tmp);   // convert to int
       switch (led)
       {
       case 'y':
@@ -874,6 +869,39 @@ void process_wheel_msg()
     wheel_interval = atol(msg_buf); // convert to long
 }
 #endif
+
+void process_feature_msg() {
+  String msg = robot_type;
+  msg += ":";
+  #if HAS_VOLTAGE_DIVIDER
+    msg += "v:";
+  #endif
+  #if HAS_INDICATORS
+    msg += "i:";
+  #endif
+  #if HAS_SONAR
+    msg += "s:";
+  #endif
+  #if HAS_BUMPER
+    msg += "b:";
+  #endif
+  #if HAS_SPEED_SENSORS_FRONT
+    msg += "wf:";
+  #endif
+  #if HAS_SPEED_SENSORS_BACK
+    msg += "wb:";
+  #endif
+  #if HAS_LEDS_FRONT
+    msg += "lf:";
+  #endif
+  #if HAS_LEDS_BACK
+    msg += "lb:";
+  #endif
+  #if HAS_LEDS_STATUS
+    msg += "ls:";
+  #endif
+  Serial.println(msg);
+}
 
 void on_serial_rx() {
     char inChar = Serial.read();
@@ -920,6 +948,9 @@ void parse_msg() {
     case 'c':
         process_ctrl_msg();
         break;
+    case 'f':
+        process_feature_msg();
+        break;
     case 'h':
         process_heartbeat_msg();
         break;
@@ -956,7 +987,7 @@ void parse_msg() {
     }
     msg_idx = 0;
     msgPart = HEADER;
-    header = NULL;
+    header = '\0';
 }
 
   #if HAS_OLED
@@ -1056,24 +1087,32 @@ void drawString(String line1, String line2, String line3, String line4) {
   }
 #endif
 
-#if (HAS_LEDS_BACK)
+#if (HAS_INDICATORS)
   void update_indicator()
   {
       if (indicator_left > 0)
       {
-          digitalWrite(PIN_LED_LB, !digitalRead(PIN_LED_LB));
+          digitalWrite(PIN_LED_LI, !digitalRead(PIN_LED_LI));
       }
       else
       {
-          digitalWrite(PIN_LED_LB, light_back);
+          #if (HAS_LEDS_BACK)
+            digitalWrite(PIN_LED_LI, PIN_LED_LI==PIN_LED_LB ? light_back : LOW);
+          #else
+            digitalWrite(PIN_LED_LI, LOW);
+          #endif
       }
       if (indicator_right > 0)
       {
-          digitalWrite(PIN_LED_RB, !digitalRead(PIN_LED_RB));
+          digitalWrite(PIN_LED_RI, !digitalRead(PIN_LED_RI));
       }
       else
       {
-          digitalWrite(PIN_LED_RB, light_back);
+          #if (HAS_LEDS_BACK)
+            digitalWrite(PIN_LED_RI, PIN_LED_RI==PIN_LED_RB ? light_back : LOW);
+          #else
+            digitalWrite(PIN_LED_RI, LOW);
+          #endif
       }
   }
 #endif
@@ -1084,15 +1123,9 @@ void drawString(String line1, String line2, String line3, String line4) {
         analogWrite(PIN_LED_LF, light_front);
         analogWrite(PIN_LED_RF, light_front);
     #endif
-    #if (HAS_INDICATORS)
-        if (indicator_left == 0)
-        {
-            digitalWrite(PIN_LED_LB, light_back);
-        }
-        if (indicator_right == 0)
-        {
-            digitalWrite(PIN_LED_RB, light_back);
-        }
+    #if (HAS_LEDS_BACK)
+        analogWrite(PIN_LED_LB, light_back);
+        analogWrite(PIN_LED_RB, light_back);
     #endif
   }
 #endif
