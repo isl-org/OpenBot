@@ -87,7 +87,7 @@
 // PIN_LED_Y, PIN_LED_G, PIN_LED_B      Control yellow, green and blue status LEDs
 
 #if (OPENBOT == DIY)
-  const String robot_type = "diy";
+  const String robot_type = "DIY";
   #define HAS_VOLTAGE_DIVIDER 0
   const float VOLTAGE_DIVIDER_FACTOR = (20+10)/10;
   #define HAS_INDICATORS 0
@@ -107,7 +107,7 @@
   const int PIN_LED_LI = 4;
   const int PIN_LED_RI = 7;
 #elif (OPENBOT == PCB_V1)
-  const String robot_type = "pcb_v1";
+  const String robot_type = "PCB_V1";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (100+33)/33;
   #define HAS_INDICATORS 1
@@ -127,7 +127,7 @@
   const int PIN_LED_LI = 7;
   const int PIN_LED_RI = 8;
 #elif (OPENBOT == PCB_V2)
-  const String robot_type = "pcb_v2";
+  const String robot_type = "PCB_V2";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (20+10)/10;
   #define HAS_INDICATORS 1
@@ -147,7 +147,7 @@
   const int PIN_LED_LI = 7;
   const int PIN_LED_RI = 8;
 #elif (OPENBOT == RTR_V1)
-  const String robot_type = "rtr_v1";
+  const String robot_type = "RTR_V1";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (30+10)/10;
   #define HAS_INDICATORS 1
@@ -185,7 +185,7 @@
   #include <Servo.h>
   Servo ESC;
   Servo SERVO;
-  const String robot_type = "rc_car";
+  const String robot_type = "RC_CAR";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (20+10)/10;
   #define HAS_INDICATORS 1
