@@ -90,6 +90,9 @@
   const String robot_type = "DIY";
   #define HAS_VOLTAGE_DIVIDER 0
   const float VOLTAGE_DIVIDER_FACTOR = (20+10)/10;
+  const float VOLTAGE_MIN = 2.5f;
+  const float VOLTAGE_LOW = 9.0f;
+  const float VOLTAGE_MAX = 12.6f;
   #define HAS_INDICATORS 0
   #define HAS_SONAR 0
   #define SONAR_MEDIAN 0
@@ -110,6 +113,9 @@
   const String robot_type = "PCB_V1";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (100+33)/33;
+  const float VOLTAGE_MIN = 2.5f;
+  const float VOLTAGE_LOW = 9.0f;
+  const float VOLTAGE_MAX = 12.6f;
   #define HAS_INDICATORS 1
   #define HAS_SONAR 1
   #define SONAR_MEDIAN 0
@@ -130,6 +136,9 @@
   const String robot_type = "PCB_V2";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (20+10)/10;
+  const float VOLTAGE_MIN = 2.5f;
+  const float VOLTAGE_LOW = 9.0f;
+  const float VOLTAGE_MAX = 12.6f;
   #define HAS_INDICATORS 1
   #define HAS_SONAR 1
   #define SONAR_MEDIAN 0
@@ -150,13 +159,15 @@
   const String robot_type = "RTR_V1";
   #define HAS_VOLTAGE_DIVIDER 1
   const float VOLTAGE_DIVIDER_FACTOR = (30+10)/10;
+  const float VOLTAGE_MIN = 2.5f;
+  const float VOLTAGE_LOW = 9.0f;
+  const float VOLTAGE_MAX = 12.6f;
   #define HAS_INDICATORS 1
   #define HAS_SONAR 1
   #define SONAR_MEDIAN 0
   #define HAS_BUMPER 1
   #define HAS_SPEED_SENSORS_FRONT 1
   #define HAS_SPEED_SENSORS_BACK 1
-  #define HAS_OLED 0
   #define HAS_LEDS_FRONT 1
   #define HAS_LEDS_BACK 1
   #define HAS_LEDS_STATUS 1
@@ -186,18 +197,11 @@
   Servo ESC;
   Servo SERVO;
   const String robot_type = "RC_CAR";
-  #define HAS_VOLTAGE_DIVIDER 1
-  const float VOLTAGE_DIVIDER_FACTOR = (20+10)/10;
   #define HAS_INDICATORS 1
   #define HAS_SONAR 1
   #define SONAR_MEDIAN 0
-  #define HAS_BUMPER 0
-  #define HAS_SPEED_SENSORS_FRONT 0
-  #define HAS_SPEED_SENSORS_BACK 0
-  #define HAS_OLED 0
   #define HAS_LEDS_FRONT 0
-  #define HAS_LEDS_BACK 1
-  #define HAS_LEDS_STATUS 0
+  #define HAS_LEDS_BACK 0
   const int PIN_PWM_T = 10;
   const int PIN_PWM_S = 9;
   const int PIN_VIN = A7;
@@ -521,7 +525,7 @@ void loop()
         voltage_time = millis();
     }
 #endif
-#if (HAS_SPEED_SENSOR_FRONT || HAS_SPEED_SENSOR_BACK)
+#if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
     // Send wheel odometry reading via serial
     if ((millis() - wheel_time) >= wheel_interval)
     {
@@ -861,6 +865,9 @@ void process_sonar_msg()
 void process_voltage_msg()
 {
     voltage_interval = atol(msg_buf); // convert to long
+    Serial.println(String("vmin:") + String(VOLTAGE_MIN,2));
+    Serial.println(String("vlow:") + String(VOLTAGE_LOW,2));
+    Serial.println(String("vmax:") + String(VOLTAGE_MAX,2));
 }
 #endif
 #if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
@@ -871,8 +878,7 @@ void process_wheel_msg()
 #endif
 
 void process_feature_msg() {
-  String msg = robot_type;
-  msg += ":";
+  String msg = "f" + robot_type + ":";
   #if HAS_VOLTAGE_DIVIDER
     msg += "v:";
   #endif
@@ -1066,7 +1072,7 @@ void drawString(String line1, String line2, String line3, String line4) {
 #if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
   void send_wheel_reading(long duration)
   {
-      float rpm_factor = 60.0 * (1000.0 / duration) / (DISK_HOLES * 2);
+      float rpm_factor = 60.0 * 1000.0 / duration / DISK_HOLES;
       rpm_left = (counter_lf + counter_lb)*rpm_factor;
       rpm_right = (counter_rf + counter_rb)*rpm_factor;
       counter_lf = 0;
