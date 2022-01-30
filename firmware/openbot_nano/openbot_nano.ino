@@ -30,12 +30,11 @@
 //------------------------------------------------------//
 //DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
-
-#define DIY 0       //DIY without PCB
-#define PCB_V1 1    //DIY with PCB V1
-#define PCB_V2 2    //DIY with PCB V2
-#define RTR_V1 3    //Ready-to-Run V1
-#define RC_CAR 4    //RC truck prototypes
+#define DIY 0    //DIY without PCB
+#define PCB_V1 1 //DIY with PCB V1
+#define PCB_V2 2 //DIY with PCB V2
+#define RTR_V1 3 //Ready-to-Run V1
+#define RC_CAR 4 //RC truck prototypes
 
 // Enable/Disable no phone mode (1,0)
 // In no phone mode:
@@ -48,13 +47,11 @@
 // Enable/Disable debug print (1,0)
 #define DEBUG 0
 
-
 //------------------------------------------------------//
 //SETTINGS - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR)
 #define OPENBOT RTR_V1
-
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
@@ -210,19 +207,19 @@ const int PIN_ECHO = 4;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 8;
 #endif
+
 //------------------------------------------------------//
 //INITIALIZATION
 //------------------------------------------------------//
-
 #if HAS_SONAR
 #include "PinChangeInterrupt.h"
 //Sonar sensor
 const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 2;
 const unsigned int MAX_SONAR_DISTANCE = 300; //cm
 const unsigned int MAX_SONAR_TIME = MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
-const unsigned int STOP_DISTANCE = 0; //cm
-unsigned long sonar_interval = ULONG_MAX;   // How frequently to send out a ping (ms).
-unsigned long sonar_time = 0;         // Store last ping time.
+const unsigned int STOP_DISTANCE = 0;     //cm
+unsigned long sonar_interval = ULONG_MAX; // How frequently to send out a ping (ms).
+unsigned long sonar_time = 0;             // Store last ping time.
 boolean sonar_sent = false;
 boolean ping_success = false;
 unsigned int distance = MAX_SONAR_DISTANCE;          //cm
@@ -329,7 +326,6 @@ unsigned long display_time = 0;
 //------------------------------------------------------//
 //SETUP
 //------------------------------------------------------//
-
 void setup()
 {
   //Outputs
@@ -413,7 +409,6 @@ void setup()
 //------------------------------------------------------//
 //LOOP
 //------------------------------------------------------//
-
 void loop()
 {
 #if (NO_PHONE_MODE)
@@ -547,7 +542,6 @@ void loop()
 //------------------------------------------------------//
 //FUNCTIONS
 //------------------------------------------------------//
-
 #if HAS_VOLTAGE_DIVIDER
 float get_voltage()
 {
@@ -829,7 +823,7 @@ void process_notification_msg()
   tmp = strtok(msg_buf, ",:"); // replace delimiter with \0
   char led = tmp[0];
   tmp = strtok(NULL, ",:"); // continues where the previous call left off
-  int state = atoi(tmp);   // convert to int
+  int state = atoi(tmp);    // convert to int
   switch (led)
   {
     case 'y':
@@ -878,7 +872,8 @@ void process_wheel_msg()
 }
 #endif
 
-void process_feature_msg() {
+void process_feature_msg()
+{
   String msg = "f" + robot_type + ":";
 #if HAS_VOLTAGE_DIVIDER
   msg += "v:";
@@ -910,7 +905,8 @@ void process_feature_msg() {
   Serial.println(msg);
 }
 
-void on_serial_rx() {
+void on_serial_rx()
+{
   char inChar = Serial.read();
   if (inChar != endChar)
   {
@@ -944,7 +940,8 @@ void process_body(char inChar)
   msg_idx++;
 }
 
-void parse_msg() {
+void parse_msg()
+{
   switch (header)
   {
 #if HAS_BUMPER
@@ -999,7 +996,8 @@ void parse_msg() {
 
 #if HAS_OLED
 // Function for drawing a string on the OLED display
-void drawString(String line1, String line2, String line3, String line4) {
+void drawString(String line1, String line2, String line3, String line4)
+{
   display.clearDisplay();
   // set text color
   display.setTextColor(WHITE);
@@ -1057,14 +1055,14 @@ void display_vehicle_data()
     voltage_str,
     left_rpm_str,
     right_rpm_str,
-    distance_str
-  );
+    distance_str);
 #endif
 }
 #endif
 
 #if (HAS_VOLTAGE_DIVIDER)
-void send_voltage_reading() {
+void send_voltage_reading()
+{
   Serial.print("v");
   Serial.println(get_voltage());
 }
@@ -1125,7 +1123,8 @@ void update_indicator()
 #endif
 
 #if (HAS_LEDS_FRONT || HAS_LEDS_BACK)
-void update_light() {
+void update_light()
+{
 #if (HAS_LEDS_FRONT)
   analogWrite(PIN_LED_LF, light_front);
   analogWrite(PIN_LED_RF, light_front);
@@ -1137,7 +1136,8 @@ void update_light() {
 }
 #endif
 
-int get_median(int a[], int sz) {
+int get_median(int a[], int sz)
+{
   //bubble sort
   for (int i = 0; i < (sz - 1); i++)
   {
@@ -1166,13 +1166,15 @@ void send_ping()
 {
   echo_time = 0;
   ping_success = false;
-  if (PIN_TRIGGER == PIN_ECHO) pinMode(PIN_TRIGGER, OUTPUT);
+  if (PIN_TRIGGER == PIN_ECHO)
+    pinMode(PIN_TRIGGER, OUTPUT);
   digitalWrite(PIN_TRIGGER, LOW);
   delayMicroseconds(5);
   digitalWrite(PIN_TRIGGER, HIGH);
   delayMicroseconds(10);
   digitalWrite(PIN_TRIGGER, LOW);
-  if (PIN_TRIGGER == PIN_ECHO) pinMode(PIN_ECHO, INPUT);
+  if (PIN_TRIGGER == PIN_ECHO)
+    pinMode(PIN_ECHO, INPUT);
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), start_timer, RISING);
 }
 
@@ -1191,8 +1193,6 @@ void update_distance_estimate()
 //------------------------------------------------------//
 // INTERRUPT SERVICE ROUTINES (ISR)
 //------------------------------------------------------//
-
-
 #if HAS_SONAR
 // ISR: Start timer to measure the time it takes for the pulse to return
 void start_timer()
