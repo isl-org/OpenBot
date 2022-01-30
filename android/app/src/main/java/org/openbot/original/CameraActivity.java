@@ -903,7 +903,7 @@ public abstract class CameraActivity extends AppCompatActivity
       this.speedMode = speedMode;
       preferencesManager.setSpeedMode(speedMode.getValue());
       speedModeSpinner.setSelection(speedMode.ordinal());
-      vehicle.setSpeedMultiplier(speedMode.getValue());
+      vehicle.setSpeedFactor(speedMode.getValue());
     }
   }
 
@@ -1055,10 +1055,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void sendControlToSensorService() {
     if (sensorMessenger != null) {
-      Message msg = Message.obtain();
-      msg.arg1 = (int) (vehicle.getLeftSpeed());
-      msg.arg2 = (int) (vehicle.getRightSpeed());
-      msg.what = SensorService.MSG_CONTROL;
+      Message msg = LogDataUtils.generateControlDataMessage(vehicle.getControl().getLeft(), vehicle.getControl().getRight());
       try {
         sensorMessenger.send(msg);
       } catch (RemoteException e) {
@@ -1069,9 +1066,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void sendIndicatorToSensorService() {
     if (sensorMessenger != null) {
-      Message msg = Message.obtain();
-      msg.arg1 = vehicle.getIndicator();
-      msg.what = SensorService.MSG_INDICATOR;
+      Message msg = LogDataUtils.generateIndicatorMessage(vehicle.getIndicator());
       try {
         sensorMessenger.send(msg);
       } catch (RemoteException e) {

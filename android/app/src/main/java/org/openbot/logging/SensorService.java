@@ -410,9 +410,12 @@ public class SensorService extends Service implements SensorEventListener {
           if (inferenceLog != null) appendLog(inferenceLog, frameNumber + "," + inferenceTime);
         } else if (msg.what == MSG_CONTROL) {
           // msg.arg1 and msg.arg2 contain left and right control signals respectively
-          if (ctrlLog != null)
+          if (ctrlLog != null) {
+            float left = msg.getData().getFloat("left");
+            float right = msg.getData().getFloat("right");
             appendLog(
-                ctrlLog, SystemClock.elapsedRealtimeNanos() + "," + msg.arg1 + "," + msg.arg2);
+                    ctrlLog, SystemClock.elapsedRealtimeNanos() + "," + left + "," + right);
+          }
         } else if (msg.what == MSG_INDICATOR) {
           // msg.arg1 contains indicator signal
           if (indicatorLog != null)

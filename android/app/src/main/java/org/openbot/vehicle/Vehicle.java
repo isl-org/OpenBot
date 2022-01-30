@@ -14,7 +14,7 @@ public class Vehicle {
   private boolean noiseEnabled = false;
 
   private int indicator = 0;
-  private int speedMultiplier = 192; // 128,192,255
+  private float speedFactor = 0.5f;
   private Control control = new Control(0, 0);
 
   private final SensorReading batteryVoltage = new SensorReading();
@@ -236,7 +236,7 @@ public class Vehicle {
 
   public int getSpeedPercent() {
     float throttle = (getLeftSpeed() + getRightSpeed()) / 2;
-    return Math.abs((int) (throttle * 100 / 255)); // 255 is the max speed
+    return Math.abs((int) (throttle * 100));
   }
 
   public String getDriveGear() {
@@ -313,12 +313,16 @@ public class Vehicle {
     sendControl();
   }
 
-  public int getSpeedMultiplier() {
-    return speedMultiplier;
+  public float getSpeedFactor() {
+    return speedFactor;
   }
 
-  public void setSpeedMultiplier(int speedMultiplier) {
-    this.speedMultiplier = speedMultiplier;
+  public void setSpeedFactor(float speedFactor) {
+    this.speedFactor = speedFactor;
+  }
+
+  public void setSpeedFactor(int speedFactor) {
+    this.speedFactor = (float) speedFactor / 255.f;
   }
 
   public int getIndicator() {
@@ -373,25 +377,65 @@ public class Vehicle {
   }
 
   public float getLeftSpeed() {
-    return control.getLeft() * speedMultiplier;
+    return control.getLeft() * speedFactor;
   }
 
   public float getRightSpeed() {
-    return control.getRight() * speedMultiplier;
+    return control.getRight() * speedFactor;
+  }
+
+  // Remap an action from [-1, -eps] .. [-eps, eps] .. [eps, 1] to [-speedFactor *
+  // maxBatteryVoltage,
+  // -minMotorVoltage] .. 0 .. [minMotorVoltage, factor * speedFactor * maxBatteryVoltage].
+  // The purpose of this remapping is to avoid the dead band of the robot.
+  private float actionToVoltage(float action, float eps, float speedFactor) {
+    assert (speedFactor * maxBatteryVoltage > minMotorVoltage);
+
+    if (Math.abs(action) < eps) {
+      return 0.f;
+    } else {
+      float voltage =
+          minMotorVoltage + (speedFactor * maxBatteryVoltage - minMotorVoltage) * Math.abs(action);
+
+      if (action < 0) {
+        voltage *= -1.f;
+      }
+
+      return voltage;
+    }
+  }
+
+  private int voltageToCommand(float voltage) {
+    float cmd = voltage / maxBatteryVoltage * 255.f;
+
+    cmd = Math.max(-255.f, Math.min(cmd, 255.f));
+
+    return (int) (cmd);
+  }
+
+  private int voltageToCommand(float voltage, float currentVoltage) {
+    float cmd = voltage / maxBatteryVoltage * 255.f;
+
+    if (currentVoltage != 0) {
+      cmd *= maxBatteryVoltage / currentVoltage;
+    }
+
+    cmd = Math.max(-255.f, Math.min(cmd, 255.f));
+
+    return (int) (cmd);
   }
 
   public void sendControl() {
-    int left = (int) (getLeftSpeed());
-    int right = (int) (getRightSpeed());
-    if (noiseEnabled && noise.getDirection() < 0)
-      left =
-          (int)
-              ((control.getLeft() - noise.getValue())
-                  * speedMultiplier); // since noise value does not have speedMultiplier component,
-    // raw control value is used
-    if (noiseEnabled && noise.getDirection() > 0)
-      right = (int) ((control.getRight() - noise.getValue()) * speedMultiplier);
-    sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
+    float left = control.getLeft();
+    float right = control.getRight();
+    if (noiseEnabled && noise.getDirection() < 0) left -= noise.getValue();
+    if (noiseEnabled && noise.getDirection() > 0) right -= noise.getValue();
+    float leftVoltage = actionToVoltage(left, 0.01f, speedFactor);
+    float rightVoltage = actionToVoltage(right, 0.01f, speedFactor);
+    int leftCmd = voltageToCommand(leftVoltage);
+    int rightCmd = voltageToCommand(rightVoltage);
+
+    sendStringToUsb(String.format(Locale.US, "c%d,%d\n", leftCmd, rightCmd));
   }
 
   protected void sendHeartbeat(int timeout_ms) {

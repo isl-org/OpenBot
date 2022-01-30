@@ -185,7 +185,7 @@ public class FreeRoamFragment extends ControlsFragment {
 
       Timber.d("Updating  controlSpeed: %s", speedMode);
       preferencesManager.setSpeedMode(speedMode.getValue());
-      vehicle.setSpeedMultiplier(speedMode.getValue());
+      vehicle.setSpeedFactor(speedMode.getValue());
     }
   }
 

@@ -297,7 +297,7 @@ public class AutopilotFragment extends CameraFragment {
     switch (commandType) {
       case Constants.CMD_DRIVE:
         binding.controllerContainer.controlInfo.setText(
-            String.format(Locale.US, "%.0f,%.0f", vehicle.getLeftSpeed(), vehicle.getRightSpeed()));
+            String.format(Locale.US, "%.2f,%.2f", vehicle.getLeftSpeed(), vehicle.getRightSpeed()));
         break;
 
       case Constants.CMD_DRIVE_MODE:
@@ -472,7 +472,7 @@ public class AutopilotFragment extends CameraFragment {
 
       Timber.d("Updating  controlSpeed: %s", speedMode);
       preferencesManager.setSpeedMode(speedMode.getValue());
-      vehicle.setSpeedMultiplier(speedMode.getValue());
+      vehicle.setSpeedFactor(speedMode.getValue());
     }
   }
 

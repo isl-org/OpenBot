@@ -234,7 +234,7 @@ public class LoggerFragment extends CameraFragment {
       try {
         sensorMessenger.send(
             LogDataUtils.generateControlDataMessage(
-                (int) vehicle.getLeftSpeed(), (int) vehicle.getRightSpeed()));
+                vehicle.getControl().getLeft(), vehicle.getControl().getRight()));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -446,7 +446,7 @@ public class LoggerFragment extends CameraFragment {
 
       Timber.d("Updating  controlSpeed: %s", speedMode);
       preferencesManager.setSpeedMode(speedMode.getValue());
-      vehicle.setSpeedMultiplier(speedMode.getValue());
+      vehicle.setSpeedFactor(speedMode.getValue());
     }
   }
 

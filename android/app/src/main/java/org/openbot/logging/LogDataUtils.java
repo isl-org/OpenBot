@@ -13,10 +13,12 @@ public class LogDataUtils {
     return msg;
   }
 
-  public static Message generateControlDataMessage(int left, int right) {
+  public static Message generateControlDataMessage(float left, float right) {
     Message msg = Message.obtain();
-    msg.arg1 = left;
-    msg.arg2 = right;
+    Bundle bundle = new Bundle();
+    bundle.putFloat("left", left);
+    bundle.putFloat("right", right);
+    msg.setData(bundle);
     msg.what = SensorService.MSG_CONTROL;
     return msg;
   }

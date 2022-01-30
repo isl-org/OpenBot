@@ -82,8 +82,8 @@ public class Enums {
   }
 
   public enum SpeedMode {
-    SLOW(128),
-    NORMAL(192),
+    SLOW(64),
+    NORMAL(128),
     FAST(255);
 
     private final int value;
