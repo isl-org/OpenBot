@@ -338,7 +338,7 @@ public class ObjectNavFragment extends CameraFragment {
         getString(
             R.string.speedInfo,
             String.format(
-                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRPM(), vehicle.getRightWheelRPM())));
+                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRpm(), vehicle.getRightWheelRpm())));
   }
 
   @Override

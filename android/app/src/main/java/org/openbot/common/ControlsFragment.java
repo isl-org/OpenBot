@@ -113,9 +113,29 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
               switch (header) {
                 case 'f':
                   vehicle.processVehicleConfig(body);
+                  break;
                 case 'v':
                   if (FormatUtils.isNumeric(body)) {
                     vehicle.setBatteryVoltage(Float.parseFloat(body));
+                  } else {
+                    String[] msgParts = body.split(":");
+                    switch (msgParts[0]) {
+                      case "min":
+                        vehicle.setMinMotorVoltage(Float.parseFloat(msgParts[1]));
+                      case "low":
+                        vehicle.setLowBatteryVoltage(Float.parseFloat(msgParts[1]));
+                        break;
+                      case "max":
+                        vehicle.setMaxBatteryVoltage(Float.parseFloat(msgParts[1]));
+                        break;
+                      default:
+                        Toast.makeText(
+                                requireContext().getApplicationContext(),
+                                "Invalid voltage message received!",
+                                Toast.LENGTH_SHORT)
+                            .show();
+                        break;
+                    }
                   }
                   break;
                 case 's':
@@ -128,8 +148,8 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
                   if (itemList.length == 2
                       && FormatUtils.isNumeric(itemList[0])
                       && FormatUtils.isNumeric(itemList[1])) {
-                    vehicle.setLeftWheelTicks(Float.parseFloat(itemList[0]));
-                    vehicle.setRightWheelTicks(Float.parseFloat(itemList[1]));
+                    vehicle.setLeftWheelRpm(Float.parseFloat(itemList[0]));
+                    vehicle.setRightWheelRpm(Float.parseFloat(itemList[1]));
                   }
                   break;
                 case 'b':
@@ -141,6 +161,7 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
             });
 
     handlePhoneControllerEvents();
+    vehicle.requestVehicleConfig();
   }
 
   private void processKeyEvent(KeyEvent keyCode) {

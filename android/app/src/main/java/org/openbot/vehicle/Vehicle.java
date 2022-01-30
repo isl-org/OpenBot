@@ -18,15 +18,13 @@ public class Vehicle {
   private Control control = new Control(0, 0);
 
   private final SensorReading batteryVoltage = new SensorReading();
-  private final SensorReading leftWheelTicks = new SensorReading();
-  private final SensorReading rightWheelTicks = new SensorReading();
+  private final SensorReading leftWheelRpm = new SensorReading();
+  private final SensorReading rightWheelRpm = new SensorReading();
   private final SensorReading sonarReading = new SensorReading();
 
-  private final int diskHoles = 20;
-  private final int millisPerMinute = 60000;
-
-  private final float minBatteryVoltage = 9.6f;
-  private final float maxBatteryVoltage = 12.6f;
+  private float minMotorVoltage = 2.5f;
+  private float lowBatteryVoltage = 9.0f;
+  private float maxBatteryVoltage = 12.6f;
 
   private UsbConnection usbConnection;
   protected boolean usbConnected;
@@ -43,6 +41,30 @@ public class Vehicle {
   private boolean hasLedsFront = false;
   private boolean hasLedsBack = false;
   private boolean hasLedsStatus = false;
+
+  public float getMinMotorVoltage() {
+    return minMotorVoltage;
+  }
+
+  public void setMinMotorVoltage(float minMotorVoltage) {
+    this.minMotorVoltage = minMotorVoltage;
+  }
+
+  public float getLowBatteryVoltage() {
+    return lowBatteryVoltage;
+  }
+
+  public void setLowBatteryVoltage(float lowBatteryVoltage) {
+    this.lowBatteryVoltage = lowBatteryVoltage;
+  }
+
+  public float getMaxBatteryVoltage() {
+    return maxBatteryVoltage;
+  }
+
+  public void setMaxBatteryVoltage(float maxBatteryVoltage) {
+    this.maxBatteryVoltage = maxBatteryVoltage;
+  }
 
   public boolean isHasVoltageDivider() {
     return hasVoltageDivider;
@@ -124,6 +146,10 @@ public class Vehicle {
     this.vehicleType = vehicleType;
   }
 
+  public void requestVehicleConfig() {
+    sendStringToUsb(String.format(Locale.US, "f\n"));
+  }
+
   public void processVehicleConfig(String message) {
 
     setVehicleType(message.split(":")[0]);
@@ -177,41 +203,29 @@ public class Vehicle {
 
   public int getBatteryPercentage() {
     return (int)
-        ((batteryVoltage.getReading() - minBatteryVoltage)
+        ((batteryVoltage.getReading() - lowBatteryVoltage)
             * 100
-            / (maxBatteryVoltage - minBatteryVoltage));
+            / (maxBatteryVoltage - lowBatteryVoltage));
   }
 
   public void setBatteryVoltage(float batteryVoltage) {
     this.batteryVoltage.setReading(batteryVoltage);
   }
 
-  public float getLeftWheelTicks() {
-    return leftWheelTicks.getReading();
+  public float getLeftWheelRpm() {
+    return leftWheelRpm.getReading();
   }
 
-  public float getLeftWheelRPM() {
-    if (leftWheelTicks.getAge() > 0 && leftWheelTicks.getReading() != 0)
-      return leftWheelTicks.getReading() * millisPerMinute / leftWheelTicks.getAge() / diskHoles;
-    else return 0;
+  public void setLeftWheelRpm(float leftWheelRpm) {
+    this.leftWheelRpm.setReading(leftWheelRpm);
   }
 
-  public void setLeftWheelTicks(float leftWheelTicks) {
-    this.leftWheelTicks.setReading(leftWheelTicks);
+  public float getRightWheelRpm() {
+    return rightWheelRpm.getReading();
   }
 
-  public float getRightWheelTicks() {
-    return rightWheelTicks.getReading();
-  }
-
-  public float getRightWheelRPM() {
-    if (rightWheelTicks.getAge() > 0 && rightWheelTicks.getReading() != 0)
-      return rightWheelTicks.getReading() * millisPerMinute / rightWheelTicks.getAge() / diskHoles;
-    else return 0;
-  }
-
-  public void setRightWheelTicks(float rightWheelTicks) {
-    this.rightWheelTicks.setReading(rightWheelTicks);
+  public void setRightWheelRpm(float rightWheelRpm) {
+    this.rightWheelRpm.setReading(rightWheelRpm);
   }
 
   public float getRotation() {

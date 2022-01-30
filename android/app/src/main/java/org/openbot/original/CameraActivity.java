@@ -367,8 +367,10 @@ public abstract class CameraActivity extends AppCompatActivity
                   char header = data.charAt(0);
                   String body = data.substring(1);
                   int type = -1;
-
                   switch (header) {
+                    case 'f':
+                      vehicle.processVehicleConfig(body);
+                      break;
                     case 'v':
                       if (FormatUtils.isNumeric(body)) {
                         type = SensorService.MSG_VOLTAGE;
@@ -378,6 +380,26 @@ public abstract class CameraActivity extends AppCompatActivity
                               voltageTextView.setText(
                                   String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage()));
                             });
+                      } else {
+                        String[] msgParts = body.split(":");
+                        switch (msgParts[0]) {
+                          case "min":
+                            vehicle.setMinMotorVoltage(Float.parseFloat(msgParts[1]));
+                            break;
+                          case "low":
+                            vehicle.setLowBatteryVoltage(Float.parseFloat(msgParts[1]));
+                            break;
+                          case "max":
+                            vehicle.setMaxBatteryVoltage(Float.parseFloat(msgParts[1]));
+                            break;
+                          default:
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Invalid voltage message received!",
+                                    Toast.LENGTH_SHORT)
+                                .show();
+                            break;
+                        }
                       }
                       break;
                     case 's':
@@ -397,16 +419,16 @@ public abstract class CameraActivity extends AppCompatActivity
                           && FormatUtils.isNumeric(itemList[0])
                           && FormatUtils.isNumeric(itemList[1])) {
                         type = SensorService.MSG_WHEELS;
-                        vehicle.setLeftWheelTicks(Float.parseFloat(itemList[0]));
-                        vehicle.setRightWheelTicks(Float.parseFloat(itemList[1]));
+                        vehicle.setLeftWheelRpm(Float.parseFloat(itemList[0]));
+                        vehicle.setRightWheelRpm(Float.parseFloat(itemList[1]));
                         runOnUiThread(
                             () -> {
                               speedTextView.setText(
                                   String.format(
                                       Locale.US,
                                       "%3.0f,%3.0f rpm",
-                                      vehicle.getLeftWheelRPM(),
-                                      vehicle.getRightWheelRPM()));
+                                      vehicle.getLeftWheelRpm(),
+                                      vehicle.getRightWheelRpm()));
                             });
                       }
                       break;
@@ -426,6 +448,7 @@ public abstract class CameraActivity extends AppCompatActivity
     localIntentFilter.addAction(Constants.USB_ACTION_DATA_RECEIVED);
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
+    vehicle.requestVehicleConfig();
   }
 
   @SuppressLint("SetTextI18n")
