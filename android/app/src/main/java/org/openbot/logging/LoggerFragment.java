@@ -43,6 +43,7 @@ import org.openbot.tflite.Model;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
+import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
@@ -350,10 +351,14 @@ public class LoggerFragment extends CameraFragment {
 
     switch (header) {
       case 'v':
-        type = SensorService.MSG_VOLTAGE;
+        if (FormatUtils.isNumeric(body)) {
+          type = SensorService.MSG_VOLTAGE;
+        }
         break;
       case 's':
-        type = SensorService.MSG_SONAR;
+        if (FormatUtils.isNumeric(body)) {
+          type = SensorService.MSG_SONAR;
+        }
         break;
       case 'w':
         type = SensorService.MSG_WHEELS;
@@ -363,8 +368,8 @@ public class LoggerFragment extends CameraFragment {
                 String.format(
                     Locale.US,
                     "%3.0f,%3.0f",
-                    vehicle.getLeftWheelRPM(),
-                    vehicle.getRightWheelRPM())));
+                    vehicle.getLeftWheelRpm(),
+                    vehicle.getRightWheelRpm())));
         break;
       case 'b':
         type = SensorService.MSG_BUMPER;

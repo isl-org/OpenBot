@@ -106,7 +106,7 @@ public class FreeRoamFragment extends ControlsFragment {
         getString(
             R.string.speedInfo,
             String.format(
-                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRPM(), vehicle.getRightWheelRPM())));
+                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRpm(), vehicle.getRightWheelRpm())));
 
     binding.voltageInfo.setText(
         getString(
