@@ -25,8 +25,6 @@
 // By Matthias Mueller, Embodied AI Lab, 2022
 // ---------------------------------------------------------------------------
 
-#include <limits.h>
-
 //------------------------------------------------------//
 //DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
@@ -51,7 +49,7 @@
 //SETTINGS - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR)
-#define OPENBOT RTR_V1
+#define OPENBOT DIY
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
@@ -218,7 +216,7 @@ const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 
 const unsigned int MAX_SONAR_DISTANCE = 300; //cm
 const unsigned int MAX_SONAR_TIME = MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
 const unsigned int STOP_DISTANCE = 0;     //cm
-unsigned long sonar_interval = ULONG_MAX; // How frequently to send out a ping (ms).
+unsigned long sonar_interval = 1000; // How frequently to send out a ping (ms).
 unsigned long sonar_time = 0;             // Store last ping time.
 boolean sonar_sent = false;
 boolean ping_success = false;
@@ -233,7 +231,7 @@ unsigned int distance_counter = 0;
 #endif
 #else
 const unsigned int STOP_DISTANCE = 0;      //cm
-unsigned int distance_estimate = UINT_MAX; //cm
+unsigned int distance_estimate = -1; //cm
 #endif
 
 #if HAS_OLED
@@ -260,7 +258,7 @@ float ADC_FACTOR = 5.0 / 1023;
 unsigned int vin_counter = 0;
 const unsigned int vin_array_sz = 10;
 int vin_array[vin_array_sz] = {0};
-unsigned long voltage_interval = ULONG_MAX; //Interval for sending voltage measurements
+unsigned long voltage_interval = 1000; //Interval for sending voltage measurements
 unsigned long voltage_time = 0;
 #endif
 
@@ -275,7 +273,7 @@ volatile int counter_lb = 0;
 volatile int counter_rb = 0;
 float rpm_left = 0;
 float rpm_right = 0;
-unsigned long wheel_interval = ULONG_MAX; //Inverval for sending wheel odometry
+unsigned long wheel_interval = 1000; //Inverval for sending wheel odometry
 unsigned long wheel_time = 0;
 #endif
 
@@ -314,7 +312,7 @@ int bumper_reading = 0;
 #endif
 
 //Heartbeat
-unsigned long heartbeat_interval = ULONG_MAX;
+unsigned long heartbeat_interval = -1;
 unsigned long heartbeat_time = 0;
 
 #if (HAS_OLED || DEBUG)
