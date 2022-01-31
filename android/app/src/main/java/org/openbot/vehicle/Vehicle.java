@@ -408,16 +408,8 @@ public class Vehicle {
   private int voltageToCommand(float voltage) {
     float cmd = voltage / maxBatteryVoltage * 255.f;
 
-    cmd = Math.max(-255.f, Math.min(cmd, 255.f));
-
-    return (int) (cmd);
-  }
-
-  private int voltageToCommand(float voltage, float currentVoltage) {
-    float cmd = voltage / maxBatteryVoltage * 255.f;
-
-    if (currentVoltage != 0) {
-      cmd *= maxBatteryVoltage / currentVoltage;
+    if (hasVoltageDivider && batteryVoltage.getReading() != 0) {
+      cmd *= maxBatteryVoltage / batteryVoltage.getReading();
     }
 
     cmd = Math.max(-255.f, Math.min(cmd, 255.f));
