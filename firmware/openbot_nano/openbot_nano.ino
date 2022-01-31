@@ -529,7 +529,7 @@ void loop()
     wheel_time = millis();
   }
 #endif
-#if DEBUG
+#if (HAS_OLED || DEBUG)
   // Display vehicle measurments for via serial every display_interval
   if ((millis() - display_time) >= display_interval)
   {
@@ -1020,7 +1020,7 @@ void drawString(String line1, String line2, String line3, String line4)
 }
 #endif
 
-#if (DEBUG || HAS_OLED)
+#if (HAS_OLED || DEBUG)
 void display_vehicle_data()
 {
 #if HAS_VOLTAGE_DIVIDER
@@ -1042,7 +1042,7 @@ void display_vehicle_data()
   String distance_str = String("Distance:   ") + String("N/A");
 #endif
 #if DEBUG
-  Serial.print("------------------");
+  Serial.println("------------------");
   Serial.println(voltage_str);
   Serial.println(left_rpm_str);
   Serial.println(right_rpm_str);
