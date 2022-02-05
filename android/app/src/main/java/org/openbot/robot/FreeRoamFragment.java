@@ -160,7 +160,7 @@ public class FreeRoamFragment extends ControlsFragment {
     float left = vehicle.getLeftSpeed();
     float right = vehicle.getRightSpeed();
     binding.controllerContainer.controlInfo.setText(
-        String.format(Locale.US, "%.0f,%.0f", left, right));
+        String.format(Locale.US, "%.2f,%.2f", left, right));
 
     binding.speed.speedPercentTo(vehicle.getSpeedPercent());
 

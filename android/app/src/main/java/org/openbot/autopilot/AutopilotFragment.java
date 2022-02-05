@@ -403,9 +403,9 @@ public class AutopilotFragment extends CameraFragment {
         .runOnUiThread(
             () ->
                 binding.controllerContainer.controlInfo.setText(
-                    String.format(Locale.US, "%.0f,%.0f", left, right)));
+                    String.format(Locale.US, "%.2f,%.2f", left, right)));
   }
-
+ 
   @Override
   public void onConnectionEstablished(String ipAddress) {
     requireActivity().runOnUiThread(() -> binding.ipAddress.setText(ipAddress));

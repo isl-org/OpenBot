@@ -469,7 +469,7 @@ public class ObjectNavFragment extends CameraFragment {
         .runOnUiThread(
             () ->
                 binding.controllerContainer.controlInfo.setText(
-                    String.format(Locale.US, "%.0f,%.0f", left, right)));
+                    String.format(Locale.US, "%.2f,%.2f", left, right)));
   }
 
   protected Model getModel() {
