@@ -38,7 +38,7 @@
 // In no phone mode:
 // - the motors will turn at 75% speed
 // - the speed will be reduced if an obstacle is detected by the sonar sensor
-// - the car will turn, if an obstacle is detected within STOP_DISTANCE
+// - the car will turn, if an obstacle is detected within TURN_DISTANCE
 // WARNING: If the sonar sensor is not setup, the car will go full speed forward!
 #define NO_PHONE_MODE 0
 
@@ -49,7 +49,7 @@
 //SETTINGS - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR)
-#define OPENBOT DIY
+#define OPENBOT RTR_V1
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
@@ -209,32 +209,44 @@ const int PIN_LED_RI = 8;
 //------------------------------------------------------//
 //INITIALIZATION
 //------------------------------------------------------//
+#if (NO_PHONE_MODE)
+unsigned long turn_direction_time = 0;
+unsigned long turn_direction_interval = 5000;
+unsigned int turn_direction = 0;
+#endif
+
 #if HAS_SONAR
 #include "PinChangeInterrupt.h"
 //Sonar sensor
 const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 2;
 const unsigned int MAX_SONAR_DISTANCE = 300; //cm
 const unsigned int MAX_SONAR_TIME = MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
-const unsigned int STOP_DISTANCE = 0;     //cm
-unsigned long sonar_interval = 1000; // How frequently to send out a ping (ms).
-unsigned long sonar_time = 0;             // Store last ping time.
+const unsigned int STOP_DISTANCE = 10;     //cm
+#if (NO_PHONE_MODE)
+const unsigned int TURN_DISTANCE = 50;
+unsigned long sonar_interval = 100;
+#else
+unsigned long sonar_interval = 1000;
+#endif
+unsigned long sonar_time = 0;
 boolean sonar_sent = false;
 boolean ping_success = false;
 unsigned int distance = MAX_SONAR_DISTANCE;          //cm
 unsigned int distance_estimate = MAX_SONAR_DISTANCE; //cm
 unsigned long start_time;
 unsigned long echo_time = 0;
-#if SONAR_MEDIAN
+#if (SONAR_MEDIAN)
 const unsigned int distance_array_sz = 3;
 unsigned int distance_array[distance_array_sz] = {};
 unsigned int distance_counter = 0;
 #endif
 #else
-const unsigned int STOP_DISTANCE = 0;      //cm
-unsigned int distance_estimate = -1; //cm
+const unsigned int TURN_DISTANCE = -1; //cm
+const unsigned int STOP_DISTANCE = 0; //cm
+unsigned int distance_estimate = -1;  //cm
 #endif
 
-#if HAS_OLED
+#if (HAS_OLED)
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -410,16 +422,55 @@ void setup()
 void loop()
 {
 #if (NO_PHONE_MODE)
-  if (distance_estimate > STOP_DISTANCE)
+  int ctrl_max = 192;
+  int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
+  if ((millis() - turn_direction_time) >= turn_direction_interval)
   {
-    ctrl_left = min(192, distance_estimate);
-    ctrl_right = min(192, distance_estimate);
+    turn_direction_time = millis();
+    turn_direction = random(2); //Generate random number in the range [0,1]
   }
-  else
-  {
-    ctrl_left = 128;
-    ctrl_right = -128;
+  // drive forward
+  if (distance_estimate > 3*TURN_DISTANCE) {
+    ctrl_left = distance_estimate;
+    ctrl_right = ctrl_left;
+    digitalWrite(PIN_LED_LI, LOW);
+    digitalWrite(PIN_LED_RI, LOW);
   }
+  // turn slightly
+  else if (distance_estimate > 2*TURN_DISTANCE) {
+    ctrl_left = distance_estimate;
+    ctrl_right = ctrl_left/2;
+  }
+  // turn strongly
+  else if (distance_estimate > TURN_DISTANCE) {
+    ctrl_left = ctrl_max;
+    ctrl_right = - ctrl_max;
+  }
+  // drive backward slowly
+  else {
+      ctrl_left = -ctrl_max/2;
+      ctrl_right = -ctrl_max/2;
+      digitalWrite(PIN_LED_LI, HIGH);
+      digitalWrite(PIN_LED_RI, HIGH);
+  }
+  // flip controls if needed and set indicator light
+  if (ctrl_left != ctrl_right) {
+    if (turn_direction > 0) {
+      int temp = ctrl_left;
+      ctrl_left = ctrl_right;
+      ctrl_right = temp;
+      digitalWrite(PIN_LED_LI, HIGH);
+      digitalWrite(PIN_LED_RI, LOW);
+    }
+    else {
+      digitalWrite(PIN_LED_LI, LOW);
+      digitalWrite(PIN_LED_RI, HIGH);
+    }
+  }
+
+  // enforce limits
+  ctrl_left = ctrl_left > 0 ? max(ctrl_min, min(ctrl_left, ctrl_max)) : min(-ctrl_min, max(ctrl_left, -ctrl_max));
+  ctrl_right = ctrl_right > 0 ? max(ctrl_min, min(ctrl_right, ctrl_max)) : min(-ctrl_min, max(ctrl_right, -ctrl_max));
 #else // Check for messages from the phone
   if (Serial.available() > 0)
   {
