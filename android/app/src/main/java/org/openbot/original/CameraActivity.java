@@ -1055,7 +1055,9 @@ public abstract class CameraActivity extends AppCompatActivity
 
   protected void sendControlToSensorService() {
     if (sensorMessenger != null) {
-      Message msg = LogDataUtils.generateControlDataMessage(vehicle.getControl().getLeft(), vehicle.getControl().getRight());
+      Message msg =
+          LogDataUtils.generateControlDataMessage(
+              vehicle.getControl().getLeft(), vehicle.getControl().getRight());
       try {
         sensorMessenger.send(msg);
       } catch (RemoteException e) {
