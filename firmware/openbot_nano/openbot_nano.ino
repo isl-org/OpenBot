@@ -213,6 +213,9 @@ const int PIN_LED_RI = 8;
 unsigned long turn_direction_time = 0;
 unsigned long turn_direction_interval = 5000;
 unsigned int turn_direction = 0;
+int ctrl_max = 192;
+int ctrl_slow = 85;
+int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
 #if HAS_SONAR
@@ -422,8 +425,6 @@ void setup()
 void loop()
 {
 #if (NO_PHONE_MODE)
-  int ctrl_max = 192;
-  int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
   if ((millis() - turn_direction_time) >= turn_direction_interval)
   {
     turn_direction_time = millis();
@@ -448,8 +449,8 @@ void loop()
   }
   // drive backward slowly
   else {
-      ctrl_left = -ctrl_max/2;
-      ctrl_right = -ctrl_max/2;
+      ctrl_left = -ctrl_slow;
+      ctrl_right = -ctrl_slow;
       digitalWrite(PIN_LED_LI, HIGH);
       digitalWrite(PIN_LED_RI, HIGH);
   }
