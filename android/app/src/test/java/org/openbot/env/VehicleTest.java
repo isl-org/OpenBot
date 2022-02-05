@@ -37,8 +37,8 @@ public class VehicleTest {
     vehicle.setSpeedFactor(Enums.SpeedMode.SLOW.getValue());
     vehicle.setControl(new Control(-1.0f, 1.0f));
 
-    assertEquals(-0.25f, vehicle.getLeftSpeed(), 0.01f);
-    assertEquals(0.25f, vehicle.getRightSpeed(), 0.01f);
+    assertEquals(-0.33f, vehicle.getLeftSpeed(), 0.01f);
+    assertEquals(0.33f, vehicle.getRightSpeed(), 0.01f);
 
     vehicle.setSpeedFactor(Enums.SpeedMode.NORMAL.getValue());
     vehicle.setControl(new Control(1.0f, -1.0f));
