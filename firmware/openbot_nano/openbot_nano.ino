@@ -192,6 +192,11 @@ const int PIN_BUMPER = A2;
 Servo ESC;
 Servo SERVO;
 const String robot_type = "RC_CAR";
+#define HAS_VOLTAGE_DIVIDER 0
+const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
+const float VOLTAGE_MIN = 0.0f;
+const float VOLTAGE_LOW = 6.4f;
+const float VOLTAGE_MAX = 8.4f;
 #define HAS_INDICATORS 0
 #define HAS_SONAR 0
 #define SONAR_MEDIAN 0
