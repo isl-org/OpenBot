@@ -49,7 +49,7 @@
 //SETTINGS - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR)
-#define OPENBOT RTR_V1
+#define OPENBOT DIY
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
@@ -192,13 +192,11 @@ const int PIN_BUMPER = A2;
 Servo ESC;
 Servo SERVO;
 const String robot_type = "RC_CAR";
-#define HAS_INDICATORS 1
-#define HAS_SONAR 1
+#define HAS_INDICATORS 0
+#define HAS_SONAR 0
 #define SONAR_MEDIAN 0
-#define HAS_LEDS_FRONT 0
-#define HAS_LEDS_BACK 0
-const int PIN_PWM_T = 10;
-const int PIN_PWM_S = 9;
+const int PIN_PWM_T = A0;
+const int PIN_PWM_S = A1;
 const int PIN_VIN = A7;
 const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 4;
@@ -214,7 +212,7 @@ unsigned long turn_direction_time = 0;
 unsigned long turn_direction_interval = 5000;
 unsigned int turn_direction = 0;
 int ctrl_max = 192;
-int ctrl_slow = 85;
+int ctrl_slow = 96;
 int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
