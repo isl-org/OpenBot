@@ -46,7 +46,7 @@
 #define DEBUG 0
 
 //------------------------------------------------------//
-//SETTINGS - Choose your body
+//SETUP - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR)
 #define OPENBOT DIY
@@ -225,7 +225,7 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #include "PinChangeInterrupt.h"
 //Sonar sensor
 const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 2;
-const unsigned int MAX_SONAR_DISTANCE = 300; //cm
+const unsigned int MAX_SONAR_DISTANCE = -1;  //cm
 const unsigned int MAX_SONAR_TIME = MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
 const unsigned int STOP_DISTANCE = 10;     //cm
 #if (NO_PHONE_MODE)
@@ -636,7 +636,7 @@ void update_throttle()
 void update_steering()
 {
   int steering = map(ctrl_left - ctrl_right, -510, 510, 0, 180);
-  if (ctrl_left + ctrl_right > 0)
+  if (ctrl_left + ctrl_right <= 0)
   {
     SERVO.write(steering);
   }
