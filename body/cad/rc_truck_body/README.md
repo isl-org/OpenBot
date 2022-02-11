@@ -189,11 +189,11 @@ OpenBot RC-Truck mainly relies on readily available hobby electronics. We provid
     </p>
 13. Connect the ultrasonic sensor cables to the connector marked "sonar" on the PCB. Make sure the +ve/-ve polarity and the data lines are correctly matched between the sensor and the PCB ports.
 14. Connect the left and right indicator LED cables to their respective indicator signal connectors on the PCB. Ensure the correct polarity of +ve and -ve LED terminals.
-15. Connect the UBEC output (+6V) to the Vin pin of the Arduino Nano, and the UBEC GND to the Arduino GND pin (next to Vin).
+15. Connect the UBEC output (+6V) to the Vin pin of the Arduino Nano (optional, Arduino can also be powered by phone), and the UBEC GND to the Arduino GND pin (next to Vin).
 16. Connect the UBEC output (+6V) to the +ve terminals of the steering servo, the front LED lamps, and the rear Red LEDs through the voltage divider.
 17. Connect the ground cable of the steering servo to the GND pin of Arduino as well.
-18. Connect the PWM cable of the throttle servo (from the speed controller) to pin D10 on the Arduino Nano.
-19. Connect the PWM cable of the steering servo to pin D9 on the Arduino Nano.
+18. Connect the PWM cable of the throttle servo (from the speed controller) to pin A0 on the Arduino Nano or PCB breakout.
+19. Connect the PWM cable of the steering servo to pin A1 on the Arduino Nano or PCB breakout.
 **Tip:** If you have created a unified ground loop for the LED wiring, then connect the ground loop cable to one of the Arduino GND pins as well. Arduino Nano has three GND pins available. If you have not constructed a ground loop, then make sure that all LEDs, the steering servo, sensors, the Arduino Nano, and the speed controller's UBEC share the same ground with appropriate wiring and connections.
 21. Connect the battery pack at the front and keep it in place using some velcro or mounting tape. Having the battery at front makes it easily accessible for recharging. This placement also helps with balancing the robot weight when a smartphone is mounted on top.
 22. Put on the front and back ```electronics_covers```. Pull out the USB OTG cable from the rear ```electronics_cover``` gap for connecting it to an android smartphone.
