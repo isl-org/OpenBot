@@ -86,89 +86,89 @@ public class GameController {
 
     switch (driveMode) {
       case DUAL:
-        float y = getCenteredAxis(event, MotionEvent.AXIS_Y, historyPos);
-        float rz = getCenteredAxis(event, MotionEvent.AXIS_RZ, historyPos);
-        left = -y;
-        right = -rz;
-        break;
+        float leftStick = getCenteredAxis(event, MotionEvent.AXIS_Y, historyPos);
+        float rightStick = getCenteredAxis(event, MotionEvent.AXIS_RZ, historyPos);
+
+        return convertDualToControl(leftStick, rightStick);
 
       case GAME:
-        float r_trigger = getCenteredAxis(event, MotionEvent.AXIS_GAS, historyPos);
-        if (r_trigger == 0) {
-          r_trigger = getCenteredAxis(event, MotionEvent.AXIS_RTRIGGER, historyPos);
+        float rightTrigger = getCenteredAxis(event, MotionEvent.AXIS_GAS, historyPos);
+        if (rightTrigger == 0) {
+          rightTrigger = getCenteredAxis(event, MotionEvent.AXIS_RTRIGGER, historyPos);
         }
 
-        float l_trigger = getCenteredAxis(event, MotionEvent.AXIS_BRAKE, historyPos);
-        if (l_trigger == 0) {
-          l_trigger = getCenteredAxis(event, MotionEvent.AXIS_LTRIGGER, historyPos);
+        float leftTrigger = getCenteredAxis(event, MotionEvent.AXIS_BRAKE, historyPos);
+        if (leftTrigger == 0) {
+          leftTrigger = getCenteredAxis(event, MotionEvent.AXIS_LTRIGGER, historyPos);
         }
 
         // Calculate the steering magnitude by
         // using the input value from one of these physical controls:
         // the left control stick, hat axis, or the right control stick.
-        float steering_offset = getCenteredAxis(event, MotionEvent.AXIS_X, historyPos);
-        if (steering_offset == 0) {
-          steering_offset = getCenteredAxis(event, MotionEvent.AXIS_HAT_X, historyPos);
+        float steeringOffset = getCenteredAxis(event, MotionEvent.AXIS_X, historyPos);
+        if (steeringOffset == 0) {
+          steeringOffset = getCenteredAxis(event, MotionEvent.AXIS_HAT_X, historyPos);
         }
-        if (steering_offset == 0) {
-          steering_offset = getCenteredAxis(event, MotionEvent.AXIS_Z, historyPos);
+        if (steeringOffset == 0) {
+          steeringOffset = getCenteredAxis(event, MotionEvent.AXIS_Z, historyPos);
         }
 
-        left = r_trigger - l_trigger;
-        right = r_trigger - l_trigger;
-
-        if (steering_offset > 0) {
-          if (right >= 0) right -= steering_offset;
-          else right += steering_offset;
-        }
-        if (steering_offset < 0) {
-          if (left >= 0) left += steering_offset;
-          else left -= steering_offset;
-        }
-        break;
+        return convertGameToControl(leftTrigger, rightTrigger, steeringOffset);
 
       case JOYSTICK:
         // Calculate the vertical distance to move by
         // using the input value from one of these physical controls:
         // the left control stick, hat switch, or the right control stick.
-        float y_axis = getCenteredAxis(event, MotionEvent.AXIS_Y, historyPos);
-        if (y_axis == 0) {
-          y_axis = getCenteredAxis(event, MotionEvent.AXIS_HAT_Y, historyPos);
+        float yAxis = getCenteredAxis(event, MotionEvent.AXIS_Y, historyPos);
+        if (yAxis == 0) {
+          yAxis = getCenteredAxis(event, MotionEvent.AXIS_HAT_Y, historyPos);
         }
-        if (y_axis == 0) {
-          y_axis = getCenteredAxis(event, MotionEvent.AXIS_RZ, historyPos);
+        if (yAxis == 0) {
+          yAxis = getCenteredAxis(event, MotionEvent.AXIS_RZ, historyPos);
         }
 
         // Calculate the horizontal distance to move by
         // using the input value from one of these physical controls:
         // the left control stick, hat axis, or the right control stick.
-        float x_axis = getCenteredAxis(event, MotionEvent.AXIS_X, historyPos);
-        if (x_axis == 0) {
-          x_axis = getCenteredAxis(event, MotionEvent.AXIS_HAT_X, historyPos);
+        float xAxis = getCenteredAxis(event, MotionEvent.AXIS_X, historyPos);
+        if (xAxis == 0) {
+          xAxis = getCenteredAxis(event, MotionEvent.AXIS_HAT_X, historyPos);
         }
-        if (x_axis == 0) {
-          x_axis = getCenteredAxis(event, MotionEvent.AXIS_Z, historyPos);
-        }
-
-        left = -y_axis;
-        right = -y_axis;
-
-        if (x_axis > 0) {
-          if (right >= 0) right -= x_axis;
-          else right += x_axis;
-        }
-        if (x_axis < 0) {
-          if (left >= 0) left += x_axis;
-          else left -= x_axis;
+        if (xAxis == 0) {
+          xAxis = getCenteredAxis(event, MotionEvent.AXIS_Z, historyPos);
         }
 
-        break;
+        return convertJoystickToControl(xAxis, yAxis);
 
       default:
-        left = 0;
-        right = 0;
-        break;
+        return new Control(0, 0);
     }
+  }
+
+  public Control convertDualToControl(float leftStick, float rightStick) {
+    return new Control(-leftStick, -rightStick);
+  }
+
+  public Control convertGameToControl(float leftTrigger, float rightTrigger, float steeringOffset) {
+    float left = rightTrigger - leftTrigger;
+    float right = rightTrigger - leftTrigger;
+
+    if (left >= 0) left += steeringOffset;
+    else left -= steeringOffset;
+    if (right >= 0) right -= steeringOffset;
+    else right += steeringOffset;
+
+    return new Control(left, right);
+  }
+
+  public Control convertJoystickToControl(float xAxis, float yAxis) {
+    float left = -yAxis;
+    float right = -yAxis;
+
+    if (left >= 0) left += xAxis;
+    else left -= xAxis;
+    if (right >= 0) right -= xAxis;
+    else right += xAxis;
 
     return new Control(left, right);
   }

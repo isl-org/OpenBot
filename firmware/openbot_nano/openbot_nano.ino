@@ -636,7 +636,7 @@ void update_throttle()
 void update_steering()
 {
   int steering = map(ctrl_left - ctrl_right, -510, 510, 0, 180);
-  if (ctrl_left + ctrl_right <= 0)
+  if (ctrl_left + ctrl_right < 0)
   {
     SERVO.write(steering);
   }
