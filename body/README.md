@@ -57,9 +57,9 @@ If you do not have access to a 3D printer, there are several Arduino robot car k
 - Joy-it Robot Car Kit 01 ([EU](https://www.amazon.de/dp/B073ZGJF28))
 - Smart Car Kit 4WD Smart Robot Car Chassis Kit ([AE](https://www.aliexpress.com/item/4001238626191.html))
 
-You will also need a phone mount. Here is one option:
+You will also need a phone mount. Here are some options:
 
-- Mpow Dashboard Car Phone Mount ([EU](https://www.amazon.de/dp/B0762GS7MS), [US](https://www.amazon.com/dp/B08BYFP9BZ))
+- Phone Mount ([EU](https://www.amazon.de/dp/B06XDYJNSR), [US](https://www.amazon.com/dp/B09CY8MC2R))
 
 You can also get creative and build your own OpenBot chassis and phone mount using a material of your choice (e.g. wood, cardboard, styrofoam, etc.). If you do, please post some pictures on the [Slack channel](https://github.com/intel-isl/OpenBot#contact) so others can admire your creativity. Here is one example by [@custom-build-robots](https://custom-build-robots.com/roboter/openbot-dein-smartphone-steuert-ein-roboter-auto-chassis-bauen/13636):
 
