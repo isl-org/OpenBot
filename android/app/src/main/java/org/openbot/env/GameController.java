@@ -2,8 +2,6 @@
 
 package org.openbot.env;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 
 import android.util.Pair;
 import android.view.InputDevice;
@@ -159,7 +157,7 @@ public class GameController {
     if (right >= 0) right -= steeringOffset;
     else right += steeringOffset;
 
-    return new Control(enforceLimits(left), enforceLimits(right));
+    return new Control(left, right);
   }
 
   public Control convertJoystickToControl(float xAxis, float yAxis) {
@@ -171,7 +169,7 @@ public class GameController {
     if (right >= 0) right -= xAxis;
     else right += xAxis;
 
-    return new Control(enforceLimits(left), enforceLimits(right));
+    return new Control(left, right);
   }
 
   public static Pair<Float, Float> processJoystickInputLeft(MotionEvent event, int historyPos) {
@@ -202,9 +200,5 @@ public class GameController {
     float y = getCenteredAxis(event, MotionEvent.AXIS_RZ, historyPos);
 
     return new Pair<>(x, y);
-  }
-
-  private float enforceLimits(float control) {
-    return max(-1.f, min(control, 1.f));
   }
 }
