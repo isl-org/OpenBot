@@ -66,19 +66,19 @@ function CommandHandler (sendToBot) {
   }
 
   this.forwardLeft = () => {
-    sendDriveCommand(left.write(0.5), right.max())
+    sendDriveCommand(left.min()/2, right.max())
   }
 
   this.forwardRight = () => {
-    sendDriveCommand(left.max(), right.write(0.5))
+    sendDriveCommand(left.max(), right.min()/2)
   }
 
   this.backwardLeft = () => {
-    sendDriveCommand(right.write(-0.5), left.min())
+    sendDriveCommand(left.max()/2, right.min())
   }
 
   this.backwardRight = () => {
-    sendDriveCommand(right.min(), left.write(-0.5))
+    sendDriveCommand(left.min(), right.max()/2)
   }
 
   this.rotateLeft = () => {
