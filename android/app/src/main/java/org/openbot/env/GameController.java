@@ -2,7 +2,6 @@
 
 package org.openbot.env;
 
-
 import android.util.Pair;
 import android.view.InputDevice;
 import android.view.KeyEvent;
