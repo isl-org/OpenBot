@@ -38,6 +38,8 @@ jobs:
         run: ./gradlew checkStyle
       - name: Lint
         run: ./gradlew lint
+      - name: Test
+        run: ./gradlew test
       - name: Build
         run: ./gradlew build
       - name: Upload OpenBot App
