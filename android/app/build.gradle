@@ -9,8 +9,8 @@ android {
         applicationId "org.openbot"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 50
-        versionName "0.5.0"
+        versionCode getVersionCode()
+        versionName getVersionName()
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
@@ -148,3 +148,7 @@ dependencies {
     implementation 'com.koushikdutta.ion:ion:3.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
 }
+
+println("Version Code: " + getVersionCode())
+println("Version Name: " + getVersionName())
+

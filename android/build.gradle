@@ -1,4 +1,10 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+ext.versionMajor = 0
+ext.versionMinor = 5
+ext.versionPatch = 0
+ext.getVersionCode = { -> ext.versionMajor * 100 + ext.versionMinor * 10 + ext.versionPatch}
+ext.getVersionName = { -> "${ext.versionMajor}.${ext.versionMinor}.${ext.versionPatch}"}
+
 buildscript {
     ext.kotlin_version = '1.5.10'
 
