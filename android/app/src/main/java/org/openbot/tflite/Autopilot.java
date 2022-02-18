@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
-import org.openbot.env.Control;
+import org.openbot.vehicle.Control;
 import timber.log.Timber;
 
 public abstract class Autopilot extends Network {

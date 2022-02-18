@@ -1,0 +1,12 @@
+body {
+    background-color: #f0f8ff;
+    margin: 3%;
+    font-family: 'Roboto';
+}
+
+/* Used to suppress error:
+ResizeObserver - loop limit exceeded */
+video::-webkit-media-controls-timeline {
+    align-self: center;
+    width: calc(100% - 64px);
+  }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenBot Controller</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link rel="icon" href="icons/controller.svg">
+    <link rel="stylesheet" href="style.css">
+    <script src="index.js" type="module"></script>
+    <script src="buttons.js" type="module"></script>
+</head>
+
+<body>
+    <div style="display:flex; flex-direction: row; justify-content: left; align-items: center;">
+        <img id="controller" src="icons/controller.svg" style="margin-right: 1.5em;" width="80" />
+        <h2>OpenBot Controller</h2>
+    </div>
+
+    <div id="video-panel" style="display:flex; flex-direction: row; justify-content: left; align-items: left">
+        <!-- "muted" attributed is needed, otherwise most browsers will not auto-stream the video. -->
+        <video id='video' muted autoplay playsinline></video>
+        <ul id="command-list" style="list-style-type: none"></ul>
+    </div>
+
+    <div id="buttons" style="display:flex; flex-direction: row; justify-content: left; align-items: left">
+        <img id="sound_button" src="icons/volume_off_black_24dp.svg"
+            style="margin-left: 1em; margin-top: 1em; margin-bottom: 1em;" width="30" />
+        <img id="mirror_button" src="icons/flip_black_24dp.svg"
+            style="margin-left: 1em; margin-top: 1em; margin-bottom: 1em;" width="30" />
+        <img id="camera_switch_button" src="icons/cameraswitch_black_24dp.svg"
+            style="margin-left: 1em; margin-top: 1em; margin-bottom: 1em;" width="30" />
+        <img id="fullscreen" src="icons/fullscreen_black_24dp.svg"
+            style="margin-left: 1em; margin-top: 1em; margin-bottom: 1em;" width="30" />
+    </div>
+
+    <div>
+        <span id="error-message" style="color: red;"></span>
+    </div>
+</body>
+
+</html>

@@ -18,11 +18,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import org.openbot.controller.customComponents.DualDriveSeekBar
-import org.openbot.controller.customComponents.VideoViewVlc
 import org.openbot.controller.customComponents.VideoViewWebRTC
 import org.openbot.controller.databinding.ActivityFullscreenBinding
 import org.openbot.controller.utils.LocalEventBus
@@ -81,8 +81,11 @@ class ControllerActivity : /*AppCompat*/
                 view.init()
             }
             "RTSP" -> {
-                val view: VideoViewVlc = createView(VideoViewVlc(this)) as VideoViewVlc
-                view.init()
+                Toast.makeText(
+                    this,
+                    "RTSP not supported by this controller. For video, set your main app to use WebRTC.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -158,7 +161,6 @@ class ControllerActivity : /*AppCompat*/
                     LocalEventBus.ProgressEvents.Disconnected -> {
                         screenSelector.hideControls()
                         binding.controlModeTiltLayout.stop()
-                        ConnectionSelector.getConnection().connect(this)
                     }
                     LocalEventBus.ProgressEvents.StopAdvertising -> {
                     }

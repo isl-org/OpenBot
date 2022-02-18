@@ -43,6 +43,7 @@ import org.openbot.tflite.Model;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
+import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
@@ -240,10 +241,10 @@ public class LoggerFragment extends CameraFragment {
     }
   }
 
-  protected void sendVehicleDataToSensorService(long timestamp, String data) {
+  protected void sendVehicleDataToSensorService(long timestamp, String data, int type) {
     if (sensorMessenger != null) {
       try {
-        sensorMessenger.send(LogDataUtils.generateVehicleDataMessage(timestamp, data));
+        sensorMessenger.send(LogDataUtils.generateVehicleDataMessage(timestamp, data, type));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -343,12 +344,39 @@ public class LoggerFragment extends CameraFragment {
 
   @Override
   protected void processUSBData(String data) {
-    binding.controllerContainer.speedInfo.setText(
-        getString(
-            R.string.speedInfo,
-            String.format(
-                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRPM(), vehicle.getRightWheelRPM())));
-    sendVehicleDataToSensorService(SystemClock.elapsedRealtimeNanos(), data);
+    long timestamp = SystemClock.elapsedRealtimeNanos();
+    char header = data.charAt(0);
+    String body = data.substring(1);
+    int type = -1;
+
+    switch (header) {
+      case 'v':
+        if (FormatUtils.isNumeric(body)) {
+          type = SensorService.MSG_VOLTAGE;
+        }
+        break;
+      case 's':
+        if (FormatUtils.isNumeric(body)) {
+          type = SensorService.MSG_SONAR;
+        }
+        break;
+      case 'w':
+        type = SensorService.MSG_WHEELS;
+        binding.controllerContainer.speedInfo.setText(
+            getString(
+                R.string.speedInfo,
+                String.format(
+                    Locale.US,
+                    "%3.0f,%3.0f",
+                    vehicle.getLeftWheelRpm(),
+                    vehicle.getRightWheelRpm())));
+        break;
+      case 'b':
+        type = SensorService.MSG_BUMPER;
+        break;
+    }
+
+    if (type > 0) sendVehicleDataToSensorService(timestamp, body, type);
   }
 
   @Override

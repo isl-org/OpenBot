@@ -20,6 +20,7 @@ import org.openbot.controller.StatusEventBus
 import org.openbot.controller.utils.LocalEventBus
 import org.webrtc.*
 
+
 /*
 This class waits for a WebRTC call from the BOT, and sends an "answer", providing its A/V capabilities.
 The two sides then exchange ICE candidates until a suitable common capabilities are found, and
@@ -62,21 +63,14 @@ class VideoViewWebRTC @JvmOverloads constructor(
         StatusEventBus.subscribe(this.javaClass.simpleName, "VIDEO_COMMAND", onNext = {
             processVideoCommand(it as String)
         })
-
-        StatusEventBus.addSubject("TOGGLE_MIRROR")
-        StatusEventBus.subscribe(this.javaClass.simpleName, "TOGGLE_MIRROR", onNext = {
-            setMirror(it as String == "true")
-        })
-
         rootEglBase = EglBase.create()
-        monitorConnection()
     }
 
     @SuppressLint("CheckResult")
     fun init() {
-
         initializeSurfaceViews()
         initializePeerConnectionFactory()
+        monitorLocalEvents()
     }
 
     private fun processVideoCommand(command: String) {
@@ -92,9 +86,17 @@ class VideoViewWebRTC @JvmOverloads constructor(
     }
 
     fun stop() {
-        release()
-        peerConnection?.dispose()
-        hide()
+        try {
+            if (peerConnection != null) {
+                release()
+            }
+        } catch (e: Throwable) {
+            Log.d(TAG, "Got exception $e")
+        } finally {
+            peerConnection?.dispose()
+            peerConnection = null
+            hide()
+        }
     }
 
     fun show() {
@@ -108,6 +110,15 @@ class VideoViewWebRTC @JvmOverloads constructor(
     private fun start() {
         show()
         initializePeerConnections()
+        setMirror(false)
+    }
+
+    private fun mute() {
+        peerConnection!!.receivers[0].track()?.setEnabled(false)
+    }
+
+    private fun unmute() {
+        peerConnection!!.receivers[0].track()?.setEnabled(true)
     }
 
     private fun initializeSurfaceViews() {
@@ -168,13 +179,14 @@ class VideoViewWebRTC @JvmOverloads constructor(
 
                 remoteVideoTrack.setEnabled(true)
                 val remoteAudioTrack = mediaStream.audioTracks[0]
-                remoteAudioTrack.setEnabled(true)
+                remoteAudioTrack.setEnabled(false) // start in muted mode
                 remoteVideoTrack.addSink(this@VideoViewWebRTC)
             }
 
             override fun onRemoveStream(mediaStream: MediaStream) {
                 Log.d(TAG, "Stream removed...")
             }
+
             override fun onDataChannel(dataChannel: DataChannel) {}
             override fun onRenegotiationNeeded() {}
             override fun onAddTrack(rtpReceiver: RtpReceiver, mediaStreams: Array<MediaStream>) {}
@@ -263,8 +275,7 @@ class VideoViewWebRTC @JvmOverloads constructor(
         }
     }
 
-
-    private fun monitorConnection() {
+    private fun monitorLocalEvents() {
 
         LocalEventBus.subscriber.start(
             this.javaClass.simpleName,
@@ -275,11 +286,24 @@ class VideoViewWebRTC @JvmOverloads constructor(
                     LocalEventBus.ProgressEvents.Disconnected -> {
                         stop()
                     }
+                    LocalEventBus.ProgressEvents.Mute -> {
+                        mute()
+                    }
+                    LocalEventBus.ProgressEvents.Unmute -> {
+                        unmute()
+                    }
+                    LocalEventBus.ProgressEvents.Mirror -> {
+                        setMirror(true)
+                    }
+                    LocalEventBus.ProgressEvents.Unmirror -> {
+                        setMirror(false)
+                    }
+
                 }
             },
             { throwable ->
                 Log.d(
-                    "EventsSubscription",
+                    "monitorLocalEvents",
                     "Got error on subscribe: $throwable"
                 )
             })

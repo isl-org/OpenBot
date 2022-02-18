@@ -97,9 +97,10 @@ object NetworkServiceConnection : ILocalConnection {
         }
 
         fun connect(port: Int): ClientInfo? {
-            serverSocket = ServerSocket(port)
-            serverSocket.reuseAddress = true
             try {
+                serverSocket = ServerSocket(port)
+                serverSocket.reuseAddress = true
+
                 while (true) {
                     client = serverSocket.accept()
 
@@ -115,7 +116,7 @@ object NetworkServiceConnection : ILocalConnection {
                 clientInfo = ClientInfo(reader, writer)
 
                 val event: LocalEventBus.ProgressEvents =
-                        LocalEventBus.ProgressEvents.ConnectionSuccessful
+                    LocalEventBus.ProgressEvents.ConnectionSuccessful
                 LocalEventBus.onNext(event)
 
                 println("Client connected: ${client.inetAddress.hostAddress}")
@@ -134,10 +135,12 @@ object NetworkServiceConnection : ILocalConnection {
                     if (payload != null) {
 
                         (context as Activity).runOnUiThread {
-                            dataReceivedCallback?.dataReceived(String(
+                            dataReceivedCallback?.dataReceived(
+                                String(
                                     payload.toByteArray(),
                                     StandardCharsets.UTF_8
-                            ))
+                                )
+                            )
                         }
                     }
                 }
@@ -167,13 +170,17 @@ object NetworkServiceConnection : ILocalConnection {
         }
 
         fun close() {
-            if (this::client.isInitialized && !client.isClosed) {
+            if (client.isClosed) {
+                return
+            }
+            if (this::client.isInitialized) {
                 client.close()
             }
-            serverSocket.close()
+            if (this::serverSocket.isInitialized) {
+                serverSocket.close()
+            }
 
-            val event: LocalEventBus.ProgressEvents =
-                    LocalEventBus.ProgressEvents.Disconnected
+            val event: LocalEventBus.ProgressEvents = LocalEventBus.ProgressEvents.Disconnected
             LocalEventBus.onNext(event)
         }
 
@@ -192,9 +199,11 @@ object NetworkServiceConnection : ILocalConnection {
         serviceInfo.serviceType = SERVICE_TYPE
         serviceInfo.port = port
 
-        mNsdManager!!.registerService(serviceInfo,
-                NsdManager.PROTOCOL_DNS_SD,
-                mRegistrationListener)
+        mNsdManager!!.registerService(
+            serviceInfo,
+            NsdManager.PROTOCOL_DNS_SD,
+            mRegistrationListener
+        )
     }
 
     var mRegistrationListener: RegistrationListener = object : RegistrationListener {
@@ -208,7 +217,7 @@ object NetworkServiceConnection : ILocalConnection {
             Log.d(TAG, "onRegistrationFailed")
 
             val event: LocalEventBus.ProgressEvents =
-                    LocalEventBus.ProgressEvents.ConnectionFailed
+                LocalEventBus.ProgressEvents.ConnectionFailed
             LocalEventBus.onNext(event)
         }
 

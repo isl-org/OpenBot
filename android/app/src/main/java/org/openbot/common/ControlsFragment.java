@@ -27,11 +27,9 @@ import org.json.JSONObject;
 import org.openbot.R;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.BotToControllerEventBus;
-import org.openbot.env.Control;
 import org.openbot.env.ControllerToBotEventBus;
 import org.openbot.env.PhoneController;
 import org.openbot.env.SharedPreferencesManager;
-import org.openbot.env.Vehicle;
 import org.openbot.main.MainViewModel;
 import org.openbot.server.ServerCommunication;
 import org.openbot.server.ServerListener;
@@ -42,6 +40,8 @@ import org.openbot.utils.Enums;
 import org.openbot.utils.FileUtils;
 import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.vehicle.Control;
+import org.openbot.vehicle.Vehicle;
 import timber.log.Timber;
 
 public abstract class ControlsFragment extends Fragment implements ServerListener {
@@ -107,25 +107,61 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
         .observe(
             getViewLifecycleOwner(),
             data -> {
-              String[] itemList = data.split(",");
-              if (itemList.length == 4) {
-                if (FormatUtils.isNumeric(itemList[0]))
-                  vehicle.setBatteryVoltage(Float.parseFloat(itemList[0]));
+              char header = data.charAt(0);
+              String body = data.substring(1);
 
-                if (FormatUtils.isNumeric(itemList[1]))
-                  vehicle.setLeftWheelTicks(Float.parseFloat(itemList[1]));
-
-                if (FormatUtils.isNumeric(itemList[2]))
-                  vehicle.setRightWheelTicks(Float.parseFloat(itemList[2]));
-
-                if (FormatUtils.isNumeric(itemList[3]))
-                  vehicle.setSonarReading(Float.parseFloat(itemList[3]));
-
-                processUSBData(data);
+              switch (header) {
+                case 'f':
+                  vehicle.processVehicleConfig(body);
+                  break;
+                case 'v':
+                  if (FormatUtils.isNumeric(body)) {
+                    vehicle.setBatteryVoltage(Float.parseFloat(body));
+                  } else {
+                    String[] msgParts = body.split(":");
+                    switch (msgParts[0]) {
+                      case "min":
+                        vehicle.setMinMotorVoltage(Float.parseFloat(msgParts[1]));
+                      case "low":
+                        vehicle.setLowBatteryVoltage(Float.parseFloat(msgParts[1]));
+                        break;
+                      case "max":
+                        vehicle.setMaxBatteryVoltage(Float.parseFloat(msgParts[1]));
+                        break;
+                      default:
+                        Toast.makeText(
+                                requireContext().getApplicationContext(),
+                                "Invalid voltage message received!",
+                                Toast.LENGTH_SHORT)
+                            .show();
+                        break;
+                    }
+                  }
+                  break;
+                case 's':
+                  if (FormatUtils.isNumeric(body)) {
+                    vehicle.setSonarReading(Float.parseFloat(body));
+                  }
+                  break;
+                case 'w':
+                  String[] itemList = body.split(",");
+                  if (itemList.length == 2
+                      && FormatUtils.isNumeric(itemList[0])
+                      && FormatUtils.isNumeric(itemList[1])) {
+                    vehicle.setLeftWheelRpm(Float.parseFloat(itemList[0]));
+                    vehicle.setRightWheelRpm(Float.parseFloat(itemList[1]));
+                  }
+                  break;
+                case 'b':
+                  // do nothing
+                  break;
               }
+
+              processUSBData(data);
             });
 
     handlePhoneControllerEvents();
+    vehicle.requestVehicleConfig();
   }
 
   private void processKeyEvent(KeyEvent keyCode) {

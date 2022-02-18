@@ -38,7 +38,6 @@ public class RtspServer
   private Context context;
   private Size resolution = new Size(640, 360);
   private final int PORT = 1935;
-  private final CameraControlHandler cameraControlHandler = new CameraControlHandler();
 
   public RtspServer() {}
 
@@ -75,8 +74,8 @@ public class RtspServer
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_PROTOCOL", "RTSP"));
     sendServerUrl();
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("VIDEO_COMMAND", "START"));
-    BotToControllerEventBus.emitEvent(
-        ConnectionUtils.createStatus("TOGGLE_MIRROR", true)); // start as mirrored
+
+    rtspServerCamera1.enableAudio();
   }
 
   @Override
@@ -175,18 +174,12 @@ public class RtspServer
       }
     }
 
-    cameraControlHandler.handleCameraControlEvents();
-
     if (!rtspServerCamera1.isStreaming()) {
       if (rtspServerCamera1.prepareAudio(64 * 1024, 32000, false, true, true)
           && rtspServerCamera1.prepareVideo(
               resolution.getWidth(), resolution.getHeight(), 20, 1200 * 1024, 2, 0)) {
 
         rtspServerCamera1.startStream("");
-        boolean isMute = ControllerConfig.getInstance().isMute();
-        if (isMute) {
-          cameraControlHandler.disableAudio();
-        }
 
         // Delay starting the client for a second to make sure the server is started.
         Runnable action = () -> startClient();
@@ -272,35 +265,6 @@ public class RtspServer
   @Override
   public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
     Log.i(TAG, "onSurfaceTextureUpdated called");
-  }
-
-  class CameraControlHandler {
-
-    private void disableAudio() {
-      rtspServerCamera1.disableAudio();
-    }
-
-    private void handleCameraControlEvents() {
-      ControllerConfig config = ControllerConfig.getInstance();
-
-      ControllerToBotEventBus.subscribe(
-          this.getClass().getSimpleName(),
-          event -> {
-            String commandType = event.getString("command");
-            if (rtspServerCamera1.isAudioMuted()) rtspServerCamera1.enableAudio();
-            else rtspServerCamera1.disableAudio();
-          },
-          error -> Log.d(null, "Error occurred in ControllerToBotEventBus: " + error),
-          event ->
-              event.has("command")
-                  && ("TOGGLE_SOUND".equals(event.getString("command"))
-                      || "TOGGLE_MIRROR"
-                          .equals(
-                              event.getString(
-                                  "command"))) // filter out all but the "TOGGLE_SOUND" and
-          // "TOGGLE_MIRROR" commands..
-          );
-    }
   }
 
   // Utils

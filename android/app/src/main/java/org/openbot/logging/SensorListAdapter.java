@@ -8,20 +8,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
+import org.openbot.R;
 import org.openbot.databinding.ItemSensorBinding;
 import org.openbot.env.SharedPreferencesManager;
 
 public class SensorListAdapter extends RecyclerView.Adapter<SensorListAdapter.ViewHolder> {
 
   private final List<String> names;
-  private final List<Boolean> status;
+  private List<Boolean> status;
   private final SharedPreferencesManager preferencesManager;
+  private CheckBox allSelector;
 
   public SensorListAdapter(
-      HashMap<String, Boolean> items, SharedPreferencesManager preferencesManager) {
+      HashMap<String, Boolean> items,
+      CheckBox allSelector,
+      SharedPreferencesManager preferencesManager) {
     names = new ArrayList<>(items.keySet());
     status = new ArrayList<>(items.values());
     this.preferencesManager = preferencesManager;
+    this.allSelector = allSelector;
   }
 
   @NotNull
@@ -36,7 +41,24 @@ public class SensorListAdapter extends RecyclerView.Adapter<SensorListAdapter.Vi
     holder.checkBox.setText(names.get(position));
     holder.checkBox.setChecked(status.get(position));
     holder.checkBox.setOnClickListener(
-        v -> preferencesManager.setSensorStatus(holder.checkBox.isChecked(), names.get(position)));
+        v -> {
+          status.set(position, holder.checkBox.isChecked());
+          preferencesManager.setSensorStatus(holder.checkBox.isChecked(), names.get(position));
+          allSelector.setChecked(getStatusChange());
+          allSelector.setText(
+              allSelector.isChecked()
+                  ? allSelector.getContext().getResources().getString(R.string.clearAll)
+                  : allSelector.getContext().getResources().getString(R.string.selectAll));
+        });
+  }
+
+  private boolean getStatusChange() {
+    for (boolean b : status) if (!b) return false;
+    return true;
+  }
+
+  public void updateStatusValue(boolean value) {
+    for (int i = 0; i < status.size(); i++) status.set(i, value);
   }
 
   @Override

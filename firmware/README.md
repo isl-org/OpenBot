@@ -5,7 +5,7 @@
   <a href="README_CN.md">简体中文</a>
 </p>
 
-We use a microcontroller unit (MCU) to act as a bridge between the robot body and the smartphone.  We provide our [firmware](openbot_v1_nano/openbot_v1_nano.ino) for the Arduino Nano with an ATmega328P microcontroller.
+We use a microcontroller unit (MCU) to act as a bridge between the robot body and the smartphone.  We provide our [firmware](openbot_nano/openbot_nano.ino) for the Arduino Nano with an ATmega328P microcontroller.
 
 ## Features
 
@@ -14,16 +14,19 @@ The main task of the MCU is to handle the low-level control of the vehicle and p
 ## Setup
 
 First you have to set up your hardware configuration at the beginning of the code. If you did the DIY build (using the L298N motor driver), set `OPENBOT DIY`.
-If you used the custom PCB, check the version and set either `OPENBOT PCB_V1` or `OPENBOT PCB_V2`.
+If you used the custom PCB, check the version and set either `OPENBOT PCB_V1` or `OPENBOT PCB_V2`. If you have a OpenBot kit set `OPENBOT RTR_V1`. If you have retrofitted a RC truck, set `OPENBOT RC_CAR`.
 
-Next, you need to configure which features you want to enable. Disabled features are not compiled to save memory and make the code faster.
+## Config
 
-- Enable the voltage divider by setting `HAS_VOLTAGE_DIVIDER 1` (default: 0)
-- Enable the indicator LEDs by setting `HAS_INDICATORS 1` (default: 0)
-- Enable the speed sensors by setting `HAS_SPEED_SENSORS 1` (default: 0)
-- Enable the ultrasonic sensor by setting `HAS_SONAR 1` (default: 0)
-- Enable the median filter for sonar measurements by setting `USE_MEDIAN 1` (default: 0)
-- Enable the OLED display by setting `HAS_OLED 1` (default: 0)
+Next, you need to configure which features you want to enable. Disabled features are not compiled to save memory and make the code faster. If a flag is not defined, the feature will be disabled. Each model has some default settings, that you may need to change depending on your configuration.
+
+- Enable the voltage divider by setting `HAS_VOLTAGE_DIVIDER 1` (disable: 0). If you have a voltage divider, you should also specify the `VOLTAGE_DIVIDER_FACTOR` which is computed as (R1+R2)/R2, `VOLTAGE_MIN` which is the minimum voltage to drive the motors, `VOLTAGE_LOW` which is the minimum battery voltage and `VOLTAGE_MAX` which is the maximum battery voltage.
+- Enable the indicator LEDs by setting `HAS_INDICATORS 1` (disable: 0).
+- Enable the front/back speed sensors by setting `HAS_SPEED_SENSORS_FRONT 1` / `HAS_SPEED_SENSORS_BACK 1` (disable: 0).
+- Enable the ultrasonic sensor by setting `HAS_SONAR 1` (disable: 0). Enable the median filter for sonar measurements by setting `USE_MEDIAN 1` (disable: 0).
+- Enable the bumper sensor which is used to detect collisions by setting `HAS_BUMPER 1` (disable: 0).
+- Enable the OLED display by setting `HAS_OLED 1` (disable: 0).
+- Enable the front/back/status LEDs by setting `HAS_LEDS_FRONT 1` / `HAS_LEDS_BACK 1` / `HAS_LEDS_STATUS 1` (disable: 0).
 
 ### Dependencies
 
@@ -72,22 +75,31 @@ This section explains how to test all functionalities of the car after the firmw
     3. the correct USB port is selected
 2. Open the Serial Monitor: `Tools` :arrow_right: `Serial Monitor`
 
-#### Vehicle Status
+#### Sending messages to the OpenBot
 
-You should now see four comma-seperated values that update once per second:
+You can also send messages to the Arudino by typing a command into the input field on the top and then pressing send. The following commands are available (provided the neccessary features are supported by the robot):
+
+- `c<left>,<right>` where `<left>` and `<right>` are both in the range [-255,255]. A value of `0` will stop the motors. A value of `255` applies the maximum voltage driving the motors at the full speed forward. Lower values lead to proportionlly lower voltages and speeds. Negative values apply the corresponding voltages in reverse polarity driving the motors in reverse.
+- `i<left>,<right>` where `<left>` and `<right>` are both in the range [0,1] and correspond to the left and right indicator LEDs. For example, `i1,0` turns on the left indicator, `i0,1` the right indicator and `i1,1` both indicators. Enabled indicator lights will flash once per second. A value of `i0,0` turns the indicators off. Only one state at a time is possible.
+- `l<front>,<back>` where `<front>` and `<back>` are both in the range [0,255] and correspond to the brightness of the front and back LEDs.
+- `s<time_ms>` where `<time_ms>` corresponds to the time in ms between sonar measurements triggered (default = 1000). After the sonar reading is aquired the message is sent to the robot. If it times out, the specified `MAX_SONAR_DISTANCE` is sent.
+- `w<time_ms>` where `<time_ms>` corresponds to the time in ms between wheel odometry measurements sent to the robot (default = 1000). The wheel speed is monitored coniniously and and the rpm is computed as average over the specified time interval.
+- `v<time_ms>` where `<time_ms>` corresponds to the time in ms between voltage measurements sent to the robot (default = 1000). The voltage is monitored continuously and filtered via a moving average filter of size 10. In addition to setting the time interval for voltage readings, sending this command will also trigger messages that report the minimum voltage to drive the motors (`vmin:<value>`), minimum battery voltage (`vlow:<value>`) and maximum battery vollage (`vmax:<value>`).
+- `h<time_ms>` where `<time_ms>` corresponds to the time in ms after which the robot will stop if no new heartbeat message was received (default = -1).
+- `b<time_ms>` where `<time_ms>` corresponds to the time in ms after which the bumper trigger will be reset (default = 750).
+- `n<color>,<state>` where `<color>` corresponds to a status LED (`b` = blue, `g` = green, `y` = yellow) and `state` to its value (`0` = off, `1` = on).
+- `f` will send a request to the OpenBot to return a message with the robot type and its features, e.g. voltage measurement (`v`), indicators (`i`), sonar (`s`), bump sensors (`b`),  wheel odometry (`wf`, `wb`), LEDs (`lf`, `lb`, `ls`), etc. For example, for the `RTR_V1` version of OpenBot the message would look like this: `fRTR_V1:v:i:s:b:wf:wb:lf:lb:ls:`.
+
+#### Receiving messages from the OpenBot
+
+Depending on your configuration you may see different messages.
 
 ![Serial Monitor](../docs/images/serial_monitor.png)
 
-- The first value is the battery voltage. If you connect the battery to the car (i.e. turn on the switch), it should show the battery voltage. If you disconnect the battery (i.e. turn off the switch), it should show a small value.
-- The second and third values are the raw readings of the speed sensors. Each hole in the encoder disk will increment the counter by plus/minus one depending on the direction. You can set the number of holes with the parameter `DISK_HOLES`. If you are using the stardard disk with 20 holes, there will be 20 counts for each revolution of the wheel. Hence, if you divide the displayed number by 20, you will get the revolutions per second.
-- The fourth value is the estimated free space in front of the ultrasonic sensor in cm. If the ultrasonic sensor is disabled or unable to get a reading, it will show `65535`.
-
-#### Vehicle Control
-
-You can also send messages to the Arudino by typing a command into the input field on the top and then pressing send. The following commands are available:
-
-- `c<left>,<right>` where `<left>` and `<right>` are both in the range [-255,255]. A value of `0` will stop the motors. A value of `255` applies the maximum voltage driving the motors at the full speed forward. Lower values lead to proportionlly lower voltages and speeds. Negative values apply the corresponding voltages in reverse polarity driving the motors in reverse.
-- `i<cmd>` where `<cmd>` is in the range [-1,1]. A value of `-1` turns on the left indicator LED and a value of `1` turns on the right indicator LED. A value of `0` turns the indicator LEDs off. Only one state at a time is possible.
+- Messages that start with `v` report the battery voltage. If you connect the battery to the car (i.e. turn on the switch), it should show the battery voltage. If you disconnect the battery (i.e. turn off the switch), it should show a small value.
+- Messages that start with `w` report readings of the speed sensors measured in revolutions per second (rpm). Each hole in the encoder disk will increment a counter by plus/minus one depending on the direction. You can set the number of holes with the parameter `DISK_HOLES`. If you are using the stardard disk with 20 holes, there will be 20 counts for each revolution of the wheel.
+- Messages that start with `s` report the estimated free space in front of the ultrasonic sensor in cm. If the ultrasonic sensor is disabled or unable to get a reading, it will show `65535`.
+- Messages that start with `b` report collisions. The codes `lf` (left front), `rf` (right front), `cf` (center front), `lb` (left back), `rb` (right back) indicate which sensor triggered the collision.
 
 #### Test procedure
 
@@ -101,15 +113,15 @@ Before you proceed, make sure the tires are removed. You will need the Serial Mo
         2. Observe the readings on the serial monitor for some time and then enter the command `c128,128`.
         3. If the sensor readings change significantly, you will need to dampen the vibrations transmitted to the ultrasonic sensor from the chassis (e.g. add some silicon, adjust the mounting position).
 3. If you have the speed sensors installed:
-    1. Make sure, you have plenty of free space in front of the ultrasonic sensor. The reading (fourth value) needs to be at least above the `STOP_THRESHOLD` which is `32` by default. If the ultrasonic sensor is not installed, you should see a reading of `65535`.
+    1. Make sure, you have plenty of free space in front of the ultrasonic sensor. The reading (fourth value) needs to be at least above the `STOP_THRESHOLD` which is `10` by default. If the ultrasonic sensor is not installed, you should see a reading of `65535`.
     2. Send the command `c128,128`. The motors will start spinning at *slow speed* (50% PWM). The speed sensor readings (second and third value) should be similar to the values in the image above. If you are using the DIY version or a weaker battery, values may be lower. Check that all motors are spinning forward and that the speed sensor readings are positive. Note: If you multiply these values by 3, they correspond to the rpm for the standard disk with 20 holes.
     3. Try sending different controls and observe the speed sensor readings. For example, the command `c-128,-128` will spin all motors backward at *slow speed* (50% PWM). The command `c255,-255` will spin the left motors forward and the right motors backward at *fast speed* (100% PWM). The command `c-192,192` will spin the left motors backward and the right motors forward at *normal speed* (75% PWM).
 4. Stop the motors by sending the command `c0,0` or by holding your hand in front of the ultrasonic sensor
-5. If you have the indicator LEDs installed, send the command `i-1` and observe the left indicator light flashing. The send the command `i1` and observe the right indicator light flashing. Finally, turn the indicator off by sending the command `i0`.
+5. If you have the indicator LEDs installed, send the command `i1,0` and observe the left indicator light flashing. The send the command `i0,1` and observe the right indicator light flashing. Finally, turn the indicator off by sending the command `i0,0`.
 
 ### No Phone Mode
 
-Before testing the car with a smartphone that has the OpenBot application installed, you can also test the car without a phone first. Simply set the option `NO_PHONE_MODE` to `1`. The car will now drive at *normal_speed* (75% PWM) and slow down as it detects obstacles with the ultrasonic sensor. Once it gets close to the `STOP_THRESHOLD` (default: 32cm), it will start turning in a random direction and turn on the LED on that side. If the estimated free space in front of the car falls below the `STOP_THRESHOLD`, it will slowly go backwards and both LEDs will turn on. Note that both the car and the Arduino need to be powered. The Arduino can be powered by connecting the 5V pin to the 5V output of the L298N motor driver, or by connecting the USB cable to a power source (e.g. phone).
+Before testing the car with a smartphone that has the OpenBot application installed, you can also test the car without a phone first. Simply set the option `NO_PHONE_MODE` to `1`. The car will now drive at *normal_speed* (75% PWM) and slow down as it detects obstacles with the ultrasonic sensor. Once it gets close to the `TURN_THRESHOLD` (default: 50cm), it will start turning in a random direction and turn on the LED on that side. If the estimated free space in front of the car falls below the `TURN_THRESHOLD`, it will slowly go backwards and both LEDs will turn on. Note that both the car and the Arduino need to be powered. The Arduino can be powered by connecting the 5V pin to the 5V output of the L298N motor driver, or by connecting the USB cable to a power source (e.g. phone).
 
 Before running the car, we recommend to remove the tires, connect the Arduino to a computer and observe the serial monitor like in the section [Testing](#testing). The output on the serial monitor is a bit easier to parse (same as OLED) and shows the battery voltage, the rpm for the left and right motors and the estimated free space in front of the car. You can move a large object back and forth in front of ultrasonic sensor and observe the speed of the motors changing.
 

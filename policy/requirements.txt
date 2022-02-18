@@ -1,4 +1,4 @@
-tensorflow==2.6.0
+tensorflow==2.5.3
 notebook>=6.4.3
 matplotlib>=3.4.3
 pillow>=8.3.1

@@ -33,7 +33,6 @@ import org.openbot.R;
 import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentObjectNavBinding;
 import org.openbot.env.BorderedText;
-import org.openbot.env.Control;
 import org.openbot.env.ImageUtils;
 import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
@@ -42,6 +41,7 @@ import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.vehicle.Control;
 import timber.log.Timber;
 
 public class ObjectNavFragment extends CameraFragment {
@@ -338,7 +338,7 @@ public class ObjectNavFragment extends CameraFragment {
         getString(
             R.string.speedInfo,
             String.format(
-                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRPM(), vehicle.getRightWheelRPM())));
+                Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRpm(), vehicle.getRightWheelRpm())));
   }
 
   @Override

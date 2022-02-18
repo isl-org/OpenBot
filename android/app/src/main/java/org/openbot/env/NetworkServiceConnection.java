@@ -1,6 +1,8 @@
 package org.openbot.env;
 
-import static timber.log.Timber.*;
+import static timber.log.Timber.d;
+import static timber.log.Timber.e;
+import static timber.log.Timber.i;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -104,74 +106,80 @@ public class NetworkServiceConnection implements ILocalConnection {
   }
   // end of interface
 
+  NsdManager.DiscoveryListener mDiscoveryListener = null;
+
   private void runConnection() {
     try {
-      mNsdManager.discoverServices(
-          /*ALL_SERVICE_TYPES*/ SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
+      this.mDiscoveryListener = createDiscoveryListener();
+
+      mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
     } catch (IllegalArgumentException e) {
       Log.d(TAG, "runConnection: Already discovering: " + e);
     }
   }
 
-  NsdManager.DiscoveryListener mDiscoveryListener =
-      new NsdManager.DiscoveryListener() {
-        // Called as soon as service discovery begins.
-        @Override
-        public void onDiscoveryStarted(String regType) {
-          d("Service discovery started");
-        }
+  NsdManager.DiscoveryListener createDiscoveryListener() {
+    return new NsdManager.DiscoveryListener() {
+      // Called as soon as service discovery begins.
+      @Override
+      public void onDiscoveryStarted(String regType) {
+        d("Service discovery started");
+      }
 
-        @Override
-        public void onServiceFound(NsdServiceInfo service) {
-          // A service was found! Do something with it.
-          d("Service discovery success : %s", service);
-          d("Host = %s", service.getServiceName());
-          d("port = %s", String.valueOf(service.getPort()));
+      @Override
+      public void onServiceFound(NsdServiceInfo service) {
+        // A service was found! Do something with it.
+        d("Service discovery success : %s", service);
+        d("Host = %s", service.getServiceName());
+        d("port = %s", String.valueOf(service.getPort()));
 
-          try {
-            if (service.getServiceType().equals(SERVICE_TYPE)
-                && service.getServiceName().equals(SERVICE_NAME_CONTROLLER)) {
-              mNsdManager.resolveService(service, mResolveListener);
-            } else if (service.getServiceName().equals(MY_SERVICE_NAME)) {
-              Log.d(TAG, "Same machine: " + MY_SERVICE_NAME);
-            }
-          } catch (java.lang.IllegalArgumentException e) {
-            Log.d(TAG, "Got exception: " + e);
+        try {
+          if (service.getServiceType().equals(SERVICE_TYPE)
+              && service.getServiceName().equals(SERVICE_NAME_CONTROLLER)) {
+            mNsdManager.resolveService(service, mResolveListener);
+          } else if (service.getServiceName().equals(MY_SERVICE_NAME)) {
+            Log.d(TAG, "Same machine: " + MY_SERVICE_NAME);
           }
+        } catch (java.lang.IllegalArgumentException e) {
+          Log.d(TAG, "Got exception: " + e);
         }
+      }
 
-        @Override
-        public void onServiceLost(NsdServiceInfo service) {
-          // When the network service is no longer available.
-          // Internal bookkeeping code goes here.
-          ((Activity) context)
-              .runOnUiThread(
-                  () -> {
-                    ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}");
-                  });
-        }
+      @Override
+      public void onServiceLost(NsdServiceInfo service) {
+        // When the network service is no longer available.
+        // Internal bookkeeping code goes here.
+        ((Activity) context)
+            .runOnUiThread(
+                () -> {
+                  // There is no need to disconnect here if this DNS service is no longer active.
+                  // This is only used for initial connection, but we are already connected.
+                  // ControllerToBotEventBus.emitEvent("{command: \"DISCONNECTED\"}");
+                });
+      }
 
-        @Override
-        public void onDiscoveryStopped(String serviceType) {
-          i("Discovery stopped: %s", serviceType);
-        }
+      @Override
+      public void onDiscoveryStopped(String serviceType) {
+        i("Discovery stopped: %s", serviceType);
+      }
 
-        @SuppressLint("TimberArgCount")
-        @Override
-        public void onStartDiscoveryFailed(String serviceType, int errorCode) {
-          e(TAG, "Discovery failed: Error code: %s", errorCode);
-          mNsdManager.stopServiceDiscovery(this);
+      @SuppressLint("TimberArgCount")
+      @Override
+      public void onStartDiscoveryFailed(String serviceType, int errorCode) {
+        e(TAG, "Discovery failed: Error code: %s", errorCode);
+        mNsdManager.stopServiceDiscovery(this);
 
-          // re-try connecting
-          runConnection();
-        }
+        // re-try connecting
+        runConnection();
+      }
 
-        @Override
-        public void onStopDiscoveryFailed(String serviceType, int errorCode) {
-          e("Discovery failed: Error code:%s", errorCode);
-          mNsdManager.stopServiceDiscovery(this);
-        }
-      };
+      @Override
+      public void onStopDiscoveryFailed(String serviceType, int errorCode) {
+        e("Discovery failed: Error code:%s", errorCode);
+        mNsdManager.stopServiceDiscovery(this);
+      }
+    };
+  }
 
   NsdManager.ResolveListener mResolveListener =
       new NsdManager.ResolveListener() {
