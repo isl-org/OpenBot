@@ -29,19 +29,19 @@ function RemoteKeyboard (commandHandler) {
 
         if (['w', 's'].includes(keyPress.key)) {
           commandHandler.reset()
+          break
         }
 
-        if (['a', 'd', 'q', 'e'].includes(keyPress.key)) {
+        if (['a', 'd'].includes(keyPress.key)) {
           if (pressedKeys.has('w')) {
             commandHandler.goForward()
-          } else {
-            commandHandler.reset()
+            break
           }
           if (pressedKeys.has('s')) {
             commandHandler.goBackward()
-          } else {
-            commandHandler.reset()
+            break
           }
+          commandHandler.reset()
         }
         break
 
@@ -75,23 +75,23 @@ function RemoteKeyboard (commandHandler) {
             if (pressedKeys.has('w')) {
               commandHandler.forwardLeft()
             }
-            if (pressedKeys.has('s')) {
+            else if (pressedKeys.has('s')) {
               commandHandler.backwardLeft()
+            }
+            else {
+              commandHandler.rotateLeft()
             }
             break
           case 'd':
             if (pressedKeys.has('w')) {
               commandHandler.forwardRight()
             }
-            if (pressedKeys.has('s')) {
+            else if (pressedKeys.has('s')) {
               commandHandler.backwardRight()
             }
-            break
-          case 'q':
-            commandHandler.rotateLeft()
-            break
-          case 'e':
-            commandHandler.rotateRight()
+            else {
+              commandHandler.rotateRight()
+            }
             break
           case 'n':
             commandHandler.sendCommand('NOISE')
@@ -113,6 +113,12 @@ function RemoteKeyboard (commandHandler) {
             break
           case 'm':
             commandHandler.sendCommand('DRIVE_MODE')
+            break
+          case 'q':
+            commandHandler.sendCommand('SPEED_DOWN')
+            break
+          case 'e':
+            commandHandler.sendCommand('SPEED_UP')
             break
           case 'Escape':
             commandHandler.reset()
