@@ -405,7 +405,7 @@ public class AutopilotFragment extends CameraFragment {
                 binding.controllerContainer.controlInfo.setText(
                     String.format(Locale.US, "%.2f,%.2f", left, right)));
   }
- 
+
   @Override
   public void onConnectionEstablished(String ipAddress) {
     requireActivity().runOnUiThread(() -> binding.ipAddress.setText(ipAddress));
