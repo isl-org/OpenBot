@@ -12,8 +12,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 50
-        versionName "0.5.0"
+        versionCode getVersionCode()
+        versionName getVersionName()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -82,3 +82,6 @@ dependencies {
     apply plugin: 'com.android.application'
     apply plugin: 'kotlin-android'
 }
+
+println("Version Code: " + getVersionCode())
+println("Version Name: " + getVersionName())
