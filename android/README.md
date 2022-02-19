@@ -19,18 +19,18 @@ The easiest way to get either of the apps is to download it directly to the phon
 <table style="width:100%;border:none;text-align:center">
   <tr>
     <td>  <a href="https://app.openbot.org/robot" target="_blank">
-    <img alt="Robot App" width="50%" src="../docs/images/robot_app_qr_code.png" style ="padding-right: 50%;" />
+    <img alt="🤖 App" width="50%" src="../docs/images/robot_app_qr_code.png" />
   </a>
     </td>
     <td>
   <a href="https://app.openbot.org/controller" target="_blank">
-    <img alt="Controller App" width="50%" src="../docs/images/controller_app_qr_code.png" />
+    <img alt="🎮 App" width="50%" src="../docs/images/controller_app_qr_code.png" />
   </a>
       </td>
   </tr>
   <tr>
-    <td>Robot App</td>
-    <td>Controller App</td>
+    <td>🤖 App</td>
+    <td>🎮 App</td>
   </tr>
 </table>
 
