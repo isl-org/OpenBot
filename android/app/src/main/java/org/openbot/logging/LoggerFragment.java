@@ -282,11 +282,14 @@ public class LoggerFragment extends CameraFragment {
             Timber.e(e, "Got interrupted.");
           }
         });
+    if (binding.videoCaptureCheckBox.isChecked()) startVideoRecording();
   }
 
   private void stopLogging() {
     if (sensorConnection != null) requireActivity().unbindService(sensorConnection);
     requireActivity().stopService(intentSensorService);
+
+    if (binding.videoCaptureCheckBox.isChecked()) stopVideoRecording();
 
     // Pack and upload the collected data
     runInBackground(
@@ -331,8 +334,10 @@ public class LoggerFragment extends CameraFragment {
           new ActivityResultContracts.RequestMultiplePermissions(),
           result -> {
             result.forEach((permission, granted) -> allGranted = allGranted && granted);
-            if (allGranted) setIsLoggingActive(true);
-            else {
+            if (allGranted) {
+              bindCameraUseCases();
+              setIsLoggingActive(true);
+            } else {
               PermissionUtils.showLoggingPermissionsToast(requireActivity());
             }
           });

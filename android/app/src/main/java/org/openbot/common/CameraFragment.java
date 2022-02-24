@@ -1,13 +1,18 @@
 package org.openbot.common;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -17,14 +22,19 @@ import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
+import androidx.camera.core.VideoCapture;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.viewbinding.ViewBinding;
 import com.google.common.util.concurrent.ListenableFuture;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.env.ImageUtils;
 import org.openbot.utils.Constants;
@@ -44,6 +54,8 @@ public abstract class CameraFragment extends ControlsFragment {
   private YuvToRgbConverter converter;
   private Bitmap bitmapBuffer;
   private int rotationDegrees;
+  private VideoCapture videoCapture;
+  private Dialog loadingDialog;
 
   protected View inflateFragment(int resId, LayoutInflater inflater, ViewGroup container) {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
@@ -60,6 +72,7 @@ public abstract class CameraFragment extends ControlsFragment {
 
     previewView = cameraView.findViewById(R.id.viewFinder);
     rootView.addView(view);
+    videoCapture = new VideoCapture.Builder().build();
 
     if (!PermissionUtils.hasCameraPermission(requireActivity())) {
       requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
@@ -95,9 +108,10 @@ public abstract class CameraFragment extends ControlsFragment {
   }
 
   @SuppressLint({"UnsafeExperimentalUsageError", "UnsafeOptInUsageError"})
-  private void bindCameraUseCases() {
+  protected void bindCameraUseCases() {
     converter = new YuvToRgbConverter(requireContext());
     bitmapBuffer = null;
+    videoCapture = new VideoCapture.Builder().build();
     preview = new Preview.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).build();
     final boolean rotated = ImageUtils.getScreenOrientation(requireActivity()) % 180 == 90;
     final PreviewView.ScaleType scaleType =
@@ -113,7 +127,7 @@ public abstract class CameraFragment extends ControlsFragment {
           new ImageAnalysis.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).build();
     else
       imageAnalysis = new ImageAnalysis.Builder().setTargetResolution(analyserResolution).build();
-    // insert your code here.
+
     imageAnalysis.setAnalyzer(
         cameraExecutor,
         image -> {
@@ -130,7 +144,7 @@ public abstract class CameraFragment extends ControlsFragment {
     try {
       if (cameraProvider != null) {
         cameraProvider.unbindAll();
-        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
+        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis, videoCapture);
       }
     } catch (Exception e) {
       Timber.e("Use case binding failed: %s", e.toString());
@@ -186,6 +200,68 @@ public abstract class CameraFragment extends ControlsFragment {
       else this.analyserResolution = resolutionSize;
     }
     bindCameraUseCases();
+  }
+
+  @SuppressLint("RestrictedApi")
+  protected void startVideoRecording() {
+    String outputDirectory =
+        Environment.getExternalStorageDirectory().getAbsolutePath()
+            + File.separator
+            + getString(R.string.app_name)
+            + File.separator
+            + "videos";
+    final File myDir = new File(outputDirectory);
+
+    if (!myDir.exists()) {
+      if (!myDir.mkdirs()) {
+        Timber.i("Make dir failed");
+      }
+    }
+
+    File videoFile =
+        new File(
+            outputDirectory,
+            new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                    .format(System.currentTimeMillis())
+                + ".mp4");
+    VideoCapture.OutputFileOptions outputOptions =
+        new VideoCapture.OutputFileOptions.Builder(videoFile).build();
+
+    videoCapture.startRecording(
+        outputOptions,
+        ContextCompat.getMainExecutor(requireContext()),
+        new VideoCapture.OnVideoSavedCallback() {
+          @Override
+          public void onVideoSaved(
+              @NonNull @NotNull VideoCapture.OutputFileResults outputFileResults) {
+            Uri savedUri = Uri.fromFile(videoFile);
+            if (loadingDialog != null) loadingDialog.cancel();
+            Timber.d("Video capture succeeded:" + savedUri);
+          }
+
+          @Override
+          public void onError(
+              int videoCaptureError,
+              @NonNull @NotNull String message,
+              @Nullable @org.jetbrains.annotations.Nullable Throwable cause) {
+            Timber.e("Video capture failed: " + message);
+          }
+        });
+  }
+
+  @SuppressLint("RestrictedApi")
+  public void stopVideoRecording() {
+    videoCapture.stopRecording();
+    showLoading(requireContext());
+  }
+
+  public void showLoading(final Context context) {
+    loadingDialog = new Dialog(context);
+    loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    loadingDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    loadingDialog.getWindow().setDimAmount(0.1f);
+    loadingDialog.setContentView(R.layout.dialog_loader);
+    loadingDialog.show();
   }
 
   protected abstract void processFrame(Bitmap image, ImageProxy imageProxy);
