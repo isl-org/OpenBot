@@ -1,0 +1,6 @@
+tensorflow>=2.3.0
+notebook>=6.4.3
+matplotlib>=3.4.3
+pillow>=8.3.1
+numpyencoder>=0.3.0
+black[jupyter]

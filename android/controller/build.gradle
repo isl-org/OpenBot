@@ -56,13 +56,13 @@ dependencies {
     //noinspection GradleDependency
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    testImplementation 'junit:junit:4.13.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
-    implementation 'com.google.android.gms:play-services-nearby:17.0.0'
+    implementation "com.google.android.gms:play-services-location:$location_version"
+    implementation "com.google.android.gms:play-services-nearby:$nearby_version"
 
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:2.2.8"
@@ -72,10 +72,10 @@ dependencies {
     implementation 'com.abemart.wroup:wroup:0.9'
 
     // material design
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
 
     // WebRTC
-    implementation 'org.webrtc:google-webrtc:1.0.+'
+    implementation "org.webrtc:google-webrtc:$webrtc_version"
 
     // For a library module, uncomment the following line and comment the one after
     // apply plugin: 'com.android.library'

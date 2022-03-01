@@ -29,7 +29,7 @@ async def init_frontend(app: web.Application):
     installed = f"{frontend_pkg}=={version}"
     required = None
 
-    for line in open(os.path.join(base_dir, "requirements.txt"), "r"):
+    for line in open(os.path.join(base_dir, "requirements_web.txt"), "r"):
         if line.startswith(frontend_pkg):
             required = line.strip()
 

@@ -19,7 +19,7 @@ You first need to setup your training environment.
 We recommend to create a conda environment for OpenBot (if not already done). Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). You can create a new environment with the following command:
 
 ```bash
-conda create -n openbot python=3.7
+conda create -n openbot pip
 ```
 
 If you do not want install the dependencies globally, activate your conda environment first:
@@ -28,28 +28,36 @@ If you do not want install the dependencies globally, activate your conda enviro
 conda activate openbot
 ```
 
-Make sure you are in the folder `policy` within your local OpenBot repository. Now, you can install all the dependencies with the following command:
+Make sure you are in the folder `policy` within your local OpenBot repository. Now, you can install all the dependencies for training with the following command:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements_train.txt
 ```
+
+You can also install pydot (`pip install pydot`) and graphviz ([see instructions](https://graphviz.gitlab.io/download/)) if you want to visualize the the network architecture.
 
 Note that training will be very slow on a laptop. So if you have access to a computer with dedicated GPU, we highly recommend to use it.
 
+If you want to use the [WebApp](#web-app) for data collection and training, you need to install the following dependencies in addition.
+
+```bash
+pip install -r requirements_web.txt
+```
+
 If you prefer to setup the environment manually, here is a list of the dependencies:
 
-- tensorflow
-- jupyter notebook
-- matplotlib
-- numpy
-- PIL
-- black[jupyter]
+- [tensorflow](https://pypi.org/project/tensorflow/)
+- [jupyter notebook](https://pypi.org/project/notebook/)
+- [matplotlib](https://pypi.org/project/matplotlib/)
+- [numpy](https://pypi.org/project/numpy/)
+- [PIL](https://pypi.org/project/Pillow/)
+- [black[jupyter]](https://pypi.org/project/black/)
 
 If you want to use the web interface you also need:
 
-- AIOHTTP
-- aiozeroconf
-- imageio
+- [aiohttp](https://pypi.org/project/aiohttp/)
+- [aiozeroconf](https://pypi.org/project/aiozeroconf/)
+- [imageio](https://pypi.org/project/imageio/)
 
 NOTES:
 
