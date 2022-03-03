@@ -62,8 +62,13 @@ public class DetectorFloatYoloV4 extends Detector {
 
   @Override
   protected final void parseTflite() {
-    outputLocationsIdx = tflite.getOutputIndex("Identity");
-    outputScoresIdx = tflite.getOutputIndex("Identity_1");
+    try {
+      outputLocationsIdx = tflite.getOutputIndex("Identity");
+      outputScoresIdx = tflite.getOutputIndex("Identity_1");
+    } catch (IllegalArgumentException e) {
+      outputLocationsIdx = tflite.getOutputIndex("StatefulPartitionedCall:0");
+      outputScoresIdx = tflite.getOutputIndex("StatefulPartitionedCall:1");
+    }
     NUM_DETECTIONS = tflite.getOutputTensor(outputLocationsIdx).shape()[1];
   }
 
