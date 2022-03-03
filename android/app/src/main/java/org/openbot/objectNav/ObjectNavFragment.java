@@ -388,6 +388,9 @@ public class ObjectNavFragment extends CameraFragment {
   }
 
   private long frameNum = 0;
+  private long processedFrames;
+  private double processingTime;
+  MovingAverage mavg = new MovingAverage(100);
 
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy image) {
@@ -452,12 +455,36 @@ public class ObjectNavFragment extends CameraFragment {
 
             computingNetwork = false;
           });
-      if (lastProcessingTimeMs > 0)
-        requireActivity()
-            .runOnUiThread(
-                () ->
-                    binding.inferenceInfo.setText(
-                        String.format(Locale.US, "%.1f fps", 1000.f / lastProcessingTimeMs)));
+      if (lastProcessingTimeMs > 0) {
+        mavg.next(lastProcessingTimeMs);
+        processingTime = mavg.next(lastProcessingTimeMs);
+        processedFrames += 1;
+        if (processedFrames >= 100) {
+          binding.inferenceInfo.setText(
+              String.format(Locale.US, "%.1f fps", 1000.f / processingTime));
+        }
+      }
+    }
+  }
+
+  public class MovingAverage {
+    private long[] window;
+    private int n, insert;
+    private long sum;
+
+    public MovingAverage(int size) {
+      window = new long[size];
+      insert = 0;
+      sum = 0;
+    }
+
+    public double next(long val) {
+      if (n < window.length) n++;
+      sum -= window[insert];
+      sum += val;
+      window[insert] = val;
+      insert = (insert + 1) % window.length;
+      return (double) sum / n;
     }
   }
 
