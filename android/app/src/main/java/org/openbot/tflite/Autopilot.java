@@ -43,7 +43,7 @@ public abstract class Autopilot extends Network {
     try {
       cmdIndex = tflite.getInputIndex("serving_default_cmd_input:0");
       imgIndex = tflite.getInputIndex("serving_default_img_input:0");
-    } catch (Exception e) {
+    } catch (IllegalArgumentException e) {
       cmdIndex = tflite.getInputIndex("cmd_input");
       imgIndex = tflite.getInputIndex("img_input");
     }
