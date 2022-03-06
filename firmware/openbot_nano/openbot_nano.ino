@@ -312,11 +312,15 @@ unsigned int light_back = 0;
 #if HAS_BUMPER
 bool bumper_event = 0;
 const int BUMPER_NOISE = 512;
-const int BUMPER_CF = 970;
-const int BUMPER_LF = 870; //922
-const int BUMPER_RF = 770; //820
-const int BUMPER_LB = 670; //716
-const int BUMPER_RB = 570; //613
+const int BUMPER_EPS = 10;
+const int BUMPER_AF = 951;
+const int BUMPER_BF = 903;
+const int BUMPER_CF = 867;
+const int BUMPER_LF = 825;
+const int BUMPER_RF = 786;
+const int BUMPER_BB = 745;
+const int BUMPER_LB = 607;
+const int BUMPER_RB = 561;
 bool collision_lf = 0;
 bool collision_rf = 0;
 bool collision_cf = 0;
@@ -434,16 +438,16 @@ void loop()
     turn_direction = random(2); //Generate random number in the range [0,1]
   }
   // drive forward
-  if (distance_estimate > 3*TURN_DISTANCE) {
+  if (distance_estimate > 3 * TURN_DISTANCE) {
     ctrl_left = distance_estimate;
     ctrl_right = ctrl_left;
     digitalWrite(PIN_LED_LI, LOW);
     digitalWrite(PIN_LED_RI, LOW);
   }
   // turn slightly
-  else if (distance_estimate > 2*TURN_DISTANCE) {
+  else if (distance_estimate > 2 * TURN_DISTANCE) {
     ctrl_left = distance_estimate;
-    ctrl_right = ctrl_left/2;
+    ctrl_right = ctrl_left / 2;
   }
   // turn strongly
   else if (distance_estimate > TURN_DISTANCE) {
@@ -452,10 +456,10 @@ void loop()
   }
   // drive backward slowly
   else {
-      ctrl_left = -ctrl_slow;
-      ctrl_right = -ctrl_slow;
-      digitalWrite(PIN_LED_LI, HIGH);
-      digitalWrite(PIN_LED_RI, HIGH);
+    ctrl_left = -ctrl_slow;
+    ctrl_right = -ctrl_slow;
+    digitalWrite(PIN_LED_LI, HIGH);
+    digitalWrite(PIN_LED_RI, HIGH);
   }
   // flip controls if needed and set indicator light
   if (ctrl_left != ctrl_right) {
@@ -707,6 +711,10 @@ void coast_right_motors()
 }
 #endif
 
+boolean almost_equal(int a, int b, int eps) {
+  return abs(a - b) <= eps;
+}
+
 #if HAS_BUMPER
 void emergency_stop()
 {
@@ -722,7 +730,26 @@ void emergency_stop()
 #endif
   bumper_time = millis();
   char bumper_id[2];
-  if (bumper_reading > BUMPER_CF)
+  if (almost_equal(bumper_reading, BUMPER_AF, BUMPER_EPS))
+  {
+    collision_cf = 1;
+    collision_lf = 1;
+    collision_rf = 1;
+    strncpy(bumper_id, "af", sizeof(bumper_id));
+#if DEBUG
+    Serial.print("All Front: ");
+#endif
+  }
+  else if (almost_equal(bumper_reading, BUMPER_BF, BUMPER_EPS))
+  {
+    collision_lf = 1;
+    collision_rf = 1;
+    strncpy(bumper_id, "bf", sizeof(bumper_id));
+#if DEBUG
+    Serial.print("Both Front: ");
+#endif
+  }
+  else if (almost_equal(bumper_reading, BUMPER_CF, BUMPER_EPS))
   {
     collision_cf = 1;
     strncpy(bumper_id, "cf", sizeof(bumper_id));
@@ -730,7 +757,7 @@ void emergency_stop()
     Serial.print("Camera Front: ");
 #endif
   }
-  else if (bumper_reading > BUMPER_LF)
+  else if (almost_equal(bumper_reading, BUMPER_LF, BUMPER_EPS))
   {
     collision_lf = 1;
     strncpy(bumper_id, "lf", sizeof(bumper_id));
@@ -738,7 +765,7 @@ void emergency_stop()
     Serial.print("Left Front: ");
 #endif
   }
-  else if (bumper_reading > BUMPER_RF)
+  else if (almost_equal(bumper_reading, BUMPER_RF, BUMPER_EPS))
   {
     collision_rf = 1;
     strncpy(bumper_id, "rf", sizeof(bumper_id));
@@ -746,7 +773,16 @@ void emergency_stop()
     Serial.print("Right Front: ");
 #endif
   }
-  else if (bumper_reading > BUMPER_LB)
+  else if (almost_equal(bumper_reading, BUMPER_BB, BUMPER_EPS))
+  {
+    collision_lb = 1;
+    collision_rb = 1;
+    strncpy(bumper_id, "bb", sizeof(bumper_id));
+#if DEBUG
+    Serial.print("Both Back: ");
+#endif
+  }
+  else if (almost_equal(bumper_reading, BUMPER_LB, BUMPER_EPS))
   {
     collision_lb = 1;
     strncpy(bumper_id, "lb", sizeof(bumper_id));
@@ -754,7 +790,7 @@ void emergency_stop()
     Serial.print("Left Back: ");
 #endif
   }
-  else if (bumper_reading > BUMPER_RB)
+  else if (almost_equal(bumper_reading, BUMPER_RB, BUMPER_EPS))
   {
     collision_rb = 1;
     strncpy(bumper_id, "rb", sizeof(bumper_id));
@@ -1117,7 +1153,7 @@ void display_vehicle_data()
 void send_voltage_reading()
 {
   Serial.print("v");
-  Serial.println(get_voltage());
+  Serial.println(String(get_voltage(), 2));
 }
 #endif
 
