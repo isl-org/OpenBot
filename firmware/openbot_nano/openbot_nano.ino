@@ -49,7 +49,7 @@
 //SETUP - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR)
-#define OPENBOT RTR_V1
+#define OPENBOT DIY
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
