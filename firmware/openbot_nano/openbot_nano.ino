@@ -33,6 +33,7 @@
 #define PCB_V2 2 //DIY with PCB V2
 #define RTR_V1 3 //Ready-to-Run V1
 #define RC_CAR 4 //RC truck prototypes
+#define RTR_V1_ESP32 5
 
 // Enable/Disable no phone mode (1,0)
 // In no phone mode:
@@ -49,7 +50,7 @@
 //SETUP - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR)
-#define OPENBOT DIY
+#define OPENBOT RTR_V1_ESP32
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
@@ -88,6 +89,7 @@ const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
 const float VOLTAGE_MIN = 2.5f;
 const float VOLTAGE_LOW = 9.0f;
 const float VOLTAGE_MAX = 12.6f;
+const float ADC_FACTOR = 5.0 / 1023;
 #define HAS_INDICATORS 0
 #define HAS_SONAR 0
 #define SONAR_MEDIAN 0
@@ -111,6 +113,7 @@ const float VOLTAGE_DIVIDER_FACTOR = (100 + 33) / 33;
 const float VOLTAGE_MIN = 2.5f;
 const float VOLTAGE_LOW = 9.0f;
 const float VOLTAGE_MAX = 12.6f;
+const float ADC_FACTOR = 5.0 / 1023;
 #define HAS_INDICATORS 1
 #define HAS_SONAR 1
 #define SONAR_MEDIAN 0
@@ -134,6 +137,7 @@ const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
 const float VOLTAGE_MIN = 2.5f;
 const float VOLTAGE_LOW = 9.0f;
 const float VOLTAGE_MAX = 12.6f;
+const float ADC_FACTOR = 5.0 / 1023;
 #define HAS_INDICATORS 1
 #define HAS_SONAR 1
 #define SONAR_MEDIAN 0
@@ -157,6 +161,7 @@ const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
 const float VOLTAGE_MIN = 2.5f;
 const float VOLTAGE_LOW = 9.0f;
 const float VOLTAGE_MAX = 12.6f;
+const float ADC_FACTOR = 5.0 / 1023;
 #define HAS_INDICATORS 1
 #define HAS_SONAR 1
 #define SONAR_MEDIAN 0
@@ -197,6 +202,7 @@ const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
 const float VOLTAGE_MIN = 0.0f;
 const float VOLTAGE_LOW = 6.4f;
 const float VOLTAGE_MAX = 8.4f;
+const float ADC_FACTOR = 5.0 / 1023;
 #define HAS_INDICATORS 0
 #define HAS_SONAR 0
 #define SONAR_MEDIAN 0
@@ -207,6 +213,74 @@ const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 4;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 8;
+#elif (OPENBOT == RTR_V1_ESP32)
+#include <esp_wifi.h>
+#undef max
+#ifndef max
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+#define analogWrite ledcWrite
+#define attachPinChangeInterrupt attachInterrupt
+#define detachPinChangeInterrupt detachInterrupt
+#define digitalPinToPinChangeInterrupt digitalPinToInterrupt
+#define PIN_PWM_L1 CH_PWM_L1
+#define PIN_PWM_L2 CH_PWM_L2
+#define PIN_PWM_R1 CH_PWM_R1
+#define PIN_PWM_R2 CH_PWM_R2
+const String robot_type = "RTR_V1_ESP32";
+#define HAS_VOLTAGE_DIVIDER 1
+const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
+const float VOLTAGE_MIN = 6.0f;
+const float VOLTAGE_LOW = 9.0f;
+const float VOLTAGE_MAX = 12.6f;
+const float ADC_FACTOR = 3.3 / 4095;
+#define HAS_INDICATORS 1
+#define HAS_SONAR 1
+#define SONAR_MEDIAN 0
+#define HAS_BUMPER 1
+#define HAS_SPEED_SENSORS_FRONT 1
+#define HAS_SPEED_SENSORS_BACK 1
+#define HAS_LEDS_FRONT 1
+#define HAS_LEDS_BACK 1
+#define HAS_LEDS_STATUS 1
+//PWM properties
+const int FREQ = 5000;
+const int RES = 8;
+const int CH_PWM_L1 = 0;
+const int CH_PWM_L2 = 1;
+const int CH_PWM_R1 = 2;
+const int CH_PWM_R2 = 3;
+const int CH_LED_LF = 4;
+const int CH_LED_RF = 5;
+const int CH_LED_LB = 6;
+const int CH_LED_RB = 7;
+const int CH_LED_LI = 8;
+const int CH_LED_RI = 9;
+const int PIN_PWM_LF1 = 16;
+const int PIN_PWM_LF2 = 17;
+const int PIN_PWM_LB1 = 19;
+const int PIN_PWM_LB2 = 18;
+const int PIN_PWM_RF1 = 26;
+const int PIN_PWM_RF2 = 25;
+const int PIN_PWM_RB1 = 33;
+const int PIN_PWM_RB2 = 32;
+const int PIN_SPEED_LF = 21;
+const int PIN_SPEED_RF = 35;
+const int PIN_SPEED_LB = 23;
+const int PIN_SPEED_RB = 36;
+const int PIN_VIN = 39;
+const int PIN_TRIGGER = 12;
+const int PIN_ECHO = 14;
+const int PIN_LED_LI = 22;
+const int PIN_LED_RI = 27;
+const int PIN_LED_LB = 22;
+const int PIN_LED_RB = 27;
+const int PIN_LED_LF = 4;
+const int PIN_LED_RF = 13;
+const int PIN_LED_Y = 0;
+const int PIN_LED_G = 2;
+const int PIN_LED_B = 15;
+const int PIN_BUMPER = 34;
 #endif
 
 //------------------------------------------------------//
@@ -222,7 +296,9 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
 #if HAS_SONAR
+#if (OPENBOT != RTR_V1_ESP32)
 #include "PinChangeInterrupt.h"
+#endif
 //Sonar sensor
 const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 2;
 const unsigned int MAX_SONAR_DISTANCE = -1;  //cm
@@ -272,7 +348,6 @@ int ctrl_right = 0;
 
 #if (HAS_VOLTAGE_DIVIDER)
 //Voltage measurement
-float ADC_FACTOR = 5.0 / 1023;
 unsigned int vin_counter = 0;
 const unsigned int vin_array_sz = 10;
 int vin_array[vin_array_sz] = {0};
@@ -281,7 +356,9 @@ unsigned long voltage_time = 0;
 #endif
 
 #if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
+#if (OPENBOT != RTR_V1_ESP32)
 #include "PinChangeInterrupt.h"
+#endif
 //Speed sensor
 const unsigned long SPEED_TRIGGER_THRESHOLD = 1; // Triggers within this time will be ignored (ms)
 const unsigned int DISK_HOLES = 20;
@@ -348,6 +425,43 @@ unsigned long display_time = 0;
 //------------------------------------------------------//
 void setup()
 {
+#if (OPENBOT == RTR_V1_ESP32)
+  esp_wifi_deinit();
+ 
+  //PWMs
+  // configure PWM functionalitites
+  ledcSetup(CH_PWM_L1, FREQ, RES);
+  ledcSetup(CH_PWM_L2, FREQ, RES);
+  ledcSetup(CH_PWM_R1, FREQ, RES);
+  ledcSetup(CH_PWM_R2, FREQ, RES);
+
+  // attach the channel to the GPIO to be controlled
+  ledcAttachPin(PIN_PWM_LF1, CH_PWM_L1);
+  ledcAttachPin(PIN_PWM_LB1, CH_PWM_L1);
+  ledcAttachPin(PIN_PWM_LF2, CH_PWM_L2);
+  ledcAttachPin(PIN_PWM_LB2, CH_PWM_L2);
+  ledcAttachPin(PIN_PWM_RF1, CH_PWM_R1);
+  ledcAttachPin(PIN_PWM_RB1, CH_PWM_R1);
+  ledcAttachPin(PIN_PWM_RF2, CH_PWM_R2);
+  ledcAttachPin(PIN_PWM_RB2, CH_PWM_R2);
+  
+  //LEDs
+  ledcSetup(CH_LED_LF, FREQ, RES);
+  ledcSetup(CH_LED_RF, FREQ, RES);
+  ledcSetup(CH_LED_LB, FREQ, RES);
+  ledcSetup(CH_LED_RB, FREQ, RES);
+  ledcSetup(CH_LED_LI, FREQ, RES);
+  ledcSetup(CH_LED_RI, FREQ, RES);
+  
+  ledcAttachPin(PIN_LED_LF, CH_LED_LF);
+  ledcAttachPin(PIN_LED_RF, CH_LED_RF);
+  ledcAttachPin(PIN_LED_RB, CH_LED_RB);
+  ledcAttachPin(PIN_LED_LB, CH_LED_LB);
+  ledcAttachPin(PIN_LED_LI, CH_LED_LI);
+  ledcAttachPin(PIN_LED_RI, CH_LED_RI);
+
+#endif
+
   //Outputs
 #if (OPENBOT == RC_CAR)
   pinMode(PIN_PWM_T, OUTPUT);
@@ -417,6 +531,15 @@ void setup()
   pinMode(PIN_SPEED_RF, INPUT_PULLUP);
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_LF), update_speed_lf, RISING);
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_RF), update_speed_rf, RISING);
+#endif
+
+#if (OPENBOT == RTR_V1_ESP32)
+  #define PIN_LED_LF CH_LED_LF
+  #define PIN_LED_RF CH_LED_RF
+  #define PIN_LED_LB CH_LED_LB 
+  #define PIN_LED_RB CH_LED_RB 
+  #define PIN_LED_LI CH_LED_LI 
+  #define PIN_LED_RI CH_LED_RI
 #endif
 
   Serial.begin(115200, SERIAL_8N1);
