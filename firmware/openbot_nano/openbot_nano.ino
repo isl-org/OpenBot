@@ -33,7 +33,7 @@
 #define PCB_V2 2 //DIY with PCB V2
 #define RTR_V1 3 //Ready-to-Run V1
 #define RC_CAR 4 //RC truck prototypes
-#define RTR_V1_ESP32 5
+#define RTR_ESP32_V1 6
 
 // Enable/Disable no phone mode (1,0)
 // In no phone mode:
@@ -50,7 +50,7 @@
 //SETUP - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR)
-#define OPENBOT RTR_V1_ESP32
+#define OPENBOT RTR_ESP32_V1
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
@@ -192,6 +192,16 @@ const int PIN_LED_Y = 13;
 const int PIN_LED_G = A0;
 const int PIN_LED_B = A1;
 const int PIN_BUMPER = A2;
+const int BUMPER_NOISE = 512;
+const int BUMPER_EPS = 10;
+const int BUMPER_AF = 951;
+const int BUMPER_BF = 903;
+const int BUMPER_CF = 867;
+const int BUMPER_LF = 825;
+const int BUMPER_RF = 786;
+const int BUMPER_BB = 745;
+const int BUMPER_LB = 607;
+const int BUMPER_RB = 561;
 #elif (OPENBOT == RC_CAR)
 #include <Servo.h>
 Servo ESC;
@@ -213,12 +223,8 @@ const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 4;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 8;
-#elif (OPENBOT == RTR_V1_ESP32)
+#elif (OPENBOT == RTR_ESP32_V1)
 #include <esp_wifi.h>
-#undef max
-#ifndef max
-#define max(a,b) (((a) > (b)) ? (a) : (b))
-#endif
 #define analogWrite ledcWrite
 #define attachPinChangeInterrupt attachInterrupt
 #define detachPinChangeInterrupt detachInterrupt
@@ -227,7 +233,7 @@ const int PIN_LED_RI = 8;
 #define PIN_PWM_L2 CH_PWM_L2
 #define PIN_PWM_R1 CH_PWM_R1
 #define PIN_PWM_R2 CH_PWM_R2
-const String robot_type = "RTR_V1_ESP32";
+const String robot_type = "RTR_ESP32_V1";
 #define HAS_VOLTAGE_DIVIDER 1
 const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
 const float VOLTAGE_MIN = 6.0f;
@@ -254,8 +260,6 @@ const int CH_LED_LF = 4;
 const int CH_LED_RF = 5;
 const int CH_LED_LB = 6;
 const int CH_LED_RB = 7;
-const int CH_LED_LI = 8;
-const int CH_LED_RI = 9;
 const int PIN_PWM_LF1 = 16;
 const int PIN_PWM_LF2 = 17;
 const int PIN_PWM_LB1 = 19;
@@ -281,6 +285,16 @@ const int PIN_LED_Y = 0;
 const int PIN_LED_G = 2;
 const int PIN_LED_B = 15;
 const int PIN_BUMPER = 34;
+const int BUMPER_NOISE = 512;
+const int BUMPER_EPS = 50;
+const int BUMPER_AF = 3890;
+const int BUMPER_BF = 3550;
+const int BUMPER_CF = 3330;
+const int BUMPER_LF = 3100;
+const int BUMPER_RF = 2930;
+const int BUMPER_BB = 2750;
+const int BUMPER_LB = 2180;
+const int BUMPER_RB = 2000;
 #endif
 
 //------------------------------------------------------//
@@ -296,13 +310,13 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
 #if HAS_SONAR
-#if (OPENBOT != RTR_V1_ESP32)
+#if (OPENBOT != RTR_ESP32_V1)
 #include "PinChangeInterrupt.h"
 #endif
 //Sonar sensor
 const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 2;
 const unsigned int MAX_SONAR_DISTANCE = -1;  //cm
-const unsigned int MAX_SONAR_TIME = MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
+const unsigned long MAX_SONAR_TIME = (long) MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
 const unsigned int STOP_DISTANCE = 10;     //cm
 #if (NO_PHONE_MODE)
 const unsigned int TURN_DISTANCE = 50;
@@ -356,12 +370,18 @@ unsigned long voltage_time = 0;
 #endif
 
 #if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
-#if (OPENBOT != RTR_V1_ESP32)
+#if (OPENBOT == RTR_ESP32_V1)
+//Speed sensor
+//1000rpm motor - reduction ratio 10, motor 11
+//One revolution = 110
+const unsigned int TICKS_PER_REV = 110;
+#else
 #include "PinChangeInterrupt.h"
+const unsigned int TICKS_PER_REV = 20;
 #endif
 //Speed sensor
 const unsigned long SPEED_TRIGGER_THRESHOLD = 1; // Triggers within this time will be ignored (ms)
-const unsigned int DISK_HOLES = 20;
+
 volatile int counter_lf = 0;
 volatile int counter_rf = 0;
 volatile int counter_lb = 0;
@@ -388,16 +408,6 @@ unsigned int light_back = 0;
 //Bumper
 #if HAS_BUMPER
 bool bumper_event = 0;
-const int BUMPER_NOISE = 512;
-const int BUMPER_EPS = 10;
-const int BUMPER_AF = 951;
-const int BUMPER_BF = 903;
-const int BUMPER_CF = 867;
-const int BUMPER_LF = 825;
-const int BUMPER_RF = 786;
-const int BUMPER_BB = 745;
-const int BUMPER_LB = 607;
-const int BUMPER_RB = 561;
 bool collision_lf = 0;
 bool collision_rf = 0;
 bool collision_cf = 0;
@@ -425,43 +435,6 @@ unsigned long display_time = 0;
 //------------------------------------------------------//
 void setup()
 {
-#if (OPENBOT == RTR_V1_ESP32)
-  esp_wifi_deinit();
- 
-  //PWMs
-  // configure PWM functionalitites
-  ledcSetup(CH_PWM_L1, FREQ, RES);
-  ledcSetup(CH_PWM_L2, FREQ, RES);
-  ledcSetup(CH_PWM_R1, FREQ, RES);
-  ledcSetup(CH_PWM_R2, FREQ, RES);
-
-  // attach the channel to the GPIO to be controlled
-  ledcAttachPin(PIN_PWM_LF1, CH_PWM_L1);
-  ledcAttachPin(PIN_PWM_LB1, CH_PWM_L1);
-  ledcAttachPin(PIN_PWM_LF2, CH_PWM_L2);
-  ledcAttachPin(PIN_PWM_LB2, CH_PWM_L2);
-  ledcAttachPin(PIN_PWM_RF1, CH_PWM_R1);
-  ledcAttachPin(PIN_PWM_RB1, CH_PWM_R1);
-  ledcAttachPin(PIN_PWM_RF2, CH_PWM_R2);
-  ledcAttachPin(PIN_PWM_RB2, CH_PWM_R2);
-  
-  //LEDs
-  ledcSetup(CH_LED_LF, FREQ, RES);
-  ledcSetup(CH_LED_RF, FREQ, RES);
-  ledcSetup(CH_LED_LB, FREQ, RES);
-  ledcSetup(CH_LED_RB, FREQ, RES);
-  ledcSetup(CH_LED_LI, FREQ, RES);
-  ledcSetup(CH_LED_RI, FREQ, RES);
-  
-  ledcAttachPin(PIN_LED_LF, CH_LED_LF);
-  ledcAttachPin(PIN_LED_RF, CH_LED_RF);
-  ledcAttachPin(PIN_LED_RB, CH_LED_RB);
-  ledcAttachPin(PIN_LED_LB, CH_LED_LB);
-  ledcAttachPin(PIN_LED_LI, CH_LED_LI);
-  ledcAttachPin(PIN_LED_RI, CH_LED_RI);
-
-#endif
-
   //Outputs
 #if (OPENBOT == RC_CAR)
   pinMode(PIN_PWM_T, OUTPUT);
@@ -469,7 +442,7 @@ void setup()
   // Attach the ESC and SERVO
   ESC.attach(PIN_PWM_T, 1000, 2000);   // (pin, min pulse width, max pulse width in microseconds)
   SERVO.attach(PIN_PWM_S, 1000, 2000); // (pin, min pulse width, max pulse width in microseconds)
-#else
+#elif (OPENBOT != RTR_ESP32_V1)
   pinMode(PIN_PWM_L1, OUTPUT);
   pinMode(PIN_PWM_L2, OUTPUT);
   pinMode(PIN_PWM_R1, OUTPUT);
@@ -533,13 +506,39 @@ void setup()
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_RF), update_speed_rf, RISING);
 #endif
 
-#if (OPENBOT == RTR_V1_ESP32)
-  #define PIN_LED_LF CH_LED_LF
-  #define PIN_LED_RF CH_LED_RF
-  #define PIN_LED_LB CH_LED_LB 
-  #define PIN_LED_RB CH_LED_RB 
-  #define PIN_LED_LI CH_LED_LI 
-  #define PIN_LED_RI CH_LED_RI
+#if (OPENBOT == RTR_ESP32_V1)
+  esp_wifi_deinit();
+ 
+  //PWMs
+  // configure PWM functionalitites
+  ledcSetup(CH_PWM_L1, FREQ, RES);
+  ledcSetup(CH_PWM_L2, FREQ, RES);
+  ledcSetup(CH_PWM_R1, FREQ, RES);
+  ledcSetup(CH_PWM_R2, FREQ, RES);
+
+  // attach the channel to the GPIO to be controlled
+  ledcAttachPin(PIN_PWM_LF1, CH_PWM_L1);
+  ledcAttachPin(PIN_PWM_LB1, CH_PWM_L1);
+  ledcAttachPin(PIN_PWM_LF2, CH_PWM_L2);
+  ledcAttachPin(PIN_PWM_LB2, CH_PWM_L2);
+  ledcAttachPin(PIN_PWM_RF1, CH_PWM_R1);
+  ledcAttachPin(PIN_PWM_RB1, CH_PWM_R1);
+  ledcAttachPin(PIN_PWM_RF2, CH_PWM_R2);
+  ledcAttachPin(PIN_PWM_RB2, CH_PWM_R2);
+  
+#if (HAS_LEDS_BACK)
+  ledcSetup(CH_LED_LB, FREQ, RES);
+  ledcSetup(CH_LED_RB, FREQ, RES);
+  ledcAttachPin(PIN_LED_RB, CH_LED_RB);
+  ledcAttachPin(PIN_LED_LB, CH_LED_LB);
+#endif
+#if (HAS_LEDS_FRONT)  
+  ledcSetup(CH_LED_LF, FREQ, RES);
+  ledcSetup(CH_LED_RF, FREQ, RES);
+  ledcAttachPin(PIN_LED_LF, CH_LED_LF);
+  ledcAttachPin(PIN_LED_RF, CH_LED_RF);
+#endif
+
 #endif
 
   Serial.begin(115200, SERIAL_8N1);
@@ -607,7 +606,7 @@ void loop()
   {
     on_serial_rx();
   }
-  if (distance_estimate <= STOP_DISTANCE)
+  if (distance_estimate <= STOP_DISTANCE && ctrl_left > 0 && ctrl_right > 0)
   {
     ctrl_left = 0;
     ctrl_right = 0;
@@ -1283,7 +1282,7 @@ void send_voltage_reading()
 #if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
 void send_wheel_reading(long duration)
 {
-  float rpm_factor = 60.0 * 1000.0 / duration / DISK_HOLES;
+  float rpm_factor = 60.0 * 1000.0 / duration / TICKS_PER_REV;
   rpm_left = (counter_lf + counter_lb) * rpm_factor;
   rpm_right = (counter_rf + counter_rb) * rpm_factor;
   counter_lf = 0;
@@ -1309,6 +1308,9 @@ void update_indicator()
 {
   if (indicator_left > 0)
   {
+    if (OPENBOT == RTR_ESP32_V1 && PIN_LED_LI == PIN_LED_LB) {
+      ledcDetachPin(PIN_LED_LB);
+    }
     digitalWrite(PIN_LED_LI, !digitalRead(PIN_LED_LI));
   }
   else
@@ -1318,9 +1320,15 @@ void update_indicator()
 #else
     digitalWrite(PIN_LED_LI, LOW);
 #endif
+    if (OPENBOT == RTR_ESP32_V1 && PIN_LED_LI == PIN_LED_LB) {
+      ledcAttachPin(PIN_LED_LB, CH_LED_LB);
+    }
   }
   if (indicator_right > 0)
   {
+    if (OPENBOT == RTR_ESP32_V1 && PIN_LED_RI == PIN_LED_RB) {
+      ledcDetachPin(PIN_LED_RB);
+    }
     digitalWrite(PIN_LED_RI, !digitalRead(PIN_LED_RI));
   }
   else
@@ -1330,6 +1338,9 @@ void update_indicator()
 #else
     digitalWrite(PIN_LED_RI, LOW);
 #endif
+    if (OPENBOT == RTR_ESP32_V1 && PIN_LED_RI == PIN_LED_RB) {
+      ledcAttachPin(PIN_LED_RB, CH_LED_RB);
+    }
   }
 }
 #endif
@@ -1338,12 +1349,23 @@ void update_indicator()
 void update_light()
 {
 #if (HAS_LEDS_FRONT)
+#if (OPENBOT == RTR_ESP32_V1)
+  analogWrite(CH_LED_LF, light_front);
+  analogWrite(CH_LED_RF, light_front);
+#else
   analogWrite(PIN_LED_LF, light_front);
   analogWrite(PIN_LED_RF, light_front);
 #endif
+#endif
+
 #if (HAS_LEDS_BACK)
+#if (OPENBOT == RTR_ESP32_V1)
+  analogWrite(CH_LED_LB, light_back);
+  analogWrite(CH_LED_RB, light_back);
+#else
   analogWrite(PIN_LED_LB, light_back);
   analogWrite(PIN_LED_RB, light_back);
+#endif
 #endif
 }
 #endif
@@ -1387,7 +1409,8 @@ void send_ping()
   digitalWrite(PIN_TRIGGER, LOW);
   if (PIN_TRIGGER == PIN_ECHO)
     pinMode(PIN_ECHO, INPUT);
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), start_timer, RISING);
+  //attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), start_timer, RISING);
+  attachInterrupt(digitalPinToInterrupt(PIN_ECHO), start_timer, RISING);
 }
 
 void update_distance_estimate()
@@ -1410,13 +1433,15 @@ void update_distance_estimate()
 void start_timer()
 {
   start_time = micros();
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), stop_timer, FALLING);
+  //attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), stop_timer, FALLING);
+  attachInterrupt(digitalPinToInterrupt(PIN_ECHO), stop_timer, FALLING);
 }
 // ISR: Stop timer and record the time
 void stop_timer()
 {
   echo_time = micros() - start_time;
-  detachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO));
+  //detachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO));
+  detachInterrupt(digitalPinToInterrupt(PIN_ECHO));
   ping_success = true;
 }
 #endif
