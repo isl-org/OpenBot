@@ -20,6 +20,7 @@
 // Contributors:
 //  - October 2020: OLED display support by Ingmar Stapel
 //  - December 2021: RC truck support by Usman Fiaz
+//  - March 2022: OpenBot-Lite support by William Tan
 // ---------------------------------------------------------------------------
 
 // By Matthias Mueller, Embodied AI Lab, 2022
@@ -33,7 +34,18 @@
 #define PCB_V2 2 //DIY with PCB V2
 #define RTR_V1 3 //Ready-to-Run V1
 #define RC_CAR 4 //RC truck prototypes
+#define LITE 5   //Smaller DIY version for education
 #define RTR_ESP32_V1 6
+
+//------------------------------------------------------//
+//SETUP - Choose your body
+//------------------------------------------------------//
+// Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR, LITE)
+#define OPENBOT RTR_ESP32_V1
+
+//------------------------------------------------------//
+//SETTINGS - Global settings
+//------------------------------------------------------//
 
 // Enable/Disable no phone mode (1,0)
 // In no phone mode:
@@ -46,11 +58,9 @@
 // Enable/Disable debug print (1,0)
 #define DEBUG 0
 
-//------------------------------------------------------//
-//SETUP - Choose your body
-//------------------------------------------------------//
-// Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR)
-#define OPENBOT RTR_ESP32_V1
+// Enable/Disable coast mode (1,0)
+// When no control is applied, the robot will either coast (1) or actively stop (0)
+boolean coast_mode = 1;
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
@@ -82,6 +92,7 @@
 // PIN_LED_LF, PIN_LED_RF               Control left and right front LEDs (illumination)
 // PIN_LED_Y, PIN_LED_G, PIN_LED_B      Control yellow, green and blue status LEDs
 
+//-------------------------DIY--------------------------//
 #if (OPENBOT == DIY)
 const String robot_type = "DIY";
 #define HAS_VOLTAGE_DIVIDER 0
@@ -106,6 +117,7 @@ const int PIN_TRIGGER = 12;
 const int PIN_ECHO = 11;
 const int PIN_LED_LI = 4;
 const int PIN_LED_RI = 7;
+//-------------------------PCB_V1-----------------------//
 #elif (OPENBOT == PCB_V1)
 const String robot_type = "PCB_V1";
 #define HAS_VOLTAGE_DIVIDER 1
@@ -130,6 +142,7 @@ const int PIN_TRIGGER = 3;
 const int PIN_ECHO = 3;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 8;
+//-------------------------PCB_V2-----------------------//
 #elif (OPENBOT == PCB_V2)
 const String robot_type = "PCB_V2";
 #define HAS_VOLTAGE_DIVIDER 1
@@ -154,6 +167,7 @@ const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 4;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 8;
+//-------------------------RTR_V1-----------------------//
 #elif (OPENBOT == RTR_V1)
 const String robot_type = "RTR_V1";
 #define HAS_VOLTAGE_DIVIDER 1
@@ -202,6 +216,7 @@ const int BUMPER_RF = 786;
 const int BUMPER_BB = 745;
 const int BUMPER_LB = 607;
 const int BUMPER_RB = 561;
+//-------------------------RC_CAR-----------------------//
 #elif (OPENBOT == RC_CAR)
 #include <Servo.h>
 Servo ESC;
@@ -223,6 +238,21 @@ const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 4;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 8;
+//-------------------------LITE-------------------------//
+#elif (OPENBOT == LITE)
+const String robot_type = "LITE";
+const float VOLTAGE_MIN = 2.5f;
+const float VOLTAGE_LOW = 4.5f;
+const float VOLTAGE_MAX = 5.0f;
+#define HAS_INDICATORS 1
+const int PIN_PWM_L1 = 5;
+const int PIN_PWM_L2 = 6;
+const int PIN_PWM_R1 = 9;
+const int PIN_PWM_R2 = 10;
+const int PIN_LED_LI = 4;
+const int PIN_LED_RI = 7;
+coast_mode = !coast_mode;
+//-------------------------RTR_ESP32_V1-----------------//
 #elif (OPENBOT == RTR_ESP32_V1)
 #include <esp_wifi.h>
 #define analogWrite ledcWrite
@@ -296,6 +326,7 @@ const int BUMPER_BB = 2750;
 const int BUMPER_LB = 2180;
 const int BUMPER_RB = 2000;
 #endif
+//------------------------------------------------------//
 
 //------------------------------------------------------//
 //INITIALIZATION
@@ -786,7 +817,10 @@ void update_left_motors()
   }
   else
   {
-    coast_left_motors();
+    if (coast_mode)
+      coast_left_motors();
+    else
+      stop_left_motors();
   }
 }
 
@@ -816,7 +850,10 @@ void update_right_motors()
   }
   else
   {
-    coast_right_motors();
+    if (coast_mode)
+      coast_right_motors();
+    else
+      stop_right_motors();
   }
 }
 
@@ -1067,15 +1104,17 @@ void process_sonar_msg()
   sonar_interval = atol(msg_buf); // convert to long
 }
 #endif
-#if HAS_VOLTAGE_DIVIDER
+
 void process_voltage_msg()
 {
+#if HAS_VOLTAGE_DIVIDER
   voltage_interval = atol(msg_buf); // convert to long
+#endif
   Serial.println(String("vmin:") + String(VOLTAGE_MIN, 2));
   Serial.println(String("vlow:") + String(VOLTAGE_LOW, 2));
   Serial.println(String("vmax:") + String(VOLTAGE_MAX, 2));
 }
-#endif
+
 #if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
 void process_wheel_msg()
 {
