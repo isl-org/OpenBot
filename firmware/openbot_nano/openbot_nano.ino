@@ -40,15 +40,11 @@
 //SETUP - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR, LITE)
-#define OPENBOT DIY
+#define OPENBOT LITE
 
 //------------------------------------------------------//
 //SETTINGS - Global settings
 //------------------------------------------------------//
-
-// Enable/Disable coasting (1,0)
-// If coasting is enabled the robot will coast when no control is applied, otherwise it will stop
-#define COAST 1
 
 // Enable/Disable no phone mode (1,0)
 // In no phone mode:
@@ -60,6 +56,10 @@
 
 // Enable/Disable debug print (1,0)
 #define DEBUG 0
+
+// Enable/Disable coast mode (1,0)
+// When no control is applied, the robot will either coast (1) or actively stop (0)
+boolean coast_mode = 1;
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
@@ -235,6 +235,7 @@ const int PIN_PWM_R1 = 9;
 const int PIN_PWM_R2 = 10;
 const int PIN_LED_LI = 4;
 const int PIN_LED_RI = 7;
+coast_mode = !coast_mode;
 #endif
 //------------------------------------------------------//
 
@@ -693,11 +694,10 @@ void update_left_motors()
   }
   else
   {
-#if (COAST)
-    coast_left_motors();
-#else
-    stop_left_motors();
-#endif
+    if (coast_mode)
+      coast_left_motors();
+    else
+      stop_left_motors();
   }
 }
 
@@ -727,11 +727,10 @@ void update_right_motors()
   }
   else
   {
-#if (COAST)
-    coast_right_motors();
-#else
-    stop_right_motors();
-#endif
+    if (coast_mode)
+      coast_right_motors();
+    else
+      stop_right_motors();
   }
 }
 
