@@ -10,7 +10,7 @@
 这个文件夹包含了分成4块的OpenBot本体。
 它可以用小到150mmx140mm的构建板打印，然后粘合在一起。
 
-![可胶合机身](../../../docs/images/glue_body.jpg)
+![可胶合机身](../../../../docs/images/glue_body.jpg)
 
 ## 部件
 
