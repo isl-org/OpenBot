@@ -229,4 +229,4 @@ Our robot body relies on readily available hobby electronics. We provide links f
 
 ## Next
 
-Flash the [Arduino Firmware](../firmware/README.md)
+Flash the [Arduino Firmware](../../firmware/README.md)

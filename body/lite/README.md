@@ -55,4 +55,4 @@ We are looking forward to your success stories and videos.  Have fun!
 
 ## Next
 
-Flash the [Arduino Firmware](../firmware/README.md)
+Flash the [Arduino Firmware](../../firmware/README.md)
