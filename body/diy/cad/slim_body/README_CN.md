@@ -9,7 +9,7 @@
 这个文件夹包含超薄版的OpenBot车身。
 当零件旋转45度时，它可以用220mmx220mm的构建板打印。
 
-![超薄机身](../../../docs/images/slim_body.jpg)
+![超薄机身](../../../../docs/images/slim_body.jpg)
 
 ## 部件
 

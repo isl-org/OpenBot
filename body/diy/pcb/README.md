@@ -7,8 +7,8 @@
 
 The custom PCB acts as a carrier board for the Arduino Nano and integrates modern motor drivers, the voltage divider circuit and resistors for the LEDs. The Arduino is simply plugged into the pin header and all sensors and LEDs are connected via Dupont cables to the appropriate connectors.
 
-![PCB_2D](../../docs/images/pcb_2d_v2.png)
-![PCB_3D](../../docs/images/pcb_3d_v2.png)
+![PCB_2D](../../../docs/images/pcb_2d_v2.png)
+![PCB_3D](../../../docs/images/pcb_3d_v2.png)
 
 The latest PCB is [version 2](v2). Here are the changes compared to [version 1](v1):
 
@@ -18,7 +18,7 @@ The latest PCB is [version 2](v2). Here are the changes compared to [version 1](
 - Update voltage divider to 20k/10k for better precision
 - Change motor connectors to upright version for easier access
 
-If you have already ordered [version 1](v1) of the PCB ([2D view](../docs/images/pcb_2d_v1.png), [3D view](../docs/images/pcb_3d_v1.png)), don't worry it will work fine. Just make sure to set the correct flag in the firmware.
+If you have already ordered [version 1](v1) of the PCB ([2D view](../../../docs/images/pcb_2d_v1.png), [3D view](../../../docs/images/pcb_3d_v1.png)), don't worry it will work fine. Just make sure to set the correct flag in the firmware.
 
 The custom PCB involves the following steps:
 
@@ -29,5 +29,5 @@ The custom PCB involves the following steps:
 You can also find vendors that will provide you a TurnKey solution covering all 3 steps. They will manufacture the PCB, source the components and assemble the PCB. This is very convenient and also not too expensive. However, delivery times are often very long (1-3 months).
 
 When requesting a quote at [PCBWay](https://www.pcbway.com/orderonline.aspx), you can select the assembly service after uploading the Gerber file.
-![Assembly Service](../../docs/images/assembly_service.jpg)
+![Assembly Service](../../../docs/images/assembly_service.jpg)
 In the next step, you will need to upload the [BOM](v2/BOM_v2.csv) and the [Centroid File](v2/centroid_file_v2.csv). Your quote will then be reviewed and updated within a few days. You can then choose to proceed with payment after reviewing cost and delivery time.
