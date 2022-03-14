@@ -52,3 +52,7 @@ If you find this material helpful, please like the videos and subscribe to the e
 * [eSpace's Instagram](https://www.instagram.com/EspaceCW/)
 
 We are looking forward to your success stories and videos.  Have fun!
+
+## Next
+
+Flash the [Arduino Firmware](../firmware/README.md)

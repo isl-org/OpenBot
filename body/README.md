@@ -7,17 +7,17 @@ Below are a number of examples with build instructions:
 <table style="width:100%;border:none;text-align:center">
   <tr>
   <td>  <a href="diy">
-    <img alt="DIY" width="33%" src="../docs/images/assembly.gif" />
+    <img alt="DIY" src="../docs/images/assembly.gif" />
   </a>
   </td>
   <td>
   <a href="lite">
-    <img alt="Lite" width="33%" src="../docs/images/openbot_lite.jpg" />
+    <img alt="Lite" src="../docs/images/openbot_lite.jpg" />
   </a>
   </td>
   <td>
   <a href="rc_truck">
-    <img alt="RC Truck" width="33%" src="../docs/images/add_covers_2.JPG" />
+    <img alt="RC Truck" src="../docs/images/add_covers_2.JPG" />
   </a>
   </td>
   </tr>
