@@ -72,9 +72,11 @@ public class ObjectNavFragment extends CameraFragment {
 
   private long lastProcessingTimeMs;
   private long frameNum = 0;
-  private final boolean isBenchmarkMode = true;
+
+  private final boolean isBenchmarkMode = false;
   private long processedFrames;
-  MovingAverage movingAvgProcessingTimeMs = new MovingAverage(100);
+  private final int movingAvgSize = 100;
+  MovingAverage movingAvgProcessingTimeMs = new MovingAverage(movingAvgSize);
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -458,21 +460,20 @@ public class ObjectNavFragment extends CameraFragment {
           });
       if (lastProcessingTimeMs > 0) {
         if (isBenchmarkMode) {
-          movingAvgProcessingTimeMs.next(lastProcessingTimeMs);
           double avgProcessingTimeMs = movingAvgProcessingTimeMs.next(lastProcessingTimeMs);
           processedFrames += 1;
-          if (processedFrames >= 100) {
-            binding.inferenceInfo.setText(
-                String.format(Locale.US, "%.1f fps", 1000.f / avgProcessingTimeMs));
-          }
-        } else
-          requireActivity()
-              .runOnUiThread(
-                  () ->
-                      binding.inferenceInfo.setText(
-                          String.format(Locale.US, "%.1f fps", 1000.f / lastProcessingTimeMs)));
+          if (processedFrames >= movingAvgSize) updateFpsUi(avgProcessingTimeMs);
+        } else updateFpsUi(lastProcessingTimeMs);
       }
     }
+  }
+
+  private void updateFpsUi(double processingTimeMs) {
+    requireActivity()
+        .runOnUiThread(
+            () ->
+                binding.inferenceInfo.setText(
+                    String.format(Locale.US, "%.1f fps", 1000.f / processingTimeMs)));
   }
 
   protected void handleDriveCommand(Control control) {
