@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -76,7 +75,7 @@ public class ObjectNavFragment extends CameraFragment {
   private final boolean isBenchmarkMode = false;
   private long processedFrames = 0;
   private final int movingAvgSize = 100;
-  MovingAverage movingAvgProcessingTimeMs = new MovingAverage(movingAvgSize);
+  private MovingAverage movingAvgProcessingTimeMs = new MovingAverage(movingAvgSize);
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -256,6 +255,7 @@ public class ObjectNavFragment extends CameraFragment {
   }
 
   private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+    resetFpsUi();
     if (model == null) return;
     tracker.clearTrackedObjects();
     if (detector != null) {
@@ -366,19 +366,8 @@ public class ObjectNavFragment extends CameraFragment {
   private void setNetworkEnabledWithAudio(boolean b) {
     setNetworkEnabled(b);
 
-    if (b) {
-      audioPlayer.play(voice, "network_enabled.mp3");
-      runInBackground(
-          () -> {
-            try {
-              TimeUnit.MILLISECONDS.sleep(Math.max(lastProcessingTimeMs, 50));
-              vehicle.setControl(0, 0);
-              resetFpsUi();
-            } catch (InterruptedException e) {
-              Timber.e(e, "Got interrupted.");
-            }
-          });
-    } else audioPlayer.playDriveMode(voice, vehicle.getDriveMode());
+    if (b) audioPlayer.play(voice, "network_enabled.mp3");
+    else audioPlayer.playDriveMode(voice, vehicle.getDriveMode());
   }
 
   private void setNetworkEnabled(boolean b) {
@@ -391,7 +380,8 @@ public class ObjectNavFragment extends CameraFragment {
     binding.controllerContainer.driveMode.setAlpha(b ? 0.5f : 1f);
     binding.controllerContainer.speedMode.setAlpha(b ? 0.5f : 1f);
 
-    if (!b) handler.postDelayed(() -> vehicle.setControl(0, 0), 500);
+    resetFpsUi();
+    if (!b) handler.postDelayed(() -> vehicle.setControl(0, 0), Math.max(lastProcessingTimeMs, 50));
   }
 
   @Override
@@ -476,6 +466,8 @@ public class ObjectNavFragment extends CameraFragment {
   }
 
   private void resetFpsUi() {
+    processedFrames = 0;
+    movingAvgProcessingTimeMs = new MovingAverage(movingAvgSize);
     requireActivity().runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_fps));
   }
 
