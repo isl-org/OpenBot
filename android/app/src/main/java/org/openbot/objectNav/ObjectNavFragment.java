@@ -40,6 +40,7 @@ import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
+import org.openbot.utils.MovingAverage;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Control;
 import timber.log.Timber;
@@ -49,7 +50,6 @@ public class ObjectNavFragment extends CameraFragment {
   private Handler handler;
   private HandlerThread handlerThread;
 
-  private long lastProcessingTimeMs;
   private boolean computingNetwork = false;
   private static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
 
@@ -69,6 +69,12 @@ public class ObjectNavFragment extends CameraFragment {
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
   private String classType = "person";
+
+  private long lastProcessingTimeMs;
+  private long frameNum = 0;
+  private final boolean isBenchmarkMode = true;
+  private long processedFrames;
+  MovingAverage movingAvgProcessingTimeMs = new MovingAverage(100);
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -387,11 +393,6 @@ public class ObjectNavFragment extends CameraFragment {
     if (!b) handler.postDelayed(() -> vehicle.setControl(0, 0), 500);
   }
 
-  private long frameNum = 0;
-  private long processedFrames;
-  private double processingTime;
-  MovingAverage mavg = new MovingAverage(100);
-
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy image) {
     if (tracker == null) updateCropImageInfo();
@@ -456,35 +457,21 @@ public class ObjectNavFragment extends CameraFragment {
             computingNetwork = false;
           });
       if (lastProcessingTimeMs > 0) {
-        mavg.next(lastProcessingTimeMs);
-        processingTime = mavg.next(lastProcessingTimeMs);
-        processedFrames += 1;
-        if (processedFrames >= 100) {
-          binding.inferenceInfo.setText(
-              String.format(Locale.US, "%.1f fps", 1000.f / processingTime));
-        }
+        if (isBenchmarkMode) {
+          movingAvgProcessingTimeMs.next(lastProcessingTimeMs);
+          double avgProcessingTimeMs = movingAvgProcessingTimeMs.next(lastProcessingTimeMs);
+          processedFrames += 1;
+          if (processedFrames >= 100) {
+            binding.inferenceInfo.setText(
+                String.format(Locale.US, "%.1f fps", 1000.f / avgProcessingTimeMs));
+          }
+        } else
+          requireActivity()
+              .runOnUiThread(
+                  () ->
+                      binding.inferenceInfo.setText(
+                          String.format(Locale.US, "%.1f fps", 1000.f / lastProcessingTimeMs)));
       }
-    }
-  }
-
-  public class MovingAverage {
-    private long[] window;
-    private int n, insert;
-    private long sum;
-
-    public MovingAverage(int size) {
-      window = new long[size];
-      insert = 0;
-      sum = 0;
-    }
-
-    public double next(long val) {
-      if (n < window.length) n++;
-      sum -= window[insert];
-      sum += val;
-      window[insert] = val;
-      insert = (insert + 1) % window.length;
-      return (double) sum / n;
     }
   }
 
