@@ -70,11 +70,11 @@ public class ObjectNavFragment extends CameraFragment {
   private int numThreads = -1;
   private String classType = "person";
 
-  private long lastProcessingTimeMs;
+  private long lastProcessingTimeMs = -1;
   private long frameNum = 0;
 
   private final boolean isBenchmarkMode = false;
-  private long processedFrames;
+  private long processedFrames = 0;
   private final int movingAvgSize = 100;
   MovingAverage movingAvgProcessingTimeMs = new MovingAverage(movingAvgSize);
 
@@ -371,10 +371,9 @@ public class ObjectNavFragment extends CameraFragment {
       runInBackground(
           () -> {
             try {
-              TimeUnit.MILLISECONDS.sleep(lastProcessingTimeMs);
+              TimeUnit.MILLISECONDS.sleep(Math.max(lastProcessingTimeMs, 50));
               vehicle.setControl(0, 0);
-              requireActivity()
-                  .runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_fps));
+              resetFpsUi();
             } catch (InterruptedException e) {
               Timber.e(e, "Got interrupted.");
             }
@@ -474,6 +473,10 @@ public class ObjectNavFragment extends CameraFragment {
             () ->
                 binding.inferenceInfo.setText(
                     String.format(Locale.US, "%.1f fps", 1000.f / processingTimeMs)));
+  }
+
+  private void resetFpsUi() {
+    requireActivity().runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_fps));
   }
 
   protected void handleDriveCommand(Control control) {
