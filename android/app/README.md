@@ -147,7 +147,7 @@ Simple UI for running autopilot models.
 
 ### Object Tracking
 
-Simple UI for tracking objects of 80 different classes. Short description of the different AI models for object tracking and performance benchmarks can be found in [Model Management](#model-management).
+Simple UI for tracking objects of 80 different classes. A short description of the different AI models for object tracking and performance benchmarks can be found in [Model Management](#model-management).
 
 <p align="left">
 <img src="../../docs/images/screen_object_tracking_1.jpg" alt="Alt text" width="49%" />
@@ -156,69 +156,66 @@ Simple UI for tracking objects of 80 different classes. Short description of the
 
 ### Model Management
 
+All models are quantized for better performance on embedded devices. Please refer to the tables below for a short description of the available models and benchmarking results. The [mean Average Precision (mAP)](https://kharshit.github.io/blog/2019/09/20/evaluation-metrics-for-object-detection-and-segmentation) is computed on the validation set of the [COCO Detection 2017](https://cocodataset.org/#detection-2017) dataset. The runtime is averaged across 100 frames and reported in frames per second (fps).
+
 <p align="left">
 <img src="../../docs/images/screen_model_management.jpg" alt="Alt text" width="25%" />
 </p>
-
-All models are quantized for better performance on embedded devices. Please refer to the tables below for a short description of the available models and benchmarking results. The runtime is averaged across 100 frames. The mIOU is computed on the validation set of the [COCO Detection 2017](https://cocodataset.org/#detection-2017) dataset.
 
 #### MobileNetV1-300 (pre-installed) - mAP: 18%
 
 SSD object detector with MobileNet V3 backbone and input resolution of 300x300.
 
-|                  | CPU | GPU | NNAPI |
+|phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S20FE    |  34 |  57 |    87 |
-| Huawei P30 Pro   |  36 |  25 |    10 |
-| Google Pixel 6XL |  35 |  42 |    53 |
-| Xiaomi Mi9       |  22 |  41 |    33 |
+| Samsung S20FE    |  34 |  57 |   87  |
+| Huawei P30 Pro   |  36 |  25 |   10  |
+| Google Pixel 6XL |  35 |  42 |   53  |
+| Xiaomi Mi9       |  22 |  41 |   33  |
 
 #### MobileNetV3-320 - mAP: 16%
 
 SSD object detector with MobileNet V3 backbone and input resolution of 320x320.
 
-|                  | CPU | GPU | NNAPI |
+|phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S20FE    |  34 |  42 |    28 |
-| Huawei P30 Pro   |  32 |  27 |    23 |
-| Google Pixel 6XL |  33 |  43 |    27 |
-| Xiaomi Mi9       |  20 |  45 |    10 |
+| Samsung S20FE    |  34 |  42 |   28  |
+| Huawei P30 Pro   |  32 |  27 |   23  |
+| Google Pixel 6XL |  33 |  43 |   27  |
+| Xiaomi Mi9       |  20 |  45 |   10  |
 
 #### YoloV4-224 - mAP: mAP: 40.40%
 
 State-of-the-art object detector [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution of 224x224.
 
-|                  | CPU | GPU | NNAPI |
+|phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S20FE    | 3.1 | 7.1 |   4.2 |
-| Huawei P30 Pro   | 2.4 | 6.2 |   0.7 |
-| Google Pixel 6XL | 2.7 |  11 |   0.9 |
-| Xiaomi Mi9       | 2.1 | 6.4 |   1.7 |
-| Samsung Note 8   | 0.9 | 3.9 |   0.6 |
+| Samsung S20FE    | 3.1 | 7.1 |  4.2  |
+| Huawei P30 Pro   | 2.4 | 6.2 |  0.7  |
+| Google Pixel 6XL | 2.7 |  11 |  0.9  |
+| Xiaomi Mi9       | 2.1 | 6.4 |  1.7  |
 
 #### YoloV4-tiny-224 - mAP: 22.05%
 
 Tiny version of YoloV4 with input resolution of 224x224.
 
-|                  | CPU | GPU | NNAPI |
+|phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S20FE    |  30 |  21 |    14 |
-| Huawei P30 Pro   |  27 |  17 |    22 |
-| Google Pixel 6XL |  29 |  24 |    19 |
-| Xiaomi Mi9       |  16 |  14 |   9.3 |
-| Samsung Note 8   | 0.9 | 3.9 |   0.6 |
+| Samsung S20FE    |  30 |  21 |   14  |
+| Huawei P30 Pro   |  27 |  17 |   22  |
+| Google Pixel 6XL |  29 |  24 |   19  |
+| Xiaomi Mi9       |  16 |  14 |  9.3  |
 
 #### YoloV4-tiny-416 - mAP: 29.42%
 
 Tiny version of YoloV4 with input resolution of 416x416.
 
-|                  | CPU | GPU | NNAPI |
+|phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S20FE    |  12 | 9.4 |   7.7 |
-| Huawei P30 Pro   | 8.4 | 7.6 |   6.9 |
-| Google Pixel 6XL |  10 | 9.6 |   7.2 |
-| Xiaomi Mi9       | 9.0 | 7.3 |   5.0 |
-| Samsung Note 8   | 0.9 | 3.9 |   0.6 |
+| Samsung S20FE    |  12 | 9.4 |  7.7  |
+| Huawei P30 Pro   | 8.4 | 7.6 |  6.9  |
+| Google Pixel 6XL |  10 | 9.6 |  7.2  |
+| Xiaomi Mi9       | 9.0 | 7.3 |  5.0  |
 
 ## Add your own fragment
 
