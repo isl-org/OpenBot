@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -40,6 +39,7 @@ import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
+import org.openbot.utils.MovingAverage;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Control;
 import timber.log.Timber;
@@ -49,7 +49,6 @@ public class ObjectNavFragment extends CameraFragment {
   private Handler handler;
   private HandlerThread handlerThread;
 
-  private long lastProcessingTimeMs;
   private boolean computingNetwork = false;
   private static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
 
@@ -69,6 +68,14 @@ public class ObjectNavFragment extends CameraFragment {
   private Network.Device device = Network.Device.CPU;
   private int numThreads = -1;
   private String classType = "person";
+
+  private long lastProcessingTimeMs = -1;
+  private long frameNum = 0;
+
+  private final boolean isBenchmarkMode = false;
+  private long processedFrames = 0;
+  private final int movingAvgSize = 100;
+  private MovingAverage movingAvgProcessingTimeMs = new MovingAverage(movingAvgSize);
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -248,6 +255,7 @@ public class ObjectNavFragment extends CameraFragment {
   }
 
   private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+    resetFpsUi();
     if (model == null) return;
     tracker.clearTrackedObjects();
     if (detector != null) {
@@ -358,20 +366,8 @@ public class ObjectNavFragment extends CameraFragment {
   private void setNetworkEnabledWithAudio(boolean b) {
     setNetworkEnabled(b);
 
-    if (b) {
-      audioPlayer.play(voice, "network_enabled.mp3");
-      runInBackground(
-          () -> {
-            try {
-              TimeUnit.MILLISECONDS.sleep(lastProcessingTimeMs);
-              vehicle.setControl(0, 0);
-              requireActivity()
-                  .runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_fps));
-            } catch (InterruptedException e) {
-              Timber.e(e, "Got interrupted.");
-            }
-          });
-    } else audioPlayer.playDriveMode(voice, vehicle.getDriveMode());
+    if (b) audioPlayer.play(voice, "network_enabled.mp3");
+    else audioPlayer.playDriveMode(voice, vehicle.getDriveMode());
   }
 
   private void setNetworkEnabled(boolean b) {
@@ -384,10 +380,9 @@ public class ObjectNavFragment extends CameraFragment {
     binding.controllerContainer.driveMode.setAlpha(b ? 0.5f : 1f);
     binding.controllerContainer.speedMode.setAlpha(b ? 0.5f : 1f);
 
-    if (!b) handler.postDelayed(() -> vehicle.setControl(0, 0), 500);
+    resetFpsUi();
+    if (!b) handler.postDelayed(() -> vehicle.setControl(0, 0), Math.max(lastProcessingTimeMs, 50));
   }
-
-  private long frameNum = 0;
 
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy image) {
@@ -452,13 +447,28 @@ public class ObjectNavFragment extends CameraFragment {
 
             computingNetwork = false;
           });
-      if (lastProcessingTimeMs > 0)
-        requireActivity()
-            .runOnUiThread(
-                () ->
-                    binding.inferenceInfo.setText(
-                        String.format(Locale.US, "%.1f fps", 1000.f / lastProcessingTimeMs)));
+      if (lastProcessingTimeMs > 0) {
+        if (isBenchmarkMode) {
+          double avgProcessingTimeMs = movingAvgProcessingTimeMs.next(lastProcessingTimeMs);
+          processedFrames += 1;
+          if (processedFrames >= movingAvgSize) updateFpsUi(avgProcessingTimeMs);
+        } else updateFpsUi(lastProcessingTimeMs);
+      }
     }
+  }
+
+  private void updateFpsUi(double processingTimeMs) {
+    requireActivity()
+        .runOnUiThread(
+            () ->
+                binding.inferenceInfo.setText(
+                    String.format(Locale.US, "%.1f fps", 1000.f / processingTimeMs)));
+  }
+
+  private void resetFpsUi() {
+    processedFrames = 0;
+    movingAvgProcessingTimeMs = new MovingAverage(movingAvgSize);
+    requireActivity().runOnUiThread(() -> binding.inferenceInfo.setText(R.string.time_fps));
   }
 
   protected void handleDriveCommand(Control control) {
