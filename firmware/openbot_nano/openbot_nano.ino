@@ -29,19 +29,19 @@
 //------------------------------------------------------//
 //DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
-#define DIY 0    //DIY without PCB
-#define PCB_V1 1 //DIY with PCB V1
-#define PCB_V2 2 //DIY with PCB V2
-#define RTR_V1 3 //Ready-to-Run V1
-#define RC_CAR 4 //RC truck prototypes
-#define LITE 5   //Smaller DIY version for education
-#define RTR_ESP32_V1 6
+#define DIY 0     //DIY without PCB
+#define PCB_V1 1  //DIY with PCB V1
+#define PCB_V2 2  //DIY with PCB V2
+#define RTR_TT 3  //Ready-to-Run with TT-motors
+#define RC_CAR 4  //RC truck prototypes
+#define LITE 5    //Smaller DIY version for education
+#define RTR_520 6 //Ready-to-Run with 520-motors
 
 //------------------------------------------------------//
 //SETUP - Choose your body
 //------------------------------------------------------//
-// Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR, LITE)
-#define OPENBOT RTR_ESP32_V1
+// Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520)
+#define OPENBOT RTR_TT
 
 //------------------------------------------------------//
 //SETTINGS - Global settings
@@ -167,9 +167,9 @@ const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 4;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 8;
-//-------------------------RTR_V1-----------------------//
-#elif (OPENBOT == RTR_V1)
-const String robot_type = "RTR_V1";
+//-------------------------RTR_TT-----------------------//
+#elif (OPENBOT == RTR_TT)
+const String robot_type = "RTR_TT";
 #define HAS_VOLTAGE_DIVIDER 1
 const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
 const float VOLTAGE_MIN = 2.5f;
@@ -252,8 +252,8 @@ const int PIN_PWM_R2 = 10;
 const int PIN_LED_LI = 4;
 const int PIN_LED_RI = 7;
 coast_mode = !coast_mode;
-//-------------------------RTR_ESP32_V1-----------------//
-#elif (OPENBOT == RTR_ESP32_V1)
+//-------------------------RTR_520----------------------//
+#elif (OPENBOT == RTR_520)
 #include <esp_wifi.h>
 #define analogWrite ledcWrite
 #define attachPinChangeInterrupt attachInterrupt
@@ -263,7 +263,7 @@ coast_mode = !coast_mode;
 #define PIN_PWM_L2 CH_PWM_L2
 #define PIN_PWM_R1 CH_PWM_R1
 #define PIN_PWM_R2 CH_PWM_R2
-const String robot_type = "RTR_ESP32_V1";
+const String robot_type = "RTR_520";
 #define HAS_VOLTAGE_DIVIDER 1
 const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
 const float VOLTAGE_MIN = 6.0f;
@@ -341,7 +341,7 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
 #if HAS_SONAR
-#if (OPENBOT != RTR_ESP32_V1)
+#if (OPENBOT != RTR_520)
 #include "PinChangeInterrupt.h"
 #endif
 //Sonar sensor
@@ -401,7 +401,7 @@ unsigned long voltage_time = 0;
 #endif
 
 #if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
-#if (OPENBOT == RTR_ESP32_V1)
+#if (OPENBOT == RTR_520)
 //Speed sensor
 //1000rpm motor - reduction ratio 10, motor 11
 //One revolution = 110
@@ -473,7 +473,7 @@ void setup()
   // Attach the ESC and SERVO
   ESC.attach(PIN_PWM_T, 1000, 2000);   // (pin, min pulse width, max pulse width in microseconds)
   SERVO.attach(PIN_PWM_S, 1000, 2000); // (pin, min pulse width, max pulse width in microseconds)
-#elif (OPENBOT != RTR_ESP32_V1)
+#elif (OPENBOT != RTR_520)
   pinMode(PIN_PWM_L1, OUTPUT);
   pinMode(PIN_PWM_L2, OUTPUT);
   pinMode(PIN_PWM_R1, OUTPUT);
@@ -537,7 +537,7 @@ void setup()
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_RF), update_speed_rf, RISING);
 #endif
 
-#if (OPENBOT == RTR_ESP32_V1)
+#if (OPENBOT == RTR_520)
   esp_wifi_deinit();
  
   //PWMs
@@ -563,6 +563,7 @@ void setup()
   ledcAttachPin(PIN_LED_RB, CH_LED_RB);
   ledcAttachPin(PIN_LED_LB, CH_LED_LB);
 #endif
+
 #if (HAS_LEDS_FRONT)  
   ledcSetup(CH_LED_LF, FREQ, RES);
   ledcSetup(CH_LED_RF, FREQ, RES);
@@ -1347,9 +1348,9 @@ void update_indicator()
 {
   if (indicator_left > 0)
   {
-    if (OPENBOT == RTR_ESP32_V1 && PIN_LED_LI == PIN_LED_LB) {
-      ledcDetachPin(PIN_LED_LB);
-    }
+#if (OPENBOT == RTR_520 && PIN_LED_LI == PIN_LED_LB)
+    ledcDetachPin(PIN_LED_LB);
+#endif
     digitalWrite(PIN_LED_LI, !digitalRead(PIN_LED_LI));
   }
   else
@@ -1359,15 +1360,15 @@ void update_indicator()
 #else
     digitalWrite(PIN_LED_LI, LOW);
 #endif
-    if (OPENBOT == RTR_ESP32_V1 && PIN_LED_LI == PIN_LED_LB) {
-      ledcAttachPin(PIN_LED_LB, CH_LED_LB);
-    }
+#if (OPENBOT == RTR_520 && PIN_LED_LI == PIN_LED_LB)
+    ledcAttachPin(PIN_LED_LB, CH_LED_LB);
+#endif
   }
   if (indicator_right > 0)
   {
-    if (OPENBOT == RTR_ESP32_V1 && PIN_LED_RI == PIN_LED_RB) {
-      ledcDetachPin(PIN_LED_RB);
-    }
+#if (OPENBOT == RTR_520 && PIN_LED_RI == PIN_LED_RB)
+    ledcDetachPin(PIN_LED_RB);
+#endif
     digitalWrite(PIN_LED_RI, !digitalRead(PIN_LED_RI));
   }
   else
@@ -1377,9 +1378,9 @@ void update_indicator()
 #else
     digitalWrite(PIN_LED_RI, LOW);
 #endif
-    if (OPENBOT == RTR_ESP32_V1 && PIN_LED_RI == PIN_LED_RB) {
-      ledcAttachPin(PIN_LED_RB, CH_LED_RB);
-    }
+#if (OPENBOT == RTR_520 && PIN_LED_RI == PIN_LED_RB)
+    ledcAttachPin(PIN_LED_RB, CH_LED_RB);
+#endif
   }
 }
 #endif
@@ -1388,7 +1389,7 @@ void update_indicator()
 void update_light()
 {
 #if (HAS_LEDS_FRONT)
-#if (OPENBOT == RTR_ESP32_V1)
+#if (OPENBOT == RTR_520)
   analogWrite(CH_LED_LF, light_front);
   analogWrite(CH_LED_RF, light_front);
 #else
@@ -1398,7 +1399,7 @@ void update_light()
 #endif
 
 #if (HAS_LEDS_BACK)
-#if (OPENBOT == RTR_ESP32_V1)
+#if (OPENBOT == RTR_520)
   analogWrite(CH_LED_LB, light_back);
   analogWrite(CH_LED_RB, light_back);
 #else
