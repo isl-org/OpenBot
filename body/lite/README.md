@@ -44,11 +44,10 @@ Arduino Version:
 2. [Person Following](https://youtube.com/playlist?list=PLNKFHX5MRn501oWvPbKzP1zkcqhLU5TOh)
 3. [Policy Learning](https://youtube.com/playlist?list=PLNKFHX5MRn5233AyCWhcn71JdB9qIEa-E)
 
-
 micro:bit Version:
 1. [Assembly of OpenBot Lite (micro:bit)](https://youtube.com/playlist?list=PLNKFHX5MRn51xVKHo2VCY-KbOFQrkOm2R)
 2. [Person Following](https://youtube.com/playlist?list=PLNKFHX5MRn51crWis1lwFJXj69DN9evG1)
-3. [micro:bit Codes Explained](https://youtube.com/playlist?list=PLNKFHX5MRn51DfspxVo16BkfXz8y9uR7N)
+3. [micro:bit Code Explained](https://youtube.com/playlist?list=PLNKFHX5MRn51DfspxVo16BkfXz8y9uR7N)
 4. [Policy Learning](https://youtube.com/playlist?list=PLNKFHX5MRn5233AyCWhcn71JdB9qIEa-E)
 
 ## Acknowledgement
