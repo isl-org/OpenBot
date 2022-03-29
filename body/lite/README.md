@@ -1,10 +1,10 @@
 # OpenBot for Education
 
-William Tan has developed a [curriculum](#curriculum) for economical and scalable AI and robotics education around the OpenBot software stack. It comes in the form of [step-by-step YouTube videos](#step-by-step-video-guides) which guides you through the assembly of the [OpenBot Lite](#openbot-lite-arduino), installing the necessary software, using the person following and training and deploying your own autonomous driving policy.
+ITE's eSpace has developed a [curriculum](#curriculum) for economical and scalable AI and robotics education around the OpenBot software stack. It comes in the form of [step-by-step YouTube videos](#step-by-step-video-guides) which guides you through the assembly of the [OpenBot Lite](#openbot-lite-arduino), installing the necessary software, using the person following and training and deploying your own autonomous driving policy.
 
 ## OpenBot Lite
 
-OpenBot Lite is a smaller and simplified variant of the OpenBot DIY version. This minimalist version was developed by William Tan to leverage the great potential of the OpenBot software stack for economical and scalable AI and robotics education. OpenBot Lite supports either a [micro:bit](https://microbit.org/) (+ propriotary IO board) or Ardunio Nano.
+OpenBot Lite is a smaller and simplified variant of the OpenBot DIY version. This minimalist version was developed by ITE's eSpace to leverage the great potential of the OpenBot software stack for economical and scalable AI and robotics education. OpenBot Lite supports either a [micro:bit](https://microbit.org/) (+ propriotary IO board) or Ardunio Nano. The image below shows the micro:bit variant on the left and the Arduino variant on the right.
 
 <p float="left">
   <img src="../../docs/images/openbot_lite.jpg" width="480px" />
@@ -37,11 +37,19 @@ Trained Autopilot in action:
 
 ## Step-by-Step Video Guides
 
-Below are the YouTube playlist in sequence:
+Below are the YouTube playlists in sequence:
 
+Arduino Version:
 1. [Assembly of OpenBot Lite (Arduino)](https://youtube.com/playlist?list=PLNKFHX5MRn52za5VeteCmvLNcL1Kowtw2)
 2. [Person Following](https://youtube.com/playlist?list=PLNKFHX5MRn501oWvPbKzP1zkcqhLU5TOh)
 3. [Policy Learning](https://youtube.com/playlist?list=PLNKFHX5MRn5233AyCWhcn71JdB9qIEa-E)
+
+
+micro:bit Version:
+1. [Assembly of OpenBot Lite (micro:bit)](https://youtube.com/playlist?list=PLNKFHX5MRn51xVKHo2VCY-KbOFQrkOm2R)
+2. [Person Following](https://youtube.com/playlist?list=PLNKFHX5MRn51crWis1lwFJXj69DN9evG1)
+3. [micro:bit Codes Explained](https://youtube.com/playlist?list=PLNKFHX5MRn51DfspxVo16BkfXz8y9uR7N)
+4. [Policy Learning](https://youtube.com/playlist?list=PLNKFHX5MRn5233AyCWhcn71JdB9qIEa-E)
 
 ## Acknowledgement
 
