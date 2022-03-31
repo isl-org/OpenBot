@@ -346,8 +346,8 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 //Sonar sensor
 const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 2;
-const unsigned int MAX_SONAR_DISTANCE = -1;  //cm
-const unsigned long MAX_SONAR_TIME = (long) MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
+const unsigned int MAX_SONAR_DISTANCE = 300;  //cm
+const unsigned int MAX_SONAR_TIME = MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
 const unsigned int STOP_DISTANCE = 10;     //cm
 #if (NO_PHONE_MODE)
 const unsigned int TURN_DISTANCE = 50;
@@ -358,8 +358,8 @@ unsigned long sonar_interval = 1000;
 unsigned long sonar_time = 0;
 boolean sonar_sent = false;
 boolean ping_success = false;
-unsigned int distance = MAX_SONAR_DISTANCE;          //cm
-unsigned int distance_estimate = MAX_SONAR_DISTANCE; //cm
+unsigned int distance = -1;          //cm
+unsigned int distance_estimate = -1; //cm
 unsigned long start_time;
 unsigned long echo_time = 0;
 #if (SONAR_MEDIAN)
@@ -369,8 +369,8 @@ unsigned int distance_counter = 0;
 #endif
 #else
 const unsigned int TURN_DISTANCE = -1; //cm
-const unsigned int STOP_DISTANCE = 0; //cm
-unsigned int distance_estimate = -1;  //cm
+const unsigned int STOP_DISTANCE = 0;  //cm
+unsigned int distance_estimate = -1;   //cm
 #endif
 
 #if (HAS_OLED)
@@ -1449,8 +1449,7 @@ void send_ping()
   digitalWrite(PIN_TRIGGER, LOW);
   if (PIN_TRIGGER == PIN_ECHO)
     pinMode(PIN_ECHO, INPUT);
-  //attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), start_timer, RISING);
-  attachInterrupt(digitalPinToInterrupt(PIN_ECHO), start_timer, RISING);
+  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), start_timer, RISING);
 }
 
 void update_distance_estimate()
@@ -1473,15 +1472,13 @@ void update_distance_estimate()
 void start_timer()
 {
   start_time = micros();
-  //attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), stop_timer, FALLING);
-  attachInterrupt(digitalPinToInterrupt(PIN_ECHO), stop_timer, FALLING);
+  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), stop_timer, FALLING);
 }
 // ISR: Stop timer and record the time
 void stop_timer()
 {
   echo_time = micros() - start_time;
-  //detachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO));
-  detachInterrupt(digitalPinToInterrupt(PIN_ECHO));
+  detachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO));
   ping_success = true;
 }
 #endif
