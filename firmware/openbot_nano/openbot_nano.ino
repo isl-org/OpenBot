@@ -40,8 +40,9 @@
 //------------------------------------------------------//
 //SETUP - Choose your body
 //------------------------------------------------------//
+
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520)
-#define OPENBOT RTR_TT
+#define OPENBOT DIY
 
 //------------------------------------------------------//
 //SETTINGS - Global settings
@@ -60,7 +61,7 @@
 
 // Enable/Disable coast mode (1,0)
 // When no control is applied, the robot will either coast (1) or actively stop (0)
-volatile int coast_mode = 1;
+boolean coast_mode = 1;
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
@@ -251,7 +252,6 @@ const int PIN_PWM_R1 = 9;
 const int PIN_PWM_R2 = 10;
 const int PIN_LED_LI = 4;
 const int PIN_LED_RI = 7;
-coast_mode = !coast_mode;
 //-------------------------RTR_520----------------------//
 #elif (OPENBOT == RTR_520)
 #include <esp_wifi.h>
@@ -466,6 +466,9 @@ unsigned long display_time = 0;
 //------------------------------------------------------//
 void setup()
 {
+#if (OPENBOT == LITE)
+  coast_mode = !coast_mode;
+#endif
   //Outputs
 #if (OPENBOT == RC_CAR)
   pinMode(PIN_PWM_T, OUTPUT);
@@ -479,7 +482,6 @@ void setup()
   pinMode(PIN_PWM_R1, OUTPUT);
   pinMode(PIN_PWM_R2, OUTPUT);
 #endif
-
   //Initialize with the I2C addr 0x3C
 #if HAS_OLED
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
