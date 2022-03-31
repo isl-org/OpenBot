@@ -40,7 +40,7 @@
 //SETUP - Choose your body
 //------------------------------------------------------//
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_V1, RC_CAR, LITE)
-#define OPENBOT LITE
+#define OPENBOT DIY
 
 //------------------------------------------------------//
 //SETTINGS - Global settings
@@ -235,7 +235,6 @@ const int PIN_PWM_R1 = 9;
 const int PIN_PWM_R2 = 10;
 const int PIN_LED_LI = 4;
 const int PIN_LED_RI = 7;
-coast_mode = !coast_mode;
 #endif
 //------------------------------------------------------//
 
@@ -378,6 +377,9 @@ unsigned long display_time = 0;
 //------------------------------------------------------//
 void setup()
 {
+#if (OPENBOT == LITE)
+  coast_mode = !coast_mode;
+#endif
   //Outputs
 #if (OPENBOT == RC_CAR)
   pinMode(PIN_PWM_T, OUTPUT);
@@ -391,7 +393,6 @@ void setup()
   pinMode(PIN_PWM_R1, OUTPUT);
   pinMode(PIN_PWM_R2, OUTPUT);
 #endif
-
   //Initialize with the I2C addr 0x3C
 #if HAS_OLED
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
