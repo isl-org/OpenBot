@@ -7,7 +7,7 @@
 
 我们为轮式机器人设计了一个车身，该车身依赖于低成本，随时可用的业余爱好硬件。
 
-![Assembly](../docs/images/assembly.gif)
+![Assembly](../../docs/images/assembly.gif)
 
 ## 3D打印机身
 
@@ -134,7 +134,7 @@
 
 ### 选项1：自己动手做
 
-![Wiring Diagram](../docs/images/wiring_diagram.png)
+![Wiring Diagram](../../docs/images/wiring_diagram.png)
 
 1. 如有必要，将线连接到电动机
 2. 将两个电动机的正极和负极引线插入L298N板的OUT1（+）和OUT2（-）
