@@ -60,7 +60,7 @@
 
 // Enable/Disable coast mode (1,0)
 // When no control is applied, the robot will either coast (1) or actively stop (0)
-boolean coast_mode = 1;
+volatile int coast_mode = 1;
 
 //------------------------------------------------------//
 // CONFIG - update if you have built the DIY version
@@ -539,7 +539,7 @@ void setup()
 
 #if (OPENBOT == RTR_520)
   esp_wifi_deinit();
- 
+
   //PWMs
   // configure PWM functionalitites
   ledcSetup(CH_PWM_L1, FREQ, RES);
@@ -556,7 +556,7 @@ void setup()
   ledcAttachPin(PIN_PWM_RB1, CH_PWM_R1);
   ledcAttachPin(PIN_PWM_RF2, CH_PWM_R2);
   ledcAttachPin(PIN_PWM_RB2, CH_PWM_R2);
-  
+
 #if (HAS_LEDS_BACK)
   ledcSetup(CH_LED_LB, FREQ, RES);
   ledcSetup(CH_LED_RB, FREQ, RES);
@@ -564,7 +564,7 @@ void setup()
   ledcAttachPin(PIN_LED_LB, CH_LED_LB);
 #endif
 
-#if (HAS_LEDS_FRONT)  
+#if (HAS_LEDS_FRONT)
   ledcSetup(CH_LED_LF, FREQ, RES);
   ledcSetup(CH_LED_RF, FREQ, RES);
   ledcAttachPin(PIN_LED_LF, CH_LED_LF);
