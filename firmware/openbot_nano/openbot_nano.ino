@@ -235,7 +235,6 @@ const int PIN_PWM_R1 = 9;
 const int PIN_PWM_R2 = 10;
 const int PIN_LED_LI = 4;
 const int PIN_LED_RI = 7;
-coast_mode = !coast_mode;
 #endif
 //------------------------------------------------------//
 
@@ -454,6 +453,9 @@ void setup()
   //SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
   //SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
   //Serial.setTimeout(10);
+#if (OPENBOT == LITE)
+  coast_mode = !coast_mode;
+#endif
 }
 
 //------------------------------------------------------//
