@@ -35,7 +35,7 @@
 #define RTR_TT 3  //Ready-to-Run with TT-motors
 #define RC_CAR 4  //RC truck prototypes
 #define LITE 5    //Smaller DIY version for education
-#define RTR_520 6 //Ready-to-Run with 520-motors
+#define RTR_520 6 //Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
 
 //------------------------------------------------------//
 //SETUP - Choose your body
@@ -347,7 +347,7 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 //Sonar sensor
 const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 2;
 const unsigned int MAX_SONAR_DISTANCE = 300;  //cm
-const unsigned int MAX_SONAR_TIME = MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
+const unsigned long MAX_SONAR_TIME = (long) MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
 const unsigned int STOP_DISTANCE = 10;     //cm
 #if (NO_PHONE_MODE)
 const unsigned int TURN_DISTANCE = 50;
