@@ -98,23 +98,23 @@ Depending on your configuration you may see different messages.
 
 - Messages that start with `v` report the battery voltage. If you connect the battery to the car (i.e. turn on the switch), it should show the battery voltage. If you disconnect the battery (i.e. turn off the switch), it should show a small value.
 - Messages that start with `w` report readings of the speed sensors measured in revolutions per second (rpm). Each hole in the encoder disk will increment a counter by plus/minus one depending on the direction. You can set the number of holes with the parameter `DISK_HOLES`. If you are using the standard disk with 20 holes, there will be 20 counts for each revolution of the wheel.
-- Messages that start with `s` report the estimated free space in front of the ultrasonic sensor in cm. If the ultrasonic sensor is disabled or unable to get a reading, it will show `65535`.
+- Messages that start with `s` report the estimated free space in front of the ultrasonic sensor in cm.
 - Messages that start with `b` report collisions. The codes `lf` (left front), `rf` (right front), `cf` (center front), `lb` (left back), `rb` (right back) indicate which sensor triggered the collision.
 
 #### Test procedure
 
 Before you proceed, make sure the tires are removed. You will need the Serial Monitor open to send commands and you will see the messages received from your OpenBot. If you have the OLED display installed, you will also see the vehicle status displayed there in a more human-readable format. The following test procedure can be used to test all functionalities of the car:
 
-1. Turn on the car and observe the battery voltage (first value). You can verify the reading with a multimeter and adjust the `VOLTAGE_DIVIDER_FACTOR` if necessary.
+1. Turn on the car and observe the battery voltage (the number after the `v`). You can verify the reading with a multimeter and adjust the `VOLTAGE_DIVIDER_FACTOR` if necessary.
 2. If you have an ultrasonic sensor installed:
-    1. Hold your hand in front of the sensor and move it back and forth. You should see the readings (fourth value) change correspondingly.
+    1. Hold your hand in front of the sensor and move it back and forth. You should see the readings (the number after the `s`) change correspondingly.
     2. We have observed that the ultrasonic sensor is very sensitive to vibrations! So it is advisable to make sure you will get reliable readings during operation by performing the following test:
         1. Place the OpenBot with the ultrasonic sensor installed such that there is at least 200cm of free space in front of it. You should see a reading of `200` or more.
         2. Observe the readings on the serial monitor for some time and then enter the command `c128,128`.
         3. If the sensor readings change significantly, you will need to dampen the vibrations transmitted to the ultrasonic sensor from the chassis (e.g. add some silicon, adjust the mounting position).
 3. If you have the speed sensors installed:
-    1. Make sure, you have plenty of free space in front of the ultrasonic sensor. The reading (fourth value) needs to be at least above the `STOP_THRESHOLD` which is `10` by default. If the ultrasonic sensor is not installed, you should see a reading of `65535`.
-    2. Send the command `c128,128`. The motors will start spinning at *slow speed* (50% PWM). The speed sensor readings (second and third value) should be similar to the values in the image above. If you are using the DIY version or a weaker battery, values may be lower. Check that all motors are spinning forward and that the speed sensor readings are positive. Note: If you multiply these values by 3, they correspond to the rpm for the standard disk with 20 holes.
+    1. Make sure, you have plenty of free space in front of the ultrasonic sensor. The reading (the number after the `s`) needs to be at least above the `STOP_DISTANCE` which is `10` by default.
+    2. Send the command `c128,128`. The motors will start spinning at *slow speed* (50% PWM). The speed sensor readings (values after the `w`) are reported in rpm and should be between 250 and 300 for the RTR_TT version depending on the SOC of the battery. If you are using the DIY version or a weaker battery, values may be lower. Check that all motors are spinning forward and that the speed sensor readings are positive.
     3. Try sending different controls and observe the speed sensor readings. For example, the command `c-128,-128` will spin all motors backward at *slow speed* (50% PWM). The command `c255,-255` will spin the left motors forward and the right motors backward at *fast speed* (100% PWM). The command `c-192,192` will spin the left motors backward and the right motors forward at *normal speed* (75% PWM).
 4. Stop the motors by sending the command `c0,0` or by holding your hand in front of the ultrasonic sensor
 5. If you have the indicator LEDs installed, send the command `i1,0` and observe the left indicator light flashing. The send the command `i0,1` and observe the right indicator light flashing. Finally, turn the indicator off by sending the command `i0,0`.
