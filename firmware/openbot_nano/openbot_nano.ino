@@ -403,9 +403,9 @@ unsigned long voltage_time = 0;
 #if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
 #if (OPENBOT == RTR_520)
 //Speed sensor
-//1000rpm motor - reduction ratio 10, motor 11
-//One revolution = 110
-const unsigned int TICKS_PER_REV = 110;
+//530rpm motor - reduction ratio 19, motor 11
+//One revolution = 209
+const unsigned int TICKS_PER_REV = 209;
 #else
 #include "PinChangeInterrupt.h"
 const unsigned int TICKS_PER_REV = 20;
