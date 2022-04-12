@@ -170,5 +170,5 @@
 
 ## 下一步
 
-烧录[Arduino固件](../firmware/README_CN.md)
+烧录[Arduino固件](../../firmware/README_CN.md)
 

@@ -2,7 +2,7 @@
 
 <p align="center">
   <span>English</span> |
-  <a href="README_CN.md">简体中文</a>
+  <a href="CONTRIBUTING_CN.md">简体中文</a>
 </p>
 
 ## Process
