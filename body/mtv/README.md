@@ -522,16 +522,16 @@ The total cost of the externally sourced components is estimated to around **500
 
 #### II.2.1. Overview
 
-This chapter covers the assembly process of the MTV. Note that left and right are the port and starboard sides of the robot and will be used interchangeably in this document. Unless stated otherwise, all bolts are ssumed to have flat washers to protect the 3D printed plastic. It should moreover be emphasized that the use of spring washers and nylocs allows preventing any loosening of the nuts due to vibrations. 
+This chapter covers the assembly process of the MTV. Note that left and right are the port and starboard sides of the robot and will be used interchangeably in this document. Unless stated otherwise, all bolts are assumed to have flat washers to protect the 3D printed plastic. It should moreover be emphasized that the use of spring washers and nylocs usually allows preventing any loosening of the nuts due to vibrations. 
 
-The assembly process of the MTV can be divided into seven steps, namely:
-- **a.** assembly of the the 6 motor modules
-- **b.** assembly of the legs
-- **c.** assembly of the chassis
-- **d.** assembly of the main compartment 
-- **e.** assembly of the vehicle
-- **f.** assembly of the power unit, control unit and connection of the different components
-- **g.** Testing, programming and use. 
+The assembly process of the MTV can be divided into seven main steps, namely:
+1. assembly of the the 6 motor modules
+2. assembly of the legs
+3. assembly of the chassis
+4. assembly of the main compartment 
+5. assembly of the vehicle
+6. assembly of the power unit, control unit and connection of the different components
+7. Testing, programming and use. 
 
 <p align="center">
   <img src="../../docs/images/MTV/Rover_Assembly.png" width="1000" alt="App GUI"/>
@@ -547,7 +547,7 @@ Each of the motor modules consist of the following parts:
 - 1 x JGB37-520 DC-Motor with encoders and wheel adapter (O1)
 - 1 x PG7 Cable Gland (O5)
 
-The assembly process is the following:
+To assemble a motor module:
 
 1. Start by connecting the control cable provided in the kit (O1) to the motor. It is strongly recommended to secure this connection with a bit of hot glue. 
 2. Carefully align the motor fixture pattern with the 3D-printed motor housing (A1) hole pattern. Make sure not to apply any force onto the encoder, to avoid damaging it. Screw the motor to the 3D-printed motor housing (A1), using the screws provided in the kit (O1). 
@@ -570,21 +570,27 @@ The left leg of the MTV consists of the following parts:
 
 - 1 x 3D-printed <a href="cad/Joints/90deg_Joint.stl">90 deg Joint </a> (A4)
 - 1 x 3D-printed <a href="cad/Joints/End_Joint.stl">End Joint  </a> (A7)
-- 2 x 3D-printed <a href="cad/Joints/BearingCover.stl">Bearing Cover </a> (A11)
+- 1 x 3D-printed <a href="cad/Joints/BearingCover.stl">Bearing Cover </a> (A11)
 - 1 x 3D-printed <a href="cad/Joints/100deg_Joint.stl">100 deg Joint </a> (A5)
 - 2 x 3D-printed <a href="cad/Legs/Front_Leg.stl">Front Leg </a> (A8)
 - 1 x 3D-printed <a href="cad/Legs/Mid_Leg.stl">Mid Leg </a> (A9)
-- 1 x 3D-printed <a href="cad/Legs/Rear_Leg.stl">Rear Leg </a> (A10)
+- 1 x 3D-printed <a href="cad/Legs/Rear_Leg.stl">Rear Leg </a> (A10) 
+- 1 x D-Line cable duct (O4)
+- 1 x 7-Core Cable (O3)
+- 1 x MR126ZZ Ball Bearing (O6)
 
 The right leg of the MTV consists of the following parts:
 
 - 1 x 3D-printed <a href="cad/Joints/90deg_Joint.stl">90 deg Joint </a> (A4)
 - 1 x 3D-printed <a href="cad/Joints/End_Joint.stl">End Joint  </a> (A7)
-- 2 x 3D-printed <a href="cad/Joints/BearingCover.stl">Bearing Cover </a> (A11)
+- 1 x 3D-printed <a href="cad/Joints/BearingCover.stl">Bearing Cover </a> (A11)
 - 1 x 3D-printed <a href="cad/Joints/100deg_Joint_Mirror.stl">100 deg Joint Mirror</a> (A6)
 - 2 x 3D-printed <a href="cad/Legs/Front_Leg.stl">Front Leg </a> (A8)
 - 1 x 3D-printed <a href="cad/Legs/Mid_Leg.stl">Mid Leg </a> (A9)
 - 1 x 3D-printed <a href="cad/Legs/Rear_Leg.stl">Rear Leg </a> (A10)
+- 1 x D-Line cable duct (O4)
+- 1 x 7-Core Cable (O3)
+- 1 x MR126ZZ Ball Bearing (O6)
 
 Assemble the 90 degree joint (A4) and related legs (A8) (2x forward + mid) to form the forward leg assembly (right and left). The legs are secured to the joint by M4 x 40mm bolts (O24), flat washer (O30), spring washer (O30), and nuts (O28). Drill the guided holes provided with M4 in the leg assemblies (in the mid leg there are 3 guided holes, end 2 should be M4 and mid should be M3 which will be used to mount the shock absorbers).
 Attach the rear leg 100degree joint (A5) (resp. mirror A6) and the rear leg to form the port and starboard full leg assemblies and secure the leg using M4 x 40mm bolts (O24), flat washer (O30), spring washer (O30), and nuts (O28).  
@@ -595,23 +601,23 @@ Attach the rear leg 100degree joint (A5) (resp. mirror A6) and the rear leg to f
 
 #### II.2.4. Assembly of the chassis
 
-- Attach the motor brackets to the free ends of each leg (2 x forward and rear leg of both Left and right side) using M4 x 40mm bolts [42], flat and spring washers (O30), and nuts (O28).
-- Attach the tires (O2) to the hex hub and secure them with the wheel hub nut. 
-- The MTV motors contain an integrated magnetic encoder for velocity estimation and have a 6-pin interface, for namely `[Motor power +, Motor power - , Encoder power + , Encoder power - , Encoder data 1, Encoder data 2]`. Electrical connection between the motors and the control PCBs should be done using the (O3) 7-core cable:
+Attach the motor brackets to the free ends of each leg (2 x forward and rear leg of both Left and right side) using M4 x 40mm bolts (O24), flat and spring washers (O30), and nuts (O28). Attach the tires (O2) to the hex hub and secure them with the wheel hub nut. The MTV motors contain an integrated magnetic encoder for velocity estimation and have a 6-pin interface, for namely `[Motor power +, Motor power - , Encoder power + , Encoder power - , Encoder data 1, Encoder data 2]`. Electrical connection between the motors and the control PCBs should be done using the (O3) 7-core cable:
+
 <p align="center">
   <img src="../../docs/images/MTV/MotAssembly.png" width="800" alt="App GUI"/>
 </p>
 
-- Complete the chassis assembly, including attaching the cable trunking as required. 
+Complete the chassis assembly, including attaching the cable duct (O4) as required:
 
 <p align="center">
-  <img src="../../docs/images/MTV/Leg2.png" width="800" alt="App GUI"/>
+  <img src="../../docs/images/MTV/Leg2.png" width="600" alt="App GUI"/>
 </p>
 
 #### II.2.5. Assembly of the main compartment
 
 The main compartment consist of the following parts:
 
+- 2 x 3D-printed <a href="cad/Joints/BearingCover.stl">Bearing Cover </a> (A11)
 - 1 x 3D-printed <a href="cad/PhoneMount/Phone_Mount.stl">Phone Mount Platform </a> (A12)
 - 1 x 3D-printed <a href="cad/Buffer/Name_Front.stl">Name Front </a> (A13)
 - 1 x 3D-printed <a href="cad/Buffer/Name_Back.stl">Name Back </a> (A14)
@@ -623,6 +629,9 @@ The main compartment consist of the following parts:
 - 1 x 3D-printed <a href="cad/Compartment/Roof_Rear.stl">Roof Rear </a> (A20)
 - 1 x 3D-printed <a href="cad/Compartment/Compartment_Battery_Mount-P1.stl">Compartment Battery Mount P1 </a> (A21a)
 - 1 x 3D-printed <a href="cad/Compartment/Compartment_Battery_Mount-P2.stl">Compartment Battery Mount P2 </a> (A21b)
+- 4 x M4 x 120mm screws (O26)
+- 6 x PG7 Cable Gland (O5)
+- 1 x M6 threaded bar (O21) 
 
 Join the rear compartment (A17) with the forward compartment (A18) to form compartment assembly using M3 x 15mm (O25), flat washers (O28) nyloc nuts (O28). Use the guided holes to drill M3 holes for the joining purpose.
 
@@ -648,11 +657,10 @@ Attach the left and right buffers (A15 & A16) to the compartment assembly using 
   <img src="../../docs/images/MTV/Front.png" width="800" alt="App GUI"/>
 </p>
 
-- Attach the battery mount P1 & P2 (A21 a & b) on to the rear compartment using M3 x 15mm bolts (O25) and nylocs (O28).
-- Insert the M6 threaded bar (O21) into the chassis assembly though the centre hole of the bearings and the Battery mount P1&P2 assembly. As the threaded bar is inserted from one side, take care to add the required M6 nuts (O29) that are internal to the compartment.  
-  - Note that there are two M6 nuts (O29) on the outside of the compartment that act as spacers between the chassis and the compartment assembly. 
-  - Also note that the threaded bar needs to be balanced between the left and the right to ensure space for chassis assembly. 
-  - Care must be taken when screwing in the threaded bar into the compartment to ensure no pretension is added to the side walls.
+Attach the battery mount P1 & P2 (A21 a & b) on to the rear compartment using M3 x 15mm bolts (O25) and nylocs (O28). Insert the M6 threaded bar (O21) into the chassis assembly though the centre hole of the bearings and the Battery mount P1&P2 assembly. As the threaded bar is inserted from one side, take care to add the required M6 nuts (O29) that are internal to the compartment.  
+- Note that there are two M6 nuts (O29) on the outside of the compartment that act as spacers between the chassis and the compartment assembly. 
+- Also note that the threaded bar needs to be balanced between the left and the right to ensure space for chassis assembly. 
+- Care must be taken when screwing in the threaded bar into the compartment to ensure no pretension is added to the side walls.
 
 <p align="center">
   <img src="../../docs/images/MTV/Assembly.png" width="800" alt="App GUI"/>
