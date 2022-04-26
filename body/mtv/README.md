@@ -1,7 +1,7 @@
 # OpenBot: Multi-Terrain Vehicle (MTV) body
 
-We here propose an all-terrain alternative to the original openbot vehicle. Developed by **Ivy Tech LTD**, the Multi-Terrain Vehicle (MTV) is also based on inexpensive and easily printable components. 
-[OpenBot](https://www.openbot.org/) initiative.
+We here propose an all-terrain alternative to the original openbot vehicle. Developed by **Ivy Tech LTD**, the Multi-Terrain Vehicle (MTV) is also based on inexpensive and easily printable components. The [OpenBot](https://www.openbot.org/) MTV is inspired by several exploration vehicle concepts developed over the past decades for lunar and Martian exploration. The MTV is designed around a set of 6 actuated wheels, organized in a Rocker-Bogie configuration. Unlike most lunar or Martian rovers, the wheels cannot rotate radially. The vehicle therefore operates in the same way as a tank, which makes manual control rather intuitive.
+
 <p align="center">
   <img src="../../docs/images/MTV/MTV.png" width="400" alt="App GUI"/>
 </p>
@@ -525,18 +525,18 @@ The total cost of the externally sourced components is estimated to around **500
 This chapter covers the assembly process of the MTV. Note that left and right are the port and starboard sides of the robot and will be used interchangeably in this document. Unless stated otherwise, all bolts are ssumed to have flat washers to protect the 3D printed plastic. It should moreover be emphasized that the use of spring washers and nylocs allows preventing any loosening of the nuts due to vibrations. 
 
 The assembly process of the MTV can be divided into seven steps, namely:
-- **a.** Assembly of the the 6 motor modules
-- **b.** Assembly of the legs
-- **c.** Assembly of the chassis
-- **d.** Assembly of the main compartment 
-- **e.** Assembly of the vehicle
-- **f.** Electronics Assembly, including the power unit, control unit, lights and switches
+- **a.** assembly of the the 6 motor modules
+- **b.** assembly of the legs
+- **c.** assembly of the chassis
+- **d.** assembly of the main compartment 
+- **e.** assembly of the vehicle
+- **f.** assembly of the power unit, control unit and connection of the different components
 - **g.** Testing, programming and use. 
 
 <p align="center">
-  <img src="../../docs/images/MTV/Rover_Assembly.png" width="800" alt="App GUI"/>
+  <img src="../../docs/images/MTV/Rover_Assembly.png" width="1000" alt="App GUI"/>
 </p>
-  
+
 #### II.2.2. Assembly of the the motor modules
 
 Each of the motor modules consist of the following parts:
@@ -590,7 +590,7 @@ Assemble the 90 degree joint (A4) and related legs (A8) (2x forward + mid) to fo
 Attach the rear leg 100degree joint (A5) (resp. mirror A6) and the rear leg to form the port and starboard full leg assemblies and secure the leg using M4 x 40mm bolts (O24), flat washer (O30), spring washer (O30), and nuts (O28).  
 
 <p align="center">
-  <img src="../../docs/images/MTV/Leg.png" width="1000" alt="App GUI"/>
+  <img src="../../docs/images/MTV/Leg.png" width="800" alt="App GUI"/>
 </p>
 
 #### II.2.4. Assembly of the chassis
@@ -601,7 +601,9 @@ Attach the rear leg 100degree joint (A5) (resp. mirror A6) and the rear leg to f
 <p align="center">
   <img src="../../docs/images/MTV/MotAssembly.png" width="800" alt="App GUI"/>
 </p>
+
 - Complete the chassis assembly, including attaching the cable trunking as required. 
+
 <p align="center">
   <img src="../../docs/images/MTV/Leg2.png" width="800" alt="App GUI"/>
 </p>
@@ -714,16 +716,16 @@ A dedicated voltage display provides relevant indication of the battery state. I
   <img src="../../docs/images/MTV/V_disp.png" width="500" alt="App GUI"/>
 </p>
 
-<p align="center">
-  <img src="../../docs/images/MTV/LightMount.png" width="800" alt="App GUI"/>
-</p>
-
 #### II.3.3. PCB – lights connection 
 
 The front and rear lights should be connected to the MTV's main PCB. A switch should placed on the lid of the MTV to control them.  
 
 <p align="center">
   <img src="../../docs/images/MTV/Light.png" width="800" alt="App GUI"/>
+</p>
+
+<p align="center">
+  <img src="../../docs/images/MTV/LightMount.png" width="800" alt="App GUI"/>
 </p>
 
 #### II.3.4. Power distribution PCB assembly
@@ -867,6 +869,10 @@ To install the ESP32 board in your Arduino IDE, follow these next instructions:
 </p>
 
 6. To flash the MTV with your new code, simply select **ESP32 Dev Module** in the menu **Tools > Board > ESP32 Arduino**. Note that additional content as well as troubleshooting of the ESP32 flashing prcess can be found in the following [link](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/).
+
+<p align="center">
+  <img src="../../docs/images/arduino_windows-select-board.png" width="600" alt="App GUI"/>
+</p>
 
 
 Flash the [Arduino Firmware](../../firmware/README.md)
