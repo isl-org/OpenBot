@@ -17,7 +17,7 @@ Below are a number of examples with build instructions:
   </td>
   <td>
   <a href="rc_truck">
-    <img width="300" alt="RC Truck" src="../docs/images/add_covers_3.JPG" />
+    <img width="300" alt="RC Truck" src="../docs/images/add_covers_2.JPG" />
   </a>
   </td>
   <td>
