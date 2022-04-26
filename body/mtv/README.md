@@ -668,34 +668,27 @@ Attach the battery mount P1 & P2 (A21 a & b) on to the rear compartment using M3
 
 #### II.2.6. Assembly of the vehicle
 
-Attach the chassis assembly to the M6 threaded bar either side of the compartment and secure using M6 Nuts (O29)
+Attach the chassis assembly to the M6 threaded bar either side of the compartment and secure using M6 Nuts (O29):
 
 <p align="center">
   <img src="../../docs/images/MTV/MTV_assemb.png" width="800" alt="App GUI"/>
 </p>
 
-Attach the shock absorbers (O7) between the mid leg and chassis
+Attach the shock absorbers (O7) between the mid leg and the chassis:
 
 <p align="center">
   <img src="../../docs/images/MTV/Damper.png" width="800" alt="App GUI"/>
 </p>
 
-- Swap the factory default springs in the shock absorbers with the medium compliance set provided (gold springs) to ensure the body of the robot is level with ground. 
-- Attach the piston end to the robot compartment using the spacer and bolt provided with the shock absorber (O10) and an M3 lock nut (O28).
-- Fix the rod end using M3 x 40 bolts (O25) and nyloc (O28)
-- Run the wires from the leg assembly to the main body and attach as per wiring guidelines (also make appropriate use of the cable management trunking). 
-- Attach phone mount to the roof front (A19) 
-  - Attach the universal smart phone holder (O11) to the phone mount platform (A12). 
-  - Attach the vibration isolators (O11) to the phone mount platform (A12) and secure it to the roof front (A19) using lock nuts and washers as illustrated.   
+Swap the factory default springs in the shock absorbers with the medium compliance set provided (gold springs) to ensure the body of the robot remains leveled with the ground. Attach the piston end to the robot compartment using the spacer and bolt provided with the shock absorber (O10) and an M3 lock nut (O28). Fix the rod end using M3 x 40 bolts (O25) and nyloc (O28). Run the wires from the leg assembly to the main body and attach as per wiring guidelines (also make appropriate use of the cable management trunking). Attach the phone mount to the roof front (A19) 
+- Attach the universal smart phone holder (O11) to the phone mount platform (A12). 
+- Attach the vibration isolators (O11) to the phone mount platform (A12) and secure it to the roof front (A19) using lock nuts and washers as illustrated.   
 
 <p align="center">
   <img src="../../docs/images/MTV/Phone.png" width="800" alt="App GUI"/>
 </p>
 
-- Fix the voltage display (O12), and power control switches (O13), and Micro USB Panel Mount Cable (O14) on the roof rear’s designated slots. 
-- Pull out the head and tail lights (O8 & O9) though the roof cut outs and attach the roof front (A19) and roof rear (A20) to the compartment assembly. 
-- Insert the head lights (O8) into headlight socket (A23), and tail lights (O9) into the taillight socket (A24) and fix to the respective slots in roof front (A19) and roof rear (A20). Seal the light sockets with light endcaps (A22) as shown in figure below and use super glue to attach them. 
-- Slide in the customised Name Front (A13) and Name Back (A14) plates. 
+Fix the voltage display (O12), power control switches (O13), and Micro USB Panel Mount Cable (O14) on the roof rear's designated slots. Pull out the head and tail lights (O8 & O9) though the roof cut outs and attach the roof front (A19) and roof rear (A20) to the compartment assembly. Insert the head lights (O8) into headlight socket (A23), and tail lights (O9) into the taillight socket (A24) and fix to the respective slots in roof front (A19) and roof rear (A20). Seal the light sockets with light endcaps (A22) as shown in figure below and use super glue to attach them. Slide in the customised Name Front (A13) and Name Back (A14) plates. 
 
 <p align="center">
   <img src="../../docs/images/MTV/LightMount.png" width="800" alt="App GUI"/>
@@ -703,7 +696,7 @@ Attach the shock absorbers (O7) between the mid leg and chassis
 
 ### II.3. Electronics Assembly 
 
-This part only covers the integration of the electronic boards into the vehicle. The reader will find complementary details about the architecture and components of the different PCBs via the the [following link](./pcb). Prototyped (partially wired and with ESP 32 and motor drivers) PCBs are illustrated in the following figures: 
+This part only covers the integration of the electronic boards into the vehicle. The reader will find complementary details about the architecture and components of the different PCBs via the the [following link](./pcb). The pototyped PCBs are illustrated in the following figures: 
 
 <p align="center">
   <img src="../../docs/images/MTV/PCB_4.png" width="600" alt="App GUI"/>
