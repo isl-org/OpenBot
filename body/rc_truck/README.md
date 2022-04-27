@@ -39,8 +39,8 @@ You will need to print the following parts in order to build your OpenBot RC-Tru
 
 1) ```main_frame``` ([STL](cad/rc_truck_body/main_frame.stl), [STEP](cad/rc_truck_body/main_frame.step))
 2) ```side_cover``` \[x2\] ([STL](cad/rc_truck_body/side_cover.stl), [STEP](cad/rc_truck_body/side_cover.step))
-3) ```phone_mount_bottom``` ([STL](cad/phone_mount/phone_mount_bottom.stl), [STEP](cad/phone_mount/phone_mount_bottom.step))
-4) ```phone_mount_top``` ([STL](cad/phone_mount/phone_mount_top.stl), [STEP](cad/phone_mount/phone_mount_top.step))
+3) ```phone_mount_bottom``` ([STL](../phone_mount/phone_mount_bottom.stl), [STEP](../phone_mount/phone_mount_bottom.step))
+4) ```phone_mount_top``` ([STL](../phone_mount/phone_mount_top.stl), [STEP](../phone_mount/phone_mount_top.step))
 
 Notice that \[xN\] indicates the number of copies (i.e., N) you need to print of a particular part (wherever applicable).
 
