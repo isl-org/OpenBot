@@ -1,3 +1,15 @@
+plugins {
+    id 'io.github.reactivecircus.app-versioning' version "1.1.2"
+}
+
+appVersioning {
+    /**
+     * Git root directory used for fetching git tags.
+     * Use this to explicitly set the git root directory when the root Gradle project is not the git root directory.
+     */
+    gitRootDirectory.set(rootProject.file("../")) // if the .git directory is in the root Gradle project's parent directory.
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'de.undercouch.download'
 apply plugin: 'com.google.firebase.crashlytics'
@@ -9,8 +21,6 @@ android {
         applicationId "org.openbot"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode getVersionCode()
-        versionName getVersionName()
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
@@ -148,7 +158,3 @@ dependencies {
     implementation 'com.koushikdutta.ion:ion:3.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
 }
-
-println("Version Code: " + getVersionCode())
-println("Version Name: " + getVersionName())
-
