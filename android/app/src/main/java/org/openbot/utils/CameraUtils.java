@@ -27,9 +27,14 @@ public class CameraUtils {
         if (facing != CameraCharacteristics.LENS_FACING_BACK) {
           continue;
         }
-        final StreamConfigurationMap map =
+        final StreamConfigurationMap streamMap =
             characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-        resolution = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class), resolution);
+        final Size[] outputSizes = streamMap.getOutputSizes(SurfaceTexture.class);
+        if (outputSizes == null) {
+          Timber.e("No output sizes compatible with SurfaceTexture.");
+          continue;
+        }
+        resolution = chooseOptimalSize(outputSizes, resolution);
       }
     } catch (final CameraAccessException e) {
       Timber.e(e, "Unable to open the camera.");
