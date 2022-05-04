@@ -33,7 +33,7 @@ jobs:
       - name: Style
         run: ./gradlew checkStyle
       - name: Lint
-        run: ./gradlew lint --info
+        run: ./gradlew lint
       - name: Test
         run: ./gradlew test
       - name: Build
