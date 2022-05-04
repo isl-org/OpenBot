@@ -30,16 +30,10 @@ jobs:
           java-version: 11
           distribution: 'zulu'
           cache: 'gradle'
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
       - name: Style
         run: ./gradlew checkStyle
       - name: Lint
-        run: ./gradlew lint
+        run: ./gradlew lint --info
       - name: Test
         run: ./gradlew test
       - name: Build
