@@ -90,7 +90,7 @@ class Training:
         self.test_data_dir = ""
         self.train_datasets = []
         self.test_datasets = []
-        self.redo_matching = False
+        self.redo_matching = True
         self.remove_zeros = True
         self.image_count_train = 0
         self.image_count_test = 0
