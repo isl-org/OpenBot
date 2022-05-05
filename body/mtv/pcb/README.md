@@ -2,7 +2,7 @@
 
 ### Control architecture overview of the MTV
 
-The MTV control architecture is of cascaded type. The high level commands are computed on a smartphone, running the Intel [OpenBot](https://www.openbot.org/) deep reinforcement learning framework. These commands are then passed to a ESP32 low-level control board which handles PWM generation as well as communication with the different MTV sensors (e.g. encoders, sonars and so on).
+The MTV control architecture is of cascaded type. The high level commands are computed on a smartphone, running the Intel [OpenBot](https://www.openbot.org/) framework. These commands are then passed to a ESP32 low-level control board which handles PWM generation as well as communication with the different MTV sensors (e.g. encoders, sonars and so on).
 
 <p align="center">
   <img src="../../../docs/images/MTV/Ctrl_arch.png" width="800" alt="App GUI"/>
