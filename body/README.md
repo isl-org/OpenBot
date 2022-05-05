@@ -22,7 +22,7 @@ Below are a number of examples with build instructions:
   </td>
   <td>
   <a href="mtv">
-    <img width="300" alt="Multi-Terrain Vehicle" src="../docs/images/MTV/MTV.png" />
+    <img width="300" alt="Multi-Terrain Vehicle" src="../docs/images/MTV/MTV.jpg" />
   </a>
   </td>
   </tr>
