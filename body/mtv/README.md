@@ -1,6 +1,6 @@
 # OpenBot: Multi-Terrain Vehicle (MTV) body
 
-We here propose an all-terrain alternative to the original openbot vehicle. Developed by **Ivy Tech LTD**, the Multi-Terrain Vehicle (MTV) is also based on inexpensive and easily printable components. The [OpenBot](https://www.openbot.org/) MTV is inspired by several exploration vehicle concepts developed over the past decades for lunar and Martian exploration. The MTV is designed around a set of 6 actuated wheels, organized in a Rocker-Bogie configuration. Unlike most lunar or Martian rovers, the wheels cannot rotate radially. The vehicle therefore operates in the same way as a tank, which makes manual control rather intuitive.
+We here propose an all-terrain alternative to the original [OpenBot](https://www.openbot.org/) vehicle. Developed in collaboration with **Ivy Tech LTD**, the Multi-Terrain Vehicle (MTV) is also based on inexpensive and easily printable components. The MTV is inspired by several exploration vehicle concepts developed over the past decades for lunar and Martian exploration. The MTV is designed around a set of 6 actuated wheels, organized in a Rocker-Bogie configuration. Unlike most lunar or Martian rovers, the wheels cannot rotate radially. The vehicle therefore operates in the same way as a tank, which makes manual control rather intuitive.
 
 <p align="center">
   <img src="../../docs/images/MTV/MTV.jpg" width="400" alt="App GUI"/>
