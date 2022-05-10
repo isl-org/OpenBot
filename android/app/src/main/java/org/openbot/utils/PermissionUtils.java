@@ -10,7 +10,10 @@ import static org.openbot.utils.Constants.REQUEST_LOGGING_PERMISSIONS;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.provider.Settings;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -18,6 +21,20 @@ import androidx.preference.PreferenceManager;
 import org.openbot.R;
 
 public class PermissionUtils {
+
+  public static void startInstalledAppDetailsActivity(final Activity context) {
+    if (context == null) {
+      return;
+    }
+    final Intent i = new Intent();
+    i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+    i.addCategory(Intent.CATEGORY_DEFAULT);
+    i.setData(Uri.parse("package:" + context.getPackageName()));
+    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+    context.startActivity(i);
+  }
 
   public static boolean hasPermission(Context context, String permission) {
     return ContextCompat.checkSelfPermission(context, permission)

@@ -5,13 +5,10 @@ import static org.openbot.utils.Constants.PERMISSION_CAMERA;
 import static org.openbot.utils.Constants.PERMISSION_LOCATION;
 import static org.openbot.utils.Constants.PERMISSION_STORAGE;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
@@ -125,11 +122,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       camera.setChecked(PermissionUtils.hasCameraPermission(requireActivity()));
       camera.setOnPreferenceChangeListener(
           (preference, newValue) -> {
-            if (camera.isChecked()) startInstalledAppDetailsActivity(requireActivity());
+            if (camera.isChecked())
+              PermissionUtils.startInstalledAppDetailsActivity(requireActivity());
             else {
               if (!PermissionUtils.shouldShowRational(
                   requireActivity(), Constants.PERMISSION_CAMERA)) {
-                startInstalledAppDetailsActivity(requireActivity());
+                PermissionUtils.startInstalledAppDetailsActivity(requireActivity());
               } else {
                 requestPermissionLauncher.launch(new String[] {Constants.PERMISSION_CAMERA});
               }
@@ -144,11 +142,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       storage.setChecked(PermissionUtils.hasStoragePermission(requireActivity()));
       storage.setOnPreferenceChangeListener(
           (preference, newValue) -> {
-            if (storage.isChecked()) startInstalledAppDetailsActivity(requireActivity());
+            if (storage.isChecked())
+              PermissionUtils.startInstalledAppDetailsActivity(requireActivity());
             else {
               if (!PermissionUtils.shouldShowRational(
                   requireActivity(), Constants.PERMISSION_STORAGE)) {
-                startInstalledAppDetailsActivity(requireActivity());
+                PermissionUtils.startInstalledAppDetailsActivity(requireActivity());
               } else requestPermissionLauncher.launch(new String[] {Constants.PERMISSION_STORAGE});
             }
 
@@ -161,11 +160,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       location.setChecked(PermissionUtils.hasLocationPermission(requireActivity()));
       location.setOnPreferenceChangeListener(
           (preference, newValue) -> {
-            if (location.isChecked()) startInstalledAppDetailsActivity(requireActivity());
+            if (location.isChecked())
+              PermissionUtils.startInstalledAppDetailsActivity(requireActivity());
             else {
               if (!PermissionUtils.shouldShowRational(requireActivity(), PERMISSION_LOCATION)) {
 
-                startInstalledAppDetailsActivity(requireActivity());
+                PermissionUtils.startInstalledAppDetailsActivity(requireActivity());
               } else requestPermissionLauncher.launch(new String[] {PERMISSION_LOCATION});
             }
 
@@ -178,11 +178,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
       mic.setChecked(PermissionUtils.hasAudioPermission(requireActivity()));
       mic.setOnPreferenceChangeListener(
           (preference, newValue) -> {
-            if (mic.isChecked()) startInstalledAppDetailsActivity(requireActivity());
+            if (mic.isChecked())
+              PermissionUtils.startInstalledAppDetailsActivity(requireActivity());
             else {
               if (!PermissionUtils.shouldShowRational(
                   requireActivity(), Constants.PERMISSION_AUDIO)) {
-                startInstalledAppDetailsActivity(requireActivity());
+                PermissionUtils.startInstalledAppDetailsActivity(requireActivity());
               } else requestPermissionLauncher.launch(new String[] {Constants.PERMISSION_AUDIO});
             }
             return false;
@@ -239,19 +240,5 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     status ? vehicle.getUsbConnection().getProductName() : "No Device");
               }
             });
-  }
-
-  public void startInstalledAppDetailsActivity(final Activity context) {
-    if (context == null) {
-      return;
-    }
-    final Intent i = new Intent();
-    i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-    i.addCategory(Intent.CATEGORY_DEFAULT);
-    i.setData(Uri.parse("package:" + context.getPackageName()));
-    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-    context.startActivity(i);
   }
 }
