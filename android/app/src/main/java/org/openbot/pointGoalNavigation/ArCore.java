@@ -24,6 +24,7 @@ import com.google.ar.core.TrackingFailureReason;
 import com.google.ar.core.TrackingState;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.core.exceptions.NotYetAvailableException;
+import com.google.ar.core.exceptions.SessionPausedException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
@@ -103,7 +104,7 @@ public class ArCore implements GLSurfaceView.Renderer {
   }
 
   public Pose getStartPose() {
-    return startAnchor.getPose();
+    return startAnchor == null ? null : startAnchor.getPose();
   }
 
   public void setStartAnchorAtCurrentPose() {
@@ -157,6 +158,17 @@ public class ArCore implements GLSurfaceView.Renderer {
           });
 
       // Stop here since no camera is available and no rendering is possible.
+      return;
+    } catch (SessionPausedException e) {
+      Timber.d(e, "ARCore session paused.");
+
+      runOnMainThread(
+          () -> {
+            if (arCoreListener != null) {
+              arCoreListener.onArCoreSessionPaused(SystemClock.elapsedRealtimeNanos());
+            }
+          });
+
       return;
     }
 

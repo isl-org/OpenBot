@@ -11,6 +11,7 @@
   <string name="record_audio_permission_denied">Recording audio permission is necessary</string>
   <string name="permission_reason_logging"> to log datasets.</string>
   <string name="permission_reason_ai"> to run AI models.</string>
+  <string name="permission_reason_ar_core"> to run AR Core.</string>
   <string name="permission_reason_stream_video"> to stream video to the controller.</string>
   <string name="permission_reason_preview"> to preview video.</string>
   <string name="permission_reason_stream_audio"> to stream audio to the controller.</string>
@@ -89,6 +90,8 @@
   <string name="selectAll">Select All</string>
   <string name="clearAll">Clear All</string>
   <string name="tracking_lost">Tracking lost.</string>
+  <string name="no_initial_ar_core_pose">No initial AR Core pose.</string>
+  <string name="ar_core_session_paused">AR Core session paused.</string>
   <string-array name="servers">
     <item>No server</item>
   </string-array>

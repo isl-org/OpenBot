@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.ar.core.Pose;
 import com.google.ar.core.TrackingFailureReason;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
+import com.google.ar.core.exceptions.NotTrackingException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
@@ -46,6 +47,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   private ArCore arCore;
   private FragmentPointGoalNavigationBinding binding;
   private boolean isRunning = false;
+  private boolean isPermissionRequested = false;
   private Navigation navigationPolicy;
   static final int kMaxChannelValue = 262143;
 
@@ -226,6 +228,13 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
     }
   }
 
+  @Override
+  public void onArCoreSessionPaused(long timestamp) {
+    if (isRunning) stop();
+    audioPlayer.play(R.string.ar_core_session_paused);
+    showInfoDialog(getString(R.string.ar_core_session_paused));
+  }
+
   private void stop() {
     arCore.detachAnchors();
     vehicle.stopBot();
@@ -250,14 +259,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   @Override
   public void onResume() {
     super.onResume();
-    if (!PermissionUtils.hasCameraPermission(requireActivity())) {
-      requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
-    } else if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_CAMERA)) {
-      PermissionUtils.showCameraPermissionsPreviewToast(requireActivity());
-      requireActivity().onBackPressed();
-    } else {
-      setupArCore();
-    }
+    resume();
   }
 
   @Override
@@ -287,6 +289,25 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
     arCore.closeSession();
   }
 
+  private void resume() {
+    if (!PermissionUtils.hasCameraPermission(requireActivity())) {
+      getCameraPermission();
+    } else if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_CAMERA)) {
+      PermissionUtils.showCameraPermissionsPreviewToast(requireActivity());
+    } else {
+      setupArCore();
+    }
+  }
+
+  private void getCameraPermission() {
+    if (!isPermissionRequested) {
+      requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
+      isPermissionRequested = true;
+    } else {
+      showPermissionDialog();
+    }
+  }
+
   private final ActivityResultLauncher<String> requestPermissionLauncherCamera =
       registerForActivityResult(
           new ActivityResultContracts.RequestPermission(),
@@ -294,13 +315,17 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
             if (isGranted) {
               setupArCore();
             } else {
-              requireActivity().onBackPressed();
+              showPermissionDialog();
             }
           });
 
   private void setupArCore() {
     try {
       arCore.resume();
+      return;
+    } catch (java.lang.SecurityException e) {
+      e.printStackTrace();
+      showPermissionDialog();
       return;
     } catch (UnavailableSdkTooOldException e) {
       e.printStackTrace();
@@ -366,14 +391,49 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
             });
   }
 
+  private void showPermissionDialog() {
+    if (getChildFragmentManager().findFragmentByTag(PermissionDialogFragment.TAG) == null) {
+      PermissionDialogFragment dialog = new PermissionDialogFragment();
+      dialog.setCancelable(false);
+      dialog.show(getChildFragmentManager(), PermissionDialogFragment.TAG);
+    }
+
+    getChildFragmentManager()
+        .setFragmentResultListener(
+            PermissionDialogFragment.TAG,
+            getViewLifecycleOwner(),
+            (requestKey, result) -> {
+              String choice = result.getString("choice");
+
+              if (choice.equals("settings")) {
+                PermissionUtils.startInstalledAppDetailsActivity(requireActivity());
+              } else if (choice.equals("retry")) {
+                isPermissionRequested = false;
+                resume();
+              } else {
+                getActivity().onBackPressed();
+              }
+            });
+  }
+
   private void startDriving(float goalX, float goalZ) {
     Timber.i("setting goal at (" + goalX + ", " + goalZ + ")");
 
-    arCore.detachAnchors();
-    arCore.setStartAnchorAtCurrentPose();
-    Pose startPose = arCore.getStartPose();
-    arCore.setTargetAnchor(startPose.compose(Pose.makeTranslation(goalX, 0.0f, goalZ)));
+    try {
+      arCore.detachAnchors();
+      arCore.setStartAnchorAtCurrentPose();
 
+      Pose startPose = arCore.getStartPose();
+      if (startPose == null) {
+        showInfoDialog(getString(R.string.no_initial_ar_core_pose));
+        return;
+      }
+      arCore.setTargetAnchor(startPose.compose(Pose.makeTranslation(goalX, 0.0f, goalZ)));
+    } catch (NotTrackingException e) {
+      e.printStackTrace();
+      showInfoDialog(getString(R.string.tracking_lost));
+      return;
+    }
     Model model =
         new Model(
             0,

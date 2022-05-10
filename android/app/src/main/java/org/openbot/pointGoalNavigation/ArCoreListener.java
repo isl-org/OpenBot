@@ -11,4 +11,6 @@ public interface ArCoreListener {
       long timestamp);
 
   void onArCoreTrackingFailure(long timestamp, TrackingFailureReason trackingFailureReason);
+
+  void onArCoreSessionPaused(long timestamp);
 }
