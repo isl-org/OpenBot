@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,6 +32,8 @@ import org.openbot.tflite.Model.PATH_TYPE;
 import org.openbot.tflite.Model.TYPE;
 import org.openbot.tflite.Navigation;
 import org.openbot.tflite.Network.Device;
+import org.openbot.utils.Constants;
+import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Control;
 import org.openbot.vehicle.Vehicle;
 import timber.log.Timber;
@@ -246,24 +250,14 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   @Override
   public void onResume() {
     super.onResume();
-
-    try {
-      arCore.resume();
-      return;
-    } catch (UnavailableSdkTooOldException e) {
-      e.printStackTrace();
-    } catch (UnavailableDeviceNotCompatibleException e) {
-      e.printStackTrace();
-    } catch (UnavailableArcoreNotInstalledException e) {
-      e.printStackTrace();
-    } catch (UnavailableApkTooOldException e) {
-      e.printStackTrace();
-    } catch (CameraNotAvailableException e) {
-      e.printStackTrace();
+    if (!PermissionUtils.hasCameraPermission(requireActivity())) {
+      requestPermissionLauncherCamera.launch(Constants.PERMISSION_CAMERA);
+    } else if (PermissionUtils.shouldShowRational(requireActivity(), Constants.PERMISSION_CAMERA)) {
+      PermissionUtils.showCameraPermissionsPreviewToast(requireActivity());
+      requireActivity().onBackPressed();
+    } else {
+      setupArCore();
     }
-
-    showInfoDialog(
-        "ARCore failure. Make sure that your device is compatible and the ARCore SDK is installed.");
   }
 
   @Override
@@ -291,6 +285,37 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
     super.onDestroy();
 
     arCore.closeSession();
+  }
+
+  private final ActivityResultLauncher<String> requestPermissionLauncherCamera =
+      registerForActivityResult(
+          new ActivityResultContracts.RequestPermission(),
+          isGranted -> {
+            if (isGranted) {
+              setupArCore();
+            } else {
+              requireActivity().onBackPressed();
+            }
+          });
+
+  private void setupArCore() {
+    try {
+      arCore.resume();
+      return;
+    } catch (UnavailableSdkTooOldException e) {
+      e.printStackTrace();
+    } catch (UnavailableDeviceNotCompatibleException e) {
+      e.printStackTrace();
+    } catch (UnavailableArcoreNotInstalledException e) {
+      e.printStackTrace();
+    } catch (UnavailableApkTooOldException e) {
+      e.printStackTrace();
+    } catch (CameraNotAvailableException e) {
+      e.printStackTrace();
+    }
+
+    showInfoDialog(
+        "ARCore failure. Make sure that your device is compatible and the ARCore SDK is installed.");
   }
 
   private void showStartDialog() {
