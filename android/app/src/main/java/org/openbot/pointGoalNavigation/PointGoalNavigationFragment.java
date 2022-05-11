@@ -223,7 +223,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   public void onArCoreTrackingFailure(long timestamp, TrackingFailureReason trackingFailureReason) {
     if (isRunning) {
       stop();
-      audioPlayer.play(R.string.tracking_lost);
+      audioPlayer.playFromStringID(R.string.tracking_lost);
       showInfoDialog(getString(R.string.tracking_lost));
     }
   }
@@ -231,7 +231,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
   @Override
   public void onArCoreSessionPaused(long timestamp) {
     if (isRunning) stop();
-    audioPlayer.play(R.string.ar_core_session_paused);
+    audioPlayer.playFromStringID(R.string.ar_core_session_paused);
     showInfoDialog(getString(R.string.ar_core_session_paused));
   }
 
