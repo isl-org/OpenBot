@@ -5,20 +5,56 @@ package org.openbot.env;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
+import android.speech.tts.TextToSpeech;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import org.openbot.utils.Enums;
 
 // Convert text to speech
 // https://ttsmp3.com
 
 public class AudioPlayer {
+
   private MediaPlayer mp;
   private final Context context;
+  private TextToSpeech tts;
 
   public AudioPlayer(Context context) {
     mp = new MediaPlayer();
     this.context = context;
+
+    tts =
+        new TextToSpeech(
+            context,
+            new TextToSpeech.OnInitListener() {
+              @Override
+              public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                  tts.setLanguage(Locale.US);
+                  tts.setSpeechRate(1.0f);
+                  tts.setPitch(0.5f);
+                }
+              }
+            });
+  }
+
+  // Play audio from string id.
+  public void playFromStringID(int id) {
+    playFromString(context.getString(id));
+  }
+
+  // Play audio from string.
+  public void playFromString(String message) {
+    tts.speak(
+        message
+            .replace("'Y'", "why")
+            .replace("'B'", "bee")
+            .replace("'X'", "axe")
+            .replace("AR Core", "ay are core"),
+        TextToSpeech.QUEUE_FLUSH,
+        null,
+        "ttsPlayer");
   }
 
   // Play from a resource file
@@ -89,12 +125,18 @@ public class AudioPlayer {
   }
 
   public void playNoise(String voice, boolean isEnabled) {
-    if (isEnabled) play(voice, "noise_enabled.mp3");
-    else play(voice, "noise_disabled.mp3");
+    if (isEnabled) {
+      play(voice, "noise_enabled.mp3");
+    } else {
+      play(voice, "noise_disabled.mp3");
+    }
   }
 
   public void playLogging(String voice, boolean isEnabled) {
-    if (isEnabled) play(voice, "logging_started.mp3");
-    else play(voice, "logging_stopped.mp3");
+    if (isEnabled) {
+      play(voice, "logging_started.mp3");
+    } else {
+      play(voice, "logging_stopped.mp3");
+    }
   }
 }

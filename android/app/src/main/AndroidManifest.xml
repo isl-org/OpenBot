@@ -92,6 +92,8 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
+        <meta-data android:name="com.google.ar.core" android:value="optional" />
+
     </application>
 
 </manifest>

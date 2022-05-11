@@ -27,12 +27,14 @@ public class Model {
     AUTOPILOT_F,
     MOBILENETV1_1_0_Q,
     MOBILENETV3_S_Q,
-    YOLOV4
+    YOLOV4,
+    NAVIGATION
   }
 
   public enum TYPE {
     AUTOPILOT,
-    DETECTOR
+    DETECTOR,
+    NAVIGATION
   }
 
   public enum PATH_TYPE {
