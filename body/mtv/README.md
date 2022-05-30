@@ -828,54 +828,6 @@ Once the main PCB was attached, switches and displays in the roof / lid of the o
   <img src="../../docs/images/MTV/Lipo_2.jpg" width="1000" alt="App GUI" />
 </p>
 
-
-## III. Flashing the Firmware
-
-### III.1. Prerequisites: Arduino IDE Installed
-
-Before starting this installation procedure, make sure you have the latest version of the Arduino IDE installed in your computer ([arduino.cc/en/Main/Software](https://www.arduino.cc/en/software)). If you don't, please uninstall it and then re-install the arduino development environment. 
-
-### III.2. Installing ESP32 Add-on in Arduino IDE
-
-To install the ESP32 board in your Arduino IDE, follow these next instructions:
-
-1. In your Arduino IDE, go to **File> Preferences**:
-<p align="center">
-  <img src="../../docs/images/arduino-ide-open-preferences.png" width="300" alt="App GUI"/>
-</p>
-
-2. Enter *https://dl.espressif.com/dl/package_esp32_index.json* into the “*Additional Board Manager URLs*” field as shown in the figure below. Then, click the “OK” button:
-<p align="center">
-  <img src="../../docs/images/arduino_preferences.png" width="600" alt="App GUI"/>
-</p>
-
-**Note:** if you already have the ESP8266 boards URL, you can separate the URLs with a comma as follows:
-
-    https://dl.espressif.com/dl/package_esp32_index.json, 
-    http://arduino.esp8266.com/stable/package_esp8266com_index.json
-
-3. Open the Boards Manager. Go to **Tools > Board > Boards Manager**:
-<p align="center">
-  <img src="../../docs/images/arduino_boardsManager.png" width="800" alt="App GUI"/>
-</p>
-
-4. Search for ESP32 and press install button for the “ESP32 by Espressif Systems“:
-<p align="center">
-  <img src="../../docs/images/arduino_installing.png" width="600" alt="App GUI"/>
-</p>
-
-5. You should now have everything to successfully flash the ESP32 board of the MTV using the Arduino development envinronment
-<p align="center">
-  <img src="../../docs/images/arduino_ESP32-Board-add-on-in-Arduino-IDE-installed.png" width="600" alt="App GUI"/>
-</p>
-
-6. To flash the MTV with your new code, simply select **ESP32 Dev Module** in the menu **Tools > Board > ESP32 Arduino**. Note that additional content as well as troubleshooting of the ESP32 flashing prcess can be found in the following [link](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/).
-
-<p align="center">
-  <img src="../../docs/images/arduino_windows-select-board.png" width="600" alt="App GUI"/>
-</p>
-
-
 Flash the [Arduino Firmware](../../firmware/README.md)
 
 
