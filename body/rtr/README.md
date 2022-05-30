@@ -8,7 +8,13 @@ The ready-to-run (RTR) versions of the OpenBot vehicle are targetting an audienc
   </a>
 </p>
 
-## Chassis
+### Ordering
+
+The RTR OpenBot vehicles can be ordered [here](http://www.openbot.info/).
+
+## Building the RTR yourself
+
+In case you want to build your own OpenBot RTR, you will need to print the chassis, manufacture the PCBs and buy the motors and a phone mount.
 
 ### 3D printing
 
@@ -22,9 +28,39 @@ In case you still want to print your own OpenBot RTR, you will need to print the
   <img src="../../docs/images/rtr_tt_assembly.gif" width="600" alt="App GUI"/>
 </p>
 
-### Ordering
+### PCBs
 
-The RTR OpenBot vehicles can be ordered [here](http://www.openbot.info/).
+For each of the PCBs, there are three files. The gerber file contains the actual PCB, the BOM (bill of materials) file contains all components to be soldered onto the PCB and the centroid file contains the coordinates of each componnent for automatic PCB assembly. The base board contains the majority of the components. There are three variants of the base board. Variant A is a bare board with connectors for external motor driver boards and an external microcontroller board. Variant B is a modular board with a pin header for an external microcontroller. Variant C is the fully integrated base board which we would recommend for most users. The front bump sensor board contains two bump sensors, a sonar sensor and the USB driver. There are two variants of the front bump sensor board, one with the cheaper CH340G USB driver and one with the more reliable CP2102N USB driver. Depending on which version (TT-motor or 520-motor) you want to build, you will need the following PCBs.
+
+#### TT-motor
+
+1x Base board (Arduino)
+1x Status LED board
+1x Front/Top/Back bump sensor board
+4x Speed sensor board (Arduino)
+
+#### 520-motor
+
+1x Base board (ESP32)
+1x Status LED board
+1x Front/Top/Back bump sensor board
+
+#### Board reference
+
+- Status LED Board ([gerber](),[bom](),[centroid]())
+- Top Bump Sensor Board ([gerber](),[bom](),[centroid]())
+- Back Bump Sensor Board ([gerber](),[bom](),[centroid]())
+- Front Bump Sensor Board (CH340G) ([gerber](),[bom](),[centroid]())
+- Front Bump Sensor Board (CP2102N) ([gerber](),[bom](),[centroid]())
+- Speed Sensor Board (Arduino) ([gerber](),[bom](),[centroid]())
+- Integrated Base Board C (Arduino) ([gerber](),[bom](),[centroid]())
+- Integrated Base Board C (ESP32) ([gerber](),[bom](),[centroid]())
+- Modular Base Board B (Arduino) ([gerber](),[bom](),[centroid]())
+- Modular Base Board B (ESP32) ([gerber](),[bom](),[centroid]())
+- Bare Base Board A (Arduino) ([gerber](),[bom](),[centroid]())
+- Motor Driver DRV8870 Board (Arduino) ([gerber](),[bom](),[centroid]())
+- Bare Base Board A (ESP32) ([gerber](),[bom](),[centroid]())
+- Motor Driver DRV8870 Board (ESP32) ([gerber](),[bom](),[centroid]())
 
 ## Next
 
