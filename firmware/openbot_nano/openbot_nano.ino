@@ -21,6 +21,7 @@
 //  - October 2020: OLED display support by Ingmar Stapel
 //  - December 2021: RC truck support by Usman Fiaz
 //  - March 2022: OpenBot-Lite support by William Tan
+//  - May 2022: MTV support by Quentin Leboutet
 // ---------------------------------------------------------------------------
 
 // By Matthias Mueller, Embodied AI Lab, 2022
@@ -29,23 +30,24 @@
 //------------------------------------------------------//
 //DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
-#define DIY 0     //DIY without PCB
-#define PCB_V1 1  //DIY with PCB V1
-#define PCB_V2 2  //DIY with PCB V2
-#define RTR_TT 3  //Ready-to-Run with TT-motors
-#define RC_CAR 4  //RC truck prototypes
-#define LITE 5    //Smaller DIY version for education
-#define RTR_520 6 //Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
+#define DIY 0     // DIY without PCB
+#define PCB_V1 1  // DIY with PCB V1
+#define PCB_V2 2  // DIY with PCB V2
+#define RTR_TT 3  // Ready-to-Run with TT-motors
+#define RC_CAR 4  // RC truck prototypes
+#define LITE 5    // Smaller DIY version for education
+#define RTR_520 6 // Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
+#define MTV 7     // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
 
 //------------------------------------------------------//
-//SETUP - Choose your body
+// SETUP - Choose your body
 //------------------------------------------------------//
 
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520)
-#define OPENBOT DIY
+#define OPENBOT MTV
 
 //------------------------------------------------------//
-//SETTINGS - Global settings
+// SETTINGS - Global settings
 //------------------------------------------------------//
 
 // Enable/Disable no phone mode (1,0)
@@ -74,6 +76,7 @@ boolean coast_mode = 1;
 // HAS_BUMPER                           Enable/Disable bumper (1,0)
 // HAS_SPEED_SENSORS_FRONT              Enable/Disable front speed sensors (1,0)
 // HAS_SPEED_SENSORS_BACK               Enable/Disable back speed sensors (1,0)
+// HAS_SPEED_SENSORS_MIDDLE                Enable/Disable middle speed sensors (1,0)
 // HAS_OLED                             Enable/Disable OLED display (1,0)
 // HAS_LEDS_FRONT                       Enable/Disable front LEDs
 // HAS_LEDS_BACK                        Enable/Disable back LEDs
@@ -325,6 +328,65 @@ const int BUMPER_RF = 2930;
 const int BUMPER_BB = 2750;
 const int BUMPER_LB = 2180;
 const int BUMPER_RB = 2000;
+//---------------------------MTV------------------------//
+#elif (OPENBOT == MTV)
+#include <esp_wifi.h>
+#define analogWrite ledcWrite
+#define attachPinChangeInterrupt attachInterrupt
+#define detachPinChangeInterrupt detachInterrupt
+#define digitalPinToPinChangeInterrupt digitalPinToInterrupt
+const String robot_type = "MTV";
+#define HAS_VOLTAGE_DIVIDER 0
+const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
+const float VOLTAGE_MIN = 2.5f;
+const float VOLTAGE_LOW = 9.0f;
+const float VOLTAGE_MAX = 12.6f;
+#define HAS_SPEED_SENSORS_FRONT 1
+#define HAS_SPEED_SENSORS_BACK 1
+#define HAS_SPEED_SENSORS_MIDDLE 1
+#define HAS_INDICATORS 0
+#define HAS_SONAR 0
+#define SONAR_MEDIAN 0
+#define HAS_BUMPER 0
+#define HAS_LEDS_FRONT 0
+#define HAS_LEDS_BACK 0
+#define HAS_LEDS_STATUS 0
+const int PIN_PWM_R = 19;
+const int PIN_DIR_R = 18;
+const int PIN_PWM_L = 33;
+const int PIN_DIR_L = 32;
+
+// Encoder setup:
+const int PIN_SPEED_RF_A = 14;
+const int PIN_SPEED_RF_B = 13;
+
+const int PIN_SPEED_RM_A = 26;
+const int PIN_SPEED_RM_B = 27;
+
+const int PIN_SPEED_RB_A = 35;
+const int PIN_SPEED_RB_B = 25;
+
+const int PIN_SPEED_LF_A = 17;
+const int PIN_SPEED_LF_B = 5;
+
+const int PIN_SPEED_LM_A = 4;
+const int PIN_SPEED_LM_B = 16;
+
+const int PIN_SPEED_LB_A = 15;
+const int PIN_SPEED_LB_B = 2;
+
+const int PIN_SPEED_LF = PIN_SPEED_LF_A;
+const int PIN_SPEED_RF = PIN_SPEED_RF_A;
+const int PIN_SPEED_LM = PIN_SPEED_LM_A;
+const int PIN_SPEED_RM = PIN_SPEED_RM_A;
+const int PIN_SPEED_LB = PIN_SPEED_LB_A;
+const int PIN_SPEED_RB = PIN_SPEED_RB_A;
+
+// PWM properties:
+const int FREQ = 5000;
+const int RES = 8;
+const int LHS_PWM_OUT = 0;
+const int RHS_PWM_OUT = 1;
 #endif
 //------------------------------------------------------//
 
@@ -341,7 +403,7 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
 #if HAS_SONAR
-#if (OPENBOT != RTR_520)
+#if ((OPENBOT != RTR_520) and (OPENBOT != MTV))
 #include "PinChangeInterrupt.h"
 #endif
 //Sonar sensor
@@ -400,12 +462,17 @@ unsigned long voltage_interval = 1000; //Interval for sending voltage measuremen
 unsigned long voltage_time = 0;
 #endif
 
-#if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
+#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
 #if (OPENBOT == RTR_520)
 //Speed sensor
-//530rpm motor - reduction ratio 19, motor 11
-//One revolution = 209
+//530rpm motor - reduction ratio 19, ticks per motor rotation 11
+//One revolution = 209 ticks
 const unsigned int TICKS_PER_REV = 209;
+#elif (OPENBOT == MTV)
+//Speed sensor
+//178rpm motor - reduction ratio 56, ticks per motor rotation 11
+//One revolution = 616 ticks
+const unsigned int TICKS_PER_REV = 616;
 #else
 #include "PinChangeInterrupt.h"
 const unsigned int TICKS_PER_REV = 20;
@@ -417,6 +484,8 @@ volatile int counter_lf = 0;
 volatile int counter_rf = 0;
 volatile int counter_lb = 0;
 volatile int counter_rb = 0;
+volatile int counter_lm = 0;
+volatile int counter_rm = 0;
 float rpm_left = 0;
 float rpm_right = 0;
 unsigned long wheel_interval = 1000; //Inverval for sending wheel odometry
@@ -476,7 +545,7 @@ void setup()
   // Attach the ESC and SERVO
   ESC.attach(PIN_PWM_T, 1000, 2000);   // (pin, min pulse width, max pulse width in microseconds)
   SERVO.attach(PIN_PWM_S, 1000, 2000); // (pin, min pulse width, max pulse width in microseconds)
-#elif (OPENBOT != RTR_520)
+#elif ((OPENBOT != RTR_520) and (OPENBOT != MTV))
   pinMode(PIN_PWM_L1, OUTPUT);
   pinMode(PIN_PWM_L2, OUTPUT);
   pinMode(PIN_PWM_R1, OUTPUT);
@@ -538,6 +607,12 @@ void setup()
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_LF), update_speed_lf, RISING);
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_RF), update_speed_rf, RISING);
 #endif
+#if (HAS_SPEED_SENSORS_MIDDLE)
+  pinMode(PIN_SPEED_LM, INPUT_PULLUP);
+  pinMode(PIN_SPEED_RM, INPUT_PULLUP);
+  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_LM), update_speed_lm, RISING);
+  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_RM), update_speed_rm, RISING);
+#endif
 
 #if (OPENBOT == RTR_520)
   esp_wifi_deinit();
@@ -549,7 +624,7 @@ void setup()
   ledcSetup(CH_PWM_R1, FREQ, RES);
   ledcSetup(CH_PWM_R2, FREQ, RES);
 
-  // attach the channel to the GPIO to be controlled
+  // Attach the channel to the GPIO to be controlled
   ledcAttachPin(PIN_PWM_LF1, CH_PWM_L1);
   ledcAttachPin(PIN_PWM_LB1, CH_PWM_L1);
   ledcAttachPin(PIN_PWM_LF2, CH_PWM_L2);
@@ -573,6 +648,24 @@ void setup()
   ledcAttachPin(PIN_LED_RF, CH_LED_RF);
 #endif
 
+#endif
+
+#if (OPENBOT == MTV)
+  esp_wifi_deinit();
+
+  //PWMs
+  // PWM signal configuration using the ESP32 API
+  ledcSetup(LHS_PWM_OUT, FREQ, RES);
+  ledcSetup(RHS_PWM_OUT, FREQ, RES);
+  
+  // Attach the channel to the GPIO to be controlled
+  ledcAttachPin(PIN_PWM_L, LHS_PWM_OUT);
+  ledcAttachPin(PIN_PWM_R, RHS_PWM_OUT);
+  
+  pinMode(PIN_DIR_L, OUTPUT);
+  pinMode(PIN_DIR_R, OUTPUT);
+  pinMode(PIN_DIR_L, LOW);
+  pinMode(PIN_DIR_R, LOW);
 #endif
 
   Serial.begin(115200, SERIAL_8N1);
@@ -734,7 +827,7 @@ void loop()
     voltage_time = millis();
   }
 #endif
-#if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
+#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
   // Send wheel odometry reading via serial
   if ((millis() - wheel_time) >= wheel_interval)
   {
@@ -773,6 +866,9 @@ void update_vehicle()
 #if (OPENBOT == RC_CAR)
   update_throttle();
   update_steering();
+#elif (OPENBOT == MTV)
+  update_left_motors_mtv();
+  update_right_motors_mtv();
 #else
   update_left_motors();
   update_right_motors();
@@ -805,7 +901,76 @@ void update_steering()
     SERVO.write(180 - steering);
   }
 }
+
+#elif (OPENBOT == MTV)
+void update_left_motors_mtv()
+{
+  if (ctrl_left < 0)
+  {
+    ledcWrite(LHS_PWM_OUT, -ctrl_left);
+    digitalWrite(PIN_DIR_L, HIGH);
+  }
+  else if (ctrl_left > 0)
+  {
+    ledcWrite(LHS_PWM_OUT, ctrl_left);
+    digitalWrite(PIN_DIR_L, LOW);
+  }
+  else
+  {
+    if (coast_mode)
+      coast_left_motors_mtv();
+    else
+      stop_left_motors_mtv();
+  }
+}
+
+void stop_left_motors_mtv()
+{
+  ledcWrite(LHS_PWM_OUT, 0);
+  digitalWrite(PIN_DIR_L, LOW);
+}
+
+void coast_left_motors_mtv()
+{
+  ledcWrite(LHS_PWM_OUT, 0);
+  digitalWrite(PIN_DIR_L, LOW);
+}
+
+void update_right_motors_mtv()
+{
+  if (ctrl_right < 0)
+  {
+    ledcWrite(RHS_PWM_OUT, -ctrl_right);
+    digitalWrite(PIN_DIR_R, HIGH);
+  }
+  else if (ctrl_right > 0)
+  {
+    ledcWrite(RHS_PWM_OUT, ctrl_right);
+    digitalWrite(PIN_DIR_R, LOW);
+  }
+  else
+  {
+    if (coast_mode)
+      coast_right_motors_mtv();
+    else
+      stop_right_motors_mtv();
+  }
+}
+
+void stop_right_motors_mtv()
+{
+  ledcWrite(RHS_PWM_OUT, 0);
+  digitalWrite(PIN_DIR_R, LOW);
+}
+
+void coast_right_motors_mtv()
+{
+  ledcWrite(RHS_PWM_OUT, 0);
+  digitalWrite(PIN_DIR_R, LOW);
+}
+
 #else
+
 void update_left_motors()
 {
   if (ctrl_left < 0)
@@ -1118,7 +1283,7 @@ void process_voltage_msg()
   Serial.println(String("vmax:") + String(VOLTAGE_MAX, 2));
 }
 
-#if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
+#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
 void process_wheel_msg()
 {
   wheel_interval = atol(msg_buf); // convert to long
@@ -1145,6 +1310,9 @@ void process_feature_msg()
 #endif
 #if HAS_SPEED_SENSORS_BACK
   msg += "wb:";
+#endif
+#if HAS_SPEED_SENSORS_MIDDLE
+  msg += "wm:";
 #endif
 #if HAS_LEDS_FRONT
   msg += "lf:";
@@ -1236,7 +1404,7 @@ void parse_msg()
       process_voltage_msg();
       break;
 #endif
-#if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
+#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
     case 'w':
       process_wheel_msg();
       break;
@@ -1282,7 +1450,7 @@ void display_vehicle_data()
 #else
   String voltage_str = String("Voltage:    ") + String("N/A");
 #endif
-#if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
+#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
   String left_rpm_str = String("Left RPM:  ") + String(rpm_left, 0);
   String right_rpm_str = String("Right RPM:  ") + String(rpm_left, 0);
 #else
@@ -1321,22 +1489,28 @@ void send_voltage_reading()
 }
 #endif
 
-#if (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
+#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
 void send_wheel_reading(long duration)
 {
   float rpm_factor = 60.0 * 1000.0 / duration / TICKS_PER_REV;
-  rpm_left = (counter_lf + counter_lb) * rpm_factor;
-  rpm_right = (counter_rf + counter_rb) * rpm_factor;
+  rpm_left = (counter_lf + counter_lb + counter_lm) * rpm_factor;
+  rpm_right = (counter_rf + counter_rb + counter_rm) * rpm_factor;
   counter_lf = 0;
   counter_rf = 0;
   counter_lb = 0;
   counter_rb = 0;
+  counter_lm = 0;
+  counter_rm = 0;
   Serial.print("w");
-#if (HAS_SPEED_SENSORS_FRONT && HAS_SPEED_SENSORS_BACK)
+#if (HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_BACK and HAS_SPEED_SENSORS_MIDDLE)
+  Serial.print(rpm_left / 3, 0);
+  Serial.print(",");
+  Serial.print(rpm_right / 3, 0);
+#elif ((HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_BACK) or (HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_MIDDLE) or (HAS_SPEED_SENSORS_MIDDLE and HAS_SPEED_SENSORS_BACK))
   Serial.print(rpm_left / 2, 0);
   Serial.print(",");
   Serial.print(rpm_right / 2, 0);
-#elif (HAS_SPEED_SENSORS_FRONT || HAS_SPEED_SENSORS_BACK)
+#elif (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
   Serial.print(rpm_left, 0);
   Serial.print(",");
   Serial.print(rpm_right, 0);
@@ -1537,6 +1711,34 @@ void update_speed_rb()
   else if (ctrl_right > 0)
   {
     counter_rb++;
+  }
+}
+#endif
+
+#if (HAS_SPEED_SENSORS_MIDDLE)
+// ISR: Increment speed sensor counter (left mid)
+void update_speed_lm()
+{
+  if (ctrl_left < 0)
+  {
+    counter_lm--;
+  }
+  else if (ctrl_left > 0)
+  {
+    counter_lm++;
+  }
+}
+
+// ISR: Increment speed sensor counter (right mid)
+void update_speed_rm()
+{
+  if (ctrl_right < 0)
+  {
+    counter_rm--;
+  }
+  else if (ctrl_right > 0)
+  {
+    counter_rm++;
   }
 }
 #endif
