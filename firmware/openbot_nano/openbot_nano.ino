@@ -28,7 +28,7 @@
 // ---------------------------------------------------------------------------
 
 //------------------------------------------------------//
-//DEFINITIONS - DO NOT CHANGE!
+// DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
 #define DIY 0     // DIY without PCB
 #define PCB_V1 1  // DIY with PCB V1
@@ -76,7 +76,7 @@ boolean coast_mode = 1;
 // HAS_BUMPER                           Enable/Disable bumper (1,0)
 // HAS_SPEED_SENSORS_FRONT              Enable/Disable front speed sensors (1,0)
 // HAS_SPEED_SENSORS_BACK               Enable/Disable back speed sensors (1,0)
-// HAS_SPEED_SENSORS_MIDDLE                Enable/Disable middle speed sensors (1,0)
+// HAS_SPEED_SENSORS_MIDDLE             Enable/Disable middle speed sensors (1,0)
 // HAS_OLED                             Enable/Disable OLED display (1,0)
 // HAS_LEDS_FRONT                       Enable/Disable front LEDs
 // HAS_LEDS_BACK                        Enable/Disable back LEDs
@@ -372,7 +372,7 @@ const int RHS_PWM_OUT = 1;
 //------------------------------------------------------//
 
 //------------------------------------------------------//
-//INITIALIZATION
+// INITIALIZATION
 //------------------------------------------------------//
 #if (NO_PHONE_MODE)
 unsigned long turn_direction_time = 0;
@@ -387,7 +387,7 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #if ((OPENBOT != RTR_520) and (OPENBOT != MTV))
 #include "PinChangeInterrupt.h"
 #endif
-//Sonar sensor
+// Sonar sensor
 const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 2;
 const unsigned int MAX_SONAR_DISTANCE = 300;  //cm
 const unsigned long MAX_SONAR_TIME = (long) MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
@@ -435,7 +435,7 @@ int ctrl_left = 0;
 int ctrl_right = 0;
 
 #if (HAS_VOLTAGE_DIVIDER)
-//Voltage measurement
+// Voltage measurement
 unsigned int vin_counter = 0;
 const unsigned int vin_array_sz = 10;
 int vin_array[vin_array_sz] = {0};
@@ -445,20 +445,20 @@ unsigned long voltage_time = 0;
 
 #if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
 #if (OPENBOT == RTR_520)
-//Speed sensor
-//530rpm motor - reduction ratio 19, ticks per motor rotation 11
-//One revolution = 209 ticks
+// Speed sensor
+// 530rpm motor - reduction ratio 19, ticks per motor rotation 11
+// One revolution = 209 ticks
 const unsigned int TICKS_PER_REV = 209;
 #elif (OPENBOT == MTV)
-//Speed sensor
-//178rpm motor - reduction ratio 56, ticks per motor rotation 11
-//One revolution = 616 ticks
+// Speed sensor
+// 178rpm motor - reduction ratio 56, ticks per motor rotation 11
+// One revolution = 616 ticks
 const unsigned int TICKS_PER_REV = 616;
 #else
 #include "PinChangeInterrupt.h"
 const unsigned int TICKS_PER_REV = 20;
 #endif
-//Speed sensor
+// Speed sensor
 const unsigned long SPEED_TRIGGER_THRESHOLD = 1; // Triggers within this time will be ignored (ms)
 
 volatile int counter_lf = 0;
@@ -469,13 +469,13 @@ volatile int counter_lm = 0;
 volatile int counter_rm = 0;
 float rpm_left = 0;
 float rpm_right = 0;
-unsigned long wheel_interval = 1000; //Inverval for sending wheel odometry
+unsigned long wheel_interval = 1000; // Inverval for sending wheel odometry
 unsigned long wheel_time = 0;
 #endif
 
 #if (HAS_INDICATORS)
-//Indicator Signal
-unsigned long indicator_interval = 500; //Blinking rate of the indicator signal (ms).
+// Indicator Signal
+unsigned long indicator_interval = 500; // Blinking rate of the indicator signal (ms).
 unsigned long indicator_time = 0;
 bool indicator_left = 0;
 bool indicator_right = 0;
@@ -486,7 +486,7 @@ unsigned int light_front = 0;
 unsigned int light_back = 0;
 #endif
 
-//Bumper
+// Bumper
 #if HAS_BUMPER
 bool bumper_event = 0;
 bool collision_lf = 0;
@@ -506,20 +506,20 @@ unsigned long heartbeat_interval = -1;
 unsigned long heartbeat_time = 0;
 
 #if (HAS_OLED || DEBUG)
-//Display (via Serial)
+// Display (via Serial)
 unsigned long display_interval = 1000; // How frequently vehicle data is displayed (ms).
 unsigned long display_time = 0;
 #endif
 
 //------------------------------------------------------//
-//SETUP
+// SETUP
 //------------------------------------------------------//
 void setup()
 {
 #if (OPENBOT == LITE)
   coast_mode = !coast_mode;
 #endif
-  //Outputs
+  // Outputs
 #if (OPENBOT == RC_CAR)
   pinMode(PIN_PWM_T, OUTPUT);
   pinMode(PIN_PWM_S, OUTPUT);
@@ -532,7 +532,7 @@ void setup()
   pinMode(PIN_PWM_R1, OUTPUT);
   pinMode(PIN_PWM_R2, OUTPUT);
 #endif
-  //Initialize with the I2C addr 0x3C
+  // Initialize with the I2C addr 0x3C
 #if HAS_OLED
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 #endif
@@ -553,7 +553,7 @@ void setup()
   pinMode(PIN_LED_G, OUTPUT);
   pinMode(PIN_LED_B, OUTPUT);
 #endif
-  //Test sequence for indicator LEDs
+  // Test sequence for indicator LEDs
 #if HAS_INDICATORS
   digitalWrite(PIN_LED_LI, LOW);
   digitalWrite(PIN_LED_RI, LOW);
@@ -598,8 +598,8 @@ void setup()
 #if (OPENBOT == RTR_520)
   esp_wifi_deinit();
 
-  //PWMs
-  // configure PWM functionalitites
+  // PWMs
+  // Configure PWM functionalitites
   ledcSetup(CH_PWM_L1, FREQ, RES);
   ledcSetup(CH_PWM_L2, FREQ, RES);
   ledcSetup(CH_PWM_R1, FREQ, RES);
@@ -634,7 +634,7 @@ void setup()
 #if (OPENBOT == MTV)
   esp_wifi_deinit();
 
-  //PWMs
+  // PWMs
   // PWM signal configuration using the ESP32 API
   ledcSetup(LHS_PWM_OUT, FREQ, RES);
   ledcSetup(RHS_PWM_OUT, FREQ, RES);
@@ -650,10 +650,10 @@ void setup()
 #endif
 
   Serial.begin(115200, SERIAL_8N1);
-  //SERIAL_8E1 - 8 data bits, even parity, 1 stop bit
-  //SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
-  //SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
-  //Serial.setTimeout(10);
+  // SERIAL_8E1 - 8 data bits, even parity, 1 stop bit
+  // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
+  // SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
+  // Serial.setTimeout(10);
 }
 
 //------------------------------------------------------//
@@ -667,31 +667,31 @@ void loop()
     turn_direction_time = millis();
     turn_direction = random(2); //Generate random number in the range [0,1]
   }
-  // drive forward
+  // Drive forward
   if (distance_estimate > 3 * TURN_DISTANCE) {
     ctrl_left = distance_estimate;
     ctrl_right = ctrl_left;
     digitalWrite(PIN_LED_LI, LOW);
     digitalWrite(PIN_LED_RI, LOW);
   }
-  // turn slightly
+  // Turn slightly
   else if (distance_estimate > 2 * TURN_DISTANCE) {
     ctrl_left = distance_estimate;
     ctrl_right = ctrl_left / 2;
   }
-  // turn strongly
+  // Turn strongly
   else if (distance_estimate > TURN_DISTANCE) {
     ctrl_left = ctrl_max;
     ctrl_right = - ctrl_max;
   }
-  // drive backward slowly
+  // Drive backward slowly
   else {
     ctrl_left = -ctrl_slow;
     ctrl_right = -ctrl_slow;
     digitalWrite(PIN_LED_LI, HIGH);
     digitalWrite(PIN_LED_RI, HIGH);
   }
-  // flip controls if needed and set indicator light
+  // Flip controls if needed and set indicator light
   if (ctrl_left != ctrl_right) {
     if (turn_direction > 0) {
       int temp = ctrl_left;
@@ -706,7 +706,7 @@ void loop()
     }
   }
 
-  // enforce limits
+  // Enforce limits
   ctrl_left = ctrl_left > 0 ? max(ctrl_min, min(ctrl_left, ctrl_max)) : min(-ctrl_min, max(ctrl_left, -ctrl_max));
   ctrl_right = ctrl_right > 0 ? max(ctrl_min, min(ctrl_right, ctrl_max)) : min(-ctrl_min, max(ctrl_right, -ctrl_max));
 #else // Check for messages from the phone
@@ -753,13 +753,13 @@ void loop()
 #endif
 
 #if HAS_VOLTAGE_DIVIDER
-  //Measure voltage
+  // Measure voltage
   vin_array[vin_counter % vin_array_sz] = analogRead(PIN_VIN);
   vin_counter++;
 #endif
 
 #if HAS_SONAR
-  //Check for successful sonar reading
+  // Check for successful sonar reading
   if (!sonar_sent && ping_success)
   {
     distance = echo_time * US_TO_CM;
@@ -767,7 +767,7 @@ void loop()
     send_sonar_reading();
     sonar_sent = true;
   }
-  //Measure distance every sonar_interval
+  // Measure distance every sonar_interval
   if ((millis() - sonar_time) >= max(sonar_interval, MAX_SONAR_TIME))
   {
     if (!sonar_sent && !ping_success)
@@ -827,7 +827,7 @@ void loop()
 }
 
 //------------------------------------------------------//
-//FUNCTIONS
+// FUNCTIONS
 //------------------------------------------------------//
 #if HAS_VOLTAGE_DIVIDER
 float get_voltage()
@@ -1034,7 +1034,7 @@ void emergency_stop()
 #if HAS_INDICATORS
   indicator_left = 1;
   indicator_right = 1;
-  indicator_time = millis() - indicator_interval; //update indicators
+  indicator_time = millis() - indicator_interval; // update indicators
 #endif
   bumper_time = millis();
   char bumper_id[2];
