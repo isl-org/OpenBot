@@ -81,12 +81,12 @@ To install the ESP32 board in your Arduino IDE, follow these next instructions:
   <img src="../docs/images/arduino_installing.png" width="600" alt="App GUI"/>
 </p>
 
-5. You should now have everything to successfully flash the ESP32 board of the MTV using the Arduino development envinronment
+5. You should now have everything to successfully flash the ESP32 board of your OpenBot using the Arduino development envinronment
 <p align="center">
   <img src="../docs/images/arduino_ESP32-Board-add-on-in-Arduino-IDE-installed.png" width="600" alt="App GUI"/>
 </p>
 
-6. To flash the MTV with your new code, simply select **ESP32 Dev Module** in the menu **Tools > Board > ESP32 Arduino**. Note that additional content as well as troubleshooting of the ESP32 flashing prcess can be found in the following [link](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/).
+6. To flash the OpenBot with your new code, simply select **ESP32 Dev Module** in the menu **Tools > Board > ESP32 Arduino**. Note that additional content as well as troubleshooting of the ESP32 flashing prcess can be found in the following [link](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/).
 
 <p align="center">
   <img src="../docs/images/arduino_windows-select-board.png" width="600" alt="App GUI"/>
