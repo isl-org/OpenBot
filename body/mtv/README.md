@@ -828,6 +828,8 @@ Once the main PCB was attached, switches and displays in the roof / lid of the o
   <img src="../../docs/images/MTV/Lipo_2.jpg" width="1000" alt="App GUI" />
 </p>
 
+## III: Next
+
 Flash the [Arduino Firmware](../../firmware/README.md)
 
 
