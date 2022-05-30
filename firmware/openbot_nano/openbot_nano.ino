@@ -337,10 +337,9 @@ const int BUMPER_RB = 2000;
 #define digitalPinToPinChangeInterrupt digitalPinToInterrupt
 const String robot_type = "MTV";
 #define HAS_VOLTAGE_DIVIDER 0
-const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
-const float VOLTAGE_MIN = 2.5f;
-const float VOLTAGE_LOW = 9.0f;
-const float VOLTAGE_MAX = 12.6f;
+const float VOLTAGE_MIN = 17.0f;
+const float VOLTAGE_LOW = 20.0f;
+const float VOLTAGE_MAX = 24.0f;
 #define HAS_SPEED_SENSORS_FRONT 1
 #define HAS_SPEED_SENSORS_BACK 1
 #define HAS_SPEED_SENSORS_MIDDLE 1
