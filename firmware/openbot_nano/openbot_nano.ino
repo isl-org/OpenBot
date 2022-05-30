@@ -356,30 +356,12 @@ const int PIN_PWM_L = 33;
 const int PIN_DIR_L = 32;
 
 // Encoder setup:
-const int PIN_SPEED_RF_A = 14;
-const int PIN_SPEED_RF_B = 13;
-
-const int PIN_SPEED_RM_A = 26;
-const int PIN_SPEED_RM_B = 27;
-
-const int PIN_SPEED_RB_A = 35;
-const int PIN_SPEED_RB_B = 25;
-
-const int PIN_SPEED_LF_A = 17;
-const int PIN_SPEED_LF_B = 5;
-
-const int PIN_SPEED_LM_A = 4;
-const int PIN_SPEED_LM_B = 16;
-
-const int PIN_SPEED_LB_A = 15;
-const int PIN_SPEED_LB_B = 2;
-
-const int PIN_SPEED_LF = PIN_SPEED_LF_A;
-const int PIN_SPEED_RF = PIN_SPEED_RF_A;
-const int PIN_SPEED_LM = PIN_SPEED_LM_A;
-const int PIN_SPEED_RM = PIN_SPEED_RM_A;
-const int PIN_SPEED_LB = PIN_SPEED_LB_A;
-const int PIN_SPEED_RB = PIN_SPEED_RB_A;
+const int PIN_SPEED_LF = 17; // PIN_SPEED_LF_A = 17, PIN_SPEED_LF_B = 5
+const int PIN_SPEED_RF = 14; // PIN_SPEED_RF_A = 14, PIN_SPEED_RF_B = 13
+const int PIN_SPEED_LM = 4;  // PIN_SPEED_LM_A = 4, PIN_SPEED_LM_B = 16
+const int PIN_SPEED_RM = 26; // PIN_SPEED_RM_A = 26, PIN_SPEED_RM_B = 27
+const int PIN_SPEED_LB = 15; // PIN_SPEED_LB_A = 15, PIN_SPEED_LB_B = 2
+const int PIN_SPEED_RB = 35; // PIN_SPEED_RB_A = 35, PIN_SPEED_RB_B = 25
 
 // PWM properties:
 const int FREQ = 5000;
