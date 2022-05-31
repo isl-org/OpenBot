@@ -44,7 +44,7 @@
 //------------------------------------------------------//
 
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520)
-#define OPENBOT MTV
+#define OPENBOT DIY
 
 //------------------------------------------------------//
 // SETTINGS - Global settings
