@@ -5,7 +5,7 @@
   <a href="README_CN.md">简体中文</a>
 </p>
 
-We use a microcontroller unit (MCU) to act as a bridge between the robot body and the smartphone.  We provide our [firmware](openbot_nano/openbot_nano.ino) for the Arduino Nano with an ATmega328P microcontroller.
+We use a microcontroller unit (MCU) to act as a bridge between the robot body and the smartphone.  We provide our [firmware](openbot_nano/openbot_nano.ino) for the Arduino Nano with an ATmega328P microcontroller as well as for the ESP32 development kit.
 
 ## Features
 
@@ -14,7 +14,7 @@ The main task of the MCU is to handle the low-level control of the vehicle and p
 ## Setup
 
 First you have to set up your hardware configuration at the beginning of the code. If you did the DIY build (using the L298N motor driver), set `OPENBOT DIY`.
-If you used the custom PCB, check the version and set either `OPENBOT PCB_V1` or `OPENBOT PCB_V2`. If you have a OpenBot kit set `OPENBOT RTR_V1`. If you have retrofitted a RC truck, set `OPENBOT RC_CAR`.
+If you used the custom PCB, check the version and set either `OPENBOT PCB_V1` or `OPENBOT PCB_V2`. If you have a OpenBot kit set `OPENBOT RTR_TT`. If you have retrofitted a RC truck, set `OPENBOT RC_CAR`. If you use the smaller DIY version for education, set `OPENBOT LITE`. If you use the OpenBot Ready-to-Run kit with 520-motors, set `OPENBOT RTR_520`. Finally if you built the Multi Terrain Vehicle, you should set `OPENBOT MTV`.
 
 ## Config
 
@@ -52,18 +52,65 @@ You may need to download the [WCH340](http://www.wch.cn/product/CH340.html) driv
 - [Linux](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html)
 - [Mac](http://www.wch.cn/download/CH341SER_MAC_ZIP.html)
 
+### ESP32 development kit
+
+To install the ESP32 board in your Arduino IDE, follow these next instructions:
+
+1. In your Arduino IDE, go to **File> Preferences**:
+<p align="center">
+  <img src="../docs/images/arduino-ide-open-preferences.png" width="300" alt="App GUI"/>
+</p>
+
+2. Enter *https://dl.espressif.com/dl/package_esp32_index.json* into the “*Additional Board Manager URLs*” field as shown in the figure below. Then, click the “OK” button:
+<p align="center">
+  <img src="../docs/images/arduino_preferences.png" width="600" alt="App GUI"/>
+</p>
+
+**Note:** if you already have the ESP8266 boards URL, you can separate the URLs with a comma as follows:
+
+    https://dl.espressif.com/dl/package_esp32_index.json, 
+    http://arduino.esp8266.com/stable/package_esp8266com_index.json
+
+3. Open the Boards Manager. Go to **Tools > Board > Boards Manager**:
+<p align="center">
+  <img src="../docs/images/arduino_boardsManager.png" width="800" alt="App GUI"/>
+</p>
+
+4. Search for ESP32 and press install button for the “ESP32 by Espressif Systems“:
+<p align="center">
+  <img src="../docs/images/arduino_installing.png" width="600" alt="App GUI"/>
+</p>
+
+5. You should now have everything to successfully flash the ESP32 board of your OpenBot using the Arduino development envinronment
+<p align="center">
+  <img src="../docs/images/arduino_ESP32-Board-add-on-in-Arduino-IDE-installed.png" width="600" alt="App GUI"/>
+</p>
+
+6. To flash the OpenBot with your new code, simply select **ESP32 Dev Module** in the menu **Tools > Board > ESP32 Arduino**. Note that additional content as well as troubleshooting of the ESP32 flashing prcess can be found in the following [link](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/).
+
+<p align="center">
+  <img src="../docs/images/arduino_windows-select-board.png" width="600" alt="App GUI"/>
+</p>
+
 ## Upload
 
-### Settings
+### Settings (Arduino nano setup)
 
 - `Tools` :arrow_right: `Board` :arrow_right: `Arduino AVR Boards` :arrow_right: `Arduino Nano`
 - `Tools` :arrow_right: `Processor` :arrow_right: `ATmega328P (Old Bootloader)`
 - `Tools` :arrow_right: `Port` :arrow_right: `*Select the USB port*`
 
+:memo: NOTE: Currently, most cheap Arduino Nano boards come with the *Old Bootloader*. However, depending on the seller you may also get one with the new bootloader. So if you are unable to upload the firmware, chances are that you need to change the processor to *ATmega328P*.
+
+### Settings (ESP32 setup)
+
+- `Tools` :arrow_right: `Board` :arrow_right: `ESP32 Arduino` :arrow_right: `ESP32 Dev Module`
+- `Tools` :arrow_right: `Port` :arrow_right: `*Select the USB port*`
+
+### Uploading the firmware
+
 The firmware can now be uploaded through `Sketch` :arrow_right: `Upload` or by pressing the upload button (right arrow).
 ![Firmware Upload](../docs/images/firmware_upload.png)
-
-:memo: NOTE: Currently, most cheap Arduino Nano boards come with the *Old Bootloader*. However, depending on the seller you may also get one with the new bootloader. So if you are unable to upload the firmware, chances are that you need to change the processor to *ATmega328P*.
 
 ### Testing
 

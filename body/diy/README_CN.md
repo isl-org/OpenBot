@@ -15,8 +15,8 @@
 
 1) 车身底部 ([STL](cad/body_bottom.stl), [STEP](cad/body_bottom.step))
 2) 车身顶部 ([STL](cad/body_top.stl), [STEP](cad/body_top.step))
-3) 手机支架底部 ([STL](cad/phone_mount_bottom.stl), [STEP](cad/phone_mount_bottom.step))
-4) 手机支架顶部 ([STL](cad/phone_mount_top.stl), [STEP](cad/phone_mount_top.step))
+3) 手机支架底部 ([STL](../phone_mount_bottom.stl), [STEP](../phone_mount_bottom.step))
+4) 手机支架顶部 ([STL](../phone_mount_top.stl), [STEP](../phone_mount_top.step))
 
 对于上述零件，你的构建板至少需要240mmx150mm。
 

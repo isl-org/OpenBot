@@ -37,19 +37,19 @@ Irrespective of the retailer and the version of RC-toy truck you choose for your
 
 You will need to print the following parts in order to build your OpenBot RC-Truck.
 
-1) ```main_frame``` ([STL](/body/cad/rc_truck_body/main_frame.stl), [STEP](/body/cad/rc_truck_body/main_frame.step))
-2) ```side_cover``` \[x2\] ([STL](/body/cad/rc_truck_body/side_cover.stl), [STEP](/body/cad/rc_truck_body/side_cover.step))
-3) ```phone_mount_bottom``` ([STL](/body/cad/phone_mount/phone_mount_bottom.stl), [STEP](/body/cad/phone_mount/phone_mount_bottom.step))
-4) ```phone_mount_top``` ([STL](/body/cad/phone_mount/phone_mount_top.stl), [STEP](/body/cad/phone_mount/phone_mount_top.step))
+1) ```main_frame``` ([STL](cad/rc_truck_body/main_frame.stl), [STEP](cad/rc_truck_body/main_frame.step))
+2) ```side_cover``` \[x2\] ([STL](cad/rc_truck_body/side_cover.stl), [STEP](cad/rc_truck_body/side_cover.step))
+3) ```phone_mount_bottom``` ([STL](../phone_mount/phone_mount_bottom.stl), [STEP](../phone_mount/phone_mount_bottom.step))
+4) ```phone_mount_top``` ([STL](../phone_mount/phone_mount_top.stl), [STEP](../phone_mount/phone_mount_top.step))
 
 Notice that \[xN\] indicates the number of copies (i.e., N) you need to print of a particular part (wherever applicable).
 
 Following parts are optional (but recommended) to make your OpenBot RC-Truck more compact and aesthetically pleasing.
 
-5) ```camera_elevator``` ([STL](/body/cad/rc_truck_body/camera_elevator.stl), [STEP](/body/cad/rc_truck_body/camera_elevator.step))
-6) ```electronics_cover``` \[x2\] ([STL](/body/cad/rc_truck_body/electronics_cover.stl), [STEP](/body/cad/rc_truck_body/electronics_cover.step))
-7) ```spacer``` \[x4\] ([STL](/body/cad/rc_truck_body/spacer.stl), [STEP](/body/cad/rc_truck_body/spacer.step))
-8) ```front_light_spacer``` \[x2\] ([STL](/body/cad/rc_truck_body/front_light_spacer.stl), [STEP](/body/cad/rc_truck_body/front_light_spacer.step))
+5) ```camera_elevator``` ([STL](cad/rc_truck_body/camera_elevator.stl), [STEP](cad/rc_truck_body/camera_elevator.step))
+6) ```electronics_cover``` \[x2\] ([STL](cad/rc_truck_body/electronics_cover.stl), [STEP](cad/rc_truck_body/electronics_cover.step))
+7) ```spacer``` \[x4\] ([STL](cad/rc_truck_body/spacer.stl), [STEP](cad/rc_truck_body/spacer.step))
+8) ```front_light_spacer``` \[x2\] ([STL](cad/rc_truck_body/front_light_spacer.stl), [STEP](cad/rc_truck_body/front_light_spacer.step))
 
 For all the above parts, your build plate needs to be at least 260mmx220mm, which is the print size of the ```main_frame```.
 
