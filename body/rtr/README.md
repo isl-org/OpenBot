@@ -34,16 +34,16 @@ For each of the PCBs, there are three files. The gerber file contains the actual
 
 #### TT-motor
 
-1x Base board (Arduino)
-1x Status LED board
-1x Front/Top/Back bump sensor board
-4x Speed sensor board (Arduino)
+- 1x Base board (Arduino)
+- 1x Status LED board
+- 1x Front/Top/Back bump sensor board
+- 4x Speed sensor board (Arduino)
 
 #### 520-motor
 
-1x Base board (ESP32)
-1x Status LED board
-1x Front/Top/Back bump sensor board
+- 1x Base board (ESP32)
+- 1x Status LED board
+- 1x Front/Top/Back bump sensor board
 
 #### Board reference
 
