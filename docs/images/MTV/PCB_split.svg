@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="463.72263mm"
+   height="179.90019mm"
+   viewBox="0 0 463.72263 179.90019"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="PCB_split.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.5"
+     inkscape:cx="1411.1971"
+     inkscape:cy="190.93923"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="2488"
+     inkscape:window-height="1016"
+     inkscape:window-x="72"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(76.657036,7.7702136)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1528"
+       width="463.04999"
+       height="179.92935"
+       x="-76.157036"
+       y="-7.2702136" />
+    <g
+       id="g1526">
+      <path
+         inkscape:connector-curvature="0"
+         id="path1417-7"
+         d="m 127.13229,89.059046 h 42.33334"
+         style="fill:none;stroke:#ff0000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path1417"
+         d="m 127.39687,75.300711 h 42.33334"
+         style="fill:none;stroke:#ff8700;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <rect
+         y="-7.2702136"
+         x="-76.157036"
+         height="27.470428"
+         width="64.649666"
+         id="rect815-1"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text876"
+         y="10.317478"
+         x="-56.025257"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="10.317478"
+           x="-56.025257"
+           id="tspan874"
+           sodipodi:role="line">MCU</tspan></text>
+      <rect
+         y="30.587221"
+         x="-76.157036"
+         height="27.470428"
+         width="64.649666"
+         id="rect815-1-0"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text880"
+         y="41.490566"
+         x="-43.865791"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="41.490566"
+           x="-42.183723"
+           id="tspan878"
+           sodipodi:role="line">Motor </tspan><tspan
+           id="tspan882"
+           style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="54.719734"
+           x="-43.865791"
+           sodipodi:role="line">drivers</tspan></text>
+      <rect
+         y="106.3021"
+         x="-76.157036"
+         height="27.470428"
+         width="64.649666"
+         id="rect815-1-2"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text880-9"
+         y="117.36823"
+         x="-43.674591"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan882-6"
+           style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="117.36823"
+           x="-43.674591"
+           sodipodi:role="line">Encoder</tspan><tspan
+           id="tspan917"
+           style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="130.5974"
+           x="-43.674591"
+           sodipodi:role="line">connection</tspan></text>
+      <rect
+         y="144.15955"
+         x="-76.157036"
+         height="27.470428"
+         width="64.649666"
+         id="rect815-1-61"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text921"
+         y="155.22568"
+         x="-43.674591"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="155.22568"
+           x="-43.674591"
+           id="tspan919"
+           sodipodi:role="line">Light</tspan><tspan
+           id="tspan923"
+           style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="168.45485"
+           x="-43.674591"
+           sodipodi:role="line">connection</tspan></text>
+      <text
+         id="text927"
+         y="86.125381"
+         x="208.87991"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="86.125381"
+           x="208.87991"
+           id="tspan925"
+           sodipodi:role="line">Main PCB</tspan></text>
+      <rect
+         y="68.444672"
+         x="169.72523"
+         height="27.470428"
+         width="128.25981"
+         id="rect815-1-8"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text931"
+         y="86.125381"
+         x="173.67535"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="86.125381"
+           x="173.67535"
+           id="tspan929"
+           sodipodi:role="line">Power distribution PCB</tspan></text>
+      <g
+         transform="translate(120.3856)"
+         id="g1400">
+        <rect
+           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect815-1-20"
+           width="64.649666"
+           height="27.470428"
+           x="201.5303"
+           y="106.3021" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="233.82153"
+           y="117.27521"
+           id="text941"><tspan
+             sodipodi:role="line"
+             id="tspan939"
+             x="235.5036"
+             y="117.27521"
+             style="text-align:center;text-anchor:middle;stroke-width:0.26458332">DC/DC </tspan><tspan
+             sodipodi:role="line"
+             x="233.82153"
+             y="130.50438"
+             style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
+             id="tspan943">converters</tspan></text>
+      </g>
+      <g
+         transform="translate(120.38561)"
+         id="g1394">
+        <rect
+           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect815-1-9"
+           width="64.649666"
+           height="27.470428"
+           x="201.5303"
+           y="30.587227" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="233.13705"
+           y="41.115204"
+           id="text935"><tspan
+             sodipodi:role="line"
+             id="tspan933"
+             x="234.81912"
+             y="41.115204"
+             style="text-align:center;text-anchor:middle;stroke-width:0.26458332">Battery </tspan><tspan
+             sodipodi:role="line"
+             x="233.13705"
+             y="54.344372"
+             style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
+             id="tspan937">connection</tspan></text>
+      </g>
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path1171"
+         d="M -11.666012,6.4650006 H 94.693924"
+         style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2, 2;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path1171-2"
+         d="M -11.666014,6.4650006 H 94.693925 V 68.532292"
+         style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.00000002, 2.00000002;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path1171-2-7"
+         d="M -11.666014,44.322435 H 75.114759 V 68.4"
+         style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.00000004, 2.00000004;stroke-dashoffset:0;stroke-opacity:1" />
+      <rect
+         y="68.444664"
+         x="-76.157036"
+         height="27.470428"
+         width="64.649666"
+         id="rect815-1-6"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text880-2"
+         y="79.348007"
+         x="-43.674591"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="79.348007"
+           x="-41.992523"
+           id="tspan878-7"
+           sodipodi:role="line">Motor </tspan><tspan
+           id="tspan882-0"
+           style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
+           y="92.577171"
+           x="-43.674591"
+           sodipodi:role="line">connection</tspan></text>
+      <g
+         id="g1441">
+        <rect
+           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect815-1-7"
+           width="64.649666"
+           height="27.470428"
+           x="62.68663"
+           y="68.444664" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="70.036247"
+           y="86.125374"
+           id="text1120"><tspan
+             sodipodi:role="line"
+             id="tspan1118"
+             x="70.036247"
+             y="86.125374"
+             style="stroke-width:0.26458332">Main PCB</tspan></text>
+      </g>
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path1171-2-7-5"
+         d="M -11.313332,82.179878 H 62.493179"
+         style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.00000006, 2.00000006;stroke-dashoffset:0;stroke-opacity:1" />
+      <g
+         transform="matrix(1,0,0,-1,-32.949103,284.77453)"
+         id="g1338">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.00000002, 2.00000002;stroke-dashoffset:0;stroke-opacity:1"
+           d="M 21.28309,126.77062 H 127.64303"
+           id="path1171-9"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.00000004, 2.00000004;stroke-dashoffset:0;stroke-opacity:1"
+           d="M 21.283088,126.77062 H 127.64303 v 62.06729"
+           id="path1171-2-2"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.00000006, 2.00000006;stroke-dashoffset:0;stroke-opacity:1"
+           d="m 21.283088,164.62805 h 86.780772 v 24.07757"
+           id="path1171-2-7-2"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cc" />
+      </g>
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path1171-2-7-8"
+         d="M 321.40237,44.180222 H 234.6216 v 24.077565"
+         style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.00000006, 2.00000006;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path1171-2-7-8-9"
+         d="M 321.40237,120.11627 H 234.6216 V 96.038588"
+         style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:2.00000008, 2.00000008;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text1447"
+         y="70.252075"
+         x="140.85858"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff8700;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="fill:#ff8700;fill-opacity:1;stroke-width:0.26458332"
+           y="70.252075"
+           x="140.85858"
+           id="tspan1445"
+           sodipodi:role="line">5V</tspan></text>
+      <text
+         id="text1451"
+         y="101.60521"
+         x="137.31874"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="fill:#ff0000;fill-opacity:1;stroke-width:0.26458332"
+           y="101.60521"
+           x="137.31874"
+           id="tspan1449"
+           sodipodi:role="line">12V</tspan></text>
+    </g>
+  </g>
+</svg>
