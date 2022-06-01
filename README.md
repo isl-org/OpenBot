@@ -29,16 +29,6 @@ OpenBot leverages smartphones as brains for low-cost robots. We have designed a 
 - Drive the robot via a [Controller](controller/README.md)
 - Train your own [Driving Policy](policy/README.md)
 
-## Videos
-
-<a href="https://www.youtube.com/watch?v=RbzPXywJifA" >
-  <img align="center" width="500" alt="youtube video" src="https://img.youtube.com/vi/RbzPXywJifA/hqdefault.jpg" />
-</a>
-
-<a href="https://www.youtube.com/watch?v=qc8hFLyWDOM" >
-  <img align="center" width="500" alt="youtube video" src="https://img.youtube.com/vi/qc8hFLyWDOM/hqdefault.jpg" />
-</a>
-
 ## Get the source code
 
 - You can download the repo as a [zip file](https://github.com/intel-isl/OpenBot/archive/master.zip) and extract it into a folder of your choice.
@@ -48,14 +38,15 @@ OpenBot leverages smartphones as brains for low-cost robots. We have designed a 
     ```
 - You can fork the OpenBot repository and then clone your local copy. This is recommended, especially if you want to [contribute](CONTRIBUTING.md).
 
-## Contribute
+## Videos
 
-Please read the [contribution guidelines](CONTRIBUTING.md). If you are not sure where to start have a look at the [open issues](https://github.com/intel-isl/OpenBot/issues).
+<a href="https://www.youtube.com/watch?v=RbzPXywJifA" >
+  <img align="center" width="300" alt="youtube video" src="https://img.youtube.com/vi/RbzPXywJifA/hqdefault.jpg" />
+</a>
 
-## Contact
-
-- Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) channel to connect with the OpenBot community.
-- Contact us via [Email](mailto:openbot.team@gmail.com)
+<a href="https://www.youtube.com/watch?v=qc8hFLyWDOM" >
+  <img align="center" width="300" alt="youtube video" src="https://img.youtube.com/vi/qc8hFLyWDOM/hqdefault.jpg" />
+</a>
 
 ## Cool projects using OpenBot
 
@@ -75,6 +66,15 @@ There are a lot of cool projects using OpenBot already. Below is a small selecti
     <img alt="Baby Yoda OpenBot" width="24%" src="docs/images/openbot_yoda.jpg" />
   </a>
 </p>
+
+## Contact
+
+- Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) channel to connect with the OpenBot community.
+- Contact us via [Email](mailto:openbot.team@gmail.com)
+
+## Contribute
+
+Please read the [contribution guidelines](CONTRIBUTING.md). If you are not sure where to start have a look at the [open issues](https://github.com/intel-isl/OpenBot/issues).
 
 ## Citation
 
