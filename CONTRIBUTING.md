@@ -9,9 +9,10 @@
 
 1. Submit an issue describing the changes you want to implement. If it's only minor changes/bug-fixes, you can skip to step 3.
 2. After the scope was discussed in the issue, assign it to yourself. It should show up in the "To do" column in the OpenBot project.
-3. Fork the project and clone it locally:
+3. Fork the project and clone it locally using ssh (i not already done, you might need to generate a ssh key using 
+the ssh-keygen command):
 
-   `git clone https://github.com/<user_id>/OpenBot.git`
+   `git clone git@github.com:<user_id>/OpenBot.git`
 
 4. Create a branch:
 
