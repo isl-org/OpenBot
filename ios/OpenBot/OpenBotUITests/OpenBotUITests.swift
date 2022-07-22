@@ -2,7 +2,8 @@
 //  OpenBotUITests.swift
 //  OpenBotUITests
 //
-//  Created by Nitish Yadav on 20/07/22.
+//  Created by Sparsh Jain on 22/07/22.
+//
 //
 
 import XCTest
