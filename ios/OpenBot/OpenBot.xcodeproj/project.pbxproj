@@ -16,6 +16,7 @@
 		3A2CCC4928882ED90059789E /* OpenBotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2CCC4828882ED90059789E /* OpenBotTests.swift */; };
 		3A2CCC5328882ED90059789E /* OpenBotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2CCC5228882ED90059789E /* OpenBotUITests.swift */; };
 		3A2CCC5528882ED90059789E /* OpenBotUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2CCC5428882ED90059789E /* OpenBotUITestsLaunchTests.swift */; };
+		3A7E66CB2889387F00A07E01 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A7E66CA2889387F00A07E01 /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,8 @@
 		3A2CCC4E28882ED90059789E /* OpenBotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A2CCC5228882ED90059789E /* OpenBotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITests.swift; sourceTree = "<group>"; };
 		3A2CCC5428882ED90059789E /* OpenBotUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3A7E66BF28890EED00A07E01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3A7E66CA2889387F00A07E01 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +101,8 @@
 		3A2CCC3128882ED80059789E /* OpenBot */ = {
 			isa = PBXGroup;
 			children = (
+				3A7E66BF28890EED00A07E01 /* Info.plist */,
+				3A7E66CA2889387F00A07E01 /* Launch Screen.storyboard */,
 				3A2CCC3228882ED80059789E /* OpenBotApp.swift */,
 				3A2CCC3428882ED80059789E /* ContentView.swift */,
 				3A2CCC3628882ED90059789E /* Assets.xcassets */,
@@ -237,6 +242,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A7E66CB2889387F00A07E01 /* Launch Screen.storyboard in Resources */,
 				3A2CCC3A28882ED90059789E /* Preview Assets.xcassets in Resources */,
 				3A2CCC3728882ED90059789E /* Assets.xcassets in Resources */,
 			);
@@ -353,7 +359,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -407,7 +413,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -422,15 +428,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"OpenBot/Preview Content\"";
 				DEVELOPMENT_TEAM = 45P94DZS6G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OpenBot/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OpenBot;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -451,15 +462,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"OpenBot/Preview Content\"";
 				DEVELOPMENT_TEAM = 45P94DZS6G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OpenBot/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OpenBot;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
