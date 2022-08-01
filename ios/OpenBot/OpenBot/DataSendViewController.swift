@@ -63,7 +63,9 @@ class DataSendViewController: UIViewController, CBCentralManagerDelegate, CBPeri
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
-                print(characteristic)
+                print(" hello ",characteristic)
+                let dataToSend: Data = "hello jgbjdsb".data(using: String.Encoding.utf8)!
+                peripheral.writeValue(dataToSend, for: characteristic, type: CBCharacteristicWriteType.withResponse)
             }
         }
     }
