@@ -11,8 +11,11 @@ import CoreBluetooth
 class DataSendViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     var centralManager: CBCentralManager?
     var tempPeripheral: CBPeripheral!
-
-//
+    private var allservices: [CBService]?
+    var writeCharacteristics : CBCharacteristic?
+    @IBOutlet weak var wifiPassword: UITextField!
+    @IBOutlet weak var wifiName: UITextField!
+    //
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -55,6 +58,7 @@ class DataSendViewController: UIViewController, CBCentralManagerDelegate, CBPeri
         if let services = peripheral.services {
             for service in services {
                 print(service)
+                allservices?.append(service)
                 peripheral.discoverCharacteristics([], for: service)
             }
         }
@@ -63,11 +67,28 @@ class DataSendViewController: UIViewController, CBCentralManagerDelegate, CBPeri
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
+                writeCharacteristics = characteristic
                 print(" hello ",characteristic)
-                let dataToSend: Data = "hello jgbjdsb".data(using: String.Encoding.utf8)!
-                peripheral.writeValue(dataToSend, for: characteristic, type: CBCharacteristicWriteType.withResponse)
+//                    let dataToSend: Data = "hello jgbjdsb".data(using: String.Encoding.utf8)!
+//                var  temp = (wifiName.text ?? "") + (wifiPassword.text ?? "")
+//                let dataToSend: Data = temp.data(using: String.Encoding.utf8)!
+//                    peripheral.writeValue(dataToSend, for: characteristic, type: CBCharacteristicWriteType.withResponse);
             }
         }
     }
 
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        let x = tempPeripheral.readValue(for: writeCharacteristics!)
+
+
+    }
+
+    @IBAction func sendData(_ sender: Any) {
+        print("hi sender ")
+        var  temp = (wifiName.text ?? "") + (wifiPassword.text ?? "")
+        let dataToSend: Data = temp.data(using: String.Encoding.utf8)!
+       tempPeripheral.writeValue(dataToSend, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
+        tempPeripheral.readValue(for: writeCharacteristics!)
+
+    }
 }

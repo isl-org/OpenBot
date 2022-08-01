@@ -23,14 +23,9 @@ class ViewController: UIViewController, CBCentralManagerDelegate {
         }
     }
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-
-
         peripherals.append(peripheral)
         myTable.reloadData()
     }
-
-
-
     override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view.
@@ -39,13 +34,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate {
         self.myTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         centralManager = CBCentralManager(delegate: self, queue: DispatchQueue.main)
     }
-
-
-
 }
-
-
-
 extension ViewController : UITableViewDataSource ,UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return peripherals.count
@@ -77,6 +66,7 @@ extension ViewController : UITableViewDataSource ,UITableViewDelegate{
 
 
     }
+
 
 
 }
