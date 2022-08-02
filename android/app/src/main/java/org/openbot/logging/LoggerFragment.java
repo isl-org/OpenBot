@@ -58,6 +58,8 @@ public class LoggerFragment extends CameraFragment {
   protected String logFolder;
 
   protected boolean loggingEnabled;
+  private boolean loggingCanceled;
+
   private Matrix frameToCropTransform;
   private Bitmap croppedBitmap;
   private int sensorOrientation;
@@ -105,7 +107,7 @@ public class LoggerFragment extends CameraFragment {
                     Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()))));
 
     binding.loggerSwitch.setOnCheckedChangeListener(
-        (buttonView, isChecked) -> setIsLoggingActive(isChecked));
+        (buttonView, isChecked) -> setLoggingActive(isChecked));
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
@@ -271,10 +273,10 @@ public class LoggerFragment extends CameraFragment {
     intentSensorService.putExtra("logFolder", logFolder + File.separator + "sensor_data");
     requireActivity().startService(intentSensorService);
     requireActivity().bindService(intentSensorService, sensorConnection, Context.BIND_AUTO_CREATE);
-    // Send current vehicle state to log
     runInBackground(
         () -> {
           try {
+            // Send current vehicle state to log
             TimeUnit.MILLISECONDS.sleep(500);
             sendControlToSensorService();
             sendIndicatorToSensorService();
@@ -284,7 +286,7 @@ public class LoggerFragment extends CameraFragment {
         });
   }
 
-  private void stopLogging() {
+  private void stopLogging(boolean isCancel) {
     if (sensorConnection != null) requireActivity().unbindService(sensorConnection);
     requireActivity().stopService(intentSensorService);
 
@@ -292,23 +294,41 @@ public class LoggerFragment extends CameraFragment {
     runInBackground(
         () -> {
           try {
-            String logZipFile = logFolder + ".zip";
-            // Zip the log folder and then delete it
             File folder = new File(logFolder);
-            File zip = new File(logZipFile);
+            if (!isCancel) {
+              // Zip the log folder and then upload it
+              serverCommunication.upload(zip(folder));
+            }
             TimeUnit.MILLISECONDS.sleep(500);
-            // These two lines below are messy and may cause bugs. needs to be looked into
-            ZipUtil.pack(folder, zip);
             FileUtils.deleteQuietly(folder);
-            serverCommunication.upload(zip);
           } catch (InterruptedException e) {
             Timber.e(e, "Got interrupted.");
           }
         });
+    loggingEnabled = false;
   }
 
-  protected void setIsLoggingActive(boolean loggingActive) {
-    if (loggingActive && !loggingEnabled) {
+  private File zip(File folder) {
+    String zipFileName = folder + ".zip";
+    File zip = new File(zipFileName);
+    ZipUtil.pack(folder, zip);
+    return zip;
+  }
+
+  private void cancelLogging() {
+    loggingCanceled = true;
+    setLoggingActive(false);
+    audioPlayer.playFromString("Log deleted!");
+  }
+
+  protected void toggleLogging() {
+    loggingCanceled = false;
+    setLoggingActive(!loggingEnabled);
+    audioPlayer.playLogging(voice, loggingEnabled);
+  }
+
+  protected void setLoggingActive(boolean enableLogging) {
+    if (enableLogging && !loggingEnabled) {
       if (!PermissionUtils.hasLoggingPermissions(requireActivity())) {
         requestPermissionLauncherLogging.launch(Constants.PERMISSIONS_LOGGING);
         loggingEnabled = false;
@@ -316,8 +336,8 @@ public class LoggerFragment extends CameraFragment {
         startLogging();
         loggingEnabled = true;
       }
-    } else if (!loggingActive && loggingEnabled) {
-      stopLogging();
+    } else if (!enableLogging && loggingEnabled) {
+      stopLogging(loggingCanceled);
       loggingEnabled = false;
     }
     BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("LOGS", loggingEnabled));
@@ -331,16 +351,11 @@ public class LoggerFragment extends CameraFragment {
           new ActivityResultContracts.RequestMultiplePermissions(),
           result -> {
             result.forEach((permission, granted) -> allGranted = allGranted && granted);
-            if (allGranted) setIsLoggingActive(true);
+            if (allGranted) setLoggingActive(true);
             else {
               PermissionUtils.showLoggingPermissionsToast(requireActivity());
             }
           });
-
-  protected void handleLogging() {
-    setIsLoggingActive(!loggingEnabled);
-    audioPlayer.playLogging(voice, loggingEnabled);
-  }
 
   @Override
   protected void processUSBData(String data) {
@@ -387,7 +402,7 @@ public class LoggerFragment extends CameraFragment {
         break;
 
       case Constants.CMD_LOGS:
-        handleLogging();
+        toggleLogging();
         break;
 
       case Constants.CMD_INDICATOR_LEFT:
@@ -417,7 +432,7 @@ public class LoggerFragment extends CameraFragment {
                 Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
         break;
       case Constants.CMD_NETWORK:
-        //        handleNetwork();
+        cancelLogging();
         break;
     }
   }
