@@ -63,8 +63,6 @@ extension ViewController : UITableViewDataSource ,UITableViewDelegate{
     private func startScan(){
         peripherals.removeAll();
         centralManager = CBCentralManager(delegate: self, queue: DispatchQueue.main)
-
-
     }
 
 

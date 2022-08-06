@@ -30,6 +30,8 @@
 //------------------------------------------------------//
 // DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
+
+
 #define DIY 0     // DIY without PCB
 #define PCB_V1 1  // DIY with PCB V1
 #define PCB_V2 2  // DIY with PCB V2
@@ -116,7 +118,7 @@ const int PIN_PWM_R1 = 9;
 const int PIN_PWM_R2 = 10;
 const int PIN_SPEED_LF = 2;
 const int PIN_SPEED_RF = 3;
-const int PIN_VIN = A7;
+//const int PIN_VIN = A7;
 const int PIN_TRIGGER = 12;
 const int PIN_ECHO = 11;
 const int PIN_LED_LI = 4;
