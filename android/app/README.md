@@ -129,6 +129,12 @@ Simple UI for collection of data sets.
 
 - **Model Resolution**: Used to switch between resolutions of images saved for training different models.
 
+- **Save/Discard the Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may: 
+    - press the **A button** to **start** the data collection process
+    - press the **A button again** to **stop** data collection and save the collected data in a .zip file
+    - alternatively press the **R1 button** to **stop** data collection **without saving** the collected data (for instance because of an unexpected collision with the environment)
+    - remember to use the controller mapping fragment to ensure you are using the correct buttons.
+
 ### Controller Mapping
 
 Simple UI to check the button and joystick mapping of a connected BT controller.
