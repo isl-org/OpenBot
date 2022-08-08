@@ -38,13 +38,14 @@
 #define LITE 5    // Smaller DIY version for education
 #define RTR_520 6 // Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
 #define MTV 7     // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
+#define KO_LAB_SCOOTER 8     // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
 
 //------------------------------------------------------//
 // SETUP - Choose your body
 //------------------------------------------------------//
 
-// Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520)
-#define OPENBOT DIY
+// Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520, KO_LAB_SCOOTER)
+#define OPENBOT KO_LAB_SCOOTER
 
 //------------------------------------------------------//
 // SETTINGS - Global settings
@@ -220,12 +221,12 @@ const int BUMPER_RF = 786;
 const int BUMPER_BB = 745;
 const int BUMPER_LB = 607;
 const int BUMPER_RB = 561;
-//-------------------------RC_CAR-----------------------//
-#elif (OPENBOT == RC_CAR)
-#include <Servo.h>
-Servo ESC;
-Servo SERVO;
-const String robot_type = "RC_CAR";
+//-------------------------KO_LAB_SCOOTER-----------------------//
+#elif (OPENBOT == KO_LAB_SCOOTER)
+#define DS3502_WIPER_MIDDLE 127
+Adafruit_DS3502 ds3502 = Adafruit_DS3502();
+float wantedSteering;
+const String robot_type = "KO_LAB_SCOOTER";
 #define HAS_VOLTAGE_DIVIDER 0
 const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
 const float VOLTAGE_MIN = 0.0f;
@@ -235,13 +236,15 @@ const float ADC_FACTOR = 5.0 / 1023;
 #define HAS_INDICATORS 0
 #define HAS_SONAR 0
 #define SONAR_MEDIAN 0
-const int PIN_PWM_T = A0;
-const int PIN_PWM_S = A1;
+const int PIN_STEERING_POT = 10;
+const int PIN_L298N_ENA = 8;
+const int PIN_L298N_IN1 = 9;
+const int PIN_L298N_IN2 = 10;
 const int PIN_VIN = A7;
 const int PIN_TRIGGER = 4;
-const int PIN_ECHO = 4;
+const int PIN_ECHO = 5;
 const int PIN_LED_LI = 7;
-const int PIN_LED_RI = 8;
+const int PIN_LED_RI = 6;
 //-------------------------LITE-------------------------//
 #elif (OPENBOT == LITE)
 const String robot_type = "LITE";
@@ -520,12 +523,17 @@ void setup()
   coast_mode = !coast_mode;
 #endif
   // Outputs
-#if (OPENBOT == RC_CAR)
-  pinMode(PIN_PWM_T, OUTPUT);
-  pinMode(PIN_PWM_S, OUTPUT);
-  // Attach the ESC and SERVO
-  ESC.attach(PIN_PWM_T, 1000, 2000);   // (pin, min pulse width, max pulse width in microseconds)
-  SERVO.attach(PIN_PWM_S, 1000, 2000); // (pin, min pulse width, max pulse width in microseconds)
+#if (OPENBOT == KO_LAB_SCOOTER)
+  pinMode(PIN_L298N_ENA, OUTPUT);
+  pinMode(PIN_L298N_IN1, OUTPUT);
+  pinMode(PIN_L298N_IN2, OUTPUT);
+  pinMode(PIN_STEERING_POT, INPUT);
+  if (!ds3502.begin()) {
+    Serial.println("Couldn't find DS3502 chip");
+    while (1);
+  }
+  Serial.println("Found DS3502 chip");
+  ds3502.setWiperDefault(DS3502_WIPER_MIDDLE);
 #elif ((OPENBOT != RTR_520) and (OPENBOT != MTV))
   pinMode(PIN_PWM_L1, OUTPUT);
   pinMode(PIN_PWM_L2, OUTPUT);
@@ -844,7 +852,7 @@ float get_voltage()
 
 void update_vehicle()
 {
-#if (OPENBOT == RC_CAR)
+#if(OPENBOT == KO_LAB_SCOOTER)
   update_throttle();
   update_steering();
 #elif (OPENBOT == MTV)
@@ -856,17 +864,17 @@ void update_vehicle()
 #endif
 }
 
-#if (OPENBOT == RC_CAR)
+#if(OPENBOT == KO_LAB_SCOOTER)
 void update_throttle()
 {
   if (ctrl_left == 0 || ctrl_right == 0)
   {
-    ESC.write(90); //set throttle to zero
+    ds3502.setWiper(DS3502_WIPER_MIDDLE);
   }
   else
   {
     int throttle = map(ctrl_left + ctrl_right, -510, 510, 0, 180);
-    ESC.write(throttle);
+    throttle.write(throttle);
   }
 }
 
@@ -875,11 +883,11 @@ void update_steering()
   int steering = map(ctrl_left - ctrl_right, -510, 510, 0, 180);
   if (ctrl_left + ctrl_right < 0)
   {
-    SERVO.write(steering);
+    steering.write(steering);
   }
   else
   {
-    SERVO.write(180 - steering);
+    steering.write(180 - steering);
   }
 }
 
