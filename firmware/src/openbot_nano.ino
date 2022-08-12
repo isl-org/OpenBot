@@ -110,9 +110,9 @@ boolean coast_mode = 1;
 #define DS3502_WIPER_MIDDLE 63
 #define STEERING_POWER 255 // value for analog
 #define DS3502_WIPER_MAX_EXTRA 63
-#define STEERING_POT_MIDDLE 512
-#define STEERING_TOLERANCE 10
-#define STEERING_POT_MAX_EXTRA 200
+#define STEERING_POT_MIDDLE (4095 /2)
+#define STEERING_TOLERANCE 20
+#define STEERING_POT_MAX_EXTRA (STEERING_POT_MIDDLE /2)
 Adafruit_DS3502 ds3502 = Adafruit_DS3502();
 float wantedSteering;
 int steeringPotVal;
@@ -208,7 +208,7 @@ unsigned long display_time = 0;
 //------------------------------------------------------//
 void setup()
 {
-  Serial.begin(115200, SERIAL_8N1);
+  Serial.begin(9600, SERIAL_8N1);
   // SERIAL_8E1 - 8 data bits, even parity, 1 stop bit
   // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
   // SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
