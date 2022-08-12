@@ -125,10 +125,10 @@ const float ADC_FACTOR = 5.0 / 1023;
 #define HAS_INDICATORS 0
 #define HAS_SONAR 0
 #define SONAR_MEDIAN 0
-const int PIN_STEERING_POT = A0;
-const int PIN_L298N_ENA = 8;
-const int PIN_L298N_IN1 = 9;
-const int PIN_L298N_IN2 = 10;
+const int PIN_STEERING_POT = 27;
+const int PIN_L298N_ENA = 26;
+const int PIN_L298N_IN1 = 18;
+const int PIN_L298N_IN2 = 19;
 const int PIN_VIN = A7;
 const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 5;
