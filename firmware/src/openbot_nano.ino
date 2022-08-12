@@ -147,53 +147,12 @@ int ctrl_slow = 96;
 int ctrl_min = (int)255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
-#if HAS_SONAR
-#if ((OPENBOT != RTR_520) and (OPENBOT != MTV))
-#include "PinChangeInterrupt.h"
-#endif
-// Sonar sensor
-const float US_TO_CM = 0.01715;              // cm/uS -> (343 * 100 / 1000000) / 2;
-const unsigned int MAX_SONAR_DISTANCE = 300; // cm
-const unsigned long MAX_SONAR_TIME = (long)MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
-const unsigned int STOP_DISTANCE = 10; // cm
-#if (NO_PHONE_MODE)
-const unsigned int TURN_DISTANCE = 50;
-unsigned long sonar_interval = 100;
-#else
-unsigned long sonar_interval = 1000;
-#endif
-unsigned long sonar_time = 0;
-boolean sonar_sent = false;
-boolean ping_success = false;
-unsigned int distance = -1;          // cm
-unsigned int distance_estimate = -1; // cm
-unsigned long start_time;
-unsigned long echo_time = 0;
-#if (SONAR_MEDIAN)
-const unsigned int distance_array_sz = 3;
-unsigned int distance_array[distance_array_sz] = {};
-unsigned int distance_counter = 0;
-#endif
-#else
 const unsigned int TURN_DISTANCE = -1; // cm
 const unsigned int STOP_DISTANCE = 0;  // cm
 unsigned int distance_estimate = -1;   // cm
-#endif
 
-#if (HAS_OLED)
-#include <SPI.h>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 
-// OLED Display SSD1306
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 32 // OLED display height, in pixels
-#define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
-#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-#endif
 
 // Vehicle Control
 int ctrl_left = 0;
@@ -261,6 +220,9 @@ void setup()
   pinMode(PIN_L298N_ENA, OUTPUT);
   pinMode(PIN_L298N_IN1, OUTPUT);
   pinMode(PIN_L298N_IN2, OUTPUT);
+  digitalWrite(PIN_L298N_ENA, 0);
+  digitalWrite(PIN_L298N_IN1, 0);
+  digitalWrite(PIN_L298N_IN2, 0);
   pinMode(PIN_STEERING_POT, INPUT);
   if (!ds3502.begin())
   {
