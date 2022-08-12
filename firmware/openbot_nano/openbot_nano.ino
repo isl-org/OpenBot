@@ -30,15 +30,15 @@
 //------------------------------------------------------//
 // DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
-#define DIY 0     // DIY without PCB
-#define PCB_V1 1  // DIY with PCB V1
-#define PCB_V2 2  // DIY with PCB V2
-#define RTR_TT 3  // Ready-to-Run with TT-motors
-#define RC_CAR 4  // RC truck prototypes
-#define LITE 5    // Smaller DIY version for education
-#define RTR_520 6 // Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
-#define MTV 7     // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
-#define KO_LAB_SCOOTER 8     // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
+#define DIY 0            // DIY without PCB
+#define PCB_V1 1         // DIY with PCB V1
+#define PCB_V2 2         // DIY with PCB V2
+#define RTR_TT 3         // Ready-to-Run with TT-motors
+#define RC_CAR 4         // RC truck prototypes
+#define LITE 5           // Smaller DIY version for education
+#define RTR_520 6        // Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
+#define MTV 7            // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
+#define KO_LAB_SCOOTER 8 // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
 
 //------------------------------------------------------//
 // SETUP - Choose your body
@@ -223,9 +223,17 @@ const int BUMPER_LB = 607;
 const int BUMPER_RB = 561;
 //-------------------------KO_LAB_SCOOTER-----------------------//
 #elif (OPENBOT == KO_LAB_SCOOTER)
-#define DS3502_WIPER_MIDDLE 127
+#include <Adafruit_DS3502.h>
+#define HAS_OLED 1
+#define DS3502_WIPER_MIDDLE 63
+#define STEERING_POWER 255 // value for analog
+#define DS3502_WIPER_MAX_EXTRA 63
+#define STEERING_POT_MIDDLE 512
+#define STEERING_TOLERANCE 10
+#define STEERING_POT_MAX_EXTRA 200
 Adafruit_DS3502 ds3502 = Adafruit_DS3502();
 float wantedSteering;
+int steeringPotVal;
 const String robot_type = "KO_LAB_SCOOTER";
 #define HAS_VOLTAGE_DIVIDER 0
 const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
@@ -236,7 +244,7 @@ const float ADC_FACTOR = 5.0 / 1023;
 #define HAS_INDICATORS 0
 #define HAS_SONAR 0
 #define SONAR_MEDIAN 0
-const int PIN_STEERING_POT = 10;
+const int PIN_STEERING_POT = A0;
 const int PIN_L298N_ENA = 8;
 const int PIN_L298N_IN1 = 9;
 const int PIN_L298N_IN2 = 10;
@@ -285,7 +293,7 @@ const float ADC_FACTOR = 3.3 / 4095;
 #define HAS_LEDS_FRONT 1
 #define HAS_LEDS_BACK 1
 #define HAS_LEDS_STATUS 1
-//PWM properties
+// PWM properties
 const int FREQ = 5000;
 const int RES = 8;
 const int CH_PWM_L1 = 0;
@@ -383,7 +391,7 @@ unsigned long turn_direction_interval = 5000;
 unsigned int turn_direction = 0;
 int ctrl_max = 192;
 int ctrl_slow = 96;
-int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
+int ctrl_min = (int)255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
 #if HAS_SONAR
@@ -391,10 +399,10 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #include "PinChangeInterrupt.h"
 #endif
 // Sonar sensor
-const float US_TO_CM = 0.01715;              //cm/uS -> (343 * 100 / 1000000) / 2;
-const unsigned int MAX_SONAR_DISTANCE = 300;  //cm
-const unsigned long MAX_SONAR_TIME = (long) MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
-const unsigned int STOP_DISTANCE = 10;     //cm
+const float US_TO_CM = 0.01715;              // cm/uS -> (343 * 100 / 1000000) / 2;
+const unsigned int MAX_SONAR_DISTANCE = 300; // cm
+const unsigned long MAX_SONAR_TIME = (long)MAX_SONAR_DISTANCE * 2 * 10 / 343 + 1;
+const unsigned int STOP_DISTANCE = 10; // cm
 #if (NO_PHONE_MODE)
 const unsigned int TURN_DISTANCE = 50;
 unsigned long sonar_interval = 100;
@@ -404,8 +412,8 @@ unsigned long sonar_interval = 1000;
 unsigned long sonar_time = 0;
 boolean sonar_sent = false;
 boolean ping_success = false;
-unsigned int distance = -1;          //cm
-unsigned int distance_estimate = -1; //cm
+unsigned int distance = -1;          // cm
+unsigned int distance_estimate = -1; // cm
 unsigned long start_time;
 unsigned long echo_time = 0;
 #if (SONAR_MEDIAN)
@@ -414,9 +422,9 @@ unsigned int distance_array[distance_array_sz] = {};
 unsigned int distance_counter = 0;
 #endif
 #else
-const unsigned int TURN_DISTANCE = -1; //cm
-const unsigned int STOP_DISTANCE = 0;  //cm
-unsigned int distance_estimate = -1;   //cm
+const unsigned int TURN_DISTANCE = -1; // cm
+const unsigned int STOP_DISTANCE = 0;  // cm
+unsigned int distance_estimate = -1;   // cm
 #endif
 
 #if (HAS_OLED)
@@ -425,15 +433,16 @@ unsigned int distance_estimate = -1;   //cm
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-const int OLED_RESET = -1; // not used
-Adafruit_SSD1306 display(OLED_RESET);
-
 // OLED Display SSD1306
-const unsigned int SCREEN_WIDTH = 128; // OLED display width, in pixels
-const unsigned int SCREEN_HEIGHT = 32; // OLED display height, in pixels
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 32 // OLED display height, in pixels
+#define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
+#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
 #endif
 
-//Vehicle Control
+// Vehicle Control
 int ctrl_left = 0;
 int ctrl_right = 0;
 
@@ -442,7 +451,7 @@ int ctrl_right = 0;
 unsigned int vin_counter = 0;
 const unsigned int vin_array_sz = 10;
 int vin_array[vin_array_sz] = {0};
-unsigned long voltage_interval = 1000; //Interval for sending voltage measurements
+unsigned long voltage_interval = 1000; // Interval for sending voltage measurements
 unsigned long voltage_time = 0;
 #endif
 
@@ -504,7 +513,7 @@ int bumper_array[bumper_array_sz] = {0};
 int bumper_reading = 0;
 #endif
 
-//Heartbeat
+// Heartbeat
 unsigned long heartbeat_interval = -1;
 unsigned long heartbeat_time = 0;
 
@@ -519,6 +528,11 @@ unsigned long display_time = 0;
 //------------------------------------------------------//
 void setup()
 {
+    Serial.begin(115200, SERIAL_8N1);
+  // SERIAL_8E1 - 8 data bits, even parity, 1 stop bit
+  // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
+  // SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
+  // Serial.setTimeout(10);
 #if (OPENBOT == LITE)
   coast_mode = !coast_mode;
 #endif
@@ -528,9 +542,11 @@ void setup()
   pinMode(PIN_L298N_IN1, OUTPUT);
   pinMode(PIN_L298N_IN2, OUTPUT);
   pinMode(PIN_STEERING_POT, INPUT);
-  if (!ds3502.begin()) {
+  if (!ds3502.begin())
+  {
     Serial.println("Couldn't find DS3502 chip");
-    while (1);
+    while (1)
+      ;
   }
   Serial.println("Found DS3502 chip");
   ds3502.setWiperDefault(DS3502_WIPER_MIDDLE);
@@ -542,7 +558,13 @@ void setup()
 #endif
   // Initialize with the I2C addr 0x3C
 #if HAS_OLED
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  
+  if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
+  { 
+    Serial.println("Couldn't start SSD1306");
+  }
+  Serial.println("Successfully started SSD1306");
+
 #endif
 #if (HAS_INDICATORS)
   pinMode(PIN_LED_LI, OUTPUT);
@@ -646,26 +668,22 @@ void setup()
   // PWM signal configuration using the ESP32 API
   ledcSetup(LHS_PWM_OUT, FREQ, RES);
   ledcSetup(RHS_PWM_OUT, FREQ, RES);
-  
+
   // Attach the channel to the GPIO to be controlled
   ledcAttachPin(PIN_PWM_L, LHS_PWM_OUT);
   ledcAttachPin(PIN_PWM_R, RHS_PWM_OUT);
-  
+
   pinMode(PIN_DIR_L, OUTPUT);
   pinMode(PIN_DIR_R, OUTPUT);
   pinMode(PIN_DIR_L, LOW);
   pinMode(PIN_DIR_R, LOW);
 #endif
 
-  Serial.begin(115200, SERIAL_8N1);
-  // SERIAL_8E1 - 8 data bits, even parity, 1 stop bit
-  // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
-  // SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
-  // Serial.setTimeout(10);
+
 }
 
 //------------------------------------------------------//
-//LOOP
+// LOOP
 //------------------------------------------------------//
 void loop()
 {
@@ -673,42 +691,49 @@ void loop()
   if ((millis() - turn_direction_time) >= turn_direction_interval)
   {
     turn_direction_time = millis();
-    turn_direction = random(2); //Generate random number in the range [0,1]
+    turn_direction = random(2); // Generate random number in the range [0,1]
   }
   // Drive forward
-  if (distance_estimate > 3 * TURN_DISTANCE) {
+  if (distance_estimate > 3 * TURN_DISTANCE)
+  {
     ctrl_left = distance_estimate;
     ctrl_right = ctrl_left;
     digitalWrite(PIN_LED_LI, LOW);
     digitalWrite(PIN_LED_RI, LOW);
   }
   // Turn slightly
-  else if (distance_estimate > 2 * TURN_DISTANCE) {
+  else if (distance_estimate > 2 * TURN_DISTANCE)
+  {
     ctrl_left = distance_estimate;
     ctrl_right = ctrl_left / 2;
   }
   // Turn strongly
-  else if (distance_estimate > TURN_DISTANCE) {
+  else if (distance_estimate > TURN_DISTANCE)
+  {
     ctrl_left = ctrl_max;
-    ctrl_right = - ctrl_max;
+    ctrl_right = -ctrl_max;
   }
   // Drive backward slowly
-  else {
+  else
+  {
     ctrl_left = -ctrl_slow;
     ctrl_right = -ctrl_slow;
     digitalWrite(PIN_LED_LI, HIGH);
     digitalWrite(PIN_LED_RI, HIGH);
   }
   // Flip controls if needed and set indicator light
-  if (ctrl_left != ctrl_right) {
-    if (turn_direction > 0) {
+  if (ctrl_left != ctrl_right)
+  {
+    if (turn_direction > 0)
+    {
       int temp = ctrl_left;
       ctrl_left = ctrl_right;
       ctrl_right = temp;
       digitalWrite(PIN_LED_LI, HIGH);
       digitalWrite(PIN_LED_RI, LOW);
     }
-    else {
+    else
+    {
       digitalWrite(PIN_LED_LI, LOW);
       digitalWrite(PIN_LED_RI, HIGH);
     }
@@ -832,6 +857,27 @@ void loop()
     display_time = millis();
   }
 #endif
+#if KO_LAB_SCOOTER
+  steeringPotVal = analogRead(PIN_STEERING_POT);
+  if (steeringPotVal - STEERING_TOLERANCE > wantedSteering)
+  {
+    digitalWrite(PIN_L298N_ENA, 1);
+    analogWrite(PIN_L298N_IN1, 0);
+    analogWrite(PIN_L298N_IN2, STEERING_POWER);
+  }
+  else if (steeringPotVal + STEERING_TOLERANCE < wantedSteering)
+  {
+    digitalWrite(PIN_L298N_ENA, 1);
+    analogWrite(PIN_L298N_IN1, STEERING_POWER);
+    analogWrite(PIN_L298N_IN2, 0);
+  }
+  else
+  {
+    analogWrite(PIN_L298N_IN1, 0);
+    analogWrite(PIN_L298N_IN2, 0);
+    digitalWrite(PIN_L298N_ENA, 0);
+  }
+#endif
 }
 
 //------------------------------------------------------//
@@ -852,7 +898,7 @@ float get_voltage()
 
 void update_vehicle()
 {
-#if(OPENBOT == KO_LAB_SCOOTER)
+#if (OPENBOT == KO_LAB_SCOOTER)
   update_throttle();
   update_steering();
 #elif (OPENBOT == MTV)
@@ -864,30 +910,29 @@ void update_vehicle()
 #endif
 }
 
-#if(OPENBOT == KO_LAB_SCOOTER)
+#if (OPENBOT == KO_LAB_SCOOTER)
+int ds3502_value;
 void update_throttle()
 {
   if (ctrl_left == 0 || ctrl_right == 0)
   {
     ds3502.setWiper(DS3502_WIPER_MIDDLE);
+    ds3502_value = DS3502_WIPER_MIDDLE;
   }
   else
   {
-    int throttle = map(ctrl_left + ctrl_right, -510, 510, 0, 180);
-    throttle.write(throttle);
+    int throttle = map(ctrl_left + ctrl_right, -510, 510, DS3502_WIPER_MIDDLE - DS3502_WIPER_MAX_EXTRA, DS3502_WIPER_MIDDLE + DS3502_WIPER_MAX_EXTRA);
+    ds3502.setWiper(throttle);
+    ds3502_value = throttle;
   }
 }
 
 void update_steering()
 {
-  int steering = map(ctrl_left - ctrl_right, -510, 510, 0, 180);
+  wantedSteering = map(ctrl_left - ctrl_right, -510, 510, STEERING_POT_MIDDLE - STEERING_POT_MAX_EXTRA, STEERING_POT_MIDDLE + STEERING_POT_MAX_EXTRA);
   if (ctrl_left + ctrl_right < 0)
   {
-    steering.write(steering);
-  }
-  else
-  {
-    steering.write(180 - steering);
+    wantedSteering = STEERING_POT_MIDDLE + STEERING_POT_MAX_EXTRA - wantedSteering;
   }
 }
 
@@ -1027,7 +1072,8 @@ void coast_right_motors()
 }
 #endif
 
-boolean almost_equal(int a, int b, int eps) {
+boolean almost_equal(int a, int b, int eps)
+{
   return abs(a - b) <= eps;
 }
 
@@ -1231,15 +1277,15 @@ void process_notification_msg()
   int state = atoi(tmp);    // convert to int
   switch (led)
   {
-    case 'y':
-      digitalWrite(PIN_LED_Y, state);
-      break;
-    case 'g':
-      digitalWrite(PIN_LED_G, state);
-      break;
-    case 'b':
-      digitalWrite(PIN_LED_B, state);
-      break;
+  case 'y':
+    digitalWrite(PIN_LED_Y, state);
+    break;
+  case 'g':
+    digitalWrite(PIN_LED_G, state);
+    break;
+  case 'b':
+    digitalWrite(PIN_LED_B, state);
+    break;
   }
 #if DEBUG
   Serial.print("Notification: ");
@@ -1322,12 +1368,12 @@ void on_serial_rx()
   {
     switch (msgPart)
     {
-      case HEADER:
-        process_header(inChar);
-        return;
-      case BODY:
-        process_body(inChar);
-        return;
+    case HEADER:
+      process_header(inChar);
+      return;
+    case BODY:
+      process_body(inChar);
+      return;
     }
   }
   else
@@ -1355,48 +1401,48 @@ void parse_msg()
   switch (header)
   {
 #if HAS_BUMPER
-    case 'b':
-      process_bumper_msg();
-      break;
+  case 'b':
+    process_bumper_msg();
+    break;
 #endif
-    case 'c':
-      process_ctrl_msg();
-      break;
-    case 'f':
-      process_feature_msg();
-      break;
-    case 'h':
-      process_heartbeat_msg();
-      break;
+  case 'c':
+    process_ctrl_msg();
+    break;
+  case 'f':
+    process_feature_msg();
+    break;
+  case 'h':
+    process_heartbeat_msg();
+    break;
 #if HAS_INDICATORS
-    case 'i':
-      process_indicator_msg();
-      break;
+  case 'i':
+    process_indicator_msg();
+    break;
 #endif
 #if (HAS_LEDS_FRONT || HAS_LEDS_BACK)
-    case 'l':
-      process_light_msg();
-      break;
+  case 'l':
+    process_light_msg();
+    break;
 #endif
 #if HAS_LEDS_STATUS
-    case 'n':
-      process_notification_msg();
-      break;
+  case 'n':
+    process_notification_msg();
+    break;
 #endif
 #if HAS_SONAR
-    case 's':
-      process_sonar_msg();
-      break;
+  case 's':
+    process_sonar_msg();
+    break;
 #endif
 #if HAS_VOLTAGE_DIVIDER
-    case 'v':
-      process_voltage_msg();
-      break;
+  case 'v':
+    process_voltage_msg();
+    break;
 #endif
 #if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-    case 'w':
-      process_wheel_msg();
-      break;
+  case 'w':
+    process_wheel_msg();
+    break;
 #endif
   }
   msg_idx = 0;
@@ -1437,19 +1483,19 @@ void display_vehicle_data()
   float voltage_value = get_voltage();
   String voltage_str = String("Voltage:    ") + String(voltage_value, 2);
 #else
-  String voltage_str = String("Voltage:    ") + String("N/A");
+  String voltage_str = String("steeringPotVal:") + String(steeringPotVal);
 #endif
 #if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
   String left_rpm_str = String("Left RPM:  ") + String(rpm_left, 0);
   String right_rpm_str = String("Right RPM:  ") + String(rpm_left, 0);
 #else
-  String left_rpm_str = String("Left RPM:  ") + String("N/A");
-  String right_rpm_str = String("Right RPM:  ") + String("N/A");
+  String left_rpm_str = String("Left RPM:  ") + String(ctrl_left);
+  String right_rpm_str = String("Right RPM:  ") + String(ctrl_right);
 #endif
 #if HAS_SONAR
   String distance_str = String("Distance:   ") + String(distance_estimate);
 #else
-  String distance_str = String("Distance:   ") + String("N/A");
+  String distance_str = String("wantedSteering:") + String(wantedSteering);
 #endif
 #if DEBUG
   Serial.println("------------------");
@@ -1462,10 +1508,10 @@ void display_vehicle_data()
 #if HAS_OLED
   // Set display information
   drawString(
-    voltage_str,
-    left_rpm_str,
-    right_rpm_str,
-    distance_str);
+      voltage_str,
+      left_rpm_str,
+      right_rpm_str,
+      distance_str);
 #endif
 }
 #endif
@@ -1577,7 +1623,7 @@ void update_light()
 
 int get_median(int a[], int sz)
 {
-  //bubble sort
+  // bubble sort
   for (int i = 0; i < (sz - 1); i++)
   {
     for (int j = 0; j < (sz - (i + 1)); j++)
