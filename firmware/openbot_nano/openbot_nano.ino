@@ -97,134 +97,15 @@ boolean coast_mode = 1;
 // PIN_LED_LF, PIN_LED_RF               Control left and right front LEDs (illumination)
 // PIN_LED_Y, PIN_LED_G, PIN_LED_B      Control yellow, green and blue status LEDs
 
-//-------------------------DIY--------------------------//
-#if (OPENBOT == DIY)
-const String robot_type = "DIY";
-#define HAS_VOLTAGE_DIVIDER 0
-const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
-const float VOLTAGE_MIN = 2.5f;
-const float VOLTAGE_LOW = 9.0f;
-const float VOLTAGE_MAX = 12.6f;
-const float ADC_FACTOR = 5.0 / 1023;
-#define HAS_INDICATORS 0
-#define HAS_SONAR 0
-#define SONAR_MEDIAN 0
-#define HAS_SPEED_SENSORS_FRONT 0
-#define HAS_OLED 0
-const int PIN_PWM_L1 = 5;
-const int PIN_PWM_L2 = 6;
-const int PIN_PWM_R1 = 9;
-const int PIN_PWM_R2 = 10;
-const int PIN_SPEED_LF = 2;
-const int PIN_SPEED_RF = 3;
-const int PIN_VIN = A7;
-const int PIN_TRIGGER = 12;
-const int PIN_ECHO = 11;
-const int PIN_LED_LI = 4;
-const int PIN_LED_RI = 7;
-//-------------------------PCB_V1-----------------------//
-#elif (OPENBOT == PCB_V1)
-const String robot_type = "PCB_V1";
-#define HAS_VOLTAGE_DIVIDER 1
-const float VOLTAGE_DIVIDER_FACTOR = (100 + 33) / 33;
-const float VOLTAGE_MIN = 2.5f;
-const float VOLTAGE_LOW = 9.0f;
-const float VOLTAGE_MAX = 12.6f;
-const float ADC_FACTOR = 5.0 / 1023;
-#define HAS_INDICATORS 1
-#define HAS_SONAR 1
-#define SONAR_MEDIAN 0
-#define HAS_SPEED_SENSORS_FRONT 1
-#define HAS_OLED 0
-const int PIN_PWM_L1 = 9;
-const int PIN_PWM_L2 = 10;
-const int PIN_PWM_R1 = 5;
-const int PIN_PWM_R2 = 6;
-const int PIN_SPEED_LF = 2;
-const int PIN_SPEED_RF = 4;
-const int PIN_VIN = A7;
-const int PIN_TRIGGER = 3;
-const int PIN_ECHO = 3;
-const int PIN_LED_LI = 7;
-const int PIN_LED_RI = 8;
-//-------------------------PCB_V2-----------------------//
-#elif (OPENBOT == PCB_V2)
-const String robot_type = "PCB_V2";
-#define HAS_VOLTAGE_DIVIDER 1
-const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
-const float VOLTAGE_MIN = 2.5f;
-const float VOLTAGE_LOW = 9.0f;
-const float VOLTAGE_MAX = 12.6f;
-const float ADC_FACTOR = 5.0 / 1023;
-#define HAS_INDICATORS 1
-#define HAS_SONAR 1
-#define SONAR_MEDIAN 0
-#define HAS_SPEED_SENSORS_FRONT 1
-#define HAS_OLED 0
-const int PIN_PWM_L1 = 9;
-const int PIN_PWM_L2 = 10;
-const int PIN_PWM_R1 = 5;
-const int PIN_PWM_R2 = 6;
-const int PIN_SPEED_LF = 2;
-const int PIN_SPEED_RF = 3;
-const int PIN_VIN = A7;
-const int PIN_TRIGGER = 4;
-const int PIN_ECHO = 4;
-const int PIN_LED_LI = 7;
-const int PIN_LED_RI = 8;
-//-------------------------RTR_TT-----------------------//
-#elif (OPENBOT == RTR_TT)
-const String robot_type = "RTR_TT";
-#define HAS_VOLTAGE_DIVIDER 1
-const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
-const float VOLTAGE_MIN = 2.5f;
-const float VOLTAGE_LOW = 9.0f;
-const float VOLTAGE_MAX = 12.6f;
-const float ADC_FACTOR = 5.0 / 1023;
-#define HAS_INDICATORS 1
-#define HAS_SONAR 1
-#define SONAR_MEDIAN 0
-#define HAS_BUMPER 1
-#define HAS_SPEED_SENSORS_FRONT 1
-#define HAS_SPEED_SENSORS_BACK 1
-#define HAS_LEDS_FRONT 1
-#define HAS_LEDS_BACK 1
-#define HAS_LEDS_STATUS 1
-const int PIN_PWM_L1 = 10;
-const int PIN_PWM_L2 = 9;
-const int PIN_PWM_R1 = 6;
-const int PIN_PWM_R2 = 5;
-const int PIN_SPEED_LF = A3;
-const int PIN_SPEED_RF = 7;
-const int PIN_SPEED_LB = A4;
-const int PIN_SPEED_RB = 8;
-const int PIN_VIN = A6;
-const int PIN_TRIGGER = 4;
-const int PIN_ECHO = 2;
-const int PIN_LED_LI = A5;
-const int PIN_LED_RI = 12;
-const int PIN_LED_LB = A5;
-const int PIN_LED_RB = 12;
-const int PIN_LED_LF = 3;
-const int PIN_LED_RF = 11;
-const int PIN_LED_Y = 13;
-const int PIN_LED_G = A0;
-const int PIN_LED_B = A1;
-const int PIN_BUMPER = A2;
-const int BUMPER_NOISE = 512;
-const int BUMPER_EPS = 10;
-const int BUMPER_AF = 951;
-const int BUMPER_BF = 903;
-const int BUMPER_CF = 867;
-const int BUMPER_LF = 825;
-const int BUMPER_RF = 786;
-const int BUMPER_BB = 745;
-const int BUMPER_LB = 607;
-const int BUMPER_RB = 561;
 //-------------------------KO_LAB_SCOOTER-----------------------//
 #elif (OPENBOT == KO_LAB_SCOOTER)
+#define analogWrite ledcWrite
 #include <Adafruit_DS3502.h>
-#define HAS_OLED 1
+#define analogWrite ledcWrite
+#define attachPinChangeInterrupt attachInterrupt
+#define detachPinChangeInterrupt detachInterrupt
+#define digitalPinToPinChangeInterrupt digitalPinToInterrupt
+#define HAS_OLED 0
 #define DS3502_WIPER_MIDDLE 63
 #define STEERING_POWER 255 // value for analog
 #define DS3502_WIPER_MAX_EXTRA 63
@@ -253,134 +134,6 @@ const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 5;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 6;
-//-------------------------LITE-------------------------//
-#elif (OPENBOT == LITE)
-const String robot_type = "LITE";
-const float VOLTAGE_MIN = 2.5f;
-const float VOLTAGE_LOW = 4.5f;
-const float VOLTAGE_MAX = 5.0f;
-#define HAS_INDICATORS 1
-const int PIN_PWM_L1 = 5;
-const int PIN_PWM_L2 = 6;
-const int PIN_PWM_R1 = 9;
-const int PIN_PWM_R2 = 10;
-const int PIN_LED_LI = 4;
-const int PIN_LED_RI = 7;
-//-------------------------RTR_520----------------------//
-#elif (OPENBOT == RTR_520)
-#include <esp_wifi.h>
-#define analogWrite ledcWrite
-#define attachPinChangeInterrupt attachInterrupt
-#define detachPinChangeInterrupt detachInterrupt
-#define digitalPinToPinChangeInterrupt digitalPinToInterrupt
-#define PIN_PWM_L1 CH_PWM_L1
-#define PIN_PWM_L2 CH_PWM_L2
-#define PIN_PWM_R1 CH_PWM_R1
-#define PIN_PWM_R2 CH_PWM_R2
-const String robot_type = "RTR_520";
-#define HAS_VOLTAGE_DIVIDER 1
-const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
-const float VOLTAGE_MIN = 6.0f;
-const float VOLTAGE_LOW = 9.0f;
-const float VOLTAGE_MAX = 12.6f;
-const float ADC_FACTOR = 3.3 / 4095;
-#define HAS_INDICATORS 1
-#define HAS_SONAR 1
-#define SONAR_MEDIAN 0
-#define HAS_BUMPER 1
-#define HAS_SPEED_SENSORS_FRONT 1
-#define HAS_SPEED_SENSORS_BACK 1
-#define HAS_LEDS_FRONT 1
-#define HAS_LEDS_BACK 1
-#define HAS_LEDS_STATUS 1
-// PWM properties
-const int FREQ = 5000;
-const int RES = 8;
-const int CH_PWM_L1 = 0;
-const int CH_PWM_L2 = 1;
-const int CH_PWM_R1 = 2;
-const int CH_PWM_R2 = 3;
-const int CH_LED_LF = 4;
-const int CH_LED_RF = 5;
-const int CH_LED_LB = 6;
-const int CH_LED_RB = 7;
-const int PIN_PWM_LF1 = 16;
-const int PIN_PWM_LF2 = 17;
-const int PIN_PWM_LB1 = 19;
-const int PIN_PWM_LB2 = 18;
-const int PIN_PWM_RF1 = 26;
-const int PIN_PWM_RF2 = 25;
-const int PIN_PWM_RB1 = 33;
-const int PIN_PWM_RB2 = 32;
-const int PIN_SPEED_LF = 21;
-const int PIN_SPEED_RF = 35;
-const int PIN_SPEED_LB = 23;
-const int PIN_SPEED_RB = 36;
-const int PIN_VIN = 39;
-const int PIN_TRIGGER = 12;
-const int PIN_ECHO = 14;
-const int PIN_LED_LI = 22;
-const int PIN_LED_RI = 27;
-const int PIN_LED_LB = 22;
-const int PIN_LED_RB = 27;
-const int PIN_LED_LF = 4;
-const int PIN_LED_RF = 13;
-const int PIN_LED_Y = 0;
-const int PIN_LED_G = 2;
-const int PIN_LED_B = 15;
-const int PIN_BUMPER = 34;
-const int BUMPER_NOISE = 512;
-const int BUMPER_EPS = 50;
-const int BUMPER_AF = 3890;
-const int BUMPER_BF = 3550;
-const int BUMPER_CF = 3330;
-const int BUMPER_LF = 3100;
-const int BUMPER_RF = 2930;
-const int BUMPER_BB = 2750;
-const int BUMPER_LB = 2180;
-const int BUMPER_RB = 2000;
-//---------------------------MTV------------------------//
-#elif (OPENBOT == MTV)
-#include <esp_wifi.h>
-#define analogWrite ledcWrite
-#define attachPinChangeInterrupt attachInterrupt
-#define detachPinChangeInterrupt detachInterrupt
-#define digitalPinToPinChangeInterrupt digitalPinToInterrupt
-const String robot_type = "MTV";
-#define HAS_VOLTAGE_DIVIDER 0
-const float VOLTAGE_MIN = 17.0f;
-const float VOLTAGE_LOW = 20.0f;
-const float VOLTAGE_MAX = 24.0f;
-#define HAS_SPEED_SENSORS_FRONT 1
-#define HAS_SPEED_SENSORS_BACK 1
-#define HAS_SPEED_SENSORS_MIDDLE 1
-#define HAS_INDICATORS 0
-#define HAS_SONAR 0
-#define SONAR_MEDIAN 0
-#define HAS_BUMPER 0
-#define HAS_LEDS_FRONT 0
-#define HAS_LEDS_BACK 0
-#define HAS_LEDS_STATUS 0
-const int PIN_PWM_R = 19;
-const int PIN_DIR_R = 18;
-const int PIN_PWM_L = 33;
-const int PIN_DIR_L = 32;
-
-// Encoder setup:
-const int PIN_SPEED_LF = 17; // PIN_SPEED_LF_A = 17, PIN_SPEED_LF_B = 5
-const int PIN_SPEED_RF = 14; // PIN_SPEED_RF_A = 14, PIN_SPEED_RF_B = 13
-const int PIN_SPEED_LM = 4;  // PIN_SPEED_LM_A = 4, PIN_SPEED_LM_B = 16
-const int PIN_SPEED_RM = 26; // PIN_SPEED_RM_A = 26, PIN_SPEED_RM_B = 27
-const int PIN_SPEED_LB = 15; // PIN_SPEED_LB_A = 15, PIN_SPEED_LB_B = 2
-const int PIN_SPEED_RB = 35; // PIN_SPEED_RB_A = 35, PIN_SPEED_RB_B = 25
-
-// PWM properties:
-const int FREQ = 5000;
-const int RES = 8;
-const int LHS_PWM_OUT = 0;
-const int RHS_PWM_OUT = 1;
-#endif
-//------------------------------------------------------//
 
 //------------------------------------------------------//
 // INITIALIZATION
@@ -455,36 +208,6 @@ unsigned long voltage_interval = 1000; // Interval for sending voltage measureme
 unsigned long voltage_time = 0;
 #endif
 
-#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-#if (OPENBOT == RTR_520)
-// Speed sensor
-// 530rpm motor - reduction ratio 19, ticks per motor rotation 11
-// One revolution = 209 ticks
-const unsigned int TICKS_PER_REV = 209;
-#elif (OPENBOT == MTV)
-// Speed sensor
-// 178rpm motor - reduction ratio 56, ticks per motor rotation 11
-// One revolution = 616 ticks
-const unsigned int TICKS_PER_REV = 616;
-#else
-#include "PinChangeInterrupt.h"
-const unsigned int TICKS_PER_REV = 20;
-#endif
-// Speed sensor
-const unsigned long SPEED_TRIGGER_THRESHOLD = 1; // Triggers within this time will be ignored (ms)
-
-volatile int counter_lf = 0;
-volatile int counter_rf = 0;
-volatile int counter_lb = 0;
-volatile int counter_rb = 0;
-volatile int counter_lm = 0;
-volatile int counter_rm = 0;
-float rpm_left = 0;
-float rpm_right = 0;
-unsigned long wheel_interval = 1000; // Inverval for sending wheel odometry
-unsigned long wheel_time = 0;
-#endif
-
 #if (HAS_INDICATORS)
 // Indicator Signal
 unsigned long indicator_interval = 500; // Blinking rate of the indicator signal (ms).
@@ -528,14 +251,11 @@ unsigned long display_time = 0;
 //------------------------------------------------------//
 void setup()
 {
-    Serial.begin(115200, SERIAL_8N1);
+  Serial.begin(115200, SERIAL_8N1);
   // SERIAL_8E1 - 8 data bits, even parity, 1 stop bit
   // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
   // SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
   // Serial.setTimeout(10);
-#if (OPENBOT == LITE)
-  coast_mode = !coast_mode;
-#endif
   // Outputs
 #if (OPENBOT == KO_LAB_SCOOTER)
   pinMode(PIN_L298N_ENA, OUTPUT);
@@ -550,22 +270,8 @@ void setup()
   }
   Serial.println("Found DS3502 chip");
   ds3502.setWiperDefault(DS3502_WIPER_MIDDLE);
-#elif ((OPENBOT != RTR_520) and (OPENBOT != MTV))
-  pinMode(PIN_PWM_L1, OUTPUT);
-  pinMode(PIN_PWM_L2, OUTPUT);
-  pinMode(PIN_PWM_R1, OUTPUT);
-  pinMode(PIN_PWM_R2, OUTPUT);
 #endif
   // Initialize with the I2C addr 0x3C
-#if HAS_OLED
-  
-  if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
-  { 
-    Serial.println("Couldn't start SSD1306");
-  }
-  Serial.println("Successfully started SSD1306");
-
-#endif
 #if (HAS_INDICATORS)
   pinMode(PIN_LED_LI, OUTPUT);
   pinMode(PIN_LED_RI, OUTPUT);
@@ -595,91 +301,12 @@ void setup()
   delay(500);
   digitalWrite(PIN_LED_RI, LOW);
 #endif
-#if (HAS_SONAR)
-  pinMode(PIN_ECHO, INPUT);
-  pinMode(PIN_TRIGGER, OUTPUT);
-#endif
 #if (HAS_VOLTAGE_DIVIDER)
   pinMode(PIN_VIN, INPUT);
 #endif
 #if (HAS_BUMPER)
   pinMode(PIN_BUMPER, INPUT);
 #endif
-
-#if (HAS_SPEED_SENSORS_BACK)
-  pinMode(PIN_SPEED_LB, INPUT_PULLUP);
-  pinMode(PIN_SPEED_RB, INPUT_PULLUP);
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_LB), update_speed_lb, RISING);
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_RB), update_speed_rb, RISING);
-#endif
-#if (HAS_SPEED_SENSORS_FRONT)
-  pinMode(PIN_SPEED_LF, INPUT_PULLUP);
-  pinMode(PIN_SPEED_RF, INPUT_PULLUP);
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_LF), update_speed_lf, RISING);
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_RF), update_speed_rf, RISING);
-#endif
-#if (HAS_SPEED_SENSORS_MIDDLE)
-  pinMode(PIN_SPEED_LM, INPUT_PULLUP);
-  pinMode(PIN_SPEED_RM, INPUT_PULLUP);
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_LM), update_speed_lm, RISING);
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_RM), update_speed_rm, RISING);
-#endif
-
-#if (OPENBOT == RTR_520)
-  esp_wifi_deinit();
-
-  // PWMs
-  // Configure PWM functionalitites
-  ledcSetup(CH_PWM_L1, FREQ, RES);
-  ledcSetup(CH_PWM_L2, FREQ, RES);
-  ledcSetup(CH_PWM_R1, FREQ, RES);
-  ledcSetup(CH_PWM_R2, FREQ, RES);
-
-  // Attach the channel to the GPIO to be controlled
-  ledcAttachPin(PIN_PWM_LF1, CH_PWM_L1);
-  ledcAttachPin(PIN_PWM_LB1, CH_PWM_L1);
-  ledcAttachPin(PIN_PWM_LF2, CH_PWM_L2);
-  ledcAttachPin(PIN_PWM_LB2, CH_PWM_L2);
-  ledcAttachPin(PIN_PWM_RF1, CH_PWM_R1);
-  ledcAttachPin(PIN_PWM_RB1, CH_PWM_R1);
-  ledcAttachPin(PIN_PWM_RF2, CH_PWM_R2);
-  ledcAttachPin(PIN_PWM_RB2, CH_PWM_R2);
-
-#if (HAS_LEDS_BACK)
-  ledcSetup(CH_LED_LB, FREQ, RES);
-  ledcSetup(CH_LED_RB, FREQ, RES);
-  ledcAttachPin(PIN_LED_RB, CH_LED_RB);
-  ledcAttachPin(PIN_LED_LB, CH_LED_LB);
-#endif
-
-#if (HAS_LEDS_FRONT)
-  ledcSetup(CH_LED_LF, FREQ, RES);
-  ledcSetup(CH_LED_RF, FREQ, RES);
-  ledcAttachPin(PIN_LED_LF, CH_LED_LF);
-  ledcAttachPin(PIN_LED_RF, CH_LED_RF);
-#endif
-
-#endif
-
-#if (OPENBOT == MTV)
-  esp_wifi_deinit();
-
-  // PWMs
-  // PWM signal configuration using the ESP32 API
-  ledcSetup(LHS_PWM_OUT, FREQ, RES);
-  ledcSetup(RHS_PWM_OUT, FREQ, RES);
-
-  // Attach the channel to the GPIO to be controlled
-  ledcAttachPin(PIN_PWM_L, LHS_PWM_OUT);
-  ledcAttachPin(PIN_PWM_R, RHS_PWM_OUT);
-
-  pinMode(PIN_DIR_L, OUTPUT);
-  pinMode(PIN_DIR_R, OUTPUT);
-  pinMode(PIN_DIR_L, LOW);
-  pinMode(PIN_DIR_R, LOW);
-#endif
-
-
 }
 
 //------------------------------------------------------//
@@ -791,31 +418,6 @@ void loop()
   vin_counter++;
 #endif
 
-#if HAS_SONAR
-  // Check for successful sonar reading
-  if (!sonar_sent && ping_success)
-  {
-    distance = echo_time * US_TO_CM;
-    update_distance_estimate();
-    send_sonar_reading();
-    sonar_sent = true;
-  }
-  // Measure distance every sonar_interval
-  if ((millis() - sonar_time) >= max(sonar_interval, MAX_SONAR_TIME))
-  {
-    if (!sonar_sent && !ping_success)
-    { // Send max val if last ping was not returned
-      distance = MAX_SONAR_DISTANCE;
-      update_distance_estimate();
-      send_sonar_reading();
-      sonar_sent = true;
-    }
-    sonar_time = millis();
-    sonar_sent = false;
-    send_ping();
-  }
-#endif
-
 #if HAS_INDICATORS
   // Check indicator signal every indicator_interval
   if ((millis() - indicator_time) >= indicator_interval)
@@ -841,14 +443,7 @@ void loop()
     voltage_time = millis();
   }
 #endif
-#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-  // Send wheel odometry reading via serial
-  if ((millis() - wheel_time) >= wheel_interval)
-  {
-    send_wheel_reading(millis() - wheel_time);
-    wheel_time = millis();
-  }
-#endif
+
 #if (HAS_OLED || DEBUG)
   // Display vehicle measurments for via serial every display_interval
   if ((millis() - display_time) >= display_interval)
@@ -862,19 +457,19 @@ void loop()
   if (steeringPotVal - STEERING_TOLERANCE > wantedSteering)
   {
     digitalWrite(PIN_L298N_ENA, 1);
-    analogWrite(PIN_L298N_IN1, 0);
-    analogWrite(PIN_L298N_IN2, STEERING_POWER);
+    digitalWrite(PIN_L298N_IN1, 0);
+    digitalWrite(PIN_L298N_IN2, 1);
   }
   else if (steeringPotVal + STEERING_TOLERANCE < wantedSteering)
   {
     digitalWrite(PIN_L298N_ENA, 1);
-    analogWrite(PIN_L298N_IN1, STEERING_POWER);
-    analogWrite(PIN_L298N_IN2, 0);
+    digitalWrite(PIN_L298N_IN1, 1);
+    digitalWrite(PIN_L298N_IN2, 0);
   }
   else
   {
-    analogWrite(PIN_L298N_IN1, 0);
-    analogWrite(PIN_L298N_IN2, 0);
+    digitalWrite(PIN_L298N_IN1, 0);
+    digitalWrite(PIN_L298N_IN2, 0);
     digitalWrite(PIN_L298N_ENA, 0);
   }
 #endif
@@ -901,12 +496,6 @@ void update_vehicle()
 #if (OPENBOT == KO_LAB_SCOOTER)
   update_throttle();
   update_steering();
-#elif (OPENBOT == MTV)
-  update_left_motors_mtv();
-  update_right_motors_mtv();
-#else
-  update_left_motors();
-  update_right_motors();
 #endif
 }
 
@@ -935,142 +524,6 @@ void update_steering()
     wantedSteering = STEERING_POT_MIDDLE + STEERING_POT_MAX_EXTRA - wantedSteering;
   }
 }
-
-#elif (OPENBOT == MTV)
-void update_left_motors_mtv()
-{
-  if (ctrl_left < 0)
-  {
-    ledcWrite(LHS_PWM_OUT, -ctrl_left);
-    digitalWrite(PIN_DIR_L, HIGH);
-  }
-  else if (ctrl_left > 0)
-  {
-    ledcWrite(LHS_PWM_OUT, ctrl_left);
-    digitalWrite(PIN_DIR_L, LOW);
-  }
-  else
-  {
-    if (coast_mode)
-      coast_left_motors_mtv();
-    else
-      stop_left_motors_mtv();
-  }
-}
-
-void stop_left_motors_mtv()
-{
-  ledcWrite(LHS_PWM_OUT, 0);
-  digitalWrite(PIN_DIR_L, LOW);
-}
-
-void coast_left_motors_mtv()
-{
-  ledcWrite(LHS_PWM_OUT, 0);
-  digitalWrite(PIN_DIR_L, LOW);
-}
-
-void update_right_motors_mtv()
-{
-  if (ctrl_right < 0)
-  {
-    ledcWrite(RHS_PWM_OUT, -ctrl_right);
-    digitalWrite(PIN_DIR_R, HIGH);
-  }
-  else if (ctrl_right > 0)
-  {
-    ledcWrite(RHS_PWM_OUT, ctrl_right);
-    digitalWrite(PIN_DIR_R, LOW);
-  }
-  else
-  {
-    if (coast_mode)
-      coast_right_motors_mtv();
-    else
-      stop_right_motors_mtv();
-  }
-}
-
-void stop_right_motors_mtv()
-{
-  ledcWrite(RHS_PWM_OUT, 0);
-  digitalWrite(PIN_DIR_R, LOW);
-}
-
-void coast_right_motors_mtv()
-{
-  ledcWrite(RHS_PWM_OUT, 0);
-  digitalWrite(PIN_DIR_R, LOW);
-}
-
-#else
-
-void update_left_motors()
-{
-  if (ctrl_left < 0)
-  {
-    analogWrite(PIN_PWM_L1, -ctrl_left);
-    analogWrite(PIN_PWM_L2, 0);
-  }
-  else if (ctrl_left > 0)
-  {
-    analogWrite(PIN_PWM_L1, 0);
-    analogWrite(PIN_PWM_L2, ctrl_left);
-  }
-  else
-  {
-    if (coast_mode)
-      coast_left_motors();
-    else
-      stop_left_motors();
-  }
-}
-
-void stop_left_motors()
-{
-  analogWrite(PIN_PWM_L1, 255);
-  analogWrite(PIN_PWM_L2, 255);
-}
-
-void coast_left_motors()
-{
-  analogWrite(PIN_PWM_L1, 0);
-  analogWrite(PIN_PWM_L2, 0);
-}
-
-void update_right_motors()
-{
-  if (ctrl_right < 0)
-  {
-    analogWrite(PIN_PWM_R1, -ctrl_right);
-    analogWrite(PIN_PWM_R2, 0);
-  }
-  else if (ctrl_right > 0)
-  {
-    analogWrite(PIN_PWM_R1, 0);
-    analogWrite(PIN_PWM_R2, ctrl_right);
-  }
-  else
-  {
-    if (coast_mode)
-      coast_right_motors();
-    else
-      stop_right_motors();
-  }
-}
-
-void stop_right_motors()
-{
-  analogWrite(PIN_PWM_R1, 255);
-  analogWrite(PIN_PWM_R2, 255);
-}
-
-void coast_right_motors()
-{
-  analogWrite(PIN_PWM_R1, 0);
-  analogWrite(PIN_PWM_R2, 0);
-}
-#endif
 
 boolean almost_equal(int a, int b, int eps)
 {
@@ -1301,12 +754,6 @@ void process_bumper_msg()
   bumper_interval = atol(msg_buf); // convert to long
 }
 #endif
-#if HAS_SONAR
-void process_sonar_msg()
-{
-  sonar_interval = atol(msg_buf); // convert to long
-}
-#endif
 
 void process_voltage_msg()
 {
@@ -1318,13 +765,6 @@ void process_voltage_msg()
   Serial.println(String("vmax:") + String(VOLTAGE_MAX, 2));
 }
 
-#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-void process_wheel_msg()
-{
-  wheel_interval = atol(msg_buf); // convert to long
-}
-#endif
-
 void process_feature_msg()
 {
   String msg = "f" + robot_type + ":";
@@ -1334,20 +774,8 @@ void process_feature_msg()
 #if HAS_INDICATORS
   msg += "i:";
 #endif
-#if HAS_SONAR
-  msg += "s:";
-#endif
 #if HAS_BUMPER
   msg += "b:";
-#endif
-#if HAS_SPEED_SENSORS_FRONT
-  msg += "wf:";
-#endif
-#if HAS_SPEED_SENSORS_BACK
-  msg += "wb:";
-#endif
-#if HAS_SPEED_SENSORS_MIDDLE
-  msg += "wm:";
 #endif
 #if HAS_LEDS_FRONT
   msg += "lf:";
@@ -1429,19 +857,9 @@ void parse_msg()
     process_notification_msg();
     break;
 #endif
-#if HAS_SONAR
-  case 's':
-    process_sonar_msg();
-    break;
-#endif
 #if HAS_VOLTAGE_DIVIDER
   case 'v':
     process_voltage_msg();
-    break;
-#endif
-#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-  case 'w':
-    process_wheel_msg();
     break;
 #endif
   }
@@ -1449,32 +867,6 @@ void parse_msg()
   msgPart = HEADER;
   header = '\0';
 }
-
-#if HAS_OLED
-// Function for drawing a string on the OLED display
-void drawString(String line1, String line2, String line3, String line4)
-{
-  display.clearDisplay();
-  // set text color
-  display.setTextColor(WHITE);
-  // set text size
-  display.setTextSize(1);
-  // set text cursor position
-  display.setCursor(1, 0);
-  // show text
-  display.println(line1);
-  display.setCursor(1, 8);
-  // show text
-  display.println(line2);
-  display.setCursor(1, 16);
-  // show text
-  display.println(line3);
-  display.setCursor(1, 24);
-  // show text
-  display.println(line4);
-  display.display();
-}
-#endif
 
 #if (HAS_OLED || DEBUG)
 void display_vehicle_data()
@@ -1485,18 +877,10 @@ void display_vehicle_data()
 #else
   String voltage_str = String("steeringPotVal:") + String(steeringPotVal);
 #endif
-#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-  String left_rpm_str = String("Left RPM:  ") + String(rpm_left, 0);
-  String right_rpm_str = String("Right RPM:  ") + String(rpm_left, 0);
-#else
+
   String left_rpm_str = String("Left RPM:  ") + String(ctrl_left);
   String right_rpm_str = String("Right RPM:  ") + String(ctrl_right);
-#endif
-#if HAS_SONAR
-  String distance_str = String("Distance:   ") + String(distance_estimate);
-#else
   String distance_str = String("wantedSteering:") + String(wantedSteering);
-#endif
 #if DEBUG
   Serial.println("------------------");
   Serial.println(voltage_str);
@@ -1504,14 +888,6 @@ void display_vehicle_data()
   Serial.println(right_rpm_str);
   Serial.println(distance_str);
   Serial.println("------------------");
-#endif
-#if HAS_OLED
-  // Set display information
-  drawString(
-      voltage_str,
-      left_rpm_str,
-      right_rpm_str,
-      distance_str);
 #endif
 }
 #endif
@@ -1524,44 +900,11 @@ void send_voltage_reading()
 }
 #endif
 
-#if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-void send_wheel_reading(long duration)
-{
-  float rpm_factor = 60.0 * 1000.0 / duration / TICKS_PER_REV;
-  rpm_left = (counter_lf + counter_lb + counter_lm) * rpm_factor;
-  rpm_right = (counter_rf + counter_rb + counter_rm) * rpm_factor;
-  counter_lf = 0;
-  counter_rf = 0;
-  counter_lb = 0;
-  counter_rb = 0;
-  counter_lm = 0;
-  counter_rm = 0;
-  Serial.print("w");
-#if (HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_BACK and HAS_SPEED_SENSORS_MIDDLE)
-  Serial.print(rpm_left / 3, 0);
-  Serial.print(",");
-  Serial.print(rpm_right / 3, 0);
-#elif ((HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_BACK) or (HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_MIDDLE) or (HAS_SPEED_SENSORS_MIDDLE and HAS_SPEED_SENSORS_BACK))
-  Serial.print(rpm_left / 2, 0);
-  Serial.print(",");
-  Serial.print(rpm_right / 2, 0);
-#elif (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-  Serial.print(rpm_left, 0);
-  Serial.print(",");
-  Serial.print(rpm_right, 0);
-#endif
-  Serial.println();
-}
-#endif
-
 #if (HAS_INDICATORS)
 void update_indicator()
 {
   if (indicator_left > 0)
   {
-#if (OPENBOT == RTR_520 && PIN_LED_LI == PIN_LED_LB)
-    ledcDetachPin(PIN_LED_LB);
-#endif
     digitalWrite(PIN_LED_LI, !digitalRead(PIN_LED_LI));
   }
   else
@@ -1571,15 +914,9 @@ void update_indicator()
 #else
     digitalWrite(PIN_LED_LI, LOW);
 #endif
-#if (OPENBOT == RTR_520 && PIN_LED_LI == PIN_LED_LB)
-    ledcAttachPin(PIN_LED_LB, CH_LED_LB);
-#endif
   }
   if (indicator_right > 0)
   {
-#if (OPENBOT == RTR_520 && PIN_LED_RI == PIN_LED_RB)
-    ledcDetachPin(PIN_LED_RB);
-#endif
     digitalWrite(PIN_LED_RI, !digitalRead(PIN_LED_RI));
   }
   else
@@ -1638,142 +975,3 @@ int get_median(int a[], int sz)
   }
   return a[sz / 2];
 }
-
-#if HAS_SONAR
-void send_sonar_reading()
-{
-  Serial.print("s");
-  Serial.println(distance_estimate);
-}
-
-// Send pulse by toggling trigger pin
-void send_ping()
-{
-  echo_time = 0;
-  ping_success = false;
-  if (PIN_TRIGGER == PIN_ECHO)
-    pinMode(PIN_TRIGGER, OUTPUT);
-  digitalWrite(PIN_TRIGGER, LOW);
-  delayMicroseconds(5);
-  digitalWrite(PIN_TRIGGER, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(PIN_TRIGGER, LOW);
-  if (PIN_TRIGGER == PIN_ECHO)
-    pinMode(PIN_ECHO, INPUT);
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), start_timer, RISING);
-}
-
-void update_distance_estimate()
-{
-#if SONAR_MEDIAN
-  distance_array[distance_counter % distance_array_sz] = distance;
-  distance_counter++;
-  distance_estimate = get_median(distance_array, distance_array_sz);
-#else
-  distance_estimate = distance;
-#endif
-}
-#endif
-
-//------------------------------------------------------//
-// INTERRUPT SERVICE ROUTINES (ISR)
-//------------------------------------------------------//
-#if HAS_SONAR
-// ISR: Start timer to measure the time it takes for the pulse to return
-void start_timer()
-{
-  start_time = micros();
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), stop_timer, FALLING);
-}
-// ISR: Stop timer and record the time
-void stop_timer()
-{
-  echo_time = micros() - start_time;
-  detachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO));
-  ping_success = true;
-}
-#endif
-
-#if (HAS_SPEED_SENSORS_FRONT)
-// ISR: Increment speed sensor counter (left front)
-void update_speed_lf()
-{
-  if (ctrl_left < 0)
-  {
-    counter_lf--;
-  }
-  else if (ctrl_left > 0)
-  {
-    counter_lf++;
-  }
-}
-
-// ISR: Increment speed sensor counter (right front)
-void update_speed_rf()
-{
-  if (ctrl_right < 0)
-  {
-    counter_rf--;
-  }
-  else if (ctrl_right > 0)
-  {
-    counter_rf++;
-  }
-}
-#endif
-
-#if (HAS_SPEED_SENSORS_BACK)
-// ISR: Increment speed sensor counter (left back)
-void update_speed_lb()
-{
-  if (ctrl_left < 0)
-  {
-    counter_lb--;
-  }
-  else if (ctrl_left > 0)
-  {
-    counter_lb++;
-  }
-}
-
-// ISR: Increment speed sensor counter (right back)
-void update_speed_rb()
-{
-  if (ctrl_right < 0)
-  {
-    counter_rb--;
-  }
-  else if (ctrl_right > 0)
-  {
-    counter_rb++;
-  }
-}
-#endif
-
-#if (HAS_SPEED_SENSORS_MIDDLE)
-// ISR: Increment speed sensor counter (left mid)
-void update_speed_lm()
-{
-  if (ctrl_left < 0)
-  {
-    counter_lm--;
-  }
-  else if (ctrl_left > 0)
-  {
-    counter_lm++;
-  }
-}
-
-// ISR: Increment speed sensor counter (right mid)
-void update_speed_rm()
-{
-  if (ctrl_right < 0)
-  {
-    counter_rm--;
-  }
-  else if (ctrl_right > 0)
-  {
-    counter_rm++;
-  }
-}
-#endif
