@@ -110,9 +110,9 @@ boolean coast_mode = 1;
 #define DS3502_WIPER_MIDDLE 63
 #define STEERING_POWER 255 // value for analog
 #define DS3502_WIPER_MAX_EXTRA 63
-#define STEERING_POT_MIDDLE (4095 /2)
+#define STEERING_POT_MIDDLE (4095 / 2)
 #define STEERING_TOLERANCE 20
-#define STEERING_POT_MAX_EXTRA (STEERING_POT_MIDDLE /2)
+#define STEERING_POT_MAX_EXTRA (STEERING_POT_MIDDLE / 2)
 Adafruit_DS3502 ds3502 = Adafruit_DS3502();
 float wantedSteering;
 int steeringPotVal;
@@ -413,24 +413,27 @@ void loop()
   }
 #endif
 #if KO_LAB_SCOOTER
-  steeringPotVal = analogRead(PIN_STEERING_POT);
-  if (steeringPotVal - STEERING_TOLERANCE > wantedSteering)
+  if (ctrl_left || ctrl_right)
   {
-    digitalWrite(PIN_L298N_ENA, 1);
-    digitalWrite(PIN_L298N_IN1, 1 == STEER_DIR);
-    digitalWrite(PIN_L298N_IN2, 0 == STEER_DIR);
-  }
-  else if (steeringPotVal + STEERING_TOLERANCE < wantedSteering)
-  {
-    digitalWrite(PIN_L298N_ENA, 1);
-    digitalWrite(PIN_L298N_IN1, 0 == STEER_DIR);
-    digitalWrite(PIN_L298N_IN2, 1 == STEER_DIR);
-  }
-  else
-  {
-    digitalWrite(PIN_L298N_ENA, 0);
-    digitalWrite(PIN_L298N_IN1, 0);
-    digitalWrite(PIN_L298N_IN2, 0);
+    steeringPotVal = analogRead(PIN_STEERING_POT);
+    if (steeringPotVal - STEERING_TOLERANCE > wantedSteering)
+    {
+      digitalWrite(PIN_L298N_ENA, 1);
+      digitalWrite(PIN_L298N_IN1, 1 == STEER_DIR);
+      digitalWrite(PIN_L298N_IN2, 0 == STEER_DIR);
+    }
+    else if (steeringPotVal + STEERING_TOLERANCE < wantedSteering)
+    {
+      digitalWrite(PIN_L298N_ENA, 1);
+      digitalWrite(PIN_L298N_IN1, 0 == STEER_DIR);
+      digitalWrite(PIN_L298N_IN2, 1 == STEER_DIR);
+    }
+    else
+    {
+      digitalWrite(PIN_L298N_ENA, 0);
+      digitalWrite(PIN_L298N_IN1, 0);
+      digitalWrite(PIN_L298N_IN2, 0);
+    }
   }
 #endif
 }
