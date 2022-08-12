@@ -98,7 +98,7 @@ boolean coast_mode = 1;
 // PIN_LED_Y, PIN_LED_G, PIN_LED_B      Control yellow, green and blue status LEDs
 
 //-------------------------KO_LAB_SCOOTER-----------------------//
-#elif (OPENBOT == KO_LAB_SCOOTER)
+#if (OPENBOT == KO_LAB_SCOOTER)
 #define analogWrite ledcWrite
 #include <Adafruit_DS3502.h>
 #define analogWrite ledcWrite
@@ -134,7 +134,7 @@ const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 5;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 6;
-
+#endif
 //------------------------------------------------------//
 // INITIALIZATION
 //------------------------------------------------------//
@@ -529,7 +529,7 @@ boolean almost_equal(int a, int b, int eps)
 {
   return abs(a - b) <= eps;
 }
-
+#endif
 #if HAS_BUMPER
 void emergency_stop()
 {
