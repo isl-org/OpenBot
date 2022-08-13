@@ -47,7 +47,7 @@ Alternatively, you can download the apks from the assets of any [release](https:
 
 ![Android SDK](../docs/images/android_studio_sdk.jpg)
 
-### Build process
+### Build process`
 
 1. Open Android Studio and select *Open an existing Android Studio project*.
 2. Select the OpenBot/android directory and click OK.

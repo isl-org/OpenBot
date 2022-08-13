@@ -101,7 +101,7 @@ boolean coast_mode = 1;
 #if (OPENBOT == KO_LAB_SCOOTER)
 #define analogWrite ledcWrite
 #include <Adafruit_DS3502.h>
-// #define STEERING_DIR 1
+#define STEERING_DIR 1
 #define analogWrite ledcWrite
 #define attachPinChangeInterrupt attachInterrupt
 #define detachPinChangeInterrupt detachInterrupt
@@ -849,7 +849,7 @@ void display_vehicle_data()
 
   String left_rpm_str = String("Left RPM:  ") + String(ctrl_left);
   String right_rpm_str = String("Right RPM:  ") + String(ctrl_right);
-  String distance_str = String("wantedSteering:") + String(wantedSteering);
+  String distance_str = String("DSVAL:") + String(ds3502_value);
 #if DEBUG
   Serial.println("------------------");
   Serial.println(voltage_str);
