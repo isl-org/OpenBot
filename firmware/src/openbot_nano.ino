@@ -60,7 +60,7 @@
 #define NO_PHONE_MODE 0
 
 // Enable/Disable debug print (1,0)
-#define DEBUG 1
+#define DEBUG 0
 
 // Enable/Disable coast mode (1,0)
 // When no control is applied, the robot will either coast (1) or actively stop (0)
@@ -208,7 +208,7 @@ unsigned long display_time = 0;
 //------------------------------------------------------//
 void setup()
 {
-  Serial.begin(9600, SERIAL_8N1);
+  Serial.begin(115200, SERIAL_8N1);
   // SERIAL_8E1 - 8 data bits, even parity, 1 stop bit
   // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
   // SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
@@ -413,7 +413,7 @@ void loop()
   }
 #endif
 #if KO_LAB_SCOOTER
-  if (ctrl_left || ctrl_right)
+  if (ctrl_left != 0 || ctrl_right != 0)
   {
     steeringPotVal = analogRead(PIN_STEERING_POT);
     if (steeringPotVal - STEERING_TOLERANCE > wantedSteering)
@@ -434,6 +434,12 @@ void loop()
       digitalWrite(PIN_L298N_IN1, 0);
       digitalWrite(PIN_L298N_IN2, 0);
     }
+  }
+  else
+  {
+    digitalWrite(PIN_L298N_ENA, 0);
+    digitalWrite(PIN_L298N_IN1, 0);
+    digitalWrite(PIN_L298N_IN2, 0);
   }
 #endif
 }
