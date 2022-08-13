@@ -60,7 +60,7 @@
 #define NO_PHONE_MODE 0
 
 // Enable/Disable debug print (1,0)
-#define DEBUG 0
+#define DEBUG 1
 
 // Enable/Disable coast mode (1,0)
 // When no control is applied, the robot will either coast (1) or actively stop (0)
@@ -101,7 +101,7 @@ boolean coast_mode = 1;
 #if (OPENBOT == KO_LAB_SCOOTER)
 #define analogWrite ledcWrite
 #include <Adafruit_DS3502.h>
-#define STEER_DIR 1
+// #define STEERING_DIR 1
 #define analogWrite ledcWrite
 #define attachPinChangeInterrupt attachInterrupt
 #define detachPinChangeInterrupt detachInterrupt
@@ -419,14 +419,14 @@ void loop()
     if (steeringPotVal - STEERING_TOLERANCE > wantedSteering)
     {
       digitalWrite(PIN_L298N_ENA, 1);
-      digitalWrite(PIN_L298N_IN1, 1 == STEER_DIR);
-      digitalWrite(PIN_L298N_IN2, 0 == STEER_DIR);
+      digitalWrite(PIN_L298N_IN1, 1 == STEERING_DIR);
+      digitalWrite(PIN_L298N_IN2, 0 == STEERING_DIR);
     }
     else if (steeringPotVal + STEERING_TOLERANCE < wantedSteering)
     {
       digitalWrite(PIN_L298N_ENA, 1);
-      digitalWrite(PIN_L298N_IN1, 0 == STEER_DIR);
-      digitalWrite(PIN_L298N_IN2, 1 == STEER_DIR);
+      digitalWrite(PIN_L298N_IN1, 0 == STEERING_DIR);
+      digitalWrite(PIN_L298N_IN2, 1 == STEERING_DIR);
     }
     else
     {
