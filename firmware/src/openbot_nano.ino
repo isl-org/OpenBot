@@ -107,12 +107,14 @@ boolean coast_mode = 1;
 #define detachPinChangeInterrupt detachInterrupt
 #define digitalPinToPinChangeInterrupt digitalPinToInterrupt
 #define HAS_OLED 0
-#define DS3502_WIPER_MIDDLE 63
+#define DS3502_WIPER_MIDDLE 57
+// 128 * 2.7 /5
 #define STEERING_POWER 255 // value for analog
-#define DS3502_WIPER_MAX_EXTRA 63
+#define DS3502_WIPER_MAX_EXTRA 40
 #define STEERING_POT_MIDDLE (4095 / 2)
 #define STEERING_TOLERANCE 20
 #define STEERING_POT_MAX_EXTRA (STEERING_POT_MIDDLE / 2)
+Adafruit_DS3502 ds3502_2 = Adafruit_DS3502();
 Adafruit_DS3502 ds3502 = Adafruit_DS3502();
 float wantedSteering;
 int steeringPotVal;
@@ -151,6 +153,7 @@ int ctrl_min = (int)255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 const unsigned int TURN_DISTANCE = -1; // cm
 const unsigned int STOP_DISTANCE = 0;  // cm
 unsigned int distance_estimate = -1;   // cm
+int ds3502_value;
 
 // Vehicle Control
 int ctrl_left = 0;
@@ -222,7 +225,7 @@ void setup()
   digitalWrite(PIN_L298N_IN1, 0);
   digitalWrite(PIN_L298N_IN2, 0);
   pinMode(PIN_STEERING_POT, INPUT);
-  if (!ds3502.begin())
+  if (!ds3502.begin() || !ds3502_2.begin(0x2A))
   {
     Serial.println("Couldn't find DS3502 chip");
     while (1)
@@ -230,6 +233,10 @@ void setup()
   }
   Serial.println("Found DS3502 chip");
   ds3502.setWiperDefault(DS3502_WIPER_MIDDLE);
+  ds3502_2.setWiperDefault(DS3502_WIPER_MIDDLE);
+  ds3502.setWiper(DS3502_WIPER_MIDDLE);
+  ds3502_2.setWiper(DS3502_WIPER_MIDDLE);
+  ds3502_value =DS3502_WIPER_MIDDLE;
 #endif
   // Initialize with the I2C addr 0x3C
 #if (HAS_INDICATORS)
@@ -268,12 +275,13 @@ void setup()
   pinMode(PIN_BUMPER, INPUT);
 #endif
 }
-
+int extra = 0;
 //------------------------------------------------------//
 // LOOP
 //------------------------------------------------------//
 void loop()
 {
+
 #if (NO_PHONE_MODE)
   if ((millis() - turn_direction_time) >= turn_direction_interval)
   {
@@ -442,6 +450,19 @@ void loop()
     digitalWrite(PIN_L298N_IN2, 0);
   }
 #endif
+
+  // ds3502.setWiper(50 + (extra / 2) + (extra % 2));
+  // ds3502_2.setWiper(50 + (extra / 2));
+  // ds3502_value = 50 + (extra / 2);
+  // if ((extra % 2))
+  // {
+  //   Serial.println("ds3502_value + 0.5");
+  // }
+  // Serial.print("ds3502_value: ");
+  // Serial.println(ds3502_value);
+  // extra = extra + 1;
+  // delay(4000);
+  // extra = extra % 60;
 }
 
 //------------------------------------------------------//
@@ -469,20 +490,19 @@ void update_vehicle()
 }
 
 #if (OPENBOT == KO_LAB_SCOOTER)
-int ds3502_value;
 void update_throttle()
 {
   if (ctrl_left == 0 || ctrl_right == 0)
   {
-    ds3502.setWiper(DS3502_WIPER_MIDDLE);
     ds3502_value = DS3502_WIPER_MIDDLE;
   }
   else
   {
     int throttle = map(ctrl_left + ctrl_right, -510, 510, DS3502_WIPER_MIDDLE - DS3502_WIPER_MAX_EXTRA, DS3502_WIPER_MIDDLE + DS3502_WIPER_MAX_EXTRA);
-    ds3502.setWiper(throttle);
     ds3502_value = throttle;
   }
+  ds3502.setWiper(ds3502_value);
+  ds3502_2.setWiper(ds3502_value);
 }
 
 void update_steering()
