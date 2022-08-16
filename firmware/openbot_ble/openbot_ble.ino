@@ -834,52 +834,52 @@ void loop() {
 
 #if (NO_PHONE_MODE)
     if ((millis() - turn_direction_time) >= turn_direction_interval)
-  {
-    turn_direction_time = millis();
-    turn_direction = random(2); //Generate random number in the range [0,1]
-  }
-  // Drive forward
-  if (distance_estimate > 3 * TURN_DISTANCE) {
-    ctrl_left = distance_estimate;
-    ctrl_right = ctrl_left;
-    digitalWrite(PIN_LED_LI, LOW);
-    digitalWrite(PIN_LED_RI, LOW);
-  }
-  // Turn slightly
-  else if (distance_estimate > 2 * TURN_DISTANCE) {
-    ctrl_left = distance_estimate;
-    ctrl_right = ctrl_left / 2;
-  }
-  // Turn strongly
-  else if (distance_estimate > TURN_DISTANCE) {
-    ctrl_left = ctrl_max;
-    ctrl_right = - ctrl_max;
-  }
-  // Drive backward slowly
-  else {
-    ctrl_left = -ctrl_slow;
-    ctrl_right = -ctrl_slow;
-    digitalWrite(PIN_LED_LI, HIGH);
-    digitalWrite(PIN_LED_RI, HIGH);
-  }
-  // Flip controls if needed and set indicator light
-  if (ctrl_left != ctrl_right) {
-    if (turn_direction > 0) {
-      int temp = ctrl_left;
-      ctrl_left = ctrl_right;
-      ctrl_right = temp;
-      digitalWrite(PIN_LED_LI, HIGH);
-      digitalWrite(PIN_LED_RI, LOW);
-    }
-    else {
-      digitalWrite(PIN_LED_LI, LOW);
-      digitalWrite(PIN_LED_RI, HIGH);
-    }
-  }
+{
+turn_direction_time = millis();
+turn_direction = random(2); //Generate random number in the range [0,1]
+}
+// Drive forward
+if (distance_estimate > 3 * TURN_DISTANCE) {
+ctrl_left = distance_estimate;
+ctrl_right = ctrl_left;
+digitalWrite(PIN_LED_LI, LOW);
+digitalWrite(PIN_LED_RI, LOW);
+}
+// Turn slightly
+else if (distance_estimate > 2 * TURN_DISTANCE) {
+ctrl_left = distance_estimate;
+ctrl_right = ctrl_left / 2;
+}
+// Turn strongly
+else if (distance_estimate > TURN_DISTANCE) {
+ctrl_left = ctrl_max;
+ctrl_right = - ctrl_max;
+}
+// Drive backward slowly
+else {
+ctrl_left = -ctrl_slow;
+ctrl_right = -ctrl_slow;
+digitalWrite(PIN_LED_LI, HIGH);
+digitalWrite(PIN_LED_RI, HIGH);
+}
+// Flip controls if needed and set indicator light
+if (ctrl_left != ctrl_right) {
+if (turn_direction > 0) {
+int temp = ctrl_left;
+ctrl_left = ctrl_right;
+ctrl_right = temp;
+digitalWrite(PIN_LED_LI, HIGH);
+digitalWrite(PIN_LED_RI, LOW);
+}
+else {
+digitalWrite(PIN_LED_LI, LOW);
+digitalWrite(PIN_LED_RI, HIGH);
+}
+}
 
-  // Enforce limits
-  ctrl_left = ctrl_left > 0 ? max(ctrl_min, min(ctrl_left, ctrl_max)) : min(-ctrl_min, max(ctrl_left, -ctrl_max));
-  ctrl_right = ctrl_right > 0 ? max(ctrl_min, min(ctrl_right, ctrl_max)) : min(-ctrl_min, max(ctrl_right, -ctrl_max));
+// Enforce limits
+ctrl_left = ctrl_left > 0 ? max(ctrl_min, min(ctrl_left, ctrl_max)) : min(-ctrl_min, max(ctrl_left, -ctrl_max));
+ctrl_right = ctrl_right > 0 ? max(ctrl_min, min(ctrl_right, ctrl_max)) : min(-ctrl_min, max(ctrl_right, -ctrl_max));
 #else // Check for messages from the phone
     if (Serial.available() > 0) {
         on_serial_rx();
@@ -896,26 +896,26 @@ void loop() {
 
 #if HAS_BUMPER
     if (analogRead(PIN_BUMPER) > BUMPER_NOISE && !bumper_event)
-  {
-    delayMicroseconds(500);
-    for (unsigned int i = 0; i < bumper_array_sz; i++)
-    {
-      bumper_array[i] = analogRead(PIN_BUMPER);
-    }
-    bumper_reading = get_median(bumper_array, bumper_array_sz);
-    if (bumper_reading > BUMPER_NOISE)
-      emergency_stop();
-  }
+{
+delayMicroseconds(500);
+for (unsigned int i = 0; i < bumper_array_sz; i++)
+{
+bumper_array[i] = analogRead(PIN_BUMPER);
+}
+bumper_reading = get_median(bumper_array, bumper_array_sz);
+if (bumper_reading > BUMPER_NOISE)
+emergency_stop();
+}
 
-  bool collison_front = collision_lf || collision_rf || collision_cf;
-  bool collision_back = collision_lb || collision_rb;
-  bool control_front = ctrl_left > 0 && ctrl_right > 0;
-  bool control_back = ctrl_left < 0 && ctrl_right < 0;
+bool collison_front = collision_lf || collision_rf || collision_cf;
+bool collision_back = collision_lb || collision_rb;
+bool control_front = ctrl_left > 0 && ctrl_right > 0;
+bool control_back = ctrl_left < 0 && ctrl_right < 0;
 
-  if (!bumper_event || (control_back && collison_front) || (control_front && collision_back))
-  {
-    update_vehicle();
-  }
+if (!bumper_event || (control_back && collison_front) || (control_front && collision_back))
+{
+update_vehicle();
+}
 #else
     update_vehicle();
 #endif
@@ -958,11 +958,11 @@ void loop() {
 
 #if HAS_BUMPER
     // Check bumper signal every bumper_interval
-  if ((millis() - bumper_time) >= bumper_interval && bumper_event)
-  {
-    reset_bumper();
-    bumper_time = millis();
-  }
+if ((millis() - bumper_time) >= bumper_interval && bumper_event)
+{
+reset_bumper();
+bumper_time = millis();
+}
 #endif
 #if HAS_VOLTAGE_DIVIDER
     // Send voltage reading via serial
@@ -980,10 +980,10 @@ void loop() {
 #endif
 #if (HAS_OLED || DEBUG)
     // Display vehicle measurments for via serial every display_interval
-  if ((millis() - display_time) >= display_interval) {
-    display_vehicle_data();
-    display_time = millis();
-  }
+if ((millis() - display_time) >= display_interval) {
+display_vehicle_data();
+display_time = millis();
+}
 #endif
 }
 
@@ -1283,7 +1283,7 @@ void send_bumper_reading(char bumper_id[])
 {
   Serial.print("b");
   Serial.println(bumper_id);
-   sendDataToBLE("b" + String(bumper_id));
+  sendDataToBLE("b" + String(bumper_id));
 }
 #endif
 
@@ -1614,7 +1614,7 @@ void send_wheel_reading(long duration) {
 #if (HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_BACK and HAS_SPEED_SENSORS_MIDDLE)
     Serial.print(rpm_left / 3, 0);
   Serial.print(",");
-  Serial.print(rpm_right / 3, 0);x
+  Serial.print(rpm_right / 3, 0);
   sendDataToBLE("w" + String(rpm_left / 3) + "," + String(rpm_right / 3));
 #elif ((HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_BACK) or (HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_MIDDLE) or (HAS_SPEED_SENSORS_MIDDLE and HAS_SPEED_SENSORS_BACK))
     Serial.print(rpm_left / 2, 0);
