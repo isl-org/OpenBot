@@ -136,7 +136,7 @@ class DataSendViewController: UIViewController, CBCentralManagerDelegate, CBPeri
     }
 
     @IBAction func sendData(_ sender: Any) {
-        var temp = (wifiName.text ?? "")
+        var temp = (wifiName.text ?? "") + "\n"
         LabelString = (LabelString ?? "") + (temp) + "\n"
         let range = NSRange(location: bleSendData.text.count - 1, length: 0)
         bleSendData.scrollRangeToVisible(range)
