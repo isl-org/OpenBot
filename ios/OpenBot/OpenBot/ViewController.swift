@@ -22,6 +22,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate {
         print("please on bluetoooth")
         }
     }
+
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         peripherals.append(peripheral)
         myTable.reloadData()

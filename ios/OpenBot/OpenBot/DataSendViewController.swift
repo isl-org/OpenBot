@@ -16,7 +16,7 @@ class DataSendViewController: UIViewController, CBCentralManagerDelegate, CBPeri
     var writeCharacteristics: CBCharacteristic?
     @IBOutlet weak var wifiName: UITextField!
     @IBOutlet weak var bleSendData: UITextView!
-    @IBOutlet weak var DataLabel: UILabel!
+
 
     //
     override func viewDidLoad() {
