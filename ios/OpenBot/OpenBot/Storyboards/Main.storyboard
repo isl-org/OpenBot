@@ -118,7 +118,7 @@
         <!--Home Page View Controller-->
         <scene sceneID="8b0-hH-SCr">
             <objects>
-                <viewController id="8dq-jC-bEe" customClass="HomePageViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="homescreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="8dq-jC-bEe" customClass="HomePageViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="is3-d9-Un6">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

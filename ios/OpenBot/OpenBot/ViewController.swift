@@ -57,7 +57,7 @@ extension ViewController : UITableViewDataSource ,UITableViewDelegate{
         print(indexPath.row)
         centralManager?.stopScan()
         isBluetoothConnected = true;
-        let dataSend = (self.storyboard?.instantiateViewController(withIdentifier: "sendScreen"))!
+        let dataSend = (self.storyboard?.instantiateViewController(withIdentifier: "homescreen"))!
         guard let controller = self.navigationController?.pushViewController(dataSend, animated: true) else {
             fatalError("guard failure handling has not been implemented")
         }
