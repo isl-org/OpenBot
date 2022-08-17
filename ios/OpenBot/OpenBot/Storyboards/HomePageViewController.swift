@@ -9,15 +9,19 @@ import UIKit
 var isBluetoothConnected = false;
 
 class HomePageViewController: UIViewController {
-
-
     @IBOutlet weak var bluetooth: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        setUpTitle();
+
+
+    }
+    func setUpTitle(){
         titleLabel.text = "OpenBot";
+        titleLabel.textColor = UIColor(named: "HomePageTitleColor")
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -32,15 +36,9 @@ class HomePageViewController: UIViewController {
     @IBAction func tap() {
         isBluetoothConnected = !isBluetoothConnected;
     }
-
-    /*
-    // MARK: - Navigation
-     
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+   
+    
+    @IBAction func settingButton(_ sender: Any) {
+        print("setting button clicked")
     }
-    */
-
 }
