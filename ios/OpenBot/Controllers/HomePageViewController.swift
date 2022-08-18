@@ -10,6 +10,11 @@ import CoreBluetooth
 
 var isBluetoothConnected = false;
 
+public struct GridItem {
+    var label: String;
+    var icon: UIImage?;
+}
+
 class HomePageViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
@@ -22,18 +27,38 @@ class HomePageViewController: UIViewController, CBCentralManagerDelegate, CBPeri
     @IBOutlet weak var bluetooth: UIButton!
     @IBOutlet weak var settings: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet var modesCollectionView: UICollectionView!;
+    
+ 
 
+    public var gridItems = [GridItem(label: "Free Roam", icon: UIImage(named: "freeRoam")), GridItem(label: "Data Collection", icon: UIImage(named: "dataCollection")), GridItem(label: "Controller Mapping", icon: UIImage(named: "controllerMapping"))];
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTitle();
         if peri != nil {
-
             centralManager = CBCentralManager(delegate: self, queue: nil)
         }
+        let layout = UICollectionViewFlowLayout();
+        layout.collectionView?.layer.cornerRadius = 10;
+        layout.collectionView?.layer.shadowColor = UIColor(named: "gridItemShadowColor")?.cgColor
+        layout.collectionView?.layer.shadowOpacity = 1
+        layout.itemSize = CGSize(width: 190, height: 190);
+        
+        modesCollectionView.collectionViewLayout = layout;
+        modesCollectionView.register(modesCollectionViewCell.nib(), forCellWithReuseIdentifier: modesCollectionViewCell.identifier)
+        modesCollectionView.delegate = self
+        modesCollectionView.dataSource = self
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
+//        content.layer.cornerRadius = 10
+//        content.layer.shadowColor = UIColor(named: "gridItemShadowColor")?.cgColor
+//        content.layer.shadowOpacity = 1
+//        content.layer.shadowOffset = CGSize(width: 0, height: 4)
+//        content.layer.shadowRadius = 14 / 2
         if (isBluetoothConnected) {
             bluetooth.setImage(UIImage(named: "bluetoothConnected"), for: .normal)
         } else {
@@ -89,4 +114,35 @@ class HomePageViewController: UIViewController, CBCentralManagerDelegate, CBPeri
         }
     }
 
+
 }
+
+extension UIViewController: UICollectionViewDelegate{
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let openDataSerialView = (self.storyboard?.instantiateViewController(withIdentifier: "dataSerialMonitor"))!
+        guard (self.navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
+            fatalError("guard failure handling has not been implemented")
+        }
+        print(indexPath);
+    }
+}
+extension UIViewController: UICollectionViewDataSource{
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return HomePageViewController().gridItems.count;
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: modesCollectionViewCell.identifier, for: indexPath) as! modesCollectionViewCell;
+        cell.configure(with: HomePageViewController().gridItems[indexPath.row]);
+        return cell
+    }
+}
+extension UIViewController: UICollectionViewDelegateFlowLayout{
+    func collectionView(_collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath)->
+    CGSize{
+        return CGSize(width: 190, height: 190)
+    }
+}
+
+

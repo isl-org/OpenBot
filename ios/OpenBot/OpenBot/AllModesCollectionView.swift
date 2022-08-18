@@ -8,6 +8,7 @@
 import UIKit
 
 class AllModesCollectionView: UICollectionView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
     struct gridItem {
         var label: String;
         var icon: UIImage?;
@@ -33,16 +34,12 @@ class AllModesCollectionView: UICollectionView, UICollectionViewDataSource, UICo
         gridItems.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfSections section: Int) -> Int {
-        2
-    }
-
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 150, height: 150)
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+        print(indexPath);
     }
 
 }
