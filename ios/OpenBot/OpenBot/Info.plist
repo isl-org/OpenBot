@@ -4,6 +4,10 @@
 <dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>allow bluetooth for OpenBot</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow Camera for Free Roam Mode</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow microphone for Free Roam </string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

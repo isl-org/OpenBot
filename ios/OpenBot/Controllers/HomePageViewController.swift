@@ -105,12 +105,22 @@ class HomePageViewController: UIViewController, CBCentralManagerDelegate, CBPeri
     }
 
     @IBAction func onTapSettings() {
-        print("setting button clicked");
+
         if isBluetoothConnected != false{
         let openDataSerialView = (self.storyboard?.instantiateViewController(withIdentifier: "dataSerialMonitor"))!
         guard (self.navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
             fatalError("guard failure handling has not been implemented")
         }
+        }
+        else{
+//            let yourAlert = UIAlertController(title: "Connection Error", message: "Please connect to BlueTooth", preferredStyle: UIAlertController.Style.alert)
+//            yourAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (handler) in}))
+//            self.present(yourAlert, animated: true, completion: nil)
+            let openDataSerialView = (self.storyboard?.instantiateViewController(withIdentifier: "sensorScreen"))!
+            guard (self.navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
+                fatalError("guard failure handling has not been implemented")
+            }
+
         }
     }
 
