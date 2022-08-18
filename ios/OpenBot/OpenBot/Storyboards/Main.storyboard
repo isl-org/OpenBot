@@ -57,7 +57,7 @@
         <!--Send Data-->
         <scene sceneID="xcY-xJ-ckS">
             <objects>
-                <viewController storyboardIdentifier="sendScreen" title="Send Data" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7az-1S-5T9" customClass="DataSendViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="dataSerialMonitor" title="Send Data" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7az-1S-5T9" customClass="DataSerialMonitorViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" restorationIdentifier="sendScreen" id="bbB-lb-dd0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -74,7 +74,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Send"/>
                                 <connections>
-                                    <action selector="sendData:" destination="7az-1S-5T9" eventType="touchUpInside" id="UIE-P4-ya5"/>
+                                    <action selector="sendData:" destination="7az-1S-5T9" eventType="touchUpInside" id="v66-c0-bNa"/>
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="EoC-79-1xI">
@@ -89,9 +89,9 @@
                         <viewLayoutGuide key="safeArea" id="vT9-Wp-ph1"/>
                     </view>
                     <connections>
-                        <outlet property="bleSendData" destination="EoC-79-1xI" id="A6K-rc-J00"/>
+                        <outlet property="bleSendData" destination="EoC-79-1xI" id="ice-WU-M7H"/>
+                        <outlet property="sendDataToBle" destination="TUs-Ba-dkE" id="3fX-bV-5ec"/>
                         <outlet property="view" destination="bbB-lb-dd0" id="4df-au-0b1"/>
-                        <outlet property="wifiName" destination="TUs-Ba-dkE" id="Zxm-tS-sR9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F3L-yC-2JR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
