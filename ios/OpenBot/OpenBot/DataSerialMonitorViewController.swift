@@ -1,36 +1,27 @@
 //
-//  DataSendViewController.swift
+//  DataSerialMonitorViewController.swift
 //  OpenBot
 //
-//  Created by Nitish Yadav on 30/07/22.
+//  Created by Nitish Yadav on 18/08/22.
 //
 
 import UIKit
 import CoreBluetooth
-
-class DataSendViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
+class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDelegate {
     var centralManager: CBCentralManager?
     var tempPeripheral: CBPeripheral!
     var LabelString: String!
     private var allservices: [CBService]?
     var writeCharacteristics: CBCharacteristic?
-    @IBOutlet weak var wifiName: UITextField!
+    @IBOutlet weak var sendDataToBle: UITextField!
     @IBOutlet weak var bleSendData: UITextView!
-
-
-    //
     override func viewDidLoad() {
-
         super.viewDidLoad()
         bleSendData.isEditable = false
-
         centralManager = CBCentralManager(delegate: self, queue: nil)
-
-
     }
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-
         self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
     }
 
@@ -115,6 +106,7 @@ class DataSendViewController: UIViewController, CBCentralManagerDelegate, CBPeri
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
         print(descriptor)
     }
+
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
 //        print("didUpdateValue : ",characteristic.value)
         if characteristic.value != nil {
@@ -132,11 +124,11 @@ class DataSendViewController: UIViewController, CBCentralManagerDelegate, CBPeri
     }
 
     func readValue(characteristic: CBCharacteristic) {
-         self.tempPeripheral?.readValue(for: characteristic)
+        self.tempPeripheral?.readValue(for: characteristic)
     }
 
     @IBAction func sendData(_ sender: Any) {
-        var temp = (wifiName.text ?? "") + "\n"
+        var temp = (sendDataToBle.text ?? "") + "\n"
         LabelString = (LabelString ?? "") + (temp) + "\n"
         let range = NSRange(location: bleSendData.text.count - 1, length: 0)
         bleSendData.scrollRangeToVisible(range)
@@ -145,7 +137,7 @@ class DataSendViewController: UIViewController, CBCentralManagerDelegate, CBPeri
         print("value is :", temp)
         let dataToSend: Data = temp.data(using: String.Encoding.utf8)!
         tempPeripheral.writeValue(dataToSend, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
-        wifiName.text = "";
+        sendDataToBle.text = "";
     }
-}
 
+}

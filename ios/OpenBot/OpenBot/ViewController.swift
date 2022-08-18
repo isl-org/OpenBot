@@ -54,7 +54,6 @@ extension ViewController : UITableViewDataSource ,UITableViewDelegate{
     }
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         peri = peripherals[indexPath.row]
-        print(indexPath.row)
         centralManager?.stopScan()
         isBluetoothConnected = true;
         let dataSend = (self.storyboard?.instantiateViewController(withIdentifier: "homescreen"))!
