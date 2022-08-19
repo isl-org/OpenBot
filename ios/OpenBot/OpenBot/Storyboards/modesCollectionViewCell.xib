@@ -49,7 +49,6 @@
             </constraints>
             <size key="customSize" width="191" height="191"/>
             <connections>
-                <outlet property="content" destination="yph-XZ-M4D" id="dsO-9Z-7Vq"/>
                 <outlet property="icon" destination="s9m-L1-6qy" id="p90-d8-Tlw"/>
                 <outlet property="title" destination="3Sy-Pu-Yu8" id="7sP-md-qAo"/>
             </connections>
