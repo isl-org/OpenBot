@@ -28,15 +28,15 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-//        print(peri)
+        print(peri)
         print(peripheral.name)
         if peripheral.name == peri?.name {
             print(10)
             centralManager?.stopScan()
             self.tempPeripheral = peripheral
             print("peripheral is :",tempPeripheral)
-            peripheral.delegate = self
-            centralManager?.connect(peripheral)
+            tempPeripheral.delegate = self
+            centralManager?.connect(tempPeripheral)
         }
     }
 
@@ -141,9 +141,9 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
         bleSendData.text = LabelString
 
         print("value is :", temp)
-        print("temp peripheral is :",tempPeripheral)
+        print("temp peripheral is :",peri)
         let dataToSend: Data = temp.data(using: String.Encoding.utf8)!
-        peri!.writeValue(dataToSend, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
+        tempPeripheral!.writeValue(dataToSend, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
         sendDataToBle.text = "";
     }
 
