@@ -19,22 +19,22 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
         super.viewDidLoad()
         bleSendData.isEditable = false
         centralManager = CBCentralManager(delegate: self, queue: nil)
-        print("tempPeripheral is :", tempPeripheral)
+//        print("tempPeripheral is :", tempPeripheral)
     }
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        print("i am here")
+
         self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        print(peri)
-        print(peripheral.name)
+//        print(peri)
+//        print(peripheral.name)
         if peripheral.name == peri?.name {
             print(10)
             centralManager?.stopScan()
             self.tempPeripheral = peripheral
-            print("peripheral is :",tempPeripheral)
+//            print("peripheral is :",tempPeripheral)
             tempPeripheral.delegate = self
             centralManager?.connect(tempPeripheral)
         }
@@ -42,8 +42,8 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
 
-        print("i am connected to ", peripheral.name)
-        print("peripheral delegate", peripheral.delegate)
+//        print("i am connected to ", peripheral.name)
+//        print("peripheral delegate", peripheral.delegate)
 
         peripheral.discoverServices(nil)
 
@@ -60,7 +60,7 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let services = peripheral.services {
-            print("services are :", services)
+//            print("services are :", services)
             for service in services {
                 allservices?.append(service)
                 peripheral.discoverCharacteristics([], for: service)
@@ -80,7 +80,7 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
                 writeCharacteristics = characteristic
-                print(" hello ", characteristic)
+//                print(" hello ", characteristic)
 //                    let dataToSend: Data = "hello jgbjdsb".data(using: String.Encoding.utf8)!
 //                var  temp = (wifiName.text ?? "") + (wifiPassword.text ?? "")
 //                let dataToSend: Data = temp.data(using: String.Encoding.utf8)!
@@ -141,7 +141,7 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
         bleSendData.text = LabelString
 
         print("value is :", temp)
-        print("temp peripheral is :",peri)
+//        print("temp peripheral is :",peri)
         let dataToSend: Data = temp.data(using: String.Encoding.utf8)!
         tempPeripheral!.writeValue(dataToSend, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
         sendDataToBle.text = "";

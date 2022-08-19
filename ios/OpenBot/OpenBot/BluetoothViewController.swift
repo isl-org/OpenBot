@@ -52,7 +52,7 @@ extension BluetoothViewController : UITableViewDataSource ,UITableViewDelegate{
         peri = peripherals[indexPath.row]
         centralManager?.stopScan()
 //        centralManager?.connect(peri!)
-//        isBluetoothConnected = true;
+        isBluetoothConnected = true;
         let dataSend = (self.storyboard?.instantiateViewController(withIdentifier: "homescreen"))!
         guard let controller = self.navigationController?.pushViewController(dataSend, animated: true) else {
             fatalError("guard failure handling has not been implemented")
