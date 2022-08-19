@@ -124,20 +124,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Borometer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iTw-3c-ahA">
-                                <rect key="frame" x="35" y="91" width="157" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xww-4J-cEA">
-                                <rect key="frame" x="175" y="94" width="194" height="43"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Gyroscope" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VY1-Za-KFY">
                                 <rect key="frame" x="153" y="166" width="117" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -291,14 +277,9 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" image="camera.fill" catalog="system"/>
                                 <connections>
-                                    <action selector="openCamera:" destination="K4k-6X-m7z" eventType="touchUpInside" id="zqS-Hf-nbC"/>
+                                    <action selector="openCamera:" destination="K4k-6X-m7z" eventType="touchUpInside" id="8OJ-Q4-8Hn"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Mi-qH-Mua">
-                                <rect key="frame" x="50" y="596" width="315" height="202"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="whc-46-fSQ"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -307,8 +288,6 @@
                         <outlet property="accelerationX" destination="RVl-wy-NJx" id="Dqe-ns-Yvc"/>
                         <outlet property="accelerationY" destination="vcW-au-MzX" id="N4F-jl-tI7"/>
                         <outlet property="accelerationZ" destination="XRu-6s-BI3" id="Lq4-kB-n4M"/>
-                        <outlet property="borometer" destination="xww-4J-cEA" id="Dsx-8v-mZC"/>
-                        <outlet property="cameraview" destination="9Mi-qH-Mua" id="Zjb-pk-UE1"/>
                         <outlet property="gyroX" destination="MvU-Fe-pC1" id="RSm-I2-tYB"/>
                         <outlet property="gyroY" destination="r7L-Q7-fmJ" id="wCQ-BV-SE6"/>
                         <outlet property="gyroZ" destination="tT8-D8-eQ5" id="OCR-oQ-CZE"/>
@@ -320,6 +299,46 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="09Z-LK-aaZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-342.02898550724638" y="963.61607142857133"/>
+        </scene>
+        <!--Camera View Controller-->
+        <scene sceneID="SLa-hy-DHq">
+            <objects>
+                <viewController storyboardIdentifier="cameraScreen" id="YEf-aW-8Ip" customClass="CameraViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="TNt-JJ-CyR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ha0-xm-yF0">
+                                <rect key="frame" x="38" y="68" width="337" height="360"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1CK-0J-aVB">
+                                <rect key="frame" x="154" y="545" width="240" height="283"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bEo-O0-uXF">
+                                <rect key="frame" x="0.0" y="601" width="129" height="78"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Take Photo"/>
+                                <connections>
+                                    <action selector="cameraButton:" destination="YEf-aW-8Ip" eventType="touchUpInside" id="cT5-Wj-SyF"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="d70-x1-Hq8"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <connections>
+                        <outlet property="cameraView" destination="ha0-xm-yF0" id="Cwy-vg-55y"/>
+                        <outlet property="photo" destination="1CK-0J-aVB" id="ims-IL-01n"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OcW-gC-09e" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="905.79710144927549" y="969.64285714285711"/>
         </scene>
         <!--Home Page View Controller-->
         <scene sceneID="8b0-hH-SCr">
@@ -339,7 +358,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z72-El-xFG">
-                                <rect key="frame" x="280" y="99" width="38" height="11"/>
+                                <rect key="frame" x="280" y="101.5" width="38" height="6"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="bluetoothConnected" title="">
                                     <color key="baseForegroundColor" name="HomePageTitleColor"/>

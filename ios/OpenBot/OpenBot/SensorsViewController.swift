@@ -9,8 +9,12 @@ import UIKit
 import CoreMotion
 import DeviceCheck
 import MobileCoreServices
-class SensorsViewController: UIViewController ,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    @IBOutlet weak var borometer: UILabel!
+import AVFoundation
+
+class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,AVCaptureVideoDataOutputSampleBufferDelegate {
+//    @IBOutlet weak var borometer: UILabel!
+    let captureSession = AVCaptureSession()
+   
     @IBOutlet weak var gyroX: UILabel!
     @IBOutlet weak var gyroY: UILabel!
     @IBOutlet weak var gyroZ: UILabel!
@@ -20,84 +24,81 @@ class SensorsViewController: UIViewController ,UIImagePickerControllerDelegate, 
     @IBOutlet weak var magneticFieldX: UILabel!
     @IBOutlet weak var magneticFieldY: UILabel!
     @IBOutlet weak var magneticFieldZ: UILabel!
-    @IBOutlet weak var cameraview: UIView!
+
     var controller = UIImagePickerController()
     let device = [UIDevice].self;
     let motionManager = CMMotionManager()
     let altitudeManager = CMAltimeter()
+
     let queue = OperationQueue()
     var altitude = Double.zero
     var pressure = Double.zero
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        accelerometer()
-        gyroscope()
-        magnetometer()
-        altimeter()
+        startMotionUpdates()
+        Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { _ in
+            self.accelerometer()
+            self.gyroscope()
+            self.magnetometer()
+//            self.altimeter()
+        }
 
 //        openCamera()
     }
 
+    func startMotionUpdates() {
+        var interval: Double = 0.25
+
+        //for acceleration
+        motionManager.startAccelerometerUpdates()
+        motionManager.accelerometerUpdateInterval = interval
+        //for gyroscope
+        motionManager.startGyroUpdates()
+        motionManager.gyroUpdateInterval = interval
+        //for Magnetometer
+        motionManager.startMagnetometerUpdates()
+        motionManager.magnetometerUpdateInterval = interval
+        //for altitude
+
+    }
 
     func accelerometer() {
-
-        motionManager.startAccelerometerUpdates(to: queue) { (data: CMAccelerometerData?, error: Error?) in
-            guard let data = data else {
-                print("Error: \(error!)")
-                return
-            }
-            let motion: CMAcceleration = data.acceleration
-            self.motionManager.accelerometerUpdateInterval = 0.5
-            self.accelerationX.text = String(motion.x);
-            self.accelerationY.text = String(motion.y);
-            self.accelerationZ.text = String(motion.z);
-            print("acceleration in x is : ", self.accelerationX)
+        if let data = self.motionManager.accelerometerData {
+            self.accelerationX.text = String(format: "%.5f", data.acceleration.x)
+            self.accelerationY.text = String(format: "%.5f", data.acceleration.y)
+            self.accelerationZ.text = String(format: "%.5f", data.acceleration.z)
         }
     }
 
     func gyroscope() {
-        motionManager.startGyroUpdates(to: queue) { (data: CMGyroData?, error: Error?) in
-            guard let data = data else {
-                print("Error: \(error!)")
-                return
-            }
-            let motion: CMRotationRate = data.rotationRate
-            self.motionManager.gyroUpdateInterval = 0.5
-            self.gyroX.text = String(motion.x)
-            self.gyroY.text = String(motion.y)
-            self.gyroZ.text = String(motion.z)
-            print("gyro in x is : ", self.gyroX)
-
+        if let data = self.motionManager.gyroData {
+            self.gyroX.text = String(format: "%.5f", data.rotationRate.x)
+            self.gyroY.text = String(format: "%.5f", data.rotationRate.y)
+            self.gyroZ.text = String(format: "%.5f", data.rotationRate.z)
         }
     }
 
     func magnetometer() {
-        motionManager.startMagnetometerUpdates(to: queue) { (data: CMMagnetometerData?, error: Error?) in
-            guard let data = data else {
-                print("Error: \(error!)")
-                return
-            }
-            let magnet = data.magneticField
-            self.motionManager.magnetometerUpdateInterval = 0.5
-            self.magneticFieldX.text = String(magnet.x)
-            self.magneticFieldY.text = String(magnet.y);
-            self.magneticFieldZ.text = String(magnet.z);
-            print("magnetic field in x is :", self.magneticFieldX)
+        if let data = motionManager.magnetometerData {
+            magneticFieldX.text = String(format: "%.5f", data.magneticField.x)
+            magneticFieldY.text = String(format: "%.5f", data.magneticField.y)
+            magneticFieldZ.text = String(format: "%.5f", data.magneticField.z)
         }
     }
 
-    func altimeter() {
-        altitudeManager.startRelativeAltitudeUpdates(to: queue) { altitudeData, error in
-            self.altitude = altitudeData?.relativeAltitude.doubleValue ?? 0
-            self.pressure = altitudeData?.pressure.doubleValue ?? 0
-            print("altitude is : ", self.altitude, " pressure is : ", self.pressure)
+//    func altimeter() {
+//        altitudeManager.startRelativeAltitudeUpdates(to: queue) { altitudeData, error in
+//            self.altitude = altitudeData?.relativeAltitude.doubleValue ?? 0
+//            self.pressure = altitudeData?.pressure.doubleValue ?? 0
+//
+//            print("altitude is : ", self.altitude, " pressure is : ", self.pressure)
+//
+//            self.borometer.text = String(self.pressure)
+//        }
+//    }
 
-            self.borometer.text = String(self.pressure)
-        }
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true)
 
         guard let image = info[.editedImage] as? UIImage else {
@@ -111,20 +112,30 @@ class SensorsViewController: UIViewController ,UIImagePickerControllerDelegate, 
     }
 
     @IBAction func openCamera(_ sender: Any) {
-        // 1 Check if project runs on a device with camera available
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
-
-            // 2 Present UIImagePickerController to take video
-            controller.sourceType = .camera
-            controller.mediaTypes = [kUTTypeMovie as String]
-            controller.delegate = self
-
-            present(controller, animated: true, completion: nil)
-        } else {
-            print("Camera is not available")
+//        // 1 Check if project runs on a device with camera available
+//        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+//
+//            // 2 Present UIImagePickerController to take video
+//            controller.sourceType = .camera
+//            controller.mediaTypes = [kUTTypeMovie as String]
+//            controller.delegate = self
+//
+//
+//            present(controller, animated: true, completion: nil)
+//        } else {
+//            print("Camera is not available")
+//        }
+        let openDataSerialView = (self.storyboard?.instantiateViewController(withIdentifier: "cameraScreen"))!
+        guard (self.navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
+            fatalError("guard failure handling has not been implemented")
         }
+
+        
+        
     }
-    
+        
+        
+        
 }
 
 

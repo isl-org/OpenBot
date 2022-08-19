@@ -71,7 +71,7 @@ class HomePageViewController: UIViewController, CBCentralManagerDelegate, CBPeri
             centralManager?.stopScan()
             self.tempPeripheral = peripheral
             peripheral.delegate = self
-            centralManager?.connect(peripheral)
+//            centralManager?.connect(peripheral)
         }
     }
 
