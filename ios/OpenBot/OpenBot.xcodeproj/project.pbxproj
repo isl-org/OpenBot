@@ -19,7 +19,7 @@
 		4FEF483FCB45A3257C181C30 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4BD00A645A3985233A37 /* README.md */; };
 		4FEF49DD79D9DD3CF5733B71 /* OpenBotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */; };
 		4FEF4BF08DDE6BB860043DE4 /* BluetoothViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF49C8753F02C2240E51D8 /* BluetoothViewController.swift */; };
-		4FEF4C5087962C2F3B2BB3A1 /* modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45F4F7552D2FFF3D1130 /* modes.swift */; };
+		4FEF4C5087962C2F3B2BB3A1 /* Modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45F4F7552D2FFF3D1130 /* Modes.swift */; };
 		4FEF4C9BF06BF69E5C67E86A /* OpenBotUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4D548F5BD4ABE07F1F71 /* OpenBotUITestsLaunchTests.swift */; };
 		4FEF4DC031698B6DEEB01AEB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */; };
 		4FEF4F78919CCCC28C418C5B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4D63E4FA9FB585EF1733 /* SceneDelegate.swift */; };
@@ -54,7 +54,7 @@
 		4FEF42374776D62381BDE68C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITests.swift; sourceTree = "<group>"; };
 		4FEF44EFCFD003BA859F8008 /* OpenBotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4FEF45F4F7552D2FFF3D1130 /* modes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = modes.swift; sourceTree = "<group>"; };
+		4FEF45F4F7552D2FFF3D1130 /* Modes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Modes.swift; sourceTree = "<group>"; };
 		4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4FEF466ED1A3047EB287B7CA /* OpenBotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEF46775439F2AC3ED4FE35 /* OpenBot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenBot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,12 +112,12 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		4FEF44F0837469F66D5A7156 /* models */ = {
+		4FEF44F0837469F66D5A7156 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				4FEF45F4F7552D2FFF3D1130 /* modes.swift */,
+				4FEF45F4F7552D2FFF3D1130 /* Modes.swift */,
 			);
-			path = models;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		4FEF4549B0D1FC8F591E63FE /* OpenBotUITests */ = {
@@ -133,7 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				BF9BAED628AF94A800EF3E48 /* Frameworks */,
-				4FEF44F0837469F66D5A7156 /* models */,
+				4FEF44F0837469F66D5A7156 /* Models */,
 				4FEF42AB3B7AC14D55B7DBA3 /* Utils */,
 				BF5AF3C028AF54A7008BAD95 /* fonts */,
 				BF5AF3BF28AE4A96008BAD95 /* Controllers */,
@@ -356,7 +356,7 @@
 				BF812E8728AE2C4200E0B682 /* modesCollectionViewCell.swift in Sources */,
 				4FEF4BF08DDE6BB860043DE4 /* BluetoothViewController.swift in Sources */,
 				4FEF4BF08DDE6BB860043DE4 /* BluetoothViewController.swift in Sources */,
-				4FEF4C5087962C2F3B2BB3A1 /* modes.swift in Sources */,
+				4FEF4C5087962C2F3B2BB3A1 /* Modes.swift in Sources */,
 				4FEF483FCB45A3257C181C30 /* README.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
