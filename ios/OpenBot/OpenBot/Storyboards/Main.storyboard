@@ -362,18 +362,8 @@
                                 <color key="textColor" name="HomePageTitleColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z72-El-xFG">
-                                <rect key="frame" x="280" y="101.5" width="38" height="6"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="bluetoothConnected" title="">
-                                    <color key="baseForegroundColor" name="HomePageTitleColor"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <segue destination="BYZ-38-t0r" kind="show" id="rdZ-7e-Eg3"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5c8-Vo-nJ6">
-                                <rect key="frame" x="315" y="77" width="72" height="55"/>
+                                <rect key="frame" x="342" y="77" width="72" height="55"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="settings"/>
                                 <connections>
@@ -400,20 +390,30 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z72-El-xFG">
+                                <rect key="frame" x="308" y="87" width="38" height="33"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="bluetoothConnected" title="">
+                                    <color key="baseForegroundColor" name="HomePageTitleColor"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="show" id="gA1-un-beb"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3bM-uf-XtB"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="uDx-Ys-4aG" firstAttribute="centerY" secondItem="Z72-El-xFG" secondAttribute="centerY" id="AVT-LE-3xe"/>
                             <constraint firstItem="uDx-Ys-4aG" firstAttribute="centerY" secondItem="5c8-Vo-nJ6" secondAttribute="centerY" id="M6Q-di-pyE"/>
-                            <constraint firstItem="3bM-uf-XtB" firstAttribute="trailing" secondItem="Z72-El-xFG" secondAttribute="trailing" constant="96" id="MNy-64-nFr"/>
-                            <constraint firstItem="3bM-uf-XtB" firstAttribute="trailing" secondItem="5c8-Vo-nJ6" secondAttribute="trailing" constant="27" id="U5c-gk-7aM"/>
+                            <constraint firstItem="3bM-uf-XtB" firstAttribute="trailing" secondItem="5c8-Vo-nJ6" secondAttribute="trailing" id="U5c-gk-7aM"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Z72-El-xFG" secondAttribute="trailing" constant="48" id="WeT-f2-TdF"/>
                             <constraint firstItem="3bM-uf-XtB" firstAttribute="bottom" secondItem="Ce8-ek-lG7" secondAttribute="bottom" constant="69" id="cIT-9A-L9t"/>
-                            <constraint firstItem="uDx-Ys-4aG" firstAttribute="baseline" secondItem="Z72-El-xFG" secondAttribute="baseline" id="d0b-uX-06c"/>
                             <constraint firstItem="uDx-Ys-4aG" firstAttribute="leading" secondItem="3bM-uf-XtB" secondAttribute="leading" constant="12" id="dSW-c9-MLk"/>
+                            <constraint firstItem="Z72-El-xFG" firstAttribute="centerY" secondItem="5c8-Vo-nJ6" secondAttribute="centerY" constant="-1" id="fEZ-5T-aCn"/>
                             <constraint firstItem="3bM-uf-XtB" firstAttribute="trailing" secondItem="Ce8-ek-lG7" secondAttribute="trailing" id="gTR-c2-eZz"/>
                             <constraint firstItem="Ce8-ek-lG7" firstAttribute="leading" secondItem="3bM-uf-XtB" secondAttribute="leading" id="j8Z-fZ-RFN"/>
                             <constraint firstItem="Ce8-ek-lG7" firstAttribute="top" secondItem="uDx-Ys-4aG" secondAttribute="bottom" constant="8" symbolic="YES" id="kCK-d5-1bb"/>
+                            <constraint firstItem="Z72-El-xFG" firstAttribute="top" secondItem="3bM-uf-XtB" secondAttribute="top" constant="-1" id="kMU-7N-GDm"/>
                             <constraint firstItem="uDx-Ys-4aG" firstAttribute="top" secondItem="3bM-uf-XtB" secondAttribute="top" id="nMm-Ys-4Lx"/>
                         </constraints>
                     </view>
