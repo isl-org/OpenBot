@@ -7,12 +7,13 @@
 
 import UIKit
 import AVFoundation
-class CameraViewController: UIViewController ,AVCapturePhotoCaptureDelegate {
+class CameraViewController: UIViewController ,AVCapturePhotoCaptureDelegate,AVCaptureAudioDataOutputSampleBufferDelegate,
+        AVCaptureVideoDataOutputSampleBufferDelegate {
     var captureSession: AVCaptureSession!
     var stillImageOutput: AVCapturePhotoOutput!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     @IBOutlet weak var cameraView: UIView!
-    @IBOutlet weak var photoView: UIView!
+    @IBOutlet weak var photoView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -72,7 +73,7 @@ class CameraViewController: UIViewController ,AVCapturePhotoCaptureDelegate {
         else { return }
 
         let image = UIImage(data: imageData)
-        photoView.largeContentImage = image
+        photoView.image = image
     }
 
 }

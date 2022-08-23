@@ -14,7 +14,6 @@ import AVFoundation
 class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,AVCaptureVideoDataOutputSampleBufferDelegate {
 //    @IBOutlet weak var borometer: UILabel!
     let captureSession = AVCaptureSession()
-   
     @IBOutlet weak var gyroX: UILabel!
     @IBOutlet weak var gyroY: UILabel!
     @IBOutlet weak var gyroZ: UILabel!
@@ -133,7 +132,16 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         
     }
+    
+    @IBAction func videoCamera(_ sender: Any) {
+        let openDataSerialView = (self.storyboard?.instantiateViewController(withIdentifier: "videoRecorder"))!
+        guard (self.navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
+            fatalError("guard failure handling has not been implemented")
+        }
+
         
+    }
+    
         
         
 }

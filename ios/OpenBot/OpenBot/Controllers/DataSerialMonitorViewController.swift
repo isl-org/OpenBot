@@ -106,7 +106,7 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
     }
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("Data sended to esp32");
+        print("Data sended to :" , peripheral.name);
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
