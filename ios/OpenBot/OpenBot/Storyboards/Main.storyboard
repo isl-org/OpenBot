@@ -415,7 +415,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j14-sQ-On2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1440.5797101449277" y="971.65178571428567"/>
+            <point key="canvasLocation" x="1375" y="951"/>
         </scene>
         <!--Home Page View Controller-->
         <scene sceneID="8b0-hH-SCr">
@@ -504,7 +504,7 @@
         <!--Game View Controller-->
         <scene sceneID="CnZ-sr-Jyg">
             <objects>
-                <viewController id="9A3-P5-jVL" customClass="GameViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="controllerMapping" id="9A3-P5-jVL" customClass="GameViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VcJ-Kq-j9A">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -543,7 +543,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d4V-wJ-6BY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2037.68115942029" y="969.64285714285711"/>
+            <point key="canvasLocation" x="2262" y="964"/>
         </scene>
     </scenes>
     <resources>
