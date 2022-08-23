@@ -12,7 +12,7 @@ class HomePageViewController: UIViewController {
     @IBOutlet weak var settings: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet var modesCollectionView: UICollectionView!;
-    public var gridItems = [ModeItem(label: "Free Roam", icon: "freeRoam", identifier: "freeRoam"), ModeItem(label: "Data Collection", icon: "dataCollection", identifier: "dataSerialMonitor"), ModeItem(label: "Controller Mapping", icon: "controllerMapping", identifier: "dataSerialMonitor")];
+    public var gridItems = [ModeItem(label: "Free Roam", icon: "freeRoam", identifier: "freeRoam"), ModeItem(label: "Data Collection", icon: "dataCollection", identifier: "dataSerialMonitor"), ModeItem(label: "Controller Mapping", icon: "controllerMapping", identifier: "controllerMapping")];
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTitle();
