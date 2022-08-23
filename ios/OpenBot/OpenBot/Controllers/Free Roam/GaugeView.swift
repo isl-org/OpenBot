@@ -8,17 +8,17 @@
 import UIKit
 
 class GaugeView: UIView {
+    var circle: UIView!
     var outerBezelColor = UIColor(red: 0, green: 0.5, blue: 1, alpha: 1)
     var outerBezelWidth: CGFloat = 10
 
     var innerBezelColor = UIColor.white
-    var innerBezelWidth: CGFloat = 5
-
+    var innerBezelWidth: CGFloat = 1
     var insideColor = UIColor.white
-    var segmentWidth: CGFloat = 20
-    var segmentColors = [UIColor(red: 0.7, green: 0, blue: 0, alpha: 1), UIColor(red: 0, green: 0.5, blue: 0, alpha: 1), UIColor(red: 0, green: 0.5, blue: 0, alpha: 1), UIColor(red: 0, green: 0.5, blue: 0, alpha: 1), UIColor(red: 0.7, green: 0, blue: 0, alpha: 1)]
+    var segmentWidth: CGFloat = 30
+    var segmentColors = [UIColor(red: 0.10, green: 0.66, blue: 0.98, alpha: 1.00),UIColor(red: 0.00, green: 0.44, blue: 0.77, alpha: 1.00)]
     var totalAngle: CGFloat = 270
-    var rotation: CGFloat = -135
+    var rotation: CGFloat = -92
     let valueLabel = UILabel()
     var valueFont = UIFont.systemFont(ofSize: 56)
 
@@ -34,25 +34,28 @@ class GaugeView: UIView {
 
 
     func drawBackground(in rect: CGRect, context ctx: CGContext) {
-        // draw the outer bezel as the largest circle
-        outerBezelColor.set()
-        ctx.fillEllipse(in: rect)
-
-        // move in a little on each edge, then draw the inner bezel
-        let innerBezelRect = rect.insetBy(dx: outerBezelWidth, dy: outerBezelWidth)
-        innerBezelColor.set()
-        ctx.fillEllipse(in: innerBezelRect)
-
-        // finally, move in some more and draw the inside of our gauge
-        let insideRect = innerBezelRect.insetBy(dx: innerBezelWidth, dy: innerBezelWidth)
-        insideColor.set()
-        ctx.fillEllipse(in: insideRect)
+//        // draw the outer bezel as the largest circle
+//        outerBezelColor.set()
+//        ctx.fillEllipse(in: rect)
+//
+//        // move in a little on each edge, then draw the inner bezel
+//        let innerBezelRect = rect.insetBy(dx: outerBezelWidth, dy: outerBezelWidth)
+//        innerBezelColor.set()
+//        ctx.fillEllipse(in: innerBezelRect)
+//
+//        // finally, move in some more and draw the inside of our gauge
+//        let insideRect = innerBezelRect.insetBy(dx: innerBezelWidth, dy: innerBezelWidth)
+//        insideColor.set()
+//        ctx.fillEllipse(in: insideRect)
     }
     override func draw(_ rect: CGRect) {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
         drawBackground(in: rect, context: ctx)
         drawSegments(in: rect, context: ctx)
-        drawCenterDisc(in: rect, context: ctx)
+//        drawCenterDisc(in: rect, context: ctx)
+
+
+
     }
     func deg2rad(_ number: CGFloat) -> CGFloat {
         return number * .pi / 180
@@ -69,16 +72,15 @@ class GaugeView: UIView {
         ctx.setLineWidth(segmentWidth)
 
         // 4: Calculate the size of each segment in the total gauge
-        let segmentAngle = deg2rad(totalAngle / CGFloat(segmentColors.count))
+        let segmentAngle = deg2rad(90)
 
         // 5: Calculate how wide the segment arcs should be
-        let segmentRadius = (((rect.width - segmentWidth) / 2) - outerBezelWidth) - innerBezelWidth
+        let segmentRadius = ((rect.width - segmentWidth) / 2)
 
         // 6: Draw each segment
         for (index, segment) in segmentColors.enumerated() {
             // figure out where the segment starts in our arc
             let start = CGFloat(index) * segmentAngle
-
             // activate its color
             segment.set()
 
@@ -89,9 +91,14 @@ class GaugeView: UIView {
             ctx.drawPath(using: .stroke)
         }
 
+
         // 7: Reset the graphics state
         ctx.restoreGState()
     }
+
+
+
+
     func drawCenterDisc(in rect: CGRect, context ctx: CGContext) {
         ctx.saveGState()
         ctx.translateBy(x: rect.midX, y: rect.midY)
@@ -121,7 +128,7 @@ class GaugeView: UIView {
 
         valueLabel.font = valueFont
 //        valueLabel.text = "100"
-        valueLabel.textColor = .black
+        valueLabel.textColor = .white
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(valueLabel)
 

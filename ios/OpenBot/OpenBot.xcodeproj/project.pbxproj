@@ -13,6 +13,7 @@
 		3AAB48BE289522F200482153 /* ScannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAB48BD289522F200482153 /* ScannerTableViewCell.swift */; };
 		3AD2794028AF703A00053CAD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD2793F28AF703A00053CAD /* CameraViewController.swift */; };
 		3ADF3CC728B4AFAD00EEA7A0 /* sonarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADF3CC628B4AFAD00EEA7A0 /* sonarView.swift */; };
+		3ADF3CC928B4EB2C00EEA7A0 /* tickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADF3CC828B4EB2C00EEA7A0 /* tickView.swift */; };
 		3AE7A38B28ACB0D6001ABE2F /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */; };
 		4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */; };
 		4FEF434E29022789D4FB8985 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4E0B9A9BAE2BD7321783 /* Main.storyboard */; };
@@ -56,6 +57,7 @@
 		3AAB48BD289522F200482153 /* ScannerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerTableViewCell.swift; sourceTree = "<group>"; };
 		3AD2793F28AF703A00053CAD /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		3ADF3CC628B4AFAD00EEA7A0 /* sonarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sonarView.swift; sourceTree = "<group>"; };
+		3ADF3CC828B4EB2C00EEA7A0 /* tickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tickView.swift; sourceTree = "<group>"; };
 		3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		4FEF42374776D62381BDE68C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITests.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 		727D3486646629C6067A6656 /* Free Roam */ = {
 			isa = PBXGroup;
 			children = (
+				3ADF3CC828B4EB2C00EEA7A0 /* tickView.swift */,
 				727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */,
 				3ADF3CC628B4AFAD00EEA7A0 /* sonarView.swift */,
 				727D30501D6445D0C8AED362 /* GaugeView.swift */,
@@ -366,6 +369,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3ADF3CC928B4EB2C00EEA7A0 /* tickView.swift in Sources */,
 				4FEF4DC031698B6DEEB01AEB /* AppDelegate.swift in Sources */,
 				3AD2794028AF703A00053CAD /* CameraViewController.swift in Sources */,
 				3AE7A38B28ACB0D6001ABE2F /* HomePageViewController.swift in Sources */,
