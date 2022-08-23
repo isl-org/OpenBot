@@ -443,7 +443,7 @@
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Ce8-ek-lG7">
-                                <rect key="frame" x="0.0" y="129" width="414" height="664"/>
+                                <rect key="frame" x="0.0" y="140" width="414" height="653"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Mxr-ZR-LOu">
                                     <size key="itemSize" width="128" height="128"/>
@@ -469,7 +469,7 @@
                                     <color key="baseForegroundColor" name="HomePageTitleColor"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <segue destination="BYZ-38-t0r" kind="show" id="gA1-un-beb"/>
+                                    <segue destination="BYZ-38-t0r" kind="show" id="lxN-hS-6YV"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -484,7 +484,7 @@
                             <constraint firstItem="Z72-El-xFG" firstAttribute="centerY" secondItem="5c8-Vo-nJ6" secondAttribute="centerY" constant="-1" id="fEZ-5T-aCn"/>
                             <constraint firstItem="3bM-uf-XtB" firstAttribute="trailing" secondItem="Ce8-ek-lG7" secondAttribute="trailing" id="gTR-c2-eZz"/>
                             <constraint firstItem="Ce8-ek-lG7" firstAttribute="leading" secondItem="3bM-uf-XtB" secondAttribute="leading" id="j8Z-fZ-RFN"/>
-                            <constraint firstItem="Ce8-ek-lG7" firstAttribute="top" secondItem="uDx-Ys-4aG" secondAttribute="bottom" constant="8" symbolic="YES" id="kCK-d5-1bb"/>
+                            <constraint firstItem="Ce8-ek-lG7" firstAttribute="top" secondItem="uDx-Ys-4aG" secondAttribute="bottom" constant="19" id="kCK-d5-1bb"/>
                             <constraint firstItem="Z72-El-xFG" firstAttribute="top" secondItem="3bM-uf-XtB" secondAttribute="top" constant="-1" id="kMU-7N-GDm"/>
                             <constraint firstItem="uDx-Ys-4aG" firstAttribute="top" secondItem="3bM-uf-XtB" secondAttribute="top" id="nMm-Ys-4Lx"/>
                         </constraints>
@@ -501,10 +501,55 @@
             </objects>
             <point key="canvasLocation" x="498.55072463768118" y="-576.5625"/>
         </scene>
+        <!--Game View Controller-->
+        <scene sceneID="CnZ-sr-Jyg">
+            <objects>
+                <viewController id="9A3-P5-jVL" customClass="GameViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="VcJ-Kq-j9A">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" indicatorStyle="white" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNw-oB-7R8">
+                                <rect key="frame" x="0.0" y="447" width="414" height="415"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                            </textView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="controller" translatesAutoresizingMaskIntoConstraints="NO" id="HYS-00-IDW">
+                                <rect key="frame" x="0.0" y="64" width="414" height="375"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="375" id="Xqu-ir-4R0"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="cVs-ib-gs6"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="HYS-00-IDW" firstAttribute="leading" secondItem="cVs-ib-gs6" secondAttribute="leading" id="038-e8-eTI"/>
+                            <constraint firstItem="HYS-00-IDW" firstAttribute="centerY" secondItem="ZNw-oB-7R8" secondAttribute="centerY" constant="-403" id="6jE-iR-wqR"/>
+                            <constraint firstItem="HYS-00-IDW" firstAttribute="leading" secondItem="ZNw-oB-7R8" secondAttribute="leading" id="8Hm-cI-zdH"/>
+                            <constraint firstItem="HYS-00-IDW" firstAttribute="trailing" secondItem="ZNw-oB-7R8" secondAttribute="trailing" id="Ljy-qD-d72"/>
+                            <constraint firstItem="ZNw-oB-7R8" firstAttribute="top" secondItem="cVs-ib-gs6" secondAttribute="top" constant="403" id="OfB-Z9-8ia"/>
+                            <constraint firstItem="HYS-00-IDW" firstAttribute="centerX" secondItem="VcJ-Kq-j9A" secondAttribute="centerX" id="dvP-NW-nQE"/>
+                            <constraint firstItem="HYS-00-IDW" firstAttribute="centerY" secondItem="VcJ-Kq-j9A" secondAttribute="centerY" constant="-196.5" id="eus-Aj-a2z"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="3hd-BS-i2M"/>
+                    <connections>
+                        <outlet property="logTextView" destination="ZNw-oB-7R8" id="veU-lG-QZX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d4V-wJ-6BY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2037.68115942029" y="969.64285714285711"/>
+        </scene>
     </scenes>
     <resources>
         <image name="bluetoothConnected" width="14" height="22"/>
         <image name="camera.fill" catalog="system" width="128" height="94"/>
+        <image name="controller" width="500" height="500"/>
         <image name="settings" width="48" height="41"/>
         <namedColor name="HomePageTitleColor">
             <color red="0.0" green="0.44299998879432678" blue="0.77300000190734863" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
