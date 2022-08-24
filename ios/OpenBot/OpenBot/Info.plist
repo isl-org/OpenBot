@@ -2,6 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Program requires GPS to track cars and job orders</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Program requires GPS to track cars and job orders</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Program requires GPS to track cars and job orders</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app uses your Microphone to allow Voice over IP communication with the Program Admin system</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow for Location updates</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allow for Location updates</string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>NSLocationUsageDescription</key>
+	<string>Allow for Location updates</string>
 	<key>CFBundleIcons</key>
 	<dict/>
 	<key>CFBundleIcons~ipad</key>

@@ -10,8 +10,10 @@ import CoreMotion
 import DeviceCheck
 import MobileCoreServices
 import AVFoundation
+import CoreLocation
+import CoreLocationUI
 
-class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,AVCaptureVideoDataOutputSampleBufferDelegate {
+class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,AVCaptureVideoDataOutputSampleBufferDelegate, CLLocationManagerDelegate {
 //    @IBOutlet weak var borometer: UILabel!
     let captureSession = AVCaptureSession()
     @IBOutlet weak var gyroX: UILabel!
@@ -28,7 +30,8 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
     let device = [UIDevice].self;
     let motionManager = CMMotionManager()
     let altitudeManager = CMAltimeter()
-
+    let locationManager = CLLocationManager()
+    let geoCoder = CLGeocoder()
     let queue = OperationQueue()
     var altitude = Double.zero
     var pressure = Double.zero
@@ -41,6 +44,12 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.gyroscope()
             self.magnetometer()
 //            self.altimeter()
+
+        }
+        locationManager.requestAlwaysAuthorization()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.startMonitoringSignificantLocationChanges()
         }
 
 //        openCamera()
@@ -141,6 +150,16 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
 
         
     }
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let currentLocation = locations.first else { return }
+
+        geoCoder.reverseGeocodeLocation(currentLocation) { (placemarks, error) in
+            guard let currentLocPlacemark = placemarks?.first else { return }
+           print(currentLocPlacemark)
+        }
+    }
+
+
     
         
         
