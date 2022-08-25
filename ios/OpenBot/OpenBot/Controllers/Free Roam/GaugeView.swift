@@ -14,6 +14,7 @@ class GaugeView: UIView {
     //speed label
     let valueLabel = UILabel()
     var valueFont = UIFont.systemFont(ofSize: 56)
+
     override func draw(_ rect: CGRect) {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
         drawSegments(in: rect, context: ctx)
@@ -62,7 +63,7 @@ class GaugeView: UIView {
         addSubview(valueLabel)
         NSLayoutConstraint.activate([
             valueLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)
+            valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0)
         ])
     }
     override init(frame: CGRect) {
