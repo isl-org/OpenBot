@@ -18,7 +18,9 @@
 		4FEF434E29022789D4FB8985 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4E0B9A9BAE2BD7321783 /* Main.storyboard */; };
 		4FEF43565A0B8A9578E85B54 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4EE1E197D3F52EFF3B88 /* Launch Screen.storyboard */; };
 		4FEF442F6DF5C31D0EE4FE2B /* OpenBotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */; };
+		4FEF47B52607872D6B0CD56F /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4178D0A2805591A6A3A6 /* Strings.swift */; };
 		4FEF483FCB45A3257C181C30 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4BD00A645A3985233A37 /* README.md */; };
+		4FEF49D3149212EA208C893B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF443C3B9B9931D5108052 /* Constants.swift */; };
 		4FEF49DD79D9DD3CF5733B71 /* OpenBotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */; };
 		4FEF4BF08DDE6BB860043DE4 /* BluetoothViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF49C8753F02C2240E51D8 /* BluetoothViewController.swift */; };
 		4FEF4C5087962C2F3B2BB3A1 /* Modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45F4F7552D2FFF3D1130 /* Modes.swift */; };
@@ -58,8 +60,10 @@
 		3AAB48BD289522F200482153 /* ScannerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerTableViewCell.swift; sourceTree = "<group>"; };
 		3AD2793F28AF703A00053CAD /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
+		4FEF4178D0A2805591A6A3A6 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		4FEF42374776D62381BDE68C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITests.swift; sourceTree = "<group>"; };
+		4FEF443C3B9B9931D5108052 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4FEF44EFCFD003BA859F8008 /* OpenBotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEF45F4F7552D2FFF3D1130 /* Modes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Modes.swift; sourceTree = "<group>"; };
 		4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -118,6 +122,8 @@
 		4FEF42AB3B7AC14D55B7DBA3 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				4FEF443C3B9B9931D5108052 /* Constants.swift */,
+				4FEF4178D0A2805591A6A3A6 /* Strings.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -386,6 +392,8 @@
 				4FEF483FCB45A3257C181C30 /* README.md in Sources */,
 				727D3D12FAF02C416CC2CEC1 /* FreeRoamController.swift in Sources */,
 				727D33DD6B69783CAE4035BD /* GaugeView.swift in Sources */,
+				4FEF49D3149212EA208C893B /* Constants.swift in Sources */,
+				4FEF47B52607872D6B0CD56F /* Strings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -3,10 +3,11 @@
 //
 
 import Foundation
+import UIKit
 
 
 public struct ModeItem {
     var label: String;
-    var icon: String;
+    var icon: UIImage;
     var identifier: String;
 }
