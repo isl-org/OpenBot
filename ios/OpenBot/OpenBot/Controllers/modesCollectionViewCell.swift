@@ -18,12 +18,12 @@ class modesCollectionViewCell: UICollectionViewCell {
     }
 
     public func configure(with gridItem: ModeItem) {
-        icon.image = UIImage(named: gridItem.icon)!;
+        icon.image = gridItem.icon;
         title.text = gridItem.label;
     }
 
     static func nib() -> UINib {
-        return UINib(nibName: "modesCollectionViewCell", bundle: nil);
+        UINib(nibName: "modesCollectionViewCell", bundle: nil);
     }
 
 }
