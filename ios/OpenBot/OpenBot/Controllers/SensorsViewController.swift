@@ -38,12 +38,11 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        startMotionUpdates()
         Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { _ in
             self.accelerometer()
             self.gyroscope()
             self.magnetometer()
-//            self.altimeter()
+
 
         }
         locationManager.requestAlwaysAuthorization()
@@ -55,44 +54,44 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
 //        openCamera()
     }
 
-    func startMotionUpdates() {
-        var interval: Double = 0.25
-
-        //for acceleration
-        motionManager.startAccelerometerUpdates()
-        motionManager.accelerometerUpdateInterval = interval
-        //for gyroscope
-        motionManager.startGyroUpdates()
-        motionManager.gyroUpdateInterval = interval
-        //for Magnetometer
-        motionManager.startMagnetometerUpdates()
-        motionManager.magnetometerUpdateInterval = interval
-        //for altitude
-
-    }
+//    func startMotionUpdates() {
+//        var interval: Double = 0.25
+//
+//        //for acceleration
+//        motionManager.startAccelerometerUpdates()
+//        motionManager.accelerometerUpdateInterval = interval
+//        //for gyroscope
+//        motionManager.startGyroUpdates()
+//        motionManager.gyroUpdateInterval = interval
+//        //for Magnetometer
+//        motionManager.startMagnetometerUpdates()
+//        motionManager.magnetometerUpdateInterval = interval
+//        //for altitude
+//
+//    }
 
     func accelerometer() {
-        if let data = self.motionManager.accelerometerData {
-            self.accelerationX.text = String(format: "%.5f", data.acceleration.x)
-            self.accelerationY.text = String(format: "%.5f", data.acceleration.y)
-            self.accelerationZ.text = String(format: "%.5f", data.acceleration.z)
-        }
+
+            self.accelerationX.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationX)
+            self.accelerationY.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationY)
+            self.accelerationZ.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationZ)
+
     }
 
     func gyroscope() {
-        if let data = self.motionManager.gyroData {
-            self.gyroX.text = String(format: "%.5f", data.rotationRate.x)
-            self.gyroY.text = String(format: "%.5f", data.rotationRate.y)
-            self.gyroZ.text = String(format: "%.5f", data.rotationRate.z)
-        }
+
+            self.gyroX.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
+            self.gyroY.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
+            self.gyroZ.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
+
     }
 
     func magnetometer() {
-        if let data = motionManager.magnetometerData {
-            magneticFieldX.text = String(format: "%.5f", data.magneticField.x)
-            magneticFieldY.text = String(format: "%.5f", data.magneticField.y)
-            magneticFieldZ.text = String(format: "%.5f", data.magneticField.z)
-        }
+
+            magneticFieldX.text = String(format: "%.5f", sensorDataRetrieve.shared.magneticFieldX)
+            magneticFieldY.text = String(format: "%.5f", sensorDataRetrieve.shared.magneticFieldY)
+            magneticFieldZ.text = String(format: "%.5f", sensorDataRetrieve.shared.magneticFieldZ)
+
     }
 
 //    func altimeter() {
