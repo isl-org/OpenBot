@@ -7,18 +7,12 @@
 
 
 import UIKit
-import GameController
 
 class GameViewController: UIViewController {
 
     @IBOutlet weak var logTextView: UITextView!
-
+    let gameController: GameController = GameController.shared;
     var dateFormatter = DateFormatter()
-
-    private let maximumControllerCount: Int = 1
-    private(set) var controllers = Set<GCController>()
-    private var panRecognizer: UIPanGestureRecognizer!
-    weak var delegate: InputManagerDelegate?
 
     let overlayLeft = Draw(frame: CGRect(origin: CGPoint(x: 61, y: 175), size: CGSize(width: 18, height: 18)))
     let overlayRight = Draw(frame: CGRect(origin: CGPoint(x: 102, y: 175), size: CGSize(width: 18, height: 18)))
@@ -41,123 +35,106 @@ class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         dateFormatter.dateFormat = "HH:mm:ss.SSSS"
         clearLog()
-
-        NotificationCenter.default.addObserver(self,
-                selector: #selector(didConnectController),
-                name: NSNotification.Name.GCControllerDidConnect,
-                object: nil)
-        NotificationCenter.default.addObserver(self,
-                selector: #selector(didDisconnectController),
-                name: NSNotification.Name.GCControllerDidDisconnect,
-                object: nil)
-
-        GCController.startWirelessControllerDiscovery {
-        }
     }
 
     func clearLog() {
+//        print("sparsh is awesome");
         logTextView.text = ""
     }
 
     func writeToLog(newLine: String) {
-        logTextView.text = newLine + "\n" + logTextView.text
+        print(newLine);
+//        logTextView.text = newLine + "\n" + logTextView.text
     }
 
-    @objc func didConnectController(_ notification: Notification) {
-        writeToLog(newLine: "didConnectController")
-        guard controllers.count < maximumControllerCount else {
-            return
-        }
-        let controller = notification.object as! GCController
-        let batteryLevel = String(format: "%.2f", controller.battery.unsafelyUnwrapped.batteryLevel * 100);
-        writeToLog(newLine: "Battery Level:" + batteryLevel);
+//    @objc func didConnectController(_ notification: Notification) {
 
-        controllers.insert(controller)
-
-        delegate?.inputManager(self, didConnect: controller)
-        controller.extendedGamepad?.dpad.left.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("←", pressed, self.overlayLeft)
-        }
-        controller.extendedGamepad?.dpad.right.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("→", pressed, self.overlayRight)
-        }
-        controller.extendedGamepad?.dpad.up.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("↑", pressed, self.overlayUp)
-        }
-        controller.extendedGamepad?.dpad.down.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("↓", pressed, self.overlayDown)
-        }
-
-        // buttonA is labeled "X" (blue) on PS4 controller
-        controller.extendedGamepad?.buttonA.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("A", pressed, self.overlayA)
-        }
-        // buttonB is labeled "circle" (red) on PS4 controller
-        controller.extendedGamepad?.buttonB.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("B", pressed, self.overlayB)
-        }
-        // buttonX is labeled "square" (pink) on PS4 controller
-        controller.extendedGamepad?.buttonX.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("X", pressed, self.overlayX)
-        }
-        // buttonY is labeled "triangle" (green) on PS4 controller
-        controller.extendedGamepad?.buttonY.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("Y", pressed, self.overlayY)
-        }
-
-        // buttonOptions is labeled "SHARE" on PS4 controller
-        controller.extendedGamepad?.buttonOptions?.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("SHARE", pressed, self.overlayOptions)
-        }
-        // buttonMenu is labeled "OPTIONS" on PS4 controller
-        controller.extendedGamepad?.buttonMenu.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("OPTIONS", pressed, self.overlayMenu)
-        }
-
-        controller.extendedGamepad?.leftShoulder.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("L1", pressed, self.overlayLeftShoulder)
-        }
-        controller.extendedGamepad?.rightShoulder.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("R1", pressed, self.overlayRightShoulder)
-        }
-
-        controller.extendedGamepad?.leftTrigger.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("L2", pressed, self.overlayLeftShoulder)
-        }
-        controller.extendedGamepad?.leftTrigger.valueChangedHandler = { (button, value, pressed) in
-            self.triggerChangedHandler("L2", value, pressed)
-        }
-        controller.extendedGamepad?.rightTrigger.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("R2", pressed, self.overlayRightShoulder)
-        }
-        controller.extendedGamepad?.rightTrigger.valueChangedHandler = { (button, value, pressed) in
-            self.triggerChangedHandler("R2", value, pressed)
-        }
-
-        controller.extendedGamepad?.leftThumbstick.valueChangedHandler = { (button, xvalue, yvalue) in
-            self.thumbstickChangedHandler("THUMB-LEFT", xvalue, yvalue)
-        }
-        controller.extendedGamepad?.rightThumbstick.valueChangedHandler = { (button, xvalue, yvalue) in
-            self.thumbstickChangedHandler("THUMB-RIGHT", xvalue, yvalue)
-        }
-
-        controller.extendedGamepad?.leftThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("THUMB-LEFT", pressed, self.overlayLeftThumb)
-        }
-        controller.extendedGamepad?.rightThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("THUMB-RIGHT", pressed, self.overlayRightThumb)
-        }
-    }
-
-    @objc func didDisconnectController(_ notification: Notification) {
-        writeToLog(newLine: "didDisconnectController")
-        let controller = notification.object as! GCController
-        controllers.remove(controller)
-        delegate?.inputManager(self, didDisconnect: controller)
-    }
+//        writeToLog(newLine: "didConnectController")
+//        guard controllers.count < maximumControllerCount else {
+//            return
+//        }
+//        let controller = notification.object as! GCController
+//        let batteryLevel = String(format: "%.2f", controller.battery.unsafelyUnwrapped.batteryLevel * 100);
+//        writeToLog(newLine: "Battery Level:" + batteryLevel);
+//
+//        controllers.insert(controller)
+//
+//        delegate?.inputManager(self, didConnect: controller)
+//        controller.extendedGamepad?.dpad.left.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("←", pressed, self.overlayLeft)
+//        }
+//        controller.extendedGamepad?.dpad.right.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("→", pressed, self.overlayRight)
+//        }
+//        controller.extendedGamepad?.dpad.up.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("↑", pressed, self.overlayUp)
+//        }
+//        controller.extendedGamepad?.dpad.down.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("↓", pressed, self.overlayDown)
+//        }
+//
+//        // buttonA is labeled "X" (blue) on PS4 controller
+//        controller.extendedGamepad?.buttonA.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("A", pressed, self.overlayA)
+//        }
+//        // buttonB is labeled "circle" (red) on PS4 controller
+//        controller.extendedGamepad?.buttonB.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("B", pressed, self.overlayB)
+//        }
+//        // buttonX is labeled "square" (pink) on PS4 controller
+//        controller.extendedGamepad?.buttonX.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("X", pressed, self.overlayX)
+//        }
+//        // buttonY is labeled "triangle" (green) on PS4 controller
+//        controller.extendedGamepad?.buttonY.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("Y", pressed, self.overlayY)
+//        }
+//
+//        // buttonOptions is labeled "SHARE" on PS4 controller
+//        controller.extendedGamepad?.buttonOptions?.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("SHARE", pressed, self.overlayOptions)
+//        }
+//        // buttonMenu is labeled "OPTIONS" on PS4 controller
+//        controller.extendedGamepad?.buttonMenu.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("OPTIONS", pressed, self.overlayMenu)
+//        }
+//
+//        controller.extendedGamepad?.leftShoulder.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("L1", pressed, self.overlayLeftShoulder)
+//        }
+//        controller.extendedGamepad?.rightShoulder.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("R1", pressed, self.overlayRightShoulder)
+//        }
+//
+//        controller.extendedGamepad?.leftTrigger.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("L2", pressed, self.overlayLeftShoulder)
+//        }
+//        controller.extendedGamepad?.leftTrigger.valueChangedHandler = { (button, value, pressed) in
+//            self.triggerChangedHandler("L2", value, pressed)
+//        }
+//        controller.extendedGamepad?.rightTrigger.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("R2", pressed, self.overlayRightShoulder)
+//        }
+//        controller.extendedGamepad?.rightTrigger.valueChangedHandler = { (button, value, pressed) in
+//            self.triggerChangedHandler("R2", value, pressed)
+//        }
+//
+//        controller.extendedGamepad?.leftThumbstick.valueChangedHandler = { (button, xvalue, yvalue) in
+//            self.thumbstickChangedHandler("THUMB-LEFT", xvalue, yvalue)
+//        }
+//        controller.extendedGamepad?.rightThumbstick.valueChangedHandler = { (button, xvalue, yvalue) in
+//            self.thumbstickChangedHandler("THUMB-RIGHT", xvalue, yvalue)
+//        }
+//
+//        controller.extendedGamepad?.leftThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("THUMB-LEFT", pressed, self.overlayLeftThumb)
+//        }
+//        controller.extendedGamepad?.rightThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
+//            self.buttonChangedHandler("THUMB-RIGHT", pressed, self.overlayRightThumb)
+//        }
+//    }
 
     func getTimestamp() -> String {
         dateFormatter.string(from: Date())
@@ -166,10 +143,10 @@ class GameViewController: UIViewController {
     func buttonChangedHandler(_ button: String, _ pressed: Bool, _ overlay: UIView) {
         if pressed {
             writeToLog(newLine: getTimestamp() + " - " + button + " " + "down")
-            view.addSubview(overlay)
+//            view.addSubview(overlay)
         } else {
             writeToLog(newLine: getTimestamp() + " - " + button + " " + "up")
-            overlay.removeFromSuperview()
+//            overlay.removeFromSuperview()
         }
     }
 
@@ -187,12 +164,6 @@ class GameViewController: UIViewController {
     }
 
 }
-
-protocol InputManagerDelegate: AnyObject {
-    func inputManager(_ manager: GameViewController, didConnect controller: GCController)
-    func inputManager(_ manager: GameViewController, didDisconnect controller: GCController)
-}
-
 
 class Draw: UIView {
 

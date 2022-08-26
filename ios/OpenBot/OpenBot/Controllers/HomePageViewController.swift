@@ -59,7 +59,6 @@ class HomePageViewController: UIViewController {
     }
 
     @IBAction func onTapSettings() {
-
         if isBluetoothConnected != false {
             let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: Strings.ScreenDataCollection))!
             guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
