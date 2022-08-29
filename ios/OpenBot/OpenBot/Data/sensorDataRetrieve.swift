@@ -67,7 +67,7 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
                 accelerationX = data.acceleration.x
                 accelerationY = data.acceleration.y
                 accelerationZ = data.acceleration.z
-                print("acceleration x is :", accelerationX)
+
             }
         } else {
             print("accelration is not available")
@@ -79,7 +79,6 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
             gyroX = data.rotationRate.x
             gyroY = data.rotationRate.y
             gyroZ = data.rotationRate.z
-            print("gyro data is :", gyroX)
         }
     }
 
@@ -88,7 +87,7 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
             magneticFieldX = data.magneticField.x
             magneticFieldY = data.magneticField.y
             magneticFieldZ = data.magneticField.z
-            print("magnetic field in x is :", magneticFieldX)
+
         }
     }
 

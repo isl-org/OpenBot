@@ -42,6 +42,7 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.accelerometer()
             self.gyroscope()
             self.magnetometer()
+            bluetoothDataController.shared
 
 
         }

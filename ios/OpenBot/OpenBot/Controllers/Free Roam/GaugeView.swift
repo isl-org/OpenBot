@@ -16,7 +16,6 @@ class GaugeView: UIView {
     let valueLabel = UILabel()
     var valueFont = UIFont(name:"medium", size: 100.0)
     var segmentValue : Int = 120
-
     override func draw(_ rect: CGRect) {
 
 

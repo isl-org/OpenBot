@@ -1,35 +1,38 @@
 //
-//  DataSerialMonitorViewController.swift
-//  OpenBot
-//
-//  Created by Nitish Yadav on 18/08/22.
+// Created by Nitish Yadav on 29/08/22.
 //
 
-import UIKit
+import Foundation
 import CoreBluetooth
-class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDelegate {
+import CoreMotion
+
+class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPeripheralDelegate {
+    static let shared: bluetoothDataController = bluetoothDataController()
     var centralManager: CBCentralManager?
     var tempPeripheral: CBPeripheral!
     var LabelString: String!
     private var allservices: [CBService]?
     var writeCharacteristics: CBCharacteristic?
-    @IBOutlet weak var sendDataToBle: UITextField!
-    @IBOutlet weak var bleSendData: UITextView!
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        bleSendData.isEditable = false
+
+    required init?(coder: NSCoder) {
+        super.init()
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override init() {
+        super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
-//        print("tempPeripheral is :", tempPeripheral)
+        print("i am in init function")
     }
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-
         self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-
+        print(peripheral,"hello")
         if peripheral.name == peri?.name {
+            print(peripheral)
             centralManager?.stopScan()
             self.tempPeripheral = peripheral
 //            print("peripheral is :",tempPeripheral)
@@ -54,7 +57,6 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let services = peripheral.services {
-//            print("services are :", services)
             for service in services {
                 allservices?.append(service)
                 peripheral.discoverCharacteristics([], for: service)
@@ -74,13 +76,9 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
                 writeCharacteristics = characteristic
-//                print(" hello ", characteristic)
-//                    let dataToSend: Data = "hello jgbjdsb".data(using: String.Encoding.utf8)!
-//                var  temp = (wifiName.text ?? "") + (wifiPassword.text ?? "")
-//                let dataToSend: Data = temp.data(using: String.Encoding.utf8)!
-//                    peripheral.writeValue(dataToSend, for: characteristic, type: CBCharacteristicWriteType.withResponse)
                 subscribeToNotifications(peripheral: tempPeripheral, characteristic: characteristic)
                 readValue(characteristic: characteristic)
+
                 peripheral.discoverDescriptors(for: characteristic)
             }
         }
@@ -92,14 +90,12 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         if let error = error {
-            // Handle error
             return
         }
-        // Successfully subscribed to or unsubscribed from notifications/indications on a characteristic
     }
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("Data sended to :" , peripheral.name);
+        print("Data sended to :", peripheral.name);
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
@@ -107,38 +103,14 @@ class DataSerialMonitorViewController: UIViewController,CBCentralManagerDelegate
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-//        print("didUpdateValue : ",characteristic.value)
         if characteristic.value != nil {
             let data = characteristic.value!
-
             let x = String(data: data, encoding: .utf8)
-
-            LabelString = (LabelString ?? "") + (x ?? "") + "\n"
-            let range = NSRange(location: bleSendData.text.count - 1, length: 0)
-            bleSendData.scrollRangeToVisible(range)
-            bleSendData.text = LabelString
-
+            LabelString = x
         }
-//    print("characteristic are : ", writeCharacteristics)
     }
-
     func readValue(characteristic: CBCharacteristic) {
         self.tempPeripheral?.readValue(for: characteristic)
-    }
-
-    @IBAction func sendData(_ sender: Any) {
-        var temp = (sendDataToBle.text ?? "") + "\n"
-        LabelString = (LabelString ?? "") + (temp) + "\n"
-        let range = NSRange(location: bleSendData.text.count - 1, length: 0)
-        bleSendData.scrollRangeToVisible(range)
-        bleSendData.text = LabelString
-
-        print("value is :", temp)
-//        print("temp peripheral is :",peri)
-        let dataToSend: Data = temp.data(using: String.Encoding.utf8)!
-        tempPeripheral!.writeValue(dataToSend, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
-        sendDataToBle.text = "";
-
     }
 
 }
