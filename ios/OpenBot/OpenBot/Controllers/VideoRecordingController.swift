@@ -119,7 +119,7 @@ class VideoRecordingController: UIViewController , AVCaptureFileOutputRecordingD
     }
 
     func videoQueue() -> DispatchQueue {
-        return DispatchQueue.main
+        DispatchQueue.main
     }
 
 
@@ -224,7 +224,7 @@ class VideoRecordingController: UIViewController , AVCaptureFileOutputRecordingD
         } else {
 
             _ = outputURL as URL
-            let videoRecorded = outputURL! as URL
+            _ = outputURL! as URL
 
             loadVideo()
 
@@ -233,7 +233,7 @@ class VideoRecordingController: UIViewController , AVCaptureFileOutputRecordingD
         outputURL = nil
     }
     func loadVideo(){
-        print(outputURL)
+        print(outputURL as Any)
         avPlayerLayer = AVPlayerLayer(player: avPlayer)
         avPlayerLayer.frame = view.bounds
         avPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill

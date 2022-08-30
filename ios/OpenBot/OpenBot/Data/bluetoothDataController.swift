@@ -11,7 +11,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     var centralManager: CBCentralManager?
     var tempPeripheral: CBPeripheral!
     var LabelString: String!
-    private var allservices: [CBService]?
+    private var allServices: [CBService]?
     var writeCharacteristics: CBCharacteristic?
 
     required init?(coder: NSCoder) {
@@ -26,15 +26,15 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
+        centralManager?.scanForPeripherals(withServices: nil, options: nil)
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        print(peripheral,"hello")
+        print(peripheral, "hello")
         if peripheral.name == peri?.name {
             print(peripheral)
             centralManager?.stopScan()
-            self.tempPeripheral = peripheral
+            tempPeripheral = peripheral
 //            print("peripheral is :",tempPeripheral)
             tempPeripheral.delegate = self
             centralManager?.connect(tempPeripheral)
@@ -58,7 +58,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let services = peripheral.services {
             for service in services {
-                allservices?.append(service)
+                allServices?.append(service)
                 peripheral.discoverCharacteristics([], for: service)
             }
         }
@@ -89,13 +89,14 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-        if let error = error {
+        if error != nil {
             return
         }
     }
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("Data sended to :", peripheral.name);
+        print("Data sent to :", peripheral.name as Any);
+
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
@@ -107,10 +108,18 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             let data = characteristic.value!
             let x = String(data: data, encoding: .utf8)
             LabelString = x
+            print(x as Any)
+
         }
     }
+
     func readValue(characteristic: CBCharacteristic) {
-        self.tempPeripheral?.readValue(for: characteristic)
+        tempPeripheral?.readValue(for: characteristic)
     }
 
+    func sendData(payload: String) {
+        let dataToSend: Data = payload.data(using: String.Encoding.utf8)!
+        tempPeripheral!.writeValue(dataToSend, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
+
+    }
 }

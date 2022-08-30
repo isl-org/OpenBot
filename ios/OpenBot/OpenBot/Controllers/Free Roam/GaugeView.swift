@@ -30,7 +30,7 @@ class GaugeView: UIView {
     }
 
     func deg2rad(_ number: CGFloat) -> CGFloat {
-        return number * .pi / 180
+        number * .pi / 180
     }
 
     func drawSegments(in rect: CGRect, context ctx: CGContext, value: Int) {
@@ -55,7 +55,7 @@ class GaugeView: UIView {
         for (index, segment) in segmentColors.enumerated() {
 
             // figure out where the segment starts in our arc
-            var start = CGFloat(index) * segmentAngle
+            let start = CGFloat(index) * segmentAngle
             segment.set()
             if index == 0 {
                 ctx.addArc(center: .zero, radius: segmentRadius, startAngle: start, endAngle: start + segmentAngle, clockwise: false)

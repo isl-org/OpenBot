@@ -14,7 +14,6 @@ import CoreLocation
 import CoreLocationUI
 
 class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,AVCaptureVideoDataOutputSampleBufferDelegate, CLLocationManagerDelegate {
-//    @IBOutlet weak var borometer: UILabel!
     let captureSession = AVCaptureSession()
     @IBOutlet weak var gyroX: UILabel!
     @IBOutlet weak var gyroY: UILabel!
@@ -42,7 +41,7 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.accelerometer()
             self.gyroscope()
             self.magnetometer()
-            bluetoothDataController.shared
+
 
 
         }
@@ -73,17 +72,17 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
 
     func accelerometer() {
 
-            self.accelerationX.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationX)
-            self.accelerationY.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationY)
-            self.accelerationZ.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationZ)
+            accelerationX.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationX)
+            accelerationY.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationY)
+            accelerationZ.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationZ)
 
     }
 
     func gyroscope() {
 
-            self.gyroX.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
-            self.gyroY.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
-            self.gyroZ.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
+            gyroX.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
+            gyroY.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
+            gyroZ.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
 
     }
 
@@ -102,7 +101,7 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
 //
 //            print("altitude is : ", self.altitude, " pressure is : ", self.pressure)
 //
-//            self.borometer.text = String(self.pressure)
+//            self.barometer.text = String(self.pressure)
 //        }
 //    }
 
@@ -133,8 +132,8 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
 //        } else {
 //            print("Camera is not available")
 //        }
-        let openDataSerialView = (self.storyboard?.instantiateViewController(withIdentifier: "cameraScreen"))!
-        guard (self.navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
+        let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "cameraScreen"))!
+        guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
             fatalError("guard failure handling has not been implemented")
         }
 
@@ -143,8 +142,8 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     @IBAction func videoCamera(_ sender: Any) {
-        let openDataSerialView = (self.storyboard?.instantiateViewController(withIdentifier: "videoRecorder"))!
-        guard (self.navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
+        let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "videoRecorder"))!
+        guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
             fatalError("guard failure handling has not been implemented")
         }
 
@@ -153,8 +152,8 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.first else { return }
 
-        geoCoder.reverseGeocodeLocation(currentLocation) { (placemarks, error) in
-            guard let currentLocPlacemark = placemarks?.first else { return }
+        geoCoder.reverseGeocodeLocation(currentLocation) { (placeMarks, error) in
+            guard let currentLocPlacemark = placeMarks?.first else { return }
            print(currentLocPlacemark)
         }
     }

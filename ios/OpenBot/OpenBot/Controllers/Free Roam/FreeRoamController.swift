@@ -11,8 +11,8 @@ import UIKit
 class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     var temp: String = ""
     var circle: UIView!
-    var isPhonemodeEnable: Bool = false
-    var isGamemodeEnable: Bool = false
+    var isPhoneModeEnable: Bool = false
+    var isGameModeEnable: Bool = false
     var isJoystickEnable: Bool = false
     var isGameEnable: Bool = false
     var isDualEnable: Bool = false
@@ -28,24 +28,24 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let speedoMeter = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
-        speedoMeter.backgroundColor = .clear
-        view.addSubview(speedoMeter)
+        let speedometer = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
+        speedometer.backgroundColor = .clear
+        view.addSubview(speedometer)
         createSonalLabel();
 
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             UIView.animate(withDuration: 1) {
-                speedoMeter.value = 33
+                speedometer.value = 33
             }
         }
 
         Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { _ in
 
-            self.SonarLabel.text = (self.bluetooth.LabelString ?? "0")+"CM"
-            self.createSonarController(h: Int(self.bluetooth.LabelString ?? "0" ) ?? 0 )
+            self.SonarLabel.text = (self.bluetooth.LabelString ?? "0") + "CM"
+            self.createSonarController(h: Int(self.bluetooth.LabelString ?? "0") ?? 0)
         }
-        self.createSonarController(h: 10)
+        createSonarController(h: 10)
         let dIcon = UIButton()
         dIcon.setTitle("D", for: .normal)
         dIcon.layer.borderWidth = 1
@@ -53,28 +53,24 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         dIcon.frame = CGRect(x: 120, y: 310, width: 40, height: 40)
         dIcon.layer.cornerRadius = 5
         view.addSubview(dIcon)
-        let driveIconRect = createRectange(x: 180, y: 310, width: 40, height: 40, borderColor: "borderColor")
+        let driveIconRect = createRectangle(x: 180, y: 310, width: 40, height: 40, borderColor: "borderColor")
         let driveIcon = UIImageView(frame: CGRect(x: driveIconRect.frame.size.width / 4, y: driveIconRect.frame.size.height / 4, width: 20, height: 20))
         driveIcon.image = UIImage(named: "drive")
         view.addSubview(driveIconRect)
         driveIconRect.addSubview(driveIcon)
 
 
-        let blueToothIconRect = createRectange(x: 240, y: 310, width: 40, height: 40, borderColor: "borderColor")
+        let blueToothIconRect = createRectangle(x: 240, y: 310, width: 40, height: 40, borderColor: "borderColor")
         let blueToothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 5, y: blueToothIconRect.frame.size.height / 4, width: 10, height: 20))
         blueToothIcon.image = UIImage(named: "bluetooth")
         view.addSubview(blueToothIconRect)
         blueToothIconRect.addSubview(blueToothIcon)
-
-//        createVoltageController(h: 50)
-//        createSonarController(h: 40)
-
-        self.createLabel(value: "12V", x: 35, y: 380, width: 50, height: 40)
-        self.createVoltageController(h: 10)
+        createLabel(value: "12V", x: 35, y: 380, width: 50, height: 40)
+        createVoltageController(h: 10)
         createLabel(value: "Controller", x: 35, y: 420, width: 100, height: 40)
         createGamepad()
         createPhone()
-        createjoystick()
+        createJoystick()
         createGame()
         createDual()
         createLabel(value: "Speed", x: 35, y: 615, width: 100, height: 40)
@@ -82,10 +78,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         createMediumMode()
         createFastMode()
         createLabel(value: "Drive Mode", x: 35, y: 515, width: 100, height: 40)
-        let diameter = 200.0
         let ticks = 40
         var radius = 120
-        for i in 0...3 {
+        for _ in 0...3 {
             drawTicks(count: ticks, radius: radius)
             radius = radius - 22;
         }
@@ -95,20 +90,8 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidAppear(animated)
     }
 
-
-//    var meter: String = "100" {
-//        willSet {
-//                print(Int(meter))
-//                print(bluetooth.LabelString)
-//        }
-//        didSet {
-//                print("hello nitish")
-//        }
-//    }
-
-
     func deg2rad(_ number: CGFloat) -> CGFloat {
-        return number * .pi / 180
+        number * .pi / 180
     }
 
     func drawTicks(count: Int, radius: Int) {
@@ -118,10 +101,10 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         for i in 0..<count {
             if i <= pointOfBreak1 || i >= pointOfBreak2 {
                 let tick = createTick()
-                let x = CGFloat(Float(187.5) + Float(radius) * cosf(2 * Float(i) * Float(M_PI) / Float(count) - Float(M_PI) / 2))
-                let y = CGFloat(Float(240) + Float(radius) * sinf(2 * Float(i) * Float(M_PI) / Float(count) - Float(M_PI) / 2))
+                let x = CGFloat(Float(187.5) + Float(radius) * cosf(2 * Float(i) * Float(Double.pi) / Float(count) - Float(Double.pi) / 2))
+                let y = CGFloat(Float(240) + Float(radius) * sinf(2 * Float(i) * Float(Double.pi) / Float(count) - Float(Double.pi) / 2))
                 tick.center = CGPoint(x: x, y: y)
-                // degress -> radians
+
                 tick.transform = CGAffineTransform.identity.rotated(by: rotationInDegrees * .pi / 180.0)
                 view.addSubview(tick)
                 rotationInDegrees = rotationInDegrees + (360.0 / CGFloat(count))
@@ -135,16 +118,18 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
         return tick
     }
-    func createSonalLabel(){
-        SonarLabel.frame = CGRect(x: Int(self.view.frame.width) - 70, y: 380, width: 50, height: 40)
+
+    func createSonalLabel() {
+        SonarLabel.frame = CGRect(x: Int(view.frame.width) - 70, y: 380, width: 50, height: 40)
         SonarLabel.text = "0CM"
         SonarLabel.textColor = .white
         SonarLabel.font = SonarLabel.font.withSize(12)
         view.addSubview(SonarLabel)
 
     }
+
     func createVoltageController(h: Int) {
-        let outerVoltage = createRectange(x: 30, y: 280, width: 50, height: 110, borderColor: "borderColor")
+        let outerVoltage = createRectangle(x: 30, y: 280, width: 50, height: 110, borderColor: "borderColor")
         let innerVoltage = UIView(frame: CGRect(x: 0, y: 110 - h, width: 49, height: h - 1))
         innerVoltage.backgroundColor = UIColor(named: "voltageDivider")
         outerVoltage.addSubview(innerVoltage)
@@ -152,15 +137,14 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createSonarController(h: Int) {
-        let outerSonar = createRectange(x: Int(view.frame.width) - 70, y: 280, width: 50, height: 110, borderColor: "borderColor");
-        let relativeHeight : Int
+        let outerSonar = createRectangle(x: Int(view.frame.width) - 70, y: 280, width: 50, height: 110, borderColor: "borderColor");
+        let relativeHeight: Int
         if h > 300 {
             relativeHeight = 100
+        } else {
+            relativeHeight = 11 / 30 * h
         }
-        else{
-            relativeHeight = 11/30*h
-        }
-        let innerSonar = UIView(frame: CGRect(x: 0, y: 110-relativeHeight, width: 49, height: relativeHeight-1))
+        let innerSonar = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
         innerSonar.backgroundColor = UIColor(named: "sonar")
         outerSonar.addSubview(innerSonar)
         view.addSubview(outerSonar)
@@ -177,17 +161,17 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     }
 
-    func createRectange(x: Int, y: Int, width: Int, height: Int, borderColor: String) -> UIView {
-        let rectangeView = UIView(frame: CGRect(x: x, y: y, width: width, height: height))
-        rectangeView.layer.cornerRadius = 5;
-        rectangeView.layer.borderWidth = 1;
-        rectangeView.layer.borderColor = UIColor(named: borderColor)?.cgColor
-        return rectangeView;
+    func createRectangle(x: Int, y: Int, width: Int, height: Int, borderColor: String) -> UIView {
+        let rectangleView = UIView(frame: CGRect(x: x, y: y, width: width, height: height))
+        rectangleView.layer.cornerRadius = 5;
+        rectangleView.layer.borderWidth = 1;
+        rectangleView.layer.borderColor = UIColor(named: borderColor)?.cgColor
+        return rectangleView;
     }
 
     func createGamepad() {
         let gamePadController = createMode(x: 35, y: 460, width: 150, label: "Gamepad", icon: "gamepad")
-        if isGamemodeEnable {
+        if isGameModeEnable {
             gamePadController.backgroundColor = UIColor(named: "HomePageTitleColor")
         } else {
             gamePadController.backgroundColor = UIColor(named: "gamepad")
@@ -201,7 +185,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func createPhone() {
         let phoneController = createMode(x: Int(view.frame.width / 2) + 20, y: 460, width: 120, label: "Phone", icon: "phone")
-        if isPhonemodeEnable {
+        if isPhoneModeEnable {
             phoneController.backgroundColor = UIColor(named: "HomePageTitleColor")
         } else {
             phoneController.backgroundColor = UIColor(named: "gamepad")
@@ -212,8 +196,8 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         view.addSubview(phoneController)
     }
 
-    func createjoystick() {
-        let joystick = createMode(x: 35, y: 550, width: 100, label: "Joytick", icon: "joystick")
+    func createJoystick() {
+        let joystick = createMode(x: 35, y: 550, width: 100, label: "Joystick", icon: "joystick")
         if isJoystickEnable {
             joystick.backgroundColor = UIColor(named: "HomePageTitleColor")
         } else {
@@ -260,7 +244,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         isJoystickEnable = true;
         isGameEnable = false
         isDualEnable = false
-        createjoystick()
+        createJoystick()
         createGame()
         createDual()
 
@@ -270,7 +254,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         isJoystickEnable = false;
         isGameEnable = true
         isDualEnable = false
-        createjoystick()
+        createJoystick()
         createGame()
         createDual()
 
@@ -280,7 +264,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         isJoystickEnable = false
         isGameEnable = false
         isDualEnable = true
-        createjoystick()
+        createJoystick()
         createGame()
         createDual()
 
@@ -326,15 +310,15 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func phoneMode(_ sender: UIView) {
-        isPhonemodeEnable = true;
-        isGamemodeEnable = false
+        isPhoneModeEnable = true;
+        isGameModeEnable = false
         createPhone()
         createGamepad()
     }
 
     @objc func gamepadMode(_ sender: UIView) {
-        isGamemodeEnable = true
-        isPhonemodeEnable = false
+        isGameModeEnable = true
+        isPhoneModeEnable = false
         createPhone()
         createGamepad()
 
@@ -368,7 +352,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createMode(x: Int, y: Int, width: Int, label: String, icon: String) -> UIView {
-        let modeRectangle = createRectange(x: x, y: y, width: width, height: 60, borderColor: "nocolor")
+        let modeRectangle = createRectangle(x: x, y: y, width: width, height: 60, borderColor: "noColor")
         modeRectangle.backgroundColor = UIColor(named: "gamepad")
         let modeRectangleLabel = UILabel(frame: CGRect(x: 10, y: 5, width: 100, height: 50))
         modeRectangleLabel.text = label

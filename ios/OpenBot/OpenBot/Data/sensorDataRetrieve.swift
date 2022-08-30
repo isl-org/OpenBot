@@ -70,7 +70,7 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
 
             }
         } else {
-            print("accelration is not available")
+            print("acceleration is not available")
         }
     }
 
@@ -96,8 +96,8 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
             return
         }
 
-        geoCoder.reverseGeocodeLocation(currentLocation) { (placemarks, error) in
-            guard let currentLocPlacemark = placemarks?.first else {
+        geoCoder.reverseGeocodeLocation(currentLocation) { (placeMarks, error) in
+            guard let currentLocPlacemark = placeMarks?.first else {
                 return
             }
             print(currentLocPlacemark)
