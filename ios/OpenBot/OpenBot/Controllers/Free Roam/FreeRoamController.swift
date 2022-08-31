@@ -41,7 +41,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         }
 
         Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { _ in
-
             self.SonarLabel.text = (self.bluetooth.LabelString ?? "0") + "CM"
             self.createSonarController(h: Int(self.bluetooth.LabelString ?? "0") ?? 0)
         }
@@ -365,4 +364,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         return modeRectangle
     }
 
+    func updateSonarLabel() {
+//        print("updateSonar", bluetooth.temp);
+//        SonarLabel.text = (bluetooth.temp) + "CM"
+//        SonarLabel.text = bluetooth.LabelString;
+    }
 }

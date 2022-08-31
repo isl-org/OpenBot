@@ -9,8 +9,10 @@ import UIKit
 import CoreBluetooth
 
 var isBluetoothConnected = false;
+var viewControllerName: String?
 
 class HomePageViewController: UIViewController {
+
     @IBOutlet weak var bluetooth: UIButton!
     @IBOutlet weak var settings: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
@@ -33,6 +35,7 @@ class HomePageViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
+        viewControllerName = classNameFrom(self)
         if (isBluetoothConnected) {
             bluetooth.setImage(Images.bluetoothConnected, for: .normal)
         } else {
@@ -97,6 +100,13 @@ extension UIViewController: UICollectionViewDataSource {
         return cell
     }
 }
+
+func classNameFrom(_ viewController: UIViewController) -> String {
+    let currentViewControllerName = NSStringFromClass(viewController.classForCoder).components(separatedBy: ".").last!
+    return currentViewControllerName
+
+}
+
 
 extension UIViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

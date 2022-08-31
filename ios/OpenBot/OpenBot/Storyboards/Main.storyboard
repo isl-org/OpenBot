@@ -82,20 +82,30 @@
                                     <action selector="sendData:" destination="7az-1S-5T9" eventType="touchUpInside" id="v66-c0-bNa"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="EoC-79-1xI">
-                                <rect key="frame" x="20" y="83" width="374" height="339"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="c3M-zp-vaN">
+                                <rect key="frame" x="0.0" y="44" width="414" height="358"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-B1-K3Y">
+                                <rect key="frame" x="147" y="606" width="121" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="HomePageTitleColor"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="tinted" title="Logs"/>
+                                <connections>
+                                    <action selector="startLogs:" destination="7az-1S-5T9" eventType="touchUpInside" id="mcM-Vr-Ljr"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vT9-Wp-ph1"/>
                     </view>
                     <connections>
-                        <outlet property="bleSendData" destination="EoC-79-1xI" id="ice-WU-M7H"/>
-                        <outlet property="sendDataToBle" destination="TUs-Ba-dkE" id="3fX-bV-5ec"/>
+                        <outlet property="bleSendData" destination="c3M-zp-vaN" id="Fc7-rn-Qjj"/>
+                        <outlet property="sendDataToBle" destination="TUs-Ba-dkE" id="yqR-DZ-vhv"/>
                         <outlet property="view" destination="bbB-lb-dd0" id="4df-au-0b1"/>
                     </connections>
                 </viewController>
@@ -552,7 +562,7 @@
         <image name="controller" width="500" height="500"/>
         <image name="settings" width="48" height="41"/>
         <namedColor name="HomePageTitleColor">
-            <color red="0.0" green="0.44299998879432678" blue="0.77300000190734863" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.4392156862745098" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

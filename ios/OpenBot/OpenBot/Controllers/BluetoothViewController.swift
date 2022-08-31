@@ -5,7 +5,6 @@
 //  Created by Sparsh Jain on 22/07/22.
 //
 //
-
 import UIKit
 import CoreBluetooth
 var peri: CBPeripheral?
@@ -46,26 +45,27 @@ extension BluetoothViewController: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //            centralManager?.stopScan()
-            let cell = myTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-            print(indexPath.row)
-            print(peripherals[indexPath.row])
-                let peripheral = peripherals[indexPath.row]
-                cell.textLabel?.text = peripheral.name
-                let button = UIButton();
-                button.backgroundColor = .systemBackground
-                cell.addSubview(button)
-                button.frame = CGRect(x: cell.frame.origin.x + 225, y: cell.frame.origin.y, width: 150, height: cell.frame.size.height)
-                button.layer.cornerRadius = 25
-                if isBluetoothConnected && peri?.name != cell.textLabel?.text {
-                    button.isHidden = true
-                } else if isBluetoothConnected && peri?.name == cell.textLabel?.text {
-                    button.setTitle("Disconnect", for: .normal)
-                    button.addTarget(self, action: #selector(disConnectToBle), for: .touchUpInside)
-                } else {
-                    button.setTitle("Connect", for: .normal)
-                    button.addTarget(self, action: #selector(connectToBle), for: .touchUpInside)
-                }
-            return cell;
+        let cell = myTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        print(indexPath.row)
+        print(peripherals[indexPath.row])
+        let peripheral = peripherals[indexPath.row]
+        cell.textLabel?.text = peripheral.name
+        let button = UIButton();
+        button.backgroundColor = .systemBackground
+        cell.addSubview(button)
+        button.frame = CGRect(x: cell.frame.origin.x + 225, y: cell.frame.origin.y, width: 150, height: cell.frame.size.height)
+        button.layer.cornerRadius = 25
+        button.tag = indexPath.row
+        if isBluetoothConnected && peri?.name != cell.textLabel?.text {
+            button.isHidden = true
+        } else if isBluetoothConnected && peri?.name == cell.textLabel?.text {
+            button.setTitle("Disconnect", for: .normal)
+            button.addTarget(self, action: #selector(disConnectToBle), for: .touchUpInside)
+        } else {
+            button.setTitle("Connect", for: .normal)
+            button.addTarget(self, action: #selector(connectToBle), for: .touchUpInside)
+        }
+        return cell;
 
     }
 
@@ -96,6 +96,7 @@ extension BluetoothViewController: UITableViewDataSource, UITableViewDelegate {
     @objc func disConnectToBle() {
         print("disconnected from ", peri)
         centralManager?.cancelPeripheralConnection(peri!)
+        bluetoothDataController.shared.disconnect()
         isBluetoothConnected = false
         peripherals.removeAll();
         peri = nil

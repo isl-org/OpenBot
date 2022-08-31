@@ -1,7 +1,6 @@
 //
 // Created by Nitish Yadav on 29/08/22.
 //
-
 import Foundation
 import CoreBluetooth
 import CoreMotion
@@ -108,8 +107,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             let data = characteristic.value!
             let x = String(data: data, encoding: .utf8)
             LabelString = x
-            print(x as Any)
-
+            bluetoothData = x ?? "nil"
         }
     }
 
@@ -120,6 +118,8 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func sendData(payload: String) {
         let dataToSend: Data = payload.data(using: String.Encoding.utf8)!
         tempPeripheral!.writeValue(dataToSend, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
-
+    }
+    func disconnect(){
+        centralManager?.cancelPeripheralConnection(tempPeripheral)
     }
 }
