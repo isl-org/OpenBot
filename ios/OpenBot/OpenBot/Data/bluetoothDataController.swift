@@ -23,12 +23,11 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
-        print("i am in init function")
     }
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if (central.state == .poweredOn) {
-            self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
+            centralManager?.scanForPeripherals(withServices: nil, options: nil)
         } else {
                 // do something like alert the user that ble is not on
         }
@@ -36,7 +35,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        print("i am running")
         if peripheral.name != nil {
             peripherals.append(peripheral)
         }
@@ -46,6 +44,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("connected to" , peripheral)
+        isBluetoothConnected = true;
         peripheral.discoverServices(nil)
 
     }
@@ -58,6 +57,8 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("disconnected from :", peripheral)
+        isBluetoothConnected = false
+
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -105,7 +106,8 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
-        print(descriptor)
+        _ = descriptor.value
+
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
@@ -118,7 +120,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
-
+        print(invalidatedServices)
     }
 
     func readValue(characteristic: CBCharacteristic) {
@@ -135,8 +137,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         peri = nil
     }
     func connect(){
-
-            print(peri)
             centralManager?.stopScan()
             tempPeripheral = peri
             tempPeripheral.delegate = self

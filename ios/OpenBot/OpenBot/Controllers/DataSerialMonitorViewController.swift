@@ -26,7 +26,6 @@ class DataSerialMonitorViewController: UIViewController {
         guard let bleSendData = bleSendData else {
             return
         }
-        print(bleSendData)
         let temp = (sendDataToBle.text ?? "") + "\n"
         labelString = (labelString) + (temp) + "\n"
         let range = NSRange(location: bleSendData.text.count - 1, length: 0)

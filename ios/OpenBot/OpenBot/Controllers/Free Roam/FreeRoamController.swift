@@ -23,28 +23,51 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     var segmentColors = [UIColor(red: 0.10, green: 0.66, blue: 0.98, alpha: 1.00), UIColor(red: 0.00, green: 0.44, blue: 0.77, alpha: 1.00)]
     var rotation: CGFloat = -89
     var SonarLabel = UILabel()
-    var segmentValue: Int = 120
+    var segmentValue: Int = 200
     let bluetooth = bluetoothDataController.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
         let speedometer = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
         speedometer.backgroundColor = .clear
+        speedometer.value = 10
+        speedometer.tag = 100
         view.addSubview(speedometer)
         createSonalLabel();
 
+        for i in 0...100 {
+            let oldTag = view.viewWithTag(100)
+            oldTag?.removeFromSuperview()
+            let dispatchAfter = DispatchTimeInterval.seconds(i)
+            DispatchQueue.main.asyncAfter(deadline: .now() + dispatchAfter) {
+                UIView.animate(withDuration: 1) {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+dispatchAfter + 1) {
+                        let a = GaugeView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 256))
+                        a.tag = 100
+                        a.value = i+20
+                        a.backgroundColor = .clear
+                        self.view.addSubview(a)
+                    }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            UIView.animate(withDuration: 1) {
-                speedometer.value = 33
+
+                }
             }
         }
 
+//
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//            UIView.animate(withDuration: 1) {
+//
+//                let b = GaugeView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 256))
+//                b.value = 50
+//                b.backgroundColor = .clear
+//                self.view.addSubview(b)
+//            }
+//        }
         Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { _ in
             self.SonarLabel.text = (self.bluetooth.LabelString ?? "0") + "CM"
-            self.createSonarController(h: Int(self.bluetooth.LabelString ?? "0") ?? 0)
+            self.createSonarController(h: Double(self.bluetooth.LabelString ?? "0") ?? 0)
         }
-        createSonarController(h: 10)
         let dIcon = UIButton()
         dIcon.setTitle("D", for: .normal)
         dIcon.layer.borderWidth = 1
@@ -61,7 +84,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
         let blueToothIconRect = createRectangle(x: 240, y: 310, width: 40, height: 40, borderColor: "borderColor")
         let blueToothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 5, y: blueToothIconRect.frame.size.height / 4, width: 10, height: 20))
-        blueToothIcon.image = UIImage(named: "bluetooth")
+        blueToothIcon.image = Images.bluetoothConnected
         view.addSubview(blueToothIconRect)
         blueToothIconRect.addSubview(blueToothIcon)
         createLabel(value: "12V", x: 35, y: 380, width: 50, height: 40)
@@ -135,18 +158,25 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         view.addSubview(outerVoltage)
     }
 
-    func createSonarController(h: Int) {
+    func createSonarController(h: Double) {
         let outerSonar = createRectangle(x: Int(view.frame.width) - 70, y: 280, width: 50, height: 110, borderColor: "borderColor");
-        let relativeHeight: Int
+        let relativeHeight: Double
         if h > 300 {
-            relativeHeight = 100
+            relativeHeight = 110
         } else {
-            relativeHeight = 11 / 30 * h
+            relativeHeight = (Double(h * 0.3667))
         }
+        view.addSubview(outerSonar)
+
         let innerSonar = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
+        innerSonar.tag = 10;
         innerSonar.backgroundColor = UIColor(named: "sonar")
         outerSonar.addSubview(innerSonar)
-        view.addSubview(outerSonar)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                outerSonar.subviews[0].removeFromSuperview()
+            }
+
+
     }
 
     func createLabel(value: String, x: Int, y: Int, width: Int, height: Int) {

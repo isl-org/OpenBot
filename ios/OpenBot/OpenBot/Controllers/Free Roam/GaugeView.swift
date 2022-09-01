@@ -15,18 +15,16 @@ class GaugeView: UIView {
     //speed label
     let valueLabel = UILabel()
     var valueFont = UIFont(name:"medium", size: 100.0)
-    var segmentValue : Int = 120
+    var segmentValue : Int = 50
     override func draw(_ rect: CGRect) {
-
-
         guard let ctx = UIGraphicsGetCurrentContext() else {
             print("no ctx found")
             return
         }
-
-        //change the value of variable value in drawSegment() of drawing updated segment\
+        print("i was called")
+        //change the value of variable value in drawSegment() of drawing updated segment
         //value range 0-180
-        drawSegments(in: rect, context: ctx, value: segmentValue)
+            drawSegments(in: rect, context: ctx, value: segmentValue)
     }
 
     func deg2rad(_ number: CGFloat) -> CGFloat {
