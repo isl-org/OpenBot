@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     var temp: String = ""
     var circle: UIView!
@@ -22,96 +21,41 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     var segmentWidth: CGFloat = 40
     var segmentColors = [UIColor(red: 0.10, green: 0.66, blue: 0.98, alpha: 1.00), UIColor(red: 0.00, green: 0.44, blue: 0.77, alpha: 1.00)]
     var rotation: CGFloat = -89
-    var SonarLabel = UILabel()
+    var sonarLabel = UILabel()
+    var voltageLabel = UILabel()
     var segmentValue: Int = 200
+    var outerSonar : UIView!
     let bluetooth = bluetoothDataController.shared
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        let speedometer = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
-        speedometer.backgroundColor = .clear
-        speedometer.value = 10
-        speedometer.tag = 100
-        view.addSubview(speedometer)
+        createSpeedometer()
         createSonalLabel();
-
-        for i in 0...100 {
-            let oldTag = view.viewWithTag(100)
-            oldTag?.removeFromSuperview()
-            let dispatchAfter = DispatchTimeInterval.seconds(i)
-            DispatchQueue.main.asyncAfter(deadline: .now() + dispatchAfter) {
-                UIView.animate(withDuration: 1) {
-                    DispatchQueue.main.asyncAfter(deadline: .now()+dispatchAfter + 1) {
-                        let a = GaugeView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 256))
-                        a.tag = 100
-                        a.value = i+20
-                        a.backgroundColor = .clear
-                        self.view.addSubview(a)
-                    }
-
-
-                }
-            }
-        }
-
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//            UIView.animate(withDuration: 1) {
-//
-//                let b = GaugeView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 256))
-//                b.value = 50
-//                b.backgroundColor = .clear
-//                self.view.addSubview(b)
-//            }
-//        }
-        Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { _ in
-            self.SonarLabel.text = (self.bluetooth.LabelString ?? "0") + "CM"
-            self.createSonarController(h: Double(self.bluetooth.LabelString ?? "0") ?? 0)
-        }
-        let dIcon = UIButton()
-        dIcon.setTitle("D", for: .normal)
-        dIcon.layer.borderWidth = 1
-        dIcon.layer.borderColor = UIColor.white.cgColor
-        dIcon.frame = CGRect(x: 120, y: 310, width: 40, height: 40)
-        dIcon.layer.cornerRadius = 5
-        view.addSubview(dIcon)
-        let driveIconRect = createRectangle(x: 180, y: 310, width: 40, height: 40, borderColor: "borderColor")
-        let driveIcon = UIImageView(frame: CGRect(x: driveIconRect.frame.size.width / 4, y: driveIconRect.frame.size.height / 4, width: 20, height: 20))
-        driveIcon.image = UIImage(named: "drive")
-        view.addSubview(driveIconRect)
-        driveIconRect.addSubview(driveIcon)
-
-
-        let blueToothIconRect = createRectangle(x: 240, y: 310, width: 40, height: 40, borderColor: "borderColor")
-        let blueToothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 5, y: blueToothIconRect.frame.size.height / 4, width: 10, height: 20))
-        blueToothIcon.image = Images.bluetoothConnected
-        view.addSubview(blueToothIconRect)
-        blueToothIconRect.addSubview(blueToothIcon)
-        createLabel(value: "12V", x: 35, y: 380, width: 50, height: 40)
-        createVoltageController(h: 10)
-        createLabel(value: "Controller", x: 35, y: 420, width: 100, height: 40)
+        createVoltageLabel()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .updateLabel, object: nil)
+        createDIcon()
+        createDriveIcon()
+        createBluetoothIcon()
         createGamepad()
         createPhone()
         createJoystick()
         createGame()
         createDual()
-        createLabel(value: "Speed", x: 35, y: 615, width: 100, height: 40)
         createSlowMode()
         createMediumMode()
         createFastMode()
-        createLabel(value: "Drive Mode", x: 35, y: 515, width: 100, height: 40)
-        let ticks = 40
-        var radius = 120
-        for _ in 0...3 {
-            drawTicks(count: ticks, radius: radius)
-            radius = radius - 22;
-        }
+        drawTick()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
-
+    func createSpeedometer(){
+        let speedometer = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
+        speedometer.backgroundColor = .clear
+        speedometer.value = 0
+        speedometer.tag = 100
+        view.addSubview(speedometer)
+    }
     func deg2rad(_ number: CGFloat) -> CGFloat {
         number * .pi / 180
     }
@@ -137,17 +81,62 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     func createTick() -> UIView {
         let tick = UIView(frame: CGRect(x: 0, y: 0, width: 2.0, height: 1.0))
         tick.backgroundColor = UIColor(red: 0.00, green: 0.44, blue: 0.77, alpha: 1.00)
-
         return tick
+    }
+    func drawTick(){
+        let ticks = 40
+        var radius = 120
+        for _ in 0...3 {
+            drawTicks(count: ticks, radius: radius)
+            radius = radius - 22;
+        }
+    }
+    func createLabels(){
+        createLabel(value: "Controller", x: 35, y: 420, width: 100, height: 40)
+        createLabel(value: "Speed", x: 35, y: 615, width: 100, height: 40)
+        createLabel(value: "Drive Mode", x: 35, y: 515, width: 100, height: 40)
+
+
+
+    }
+    func createVoltageLabel() {
+        voltageLabel.frame = CGRect(x: 35, y: 380, width: 50, height: 40)
+        voltageLabel.text = "0V"
+        voltageLabel.textColor = .white
+        voltageLabel.font = voltageLabel.font.withSize(12)
+        view.addSubview(voltageLabel)
     }
 
     func createSonalLabel() {
-        SonarLabel.frame = CGRect(x: Int(view.frame.width) - 70, y: 380, width: 50, height: 40)
-        SonarLabel.text = "0CM"
-        SonarLabel.textColor = .white
-        SonarLabel.font = SonarLabel.font.withSize(12)
-        view.addSubview(SonarLabel)
+        sonarLabel.frame = CGRect(x: Int(view.frame.width) - 70, y: 380, width: 50, height: 40)
+        sonarLabel.text = "0CM"
+        sonarLabel.textColor = .white
+        sonarLabel.font = sonarLabel.font.withSize(12)
+        view.addSubview(sonarLabel)
 
+    }
+    func createDIcon(){
+        let dIcon = UIButton()
+        dIcon.setTitle("D", for: .normal)
+        dIcon.layer.borderWidth = 1
+        dIcon.layer.borderColor = UIColor.white.cgColor
+        dIcon.frame = CGRect(x: 120, y: 310, width: 40, height: 40)
+        dIcon.layer.cornerRadius = 5
+        view.addSubview(dIcon)
+    }
+    func createDriveIcon(){
+        let driveIconRect = createRectangle(x: 180, y: 310, width: 40, height: 40, borderColor: "borderColor")
+        let driveIcon = UIImageView(frame: CGRect(x: driveIconRect.frame.size.width / 4, y: driveIconRect.frame.size.height / 4, width: 20, height: 20))
+        driveIcon.image = UIImage(named: "drive")
+        view.addSubview(driveIconRect)
+        driveIconRect.addSubview(driveIcon)
+}
+    func createBluetoothIcon(){
+        let blueToothIconRect = createRectangle(x: 240, y: 310, width: 40, height: 40, borderColor: "borderColor")
+        let blueToothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 5, y: blueToothIconRect.frame.size.height / 4, width: 10, height: 20))
+        blueToothIcon.image = Images.bluetoothConnected
+        view.addSubview(blueToothIconRect)
+        blueToothIconRect.addSubview(blueToothIcon)
     }
 
     func createVoltageController(h: Int) {
@@ -159,24 +148,20 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createSonarController(h: Double) {
-        let outerSonar = createRectangle(x: Int(view.frame.width) - 70, y: 280, width: 50, height: 110, borderColor: "borderColor");
+        if outerSonar != nil {
+            outerSonar.subviews[0].removeFromSuperview()
+        }
         let relativeHeight: Double
         if h > 300 {
             relativeHeight = 110
         } else {
             relativeHeight = (Double(h * 0.3667))
         }
+        outerSonar = createRectangle(x: Int(view.frame.width) - 70, y: 280, width: 50, height: 110, borderColor: "borderColor");
         view.addSubview(outerSonar)
-
         let innerSonar = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
-        innerSonar.tag = 10;
         innerSonar.backgroundColor = UIColor(named: "sonar")
         outerSonar.addSubview(innerSonar)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                outerSonar.subviews[0].removeFromSuperview()
-            }
-
-
     }
 
     func createLabel(value: String, x: Int, y: Int, width: Int, height: Int) {
@@ -265,8 +250,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         tapGesture.delegate = self
         dual.addGestureRecognizer(tapGesture)
         view.addSubview(dual)
-
-
     }
 
     @objc func joystick(_ sender: UIView) {
@@ -394,9 +377,40 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         return modeRectangle
     }
 
-    func updateSonarLabel() {
-//        print("updateSonar", bluetooth.temp);
-//        SonarLabel.text = (bluetooth.temp) + "CM"
-//        SonarLabel.text = bluetooth.LabelString;
+    @objc func updateScreen() {
+        updateSonar()
+        updateVoltage()
+        updateSpeedometer()
+
+    }
+    func updateSonar(){
+        let sonar = bluetooth.sonarData
+        if sonar != "" {
+            let index = sonar.index(after: sonar.startIndex)
+            sonarLabel.text = String(sonar[index...]) + "CM"
+            createSonarController(h: Double(String(sonar[index...])) ?? 0)
+        }
+
+    }
+    func updateVoltage(){
+        let voltage = bluetooth.voltageDivider
+        if voltage != "" {
+            let index = voltage.index(after: voltage.startIndex)
+            voltageLabel.text = String(voltage[index...]) + "V"
+            createVoltageController(h: Int(String(voltage[index...])) ?? 0)
+        }
+    }
+    func updateSpeedometer(){
+        let oldTag = view.viewWithTag(100)
+        oldTag?.removeFromSuperview()
+        let a = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
+        a.tag = 100
+        var value = Int(sonarLabel.text?.prefix(2) ?? "0") ?? 0
+        if value > 180{
+            value = 180
+        }
+        a.value = value
+        a.backgroundColor = .clear
+        view.addSubview(a)
     }
 }

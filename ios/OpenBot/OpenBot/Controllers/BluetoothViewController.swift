@@ -16,13 +16,10 @@ class BluetoothViewController: UIViewController{
     var isconnected: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("view is loaded")
         myTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         DispatchQueue.main.async { [weak self] in
             self?.myTable.reloadData()
         }
-
-
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -58,7 +55,6 @@ extension BluetoothViewController: UITableViewDataSource, UITableViewDelegate {
         button.layer.cornerRadius = 25
         button.tag = indexPath.row
         if isBluetoothConnected && bluetooth.peri?.name != cell.textLabel?.text {
-            print("i am here")
             button.isHidden = true
         } else if isBluetoothConnected && bluetooth.peri?.name == cell.textLabel?.text {
             button.setTitle("Disconnect", for: .normal)

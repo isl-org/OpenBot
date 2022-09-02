@@ -21,7 +21,6 @@ class GaugeView: UIView {
             print("no ctx found")
             return
         }
-        print("i was called")
         //change the value of variable value in drawSegment() of drawing updated segment
         //value range 0-180
             drawSegments(in: rect, context: ctx, value: segmentValue)

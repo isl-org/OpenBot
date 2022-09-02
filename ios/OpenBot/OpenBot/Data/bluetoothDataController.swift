@@ -11,7 +11,9 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     var peri: CBPeripheral?
     var peripherals = Array<CBPeripheral>()
     var tempPeripheral: CBPeripheral!
-    var LabelString: String!
+    var sonarData : String = ""
+    var voltageDivider : String = ""
+    var speedometer : String = ""
     private var allServices: [CBService]?
     var writeCharacteristics: CBCharacteristic?
 
@@ -23,7 +25,20 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
+        NotificationCenter.default.addObserver(self,
+                selector: #selector(startNotification),
+                name: Notification.Name("updateLabel"),
+                object: nil)
+
+        NotificationCenter.default.addObserver(self,
+                selector: #selector(startNotification),
+                name: Notification.Name("updateSerialMonitor"),
+                object: nil)
+
     }
+
+
+
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if (central.state == .poweredOn) {
@@ -113,9 +128,19 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if characteristic.value != nil {
             let data = characteristic.value!
-            let x = String(data: data, encoding: .utf8)
-            LabelString = x
-            bluetoothData = x ?? "nil"
+            let x = String(data: data, encoding: .utf8) ?? ""
+            bluetoothData = x
+            NotificationCenter.default.post(name: .updateSerialMonitor, object: nil)
+            NotificationCenter.default.post(name: .updateLabel, object: nil)
+            if x.prefix(1) == "s"{
+                sonarData = x
+            }
+            else if x.prefix(1) == "v"{
+                    voltageDivider = x
+            }
+            else if x.prefix(1) == "w"{
+                    speedometer = x
+            }
         }
     }
 
@@ -146,4 +171,11 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func startScan(){
        bluetoothDataController.shared
     }
+    @objc func  startNotification(){
+    }
+
+}
+extension  Notification.Name {
+    static let updateLabel = Notification.Name("updateLabel")
+    static let updateSerialMonitor = Notification.Name("updateSerialMonitor")
 }

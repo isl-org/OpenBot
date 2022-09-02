@@ -9,7 +9,7 @@ import CoreBluetooth
 var bluetoothData = ""
 class DataSerialMonitorViewController: UIViewController {
     var payloadData: String = ""
-    var labelString: String = ""
+    var labelString: String = "nil"
     let bluetooth = bluetoothDataController.shared
     @IBOutlet weak var sendDataToBle: UITextField!
     @IBOutlet weak var bleSendData: UITextView!
@@ -17,10 +17,7 @@ class DataSerialMonitorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bleSendData.isEditable = false
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-                self.updateLabel()
-                bluetoothData = ""
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(updateLabel), name: .updateLabel, object: nil)
     }
     @IBAction func sendData(_ sender: Any) {
         guard let bleSendData = bleSendData else {
@@ -37,13 +34,13 @@ class DataSerialMonitorViewController: UIViewController {
         sendDataToBle.text = "";
     }
 
-    func updateLabel(){
+   @objc func updateLabel(){
        labelString = (labelString) + bluetoothData  + "\n"
         let range = NSRange(location: bleSendData.text.count - 1, length: 0)
         bleSendData.scrollRangeToVisible(range)
         bleSendData.text = labelString
     }
-    @IBAction func startLogs(_ sender: Any) {
+    @objc func startLogs(_ sender: Any) {
 
     }
 
