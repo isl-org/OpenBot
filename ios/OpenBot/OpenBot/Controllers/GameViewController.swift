@@ -37,13 +37,13 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         dateFormatter.dateFormat = "HH:mm:ss.SSSS"
         clearLog()
-        gameControllerObj = GameController();
-        didConnectController();
         NotificationCenter.default.addObserver(self, selector: #selector(didConnectController), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        gameControllerObj = GameController();
+        didConnectController();
     }
 
     func clearLog() {
@@ -55,11 +55,11 @@ class GameViewController: UIViewController {
     }
 
     @objc func didConnectController() {
-        if (gameControllerObj!.connectedController == nil) {
+        if (connectedController == nil) {
             return
         }
         writeToLog(newLine: Strings.controllerConnected)
-        let controller = gameControllerObj!.connectedController;
+        let controller = connectedController;
         let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
         writeToLog(newLine: "Battery Level:" + batteryLevel);
         delegate?.inputManager(self, didConnect: controller!)

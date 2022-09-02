@@ -8,13 +8,14 @@
 import Foundation
 import GameController
 
+public var connectedController: GCController?;
+
 class GameController: GCController {
 
     static let shared: GameController = GameController();
     private let maximumControllerCount: Int = 1
     private(set) var controllers = Set<GCController>()
     private var panRecognizer: UIPanGestureRecognizer!
-    public var connectedController: GCController?;
 
     override init() {
         super.init()
