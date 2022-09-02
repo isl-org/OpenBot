@@ -18,6 +18,4 @@
 
 1. Open XCODE and select *open a project or file*.
 2. Select the OpenBot/ios/OpenBot directory.
-3. Go to signin 
-4. 
-5. ![](../../../../Screenshot 2022-08-19 at 11.43.40 AM.png)
+3. Go to signin

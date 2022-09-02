@@ -30,22 +30,23 @@
 //------------------------------------------------------//
 // DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
-#define DIY 0             // DIY without PCB
-#define PCB_V1 1         // DIY with PCB V1
-#define PCB_V2 2        // DIY with PCB V2
-#define RTR_TT 3       // Ready-to-Run with TT-motors
-#define RC_CAR 4      // RC truck prototypes
-#define LITE 5       // Smaller DIY version for education
-#define RTR_520 6   // Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
-#define MTV 7      // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
-#define DIY_ITINKER 8   // DIY without PCB  --> select ESP32 Dev Module as board!
+
+
+#define DIY 0     // DIY without PCB
+#define PCB_V1 1  // DIY with PCB V1
+#define PCB_V2 2  // DIY with PCB V2
+#define RTR_TT 3  // Ready-to-Run with TT-motors
+#define RC_CAR 4  // RC truck prototypes
+#define LITE 5    // Smaller DIY version for education
+#define RTR_520 6 // Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
+#define MTV 7     // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
 
 //------------------------------------------------------//
 // SETUP - Choose your body
 //------------------------------------------------------//
 
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520)
-#define OPENBOT DIY_ITINKER
+#define OPENBOT RTR_520
 
 //------------------------------------------------------//
 // SETTINGS - Global settings
@@ -117,7 +118,7 @@ const int PIN_PWM_R1 = 9;
 const int PIN_PWM_R2 = 10;
 const int PIN_SPEED_LF = 2;
 const int PIN_SPEED_RF = 3;
-const int PIN_VIN = A7;
+//const int PIN_VIN = A7;
 const int PIN_TRIGGER = 12;
 const int PIN_ECHO = 11;
 const int PIN_LED_LI = 4;
@@ -369,46 +370,6 @@ const int FREQ = 5000;
 const int RES = 8;
 const int LHS_PWM_OUT = 0;
 const int RHS_PWM_OUT = 1;
-//-------------------------DIY_ITINKER----------------------//
-#elif (OPENBOT == DIY_ITINKER)
-#include <esp_wifi.h>
-#define analogWrite ledcWrite
-#define attachPinChangeInterrupt attachInterrupt
-#define detachPinChangeInterrupt detachInterrupt
-#define digitalPinToPinChangeInterrupt digitalPinToInterrupt
-#define PIN_PWM_L1 CH_PWM_L1
-#define PIN_PWM_L2 CH_PWM_L2
-#define PIN_PWM_R1 CH_PWM_R1
-#define PIN_PWM_R2 CH_PWM_R2
-const String robot_type = "DIY_ITINKER";
-#define HAS_VOLTAGE_DIVIDER 1
-const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
-const float VOLTAGE_MIN = 6.0f;
-const float VOLTAGE_LOW = 9.0f;
-const float VOLTAGE_MAX = 12.6f;
-const float ADC_FACTOR = 3.3 / 4095;
-#define HAS_INDICATORS 1
-#define HAS_SONAR 1
-#define SONAR_MEDIAN 0
-#define HAS_SPEED_SENSORS_FRONT 1
-//PWM properties
-const int FREQ = 5000;
-const int RES = 8;
-const int CH_PWM_L1 = 0;
-const int CH_PWM_L2 = 1;
-const int CH_PWM_R1 = 2;
-const int CH_PWM_R2 = 3;
-const int PIN_PWM_LF1 = 16;
-const int PIN_PWM_LF2 = 17;
-const int PIN_PWM_RF1 = 26;
-const int PIN_PWM_RF2 = 25;
-const int PIN_SPEED_LF = 21;
-const int PIN_SPEED_RF = 35;
-const int PIN_VIN = 39;
-const int PIN_TRIGGER = 12;
-const int PIN_ECHO = 14;
-const int PIN_LED_LI = 22;
-const int PIN_LED_RI = 27;
 #endif
 //------------------------------------------------------//
 
@@ -425,7 +386,7 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
 #if HAS_SONAR
-#if ((OPENBOT != RTR_520) and (OPENBOT != MTV) and (OPENBOT !=DIY_ITINKER))
+#if ((OPENBOT != RTR_520) and (OPENBOT != MTV))
 #include "PinChangeInterrupt.h"
 #endif
 // Sonar sensor
@@ -495,9 +456,6 @@ const unsigned int TICKS_PER_REV = 209;
 // 178rpm motor - reduction ratio 56, ticks per motor rotation 11
 // One revolution = 616 ticks
 const unsigned int TICKS_PER_REV = 616;
-#elif (OPENBOT == DIY_ITINKER)
-//Speed Sensor
-const unsigned int TICKS_PER_REV = 20;
 #else
 #include "PinChangeInterrupt.h"
 const unsigned int TICKS_PER_REV = 20;
@@ -570,7 +528,7 @@ void setup()
   // Attach the ESC and SERVO
   ESC.attach(PIN_PWM_T, 1000, 2000);   // (pin, min pulse width, max pulse width in microseconds)
   SERVO.attach(PIN_PWM_S, 1000, 2000); // (pin, min pulse width, max pulse width in microseconds)
-#elif ((OPENBOT != RTR_520) and (OPENBOT != MTV) and (OPENBOT != DIY_ITINKER))
+#elif ((OPENBOT != RTR_520) and (OPENBOT != MTV))
   pinMode(PIN_PWM_L1, OUTPUT);
   pinMode(PIN_PWM_L2, OUTPUT);
   pinMode(PIN_PWM_R1, OUTPUT);
@@ -693,22 +651,6 @@ void setup()
   pinMode(PIN_DIR_R, LOW);
 #endif
 
-#if (OPENBOT == DIY_ITINKER)
-  esp_wifi_deinit();
-
-  // PWMs
-  // Configure PWM functionalitites
-  ledcSetup(CH_PWM_L1, FREQ, RES);
-  ledcSetup(CH_PWM_L2, FREQ, RES);
-  ledcSetup(CH_PWM_R1, FREQ, RES);
-  ledcSetup(CH_PWM_R2, FREQ, RES);
-
-  // Attach the channel to the GPIO to be controlled
-  ledcAttachPin(PIN_PWM_LF1, CH_PWM_L1);
-  ledcAttachPin(PIN_PWM_LF2, CH_PWM_L2);
-  ledcAttachPin(PIN_PWM_RF1, CH_PWM_R1);
-  ledcAttachPin(PIN_PWM_RF2, CH_PWM_R2);
-#endif
   Serial.begin(115200, SERIAL_8N1);
   // SERIAL_8E1 - 8 data bits, even parity, 1 stop bit
   // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit

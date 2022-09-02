@@ -8,6 +8,8 @@ struct Strings {
     static let dataCollection: String = "Data Collection";
     static let controllerMapping: String = "Controller Mapping";
 
+// Notifications
+    static let controllerConnected: String = "connectedWithControllerSuccessfully";
 
 // Screen Identifiers
     static let ScreenFreeRoam: String = "freeRoam";

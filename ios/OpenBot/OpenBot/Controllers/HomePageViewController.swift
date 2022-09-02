@@ -80,17 +80,17 @@ class HomePageViewController: UIViewController {
 
 extension UIViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if isBluetoothConnected {
+//        if isBluetoothConnected {
             collectionView.deselectItem(at: indexPath, animated: true)
             let viewController = (storyboard?.instantiateViewController(withIdentifier: Constants.gameModes[indexPath.row].identifier))!
             guard (navigationController?.pushViewController(viewController, animated: true)) != nil else {
                 fatalError("guard failure handling has not been implemented")
             }
-        } else {
-            let yourAlert = UIAlertController(title: "Connection Error", message: "Please connect to BlueTooth", preferredStyle: UIAlertController.Style.alert)
-            yourAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (handler) in }))
-            present(yourAlert, animated: true, completion: nil)
-        }
+//        } else {
+//            let yourAlert = UIAlertController(title: "Connection Error", message: "Please connect to BlueTooth", preferredStyle: UIAlertController.Style.alert)
+//            yourAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (handler) in }))
+//            present(yourAlert, animated: true, completion: nil)
+//        }
 
     }
 }
