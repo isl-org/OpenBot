@@ -40,9 +40,7 @@ class DataSerialMonitorViewController: UIViewController {
         bleSendData.scrollRangeToVisible(range)
         bleSendData.text = labelString
     }
-    @objc func startLogs(_ sender: Any) {
-
-    }
+   
 
     
 }

@@ -12,7 +12,6 @@ class BluetoothViewController: UIViewController{
     var bluetooth = bluetoothDataController.shared
     var centralManager: CBCentralManager?
     @IBOutlet weak var myTable: UITableView!
-    
     var isconnected: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,24 +26,14 @@ class BluetoothViewController: UIViewController{
         myTable.reloadData()
     }
     
-    @IBAction func scan(_ sender: Any) {
-         bluetooth.startScan()
-        myTable.reloadData()
-        viewDidLoad()
-        viewDidAppear(true)
-
-
-    }
+   
 }
-
-
 
 extension BluetoothViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         bluetooth.peripherals.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let cell = myTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let peripheral = bluetooth.peripherals[indexPath.row]
         cell.textLabel?.text = peripheral.name
@@ -64,7 +53,6 @@ extension BluetoothViewController: UITableViewDataSource, UITableViewDelegate {
             button.addTarget(self, action: #selector(connectToBle), for: .touchUpInside)
         }
         return cell;
-
     }
 
     @objc func connectToBle(sender: UIButton) {
@@ -74,7 +62,6 @@ extension BluetoothViewController: UITableViewDataSource, UITableViewDelegate {
         let dataSend = (storyboard?.instantiateViewController(withIdentifier: "homescreen"))!
         guard (navigationController?.pushViewController(dataSend, animated: true)) != nil else {
             fatalError("guard failure handling has not been implemented")
-
         }
     }
     @objc func disConnectToBle() {

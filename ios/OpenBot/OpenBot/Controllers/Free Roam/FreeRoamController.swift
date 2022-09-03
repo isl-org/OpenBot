@@ -24,8 +24,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     var sonarLabel = UILabel()
     var voltageLabel = UILabel()
     var segmentValue: Int = 200
-    var outerSonar : UIView!
+    var outerSonar: UIView!
     let bluetooth = bluetoothDataController.shared
+
     override func viewDidLoad() {
         super.viewDidLoad()
         createSpeedometer()
@@ -49,13 +50,15 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
-    func createSpeedometer(){
+
+    func createSpeedometer() {
         let speedometer = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
         speedometer.backgroundColor = .clear
         speedometer.value = 0
         speedometer.tag = 100
         view.addSubview(speedometer)
     }
+
     func deg2rad(_ number: CGFloat) -> CGFloat {
         number * .pi / 180
     }
@@ -70,7 +73,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
                 let x = CGFloat(Float(187.5) + Float(radius) * cosf(2 * Float(i) * Float(Double.pi) / Float(count) - Float(Double.pi) / 2))
                 let y = CGFloat(Float(240) + Float(radius) * sinf(2 * Float(i) * Float(Double.pi) / Float(count) - Float(Double.pi) / 2))
                 tick.center = CGPoint(x: x, y: y)
-
                 tick.transform = CGAffineTransform.identity.rotated(by: rotationInDegrees * .pi / 180.0)
                 view.addSubview(tick)
                 rotationInDegrees = rotationInDegrees + (360.0 / CGFloat(count))
@@ -83,7 +85,8 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         tick.backgroundColor = UIColor(red: 0.00, green: 0.44, blue: 0.77, alpha: 1.00)
         return tick
     }
-    func drawTick(){
+
+    func drawTick() {
         let ticks = 40
         var radius = 120
         for _ in 0...3 {
@@ -91,14 +94,15 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             radius = radius - 22;
         }
     }
-    func createLabels(){
+
+    func createLabels() {
         createLabel(value: "Controller", x: 35, y: 420, width: 100, height: 40)
         createLabel(value: "Speed", x: 35, y: 615, width: 100, height: 40)
         createLabel(value: "Drive Mode", x: 35, y: 515, width: 100, height: 40)
 
 
-
     }
+
     func createVoltageLabel() {
         voltageLabel.frame = CGRect(x: 35, y: 380, width: 50, height: 40)
         voltageLabel.text = "0V"
@@ -115,7 +119,8 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         view.addSubview(sonarLabel)
 
     }
-    func createDIcon(){
+
+    func createDIcon() {
         let dIcon = UIButton()
         dIcon.setTitle("D", for: .normal)
         dIcon.layer.borderWidth = 1
@@ -124,14 +129,16 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         dIcon.layer.cornerRadius = 5
         view.addSubview(dIcon)
     }
-    func createDriveIcon(){
+
+    func createDriveIcon() {
         let driveIconRect = createRectangle(x: 180, y: 310, width: 40, height: 40, borderColor: "borderColor")
         let driveIcon = UIImageView(frame: CGRect(x: driveIconRect.frame.size.width / 4, y: driveIconRect.frame.size.height / 4, width: 20, height: 20))
         driveIcon.image = UIImage(named: "drive")
         view.addSubview(driveIconRect)
         driveIconRect.addSubview(driveIcon)
-}
-    func createBluetoothIcon(){
+    }
+
+    func createBluetoothIcon() {
         let blueToothIconRect = createRectangle(x: 240, y: 310, width: 40, height: 40, borderColor: "borderColor")
         let blueToothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 5, y: blueToothIconRect.frame.size.height / 4, width: 10, height: 20))
         blueToothIcon.image = Images.bluetoothConnected
@@ -151,12 +158,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         if outerSonar != nil {
             outerSonar.subviews[0].removeFromSuperview()
         }
-        let relativeHeight: Double
-        if h > 300 {
-            relativeHeight = 110
-        } else {
-            relativeHeight = (Double(h * 0.3667))
-        }
+        let relativeHeight = Double(h * 0.3667)
         outerSonar = createRectangle(x: Int(view.frame.width) - 70, y: 280, width: 50, height: 110, borderColor: "borderColor");
         view.addSubview(outerSonar)
         let innerSonar = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
@@ -221,8 +223,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         tapGesture.delegate = self
         joystick.addGestureRecognizer(tapGesture)
         view.addSubview(joystick)
-
-
     }
 
     func createGame() {
@@ -236,7 +236,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         tapGesture.delegate = self
         game.addGestureRecognizer(tapGesture)
         view.addSubview(game)
-
     }
 
     func createDual() {
@@ -381,18 +380,19 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         updateSonar()
         updateVoltage()
         updateSpeedometer()
-
     }
-    func updateSonar(){
+
+    func updateSonar() {
         let sonar = bluetooth.sonarData
         if sonar != "" {
             let index = sonar.index(after: sonar.startIndex)
-            sonarLabel.text = String(sonar[index...]) + "CM"
-            createSonarController(h: Double(String(sonar[index...])) ?? 0)
+            let actualSonarValue = min(Int(String(sonar[index...])) ?? 0,300)
+            sonarLabel.text = String(actualSonarValue) + "CM"
+            createSonarController(h: Double(actualSonarValue) ?? 0)
         }
-
     }
-    func updateVoltage(){
+
+    func updateVoltage() {
         let voltage = bluetooth.voltageDivider
         if voltage != "" {
             let index = voltage.index(after: voltage.startIndex)
@@ -400,17 +400,24 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             createVoltageController(h: Int(String(voltage[index...])) ?? 0)
         }
     }
-    func updateSpeedometer(){
+
+    func updateSpeedometer() {
         let oldTag = view.viewWithTag(100)
         oldTag?.removeFromSuperview()
         let a = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
         a.tag = 100
-        var value = Int(sonarLabel.text?.prefix(2) ?? "0") ?? 0
-        if value > 180{
-            value = 180
+        let speedometer = bluetooth.speedometer
+        if speedometer != ""{
+            let index_1 = speedometer.index(after: speedometer.startIndex)
+            let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
+            let index_2 = speedometer.index(before: indexOfComma)
+            let leftFront = Float(speedometer[index_1 ... index_2])
+            let rightFont = Float(speedometer[speedometer.index(after: indexOfComma)...])
+            let value = Int(((leftFront ?? 0) + (rightFont ?? 0))/2) ?? 0
+            a.value = value
+            a.backgroundColor = .clear
+            view.addSubview(a)
         }
-        a.value = value
-        a.backgroundColor = .clear
-        view.addSubview(a)
+
     }
 }
