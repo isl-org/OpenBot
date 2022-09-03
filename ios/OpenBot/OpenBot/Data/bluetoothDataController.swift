@@ -1,6 +1,7 @@
 //
 // Created by Nitish Yadav on 29/08/22.
 //
+
 import Foundation
 import CoreBluetooth
 import CoreMotion
@@ -11,9 +12,9 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     var peri: CBPeripheral?
     var peripherals = Array<CBPeripheral>()
     var tempPeripheral: CBPeripheral!
-    var sonarData : String = ""
-    var voltageDivider : String = ""
-    var speedometer : String = ""
+    var sonarData: String = ""
+    var voltageDivider: String = ""
+    var speedometer: String = ""
     private var allServices: [CBService]?
     var writeCharacteristics: CBCharacteristic?
 
@@ -38,13 +39,11 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
 
-
-
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if (central.state == .poweredOn) {
             centralManager?.scanForPeripherals(withServices: nil, options: nil)
         } else {
-                // do something like alert the user that ble is not on
+            // do something like alert the user that ble is not on
         }
 
     }
@@ -58,7 +57,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("connected to" , peripheral)
+        print("connected to", peripheral)
         isBluetoothConnected = true;
         peripheral.discoverServices(nil)
 
@@ -132,14 +131,12 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             bluetoothData = x
             NotificationCenter.default.post(name: .updateSerialMonitor, object: nil)
             NotificationCenter.default.post(name: .updateLabel, object: nil)
-            if x.prefix(1) == "s"{
+            if x.prefix(1) == "s" {
                 sonarData = x
-            }
-            else if x.prefix(1) == "v"{
-                    voltageDivider = x
-            }
-            else if x.prefix(1) == "w"{
-                    speedometer = x
+            } else if x.prefix(1) == "v" {
+                voltageDivider = x
+            } else if x.prefix(1) == "w" {
+                speedometer = x
             }
         }
     }
@@ -156,26 +153,30 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         let dataToSend: Data = payload.data(using: String.Encoding.utf8)!
         tempPeripheral!.writeValue(dataToSend, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
     }
-    func disconnect(){
+
+    func disconnect() {
         centralManager?.cancelPeripheralConnection(tempPeripheral)
         startScan()
         peri = nil
     }
-    func connect(){
-            centralManager?.stopScan()
-            tempPeripheral = peri
-            tempPeripheral.delegate = self
-            centralManager?.connect(tempPeripheral)
+
+    func connect() {
+        centralManager?.stopScan()
+        tempPeripheral = peri
+        tempPeripheral.delegate = self
+        centralManager?.connect(tempPeripheral)
 
     }
-    func startScan(){
-       bluetoothDataController.shared
+
+    func startScan() {
     }
-    @objc func  startNotification(){
+
+    @objc func startNotification() {
     }
 
 }
-extension  Notification.Name {
+
+extension Notification.Name {
     static let updateLabel = Notification.Name("updateLabel")
     static let updateSerialMonitor = Notification.Name("updateSerialMonitor")
 }

@@ -8,24 +8,14 @@
 import UIKit
 
 class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
-    var temp: String = ""
-    var circle: UIView!
-    var isPhoneModeEnable: Bool = false
-    var isGameModeEnable: Bool = false
-    var isJoystickEnable: Bool = false
-    var isGameEnable: Bool = false
-    var isDualEnable: Bool = false
-    var isSlowEnable: Bool = false
-    var isMediumEnable: Bool = false
-    var isFastEnable: Bool = false
-    var segmentWidth: CGFloat = 40
-    var segmentColors = [UIColor(red: 0.10, green: 0.66, blue: 0.98, alpha: 1.00), UIColor(red: 0.00, green: 0.44, blue: 0.77, alpha: 1.00)]
-    var rotation: CGFloat = -89
     var sonarLabel = UILabel()
     var voltageLabel = UILabel()
-    var segmentValue: Int = 200
     var outerSonar: UIView!
+    var selectedSpeedMode: SpeedMode = SpeedMode.medium;
+    var selectedControlMode: ControlMode = ControlMode.gamepad;
+    var selectedGamepadMode: GamepadType = GamepadType.joystick;
     let bluetooth = bluetoothDataController.shared
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,14 +26,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         createDIcon()
         createDriveIcon()
         createBluetoothIcon()
-        createGamepad()
-        createPhone()
-        createJoystick()
-        createGame()
-        createDual()
-        createSlowMode()
-        createMediumMode()
-        createFastMode()
+        updateControlMode()
+        updateGameControllerModeType()
+        updateSpeedModes()
         drawTick()
     }
 
@@ -146,9 +131,12 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         blueToothIconRect.addSubview(blueToothIcon)
     }
 
-    func createVoltageController(h: Int) {
+    func createVoltageController(h: Double) {
         let outerVoltage = createRectangle(x: 30, y: 280, width: 50, height: 110, borderColor: "borderColor")
-        let innerVoltage = UIView(frame: CGRect(x: 0, y: 110 - h, width: 49, height: h - 1))
+        let relativeHeight = Double(h * 9.16)
+        let innerVoltage = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
+        innerVoltage.layer.cornerRadius = 5;
+
         innerVoltage.backgroundColor = UIColor(named: "voltageDivider")
         outerVoltage.addSubview(innerVoltage)
         view.addSubview(outerVoltage)
@@ -162,6 +150,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         outerSonar = createRectangle(x: Int(view.frame.width) - 70, y: 280, width: 50, height: 110, borderColor: "borderColor");
         view.addSubview(outerSonar)
         let innerSonar = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
+        innerSonar.layer.cornerRadius = 5;
         innerSonar.backgroundColor = UIColor(named: "sonar")
         outerSonar.addSubview(innerSonar)
     }
@@ -185,184 +174,105 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         return rectangleView;
     }
 
-    func createGamepad() {
-        let gamePadController = createMode(x: 35, y: 460, width: 150, label: "Gamepad", icon: "gamepad")
-        if isGameModeEnable {
+    func updateControlMode() {
+        let gamePadController = createMode(x: 35, y: 460, width: 150, label: "Gamepad", icon: "gamepad", action: #selector(gamepadMode(_:)))
+        let phoneController = createMode(x: Int(view.frame.width / 2) + 20, y: 460, width: 120, label: "Phone", icon: "phone", action: #selector(phoneMode(_:)))
+        phoneController.backgroundColor = UIColor(named: "gamepad")
+        gamePadController.backgroundColor = UIColor(named: "gamepad")
+
+        if selectedControlMode == ControlMode.gamepad {
             gamePadController.backgroundColor = UIColor(named: "HomePageTitleColor")
-        } else {
-            gamePadController.backgroundColor = UIColor(named: "gamepad")
-        }
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(gamepadMode(_:)))
-        tapGesture.delegate = self
-        gamePadController.addGestureRecognizer(tapGesture)
-        view.addSubview(gamePadController)
-    }
-
-
-    func createPhone() {
-        let phoneController = createMode(x: Int(view.frame.width / 2) + 20, y: 460, width: 120, label: "Phone", icon: "phone")
-        if isPhoneModeEnable {
+        } else if selectedControlMode == ControlMode.phone {
             phoneController.backgroundColor = UIColor(named: "HomePageTitleColor")
-        } else {
-            phoneController.backgroundColor = UIColor(named: "gamepad")
         }
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(phoneMode(_:)))
-        tapGesture.delegate = self
-        phoneController.addGestureRecognizer(tapGesture)
+        view.addSubview(gamePadController)
         view.addSubview(phoneController)
     }
 
-    func createJoystick() {
-        let joystick = createMode(x: 35, y: 550, width: 100, label: "Joystick", icon: "joystick")
-        if isJoystickEnable {
+    func updateGameControllerModeType() {
+        let joystick = createMode(x: 35, y: 550, width: 100, label: "Joystick", icon: "joystick", action: #selector(joystick(_:)))
+        let game = createMode(x: 140, y: 550, width: 100, label: "Game", icon: "game", action: #selector(gameMode(_:)))
+        let dual = createMode(x: 250, y: 550, width: 100, label: "Dual", icon: "dual", action: #selector(dualMode(_:)))
+        joystick.backgroundColor = UIColor(named: "gamepad")
+        game.backgroundColor = UIColor(named: "gamepad")
+        dual.backgroundColor = UIColor(named: "gamepad")
+
+        if selectedGamepadMode == GamepadType.joystick {
             joystick.backgroundColor = UIColor(named: "HomePageTitleColor")
-        } else {
-            joystick.backgroundColor = UIColor(named: "gamepad")
-        }
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(joystick(_:)))
-        tapGesture.delegate = self
-        joystick.addGestureRecognizer(tapGesture)
-        view.addSubview(joystick)
-    }
-
-    func createGame() {
-        let game = createMode(x: 140, y: 550, width: 100, label: "Game", icon: "game")
-        if isGameEnable {
+        } else if selectedGamepadMode == GamepadType.gameController {
             game.backgroundColor = UIColor(named: "HomePageTitleColor")
-        } else {
-            game.backgroundColor = UIColor(named: "gamepad")
-        }
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(gameMode(_:)))
-        tapGesture.delegate = self
-        game.addGestureRecognizer(tapGesture)
-        view.addSubview(game)
-    }
-
-    func createDual() {
-        let dual = createMode(x: 250, y: 550, width: 100, label: "Dual", icon: "dual")
-        if isDualEnable {
+        } else if selectedGamepadMode == GamepadType.dual {
             dual.backgroundColor = UIColor(named: "HomePageTitleColor")
-        } else {
-            dual.backgroundColor = UIColor(named: "gamepad")
         }
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dualMode(_:)))
-        tapGesture.delegate = self
-        dual.addGestureRecognizer(tapGesture)
+        view.addSubview(joystick)
+        view.addSubview(game)
         view.addSubview(dual)
+
     }
 
     @objc func joystick(_ sender: UIView) {
-        isJoystickEnable = true;
-        isGameEnable = false
-        isDualEnable = false
-        createJoystick()
-        createGame()
-        createDual()
-
+        selectedGamepadMode = GamepadType.joystick
+        updateGameControllerModeType()
     }
 
     @objc func gameMode(_ sender: UIView) {
-        isJoystickEnable = false;
-        isGameEnable = true
-        isDualEnable = false
-        createJoystick()
-        createGame()
-        createDual()
+        selectedGamepadMode = GamepadType.gameController
+        updateGameControllerModeType()
 
     }
 
     @objc func dualMode(_ sender: UIView) {
-        isJoystickEnable = false
-        isGameEnable = false
-        isDualEnable = true
-        createJoystick()
-        createGame()
-        createDual()
+        selectedGamepadMode = GamepadType.dual
+        updateGameControllerModeType()
 
     }
 
-    func createSlowMode() {
-        let slowMode = createMode(x: 35, y: 650, width: 100, label: "Slow", icon: "slow")
-        if isSlowEnable {
+    func updateSpeedModes() {
+        let slowMode = createMode(x: 35, y: 650, width: 100, label: "Slow", icon: "slow", action: #selector(slow(_:)))
+        let mediumMode = createMode(x: 140, y: 650, width: 100, label: "Medium", icon: "medium", action: #selector(medium(_:)))
+        let fastMode = createMode(x: 250, y: 650, width: 100, label: "Fast", icon: "fast", action: #selector(fast(_:)))
+        slowMode.backgroundColor = UIColor(named: "gamepad")
+        mediumMode.backgroundColor = UIColor(named: "gamepad")
+        fastMode.backgroundColor = UIColor(named: "gamepad")
+
+        if selectedSpeedMode == SpeedMode.slow {
             slowMode.backgroundColor = UIColor(named: "HomePageTitleColor")
-        } else {
-            slowMode.backgroundColor = UIColor(named: "gamepad")
-        }
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(slow(_:)))
-        tapGesture.delegate = self
-        slowMode.addGestureRecognizer(tapGesture)
-        view.addSubview(slowMode)
-    }
-
-    func createMediumMode() {
-        let mediumMode = createMode(x: 140, y: 650, width: 100, label: "Medium", icon: "medium")
-        if isMediumEnable {
+        } else if selectedSpeedMode == SpeedMode.medium {
             mediumMode.backgroundColor = UIColor(named: "HomePageTitleColor")
         } else {
-            mediumMode.backgroundColor = UIColor(named: "gamepad")
-        }
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(medium(_:)))
-        tapGesture.delegate = self
-        mediumMode.addGestureRecognizer(tapGesture)
-        view.addSubview(mediumMode)
-    }
-
-    func createFastMode() {
-        let fastMode = createMode(x: 250, y: 650, width: 100, label: "Fast", icon: "fast")
-        if isFastEnable {
             fastMode.backgroundColor = UIColor(named: "HomePageTitleColor")
-        } else {
-            fastMode.backgroundColor = UIColor(named: "gamepad")
         }
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(fast(_:)))
-        tapGesture.delegate = self
-        fastMode.addGestureRecognizer(tapGesture)
+        view.addSubview(slowMode)
+        view.addSubview(mediumMode)
         view.addSubview(fastMode)
     }
 
     @objc func phoneMode(_ sender: UIView) {
-        isPhoneModeEnable = true;
-        isGameModeEnable = false
-        createPhone()
-        createGamepad()
+        selectedControlMode = ControlMode.phone
+        updateControlMode()
     }
 
     @objc func gamepadMode(_ sender: UIView) {
-        isGameModeEnable = true
-        isPhoneModeEnable = false
-        createPhone()
-        createGamepad()
-
+        selectedControlMode = ControlMode.gamepad
+        updateControlMode()
     }
 
     @objc func slow(_ sender: UIView) {
-        isSlowEnable = true
-        isMediumEnable = false
-        isFastEnable = false
-        createSlowMode()
-        createMediumMode()
-        createFastMode()
+        selectedSpeedMode = SpeedMode.slow
+        updateSpeedModes()
     }
 
     @objc func medium(_ sender: UIView) {
-        isSlowEnable = false
-        isMediumEnable = true
-        isFastEnable = false
-        createSlowMode()
-        createMediumMode()
-        createFastMode()
+        selectedSpeedMode = SpeedMode.medium
+        updateSpeedModes()
     }
 
     @objc func fast(_ sender: UIView) {
-        isSlowEnable = false
-        isMediumEnable = false
-        isFastEnable = true
-        createSlowMode()
-        createMediumMode()
-        createFastMode()
+        selectedSpeedMode = SpeedMode.fast
+        updateSpeedModes()
     }
 
-    func createMode(x: Int, y: Int, width: Int, label: String, icon: String) -> UIView {
+    func createMode(x: Int, y: Int, width: Int, label: String, icon: String, action: Selector?) -> UIView {
         let modeRectangle = createRectangle(x: x, y: y, width: width, height: 60, borderColor: "noColor")
         modeRectangle.backgroundColor = UIColor(named: "gamepad")
         let modeRectangleLabel = UILabel(frame: CGRect(x: 10, y: 5, width: 100, height: 50))
@@ -372,6 +282,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         modeRectangle.addSubview(modeRectangleLabel)
         let modeIcon = UIImageView(frame: CGRect(x: modeRectangle.frame.width - 20 - modeRectangle.frame.width / 10, y: modeRectangle.frame.height / 3, width: 20, height: 20))
         modeIcon.image = UIImage(named: icon)
+        let tapGesture = UITapGestureRecognizer(target: self, action: action)
+        tapGesture.delegate = self
+        modeRectangle.addGestureRecognizer(tapGesture)
         modeRectangle.addSubview(modeIcon)
         return modeRectangle
     }
@@ -386,9 +299,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let sonar = bluetooth.sonarData
         if sonar != "" {
             let index = sonar.index(after: sonar.startIndex)
-            let actualSonarValue = min(Int(String(sonar[index...])) ?? 0,300)
+            let actualSonarValue = min(Int(String(sonar[index...])) ?? 0, 300)
             sonarLabel.text = String(actualSonarValue) + "CM"
-            createSonarController(h: Double(actualSonarValue) ?? 0)
+            createSonarController(h: Double(actualSonarValue))
         }
     }
 
@@ -397,7 +310,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         if voltage != "" {
             let index = voltage.index(after: voltage.startIndex)
             voltageLabel.text = String(voltage[index...]) + "V"
-            createVoltageController(h: Int(String(voltage[index...])) ?? 0)
+            createVoltageController(h: Double(String(voltage[index...])) ?? 0)
         }
     }
 
@@ -407,17 +320,16 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let a = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
         a.tag = 100
         let speedometer = bluetooth.speedometer
-        if speedometer != ""{
+        if speedometer != "" {
             let index_1 = speedometer.index(after: speedometer.startIndex)
             let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
             let index_2 = speedometer.index(before: indexOfComma)
-            let leftFront = Float(speedometer[index_1 ... index_2])
+            let leftFront = Float(speedometer[index_1...index_2])
             let rightFont = Float(speedometer[speedometer.index(after: indexOfComma)...])
-            let value = Int(((leftFront ?? 0) + (rightFont ?? 0))/2) ?? 0
+            let value = Int(((leftFront ?? 0) + (rightFont ?? 0)) / 2)
             a.value = value
             a.backgroundColor = .clear
             view.addSubview(a)
         }
-
     }
 }

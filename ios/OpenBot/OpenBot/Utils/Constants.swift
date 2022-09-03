@@ -27,3 +27,17 @@ struct Constants {
         ModeItem(label: Strings.controllerMapping, icon: Images.controllerMapping!, identifier: Strings.ScreenControllerMapping)
     ];
 }
+
+enum SpeedMode: Float {
+    case slow = 128
+    case medium = 192
+    case fast = 255
+}
+
+enum ControlMode {
+    case phone, gamepad
+}
+
+enum GamepadType {
+    case joystick, gameController, dual
+}
