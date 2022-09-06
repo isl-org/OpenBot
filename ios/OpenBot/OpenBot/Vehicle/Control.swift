@@ -13,6 +13,9 @@ class Control {
         self.right = max(-1.0, min(1.0, right));
     }
 
+    init() {
+    }
+
     public func getLeft() -> Float {
         left;
     }

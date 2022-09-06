@@ -13,9 +13,10 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     var outerSonar: UIView!
     var selectedSpeedMode: SpeedMode = SpeedMode.medium;
     var selectedControlMode: ControlMode = ControlMode.gamepad;
-    var selectedGamepadMode: GamepadType = GamepadType.joystick;
-    let bluetooth = bluetoothDataController.shared
-
+    var selectedDriveMode: DriveMode = DriveMode.joystick;
+    let bluetooth = bluetoothDataController.shared;
+    var gameControllerObj: GameController?;
+    var vehicleControl = Control();
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -181,8 +182,12 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         gamePadController.backgroundColor = UIColor(named: "gamepad")
 
         if selectedControlMode == ControlMode.gamepad {
+            NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
+            gameControllerObj = GameController();
             gamePadController.backgroundColor = UIColor(named: "HomePageTitleColor")
         } else if selectedControlMode == ControlMode.phone {
+            gameControllerObj = nil;
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             phoneController.backgroundColor = UIColor(named: "HomePageTitleColor")
         }
         view.addSubview(gamePadController)
@@ -197,11 +202,11 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         game.backgroundColor = UIColor(named: "gamepad")
         dual.backgroundColor = UIColor(named: "gamepad")
 
-        if selectedGamepadMode == GamepadType.joystick {
+        if selectedDriveMode == DriveMode.joystick {
             joystick.backgroundColor = UIColor(named: "HomePageTitleColor")
-        } else if selectedGamepadMode == GamepadType.gameController {
+        } else if selectedDriveMode == DriveMode.gameController {
             game.backgroundColor = UIColor(named: "HomePageTitleColor")
-        } else if selectedGamepadMode == GamepadType.dual {
+        } else if selectedDriveMode == DriveMode.dual {
             dual.backgroundColor = UIColor(named: "HomePageTitleColor")
         }
         view.addSubview(joystick)
@@ -211,18 +216,18 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func joystick(_ sender: UIView) {
-        selectedGamepadMode = GamepadType.joystick
+        selectedDriveMode = DriveMode.joystick
         updateGameControllerModeType()
     }
 
     @objc func gameMode(_ sender: UIView) {
-        selectedGamepadMode = GamepadType.gameController
+        selectedDriveMode = DriveMode.gameController
         updateGameControllerModeType()
 
     }
 
     @objc func dualMode(_ sender: UIView) {
-        selectedGamepadMode = GamepadType.dual
+        selectedDriveMode = DriveMode.dual
         updateGameControllerModeType()
 
     }
@@ -253,7 +258,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func gamepadMode(_ sender: UIView) {
-        selectedControlMode = ControlMode.gamepad
+        selectedControlMode = ControlMode.gamepad;
         updateControlMode()
     }
 
@@ -331,5 +336,27 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             a.backgroundColor = .clear
             view.addSubview(a)
         }
+    }
+
+    @objc func updateControllerValues() {
+        print("printing with controller");
+        if (connectedController == nil) {
+            return
+        }
+        print(Strings.controllerConnected)
+        let controller = connectedController;
+        let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
+        print(batteryLevel);
+        controller?.extendedGamepad?.valueChangedHandler = { [self] gamepad, element in
+            vehicleControl = gameControllerObj?.processJoystickInput(mode: selectedDriveMode, gamepad: gamepad) ?? Control();
+            sendControl();
+        }
+    }
+
+    func sendControl() {
+        let left = vehicleControl.getLeft() * selectedSpeedMode.rawValue;
+        let right = vehicleControl.getRight() * selectedSpeedMode.rawValue;
+        print("c" + String(left) + "," + String(right) + "\n");
+        bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
     }
 }

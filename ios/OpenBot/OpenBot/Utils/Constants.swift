@@ -38,6 +38,6 @@ enum ControlMode {
     case phone, gamepad
 }
 
-enum GamepadType {
+enum DriveMode {
     case joystick, gameController, dual
 }
