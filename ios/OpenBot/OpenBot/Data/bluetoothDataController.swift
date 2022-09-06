@@ -168,13 +168,17 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     }
 
-    func startScan() {
+
+
+    func startScan(){
     }
 
     @objc func startNotification() {
+
+    }
     }
 
-}
+
 
 extension Notification.Name {
     static let updateLabel = Notification.Name("updateLabel")

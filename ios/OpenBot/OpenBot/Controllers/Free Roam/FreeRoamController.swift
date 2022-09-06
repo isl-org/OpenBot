@@ -4,7 +4,6 @@
 //
 //  Created by Nitish Yadav on 23/08/22.
 //
-
 import UIKit
 
 class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
@@ -17,12 +16,19 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     let bluetooth = bluetoothDataController.shared;
     var gameControllerObj: GameController?;
     var vehicleControl = Control();
+    let firstView = UIView()
+    let secondView = UIView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        createFirstView()
+        createSecondView()
         createSpeedometer()
         createSonalLabel();
         createVoltageLabel()
+        createLabels()
+        createVoltageController(h: 0)
+        createSonarController(h: 0)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .updateLabel, object: nil)
         createDIcon()
         createDriveIcon()
@@ -35,6 +41,20 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
+
+    func createFirstView(){
+        firstView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height/2)
+        view.addSubview(firstView)
+    }
+    func createSecondView(){
+        secondView.frame = CGRect(x: 0, y: view.frame.height/2, width: view.frame.width, height: view.frame.height/2)
+        view.addSubview(secondView)
+        secondView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            secondView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            secondView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
 
     func createSpeedometer() {
@@ -82,11 +102,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createLabels() {
-        createLabel(value: "Controller", x: 35, y: 420, width: 100, height: 40)
-        createLabel(value: "Speed", x: 35, y: 615, width: 100, height: 40)
-        createLabel(value: "Drive Mode", x: 35, y: 515, width: 100, height: 40)
-
-
+        createLabel(value: "Controller", x: 35, y: 20, width: 100, height: 40)
+        createLabel(value: "Speed", x: 35, y: 210, width: 100, height: 40)
+        createLabel(value: "Drive Mode", x: 35, y: 115, width: 100, height: 40)
     }
 
     func createVoltageLabel() {
@@ -163,7 +181,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         label.frame = CGRect(x: x, y: y, width: width, height: height)
         label.textColor = .white
         label.font = label.font.withSize(12)
-        view.addSubview(label)
+        secondView.addSubview(label)
 
     }
 

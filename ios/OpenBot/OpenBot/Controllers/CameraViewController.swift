@@ -42,16 +42,18 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                 captureSession.addOutput(stillImageOutput)
                 setupLivePreview()
             }
-        }
-        catch let error  {
+        } catch let error {
             print("Error Unable to initialize back camera:  \(error.localizedDescription)")
         }
 
     }
+
     @IBAction func cameraButton(_ sender: Any) {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
         stillImageOutput.capturePhoto(with: settings, delegate: self)
+
     }
+
     func setupLivePreview() {
 
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -59,9 +61,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         videoPreviewLayer.videoGravity = .resizeAspect
         videoPreviewLayer.connection?.videoOrientation = .portrait
         cameraView.layer.addSublayer(videoPreviewLayer)
-        DispatchQueue.global(qos: .userInitiated).async { //[weak self] in
+        DispatchQueue.global(qos: .userInitiated).async {
             self.captureSession.startRunning()
-            //Step 13
             DispatchQueue.main.async {
                 self.videoPreviewLayer.frame = self.cameraView.bounds
             }

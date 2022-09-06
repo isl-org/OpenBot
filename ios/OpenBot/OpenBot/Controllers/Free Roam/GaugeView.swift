@@ -16,7 +16,6 @@ class GaugeView: UIView {
     var valueFont = UIFont(name:"medium", size: 100.0)
     var segmentValue : Int = 50
     override func draw(_ rect: CGRect) {
-        print("hello nitish")
         guard let ctx = UIGraphicsGetCurrentContext() else {
             print("no ctx found")
             return
@@ -25,8 +24,7 @@ class GaugeView: UIView {
         //value range 0-180
             segmentValue = min(180, segmentValue)
             segmentValue = Int(Double(segmentValue) * 0.705)
-
-            drawSegments(in: rect, context: ctx, value: segmentValue)
+        drawSegments(in: rect, context: ctx, value: segmentValue)
     }
 
     func deg2rad(_ number: CGFloat) -> CGFloat {
