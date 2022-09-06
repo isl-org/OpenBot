@@ -103,6 +103,4 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
             print(currentLocPlacemark)
         }
     }
-
-
 }

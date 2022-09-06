@@ -16,6 +16,7 @@ class GaugeView: UIView {
     var valueFont = UIFont(name:"medium", size: 100.0)
     var segmentValue : Int = 50
     override func draw(_ rect: CGRect) {
+        print("hello nitish")
         guard let ctx = UIGraphicsGetCurrentContext() else {
             print("no ctx found")
             return

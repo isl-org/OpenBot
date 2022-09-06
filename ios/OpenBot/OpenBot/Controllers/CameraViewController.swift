@@ -7,23 +7,25 @@
 
 import UIKit
 import AVFoundation
-class CameraViewController: UIViewController ,AVCapturePhotoCaptureDelegate,AVCaptureAudioDataOutputSampleBufferDelegate,
+
+class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVCaptureAudioDataOutputSampleBufferDelegate,
         AVCaptureVideoDataOutputSampleBufferDelegate {
     var captureSession: AVCaptureSession!
     var stillImageOutput: AVCapturePhotoOutput!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var photoView: UIImageView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
 
-        
+
     }
+
     override func viewDidAppear(_ animated: Bool) {
         captureSession = AVCaptureSession()
-        captureSession.sessionPreset = .medium
         super.viewDidAppear(animated)
         // Setup your camera here...
         guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
@@ -67,13 +69,48 @@ class CameraViewController: UIViewController ,AVCapturePhotoCaptureDelegate,AVCa
 
         //Step12
     }
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
 
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        print(photo)
         guard let imageData = photo.fileDataRepresentation()
-        else { return }
+        else {
+            return
+        }
 
         let image = UIImage(data: imageData)
-        photoView.image = image
+
+        print()
+
+
+
+//        if var image:UIImage  = image {
+//            let  croppedImage = cropImage(imageToCrop: image, toRect: CGRectMake(
+//                    image.size.width/4,
+//                    0,
+//                    image.size.width/2,
+//                    image.size.height/2)
+//            )
+//        }
+        guard let image = image else {
+            fatalError("guard failure handling has not been implemented")
+        }
+        print()
+        let temp = cropImage(imageToCrop: image, toRect: CGRectMake(0, 30, 256, 96))
+        photoView.image = temp
+        print(temp)
+
     }
 
+    func cropImage(imageToCrop:UIImage, toRect rect:CGRect) -> UIImage{
+
+        let imageRef:CGImage = imageToCrop.cgImage!.cropping(to: rect)!
+        let cropped:UIImage = UIImage(cgImage:imageRef)
+        return cropped
+    }
+    func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
+         CGRect(x: x, y: y, width: width, height: height)
+    }
+
+
 }
+
