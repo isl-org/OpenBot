@@ -4,6 +4,7 @@
 //
 //  Created by Nitish Yadav on 23/08/22.
 //
+
 import UIKit
 
 class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
@@ -43,12 +44,13 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidAppear(animated)
     }
 
-    func createFirstView(){
-        firstView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height/2)
+    func createFirstView() {
+        firstView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height / 2)
         view.addSubview(firstView)
     }
-    func createSecondView(){
-        secondView.frame = CGRect(x: 0, y: view.frame.height/2, width: view.frame.width, height: view.frame.height/2)
+
+    func createSecondView() {
+        secondView.frame = CGRect(x: 0, y: view.frame.height / 2, width: view.frame.width, height: view.frame.height / 2)
         view.addSubview(secondView)
         secondView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -372,7 +374,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func sendControl(control: Control) {
-        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getRight()) {
+        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = control.getLeft() * selectedSpeedMode.rawValue;
             let right = control.getRight() * selectedSpeedMode.rawValue;
             vehicleControl = control;

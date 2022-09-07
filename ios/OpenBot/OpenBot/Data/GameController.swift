@@ -1,5 +1,5 @@
 //
-//  GameViewController.swift
+//  GameController.swift
 //  OpenBot
 //
 //  Created by Sparsh Jain on 20/08/22.
