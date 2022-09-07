@@ -366,15 +366,18 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
         print(batteryLevel);
         controller?.extendedGamepad?.valueChangedHandler = { [self] gamepad, element in
-            vehicleControl = gameControllerObj?.processJoystickInput(mode: selectedDriveMode, gamepad: gamepad) ?? Control();
-            sendControl();
+            let control = gameControllerObj?.processJoystickInput(mode: selectedDriveMode, gamepad: gamepad) ?? Control();
+            sendControl(control: control);
         }
     }
 
-    func sendControl() {
-        let left = vehicleControl.getLeft() * selectedSpeedMode.rawValue;
-        let right = vehicleControl.getRight() * selectedSpeedMode.rawValue;
-        print("c" + String(left) + "," + String(right) + "\n");
-        bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+    func sendControl(control: Control) {
+        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getRight()) {
+            let left = control.getLeft() * selectedSpeedMode.rawValue;
+            let right = control.getRight() * selectedSpeedMode.rawValue;
+            vehicleControl = control;
+            print("c" + String(left) + "," + String(right) + "\n");
+            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+        }
     }
 }

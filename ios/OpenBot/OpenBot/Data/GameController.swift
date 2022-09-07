@@ -57,7 +57,7 @@ class GameController: GCController {
     public func processJoystickInput(mode: DriveMode, gamepad: GCExtendedGamepad) -> Control {
         switch (mode) {
         case .dual:
-            return convertDualToControl(leftStick: gamepad.leftThumbstick.yAxis.value, rightStick: gamepad.rightThumbstick.yAxis.value);
+            return convertDualToControl(leftStick: gamepad.leftThumbstick.yAxis.value.rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero), rightStick: gamepad.rightThumbstick.yAxis.value.rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero));
         case .gameController:
             var rightTrigger: Float = gamepad.rightShoulder.value;
             if (rightTrigger == 0) {
@@ -69,31 +69,31 @@ class GameController: GCController {
                 leftTrigger = gamepad.leftTrigger.value;
             }
 
-            var steeringOffset: Float = gamepad.leftThumbstick.xAxis.value;
+            var steeringOffset: Float = gamepad.leftThumbstick.xAxis.value.rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             if (steeringOffset == 0) {
                 steeringOffset = gamepad.dpad.yAxis.value;
             }
             if (steeringOffset == 0) {
-                steeringOffset = gamepad.rightThumbstick.xAxis.value;
+                steeringOffset = gamepad.rightThumbstick.xAxis.value.rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             }
 
             return convertGameToControl(leftTrigger: leftTrigger, rightTrigger: rightTrigger, steeringOffset: steeringOffset);
         case .joystick:
-            var yAxis: Float = gamepad.leftThumbstick.yAxis.value;
+            var yAxis: Float = gamepad.leftThumbstick.yAxis.value.rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             if (yAxis == 0) {
                 yAxis = gamepad.dpad.yAxis.value;
             }
 
             if (yAxis == 0) {
-                yAxis = gamepad.rightThumbstick.yAxis.value;
+                yAxis = gamepad.rightThumbstick.yAxis.value.rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             }
 
-            var xAxis: Float = gamepad.leftThumbstick.xAxis.value;
+            var xAxis: Float = gamepad.leftThumbstick.xAxis.value.rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             if (xAxis == 0) {
                 xAxis = gamepad.dpad.xAxis.value;
             }
             if (xAxis == 0) {
-                xAxis = gamepad.rightThumbstick.xAxis.value;
+                xAxis = gamepad.rightThumbstick.xAxis.value.rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             }
             return convertJoystickToControl(xAxis: xAxis, yAxis: yAxis);
         }
@@ -104,8 +104,8 @@ class GameController: GCController {
     }
 
     public func convertJoystickToControl(xAxis: Float, yAxis: Float) -> Control {
-        var left = -yAxis;
-        var right = -yAxis;
+        var left = yAxis;
+        var right = yAxis;
 
         if (left >= 0) {
             left += xAxis;
@@ -117,7 +117,7 @@ class GameController: GCController {
         } else {
             right += xAxis;
         }
-        return Control(left: -left, right: -right);
+        return Control(left: left, right: right);
     }
 
     public func convertGameToControl(leftTrigger: Float, rightTrigger: Float, steeringOffset: Float) -> Control {

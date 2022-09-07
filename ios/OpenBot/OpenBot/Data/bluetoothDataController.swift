@@ -150,8 +150,10 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     func sendData(payload: String) {
-        let dataToSend: Data = payload.data(using: String.Encoding.utf8)!
-        tempPeripheral!.writeValue(dataToSend, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
+        let dataToSend: Data? = payload.data(using: String.Encoding.utf8)
+        if (dataToSend != nil && tempPeripheral != nil) {
+            tempPeripheral!.writeValue(dataToSend!, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
+        }
     }
 
     func disconnect() {
