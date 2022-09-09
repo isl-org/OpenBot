@@ -21,9 +21,10 @@ class GaugeView: UIView {
         }
         //change the value of variable value in drawSegment() of drawing updated segment
         //value range 0-180
+
             segmentValue = min(180, segmentValue)
             segmentValue = Int(Double(segmentValue) * 0.705)
-        drawSegments(in: rect, context: ctx, value: segmentValue)
+        drawSegments(in: rect, context: ctx, value: abs(segmentValue))
     }
 
     func deg2rad(_ number: CGFloat) -> CGFloat {
@@ -75,7 +76,7 @@ class GaugeView: UIView {
 
     var value: Int = 0 {
         didSet {
-            valueLabel.text = String(value)
+            valueLabel.text = String(abs(value))
             segmentValue = value
         }
     }

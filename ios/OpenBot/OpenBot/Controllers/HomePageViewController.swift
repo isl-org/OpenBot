@@ -7,7 +7,9 @@
 
 import UIKit
 import CoreBluetooth
-
+let height = max(UIScreen.main.bounds.height,UIScreen.main.bounds.width)
+let width = min(UIScreen.main.bounds.height,UIScreen.main.bounds.width)
+var currentOrientation = DeviceCurrentOrientation.Orientation.portrait
 var isBluetoothConnected = false;
 var viewControllerName: String?
 
@@ -25,15 +27,24 @@ class HomePageViewController: UIViewController {
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
         layout.itemSize = CGSize(width: 190, height: 190);
-
         modesCollectionView.collectionViewLayout = layout;
         modesCollectionView.register(modesCollectionViewCell.nib(), forCellWithReuseIdentifier: modesCollectionViewCell.identifier)
         modesCollectionView.delegate = self
         modesCollectionView.dataSource = self
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
+    }
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
+
         viewControllerName = classNameFrom(self)
         if (isBluetoothConnected) {
             bluetooth.setImage(Images.bluetoothConnected, for: .normal)

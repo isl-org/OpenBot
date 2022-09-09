@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PA5-nf-qH0">
-    <device id="retina6_0" orientation="portrait" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <accessibilityOverrides isEnabled="YES" boldText="YES" buttonShapes="YES" onOffLabels="YES" increaseContrast="YES" reduceTransparency="YES" dynamicTypePreference="2"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -20,15 +21,16 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="BluetoothViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="hzh-Sa-MSb">
-                                <rect key="frame" x="0.0" y="88" width="390" height="601"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="hzh-Sa-MSb">
+                                <rect key="frame" x="0.0" y="88" width="390" height="664"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="OmC-sT-wYd" customClass="ScannerTableViewCell" customModule="OpenBot" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.666666030883789" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="0.0" y="48.666666030883789" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OmC-sT-wYd" id="Zu2-gy-4TH" customClass="ScannerTableViewCell" customModule="OpenBot" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
@@ -42,7 +44,7 @@
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="lmw-Vc-mXp">
-                                <rect key="frame" x="134" y="749" width="146" height="51"/>
+                                <rect key="frame" x="92" y="752" width="207" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
@@ -50,12 +52,6 @@
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hzh-Sa-MSb" secondAttribute="trailing" id="1IP-Rc-wjz"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="hzh-Sa-MSb" secondAttribute="bottom" constant="121" id="3ME-5N-van"/>
-                            <constraint firstItem="hzh-Sa-MSb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Gen-yS-ooM"/>
-                            <constraint firstItem="hzh-Sa-MSb" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="xrC-WD-5o1"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Select Device" id="NyW-zY-MuG"/>
                     <connections>
@@ -64,14 +60,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="889.85507246376824" y="97.767857142857139"/>
+            <point key="canvasLocation" x="889.23076923076917" y="96.682464454976298"/>
         </scene>
         <!--Send Data-->
         <scene sceneID="xcY-xJ-ckS">
             <objects>
                 <viewController storyboardIdentifier="dataSerialMonitor" title="Send Data" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7az-1S-5T9" customClass="DataSerialMonitorViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" restorationIdentifier="sendScreen" id="bbB-lb-dd0">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Text 1" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TUs-Ba-dkE">
@@ -89,35 +85,46 @@
                                     <action selector="sendData:" destination="7az-1S-5T9" eventType="touchUpInside" id="v66-c0-bNa"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="c3M-zp-vaN">
-                                <rect key="frame" x="0.0" y="44" width="414" height="358"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ihl-gr-eWJ">
+                                <rect key="frame" x="148" y="536" width="119" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="logs">
+                                    <color key="baseBackgroundColor" name="gamepad"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="startLogs:" destination="7az-1S-5T9" eventType="touchUpInside" id="48g-wp-TM5"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5T2-KX-uXY">
+                                <rect key="frame" x="58" y="44" width="240" height="320"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ihl-gr-eWJ">
-                                <rect key="frame" x="148" y="536" width="119" height="53"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0AQ-0n-qMu">
+                                <rect key="frame" x="126" y="665" width="58" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="logs"/>
+                                <buttonConfiguration key="configuration" style="filled" title="temp"/>
                                 <connections>
-                                    <action selector="startLogs:" destination="7az-1S-5T9" eventType="touchUpInside" id="48g-wp-TM5"/>
+                                    <action selector="openTemp:" destination="7az-1S-5T9" eventType="touchUpInside" id="BEm-Sz-gtb"/>
                                 </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vT9-Wp-ph1"/>
                     </view>
                     <connections>
-                        <outlet property="bleSendData" destination="c3M-zp-vaN" id="Fc7-rn-Qjj"/>
+                        <outlet property="bleSendData" destination="5T2-KX-uXY" id="Q64-SP-4g0"/>
                         <outlet property="sendDataToBle" destination="TUs-Ba-dkE" id="yqR-DZ-vhv"/>
                         <outlet property="view" destination="bbB-lb-dd0" id="4df-au-0b1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F3L-yC-2JR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1592.753623188406" y="111.83035714285714"/>
+            <point key="canvasLocation" x="1592.3076923076922" y="111.61137440758293"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="kIt-wE-ccE">
@@ -125,7 +132,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PA5-nf-qH0" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="iB7-Za-Tcy">
-                        <rect key="frame" x="0.0" y="44" width="390" height="44"/>
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -142,7 +149,7 @@
             <objects>
                 <viewController storyboardIdentifier="freeRoam" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5Jb-Vu-sjn" customClass="FreeRoamController" customModule="OpenBot" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="d2O-Vk-YgR">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <viewLayoutGuide key="safeArea" id="scE-Np-rD9"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -152,12 +159,27 @@
             </objects>
             <point key="canvasLocation" x="-346.15384615384613" y="1895.260663507109"/>
         </scene>
+        <!--Temp View Controller-->
+        <scene sceneID="9gd-tr-ZHq">
+            <objects>
+                <viewController storyboardIdentifier="temp" id="IAB-NJ-dSq" customClass="TempViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ylQ-yb-LIv">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="dmd-0j-6t0"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2ER-lk-4Gg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="531" y="1884"/>
+        </scene>
         <!--Sensors View Controller-->
         <scene sceneID="DST-OZ-Qhc">
             <objects>
                 <viewController storyboardIdentifier="sensorScreen" id="K4k-6X-m7z" customClass="SensorsViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LRU-aC-Xdj">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Gyroscope" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VY1-Za-KFY">
@@ -350,13 +372,12 @@
             <objects>
                 <viewController storyboardIdentifier="cameraScreen" id="YEf-aW-8Ip" customClass="CameraViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TNt-JJ-CyR">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ha0-xm-yF0">
                                 <rect key="frame" x="38" y="68" width="337" height="360"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bEo-O0-uXF">
                                 <rect key="frame" x="0.0" y="601" width="129" height="78"/>
@@ -389,7 +410,7 @@
             <objects>
                 <viewController storyboardIdentifier="videoRecorder" id="ZrD-XW-Sfy" customClass="VideoRecordingController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2kx-c8-CsP">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="653-az-1Li">
@@ -438,7 +459,7 @@
             <objects>
                 <viewController storyboardIdentifier="homescreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="8dq-jC-bEe" customClass="HomePageViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="is3-d9-Un6">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OpenBot" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDx-Ys-4aG">
@@ -451,7 +472,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5c8-Vo-nJ6">
-                                <rect key="frame" x="318" y="77" width="72" height="55"/>
+                                <rect key="frame" x="342" y="77" width="72" height="55"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="settings"/>
                                 <connections>
@@ -459,7 +480,7 @@
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Ce8-ek-lG7">
-                                <rect key="frame" x="0.0" y="140" width="390" height="601"/>
+                                <rect key="frame" x="0.0" y="140" width="414" height="653"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Mxr-ZR-LOu">
                                     <size key="itemSize" width="128" height="128"/>
@@ -479,7 +500,7 @@
                                 </cells>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z72-El-xFG">
-                                <rect key="frame" x="288" y="87" width="38" height="33"/>
+                                <rect key="frame" x="308" y="87" width="38" height="33"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="bluetoothConnected" title="">
                                     <color key="baseForegroundColor" name="HomePageTitleColor"/>
@@ -522,11 +543,11 @@
             <objects>
                 <viewController storyboardIdentifier="controllerMapping" id="9A3-P5-jVL" customClass="GameViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VcJ-Kq-j9A">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" indicatorStyle="white" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNw-oB-7R8">
-                                <rect key="frame" x="0.0" y="447" width="390" height="363"/>
+                                <rect key="frame" x="0.0" y="447" width="414" height="415"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -534,7 +555,7 @@
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="controller" translatesAutoresizingMaskIntoConstraints="NO" id="HYS-00-IDW">
-                                <rect key="frame" x="0.0" y="38" width="390" height="375"/>
+                                <rect key="frame" x="-0.5" y="63.5" width="415" height="376"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="375" id="Xqu-ir-4R0"/>
                                 </constraints>
@@ -569,6 +590,9 @@
         <image name="settings" width="48" height="41"/>
         <namedColor name="HomePageTitleColor">
             <color red="0.0" green="0.4392156862745098" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="gamepad">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

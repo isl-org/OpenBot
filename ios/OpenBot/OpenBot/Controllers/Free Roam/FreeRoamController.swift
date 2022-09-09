@@ -19,6 +19,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     var vehicleControl = Control();
     let firstView = UIView()
     let secondView = UIView()
+    let deviceOrientation = DeviceCurrentOrientation.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,58 +39,69 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         updateGameControllerModeType()
         updateSpeedModes()
         drawTick()
+        if currentOrientation == .landScape{
+            applyLandScapeConstraint()
+        }
     }
 
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        let orient = UIApplication.shared.statusBarOrientation
-        switch orient {
-        case .portrait:
-            applyLandScapeConstraint()
-            break
-        default:
+
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
+        switch currentOrientation {
+        case .portrait :
             ApplyPortraitConstraint()
             break
+        case .landScape :
+            applyLandScapeConstraint()
+            break
+
         }
 
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
+
+    }
+
     func ApplyPortraitConstraint() {
-        for constraint in view.constraints {
-            if constraint.identifier == "secondView" {
-                view.removeConstraint(constraint)
-            }
-        }
+        removeConstraints()
         let leading = secondView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0)
-        leading.identifier = "secondView"
-        let top = secondView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: view.frame.width / 2-80)
-        top.identifier = "secondView"
+        leading.identifier = Strings.secondView
+        let top = secondView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: view.frame.width / 2 - 80)
+        top.identifier = Strings.secondView
         let width = secondView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1)
-        width.identifier = "secondView"
+        width.identifier = Strings.secondView
         let height = secondView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5)
-        height.identifier = "secondView"
+        height.identifier = Strings.secondView
         NSLayoutConstraint.activate([
             leading, top, width, height
         ])
     }
 
     func applyLandScapeConstraint() {
-        for constraint in view.constraints {
-            if constraint.identifier == "secondView" {
-                view.removeConstraint(constraint)
-            }
-        }
-        let leading = secondView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: view.frame.height / 2)
-        leading.identifier = "secondView"
+        removeConstraints()
+        let leading = secondView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: height/2 - 12)
+        leading.identifier = Strings.secondView
         let top = secondView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -30)
-        top.identifier = "secondView"
+        top.identifier = Strings.secondView
         let width = secondView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5)
-        width.identifier = "secondView"
+        width.identifier = Strings.secondView
         let height = secondView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1)
-        height.identifier = "secondView"
+        height.identifier = Strings.secondView
         NSLayoutConstraint.activate([
             leading, top, width, height
         ])
+    }
+
+    func removeConstraints() {
+        for constraint in view.constraints {
+            if constraint.identifier == Strings.secondView {
+                view.removeConstraint(constraint)
+            }
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -102,13 +114,13 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createSecondView() {
-        secondView.frame = CGRect(x: 0, y: view.frame.height / 2, width: view.frame.width, height: view.frame.height / 2)
+        secondView.frame = CGRect(x: 0, y: height/2, width: view.frame.width, height: view.frame.height / 2)
         view.addSubview(secondView)
         secondView.translatesAutoresizingMaskIntoConstraints = false
     }
 
     func createSpeedometer() {
-        let speedometer = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
+        let speedometer = GaugeView(frame: CGRect(x: 0, y: 0, width: width, height: 256))
         speedometer.backgroundColor = .clear
         speedometer.value = 0
         speedometer.tag = 100
@@ -128,7 +140,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
                 let tick = createTick()
                 let x = CGFloat(Float(187.5) + Float(radius) * cosf(2 * Float(i) * Float(Double.pi) / Float(count) - Float(Double.pi) / 2))
                 let y = CGFloat(Float(240) + Float(radius) * sinf(2 * Float(i) * Float(Double.pi) / Float(count) - Float(Double.pi) / 2))
-                tick.center = CGPoint(x: x, y: y-55)
+                tick.center = CGPoint(x: x, y: y - 55)
                 tick.transform = CGAffineTransform.identity.rotated(by: rotationInDegrees * .pi / 180.0)
                 firstView.addSubview(tick)
                 rotationInDegrees = rotationInDegrees + (360.0 / CGFloat(count))
@@ -152,9 +164,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createLabels() {
-        createLabel(value: "Controller", x: 35, y: 20, width: 100, height: 40)
-        createLabel(value: "Speed", x: 35, y: 210, width: 100, height: 40)
-        createLabel(value: "Drive Mode", x: 35, y: 115, width: 100, height: 40)
+        createLabel(value: Strings.controller, x: 35, y: 20, width: 100, height: 40)
+        createLabel(value: Strings.speed, x: 35, y: 210, width: 100, height: 40)
+        createLabel(value: Strings.driveMode, x: 35, y: 115, width: 100, height: 40)
     }
 
     func createVoltageLabel() {
@@ -166,12 +178,11 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createSonalLabel() {
-        sonarLabel.frame = CGRect(x: Int(view.frame.width) - 70, y: 320, width: 50, height: 40)
+        sonarLabel.frame = CGRect(x: Int(width) - 70, y: 320, width: 50, height: 40)
         sonarLabel.text = "0CM"
         sonarLabel.textColor = .white
         sonarLabel.font = sonarLabel.font.withSize(12)
         firstView.addSubview(sonarLabel)
-
     }
 
     func createDIcon() {
@@ -205,7 +216,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let relativeHeight = Double(h * 9.16)
         let innerVoltage = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
         innerVoltage.layer.cornerRadius = 5;
-        innerVoltage.backgroundColor = UIColor(named: "voltageDivider")
+        innerVoltage.backgroundColor = Colors.voltageDividerColor
         outerVoltage.addSubview(innerVoltage)
         firstView.addSubview(outerVoltage)
     }
@@ -215,11 +226,11 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             outerSonar.subviews[0].removeFromSuperview()
         }
         let relativeHeight = Double(h * 0.3667)
-        outerSonar = createRectangle(x: Int(view.frame.width) - 70, y: 220, width: 50, height: 110, borderColor: "borderColor");
+        outerSonar = createRectangle(x: Int(width) - 70, y: 220, width: 50, height: 110, borderColor: "borderColor");
         firstView.addSubview(outerSonar)
         let innerSonar = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
         innerSonar.layer.cornerRadius = 5;
-        innerSonar.backgroundColor = UIColor(named: "sonar")
+        innerSonar.backgroundColor = Colors.sonar
         outerSonar.addSubview(innerSonar)
     }
 
@@ -243,38 +254,38 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func updateControlMode() {
-        let gamePadController = createMode(x: 35, y: 60, width: 150, label: "Gamepad", icon: "gamepad", action: #selector(gamepadMode(_:)))
-        let phoneController = createMode(x: Int(view.frame.width / 2) + 20, y: 60, width: 120, label: "Phone", icon: "phone", action: #selector(phoneMode(_:)))
-        phoneController.backgroundColor = UIColor(named: "gamepad")
-        gamePadController.backgroundColor = UIColor(named: "gamepad")
+        let gamePadController = createMode(x: 35, y: 60, width: 150, label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
+        let phoneController = createMode(x: Int(width / 2) + 20, y: 60, width: 120, label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
+        phoneController.backgroundColor = Colors.freeRoamButtonsColor
+        gamePadController.backgroundColor = Colors.freeRoamButtonsColor
 
         if selectedControlMode == ControlMode.gamepad {
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             gameControllerObj = GameController();
-            gamePadController.backgroundColor = UIColor(named: "HomePageTitleColor")
+            gamePadController.backgroundColor = Colors.title
         } else if selectedControlMode == ControlMode.phone {
             gameControllerObj = nil;
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
-            phoneController.backgroundColor = UIColor(named: "HomePageTitleColor")
+            phoneController.backgroundColor = Colors.title
         }
         secondView.addSubview(gamePadController)
         secondView.addSubview(phoneController)
     }
 
     func updateGameControllerModeType() {
-        let joystick = createMode(x: 35, y: 150, width: 100, label: "Joystick", icon: "joystick", action: #selector(joystick(_:)))
-        let game = createMode(x: 140, y: 150, width: 100, label: "Game", icon: "game", action: #selector(gameMode(_:)))
-        let dual = createMode(x: 250, y: 150, width: 100, label: "Dual", icon: "dual", action: #selector(dualMode(_:)))
-        joystick.backgroundColor = UIColor(named: "gamepad")
-        game.backgroundColor = UIColor(named: "gamepad")
-        dual.backgroundColor = UIColor(named: "gamepad")
+        let joystick = createMode(x: 35, y: 150, width: 100, label: Strings.joystick, icon: "joystick", action: #selector(joystick(_:)))
+        let game = createMode(x: 140, y: 150, width: 100, label: Strings.game, icon: "game", action: #selector(gameMode(_:)))
+        let dual = createMode(x: 250, y: 150, width: 100, label: Strings.dual, icon: "dual", action: #selector(dualMode(_:)))
+        joystick.backgroundColor = Colors.freeRoamButtonsColor
+        game.backgroundColor = Colors.freeRoamButtonsColor
+        dual.backgroundColor = Colors.freeRoamButtonsColor
 
         if selectedDriveMode == DriveMode.joystick {
-            joystick.backgroundColor = UIColor(named: "HomePageTitleColor")
+            joystick.backgroundColor = Colors.title
         } else if selectedDriveMode == DriveMode.gameController {
-            game.backgroundColor = UIColor(named: "HomePageTitleColor")
+            game.backgroundColor = Colors.title
         } else if selectedDriveMode == DriveMode.dual {
-            dual.backgroundColor = UIColor(named: "HomePageTitleColor")
+            dual.backgroundColor = Colors.title
         }
         secondView.addSubview(joystick)
         secondView.addSubview(game)
@@ -300,19 +311,19 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func updateSpeedModes() {
-        let slowMode = createMode(x: 35, y: 250, width: 100, label: "Slow", icon: "slow", action: #selector(slow(_:)))
-        let mediumMode = createMode(x: 140, y: 250, width: 100, label: "Medium", icon: "medium", action: #selector(medium(_:)))
-        let fastMode = createMode(x: 250, y: 250, width: 100, label: "Fast", icon: "fast", action: #selector(fast(_:)))
-        slowMode.backgroundColor = UIColor(named: "gamepad")
-        mediumMode.backgroundColor = UIColor(named: "gamepad")
-        fastMode.backgroundColor = UIColor(named: "gamepad")
+        let slowMode = createMode(x: 35, y: 250, width: 100, label: Strings.slow, icon: "slow", action: #selector(slow(_:)))
+        let mediumMode = createMode(x: 140, y: 250, width: 100, label: Strings.medium, icon: "medium", action: #selector(medium(_:)))
+        let fastMode = createMode(x: 250, y: 250, width: 100, label: Strings.fast, icon: "fast", action: #selector(fast(_:)))
+        slowMode.backgroundColor = Colors.freeRoamButtonsColor
+        mediumMode.backgroundColor = Colors.freeRoamButtonsColor
+        fastMode.backgroundColor = Colors.freeRoamButtonsColor
 
         if selectedSpeedMode == SpeedMode.slow {
-            slowMode.backgroundColor = UIColor(named: "HomePageTitleColor")
+            slowMode.backgroundColor = Colors.title
         } else if selectedSpeedMode == SpeedMode.medium {
-            mediumMode.backgroundColor = UIColor(named: "HomePageTitleColor")
+            mediumMode.backgroundColor = Colors.title
         } else {
-            fastMode.backgroundColor = UIColor(named: "HomePageTitleColor")
+            fastMode.backgroundColor = Colors.title
         }
         secondView.addSubview(slowMode)
         secondView.addSubview(mediumMode)
@@ -406,7 +417,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func updateControllerValues() {
-        print("printing with controller");
         if (connectedController == nil) {
             return
         }
@@ -427,6 +437,18 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             vehicleControl = control;
             print("c" + String(left) + "," + String(right) + "\n");
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+        }
+    }
+    var statusBarOrientation: UIInterfaceOrientation? {
+        get {
+            guard let orientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation else {
+                #if DEBUG
+                fatalError("Could not obtain UIInterfaceOrientation from a valid windowScene")
+                #else
+                return nil
+                #endif
+            }
+            return orientation
         }
     }
 

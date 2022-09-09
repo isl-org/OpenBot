@@ -33,17 +33,30 @@ class GameViewController: UIViewController {
     let overlayLeftThumb = Draw(frame: CGRect(origin: CGPoint(x: 112, y: 207), size: CGSize(width: 46, height: 46)))
     let overlayRightThumb = Draw(frame: CGRect(origin: CGPoint(x: 232, y: 207), size: CGSize(width: 46, height: 46)))
 
+    var restrictRotation:UIInterfaceOrientationMask = .portrait
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.portrait, andRotateTo: UIInterfaceOrientation.portrait)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         dateFormatter.dateFormat = "HH:mm:ss.SSSS"
         clearLog()
         NotificationCenter.default.addObserver(self, selector: #selector(didConnectController), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         gameControllerObj = GameController();
         didConnectController();
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.all)
     }
 
     func clearLog() {

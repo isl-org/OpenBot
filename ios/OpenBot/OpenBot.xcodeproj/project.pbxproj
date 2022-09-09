@@ -31,6 +31,8 @@
 		727D33DD6B69783CAE4035BD /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30501D6445D0C8AED362 /* GaugeView.swift */; };
 		727D3457F432B9743263C307 /* sensorDataRetrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */; };
 		727D348793BC7E328164FDB2 /* DataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3157F2B5E5DBB1565EDD /* DataLogger.swift */; };
+		727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */; };
+		727D3B81A6A44E4095ECCDBD /* TempViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3566124B852BABC22AF4 /* TempViewController.swift */; };
 		727D3D12FAF02C416CC2CEC1 /* FreeRoamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */; };
 		BF72296428B0FD6D0013CD8E /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF72296328B0FD6D0013CD8E /* GameViewController.swift */; };
 		BF812E8728AE2C4200E0B682 /* modesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF812E8528AE2C4200E0B682 /* modesCollectionViewCell.swift */; };
@@ -84,7 +86,9 @@
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
 		727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreeRoamController.swift; sourceTree = "<group>"; };
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
+		727D3566124B852BABC22AF4 /* TempViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TempViewController.swift; sourceTree = "<group>"; };
 		727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bluetoothDataController.swift; sourceTree = "<group>"; };
+		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		BF72296328B0FD6D0013CD8E /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		BF812E8528AE2C4200E0B682 /* modesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = modesCollectionViewCell.swift; sourceTree = "<group>"; };
 		BF812E8628AE2C4200E0B682 /* modesCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = modesCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -178,6 +182,7 @@
 				727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */,
 				727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */,
 				727D3157F2B5E5DBB1565EDD /* DataLogger.swift */,
+				727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -242,6 +247,7 @@
 				3A0B835428ADFD6200A9FA0F /* DataSerialMonitorViewController.swift */,
 				727D3486646629C6067A6656 /* Free Roam */,
 				BF72296328B0FD6D0013CD8E /* GameViewController.swift */,
+				727D3566124B852BABC22AF4 /* TempViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -422,6 +428,8 @@
 				727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */,
 				4FEF4D4C829C1A8519999198 /* Control.swift in Sources */,
 				727D348793BC7E328164FDB2 /* DataLogger.swift in Sources */,
+				727D3B81A6A44E4095ECCDBD /* TempViewController.swift in Sources */,
+				727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,13 +14,20 @@ class DataSerialMonitorViewController: UIViewController {
     var payloadData: String = ""
     var labelString: String = "nil"
     let bluetooth = bluetoothDataController.shared
+    let serialMonitor = UITextView()
     @IBOutlet weak var sendDataToBle: UITextField!
     @IBOutlet weak var bleSendData: UITextView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        bleSendData.isEditable = false
+        createSerialMonitor()
         NotificationCenter.default.addObserver(self, selector: #selector(updateLabel), name: .updateLabel, object: nil)
+    }
+
+    func createSerialMonitor(){
+        serialMonitor.frame = CGRect(x: 0 , y: 0, width: view.frame.width, height: view.frame.height/2)
+        serialMonitor.backgroundColor = Colors.sonar
+//        view.addSubview(serialMonitor)
     }
 
     @IBAction func sendData(_ sender: Any) {
@@ -54,8 +61,10 @@ class DataSerialMonitorViewController: UIViewController {
         DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
         DataLogger.shared.createImageFolder(openBotPath: openBotPath)
         DataLogger.shared.createSensorData(openBotPath: openBotPath)
+
         if let url = URL(string: openBotPath) {
-            saveFolder(path: url)
+            createZip(path: url)
+//            saveFolder(path: url)
         }
     }
 
@@ -71,7 +80,6 @@ class DataSerialMonitorViewController: UIViewController {
     func createZip(path: URL) {
         let baseDirectoryName = datalogger.knowDateOrTime(format: "yyyy") + datalogger.knowDateOrTime(format: "MM") + datalogger.knowDateOrTime(format: "dd") + "_"
                 + datalogger.knowDateOrTime(format: "H") + datalogger.knowDateOrTime(format: "mm") + datalogger.knowDateOrTime(format: "ss") + ".zip"
-        print(baseDirectoryName)
         let fm = FileManager.default
         let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("/openBot")
         var archiveUrl: URL?
@@ -94,6 +102,12 @@ class DataSerialMonitorViewController: UIViewController {
             print(error as Any)
         }
     }
-
-
+    
+    @IBAction func openTemp(_ sender: Any) {
+        let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "temp"))!
+        guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
+            fatalError("guard failure handling has not been implemented")
+        }
+    }
+    
 }
