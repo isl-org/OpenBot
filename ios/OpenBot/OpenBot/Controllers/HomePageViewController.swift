@@ -31,14 +31,13 @@ class HomePageViewController: UIViewController {
         modesCollectionView.register(modesCollectionViewCell.nib(), forCellWithReuseIdentifier: modesCollectionViewCell.identifier)
         modesCollectionView.delegate = self
         modesCollectionView.dataSource = self
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-
         DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
 

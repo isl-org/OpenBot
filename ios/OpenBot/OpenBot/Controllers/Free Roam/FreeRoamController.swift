@@ -46,7 +46,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         switch currentOrientation {
         case .portrait :
@@ -55,15 +54,12 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         case .landScape :
             applyLandScapeConstraint()
             break
-
         }
 
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        DeviceCurrentOrientation.shared.findDeviceOrientation()
-
     }
 
     func ApplyPortraitConstraint() {
