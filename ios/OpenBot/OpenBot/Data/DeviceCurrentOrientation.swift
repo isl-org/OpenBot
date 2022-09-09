@@ -12,6 +12,11 @@ class DeviceCurrentOrientation {
 
     func findDeviceOrientation(){
         let isPortrait = UIDevice.current.orientation.isPortrait
+        let isLandscape = UIDevice.current.orientation.isLandscape
+        print(isLandscape , isPortrait)
+        if (isPortrait == false && isLandscape == false){
+            return
+        }
         switch (isPortrait) {
         case true:
             currentOrientation = Orientation.portrait
@@ -20,6 +25,7 @@ class DeviceCurrentOrientation {
             currentOrientation = Orientation.landScape
             break
         }
+        print(currentOrientation)
     }
 
 

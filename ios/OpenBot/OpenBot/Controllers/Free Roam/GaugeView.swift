@@ -33,13 +33,12 @@ class GaugeView: UIView {
 
     func drawSegments(in rect: CGRect, context ctx: CGContext, value: Int) {
         ctx.saveGState()
-        ctx.translateBy(x: rect.midX, y: rect.midY + 60)
+        ctx.translateBy(x: rect.midX-10, y: rect.midY + 40)
         ctx.rotate(by: deg2rad(rotation) - (.pi / 2))
         ctx.setLineWidth(segmentWidth)
         var segmentAngle = deg2rad(CGFloat(value))
-        let segmentRadius = (rect.width / 2) - 50
+        let segmentRadius = (rect.width / 2) - 60
         for (index, segment) in segmentColors.enumerated() {
-
             let start = CGFloat(index) * segmentAngle
             segment.set()
             if index == 0 {
@@ -59,8 +58,8 @@ class GaugeView: UIView {
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(valueLabel)
         NSLayoutConstraint.activate([
-            valueLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -60)
+            valueLabel.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -10),
+            valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -80)
         ])
     }
 
