@@ -21,6 +21,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     let secondView = UIView()
     let deviceOrientation = DeviceCurrentOrientation.shared
     private let mainView = UIView()
+    var indicator = "i0,0\n";
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,16 +44,17 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         updateGameControllerModeType()
         updateSpeedModes()
         drawTick()
-        if currentOrientation == .landScape{
+        if currentOrientation == .landScape {
             applyLandScapeConstraint()
         }
     }
 
-    func applySafeAreaConstraints(){
+    func applySafeAreaConstraints() {
         mainView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mainView)
     }
-    func apply(){
+
+    func apply() {
         let margins = view.layoutMarginsGuide
         NSLayoutConstraint.activate([
             mainView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
@@ -66,10 +68,10 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         switch currentOrientation {
-        case .portrait :
+        case .portrait:
             ApplyPortraitConstraint()
             break
-        case .landScape :
+        case .landScape:
             applyLandScapeConstraint()
             break
         }
@@ -97,7 +99,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func applyLandScapeConstraint() {
         removeConstraints()
-        let leading = secondView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: height/2 - 12)
+        let leading = secondView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: height / 2 - 12)
         leading.identifier = Strings.secondView
         let top = secondView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -30)
         top.identifier = Strings.secondView
@@ -123,13 +125,13 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createFirstView() {
-        firstView.frame = CGRect(x: 0, y: 10, width: mainView.frame.width, height: mainView.frame.height/2)
+        firstView.frame = CGRect(x: 0, y: 10, width: mainView.frame.width, height: mainView.frame.height / 2)
         firstView.backgroundColor = Colors.sonar
         mainView.addSubview(firstView)
     }
 
     func createSecondView() {
-        secondView.frame = CGRect(x: 0, y: height/2-30, width: view.frame.width, height: view.frame.height / 2)
+        secondView.frame = CGRect(x: 0, y: height / 2 - 30, width: view.frame.width, height: view.frame.height / 2)
         mainView.addSubview(secondView)
         secondView.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -148,15 +150,15 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func drawTicks(count: Int, radius: Int) {
         var rotationInDegrees: CGFloat = 0
-        let pointOfBreak1: Int = count / 4-1;
-        let pointOfBreak2: Int = 3 * count / 4+1;
+        let pointOfBreak1: Int = count / 4 - 1;
+        let pointOfBreak2: Int = 3 * count / 4 + 1;
         for i in 0..<count {
             if i <= pointOfBreak1 || i >= pointOfBreak2 {
                 let tick = createTick()
 
                 let x = CGFloat(Float(187.5) + Float(radius) * cosf(2 * Float(i) * Float(Double.pi) / Float(count) - Float(Double.pi) / 2))
                 let y = CGFloat(Float(240) + Float(radius) * sinf(2 * Float(i) * Float(Double.pi) / Float(count) - Float(Double.pi) / 2))
-                tick.center = CGPoint(x: x-10, y: y - 70)
+                tick.center = CGPoint(x: x - 10, y: y - 70)
                 tick.transform = CGAffineTransform.identity.rotated(by: rotationInDegrees * .pi / 180.0)
                 firstView.addSubview(tick)
                 rotationInDegrees = rotationInDegrees + (360.0 / CGFloat(count))
@@ -270,8 +272,8 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func updateControlMode() {
-        let gamePadController = createMode(x: 35, y: 55, width: Int(width/3), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
-        let phoneController = createMode(x: Int(width / 2) + 20, y: 60, width: Int(width/3), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
+        let gamePadController = createMode(x: 35, y: 55, width: Int(width / 3), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
+        let phoneController = createMode(x: Int(width / 2) + 20, y: 60, width: Int(width / 3), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
         phoneController.backgroundColor = Colors.freeRoamButtonsColor
         gamePadController.backgroundColor = Colors.freeRoamButtonsColor
 
@@ -289,9 +291,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func updateGameControllerModeType() {
-        let joystick = createMode(x: 35, y: 145, width: Int(width/4), label: Strings.joystick, icon: "joystick", action: #selector(joystick(_:)))
-        let game = createMode(x: 145, y: 145, width: Int(width/4), label: Strings.game, icon: "game", action: #selector(gameMode(_:)))
-        let dual = createMode(x: 250, y: 145, width: Int(width/4), label: Strings.dual, icon: "dual", action: #selector(dualMode(_:)))
+        let joystick = createMode(x: 35, y: 145, width: Int(width / 4), label: Strings.joystick, icon: "joystick", action: #selector(joystick(_:)))
+        let game = createMode(x: 145, y: 145, width: Int(width / 4), label: Strings.game, icon: "game", action: #selector(gameMode(_:)))
+        let dual = createMode(x: 250, y: 145, width: Int(width / 4), label: Strings.dual, icon: "dual", action: #selector(dualMode(_:)))
         joystick.backgroundColor = Colors.freeRoamButtonsColor
         game.backgroundColor = Colors.freeRoamButtonsColor
         dual.backgroundColor = Colors.freeRoamButtonsColor
@@ -327,9 +329,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func updateSpeedModes() {
-        let slowMode = createMode(x: 35, y: 245, width: Int(width/4), label: Strings.slow, icon: "slow", action: #selector(slow(_:)))
-        let mediumMode = createMode(x: 145, y: 245, width: Int(width/4), label: Strings.medium, icon: "medium", action: #selector(medium(_:)))
-        let fastMode = createMode(x: 250, y: 245, width: Int(width/4), label: Strings.fast, icon: "fast", action: #selector(fast(_:)))
+        let slowMode = createMode(x: 35, y: 245, width: Int(width / 4), label: Strings.slow, icon: "slow", action: #selector(slow(_:)))
+        let mediumMode = createMode(x: 145, y: 245, width: Int(width / 4), label: Strings.medium, icon: "medium", action: #selector(medium(_:)))
+        let fastMode = createMode(x: 250, y: 245, width: Int(width / 4), label: Strings.fast, icon: "fast", action: #selector(fast(_:)))
         slowMode.backgroundColor = Colors.freeRoamButtonsColor
         mediumMode.backgroundColor = Colors.freeRoamButtonsColor
         fastMode.backgroundColor = Colors.freeRoamButtonsColor
@@ -441,8 +443,11 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
         print(batteryLevel);
         controller?.extendedGamepad?.valueChangedHandler = { [self] gamepad, element in
-            let control = gameControllerObj?.processJoystickInput(mode: selectedDriveMode, gamepad: gamepad) ?? Control();
+            let control = gameControllerObj?.processJoystickInput(mode: selectedDriveMode, gamepad: gamepad) ?? vehicleControl;
             sendControl(control: control);
+
+            let keyCommand = gameControllerObj?.processControllerKeyData(element: element);
+            sendKeyUpdates(keyCommand: keyCommand ?? "");
         }
     }
 
@@ -455,6 +460,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
         }
     }
+
     var statusBarOrientation: UIInterfaceOrientation? {
         get {
             guard let orientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation else {
@@ -468,5 +474,35 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
+    @objc func sendKeyUpdates(keyCommand: Any) {
+        switch (keyCommand) {
+        case IndicatorEvent.Right:
+            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
+            break;
+        case IndicatorEvent.Left:
+            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
+            break;
+        case IndicatorEvent.Stop:
+            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
+            break;
+        case ControlEvent.STOP:
+            sendControl(control: Control());
+            break;
+        case ControlEvent.FORWARD:
+            break;
+        case CMD_Events.TOGGLE_LOGS:
+            break;
+        default:
+            break;
+        }
+    }
+
+    func setIndicator(keyCommand: IndicatorEvent) {
+        let indicatorValues: String = gameControllerObj?.getIndicatorEventValue(event: keyCommand) ?? "";
+        if (indicator != indicatorValues) {
+            bluetooth.sendData(payload: indicatorValues);
+            indicator = indicatorValues;
+        }
+    }
 }
 

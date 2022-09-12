@@ -11,7 +11,6 @@ import GameController
 public var connectedController: GCController?;
 
 class GameController: GCController {
-
     static let shared: GameController = GameController();
     private let maximumControllerCount: Int = 1
     private(set) var controllers = Set<GCController>()
@@ -54,6 +53,13 @@ class GameController: GCController {
         controllers.remove(controller)
     }
 
+    /**
+
+     - Parameters:
+       - mode:
+       - gamepad:
+     - Returns:
+     */
     public func processJoystickInput(mode: DriveMode, gamepad: GCExtendedGamepad) -> Control {
         switch (mode) {
         case .dual:
@@ -99,10 +105,24 @@ class GameController: GCController {
         }
     }
 
+    /**
+     function to return dual mode control values to openbot device movement values.
+     - Parameters:
+       - leftStick: left joystick yAxis values.
+       - rightStick: right joystick yAxis values.
+     - Returns: return control object with left and right values.
+     */
     public func convertDualToControl(leftStick: Float, rightStick: Float) -> Control {
         Control(left: leftStick, right: rightStick);
     }
 
+    /**
+     function to convert controller input for joystick mode to values to return to openbot device to control the navigation.
+     - Parameters:
+       - xAxis: xAxis position of the joystick
+       - yAxis: yAxis position of the joystick
+     - Returns: returns control object with left and right values.
+     */
     public func convertJoystickToControl(xAxis: Float, yAxis: Float) -> Control {
         var left = yAxis;
         var right = yAxis;
@@ -120,6 +140,14 @@ class GameController: GCController {
         return Control(left: left, right: right);
     }
 
+    /**
+     function to convert controller input for game mode to the values to return to openbot device to control the device movement.
+     - Parameters:
+       - leftTrigger: left control of device.
+       - rightTrigger: right control of device.
+       - steeringOffset: offset in left and right directions.
+     - Returns: Returns Control object with left and right values.
+     */
     public func convertGameToControl(leftTrigger: Float, rightTrigger: Float, steeringOffset: Float) -> Control {
         var left = rightTrigger - leftTrigger;
         var right = rightTrigger - leftTrigger;
@@ -135,5 +163,46 @@ class GameController: GCController {
             right += steeringOffset;
         }
         return Control(left: left, right: right);
+    }
+
+    /**
+     function to process the controller keys and create events out of them.
+     - Parameters:
+       - element: takes controllerElement as input and using localized_names of controller and map it to Keymap[enum].
+     - Returns: Events
+     */
+    public func processControllerKeyData(element: GCControllerElement) -> Any {
+        switch (element.localizedName) {
+        case Keymap.KEY_CIRCLE.rawValue:
+            return IndicatorEvent.Right;
+        case Keymap.KEY_SQUARE.rawValue:
+            return IndicatorEvent.Left;
+        case Keymap.KEY_TRIANGLE.rawValue:
+            return ControlEvent.STOP;
+        case Keymap.KEY_CROSS.rawValue:
+            return CMD_Events.TOGGLE_LOGS;
+        case Keymap.KEY_Options.rawValue:
+            return CMD_Events.TOGGLE_NOISE;
+        case Keymap.KEY_R1.rawValue:
+            return CMD_Events.TOGGLE_NOISE;
+        default:
+            return "";
+        }
+    }
+
+    /**
+     function to get the values to return to openbot for update in indicator.
+     - Parameter event: [IndicatorEvent] enum
+     - Returns: [String]
+     */
+    public func getIndicatorEventValue(event: IndicatorEvent) -> String {
+        if (event == IndicatorEvent.Stop) {
+            return "i0,0\n";
+        } else if (event == IndicatorEvent.Left) {
+            return "i1,0\n"
+        } else if (event == IndicatorEvent.Right) {
+            return "i0,1\n";
+        }
+        return "i1,1\n";
     }
 }

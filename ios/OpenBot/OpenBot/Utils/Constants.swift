@@ -17,7 +17,7 @@ struct Colors {
     //Colors
     static let gridShadowColor = UIColor(named: "gridItemShadowColor");
     static let title = UIColor(named: "HomePageTitleColor");
-    static  let sonar = UIColor(named: "sonar")
+    static let sonar = UIColor(named: "sonar")
     static let voltageDividerColor = UIColor(named: "voltageDivider")
     static let freeRoamButtonsColor = UIColor(named: "gamepad")
 
@@ -44,4 +44,33 @@ enum ControlMode {
 
 enum DriveMode {
     case joystick, gameController, dual
+}
+
+enum IndicatorEvent: Int {
+    case Left = -1
+    case Right = 1
+    case Stop = 0
+}
+
+enum ControlEvent {
+    case STOP, FORWARD, BACKWARD, LEFT, RIGHT
+}
+
+enum Keymap: String {
+    case KEY_TRIANGLE = "Triangle Button"
+    case KEY_SQUARE = "Square Button"
+    case KEY_CIRCLE = "Circle Button"
+    case KEY_CROSS = "Cross Button"
+    case KEY_R1 = "R1 Button"
+    case KEY_R2 = "R2 Button"
+    case KEY_R3 = "R3 Button"
+    case KEY_L1 = "L1 Button"
+    case KEY_L2 = "L2 Button"
+    case KEY_L3 = "L3 Button"
+    case KEY_Options = "OPTIONS Button"
+    case KEY_Share = "SHARE Button"
+}
+
+enum CMD_Events {
+    case TOGGLE_LOGS, TOGGLE_NOISE, TOGGLE_CAMERA
 }
