@@ -19,12 +19,9 @@ class GaugeView: UIView {
             print("no ctx found")
             return
         }
-        //change the value of variable value in drawSegment() of drawing updated segment
-        //value range 0-180
-
             segmentValue = min(180, segmentValue)
             segmentValue = Int(Double(segmentValue) * 0.705)
-        drawSegments(in: rect, context: ctx, value: abs(segmentValue))
+            drawSegments(in: rect, context: ctx, value: abs(segmentValue))
     }
 
     func deg2rad(_ number: CGFloat) -> CGFloat {
@@ -33,11 +30,18 @@ class GaugeView: UIView {
 
     func drawSegments(in rect: CGRect, context ctx: CGContext, value: Int) {
         ctx.saveGState()
-        ctx.translateBy(x: rect.midX-10, y: rect.midY + 40)
+        ctx.translateBy(x: 180.5, y: rect.midY + 40)
+//        if currentOrientation == .portrait{
+////            ctx.translateBy(x: rect.midX-10, y: rect.midY + 40)
+//            ctx.translateBy(x: 180.5, y: rect.midY + 40)
+//        }
+//        else{
+//            ctx.translateBy(x: 180.5, y: rect.midY + 40)
+//        }
         ctx.rotate(by: deg2rad(rotation) - (.pi / 2))
         ctx.setLineWidth(segmentWidth)
         var segmentAngle = deg2rad(CGFloat(value))
-        let segmentRadius = (rect.width / 2) - 60
+        let segmentRadius = (width / 2) - 60
         for (index, segment) in segmentColors.enumerated() {
             let start = CGFloat(index) * segmentAngle
             segment.set()
@@ -55,11 +59,12 @@ class GaugeView: UIView {
     func setUp() {
         valueLabel.font = valueFont
         valueLabel.textColor = .white
-        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+//        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+        valueLabel.frame = CGRect(x: 175.5, y: 100, width: 100, height: 100)
         addSubview(valueLabel)
         NSLayoutConstraint.activate([
-            valueLabel.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -10),
-            valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -80)
+//            valueLabel.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -10),
+//            valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -80)
         ])
     }
 

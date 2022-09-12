@@ -33,10 +33,9 @@ class GameViewController: UIViewController {
     let overlayLeftThumb = Draw(frame: CGRect(origin: CGPoint(x: 112, y: 207), size: CGSize(width: 46, height: 46)))
     let overlayRightThumb = Draw(frame: CGRect(origin: CGPoint(x: 232, y: 207), size: CGSize(width: 46, height: 46)))
 
-    var restrictRotation:UIInterfaceOrientationMask = .portrait
+    var restrictRotation: UIInterfaceOrientationMask = .portrait
 
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.portrait, andRotateTo: UIInterfaceOrientation.portrait)
     }
 
@@ -48,15 +47,23 @@ class GameViewController: UIViewController {
 
     }
 
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         gameControllerObj = GameController();
         didConnectController();
     }
 
+
+
+    override func viewWillDisappear(_ animated: Bool) {
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
+        AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.all)
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.all)
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
 
     func clearLog() {

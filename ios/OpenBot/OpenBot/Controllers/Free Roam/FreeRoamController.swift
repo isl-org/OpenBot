@@ -27,7 +27,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         applySafeAreaConstraints()
         apply()
-
         createFirstView()
         createSecondView()
         createSpeedometer()
@@ -44,7 +43,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         updateGameControllerModeType()
         updateSpeedModes()
         drawTick()
-        if currentOrientation == .landScape {
+        if currentOrientation == UIInterfaceOrientation.landscapeRight || currentOrientation == UIInterfaceOrientation.landscapeLeft {
             applyLandScapeConstraint()
         }
     }
@@ -71,9 +70,14 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         case .portrait:
             ApplyPortraitConstraint()
             break
-        case .landScape:
+        case .landscapeRight:
             applyLandScapeConstraint()
             break
+        case .landscapeLeft:
+            applyLandScapeConstraint()
+            break
+        default:
+            ApplyPortraitConstraint();
         }
 
     }
@@ -125,9 +129,10 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createFirstView() {
-        firstView.frame = CGRect(x: 0, y: 10, width: mainView.frame.width, height: mainView.frame.height / 2)
-        firstView.backgroundColor = Colors.sonar
+        firstView.frame = CGRect(x: 0, y: 10, width: view.frame.width, height: view.frame.height / 2)
         mainView.addSubview(firstView)
+        firstView.translatesAutoresizingMaskIntoConstraints = false
+
     }
 
     func createSecondView() {
@@ -196,7 +201,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createSonalLabel() {
-        sonarLabel.frame = CGRect(x: Int(width) - 100, y: 300, width: 50, height: 40)
+        sonarLabel.frame = CGRect(x: Int(width) - 96, y: 300, width: 60, height: 40)
         sonarLabel.text = "0CM"
         sonarLabel.textColor = .white
         sonarLabel.font = sonarLabel.font.withSize(15)

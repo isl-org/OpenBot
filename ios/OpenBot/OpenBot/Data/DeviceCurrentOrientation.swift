@@ -4,31 +4,30 @@
 
 import Foundation
 import UIKit
-class DeviceCurrentOrientation {
-    static let shared : DeviceCurrentOrientation = DeviceCurrentOrientation()
-    enum  Orientation{
-        case landScape, portrait
-    }
 
-    func findDeviceOrientation(){
+class DeviceCurrentOrientation {
+    static let shared: DeviceCurrentOrientation = DeviceCurrentOrientation()
+
+
+    func findDeviceOrientation() {
         let isPortrait = UIDevice.current.orientation.isPortrait
         let isLandscape = UIDevice.current.orientation.isLandscape
-        print(isLandscape , isPortrait)
-        if (isPortrait == false && isLandscape == false){
+        if (isPortrait == false && isLandscape == false) {
             return
         }
-        switch (isPortrait) {
-        case true:
-            currentOrientation = Orientation.portrait
-            break;
-        case false:
-            currentOrientation = Orientation.landScape
+        switch UIDevice.current.orientation {
+        case .landscapeLeft :
+            currentOrientation = .landscapeLeft
+            break
+        case .landscapeRight:
+            currentOrientation = .landscapeRight
+            break
+        case .portrait:
+            currentOrientation = .portrait
+            break
+        default :
+            currentOrientation = .portrait
             break
         }
-        print(currentOrientation)
     }
-
-
-
-
 }

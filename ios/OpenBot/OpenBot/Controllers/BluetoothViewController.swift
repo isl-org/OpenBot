@@ -19,6 +19,7 @@ class BluetoothViewController: UIViewController{
         DispatchQueue.main.async { [weak self] in
             self?.myTable.reloadData()
         }
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
