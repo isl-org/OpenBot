@@ -5,16 +5,9 @@
 import Foundation
 import UIKit
 
-class DataLogger: UIViewController {
+class DataLogger {
     static let shared: DataLogger = DataLogger()
-
-    required init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    var enabled: Bool = false;
 
     func getDirectoryInfo() -> URL {
         let fileManager = FileManager.default

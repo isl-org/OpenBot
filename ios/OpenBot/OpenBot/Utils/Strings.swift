@@ -27,7 +27,7 @@ struct Strings {
 
 // Screen Identifiers
     static let ScreenFreeRoam: String = "freeRoam";
-    static let ScreenDataCollection: String = "dataSerialMonitor";
+    static let ScreenDataCollection: String = "dataCollection";
     static let ScreenControllerMapping: String = "controllerMapping";
 
 

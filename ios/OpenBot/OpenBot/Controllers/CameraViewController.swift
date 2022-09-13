@@ -18,10 +18,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
-
-
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -45,7 +42,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         } catch let error {
             print("Error Unable to initialize back camera:  \(error.localizedDescription)")
         }
-
     }
 
     @IBAction func cameraButton(_ sender: Any) {
@@ -55,7 +51,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     }
 
     func setupLivePreview() {
-
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
 
         videoPreviewLayer.videoGravity = .resizeAspect
@@ -67,7 +62,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                 self.videoPreviewLayer.frame = self.cameraView.bounds
             }
         }
-
         //Step12
     }
 
@@ -77,13 +71,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         else {
             return
         }
-
         let image = UIImage(data: imageData)
-
-        print()
-
-
-
 //        if var image:UIImage  = image {
 //            let  croppedImage = cropImage(imageToCrop: image, toRect: CGRectMake(
 //                    image.size.width/4,
@@ -95,23 +83,20 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         guard let image = image else {
             fatalError("guard failure handling has not been implemented")
         }
-        print()
         let temp = cropImage(imageToCrop: image, toRect: CGRectMake(0, 30, 256, 96))
         photoView.image = temp
         print(temp)
-
     }
 
-    func cropImage(imageToCrop:UIImage, toRect rect:CGRect) -> UIImage{
+    func cropImage(imageToCrop: UIImage, toRect rect: CGRect) -> UIImage {
 
-        let imageRef:CGImage = imageToCrop.cgImage!.cropping(to: rect)!
-        let cropped:UIImage = UIImage(cgImage:imageRef)
+        let imageRef: CGImage = imageToCrop.cgImage!.cropping(to: rect)!
+        let cropped: UIImage = UIImage(cgImage: imageRef)
         return cropped
     }
+
     func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
-         CGRect(x: x, y: y, width: width, height: height)
+        CGRect(x: x, y: y, width: width, height: height)
     }
-
-
 }
 
