@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PA5-nf-qH0">
-    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="dark"/>
     <accessibilityOverrides isEnabled="YES" boldText="YES" buttonShapes="YES" onOffLabels="YES" increaseContrast="YES" reduceTransparency="YES" dynamicTypePreference="2"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
@@ -159,21 +159,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kag-im-1SP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-346.37681159420293" y="1895.0892857142856"/>
-        </scene>
-        <!--Temp View Controller-->
-        <scene sceneID="9gd-tr-ZHq">
-            <objects>
-                <viewController storyboardIdentifier="temp" id="IAB-NJ-dSq" customClass="TempViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ylQ-yb-LIv">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="dmd-0j-6t0"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2ER-lk-4Gg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="531" y="1884"/>
         </scene>
         <!--Sensors View Controller-->
         <scene sceneID="DST-OZ-Qhc">
@@ -582,6 +567,35 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d4V-wJ-6BY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2262" y="964"/>
+        </scene>
+        <!--Data Collection Controller-->
+        <scene sceneID="2Fa-jB-MxX">
+            <objects>
+                <viewController storyboardIdentifier="dataCollection" id="TfL-g3-JdL" customClass="DataCollectionController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="QEz-9R-cv6">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oc2-5d-n3q" userLabel="cameraView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="895"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="PUC-KL-NW0"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="oc2-5d-n3q" firstAttribute="centerX" secondItem="QEz-9R-cv6" secondAttribute="centerX" id="JxC-ed-z8J"/>
+                            <constraint firstItem="oc2-5d-n3q" firstAttribute="width" secondItem="QEz-9R-cv6" secondAttribute="width" multiplier="0.901786" constant="40.660714285714278" id="d96-1w-mfi" userLabel="cameraView.width = width"/>
+                            <constraint firstItem="oc2-5d-n3q" firstAttribute="top" secondItem="QEz-9R-cv6" secondAttribute="top" id="gaL-Qc-7N0"/>
+                            <constraint firstItem="oc2-5d-n3q" firstAttribute="height" secondItem="QEz-9R-cv6" secondAttribute="height" multiplier="0.949275" constant="44.449275362318872" id="p0Y-8M-8F7" userLabel="cameraView.height = height"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cameraView" destination="oc2-5d-n3q" id="Fm1-do-n2h"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yJR-jR-Qid" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2256.521739130435" y="276.5625"/>
         </scene>
     </scenes>
     <resources>
