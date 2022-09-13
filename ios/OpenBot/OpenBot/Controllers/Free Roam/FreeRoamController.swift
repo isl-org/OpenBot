@@ -6,7 +6,6 @@
 //
 
 import UIKit
-
 class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     var sonarLabel = UILabel()
     var voltageLabel = UILabel()
@@ -260,7 +259,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     func createLabel(value: String, x: Int, y: Int, width: Int, height: Int) {
         let label = UILabel()
         label.text = value
-        label.font = UIFont(name: "medium", size: 30.0)
+        label.font = UIFont(name: "medium", size: adapted(dimensionSize: 30, to: .width))
         label.frame = CGRect(x: x, y: y, width: width, height: height)
         label.textColor = .white
         label.font = label.font.withSize(15)

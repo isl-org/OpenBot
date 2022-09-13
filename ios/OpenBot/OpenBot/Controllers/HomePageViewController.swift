@@ -13,7 +13,7 @@ let width = min(UIScreen.main.bounds.height, UIScreen.main.bounds.width)
 var currentOrientation: UIInterfaceOrientation = UIInterfaceOrientation.portrait
 var isBluetoothConnected = false;
 var viewControllerName: String?
-
+var leadingConstraint  = NSLayoutConstraint()
 class HomePageViewController: UIViewController {
     @IBOutlet weak var bluetooth: UIButton!
     @IBOutlet weak var settings: UIButton!
@@ -24,17 +24,20 @@ class HomePageViewController: UIViewController {
         super.viewDidLoad()
         setUpTitle();
         let layout = UICollectionViewFlowLayout();
-        layout.collectionView?.layer.cornerRadius = 10;
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
-        layout.itemSize = CGSize(width: 190, height: 190);
+        layout.itemSize = resized(size: CGSize(width: width * 0.38, height: width * 0.38), basedOn: .width)
+        layout.minimumInteritemSpacing = 5
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        layout.minimumLineSpacing = 30
+        print(layout.minimumInteritemSpacing)
         modesCollectionView.collectionViewLayout = layout;
+
         modesCollectionView.register(modesCollectionViewCell.nib(), forCellWithReuseIdentifier: modesCollectionViewCell.identifier)
         modesCollectionView.delegate = self
         modesCollectionView.dataSource = self
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         changeNavigationColor()
-
 
     }
 
@@ -79,6 +82,7 @@ class HomePageViewController: UIViewController {
 
     func setUpTitle() {
         titleLabel.text = Strings.OpenBot;
+
         titleLabel.textColor = Colors.title;
     }
 
@@ -92,7 +96,7 @@ class HomePageViewController: UIViewController {
 //            let yourAlert = UIAlertController(title: "Connection Error", message: "Please connect to BlueTooth", preferredStyle: UIAlertController.Style.alert)
 //            yourAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (handler) in}))
 //            self.present(yourAlert, animated: true, completion: nil)
-            let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "sensorScreen"))!
+            let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "temp"))!
             guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
                 fatalError("guard failure handling has not been implemented")
             }
@@ -119,24 +123,24 @@ extension UIViewController: UICollectionViewDelegate {
 
 extension UIViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        Constants.gameModes.count;
+          Constants.gameModes.count;
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: modesCollectionViewCell.identifier, for: indexPath) as! modesCollectionViewCell;
         cell.configure(with: Constants.gameModes[indexPath.row]);
+        cell.layer.cornerRadius = adapted(dimensionSize: 10, to: .height)
+        cell.translatesAutoresizingMaskIntoConstraints = true
+        leadingConstraint = cell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
         return cell
     }
-}
 
-func classNameFrom(_ viewController: UIViewController) -> String {
-    let currentViewControllerName = NSStringFromClass(viewController.classForCoder).components(separatedBy: ".").last!
-    return currentViewControllerName
+    func arrowConstraints(){
 
-}
+    }
+    func classNameFrom(_ viewController: UIViewController) -> String {
+        let currentViewControllerName = NSStringFromClass(viewController.classForCoder).components(separatedBy: ".").last!
+        return currentViewControllerName
 
-extension UIViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: 190, height: 190)
     }
 }
