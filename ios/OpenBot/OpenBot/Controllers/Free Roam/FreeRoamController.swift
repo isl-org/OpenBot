@@ -6,6 +6,7 @@
 //
 
 import UIKit
+
 class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     var sonarLabel = UILabel()
     var voltageLabel = UILabel()
@@ -128,20 +129,25 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createFirstView() {
-        firstView.frame = CGRect(x: 0, y: 10, width: view.frame.width, height: view.frame.height / 2)
+        firstView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height / 2)
         mainView.addSubview(firstView)
         firstView.translatesAutoresizingMaskIntoConstraints = false
 
     }
 
     func createSecondView() {
-        secondView.frame = CGRect(x: 0, y: height / 2 - 30, width: view.frame.width, height: view.frame.height / 2)
+//        secondView.frame = CGRect(x: 0, y: height / 2 - 30, width: view.frame.width, height: view.frame.height / 2)
+        let h = view.frame.height / 2
+        let width = view.frame.width
+        let size = CGSize(width: width, height: h)
+        let origin = CGPoint(x: 0, y: height / 2 - 30)
+        secondView.frame = CGRect(origin: origin, size: resized(size: size, basedOn: dimension))
         mainView.addSubview(secondView)
         secondView.translatesAutoresizingMaskIntoConstraints = false
     }
 
     func createSpeedometer() {
-        let speedometer = GaugeView(frame: CGRect(x: 0, y: 0, width: width, height: 256))
+        let speedometer = GaugeView(frame: CGRect(x: 0, y: -10, width: width, height: 256))
         speedometer.backgroundColor = .clear
         speedometer.value = 0
         speedometer.tag = 100
@@ -159,7 +165,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         for i in 0..<count {
             if i <= pointOfBreak1 || i >= pointOfBreak2 {
                 let tick = createTick()
-
                 let x = CGFloat(Float(187.5) + Float(radius) * cosf(2 * Float(i) * Float(Double.pi) / Float(count) - Float(Double.pi) / 2))
                 let y = CGFloat(Float(240) + Float(radius) * sinf(2 * Float(i) * Float(Double.pi) / Float(count) - Float(Double.pi) / 2))
                 tick.center = CGPoint(x: x - 10, y: y - 70)
@@ -187,7 +192,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func createLabels() {
         createLabel(value: Strings.controller, x: 35, y: 20, width: 100, height: 40)
-        createLabel(value: Strings.speed, x: 35, y: 210, width: 100, height: 40)
+        createLabel(value: Strings.speed, x: 35, y: 207, width: 100, height: 40)
         createLabel(value: Strings.driveMode, x: 35, y: 115, width: 100, height: 40)
     }
 
@@ -236,7 +241,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     func createVoltageController(h: Double) {
         let outerVoltage = createRectangle(x: 30, y: 190, width: 50, height: 110, borderColor: "borderColor")
         let relativeHeight = Double(h * 9.16)
-        let innerVoltage = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
+//        let innerVoltage = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
+        let innerVoltage = createRectangle(x: 0, y: 110 - Int(relativeHeight), width: 49, height: Int(relativeHeight) - 1, borderColor: "nocolor")
+
         innerVoltage.layer.cornerRadius = 5;
         innerVoltage.backgroundColor = Colors.voltageDividerColor
         outerVoltage.addSubview(innerVoltage)
@@ -250,7 +257,8 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let relativeHeight = Double(h * 0.3667)
         outerSonar = createRectangle(x: Int(width) - 100, y: 190, width: 50, height: 110, borderColor: "borderColor");
         firstView.addSubview(outerSonar)
-        let innerSonar = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
+//        let innerSonar = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
+        let innerSonar = createRectangle(x: 0, y: 110 - Int(relativeHeight), width: 49, height: Int(relativeHeight) - 1, borderColor: "nocolor")
         innerSonar.layer.cornerRadius = 5;
         innerSonar.backgroundColor = Colors.sonar
         outerSonar.addSubview(innerSonar)
@@ -268,12 +276,18 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createRectangle(x: Int, y: Int, width: Int, height: Int, borderColor: String) -> UIView {
-        let rectangleView = UIView(frame: CGRect(x: x, y: y, width: width, height: height))
+//        let rectangleView = UIView(frame: CGRect(x: x, y: y, width: width, height: height))
+        let rectangleView = UIView();
+        let origin = CGPoint(x: x, y: y)
+        let size = CGSize(width: width, height: height)
+        let resize = resized(size: size, basedOn: dimension)
+        rectangleView.frame = CGRect(origin: origin, size: resized(size: size, basedOn: dimension))
         rectangleView.layer.cornerRadius = 5;
         rectangleView.layer.borderWidth = 1;
         rectangleView.layer.borderColor = UIColor(named: borderColor)?.cgColor
         return rectangleView;
     }
+
 
     func updateControlMode() {
         let gamePadController = createMode(x: 35, y: 55, width: Int(width / 3), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
@@ -333,9 +347,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func updateSpeedModes() {
-        let slowMode = createMode(x: 35, y: 245, width: Int(width / 4), label: Strings.slow, icon: "slow", action: #selector(slow(_:)))
-        let mediumMode = createMode(x: 145, y: 245, width: Int(width / 4), label: Strings.medium, icon: "medium", action: #selector(medium(_:)))
-        let fastMode = createMode(x: 250, y: 245, width: Int(width / 4), label: Strings.fast, icon: "fast", action: #selector(fast(_:)))
+        let slowMode = createMode(x: 35, y: 242, width: Int(width / 4), label: Strings.slow, icon: "slow", action: #selector(slow(_:)))
+        let mediumMode = createMode(x: 145, y: 242, width: Int(width / 4), label: Strings.medium, icon: "medium", action: #selector(medium(_:)))
+        let fastMode = createMode(x: 250, y: 242, width: Int(width / 4), label: Strings.fast, icon: "fast", action: #selector(fast(_:)))
         slowMode.backgroundColor = Colors.freeRoamButtonsColor
         mediumMode.backgroundColor = Colors.freeRoamButtonsColor
         fastMode.backgroundColor = Colors.freeRoamButtonsColor

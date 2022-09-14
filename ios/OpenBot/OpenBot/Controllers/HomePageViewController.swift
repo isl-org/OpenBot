@@ -22,15 +22,21 @@ class HomePageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
         setUpTitle();
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
-        layout.itemSize = resized(size: CGSize(width: width * 0.38, height: width * 0.38), basedOn: .width)
+        if currentOrientation == .portrait {
+            layout.itemSize = resized(size: CGSize(width: width * 0.47, height: width * 0.42), basedOn: dimension)
+        }
+        else{
+            layout.itemSize = resized(size: CGSize(width: width * 0.47, height: width * 0.42), basedOn: dimension)
+        }
+
         layout.minimumInteritemSpacing = 5
         layout.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         layout.minimumLineSpacing = 30
-        print(layout.minimumInteritemSpacing)
         modesCollectionView.collectionViewLayout = layout;
 
         modesCollectionView.register(modesCollectionViewCell.nib(), forCellWithReuseIdentifier: modesCollectionViewCell.identifier)
@@ -68,7 +74,6 @@ class HomePageViewController: UIViewController {
     }
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print(peripheral)
         peripheral.discoverServices(nil)
     }
 
@@ -96,7 +101,7 @@ class HomePageViewController: UIViewController {
 //            let yourAlert = UIAlertController(title: "Connection Error", message: "Please connect to BlueTooth", preferredStyle: UIAlertController.Style.alert)
 //            yourAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (handler) in}))
 //            self.present(yourAlert, animated: true, completion: nil)
-            let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "temp"))!
+            let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "sensorScreen"))!
             guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
                 fatalError("guard failure handling has not been implemented")
             }
