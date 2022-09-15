@@ -43,7 +43,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         if (central.state == .poweredOn) {
             centralManager?.scanForPeripherals(withServices: nil, options: nil)
         } else {
-            // do something like alert the user that ble is not on
+            print("bluetooth is off ")
         }
 
     }
@@ -173,10 +173,11 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
 
     func startScan(){
+
     }
 
     @objc func startNotification() {
-
+        _ = CBCentralManager(delegate: self, queue: nil)
     }
     }
 
