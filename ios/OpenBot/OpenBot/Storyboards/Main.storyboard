@@ -544,23 +544,9 @@
                     <view key="view" contentMode="scaleToFill" id="QEz-9R-cv6">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oc2-5d-n3q" userLabel="cameraView">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="895"/>
-                            </view>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="PUC-KL-NW0"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="oc2-5d-n3q" firstAttribute="centerX" secondItem="QEz-9R-cv6" secondAttribute="centerX" id="JxC-ed-z8J"/>
-                            <constraint firstItem="oc2-5d-n3q" firstAttribute="width" secondItem="QEz-9R-cv6" secondAttribute="width" multiplier="0.901786" constant="40.660714285714278" id="d96-1w-mfi" userLabel="cameraView.width = width"/>
-                            <constraint firstItem="oc2-5d-n3q" firstAttribute="top" secondItem="QEz-9R-cv6" secondAttribute="top" id="gaL-Qc-7N0"/>
-                            <constraint firstItem="oc2-5d-n3q" firstAttribute="height" secondItem="QEz-9R-cv6" secondAttribute="height" multiplier="0.949275" constant="44.449275362318872" id="p0Y-8M-8F7" userLabel="cameraView.height = height"/>
-                        </constraints>
                     </view>
-                    <connections>
-                        <outlet property="cameraView" destination="oc2-5d-n3q" id="Fm1-do-n2h"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yJR-jR-Qid" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
