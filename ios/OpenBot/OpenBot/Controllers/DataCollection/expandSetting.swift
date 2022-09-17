@@ -11,7 +11,7 @@ class expandSetting: UIView {
         createLogDataButton()
         createBluetoothIcon()
         createCameraIcon()
-        createLabels(value: "Preview Resolution (1280 x 720)", positionX: 20, positionY: 120, labelWidth: 240, labelHeight: 30)
+        createLabels(value: Strings.previewResulation, positionX: 20, positionY: 120, labelWidth: 240, labelHeight: 30)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .clickSetting, object: nil)
         createCancelButton()
     }
@@ -22,19 +22,20 @@ class expandSetting: UIView {
 
     func createBluetoothIcon() {
         let bluetoothIcon = UIImageView(frame: CGRect(x: 200, y: 65, width: 30, height: 30))
-        bluetoothIcon.image = UIImage(named: "bluetoothConnected")
+        bluetoothIcon.image =  Images.bluetoothConnected
+
         addSubview(bluetoothIcon)
     }
 
     func createCameraIcon() {
         let cameraView = UIImageView(frame: CGRect(x: 240, y: 65, width: 30, height: 30))
-        cameraView.image = UIImage(named: "frontCamera")
+        cameraView.image = Images.frontCamera
         addSubview(cameraView)
     }
 
     func createLogDataButton() {
         let logData = UISwitch(frame: CGRect(x: 120, y: 65, width: 100, height: 40))
-        createLabels(value: "Log Data", positionX: 40, positionY: 60, labelWidth: 100, labelHeight: 40)
+        createLabels(value: Strings.logData, positionX: 40, positionY: 60, labelWidth: 100, labelHeight: 40)
         logData.isOn = true
         logData.setOn(true, animated: false)
         logData.onTintColor = Colors.title
@@ -45,8 +46,8 @@ class expandSetting: UIView {
         let cancelButton = UIButton()
         cancelButton.frame = CGRect(x: 280, y: 50, width: 60, height: 50)
         let cancelIcon = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        cancelIcon.image = UIImage(named: "closeIcon")
-        cancelButton.addTarget(self, action: #selector(pressed), for: .touchUpInside)
+        cancelIcon.image = Images.closeIcon
+        cancelButton.addTarget(self, action: #selector(cancelExpandedView), for: .touchUpInside)
         cancelButton.addSubview(cancelIcon)
         addSubview(cancelButton)
 
@@ -75,7 +76,7 @@ class expandSetting: UIView {
         return rectangleView;
     }
 
-    @objc func pressed() {
+    @objc func cancelExpandedView() {
         NotificationCenter.default.post(name: .cancelButton, object: nil)
     }
 
@@ -85,6 +86,6 @@ class expandSetting: UIView {
 }
 
 extension Notification.Name {
-    static let cancelButton = Notification.Name("cancelButton")
+    static let cancelButton = Notification.Name(Strings.cancelButton)
 
 }

@@ -22,20 +22,20 @@ class collapseSettingView: UIView {
     }
 
     func createBluetoothIcon() {
-        if let image = UIImage(named: "frontCamera") {
+        if let image = Images.frontCamera {
             createIcons(iconImg: image, topAnchor: 10, backgroundColor: Colors.title ?? .blue, action: #selector(setting(_:)))
         }
     }
 
     func createCameraIcon() {
-        if let image = UIImage(named: "ble") {
+        if let image = Images.ble {
             createIcons(iconImg: image, topAnchor: 80, backgroundColor: Colors.title ?? .blue, action: #selector(setting(_:)))
         }
 
     }
 
     func createSettingIcon() {
-        if let image = UIImage(named: "settings") {
+        if let image = Images.settings {
             createIcons(iconImg: image, topAnchor: 155, backgroundColor: Colors.borderColor ?? .white, action: #selector(setting(_:)))
         }
     }
@@ -76,6 +76,6 @@ class collapseSettingView: UIView {
 }
 
 extension Notification.Name {
-    static let clickSetting = Notification.Name("clickSetting")
+    static let clickSetting = Notification.Name(Strings.clickSetting)
 
 }

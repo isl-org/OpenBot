@@ -38,6 +38,7 @@
 		727D34602C26673639AA0D0B /* Dimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3946DB74E63117B32AF4 /* Dimension.swift */; };
 		727D348793BC7E328164FDB2 /* DataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3157F2B5E5DBB1565EDD /* DataLogger.swift */; };
 		727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */; };
+		727D373B2A839824AE8E6AE2 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31331A6716FD310082EB /* CameraController.swift */; };
 		727D39CEBB2CF03D171BC311 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D37D0890B15799952F87A /* UIViewExtension.swift */; };
 		727D3B19FEA7A95C092DC11E /* collapseSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D316515ACC87CAEB31A26 /* collapseSettingView.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
@@ -98,6 +99,7 @@
 		4FEF4EE1E197D3F52EFF3B88 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
 		727D30501D6445D0C8AED362 /* GaugeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GaugeView.swift; sourceTree = "<group>"; };
+		727D31331A6716FD310082EB /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
 		727D316515ACC87CAEB31A26 /* collapseSettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = collapseSettingView.swift; sourceTree = "<group>"; };
 		727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreeRoamController.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */,
 				727D3157F2B5E5DBB1565EDD /* DataLogger.swift */,
 				727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */,
+				727D31331A6716FD310082EB /* CameraController.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -474,6 +477,7 @@
 				4FEF4DAC98B9D01B10F7B3E9 /* DataCollectionController.swift in Sources */,
 				727D3B19FEA7A95C092DC11E /* collapseSettingView.swift in Sources */,
 				727D332F054456A4182DD7DF /* expandSetting.swift in Sources */,
+				727D373B2A839824AE8E6AE2 /* CameraController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
