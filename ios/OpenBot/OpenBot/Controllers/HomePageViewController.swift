@@ -29,10 +29,10 @@ class HomePageViewController: UIViewController {
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
         if currentOrientation == .portrait {
-            layout.itemSize = resized(size: CGSize(width: width * 0.47, height: width * 0.42), basedOn: dimension)
+            layout.itemSize = resized(size: CGSize(width: width * 0.42, height: width * 0.42), basedOn: dimension)
         }
         else{
-            layout.itemSize = resized(size: CGSize(width: width * 0.47, height: width * 0.42), basedOn: dimension)
+            layout.itemSize = resized(size: CGSize(width: width * 0.42, height: width * 0.42), basedOn: dimension)
         }
 
         layout.minimumInteritemSpacing = 5

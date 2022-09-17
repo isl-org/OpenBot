@@ -13,11 +13,13 @@ class DataCollectionController: UIViewController {
     let cameraView: UIView = UIView()
     var heightConstraint: NSLayoutConstraint! = nil
     var widthConstraint: NSLayoutConstraint! = nil
+    let collapseView = collapseSettingView(frame: CGRect(x: 0, y: 0, width: width, height: height))
+    let expandSettingView = expandSetting(frame: CGRect(x: 0, y: 0, width: width, height: height))
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-       title = "Data Collection"
+        title = "Data Collection"
         captureSession = AVCaptureSession()
         captureSession.sessionPreset = .medium
         guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
@@ -43,72 +45,56 @@ class DataCollectionController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         createCameraView()
+//        createRectangle(x: 100, y: 100, width: 300, height: 100, borderColor: "borderColor", trailingConstant: 10, topConstant: 20)
+        view.addSubview(collapseView)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadExpandView), name: .clickSetting, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadCollapseView), name: .cancelButton, object: nil)
+
 
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        createBluetoothIcon()
-        createCameraIcon()
-        createSettingIcon()
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
+        setupCollapseView()
     }
+
 
     func createCameraView() {
         cameraView.frame.origin = CGPoint(x: 0, y: 0)
         cameraView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(cameraView)
         applyConstraints()
-
-
     }
 
-    func createBluetoothIcon(){
-        if let image = UIImage(named: "frontCamera") {
-            let frontCamera = createIcons(iconImg : image, width: 40 , height: 40)
-            view.addSubview(frontCamera)
-            frontCamera.translatesAutoresizingMaskIntoConstraints = false
-            frontCamera.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50).isActive = true
-            frontCamera.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor , constant: 70).isActive = true
-
-        }
-    }
-
-    func createCameraIcon(){
-        if let image = UIImage(named: "bluetooth") {
-            let bluetoothIcon = createIcons(iconImg : image, width: 60 ,height: 60)
-            view.addSubview(bluetoothIcon)
-            bluetoothIcon.translatesAutoresizingMaskIntoConstraints = false
-            bluetoothIcon.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50).isActive = true
-            bluetoothIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor , constant: 30).isActive = true
-
-        }
-
-    }
-
-    func createSettingIcon(){
-        if let image = UIImage(named: "settings") {
-            let settingIcon = createIcons(iconImg : image,width: 120 , height: 120)
-            view.addSubview(settingIcon)
-            settingIcon.translatesAutoresizingMaskIntoConstraints = false
-            settingIcon.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50).isActive = true
-            settingIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor , constant: 100).isActive = true
-
-        }
-    }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         refreshConstraints()
+        setupCollapseView()
+
 
     }
 
+    func setupCollapseView(){
+        if currentOrientation == .portrait {
+            collapseView.frame = CGRect(x: 0, y: 0, width: width, height: height)
+            expandSettingView.frame = CGRect(x: 0, y: 0, width: width, height: height)
+
+        }
+        else {
+            collapseView.frame = CGRect(x: 0, y: 0, width: height, height: width)
+            expandSettingView.frame = CGRect(x: 0, y: 0, width: height, height: width)
+
+        }
+    }
+
     func applyConstraints() {
-        if currentOrientation == .portrait{
+        if currentOrientation == .portrait {
             widthConstraint = cameraView.widthAnchor.constraint(equalToConstant: width)
             heightConstraint = cameraView.heightAnchor.constraint(equalToConstant: height)
-        }
-        else{
+        } else {
             widthConstraint = cameraView.widthAnchor.constraint(equalToConstant: height)
             heightConstraint = cameraView.heightAnchor.constraint(equalToConstant: width)
         }
@@ -169,38 +155,21 @@ class DataCollectionController: UIViewController {
             if connection.isVideoOrientationSupported,
                let videoOrientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue) {
                 previewLayer.frame = view.bounds
-                connection.videoOrientation = videoOrientation
+                connection.videoOrientation = .portrait
             }
         }
     }
-    func createIcons(iconImg : UIImage ,width : CGFloat , height : CGFloat  ) -> UIView{
 
-        let icon = UIView()
-        icon.frame.size = CGSize(width: 60, height: 60)
-        let iconImage = UIImageView(frame: (CGRect(x: 0, y: 0, width: icon.frame.width/2, height: icon.frame.width/2 )))
-        iconImage.image = iconImg
-        icon.backgroundColor = Colors.title
-        icon.addSubview(iconImage)
-        return icon
+    @objc func loadExpandView() {
+        collapseView.removeFromSuperview()
+        view.addSubview(expandSettingView)
+    }
 
-
-
-
-
-
-
-
-
-
-//        let iconButton = UIButton()
-//        iconButton.frame.size =  CGSize(width: 200, height: 200)
-//        iconButton.layer.cornerRadius = 5
-//        iconButton.setBackgroundImage(iconImage, for: UIControl.State.normal)
-//        iconButton.backgroundColor = backg
-//        return iconButton
-
-
+    @objc func loadCollapseView() {
+        expandSettingView.removeFromSuperview()
+        view.addSubview(collapseView)
 
     }
+
 
 }
