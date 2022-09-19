@@ -12,7 +12,6 @@ class expandSetting: UIView {
         createBluetoothIcon()
         createCameraIcon()
         createLabels(value: Strings.previewResulation, positionX: 20, positionY: 120, labelWidth: 240, labelHeight: 30)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .clickSetting, object: nil)
         createCancelButton()
     }
 

@@ -366,7 +366,7 @@
 		4FEF44CF03B950ABA7A3C2A8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					4FEF4468D4E229F25FFC08A1 = {
 						DevelopmentTeam = 45P94DZS6G;
@@ -381,10 +381,9 @@
 			};
 			buildConfigurationList = 4FEF4122C53708B73B477B24 /* Build configuration list for PBXProject "OpenBot" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
@@ -452,7 +451,6 @@
 				BF812E8728AE2C4200E0B682 /* modesCollectionViewCell.swift in Sources */,
 				3A5BF7D228D0548B00D8736E /* TempViewController.swift in Sources */,
 				3A3C40C828B0A8A800AA40CF /* VideoRecordingController.swift in Sources */,
-				4FEF4BF08DDE6BB860043DE4 /* BluetoothViewController.swift in Sources */,
 				4FEF4BF08DDE6BB860043DE4 /* BluetoothViewController.swift in Sources */,
 				4FEF4C5087962C2F3B2BB3A1 /* Modes.swift in Sources */,
 				4FEF483FCB45A3257C181C30 /* README.md in Sources */,

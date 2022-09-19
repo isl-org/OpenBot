@@ -10,9 +10,10 @@ class CameraController: UIViewController {
     var captureSession: AVCaptureSession!
     var stillImageOutput: AVCapturePhotoOutput!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
-    let cameraView : UIView = UIView()
+    let cameraView: UIView = UIView()
     var heightConstraint: NSLayoutConstraint! = nil
     var widthConstraint: NSLayoutConstraint! = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -22,7 +23,8 @@ class CameraController: UIViewController {
         initializeCamera()
 
     }
-    func initializeCamera(){
+
+    func initializeCamera() {
         captureSession = AVCaptureSession()
         captureSession.sessionPreset = .medium
         guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
@@ -44,6 +46,7 @@ class CameraController: UIViewController {
             print("Error Unable to initialize back camera:  \(error.localizedDescription)")
         }
     }
+
     func createCameraView() {
         cameraView.frame.origin = CGPoint(x: 0, y: 0)
         cameraView.translatesAutoresizingMaskIntoConstraints = false
@@ -64,6 +67,7 @@ class CameraController: UIViewController {
             }
         }
     }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         configureVideoOrientation()
@@ -99,5 +103,37 @@ class CameraController: UIViewController {
         }
     }
 
+    func switchCameraView() {
+        let currentCameraInput: AVCaptureInput = captureSession.inputs[0]
+        captureSession.removeInput(currentCameraInput)
+        var newCamera: AVCaptureDevice
+        newCamera = AVCaptureDevice.default(for: AVMediaType.video)!
+
+        if (currentCameraInput as! AVCaptureDeviceInput).device.position == .back {
+            UIView.transition(with: self.cameraView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
+                newCamera = self.cameraWithPosition(.front)!
+            }, completion: nil)
+        } else {
+            UIView.transition(with: self.cameraView, duration: 0.5, options: .transitionFlipFromRight, animations: {
+                newCamera = self.cameraWithPosition(.back)!
+            }, completion: nil)
+        }
+        do {
+            try self.captureSession?.addInput(AVCaptureDeviceInput(device: newCamera))
+        } catch {
+            print("error: \(error.localizedDescription)")
+        }
+    }
+
+    func cameraWithPosition(_ position: AVCaptureDevice.Position) -> AVCaptureDevice? {
+        let deviceDescoverySession = AVCaptureDevice.DiscoverySession.init(deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera], mediaType: AVMediaType.video, position: AVCaptureDevice.Position.unspecified)
+
+        for device in deviceDescoverySession.devices {
+            if device.position == position {
+                return device
+            }
+        }
+        return nil
+    }
 
 }

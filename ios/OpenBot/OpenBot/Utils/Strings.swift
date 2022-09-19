@@ -18,13 +18,15 @@ struct Strings {
     static let slow: String = "Slow"
     static let medium: String = "Medium"
     static let fast: String = "Fast"
-    static let logData : String = "Log Data"
-    static  let previewResulation : String = "Preview Resolution (1280 x 720)"
+    static let logData: String = "Log Data"
+    static let previewResulation: String = "Preview Resolution (1280 x 720)"
 
 // Notifications
     static let controllerConnected: String = "connectedWithControllerSuccessfully";
-static let clickSetting : String = "clickSetting"
-    static let cancelButton : String = "cancelButton"
+    static let clickSetting: String = "clickSetting"
+    static let cancelButton: String = "cancelButton"
+    static let switchCamera: String = "switchCamera"
+    static let ble: String = "ble"
 
 
 // Screen Identifiers

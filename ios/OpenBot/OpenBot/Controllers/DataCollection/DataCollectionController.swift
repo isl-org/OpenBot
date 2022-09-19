@@ -21,6 +21,8 @@ class DataCollectionController: CameraController {
         createCameraView()
         view.addSubview(collapseView)
         NotificationCenter.default.addObserver(self, selector: #selector(loadExpandView), name: .clickSetting, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadCollapseView), name: .cancelButton, object: nil)
     }
 
@@ -37,13 +39,12 @@ class DataCollectionController: CameraController {
         setupCollapseView()
     }
 
-    func setupCollapseView(){
+    func setupCollapseView() {
         if currentOrientation == .portrait {
             collapseView.frame = CGRect(x: 0, y: 0, width: width, height: height)
             expandSettingView.frame = CGRect(x: 0, y: 0, width: width, height: height)
 
-        }
-        else {
+        } else {
             collapseView.frame = CGRect(x: 0, y: 0, width: height, height: width)
             expandSettingView.frame = CGRect(x: 0, y: 0, width: height, height: width)
 
@@ -74,6 +75,16 @@ class DataCollectionController: CameraController {
     @objc func loadExpandView() {
         collapseView.removeFromSuperview()
         view.addSubview(expandSettingView)
+    }
+
+    @objc func switchCamera() {
+        switchCameraView();
+        print("switchCamera");
+    }
+
+    @objc func openBluetoothSettings() {
+        print("openBluetoothSettings");
+
     }
 
     @objc func loadCollapseView() {
