@@ -90,7 +90,6 @@ class CameraController: UIViewController {
         if let previewLayer = videoPreviewLayer,
            let connection = videoPreviewLayer.connection {
             let orientation = UIDevice.current.orientation
-
             if connection.isVideoOrientationSupported,
                let videoOrientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue) {
                 previewLayer.frame = view.bounds
