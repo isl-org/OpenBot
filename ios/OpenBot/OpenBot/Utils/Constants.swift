@@ -12,9 +12,9 @@ struct Images {
     static let bluetoothConnected = UIImage(named: "bluetoothConnected");
     static let bluetoothDisconnected = UIImage(named: "bluetoothDisconnected");
     static let frontCamera = UIImage(named: "frontCamera");
-static let  ble = UIImage(named: "ble")
-    static  let settings = UIImage(named: "settings")
-    static  let closeIcon =  UIImage(named: "closeIcon")
+    static let ble = UIImage(named: "ble")
+    static let settings = UIImage(named: "settings")
+    static let closeIcon = UIImage(named: "closeIcon")
 
 
 }

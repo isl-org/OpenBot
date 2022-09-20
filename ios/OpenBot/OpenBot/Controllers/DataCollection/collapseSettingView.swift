@@ -6,15 +6,12 @@ import Foundation
 import UIKit
 
 class collapseSettingView: UIView {
-    var loadCollapseSetting = true
-    var loadExpandedSetting = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         createBluetoothIcon()
         createCameraIcon()
         createSettingIcon()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .clickSetting, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -22,33 +19,30 @@ class collapseSettingView: UIView {
     }
 
     func createBluetoothIcon() {
-        if let image = Images.frontCamera {
-            createIcons(iconImg: image, topAnchor: 10, backgroundColor: Colors.title ?? .blue, action: #selector(setting(_:)))
+        if let image = Images.ble {
+            createIcons(iconImg: image, topAnchor: 10, x: 24.5, y: 21, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         }
     }
 
     func createCameraIcon() {
-        if let image = Images.ble {
-            createIcons(iconImg: image, topAnchor: 80, backgroundColor: Colors.title ?? .blue, action: #selector(setting(_:)))
+        if let image = Images.frontCamera {
+            createIcons(iconImg: image, topAnchor: 80, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
         }
 
     }
 
     func createSettingIcon() {
         if let image = Images.settings {
-            createIcons(iconImg: image, topAnchor: 155, backgroundColor: Colors.borderColor ?? .white, action: #selector(setting(_:)))
+            createIcons(iconImg: image, topAnchor: 150, x: 6.0, y: 9.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.borderColor ?? .white, action: #selector(setting(_:)))
         }
     }
 
-    func createIcons(iconImg: UIImage, topAnchor: CGFloat, backgroundColor: UIColor, action: Selector?) {
-        let icon = UIView()
-        let size = CGSize(width: 60, height: 60)
-        icon.frame.size = size
-        let iconImage = UIImageView(frame: (CGRect(x: icon.frame.width / 4, y: icon.frame.height / 4, width: icon.frame.width * 0.5, height: icon.frame.width * 0.5)))
-        icon.addSubview(iconImage)
+    func createIcons(iconImg: UIImage, topAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) {
+        let icon = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        let iconImage = UIImageView(frame: CGRect(x: x, y: y, width: size.width, height: size.height))
         iconImage.image = iconImg
-        icon.backgroundColor = backgroundColor
         icon.addSubview(iconImage)
+        icon.backgroundColor = backgroundColor
         addSubview(icon)
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.widthAnchor.constraint(equalToConstant: 60).isActive = true
@@ -61,11 +55,15 @@ class collapseSettingView: UIView {
     }
 
     @objc func setting(_ sender: UIView) {
-//        addSubview(expandSetting(frame: CGRect(x: 0, y: 0, width: width, height: height)))
-//        exchangeSubview(at: 0, withSubviewAt: 1)
-//        addSubview(expandSetting(frame: CGRect(x: 0, y: 0, width: width, height: height)))
         NotificationCenter.default.post(name: .clickSetting, object: nil)
+    }
 
+    @objc func ble(_ sender: UIView) {
+        NotificationCenter.default.post(name: .ble, object: nil)
+    }
+
+    @objc func switchCamera(_ sender: UIView) {
+        NotificationCenter.default.post(name: .switchCamera, object: nil)
     }
 
     @objc func updateScreen() {
@@ -77,5 +75,7 @@ class collapseSettingView: UIView {
 
 extension Notification.Name {
     static let clickSetting = Notification.Name(Strings.clickSetting)
+    static let switchCamera = Notification.Name(Strings.switchCamera)
+    static let ble = Notification.Name(Strings.ble)
 
 }
