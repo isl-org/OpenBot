@@ -20,6 +20,7 @@ struct Strings {
     static let fast: String = "Fast"
     static let logData: String = "Log Data"
     static let previewResulation: String = "Preview Resolution (1280 x 720)"
+    static let modelResolution : String = "Model Resolution "
 
 // Notifications
     static let controllerConnected: String = "connectedWithControllerSuccessfully";

@@ -16,12 +16,15 @@ class CameraController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        for subview in view.subviews {
+            print(subview)
+        }
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         initializeCamera()
-
     }
 
     func initializeCamera() {

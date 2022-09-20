@@ -6,73 +6,107 @@ import Foundation
 import UIKit
 
 class expandSetting: UIView {
+    let logData = UISwitch()
+    let bluetoothIcon = UIImageView()
+    let cameraIcon = UIImageView()
+    let cancelButton = UIButton()
+    var low = UIView()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
+        applyBlurEffect()
         createLogDataButton()
         createBluetoothIcon()
         createCameraIcon()
-        createLabels(value: Strings.previewResulation, positionX: 20, positionY: 120, labelWidth: 240, labelHeight: 30)
+        createLabels(value: Strings.previewResulation, leadingAnchor: 10, topAnchor: 50, labelWidth: 240, labelHeight: 30)
         createCancelButton()
+        createLow()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
-    func createBluetoothIcon() {
-        let bluetoothIcon = UIImageView(frame: CGRect(x: 200, y: 65, width: 30, height: 30))
-        bluetoothIcon.image =  Images.bluetoothConnected
-
-        addSubview(bluetoothIcon)
-    }
-
-    func createCameraIcon() {
-        let cameraView = UIImageView(frame: CGRect(x: 240, y: 65, width: 30, height: 30))
-        cameraView.image = Images.frontCamera
-        addSubview(cameraView)
-    }
-
     func createLogDataButton() {
-        let logData = UISwitch(frame: CGRect(x: 120, y: 65, width: 100, height: 40))
-        createLabels(value: Strings.logData, positionX: 40, positionY: 60, labelWidth: 100, labelHeight: 40)
+
+        logData.frame.size = CGSize(width: 100, height: 100)
+        createLabels(value: Strings.logData, leadingAnchor: 10, topAnchor: 13, labelWidth: 100, labelHeight: 40)
         logData.isOn = true
         logData.setOn(true, animated: false)
         logData.onTintColor = Colors.title
+        logData.transform = CGAffineTransform(scaleX: 1.2, y: 0.7)
+        logData.addTarget(self, action: #selector(switchLogButton(_:)), for: .valueChanged)
+        logData.translatesAutoresizingMaskIntoConstraints = false
         addSubview(logData)
+        logData.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 90).isActive = true
+        logData.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
     }
 
+    func createBluetoothIcon() {
+        bluetoothIcon.frame.size = CGSize(width: 30, height: 30)
+        bluetoothIcon.translatesAutoresizingMaskIntoConstraints = false
+        bluetoothIcon.image = Images.bluetoothConnected
+        addSubview(bluetoothIcon)
+        bluetoothIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        bluetoothIcon.leadingAnchor.constraint(equalTo: logData.trailingAnchor, constant: 20).isActive = true
+
+    }
+
+    func createCameraIcon() {
+        cameraIcon.frame.size = CGSize(width: 30, height: 30)
+        cameraIcon.translatesAutoresizingMaskIntoConstraints = false
+        cameraIcon.image = Images.frontCamera
+        cameraIcon.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(reverseCamera(_:)))
+        cameraIcon.addGestureRecognizer(tap)
+        addSubview(cameraIcon)
+        cameraIcon.leadingAnchor.constraint(equalTo: bluetoothIcon.trailingAnchor, constant: 20).isActive = true
+        cameraIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+    }
+
+
+
     func createCancelButton() {
-        let cancelButton = UIButton()
-        cancelButton.frame = CGRect(x: 280, y: 50, width: 60, height: 50)
-        let cancelIcon = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+
+        cancelButton.frame.size = CGSize(width: 60, height: 60)
+        let cancelIcon = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         cancelIcon.image = Images.closeIcon
         cancelButton.addTarget(self, action: #selector(cancelExpandedView), for: .touchUpInside)
         cancelButton.addSubview(cancelIcon)
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(cancelButton)
+        cancelButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 2).isActive = true
+        cancelButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
+
 
     }
 
-    func createLabels(value: String, positionX: CGFloat, positionY: CGFloat, labelWidth: CGFloat, labelHeight: CGFloat) {
+    func createLow(){
+       low =   createRectangle(width: 100, height: 100, borderColor: "sonar")
+        addSubview(low)
+        low.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 200).isActive = true
+        low.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 200).isActive = true
+        print(low.frame)
+    }
+
+    func createLabels(value: String, leadingAnchor: CGFloat, topAnchor: CGFloat, labelWidth: CGFloat, labelHeight: CGFloat) {
         let label = UILabel()
         label.text = value
         label.font = UIFont(name: "medium", size: adapted(dimensionSize: 30, to: .width))
-        label.frame = CGRect(x: positionX, y: positionY, width: labelWidth, height: labelHeight)
+        label.frame.size = CGSize(width: labelWidth, height: labelHeight)
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
         label.font = label.font.withSize(15)
         addSubview(label)
+        label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topAnchor).isActive = true
+        label.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: leadingAnchor).isActive = true
     }
 
-    func createRectangle(x: Int, y: Int, width: Int, height: Int, borderColor: String) -> UIView {
-//        let rectangleView = UIView(frame: CGRect(x: x, y: y, width: width, height: height))
-        let rectangleView = UIView();
-        let origin = CGPoint(x: x, y: y)
-        let size = CGSize(width: width, height: height)
-        let resize = resized(size: size, basedOn: dimension)
-        rectangleView.frame = CGRect(origin: origin, size: resized(size: size, basedOn: dimension))
-        rectangleView.layer.cornerRadius = 5;
-        rectangleView.layer.borderWidth = 1;
-        rectangleView.layer.borderColor = UIColor(named: borderColor)?.cgColor
-        return rectangleView;
+    func createRectangle( width: Int, height: Int, borderColor: String) -> UIView {
+        let rectangle = UIView()
+        rectangle.frame.size = CGSize( width: 100, height: 100)
+        rectangle.backgroundColor = .red
+        rectangle.translatesAutoresizingMaskIntoConstraints = false
+        return rectangle
     }
 
     @objc func cancelExpandedView() {
@@ -81,6 +115,21 @@ class expandSetting: UIView {
 
     @objc func updateScreen() {
 
+    }
+
+    @objc func reverseCamera(_ sender: UITapGestureRecognizer? = nil) {
+        NotificationCenter.default.post(name: .switchCamera, object: nil)
+    }
+
+    func applyBlurEffect() {
+        let blurEffectView = UIView(frame: bounds);
+        blurEffectView.backgroundColor = UIColor(named: "darkBg");
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(blurEffectView)
+    }
+
+    @objc func switchLogButton(_ sender: UISwitch) {
+        print("hello switch button")
     }
 }
 

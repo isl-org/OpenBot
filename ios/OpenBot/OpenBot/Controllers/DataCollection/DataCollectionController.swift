@@ -13,7 +13,6 @@ class DataCollectionController: CameraController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        title = "Data Collection"
     }
 
     override func viewDidLoad() {
@@ -24,6 +23,7 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadCollapseView), name: .cancelButton, object: nil)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -79,7 +79,7 @@ class DataCollectionController: CameraController {
 
     @objc func switchCamera() {
         switchCameraView();
-        print("switchCamera");
+
     }
 
     @objc func openBluetoothSettings() {
