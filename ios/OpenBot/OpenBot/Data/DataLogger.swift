@@ -81,7 +81,6 @@ class DataLogger {
 
     }
 
-
     func knowDateOrTime(format: String) -> String {
         let date = Date()
         let dateFormatter = DateFormatter()
@@ -89,7 +88,4 @@ class DataLogger {
         let dateOrTime = dateFormatter.string(from: date)
         return dateOrTime
     }
-
-
-
 }

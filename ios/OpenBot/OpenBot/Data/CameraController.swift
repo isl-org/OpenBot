@@ -27,6 +27,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         initializeCamera()
     }
 
+    /**
+        function to initialise camera view on the screen with back camera with medium quality view feed
+     */
     func initializeCamera() {
         captureSession = AVCaptureSession()
         captureSession.sessionPreset = .medium
@@ -37,7 +40,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
         do {
             let input = try AVCaptureDeviceInput(device: backCamera)
-            //Step 9
             stillImageOutput = AVCapturePhotoOutput()
             if captureSession.canAddInput(input) && captureSession.canAddOutput(stillImageOutput) {
                 captureSession.addInput(input)
@@ -50,6 +52,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
     }
 
+    /**
+        function to create the camera view frame with corner to corner screen without constraints.
+     */
     func createCameraView() {
         cameraView.frame.origin = CGPoint(x: 0, y: 0)
         cameraView.translatesAutoresizingMaskIntoConstraints = false
@@ -57,6 +62,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         applyConstraints()
     }
 
+    /**
+        function to dispatch the camera feed into the screen in portrait mode.
+     */
     func setupLivePreview() {
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         videoPreviewLayer.removeFromSuperlayer()
@@ -71,11 +79,17 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
     }
 
+    /**
+        function to load the subviews, manage anything on the screen when screen view updates.
+     */
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         configureVideoOrientation()
     }
 
+    /**
+        function to apply the constraints on the screen view and also manage the rotation of the camera view
+     */
     func applyConstraints() {
         if currentOrientation == .portrait {
             widthConstraint = cameraView.widthAnchor.constraint(equalToConstant: width)
@@ -87,12 +101,14 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         widthConstraint.identifier = "width"
         heightConstraint.identifier = "height"
 
-
         NSLayoutConstraint.activate([
             widthConstraint, heightConstraint
         ])
     }
 
+    /**
+        To configure the video(camera output) rotation when screen orientation changes.
+     */
     private func configureVideoOrientation() {
         if let previewLayer = videoPreviewLayer,
            let connection = videoPreviewLayer.connection {
@@ -105,9 +121,10 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
     }
 
+    /**
+        To switch between front camera and back camera
+     */
     func switchCameraView() {
-//        let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
-//        stillImageOutput.capturePhoto(with: settings, delegate: self)
         let currentCameraInput: AVCaptureInput = captureSession.inputs[0]
         captureSession.removeInput(currentCameraInput)
         var newCamera: AVCaptureDevice
@@ -129,6 +146,11 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
     }
 
+    /**
+        To set the camera position for switching camera
+     - Parameter position: new camera position.
+     - Returns: device feed.
+     */
     func cameraWithPosition(_ position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let deviceDescoverySession = AVCaptureDevice.DiscoverySession.init(deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera], mediaType: AVMediaType.video, position: AVCaptureDevice.Position.unspecified)
 
@@ -141,6 +163,13 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     }
 
 
+    /**
+        This function calls automatically whenever any image click function is called.
+     - Parameters:
+       - output:
+       - photo:
+       - error:
+     */
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation()
         else {
@@ -153,33 +182,83 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         if (image != nil) {
             temp = cropImage(imageToCrop: image!, toRect: CGRectMake(0, 30, 256, 96))
         }
-        let imageName = "number.jpeg";
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return
         }
+//        let path = documentsDirectory.absoluteString + "openbot";
+        let imageName = "number.jpeg";
         let fileName = imageName
+
+//        if !FileManager.default.fileExists(atPath: path) {
+//            try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
+//        }
+
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
-        guard let data = temp?.jpegData(compressionQuality: 1) else {
+        guard let data = temp?.jpegData(compressionQuality: 0) else {
             return
         }
+
         do {
             try data.write(to: fileURL)
         } catch let error {
             print("error saving file with error", error)
         }
+//        let folder = documentsDirectory.appendingPathComponent("/openbot", isDirectory: true);
+
+//        let baseDirectoryName = "file1.zip"
+//        let fm = FileManager.default
+//        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("/openBot")
+//        var archiveUrl: URL?
+//        var error: NSError?
+//        let coordinator = NSFileCoordinator()
+//        coordinator.coordinate(readingItemAt: folder, options: [.forUploading], error: &error) { (zipUrl) in
+//            let tmpUrl = try! fm.url(
+//                    for: .itemReplacementDirectory,
+//                    in: .userDomainMask,
+//                    appropriateFor: zipUrl,
+//                    create: true
+//            ).appendingPathComponent(baseDirectoryName)
+//            try! fm.moveItem(at: zipUrl, to: tmpUrl)
+//            archiveUrl = tmpUrl
+//        }
+
+
         let avc = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
         present(avc, animated: true)
     }
 
+    /**
+        To crop the image into the required format.
+     - Parameters:
+       - imageToCrop:
+       - rect:
+     - Returns:
+     */
     func cropImage(imageToCrop: UIImage, toRect rect: CGRect) -> UIImage {
-
         let imageRef: CGImage = imageToCrop.cgImage!.cropping(to: rect)!
         let cropped: UIImage = UIImage(cgImage: imageRef)
         return cropped
     }
 
+    /**
+        To create a rectangle on the image to crop it.
+     - Parameters:
+       - x:
+       - y:
+       - width:
+       - height:
+     - Returns:
+     */
     func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
         CGRect(x: x, y: y, width: width, height: height)
+    }
+
+    /**
+        This function saves the output of the camera as image.
+     */
+    func captureImage() {
+        let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
+        stillImageOutput.capturePhoto(with: settings, delegate: self)
     }
 
 
