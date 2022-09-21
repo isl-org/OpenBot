@@ -81,3 +81,7 @@ enum Keymap: String {
 enum CMD_Events {
     case TOGGLE_LOGS, TOGGLE_NOISE, TOGGLE_CAMERA
 }
+
+enum Resolutions {
+    case low , medium , high
+}

@@ -19,6 +19,7 @@ class DataCollectionController: CameraController {
         super.viewDidLoad()
         createCameraView()
         view.addSubview(collapseView)
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
         NotificationCenter.default.addObserver(self, selector: #selector(loadExpandView), name: .clickSetting, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
@@ -35,8 +36,10 @@ class DataCollectionController: CameraController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
+        expandSettingView.refreshConstraints()
         refreshConstraints()
         setupCollapseView()
+
     }
 
     func setupCollapseView() {

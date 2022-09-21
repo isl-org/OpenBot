@@ -19,8 +19,17 @@ struct Strings {
     static let medium: String = "Medium"
     static let fast: String = "Fast"
     static let logData: String = "Log Data"
-    static let previewResulation: String = "Preview Resolution (1280 x 720)"
-    static let modelResolution : String = "Model Resolution "
+    static let previewResolutionMedium: String = "Preview Resolution (1280 x 720)"
+    static let previewResolutionLow: String = "Preview Resolution (960 x 540)"
+    static let previewResolutionHigh: String = "Preview Resolution (1920 x 1080)"
+    static let low : String = "Low"
+    static let high : String = "High"
+    static let modelResolution : String = "Model Resolution 256 x 96"
+    static let server : String = "Server"
+    static let expendSetting : String = "expendSetting"
+    static let preview : String = "Preview"
+    static let training : String =  "Training"
+
 
 // Notifications
     static let controllerConnected: String = "connectedWithControllerSuccessfully";
