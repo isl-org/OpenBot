@@ -6,7 +6,7 @@ import Foundation
 import AVFoundation
 import UIKit
 
-class CameraController: UIViewController {
+class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     var captureSession: AVCaptureSession!
     var stillImageOutput: AVCapturePhotoOutput!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
@@ -106,6 +106,8 @@ class CameraController: UIViewController {
     }
 
     func switchCameraView() {
+//        let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
+//        stillImageOutput.capturePhoto(with: settings, delegate: self)
         let currentCameraInput: AVCaptureInput = captureSession.inputs[0]
         captureSession.removeInput(currentCameraInput)
         var newCamera: AVCaptureDevice
@@ -137,5 +139,48 @@ class CameraController: UIViewController {
         }
         return nil
     }
+
+
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        guard let imageData = photo.fileDataRepresentation()
+        else {
+            return
+        }
+        let image = UIImage(data: imageData)
+        var temp = image
+
+        // toCropImage
+        if (image != nil) {
+            temp = cropImage(imageToCrop: image!, toRect: CGRectMake(0, 30, 256, 96))
+        }
+        let imageName = "number.jpeg";
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        let fileName = imageName
+        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+        guard let data = temp?.jpegData(compressionQuality: 1) else {
+            return
+        }
+        do {
+            try data.write(to: fileURL)
+        } catch let error {
+            print("error saving file with error", error)
+        }
+        let avc = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
+        present(avc, animated: true)
+    }
+
+    func cropImage(imageToCrop: UIImage, toRect rect: CGRect) -> UIImage {
+
+        let imageRef: CGImage = imageToCrop.cgImage!.cropping(to: rect)!
+        let cropped: UIImage = UIImage(cgImage: imageRef)
+        return cropped
+    }
+
+    func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
+        CGRect(x: x, y: y, width: width, height: height)
+    }
+
 
 }
