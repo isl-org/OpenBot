@@ -13,6 +13,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     let cameraView: UIView = UIView()
     var heightConstraint: NSLayoutConstraint! = nil
     var widthConstraint: NSLayoutConstraint! = nil
+    var images: [UIImage] = [];
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -182,49 +183,10 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         if (image != nil) {
             temp = cropImage(imageToCrop: image!, toRect: CGRectMake(0, 30, 256, 96))
         }
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return
-        }
-//        let path = documentsDirectory.absoluteString + "openbot";
-        let imageName = "number.jpeg";
-        let fileName = imageName
-
-//        if !FileManager.default.fileExists(atPath: path) {
-//            try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
-//        }
-
-        let fileURL = documentsDirectory.appendingPathComponent(fileName)
-        guard let data = temp?.jpegData(compressionQuality: 0) else {
-            return
+        if (temp != nil) {
+            images.append(temp!);
         }
 
-        do {
-            try data.write(to: fileURL)
-        } catch let error {
-            print("error saving file with error", error)
-        }
-//        let folder = documentsDirectory.appendingPathComponent("/openbot", isDirectory: true);
-
-//        let baseDirectoryName = "file1.zip"
-//        let fm = FileManager.default
-//        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("/openBot")
-//        var archiveUrl: URL?
-//        var error: NSError?
-//        let coordinator = NSFileCoordinator()
-//        coordinator.coordinate(readingItemAt: folder, options: [.forUploading], error: &error) { (zipUrl) in
-//            let tmpUrl = try! fm.url(
-//                    for: .itemReplacementDirectory,
-//                    in: .userDomainMask,
-//                    appropriateFor: zipUrl,
-//                    create: true
-//            ).appendingPathComponent(baseDirectoryName)
-//            try! fm.moveItem(at: zipUrl, to: tmpUrl)
-//            archiveUrl = tmpUrl
-//        }
-
-
-        let avc = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
-        present(avc, animated: true)
     }
 
     /**
@@ -259,6 +221,59 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func captureImage() {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
         stillImageOutput.capturePhoto(with: settings, delegate: self)
+    }
+
+    func saveImages() {
+
+        if (images.count > 0) {
+            for temp in images {
+
+
+                guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                    return
+                }
+//        let path = documentsDirectory.absoluteString + "openbot";
+                let imageName = "number.jpeg";
+                let fileName = imageName
+
+//        if !FileManager.default.fileExists(atPath: path) {
+//            try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
+//        }
+
+                let fileURL = documentsDirectory.appendingPathComponent(fileName)
+                guard let data = temp.jpegData(compressionQuality: 0) else {
+                    return
+                }
+
+                do {
+                    try data.write(to: fileURL)
+                } catch let error {
+                    print("error saving file with error", error)
+                }
+//        let folder = documentsDirectory.appendingPathComponent("/openbot", isDirectory: true);
+
+//        let baseDirectoryName = "file1.zip"
+//        let fm = FileManager.default
+//        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("/openBot")
+//        var archiveUrl: URL?
+//        var error: NSError?
+//        let coordinator = NSFileCoordinator()
+//        coordinator.coordinate(readingItemAt: folder, options: [.forUploading], error: &error) { (zipUrl) in
+//            let tmpUrl = try! fm.url(
+//                    for: .itemReplacementDirectory,
+//                    in: .userDomainMask,
+//                    appropriateFor: zipUrl,
+//                    create: true
+//            ).appendingPathComponent(baseDirectoryName)
+//            try! fm.moveItem(at: zipUrl, to: tmpUrl)
+//            archiveUrl = tmpUrl
+//        }
+
+
+                let avc = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
+                present(avc, animated: true)
+            }
+        }
     }
 
 

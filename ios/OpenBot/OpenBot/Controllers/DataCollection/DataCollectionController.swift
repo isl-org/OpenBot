@@ -9,6 +9,7 @@ import AVFoundation
 class DataCollectionController: CameraController {
     let collapseView = collapseSettingView(frame: CGRect(x: 0, y: 0, width: width, height: height))
     let expandSettingView = expandSetting(frame: CGRect(x: 0, y: 0, width: width, height: height))
+    var loggingEnabled: Bool = false;
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -24,6 +25,7 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadCollapseView), name: .cancelButton, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(switchLogging), name: .logData, object: nil)
 
     }
 
@@ -95,5 +97,15 @@ class DataCollectionController: CameraController {
         view.addSubview(collapseView)
     }
 
+    @objc func switchLogging() {
+        loggingEnabled = !loggingEnabled;
+        if (loggingEnabled) {
+            while (loggingEnabled) {
+                captureImage();
+            }
+        } else {
+            saveImages();
+        }
+    }
 
 }

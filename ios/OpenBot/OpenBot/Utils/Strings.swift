@@ -37,6 +37,7 @@ struct Strings {
     static let cancelButton: String = "cancelButton"
     static let switchCamera: String = "switchCamera"
     static let ble: String = "ble"
+    static let logDataNotify: String = "log_data"
 
 
 // Screen Identifiers

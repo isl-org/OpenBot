@@ -21,7 +21,7 @@ class expandSetting: UIView {
     var topConstraint: NSLayoutConstraint!
     var widthConstraint: NSLayoutConstraint!
     var heightConstraint: NSLayoutConstraint!
-    var preview  = UIButton()
+    var preview = UIButton()
     var training = UIButton()
 
     var selectedResolution: Resolutions = Resolutions.medium
@@ -131,13 +131,13 @@ class expandSetting: UIView {
             leadingConstraint = secondView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 0)
             topConstraint = secondView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 320);
             widthConstraint = secondView.widthAnchor.constraint(equalToConstant: width)
-            heightConstraint = secondView.heightAnchor.constraint(equalToConstant: height/2)
+            heightConstraint = secondView.heightAnchor.constraint(equalToConstant: height / 2)
         } else {
-            leadingConstraint = secondView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: height/2)
+            leadingConstraint = secondView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: height / 2)
             leadingConstraint.identifier = Strings.expendSetting;
             topConstraint = secondView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 30);
             topConstraint.identifier = Strings.expendSetting
-            widthConstraint = secondView.widthAnchor.constraint(equalToConstant: height/2)
+            widthConstraint = secondView.widthAnchor.constraint(equalToConstant: height / 2)
             widthConstraint.identifier = Strings.expendSetting
             heightConstraint = secondView.heightAnchor.constraint(equalToConstant: width)
             heightConstraint.identifier = Strings.expendSetting
@@ -148,7 +148,7 @@ class expandSetting: UIView {
         widthConstraint.identifier = Strings.expendSetting
         heightConstraint.identifier = Strings.expendSetting
         NSLayoutConstraint.activate([
-            leadingConstraint,topConstraint,widthConstraint,heightConstraint
+            leadingConstraint, topConstraint, widthConstraint, heightConstraint
         ])
 
 
@@ -156,23 +156,22 @@ class expandSetting: UIView {
 
     func refreshConstraints() {
 
-        if currentOrientation == .portrait{
-           leadingConstraint.constant = 0
+        if currentOrientation == .portrait {
+            leadingConstraint.constant = 0
             topConstraint.constant = 320
             widthConstraint.constant = width
-            heightConstraint.constant = height/2
-        }
-        else{
-            leadingConstraint.constant = height/2
+            heightConstraint.constant = height / 2
+        } else {
+            leadingConstraint.constant = height / 2
             topConstraint.constant = 30
-            widthConstraint.constant = height/2
+            widthConstraint.constant = height / 2
             heightConstraint.constant = width
         }
     }
 
-    func createImagesButton(){
-        preview = createSecondViewButton(borderColor: "no", buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, action: #selector(applyPreview(_:)) )
-        training = createSecondViewButton(borderColor: "no", buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, action: #selector(applyTraining(_:)) )
+    func createImagesButton() {
+        preview = createSecondViewButton(borderColor: "no", buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, action: #selector(applyPreview(_:)))
+        training = createSecondViewButton(borderColor: "no", buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, action: #selector(applyTraining(_:)))
 
     }
 
@@ -263,6 +262,7 @@ class expandSetting: UIView {
 
     @objc func switchLogButton(_ sender: UISwitch) {
         print("hello switch button")
+        NotificationCenter.default.post(name: .logData, object: nil)
     }
 
     @objc func applyLowResolution(_ sender: UIView) {
@@ -320,12 +320,12 @@ class expandSetting: UIView {
     @objc func applyTraining(_ sender: UIView) {
 
 
-
     }
 
 }
 
 extension Notification.Name {
     static let cancelButton = Notification.Name(Strings.cancelButton)
+    static let logData = Notification.Name(Strings.logDataNotify)
 
 }
