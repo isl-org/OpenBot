@@ -23,7 +23,7 @@ class expandSetting: UIView {
     var heightConstraint: NSLayoutConstraint!
     var preview = UIButton()
     var training = UIButton()
-
+    var selectedImages : ImagesMode = ImagesMode.preview
     var selectedResolution: Resolutions = Resolutions.medium
 
     override init(frame: CGRect) {
@@ -110,7 +110,7 @@ class expandSetting: UIView {
         low = createButton(borderColor: "red", buttonName: Strings.low, leadingAnchor: 10, topAnchor: 80, action: #selector(applyLowResolution(_:)))
         medium = createButton(borderColor: "red", buttonName: Strings.medium, leadingAnchor: 100, topAnchor: 80, action: #selector(applyMediumResolution(_:)))
         high = createButton(borderColor: "red", buttonName: Strings.high, leadingAnchor: 190, topAnchor: 80, action: #selector(applyHighResolution(_:)))
-        updateResolution(low: low, medium: medium, high: high)
+        updateResolution()
     }
 
     func createModelResolutionTitle() {
@@ -169,9 +169,14 @@ class expandSetting: UIView {
         }
     }
 
-    func createImagesButton() {
-        preview = createSecondViewButton(borderColor: "no", buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, action: #selector(applyPreview(_:)))
-        training = createSecondViewButton(borderColor: "no", buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, action: #selector(applyTraining(_:)))
+
+    func createImagesButton(){
+        preview = createSecondViewButton(borderColor: "no", buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, action: #selector(applyPreview(_:)) )
+        training = createSecondViewButton(borderColor: "no", buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, action: #selector(applyTraining(_:)) )
+        preview.layer.borderWidth = 2
+        training.layer.borderWidth = 2
+        updateImageMode()
+
 
     }
 
@@ -261,13 +266,12 @@ class expandSetting: UIView {
     }
 
     @objc func switchLogButton(_ sender: UISwitch) {
-        print("hello switch button")
         NotificationCenter.default.post(name: .logData, object: nil)
     }
 
     @objc func applyLowResolution(_ sender: UIView) {
         selectedResolution = Resolutions.low
-        updateResolution(low: low, medium: medium, high: high)
+        updateResolution()
         previewResolution.text = Strings.previewResolutionLow
 
 
@@ -275,7 +279,7 @@ class expandSetting: UIView {
 
     @objc func applyMediumResolution(_ sender: UIView) {
         selectedResolution = Resolutions.medium
-        updateResolution(low: low, medium: medium, high: high)
+        updateResolution()
         previewResolution.text = Strings.previewResolutionMedium
 
 
@@ -283,7 +287,7 @@ class expandSetting: UIView {
 
     @objc func applyHighResolution(_ sender: UIView) {
         selectedResolution = Resolutions.high
-        updateResolution(low: low, medium: medium, high: high)
+        updateResolution()
         previewResolution.text = Strings.previewResolutionHigh
 
 
@@ -293,7 +297,7 @@ class expandSetting: UIView {
         print("hello server")
     }
 
-    @objc func updateResolution(low: UIButton, medium: UIButton, high: UIButton) {
+    @objc func updateResolution() {
 
         switch (selectedResolution) {
 
@@ -312,16 +316,26 @@ class expandSetting: UIView {
         }
 
     }
-
     @objc func applyPreview(_ sender: UIView) {
-
+        selectedImages = ImagesMode.preview
+        updateImageMode()
     }
 
     @objc func applyTraining(_ sender: UIView) {
-
+    selectedImages = ImagesMode.training
+        updateImageMode()
+    }
+    func updateImageMode(){
+        switch (selectedImages) {
+        case .preview :
+            preview.layer.borderColor = Colors.title?.cgColor
+            training.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
+        case .training :
+            preview.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
+            training.layer.borderColor = Colors.title?.cgColor
+        }
 
     }
-
 }
 
 extension Notification.Name {

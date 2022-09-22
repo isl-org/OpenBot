@@ -29,7 +29,7 @@ struct Strings {
     static let expendSetting : String = "expendSetting"
     static let preview : String = "Preview"
     static let training : String =  "Training"
-
+    static let sensorData : String = "Sensor Data"
 
 // Notifications
     static let controllerConnected: String = "connectedWithControllerSuccessfully";

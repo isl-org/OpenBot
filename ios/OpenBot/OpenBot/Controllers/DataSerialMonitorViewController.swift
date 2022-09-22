@@ -59,7 +59,7 @@ class DataSerialMonitorViewController: UIViewController {
         let documentsDirectory: String = paths.first ?? ""
         let openBotPath = documentsDirectory + "/openBot"
         DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
-        DataLogger.shared.createImageFolder(openBotPath: openBotPath)
+//        DataLogger.shared.createImageFolder(openBotPath: openBotPath)
         DataLogger.shared.createSensorData(openBotPath: openBotPath)
 
         if let url = URL(string: openBotPath) {
@@ -73,7 +73,6 @@ class DataSerialMonitorViewController: UIViewController {
         let archiveUrl = DataLogger.shared.getDirectoryInfo()
         let activityManager = UIActivityViewController(activityItems: [archiveUrl], applicationActivities: nil)
         present(activityManager, animated: true)
-
     }
 
 

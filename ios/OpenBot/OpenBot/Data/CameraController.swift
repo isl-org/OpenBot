@@ -7,6 +7,7 @@ import AVFoundation
 import UIKit
 
 class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
+    let dataLogger = DataLogger.shared
     var captureSession: AVCaptureSession!
     var stillImageOutput: AVCapturePhotoOutput!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
@@ -17,10 +18,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        for subview in view.subviews {
-            print(subview)
-        }
-
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -132,16 +129,16 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         newCamera = AVCaptureDevice.default(for: AVMediaType.video)!
 
         if (currentCameraInput as! AVCaptureDeviceInput).device.position == .back {
-            UIView.transition(with: self.cameraView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
+            UIView.transition(with: cameraView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
                 newCamera = self.cameraWithPosition(.front)!
             }, completion: nil)
         } else {
-            UIView.transition(with: self.cameraView, duration: 0.5, options: .transitionFlipFromRight, animations: {
+            UIView.transition(with: cameraView, duration: 0.5, options: .transitionFlipFromRight, animations: {
                 newCamera = self.cameraWithPosition(.back)!
             }, completion: nil)
         }
         do {
-            try self.captureSession?.addInput(AVCaptureDeviceInput(device: newCamera))
+            try captureSession?.addInput(AVCaptureDeviceInput(device: newCamera))
         } catch {
             print("error: \(error.localizedDescription)")
         }
@@ -153,9 +150,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
      - Returns: device feed.
      */
     func cameraWithPosition(_ position: AVCaptureDevice.Position) -> AVCaptureDevice? {
-        let deviceDescoverySession = AVCaptureDevice.DiscoverySession.init(deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera], mediaType: AVMediaType.video, position: AVCaptureDevice.Position.unspecified)
+        let deviceDiscoverySession = AVCaptureDevice.DiscoverySession.init(deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera], mediaType: AVMediaType.video, position: AVCaptureDevice.Position.unspecified)
 
-        for device in deviceDescoverySession.devices {
+        for device in deviceDiscoverySession.devices {
             if device.position == position {
                 return device
             }
@@ -224,57 +221,62 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     }
 
     func saveImages() {
-
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory: String = paths.first ?? ""
+        let openBotPath = documentsDirectory + "/openBot"
+        DataLogger.shared.deleteFiles(path: openBotPath)
+        DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
+        DataLogger.shared.createImageFolder(openBotPath: openBotPath)
+        DataLogger.shared.createSensorData(openBotPath: openBotPath)
+        let imagePath = openBotPath + "/images"
+        var x : Int = 0
         if (images.count > 0) {
             for temp in images {
-
-
-                guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-                    return
-                }
-//        let path = documentsDirectory.absoluteString + "openbot";
-                let imageName = "number.jpeg";
-                let fileName = imageName
-
-//        if !FileManager.default.fileExists(atPath: path) {
-//            try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
-//        }
-
-                let fileURL = documentsDirectory.appendingPathComponent(fileName)
-                guard let data = temp.jpegData(compressionQuality: 0) else {
-                    return
-                }
-
-                do {
-                    try data.write(to: fileURL)
-                } catch let error {
-                    print("error saving file with error", error)
-                }
-//        let folder = documentsDirectory.appendingPathComponent("/openbot", isDirectory: true);
-
-//        let baseDirectoryName = "file1.zip"
-//        let fm = FileManager.default
-//        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("/openBot")
-//        var archiveUrl: URL?
-//        var error: NSError?
-//        let coordinator = NSFileCoordinator()
-//        coordinator.coordinate(readingItemAt: folder, options: [.forUploading], error: &error) { (zipUrl) in
-//            let tmpUrl = try! fm.url(
-//                    for: .itemReplacementDirectory,
-//                    in: .userDomainMask,
-//                    appropriateFor: zipUrl,
-//                    create: true
-//            ).appendingPathComponent(baseDirectoryName)
-//            try! fm.moveItem(at: zipUrl, to: tmpUrl)
-//            archiveUrl = tmpUrl
-//        }
-
-
-                let avc = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
-                present(avc, animated: true)
+                let imageName = String(x) + "_" + "crop.jpeg" ;
+                x = x + 1;
+            DataLogger.shared.saveImages(path: imagePath, image: temp, name: imageName);
             }
         }
+        if let url = URL(string: openBotPath) {
+          createZip(path: url)
+        }
+        images.removeAll()
+
     }
+    func saveFolder(path: URL) {
+        let archiveUrl = DataLogger.shared.getDirectoryInfo()
+        let activityManager = UIActivityViewController(activityItems: [archiveUrl], applicationActivities: nil)
+        present(activityManager, animated: true)
+
+    }
+
+    func createZip(path: URL) {
+        let baseDirectoryName = dataLogger.knowDateOrTime(format: "yyyy") + dataLogger.knowDateOrTime(format: "MM") + dataLogger.knowDateOrTime(format: "dd") + "_"
+                + dataLogger.knowDateOrTime(format: "H") + dataLogger.knowDateOrTime(format: "mm") + dataLogger.knowDateOrTime(format: "ss") + ".zip"
+        let fm = FileManager.default
+        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("/openBot")
+        var archiveUrl: URL?
+        var error: NSError?
+        let coordinator = NSFileCoordinator()
+        coordinator.coordinate(readingItemAt: baseDirectoryUrl, options: [.forUploading], error: &error) { (zipUrl) in
+            let tmpUrl = try! fm.url(
+                    for: .itemReplacementDirectory,
+                    in: .userDomainMask,
+                    appropriateFor: zipUrl,
+                    create: true
+            ).appendingPathComponent(baseDirectoryName)
+            try! fm.moveItem(at: zipUrl, to: tmpUrl)
+            archiveUrl = tmpUrl
+        }
+        if let archiveUrl = archiveUrl {
+            let avc = UIActivityViewController(activityItems: [archiveUrl], applicationActivities: nil)
+            present(avc, animated: true)
+        } else {
+            print(error as Any)
+        }
+    }
+
+
 
 
 }

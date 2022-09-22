@@ -15,7 +15,6 @@ class DataLogger {
         documentsURL = documentsURL.appendingPathComponent("/openBot")
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-            print(fileURLs)
 
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
@@ -31,9 +30,9 @@ class DataLogger {
     func createImageFolder(openBotPath: String) {
         let imagePath = openBotPath + "/images"
         createFolder(path: imagePath)
-        if URL(string: openBotPath) != nil {
-            saveImages(path: imagePath)
-        }
+//        if URL(string: openBotPath) != nil {
+//            saveImages(path: imagePath, image: image)
+//        }
 
     }
 
@@ -52,18 +51,18 @@ class DataLogger {
 
     }
 
-    func saveImages(path: String) {
+    func saveImages(path: String , image : UIImage,name : String) {
         let imagePath = URL(string: path)
-        let imageName = imagePath?.appendingPathComponent("image1.jpg");
+        let imageName = imagePath?.appendingPathComponent(name);
         let ima = imageName?.absoluteString
-        let image = UIImage(named: "bluetoothConnected")
+        let image = image
         let fileManager = FileManager.default
         if let ima = ima {
-            fileManager.createFile(atPath: ima, contents: image?.pngData())
+            fileManager.createFile(atPath: ima, contents: image.pngData())
         }
     }
 
-    func deletefiles(path: String) {
+    func deleteFiles(path: String) {
         do {
             try FileManager.default.removeItem(atPath: path)
         } catch {
@@ -88,4 +87,5 @@ class DataLogger {
         let dateOrTime = dateFormatter.string(from: date)
         return dateOrTime
     }
+
 }

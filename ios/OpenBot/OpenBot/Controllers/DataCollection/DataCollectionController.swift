@@ -99,9 +99,14 @@ class DataCollectionController: CameraController {
 
     @objc func switchLogging() {
         loggingEnabled = !loggingEnabled;
+        print(loggingEnabled)
         if (loggingEnabled) {
-            while (loggingEnabled) {
-                captureImage();
+
+            Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [self] timer in
+                captureImage()
+                if !loggingEnabled {
+                    timer.invalidate()
+                }
             }
         } else {
             saveImages();
