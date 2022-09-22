@@ -23,8 +23,19 @@ class expandSetting: UIView {
     var heightConstraint: NSLayoutConstraint!
     var preview = UIButton()
     var training = UIButton()
-    var selectedImages : ImagesMode = ImagesMode.preview
+    var vehicle = UIButton()
+    var gps = UIButton()
+    var acceleration = UIButton()
+    var magnetic = UIButton()
+    var temperature = UIButton()
+    var gyroscope = UIButton()
+    var proximity = UIButton()
+    var light = UIButton()
+    var gravity = UIButton()
+    var motion = UIButton()
+    var selectedImages: ImagesMode = ImagesMode.preview
     var selectedResolution: Resolutions = Resolutions.medium
+    var selectedSensor = [UIButton()]
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,7 +53,8 @@ class expandSetting: UIView {
         createSecondView()
         createSecondViewLabel(value: "Images", leadingAnchor: 10, topAnchor: 10, labelWidth: 100, labelHeight: 40)
         createImagesButton()
-
+        createSecondViewLabel(value: Strings.sensorData, leadingAnchor: 10, topAnchor: 90, labelWidth: 200, labelHeight: 40)
+        createSensorButtons()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -50,7 +62,6 @@ class expandSetting: UIView {
     }
 
     func createLogDataButton() {
-
         logData.frame.size = CGSize(width: 100, height: 100)
         _ = createLabels(value: Strings.logData, leadingAnchor: 10, topAnchor: 13, labelWidth: 100, labelHeight: 40)
         logData.isOn = true
@@ -123,8 +134,6 @@ class expandSetting: UIView {
 
 
     func createSecondView() {
-
-//        secondView.frame = CGRect(x: 0, y: frame.height/2, width: frame.width/2, height: frame.height/2)
         secondView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(secondView)
         if currentOrientation == .portrait {
@@ -151,7 +160,6 @@ class expandSetting: UIView {
             leadingConstraint, topConstraint, widthConstraint, heightConstraint
         ])
 
-
     }
 
     func refreshConstraints() {
@@ -170,12 +178,23 @@ class expandSetting: UIView {
     }
 
 
-    func createImagesButton(){
-        preview = createSecondViewButton(borderColor: "no", buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, action: #selector(applyPreview(_:)) )
-        training = createSecondViewButton(borderColor: "no", buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, action: #selector(applyTraining(_:)) )
-        preview.layer.borderWidth = 2
-        training.layer.borderWidth = 2
+    func createImagesButton() {
+        preview = createSecondViewButton( buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, action: #selector(applyPreview(_:)))
+        training = createSecondViewButton( buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, action: #selector(applyTraining(_:)))
         updateImageMode()
+    }
+
+    func createSensorButtons() {
+        vehicle = createSecondViewButton( buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 120, action: #selector(updateSensor(_:)))
+        gps = createSecondViewButton( buttonName: Strings.gps, leadingAnchor: 100, topAnchor: 120, action: #selector(updateSensor(_:)))
+        acceleration = createSecondViewButton( buttonName: Strings.accelerometer, leadingAnchor: 190, topAnchor: 120, action: #selector(updateSensor(_:)))
+        magnetic = createSecondViewButton( buttonName: Strings.magnetic, leadingAnchor: 280, topAnchor: 120, action: #selector(updateSensor(_:)))
+        temperature = createSecondViewButton( buttonName: Strings.temperature, leadingAnchor: 10, topAnchor: 170, action: #selector(updateSensor(_:)))
+        gyroscope = createSecondViewButton( buttonName: Strings.gyroscope, leadingAnchor: 100, topAnchor: 170, action: #selector(updateSensor(_:)))
+        proximity = createSecondViewButton(buttonName: "Proximity", leadingAnchor: 190, topAnchor: 170, action: #selector(updateSensor(_:)))
+        light = createSecondViewButton( buttonName: "Light", leadingAnchor: 10, topAnchor: 220, action: #selector(updateSensor(_:)))
+        gravity = createSecondViewButton( buttonName: "Gravity", leadingAnchor: 100, topAnchor: 220, action: #selector(updateSensor(_:)))
+        motion = createSecondViewButton(buttonName: "Motion", leadingAnchor: 190, topAnchor: 220, action: #selector(updateSensor(_:)))
 
 
     }
@@ -228,7 +247,7 @@ class expandSetting: UIView {
         label.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
     }
 
-    func createSecondViewButton(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIButton {
+    func createSecondViewButton( buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIButton {
         let btn = UIButton()
         btn.layer.cornerRadius = 10
         btn.backgroundColor = Colors.freeRoamButtonsColor
@@ -239,6 +258,8 @@ class expandSetting: UIView {
             btn.addTarget(self, action: action, for: .touchUpInside)
         }
         secondView.addSubview(btn)
+        btn.layer.borderWidth = 2
+        btn.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.topAnchor.constraint(equalTo: secondView.topAnchor, constant: topAnchor).isActive = true;
         btn.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
@@ -316,25 +337,46 @@ class expandSetting: UIView {
         }
 
     }
+
     @objc func applyPreview(_ sender: UIView) {
         selectedImages = ImagesMode.preview
         updateImageMode()
     }
 
     @objc func applyTraining(_ sender: UIView) {
-    selectedImages = ImagesMode.training
+        selectedImages = ImagesMode.training
         updateImageMode()
     }
-    func updateImageMode(){
+
+    func updateImageMode() {
         switch (selectedImages) {
-        case .preview :
+        case .preview:
             preview.layer.borderColor = Colors.title?.cgColor
             training.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
-        case .training :
+        case .training:
             preview.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
             training.layer.borderColor = Colors.title?.cgColor
         }
+    }
 
+    @objc func updateSensor(_ sender: UIButton) {
+
+        var index = 0
+        var isFound = false
+        for sensor in selectedSensor {
+            if sensor == sender {
+                sender.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
+                selectedSensor.remove(at: index)
+                isFound = true
+                break;
+            }
+            index = index + 1
+        }
+        if !isFound {
+            selectedSensor.append(sender)
+            sender.layer.borderColor = Colors.title?.cgColor
+
+        }
     }
 }
 

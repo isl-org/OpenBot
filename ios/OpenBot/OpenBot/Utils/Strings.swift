@@ -30,6 +30,14 @@ struct Strings {
     static let preview : String = "Preview"
     static let training : String =  "Training"
     static let sensorData : String = "Sensor Data"
+    static let vehicle : String = "Vehicle"
+    static  let gps : String = "GPS"
+    static let accelerometer : String = "Accelerometer"
+    static let magnetic : String = "Magnetic"
+    static let temperature : String = "Temperature"
+    static let gyroscope : String = "Gyroscope"
+    static let gravity : String = "Gravity"
+
 
 // Notifications
     static let controllerConnected: String = "connectedWithControllerSuccessfully";
