@@ -52,6 +52,11 @@ class expandSetting: UIView, UITextFieldDelegate {
         createSensorButtons()
         createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
         createDelayField()
+        let m = Vehicle(frame: CGRect(x: 0, y: height-100, width: width, height: 300))
+        addSubview(m)
+    }
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     required init?(coder aDecoder: NSCoder) {
