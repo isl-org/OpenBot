@@ -206,7 +206,7 @@ class expandSetting: UIView, UITextFieldDelegate {
         delayTextField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         delayTextField.delegate = self
         delayTextField.addTarget(self, action: #selector(delayFieldDidChange), for: .editingChanged)
-        var bottomLine = CALayer()
+        let bottomLine = CALayer()
         bottomLine.frame = CGRect(x: 0.0, y: delayTextField.frame.height - 10, width: delayTextField.frame.width, height: 1.0)
         bottomLine.backgroundColor = UIColor.white.cgColor
         delayTextField.borderStyle = UITextField.BorderStyle.none

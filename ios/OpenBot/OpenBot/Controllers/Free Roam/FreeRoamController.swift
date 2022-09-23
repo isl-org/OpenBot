@@ -281,7 +281,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let origin = CGPoint(x: x, y: y)
         let size = CGSize(width: width, height: height)
         let resize = resized(size: size, basedOn: dimension)
-        rectangleView.frame = CGRect(origin: origin, size: resized(size: size, basedOn: dimension))
+        rectangleView.frame = CGRect(origin: origin, size: resize)
         rectangleView.layer.cornerRadius = 5;
         rectangleView.layer.borderWidth = 1;
         rectangleView.layer.borderColor = UIColor(named: borderColor)?.cgColor
