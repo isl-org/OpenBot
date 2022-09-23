@@ -10,7 +10,7 @@ import CoreBluetooth
 var bluetoothData = ""
 
 class DataSerialMonitorViewController: UIViewController {
-    let datalogger = DataLogger.shared
+    let dataLogger = DataLogger.shared
     var payloadData: String = ""
     var labelString: String = "nil"
     let bluetooth = bluetoothDataController.shared
@@ -77,8 +77,8 @@ class DataSerialMonitorViewController: UIViewController {
 
 
     func createZip(path: URL) {
-        let baseDirectoryName = datalogger.knowDateOrTime(format: "yyyy") + datalogger.knowDateOrTime(format: "MM") + datalogger.knowDateOrTime(format: "dd") + "_"
-                + datalogger.knowDateOrTime(format: "H") + datalogger.knowDateOrTime(format: "mm") + datalogger.knowDateOrTime(format: "ss") + ".zip"
+        let baseDirectoryName = dataLogger.knowDateOrTime(format: "yyyy") + dataLogger.knowDateOrTime(format: "MM") + dataLogger.knowDateOrTime(format: "dd") + "_"
+                + dataLogger.knowDateOrTime(format: "H") + dataLogger.knowDateOrTime(format: "mm") + dataLogger.knowDateOrTime(format: "ss") + ".zip"
         let fm = FileManager.default
         let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("/openBot")
         var archiveUrl: URL?

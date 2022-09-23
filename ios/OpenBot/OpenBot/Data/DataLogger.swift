@@ -39,7 +39,7 @@ class DataLogger {
         let sensorDataPath = openBotPath + "/sensor_data"
         createFolder(path: sensorDataPath)
         if URL(string: openBotPath) != nil {
-            saveSensorFile(path: sensorDataPath, data: sensorDataRetrieve.shared.sensorData)
+            saveSensorFile(path: sensorDataPath, data: carSensorsData )
         }
     }
 

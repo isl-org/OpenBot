@@ -5,7 +5,7 @@
 import Foundation
 import UIKit
 import AVFoundation
-
+var carSensorsData : String = ""
 class DataCollectionController: CameraController {
     let collapseView = collapseSettingView(frame: CGRect(x: 0, y: 0, width: width, height: height))
     let expandSettingView = expandSetting(frame: CGRect(x: 0, y: 0, width: width, height: height))
@@ -109,11 +109,12 @@ class DataCollectionController: CameraController {
                 recordSensorData();
                 if !loggingEnabled {
                     timer.invalidate()
-
                 }
             }
         } else {
             saveImages();
+            sensorDataTemp = ""
+            carSensorsData = ""
         }
     }
 
@@ -122,7 +123,7 @@ class DataCollectionController: CameraController {
 
             switch sensor.tag {
             case 1 :
-                print("vehicle")
+                carSensorsData = carSensorsData + bluetoothData  + "\n"
                 break
             case 2 :
                 print("gps")
@@ -131,8 +132,8 @@ class DataCollectionController: CameraController {
                 print("acceleration")
                 break
             case 4 :
-                print(sensorData.magneticFieldZ)
-                sensorDataTemp = sensorDataTemp + String(sensorData.magneticFieldZ) + "\n"
+
+                carSensorsData = carSensorsData + String(sensorData.magneticFieldZ)  + "\n"
                 break
             case 5 :
                 print("gyro")
