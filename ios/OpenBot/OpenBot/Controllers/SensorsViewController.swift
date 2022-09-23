@@ -13,8 +13,7 @@ import AVFoundation
 import CoreLocation
 import CoreLocationUI
 
-class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,AVCaptureVideoDataOutputSampleBufferDelegate, CLLocationManagerDelegate {
-    let captureSession = AVCaptureSession()
+class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, CLLocationManagerDelegate {
     @IBOutlet weak var gyroX: UILabel!
     @IBOutlet weak var gyroY: UILabel!
     @IBOutlet weak var gyroZ: UILabel!
@@ -37,13 +36,10 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { _ in
+        Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { _ in
             self.accelerometer()
             self.gyroscope()
             self.magnetometer()
-
-
-
         }
         locationManager.requestAlwaysAuthorization()
         if CLLocationManager.locationServicesEnabled() {
@@ -55,6 +51,7 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
 
 //    func startMotionUpdates() {
+
 //        var interval: Double = 0.25
 //
 //        //for acceleration
@@ -72,29 +69,30 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
 
     func accelerometer() {
 
-            accelerationX.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationX)
-            accelerationY.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationY)
-            accelerationZ.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationZ)
+        accelerationX.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationX)
+        accelerationY.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationY)
+        accelerationZ.text = String(format: "%.5f", sensorDataRetrieve.shared.accelerationZ)
 
     }
 
     func gyroscope() {
 
-            gyroX.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
-            gyroY.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
-            gyroZ.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
+        gyroX.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
+        gyroY.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
+        gyroZ.text = String(format: "%.5f", sensorDataRetrieve.shared.gyroX)
 
     }
 
     func magnetometer() {
 
-            magneticFieldX.text = String(format: "%.5f", sensorDataRetrieve.shared.magneticFieldX)
-            magneticFieldY.text = String(format: "%.5f", sensorDataRetrieve.shared.magneticFieldY)
-            magneticFieldZ.text = String(format: "%.5f", sensorDataRetrieve.shared.magneticFieldZ)
+        magneticFieldX.text = String(format: "%.5f", sensorDataRetrieve.shared.magneticFieldX)
+        magneticFieldY.text = String(format: "%.5f", sensorDataRetrieve.shared.magneticFieldY)
+        magneticFieldZ.text = String(format: "%.5f", sensorDataRetrieve.shared.magneticFieldZ)
 
     }
 
 //    func altimeter() {
+
 //        altitudeManager.startRelativeAltitudeUpdates(to: queue) { altitudeData, error in
 //            self.altitude = altitudeData?.relativeAltitude.doubleValue ?? 0
 //            self.pressure = altitudeData?.pressure.doubleValue ?? 0
@@ -137,31 +135,32 @@ class SensorsViewController: UIViewController, UIImagePickerControllerDelegate, 
             fatalError("guard failure handling has not been implemented")
         }
 
-        
-        
+
     }
-    
+
     @IBAction func videoCamera(_ sender: Any) {
         let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "videoRecorder"))!
         guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
             fatalError("guard failure handling has not been implemented")
         }
 
-        
+
     }
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let currentLocation = locations.first else { return }
+        guard let currentLocation = locations.first else {
+            return
+        }
 
         geoCoder.reverseGeocodeLocation(currentLocation) { (placeMarks, error) in
-            guard let currentLocPlacemark = placeMarks?.first else { return }
-           print(currentLocPlacemark)
+            guard let currentLocPlacemark = placeMarks?.first else {
+                return
+            }
+            print(currentLocPlacemark)
         }
     }
 
 
-    
-        
-        
 }
 
 

@@ -102,8 +102,9 @@ class DataCollectionController: CameraController {
         print(loggingEnabled)
         if (loggingEnabled) {
 
-            Timer.scheduledTimer(withTimeInterval: 0.0167, repeats: true) { [self] timer in
+            Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
                 captureImage()
+
                 if !loggingEnabled {
                     timer.invalidate()
                 }

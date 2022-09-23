@@ -24,7 +24,7 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     let motionManager = CMMotionManager()
     let locationManager = CLLocationManager()
     let altitudeManager = CMAltimeter()
-    var interval: Double = 0.25
+    var interval: Double = 0.03
 
     override init() {
         print("init function ")
@@ -53,7 +53,7 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     }
 
     func startSensorsUpdates() {
-        Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { _ in
+        Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { _ in
             self.accelerometer()
             self.gyroscope()
             self.magnetometer()
