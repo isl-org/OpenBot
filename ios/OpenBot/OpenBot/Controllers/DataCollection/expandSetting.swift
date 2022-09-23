@@ -5,7 +5,7 @@
 import Foundation
 import UIKit
 
-class expandSetting: UIView {
+class expandSetting: UIView, UITextFieldDelegate {
     let logData = UISwitch()
     let bluetoothIcon = UIImageView()
     let cameraIcon = UIImageView()
@@ -27,12 +27,7 @@ class expandSetting: UIView {
     var gps = UIButton()
     var acceleration = UIButton()
     var magnetic = UIButton()
-    var temperature = UIButton()
     var gyroscope = UIButton()
-    var proximity = UIButton()
-    var light = UIButton()
-    var gravity = UIButton()
-    var motion = UIButton()
     var selectedImages: ImagesMode = ImagesMode.preview
     var selectedResolution: Resolutions = Resolutions.medium
     var selectedSensor = [UIButton()]
@@ -55,6 +50,8 @@ class expandSetting: UIView {
         createImagesButton()
         createSecondViewLabel(value: Strings.sensorData, leadingAnchor: 10, topAnchor: 90, labelWidth: 200, labelHeight: 40)
         createSensorButtons()
+        createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
+        createDelayField()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -179,22 +176,38 @@ class expandSetting: UIView {
 
 
     func createImagesButton() {
-        preview = createSecondViewButton( buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, action: #selector(applyPreview(_:)))
-        training = createSecondViewButton( buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, action: #selector(applyTraining(_:)))
+        preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 80, action: #selector(applyPreview(_:)))
+        training = createSecondViewButton(buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, buttonWidth: 80, action: #selector(applyTraining(_:)))
         updateImageMode()
     }
 
     func createSensorButtons() {
-        vehicle = createSecondViewButton( buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 120, action: #selector(updateSensor(_:)))
-        gps = createSecondViewButton( buttonName: Strings.gps, leadingAnchor: 100, topAnchor: 120, action: #selector(updateSensor(_:)))
-        acceleration = createSecondViewButton( buttonName: Strings.accelerometer, leadingAnchor: 190, topAnchor: 120, action: #selector(updateSensor(_:)))
-        magnetic = createSecondViewButton( buttonName: Strings.magnetic, leadingAnchor: 280, topAnchor: 120, action: #selector(updateSensor(_:)))
-        temperature = createSecondViewButton( buttonName: Strings.temperature, leadingAnchor: 10, topAnchor: 170, action: #selector(updateSensor(_:)))
-        gyroscope = createSecondViewButton( buttonName: Strings.gyroscope, leadingAnchor: 100, topAnchor: 170, action: #selector(updateSensor(_:)))
-        proximity = createSecondViewButton(buttonName: "Proximity", leadingAnchor: 190, topAnchor: 170, action: #selector(updateSensor(_:)))
-        light = createSecondViewButton( buttonName: "Light", leadingAnchor: 10, topAnchor: 220, action: #selector(updateSensor(_:)))
-        gravity = createSecondViewButton( buttonName: "Gravity", leadingAnchor: 100, topAnchor: 220, action: #selector(updateSensor(_:)))
-        motion = createSecondViewButton(buttonName: "Motion", leadingAnchor: 190, topAnchor: 220, action: #selector(updateSensor(_:)))
+        vehicle = createSecondViewButton(buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)))
+        gps = createSecondViewButton(buttonName: Strings.gps, leadingAnchor: 100, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)))
+        acceleration = createSecondViewButton(buttonName: Strings.accelerometer, leadingAnchor: 190, topAnchor: 120, buttonWidth: 140, action: #selector(updateSensor(_:)))
+        magnetic = createSecondViewButton(buttonName: Strings.magnetic, leadingAnchor: 10, topAnchor: 170, buttonWidth: 100, action: #selector(updateSensor(_:)))
+        gyroscope = createSecondViewButton(buttonName: Strings.gyroscope, leadingAnchor: 120, topAnchor: 170, buttonWidth: 100, action: #selector(updateSensor(_:)))
+    }
+
+    func createDelayField() {
+
+        let delayTextField = UITextField(frame: CGRect(x: 310, y: 177, width: 50, height: 40))
+        delayTextField.placeholder = "200"
+        delayTextField.font = UIFont.systemFont(ofSize: 15)
+        delayTextField.borderStyle = UITextField.BorderStyle.roundedRect
+        delayTextField.autocorrectionType = UITextAutocorrectionType.no
+        delayTextField.keyboardType = UIKeyboardType.phonePad
+        delayTextField.returnKeyType = UIReturnKeyType.default
+        delayTextField.clearButtonMode = UITextField.ViewMode.whileEditing
+        delayTextField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
+        delayTextField.delegate = self
+        delayTextField.addTarget(self, action: #selector(delayFieldDidChange), for: .editingChanged)
+        var bottomLine = CALayer()
+        bottomLine.frame = CGRect(x: 0.0, y: delayTextField.frame.height - 10, width: delayTextField.frame.width, height: 1.0)
+        bottomLine.backgroundColor = UIColor.white.cgColor
+        delayTextField.borderStyle = UITextField.BorderStyle.none
+        delayTextField.layer.addSublayer(bottomLine)
+        secondView.addSubview(delayTextField)
 
 
     }
@@ -247,7 +260,7 @@ class expandSetting: UIView {
         label.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
     }
 
-    func createSecondViewButton( buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIButton {
+    func createSecondViewButton(buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, buttonWidth: CGFloat, action: Selector?) -> UIButton {
         let btn = UIButton()
         btn.layer.cornerRadius = 10
         btn.backgroundColor = Colors.freeRoamButtonsColor
@@ -263,9 +276,9 @@ class expandSetting: UIView {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.topAnchor.constraint(equalTo: secondView.topAnchor, constant: topAnchor).isActive = true;
         btn.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
-        btn.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        text.frame = CGRect(x: 10, y: 0, width: 70, height: 40)
+        text.frame = CGRect(x: 10, y: 0, width: buttonWidth, height: 40)
         btn.addSubview(text)
         return btn
     }
@@ -378,6 +391,12 @@ class expandSetting: UIView {
 
         }
     }
+
+    @objc func delayFieldDidChange(_ sender: UITextField) {
+        print(sender.text)
+
+
+    }
 }
 
 extension Notification.Name {
@@ -385,3 +404,4 @@ extension Notification.Name {
     static let logData = Notification.Name(Strings.logDataNotify)
 
 }
+

@@ -34,9 +34,9 @@ struct Strings {
     static  let gps : String = "GPS"
     static let accelerometer : String = "Accelerometer"
     static let magnetic : String = "Magnetic"
-    static let temperature : String = "Temperature"
     static let gyroscope : String = "Gyroscope"
-    static let gravity : String = "Gravity"
+    static let delay : String =  "Delay (ms)"
+
 
 
 // Notifications

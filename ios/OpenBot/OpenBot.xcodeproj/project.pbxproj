@@ -40,6 +40,7 @@
 		727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */; };
 		727D373B2A839824AE8E6AE2 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31331A6716FD310082EB /* CameraController.swift */; };
 		727D39CEBB2CF03D171BC311 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D37D0890B15799952F87A /* UIViewExtension.swift */; };
+		727D3A805DDE14D8AD205D31 /* Modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3ABD8F9F9D0485B435C2 /* Modes.swift */; };
 		727D3B19FEA7A95C092DC11E /* collapseSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D316515ACC87CAEB31A26 /* collapseSettingView.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
 		727D3D12FAF02C416CC2CEC1 /* FreeRoamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */; };
@@ -109,6 +110,7 @@
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
 		727D39B02AB471D9F31B0747 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bluetoothDataController.swift; sourceTree = "<group>"; };
+		727D3ABD8F9F9D0485B435C2 /* Modes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Modes.swift; path = Modes/Modes.swift; sourceTree = "<group>"; };
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		727D3D78A49AC3693B1A2B7B /* CGFloatExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CGFloatExtension.swift; path = Adaptive/CGFloatExtension.swift; sourceTree = "<group>"; };
@@ -291,6 +293,7 @@
 				727D3486646629C6067A6656 /* Free Roam */,
 				BF72296328B0FD6D0013CD8E /* GameViewController.swift */,
 				4FEF40885316AD1AB57A55DD /* DataCollection */,
+				727D3ABD8F9F9D0485B435C2 /* Modes.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -476,6 +479,7 @@
 				727D3B19FEA7A95C092DC11E /* collapseSettingView.swift in Sources */,
 				727D332F054456A4182DD7DF /* expandSetting.swift in Sources */,
 				727D373B2A839824AE8E6AE2 /* CameraController.swift in Sources */,
+				727D3A805DDE14D8AD205D31 /* Modes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
