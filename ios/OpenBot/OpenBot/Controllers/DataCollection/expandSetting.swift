@@ -52,9 +52,10 @@ class expandSetting: UIView, UITextFieldDelegate {
         createSensorButtons()
         createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
         createDelayField()
-        let m = Vehicle(frame: CGRect(x: 0, y: height-100, width: width, height: 300))
+        let m = Vehicle(frame: CGRect(x: 0, y: height - 100, width: width, height: 300))
         addSubview(m)
     }
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -64,12 +65,10 @@ class expandSetting: UIView, UITextFieldDelegate {
     }
 
     func createLogDataButton() {
-        logData.frame.size = CGSize(width: 100, height: 100)
         _ = createLabels(value: Strings.logData, leadingAnchor: 10, topAnchor: 13, labelWidth: 100, labelHeight: 40)
-        logData.isOn = true
-        logData.setOn(true, animated: false)
+        logData.isOn = false
+        logData.setOn(false, animated: true)
         logData.onTintColor = Colors.title
-        logData.transform = CGAffineTransform(scaleX: 1.2, y: 0.7)
         logData.addTarget(self, action: #selector(switchLogButton(_:)), for: .valueChanged)
         logData.translatesAutoresizingMaskIntoConstraints = false
         addSubview(logData)
