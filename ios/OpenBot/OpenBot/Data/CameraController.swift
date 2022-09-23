@@ -229,6 +229,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         DataLogger.shared.createImageFolder(openBotPath: openBotPath)
         DataLogger.shared.createSensorData(openBotPath: openBotPath)
         let imagePath = openBotPath + "/images"
+
         var x : Int = 0
         if (images.count > 0) {
             for temp in images {

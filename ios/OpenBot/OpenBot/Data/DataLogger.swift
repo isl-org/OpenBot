@@ -24,7 +24,6 @@ class DataLogger {
 
     func createOpenBotFolder(openBotPath: String) {
         createFolder(path: openBotPath)
-
     }
 
     func createImageFolder(openBotPath: String) {
@@ -40,7 +39,7 @@ class DataLogger {
         let sensorDataPath = openBotPath + "/sensor_data"
         createFolder(path: sensorDataPath)
         if URL(string: openBotPath) != nil {
-            saveSensorFile(path: sensorDataPath)
+            saveSensorFile(path: sensorDataPath, data: sensorDataRetrieve.shared.sensorData)
         }
     }
 
@@ -70,12 +69,12 @@ class DataLogger {
         }
     }
 
-    func saveSensorFile(path: String) {
+    func saveSensorFile(path: String,data : String) {
         let fileManager = FileManager.default
         let sensorPath = URL(string: path)
         let sensor = sensorPath?.appendingPathComponent("sensor1.txt")
         let sen = sensor?.absoluteString
-        let str = "hello i am sensor data"
+        let str = data
         fileManager.createFile(atPath: sen ?? "", contents: str.data(using: String.Encoding.utf8))
 
     }

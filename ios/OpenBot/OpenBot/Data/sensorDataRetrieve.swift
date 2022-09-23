@@ -25,6 +25,7 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     let altitudeManager = CMAltimeter()
     var interval: Double = 0.03
+    var sensorData : String = ""
 
     override init() {
         print("init function ")
@@ -53,12 +54,9 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     }
 
     func startSensorsUpdates() {
-        Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { _ in
-            self.accelerometer()
-            self.gyroscope()
-            self.magnetometer()
-
-        }
+            accelerometer()
+            gyroscope()
+            magnetometer()
     }
 
     func accelerometer() {
@@ -87,6 +85,7 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
             magneticFieldX = data.magneticField.x
             magneticFieldY = data.magneticField.y
             magneticFieldZ = data.magneticField.z
+            sensorData = sensorData + String(data.magneticField.z) + "\n"
 
         }
     }
@@ -103,4 +102,6 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
             print(currentLocPlacemark)
         }
     }
+
+
 }

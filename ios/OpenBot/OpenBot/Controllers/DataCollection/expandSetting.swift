@@ -4,7 +4,7 @@
 
 import Foundation
 import UIKit
-
+var selectedSensor = [UIButton()]
 class expandSetting: UIView, UITextFieldDelegate {
     let logData = UISwitch()
     let bluetoothIcon = UIImageView()
@@ -30,7 +30,7 @@ class expandSetting: UIView, UITextFieldDelegate {
     var gyroscope = UIButton()
     var selectedImages: ImagesMode = ImagesMode.preview
     var selectedResolution: Resolutions = Resolutions.medium
-    var selectedSensor = [UIButton()]
+
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -187,10 +187,15 @@ class expandSetting: UIView, UITextFieldDelegate {
 
     func createSensorButtons() {
         vehicle = createSecondViewButton(buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)))
+        vehicle.tag = 1;
         gps = createSecondViewButton(buttonName: Strings.gps, leadingAnchor: 100, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)))
+        gps.tag = 2;
         acceleration = createSecondViewButton(buttonName: Strings.accelerometer, leadingAnchor: 190, topAnchor: 120, buttonWidth: 140, action: #selector(updateSensor(_:)))
+        acceleration.tag = 3
         magnetic = createSecondViewButton(buttonName: Strings.magnetic, leadingAnchor: 10, topAnchor: 170, buttonWidth: 100, action: #selector(updateSensor(_:)))
+        magnetic.tag = 4
         gyroscope = createSecondViewButton(buttonName: Strings.gyroscope, leadingAnchor: 120, topAnchor: 170, buttonWidth: 100, action: #selector(updateSensor(_:)))
+        gyroscope.tag = 5
     }
 
     func createDelayField() {
@@ -305,6 +310,7 @@ class expandSetting: UIView, UITextFieldDelegate {
 
     @objc func switchLogButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .logData, object: nil)
+
     }
 
     @objc func applyLowResolution(_ sender: UIView) {
@@ -392,7 +398,6 @@ class expandSetting: UIView, UITextFieldDelegate {
         if !isFound {
             selectedSensor.append(sender)
             sender.layer.borderColor = Colors.title?.cgColor
-
         }
     }
 

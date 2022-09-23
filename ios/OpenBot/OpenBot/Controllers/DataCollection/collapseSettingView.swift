@@ -71,6 +71,7 @@ class collapseSettingView: UIView {
     }
 
 
+
 }
 
 extension Notification.Name {

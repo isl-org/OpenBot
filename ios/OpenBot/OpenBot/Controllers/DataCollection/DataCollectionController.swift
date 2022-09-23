@@ -10,6 +10,8 @@ class DataCollectionController: CameraController {
     let collapseView = collapseSettingView(frame: CGRect(x: 0, y: 0, width: width, height: height))
     let expandSettingView = expandSetting(frame: CGRect(x: 0, y: 0, width: width, height: height))
     var loggingEnabled: Bool = false;
+    let sensorData = sensorDataRetrieve.shared
+    var sensorDataTemp : String = ""
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -99,14 +101,15 @@ class DataCollectionController: CameraController {
 
     @objc func switchLogging() {
         loggingEnabled = !loggingEnabled;
-        print(loggingEnabled)
         if (loggingEnabled) {
 
             Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
-                captureImage()
-
+                captureImage();
+                sensorData.startSensorsUpdates()
+                recordSensorData();
                 if !loggingEnabled {
                     timer.invalidate()
+
                 }
             }
         } else {
@@ -114,4 +117,29 @@ class DataCollectionController: CameraController {
         }
     }
 
+    func recordSensorData(){
+        for sensor in selectedSensor {
+
+            switch sensor.tag {
+            case 1 :
+                print("vehicle")
+                break
+            case 2 :
+                print("gps")
+                break
+            case 3 :
+                print("acceleration")
+                break
+            case 4 :
+                print(sensorData.magneticFieldZ)
+                sensorDataTemp = sensorDataTemp + String(sensorData.magneticFieldZ) + "\n"
+                break
+            case 5 :
+                print("gyro")
+                break
+            default:
+               break
+            }
+        }
+    }
 }
