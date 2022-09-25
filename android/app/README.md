@@ -190,11 +190,11 @@ All models are quantized for better performance on embedded devices. Please refe
 
 #### MobileNetV1-300 (pre-installed) - mAP: 18%
 
-SSD object detector with MobileNet V3 backbone and input resolution of 300x300.
+SSD object detector with MobileNet V1 backbone and input resolution of 300x300.
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S22 Ultra|  24 |  12 |   25  |
+| Samsung S22 Ultra|  33 |  13 |   30  |
 | Samsung S20FE 5G |  34 |  57 |   87  |
 | Huawei P30 Pro   |  36 |  25 |   10  |
 | Google Pixel 6XL |  35 |  42 |   53  |
@@ -206,7 +206,7 @@ SSD object detector with MobileNet V3 backbone and input resolution of 320x320.
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S22 Ultra|  24 |  15 |   25  |
+| Samsung S22 Ultra|  30 |  17 |   30  |
 | Samsung S20FE 5G |  34 |  42 |   28  |
 | Huawei P30 Pro   |  32 |  27 |   23  |
 | Google Pixel 6XL |  33 |  43 |   27  |
@@ -218,7 +218,7 @@ State-of-the-art object detector [YoloV4](https://arxiv.org/abs/2004.10934) with
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S22 Ultra| 1.2 | 1.8 |  1.2  |
+| Samsung S22 Ultra| 3.7 | 5.6 |  3.5  |
 | Samsung S20FE 5G | 3.1 | 7.1 |  4.2  |
 | Huawei P30 Pro   | 2.4 | 6.2 |  0.7  |
 | Google Pixel 6XL | 2.7 |  11 |  0.9  |
@@ -230,7 +230,7 @@ Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S22 Ultra|  16 |  10 |   15  |
+| Samsung S22 Ultra|  31 |  12 |   31  |
 | Samsung S20FE 5G |  30 |  21 |   14  |
 | Huawei P30 Pro   |  27 |  17 |   22  |
 | Google Pixel 6XL |  29 |  24 |   19  |
@@ -242,7 +242,7 @@ Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S22 Ultra| 3.1 | 5.0 |  5.3  |
+| Samsung S22 Ultra|  13 | 9.8 |   13  |
 | Samsung S20FE 5G |  12 | 9.4 |  7.7  |
 | Huawei P30 Pro   | 8.4 | 7.6 |  6.9  |
 | Google Pixel 6XL |  10 | 9.6 |  7.2  |
