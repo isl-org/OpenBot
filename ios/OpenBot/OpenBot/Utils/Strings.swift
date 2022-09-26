@@ -36,6 +36,13 @@ struct Strings {
     static let magnetic : String = "Magnetic"
     static let gyroscope : String = "Gyroscope"
     static let delay : String =  "Delay (ms)"
+    static  let images : String = "/images"
+    static let sensor : String = "/sensor_data"
+    static let timestamp : String = "timestamp[ns],frame\n"
+    static let crop : String = "crop.jpeg"
+    static let underscore : String = "_"
+    static let comma : String = ","
+    static let newLine : String = "\n"
 
 
 

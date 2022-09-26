@@ -15,6 +15,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     var heightConstraint: NSLayoutConstraint! = nil
     var widthConstraint: NSLayoutConstraint! = nil
     var images: [UIImage] = [];
+    var rgbFrames = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -223,27 +224,34 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func saveImages() {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory: String = paths.first ?? ""
-        let openBotPath = documentsDirectory + "/openBot"
+        let openBotPath = documentsDirectory + Strings.OpenBot
         DataLogger.shared.deleteFiles(path: openBotPath)
         DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
         DataLogger.shared.createImageFolder(openBotPath: openBotPath)
         DataLogger.shared.createSensorData(openBotPath: openBotPath)
-        let imagePath = openBotPath + "/images"
-
-        var x : Int = 0
+        let imagePath = openBotPath + Strings.images
+        let sensorPath = openBotPath + Strings.sensor
+        let header = Strings.timestamp
+        rgbFrames = header;
+        var x: Int = 0
         if (images.count > 0) {
             for temp in images {
-                let imageName = String(x) + "_" + "crop.jpeg" ;
+                let imageName = String(x) + Strings.underscore + Strings.crop
+                let timestamp = NSDate().timeIntervalSince1970
+                rgbFrames = rgbFrames +  String(timestamp) + Strings.comma + String(x) + Strings.newLine
+                DataLogger.shared.saveImages(path: imagePath, image: temp, name: imageName);
+
                 x = x + 1;
-            DataLogger.shared.saveImages(path: imagePath, image: temp, name: imageName);
             }
         }
         if let url = URL(string: openBotPath) {
-          createZip(path: url)
+            DataLogger.shared.saveFramesFile(path: sensorPath, data: rgbFrames);
+            createZip(path: url)
         }
         images.removeAll()
 
     }
+
     func saveFolder(path: URL) {
         let archiveUrl = DataLogger.shared.getDirectoryInfo()
         let activityManager = UIActivityViewController(activityItems: [archiveUrl], applicationActivities: nil)
@@ -276,8 +284,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             print(error as Any)
         }
     }
-
-
 
 
 }

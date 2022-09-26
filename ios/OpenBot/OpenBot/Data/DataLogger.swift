@@ -87,4 +87,15 @@ class DataLogger {
         return dateOrTime
     }
 
+    func saveFramesFile(path : String , data : String){
+        let fileManager = FileManager.default
+        let sensorPath = URL(string: path)
+        let frame =  sensorPath?.appendingPathComponent("rgbFrames.txt")
+        let f = frame?.absoluteString
+        let str = data
+        if let f = f {
+            fileManager.createFile(atPath: f, contents: str.data(using: String.Encoding.utf8))
+        }
+    }
+
 }
