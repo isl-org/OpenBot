@@ -15,8 +15,15 @@ struct Images {
     static let ble = UIImage(named: "ble")
     static let settings = UIImage(named: "settings")
     static let closeIcon = UIImage(named: "closeIcon")
-
-
+    static let phoneIcon = UIImage(named: "phone")
+    static let gamepadIcon = UIImage(named: "gamepad")
+    static let slowIcon = UIImage(named: "slow")
+    static let mediumIcon = UIImage(named: "medium")
+    static let fastIcon = UIImage(named: "fast")
+    static let joystickIcon = UIImage(named: "joystick")
+    static let dualDriveIcon = UIImage(named: "dual")
+    static let driveIcon = UIImage(named: "drive")
+    static let gameDriveIcon = UIImage(named: "game")
 }
 
 struct Colors {

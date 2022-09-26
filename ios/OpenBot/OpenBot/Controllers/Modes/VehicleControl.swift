@@ -5,10 +5,12 @@
 import Foundation
 import UIKit
 
-class Vehicle : UIView {
+class VehicleControl: UIView {
     var controller = UIButton()
-    var DriveMode = UIButton()
-    var speed = UIButton()
+    var controlMode: ControlMode = ControlMode.phone;
+    var speedMode: SpeedMode = SpeedMode.slow;
+    var driveMode: DriveMode = DriveMode.dual;
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -21,31 +23,24 @@ class Vehicle : UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func createControllerMode(){
-        controller = createButton(borderColor: "red", buttonName: "Test", leadingAnchor: 10, topAnchor: 40, action:  #selector(applyLowResolution(_:)))
-        addSubview(controller)
-
-
+    func createControllerMode() {
+        updateControlMode(self);
     }
 
-    func createDriveMode(){
-        DriveMode = createButton(borderColor: "red", buttonName: "Test", leadingAnchor: 100, topAnchor: 40, action:  #selector(applyLowResolution(_:)))
-        addSubview(DriveMode)
-
+    func createDriveMode() {
+        updateDriveMode(self)
     }
 
-    func createSpeedMode(){
-        speed = createButton(borderColor: "red", buttonName: "Test", leadingAnchor: 190, topAnchor: 40, action:  #selector(applyLowResolution(_:)))
-        addSubview(speed)
+    func createSpeedMode() {
+        updateSpeedMode(self)
     }
 
-    func createButton(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIButton {
+    func createAndUpdateButton(iconName: UIImage, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) {
         let btn = UIButton()
         btn.layer.cornerRadius = 10
-        btn.backgroundColor = Colors.freeRoamButtonsColor
-        let text = UILabel()
-        text.text = buttonName
-        text.textColor = Colors.borderColor
+        btn.backgroundColor = Colors.title
+        let modeIcon = UIImageView(frame: CGRect(x: 15, y: 15, width: 30, height: 30))
+        modeIcon.image = iconName;
         if let action = action {
             btn.addTarget(self, action: action, for: .touchUpInside)
         }
@@ -53,17 +48,63 @@ class Vehicle : UIView {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topAnchor).isActive = true;
         btn.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: leadingAnchor).isActive = true
-        btn.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        text.frame = CGRect(x: 10, y: 0, width: 70, height: 40)
-        btn.addSubview(text)
-        return btn
+        btn.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        btn.addSubview(modeIcon)
     }
 
-        @objc func applyLowResolution(_ sender: UIButton){
-                print("hello nitish")
+    @objc func updateControlMode(_ sender: UIView) {
+        if (controlMode == ControlMode.gamepad) {
+            controlMode = ControlMode.phone;
+            createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: 10, topAnchor: 40, action: #selector(updateControlMode(_:)));
+        } else {
+            controlMode = ControlMode.gamepad;
+            createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: 10, topAnchor: 40, action: #selector(updateControlMode(_:)));
         }
+        let userInfo = ["mode": controlMode];
+        NotificationCenter.default.post(name: .updateControl, object: nil, userInfo: userInfo)
+    }
 
+    @objc func updateDriveMode(_ sender: UIView) {
+        if (controlMode == .gamepad) {
+            switch (driveMode) {
+            case .joystick:
+                driveMode = .gameController;
+                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: 100, topAnchor: 40, action: #selector(updateDriveMode(_:)));
+                break;
+            case .gameController:
+                driveMode = .dual;
+                createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: 100, topAnchor: 40, action: #selector(updateDriveMode(_:)));
+                break;
+            case .dual:
+                driveMode = .joystick;
+                createAndUpdateButton(iconName: Images.joystickIcon!, leadingAnchor: 100, topAnchor: 40, action: #selector(updateDriveMode(_:)));
+                break;
+            }
+            let userInfo = ["drive": driveMode];
+            NotificationCenter.default.post(name: .updateDriveMode, object: nil, userInfo: userInfo)
+        }
+    }
+
+    @objc func updateSpeedMode(_ sender: UIView) {
+
+        switch (speedMode) {
+        case .slow:
+            speedMode = .medium;
+            createAndUpdateButton(iconName: Images.mediumIcon!, leadingAnchor: 190, topAnchor: 40, action: #selector(updateSpeedMode(_:)));
+            break;
+        case .medium:
+            speedMode = .fast;
+            createAndUpdateButton(iconName: Images.fastIcon!, leadingAnchor: 190, topAnchor: 40, action: #selector(updateSpeedMode(_:)));
+            break;
+        case .fast:
+            speedMode = .slow;
+            createAndUpdateButton(iconName: Images.slowIcon!, leadingAnchor: 190, topAnchor: 40, action: #selector(updateSpeedMode(_:)));
+            break;
+        }
+        let userInfo = ["speed": speedMode];
+        NotificationCenter.default.post(name: .updateSpeed, object: nil, userInfo: userInfo)
+    }
 
 
 }

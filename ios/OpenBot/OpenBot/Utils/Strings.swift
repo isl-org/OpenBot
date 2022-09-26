@@ -53,6 +53,9 @@ struct Strings {
     static let switchCamera: String = "switchCamera"
     static let ble: String = "ble"
     static let logDataNotify: String = "log_data"
+    static let updateSpeedMode: String = "update_speed"
+    static let updateControlMode: String = "update_control"
+    static let updateDriveMode: String = "update_drive_mode"
 
 
 // Screen Identifiers

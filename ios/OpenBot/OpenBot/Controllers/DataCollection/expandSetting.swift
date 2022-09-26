@@ -4,6 +4,7 @@
 
 import Foundation
 import UIKit
+
 var selectedSensor = [Int]()
 class expandSetting: UIView, UITextFieldDelegate {
     let logData = UISwitch()
@@ -55,7 +56,7 @@ class expandSetting: UIView, UITextFieldDelegate {
         setupSensors()
         createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
         createDelayField()
-        let m = Vehicle(frame: CGRect(x: 0, y: height - 100, width: width, height: 300))
+        let m = VehicleControl(frame: CGRect(x: 0, y: height - 150, width: width, height: 300))
         addSubview(m)
     }
 
@@ -436,6 +437,8 @@ class expandSetting: UIView, UITextFieldDelegate {
 extension Notification.Name {
     static let cancelButton = Notification.Name(Strings.cancelButton)
     static let logData = Notification.Name(Strings.logDataNotify)
-
+    static let updateSpeed = Notification.Name(Strings.updateSpeedMode);
+    static let updateControl = Notification.Name(Strings.updateControlMode);
+    static let updateDriveMode = Notification.Name(Strings.updateDriveMode);
 }
 

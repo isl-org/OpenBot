@@ -276,7 +276,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func createRectangle(x: Int, y: Int, width: Int, height: Int, borderColor: String) -> UIView {
-//        let rectangleView = UIView(frame: CGRect(x: x, y: y, width: width, height: height))
         let rectangleView = UIView();
         let origin = CGPoint(x: x, y: y)
         let size = CGSize(width: width, height: height)
