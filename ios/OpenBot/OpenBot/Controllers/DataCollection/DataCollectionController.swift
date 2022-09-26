@@ -28,9 +28,9 @@ class DataCollectionController: CameraController {
     override func viewDidLoad() {
         super.viewDidLoad()
         createCameraView()
-        view.addSubview(expandSettingView)
+        view.addSubview(collapseView)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        NotificationCenter.default.addObserver(self, selector: #selector(collapseView), name: .clickSetting, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadExpandView), name: .clickSetting, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadCollapseView), name: .cancelButton, object: nil)
