@@ -510,7 +510,7 @@
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="controller" translatesAutoresizingMaskIntoConstraints="NO" id="HYS-00-IDW">
-                                <rect key="frame" x="-0.5" y="63.5" width="415" height="376"/>
+                                <rect key="frame" x="0.0" y="64" width="414" height="375"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="375" id="Xqu-ir-4R0"/>
                                 </constraints>

@@ -14,7 +14,6 @@ class TempViewController: UIViewController {
     var centerXConstraint = NSLayoutConstraint()
     var centerYConstraint = NSLayoutConstraint()
     let rect = UIView()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupRectangle()

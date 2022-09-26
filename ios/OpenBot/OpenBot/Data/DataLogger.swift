@@ -12,9 +12,10 @@ class DataLogger {
     func getDirectoryInfo() -> URL {
         let fileManager = FileManager.default
         var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        documentsURL = documentsURL.appendingPathComponent("/openBot")
+//        documentsURL = documentsURL.appendingPathComponent("/OpenBot/images")
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+            print(fileURLs)
 
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
@@ -39,7 +40,11 @@ class DataLogger {
         let sensorDataPath = openBotPath + "/sensor_data"
         createFolder(path: sensorDataPath)
         if URL(string: openBotPath) != nil {
-            saveSensorFile(path: sensorDataPath, data: carSensorsData )
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.acceleration, fileName: "acceleration.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.magnetometer, fileName: "magnetic.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.gyroscope, fileName: "gyroscope.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.vehicle, fileName: "vehicle.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.gps, fileName: "gps.txt")
         }
     }
 
@@ -69,14 +74,22 @@ class DataLogger {
         }
     }
 
-    func saveSensorFile(path: String,data : String) {
+    func saveSensorFiles(path: String,data : String,fileName : String) {
         let fileManager = FileManager.default
         let sensorPath = URL(string: path)
-        let sensor = sensorPath?.appendingPathComponent("sensor1.txt")
+        let sensorFileName = sensorPath?.appendingPathComponent(fileName)
+        let sen = sensorFileName?.absoluteString
+        let str = data
+        fileManager.createFile(atPath: sen ?? "", contents: str.data(using: String.Encoding.utf8))
+    }
+
+    func saveAccelerationFile(path : String , data : String){
+        let fileManager = FileManager.default
+        let sensorPath = URL(string: path)
+        let sensor = sensorPath?.appendingPathComponent("acceleration.txt")
         let sen = sensor?.absoluteString
         let str = data
         fileManager.createFile(atPath: sen ?? "", contents: str.data(using: String.Encoding.utf8))
-
     }
 
     func knowDateOrTime(format: String) -> String {
@@ -97,5 +110,4 @@ class DataLogger {
             fileManager.createFile(atPath: f, contents: str.data(using: String.Encoding.utf8))
         }
     }
-
 }

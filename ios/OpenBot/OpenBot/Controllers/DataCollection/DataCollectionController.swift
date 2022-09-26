@@ -5,7 +5,7 @@
 import Foundation
 import UIKit
 import AVFoundation
-var carSensorsData : String = ""
+
 class DataCollectionController: CameraController {
     let collapseView = collapseSettingView(frame: CGRect(x: 0, y: 0, width: width, height: height))
     let expandSettingView = expandSetting(frame: CGRect(x: 0, y: 0, width: width, height: height))
@@ -99,7 +99,7 @@ class DataCollectionController: CameraController {
         view.addSubview(collapseView)
     }
 
-    @objc func switchLogging() {
+    @objc func  switchLogging() {
         loggingEnabled = !loggingEnabled;
         if (loggingEnabled) {
 
@@ -113,33 +113,46 @@ class DataCollectionController: CameraController {
             }
         } else {
             saveImages();
+            DataLogger.shared.createSensorData(openBotPath: "/OpenBot")
             sensorDataTemp = ""
-            carSensorsData = ""
+            Global.shared.gyroscope = ""
+            Global.shared.magnetometer = ""
+            Global.shared.gps = ""
+            Global.shared.vehicle = ""
+            Global.shared.acceleration = ""
+            Global.shared.carSensorsData = ""
         }
     }
 
     func recordSensorData(){
         for sensor in selectedSensor {
-
-            switch sensor.tag {
+            let timestamp = NSDate().timeIntervalSince1970
+            switch sensor {
             case 1 :
-                carSensorsData = carSensorsData + bluetoothData  + "\n"
+                //vehicle
+                Global.shared.carSensorsData = Global.shared.carSensorsData + bluetoothData  + "\n"
                 break
             case 2 :
-                print("gps")
+                //gps
+                Global.shared.gps = Global.shared.gps + String(timestamp) + " " + String(sensorData.location.latitude) + " " + String(sensorData.location.longitude)+"\n"
                 break
             case 3 :
-                print("acceleration")
+//                acceleration
+                Global.shared.acceleration = Global.shared.acceleration + String(timestamp) + " " + convertToString(XValue: sensorData.accelerationX, YValue: sensorData.accelerationY, ZValue: sensorData.accelerationZ)  + "\n"
                 break
             case 4 :
-
-                carSensorsData = carSensorsData + String(sensorData.magneticFieldZ)  + "\n"
+                //magnetic
+                Global.shared.magnetometer = Global.shared.magnetometer + String(timestamp) + " " + convertToString(XValue: sensorData.magneticFieldX, YValue: sensorData.magneticFieldY, ZValue: sensorData.magneticFieldZ)  + "\n"
                 break
             case 5 :
-                print("gyro")
+                //gyroscope
+                Global.shared.gyroscope = Global.shared.gyroscope + String(timestamp) + " " + convertToString(XValue: sensorData.gyroX, YValue: sensorData.gyroY, ZValue: sensorData.gyroZ)  + "\n"
                 break
             default:
                break
+            }
+            func convertToString(XValue : Double, YValue :Double, ZValue : Double)->String{
+                String(XValue) + " " + String(YValue) + " "  + String(ZValue);
             }
         }
     }

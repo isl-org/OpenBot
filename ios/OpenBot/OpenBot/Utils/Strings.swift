@@ -43,7 +43,7 @@ struct Strings {
     static let underscore : String = "_"
     static let comma : String = ","
     static let newLine : String = "\n"
-
+    static let forwardSlash : String = "/"
 
 
 // Notifications

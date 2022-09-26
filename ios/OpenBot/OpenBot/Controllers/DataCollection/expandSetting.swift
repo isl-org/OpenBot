@@ -4,7 +4,7 @@
 
 import Foundation
 import UIKit
-var selectedSensor = [UIButton()]
+var selectedSensor = [Int]()
 class expandSetting: UIView, UITextFieldDelegate {
     let logData = UISwitch()
     let bluetoothIcon = UIImageView()
@@ -30,11 +30,13 @@ class expandSetting: UIView, UITextFieldDelegate {
     var gyroscope = UIButton()
     var selectedImages: ImagesMode = ImagesMode.preview
     var selectedResolution: Resolutions = Resolutions.medium
+    var sensorButtons = [UIButton]()
 
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
+
         applyBlurEffect()
         createLogDataButton()
         createBluetoothIcon()
@@ -50,6 +52,7 @@ class expandSetting: UIView, UITextFieldDelegate {
         createImagesButton()
         createSecondViewLabel(value: Strings.sensorData, leadingAnchor: 10, topAnchor: 90, labelWidth: 200, labelHeight: 40)
         createSensorButtons()
+        setupSensors()
         createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
         createDelayField()
         let m = Vehicle(frame: CGRect(x: 0, y: height - 100, width: width, height: 300))
@@ -63,6 +66,8 @@ class expandSetting: UIView, UITextFieldDelegate {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+
+
 
     func createLogDataButton() {
         _ = createLabels(value: Strings.logData, leadingAnchor: 10, topAnchor: 13, labelWidth: 100, labelHeight: 40)
@@ -180,22 +185,27 @@ class expandSetting: UIView, UITextFieldDelegate {
 
 
     func createImagesButton() {
-        preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 80, action: #selector(applyPreview(_:)))
-        training = createSecondViewButton(buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, buttonWidth: 80, action: #selector(applyTraining(_:)))
+        preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 80, action: #selector(applyPreview(_:)), borderColor: Colors.title!.cgColor)
+        training = createSecondViewButton(buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, buttonWidth: 80, action: #selector(applyTraining(_:)), borderColor: Colors.title!.cgColor)
         updateImageMode()
     }
 
     func createSensorButtons() {
-        vehicle = createSecondViewButton(buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)))
+        vehicle = createSecondViewButton(buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         vehicle.tag = 1;
-        gps = createSecondViewButton(buttonName: Strings.gps, leadingAnchor: 100, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)))
+        sensorButtons.append(vehicle)
+        gps = createSecondViewButton(buttonName: Strings.gps, leadingAnchor: 100, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         gps.tag = 2;
-        acceleration = createSecondViewButton(buttonName: Strings.accelerometer, leadingAnchor: 190, topAnchor: 120, buttonWidth: 140, action: #selector(updateSensor(_:)))
+        sensorButtons.append(gps)
+        acceleration = createSecondViewButton(buttonName: Strings.accelerometer, leadingAnchor: 190, topAnchor: 120, buttonWidth: 140, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         acceleration.tag = 3
-        magnetic = createSecondViewButton(buttonName: Strings.magnetic, leadingAnchor: 10, topAnchor: 170, buttonWidth: 100, action: #selector(updateSensor(_:)))
+        sensorButtons.append(acceleration)
+        magnetic = createSecondViewButton(buttonName: Strings.magnetic, leadingAnchor: 10, topAnchor: 170, buttonWidth: 100, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         magnetic.tag = 4
-        gyroscope = createSecondViewButton(buttonName: Strings.gyroscope, leadingAnchor: 120, topAnchor: 170, buttonWidth: 100, action: #selector(updateSensor(_:)))
+        sensorButtons.append(magnetic)
+        gyroscope = createSecondViewButton(buttonName: Strings.gyroscope, leadingAnchor: 120, topAnchor: 170, buttonWidth: 100, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         gyroscope.tag = 5
+        sensorButtons.append(gyroscope)
     }
 
     func createDelayField() {
@@ -217,8 +227,6 @@ class expandSetting: UIView, UITextFieldDelegate {
         delayTextField.borderStyle = UITextField.BorderStyle.none
         delayTextField.layer.addSublayer(bottomLine)
         secondView.addSubview(delayTextField)
-
-
     }
 
     func createButton(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIButton {
@@ -269,7 +277,7 @@ class expandSetting: UIView, UITextFieldDelegate {
         label.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
     }
 
-    func createSecondViewButton(buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, buttonWidth: CGFloat, action: Selector?) -> UIButton {
+    func createSecondViewButton(buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, buttonWidth: CGFloat, action: Selector?,borderColor : CGColor  ) -> UIButton {
         let btn = UIButton()
         btn.layer.cornerRadius = 10
         btn.backgroundColor = Colors.freeRoamButtonsColor
@@ -281,7 +289,7 @@ class expandSetting: UIView, UITextFieldDelegate {
         }
         secondView.addSubview(btn)
         btn.layer.borderWidth = 2
-        btn.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
+        btn.layer.borderColor = borderColor
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.topAnchor.constraint(equalTo: secondView.topAnchor, constant: topAnchor).isActive = true;
         btn.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
@@ -310,7 +318,16 @@ class expandSetting: UIView, UITextFieldDelegate {
 
     @objc func switchLogButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .logData, object: nil)
-
+        if sender.isOn {
+           for sensor in sensorButtons {
+               sensor.isEnabled = false
+           }
+        }
+        else{
+            for sensor in sensorButtons {
+                sensor.isEnabled = true
+            }
+        }
     }
 
     @objc func applyLowResolution(_ sender: UIView) {
@@ -382,12 +399,18 @@ class expandSetting: UIView, UITextFieldDelegate {
         }
     }
 
-    @objc func updateSensor(_ sender: UIButton) {
+    func setupSensors(){
+        // select all sensor initially
+        for i in 1...5{
+            selectedSensor.append(i);
+        }
+    }
 
+    @objc func updateSensor(_ sender: UIButton) {
         var index = 0
         var isFound = false
         for sensor in selectedSensor {
-            if sensor == sender {
+            if sensor == sender.tag {
                 sender.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
                 selectedSensor.remove(at: index)
                 isFound = true
@@ -395,10 +418,12 @@ class expandSetting: UIView, UITextFieldDelegate {
             }
             index = index + 1
         }
+
         if !isFound {
-            selectedSensor.append(sender)
+            selectedSensor.append(sender.tag)
             sender.layer.borderColor = Colors.title?.cgColor
         }
+
     }
 
     @objc func delayFieldDidChange(_ sender: UITextField) {

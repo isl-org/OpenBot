@@ -224,8 +224,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func saveImages() {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory: String = paths.first ?? ""
-        let openBotPath = documentsDirectory + Strings.OpenBot
-        DataLogger.shared.deleteFiles(path: openBotPath)
+        let openBotPath = documentsDirectory + Strings.forwardSlash  + Strings.OpenBot
+        DataLogger.shared.deleteFiles(path: openBotPath);
         DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
         DataLogger.shared.createImageFolder(openBotPath: openBotPath)
         DataLogger.shared.createSensorData(openBotPath: openBotPath)
@@ -263,7 +263,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let baseDirectoryName = dataLogger.knowDateOrTime(format: "yyyy") + dataLogger.knowDateOrTime(format: "MM") + dataLogger.knowDateOrTime(format: "dd") + "_"
                 + dataLogger.knowDateOrTime(format: "H") + dataLogger.knowDateOrTime(format: "mm") + dataLogger.knowDateOrTime(format: "ss") + ".zip"
         let fm = FileManager.default
-        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("/openBot")
+        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("/OpenBot")
         var archiveUrl: URL?
         var error: NSError?
         let coordinator = NSFileCoordinator()

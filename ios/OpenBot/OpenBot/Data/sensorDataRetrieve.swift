@@ -26,6 +26,7 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     let altitudeManager = CMAltimeter()
     var interval: Double = 0.03
     var sensorData : String = ""
+    var location : CLLocationCoordinate2D!
 
     override init() {
         print("init function ")
@@ -99,7 +100,11 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
             guard let currentLocPlacemark = placeMarks?.first else {
                 return
             }
-            print(currentLocPlacemark)
+
+//            print(currentLocPlacemark.name ?? "")
+            if let coordinate = currentLocPlacemark.location?.coordinate {
+                self.location = coordinate
+            }
         }
     }
 
