@@ -29,6 +29,7 @@ class DataCollectionController: CameraController {
         super.viewDidLoad()
         createCameraView()
         view.addSubview(collapseView)
+        updateControlMode(nil);
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         NotificationCenter.default.addObserver(self, selector: #selector(loadExpandView), name: .clickSetting, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
@@ -228,8 +229,8 @@ class DataCollectionController: CameraController {
         }
     }
 
-    @objc func updateControlMode(_ notification: Notification) {
-        if let controlMode = notification.userInfo?["mode"] as? ControlMode {
+    @objc func updateControlMode(_ notification: Notification?) {
+        if let controlMode = notification?.userInfo?["mode"] as? ControlMode {
             selectedControlMode = controlMode;
         }
         if selectedControlMode == .gamepad {
