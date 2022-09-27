@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import UIKit
 class  Global{
    static let shared : Global = Global()
     var carSensorsData : String
@@ -13,6 +14,7 @@ class  Global{
     var vehicle : String
     var gps : String
     var baseDirectory : String
+    var images: [UIImage]
     init(){
         carSensorsData = "";
         acceleration = "TimeStamp x, y, z\n"
@@ -22,5 +24,6 @@ class  Global{
         vehicle = ""
         gps = "TimeStamp latitude, longitude\n"
         baseDirectory = ""
+        images = []
     }
 }

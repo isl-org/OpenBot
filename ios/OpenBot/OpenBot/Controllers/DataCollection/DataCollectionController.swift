@@ -113,7 +113,7 @@ class DataCollectionController: CameraController {
     @objc func switchLogging() {
         loggingEnabled = !loggingEnabled;
         if (loggingEnabled) {
-
+            setupFilesForLogging();
             Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
                 captureImage();
                 sensorData.startSensorsUpdates()
@@ -126,16 +126,21 @@ class DataCollectionController: CameraController {
             Global.shared.baseDirectory = dataLogger.getBaseDirectoryName()
             saveImages();
             DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash +  Global.shared.baseDirectory);
-            sensorDataTemp = ""
-            Global.shared.gyroscope = ""
-            Global.shared.magnetometer = ""
-            Global.shared.gps = ""
-            Global.shared.vehicle = ""
-            Global.shared.acceleration = ""
-            Global.shared.carSensorsData = ""
             dataLogger.deleteFiles(path: Strings.forwardSlash +  Global.shared.baseDirectory)
+            setupFilesForLogging()
 
         }
+    }
+
+    func setupFilesForLogging(){
+        Global.shared.images.removeAll()
+        sensorDataTemp = ""
+        Global.shared.gyroscope = ""
+        Global.shared.magnetometer = ""
+        Global.shared.gps = ""
+        Global.shared.vehicle = ""
+        Global.shared.acceleration = ""
+        Global.shared.carSensorsData = ""
     }
 
     func recordSensorData() {

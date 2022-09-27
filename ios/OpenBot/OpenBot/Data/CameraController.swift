@@ -14,7 +14,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     let cameraView: UIView = UIView()
     var heightConstraint: NSLayoutConstraint! = nil
     var widthConstraint: NSLayoutConstraint! = nil
-    var images: [UIImage] = [];
     var rgbFrames = ""
 
     override func viewDidLoad() {
@@ -182,7 +181,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             temp = cropImage(imageToCrop: image!, toRect: CGRectMake(0, 30, 256, 96))
         }
         if (temp != nil) {
-            images.append(temp!);
+            Global.shared.images.append(temp!);
         }
 
     }
@@ -235,13 +234,12 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let header = Strings.timestamp
         rgbFrames = header;
         var x: Int = 0
-        if (images.count > 0) {
-            for temp in images {
+        if (Global.shared.images.count > 0) {
+            for temp in Global.shared.images {
                 let imageName = String(x) + Strings.underscore + Strings.crop
                 let timestamp = NSDate().timeIntervalSince1970
                 rgbFrames = rgbFrames +  String(timestamp) + Strings.comma + String(x) + Strings.newLine
                 DataLogger.shared.saveImages(path: imagePath, image: temp, name: imageName);
-
                 x = x + 1;
             }
         }
@@ -250,7 +248,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             createZip(path: url)
 //            saveFolder()
         }
-        images.removeAll()
+        Global.shared.images.removeAll()
     }
 
     func saveFolder() {
