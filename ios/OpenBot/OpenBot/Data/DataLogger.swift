@@ -4,7 +4,6 @@
 
 import Foundation
 import UIKit
-
 class DataLogger {
     static let shared: DataLogger = DataLogger()
     var enabled: Bool = false;
@@ -12,7 +11,7 @@ class DataLogger {
     func getDirectoryInfo() -> URL {
         let fileManager = FileManager.default
         var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-//        documentsURL = documentsURL.appendingPathComponent("/OpenBot/images")
+        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             print(fileURLs)
@@ -24,6 +23,7 @@ class DataLogger {
     }
 
     func createOpenBotFolder(openBotPath: String) {
+        print(openBotPath)
         createFolder(path: openBotPath)
     }
 
@@ -67,8 +67,10 @@ class DataLogger {
     }
 
     func deleteFiles(path: String) {
+        let fileManager = FileManager.default
+        var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         do {
-            try FileManager.default.removeItem(atPath: path)
+            try FileManager.default.removeItem(atPath: documentsURL.path + path)
         } catch {
             print(error)
         }
@@ -110,4 +112,21 @@ class DataLogger {
             fileManager.createFile(atPath: f, contents: str.data(using: String.Encoding.utf8))
         }
     }
+    func getBaseDirectoryName()-> String{
+        knowDateOrTime(format: "yyyy") + knowDateOrTime(format: "MM") + knowDateOrTime(format: "dd") + "_"
+                + knowDateOrTime(format: "H") + knowDateOrTime(format: "mm") + knowDateOrTime(format: "ss")
+    }
+    func getDocumentDirectoryInformation(){
+
+        let fileManager = FileManager.default
+        var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+//        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
+        do {
+            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+            print("hello ",fileURLs)
+        } catch {
+            print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
+        }
+    }
+
 }

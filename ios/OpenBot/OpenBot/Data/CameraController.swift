@@ -224,11 +224,12 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func saveImages() {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory: String = paths.first ?? ""
-        let openBotPath = documentsDirectory + Strings.forwardSlash  + Strings.OpenBot
-        DataLogger.shared.deleteFiles(path: openBotPath);
+        let openBotPath = documentsDirectory + Strings.forwardSlash  + Global.shared.baseDirectory
+//        DataLogger.shared.deleteFiles(path: openBotPath);
         DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
         DataLogger.shared.createImageFolder(openBotPath: openBotPath)
         DataLogger.shared.createSensorData(openBotPath: openBotPath)
+//        dataLogger.getDirectoryInfo()
         let imagePath = openBotPath + Strings.images
         let sensorPath = openBotPath + Strings.sensor
         let header = Strings.timestamp
@@ -247,23 +248,23 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         if let url = URL(string: openBotPath) {
             DataLogger.shared.saveFramesFile(path: sensorPath, data: rgbFrames);
             createZip(path: url)
+//            saveFolder()
         }
         images.removeAll()
-
     }
 
-    func saveFolder(path: URL) {
+    func saveFolder() {
         let archiveUrl = DataLogger.shared.getDirectoryInfo()
         let activityManager = UIActivityViewController(activityItems: [archiveUrl], applicationActivities: nil)
         present(activityManager, animated: true)
-
     }
 
     func createZip(path: URL) {
-        let baseDirectoryName = dataLogger.knowDateOrTime(format: "yyyy") + dataLogger.knowDateOrTime(format: "MM") + dataLogger.knowDateOrTime(format: "dd") + "_"
-                + dataLogger.knowDateOrTime(format: "H") + dataLogger.knowDateOrTime(format: "mm") + dataLogger.knowDateOrTime(format: "ss") + ".zip"
+//        let baseDirectoryName = dataLogger.knowDateOrTime(format: "yyyy") + dataLogger.knowDateOrTime(format: "MM") + dataLogger.knowDateOrTime(format: "dd") + "_"
+//                + dataLogger.knowDateOrTime(format: "H") + dataLogger.knowDateOrTime(format: "mm") + dataLogger.knowDateOrTime(format: "ss") + ".zip"
+        let baseDirectoryName =  Global.shared.baseDirectory + ".zip";
         let fm = FileManager.default
-        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("/OpenBot")
+        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
         var archiveUrl: URL?
         var error: NSError?
         let coordinator = NSFileCoordinator()
@@ -284,6 +285,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             print(error as Any)
         }
     }
+
+
 
 
 }

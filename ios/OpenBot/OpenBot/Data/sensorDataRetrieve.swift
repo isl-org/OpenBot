@@ -29,7 +29,6 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     var location : CLLocationCoordinate2D!
 
     override init() {
-        print("init function ")
         super.init()
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = interval

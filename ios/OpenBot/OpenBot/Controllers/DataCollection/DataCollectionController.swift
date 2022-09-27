@@ -123,8 +123,9 @@ class DataCollectionController: CameraController {
                 }
             }
         } else {
+            Global.shared.baseDirectory = dataLogger.getBaseDirectoryName()
             saveImages();
-            DataLogger.shared.createSensorData(openBotPath: "/OpenBot")
+            DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash +  Global.shared.baseDirectory);
             sensorDataTemp = ""
             Global.shared.gyroscope = ""
             Global.shared.magnetometer = ""
@@ -132,6 +133,8 @@ class DataCollectionController: CameraController {
             Global.shared.vehicle = ""
             Global.shared.acceleration = ""
             Global.shared.carSensorsData = ""
+            dataLogger.deleteFiles(path: Strings.forwardSlash +  Global.shared.baseDirectory)
+
         }
     }
 

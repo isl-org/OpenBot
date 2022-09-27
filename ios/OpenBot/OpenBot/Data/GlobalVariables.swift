@@ -12,6 +12,7 @@ class  Global{
     var locationCoordinates : String
     var vehicle : String
     var gps : String
+    var baseDirectory : String
     init(){
         carSensorsData = "";
         acceleration = "TimeStamp x, y, z\n"
@@ -20,5 +21,6 @@ class  Global{
         magnetometer = "TimeStamp x, y, z\n"
         vehicle = ""
         gps = "TimeStamp latitude, longitude\n"
+        baseDirectory = ""
     }
 }
