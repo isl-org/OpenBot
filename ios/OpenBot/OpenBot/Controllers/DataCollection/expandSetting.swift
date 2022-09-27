@@ -113,7 +113,7 @@ class expandSetting: UIView, UITextFieldDelegate {
         cancelButton.addSubview(cancelIcon)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(cancelButton)
-        cancelButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 2).isActive = true
+        cancelButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: -15).isActive = true
         cancelButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
 
 
@@ -333,14 +333,17 @@ class expandSetting: UIView, UITextFieldDelegate {
 
     @objc func applyLowResolution(_ sender: UIView) {
         selectedResolution = Resolutions.low
+        NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
         updateResolution()
         previewResolution.text = Strings.previewResolutionLow
+
 
 
     }
 
     @objc func applyMediumResolution(_ sender: UIView) {
         selectedResolution = Resolutions.medium
+        NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
         updateResolution()
         previewResolution.text = Strings.previewResolutionMedium
 
@@ -349,6 +352,7 @@ class expandSetting: UIView, UITextFieldDelegate {
 
     @objc func applyHighResolution(_ sender: UIView) {
         selectedResolution = Resolutions.high
+        NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
         updateResolution()
         previewResolution.text = Strings.previewResolutionHigh
 
@@ -361,8 +365,8 @@ class expandSetting: UIView, UITextFieldDelegate {
 
     @objc func updateResolution() {
 
-        switch (selectedResolution) {
 
+        switch (selectedResolution) {
         case .low:
             low.backgroundColor = Colors.title
             medium.backgroundColor = Colors.freeRoamButtonsColor
@@ -440,5 +444,6 @@ extension Notification.Name {
     static let updateSpeed = Notification.Name(Strings.updateSpeedMode);
     static let updateControl = Notification.Name(Strings.updateControlMode);
     static let updateDriveMode = Notification.Name(Strings.updateDriveMode);
+    static let updateResolution = Notification.Name("updateResolution")
 }
 

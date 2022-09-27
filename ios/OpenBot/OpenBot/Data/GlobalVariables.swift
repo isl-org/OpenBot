@@ -4,6 +4,7 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 class  Global{
    static let shared : Global = Global()
     var carSensorsData : String
@@ -15,6 +16,7 @@ class  Global{
     var gps : String
     var baseDirectory : String
     var images: [UIImage]
+    var captureSession  : AVCaptureSession
     init(){
         carSensorsData = "";
         acceleration = "TimeStamp x, y, z\n"
@@ -25,5 +27,6 @@ class  Global{
         gps = "TimeStamp latitude, longitude\n"
         baseDirectory = ""
         images = []
+        captureSession = AVCaptureSession()
     }
 }

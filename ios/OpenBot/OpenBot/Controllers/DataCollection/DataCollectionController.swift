@@ -145,7 +145,7 @@ class DataCollectionController: CameraController {
 
     func recordSensorData() {
         for sensor in selectedSensor {
-            let timestamp = NSDate().timeIntervalSince1970
+            let timestamp = returnCurrentTimestamp()
             switch sensor {
             case 1:
                 //vehicle

@@ -18,6 +18,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -47,6 +48,18 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
 
         } catch let error {
             print("Error Unable to initialize back camera:  \(error.localizedDescription)")
+        }
+    }
+
+    @objc func updateCameraPreview(_ notification: Notification?) {
+        let resolution = notification?.object as! Resolutions
+        switch resolution {
+        case .low:
+            captureSession.sessionPreset = .low
+        case .medium:
+            captureSession.sessionPreset = .medium
+        case .high:
+            captureSession.sessionPreset = .high
         }
     }
 
@@ -223,7 +236,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func saveImages() {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory: String = paths.first ?? ""
-        let openBotPath = documentsDirectory + Strings.forwardSlash  + Global.shared.baseDirectory
+        let openBotPath = documentsDirectory + Strings.forwardSlash + Global.shared.baseDirectory
 //        DataLogger.shared.deleteFiles(path: openBotPath);
         DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
         DataLogger.shared.createImageFolder(openBotPath: openBotPath)
@@ -237,8 +250,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         if (Global.shared.images.count > 0) {
             for temp in Global.shared.images {
                 let imageName = String(x) + Strings.underscore + Strings.crop
-                let timestamp = NSDate().timeIntervalSince1970
-                rgbFrames = rgbFrames +  String(timestamp) + Strings.comma + String(x) + Strings.newLine
+                rgbFrames = rgbFrames + String(returnCurrentTimestamp()) + Strings.comma + String(x) + Strings.newLine
                 DataLogger.shared.saveImages(path: imagePath, image: temp, name: imageName);
                 x = x + 1;
             }
@@ -260,9 +272,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func createZip(path: URL) {
 //        let baseDirectoryName = dataLogger.knowDateOrTime(format: "yyyy") + dataLogger.knowDateOrTime(format: "MM") + dataLogger.knowDateOrTime(format: "dd") + "_"
 //                + dataLogger.knowDateOrTime(format: "H") + dataLogger.knowDateOrTime(format: "mm") + dataLogger.knowDateOrTime(format: "ss") + ".zip"
-        let baseDirectoryName =  Global.shared.baseDirectory + ".zip";
+        let baseDirectoryName = Global.shared.baseDirectory + ".zip";
         let fm = FileManager.default
-        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
+        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + Global.shared.baseDirectory)
         var archiveUrl: URL?
         var error: NSError?
         let coordinator = NSFileCoordinator()
@@ -283,8 +295,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             print(error as Any)
         }
     }
-
-
 
 
 }

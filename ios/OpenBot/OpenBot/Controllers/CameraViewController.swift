@@ -72,14 +72,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             return
         }
         let image = UIImage(data: imageData)
-//        if var image:UIImage  = image {
-//            let  croppedImage = cropImage(imageToCrop: image, toRect: CGRectMake(
-//                    image.size.width/4,
-//                    0,
-//                    image.size.width/2,
-//                    image.size.height/2)
-//            )
-//        }
         guard let image = image else {
             fatalError("guard failure handling has not been implemented")
         }
