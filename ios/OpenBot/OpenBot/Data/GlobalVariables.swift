@@ -15,8 +15,10 @@ class  Global{
     var vehicle : String
     var gps : String
     var baseDirectory : String
-    var images: [UIImage]
-    var captureSession  : AVCaptureSession
+    var images : [(UIImage,Bool,Bool)]
+    var isTrainingSelected: Bool = true
+    var isPreviewSelected : Bool = false
+//    let tupleArray = [(Bool, Bool)]()
     init(){
         carSensorsData = "";
         acceleration = "TimeStamp x, y, z\n"
@@ -26,7 +28,7 @@ class  Global{
         vehicle = ""
         gps = "TimeStamp latitude, longitude\n"
         baseDirectory = ""
+
         images = []
-        captureSession = AVCaptureSession()
     }
 }

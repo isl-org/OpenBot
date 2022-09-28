@@ -19,6 +19,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -45,7 +46,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
                 captureSession.addOutput(stillImageOutput)
                 setupLivePreview()
             }
-
         } catch let error {
             print("Error Unable to initialize back camera:  \(error.localizedDescription)")
         }
@@ -61,6 +61,12 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         case .high:
             captureSession.sessionPreset = .high
         }
+    }
+
+    @objc func updateImageMode(_ notification: Notification?) {
+        let value = notification?.object as! NSArray
+         if value[0] as! Int == 1 {
+         }
     }
 
     /**
@@ -186,17 +192,35 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         else {
             return
         }
+        if  !Global.shared.isTrainingSelected && !Global.shared.isPreviewSelected {
+            return
+        }
+
         let image = UIImage(data: imageData)
-        var temp = image
+            if let image = image {
+                Global.shared.images.append((image , Global.shared.isPreviewSelected,Global.shared.isTrainingSelected))
+            }
 
-        // toCropImage
-        if (image != nil) {
-            temp = cropImage(imageToCrop: image!, toRect: CGRectMake(0, 30, 256, 96))
-        }
-        if (temp != nil) {
-            Global.shared.images.append(temp!);
-        }
-
+//            let image = UIImage(data: imageData)
+//            if let image = image {
+//                Global.shared.images.append(image)
+//            }
+//
+//        let image = UIImage(data: imageData)
+//        var temp = image
+//
+//        // toCropImage
+//        if (image != nil ) {
+//            temp = cropImage(imageToCrop: image!, toRect: CGRectMake(0, 30, 256, 96))
+//            if Global.shared.isPreviewSelected {
+//                Global.shared.previewImages.append(image!)
+//            }
+//        }
+//        if (temp != nil && Global.shared.isTrainingSelected) {
+//
+//            Global.shared.trainingImages.append(temp!);
+//        }
+//       a = a + 1
     }
 
     /**
@@ -246,13 +270,20 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let sensorPath = openBotPath + Strings.sensor
         let header = Strings.timestamp
         rgbFrames = header;
-        var x: Int = 0
-        if (Global.shared.images.count > 0) {
-            for temp in Global.shared.images {
-                let imageName = String(x) + Strings.underscore + Strings.crop
-                rgbFrames = rgbFrames + String(returnCurrentTimestamp()) + Strings.comma + String(x) + Strings.newLine
-                DataLogger.shared.saveImages(path: imagePath, image: temp, name: imageName);
-                x = x + 1;
+        var count : Int = 0;
+        if Global.shared.images.count > 0 {
+            for img in Global.shared.images {
+                rgbFrames = rgbFrames + String(returnCurrentTimestamp()) + Strings.comma + String(count) + Strings.newLine
+                if img.1 {
+                    let imageName  = String(count) + Strings.underscore + "preview.jpeg"
+                    DataLogger.shared.saveImages(path: imagePath, image: img.0, name: imageName);
+                }
+                if img.2 {
+                    let imageName = String(count) + Strings.underscore + Strings.crop
+                    let croppedImage = cropImage(imageToCrop: img.0, toRect: CGRectMake(0, 30, 256, 96))
+                    DataLogger.shared.saveImages(path: imagePath, image:croppedImage , name: imageName);
+                }
+                count = count + 1
             }
         }
         if let url = URL(string: openBotPath) {
@@ -260,6 +291,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             createZip(path: url)
 //            saveFolder()
         }
+
         Global.shared.images.removeAll()
     }
 

@@ -29,7 +29,6 @@ class expandSetting: UIView, UITextFieldDelegate {
     var acceleration = UIButton()
     var magnetic = UIButton()
     var gyroscope = UIButton()
-    var selectedImages: ImagesMode = ImagesMode.preview
     var selectedResolution: Resolutions = Resolutions.medium
     var sensorButtons = [UIButton]()
 
@@ -186,9 +185,12 @@ class expandSetting: UIView, UITextFieldDelegate {
 
 
     func createImagesButton() {
-        preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 80, action: #selector(applyPreview(_:)), borderColor: Colors.title!.cgColor)
+        preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 80, action: #selector(applyPreview(_:)), borderColor: Colors.freeRoamButtonsColor!.cgColor)
+
+        preview.tag = 0
         training = createSecondViewButton(buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, buttonWidth: 80, action: #selector(applyTraining(_:)), borderColor: Colors.title!.cgColor)
-        updateImageMode()
+        training.tag = 1
+        setupImageMode()
     }
 
     func createSensorButtons() {
@@ -384,24 +386,29 @@ class expandSetting: UIView, UITextFieldDelegate {
     }
 
     @objc func applyPreview(_ sender: UIView) {
-        selectedImages = ImagesMode.preview
-        updateImageMode()
+        Global.shared.isPreviewSelected = !Global.shared.isPreviewSelected
+        if Global.shared.isPreviewSelected{
+            preview.layer.borderColor = Colors.title?.cgColor
+        }
+        else{
+            preview.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
+        }
     }
 
     @objc func applyTraining(_ sender: UIView) {
-        selectedImages = ImagesMode.training
-        updateImageMode()
-    }
-
-    func updateImageMode() {
-        switch (selectedImages) {
-        case .preview:
-            preview.layer.borderColor = Colors.title?.cgColor
-            training.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
-        case .training:
-            preview.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
+        Global.shared.isTrainingSelected = !Global.shared.isTrainingSelected
+        if Global.shared.isTrainingSelected {
             training.layer.borderColor = Colors.title?.cgColor
         }
+        else {
+            training.layer.borderColor =   Colors.freeRoamButtonsColor?.cgColor
+        }
+
+    }
+
+    func setupImageMode() {
+        Global.shared.isPreviewSelected = false
+        Global.shared.isTrainingSelected = true
     }
 
     func setupSensors(){

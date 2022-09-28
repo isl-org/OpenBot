@@ -18,7 +18,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -77,11 +76,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         }
         let temp = cropImage(imageToCrop: image, toRect: CGRectMake(0, 30, 256, 96))
         photoView.image = temp
-        print(temp)
     }
 
     func cropImage(imageToCrop: UIImage, toRect rect: CGRect) -> UIImage {
-
         let imageRef: CGImage = imageToCrop.cgImage!.cropping(to: rect)!
         let cropped: UIImage = UIImage(cgImage: imageRef)
         return cropped
@@ -90,5 +87,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
         CGRect(x: x, y: y, width: width, height: height)
     }
+
 }
 

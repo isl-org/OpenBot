@@ -92,6 +92,3 @@ enum CMD_Events {
 enum Resolutions {
     case low , medium , high
 }
-enum ImagesMode {
-        case preview , training
-}
