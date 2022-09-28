@@ -14,24 +14,26 @@ class GameViewController: UIViewController {
     private let maximumControllerCount: Int = 1
     var gameControllerObj: GameController?;
     weak var delegate: InputManagerDelegate?
-    let overlayLeft = Draw(frame: CGRect(origin: CGPoint(x: 50, y: 170), size: CGSize(width: 18, height: 18)))
-    let overlayRight = Draw(frame: CGRect(origin: CGPoint(x: 92, y: 170), size: CGSize(width: 18, height: 18)))
-    let overlayUp = Draw(frame: CGRect(origin: CGPoint(x: 72, y: 148), size: CGSize(width: 18, height: 18)))
-    let overlayDown = Draw(frame: CGRect(origin: CGPoint(x: 72, y: 190), size: CGSize(width: 18, height: 18)))
+    let overlayLeft = Draw(frame: CGRect(origin: CGPoint(x: 45, y: 270), size: CGSize(width: 18, height: 18)))
+    let overlayRight = Draw(frame: CGRect(origin: CGPoint(x: 87, y: 270), size: CGSize(width: 18, height: 18)))
+    let overlayUp = Draw(frame: CGRect(origin: CGPoint(x: 67, y: 248), size: CGSize(width: 18, height: 18)))
+    let overlayDown = Draw(frame: CGRect(origin: CGPoint(x: 67, y: 290), size: CGSize(width: 18, height: 18)))
 
-    let overlayA = Draw(frame: CGRect(origin: CGPoint(x: 298, y: 192), size: CGSize(width: 28, height: 28)))
-    let overlayB = Draw(frame: CGRect(origin: CGPoint(x: 325, y: 164), size: CGSize(width: 28, height: 28)))
-    let overlayX = Draw(frame: CGRect(origin: CGPoint(x: 270, y: 164), size: CGSize(width: 28, height: 28)))
-    let overlayY = Draw(frame: CGRect(origin: CGPoint(x: 298, y: 137), size: CGSize(width: 28, height: 28)))
+    let overlayA = Draw(frame: CGRect(origin: CGPoint(x: 298, y: 292), size: CGSize(width: 28, height: 28)))
+    let overlayB = Draw(frame: CGRect(origin: CGPoint(x: 325, y: 264), size: CGSize(width: 28, height: 28)))
+    let overlayX = Draw(frame: CGRect(origin: CGPoint(x: 270, y: 264), size: CGSize(width: 28, height: 28)))
+    let overlayY = Draw(frame: CGRect(origin: CGPoint(x: 298, y: 237), size: CGSize(width: 28, height: 28)))
 
     let overlayOptions = Draw(frame: CGRect(origin: CGPoint(x: 115, y: 140), size: CGSize(width: 12, height: 12)))
     let overlayMenu = Draw(frame: CGRect(origin: CGPoint(x: 265, y: 140), size: CGSize(width: 12, height: 12)))
 
-    let overlayLeftShoulder = Draw(frame: CGRect(origin: CGPoint(x: 78, y: 105), size: CGSize(width: 28, height: 28)))
-    let overlayRightShoulder = Draw(frame: CGRect(origin: CGPoint(x: 310, y: 105), size: CGSize(width: 28, height: 28)))
+    let overlayL1Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 78, y: 170), size: CGSize(width: 20, height: 20)))
+    let overlayL2Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 78, y: 140), size: CGSize(width: 20, height: 20)))
+    let overlayR1Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 310, y: 170), size: CGSize(width: 20, height: 20)))
+    let overlayR2Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 310, y: 140), size: CGSize(width: 20, height: 20)))
 
-    let overlayLeftThumb = Draw(frame: CGRect(origin: CGPoint(x: 112, y: 207), size: CGSize(width: 46, height: 46)))
-    let overlayRightThumb = Draw(frame: CGRect(origin: CGPoint(x: 232, y: 207), size: CGSize(width: 46, height: 46)))
+    let overlayLeftThumb = Draw(frame: CGRect(origin: CGPoint(x: 112, y: 307), size: CGSize(width: 46, height: 46)))
+    let overlayRightThumb = Draw(frame: CGRect(origin: CGPoint(x: 232, y: 307), size: CGSize(width: 46, height: 46)))
 
     var restrictRotation: UIInterfaceOrientationMask = .portrait
 
@@ -118,20 +120,20 @@ class GameViewController: UIViewController {
         }
 
         controller!.extendedGamepad?.leftShoulder.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("L1", pressed, self.overlayLeftShoulder)
+            self.buttonChangedHandler("L1", pressed, self.overlayL1Shoulder)
         }
         controller!.extendedGamepad?.rightShoulder.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("R1", pressed, self.overlayRightShoulder)
+            self.buttonChangedHandler("R1", pressed, self.overlayR1Shoulder)
         }
 
         controller!.extendedGamepad?.leftTrigger.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("L2", pressed, self.overlayLeftShoulder)
+            self.buttonChangedHandler("L2", pressed, self.overlayL2Shoulder)
         }
         controller!.extendedGamepad?.leftTrigger.valueChangedHandler = { (button, value, pressed) in
             self.triggerChangedHandler("L2", value, pressed)
         }
         controller!.extendedGamepad?.rightTrigger.pressedChangedHandler = { (button, value, pressed) in
-            self.buttonChangedHandler("R2", pressed, self.overlayRightShoulder)
+            self.buttonChangedHandler("R2", pressed, self.overlayR2Shoulder)
         }
         controller!.extendedGamepad?.rightTrigger.valueChangedHandler = { (button, value, pressed) in
             self.triggerChangedHandler("R2", value, pressed)
