@@ -55,9 +55,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let resolution = notification?.object as! Resolutions
         switch resolution {
         case .low:
-            captureSession.sessionPreset = .low
+            captureSession.sessionPreset = .iFrame960x540
         case .medium:
-            captureSession.sessionPreset = .medium
+            captureSession.sessionPreset = .hd1280x720
         case .high:
             captureSession.sessionPreset = .high
         }
@@ -200,27 +200,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             if let image = image {
                 Global.shared.images.append((image , Global.shared.isPreviewSelected,Global.shared.isTrainingSelected))
             }
-
-//            let image = UIImage(data: imageData)
-//            if let image = image {
-//                Global.shared.images.append(image)
-//            }
-//
-//        let image = UIImage(data: imageData)
-//        var temp = image
-//
-//        // toCropImage
-//        if (image != nil ) {
-//            temp = cropImage(imageToCrop: image!, toRect: CGRectMake(0, 30, 256, 96))
-//            if Global.shared.isPreviewSelected {
-//                Global.shared.previewImages.append(image!)
-//            }
-//        }
-//        if (temp != nil && Global.shared.isTrainingSelected) {
-//
-//            Global.shared.trainingImages.append(temp!);
-//        }
-//       a = a + 1
     }
 
     /**

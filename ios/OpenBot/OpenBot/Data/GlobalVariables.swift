@@ -18,17 +18,38 @@ class  Global{
     var images : [(UIImage,Bool,Bool)]
     var isTrainingSelected: Bool = true
     var isPreviewSelected : Bool = false
+    var bumper : String
+    var ctrlLog : String
+    var indicator : String
+    var inferenceTime : String
+    var light : String
+    var sonar : String
+    var voltage : String
+    var wheels : String
+    var motion : String
 //    let tupleArray = [(Bool, Bool)]()
     init(){
         carSensorsData = "";
-        acceleration = "TimeStamp x, y, z\n"
-        locationCoordinates = "TimeStamp latitude, longitude\n"
-        gyroscope = "TimeStamp x, y, z\n"
-        magnetometer = "TimeStamp x, y, z\n"
+        acceleration = Strings.acceleration
+        locationCoordinates = Strings.locationCoordinates
+        gyroscope = Strings.gyroscopeHeader
+        magnetometer = Strings.magnetometer
         vehicle = ""
-        gps = "TimeStamp latitude, longitude\n"
+        gps = Strings.gpsHeader
         baseDirectory = ""
-
         images = []
+        bumper = Strings.bumper
+        ctrlLog = Strings.ctrlLog
+        indicator = Strings.indicator
+        inferenceTime = Strings.inferenceTime
+        light = Strings.light
+        sonar = Strings.sonar
+        voltage = Strings.voltageHeader
+        wheels = Strings.wheels
+        motion = Strings.motion
+    }
+    deinit {
+
+
     }
 }

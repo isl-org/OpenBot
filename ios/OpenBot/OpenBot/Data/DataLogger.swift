@@ -38,13 +38,35 @@ class DataLogger {
 
     func createSensorData(openBotPath: String) {
         let sensorDataPath = openBotPath + "/sensor_data"
+        let tempData = ""
         createFolder(path: sensorDataPath)
         if URL(string: openBotPath) != nil {
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.acceleration, fileName: "acceleration.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.magnetometer, fileName: "magnetic.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.gyroscope, fileName: "gyroscope.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.acceleration, fileName: "accelerometerLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.magnetometer, fileName: "magneticLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.gyroscope, fileName: "gyroscopeLog.txt")
             saveSensorFiles(path: sensorDataPath, data: Global.shared.vehicle, fileName: "vehicle.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.gps, fileName: "gps.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.gps, fileName: "gpsLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.bumper, fileName: "bumperLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.ctrlLog, fileName: "ctrlLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.indicator, fileName: "indicatorLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.inferenceTime, fileName: "inferenceLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.light, fileName: "lightLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.motion, fileName: "motionLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.sonar, fileName: "sonarLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.voltage, fileName: "voltageLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: Global.shared.wheels, fileName: "wheelsLog.txt")
+
+
+
+
+
+
+
+
+
+
+
+
         }
     }
 

@@ -128,23 +128,32 @@ class DataCollectionController: CameraController {
             DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash +  Global.shared.baseDirectory);
             dataLogger.deleteFiles(path: Strings.forwardSlash +  Global.shared.baseDirectory)
             setupFilesForLogging()
-
         }
     }
 
     func setupFilesForLogging(){
         Global.shared.images.removeAll()
-        sensorDataTemp = ""
-        Global.shared.gyroscope = ""
-        Global.shared.magnetometer = ""
-        Global.shared.gps = ""
+        Global.shared.carSensorsData = "";
+        Global.shared.acceleration = Strings.acceleration
+        Global.shared.locationCoordinates = Strings.locationCoordinates
+        Global.shared.gyroscope = Strings.gyroscopeHeader
+        Global.shared.magnetometer = Strings.magnetometer
         Global.shared.vehicle = ""
-        Global.shared.acceleration = ""
-        Global.shared.carSensorsData = ""
+        Global.shared.gps = Strings.gpsHeader
+        Global.shared.baseDirectory = ""
+        Global.shared.bumper = Strings.bumper
+        Global.shared.ctrlLog = Strings.ctrlLog
+        Global.shared.indicator = Strings.indicator
+        Global.shared.inferenceTime = Strings.inferenceTime
+        Global.shared.light = Strings.light
+        Global.shared.sonar = Strings.sonar
+        Global.shared.voltage = Strings.voltageHeader
+        Global.shared.wheels = Strings.wheels
+        Global.shared.motion = Strings.motion
     }
-
     func recordSensorData() {
         for sensor in selectedSensor {
+
             let timestamp = returnCurrentTimestamp()
             switch sensor {
             case 1:
@@ -153,7 +162,7 @@ class DataCollectionController: CameraController {
                 break
             case 2:
                 //gps
-                Global.shared.gps = Global.shared.gps + String(timestamp) + " " + String(sensorData.location.latitude) + " " + String(sensorData.location.longitude) + "\n"
+                Global.shared.gps = Global.shared.gps + String(timestamp) + " " + String(sensorData.location.coordinate.latitude) + " " + String(sensorData.location.coordinate.longitude) + " " + String(sensorData.location.altitude) + " " + String(sensorData.location.speed) + "\n"
                 break
             case 3:
 //                acceleration
@@ -170,11 +179,10 @@ class DataCollectionController: CameraController {
             default:
                 break
             }
-
-            func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
-                String(XValue) + " " + String(YValue) + " " + String(ZValue);
-            }
         }
+    }
+    func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
+        String(XValue) + " " + String(YValue) + " " + String(ZValue);
     }
 
     @objc func updateControllerValues() {

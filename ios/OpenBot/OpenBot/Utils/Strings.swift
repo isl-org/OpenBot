@@ -66,4 +66,21 @@ struct Strings {
 
 // UIVIew Identifiers
     static let secondView: String = "secondView"
+
+// Logging Headers
+    static let acceleration : String = "TimeStamp[ns] x[m/s^2], y[m/s^2], z[m/s^2]\n"
+    static let locationCoordinates : String = "TimeStamp latitude, longitude\n"
+    static let gyroscopeHeader: String = "TimeStamp[ns], x[rad/s], yx[rad/s], zx[rad/s]\n"
+    static let magnetometer : String = "TimeStamp[ns] x[uT], y[uT], z[uT]\n"
+    static let gpsHeader : String = "TimeStamp latitude, longitude, altitude[m], speed[m/s]\n"
+    static let bumper : String = "timestamp[ns], bumper"
+    static let ctrlLog : String = "timestamp[ns], leftCtrl, rightCtrl"
+    static let indicator : String = "timestamp[ns], signal"
+    static let inferenceTime : String = "frame, inferenceTime [ns]"
+    static let light : String = "timestamp[ns], light[lux]"
+    static let sonar : String = "timestamp[ns], distance[cm]"
+    static let voltageHeader : String = "timestamp[ns], batteryVoltage"
+    static let wheels : String = "timestamp[ns], leftWheel, rightWheel"
+    static let motion : String = "timestamp[ns"
+
 }
