@@ -113,11 +113,11 @@ class DataCollectionController: CameraController {
     @objc func switchLogging() {
         loggingEnabled = !loggingEnabled;
         if (loggingEnabled) {
-            setupFilesForLogging();
+            dataLogger.setupFilesForLogging();
             Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
                 captureImage();
                 sensorData.startSensorsUpdates()
-                recordSensorData();
+                dataLogger.recordSensorData();
                 if !loggingEnabled {
                     timer.invalidate()
                 }
@@ -127,62 +127,8 @@ class DataCollectionController: CameraController {
             saveImages();
             DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash +  Global.shared.baseDirectory);
             dataLogger.deleteFiles(path: Strings.forwardSlash +  Global.shared.baseDirectory)
-            setupFilesForLogging()
+            dataLogger.setupFilesForLogging()
         }
-    }
-
-    func setupFilesForLogging(){
-        Global.shared.images.removeAll()
-        Global.shared.carSensorsData = "";
-        Global.shared.acceleration = Strings.acceleration
-        Global.shared.locationCoordinates = Strings.locationCoordinates
-        Global.shared.gyroscope = Strings.gyroscopeHeader
-        Global.shared.magnetometer = Strings.magnetometer
-        Global.shared.vehicle = ""
-        Global.shared.gps = Strings.gpsHeader
-        Global.shared.baseDirectory = ""
-        Global.shared.bumper = Strings.bumper
-        Global.shared.ctrlLog = Strings.ctrlLog
-        Global.shared.indicator = Strings.indicator
-        Global.shared.inferenceTime = Strings.inferenceTime
-        Global.shared.light = Strings.light
-        Global.shared.sonar = Strings.sonar
-        Global.shared.voltage = Strings.voltageHeader
-        Global.shared.wheels = Strings.wheels
-        Global.shared.motion = Strings.motion
-    }
-    func recordSensorData() {
-        for sensor in selectedSensor {
-
-            let timestamp = returnCurrentTimestamp()
-            switch sensor {
-            case 1:
-                //vehicle
-                Global.shared.carSensorsData = Global.shared.carSensorsData + bluetoothData + "\n"
-                break
-            case 2:
-                //gps
-                Global.shared.gps = Global.shared.gps + String(timestamp) + " " + String(sensorData.location.coordinate.latitude) + " " + String(sensorData.location.coordinate.longitude) + " " + String(sensorData.location.altitude) + " " + String(sensorData.location.speed) + "\n"
-                break
-            case 3:
-//                acceleration
-                Global.shared.acceleration = Global.shared.acceleration + String(timestamp) + " " + convertToString(XValue: sensorData.accelerationX, YValue: sensorData.accelerationY, ZValue: sensorData.accelerationZ) + "\n"
-                break
-            case 4:
-                //magnetic
-                Global.shared.magnetometer = Global.shared.magnetometer + String(timestamp) + " " + convertToString(XValue: sensorData.magneticFieldX, YValue: sensorData.magneticFieldY, ZValue: sensorData.magneticFieldZ) + "\n"
-                break
-            case 5:
-                //gyroscope
-                Global.shared.gyroscope = Global.shared.gyroscope + String(timestamp) + " " + convertToString(XValue: sensorData.gyroX, YValue: sensorData.gyroY, ZValue: sensorData.gyroZ) + "\n"
-                break
-            default:
-                break
-            }
-        }
-    }
-    func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
-        String(XValue) + " " + String(YValue) + " " + String(ZValue);
     }
 
     @objc func updateControllerValues() {

@@ -27,6 +27,12 @@ class  Global{
     var voltage : String
     var wheels : String
     var motion : String
+    var isVehicleLogSelected : Bool = true
+    var isAccelerationLogSelected : Bool = true
+    var isGpsLogSelected : Bool = true
+    var isMagneticLogSelected : Bool = true
+    var isGyroscopeLogSelected : Bool = true
+
 //    let tupleArray = [(Bool, Bool)]()
     init(){
         carSensorsData = "";

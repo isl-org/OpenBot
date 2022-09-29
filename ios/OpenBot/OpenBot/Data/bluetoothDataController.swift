@@ -128,6 +128,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         if characteristic.value != nil {
             let data = characteristic.value!
             let x = String(data: data, encoding: .utf8) ?? ""
+            print("value is : ",x);
             bluetoothData = x
             NotificationCenter.default.post(name: .updateSerialMonitor, object: nil)
             NotificationCenter.default.post(name: .updateLabel, object: nil)

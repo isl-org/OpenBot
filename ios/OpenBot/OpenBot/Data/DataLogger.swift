@@ -7,7 +7,7 @@ import UIKit
 class DataLogger {
     static let shared: DataLogger = DataLogger()
     var enabled: Bool = false;
-
+    let sensorData = sensorDataRetrieve.shared
     func getDirectoryInfo() -> URL {
         let fileManager = FileManager.default
         var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -55,18 +55,6 @@ class DataLogger {
             saveSensorFiles(path: sensorDataPath, data: Global.shared.sonar, fileName: "sonarLog.txt")
             saveSensorFiles(path: sensorDataPath, data: Global.shared.voltage, fileName: "voltageLog.txt")
             saveSensorFiles(path: sensorDataPath, data: Global.shared.wheels, fileName: "wheelsLog.txt")
-
-
-
-
-
-
-
-
-
-
-
-
         }
     }
 
@@ -149,6 +137,48 @@ class DataLogger {
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
         }
+    }
+
+    func recordSensorData() {
+        let timestamp = returnCurrentTimestamp()
+        if Global.shared.isVehicleLogSelected {
+            Global.shared.carSensorsData = Global.shared.carSensorsData + bluetoothData + "\n"
+        }
+        if Global.shared.isGpsLogSelected {
+            Global.shared.gps = Global.shared.gps + String(timestamp) + " " + String(sensorData.location.coordinate.latitude) + " " + String(sensorData.location.coordinate.longitude) + " " + String(sensorData.location.altitude) + " " + String(sensorData.location.speed) + "\n"
+        }
+        if Global.shared.isAccelerationLogSelected {
+            Global.shared.acceleration = Global.shared.acceleration + String(timestamp) + " " + convertToString(XValue: sensorData.accelerationX, YValue: sensorData.accelerationY, ZValue: sensorData.accelerationZ) + "\n"
+        }
+        if Global.shared.isMagneticLogSelected {
+            Global.shared.magnetometer = Global.shared.magnetometer + String(timestamp) + " " + convertToString(XValue: sensorData.magneticFieldX, YValue: sensorData.magneticFieldY, ZValue: sensorData.magneticFieldZ) + "\n"
+        }
+        if Global.shared.isGyroscopeLogSelected {
+            Global.shared.gyroscope = Global.shared.gyroscope + String(timestamp) + " " + convertToString(XValue: sensorData.gyroX, YValue: sensorData.gyroY, ZValue: sensorData.gyroZ) + "\n"
+        }
+    }
+    func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
+        String(XValue) + " " + String(YValue) + " " + String(ZValue);
+    }
+    func setupFilesForLogging(){
+        Global.shared.images.removeAll()
+        Global.shared.carSensorsData = "";
+        Global.shared.acceleration = Strings.acceleration
+        Global.shared.locationCoordinates = Strings.locationCoordinates
+        Global.shared.gyroscope = Strings.gyroscopeHeader
+        Global.shared.magnetometer = Strings.magnetometer
+        Global.shared.vehicle = ""
+        Global.shared.gps = Strings.gpsHeader
+        Global.shared.baseDirectory = ""
+        Global.shared.bumper = Strings.bumper
+        Global.shared.ctrlLog = Strings.ctrlLog
+        Global.shared.indicator = Strings.indicator
+        Global.shared.inferenceTime = Strings.inferenceTime
+        Global.shared.light = Strings.light
+        Global.shared.sonar = Strings.sonar
+        Global.shared.voltage = Strings.voltageHeader
+        Global.shared.wheels = Strings.wheels
+        Global.shared.motion = Strings.motion
     }
 
 }

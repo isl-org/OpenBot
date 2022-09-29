@@ -82,5 +82,4 @@ struct Strings {
     static let voltageHeader : String = "timestamp[ns], batteryVoltage"
     static let wheels : String = "timestamp[ns], leftWheel, rightWheel"
     static let motion : String = "timestamp[ns"
-
 }

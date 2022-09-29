@@ -4,8 +4,6 @@
 
 import Foundation
 import UIKit
-
-var selectedSensor = [Int]()
 class expandSetting: UIView, UITextFieldDelegate {
     let logData = UISwitch()
     let bluetoothIcon = UIImageView()
@@ -52,7 +50,6 @@ class expandSetting: UIView, UITextFieldDelegate {
         createImagesButton()
         createSecondViewLabel(value: Strings.sensorData, leadingAnchor: 10, topAnchor: 90, labelWidth: 200, labelHeight: 40)
         createSensorButtons()
-        setupSensors()
         createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
         createDelayField()
         let m = VehicleControl(frame: CGRect(x: 0, y: height - 150, width: width, height: 300))
@@ -411,31 +408,45 @@ class expandSetting: UIView, UITextFieldDelegate {
         Global.shared.isTrainingSelected = true
     }
 
-    func setupSensors(){
-        // select all sensor initially
-        for i in 1...5{
-            selectedSensor.append(i);
-        }
-    }
 
     @objc func updateSensor(_ sender: UIButton) {
-        var index = 0
-        var isFound = false
-        for sensor in selectedSensor {
-            if sensor == sender.tag {
-                sender.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
-                selectedSensor.remove(at: index)
-                isFound = true
-                break;
-            }
-            index = index + 1
+        let selectedButtonTag = sender.tag
+        switch selectedButtonTag {
+        case 1 :
+            Global.shared.isVehicleLogSelected = !Global.shared.isVehicleLogSelected
+        case 2 :
+            Global.shared.isGpsLogSelected = !Global.shared.isGpsLogSelected
+        case 3 :
+            Global.shared.isAccelerationLogSelected = !Global.shared.isAccelerationLogSelected
+        case 4 :
+            Global.shared.isMagneticLogSelected = !Global.shared.isMagneticLogSelected
+        case 5 :
+            Global.shared.isGyroscopeLogSelected = !Global.shared.isGyroscopeLogSelected
+        default:
+            break
         }
+        updateBorderColor(sender: sender);
+//
+//        var index = 0
+//        var isFound = false
+//        for sensor in selectedSensor {
+//            if sensor == sender.tag {
+//                sender.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
+//                selectedSensor.remove(at: index)
+//                isFound = true
+//                break;
+//            }
+//            index = index + 1
+//        }
+//
+//        if !isFound {
+//            selectedSensor.append(sender.tag)
+//            sender.layer.borderColor = Colors.title?.cgColor
+//        }
 
-        if !isFound {
-            selectedSensor.append(sender.tag)
-            sender.layer.borderColor = Colors.title?.cgColor
-        }
-
+    }
+    func updateBorderColor(sender : UIButton){
+       sender.layer.borderColor =  (sender.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor)  ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
     }
 
     @objc func delayFieldDidChange(_ sender: UITextField) {
