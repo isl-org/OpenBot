@@ -7,7 +7,7 @@ import AVFoundation
 import UIKit
 
 class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
-    let dataLogger = DataLogger.shared
+
     var captureSession: AVCaptureSession!
     var stillImageOutput: AVCapturePhotoOutput!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
@@ -15,9 +15,14 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     var heightConstraint: NSLayoutConstraint! = nil
     var widthConstraint: NSLayoutConstraint! = nil
     var rgbFrames = ""
+    var baseDirectory = ""
+    var images : [(UIImage,Bool,Bool)] = []
+    var isTrainingSelected: Bool = true
+    var isPreviewSelected : Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
 
     }
@@ -192,13 +197,12 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         else {
             return
         }
-        if  !Global.shared.isTrainingSelected && !Global.shared.isPreviewSelected {
+        if  !isTrainingSelected && !isPreviewSelected {
             return
         }
-
         let image = UIImage(data: imageData)
             if let image = image {
-                Global.shared.images.append((image , Global.shared.isPreviewSelected,Global.shared.isTrainingSelected))
+                    images.append((image , isPreviewSelected,isTrainingSelected))
             }
     }
 
@@ -239,8 +243,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func saveImages() {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory: String = paths.first ?? ""
-        let openBotPath = documentsDirectory + Strings.forwardSlash + Global.shared.baseDirectory
+        let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
 //        DataLogger.shared.deleteFiles(path: openBotPath);
+
         DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
         DataLogger.shared.createImageFolder(openBotPath: openBotPath)
         DataLogger.shared.createSensorData(openBotPath: openBotPath)
@@ -250,8 +255,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let header = Strings.timestamp
         rgbFrames = header;
         var count : Int = 0;
-        if Global.shared.images.count > 0 {
-            for img in Global.shared.images {
+        if images.count > 0 {
+            for img in images {
                 rgbFrames = rgbFrames + String(returnCurrentTimestamp()) + Strings.comma + String(count) + Strings.newLine
                 if img.1 {
                     let imageName  = String(count) + Strings.underscore + "preview.jpeg"
@@ -271,7 +276,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
 //            saveFolder()
         }
 
-        Global.shared.images.removeAll()
+        images.removeAll()
     }
 
     func saveFolder() {
@@ -283,9 +288,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func createZip(path: URL) {
 //        let baseDirectoryName = dataLogger.knowDateOrTime(format: "yyyy") + dataLogger.knowDateOrTime(format: "MM") + dataLogger.knowDateOrTime(format: "dd") + "_"
 //                + dataLogger.knowDateOrTime(format: "H") + dataLogger.knowDateOrTime(format: "mm") + dataLogger.knowDateOrTime(format: "ss") + ".zip"
-        let baseDirectoryName = Global.shared.baseDirectory + ".zip";
+        let baseDirectoryName = baseDirectory + ".zip";
         let fm = FileManager.default
-        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + Global.shared.baseDirectory)
+        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + baseDirectory)
         var archiveUrl: URL?
         var error: NSError?
         let coordinator = NSFileCoordinator()

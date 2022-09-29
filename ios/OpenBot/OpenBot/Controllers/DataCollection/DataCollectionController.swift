@@ -19,7 +19,7 @@ class DataCollectionController: CameraController {
     var vehicleControl = Control();
     var indicator = "i0,0\n";
     let bluetooth = bluetoothDataController.shared;
-
+    let dataLogger = DataLogger.shared
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -39,6 +39,10 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateControlMode), name: .updateControl, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDriveMode), name: .updateDriveMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedMode), name: .updateSpeed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
+
+
 
     }
 
@@ -54,7 +58,6 @@ class DataCollectionController: CameraController {
         expandSettingView.refreshConstraints()
         refreshConstraints()
         setupCollapseView()
-
     }
 
     func setupCollapseView() {
@@ -117,16 +120,16 @@ class DataCollectionController: CameraController {
             Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
                 captureImage();
                 sensorData.startSensorsUpdates()
-                dataLogger.recordSensorData();
+                dataLogger.recordLogs();
                 if !loggingEnabled {
                     timer.invalidate()
                 }
             }
         } else {
-            Global.shared.baseDirectory = dataLogger.getBaseDirectoryName()
+            baseDirectory = dataLogger.getBaseDirectoryName()
             saveImages();
-            DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash +  Global.shared.baseDirectory);
-            dataLogger.deleteFiles(path: Strings.forwardSlash +  Global.shared.baseDirectory)
+            DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash +  baseDirectory);
+            dataLogger.deleteFiles(path: Strings.forwardSlash +  baseDirectory)
             dataLogger.setupFilesForLogging()
         }
     }
@@ -149,14 +152,16 @@ class DataCollectionController: CameraController {
     }
 
     func sendControl(control: Control) {
+        print("hello nitish")
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = control.getLeft() * selectedSpeedMode.rawValue;
             let right = control.getRight() * selectedSpeedMode.rawValue;
-            vehicleControl = control;
             print("c" + String(left) + "," + String(right) + "\n");
+            dataLogger.ctrlLog = dataLogger.ctrlLog + String(returnCurrentTimestamp()) + " " + String(left) + " " + String(right) + "\n";
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
         }
     }
+
 
 
     @objc func sendKeyUpdates(keyCommand: Any) {
@@ -186,6 +191,10 @@ class DataCollectionController: CameraController {
     func setIndicator(keyCommand: IndicatorEvent) {
         let indicatorValues: String = gameControllerObj?.getIndicatorEventValue(event: keyCommand) ?? "";
         if (indicator != indicatorValues) {
+            let index = indicatorValues.index(after: indicatorValues.startIndex)
+
+            let actualValue = indicatorValues[index...]
+//            dataLogger.indicator = dataLogger.indicator + String(returnCurrentTimestamp()) + " " + keyCommand.rawValue + "\n";
             bluetooth.sendData(payload: indicatorValues);
             indicator = indicatorValues;
         }
@@ -204,6 +213,7 @@ class DataCollectionController: CameraController {
         }
     }
 
+
     @objc func updateDriveMode(_ notification: Notification) {
         if let driveMode = notification.userInfo?["drive"] as? DriveMode {
             selectedDriveMode = driveMode;
@@ -214,5 +224,11 @@ class DataCollectionController: CameraController {
         if let speedMode = notification.userInfo?["speed"] as? SpeedMode {
             selectedSpeedMode = speedMode;
         }
+    }
+    @objc func updatePreview(_ notification: Notification) {
+       isPreviewSelected  = !isPreviewSelected
+    }
+    @objc func updateTraining(_ notification: Notification) {
+        isTrainingSelected = !isTrainingSelected
     }
 }

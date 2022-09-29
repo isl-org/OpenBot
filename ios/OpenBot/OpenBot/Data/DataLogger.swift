@@ -5,13 +5,30 @@
 import Foundation
 import UIKit
 class DataLogger {
-    static let shared: DataLogger = DataLogger()
+    static let shared : DataLogger = DataLogger()
     var enabled: Bool = false;
     let sensorData = sensorDataRetrieve.shared
+    let bluetooth = bluetoothDataController.shared;
+    var carSensorsData : String = ""
+    var acceleration : String = ""
+    var gyroscope : String = ""
+    var magnetometer : String = ""
+    var locationCoordinates : String = ""
+    var gps : String = ""
+    var baseDirectory :  String = ""
+    var bumper : String = ""
+    var ctrlLog : String = ""
+    var indicator : String = ""
+    var inferenceTime : String = ""
+    var light : String = ""
+    var sonar : String = ""
+    var voltage : String = ""
+    var wheels : String = ""
+    var motion : String = ""
     func getDirectoryInfo() -> URL {
         let fileManager = FileManager.default
         var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
+        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  baseDirectory)
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             print(fileURLs)
@@ -41,20 +58,19 @@ class DataLogger {
         let tempData = ""
         createFolder(path: sensorDataPath)
         if URL(string: openBotPath) != nil {
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.acceleration, fileName: "accelerometerLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.magnetometer, fileName: "magneticLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.gyroscope, fileName: "gyroscopeLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.vehicle, fileName: "vehicle.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.gps, fileName: "gpsLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.bumper, fileName: "bumperLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.ctrlLog, fileName: "ctrlLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.indicator, fileName: "indicatorLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.inferenceTime, fileName: "inferenceLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.light, fileName: "lightLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.motion, fileName: "motionLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.sonar, fileName: "sonarLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.voltage, fileName: "voltageLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: Global.shared.wheels, fileName: "wheelsLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: acceleration, fileName: "accelerometerLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: magnetometer, fileName: "magneticLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: gyroscope, fileName: "gyroscopeLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: gps, fileName: "gpsLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: bumper, fileName: "bumperLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: ctrlLog, fileName: "ctrlLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: indicator, fileName: "indicatorLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: inferenceTime, fileName: "inferenceLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: light, fileName: "lightLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: motion, fileName: "motionLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: sonar, fileName: "sonarLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: voltage, fileName: "voltageLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: wheels, fileName: "wheelsLog.txt")
         }
     }
 
@@ -139,46 +155,59 @@ class DataLogger {
         }
     }
 
-    func recordSensorData() {
+    func recordLogs() {
         let timestamp = returnCurrentTimestamp()
         if Global.shared.isVehicleLogSelected {
-            Global.shared.carSensorsData = Global.shared.carSensorsData + bluetoothData + "\n"
+            carSensorsData = carSensorsData + bluetoothData + "\n"
         }
         if Global.shared.isGpsLogSelected {
-            Global.shared.gps = Global.shared.gps + String(timestamp) + " " + String(sensorData.location.coordinate.latitude) + " " + String(sensorData.location.coordinate.longitude) + " " + String(sensorData.location.altitude) + " " + String(sensorData.location.speed) + "\n"
+            gps = gps + String(timestamp) + " " + String(sensorData.location.coordinate.latitude) + " " + String(sensorData.location.coordinate.longitude) + " " + String(sensorData.location.altitude) + " " + String(sensorData.location.speed) + "\n"
         }
         if Global.shared.isAccelerationLogSelected {
-            Global.shared.acceleration = Global.shared.acceleration + String(timestamp) + " " + convertToString(XValue: sensorData.accelerationX, YValue: sensorData.accelerationY, ZValue: sensorData.accelerationZ) + "\n"
+            acceleration = acceleration + String(timestamp) + " " + convertToString(XValue: sensorData.accelerationX, YValue: sensorData.accelerationY, ZValue: sensorData.accelerationZ) + "\n"
         }
         if Global.shared.isMagneticLogSelected {
-            Global.shared.magnetometer = Global.shared.magnetometer + String(timestamp) + " " + convertToString(XValue: sensorData.magneticFieldX, YValue: sensorData.magneticFieldY, ZValue: sensorData.magneticFieldZ) + "\n"
+            magnetometer = magnetometer + String(timestamp) + " " + convertToString(XValue: sensorData.magneticFieldX, YValue: sensorData.magneticFieldY, ZValue: sensorData.magneticFieldZ) + "\n"
         }
         if Global.shared.isGyroscopeLogSelected {
-            Global.shared.gyroscope = Global.shared.gyroscope + String(timestamp) + " " + convertToString(XValue: sensorData.gyroX, YValue: sensorData.gyroY, ZValue: sensorData.gyroZ) + "\n"
+            gyroscope = gyroscope + String(timestamp) + " " + convertToString(XValue: sensorData.gyroX, YValue: sensorData.gyroY, ZValue: sensorData.gyroZ) + "\n"
+        }
+        if Global.shared.isVehicleLogSelected {
+            recordVehicleLogs()
+        }
+    }
+
+    func recordVehicleLogs(){
+        if bluetoothData != "" {
+            let timestamp = returnCurrentTimestamp()
+            let index = bluetooth.sonarData.index(after: bluetooth.sonarData.startIndex)
+            sonar = sonar + String(timestamp) + " " + String(bluetooth.sonarData[index...])  + "\n"
+            wheels = wheels + String(timestamp) + " " + String(bluetooth.speedometer[index...])  + "\n"
+            voltage = voltage + String(timestamp) + " " + String(bluetooth.voltageDivider[index...]) + "\n"
         }
     }
     func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
         String(XValue) + " " + String(YValue) + " " + String(ZValue);
     }
     func setupFilesForLogging(){
-        Global.shared.images.removeAll()
-        Global.shared.carSensorsData = "";
-        Global.shared.acceleration = Strings.acceleration
-        Global.shared.locationCoordinates = Strings.locationCoordinates
-        Global.shared.gyroscope = Strings.gyroscopeHeader
-        Global.shared.magnetometer = Strings.magnetometer
-        Global.shared.vehicle = ""
-        Global.shared.gps = Strings.gpsHeader
-        Global.shared.baseDirectory = ""
-        Global.shared.bumper = Strings.bumper
-        Global.shared.ctrlLog = Strings.ctrlLog
-        Global.shared.indicator = Strings.indicator
-        Global.shared.inferenceTime = Strings.inferenceTime
-        Global.shared.light = Strings.light
-        Global.shared.sonar = Strings.sonar
-        Global.shared.voltage = Strings.voltageHeader
-        Global.shared.wheels = Strings.wheels
-        Global.shared.motion = Strings.motion
+//        images.removeAll()
+        carSensorsData = "";
+        acceleration = Strings.acceleration
+        locationCoordinates = Strings.locationCoordinates
+        gyroscope = Strings.gyroscopeHeader
+        magnetometer = Strings.magnetometer
+        gps = Strings.gpsHeader
+        baseDirectory = ""
+        bumper = Strings.bumper
+        ctrlLog = Strings.ctrlLog
+        indicator = Strings.indicator
+        inferenceTime = Strings.inferenceTime
+        light = Strings.light
+        sonar = Strings.sonar
+        voltage = Strings.voltageHeader
+        wheels = Strings.wheels
+        motion = Strings.motion
+        ctrlLog = Strings.ctrlLog
     }
 
 }

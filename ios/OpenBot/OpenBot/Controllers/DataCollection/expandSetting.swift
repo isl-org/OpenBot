@@ -383,29 +383,21 @@ class expandSetting: UIView, UITextFieldDelegate {
     }
 
     @objc func applyPreview(_ sender: UIView) {
-        Global.shared.isPreviewSelected = !Global.shared.isPreviewSelected
-        if Global.shared.isPreviewSelected{
-            preview.layer.borderColor = Colors.title?.cgColor
-        }
-        else{
-            preview.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
-        }
+        NotificationCenter.default.post(name: .updatePreview, object: nil)
+        let borderColor = (preview.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
+        print("i was clicked")
+        print(preview.layer.borderColor)
     }
 
     @objc func applyTraining(_ sender: UIView) {
-        Global.shared.isTrainingSelected = !Global.shared.isTrainingSelected
-        if Global.shared.isTrainingSelected {
-            training.layer.borderColor = Colors.title?.cgColor
-        }
-        else {
-            training.layer.borderColor =   Colors.freeRoamButtonsColor?.cgColor
-        }
+        NotificationCenter.default.post(name: .updateTraining, object: nil)
+        let borderColor = (training.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
+        print("i was clicked ejf")
 
     }
 
     func setupImageMode() {
-        Global.shared.isPreviewSelected = false
-        Global.shared.isTrainingSelected = true
+
     }
 
 
@@ -463,5 +455,7 @@ extension Notification.Name {
     static let updateControl = Notification.Name(Strings.updateControlMode);
     static let updateDriveMode = Notification.Name(Strings.updateDriveMode);
     static let updateResolution = Notification.Name("updateResolution")
+    static let updatePreview = Notification.Name("updatePreview")
+    static let updateTraining = Notification.Name("updateTraining")
 }
 
