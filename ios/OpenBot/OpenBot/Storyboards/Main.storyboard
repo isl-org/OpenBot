@@ -553,6 +553,21 @@
             </objects>
             <point key="canvasLocation" x="2256.521739130435" y="276.5625"/>
         </scene>
+        <!--Autopilot Fragment-->
+        <scene sceneID="x2x-34-MVi">
+            <objects>
+                <viewController id="VKP-fM-F86" storyboardIdentifier="AutopilotFragment" customClass="AutopilotFragment" customModule="OpenBot" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vY2-Tm-E16">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="MsG-31-xA1"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="msN-vR-AiM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1788" y="-563"/>
+        </scene>
     </scenes>
     <resources>
         <image name="bluetoothConnected" width="14" height="22"/>

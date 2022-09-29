@@ -42,7 +42,8 @@ struct Constants {
     static let gameModes: [ModeItem] = [
         ModeItem(label: Strings.freeRoam, icon: Images.freeRoam!, identifier: Strings.ScreenFreeRoam),
         ModeItem(label: Strings.dataCollection, icon: Images.dataCollection!, identifier: Strings.ScreenDataCollection),
-        ModeItem(label: Strings.controllerMapping, icon: Images.controllerMapping!, identifier: Strings.ScreenControllerMapping)
+        ModeItem(label: Strings.controllerMapping, icon: Images.controllerMapping!, identifier: Strings.ScreenControllerMapping),
+        ModeItem(label: Strings.Autopilot, icon: Images.controllerMapping!, identifier: Strings.AutopilotFragment)
     ];
 }
 
@@ -90,5 +91,9 @@ enum CMD_Events {
 }
 
 enum Resolutions {
-    case low , medium , high
+    case low, medium, high
+}
+
+enum RuntimeDevice {
+    case CPU, GPU, XNNPACK
 }

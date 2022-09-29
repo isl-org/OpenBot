@@ -8,25 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		3A0B835528ADFD6300A9FA0F /* DataSerialMonitorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0B835428ADFD6200A9FA0F /* DataSerialMonitorViewController.swift */; };
+		3A27A620261635D5ED10B431 /* Pods_OpenBot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC9E7A4152D64C9D2E8F6681 /* Pods_OpenBot.framework */; };
 		3A31E73028AE0E1A00FDD235 /* SensorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */; };
 		3A3C40C828B0A8A800AA40CF /* VideoRecordingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3C40C728B0A8A800AA40CF /* VideoRecordingController.swift */; };
 		3A5BF7D228D0548B00D8736E /* TempViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5BF7D128D0548B00D8736E /* TempViewController.swift */; };
 		3AD2794028AF703A00053CAD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD2793F28AF703A00053CAD /* CameraViewController.swift */; };
 		3AE7A38B28ACB0D6001ABE2F /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */; };
 		4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */; };
+		4FEF4209E4568C06F71C8E86 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF421BF49FEE835C6DC5CB /* config.json */; };
 		4FEF434E29022789D4FB8985 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4E0B9A9BAE2BD7321783 /* Main.storyboard */; };
 		4FEF43565A0B8A9578E85B54 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4EE1E197D3F52EFF3B88 /* Launch Screen.storyboard */; };
 		4FEF43788A6975AED9390369 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47EAC21A4C2BDD11B72B /* README.md */; };
 		4FEF442F6DF5C31D0EE4FE2B /* OpenBotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */; };
+		4FEF44E677749DA0D24FB857 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF42714D658342895B0A95 /* Network.swift */; };
 		4FEF47B52607872D6B0CD56F /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4178D0A2805591A6A3A6 /* Strings.swift */; };
+		4FEF47E6E6A09E51C9FDF010 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF49FAEA0EB5E01610A55B /* Model.swift */; };
 		4FEF483FCB45A3257C181C30 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4BD00A645A3985233A37 /* README.md */; };
 		4FEF49D3149212EA208C893B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF443C3B9B9931D5108052 /* Constants.swift */; };
 		4FEF49DD79D9DD3CF5733B71 /* OpenBotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */; };
 		4FEF4A957CB4D38EBD818730 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45E913E70DDE5DE7F387 /* GameController.swift */; };
+		4FEF4BEFB4E329AFFBAB8B4D /* Autopilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4A4D501C2B9B7E5D248D /* Autopilot.swift */; };
 		4FEF4BF08DDE6BB860043DE4 /* BluetoothViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF49C8753F02C2240E51D8 /* BluetoothViewController.swift */; };
 		4FEF4C5087962C2F3B2BB3A1 /* Modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45F4F7552D2FFF3D1130 /* Modes.swift */; };
 		4FEF4C9BF06BF69E5C67E86A /* OpenBotUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4D548F5BD4ABE07F1F71 /* OpenBotUITestsLaunchTests.swift */; };
 		4FEF4D4C829C1A8519999198 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF43EF931CFBA8BB09541E /* Control.swift */; };
+		4FEF4D94784E855709A476CB /* autopilot_float.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF458E4FD47E6C6861691B /* autopilot_float.tflite */; };
 		4FEF4DAC98B9D01B10F7B3E9 /* DataCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4DE90366ACF137F4AD9B /* DataCollectionController.swift */; };
 		4FEF4DC031698B6DEEB01AEB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */; };
 		4FEF4F78919CCCC28C418C5B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4D63E4FA9FB585EF1733 /* SceneDelegate.swift */; };
@@ -49,10 +55,13 @@
 		727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */; };
 		727D3DE03BF386B5C0FE9FF9 /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E5C449E053C06E9AD83 /* GlobalVariables.swift */; };
 		727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3C4EBE89B9B6E537BE8B /* Device.swift */; };
+		7DB780E18432EFF9F816FD4D /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A6CD6019433DBC2BDD0FBE /* Pods_OpenBot_OpenBotUITests.framework */; };
 		BF72296428B0FD6D0013CD8E /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF72296328B0FD6D0013CD8E /* GameViewController.swift */; };
 		BF812E8728AE2C4200E0B682 /* modesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF812E8528AE2C4200E0B682 /* modesCollectionViewCell.swift */; };
 		BF812E8828AE2C4200E0B682 /* modesCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF812E8628AE2C4200E0B682 /* modesCollectionViewCell.xib */; };
 		BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9BAED728AF94A800EF3E48 /* GameController.framework */; };
+		BFC5293628E59918008C04D4 /* AutopilotFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC5293528E59918008C04D4 /* AutopilotFragment.swift */; };
+		ED9F512B8794A3667B6F8160 /* Pods_OpenBotTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A9EDE2030D06BB4909AA22 /* Pods_OpenBotTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +82,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		032DE994C7EF18E564883771 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
+		14A6CD6019433DBC2BDD0FBE /* Pods_OpenBot_OpenBotUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot_OpenBotUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		18A9EDE2030D06BB4909AA22 /* Pods_OpenBotTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBotTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		33CA7936C214599CD818DC4C /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3A0B835428ADFD6200A9FA0F /* DataSerialMonitorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSerialMonitorViewController.swift; sourceTree = "<group>"; };
 		3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorsViewController.swift; sourceTree = "<group>"; };
 		3A3C40C728B0A8A800AA40CF /* VideoRecordingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecordingController.swift; sourceTree = "<group>"; };
@@ -80,11 +93,14 @@
 		3AD2793F28AF703A00053CAD /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		4FEF4178D0A2805591A6A3A6 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		4FEF421BF49FEE835C6DC5CB /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		4FEF42374776D62381BDE68C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
+		4FEF42714D658342895B0A95 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITests.swift; sourceTree = "<group>"; };
 		4FEF43EF931CFBA8BB09541E /* Control.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		4FEF443C3B9B9931D5108052 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4FEF44EFCFD003BA859F8008 /* OpenBotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FEF458E4FD47E6C6861691B /* autopilot_float.tflite */ = {isa = PBXFileReference; lastKnownFileType = file.tflite; path = autopilot_float.tflite; sourceTree = "<group>"; };
 		4FEF45E913E70DDE5DE7F387 /* GameController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		4FEF45F4F7552D2FFF3D1130 /* Modes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Modes.swift; sourceTree = "<group>"; };
 		4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -93,6 +109,8 @@
 		4FEF47EAC21A4C2BDD11B72B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotTests.swift; sourceTree = "<group>"; };
 		4FEF49C8753F02C2240E51D8 /* BluetoothViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothViewController.swift; sourceTree = "<group>"; };
+		4FEF49FAEA0EB5E01610A55B /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		4FEF4A4D501C2B9B7E5D248D /* Autopilot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Autopilot.swift; sourceTree = "<group>"; };
 		4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FEF4BD00A645A3985233A37 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4FEF4D548F5BD4ABE07F1F71 /* OpenBotUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -100,6 +118,8 @@
 		4FEF4DE90366ACF137F4AD9B /* DataCollectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataCollectionController.swift; sourceTree = "<group>"; };
 		4FEF4E0B9A9BAE2BD7321783 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		4FEF4EE1E197D3F52EFF3B88 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		508FB70DB6EA7B8D5DA754DD /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
+		6BC63007676BCE897D49E6C6 /* Pods-OpenBot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.debug.xcconfig"; sourceTree = "<group>"; };
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
 		727D30501D6445D0C8AED362 /* GaugeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GaugeView.swift; sourceTree = "<group>"; };
 		727D31331A6716FD310082EB /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
@@ -119,10 +139,14 @@
 		727D3E5C449E053C06E9AD83 /* GlobalVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalVariables.swift; sourceTree = "<group>"; };
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
+		A33733997B614B62B8080707 /* Pods-OpenBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.release.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.release.xcconfig"; sourceTree = "<group>"; };
+		AC9E7A4152D64C9D2E8F6681 /* Pods_OpenBot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF72296328B0FD6D0013CD8E /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		BF812E8528AE2C4200E0B682 /* modesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = modesCollectionViewCell.swift; sourceTree = "<group>"; };
 		BF812E8628AE2C4200E0B682 /* modesCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = modesCollectionViewCell.xib; sourceTree = "<group>"; };
 		BF9BAED728AF94A800EF3E48 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
+		BFC5293528E59918008C04D4 /* AutopilotFragment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutopilotFragment.swift; sourceTree = "<group>"; };
+		E06413F605520ED51DC4FDF4 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +154,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED9F512B8794A3667B6F8160 /* Pods_OpenBotTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,6 +162,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DB780E18432EFF9F816FD4D /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,12 +171,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */,
+				3A27A620261635D5ED10B431 /* Pods_OpenBot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		37A05E57C6BA519D6B86A37B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6BC63007676BCE897D49E6C6 /* Pods-OpenBot.debug.xcconfig */,
+				508FB70DB6EA7B8D5DA754DD /* Pods-OpenBot.release.xcconfig */,
+				E06413F605520ED51DC4FDF4 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */,
+				33CA7936C214599CD818DC4C /* Pods-OpenBot-OpenBotUITests.release.xcconfig */,
+				032DE994C7EF18E564883771 /* Pods-OpenBotTests.debug.xcconfig */,
+				A33733997B614B62B8080707 /* Pods-OpenBotTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		4FEF40885316AD1AB57A55DD /* DataCollection */ = {
 			isa = PBXGroup;
 			children = (
@@ -206,6 +246,7 @@
 		4FEF489C07FD5C967FFDCDE8 /* OpenBot */ = {
 			isa = PBXGroup;
 			children = (
+				BFC5293928E5B485008C04D4 /* networks */,
 				BF9BAED628AF94A800EF3E48 /* Frameworks */,
 				4FEF44F0837469F66D5A7156 /* Models */,
 				4FEF42AB3B7AC14D55B7DBA3 /* Utils */,
@@ -219,6 +260,8 @@
 				4FEF49E6B7BC995D19DD82E7 /* Data */,
 				4FEF4EFC6160B227C9A9BFF3 /* Vehicle */,
 				4FEF47EAC21A4C2BDD11B72B /* README.md */,
+				4FEF4FB9DCF0D8F0BFCB835B /* tflite */,
+				4FEF421BF49FEE835C6DC5CB /* config.json */,
 			);
 			path = OpenBot;
 			sourceTree = "<group>";
@@ -266,6 +309,16 @@
 			path = Vehicle;
 			sourceTree = "<group>";
 		};
+		4FEF4FB9DCF0D8F0BFCB835B /* tflite */ = {
+			isa = PBXGroup;
+			children = (
+				4FEF4A4D501C2B9B7E5D248D /* Autopilot.swift */,
+				4FEF42714D658342895B0A95 /* Network.swift */,
+				4FEF49FAEA0EB5E01610A55B /* Model.swift */,
+			);
+			path = tflite;
+			sourceTree = "<group>";
+		};
 		4FEF4FDE69B20F82CA2C0196 = {
 			isa = PBXGroup;
 			children = (
@@ -273,6 +326,8 @@
 				4FEF4191C08EC7053A46679C /* OpenBotTests */,
 				4FEF4549B0D1FC8F591E63FE /* OpenBotUITests */,
 				4FEF4BD00A645A3985233A37 /* README.md */,
+				37A05E57C6BA519D6B86A37B /* Pods */,
+				FA3A6E46E89A5A6D809F7383 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -298,6 +353,7 @@
 				3A0B835428ADFD6200A9FA0F /* DataSerialMonitorViewController.swift */,
 				727D3486646629C6067A6656 /* Free Roam */,
 				BF72296328B0FD6D0013CD8E /* GameViewController.swift */,
+				BFC5293528E59918008C04D4 /* AutopilotFragment.swift */,
 				4FEF40885316AD1AB57A55DD /* DataCollection */,
 				727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */,
 			);
@@ -313,6 +369,24 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
+		BFC5293928E5B485008C04D4 /* networks */ = {
+			isa = PBXGroup;
+			children = (
+				4FEF458E4FD47E6C6861691B /* autopilot_float.tflite */,
+			);
+			path = networks;
+			sourceTree = "<group>";
+		};
+		FA3A6E46E89A5A6D809F7383 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AC9E7A4152D64C9D2E8F6681 /* Pods_OpenBot.framework */,
+				14A6CD6019433DBC2BDD0FBE /* Pods_OpenBot_OpenBotUITests.framework */,
+				18A9EDE2030D06BB4909AA22 /* Pods_OpenBotTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -320,6 +394,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4FEF43208B4A03F247235CFE /* Build configuration list for PBXNativeTarget "OpenBotUITests" */;
 			buildPhases = (
+				2BBE442F990C3CEBDCDC977D /* [CP] Check Pods Manifest.lock */,
 				4FEF4059C0F787F734441610 /* Sources */,
 				4FEF48BBF965FC91224D548A /* Frameworks */,
 				4FEF4634A90081D52CF345B5 /* Resources */,
@@ -338,6 +413,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4FEF486AE63CA90F3F6FAC59 /* Build configuration list for PBXNativeTarget "OpenBot" */;
 			buildPhases = (
+				D6BA133EA5C00A8E0CD3BBED /* [CP] Check Pods Manifest.lock */,
 				4FEF4889F89E40050DA7F889 /* Sources */,
 				4FEF48F817C72DA7F5BE6A7E /* Frameworks */,
 				4FEF4CE476446EE3B8BFA52C /* Resources */,
@@ -355,6 +431,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4FEF43DAF9CB0AD7A444AC7D /* Build configuration list for PBXNativeTarget "OpenBotTests" */;
 			buildPhases = (
+				C54A48D3732899F5C1E65E0F /* [CP] Check Pods Manifest.lock */,
 				4FEF49E6E9BC95AEC0B778B9 /* Sources */,
 				4FEF42E5B0C74BDE71C91279 /* Frameworks */,
 				4FEF4ABE055F854E0CA57AC7 /* Resources */,
@@ -431,10 +508,81 @@
 				4FEF434E29022789D4FB8985 /* Main.storyboard in Resources */,
 				4FEF43565A0B8A9578E85B54 /* Launch Screen.storyboard in Resources */,
 				BF812E8828AE2C4200E0B682 /* modesCollectionViewCell.xib in Resources */,
+				4FEF4209E4568C06F71C8E86 /* config.json in Resources */,
+				4FEF4D94784E855709A476CB /* autopilot_float.tflite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2BBE442F990C3CEBDCDC977D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OpenBot-OpenBotUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C54A48D3732899F5C1E65E0F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OpenBotTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D6BA133EA5C00A8E0CD3BBED /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OpenBot-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4FEF4059C0F787F734441610 /* Sources */ = {
@@ -451,6 +599,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FEF4DC031698B6DEEB01AEB /* AppDelegate.swift in Sources */,
+				BFC5293628E59918008C04D4 /* AutopilotFragment.swift in Sources */,
 				3AD2794028AF703A00053CAD /* CameraViewController.swift in Sources */,
 				3AE7A38B28ACB0D6001ABE2F /* HomePageViewController.swift in Sources */,
 				3A0B835528ADFD6300A9FA0F /* DataSerialMonitorViewController.swift in Sources */,
@@ -488,6 +637,9 @@
 				727D3A805DDE14D8AD205D31 /* VehicleControl.swift in Sources */,
 				727D3DE03BF386B5C0FE9FF9 /* GlobalVariables.swift in Sources */,
 				727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */,
+				4FEF4BEFB4E329AFFBAB8B4D /* Autopilot.swift in Sources */,
+				4FEF44E677749DA0D24FB857 /* Network.swift in Sources */,
+				4FEF47E6E6A09E51C9FDF010 /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -517,6 +669,7 @@
 /* Begin XCBuildConfiguration section */
 		4FEF43D6410B560C20FD769C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E06413F605520ED51DC4FDF4 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 45P94DZS6G;
@@ -533,6 +686,7 @@
 		};
 		4FEF442167610372B5B63F94 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 508FB70DB6EA7B8D5DA754DD /* Pods-OpenBot.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -562,6 +716,7 @@
 		};
 		4FEF44CECB7978AC34B0EE6A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6BC63007676BCE897D49E6C6 /* Pods-OpenBot.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -652,6 +807,7 @@
 		};
 		4FEF4A7750256B55C807D1AF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A33733997B614B62B8080707 /* Pods-OpenBotTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OpenBot.app/OpenBot";
 				CURRENT_PROJECT_VERSION = 1;
@@ -723,6 +879,7 @@
 		};
 		4FEF4BD51157BE3E8D2839B5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 33CA7936C214599CD818DC4C /* Pods-OpenBot-OpenBotUITests.release.xcconfig */;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 45P94DZS6G;
@@ -739,6 +896,7 @@
 		};
 		4FEF4D381CB9363B3F2093A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 032DE994C7EF18E564883771 /* Pods-OpenBotTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OpenBot.app/OpenBot";
 				CURRENT_PROJECT_VERSION = 1;
