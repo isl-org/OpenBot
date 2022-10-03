@@ -9,6 +9,7 @@ import CoreMotion
 class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPeripheralDelegate {
     static let shared: bluetoothDataController = bluetoothDataController()
     var centralManager: CBCentralManager?
+    var tempCentralManager : CBCentralManager?
     var peri: CBPeripheral?
     var peripherals = Array<CBPeripheral>()
     var tempPeripheral: CBPeripheral!
@@ -182,7 +183,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     @objc func startNotification() {
-        _ = CBCentralManager(delegate: self, queue: nil)
+//        tempCentralManager = CBCentralManager(delegate: self, queue: nil)
     }
     }
 
