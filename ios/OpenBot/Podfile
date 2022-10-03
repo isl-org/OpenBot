@@ -4,7 +4,7 @@
 target 'OpenBot' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-  pod 'TensorFlowLiteSwift', :subspecs => ['Metal']
+  pod 'TensorFlowLiteSwift', '~> 0.0.1-nightly', :subspecs => ['CoreML', 'Metal']
 
   # Pods for OpenBot
 
