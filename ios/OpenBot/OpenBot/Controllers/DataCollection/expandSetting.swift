@@ -29,7 +29,11 @@ class expandSetting: UIView, UITextFieldDelegate {
     var gyroscope = UIButton()
     var selectedResolution: Resolutions = Resolutions.medium
     var sensorButtons = [UIButton]()
-
+//    var isVehicleLogSelected : Bool = true
+//    var isAccelerationLogSelected : Bool = true
+//    var isGpsLogSelected : Bool = true
+//    var isMagneticLogSelected : Bool = true
+//    var isGyroscopeLogSelected : Bool = true
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -384,15 +388,14 @@ class expandSetting: UIView, UITextFieldDelegate {
 
     @objc func applyPreview(_ sender: UIView) {
         NotificationCenter.default.post(name: .updatePreview, object: nil)
-        let borderColor = (preview.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
-        print("i was clicked")
-        print(preview.layer.borderColor)
+        let borderColor = (sender.layer.borderColor == Colors.title?.cgColor) ? Colors.freeRoamButtonsColor?.cgColor : Colors.title?.cgColor
+        sender.layer.borderColor = borderColor
     }
 
     @objc func applyTraining(_ sender: UIView) {
         NotificationCenter.default.post(name: .updateTraining, object: nil)
         let borderColor = (training.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
-        print("i was clicked ejf")
+        sender.layer.borderColor = borderColor
 
     }
 
@@ -402,40 +405,8 @@ class expandSetting: UIView, UITextFieldDelegate {
 
 
     @objc func updateSensor(_ sender: UIButton) {
-        let selectedButtonTag = sender.tag
-        switch selectedButtonTag {
-        case 1 :
-            Global.shared.isVehicleLogSelected = !Global.shared.isVehicleLogSelected
-        case 2 :
-            Global.shared.isGpsLogSelected = !Global.shared.isGpsLogSelected
-        case 3 :
-            Global.shared.isAccelerationLogSelected = !Global.shared.isAccelerationLogSelected
-        case 4 :
-            Global.shared.isMagneticLogSelected = !Global.shared.isMagneticLogSelected
-        case 5 :
-            Global.shared.isGyroscopeLogSelected = !Global.shared.isGyroscopeLogSelected
-        default:
-            break
-        }
+        NotificationCenter.default.post(name: .updateSensorsForLog, object: sender)
         updateBorderColor(sender: sender);
-//
-//        var index = 0
-//        var isFound = false
-//        for sensor in selectedSensor {
-//            if sensor == sender.tag {
-//                sender.layer.borderColor = Colors.freeRoamButtonsColor?.cgColor
-//                selectedSensor.remove(at: index)
-//                isFound = true
-//                break;
-//            }
-//            index = index + 1
-//        }
-//
-//        if !isFound {
-//            selectedSensor.append(sender.tag)
-//            sender.layer.borderColor = Colors.title?.cgColor
-//        }
-
     }
     func updateBorderColor(sender : UIButton){
        sender.layer.borderColor =  (sender.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor)  ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
@@ -457,5 +428,7 @@ extension Notification.Name {
     static let updateResolution = Notification.Name("updateResolution")
     static let updatePreview = Notification.Name("updatePreview")
     static let updateTraining = Notification.Name("updateTraining")
+   static let updateSensorsForLog = Notification.Name("updateSensorsForLog")
+
 }
 

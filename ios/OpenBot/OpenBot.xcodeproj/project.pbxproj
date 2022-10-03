@@ -53,7 +53,6 @@
 		727D3D12FAF02C416CC2CEC1 /* FreeRoamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */; };
 		727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B02AB471D9F31B0747 /* Font.swift */; };
 		727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */; };
-		727D3DE03BF386B5C0FE9FF9 /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E5C449E053C06E9AD83 /* GlobalVariables.swift */; };
 		727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3C4EBE89B9B6E537BE8B /* Device.swift */; };
 		BF72296428B0FD6D0013CD8E /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF72296328B0FD6D0013CD8E /* GameViewController.swift */; };
 		BF812E8728AE2C4200E0B682 /* modesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF812E8528AE2C4200E0B682 /* modesCollectionViewCell.swift */; };
@@ -133,7 +132,6 @@
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		727D3D78A49AC3693B1A2B7B /* CGFloatExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CGFloatExtension.swift; path = Adaptive/CGFloatExtension.swift; sourceTree = "<group>"; };
-		727D3E5C449E053C06E9AD83 /* GlobalVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalVariables.swift; sourceTree = "<group>"; };
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
 		74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -285,7 +283,6 @@
 				727D3157F2B5E5DBB1565EDD /* DataLogger.swift */,
 				727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */,
 				727D31331A6716FD310082EB /* CameraController.swift */,
-				727D3E5C449E053C06E9AD83 /* GlobalVariables.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -635,7 +632,6 @@
 				727D332F054456A4182DD7DF /* expandSetting.swift in Sources */,
 				727D373B2A839824AE8E6AE2 /* CameraController.swift in Sources */,
 				727D3A805DDE14D8AD205D31 /* VehicleControl.swift in Sources */,
-				727D3DE03BF386B5C0FE9FF9 /* GlobalVariables.swift in Sources */,
 				727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */,
 				4FEF4BEFB4E329AFFBAB8B4D /* Autopilot.swift in Sources */,
 				4FEF44E677749DA0D24FB857 /* Network.swift in Sources */,

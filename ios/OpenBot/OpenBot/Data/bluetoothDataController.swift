@@ -15,6 +15,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     var sonarData: String = ""
     var voltageDivider: String = ""
     var speedometer: String = ""
+    var bumperData : String = ""
     private var allServices: [CBService]?
     var writeCharacteristics: CBCharacteristic?
 
@@ -128,7 +129,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         if characteristic.value != nil {
             let data = characteristic.value!
             let x = String(data: data, encoding: .utf8) ?? ""
-            print("value is : ",x);
+//            print("value is : ",x);
             bluetoothData = x
             NotificationCenter.default.post(name: .updateSerialMonitor, object: nil)
             NotificationCenter.default.post(name: .updateLabel, object: nil)
@@ -138,6 +139,9 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
                 voltageDivider = x
             } else if x.prefix(1) == "w" {
                 speedometer = x
+            }
+            else if x.prefix(1) == "b"{
+                bumperData = x;
             }
         }
     }

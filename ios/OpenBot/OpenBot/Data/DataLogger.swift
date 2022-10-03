@@ -25,6 +25,20 @@ class DataLogger {
     var voltage : String = ""
     var wheels : String = ""
     var motion : String = ""
+    var isVehicleLogSelected : Bool = true
+    var isAccelerationLogSelected : Bool = true
+    var isGpsLogSelected : Bool = true
+    var isMagneticLogSelected : Bool = true
+    var isGyroscopeLogSelected : Bool = true
+
+    init(){
+        NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .updateSensorsForLog, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .gpsLog, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .acceleratorLog, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .magneticLog, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .gyroscopeLog, object: nil)
+
+    }
     func getDirectoryInfo() -> URL {
         let fileManager = FileManager.default
         var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -55,7 +69,7 @@ class DataLogger {
 
     func createSensorData(openBotPath: String) {
         let sensorDataPath = openBotPath + "/sensor_data"
-        let tempData = ""
+
         createFolder(path: sensorDataPath)
         if URL(string: openBotPath) != nil {
             saveSensorFiles(path: sensorDataPath, data: acceleration, fileName: "accelerometerLog.txt")
@@ -94,7 +108,7 @@ class DataLogger {
 
     func deleteFiles(path: String) {
         let fileManager = FileManager.default
-        var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         do {
             try FileManager.default.removeItem(atPath: documentsURL.path + path)
         } catch {
@@ -145,7 +159,7 @@ class DataLogger {
     func getDocumentDirectoryInformation(){
 
         let fileManager = FileManager.default
-        var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
 //        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
@@ -157,22 +171,22 @@ class DataLogger {
 
     func recordLogs() {
         let timestamp = returnCurrentTimestamp()
-        if Global.shared.isVehicleLogSelected {
+        if isVehicleLogSelected {
             carSensorsData = carSensorsData + bluetoothData + "\n"
         }
-        if Global.shared.isGpsLogSelected {
+        if isGpsLogSelected {
             gps = gps + String(timestamp) + " " + String(sensorData.location.coordinate.latitude) + " " + String(sensorData.location.coordinate.longitude) + " " + String(sensorData.location.altitude) + " " + String(sensorData.location.speed) + "\n"
         }
-        if Global.shared.isAccelerationLogSelected {
+        if isAccelerationLogSelected {
             acceleration = acceleration + String(timestamp) + " " + convertToString(XValue: sensorData.accelerationX, YValue: sensorData.accelerationY, ZValue: sensorData.accelerationZ) + "\n"
         }
-        if Global.shared.isMagneticLogSelected {
+        if isMagneticLogSelected {
             magnetometer = magnetometer + String(timestamp) + " " + convertToString(XValue: sensorData.magneticFieldX, YValue: sensorData.magneticFieldY, ZValue: sensorData.magneticFieldZ) + "\n"
         }
-        if Global.shared.isGyroscopeLogSelected {
+        if isGyroscopeLogSelected {
             gyroscope = gyroscope + String(timestamp) + " " + convertToString(XValue: sensorData.gyroX, YValue: sensorData.gyroY, ZValue: sensorData.gyroZ) + "\n"
         }
-        if Global.shared.isVehicleLogSelected {
+        if isVehicleLogSelected {
             recordVehicleLogs()
         }
     }
@@ -184,6 +198,10 @@ class DataLogger {
             sonar = sonar + String(timestamp) + " " + String(bluetooth.sonarData[index...])  + "\n"
             wheels = wheels + String(timestamp) + " " + String(bluetooth.speedometer[index...])  + "\n"
             voltage = voltage + String(timestamp) + " " + String(bluetooth.voltageDivider[index...]) + "\n"
+            if bluetooth.bumperData != ""{
+                bumper = bumper  + String(timestamp) + " " + String(bluetooth.bumperData[index...]) + "\n";
+            }
+
         }
     }
     func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
@@ -209,5 +227,29 @@ class DataLogger {
         motion = Strings.motion
         ctrlLog = Strings.ctrlLog
     }
+    @objc func updateLogger(_ notification: Notification?) {
+       let selectedButton = notification?.object as! UIButton
+        let tag = selectedButton.tag
+        switch tag{
+        case 1 :
+            isVehicleLogSelected = !isVehicleLogSelected
+        case 2 :
+            isGpsLogSelected = !isGpsLogSelected
+        case 3 :
+            isAccelerationLogSelected = !isAccelerationLogSelected
+        case 4 :
+            isMagneticLogSelected = !isMagneticLogSelected
+        default :
+            isGyroscopeLogSelected = !isGyroscopeLogSelected
+        }
+        print("hello breaker")
+        print(isVehicleLogSelected)
+        print(isGpsLogSelected)
+        print(isAccelerationLogSelected)
+        print(isMagneticLogSelected)
+        print(isGyroscopeLogSelected)
+
+    }
+
 
 }

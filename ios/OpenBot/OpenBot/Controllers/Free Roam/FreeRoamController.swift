@@ -48,6 +48,10 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated);
+    }
+
     func applySafeAreaConstraints() {
         mainView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mainView)
@@ -452,6 +456,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func updateControllerValues() {
+        print("test in free roam");
         if (connectedController == nil) {
             return
         }

@@ -20,6 +20,7 @@ class DataCollectionController: CameraController {
     var indicator = "i0,0\n";
     let bluetooth = bluetoothDataController.shared;
     let dataLogger = DataLogger.shared
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -41,9 +42,6 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedMode), name: .updateSpeed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
-
-
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -128,13 +126,14 @@ class DataCollectionController: CameraController {
         } else {
             baseDirectory = dataLogger.getBaseDirectoryName()
             saveImages();
-            DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash +  baseDirectory);
-            dataLogger.deleteFiles(path: Strings.forwardSlash +  baseDirectory)
+            DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash + baseDirectory);
+            dataLogger.deleteFiles(path: Strings.forwardSlash + baseDirectory)
             dataLogger.setupFilesForLogging()
         }
     }
 
     @objc func updateControllerValues() {
+        print("test in data collection");
         if (connectedController == nil) {
             return
         }
@@ -156,12 +155,12 @@ class DataCollectionController: CameraController {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = control.getLeft() * selectedSpeedMode.rawValue;
             let right = control.getRight() * selectedSpeedMode.rawValue;
-            print("c" + String(left) + "," + String(right) + "\n");
+            print("d" + String(left) + "," + String(right) + "\n");
             dataLogger.ctrlLog = dataLogger.ctrlLog + String(returnCurrentTimestamp()) + " " + String(left) + " " + String(right) + "\n";
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+            print("abcdef ", dataLogger.ctrlLog)
         }
     }
-
 
 
     @objc func sendKeyUpdates(keyCommand: Any) {
@@ -201,12 +200,15 @@ class DataCollectionController: CameraController {
     }
 
     @objc func updateControlMode(_ notification: Notification?) {
+        print("updated")
         if let controlMode = notification?.userInfo?["mode"] as? ControlMode {
             selectedControlMode = controlMode;
         }
+        print(selectedControlMode);
         if selectedControlMode == .gamepad {
-            NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
+            print("inside if condition");
             gameControllerObj = GameController();
+            NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
         } else if selectedControlMode == .phone {
             gameControllerObj = nil;
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
@@ -225,9 +227,12 @@ class DataCollectionController: CameraController {
             selectedSpeedMode = speedMode;
         }
     }
+
     @objc func updatePreview(_ notification: Notification) {
-       isPreviewSelected  = !isPreviewSelected
+        isPreviewSelected = !isPreviewSelected
+        print(isPreviewSelected)
     }
+
     @objc func updateTraining(_ notification: Notification) {
         isTrainingSelected = !isTrainingSelected
     }
