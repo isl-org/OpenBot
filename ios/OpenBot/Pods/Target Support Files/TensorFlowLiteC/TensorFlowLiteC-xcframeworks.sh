@@ -149,6 +149,7 @@ install_xcframework() {
   echo "Copied $source to $destination"
 }
 
-install_xcframework "${PODS_ROOT}/TensorFlowLiteC/Frameworks/TensorFlowLiteC.xcframework" "TensorFlowLiteC" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
-install_xcframework "${PODS_ROOT}/TensorFlowLiteC/Frameworks/TensorFlowLiteCMetal.xcframework" "TensorFlowLiteCMetal" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/TensorFlowLiteC/Frameworks/TensorFlowLiteC.xcframework" "TensorFlowLiteC" "framework" "ios-arm64_x86_64-simulator" "ios-arm64"
+install_xcframework "${PODS_ROOT}/TensorFlowLiteC/Frameworks/TensorFlowLiteCCoreML.xcframework" "TensorFlowLiteCCoreML" "framework" "ios-arm64" "ios-arm64_x86_64-simulator"
+install_xcframework "${PODS_ROOT}/TensorFlowLiteC/Frameworks/TensorFlowLiteCMetal.xcframework" "TensorFlowLiteCMetal" "framework" "ios-arm64_x86_64-simulator" "ios-arm64"
 
