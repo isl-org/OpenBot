@@ -230,7 +230,6 @@ class DataCollectionController: CameraController {
 
     @objc func updatePreview(_ notification: Notification) {
         isPreviewSelected = !isPreviewSelected
-        print(isPreviewSelected)
     }
 
     @objc func updateTraining(_ notification: Notification) {

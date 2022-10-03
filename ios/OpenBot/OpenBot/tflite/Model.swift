@@ -5,6 +5,16 @@
 import Foundation
 import UIKit
 
+struct ModelItem: Codable {
+    var id: Int;
+    var `class`: String;
+    var type: String;
+    var name: String;
+    var pathType: String;
+    var path: String;
+    var inputSize: String;
+}
+
 class Model {
     var id: Int;
     var classType: CLASS;
@@ -22,26 +32,6 @@ class Model {
         self.pathType = pathType;
         self.path = path;
         self.inputSize = inputSize;
-    }
-
-    enum CLASS {
-        case AUTOPILOT_F,
-             MOBILENETV1_1_0_Q,
-             MOBILENETV3_S_Q,
-             YOLOV4,
-             NAVIGATION
-    }
-
-    enum TYPE {
-        case AUTOPILOT,
-             DETECTOR,
-             NAVIGATION
-    }
-
-    enum PATH_TYPE {
-        case URL,
-             ASSET,
-             FILE
     }
 
     func getName() -> String {
@@ -83,5 +73,23 @@ extension CGSize {
         let width = Double(out[0]) ?? 0;
         let height = Double(out[1]) ?? 0;
         return CGSize(width: width, height: height);
+    }
+}
+
+extension Model {
+    static func fromModelItems(list: [ModelItem]) -> [Model] {
+        var models: [Model] = [];
+        for item in list {
+            let model: Model = Model(
+                    id: item.id,
+                    classType: CLASS(rawValue: item.class) ?? CLASS.AUTOPILOT_F,
+                    type: TYPE(rawValue: item.type) ?? TYPE.AUTOPILOT,
+                    name: item.name,
+                    pathType: PATH_TYPE(rawValue: item.pathType) ?? PATH_TYPE.ASSET,
+                    path: item.path,
+                    inputSize: item.inputSize);
+            models.append(model);
+        }
+        return models;
     }
 }

@@ -97,3 +97,24 @@ enum Resolutions {
 enum RuntimeDevice {
     case CPU, GPU, XNNPACK
 }
+
+
+enum CLASS: String {
+    case AUTOPILOT_F = "AUTOPILOT_F",
+         MOBILENETV1_1_0_Q = "MOBILENETV1_1_0_Q",
+         MOBILENETV3_S_Q = "MOBILENETV3_S_Q",
+         YOLOV4 = "YOLOV4",
+         NAVIGATION = "NAVIGATION"
+}
+
+enum TYPE: String {
+    case AUTOPILOT = "AUTOPILOT",
+         DETECTOR = "DETECTOR",
+         NAVIGATION = "NAVIGATION"
+}
+
+enum PATH_TYPE: String {
+    case URL = "URL",
+         ASSET = "ASSET",
+         FILE = "FILE"
+}
