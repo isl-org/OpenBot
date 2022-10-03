@@ -12,7 +12,7 @@
 - Currently, we're using iOS deployment target version 15.5.
 - Project is automatically manage signed in, either you need to be added as a developer or you can change the signed in account to create your own version.
 - To be added as a developer, write us on Slack.
-
+- [Cocoapods](https://cocoapods.org/) installed on your system 
 
 ### Build Process
 

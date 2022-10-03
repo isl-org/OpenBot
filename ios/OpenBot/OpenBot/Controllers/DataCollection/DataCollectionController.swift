@@ -20,6 +20,7 @@ class DataCollectionController: CameraController {
     var indicator = "i0,0\n";
     let bluetooth = bluetoothDataController.shared;
     let dataLogger = DataLogger.shared
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -41,9 +42,6 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedMode), name: .updateSpeed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
-
-
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -128,8 +126,8 @@ class DataCollectionController: CameraController {
         } else {
             baseDirectory = dataLogger.getBaseDirectoryName()
             saveImages();
-            DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash +  baseDirectory);
-            dataLogger.deleteFiles(path: Strings.forwardSlash +  baseDirectory)
+            DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash + baseDirectory);
+            dataLogger.deleteFiles(path: Strings.forwardSlash + baseDirectory)
             dataLogger.setupFilesForLogging()
         }
     }
@@ -161,7 +159,6 @@ class DataCollectionController: CameraController {
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
         }
     }
-
 
 
     @objc func sendKeyUpdates(keyCommand: Any) {
@@ -225,9 +222,11 @@ class DataCollectionController: CameraController {
             selectedSpeedMode = speedMode;
         }
     }
+
     @objc func updatePreview(_ notification: Notification) {
-       isPreviewSelected  = !isPreviewSelected
+        isPreviewSelected = !isPreviewSelected
     }
+
     @objc func updateTraining(_ notification: Notification) {
         isTrainingSelected = !isTrainingSelected
     }
