@@ -7,9 +7,7 @@
 
 import Foundation
 import GameController
-
 public var connectedController: GCController?;
-
 class GameController: GCController {
     static let shared: GameController = GameController();
     private let maximumControllerCount: Int = 1
