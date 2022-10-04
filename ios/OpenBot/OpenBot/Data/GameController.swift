@@ -7,12 +7,23 @@
 
 import Foundation
 import GameController
+
 public var connectedController: GCController?;
+
 class GameController: GCController {
     static let shared: GameController = GameController();
     private let maximumControllerCount: Int = 1
     private(set) var controllers = Set<GCController>()
     private var panRecognizer: UIPanGestureRecognizer!
+    var selectedSpeedMode: SpeedMode = SpeedMode.medium;
+    var selectedControlMode: ControlMode = ControlMode.gamepad;
+    var selectedDriveMode: DriveMode = DriveMode.joystick;
+    var vehicleControl = Control();
+    let bluetooth = bluetoothDataController.shared;
+    let dataLogger = DataLogger.shared
+    var controlData: String = ""
+    var indicatorData: String = ""
+    var indicator = "i0,0\n";
 
     override init() {
         super.init()
@@ -202,5 +213,66 @@ class GameController: GCController {
             return "i0,1\n";
         }
         return "i1,1\n";
+    }
+
+    func updateControllerValues() {
+        if (connectedController == nil) {
+            return
+        }
+        print(Strings.controllerConnected)
+        let controller = connectedController;
+        let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
+        print(batteryLevel);
+        controller?.extendedGamepad?.valueChangedHandler = { [self] gamepad, element in
+            let control = processJoystickInput(mode: selectedDriveMode, gamepad: gamepad) ?? vehicleControl;
+            sendControl(control: control);
+            let keyCommand = processControllerKeyData(element: element);
+            sendKeyUpdates(keyCommand: keyCommand ?? "");
+        }
+    }
+
+    func sendControl(control: Control) {
+        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
+            let left = control.getLeft() * selectedSpeedMode.rawValue;
+            let right = control.getRight() * selectedSpeedMode.rawValue;
+            vehicleControl = control;
+            print("c" + String(left) + "," + String(right) + "\n");
+            dataLogger.setControlLogs(left: (String(left)), right: String(right))
+            controlData = String(left) + " " + String(right)
+            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+        }
+    }
+
+    @objc func sendKeyUpdates(keyCommand: Any) {
+        switch (keyCommand) {
+        case IndicatorEvent.Right:
+            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
+            break;
+        case IndicatorEvent.Left:
+            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
+            break;
+        case IndicatorEvent.Stop:
+            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
+            break;
+        case ControlEvent.STOP:
+            sendControl(control: Control());
+            break;
+        case ControlEvent.FORWARD:
+            break;
+        case CMD_Events.TOGGLE_LOGS:
+            break;
+        default:
+            break;
+        }
+    }
+
+    func setIndicator(keyCommand: IndicatorEvent) {
+        let indicatorValues: String = getIndicatorEventValue(event: keyCommand) ?? "";
+        if (indicator != indicatorValues) {
+            dataLogger.setIndicatorLogs(indicator: String(keyCommand.rawValue))
+            indicatorData = String(keyCommand.rawValue)
+            bluetooth.sendData(payload: indicatorValues);
+            indicator = indicatorValues;
+        }
     }
 }

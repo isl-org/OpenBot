@@ -57,6 +57,10 @@ struct Strings {
     static let updateSpeedMode: String = "update_speed"
     static let updateControlMode: String = "update_control"
     static let updateDriveMode: String = "update_drive_mode"
+    static let updateResolution: String = "updateResolution"
+    static let updatePreview : String = "updatePreview"
+    static let updateTraining : String = "updateTraining"
+    static let updateSensorsForLog : String = "updateSensorsForLog"
 
 
 // Screen Identifiers
@@ -74,16 +78,16 @@ struct Strings {
     static let locationCoordinates: String = "TimeStamp latitude, longitude\n"
     static let gyroscopeHeader: String = "TimeStamp[ns], x[rad/s], yx[rad/s], zx[rad/s]\n"
 
-    static let magnetometer : String = "TimeStamp[ns] x[uT], y[uT], z[uT]\n"
-    static let gpsHeader : String = "TimeStamp latitude, longitude, altitude[m], speed[m/s]\n"
-    static let bumper : String = "timestamp[ns], bumper\n"
-    static let ctrlLog : String = "timestamp[ns], leftCtrl, rightCtrl\n"
-    static let indicator : String = "timestamp[ns], signal\n"
-    static let inferenceTime : String = "frame, inferenceTime [ns]\n"
-    static let light : String = "timestamp[ns], light[lux]\n"
-    static let sonar : String = "timestamp[ns], distance[cm]\n"
-    static let voltageHeader : String = "timestamp[ns], batteryVoltage\n"
-    static let wheels : String = "timestamp[ns], leftWheel, rightWheel\n"
-    static let motion : String = "timestamp[ns]"
+    static let magnetometer: String = "TimeStamp[ns] x[uT], y[uT], z[uT]\n"
+    static let gpsHeader: String = "TimeStamp latitude, longitude, altitude[m], speed[m/s]\n"
+    static let bumper: String = "timestamp[ns], bumper\n"
+    static let ctrlLog: String = "timestamp[ns], leftCtrl, rightCtrl\n"
+    static let indicator: String = "timestamp[ns], signal\n"
+    static let inferenceTime: String = "frame, inferenceTime [ns]\n"
+    static let light: String = "timestamp[ns], light[lux]\n"
+    static let sonar: String = "timestamp[ns], distance[cm]\n"
+    static let voltageHeader: String = "timestamp[ns], batteryVoltage\n"
+    static let wheels: String = "timestamp[ns], leftWheel, rightWheel\n"
+    static let motion: String = "timestamp[ns]"
 
 }

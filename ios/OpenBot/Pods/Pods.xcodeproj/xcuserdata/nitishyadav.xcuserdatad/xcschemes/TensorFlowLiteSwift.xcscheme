@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "10418167F619D6DA72BADAD10F9EC02B"
-               BuildableName = "TensorFlowLiteSwift.framework"
+               BuildableName = "TensorFlowLite.framework"
                BlueprintName = "TensorFlowLiteSwift"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

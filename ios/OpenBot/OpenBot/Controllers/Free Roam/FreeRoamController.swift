@@ -20,6 +20,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     let firstView = UIView()
     let secondView = UIView()
     let deviceOrientation = DeviceCurrentOrientation.shared
+    let gameController = GameController.shared
     private let mainView = UIView()
     var indicator = "i0,0\n";
 
@@ -246,7 +247,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let outerVoltage = createRectangle(x: 30, y: 190, width: 50, height: 110, borderColor: "borderColor")
         let relativeHeight = Double(h * 9.16)
 //        let innerVoltage = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
-        let innerVoltage = createRectangle(x: 0, y: 110 - Int(relativeHeight), width: 49, height: Int(relativeHeight) - 1, borderColor: "nocolor")
+        let innerVoltage = createRectangle(x: 0, y: 110 - Int(relativeHeight), width: 49, height: Int(relativeHeight) - 1, borderColor: "noColor")
 
         innerVoltage.layer.cornerRadius = 5;
         innerVoltage.backgroundColor = Colors.voltageDividerColor
@@ -262,7 +263,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         outerSonar = createRectangle(x: Int(width) - 100, y: 190, width: 50, height: 110, borderColor: "borderColor");
         firstView.addSubview(outerSonar)
 //        let innerSonar = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
-        let innerSonar = createRectangle(x: 0, y: 110 - Int(relativeHeight), width: 49, height: Int(relativeHeight) - 1, borderColor: "nocolor")
+        let innerSonar = createRectangle(x: 0, y: 110 - Int(relativeHeight), width: 49, height: Int(relativeHeight) - 1, borderColor: "noColor")
         innerSonar.layer.cornerRadius = 5;
         innerSonar.backgroundColor = Colors.sonar
         outerSonar.addSubview(innerSonar)
@@ -300,7 +301,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
         if selectedControlMode == ControlMode.gamepad {
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
-            gameControllerObj = GameController();
+            gameControllerObj = gameController
             gamePadController.backgroundColor = Colors.title
         } else if selectedControlMode == ControlMode.phone {
             gameControllerObj = nil;
@@ -329,7 +330,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         secondView.addSubview(joystick)
         secondView.addSubview(game)
         secondView.addSubview(dual)
-
     }
 
     @objc func joystick(_ sender: UIView) {
@@ -456,31 +456,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func updateControllerValues() {
-        print("test in free roam");
-        if (connectedController == nil) {
-            return
-        }
-        print(Strings.controllerConnected)
-        let controller = connectedController;
-        let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
-        print(batteryLevel);
-        controller?.extendedGamepad?.valueChangedHandler = { [self] gamepad, element in
-            let control = gameControllerObj?.processJoystickInput(mode: selectedDriveMode, gamepad: gamepad) ?? vehicleControl;
-            sendControl(control: control);
-
-            let keyCommand = gameControllerObj?.processControllerKeyData(element: element);
-            sendKeyUpdates(keyCommand: keyCommand ?? "");
-        }
-    }
-
-    func sendControl(control: Control) {
-        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = control.getLeft() * selectedSpeedMode.rawValue;
-            let right = control.getRight() * selectedSpeedMode.rawValue;
-            vehicleControl = control;
-            print("c" + String(left) + "," + String(right) + "\n");
-            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
-        }
+        gameController.updateControllerValues()
     }
 
     var statusBarOrientation: UIInterfaceOrientation? {
@@ -495,36 +471,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             return orientation
         }
     }
-
-    @objc func sendKeyUpdates(keyCommand: Any) {
-        switch (keyCommand) {
-        case IndicatorEvent.Right:
-            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
-            break;
-        case IndicatorEvent.Left:
-            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
-            break;
-        case IndicatorEvent.Stop:
-            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
-            break;
-        case ControlEvent.STOP:
-            sendControl(control: Control());
-            break;
-        case ControlEvent.FORWARD:
-            break;
-        case CMD_Events.TOGGLE_LOGS:
-            break;
-        default:
-            break;
-        }
-    }
-
-    func setIndicator(keyCommand: IndicatorEvent) {
-        let indicatorValues: String = gameControllerObj?.getIndicatorEventValue(event: keyCommand) ?? "";
-        if (indicator != indicatorValues) {
-            bluetooth.sendData(payload: indicatorValues);
-            indicator = indicatorValues;
-        }
-    }
 }
+
+
 

@@ -29,12 +29,6 @@ class expandSetting: UIView, UITextFieldDelegate {
     var gyroscope = UIButton()
     var selectedResolution: Resolutions = Resolutions.medium
     var sensorButtons = [UIButton]()
-//    var isVehicleLogSelected : Bool = true
-//    var isAccelerationLogSelected : Bool = true
-//    var isGpsLogSelected : Bool = true
-//    var isMagneticLogSelected : Bool = true
-//    var isGyroscopeLogSelected : Bool = true
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -60,7 +54,7 @@ class expandSetting: UIView, UITextFieldDelegate {
         let m = VehicleControl();
         addSubview(m)
         m.translatesAutoresizingMaskIntoConstraints = false
-        m.topAnchor.constraint(equalTo: magnetic.bottomAnchor, constant: adapted(dimensionSize: 15, to: .height)).isActive = true;
+        m.topAnchor.constraint(equalTo: magnetic.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 13, to: .height)).isActive = true;
         m.leadingAnchor.constraint(equalTo: secondView.safeAreaLayoutGuide.leadingAnchor , constant: 0).isActive = true
 
     }
@@ -430,10 +424,9 @@ extension Notification.Name {
     static let updateSpeed = Notification.Name(Strings.updateSpeedMode);
     static let updateControl = Notification.Name(Strings.updateControlMode);
     static let updateDriveMode = Notification.Name(Strings.updateDriveMode);
-    static let updateResolution = Notification.Name("updateResolution")
-    static let updatePreview = Notification.Name("updatePreview")
-    static let updateTraining = Notification.Name("updateTraining")
-   static let updateSensorsForLog = Notification.Name("updateSensorsForLog")
-
+    static let updateResolution = Notification.Name(Strings.updateResolution)
+    static let updatePreview = Notification.Name(Strings.updatePreview)
+    static let updateTraining = Notification.Name(Strings.updateTraining)
+   static let updateSensorsForLog = Notification.Name(Strings.updateSensorsForLog)
 }
 

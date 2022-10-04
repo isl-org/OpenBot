@@ -20,6 +20,7 @@ class DataCollectionController: CameraController {
     var indicator = "i0,0\n";
     let bluetooth = bluetoothDataController.shared;
     let dataLogger = DataLogger.shared
+    let gameController = GameController.shared
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -133,80 +134,16 @@ class DataCollectionController: CameraController {
     }
 
     @objc func updateControllerValues() {
-        print("test in data collection");
-        if (connectedController == nil) {
-            return
-        }
-        print(Strings.controllerConnected)
-        let controller = connectedController;
-        let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
-        print(batteryLevel);
-        controller?.extendedGamepad?.valueChangedHandler = { [self] gamepad, element in
-            let control = gameControllerObj?.processJoystickInput(mode: selectedDriveMode, gamepad: gamepad) ?? vehicleControl;
-            sendControl(control: control);
-
-            let keyCommand = gameControllerObj?.processControllerKeyData(element: element);
-            sendKeyUpdates(keyCommand: keyCommand ?? "");
-        }
-    }
-
-    func sendControl(control: Control) {
-        print("hello nitish")
-        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = control.getLeft() * selectedSpeedMode.rawValue;
-            let right = control.getRight() * selectedSpeedMode.rawValue;
-            print("d" + String(left) + "," + String(right) + "\n");
-            dataLogger.ctrlLog = dataLogger.ctrlLog + String(returnCurrentTimestamp()) + " " + String(left) + " " + String(right) + "\n";
-            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
-            print("abcdef ", dataLogger.ctrlLog)
-        }
-    }
-
-
-    @objc func sendKeyUpdates(keyCommand: Any) {
-        switch (keyCommand) {
-        case IndicatorEvent.Right:
-            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
-            break;
-        case IndicatorEvent.Left:
-            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
-            break;
-        case IndicatorEvent.Stop:
-            setIndicator(keyCommand: keyCommand as! IndicatorEvent);
-            break;
-        case ControlEvent.STOP:
-            sendControl(control: Control());
-            break;
-        case ControlEvent.FORWARD:
-            break;
-        case CMD_Events.TOGGLE_LOGS:
-            switchLogging();
-            break;
-        default:
-            break;
-        }
-    }
-
-    func setIndicator(keyCommand: IndicatorEvent) {
-        let indicatorValues: String = gameControllerObj?.getIndicatorEventValue(event: keyCommand) ?? "";
-        if (indicator != indicatorValues) {
-            let index = indicatorValues.index(after: indicatorValues.startIndex)
-
-            let actualValue = indicatorValues[index...]
-//            dataLogger.indicator = dataLogger.indicator + String(returnCurrentTimestamp()) + " " + keyCommand.rawValue + "\n";
-            bluetooth.sendData(payload: indicatorValues);
-            indicator = indicatorValues;
-        }
+        gameController.updateControllerValues()
     }
 
     @objc func updateControlMode(_ notification: Notification?) {
-        print("updated")
+
         if let controlMode = notification?.userInfo?["mode"] as? ControlMode {
             selectedControlMode = controlMode;
         }
         print(selectedControlMode);
         if selectedControlMode == .gamepad {
-            print("inside if condition");
             gameControllerObj = GameController();
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
         } else if selectedControlMode == .phone {

@@ -175,7 +175,9 @@ class DataLogger {
             carSensorsData = carSensorsData + bluetoothData + "\n"
         }
         if isGpsLogSelected {
-            gps = gps + String(timestamp) + " " + String(sensorData.location.coordinate.latitude) + " " + String(sensorData.location.coordinate.longitude) + " " + String(sensorData.location.altitude) + " " + String(sensorData.location.speed) + "\n"
+            if(sensorData.location != nil) {
+                gps = gps + String(timestamp) + " " + String(sensorData.location.coordinate.latitude) + " " + String(sensorData.location.coordinate.longitude) + " " + String(sensorData.location.altitude) + " " + String(sensorData.location.speed) + "\n"
+            }
         }
         if isAccelerationLogSelected {
             acceleration = acceleration + String(timestamp) + " " + convertToString(XValue: sensorData.accelerationX, YValue: sensorData.accelerationY, ZValue: sensorData.accelerationZ) + "\n"
@@ -201,7 +203,6 @@ class DataLogger {
             if bluetooth.bumperData != ""{
                 bumper = bumper  + String(timestamp) + " " + String(bluetooth.bumperData[index...]) + "\n";
             }
-
         }
     }
     func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
@@ -242,13 +243,12 @@ class DataLogger {
         default :
             isGyroscopeLogSelected = !isGyroscopeLogSelected
         }
-        print("hello breaker")
-        print(isVehicleLogSelected)
-        print(isGpsLogSelected)
-        print(isAccelerationLogSelected)
-        print(isMagneticLogSelected)
-        print(isGyroscopeLogSelected)
-
+    }
+    func setControlLogs(left : String, right : String){
+        ctrlLog = ctrlLog + String(returnCurrentTimestamp()) + " " + left + " " + right + "\n";
+    }
+    func setIndicatorLogs(indicator  :String){
+        self.indicator = self.indicator + String(returnCurrentTimestamp()) + " " + indicator + "\n";
     }
 
 
