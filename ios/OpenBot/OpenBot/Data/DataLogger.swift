@@ -30,14 +30,8 @@ class DataLogger {
     var isGpsLogSelected : Bool = true
     var isMagneticLogSelected : Bool = true
     var isGyroscopeLogSelected : Bool = true
-
     init(){
         NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .updateSensorsForLog, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .gpsLog, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .acceleratorLog, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .magneticLog, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .gyroscopeLog, object: nil)
-
     }
     func getDirectoryInfo() -> URL {
         let fileManager = FileManager.default

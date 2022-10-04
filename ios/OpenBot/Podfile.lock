@@ -1,4 +1,5 @@
 PODS:
+  - DropDown (2.3.13)
   - TensorFlowLiteC (0.0.1-nightly.20220921):
     - TensorFlowLiteC/Core (= 0.0.1-nightly.20220921)
   - TensorFlowLiteC/Core (0.0.1-nightly.20220921)
@@ -16,18 +17,21 @@ PODS:
     - TensorFlowLiteSwift/Core (= 0.0.1-nightly.20220921)
 
 DEPENDENCIES:
+  - DropDown
   - TensorFlowLiteSwift/CoreML (~> 0.0.1-nightly)
   - TensorFlowLiteSwift/Metal (~> 0.0.1-nightly)
 
 SPEC REPOS:
   trunk:
+    - DropDown
     - TensorFlowLiteC
     - TensorFlowLiteSwift
 
 SPEC CHECKSUMS:
+  DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
   TensorFlowLiteC: d42f35b583a023fa14c12ae0e9d6995a075a5b5b
   TensorFlowLiteSwift: 98956ceb717a98b6999f2aa49e683a7628f7f913
 
-PODFILE CHECKSUM: 53fdf75f252bcd4655a5259511fdaad7554afd6c
+PODFILE CHECKSUM: 63c2e35437edef3bc621810edfe2146e01fb756f
 
 COCOAPODS: 1.10.2

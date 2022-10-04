@@ -4,7 +4,9 @@
 
 import Foundation
 import UIKit
-class expandSetting: UIView, UITextFieldDelegate {
+import DropDown
+
+class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     let logData = UISwitch()
     let bluetoothIcon = UIImageView()
     let cameraIcon = UIImageView()
@@ -29,10 +31,17 @@ class expandSetting: UIView, UITextFieldDelegate {
     var gyroscope = UIButton()
     var selectedResolution: Resolutions = Resolutions.medium
     var sensorButtons = [UIButton]()
+    var dropDownView = UIView()
+    var ddView = UIView()
+    let dropDown = DropDown()
+    var dropdownLabel = UILabel()
+    var dropdownTopAnchor: NSLayoutConstraint!
+
+
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-
         applyBlurEffect()
         createLogDataButton()
         createBluetoothIcon()
@@ -41,6 +50,8 @@ class expandSetting: UIView, UITextFieldDelegate {
         resolutionTitle()
         createResolutions()
         createModelResolutionTitle()
+        createDropdown()
+        dropDown.hide()
         _ = createLabels(value: "server", leadingAnchor: 10, topAnchor: 250, labelWidth: 240, labelHeight: 40)
         createServer()
         createSecondView()
@@ -55,7 +66,7 @@ class expandSetting: UIView, UITextFieldDelegate {
         addSubview(m)
         m.translatesAutoresizingMaskIntoConstraints = false
         m.topAnchor.constraint(equalTo: magnetic.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 13, to: .height)).isActive = true;
-        m.leadingAnchor.constraint(equalTo: secondView.safeAreaLayoutGuide.leadingAnchor , constant: 0).isActive = true
+        m.leadingAnchor.constraint(equalTo: secondView.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
 
     }
 
@@ -66,7 +77,6 @@ class expandSetting: UIView, UITextFieldDelegate {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
 
 
     func createLogDataButton() {
@@ -134,6 +144,35 @@ class expandSetting: UIView, UITextFieldDelegate {
         modelResolution = createLabels(value: Strings.modelResolution, leadingAnchor: 10, topAnchor: 130, labelWidth: 240, labelHeight: 30)
     }
 
+    func createDropdown() {
+        let models = ["CLI-Mobile", "AUTOPILOT_F", "MOBILENETV1_1_0_Q", "MOBILENETV3_S_Q", "YOLOV4"]
+        dropDown.backgroundColor = Colors.freeRoamButtonsColor
+        if let color = Colors.borderColor {
+            dropDown.textColor = color
+        }
+        dropDown.anchorView = dropDownView
+        dropDown.dataSource = models
+        dropDown.show()
+        ddView = createDropdownView(borderColor: "", buttonName: "CLI-Mobile", leadingAnchor: 10, topAnchor: 155, action: #selector(showDropdown(_:)))
+        dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+            dropdownLabel.text = item
+        }
+        dropDown.width = 200
+        dropDownView.frame.size = CGSize(width: 200, height: 400);
+        dropDownView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(dropDownView)
+        if currentOrientation  == .portrait{
+            dropdownTopAnchor = dropDownView.topAnchor.constraint(equalTo: medium.bottomAnchor, constant: 75)
+            dropdownTopAnchor.isActive = true
+        }
+        else{
+            dropdownTopAnchor.constant = 50
+        }
+        dropDownView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true;
+
+
+    }
+
     func createServer() {
         server = createButton(borderColor: "red", buttonName: Strings.server, leadingAnchor: 10, topAnchor: 280, action: #selector(serverHandler(_:)))
     }
@@ -175,11 +214,13 @@ class expandSetting: UIView, UITextFieldDelegate {
             topConstraint.constant = 320
             widthConstraint.constant = width
             heightConstraint.constant = height / 2
+
         } else {
             leadingConstraint.constant = height / 2
             topConstraint.constant = 30
             widthConstraint.constant = height / 2
             heightConstraint.constant = width
+            dropdownTopAnchor.constant = 250
         }
     }
 
@@ -253,6 +294,26 @@ class expandSetting: UIView, UITextFieldDelegate {
         return btn
     }
 
+    func createDropdownView(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIView {
+        let dd = UIView()
+        dd.layer.cornerRadius = 10
+        dd.backgroundColor = Colors.freeRoamButtonsColor
+
+        dropdownLabel.text = buttonName
+        dropdownLabel.textColor = Colors.borderColor
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showDropdown(_:)))
+        dd.addGestureRecognizer(tap)
+        addSubview(dd)
+        dd.translatesAutoresizingMaskIntoConstraints = false
+        dd.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topAnchor).isActive = true;
+        dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: leadingAnchor).isActive = true
+        dd.widthAnchor.constraint(equalToConstant: 210).isActive = true
+        dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        dropdownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        dd.addSubview(dropdownLabel)
+        return dd
+    }
+
     func createLabels(value: String, leadingAnchor: CGFloat, topAnchor: CGFloat, labelWidth: CGFloat, labelHeight: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = value
@@ -280,7 +341,7 @@ class expandSetting: UIView, UITextFieldDelegate {
         label.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
     }
 
-    func createSecondViewButton(buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, buttonWidth: CGFloat, action: Selector?,borderColor : CGColor  ) -> UIButton {
+    func createSecondViewButton(buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, buttonWidth: CGFloat, action: Selector?, borderColor: CGColor) -> UIButton {
         let btn = UIButton()
         btn.layer.cornerRadius = 10
         btn.backgroundColor = Colors.freeRoamButtonsColor
@@ -322,11 +383,10 @@ class expandSetting: UIView, UITextFieldDelegate {
     @objc func switchLogButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .logData, object: nil)
         if sender.isOn {
-           for sensor in sensorButtons {
-               sensor.isEnabled = false
-           }
-        }
-        else{
+            for sensor in sensorButtons {
+                sensor.isEnabled = false
+            }
+        } else {
             for sensor in sensorButtons {
                 sensor.isEnabled = true
             }
@@ -338,7 +398,6 @@ class expandSetting: UIView, UITextFieldDelegate {
         NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
         updateResolution()
         previewResolution.text = Strings.previewResolutionLow
-
 
 
     }
@@ -407,8 +466,9 @@ class expandSetting: UIView, UITextFieldDelegate {
         NotificationCenter.default.post(name: .updateSensorsForLog, object: sender)
         updateBorderColor(sender: sender);
     }
-    func updateBorderColor(sender : UIButton){
-       sender.layer.borderColor =  (sender.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor)  ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
+
+    func updateBorderColor(sender: UIButton) {
+        sender.layer.borderColor = (sender.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
     }
 
     @objc func delayFieldDidChange(_ sender: UITextField) {
@@ -416,6 +476,11 @@ class expandSetting: UIView, UITextFieldDelegate {
 
 
     }
+
+    @objc func showDropdown(_ sender: UIButton) {
+        dropDown.show()
+    }
+
 }
 
 extension Notification.Name {
@@ -427,6 +492,6 @@ extension Notification.Name {
     static let updateResolution = Notification.Name(Strings.updateResolution)
     static let updatePreview = Notification.Name(Strings.updatePreview)
     static let updateTraining = Notification.Name(Strings.updateTraining)
-   static let updateSensorsForLog = Notification.Name(Strings.updateSensorsForLog)
+    static let updateSensorsForLog = Notification.Name(Strings.updateSensorsForLog)
 }
 
