@@ -22,7 +22,7 @@ class Model {
     var name: String;
     var pathType: PATH_TYPE;
     var path: String;
-    private var inputSize: String;
+    var inputSize: String;
 
     init(id: Int, classType: CLASS, type: TYPE, name: String, pathType: PATH_TYPE, path: String, inputSize: String) {
         self.id = id;

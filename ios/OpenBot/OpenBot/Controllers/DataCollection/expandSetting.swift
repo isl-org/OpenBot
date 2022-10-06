@@ -36,7 +36,9 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     let dropDown = DropDown()
     var dropdownLabel = UILabel()
     var dropdownTopAnchor: NSLayoutConstraint!
-
+    var modelsName  = [String]()
+    var resolution = [String]()
+    var models: [Model] = [];
 
 
     override init(frame: CGRect) {
@@ -141,21 +143,22 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     func createModelResolutionTitle() {
-        modelResolution = createLabels(value: Strings.modelResolution, leadingAnchor: 10, topAnchor: 130, labelWidth: 240, labelHeight: 30)
+        modelResolution = createLabels(value: Strings.modelResolution + "256x96", leadingAnchor: 10, topAnchor: 130, labelWidth: 240, labelHeight: 30)
     }
 
     func createDropdown() {
-        let models = ["CLI-Mobile", "AUTOPILOT_F", "MOBILENETV1_1_0_Q", "MOBILENETV3_S_Q", "YOLOV4"]
+        loadModelsNameAndResolution()
         dropDown.backgroundColor = Colors.freeRoamButtonsColor
         if let color = Colors.borderColor {
             dropDown.textColor = color
         }
         dropDown.anchorView = dropDownView
-        dropDown.dataSource = models
+        dropDown.dataSource = modelsName
         dropDown.show()
         ddView = createDropdownView(borderColor: "", buttonName: "CLI-Mobile", leadingAnchor: 10, topAnchor: 155, action: #selector(showDropdown(_:)))
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             dropdownLabel.text = item
+            modelResolution.text = Strings.modelResolution + resolution[index]
         }
         dropDown.width = 200
         dropDownView.frame.size = CGSize(width: 200, height: 400);
@@ -295,6 +298,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     func createDropdownView(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIView {
+
         let dd = UIView()
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
@@ -472,13 +476,62 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     @objc func delayFieldDidChange(_ sender: UITextField) {
-        print(sender.text)
+        print(sender.text as Any)
 
 
     }
 
     @objc func showDropdown(_ sender: UIButton) {
         dropDown.show()
+    }
+
+    func loadModelsNameAndResolution(){
+        let models = loadModels()
+//        for model in models{
+//            let index = model.name.firstIndex(of: ".")
+//            if let index = index {
+//                modelsName.append(String(model.name.prefix(upTo: index)))
+//            }
+//        }
+//        let modelItems = models
+//        let x = modelItems[0]
+//       let mod = Model.fromModelItems(list: modelItems);
+//        let y = Model.getName(mod[0])
+//        print(y())
+
+
+        if models.count > 0 {
+            let model = Model.fromModelItems(list: models)
+            for count in 0 ... models.count-1 {
+                let nameOfModel = Model.getName(model[count])()
+                resolution.append(model[count].inputSize)
+                let index = nameOfModel.firstIndex(of: ".")
+                if let index = index {
+                    modelsName.append(String(nameOfModel.prefix(upTo: index)))
+                }
+            }
+
+        }
+
+
+
+
+
+
+    }
+
+    func loadModels() -> [ModelItem] {
+        if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                let jsonData = try decoder.decode([ModelItem].self, from: data)
+                return jsonData;
+            } catch {
+                print("error:\(error)")
+            }
+        }
+        return [];
     }
 
 }

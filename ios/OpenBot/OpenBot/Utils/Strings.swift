@@ -24,7 +24,7 @@ struct Strings {
     static let previewResolutionHigh: String = "Preview Resolution (1920 x 1080)"
     static let low: String = "Low"
     static let high: String = "High"
-    static let modelResolution: String = "Model Resolution 256 x 96"
+    static let modelResolution: String = "Model Resolution "
     static let server: String = "Server"
     static let expendSetting: String = "expendSetting"
     static let preview: String = "Preview"
