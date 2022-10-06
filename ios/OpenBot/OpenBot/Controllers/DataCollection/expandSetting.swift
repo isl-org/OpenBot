@@ -161,17 +161,13 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             modelResolution.text = Strings.modelResolution + resolution[index]
         }
         dropDown.width = 200
-        dropDownView.frame.size = CGSize(width: 200, height: 400);
+        dropDownView.frame.size = CGSize(width: 200, height: 100);
         dropDownView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(dropDownView)
-        if currentOrientation  == .portrait{
-            dropdownTopAnchor = dropDownView.topAnchor.constraint(equalTo: medium.bottomAnchor, constant: 75)
-            dropdownTopAnchor.isActive = true
-        }
-        else{
-            dropdownTopAnchor.constant = 50
-        }
-        dropDownView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true;
+        dropdownTopAnchor = dropDownView.topAnchor.constraint(equalTo: ddView.safeAreaLayoutGuide.bottomAnchor, constant: 5)
+        dropdownTopAnchor.isActive = true
+        dropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
+
 
 
     }
@@ -199,7 +195,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             heightConstraint = secondView.heightAnchor.constraint(equalToConstant: width)
             heightConstraint.identifier = Strings.expendSetting
         }
-
         leadingConstraint.identifier = Strings.expendSetting;
         topConstraint.identifier = Strings.expendSetting
         widthConstraint.identifier = Strings.expendSetting
@@ -217,13 +212,11 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             topConstraint.constant = 320
             widthConstraint.constant = width
             heightConstraint.constant = height / 2
-
         } else {
             leadingConstraint.constant = height / 2
             topConstraint.constant = 30
             widthConstraint.constant = height / 2
             heightConstraint.constant = width
-            dropdownTopAnchor.constant = 250
         }
     }
 
@@ -298,11 +291,9 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     func createDropdownView(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIView {
-
         let dd = UIView()
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
-
         dropdownLabel.text = buttonName
         dropdownLabel.textColor = Colors.borderColor
         let tap = UITapGestureRecognizer(target: self, action: #selector(showDropdown(_:)))
@@ -487,19 +478,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
     func loadModelsNameAndResolution(){
         let models = loadModels()
-//        for model in models{
-//            let index = model.name.firstIndex(of: ".")
-//            if let index = index {
-//                modelsName.append(String(model.name.prefix(upTo: index)))
-//            }
-//        }
-//        let modelItems = models
-//        let x = modelItems[0]
-//       let mod = Model.fromModelItems(list: modelItems);
-//        let y = Model.getName(mod[0])
-//        print(y())
-
-
         if models.count > 0 {
             let model = Model.fromModelItems(list: models)
             for count in 0 ... models.count-1 {
