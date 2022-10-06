@@ -19,11 +19,13 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     var images : [(UIImage,Bool,Bool)] = []
     var isTrainingSelected: Bool = true
     var isPreviewSelected : Bool = false
+    var widthOfTrainingImage : Float = 256
+    var heightOfTrainingImage : Float = 96
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateModelResolution), name: .updateModelResolution, object: nil)
 
     }
 
@@ -65,6 +67,21 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             captureSession.sessionPreset = .hd1280x720
         case .high:
             captureSession.sessionPreset = .high
+        }
+    }
+
+    @objc func updateModelResolution(_ notification: Notification?) {
+        if notification != nil{
+            let dimensionOfImage  = notification?.object as? String
+            let indexOfx = dimensionOfImage?.firstIndex(of: "x")
+            if let indexOfx = indexOfx {
+                widthOfTrainingImage = Float(dimensionOfImage?.prefix(upTo: indexOfx) ?? "256") ?? 256
+                let indexAfterX = dimensionOfImage?.index(after: indexOfx)
+                if let indexAfterX = indexAfterX {
+                    heightOfTrainingImage = Float(dimensionOfImage?.suffix(from: indexAfterX) ?? "56") ?? 96
+                }
+            }
+
         }
     }
 
@@ -264,7 +281,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
                 }
                 if img.2 {
                     let imageName = String(count) + Strings.underscore + Strings.crop
-                    let croppedImage = cropImage(imageToCrop: img.0, toRect: CGRectMake(0, 30, 256, 96))
+                    let croppedImage = cropImage(imageToCrop: img.0, toRect: CGRectMake(0, 30, CGFloat(widthOfTrainingImage), CGFloat(heightOfTrainingImage)))
                     DataLogger.shared.saveImages(path: imagePath, image:croppedImage , name: imageName);
                 }
                 count = count + 1

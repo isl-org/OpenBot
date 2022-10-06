@@ -159,6 +159,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             dropdownLabel.text = item
             modelResolution.text = Strings.modelResolution + resolution[index]
+            NotificationCenter.default.post(name: .updateModelResolution, object: resolution[index])
         }
         dropDown.width = 200
         dropDownView.frame.size = CGSize(width: 200, height: 100);
@@ -175,7 +176,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     func createServer() {
         server = createButton(borderColor: "red", buttonName: Strings.server, leadingAnchor: 10, topAnchor: 280, action: #selector(serverHandler(_:)))
     }
-
 
     func createSecondView() {
         secondView.translatesAutoresizingMaskIntoConstraints = false
@@ -202,7 +202,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         NSLayoutConstraint.activate([
             leadingConstraint, topConstraint, widthConstraint, heightConstraint
         ])
-
     }
 
     func refreshConstraints() {
@@ -524,5 +523,6 @@ extension Notification.Name {
     static let updatePreview = Notification.Name(Strings.updatePreview)
     static let updateTraining = Notification.Name(Strings.updateTraining)
     static let updateSensorsForLog = Notification.Name(Strings.updateSensorsForLog)
+    static let updateModelResolution = Notification.Name("updateModelResolution")
 }
 
