@@ -95,6 +95,7 @@ class DataLogger {
     }
 
     func saveImages(path: String , image : UIImage,name : String) {
+
         let imagePath = URL(string: path)
         let imageName = imagePath?.appendingPathComponent(name);
         let ima = imageName?.absoluteString
@@ -209,7 +210,6 @@ class DataLogger {
         String(XValue) + " " + String(YValue) + " " + String(ZValue);
     }
     func setupFilesForLogging(){
-//        images.removeAll()
         carSensorsData = "";
         acceleration = Strings.acceleration
         locationCoordinates = Strings.locationCoordinates

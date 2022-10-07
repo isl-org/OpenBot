@@ -6,8 +6,7 @@ import Foundation
 import AVFoundation
 import UIKit
 
-class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
-
+class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
     var captureSession: AVCaptureSession!
     var stillImageOutput: AVCapturePhotoOutput!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
@@ -21,7 +20,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     var isPreviewSelected : Bool = false
     var widthOfTrainingImage : Float = 256
     var heightOfTrainingImage : Float = 96
-
+    var saveZipFilesName = [URL]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -287,10 +286,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
                 count = count + 1
             }
         }
-        if let url = URL(string: openBotPath) {
             DataLogger.shared.saveFramesFile(path: sensorPath, data: rgbFrames);
-        }
-        images.removeAll()
+            images.removeAll()
+            print("size of images ", images.count)
     }
 
     func saveFolder() {
@@ -298,15 +296,16 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let activityManager = UIActivityViewController(activityItems: DataLogger.shared.allDirectories, applicationActivities: nil)
         present(activityManager, animated: true)
         _ = navigationController?.popViewController(animated: true)
-        DataLogger.shared.deleteFiles(path: Strings.forwardSlash + baseDirectory)
+//        DataLogger.shared.deleteFiles(path: Strings.forwardSlash + baseDirectory)
     }
 
     func createZip(path: URL) {
 //        let baseDirectoryName = dataLogger.knowDateOrTime(format: "yyyy") + dataLogger.knowDateOrTime(format: "MM") + dataLogger.knowDateOrTime(format: "dd") + "_"
 //                + dataLogger.knowDateOrTime(format: "H") + dataLogger.knowDateOrTime(format: "mm") + dataLogger.knowDateOrTime(format: "ss") + ".zip"
-        let baseDirectoryName = baseDirectory + ".zip";
+    for t in DataLogger.shared.allDirectoriesName {
+        let baseDirectoryName = t + ".zip";
         let fm = FileManager.default
-        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + baseDirectory)
+        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + t)
         var archiveUrl: URL?
         var error: NSError?
         let coordinator = NSFileCoordinator()
@@ -319,12 +318,12 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             ).appendingPathComponent(baseDirectoryName)
             try! fm.moveItem(at: zipUrl, to: tmpUrl)
             archiveUrl = tmpUrl
-        }
-        if let archiveUrl = archiveUrl {
-            let avc = UIActivityViewController(activityItems: [archiveUrl], applicationActivities: nil)
-            present(avc, animated: true)
-        } else {
-            print(error as Any)
+            saveZipFilesName.append(tmpUrl)
         }
     }
+            let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
+            present(avc, animated: true)
+    }
+
+
 }

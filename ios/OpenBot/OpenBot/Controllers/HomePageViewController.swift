@@ -45,7 +45,7 @@ class HomePageViewController: UIViewController {
         modesCollectionView.dataSource = self
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         changeNavigationColor()
-
+        DataLogger.shared.deleteFiles(path: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
     }
 
     func changeNavigationColor() {
@@ -56,6 +56,7 @@ class HomePageViewController: UIViewController {
 
         }
     }
+
 
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -72,7 +73,9 @@ class HomePageViewController: UIViewController {
         } else {
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
+
     }
+
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         peripheral.discoverServices(nil)
@@ -149,6 +152,7 @@ extension UIViewController: UICollectionViewDataSource {
         return currentViewControllerName
 
     }
+
 
 
 }

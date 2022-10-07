@@ -61,7 +61,6 @@ class DataCollectionController: CameraController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 //        saveFolder()
-        print("data collection disappeared");
 
     }
 
@@ -187,7 +186,15 @@ class DataCollectionController: CameraController {
     }
 
     @objc func back(sender: UIBarButtonItem) {
-            saveFolder()
+//            saveFolder()
+
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory: String = paths.first ?? ""
+        let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
+        if let url = URL(string: openBotPath) {
+            createZip(path: url)
+        }
+        _ = navigationController?.popViewController(animated: true)
 
     }
 
