@@ -22,6 +22,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     var widthOfTrainingImage : Float = 256
     var heightOfTrainingImage : Float = 96
 
+
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
@@ -289,8 +290,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
         if let url = URL(string: openBotPath) {
             DataLogger.shared.saveFramesFile(path: sensorPath, data: rgbFrames);
-            createZip(path: url)
-//            saveFolder()
+//            createZip(path: url)
+            saveFolder()
         }
 
         images.removeAll()
@@ -298,7 +299,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
 
     func saveFolder() {
         let archiveUrl = DataLogger.shared.getDirectoryInfo()
-        let activityManager = UIActivityViewController(activityItems: [archiveUrl], applicationActivities: nil)
+        let activityManager = UIActivityViewController(activityItems: DataLogger.shared.allDirectories, applicationActivities: nil)
         present(activityManager, animated: true)
     }
 

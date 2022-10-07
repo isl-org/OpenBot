@@ -52,6 +52,11 @@ class DataCollectionController: CameraController {
         setupCollapseView()
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        dataLogger.deleteFiles(path: Strings.forwardSlash + baseDirectory)
+    }
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -127,9 +132,9 @@ class DataCollectionController: CameraController {
             }
         } else {
             baseDirectory = dataLogger.getBaseDirectoryName()
-            saveImages();
+            dataLogger.allDirectoriesName.append(baseDirectory)
             DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash + baseDirectory);
-            dataLogger.deleteFiles(path: Strings.forwardSlash + baseDirectory)
+            saveImages();
             dataLogger.setupFilesForLogging()
         }
     }
@@ -152,7 +157,6 @@ class DataCollectionController: CameraController {
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
         }
     }
-
 
     @objc func updateDriveMode(_ notification: Notification) {
         if let driveMode = notification.userInfo?["drive"] as? DriveMode {

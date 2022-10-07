@@ -16,6 +16,7 @@ class DataLogger {
     var locationCoordinates : String = ""
     var gps : String = ""
     var baseDirectory :  String = ""
+    var allDirectoriesName = [String]()
     var bumper : String = ""
     var ctrlLog : String = ""
     var indicator : String = ""
@@ -25,6 +26,7 @@ class DataLogger {
     var voltage : String = ""
     var wheels : String = ""
     var motion : String = ""
+    var allDirectories = [URL]()
     var isVehicleLogSelected : Bool = true
     var isAccelerationLogSelected : Bool = true
     var isGpsLogSelected : Bool = true
@@ -34,13 +36,14 @@ class DataLogger {
         NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .updateSensorsForLog, object: nil)
     }
     func getDirectoryInfo() -> URL {
+        allDirectories.removeAll()
         let fileManager = FileManager.default
         var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  baseDirectory)
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-            print(fileURLs)
-
+                print(fileURLs)
+                allDirectories = fileURLs
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
         }
@@ -48,6 +51,7 @@ class DataLogger {
     }
 
     func createOpenBotFolder(openBotPath: String) {
+        print(allDirectoriesName)
         print(openBotPath)
         createFolder(path: openBotPath)
     }
@@ -60,6 +64,7 @@ class DataLogger {
 //        }
 
     }
+
 
     func createSensorData(openBotPath: String) {
         let sensorDataPath = openBotPath + "/sensor_data"
@@ -104,7 +109,8 @@ class DataLogger {
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         do {
-            try FileManager.default.removeItem(atPath: documentsURL.path + path)
+            try FileManager.default.removeItem(atPath: documentsURL.path)
+//            try FileManager.default.removeItem(atPath: documentsURL.path + path)
         } catch {
             print(error)
         }
@@ -243,6 +249,10 @@ class DataLogger {
     }
     func setIndicatorLogs(indicator  :String){
         self.indicator = self.indicator + String(returnCurrentTimestamp()) + " " + indicator + "\n";
+    }
+
+    func setupAllDirectoriesName(){
+        print("hello ",getBaseDirectoryName)
     }
 
 
