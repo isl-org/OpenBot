@@ -263,7 +263,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let documentsDirectory: String = paths.first ?? ""
         let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
 //        DataLogger.shared.deleteFiles(path: openBotPath);
-
         DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
         DataLogger.shared.createImageFolder(openBotPath: openBotPath)
         DataLogger.shared.createSensorData(openBotPath: openBotPath)
@@ -290,10 +289,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
         if let url = URL(string: openBotPath) {
             DataLogger.shared.saveFramesFile(path: sensorPath, data: rgbFrames);
-//            createZip(path: url)
-            saveFolder()
         }
-
         images.removeAll()
     }
 
@@ -301,6 +297,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let archiveUrl = DataLogger.shared.getDirectoryInfo()
         let activityManager = UIActivityViewController(activityItems: DataLogger.shared.allDirectories, applicationActivities: nil)
         present(activityManager, animated: true)
+        _ = navigationController?.popViewController(animated: true)
+        DataLogger.shared.deleteFiles(path: Strings.forwardSlash + baseDirectory)
     }
 
     func createZip(path: URL) {
@@ -329,6 +327,4 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             print(error as Any)
         }
     }
-
-
 }

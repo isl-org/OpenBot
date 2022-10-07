@@ -32,6 +32,12 @@ class DataCollectionController: CameraController {
         createCameraView()
         view.addSubview(collapseView)
         updateControlMode(nil);
+
+        self.navigationItem.hidesBackButton = true
+        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target: self, action: #selector(DataCollectionController.back(sender:)))
+        self.navigationItem.leftBarButtonItem = newBackButton
+
+
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         NotificationCenter.default.addObserver(self, selector: #selector(loadExpandView), name: .clickSetting, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
@@ -54,7 +60,9 @@ class DataCollectionController: CameraController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        dataLogger.deleteFiles(path: Strings.forwardSlash + baseDirectory)
+//        saveFolder()
+        print("data collection disappeared");
+
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -177,4 +185,11 @@ class DataCollectionController: CameraController {
     @objc func updateTraining(_ notification: Notification) {
         isTrainingSelected = !isTrainingSelected
     }
+
+    @objc func back(sender: UIBarButtonItem) {
+            saveFolder()
+
+    }
+
+
 }
