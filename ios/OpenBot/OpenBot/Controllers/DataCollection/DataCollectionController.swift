@@ -21,7 +21,7 @@ class DataCollectionController: CameraController {
     let bluetooth = bluetoothDataController.shared;
     let dataLogger = DataLogger.shared
     let gameController = GameController.shared
-
+    var isLoggedButtonPressed : Bool = false
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -127,6 +127,7 @@ class DataCollectionController: CameraController {
 
     @objc func switchLogging() {
         loggingEnabled = !loggingEnabled;
+        isLoggedButtonPressed = true
         if (loggingEnabled) {
             dataLogger.setupFilesForLogging();
             Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
@@ -187,16 +188,16 @@ class DataCollectionController: CameraController {
 
     @objc func back(sender: UIBarButtonItem) {
 //            saveFolder()
-
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory: String = paths.first ?? ""
         let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
         if let url = URL(string: openBotPath) {
-            createZip(path: url)
+            if isLoggedButtonPressed{
+                createZip(path: url)
+            }
+
         }
         _ = navigationController?.popViewController(animated: true)
 
     }
-
-
 }
