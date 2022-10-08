@@ -33,11 +33,9 @@ class DataCollectionController: CameraController {
         view.addSubview(collapseView)
         updateControlMode(nil);
 
-        self.navigationItem.hidesBackButton = true
+        navigationItem.hidesBackButton = true
         let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target: self, action: #selector(DataCollectionController.back(sender:)))
-        self.navigationItem.leftBarButtonItem = newBackButton
-
-
+        navigationItem.leftBarButtonItem = newBackButton
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         NotificationCenter.default.addObserver(self, selector: #selector(loadExpandView), name: .clickSetting, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
@@ -49,7 +47,6 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedMode), name: .updateSpeed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -130,19 +127,21 @@ class DataCollectionController: CameraController {
         isLoggedButtonPressed = true
         if (loggingEnabled) {
             dataLogger.setupFilesForLogging();
+            images.removeAll()
             Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
-                captureImage();
-                sensorData.startSensorsUpdates()
-                dataLogger.recordLogs();
                 if !loggingEnabled {
                     timer.invalidate()
                 }
+                captureImage();
+                sensorData.startSensorsUpdates()
+                dataLogger.recordLogs();
             }
         } else {
             baseDirectory = dataLogger.getBaseDirectoryName()
             dataLogger.allDirectoriesName.append(baseDirectory)
             DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash + baseDirectory);
             saveImages();
+            setupImages()
             dataLogger.setupFilesForLogging()
         }
     }
@@ -187,7 +186,6 @@ class DataCollectionController: CameraController {
     }
 
     @objc func back(sender: UIBarButtonItem) {
-//            saveFolder()
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory: String = paths.first ?? ""
         let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
@@ -195,7 +193,6 @@ class DataCollectionController: CameraController {
             if isLoggedButtonPressed{
                 createZip(path: url)
             }
-
         }
         _ = navigationController?.popViewController(animated: true)
 

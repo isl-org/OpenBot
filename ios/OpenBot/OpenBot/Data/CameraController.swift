@@ -220,6 +220,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
         let image = UIImage(data: imageData)
             if let image = image {
                     images.append((image , isPreviewSelected,isTrainingSelected))
+
             }
     }
 
@@ -258,14 +259,13 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
     }
 
     func saveImages() {
+
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory: String = paths.first ?? ""
         let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
-//        DataLogger.shared.deleteFiles(path: openBotPath);
         DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
         DataLogger.shared.createImageFolder(openBotPath: openBotPath)
         DataLogger.shared.createSensorData(openBotPath: openBotPath)
-//        dataLogger.getDirectoryInfo()
         let imagePath = openBotPath + Strings.images
         let sensorPath = openBotPath + Strings.sensor
         let header = Strings.timestamp
@@ -286,9 +286,10 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
                 count = count + 1
             }
         }
+           setupImages()
             DataLogger.shared.saveFramesFile(path: sensorPath, data: rgbFrames);
-            images.removeAll()
-            print("size of images ", images.count)
+
+
     }
 
     func saveFolder() {
@@ -323,6 +324,10 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
     }
             let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
             present(avc, animated: true)
+    }
+
+    func setupImages(){
+        images.removeAll()
     }
 
 

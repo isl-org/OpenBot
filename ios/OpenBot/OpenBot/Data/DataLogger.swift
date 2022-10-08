@@ -42,7 +42,6 @@ class DataLogger {
         documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  baseDirectory)
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-                print(fileURLs)
                 allDirectories = fileURLs
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
@@ -51,17 +50,12 @@ class DataLogger {
     }
 
     func createOpenBotFolder(openBotPath: String) {
-        print(allDirectoriesName)
-        print(openBotPath)
         createFolder(path: openBotPath)
     }
 
     func createImageFolder(openBotPath: String) {
         let imagePath = openBotPath + "/images"
         createFolder(path: imagePath)
-//        if URL(string: openBotPath) != nil {
-//            saveImages(path: imagePath, image: image)
-//        }
 
     }
 
@@ -164,7 +158,6 @@ class DataLogger {
 //        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-            print("hello ",fileURLs)
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
         }
@@ -251,9 +244,6 @@ class DataLogger {
         self.indicator = self.indicator + String(returnCurrentTimestamp()) + " " + indicator + "\n";
     }
 
-    func setupAllDirectoriesName(){
-        print("hello ",getBaseDirectoryName)
-    }
 
 
 }
