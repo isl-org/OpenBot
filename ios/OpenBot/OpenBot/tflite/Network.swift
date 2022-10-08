@@ -34,10 +34,10 @@ class Network {
             let path = bundle.path(forResource: fileName, ofType: "")
             if let file = path {
                 tflite = try Interpreter(modelPath: file, options: tfliteOptions, delegates: delegates);
+                try tflite?.allocateTensors()
             } else {
                 print("file not found");
             }
         }
     }
-
 }
