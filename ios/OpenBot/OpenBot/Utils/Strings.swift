@@ -3,10 +3,13 @@
 //
 
 struct Strings {
+    //screens
     static let OpenBot: String = "OpenBot";
     static let freeRoam: String = "Free Roam";
     static let dataCollection: String = "Data Collection";
     static let controllerMapping: String = "Controller Mapping";
+    static let autoPilot : String = "Auto Pilot"
+
     static let controller: String = "Controller"
     static let speed: String = "Speed"
     static let driveMode: String = "Drive Mode"
@@ -89,5 +92,7 @@ struct Strings {
     static let voltageHeader: String = "timestamp[ns], batteryVoltage\n"
     static let wheels: String = "timestamp[ns], leftWheel, rightWheel\n"
     static let motion: String = "timestamp[ns]"
+
+
 
 }

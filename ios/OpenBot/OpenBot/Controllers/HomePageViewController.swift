@@ -13,7 +13,8 @@ let width = min(UIScreen.main.bounds.height, UIScreen.main.bounds.width)
 var currentOrientation: UIInterfaceOrientation = UIInterfaceOrientation.portrait
 var isBluetoothConnected = false;
 var viewControllerName: String?
-var leadingConstraint  = NSLayoutConstraint()
+var leadingConstraint = NSLayoutConstraint()
+
 class HomePageViewController: UIViewController {
     @IBOutlet weak var bluetooth: UIButton!
     @IBOutlet weak var settings: UIButton!
@@ -22,6 +23,7 @@ class HomePageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         bluetoothDataController.shared.startScan()
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         setUpTitle();
@@ -30,8 +32,7 @@ class HomePageViewController: UIViewController {
         layout.collectionView?.layer.shadowOpacity = 1
         if currentOrientation == .portrait {
             layout.itemSize = resized(size: CGSize(width: width * 0.42, height: width * 0.42), basedOn: dimension)
-        }
-        else{
+        } else {
             layout.itemSize = resized(size: CGSize(width: width * 0.42, height: width * 0.42), basedOn: dimension)
         }
 
@@ -46,6 +47,8 @@ class HomePageViewController: UIViewController {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         changeNavigationColor()
         DataLogger.shared.deleteFiles(path: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
+
+
     }
 
     func changeNavigationColor() {
@@ -58,7 +61,6 @@ class HomePageViewController: UIViewController {
     }
 
 
-
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
@@ -66,13 +68,14 @@ class HomePageViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-
         viewControllerName = classNameFrom(self)
         if (isBluetoothConnected) {
             bluetooth.setImage(Images.bluetoothConnected, for: .normal)
         } else {
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
+
+
 
     }
 
@@ -132,7 +135,7 @@ extension UIViewController: UICollectionViewDelegate {
 
 extension UIViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-          Constants.gameModes.count;
+        Constants.gameModes.count;
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -144,9 +147,10 @@ extension UIViewController: UICollectionViewDataSource {
         return cell
     }
 
-    func arrowConstraints(){
+    func arrowConstraints() {
 
     }
+
     func classNameFrom(_ viewController: UIViewController) -> String {
         let currentViewControllerName = NSStringFromClass(viewController.classForCoder).components(separatedBy: ".").last!
         return currentViewControllerName
@@ -155,4 +159,41 @@ extension UIViewController: UICollectionViewDataSource {
 
 
 
+}
+
+
+extension UIBarButtonItem {
+    convenience init(image :UIImage, title :String, target: Any?, action: Selector?) {
+        let button = UIButton(type: .custom)
+        button.setInsets(forContentPadding: UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0), imageTitlePadding: 10)
+        button.setImage(image, for: .normal)
+        button.imageView?.layer.transform = CATransform3DMakeScale(1.3, 1.3, 1.3)
+        button.setTitle(title, for: .normal)
+        button.frame = CGRect(x: 0, y: 0, width: image.size.width + 10, height: image.size.height)
+        if let target = target, let action = action {
+            button.addTarget(target, action: action, for: .touchUpInside)
+        }
+        self.init(customView: button)
+    }
+}
+
+
+extension UIButton {
+    func setInsets(
+            forContentPadding contentPadding: UIEdgeInsets,
+            imageTitlePadding: CGFloat
+    ) {
+        self.contentEdgeInsets = UIEdgeInsets(
+                top: contentPadding.top,
+                left: contentPadding.left,
+                bottom: contentPadding.bottom,
+                right: contentPadding.right + imageTitlePadding
+        )
+        self.titleEdgeInsets = UIEdgeInsets(
+                top: 0,
+                left: imageTitlePadding,
+                bottom: 0,
+                right: -imageTitlePadding
+        )
+    }
 }

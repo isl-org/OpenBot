@@ -293,7 +293,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
     }
 
     func saveFolder() {
-        let archiveUrl = DataLogger.shared.getDirectoryInfo()
+        _ = DataLogger.shared.getDirectoryInfo()
         let activityManager = UIActivityViewController(activityItems: DataLogger.shared.allDirectories, applicationActivities: nil)
         present(activityManager, animated: true)
         _ = navigationController?.popViewController(animated: true)

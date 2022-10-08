@@ -34,8 +34,13 @@ class DataCollectionController: CameraController {
         updateControlMode(nil);
 
         navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target: self, action: #selector(DataCollectionController.back(sender:)))
-        navigationItem.leftBarButtonItem = newBackButton
+        if UIImage(named: "back") != nil{
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.dataCollection, target: self, action: #selector(DataCollectionController.back(sender:)))
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+
+
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         NotificationCenter.default.addObserver(self, selector: #selector(loadExpandView), name: .clickSetting, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
@@ -189,12 +194,14 @@ class DataCollectionController: CameraController {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory: String = paths.first ?? ""
         let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
+        if isLoggedButtonPressed && loggingEnabled {
+            switchLogging()
+        }
         if let url = URL(string: openBotPath) {
             if isLoggedButtonPressed{
                 createZip(path: url)
             }
         }
         _ = navigationController?.popViewController(animated: true)
-
     }
 }

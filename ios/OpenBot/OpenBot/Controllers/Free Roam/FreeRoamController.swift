@@ -26,6 +26,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationBarItem()
         applySafeAreaConstraints()
         apply()
         createFirstView()
@@ -470,6 +471,19 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             }
             return orientation
         }
+    }
+
+    func setupNavigationBarItem(){
+        if UIImage(named: "back") != nil{
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.freeRoam, target: self, action: #selector(FreeRoamController.back(sender:)))
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+    }
+
+    @objc func back(sender: UIBarButtonItem) {
+
+        _ = navigationController?.popViewController(animated: true)
     }
 }
 

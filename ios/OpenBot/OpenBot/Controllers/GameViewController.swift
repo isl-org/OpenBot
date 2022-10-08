@@ -210,4 +210,6 @@ class Draw: UIView {
         bpath.fill()
     }
 
+
+
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 class AutopilotFragment: CameraController {
     var autopilot: Autopilot?;
     var models: [Model] = [];
@@ -20,6 +21,8 @@ class AutopilotFragment: CameraController {
             autopilot = Autopilot(model: models[0], device: RuntimeDevice.XNNPACK, numThreads: 1);
             checkItem();
         }
+
+        setupNavigationBarItem()
     }
 
     func checkItem() {
@@ -70,5 +73,18 @@ class AutopilotFragment: CameraController {
             }
         }
         return [];
+    }
+
+    func setupNavigationBarItem(){
+        if UIImage(named: "back") != nil{
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.autoPilot, target: self, action: #selector(AutopilotFragment.back(sender:)))
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+    }
+
+    @objc func back(sender: UIBarButtonItem) {
+
+        _ = navigationController?.popViewController(animated: true)
     }
 }

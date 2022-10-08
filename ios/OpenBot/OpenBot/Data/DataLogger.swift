@@ -158,6 +158,7 @@ class DataLogger {
 //        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+            print(fileURLs)
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
         }
