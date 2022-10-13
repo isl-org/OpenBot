@@ -7,23 +7,27 @@
 
 import Foundation
 import UIKit
+
 class AutopilotFragment: CameraController {
     var autopilot: Autopilot?;
     var models: [Model] = [];
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         createCameraView()
         let modelItems = loadModels();
         if (modelItems.count > 0) {
             models = Model.fromModelItems(list: modelItems);
-            print(models)
+            print("models are : ", models)
             autopilot = Autopilot(model: models[0], device: RuntimeDevice.XNNPACK, numThreads: 1);
             checkItem();
         }
 
+
         setupNavigationBarItem()
     }
+
 
     func checkItem() {
         do {
@@ -31,10 +35,17 @@ class AutopilotFragment: CameraController {
 
             try print(autopilot?.tflite?.input(at: 1) as Any);
 
-//            let doubleArray: [Double] = [1, 1];
             var data: Data = Data();
-            data.append([UInt8(0.8)], count: 2);
+            data.append([UInt8(0.3)], count: 2);
             data.append([UInt8(1)], count: 2);
+
+            //make image input
+
+
+            try autopilot?.tflite?.copy(UIImage(named: "bluetooth")!.jpegData(compressionQuality: 1)!, toInputAt: 1)
+            try autopilot?.tflite?.invoke()
+            let imageOutput = try autopilot?.tflite?.output(at: 0)
+            print(imageOutput)
 //            encode(with: .)
 //            let stre: String? = String(bytes: s, encoding: .utf8);
 //            var data: Data = Data();
@@ -44,13 +55,14 @@ class AutopilotFragment: CameraController {
             try autopilot?.tflite?.copy(data, toInputAt: 0)
             try autopilot?.tflite?.invoke();
             let outputTensor = try autopilot?.tflite?.output(at: 0);
+            print("outputtensor", outputTensor)
             // Copy output to `Data` to process the inference results.
             let outputSize = outputTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
             let outputData =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
             outputTensor?.data.copyBytes(to: outputData)
             for i in outputData.indices {
-                print(outputData[i]);
+                print("outputData ", outputData[i]);
             }
 //            print()
 //            print(outputData);
@@ -75,8 +87,8 @@ class AutopilotFragment: CameraController {
         return [];
     }
 
-    func setupNavigationBarItem(){
-        if UIImage(named: "back") != nil{
+    func setupNavigationBarItem() {
+        if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
             let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.autoPilot, target: self, action: #selector(AutopilotFragment.back(sender:)))
             navigationItem.leftBarButtonItem = newBackButton
@@ -87,4 +99,8 @@ class AutopilotFragment: CameraController {
 
         _ = navigationController?.popViewController(animated: true)
     }
+
+
+
+
 }
