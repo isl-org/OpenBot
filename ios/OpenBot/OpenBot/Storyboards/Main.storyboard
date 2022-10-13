@@ -127,7 +127,22 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kag-im-1SP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-346.37681159420293" y="1895.0892857142856"/>
+            <point key="canvasLocation" x="-342" y="1670"/>
+        </scene>
+        <!--Testing Bottom Slider-->
+        <scene sceneID="gHQ-Dg-OCf">
+            <objects>
+                <viewController storyboardIdentifier="nitish" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zii-xm-H1y" customClass="TestingBottomSlider" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="CYc-Lq-Ws3">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="aGL-2M-ZDc"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="USW-F8-Q0R" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="583" y="1656"/>
         </scene>
         <!--Sensors View Controller-->
         <scene sceneID="DST-OZ-Qhc">

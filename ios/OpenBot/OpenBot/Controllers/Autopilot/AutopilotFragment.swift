@@ -11,10 +11,11 @@ import UIKit
 class AutopilotFragment: CameraController {
     var autopilot: Autopilot?;
     var models: [Model] = [];
+    let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height/2, width: width, height: height/2))
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        expandedAutoPilotView.backgroundColor = Colors.freeRoamButtonsColor
         createCameraView()
         let modelItems = loadModels();
         if (modelItems.count > 0) {
@@ -23,11 +24,20 @@ class AutopilotFragment: CameraController {
             autopilot = Autopilot(model: models[0], device: RuntimeDevice.XNNPACK, numThreads: 1);
             checkItem();
         }
-
-
+        view.addSubview(expandedAutoPilotView)
         setupNavigationBarItem()
     }
 
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        if currentOrientation == .portrait{
+            expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height/2)
+
+        }
+        else{
+            expandedAutoPilotView.frame.origin = CGPoint(x: height/2+20, y: 20)
+        }
+    }
 
     func checkItem() {
         do {
@@ -99,8 +109,4 @@ class AutopilotFragment: CameraController {
 
         _ = navigationController?.popViewController(animated: true)
     }
-
-
-
-
 }

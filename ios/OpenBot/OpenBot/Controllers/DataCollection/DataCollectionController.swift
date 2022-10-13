@@ -205,3 +205,4 @@ class DataCollectionController: CameraController {
         _ = navigationController?.popViewController(animated: true)
     }
 }
+
