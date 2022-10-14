@@ -1,10 +1,12 @@
 {
   "images" : [
     {
+      "filename" : "controllerMapping-2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "controllerMapping-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

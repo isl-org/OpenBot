@@ -64,11 +64,11 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
         createDelayField()
 //        let m = VehicleControl(frame: CGRect(x: 0, y: height - 150, width: width, height: 300))
-        let m = VehicleControl();
-        addSubview(m)
-        m.translatesAutoresizingMaskIntoConstraints = false
-        m.topAnchor.constraint(equalTo: magnetic.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 13, to: .height)).isActive = true;
-        m.leadingAnchor.constraint(equalTo: secondView.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
+        let vehicleControls = VehicleControl();
+        addSubview(vehicleControls)
+        vehicleControls.translatesAutoresizingMaskIntoConstraints = false
+        vehicleControls.topAnchor.constraint(equalTo: magnetic.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 13, to: .height)).isActive = true;
+        vehicleControls.leadingAnchor.constraint(equalTo: secondView.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
 
     }
 

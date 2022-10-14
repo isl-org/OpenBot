@@ -37,6 +37,7 @@
 		525632FAD7D5CA948A20F6B9 /* Pods_OpenBot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADB8D624A9E1D1494E9F87D /* Pods_OpenBot.framework */; };
 		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
 		727D3074611DA874F01709A3 /* CGFloatExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D78A49AC3693B1A2B7B /* CGFloatExtension.swift */; };
+		727D3168E1B1C70DBDC2652E /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30F298C6C48697AB606F /* Server.swift */; };
 		727D332F054456A4182DD7DF /* expandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3327FAD14CEC3DE54D95 /* expandSetting.swift */; };
 		727D33DD6B69783CAE4035BD /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30501D6445D0C8AED362 /* GaugeView.swift */; };
 		727D3457F432B9743263C307 /* sensorDataRetrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */; };
@@ -56,6 +57,7 @@
 		727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B02AB471D9F31B0747 /* Font.swift */; };
 		727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */; };
 		727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3C4EBE89B9B6E537BE8B /* Device.swift */; };
+		727D3FB2162AE0D1794DA7CE /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D9ED8FC7A8FEFF7483B /* Models.swift */; };
 		BF72296428B0FD6D0013CD8E /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF72296328B0FD6D0013CD8E /* GameViewController.swift */; };
 		BF812E8728AE2C4200E0B682 /* modesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF812E8528AE2C4200E0B682 /* modesCollectionViewCell.swift */; };
 		BF812E8828AE2C4200E0B682 /* modesCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF812E8628AE2C4200E0B682 /* modesCollectionViewCell.xib */; };
@@ -118,6 +120,7 @@
 		4FEF4EE1E197D3F52EFF3B88 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
 		727D30501D6445D0C8AED362 /* GaugeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GaugeView.swift; sourceTree = "<group>"; };
+		727D30F298C6C48697AB606F /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Server.swift; path = DropDowns/Server.swift; sourceTree = "<group>"; };
 		727D31331A6716FD310082EB /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
 		727D316515ACC87CAEB31A26 /* collapseSettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = collapseSettingView.swift; sourceTree = "<group>"; };
@@ -135,6 +138,7 @@
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		727D3D78A49AC3693B1A2B7B /* CGFloatExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CGFloatExtension.swift; path = Adaptive/CGFloatExtension.swift; sourceTree = "<group>"; };
+		727D3D9ED8FC7A8FEFF7483B /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Models.swift; path = DropDowns/Models.swift; sourceTree = "<group>"; };
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
 		74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -366,6 +370,8 @@
 				727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */,
 				727D35819C2D0A82BB4E5A7D /* expandedAutoPilot.swift */,
 				727D31F6EEE9E6800FBBE08B /* TestingBottomSlider.swift */,
+				727D3D9ED8FC7A8FEFF7483B /* Models.swift */,
+				727D30F298C6C48697AB606F /* Server.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -695,6 +701,8 @@
 				727D39499A8CF8EE76345872 /* AutopilotFragment.swift in Sources */,
 				727D3514A9B56B54E3FA4089 /* expandedAutoPilot.swift in Sources */,
 				727D36F41F1A6A83B9AFDB5D /* TestingBottomSlider.swift in Sources */,
+				727D3FB2162AE0D1794DA7CE /* Models.swift in Sources */,
+				727D3168E1B1C70DBDC2652E /* Server.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
