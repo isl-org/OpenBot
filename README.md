@@ -22,12 +22,6 @@
 
 OpenBot leverages smartphones as brains for low-cost robots. We have designed a small electric vehicle that costs about $50 and serves as a robot body. Our software stack for Android smartphones supports advanced robotics workloads such as person following and real-time autonomous navigation.
 
-## Video
-
-<a href="https://www.youtube.com/watch?v=qc8hFLyWDOM" >
-  <img align="center" width="500" alt="youtube video" src="docs/images/youtube.jpg" />
-</a>
-
 ## Get started with OpenBot
 - Build your own [Robot Body](body/README.md)
 - Flash the [Arduino Firmware](firmware/README.md)
@@ -44,14 +38,15 @@ OpenBot leverages smartphones as brains for low-cost robots. We have designed a 
     ```
 - You can fork the OpenBot repository and then clone your local copy. This is recommended, especially if you want to [contribute](CONTRIBUTING.md).
 
-## Contribute
+## Videos
 
-Please read the [contribution guidelines](CONTRIBUTING.md). If you are not sure where to start have a look at the [open issues](https://github.com/intel-isl/OpenBot/issues).
+<a href="https://www.youtube.com/watch?v=RbzPXywJifA" >
+  <img align="center" width="300" alt="youtube video" src="https://img.youtube.com/vi/RbzPXywJifA/hqdefault.jpg" />
+</a>
 
-## Contact
-
-- Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) channel to connect with the OpenBot community.
-- Contact us via [Email](mailto:openbot.team@gmail.com)
+<a href="https://www.youtube.com/watch?v=qc8hFLyWDOM" >
+  <img align="center" width="300" alt="youtube video" src="https://img.youtube.com/vi/qc8hFLyWDOM/hqdefault.jpg" />
+</a>
 
 ## Cool projects using OpenBot
 
@@ -71,6 +66,15 @@ There are a lot of cool projects using OpenBot already. Below is a small selecti
     <img alt="Baby Yoda OpenBot" width="24%" src="docs/images/openbot_yoda.jpg" />
   </a>
 </p>
+
+## Contact
+
+- Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) channel to connect with the OpenBot community.
+- Contact us via [Email](mailto:openbot.team@gmail.com)
+
+## Contribute
+
+Please read the [contribution guidelines](CONTRIBUTING.md). If you are not sure where to start have a look at the [open issues](https://github.com/intel-isl/OpenBot/issues).
 
 ## Citation
 

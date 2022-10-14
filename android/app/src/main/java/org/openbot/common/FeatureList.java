@@ -35,6 +35,7 @@ public class FeatureList {
   public static final String PERSON_FOLLOWING = "Person Following";
   public static final String OBJECT_NAV = "Object Tracking";
   public static final String MODEL_MANAGEMENT = "Model Management";
+  public static final String POINT_GOAL_NAVIGATION = "Point Goal Navigation";
   public static final String AUTONOMOUS_DRIVING = "Autonomous Driving";
   public static final String VISUAL_GOALS = "Visual Goals";
   public static final String SMART_VOICE = "Smart Voice (left/right/straight, Ar Core)";
@@ -81,6 +82,8 @@ public class FeatureList {
     subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(AUTOPILOT, R.drawable.ic_autopilot, "#4B7BFF"));
     subCategories.add(new SubCategory(OBJECT_NAV, R.drawable.ic_person_search, "#FFD966"));
+    subCategories.add(
+        new SubCategory(POINT_GOAL_NAVIGATION, R.drawable.ic_baseline_golf_course, "#1BBFBF"));
     subCategories.add(new SubCategory(MODEL_MANAGEMENT, R.drawable.ic_edit_48, "#FFAC6C"));
     categories.add(new Category(AI, subCategories));
 

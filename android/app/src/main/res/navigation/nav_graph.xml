@@ -28,6 +28,12 @@
         <action
             android:id="@+id/action_mainFragment_to_modelManagementFragment"
             app:destination="@id/modelManagementFragment" />
+        <action
+          android:id="@+id/action_mainFragment_to_pointGoalNavigationFragment"
+          app:destination="@id/pointGoalNavigationFragment" />
+        <action
+          android:id="@+id/action_mainFragment_to_pointGoalNavigationFragment2"
+          app:destination="@id/pointGoalNavigationFragment" />
     </fragment>
     <fragment
         android:id="@+id/robotCommunicationFragment"
@@ -71,4 +77,9 @@
         android:name="org.openbot.modelManagement.ModelManagementFragment"
         android:label="fragment_model_management"
         tools:layout="@layout/fragment_model_management" />
+    <fragment
+      android:id="@+id/pointGoalNavigationFragment"
+      android:name="org.openbot.pointGoalNavigation.PointGoalNavigationFragment"
+      android:label="fragment_point_goal_navigation"
+      tools:layout="@layout/fragment_point_goal_navigation" />
 </navigation>

@@ -129,6 +129,12 @@ Simple UI for collection of data sets.
 
 - **Model Resolution**: Used to switch between resolutions of images saved for training different models.
 
+- **Save/Discard the Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may: 
+    - press the **A button** to **start** the data collection process
+    - press the **A button again** to **stop** data collection and save the collected data in a .zip file
+    - alternatively press the **R1 button** to **stop** data collection **without saving** the collected data (for instance because of an unexpected collision with the environment)
+    - remember to use the controller mapping fragment to ensure you are using the correct buttons.
+
 ### Controller Mapping
 
 Simple UI to check the button and joystick mapping of a connected BT controller.
@@ -154,21 +160,42 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 <img src="../../docs/images/screen_object_tracking_2.jpg" alt="Alt text" width="49%" />
 </p>
 
+### Point Goal Navigation
+
+Note that this fragment requires ARCore and camera permission. If your device does not support ARCore and you continue anyways, the app will crash. In this screen you can specify a goal via a 2D vector with respect to the current position and orientation of the robot. The 2D vector contains the distance to the front and left of the robot in meters. Both values can also be negative and correspond to back and right of the robot in that case. After specifying the goal and pressing `Start` the robot will exectue an AI policy that attempts to reach the goal while avoiding obstacles.
+
+<p align="left">
+<img src="../../docs/images/screen_point_goal_nav.gif" alt="Alt text" width="50%" />
+</p>
+
 ### Model Management
 
-All models are quantized for better performance on embedded devices. Please refer to the tables below for a short description of the available models and benchmarking results. The [mean Average Precision (mAP)](https://kharshit.github.io/blog/2019/09/20/evaluation-metrics-for-object-detection-and-segmentation) is computed on the validation set of the [COCO Detection 2017](https://cocodataset.org/#detection-2017) dataset. The runtime is averaged across 100 frames and reported in frames per second (fps).
+All models are quantized for better performance on embedded devices. Please refer to section below for a short description of the available models and benchmarking results. The [mean Average Precision (mAP)](https://kharshit.github.io/blog/2019/09/20/evaluation-metrics-for-object-detection-and-segmentation) is computed on the validation set of the [COCO Detection 2017](https://cocodataset.org/#detection-2017) dataset. The runtime is averaged across 100 frames and reported in frames per second (fps).
 
 <p align="left">
 <img src="../../docs/images/screen_model_management.jpg" alt="Alt text" width="25%" />
 </p>
 
+### Benchmark
+
+#### Phones
+
+| Model Name       | Chipset        | RAM  | OS |
+|------------------|----------------|------|----|
+| Samsung S22 Ultra| Exynos 2200    | 12GB | 12 |
+| Samsung S20FE 5G | Snapdragon 865 |  6GB | 12 |
+| Huawei P30 Pro   | Kirin 980      |  8GB | 10 |
+| Google Pixel 6XL | Google Tensor  | 12GB | 12 |
+| Xiaomi Mi9       | Snapdragon 855 |  6GB |  9 |
+
 #### MobileNetV1-300 (pre-installed) - mAP: 18%
 
-SSD object detector with MobileNet V3 backbone and input resolution of 300x300.
+SSD object detector with MobileNet V1 backbone and input resolution of 300x300.
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S20FE    |  34 |  57 |   87  |
+| Samsung S22 Ultra|  33 |  13 |   30  |
+| Samsung S20FE 5G |  34 |  57 |   87  |
 | Huawei P30 Pro   |  36 |  25 |   10  |
 | Google Pixel 6XL |  35 |  42 |   53  |
 | Xiaomi Mi9       |  22 |  41 |   33  |
@@ -179,40 +206,44 @@ SSD object detector with MobileNet V3 backbone and input resolution of 320x320.
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S20FE    |  34 |  42 |   28  |
+| Samsung S22 Ultra|  30 |  17 |   30  |
+| Samsung S20FE 5G |  34 |  42 |   28  |
 | Huawei P30 Pro   |  32 |  27 |   23  |
 | Google Pixel 6XL |  33 |  43 |   27  |
 | Xiaomi Mi9       |  20 |  45 |   10  |
 
-#### YoloV4-224 - mAP: mAP: 40.40%
+#### YoloV4-224 - mAP: 40.40%
 
 State-of-the-art object detector [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution of 224x224.
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S20FE    | 3.1 | 7.1 |  4.2  |
+| Samsung S22 Ultra| 3.7 | 5.6 |  3.5  |
+| Samsung S20FE 5G | 3.1 | 7.1 |  4.2  |
 | Huawei P30 Pro   | 2.4 | 6.2 |  0.7  |
 | Google Pixel 6XL | 2.7 |  11 |  0.9  |
 | Xiaomi Mi9       | 2.1 | 6.4 |  1.7  |
 
 #### YoloV4-tiny-224 - mAP: 22.05%
 
-Tiny version of YoloV4 with input resolution of 224x224.
+Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution of 224x224.
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S20FE    |  30 |  21 |   14  |
+| Samsung S22 Ultra|  31 |  12 |   31  |
+| Samsung S20FE 5G |  30 |  21 |   14  |
 | Huawei P30 Pro   |  27 |  17 |   22  |
 | Google Pixel 6XL |  29 |  24 |   19  |
 | Xiaomi Mi9       |  16 |  14 |  9.3  |
 
 #### YoloV4-tiny-416 - mAP: 29.42%
 
-Tiny version of YoloV4 with input resolution of 416x416.
+Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution of 416x416.
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
-| Samsung S20FE    |  12 | 9.4 |  7.7  |
+| Samsung S22 Ultra|  13 | 9.8 |   13  |
+| Samsung S20FE 5G |  12 | 9.4 |  7.7  |
 | Huawei P30 Pro   | 8.4 | 7.6 |  6.9  |
 | Google Pixel 6XL |  10 | 9.6 |  7.2  |
 | Xiaomi Mi9       | 9.0 | 7.3 |  5.0  |

@@ -70,7 +70,7 @@ def load_labels(data_dir, datasets):
 
 
 def convert_dataset(
-    data_dir, tfrecords_dir, tfrecords_name, redo_matching=False, remove_zeros=True
+    data_dir, tfrecords_dir, tfrecords_name, redo_matching=True, remove_zeros=True
 ):
     print(f"Reading dataset from {data_dir}")
     print(f"TFRecord will be saved at {tfrecords_dir}/{tfrecords_name}")

@@ -6,7 +6,6 @@ import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.params.StreamConfigurationMap;
 import android.text.TextUtils;
 import android.util.Size;
 import java.util.ArrayList;
@@ -27,9 +26,15 @@ public class CameraUtils {
         if (facing != CameraCharacteristics.LENS_FACING_BACK) {
           continue;
         }
-        final StreamConfigurationMap map =
-            characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-        resolution = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class), resolution);
+        final Size[] outputSizes =
+            characteristics
+                .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+                .getOutputSizes(SurfaceTexture.class);
+        if (outputSizes == null) {
+          Timber.e("No output sizes compatible with SurfaceTexture.");
+          continue;
+        }
+        resolution = chooseOptimalSize(outputSizes, resolution);
       }
     } catch (final CameraAccessException e) {
       Timber.e(e, "Unable to open the camera.");

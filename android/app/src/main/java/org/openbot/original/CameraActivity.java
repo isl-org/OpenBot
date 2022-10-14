@@ -186,7 +186,7 @@ public abstract class CameraActivity extends AppCompatActivity
   protected final GameController gameController = new GameController(driveMode);
   private PhoneController phoneController;
   protected final ControllerHandler controllerHandler = new ControllerHandler();
-  private final AudioPlayer audioPlayer = new AudioPlayer(this);
+  private AudioPlayer audioPlayer;
   private final String voice = "matthew";
 
   protected Vehicle vehicle;
@@ -197,6 +197,7 @@ public abstract class CameraActivity extends AppCompatActivity
     super.onCreate(null);
     context = getApplicationContext();
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    audioPlayer = new AudioPlayer(context);
     vehicle = OpenBotApplication.vehicle;
 
     phoneController = PhoneController.getInstance(this);
