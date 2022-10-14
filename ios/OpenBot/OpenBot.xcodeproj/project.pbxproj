@@ -31,7 +31,6 @@
 		4FEF4C5087962C2F3B2BB3A1 /* Modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45F4F7552D2FFF3D1130 /* Modes.swift */; };
 		4FEF4C9BF06BF69E5C67E86A /* OpenBotUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4D548F5BD4ABE07F1F71 /* OpenBotUITestsLaunchTests.swift */; };
 		4FEF4D4C829C1A8519999198 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF43EF931CFBA8BB09541E /* Control.swift */; };
-		4FEF4D94784E855709A476CB /* autopilot_float.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF458E4FD47E6C6861691B /* autopilot_float.tflite */; };
 		4FEF4DAC98B9D01B10F7B3E9 /* DataCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4DE90366ACF137F4AD9B /* DataCollectionController.swift */; };
 		4FEF4DC031698B6DEEB01AEB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */; };
 		4FEF4F78919CCCC28C418C5B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4D63E4FA9FB585EF1733 /* SceneDelegate.swift */; };
@@ -100,7 +99,6 @@
 		4FEF43EF931CFBA8BB09541E /* Control.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		4FEF443C3B9B9931D5108052 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4FEF44EFCFD003BA859F8008 /* OpenBotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4FEF458E4FD47E6C6861691B /* autopilot_float.tflite */ = {isa = PBXFileReference; lastKnownFileType = file.tflite; path = autopilot_float.tflite; sourceTree = "<group>"; };
 		4FEF45E913E70DDE5DE7F387 /* GameController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		4FEF45F4F7552D2FFF3D1130 /* Modes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Modes.swift; sourceTree = "<group>"; };
 		4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -258,7 +256,6 @@
 		4FEF489C07FD5C967FFDCDE8 /* OpenBot */ = {
 			isa = PBXGroup;
 			children = (
-				BFC5293928E5B485008C04D4 /* networks */,
 				BF9BAED628AF94A800EF3E48 /* Frameworks */,
 				4FEF44F0837469F66D5A7156 /* Models */,
 				4FEF42AB3B7AC14D55B7DBA3 /* Utils */,
@@ -382,14 +379,6 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
-		BFC5293928E5B485008C04D4 /* networks */ = {
-			isa = PBXGroup;
-			children = (
-				4FEF458E4FD47E6C6861691B /* autopilot_float.tflite */,
-			);
-			path = networks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -418,6 +407,7 @@
 			buildConfigurationList = 4FEF486AE63CA90F3F6FAC59 /* Build configuration list for PBXNativeTarget "OpenBot" */;
 			buildPhases = (
 				918F153342639A81A6F53345 /* [CP] Check Pods Manifest.lock */,
+				BFEDAF5428F947AF000231F8 /* ShellScript */,
 				4FEF4889F89E40050DA7F889 /* Sources */,
 				4FEF48F817C72DA7F5BE6A7E /* Frameworks */,
 				4FEF4CE476446EE3B8BFA52C /* Resources */,
@@ -463,7 +453,8 @@
 						DevelopmentTeam = 45P94DZS6G;
 					};
 					4FEF4A2489AA3ABCE29B9356 = {
-						DevelopmentTeam = 45P94DZS6G;
+						DevelopmentTeam = 3Z77UFC477;
+						ProvisioningStyle = Automatic;
 					};
 					4FEF4C57C33D71B6DD56207E = {
 						DevelopmentTeam = 45P94DZS6G;
@@ -514,7 +505,6 @@
 				4FEF43565A0B8A9578E85B54 /* Launch Screen.storyboard in Resources */,
 				BF812E8828AE2C4200E0B682 /* modesCollectionViewCell.xib in Resources */,
 				4FEF4209E4568C06F71C8E86 /* config.json in Resources */,
-				4FEF4D94784E855709A476CB /* autopilot_float.tflite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -582,6 +572,24 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		BFEDAF5428F947AF000231F8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/autopilot_float.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/autopilot_float.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/autopilot_float.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/autopilot_float.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/autopilot_float.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/mobile_ssd_v1_1.0_quant_coco.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/mobile_ssd_v1_1.0_quant_coco.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/mobile_ssd_v1_1.0_quant_coco.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/mobile_ssd_v1_1.0_quant_coco.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/navigation.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/navigation.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/navigation.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/navigation.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/navigation.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/box_priors.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/box_priors.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/box_priors.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/box_priors.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/box_priors.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/coco.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/coco.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/coco.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/coco.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/coco.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/labelmap.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/labelmap.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/labelmap.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/labelmap.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/labelmap.txt\nfi\n";
 		};
 		D2AEDA40E92036205C2665E9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -733,13 +741,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 45P94DZS6G;
+				DEVELOPMENT_TEAM = 3Z77UFC477;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Allow Camera for Free Roam Mode";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Allow microphone for Free Roam ";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Program requires GPS to track cars and job orders";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow for Location updates";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Allow for Location updates";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow for Location updates";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app uses your Microphone to allow Voice over IP communication with the Program Admin system";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -748,8 +762,9 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.itinker.openBot.OpenBot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ai.openbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -763,13 +778,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 45P94DZS6G;
+				DEVELOPMENT_TEAM = 3Z77UFC477;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Allow Camera for Free Roam Mode";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Allow microphone for Free Roam ";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Program requires GPS to track cars and job orders";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow for Location updates";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Allow for Location updates";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow for Location updates";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app uses your Microphone to allow Voice over IP communication with the Program Admin system";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -778,8 +799,9 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.itinker.openBot.OpenBot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ai.openbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
