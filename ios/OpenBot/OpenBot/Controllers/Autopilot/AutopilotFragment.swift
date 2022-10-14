@@ -11,7 +11,8 @@ import UIKit
 class AutopilotFragment: CameraController {
     var autopilot: Autopilot?;
     var models: [Model] = [];
-    let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height/2, width: width, height: height/2))
+    let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height / 2, width: width, height: height / 2))
+
     override func viewDidLoad() {
         super.viewDidLoad()
         expandedAutoPilotView.backgroundColor = Colors.freeRoamButtonsColor
@@ -31,12 +32,11 @@ class AutopilotFragment: CameraController {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        if currentOrientation == .portrait{
-            expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height/2)
+        if currentOrientation == .portrait {
+            expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height / 2)
 
-        }
-        else{
-            expandedAutoPilotView.frame.origin = CGPoint(x: height/2+30, y: 20)
+        } else {
+            expandedAutoPilotView.frame.origin = CGPoint(x: height / 2 + 30, y: 20)
         }
     }
 
@@ -52,17 +52,11 @@ class AutopilotFragment: CameraController {
 
             //make image input
 
-
-            try autopilot?.tflite?.copy(UIImage(named: "bluetooth")!.jpegData(compressionQuality: 1)!, toInputAt: 1)
+            autopilot?.convertImageToData(image: UIImage(named: "gamepad")!.cgImage!);
+            try autopilot?.tflite?.copy(autopilot?.imgData ?? Data(), toInputAt: 1);
             try autopilot?.tflite?.invoke()
             let imageOutput = try autopilot?.tflite?.output(at: 0)
             print(imageOutput)
-//            encode(with: .)
-//            let stre: String? = String(bytes: s, encoding: .utf8);
-//            var data: Data = Data();
-//            if (stre != nil) {
-//                data = stre.data(using: .utf8) ?? Data();
-//            }
             try autopilot?.tflite?.copy(data, toInputAt: 0)
             try autopilot?.tflite?.invoke();
             let outputTensor = try autopilot?.tflite?.output(at: 0);
@@ -107,7 +101,6 @@ class AutopilotFragment: CameraController {
     }
 
     @objc func back(sender: UIBarButtonItem) {
-
         _ = navigationController?.popViewController(animated: true)
     }
 

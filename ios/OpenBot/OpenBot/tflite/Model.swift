@@ -39,7 +39,7 @@ class Model {
     }
 
     func getInputSize() -> CGSize {
-        CGSize().parseSize(inputSize);
+        CGSize.parseSize(inputSize);
     }
 
     func setPath(path: String) {
@@ -67,11 +67,12 @@ class Model {
     }
 }
 
+
 extension CGSize {
-    func parseSize(_ input: String) -> CGSize {
-        let out = input.split(separator: "X");
-        let width = Double(out[0]) ?? 0;
-        let height = Double(out[1]) ?? 0;
+    static func parseSize(_ input: String) -> CGSize {
+        let out = input.split(separator: "x");
+        let width = Int(out[0]) ?? 0;
+        let height = Int(out[1]) ?? 0;
         return CGSize(width: width, height: height);
     }
 }
