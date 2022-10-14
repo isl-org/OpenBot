@@ -5,18 +5,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
 
     <TextView
         android:id="@+id/robotTypeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Robot Type: "
+        android:text="@string/robot_type"
         android:padding="8dp"
         android:textColor="@android:color/black" />
 
@@ -25,10 +25,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="N/A"
+        android:text="@string/n_a"
         android:padding="8dp"
         android:textColor="@android:color/black" />
 
+        <CheckBox
+            android:id="@+id/usbToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:button="@drawable/usb_toggle"
+            android:padding="8dp" />
     </LinearLayout>
 
     <View
@@ -42,10 +49,11 @@
     <ImageView
         android:id="@+id/robot_icon"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:padding="8dp"
         android:layout_weight="1"
-        app:srcCompat="@drawable/openbot_icon" />
+        app:srcCompat="@drawable/openbot_icon"
+        android:contentDescription="@string/robot_icon" />
 
     <View
         android:id="@+id/view2"
@@ -59,55 +67,80 @@
         android:id="@+id/voltage_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:layout_margin="8dp"
-        android:text="Voltage Divider" />
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="@string/voltage_divider" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/sonar_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:layout_margin="8dp"
-        android:text="Sonar" />
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="@string/sonar" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/indicator_leds_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:layout_margin="8dp"
-        android:text="Indicator LEDs" />
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="@string/indicator_leds" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/front_leds_switch"
+        android:id="@+id/leds_front_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:layout_margin="8dp"
-        android:text="Front LEDs" />
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="@string/front_leds" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/back_leds_switch"
+        android:id="@+id/leds_back_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:layout_margin="8dp"
-        android:text="Back LEDs" />
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="@string/back_leds" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/status_leds_switch"
+        android:id="@+id/leds_status_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:layout_margin="8dp"
-        android:text="Status LEDs" />
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="@string/status_leds" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/bumpers_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:layout_margin="8dp"
-        android:text="Bumpers" />
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="@string/bumpers" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/wheel_odometry_front_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="@string/wheel_odometry_front" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/wheel_odometry_back_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="@string/wheel_odometry_back" />
 </LinearLayout>
