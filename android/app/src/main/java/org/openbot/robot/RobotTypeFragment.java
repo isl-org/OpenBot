@@ -5,21 +5,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
-
 import org.jetbrains.annotations.NotNull;
+import org.openbot.R;
 import org.openbot.common.ControlsFragment;
 import org.openbot.databinding.FragmentRobotTypeBinding;
-import org.openbot.R;
 
 public class RobotTypeFragment extends ControlsFragment {
   private FragmentRobotTypeBinding binding;
 
   @Override
   public View onCreateView(
-          @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     binding = FragmentRobotTypeBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
@@ -30,23 +28,22 @@ public class RobotTypeFragment extends ControlsFragment {
     vehicle = mViewModel.getVehicle().getValue();
 
     mViewModel
-            .getUsbStatus()
-            .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
+        .getUsbStatus()
+        .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
 
     binding.usbToggle.setOnClickListener(
-            v -> {
-              binding.usbToggle.setChecked(vehicle.isUsbConnected());
-              Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
-            });
+        v -> {
+          binding.usbToggle.setChecked(vehicle.isUsbConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+        });
   }
 
   @Override
   protected void processControllerKeyData(String command) {
-    //Do nothing
+    // Do nothing
   }
-
 
   @Override
   protected void processUSBData(String data) {
