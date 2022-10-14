@@ -25,6 +25,8 @@ public class RobotTypeFragment extends ControlsFragment {
   @SuppressLint("RestrictedApi")
   @Override
   public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
     vehicle = mViewModel.getVehicle().getValue();
 
     mViewModel
@@ -32,12 +34,50 @@ public class RobotTypeFragment extends ControlsFragment {
         .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
+    binding.usbToggle.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> updateGui(binding.usbToggle.isChecked()));
 
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
+
+    updateGui(binding.usbToggle.isChecked());
+    vehicle.requestVehicleConfig();
+  }
+
+  private void updateGui(boolean isConnected) {
+    if (isConnected) {
+      binding.robotTypeInfo.setText(vehicle.getVehicleType());
+      switch (vehicle.getVehicleType()) {
+          // TODO: add image resources
+        default:
+          binding.robotIcon.setImageResource(R.drawable.ic_openbot);
+          break;
+      }
+      binding.voltageSwitch.setChecked(vehicle.isHasVoltageDivider());
+      binding.sonarSwitch.setChecked(vehicle.isHasSonar());
+      binding.indicatorLedsSwitch.setChecked(vehicle.isHasIndicators());
+      binding.ledsFrontSwitch.setChecked(vehicle.isHasLedsFront());
+      binding.ledsBackSwitch.setChecked(vehicle.isHasLedsBack());
+      binding.ledsStatusSwitch.setChecked(vehicle.isHasLedsStatus());
+      binding.bumpersSwitch.setChecked(vehicle.isHasBumpSensor());
+      binding.wheelOdometryFrontSwitch.setChecked(vehicle.isHasWheelOdometryFront());
+      binding.wheelOdometryBackSwitch.setChecked(vehicle.isHasWheelOdometryBack());
+    } else {
+      binding.robotTypeInfo.setText(getString(R.string.n_a));
+      binding.robotIcon.setImageResource(R.drawable.ic_openbot);
+      binding.voltageSwitch.setChecked(false);
+      binding.sonarSwitch.setChecked(false);
+      binding.indicatorLedsSwitch.setChecked(false);
+      binding.ledsFrontSwitch.setChecked(false);
+      binding.ledsBackSwitch.setChecked(false);
+      binding.ledsStatusSwitch.setChecked(false);
+      binding.bumpersSwitch.setChecked(false);
+      binding.wheelOdometryFrontSwitch.setChecked(false);
+      binding.wheelOdometryBackSwitch.setChecked(false);
+    }
   }
 
   @Override
@@ -47,15 +87,7 @@ public class RobotTypeFragment extends ControlsFragment {
 
   @Override
   protected void processUSBData(String data) {
-    binding.robotTypeInfo.setText(vehicle.getVehicleType());
-    binding.voltageSwitch.setChecked(vehicle.isHasVoltageDivider());
-    binding.sonarSwitch.setChecked(vehicle.isHasSonar());
-    binding.indicatorLedsSwitch.setChecked(vehicle.isHasIndicators());
-    binding.ledsFrontSwitch.setChecked(vehicle.isHasLedsFront());
-    binding.ledsBackSwitch.setChecked(vehicle.isHasLedsBack());
-    binding.ledsStatusSwitch.setChecked(vehicle.isHasLedsStatus());
-    binding.bumpersSwitch.setChecked(vehicle.isHasBumpSensor());
-    binding.wheelOdometryFrontSwitch.setChecked(vehicle.isHasWheelOdometryFront());
-    binding.wheelOdometryBackSwitch.setChecked(vehicle.isHasWheelOdometryBack());
+    char header = data.charAt(0);
+    if (header == 'f') updateGui(binding.usbToggle.isChecked());
   }
 }
