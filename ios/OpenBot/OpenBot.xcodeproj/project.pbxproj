@@ -459,7 +459,7 @@
 						DevelopmentTeam = 45P94DZS6G;
 					};
 					4FEF4A2489AA3ABCE29B9356 = {
-						DevelopmentTeam = 3Z77UFC477;
+						DevelopmentTeam = 45P94DZS6G;
 						ProvisioningStyle = Automatic;
 					};
 					4FEF4C57C33D71B6DD56207E = {
@@ -591,16 +591,16 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/autopilot_float.tflite",
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/mobile_ssd_v1_1.0_quant_coco.tflite",
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/navigation.tflite",
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/box_priors.txt",
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/coco.txt",
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/labelmap.txt",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/autopilot_float.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/autopilot_float.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/autopilot_float.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/autopilot_float.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/autopilot_float.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/mobile_ssd_v1_1.0_quant_coco.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/mobile_ssd_v1_1.0_quant_coco.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/mobile_ssd_v1_1.0_quant_coco.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/mobile_ssd_v1_1.0_quant_coco.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/navigation.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/navigation.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/navigation.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/navigation.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/navigation.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/box_priors.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/box_priors.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/box_priors.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/box_priors.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/box_priors.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/coco.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/coco.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/coco.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/coco.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/coco.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/labelmap.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/labelmap.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/labelmap.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/labelmap.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/labelmap.txt\nfi\n";
+			shellScript = "if [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite exists.\"\nelse\ncurl -o ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite https://storage.googleapis.com/openbot_models/autopilot_float.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/mobile_ssd_v1_1.0_quant_coco.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/navigation.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/navigation.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/box_priors.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/box_priors.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/coco.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/coco.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/labelmap.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/labelmap.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt\nfi\n";
 		};
 		D2AEDA40E92036205C2665E9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -757,7 +757,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3Z77UFC477;
+				DEVELOPMENT_TEAM = 45P94DZS6G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
@@ -775,7 +775,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ai.openbot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emboidedai.openbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -794,7 +794,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3Z77UFC477;
+				DEVELOPMENT_TEAM = 45P94DZS6G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
@@ -812,7 +812,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ai.openbot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emboidedai.openbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
