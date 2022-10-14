@@ -585,7 +585,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/autopilot_float.tflite",
 				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/mobile_ssd_v1_1.0_quant_coco.tflite",
 				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/navigation.tflite",
 				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Network/box_priors.txt",
