@@ -55,7 +55,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
 
       case FeatureList.FREE_ROAM:
         Navigation.findNavController(requireView())
-            .navigate(R.id.action_mainFragment_to_robotCommunicationFragment);
+            .navigate(R.id.action_mainFragment_to_freeRoamFragment);
         break;
 
       case FeatureList.DATA_COLLECTION:
@@ -68,6 +68,17 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
         // intent = new Intent(this, ControllerActivity.class);
         // startActivity(intent);
         break;
+
+      case FeatureList.CONTROLLER_MAPPING:
+        Navigation.findNavController(requireView())
+            .navigate(R.id.action_mainFragment_to_controllerMappingFragment);
+        break;
+
+      case FeatureList.ROBOT_TYPE:
+        Navigation.findNavController(requireView())
+            .navigate(R.id.action_mainFragment_to_robotTypeFragment);
+        break;
+
       case FeatureList.AUTOPILOT:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_autopilotFragment);
@@ -83,10 +94,6 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
             .navigate(R.id.action_mainFragment_to_pointGoalNavigationFragment);
         break;
 
-      case FeatureList.CONTROLLER_MAPPING:
-        Navigation.findNavController(requireView())
-            .navigate(R.id.action_mainFragment_to_controllerMappingFragment);
-        break;
       case FeatureList.MODEL_MANAGEMENT:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_modelManagementFragment);

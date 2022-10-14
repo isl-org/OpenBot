@@ -11,8 +11,8 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainFragment_to_robotCommunicationFragment"
-            app:destination="@id/robotCommunicationFragment" />
+            android:id="@+id/action_mainFragment_to_freeRoamFragment"
+            app:destination="@id/freeRoamFragment" />
         <action
             android:id="@+id/action_mainFragment_to_loggerFragment"
             app:destination="@id/loggerFragment" />
@@ -32,13 +32,13 @@
           android:id="@+id/action_mainFragment_to_pointGoalNavigationFragment"
           app:destination="@id/pointGoalNavigationFragment" />
         <action
-          android:id="@+id/action_mainFragment_to_pointGoalNavigationFragment2"
-          app:destination="@id/pointGoalNavigationFragment" />
+            android:id="@+id/action_mainFragment_to_robotTypeFragment"
+            app:destination="@id/robotTypeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/robotCommunicationFragment"
+        android:id="@+id/freeRoamFragment"
         android:name="org.openbot.robot.FreeRoamFragment"
-        android:label="RobotCommunicationFragment"
+        android:label="FreeRoamFragment"
         tools:layout="@layout/fragment_free_roam" />
 
     <fragment
@@ -82,4 +82,8 @@
       android:name="org.openbot.pointGoalNavigation.PointGoalNavigationFragment"
       android:label="fragment_point_goal_navigation"
       tools:layout="@layout/fragment_point_goal_navigation" />
+    <fragment
+        android:id="@+id/robotTypeFragment"
+        android:name="org.openbot.robot.RobotTypeFragment"
+        android:label="RobotTypeFragment" />
 </navigation>

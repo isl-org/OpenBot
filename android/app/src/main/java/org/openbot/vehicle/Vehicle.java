@@ -31,7 +31,7 @@ public class Vehicle {
   private final Context context;
   private final int baudRate;
 
-  private String vehicleType = "RTR_V1";
+  private String vehicleType = "RTR_TT";
   private boolean hasVoltageDivider = false;
   private boolean hasIndicators = false;
   private boolean hasSonar = false;
@@ -183,7 +183,7 @@ public class Vehicle {
       setHasLedsBack(true);
     }
     if (message.contains(":ls:")) {
-      setHasLedsBack(true);
+      setHasLedsStatus(true);
     }
   }
 
