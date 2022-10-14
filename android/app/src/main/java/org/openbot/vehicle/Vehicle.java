@@ -197,7 +197,7 @@ public class Vehicle {
             setHasLedsBack(true);
         }
         if (message.contains(":ls:")) {
-            setHasLedsBack(true);
+            setHasLedsStatus(true);
         }
     }
 

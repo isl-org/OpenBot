@@ -52,7 +52,7 @@
         android:layout_height="0dp"
         android:padding="8dp"
         android:layout_weight="1"
-        app:srcCompat="@drawable/openbot_icon"
+        app:srcCompat="@drawable/ic_openbot"
         android:contentDescription="@string/robot_icon" />
 
     <View
