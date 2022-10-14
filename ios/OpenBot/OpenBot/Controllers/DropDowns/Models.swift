@@ -11,7 +11,7 @@ let modelLabel = UILabel()
     override init(frame: CGRect) {
         super.init(frame: frame)
         NotificationCenter.default.addObserver(self, selector: #selector(showDropDown), name: .showModelsDD, object: nil)
-        setupModelDD(dataSource: ["CIL-Mobile"])
+        setupModelDD(dataSource: loadAllAutoPilotModels())
     }
 
     required init?(coder: NSCoder) {
@@ -35,6 +35,31 @@ let modelLabel = UILabel()
 
     @objc func showDropDown() {
         model.show()
+    }
+
+    func loadModels() -> [ModelItem] {
+        if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                let jsonData = try decoder.decode([ModelItem].self, from: data)
+                return jsonData;
+            } catch {
+                print("error:\(error)")
+            }
+        }
+        return [];
+    }
+
+    func loadAllAutoPilotModels()->[String]{
+        var autoPilot :[String] = []
+        let allModels = loadModels()
+        for model in allModels {
+            if model.type == "AUTOPILOT" {
+                autoPilot.append(String(model.name.prefix(upTo: model.name.index(of: ".")!)))
+            }
+        }
+        return autoPilot
     }
 
 

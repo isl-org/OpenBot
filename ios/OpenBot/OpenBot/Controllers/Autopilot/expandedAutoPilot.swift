@@ -42,8 +42,6 @@ class expandedAutoPilot: UIView {
         addSubview(createLabel(text: "Threads", leadingAnchor: 180, topAnchor: 200))
         setupThreads();
         setupVehicleControls()
-        print("jhwec",loadAllAutoPilotModels())
-
     }
 
     required init?(coder aDecoder: NSCoder) {
