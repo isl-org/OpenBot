@@ -86,7 +86,7 @@ public class FeatureList {
     subCategories.add(new SubCategory(OBJECT_NAV, R.drawable.ic_person_search, "#FFD966"));
     subCategories.add(
         new SubCategory(POINT_GOAL_NAVIGATION, R.drawable.ic_baseline_golf_course, "#1BBFBF"));
-    subCategories.add(new SubCategory(MODEL_MANAGEMENT, R.drawable.ic_edit_48, "#FFAC6C"));
+    subCategories.add(new SubCategory(MODEL_MANAGEMENT, R.drawable.ic_list_bulleted_48, "#FFAC6C"));
     categories.add(new Category(AI, subCategories));
 
     //    subCategories = new ArrayList<>();
