@@ -32,8 +32,8 @@
           android:id="@+id/action_mainFragment_to_pointGoalNavigationFragment"
           app:destination="@id/pointGoalNavigationFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_robotTypeFragment"
-            app:destination="@id/robotTypeFragment" />
+            android:id="@+id/action_mainFragment_to_robotInfoFragment"
+            app:destination="@id/robotInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/freeRoamFragment"
@@ -83,7 +83,7 @@
       android:label="fragment_point_goal_navigation"
       tools:layout="@layout/fragment_point_goal_navigation" />
     <fragment
-        android:id="@+id/robotTypeFragment"
-        android:name="org.openbot.robot.RobotTypeFragment"
-        android:label="RobotTypeFragment" />
+        android:id="@+id/robotInfoFragment"
+        android:name="org.openbot.robot.RobotInfoFragment"
+        android:label="RobotInfoFragment" />
 </navigation>
