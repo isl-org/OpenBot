@@ -27,31 +27,49 @@ public class RobotTypeFragment extends ControlsFragment {
   public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    vehicle = mViewModel.getVehicle().getValue();
-
     mViewModel
         .getUsbStatus()
         .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
-    binding.usbToggle.setOnCheckedChangeListener(
-        (buttonView, isChecked) -> updateGui(binding.usbToggle.isChecked()));
 
+    binding.usbToggle.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> {
+          refreshGui();
+        });
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
+    binding.refreshToggle.setOnClickListener(
+        v -> {
+          refreshGui();
+        });
+    refreshGui();
+  }
 
-    updateGui(binding.usbToggle.isChecked());
-    vehicle.requestVehicleConfig();
+  private void refreshGui() {
+    updateGui(false);
+    binding.refreshToggle.setChecked(false);
+    if (vehicle.isUsbConnected()) {
+      vehicle.requestVehicleConfig();
+    }
   }
 
   private void updateGui(boolean isConnected) {
     if (isConnected) {
       binding.robotTypeInfo.setText(vehicle.getVehicleType());
       switch (vehicle.getVehicleType()) {
-          // TODO: add image resources
+        case "DIY":
+          binding.robotIcon.setImageResource(R.drawable.diy);
+          break;
+        case "RTR_TT":
+          binding.robotIcon.setImageResource(R.drawable.rtr_tt);
+          break;
+        case "RTR_520":
+          binding.robotIcon.setImageResource(R.drawable.rtr_520);
+          break;
         default:
           binding.robotIcon.setImageResource(R.drawable.ic_openbot);
           break;
@@ -88,6 +106,9 @@ public class RobotTypeFragment extends ControlsFragment {
   @Override
   protected void processUSBData(String data) {
     char header = data.charAt(0);
-    if (header == 'f') updateGui(binding.usbToggle.isChecked());
+    if (header == 'f') {
+      binding.refreshToggle.setChecked(true);
+      updateGui(vehicle.isUsbConnected());
+    }
   }
 }

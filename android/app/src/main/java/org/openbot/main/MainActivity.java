@@ -197,8 +197,13 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+  }
 }

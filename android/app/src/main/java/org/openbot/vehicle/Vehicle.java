@@ -42,16 +42,16 @@ public class Vehicle {
     private final Context context;
     private final int baudRate;
 
-    private String vehicleType = "RTR_V1";
-    private boolean hasVoltageDivider = false;
-    private boolean hasIndicators = false;
-    private boolean hasSonar = false;
-    private boolean hasBumpSensor = false;
-    private boolean hasWheelOdometryFront = false;
-    private boolean hasWheelOdometryBack = false;
-    private boolean hasLedsFront = false;
-    private boolean hasLedsBack = false;
-    private boolean hasLedsStatus = false;
+  private String vehicleType = "";
+  private boolean hasVoltageDivider = false;
+  private boolean hasIndicators = false;
+  private boolean hasSonar = false;
+  private boolean hasBumpSensor = false;
+  private boolean hasWheelOdometryFront = false;
+  private boolean hasWheelOdometryBack = false;
+  private boolean hasLedsFront = false;
+  private boolean hasLedsBack = false;
+  private boolean hasLedsStatus = false;
 
     private BluetoothManager bluetoothManager;
     SharedPreferences sharedPreferences;
