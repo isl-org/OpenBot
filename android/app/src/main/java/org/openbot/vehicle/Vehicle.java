@@ -31,7 +31,7 @@ public class Vehicle {
   private final Context context;
   private final int baudRate;
 
-  private String vehicleType = "RTR_TT";
+  private String vehicleType = "";
   private boolean hasVoltageDivider = false;
   private boolean hasIndicators = false;
   private boolean hasSonar = false;

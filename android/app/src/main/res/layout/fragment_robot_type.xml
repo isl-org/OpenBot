@@ -28,12 +28,16 @@
         android:text="@string/n_a"
         android:padding="8dp"
         android:textColor="@android:color/black" />
-
+        <CheckBox
+            android:id="@+id/refreshToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/refresh_toggle"
+            android:padding="8dp" />
         <CheckBox
             android:id="@+id/usbToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:button="@drawable/usb_toggle"
             android:padding="8dp" />
     </LinearLayout>
@@ -46,7 +50,7 @@
         android:alpha="0.5"
         android:background="@drawable/button_item_background_black" />
 
-    <ImageView
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/robot_icon"
         android:layout_width="match_parent"
         android:layout_height="0dp"
