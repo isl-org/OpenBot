@@ -10,15 +10,15 @@ import androidx.navigation.Navigation;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.ControlsFragment;
-import org.openbot.databinding.FragmentRobotTypeBinding;
+import org.openbot.databinding.FragmentRobotInfoBinding;
 
-public class RobotTypeFragment extends ControlsFragment {
-  private FragmentRobotTypeBinding binding;
+public class RobotInfoFragment extends ControlsFragment {
+  private FragmentRobotInfoBinding binding;
 
   @Override
   public View onCreateView(
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    binding = FragmentRobotTypeBinding.inflate(inflater, container, false);
+    binding = FragmentRobotInfoBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
 
