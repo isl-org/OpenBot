@@ -97,6 +97,12 @@
   <string name="tips_connect_fail">connect fail</string>
   <string name="tips_connection_disconnected">connection has disconnected</string>
   <string name="tips_write_operation">please enter a hex string</string>
+
+  <string name="indicators">Indicators</string>
+  <string name="back">Back</string>
+  <string name="status">Status</string>
+  <string name="front">Front</string>
+
   <string-array name="servers">
     <item>No server</item>
   </string-array>

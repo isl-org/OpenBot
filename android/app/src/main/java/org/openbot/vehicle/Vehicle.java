@@ -52,6 +52,7 @@ public class Vehicle {
   private boolean hasLedsFront = false;
   private boolean hasLedsBack = false;
   private boolean hasLedsStatus = false;
+  private boolean isReady = false;
 
     private BluetoothManager bluetoothManager;
     SharedPreferences sharedPreferences;
@@ -59,7 +60,17 @@ public class Vehicle {
 
     public float getMinMotorVoltage() {
         return minMotorVoltage;
+
     }
+
+
+  public boolean isReady() {
+    return isReady;
+  }
+
+  public void setReady(boolean ready) {
+    isReady = ready;
+  }
 
     public void setMinMotorVoltage(float minMotorVoltage) {
         this.minMotorVoltage = minMotorVoltage;
@@ -198,6 +209,10 @@ public class Vehicle {
         }
         if (message.contains(":ls:")) {
             setHasLedsStatus(true);
+        }
+        if (message.contains(":v:")) {
+            setHasVoltageDivider(true);
+            setVoltageFrequency(250);
         }
     }
 
