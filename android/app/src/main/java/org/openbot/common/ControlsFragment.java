@@ -111,6 +111,9 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
               String body = data.substring(1);
 
               switch (header) {
+                case 'r':
+                  vehicle.setReady(true);
+                  break;
                 case 'f':
                   vehicle.processVehicleConfig(body);
                   break;
@@ -161,7 +164,6 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
             });
 
     handlePhoneControllerEvents();
-    vehicle.requestVehicleConfig();
   }
 
   private void processKeyEvent(KeyEvent keyCode) {

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
+import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.ControlsFragment;
@@ -52,7 +53,7 @@ public class RobotInfoFragment extends ControlsFragment {
   private void refreshGui() {
     updateGui(false);
     binding.refreshToggle.setChecked(false);
-    if (vehicle.isUsbConnected()) {
+    if (vehicle.isReady()) {
       vehicle.requestVehicleConfig();
     }
   }
@@ -95,6 +96,9 @@ public class RobotInfoFragment extends ControlsFragment {
       binding.bumpersSwitch.setChecked(false);
       binding.wheelOdometryFrontSwitch.setChecked(false);
       binding.wheelOdometryBackSwitch.setChecked(false);
+      binding.voltageInfo.setText(R.string.voltage);
+      binding.speedInfo.setText(R.string.rpm);
+      binding.sonarInfo.setText(R.string.distance);
     }
   }
 
@@ -105,10 +109,35 @@ public class RobotInfoFragment extends ControlsFragment {
 
   @Override
   protected void processUSBData(String data) {
+    if (!vehicle.isReady()) {
+      vehicle.setReady(true);
+      vehicle.requestVehicleConfig();
+    }
     char header = data.charAt(0);
-    if (header == 'f') {
-      binding.refreshToggle.setChecked(true);
-      updateGui(vehicle.isUsbConnected());
+    String body = data.substring(1);
+    int type = -1;
+    switch (header) {
+      case 'r':
+        vehicle.requestVehicleConfig();
+      case 'f':
+        binding.refreshToggle.setChecked(vehicle.isReady());
+        updateGui(vehicle.isReady());
+        break;
+      case 'v':
+        binding.voltageInfo.setText(
+            String.format(Locale.US, "%2.1f V", vehicle.getBatteryVoltage()));
+        break;
+      case 'w':
+        binding.speedInfo.setText(
+            String.format(
+                Locale.US,
+                "%3.0f,%3.0f rpm",
+                vehicle.getLeftWheelRpm(),
+                vehicle.getRightWheelRpm()));
+        break;
+      case 's':
+        binding.sonarInfo.setText(String.format(Locale.US, "%3.0f cm", vehicle.getSonarReading()));
+        break;
     }
   }
 }

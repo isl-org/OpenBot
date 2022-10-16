@@ -41,6 +41,7 @@ public class Vehicle {
   private boolean hasLedsFront = false;
   private boolean hasLedsBack = false;
   private boolean hasLedsStatus = false;
+  private boolean isReady = false;
 
   public float getMinMotorVoltage() {
     return minMotorVoltage;
@@ -64,6 +65,14 @@ public class Vehicle {
 
   public void setMaxBatteryVoltage(float maxBatteryVoltage) {
     this.maxBatteryVoltage = maxBatteryVoltage;
+  }
+
+  public boolean isReady() {
+    return isReady;
+  }
+
+  public void setReady(boolean ready) {
+    isReady = ready;
   }
 
   public boolean isHasVoltageDivider() {

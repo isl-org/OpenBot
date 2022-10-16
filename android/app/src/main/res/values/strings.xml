@@ -96,11 +96,11 @@
   <string name="bumpers">Bumpers</string>
   <string name="n_a">N/A</string>
   <string name="robot_type">Robot Type:</string>
-  <string name="indicator_leds">Indicator LEDs</string>
-  <string name="back_leds">Back LEDs</string>
+  <string name="indicators">Indicators</string>
+  <string name="back">Back</string>
   <string name="voltage_divider">Voltage Divider</string>
-  <string name="status_leds">Status LEDs</string>
-  <string name="front_leds">Front LEDs</string>
+  <string name="status">Status</string>
+  <string name="front">Front</string>
   <string name="robot_icon">Robot Icon</string>
   <string name="wheel_odometry_front">Wheel Odometry Front</string>
   <string name="wheel_odometry_back">Wheel Odometry Back</string>
