@@ -111,7 +111,7 @@ class expandedAutoPilot: UIView {
 
     func createCameraIcon() {
         if let image = Images.frontCamera {
-            createIcons(iconImg: image, topAnchor: 10, trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
+            createIcons(iconImg: image, topAnchor: 13, trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
         }
 
     }
@@ -220,7 +220,7 @@ class expandedAutoPilot: UIView {
     }
 
     func createDeviceDropDown(){
-        let device = Devices(frame: CGRect(x: 91, y: 200, width: 40, height: 200));
+        let device = Devices(frame: CGRect(x: 91, y: 190, width: 40, height: 200));
         addSubview(device)
         let dd = UIView()
         dd.layer.cornerRadius = 10

@@ -34,10 +34,11 @@ class AutopilotFragment: CameraController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
-            expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height / 2)
+            expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height / 2 - 10)
 
         } else {
-            expandedAutoPilotView.frame.origin = CGPoint(x: height / 2 + 30, y: 20)
+
+            expandedAutoPilotView.frame.origin = CGPoint(x: height / 2-40, y: 20)
         }
     }
 
@@ -70,6 +71,4 @@ class AutopilotFragment: CameraController {
     @objc func switchCamera() {
         switchCameraView();
     }
-
-
 }

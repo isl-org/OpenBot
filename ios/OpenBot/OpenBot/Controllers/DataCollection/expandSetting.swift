@@ -96,7 +96,13 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     func createBluetoothIcon() {
         bluetoothIcon.frame.size = CGSize(width: 30, height: 30)
         bluetoothIcon.translatesAutoresizingMaskIntoConstraints = false
-        bluetoothIcon.image = Images.bluetoothConnected
+        if isBluetoothConnected{
+            bluetoothIcon.image = Images.bluetoothConnected
+        }
+        else{
+            bluetoothIcon.image = Images.bluetoothDisconnected
+        }
+
         addSubview(bluetoothIcon)
         bluetoothIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         bluetoothIcon.leadingAnchor.constraint(equalTo: logData.trailingAnchor, constant: 20).isActive = true
