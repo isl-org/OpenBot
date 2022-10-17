@@ -29,7 +29,6 @@ class Server: UIView {
         serverDD.dataSource = dataSource
         serverDD.selectionAction = { [self] (index: Int, item: String) in
             serverLabel.text = item
-            print(item)
         }
         serverDD.width = 150
     }

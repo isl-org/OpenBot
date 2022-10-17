@@ -94,8 +94,10 @@ enum Resolutions {
     case low, medium, high
 }
 
-enum RuntimeDevice {
-    case CPU, GPU, XNNPACK
+enum RuntimeDevice: String {
+    case CPU = "CPU",
+         GPU = "GPU",
+         XNNPACK = "XNNPACK"
 }
 
 

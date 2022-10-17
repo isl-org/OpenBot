@@ -24,11 +24,10 @@ let modelLabel = UILabel()
             model.textColor = color
         }
             model.anchorView = self
-
             model.dataSource = dataSource
             model.selectionAction = { [self] (index: Int, item: String) in
                 modelLabel.text = item
-                print(item)
+                NotificationCenter.default.post(name: .updateModel, object: item)
             }
             model.width = 150
     }
@@ -56,12 +55,12 @@ let modelLabel = UILabel()
         let allModels = loadModels()
         for model in allModels {
             if model.type == "AUTOPILOT" {
-                autoPilot.append(String(model.name.prefix(upTo: model.name.index(of: ".")!)))
+                autoPilot.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
             }
         }
         return autoPilot
     }
-
-
-
+}
+extension Notification.Name {
+    static let updateModel = Notification.Name("updateModel")
 }

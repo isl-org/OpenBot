@@ -11,7 +11,7 @@ import UIKit
 class AutopilotFragment: CameraController {
     var autopilot: Autopilot?;
     var models: [Model] = [];
-    let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height / 2, width: width, height: height / 2))
+    let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height / 2 - 10 , width: width, height: height / 2+15))
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +27,8 @@ class AutopilotFragment: CameraController {
         view.addSubview(expandedAutoPilotView)
         setupNavigationBarItem()
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
+
+
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -68,4 +70,6 @@ class AutopilotFragment: CameraController {
     @objc func switchCamera() {
         switchCameraView();
     }
+
+
 }

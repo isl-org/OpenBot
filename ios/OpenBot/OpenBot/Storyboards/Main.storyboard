@@ -19,7 +19,7 @@
         <!--Select Device-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="BluetoothViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="bluetoothScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="BluetoothViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -340,7 +340,7 @@
         <!--Camera View Controller-->
         <scene sceneID="SLa-hy-DHq">
             <objects>
-                <viewController storyboardIdentifier="cameraScreen" id="YEf-aW-8Ip" customClass="CameraViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="cameraScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YEf-aW-8Ip" customClass="CameraViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TNt-JJ-CyR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

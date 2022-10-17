@@ -10,15 +10,23 @@ class VehicleControl: UIView {
     var controlMode: ControlMode = ControlMode.phone;
     var speedMode: SpeedMode = SpeedMode.slow;
     var driveMode: DriveMode = DriveMode.dual;
-
+    var leftSpeed = UILabel()
+    var speedInRpm = UILabel()
     override init(frame: CGRect) {
         super.init(frame: frame)
-
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         setupVehicleControl();
         createControllerMode()
         createDriveMode()
         createSpeedMode()
+        createLeftSpeed()
+        createRpm()
+//        createLabel(text: "xxx,xxx", bottomAnchor: -40, leadingAnchor: 10,isBoldNeeded: false)
+//        createLabel(text: "---,--- rpm", bottomAnchor: -40, leadingAnchor: width/2+100,isBoldNeeded: false)
+        createLabel(text: "Controller", bottomAnchor: 0, leadingAnchor: width/2-100,isBoldNeeded: true)
+        createLabel(text: "Drive Mode", bottomAnchor: 0, leadingAnchor: width/2-30,isBoldNeeded: true)
+        createLabel(text: "Speed", bottomAnchor: 0, leadingAnchor: width/2+50,isBoldNeeded: true)
+
 
     }
 
@@ -27,9 +35,8 @@ class VehicleControl: UIView {
     }
 
     func setupVehicleControl() {
-
             widthAnchor.constraint(equalToConstant: width).isActive = true;
-            heightAnchor.constraint(equalToConstant: 60).isActive = true;
+            heightAnchor.constraint(equalToConstant: 80).isActive = true;
     }
 
     func createControllerMode() {
@@ -46,7 +53,7 @@ class VehicleControl: UIView {
 
     func createAndUpdateButton(iconName: UIImage, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) {
         let btn = UIButton()
-        btn.layer.cornerRadius = 10
+        btn.layer.cornerRadius = 3
         btn.backgroundColor = Colors.title
         let modeIcon = UIImageView(frame: CGRect(x: 15, y: 15, width: 30, height: 30))
         modeIcon.image = iconName;
@@ -65,10 +72,10 @@ class VehicleControl: UIView {
     @objc func updateControlMode(_ sender: UIView) {
         if (controlMode == ControlMode.gamepad) {
             controlMode = ControlMode.phone;
-            createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: 50, topAnchor: 0, action: #selector(updateControlMode(_:)));
+            createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width/2-100, topAnchor: 0, action: #selector(updateControlMode(_:)));
         } else {
             controlMode = ControlMode.gamepad;
-            createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: 50, topAnchor: 0, action: #selector(updateControlMode(_:)));
+            createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width/2-100, topAnchor: 0, action: #selector(updateControlMode(_:)));
         }
         let userInfo = ["mode": controlMode];
         NotificationCenter.default.post(name: .updateControl, object: nil, userInfo: userInfo)
@@ -79,15 +86,15 @@ class VehicleControl: UIView {
             switch (driveMode) {
             case .joystick:
                 driveMode = .gameController;
-                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: 140, topAnchor: 0, action: #selector(updateDriveMode(_:)));
+                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width/2-30, topAnchor: 0, action: #selector(updateDriveMode(_:)));
                 break;
             case .gameController:
                 driveMode = .dual;
-                createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: 140, topAnchor: 0, action: #selector(updateDriveMode(_:)));
+                createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width/2-30, topAnchor: 0, action: #selector(updateDriveMode(_:)));
                 break;
             case .dual:
                 driveMode = .joystick;
-                createAndUpdateButton(iconName: Images.joystickIcon!, leadingAnchor: 140, topAnchor: 0, action: #selector(updateDriveMode(_:)));
+                createAndUpdateButton(iconName: Images.joystickIcon!, leadingAnchor: width/2-30, topAnchor: 0, action: #selector(updateDriveMode(_:)));
                 break;
             }
             let userInfo = ["drive": driveMode];
@@ -100,20 +107,54 @@ class VehicleControl: UIView {
         switch (speedMode) {
         case .slow:
             speedMode = .medium;
-            createAndUpdateButton(iconName: Images.mediumIcon!, leadingAnchor: 240, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
+            createAndUpdateButton(iconName: Images.mediumIcon!, leadingAnchor: width/2+40, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
             break;
         case .medium:
             speedMode = .fast;
-            createAndUpdateButton(iconName: Images.fastIcon!, leadingAnchor: 240, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
+            createAndUpdateButton(iconName: Images.fastIcon!, leadingAnchor: width/2+40, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
             break;
         case .fast:
             speedMode = .slow;
-            createAndUpdateButton(iconName: Images.slowIcon!, leadingAnchor: 240, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
+            createAndUpdateButton(iconName: Images.slowIcon!, leadingAnchor: width/2+40, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
             break;
         }
         let userInfo = ["speed": speedMode];
         NotificationCenter.default.post(name: .updateSpeed, object: nil, userInfo: userInfo)
     }
 
+    func createLabel(text : String,bottomAnchor :CGFloat, leadingAnchor :CGFloat,isBoldNeeded : Bool){
+        let label = UILabel()
+        label.frame.size = CGSize(width: 100, height: 40);
+        label.text = text
+        addSubview(label)
+        label.font = label.font.withSize(13.5)
+        if(isBoldNeeded) {
+            label.font = UIFont.boldSystemFont(ofSize: 13.5)
+        }
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leadingAnchor).isActive = true
+        label.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: bottomAnchor).isActive = true
+    }
 
+    func  createLeftSpeed(){
+        leftSpeed = UILabel()
+        leftSpeed.frame.size = CGSize(width: 100, height: 40);
+        leftSpeed.text = "xxx,xxx"
+        addSubview(leftSpeed)
+        leftSpeed.font = leftSpeed.font.withSize(13.5)
+        leftSpeed.translatesAutoresizingMaskIntoConstraints = false
+        leftSpeed.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
+        leftSpeed.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -40).isActive = true
+    }
+
+    func createRpm(){
+        speedInRpm = UILabel()
+        speedInRpm.frame.size = CGSize(width: 100, height: 40);
+        speedInRpm.text = "---,--- rpm"
+        addSubview(speedInRpm)
+        speedInRpm.font = leftSpeed.font.withSize(13.5)
+        speedInRpm.translatesAutoresizingMaskIntoConstraints = false
+        speedInRpm.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        speedInRpm.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -40).isActive = true
+    }
 }

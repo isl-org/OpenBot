@@ -13,6 +13,8 @@ class expandedAutoPilot: UIView {
     let dropDown = DropDown()
     let modelDropDown = DropDown()
     var serverLabel = UILabel()
+    var speedLabel = UILabel()
+    var deviceDropDownLabel = UILabel()
     var modelDropdownLabel = UILabel()
     var dropdownTopAnchor: NSLayoutConstraint!
     var inputLabel = UILabel()
@@ -21,20 +23,24 @@ class expandedAutoPilot: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeDown.direction = .down
         addGestureRecognizer(swipeDown)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeUp.direction = .up
         addGestureRecognizer(swipeUp)
-        addSubview(createLabel(text: "Auto Mode", leadingAnchor: 20, topAnchor: 40));
+        createBar()
+        addSubview(createLabel(text: "Auto Mode", leadingAnchor: 20, topAnchor: 15));
         createBluetoothIcon()
         createCameraIcon()
         createLogDataButton()
         addSubview(createLabel(text: Strings.server, leadingAnchor: 20, topAnchor: 80))
         addSubview(createLabel(text: "Model", leadingAnchor: 20, topAnchor: 120))
         addSubview(createLabel(text: "Speed", leadingAnchor: 20, topAnchor: 160))
+        setupSpeed()
         addSubview(createLabel(text: "Device", leadingAnchor: 20, topAnchor: 200))
+        createDeviceDropDown()
         createServerDropDown()
         createModelDropDown()
         addSubview(createLabel(text: "Input", leadingAnchor: 180, topAnchor: 160))
@@ -42,6 +48,14 @@ class expandedAutoPilot: UIView {
         addSubview(createLabel(text: "Threads", leadingAnchor: 180, topAnchor: 200))
         setupThreads();
         setupVehicleControls()
+
+
+
+
+
+        NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -73,9 +87,25 @@ class expandedAutoPilot: UIView {
         }
     }
 
+    func createBar(){
+        let bar = UIView()
+        bar.backgroundColor = Colors.title
+        addSubview(bar)
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        bar.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        bar.heightAnchor.constraint(equalToConstant:5).isActive = true
+        bar.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: width/2-30).isActive = true
+        bar.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        bar.layer.cornerRadius = 2
+
+    }
+
     func createBluetoothIcon() {
-        if let image = Images.ble {
-            createIcons(iconImg: image, topAnchor: 10, trailingAnchor: -75, x: 24.5, y: 21, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+
+        if (isBluetoothConnected) {
+            createIcons(iconImg: Images.bluetoothConnected!, topAnchor: 10, trailingAnchor: -75, x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+        } else {
+            createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: 10, trailingAnchor: -75, x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         }
     }
 
@@ -97,14 +127,14 @@ class expandedAutoPilot: UIView {
     }
 
     func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) {
-        let icon = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        let icon = UIView()
         let iconImage = UIImageView(frame: CGRect(x: x, y: y, width: size.width, height: size.height))
         iconImage.image = iconImg
         icon.addSubview(iconImage)
         addSubview(icon)
         icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        icon.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        icon.heightAnchor.constraint(equalToConstant: 40).isActive = true
         icon.topAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.topAnchor, constant: topAnchor).isActive = true
         icon.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: trailingAnchor).isActive = true
         icon.layer.cornerRadius = 30
@@ -121,7 +151,7 @@ class expandedAutoPilot: UIView {
         addSubview(logData)
         logData.widthAnchor.constraint(equalToConstant: 20).isActive = true
         logData.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 120).isActive = true
-        logData.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
+        logData.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 25).isActive = true
     }
 
 
@@ -154,7 +184,6 @@ class expandedAutoPilot: UIView {
     func createModelDropDown() {
         let model = Models(frame: CGRect(x: 180, y: 120, width: 100, height: 200));
         addSubview(model)
-        print(model)
         let dd = UIView()
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
@@ -183,6 +212,38 @@ class expandedAutoPilot: UIView {
         inputLabel.frame = CGRect(x: 290, y: 164.5, width: 100, height: 40)
         inputLabel.text = "256x96";
         addSubview(inputLabel)
+    }
+
+    func setupSpeed(){
+        speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: 160)
+        addSubview(speedLabel)
+    }
+
+    func createDeviceDropDown(){
+        let device = Devices(frame: CGRect(x: 91, y: 200, width: 40, height: 200));
+        addSubview(device)
+        let dd = UIView()
+        dd.layer.cornerRadius = 10
+        dd.backgroundColor = Colors.freeRoamButtonsColor
+        deviceDropDownLabel.text = "CPU"
+        deviceDropDownLabel.textColor = Colors.borderColor
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showDeviceDropdown(_:)))
+        dd.addGestureRecognizer(tap)
+        let upwardImage = UIImageView()
+        upwardImage.frame.size = CGSize(width: 5, height: 5)
+        upwardImage.image = UIImage(systemName: "arrowtriangle.down.fill")
+        dd.addSubview(upwardImage)
+        upwardImage.translatesAutoresizingMaskIntoConstraints = false
+        upwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -20).isActive = true
+        upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
+        addSubview(dd)
+        dd.translatesAutoresizingMaskIntoConstraints = false
+        dd.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 207).isActive = true;
+        dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 80).isActive = true
+        dd.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        dd.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        deviceDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        dd.addSubview(deviceDropDownLabel)
     }
 
     func setupThreads() {
@@ -231,7 +292,7 @@ class expandedAutoPilot: UIView {
 
 
     @objc func ble(_ sender: UIView) {
-        NotificationCenter.default.post(name: .ble, object: nil)
+
     }
 
     @objc func switchCamera(_ sender: UIView) {
@@ -253,6 +314,10 @@ class expandedAutoPilot: UIView {
 
     @objc func showModelDropdown(_ sender: UIButton) {
         NotificationCenter.default.post(name: .showModelsDD, object: nil)
+    }
+
+    @objc func showDeviceDropdown(_ sender: UIButton) {
+        NotificationCenter.default.post(name: .showDeviceDD, object: nil)
     }
 
     @objc func increaseThreads(_ sender: UIImage) {
@@ -297,9 +362,33 @@ class expandedAutoPilot: UIView {
         }
         return autoPilot
     }
+
+
+    @objc func updateModel(_ notification: Notification) {
+        let selectedModel = notification.object as! String
+        modelDropdownLabel.text = selectedModel
+        let models  = loadAllAutoPilotModels()
+        for model in models {
+            guard let index = model.name.firstIndex(of: ".") else {
+              return
+            }
+            if model.name.prefix(upTo: index) == selectedModel{
+                inputLabel.text = model.inputSize
+
+                break
+            }
+        }
+    }
+
+    @objc func updateDevice(_ notification: Notification) {
+        let selectedDevice = notification.object as! String
+        deviceDropDownLabel.text = selectedDevice
+
+    }
 }
 
 extension Notification.Name {
     static let showModelsDD = Notification.Name("showModelsDD")
     static let showServerDD = Notification.Name("showServerDD")
+    static let showDeviceDD = Notification.Name("showDeviceDD")
 }
