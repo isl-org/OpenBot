@@ -94,3 +94,9 @@ extension Model {
         return models;
     }
 }
+
+extension Float {
+    var bytes: [UInt8] {
+        withUnsafeBytes(of: self, Array.init)
+    }
+}

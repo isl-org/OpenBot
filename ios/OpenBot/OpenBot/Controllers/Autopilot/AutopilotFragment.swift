@@ -23,7 +23,6 @@ class AutopilotFragment: CameraController {
             models = Model.fromModelItems(list: modelItems);
             print("models are : ", models)
             autopilot = Autopilot(model: models[0], device: RuntimeDevice.XNNPACK, numThreads: 1);
-            checkItem();
         }
         view.addSubview(expandedAutoPilotView)
         setupNavigationBarItem()
@@ -38,44 +37,6 @@ class AutopilotFragment: CameraController {
         } else {
             expandedAutoPilotView.frame.origin = CGPoint(x: height / 2 + 30, y: 20)
         }
-    }
-
-    func checkItem() {
-        do {
-            try print(autopilot?.tflite?.input(at: 0) as Any);
-
-            try print(autopilot?.tflite?.input(at: 1) as Any);
-
-            var data: Data = Data();
-            data.append([UInt8(0.3)], count: 2);
-            data.append([UInt8(1)], count: 2);
-
-            //make image input
-
-            autopilot?.convertImageToData(image: UIImage(named: "gamepad")!.cgImage!);
-            try autopilot?.tflite?.copy(autopilot?.imgData ?? Data(), toInputAt: 1);
-            try autopilot?.tflite?.invoke()
-            let imageOutput = try autopilot?.tflite?.output(at: 0)
-            print(imageOutput)
-            try autopilot?.tflite?.copy(data, toInputAt: 0)
-            try autopilot?.tflite?.invoke();
-            let outputTensor = try autopilot?.tflite?.output(at: 0);
-            print("outputtensor", outputTensor)
-            // Copy output to `Data` to process the inference results.
-            let outputSize = outputTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            let outputData =
-                    UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
-            outputTensor?.data.copyBytes(to: outputData)
-            for i in outputData.indices {
-                print("outputData ", outputData[i]);
-            }
-//            print()
-//            print(outputData);
-//            let str = String(decoding: outputTensor?.data ?? Data(), as: UTF8.self)
-//            print(str)
-        } catch {
-            print("error:\(error)")
-        };
     }
 
     func loadModels() -> [ModelItem] {
