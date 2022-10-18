@@ -15,10 +15,13 @@ class BluetoothViewController: UIViewController {
 
     let myTable = UITableView()
     var isconnected: Bool = false
-
+    let button = UIButton();
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -107,7 +110,6 @@ extension BluetoothViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = myTable.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
         let peripheral = bluetooth.peripherals[indexPath.row]
-        let button = UIButton();
         cell.textLabel?.text = peripheral.name
         button.backgroundColor = .systemBackground
         cell.addSubview(button)
@@ -132,10 +134,6 @@ extension BluetoothViewController: UITableViewDataSource, UITableViewDelegate {
         bluetooth.peri = bluetooth.peripherals[sender.tag]
         isBluetoothConnected = true
         bluetooth.connect()
-        let dataSend = (storyboard?.instantiateViewController(withIdentifier: "homescreen"))!
-        guard (navigationController?.pushViewController(dataSend, animated: true)) != nil else {
-            fatalError("guard failure handling has not been implemented")
-        }
     }
 
     @objc func disConnectToBle() {
@@ -145,55 +143,15 @@ extension BluetoothViewController: UITableViewDataSource, UITableViewDelegate {
         myTable.reloadData()
     }
 
+    @objc func updateConnect(_ notification: Notification) {
+        if isBluetoothConnected{
+            button.setTitle("Disconnect", for: .normal)
+        }
+        else{
+            button.setTitle("Connect", for: .normal)
+        }
+
+    }
+
 
 }
-
-
-//
-
-//
-//extension BluetoothViewController: UITableViewDataSource, UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        bluetooth.peripherals.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = myTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-//        let peripheral = bluetooth.peripherals[indexPath.row]
-//        cell.textLabel?.text = peripheral.name
-//        button.backgroundColor = .systemBackground
-//        cell.addSubview(button)
-//        button.frame = CGRect(x: cell.frame.width - 150, y: cell.frame.origin.y, width: 150, height: cell.frame.size.height)
-//        button.layer.cornerRadius = 25
-//        button.tag = indexPath.row
-//        if isBluetoothConnected && bluetooth.peri?.name != cell.textLabel?.text {
-//            button.isHidden = true
-//        } else if isBluetoothConnected && bluetooth.peri?.name == cell.textLabel?.text {
-//            button.setTitle("Disconnect", for: .normal)
-//            button.addTarget(self, action: #selector(disConnectToBle), for: .touchUpInside)
-//        } else {
-//            button.setTitle("Connect", for: .normal)
-//            button.addTarget(self, action: #selector(connectToBle), for: .touchUpInside)
-//        }
-//        return cell;
-//    }
-//
-//
-//
-//    @objc func connectToBle(sender: UIButton) {
-//        bluetooth.peri = bluetooth.peripherals[sender.tag]
-//        isBluetoothConnected = true
-//        bluetooth.connect()
-//        let dataSend = (storyboard?.instantiateViewController(withIdentifier: "homescreen"))!
-//        guard (navigationController?.pushViewController(dataSend, animated: true)) != nil else {
-//            fatalError("guard failure handling has not been implemented")
-//        }
-//    }
-//
-//    @objc func disConnectToBle() {
-//        bluetooth.disconnect()
-//        bluetooth.startScan()
-//        isBluetoothConnected = false
-//        viewDidLoad()
-//    }
-//}

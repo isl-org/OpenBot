@@ -10,13 +10,11 @@ class expandedAutoPilot: UIView {
     let switchBtn  = UISwitch()
     var dropDownView = UIView()
     var ddView = UIView()
-    let dropDown = DropDown()
     let modelDropDown = DropDown()
     var serverLabel = UILabel()
     var speedLabel = UILabel()
     var deviceDropDownLabel = UILabel()
     var modelDropdownLabel = UILabel()
-    var dropdownTopAnchor: NSLayoutConstraint!
     var inputLabel = UILabel()
     var threadLabel = UILabel()
 
@@ -66,7 +64,7 @@ class expandedAutoPilot: UIView {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
             case .down:
-                UIView.animate(withDuration: 0.45) {
+                UIView.animate(withDuration: 0.25) {
                     if currentOrientation == .portrait {
                         self.frame.origin.y = height - 70
                     } else {
@@ -74,7 +72,7 @@ class expandedAutoPilot: UIView {
                     }
                 }
             case .up:
-                UIView.animate(withDuration: 0.45) {
+                UIView.animate(withDuration: 0.25) {
                     if currentOrientation == .portrait {
                         self.frame.origin.y = height / 2
                     } else {
@@ -238,7 +236,7 @@ class expandedAutoPilot: UIView {
         upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
         addSubview(dd)
         dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 207).isActive = true;
+        dd.topAnchor.constraint(equalTo: topAnchor, constant: 207).isActive = true;
         dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 80).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 100).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -292,6 +290,8 @@ class expandedAutoPilot: UIView {
 
 
     @objc func ble(_ sender: UIView) {
+
+        NotificationCenter.default.post(name: .ble, object: nil)
 
     }
 

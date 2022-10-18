@@ -61,6 +61,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("connected to", peripheral)
         isBluetoothConnected = true;
+        NotificationCenter.default.post(name: .bluetoothConnected, object: nil)
         peripheral.discoverServices(nil)
 
     }
@@ -74,6 +75,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("disconnected from :", peripheral)
         isBluetoothConnected = false
+        NotificationCenter.default.post(name: .bluetoothDisconnected, object: nil)
 
     }
 
@@ -192,4 +194,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 extension Notification.Name {
     static let updateLabel = Notification.Name("updateLabel")
     static let updateSerialMonitor = Notification.Name("updateSerialMonitor")
+    static let bluetoothConnected = Notification.Name("bluetoothConnected")
+    static let bluetoothDisconnected = Notification.Name("bluetoothDisconnected")
+
 }

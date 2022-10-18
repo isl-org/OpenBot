@@ -27,6 +27,8 @@ class AutopilotFragment: CameraController {
         view.addSubview(expandedAutoPilotView)
         setupNavigationBarItem()
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
+
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -69,4 +71,11 @@ class AutopilotFragment: CameraController {
     @objc func switchCamera() {
         switchCameraView();
     }
+
+    @objc func openBluetoothSettings() {
+        let nextViewController = (storyboard?.instantiateViewController(withIdentifier: "bluetoothScreen"))
+        navigationController?.pushViewController(nextViewController!, animated: true)
+    }
+
+
 }
