@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -28,12 +29,14 @@
         android:padding="8dp"
         android:textColor="@android:color/black" />
 
-    <CheckBox
-        android:id="@+id/refreshToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/refresh_toggle"
-        android:padding="8dp" />
+        <CheckBox
+            android:id="@+id/refreshToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/refresh_toggle"
+            android:minWidth="48dp"
+            android:padding="8dp"
+            tools:ignore="DuplicateSpeakableTextCheck" />
 
     <CheckBox
         android:id="@+id/usbToggle"
@@ -76,12 +79,12 @@
 
         <TextView
             android:id="@+id/batteryText"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="sans-serif-black"
             android:padding="8dp"
-            android:text="Sensors"
+            android:text="@string/sensors"
             android:textColor="@android:color/black" />
     </LinearLayout>
 
@@ -90,32 +93,35 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-    <CheckBox
-        android:id="@+id/voltage_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:minHeight="48dp"
-        android:padding="4dp"
-        android:text="@string/voltage_divider" />
+        <CheckBox
+            android:id="@+id/voltage_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:clickable="false"
+            android:minHeight="48dp"
+            android:padding="4dp"
+            android:text="@string/voltage_divider" />
 
-    <CheckBox
-        android:id="@+id/sonar_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:minHeight="48dp"
-        android:padding="4dp"
-        android:text="@string/sonar" />
+        <CheckBox
+            android:id="@+id/sonar_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:clickable="false"
+            android:minHeight="48dp"
+            android:padding="4dp"
+            android:text="@string/sonar" />
 
-    <CheckBox
-        android:id="@+id/bumpers_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:minHeight="48dp"
-        android:padding="4dp"
-        android:text="@string/bumpers" />
+        <CheckBox
+            android:id="@+id/bumpers_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:clickable="false"
+            android:minHeight="48dp"
+            android:padding="4dp"
+            android:text="@string/bumpers" />
     </LinearLayout>
 
     <LinearLayout
@@ -126,12 +132,12 @@
 
         <TextView
             android:id="@+id/wheelOdometryText"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="sans-serif-black"
             android:padding="8dp"
-            android:text="Wheel Odometry"
+            android:text="@string/wheel_odometry"
             android:textColor="@android:color/black" />
     </LinearLayout>
 
@@ -145,6 +151,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:clickable="false"
             android:minHeight="48dp"
             android:padding="4dp"
             android:text="@string/front" />
@@ -154,6 +161,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:clickable="false"
             android:minHeight="48dp"
             android:padding="4dp"
             android:text="@string/back" />
@@ -167,12 +175,12 @@
 
         <TextView
             android:id="@+id/ledText"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="sans-serif-black"
             android:padding="8dp"
-            android:text="LEDs"
+            android:text="@string/leds"
             android:textColor="@android:color/black" />
     </LinearLayout>
 
@@ -186,6 +194,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:clickable="false"
             android:minHeight="48dp"
             android:padding="4dp"
             android:text="@string/indicators" />
@@ -195,6 +204,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:clickable="false"
             android:minHeight="48dp"
             android:padding="4dp"
             android:text="@string/front" />
@@ -204,6 +214,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:clickable="false"
             android:minHeight="48dp"
             android:padding="4dp"
             android:text="@string/back" />
@@ -213,6 +224,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:clickable="false"
             android:minHeight="48dp"
             android:padding="4dp"
             android:text="@string/status" />
@@ -226,12 +238,12 @@
 
         <TextView
             android:id="@+id/readingsText"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="sans-serif-black"
             android:padding="8dp"
-            android:text="Readings"
+            android:text="@string/readings"
             android:textColor="@android:color/black" />
     </LinearLayout>
 
@@ -245,7 +257,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:minHeight="48dp"
+            android:minHeight="32dp"
             android:padding="4dp"
             android:text="@string/battery"
             android:textColor="@android:color/black" />
@@ -254,7 +266,7 @@
             android:id="@+id/voltage_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:minHeight="32dp"
             android:padding="4dp"
             android:gravity="end"
             android:text="@string/voltage"
@@ -265,7 +277,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:minHeight="48dp"
+            android:minHeight="32dp"
             android:padding="4dp"
             android:gravity="end"
             android:text="@string/speed"
@@ -275,7 +287,7 @@
             android:id="@+id/speed_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:minHeight="32dp"
             android:padding="4dp"
             android:gravity="end"
             android:text="@string/rpm"
@@ -286,7 +298,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:minHeight="48dp"
+            android:minHeight="32dp"
             android:padding="4dp"
             android:gravity="end"
             android:text="@string/sonar"
@@ -296,11 +308,117 @@
             android:id="@+id/sonar_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:minHeight="32dp"
             android:padding="4dp"
             android:gravity="end"
             android:text="@string/distance"
             android:textColor="@android:color/black" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/sendCommandsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-black"
+            android:padding="8dp"
+            android:text="@string/send_commands"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/motors_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:minHeight="48dp"
+            android:padding="4dp"
+            android:gravity="end"
+            android:text="@string/motors"
+            android:textColor="@android:color/black" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/motors_forward_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/openBotBlue"
+            android:minHeight="48dp"
+            android:padding="16dp"
+            android:text="@string/forward"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#FFFFFF"
+            tools:ignore="TextContrastCheck" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/motors_backward_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/openBotBlue"
+            android:minHeight="48dp"
+            android:padding="16dp"
+            android:text="@string/backward"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#FFFFFF"
+            tools:ignore="TextContrastCheck" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/motors_stop_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/openBotBlue"
+            android:minHeight="48dp"
+            android:padding="16dp"
+            android:text="@string/stop"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#FFFFFF"
+            tools:ignore="TextContrastCheck" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/leds_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:minHeight="48dp"
+            android:padding="4dp"
+            android:gravity="end"
+            android:text="@string/lights"
+            android:textColor="@android:color/black" />
+
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/lights_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:padding="4dp"
+            android:valueFrom="0.0"
+            android:valueTo="100.0"
+            android:contentDescription="@string/lights_slider"
+            app:trackColorActive="@color/openBotBlue"
+            app:thumbColor="@color/openBotBlue"/>
+
+
+    </LinearLayout>
 </LinearLayout>

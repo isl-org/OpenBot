@@ -38,15 +38,38 @@ public class RobotInfoFragment extends ControlsFragment {
         (buttonView, isChecked) -> {
           refreshGui();
         });
+
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
+
     binding.refreshToggle.setOnClickListener(
         v -> {
           refreshGui();
         });
+
+    binding.lightsSlider.addOnChangeListener(
+        (slider, value, fromUser) -> {
+          vehicle.sendLightIntensity(value / 100, value / 100);
+        });
+
+    binding.motorsForwardButton.setOnClickListener(
+        v -> {
+          vehicle.setControl(0.5f, 0.5f);
+        });
+
+    binding.motorsBackwardButton.setOnClickListener(
+        v -> {
+          vehicle.setControl(-0.5f, -0.5f);
+        });
+
+    binding.motorsStopButton.setOnClickListener(
+        v -> {
+          vehicle.setControl(0.0f, 0.0f);
+        });
+
     refreshGui();
   }
 

@@ -389,6 +389,12 @@ public class Vehicle {
     return control.getRight() * speedMultiplier;
   }
 
+  public void sendLightIntensity(float frontPercent, float backPercent) {
+    int front = (int) (frontPercent * 255.f);
+    int back = (int) (backPercent * 255.f);
+    sendStringToUsb(String.format(Locale.US, "l%d,%d\n", front, back));
+  }
+
   public void sendControl() {
     int left = (int) (getLeftSpeed());
     int right = (int) (getRightSpeed());

@@ -104,6 +104,17 @@
   <string name="robot_icon">Robot Icon</string>
   <string name="wheel_odometry_front">Wheel Odometry Front</string>
   <string name="wheel_odometry_back">Wheel Odometry Back</string>
+  <string name="backward">Backward</string>
+  <string name="forward">Forward</string>
+  <string name="stop">Stop</string>
+  <string name="motors">Motors</string>
+  <string name="leds">LEDs</string>
+  <string name="lights">Lights</string>
+  <string name="sensors">Sensors</string>
+  <string name="send_commands">Send Commands</string>
+  <string name="wheel_odometry">Wheel Odometry</string>
+  <string name="readings">Readings</string>
+  <string name="lights_slider">lights slider</string>
 
   <string-array name="servers">
     <item>No server</item>
