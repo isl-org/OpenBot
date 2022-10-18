@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3A0B835528ADFD6300A9FA0F /* DataSerialMonitorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0B835428ADFD6200A9FA0F /* DataSerialMonitorViewController.swift */; };
 		3A31E73028AE0E1A00FDD235 /* SensorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */; };
+		3A3AAA9E28FEBB2F006EE8D9 /* BluetoothTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3AAA9D28FEBB2F006EE8D9 /* BluetoothTable.swift */; };
 		3A3C40C828B0A8A800AA40CF /* VideoRecordingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3C40C728B0A8A800AA40CF /* VideoRecordingController.swift */; };
 		3A5BF7D228D0548B00D8736E /* TempViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5BF7D128D0548B00D8736E /* TempViewController.swift */; };
 		3AD2794028AF703A00053CAD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD2793F28AF703A00053CAD /* CameraViewController.swift */; };
@@ -89,6 +90,7 @@
 		38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
 		3A0B835428ADFD6200A9FA0F /* DataSerialMonitorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSerialMonitorViewController.swift; sourceTree = "<group>"; };
 		3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorsViewController.swift; sourceTree = "<group>"; };
+		3A3AAA9D28FEBB2F006EE8D9 /* BluetoothTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BluetoothTable.swift; path = OpenBot/BluetoothTable.swift; sourceTree = SOURCE_ROOT; };
 		3A3C40C728B0A8A800AA40CF /* VideoRecordingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecordingController.swift; sourceTree = "<group>"; };
 		3A5BF7D128D0548B00D8736E /* TempViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempViewController.swift; sourceTree = SOURCE_ROOT; };
 		3AD2793F28AF703A00053CAD /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				4FEF42374776D62381BDE68C /* Info.plist */,
 				4FEF4D63E4FA9FB585EF1733 /* SceneDelegate.swift */,
 				4FEF4A57E56E4EAB1B479871 /* Storyboards */,
+				3A3AAA9D28FEBB2F006EE8D9 /* BluetoothTable.swift */,
 				4FEF49E6B7BC995D19DD82E7 /* Data */,
 				4FEF4EFC6160B227C9A9BFF3 /* Vehicle */,
 				4FEF47EAC21A4C2BDD11B72B /* README.md */,
@@ -687,6 +690,7 @@
 				727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */,
 				727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */,
 				727D3074611DA874F01709A3 /* CGFloatExtension.swift in Sources */,
+				3A3AAA9E28FEBB2F006EE8D9 /* BluetoothTable.swift in Sources */,
 				727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */,
 				727D39CEBB2CF03D171BC311 /* UIViewExtension.swift in Sources */,
 				4FEF4DAC98B9D01B10F7B3E9 /* DataCollectionController.swift in Sources */,

@@ -238,8 +238,14 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func createBluetoothIcon() {
         let blueToothIconRect = createRectangle(x: 220, y: 230, width: 40, height: 40, borderColor: "borderColor")
-        let blueToothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 5, y: blueToothIconRect.frame.size.height / 4, width: 10, height: 20))
-        blueToothIcon.image = Images.bluetoothConnected
+        let blueToothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 4-10, y: blueToothIconRect.frame.size.height / 4, width: 20, height: 20))
+        if isBluetoothConnected {
+            blueToothIcon.image = Images.bluetoothConnected
+        }
+        else{
+            blueToothIcon.image = Images.bluetoothDisconnected
+        }
+
         firstView.addSubview(blueToothIconRect)
         blueToothIconRect.addSubview(blueToothIcon)
     }

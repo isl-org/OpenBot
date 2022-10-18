@@ -100,7 +100,7 @@ class HomePageViewController: UIViewController {
 
     @IBAction func onTapSettings() {
         if isBluetoothConnected != false {
-            let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: Strings.ScreenDataCollection))!
+            let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "bluetoothScreen"))!
             guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
                 fatalError("guard failure handling has not been implemented")
             }
@@ -108,7 +108,7 @@ class HomePageViewController: UIViewController {
 //            let yourAlert = UIAlertController(title: "Connection Error", message: "Please connect to BlueTooth", preferredStyle: UIAlertController.Style.alert)
 //            yourAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (handler) in}))
 //            self.present(yourAlert, animated: true, completion: nil)
-            let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "nitish"))!
+            let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "bluetoothScreen"))!
             guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
                 fatalError("guard failure handling has not been implemented")
             }

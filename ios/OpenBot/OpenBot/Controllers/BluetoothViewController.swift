@@ -21,18 +21,14 @@ class BluetoothViewController: UIViewController {
         setupTableView()
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         bluetooth.startScan()
-
-
     }
 
     func setupTableView() {
-
         myTable.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
 //        myTable.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         myTable.translatesAutoresizingMaskIntoConstraints = false
