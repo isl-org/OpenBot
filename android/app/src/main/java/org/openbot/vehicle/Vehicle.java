@@ -42,17 +42,17 @@ public class Vehicle {
     private final Context context;
     private final int baudRate;
 
-  private String vehicleType = "";
-  private boolean hasVoltageDivider = false;
-  private boolean hasIndicators = false;
-  private boolean hasSonar = false;
-  private boolean hasBumpSensor = false;
-  private boolean hasWheelOdometryFront = false;
-  private boolean hasWheelOdometryBack = false;
-  private boolean hasLedsFront = false;
-  private boolean hasLedsBack = false;
-  private boolean hasLedsStatus = false;
-  private boolean isReady = false;
+    private String vehicleType = "";
+    private boolean hasVoltageDivider = false;
+    private boolean hasIndicators = false;
+    private boolean hasSonar = false;
+    private boolean hasBumpSensor = false;
+    private boolean hasWheelOdometryFront = false;
+    private boolean hasWheelOdometryBack = false;
+    private boolean hasLedsFront = false;
+    private boolean hasLedsBack = false;
+    private boolean hasLedsStatus = false;
+    private boolean isReady = false;
 
     private BluetoothManager bluetoothManager;
     SharedPreferences sharedPreferences;
@@ -64,13 +64,13 @@ public class Vehicle {
     }
 
 
-  public boolean isReady() {
-    return isReady;
-  }
+    public boolean isReady() {
+        return isReady;
+    }
 
-  public void setReady(boolean ready) {
-    isReady = ready;
-  }
+    public void setReady(boolean ready) {
+        isReady = ready;
+    }
 
     public void setMinMotorVoltage(float minMotorVoltage) {
         this.minMotorVoltage = minMotorVoltage;
@@ -126,6 +126,16 @@ public class Vehicle {
 
     public boolean isHasWheelOdometryFront() {
         return hasWheelOdometryFront;
+    }
+
+    public boolean isUsbConnected() {
+        return usbConnected;
+    }
+
+    public void sendLightIntensity(float frontPercent, float backPercent) {
+        int front = (int) (frontPercent * 255.f);
+        int back = (int) (backPercent * 255.f);
+        sendStringToDevice(String.format(Locale.US, "l%d,%d\n", front, back));
     }
 
     public void setHasWheelOdometryFront(boolean hasWheelOdometryFront) {
@@ -396,15 +406,10 @@ public class Vehicle {
         }
     }
 
-    public boolean isUsbConnected() {
-        return usbConnected;
-    }
-
     private void sendStringToDevice(String message) {
-        if (getConnectionType().equals("USB") && usbConnection.isOpen()){
+        if (getConnectionType().equals("USB") && usbConnection.isOpen()) {
             usbConnection.send(message);
-        }
-        else if (getConnectionType().equals("Bluetooth") && bluetoothManager.isBleConnected()){
+        } else if (getConnectionType().equals("Bluetooth") && bluetoothManager.isBleConnected()) {
             sendStringToBle(message);
         }
     }
@@ -433,27 +438,19 @@ public class Vehicle {
     }
 
     protected void sendHeartbeat(int timeout_ms) {
-        if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-            usbConnection.send(String.format(Locale.getDefault(), "h%d\n", timeout_ms));
-        }
+        sendStringToDevice(String.format(Locale.getDefault(), "h%d\n", timeout_ms));
     }
 
     protected void setSonarFrequency(int interval_ms) {
-        if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-            usbConnection.send(String.format(Locale.getDefault(), "s%d\n", interval_ms));
-        }
+        sendStringToDevice(String.format(Locale.getDefault(), "s%d\n", interval_ms));
     }
 
     protected void setVoltageFrequency(int interval_ms) {
-        if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-            usbConnection.send(String.format(Locale.getDefault(), "v%d\n", interval_ms));
-        }
+        sendStringToDevice(String.format(Locale.getDefault(), "v%d\n", interval_ms));
     }
 
     protected void setWheelOdometryFrequency(int interval_ms) {
-        if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-            usbConnection.send(String.format(Locale.getDefault(), "w%d\n", interval_ms));
-        }
+        sendStringToDevice(String.format(Locale.getDefault(), "w%d\n", interval_ms));
     }
 
     private class HeartBeatTask extends TimerTask {
