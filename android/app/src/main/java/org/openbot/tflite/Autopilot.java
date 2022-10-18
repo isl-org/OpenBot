@@ -92,7 +92,6 @@ public abstract class Autopilot extends Network {
     Timber.v("Timecost to run model inference: %s", (endTime - startTime));
 
     Trace.endSection(); // "recognizeImage"
-//    System.out.println("output is : "+predicted_ctrl[0][0]+" : " + predicted_ctrl[0][1]);
     return new Control(predicted_ctrl[0][0], predicted_ctrl[0][1]);
   }
 }
