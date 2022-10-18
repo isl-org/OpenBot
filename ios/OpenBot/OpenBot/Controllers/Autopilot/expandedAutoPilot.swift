@@ -32,7 +32,7 @@ class expandedAutoPilot: UIView {
         addSubview(createLabel(text: "Auto Mode", leadingAnchor: 20, topAnchor: 15));
         createBluetoothIcon()
         createCameraIcon()
-        createLogDataButton()
+        createSwitchButton()
         addSubview(createLabel(text: Strings.server, leadingAnchor: 20, topAnchor: 80))
         addSubview(createLabel(text: "Model", leadingAnchor: 20, topAnchor: 120))
         addSubview(createLabel(text: "Speed", leadingAnchor: 20, topAnchor: 160))
@@ -140,14 +140,14 @@ class expandedAutoPilot: UIView {
         icon.addGestureRecognizer(tapGesture)
     }
 
-    func createLogDataButton() {
+    func createSwitchButton() {
         switchBtn.isOn = false
         switchBtn.setOn(false, animated: true)
         switchBtn.onTintColor = Colors.title
-        switchBtn.addTarget(self, action: #selector(switchLogButton(_:)), for: .valueChanged)
+        switchBtn.addTarget(self, action: #selector(switchButton(_:)), for: .valueChanged)
         switchBtn.translatesAutoresizingMaskIntoConstraints = false
         addSubview(switchBtn)
-        switchBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        switchBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
         switchBtn.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 120).isActive = true
         switchBtn.topAnchor.constraint(equalTo: topAnchor, constant: 25).isActive = true
     }
@@ -299,8 +299,8 @@ class expandedAutoPilot: UIView {
         NotificationCenter.default.post(name: .switchCamera, object: nil)
     }
 
-    @objc func switchLogButton(_ sender: UISwitch) {
-        NotificationCenter.default.post(name: .logData, object: nil)
+    @objc func switchButton(_ sender: UISwitch) {
+        NotificationCenter.default.post(name: .autoMode, object: nil)
         if sender.isOn {
 
         } else {
@@ -391,4 +391,5 @@ extension Notification.Name {
     static let showModelsDD = Notification.Name("showModelsDD")
     static let showServerDD = Notification.Name("showServerDD")
     static let showDeviceDD = Notification.Name("showDeviceDD")
+    static let autoMode  = Notification.Name("autoMode")
 }
