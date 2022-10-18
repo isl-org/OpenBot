@@ -11,23 +11,24 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/robotTypeText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/robot_type"
-        android:padding="8dp"
-        android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/robotTypeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:text="@string/robot_type"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/robotTypeInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/n_a"
-        android:padding="8dp"
-        android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/robotTypeInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:text="@string/n_a"
+            android:textColor="@android:color/black" />
 
         <CheckBox
             android:id="@+id/refreshToggle"
@@ -38,44 +39,29 @@
             android:padding="8dp"
             tools:ignore="DuplicateSpeakableTextCheck" />
 
-    <CheckBox
-        android:id="@+id/usbToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/usb_toggle"
-        android:padding="8dp" />
+        <CheckBox
+            android:id="@+id/usbToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/usb_toggle"
+            android:padding="8dp" />
     </LinearLayout>
-
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_margin="8dp"
-        android:alpha="0.5"
-        android:background="@drawable/button_item_background_black" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/robot_icon"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="8dp"
         android:layout_weight="1"
-        android:src="@drawable/ic_openbot"
-        android:contentDescription="@string/robot_icon" />
+        android:contentDescription="@string/robot_icon"
+        android:padding="8dp"
+        android:src="@drawable/ic_openbot" />
 
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_margin="8dp"
-        android:alpha="0.5"
-        android:background="@drawable/button_item_background_black" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/batteryText"
@@ -127,8 +113,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/wheelOdometryText"
@@ -170,8 +156,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/ledText"
@@ -233,8 +219,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/readingsText"
@@ -266,9 +252,9 @@
             android:id="@+id/voltage_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:minHeight="32dp"
             android:padding="4dp"
-            android:gravity="end"
             android:text="@string/voltage"
             android:textColor="@android:color/black" />
 
@@ -277,9 +263,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:gravity="end"
             android:minHeight="32dp"
             android:padding="4dp"
-            android:gravity="end"
             android:text="@string/speed"
             android:textColor="@android:color/black" />
 
@@ -287,9 +273,9 @@
             android:id="@+id/speed_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:minHeight="32dp"
             android:padding="4dp"
-            android:gravity="end"
             android:text="@string/rpm"
             android:textColor="@android:color/black" />
 
@@ -298,9 +284,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:gravity="end"
             android:minHeight="32dp"
             android:padding="4dp"
-            android:gravity="end"
             android:text="@string/sonar"
             android:textColor="@android:color/black" />
 
@@ -308,9 +294,9 @@
             android:id="@+id/sonar_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:minHeight="32dp"
             android:padding="4dp"
-            android:gravity="end"
             android:text="@string/distance"
             android:textColor="@android:color/black" />
     </LinearLayout>
@@ -318,8 +304,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/sendCommandsText"
@@ -342,9 +328,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:gravity="end"
             android:minHeight="48dp"
             android:padding="4dp"
-            android:gravity="end"
             android:text="@string/motors"
             android:textColor="@android:color/black" />
 
@@ -401,9 +387,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:gravity="end"
             android:minHeight="48dp"
             android:padding="4dp"
-            android:gravity="end"
             android:text="@string/lights"
             android:textColor="@android:color/black" />
 
@@ -412,12 +398,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
+            android:contentDescription="@string/lights_slider"
             android:padding="4dp"
             android:valueFrom="0.0"
             android:valueTo="100.0"
-            android:contentDescription="@string/lights_slider"
-            app:trackColorActive="@color/openBotBlue"
-            app:thumbColor="@color/openBotBlue"/>
+            app:thumbColor="@color/openBotBlue"
+            app:trackColorActive="@color/openBotBlue" />
 
 
     </LinearLayout>
