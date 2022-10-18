@@ -88,11 +88,20 @@ public class RobotInfoFragment extends ControlsFragment {
         case "DIY":
           binding.robotIcon.setImageResource(R.drawable.diy);
           break;
+        case "PCB_V1":
+          binding.robotIcon.setImageResource(R.drawable.diy);
+          break;
+        case "PCB_V2":
+          binding.robotIcon.setImageResource(R.drawable.diy);
+          break;
         case "RTR_TT":
           binding.robotIcon.setImageResource(R.drawable.rtr_tt);
           break;
         case "RTR_520":
           binding.robotIcon.setImageResource(R.drawable.rtr_520);
+          break;
+        case "MTV":
+          binding.robotIcon.setImageResource(R.drawable.mtv);
           break;
         default:
           binding.robotIcon.setImageResource(R.drawable.ic_openbot);
