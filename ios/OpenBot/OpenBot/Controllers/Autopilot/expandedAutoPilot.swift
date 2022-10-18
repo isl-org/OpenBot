@@ -7,7 +7,7 @@ import UIKit
 import DropDown
 
 class expandedAutoPilot: UIView {
-    let logData = UISwitch()
+    let switchBtn  = UISwitch()
     var dropDownView = UIView()
     var ddView = UIView()
     let dropDown = DropDown()
@@ -143,15 +143,15 @@ class expandedAutoPilot: UIView {
     }
 
     func createLogDataButton() {
-        logData.isOn = false
-        logData.setOn(false, animated: true)
-        logData.onTintColor = Colors.title
-        logData.addTarget(self, action: #selector(switchLogButton(_:)), for: .valueChanged)
-        logData.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(logData)
-        logData.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        logData.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 120).isActive = true
-        logData.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 25).isActive = true
+        switchBtn.isOn = false
+        switchBtn.setOn(false, animated: true)
+        switchBtn.onTintColor = Colors.title
+        switchBtn.addTarget(self, action: #selector(switchLogButton(_:)), for: .valueChanged)
+        switchBtn.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(switchBtn)
+        switchBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        switchBtn.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 120).isActive = true
+        switchBtn.topAnchor.constraint(equalTo: topAnchor, constant: 25).isActive = true
     }
 
 

@@ -27,18 +27,16 @@ class AutopilotFragment: CameraController {
         view.addSubview(expandedAutoPilotView)
         setupNavigationBarItem()
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
-
-
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        print(width," ",height )
         if currentOrientation == .portrait {
             expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height / 2 - 10)
-
         } else {
-
-            expandedAutoPilotView.frame.origin = CGPoint(x: height / 2-40, y: 20)
+            print("hello ", height/2)
+            expandedAutoPilotView.frame.origin = CGPoint(x: height - width, y: 20)
         }
     }
 
