@@ -100,8 +100,7 @@ class Network {
             imgData = inputData;
 
             print("Timecost to convert image: ", endTime - startTime);
-        }
-        catch {
+        } catch {
             print("error:\(error)")
         }
     }

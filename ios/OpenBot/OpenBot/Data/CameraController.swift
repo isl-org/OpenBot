@@ -6,7 +6,7 @@ import Foundation
 import AVFoundation
 import UIKit
 
-class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
+class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     var captureSession: AVCaptureSession!
     var stillImageOutput: AVCapturePhotoOutput!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
@@ -15,12 +15,13 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
     var widthConstraint: NSLayoutConstraint! = nil
     var rgbFrames = ""
     var baseDirectory = ""
-    var images : [(UIImage,Bool,Bool)] = []
+    var images: [(UIImage, Bool, Bool)] = []
     var isTrainingSelected: Bool = true
-    var isPreviewSelected : Bool = false
-    var widthOfTrainingImage : Float = 256
-    var heightOfTrainingImage : Float = 96
+    var isPreviewSelected: Bool = false
+    var widthOfTrainingImage: Float = 256
+    var heightOfTrainingImage: Float = 96
     var saveZipFilesName = [URL]()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
@@ -70,8 +71,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
     }
 
     @objc func updateModelResolution(_ notification: Notification?) {
-        if notification != nil{
-            let dimensionOfImage  = notification?.object as? String
+        if notification != nil {
+            let dimensionOfImage = notification?.object as? String
             let indexOfx = dimensionOfImage?.firstIndex(of: "x")
             if let indexOfx = indexOfx {
                 widthOfTrainingImage = Float(dimensionOfImage?.prefix(upTo: indexOfx) ?? "256") ?? 256
@@ -86,8 +87,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
 
     @objc func updateImageMode(_ notification: Notification?) {
         let value = notification?.object as! NSArray
-         if value[0] as! Int == 1 {
-         }
+        if value[0] as! Int == 1 {
+        }
     }
 
     /**
@@ -213,14 +214,14 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
         else {
             return
         }
-        if  !isTrainingSelected && !isPreviewSelected {
+        if !isTrainingSelected && !isPreviewSelected {
             return
         }
         let image = UIImage(data: imageData)
-            if let image = image {
-                    images.append((image , isPreviewSelected,isTrainingSelected))
+        if let image = image {
+            images.append((image, isPreviewSelected, isTrainingSelected))
 
-            }
+        }
     }
 
     /**
@@ -268,24 +269,24 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
         let sensorPath = openBotPath + Strings.sensor
         let header = Strings.timestamp
         rgbFrames = header;
-        var count : Int = 0;
+        var count: Int = 0;
         if images.count > 0 {
             for img in images {
                 rgbFrames = rgbFrames + String(returnCurrentTimestamp()) + Strings.comma + String(count) + Strings.newLine
                 if img.1 {
-                    let imageName  = String(count) + Strings.underscore + "preview.jpeg"
+                    let imageName = String(count) + Strings.underscore + "preview.jpeg"
                     DataLogger.shared.saveImages(path: imagePath, image: img.0, name: imageName);
                 }
                 if img.2 {
                     let imageName = String(count) + Strings.underscore + Strings.crop
                     let croppedImage = cropImage(imageToCrop: img.0, toRect: CGRectMake(0, 30, CGFloat(widthOfTrainingImage), CGFloat(heightOfTrainingImage)))
-                    DataLogger.shared.saveImages(path: imagePath, image:croppedImage , name: imageName);
+                    DataLogger.shared.saveImages(path: imagePath, image: croppedImage, name: imageName);
                 }
                 count = count + 1
             }
         }
-           setupImages()
-            DataLogger.shared.saveFramesFile(path: sensorPath, data: rgbFrames);
+        setupImages()
+        DataLogger.shared.saveFramesFile(path: sensorPath, data: rgbFrames);
     }
 
     func saveFolder() {
@@ -299,30 +300,30 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate  {
     func createZip(path: URL) {
 //        let baseDirectoryName = dataLogger.knowDateOrTime(format: "yyyy") + dataLogger.knowDateOrTime(format: "MM") + dataLogger.knowDateOrTime(format: "dd") + "_"
 //                + dataLogger.knowDateOrTime(format: "H") + dataLogger.knowDateOrTime(format: "mm") + dataLogger.knowDateOrTime(format: "ss") + ".zip"
-    for t in DataLogger.shared.allDirectoriesName {
-        let baseDirectoryName = t + ".zip";
-        let fm = FileManager.default
-        let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + t)
-        var archiveUrl: URL?
-        var error: NSError?
-        let coordinator = NSFileCoordinator()
-        coordinator.coordinate(readingItemAt: baseDirectoryUrl, options: [.forUploading], error: &error) { (zipUrl) in
-            let tmpUrl = try! fm.url(
-                    for: .itemReplacementDirectory,
-                    in: .userDomainMask,
-                    appropriateFor: zipUrl,
-                    create: true
-            ).appendingPathComponent(baseDirectoryName)
-            try! fm.moveItem(at: zipUrl, to: tmpUrl)
-            archiveUrl = tmpUrl
-            saveZipFilesName.append(tmpUrl)
+        for t in DataLogger.shared.allDirectoriesName {
+            let baseDirectoryName = t + ".zip";
+            let fm = FileManager.default
+            let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + t)
+            var archiveUrl: URL?
+            var error: NSError?
+            let coordinator = NSFileCoordinator()
+            coordinator.coordinate(readingItemAt: baseDirectoryUrl, options: [.forUploading], error: &error) { (zipUrl) in
+                let tmpUrl = try! fm.url(
+                        for: .itemReplacementDirectory,
+                        in: .userDomainMask,
+                        appropriateFor: zipUrl,
+                        create: true
+                ).appendingPathComponent(baseDirectoryName)
+                try! fm.moveItem(at: zipUrl, to: tmpUrl)
+                archiveUrl = tmpUrl
+                saveZipFilesName.append(tmpUrl)
+            }
         }
-    }
-            let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
-            present(avc, animated: true)
+        let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
+        present(avc, animated: true)
     }
 
-    func setupImages(){
+    func setupImages() {
         images.removeAll()
     }
 

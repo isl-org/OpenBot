@@ -13,6 +13,7 @@ class AutopilotFragment: CameraController {
     var models: [Model] = [];
     var numberOfThreads: Int = 1
     let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height / 2 - 10, width: width, height: height / 2 + 15))
+   var autoPilotMode: Bool = false;
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +32,7 @@ class AutopilotFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThread), name: .updateThread, object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -83,7 +84,24 @@ class AutopilotFragment: CameraController {
         let selectedDevice = notification.object as! String
         autopilot = Autopilot(model: models[0], device: RuntimeDevice(rawValue: selectedDevice) ?? RuntimeDevice.CPU, numThreads: numberOfThreads);
         print(autopilot?.tfliteOptions)
-        selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") :NotificationCenter.default.post(name: .updateThreadLabel, object: String(autopilot?.tfliteOptions.threadCount ?? 1))
+        selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(autopilot?.tfliteOptions.threadCount ?? 1))
+    }
+
+    @objc func toggleAutoMode() {
+        autoPilotMode = !autoPilotMode;
+        if (autoPilotMode) {
+
+            Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [self] timer in
+                if !autoPilotMode {
+                    timer.invalidate()
+                }
+                captureImage();
+                if (images.count > 0) {
+                    let out = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0);
+                    print(out?.getLeft() as Any, out?.getRight() as Any);
+                }
+            }
+        }
     }
 
     @objc func updateThread(_ notification: Notification) {

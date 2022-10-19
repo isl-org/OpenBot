@@ -7,7 +7,7 @@ import UIKit
 import DropDown
 
 class expandedAutoPilot: UIView {
-    let switchBtn  = UISwitch()
+    let switchBtn = UISwitch()
     var dropDownView = UIView()
     var ddView = UIView()
     let modelDropDown = DropDown()
@@ -47,9 +47,6 @@ class expandedAutoPilot: UIView {
         setupVehicleControls()
 
 
-
-
-
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
@@ -86,14 +83,14 @@ class expandedAutoPilot: UIView {
         }
     }
 
-    func createBar(){
+    func createBar() {
         let bar = UIView()
         bar.backgroundColor = Colors.title
         addSubview(bar)
         bar.translatesAutoresizingMaskIntoConstraints = false
         bar.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        bar.heightAnchor.constraint(equalToConstant:5).isActive = true
-        bar.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: width/2-30).isActive = true
+        bar.heightAnchor.constraint(equalToConstant: 5).isActive = true
+        bar.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: width / 2 - 30).isActive = true
         bar.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
         bar.layer.cornerRadius = 2
 
@@ -213,12 +210,12 @@ class expandedAutoPilot: UIView {
         addSubview(inputLabel)
     }
 
-    func setupSpeed(){
+    func setupSpeed() {
         speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: 160)
         addSubview(speedLabel)
     }
 
-    func createDeviceDropDown(){
+    func createDeviceDropDown() {
         let device = Devices(frame: CGRect(x: 91, y: 190, width: 40, height: 200));
         addSubview(device)
         let dd = UIView()
@@ -278,10 +275,10 @@ class expandedAutoPilot: UIView {
         threadLabel.textColor = Colors.borderColor
         threadLabel.translatesAutoresizingMaskIntoConstraints = false
         threadLabel.leadingAnchor.constraint(equalTo: threadView.leadingAnchor, constant: 43).isActive = true
-        threadLabel.topAnchor.constraint(equalTo: threadView.topAnchor,constant: 5).isActive = true
+        threadLabel.topAnchor.constraint(equalTo: threadView.topAnchor, constant: 5).isActive = true
     }
 
-    func setupVehicleControls(){
+    func setupVehicleControls() {
         let vehicleControls = VehicleControl();
         addSubview(vehicleControls)
         vehicleControls.translatesAutoresizingMaskIntoConstraints = false
@@ -356,8 +353,8 @@ class expandedAutoPilot: UIView {
         return [];
     }
 
-    func loadAllAutoPilotModels()->[ModelItem]{
-        var autoPilot :[ModelItem] = []
+    func loadAllAutoPilotModels() -> [ModelItem] {
+        var autoPilot: [ModelItem] = []
         let allModels = loadModels()
         for model in allModels {
             if model.type == "AUTOPILOT" {
@@ -371,12 +368,12 @@ class expandedAutoPilot: UIView {
     @objc func updateModel(_ notification: Notification) {
         let selectedModel = notification.object as! String
         modelDropdownLabel.text = selectedModel
-        let models  = loadAllAutoPilotModels()
+        let models = loadAllAutoPilotModels()
         for model in models {
             guard let index = model.name.firstIndex(of: ".") else {
-              return
+                return
             }
-            if model.name.prefix(upTo: index) == selectedModel{
+            if model.name.prefix(upTo: index) == selectedModel {
                 inputLabel.text = model.inputSize
 
                 break
@@ -390,7 +387,7 @@ class expandedAutoPilot: UIView {
     }
 
     @objc func updateThreadLabel(_ notification: Notification) {
-       threadLabel.text = notification.object as! String
+       threadLabel.text = (notification.object as! String)
 
     }
 }

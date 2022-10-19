@@ -14,7 +14,7 @@ class Autopilot: Network {
         do {
             let index0 = try tflite?.input(at: 0);
             let index1 = try tflite?.input(at: 0);
-            if ((index0?.name == "serving_default_cmd_input:0" && index1?.name == "serving_default_img_input:0") || (index0?.name == "cmd_input" && index1?.name == "img_input")) {
+            if (index0?.name == "serving_default_cmd_input:0" || index0?.name == "cmd_input") {
                 cmdIndex = 0;
                 imgIndex = 1;
             } else {
@@ -30,6 +30,8 @@ class Autopilot: Network {
     func recogniseImage(image: CGImage, indicator: Float) -> Control {
         do {
 
+            print("imgIndex", imgIndex);
+            print("cmdIndex", cmdIndex);
             var indicatorData: Data = Data();
             indicatorData.append(contentsOf: indicator.bytes);
             try tflite?.copy(indicatorData, toInputAt: cmdIndex);
