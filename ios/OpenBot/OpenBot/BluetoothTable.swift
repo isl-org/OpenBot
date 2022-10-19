@@ -46,9 +46,6 @@ class BluetoothTable: UITableViewController {
         tableView.reloadData()
     }
 
-    @IBAction func connectBtn(_ sender: Any) {
-    }
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }

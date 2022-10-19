@@ -21,7 +21,6 @@ class expandedAutoPilot: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeDown.direction = .down
         addGestureRecognizer(swipeDown)
@@ -53,6 +52,8 @@ class expandedAutoPilot: UIView {
 
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
+
 
     }
 
@@ -321,21 +322,24 @@ class expandedAutoPilot: UIView {
     }
 
     @objc func increaseThreads(_ sender: UIImage) {
-       if threadLabel.text == "9"{
+       if threadLabel.text == "9" || threadLabel.text == "N/A"{
            return
        }
        var value = Int(threadLabel.text ?? "1")
         value = (value ?? 1) + 1;
         threadLabel.text = String(value!)
+        NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
     }
 
     @objc func decreaseThreads(_ sender: UIImage) {
-        if threadLabel.text == "1"{
+        if threadLabel.text == "1"  || threadLabel.text == "N/A"{
             return
         }
         var value = Int(threadLabel.text ?? "1")
         value = (value ?? 1) - 1;
         threadLabel.text = String(value!)
+        NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
+
     }
 
     func loadModels() -> [ModelItem] {
@@ -383,6 +387,10 @@ class expandedAutoPilot: UIView {
     @objc func updateDevice(_ notification: Notification) {
         let selectedDevice = notification.object as! String
         deviceDropDownLabel.text = selectedDevice
+    }
+
+    @objc func updateThreadLabel(_ notification: Notification) {
+       threadLabel.text = notification.object as! String
 
     }
 }
@@ -392,4 +400,6 @@ extension Notification.Name {
     static let showServerDD = Notification.Name("showServerDD")
     static let showDeviceDD = Notification.Name("showDeviceDD")
     static let autoMode  = Notification.Name("autoMode")
+    static let updateThread = Notification.Name("updateThread");
+    static let updateThreadLabel = Notification.Name("updateThreadLabel")
 }

@@ -13,7 +13,6 @@ class Devices: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         NotificationCenter.default.addObserver(self, selector: #selector(showDropDown), name: .showDeviceDD, object: nil)
-
         setupDeviceDD(dataSource: ["CPU","GPU","XNNPACK"]);
     }
 

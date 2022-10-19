@@ -11,7 +11,8 @@ import UIKit
 class AutopilotFragment: CameraController {
     var autopilot: Autopilot?;
     var models: [Model] = [];
-    let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height / 2 - 10 , width: width, height: height / 2+15))
+    var numberOfThreads: Int = 1
+    let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height / 2 - 10, width: width, height: height / 2 + 15))
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,22 +23,23 @@ class AutopilotFragment: CameraController {
         if (modelItems.count > 0) {
             models = Model.fromModelItems(list: modelItems);
             print("models are : ", models)
-            autopilot = Autopilot(model: models[0], device: RuntimeDevice.XNNPACK, numThreads: 1);
+            autopilot = Autopilot(model: models[0], device: RuntimeDevice.CPU, numThreads: numberOfThreads);
         }
         view.addSubview(expandedAutoPilotView)
         setupNavigationBarItem()
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateThread), name: .updateThread, object: nil)
 
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        print(width," ",height )
+        print(width, " ", height)
         if currentOrientation == .portrait {
             expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height / 2 - 10)
         } else {
-            print("hello ", height/2)
             expandedAutoPilotView.frame.origin = CGPoint(x: height - width, y: 20)
         }
     }
@@ -77,5 +79,17 @@ class AutopilotFragment: CameraController {
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
+    @objc func updateDevice(_ notification: Notification) {
+        let selectedDevice = notification.object as! String
+        autopilot = Autopilot(model: models[0], device: RuntimeDevice(rawValue: selectedDevice) ?? RuntimeDevice.CPU, numThreads: numberOfThreads);
+        print(autopilot?.tfliteOptions)
+        selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") :NotificationCenter.default.post(name: .updateThreadLabel, object: String(autopilot?.tfliteOptions.threadCount ?? 1))
+    }
 
+    @objc func updateThread(_ notification: Notification) {
+        let threadCount = notification.object as! String
+        numberOfThreads = Int(threadCount) ?? 1
+        autopilot?.tfliteOptions.threadCount = numberOfThreads
+        print(autopilot?.tfliteOptions)
+    }
 }

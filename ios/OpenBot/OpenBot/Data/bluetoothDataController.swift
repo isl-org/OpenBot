@@ -52,7 +52,10 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         if peripheral.name != nil {
-            peripherals.append(peripheral)
+            if !peripherals.contains(peripheral){
+                peripherals.append(peripheral)
+            }
+
         }
 
     }
