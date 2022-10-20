@@ -47,9 +47,6 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadCollapseView), name: .cancelButton, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchLogging), name: .logData, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateControlMode), name: .updateControl, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateDriveMode), name: .updateDriveMode, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedMode), name: .updateSpeed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
     }
@@ -174,13 +171,17 @@ class DataCollectionController: CameraController {
     @objc func updateDriveMode(_ notification: Notification) {
         if let driveMode = notification.userInfo?["drive"] as? DriveMode {
             selectedDriveMode = driveMode;
+            gameController.selectedDriveMode = selectedDriveMode
         }
     }
 
     @objc func updateSpeedMode(_ notification: Notification) {
         if let speedMode = notification.userInfo?["speed"] as? SpeedMode {
             selectedSpeedMode = speedMode;
+            gameController.selectedSpeedMode = selectedSpeedMode
+            print(selectedSpeedMode)
         }
+
     }
 
     @objc func updatePreview(_ notification: Notification) {

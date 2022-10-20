@@ -11,6 +11,7 @@ class Devices: UIView {
     let deviceLabel = UILabel()
 
     override init(frame: CGRect) {
+        print("frame of device dd", frame);
         super.init(frame: frame)
         NotificationCenter.default.addObserver(self, selector: #selector(showDropDown), name: .showDeviceDD, object: nil)
         setupDeviceDD(dataSource: ["CPU","GPU","XNNPACK"]);

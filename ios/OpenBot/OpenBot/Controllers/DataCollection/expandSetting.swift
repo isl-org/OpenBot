@@ -473,8 +473,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
     @objc func delayFieldDidChange(_ sender: UITextField) {
         print(sender.text as Any)
-
-
     }
 
     @objc func showDropdown(_ sender: UIButton) {
@@ -493,14 +491,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
                     modelsName.append(String(nameOfModel.prefix(upTo: index)))
                 }
             }
-
         }
-
-
-
-
-
-
     }
 
     func loadModels() -> [ModelItem] {
@@ -522,9 +513,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 extension Notification.Name {
     static let cancelButton = Notification.Name(Strings.cancelButton)
     static let logData = Notification.Name(Strings.logDataNotify)
-    static let updateSpeed = Notification.Name(Strings.updateSpeedMode);
-    static let updateControl = Notification.Name(Strings.updateControlMode);
-    static let updateDriveMode = Notification.Name(Strings.updateDriveMode);
     static let updateResolution = Notification.Name(Strings.updateResolution)
     static let updatePreview = Notification.Name(Strings.updatePreview)
     static let updateTraining = Notification.Name(Strings.updateTraining)

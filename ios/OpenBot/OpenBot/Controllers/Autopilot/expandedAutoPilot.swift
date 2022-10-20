@@ -7,10 +7,8 @@ import UIKit
 import DropDown
 
 class expandedAutoPilot: UIView {
+
     let switchBtn = UISwitch()
-    var dropDownView = UIView()
-    var ddView = UIView()
-    let modelDropDown = DropDown()
     var serverLabel = UILabel()
     var speedLabel = UILabel()
     var deviceDropDownLabel = UILabel()
@@ -18,9 +16,9 @@ class expandedAutoPilot: UIView {
     var inputLabel = UILabel()
     var threadLabel = UILabel()
 
-
     override init(frame: CGRect) {
         super.init(frame: frame)
+        let gameController = GameController.shared
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeDown.direction = .down
         addGestureRecognizer(swipeDown)
@@ -44,14 +42,10 @@ class expandedAutoPilot: UIView {
         setupInput();
         addSubview(createLabel(text: "Threads", leadingAnchor: 180, topAnchor: 200))
         setupThreads();
-        setupVehicleControls()
-
-
+//        setupVehicleControls()
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
-
-
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -243,39 +237,46 @@ class expandedAutoPilot: UIView {
     }
 
     func setupThreads() {
-        let threadView = UIView();
-        threadView.frame.size = CGSize(width: 100, height: 30);
-        threadView.frame.origin = CGPoint(x: 260, y: 210)
-        addSubview(threadView);
+        //setting plus
+        let plusImageView = UIView();
+        plusImageView.frame.size = CGSize(width: 30, height: 30);
+        plusImageView.frame.origin = CGPoint(x: width - 40, y: 210)
+        addSubview(plusImageView)
         let plusImage = UIImageView();
         plusImage.image = UIImage(systemName: "plus");
-        plusImage.frame.size = CGSize(width: 30, height: 30);
+        plusImage.frame.size = CGSize(width: 20, height: 20);
+
         plusImage.isUserInteractionEnabled = true;
         let tapOnPlus = UITapGestureRecognizer(target: self, action: #selector(increaseThreads(_:)))
-        plusImage.addGestureRecognizer(tapOnPlus)
-        threadView.addSubview(plusImage)
+        plusImageView.addGestureRecognizer(tapOnPlus)
+        plusImageView.addSubview(plusImage)
         plusImage.translatesAutoresizingMaskIntoConstraints = false
-        plusImage.trailingAnchor.constraint(equalTo: threadView.trailingAnchor, constant: -2).isActive = true
-        plusImage.topAnchor.constraint(equalTo: threadView.topAnchor, constant: 5).isActive = true
-        //minus image
+        plusImage.leadingAnchor.constraint(equalTo: plusImageView.leadingAnchor, constant: 5.5).isActive = true
+        plusImage.topAnchor.constraint(equalTo: plusImageView.topAnchor, constant: 5).isActive = true
+        //setting minus
+        let minusImageView = UIView()
+        minusImageView.frame.size = CGSize(width: 30, height: 30);
+        minusImageView.frame.origin = CGPoint(x: width - 90, y: 210)
+        addSubview(minusImageView)
         let minusImage = UIImageView()
         minusImage.image = UIImage(systemName: "minus");
         minusImage.frame.size = CGSize(width: 30, height: 30);
         minusImage.isUserInteractionEnabled = true;
-        threadView.addSubview(minusImage)
+        minusImageView.addSubview(minusImage)
         let tapOnMinus = UITapGestureRecognizer(target: self, action: #selector(decreaseThreads(_:)))
-        minusImage.addGestureRecognizer(tapOnMinus)
+        minusImageView.addGestureRecognizer(tapOnMinus)
         minusImage.translatesAutoresizingMaskIntoConstraints = false
-        minusImage.leadingAnchor.constraint(equalTo: threadView.leadingAnchor, constant: 2).isActive = true
-        minusImage.topAnchor.constraint(equalTo: threadView.topAnchor, constant: 5).isActive = true
+        minusImage.leadingAnchor.constraint(equalTo: minusImageView.leadingAnchor, constant: 5.5).isActive = true
+        minusImage.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 5).isActive = true
         //thread Label
         threadLabel.frame.size = CGSize(width: 10, height: 40);
-        threadView.addSubview(threadLabel);
+        addSubview(threadLabel);
+        threadLabel.translatesAutoresizingMaskIntoConstraints = false
         threadLabel.text = "1";
         threadLabel.textColor = Colors.borderColor
         threadLabel.translatesAutoresizingMaskIntoConstraints = false
-        threadLabel.leadingAnchor.constraint(equalTo: threadView.leadingAnchor, constant: 43).isActive = true
-        threadLabel.topAnchor.constraint(equalTo: threadView.topAnchor, constant: 5).isActive = true
+        threadLabel.leadingAnchor.constraint(equalTo: minusImageView.trailingAnchor, constant: 4).isActive = true
+        threadLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 3).isActive = true
     }
 
     func setupVehicleControls() {
@@ -286,11 +287,8 @@ class expandedAutoPilot: UIView {
         vehicleControls.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 7).isActive = true
     }
 
-
     @objc func ble(_ sender: UIView) {
-
         NotificationCenter.default.post(name: .ble, object: nil)
-
     }
 
     @objc func switchCamera(_ sender: UIView) {
@@ -319,17 +317,17 @@ class expandedAutoPilot: UIView {
     }
 
     @objc func increaseThreads(_ sender: UIImage) {
-       if threadLabel.text == "9" || threadLabel.text == "N/A"{
-           return
-       }
-       var value = Int(threadLabel.text ?? "1")
+        if threadLabel.text == "9" || threadLabel.text == "N/A" {
+            return
+        }
+        var value = Int(threadLabel.text ?? "1")
         value = (value ?? 1) + 1;
         threadLabel.text = String(value!)
         NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
     }
 
     @objc func decreaseThreads(_ sender: UIImage) {
-        if threadLabel.text == "1"  || threadLabel.text == "N/A"{
+        if threadLabel.text == "1" || threadLabel.text == "N/A" {
             return
         }
         var value = Int(threadLabel.text ?? "1")
@@ -375,7 +373,6 @@ class expandedAutoPilot: UIView {
             }
             if model.name.prefix(upTo: index) == selectedModel {
                 inputLabel.text = model.inputSize
-
                 break
             }
         }
@@ -387,7 +384,7 @@ class expandedAutoPilot: UIView {
     }
 
     @objc func updateThreadLabel(_ notification: Notification) {
-       threadLabel.text = (notification.object as! String)
+        threadLabel.text = (notification.object as! String)
 
     }
 }
@@ -396,7 +393,7 @@ extension Notification.Name {
     static let showModelsDD = Notification.Name("showModelsDD")
     static let showServerDD = Notification.Name("showServerDD")
     static let showDeviceDD = Notification.Name("showDeviceDD")
-    static let autoMode  = Notification.Name("autoMode")
+    static let autoMode = Notification.Name("autoMode")
     static let updateThread = Notification.Name("updateThread");
     static let updateThreadLabel = Notification.Name("updateThreadLabel")
 }

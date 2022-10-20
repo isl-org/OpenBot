@@ -13,6 +13,7 @@ let width = min(UIScreen.main.bounds.height, UIScreen.main.bounds.width)
 var currentOrientation: UIInterfaceOrientation = UIInterfaceOrientation.portrait
 var isBluetoothConnected = false;
 var viewControllerName: String?
+let gameController = GameController.shared
 var leadingConstraint = NSLayoutConstraint()
 
 class HomePageViewController: UIViewController {
