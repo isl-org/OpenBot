@@ -42,7 +42,7 @@ class expandedAutoPilot: UIView {
         setupInput();
         addSubview(createLabel(text: "Threads", leadingAnchor: 180, topAnchor: 200))
         setupThreads();
-//        setupVehicleControls()
+        setupVehicleControls()
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
