@@ -12,8 +12,8 @@ class AutopilotFragment: CameraController {
     var autopilot: Autopilot?;
     var models: [Model] = [];
     var numberOfThreads: Int = 1
-    let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height / 2 - 10, width: width, height: height / 2 + 15))
-   var autoPilotMode: Bool = false;
+    let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height - 375, width: width, height: 375))
+    var autoPilotMode: Bool = false;
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,9 +39,9 @@ class AutopilotFragment: CameraController {
         super.viewWillTransition(to: size, with: coordinator)
         print(width, " ", height)
         if currentOrientation == .portrait {
-            expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height / 2 - 10)
+            expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height - 375)
         } else {
-            expandedAutoPilotView.frame.origin = CGPoint(x: height - width, y: 20)
+            expandedAutoPilotView.frame.origin = CGPoint(x: height - 375, y: 0)
         }
     }
 

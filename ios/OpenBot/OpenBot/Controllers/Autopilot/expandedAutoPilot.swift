@@ -26,21 +26,21 @@ class expandedAutoPilot: UIView {
         swipeUp.direction = .up
         addGestureRecognizer(swipeUp)
         createBar()
-        addSubview(createLabel(text: "Auto Mode", leadingAnchor: 20, topAnchor: 15));
+        addSubview(createLabel(text: "Auto Mode", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 15, to: .height))));
         createBluetoothIcon()
         createCameraIcon()
         createSwitchButton()
-        addSubview(createLabel(text: Strings.server, leadingAnchor: 20, topAnchor: 80))
-        addSubview(createLabel(text: "Model", leadingAnchor: 20, topAnchor: 120))
-        addSubview(createLabel(text: "Speed", leadingAnchor: 20, topAnchor: 160))
+        addSubview(createLabel(text: Strings.server, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 40, to: .height))))
+        addSubview(createLabel(text: "Model", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 80, to: .height))))
+        addSubview(createLabel(text: "Speed", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
         setupSpeed()
-        addSubview(createLabel(text: "Device", leadingAnchor: 20, topAnchor: 200))
+        addSubview(createLabel(text: "Device", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
         createDeviceDropDown()
         createServerDropDown()
         createModelDropDown()
-        addSubview(createLabel(text: "Input", leadingAnchor: 180, topAnchor: 160))
+        addSubview(createLabel(text: "Input", leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
         setupInput();
-        addSubview(createLabel(text: "Threads", leadingAnchor: 180, topAnchor: 200))
+        addSubview(createLabel(text: "Threads", leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
         setupThreads();
         setupVehicleControls()
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
@@ -58,17 +58,17 @@ class expandedAutoPilot: UIView {
             case .down:
                 UIView.animate(withDuration: 0.25) {
                     if currentOrientation == .portrait {
-                        self.frame.origin.y = height - 70
+                        self.frame.origin.y = height - adapted(dimensionSize: 50, to: .height)
                     } else {
-                        self.frame.origin.y = width - 70
+                        self.frame.origin.y = width - adapted(dimensionSize: 50, to: .height)
                     }
                 }
             case .up:
                 UIView.animate(withDuration: 0.25) {
                     if currentOrientation == .portrait {
-                        self.frame.origin.y = height / 2
+                        self.frame.origin.y = height - 375;
                     } else {
-                        self.frame.origin.y = 20
+                        self.frame.origin.y = adapted(dimensionSize: 20, to: .height)
                     }
                 }
             default:
@@ -82,20 +82,18 @@ class expandedAutoPilot: UIView {
         bar.backgroundColor = Colors.title
         addSubview(bar)
         bar.translatesAutoresizingMaskIntoConstraints = false
-        bar.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        bar.widthAnchor.constraint(equalToConstant: adapted(dimensionSize: 50, to: .height)).isActive = true
         bar.heightAnchor.constraint(equalToConstant: 5).isActive = true
         bar.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: width / 2 - 30).isActive = true
         bar.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
         bar.layer.cornerRadius = 2
-
     }
 
     func createBluetoothIcon() {
-
         if (isBluetoothConnected) {
-            createIcons(iconImg: Images.bluetoothConnected!, topAnchor: 10, trailingAnchor: -75, x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            createIcons(iconImg: Images.bluetoothConnected!, topAnchor: 10, trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         } else {
-            createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: 10, trailingAnchor: -75, x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: 10, trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         }
     }
 
@@ -112,7 +110,7 @@ class expandedAutoPilot: UIView {
         label.text = text
         label.textColor = Colors.borderColor
         label.frame.origin = CGPoint(x: leadingAnchor, y: topAnchor)
-        label.frame.size = CGSize(width: 100, height: 50)
+        label.frame.size = resized(size: CGSize(width: text.count * 10, height: 40), basedOn: .height)
         return label
     }
 
@@ -125,7 +123,7 @@ class expandedAutoPilot: UIView {
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.widthAnchor.constraint(equalToConstant: 40).isActive = true
         icon.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        icon.topAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.topAnchor, constant: topAnchor).isActive = true
+        icon.topAnchor.constraint(equalTo: self.topAnchor, constant: topAnchor).isActive = true
         icon.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: trailingAnchor).isActive = true
         icon.layer.cornerRadius = 30
         let tapGesture = UITapGestureRecognizer(target: self, action: action)
@@ -144,9 +142,8 @@ class expandedAutoPilot: UIView {
         switchBtn.topAnchor.constraint(equalTo: topAnchor, constant: 25).isActive = true
     }
 
-
     func createServerDropDown() {
-        let server = Server(frame: CGRect(x: 180, y: 80, width: 100, height: 200));
+        let server = Server(frame: CGRect(origin: CGPoint(x: 180, y: 80), size: resized(size: CGSize(width: 100, height: 40), basedOn: .height)));
         addSubview(server)
         let dd = UIView()
         dd.layer.cornerRadius = 10
@@ -163,11 +160,11 @@ class expandedAutoPilot: UIView {
         upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
         addSubview(dd)
         dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 80).isActive = true;
-        dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 180).isActive = true
+        dd.topAnchor.constraint(equalTo: topAnchor, constant:adapted(dimensionSize: 50, to: .height) ).isActive = true;
+        dd.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 180).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 180).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        serverLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        serverLabel.frame = CGRect(x: 0, y: 0, width: 210, height: 40)
         dd.addSubview(serverLabel)
     }
 
@@ -190,27 +187,27 @@ class expandedAutoPilot: UIView {
         upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
         addSubview(dd)
         dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 120).isActive = true;
+        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 90, to: .height)).isActive = true;
         dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 180).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 180).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        modelDropdownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        modelDropdownLabel.frame = CGRect(x: 0, y: 0, width: 210, height: 40)
         dd.addSubview(modelDropdownLabel)
     }
 
     func setupInput() {
-        inputLabel.frame = CGRect(x: 290, y: 164.5, width: 100, height: 40)
+        inputLabel.frame = CGRect(x: width-80, y: adapted(dimensionSize: 120, to: .height), width: 100, height: 40)
         inputLabel.text = "256x96";
         addSubview(inputLabel)
     }
 
     func setupSpeed() {
-        speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: 160)
+        speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: Int(adapted(dimensionSize: 120, to: .height)))
         addSubview(speedLabel)
     }
 
     func createDeviceDropDown() {
-        let device = Devices(frame: CGRect(x: 91, y: 190, width: 40, height: 200));
+        let device = Devices(frame: CGRect(x: 91, y: 190, width: 40, height: 205));
         addSubview(device)
         let dd = UIView()
         dd.layer.cornerRadius = 10
@@ -228,7 +225,7 @@ class expandedAutoPilot: UIView {
         upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
         addSubview(dd)
         dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: topAnchor, constant: 207).isActive = true;
+        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 160, to: .height)).isActive = true;
         dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 80).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 100).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -240,23 +237,22 @@ class expandedAutoPilot: UIView {
         //setting plus
         let plusImageView = UIView();
         plusImageView.frame.size = CGSize(width: 30, height: 30);
-        plusImageView.frame.origin = CGPoint(x: width - 40, y: 210)
+        plusImageView.frame.origin = CGPoint(x: width - 40, y: adapted(dimensionSize: 160, to: .height));
         addSubview(plusImageView)
         let plusImage = UIImageView();
         plusImage.image = UIImage(systemName: "plus");
         plusImage.frame.size = CGSize(width: 20, height: 20);
-
         plusImage.isUserInteractionEnabled = true;
         let tapOnPlus = UITapGestureRecognizer(target: self, action: #selector(increaseThreads(_:)))
         plusImageView.addGestureRecognizer(tapOnPlus)
         plusImageView.addSubview(plusImage)
         plusImage.translatesAutoresizingMaskIntoConstraints = false
         plusImage.leadingAnchor.constraint(equalTo: plusImageView.leadingAnchor, constant: 5.5).isActive = true
-        plusImage.topAnchor.constraint(equalTo: plusImageView.topAnchor, constant: 5).isActive = true
+        plusImage.topAnchor.constraint(equalTo: plusImageView.topAnchor, constant: 10).isActive = true
         //setting minus
         let minusImageView = UIView()
         minusImageView.frame.size = CGSize(width: 30, height: 30);
-        minusImageView.frame.origin = CGPoint(x: width - 90, y: 210)
+        minusImageView.frame.origin = CGPoint(x: width - 90, y: adapted(dimensionSize: 160, to: .height))
         addSubview(minusImageView)
         let minusImage = UIImageView()
         minusImage.image = UIImage(systemName: "minus");
@@ -267,7 +263,7 @@ class expandedAutoPilot: UIView {
         minusImageView.addGestureRecognizer(tapOnMinus)
         minusImage.translatesAutoresizingMaskIntoConstraints = false
         minusImage.leadingAnchor.constraint(equalTo: minusImageView.leadingAnchor, constant: 5.5).isActive = true
-        minusImage.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 5).isActive = true
+        minusImage.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 10).isActive = true
         //thread Label
         threadLabel.frame.size = CGSize(width: 10, height: 40);
         addSubview(threadLabel);
@@ -276,14 +272,14 @@ class expandedAutoPilot: UIView {
         threadLabel.textColor = Colors.borderColor
         threadLabel.translatesAutoresizingMaskIntoConstraints = false
         threadLabel.leadingAnchor.constraint(equalTo: minusImageView.trailingAnchor, constant: 4).isActive = true
-        threadLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 3).isActive = true
+        threadLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 8).isActive = true
     }
 
     func setupVehicleControls() {
         let vehicleControls = VehicleControl();
         addSubview(vehicleControls)
         vehicleControls.translatesAutoresizingMaskIntoConstraints = false
-        vehicleControls.topAnchor.constraint(equalTo: threadLabel.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 20, to: .height)).isActive = true;
+        vehicleControls.topAnchor.constraint(equalTo: threadLabel.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 10, to: .height)).isActive = true;
         vehicleControls.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 7).isActive = true
     }
 
@@ -361,7 +357,6 @@ class expandedAutoPilot: UIView {
         }
         return autoPilot
     }
-
 
     @objc func updateModel(_ notification: Notification) {
         let selectedModel = notification.object as! String
