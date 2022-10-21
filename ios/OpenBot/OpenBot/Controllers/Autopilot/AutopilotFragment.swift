@@ -14,6 +14,7 @@ class AutopilotFragment: CameraController {
     var numberOfThreads: Int = 1
     let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height - 375, width: width, height: 375))
     var autoPilotMode: Bool = false;
+    let gameController = GameController.shared
     let bluetooth = bluetoothDataController.shared;
     var vehicleControl: Control = Control();
 
@@ -113,9 +114,10 @@ class AutopilotFragment: CameraController {
 
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = control.getLeft() * SpeedMode.medium.rawValue;
-            let right = control.getRight() * SpeedMode.medium.rawValue;
-            NotificationCenter.default.post(name: .updateSpeedLabel, object: String(left) + "," + String(right));
+            let left = control.getLeft() * gameController.selectedSpeedMode.rawValue;
+            let right = control.getRight() * gameController.selectedSpeedMode.rawValue;
+            NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
+            NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())));
             vehicleControl = control;
             print("c" + String(left) + "," + String(right) + "\n");
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");

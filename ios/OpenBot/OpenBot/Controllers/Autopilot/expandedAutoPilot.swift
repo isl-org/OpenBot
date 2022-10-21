@@ -48,9 +48,12 @@ class expandedAutoPilot: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
     }
 
+
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+
 
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
@@ -293,11 +296,6 @@ class expandedAutoPilot: UIView {
 
     @objc func switchButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .autoMode, object: nil)
-        if sender.isOn {
-
-        } else {
-
-        }
     }
 
     @objc func showServerDropdown(_ sender: UIButton) {

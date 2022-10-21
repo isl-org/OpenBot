@@ -31,6 +31,8 @@ class VehicleControl: UIView {
         createLabel(text: "Speed", bottomAnchor: 0, leadingAnchor: width / 2 + 50, isBoldNeeded: true)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateRpmLabel), name: .updateRpmLabel, object: nil)
+
     }
 
     required init?(coder: NSCoder) {
@@ -129,6 +131,7 @@ class VehicleControl: UIView {
             }
             let userInfo = ["speed": speedMode];
             gameController.selectedSpeedMode = speedMode
+
         }
     }
 
@@ -147,7 +150,6 @@ class VehicleControl: UIView {
     }
 
     func createLeftSpeed() {
-        speedLabel = UILabel()
         speedLabel.frame.size = CGSize(width: 100, height: 40);
         speedLabel.text = "xxx,xxx"
         addSubview(speedLabel)
@@ -158,7 +160,6 @@ class VehicleControl: UIView {
     }
 
     func createRpm() {
-        speedInRpm = UILabel()
         speedInRpm.frame.size = CGSize(width: 100, height: 40);
         speedInRpm.text = "---,--- rpm"
         addSubview(speedInRpm)
@@ -175,6 +176,12 @@ class VehicleControl: UIView {
     @objc func updateSpeedLabel(_ notification: Notification) {
        speedLabel.text = notification.object as! String
     }
+
+    @objc func updateRpmLabel(_ notification: Notification) {
+        speedInRpm.text = notification.object as! String
+    }
+
+
 
 
 }

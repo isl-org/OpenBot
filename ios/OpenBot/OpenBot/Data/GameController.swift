@@ -235,7 +235,6 @@ class GameController: GCController {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = control.getLeft() * selectedSpeedMode.rawValue;
             let right = control.getRight() * selectedSpeedMode.rawValue;
-            NotificationCenter.default.post(name: .updateSpeedLabel, object: String(left) + "," + String(right));
             vehicleControl = control;
             print("c" + String(left) + "," + String(right) + "\n");
             dataLogger.setControlLogs(left: (String(left)), right: String(right))
@@ -276,10 +275,10 @@ class GameController: GCController {
             indicator = indicatorValues;
         }
     }
-
-
 }
 
 extension Notification.Name {
-    static let updateSpeedLabel = Notification.Name("updateSpeedLabel")
+    static let updateSpeedLabel = Notification.Name("updateSpeedLabel");
+    static let updateRpmLabel = Notification.Name("updateRpmLabel");
+
 }

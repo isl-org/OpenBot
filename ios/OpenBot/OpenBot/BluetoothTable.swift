@@ -15,13 +15,18 @@ class BluetoothTable: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
          self.clearsSelectionOnViewWillAppear = false
+        let timer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { timer in
+            self.bluetooth.startScan()
+            self.tableView.reloadData()
+        }
+
+
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        bluetooth.startScan()
     }
 
     @IBAction func connectDisconnectBtn(_ sender: Any) {
@@ -41,7 +46,6 @@ class BluetoothTable: UITableViewController {
 
     func disconnectToBle(){
         bluetooth.disconnect()
-        bluetooth.startScan()
         isBluetoothConnected = false
         tableView.reloadData()
     }

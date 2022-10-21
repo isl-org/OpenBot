@@ -47,17 +47,15 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         } else {
             print("bluetooth is off ")
         }
-
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         if peripheral.name != nil {
             if !peripherals.contains(peripheral){
                 peripherals.append(peripheral)
+                print(peripherals)
             }
-
         }
-
     }
 
 
@@ -184,6 +182,8 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
 
     func startScan(){
+        print("starting scan")
+        centralManager?.scanForPeripherals(withServices: nil, options: nil)
 
     }
 
@@ -191,7 +191,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 //        tempCentralManager = CBCentralManager(delegate: self, queue: nil)
     }
     }
-
 
 
 extension Notification.Name {
