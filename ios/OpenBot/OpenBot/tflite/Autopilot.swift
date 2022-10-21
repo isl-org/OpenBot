@@ -47,7 +47,6 @@ class Autopilot: Network {
             let outputData =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
             let res = outputTensor?.data.copyBytes(to: outputData)
-            print("res:", res as Any);
             return Control(left: outputData[0], right: outputData[1])
         } catch {
             print("error:\(error)")

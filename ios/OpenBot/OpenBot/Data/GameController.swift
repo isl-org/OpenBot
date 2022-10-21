@@ -224,10 +224,10 @@ class GameController: GCController {
         let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
         print(batteryLevel);
         controller?.extendedGamepad?.valueChangedHandler = { [self] gamepad, element in
-            let control = processJoystickInput(mode: selectedDriveMode, gamepad: gamepad) ?? vehicleControl;
+            let control = processJoystickInput(mode: selectedDriveMode, gamepad: gamepad);
             sendControl(control: control);
             let keyCommand = processControllerKeyData(element: element);
-            sendKeyUpdates(keyCommand: keyCommand ?? "");
+            sendKeyUpdates(keyCommand: keyCommand);
         }
     }
 
@@ -268,7 +268,7 @@ class GameController: GCController {
     }
 
     func setIndicator(keyCommand: IndicatorEvent) {
-        let indicatorValues: String = getIndicatorEventValue(event: keyCommand) ?? "";
+        let indicatorValues: String = getIndicatorEventValue(event: keyCommand);
         if (indicator != indicatorValues) {
             dataLogger.setIndicatorLogs(indicator: String(keyCommand.rawValue))
             indicatorData = String(keyCommand.rawValue)

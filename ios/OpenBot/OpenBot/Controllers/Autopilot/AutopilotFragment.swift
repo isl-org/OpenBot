@@ -14,6 +14,8 @@ class AutopilotFragment: CameraController {
     var numberOfThreads: Int = 1
     let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height - 375, width: width, height: 375))
     var autoPilotMode: Bool = false;
+    let bluetooth = bluetoothDataController.shared;
+    var vehicleControl: Control = Control();
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,7 +85,6 @@ class AutopilotFragment: CameraController {
     @objc func updateDevice(_ notification: Notification) {
         let selectedDevice = notification.object as! String
         autopilot = Autopilot(model: models[0], device: RuntimeDevice(rawValue: selectedDevice) ?? RuntimeDevice.CPU, numThreads: numberOfThreads);
-        print(autopilot?.tfliteOptions)
         selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(autopilot?.tfliteOptions.threadCount ?? 1))
     }
 
@@ -96,8 +97,9 @@ class AutopilotFragment: CameraController {
                 }
                 captureImage();
                 if (images.count > 0) {
-                    let out = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0);
-                    print(out?.getLeft() as Any, out?.getRight() as Any);
+                    let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0) ?? Control();
+                    print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
+                    sendControl(control: controlResult);
                 }
             }
         }
@@ -107,6 +109,16 @@ class AutopilotFragment: CameraController {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 1
         autopilot?.tfliteOptions.threadCount = numberOfThreads
-        print(autopilot?.tfliteOptions)
+    }
+
+    func sendControl(control: Control) {
+        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
+            let left = control.getLeft() * SpeedMode.medium.rawValue;
+            let right = control.getRight() * SpeedMode.medium.rawValue;
+            NotificationCenter.default.post(name: .updateSpeedLabel, object: String(left) + "," + String(right));
+            vehicleControl = control;
+            print("c" + String(left) + "," + String(right) + "\n");
+            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+        }
     }
 }
