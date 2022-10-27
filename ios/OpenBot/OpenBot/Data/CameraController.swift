@@ -105,10 +105,31 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         function to dispatch the camera feed into the screen in portrait mode.
      */
     func setupLivePreview() {
+
+        var orientation: AVCaptureVideoOrientation = .portrait;
+        switch currentOrientation {
+        case .unknown:
+            orientation = .portrait
+            break;
+        case .portrait:
+            orientation = .portrait
+            break;
+        case .portraitUpsideDown:
+            orientation = .portraitUpsideDown
+            break;
+        case .landscapeLeft:
+            orientation = .landscapeRight
+            break;
+        case .landscapeRight:
+            orientation = .landscapeLeft
+            break;
+        @unknown default:
+            orientation = .portrait
+        }
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         videoPreviewLayer.removeFromSuperlayer()
         videoPreviewLayer.videoGravity = .resizeAspectFill
-        videoPreviewLayer.connection?.videoOrientation = .portrait
+        videoPreviewLayer.connection?.videoOrientation = orientation;
         cameraView.layer.addSublayer(videoPreviewLayer)
         DispatchQueue.global(qos: .userInitiated).async { //[weak self] in
             self.captureSession.startRunning()
@@ -304,7 +325,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             let baseDirectoryName = t + ".zip";
             let fm = FileManager.default
             let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + t)
-            var archiveUrl: URL?
             var error: NSError?
             let coordinator = NSFileCoordinator()
             coordinator.coordinate(readingItemAt: baseDirectoryUrl, options: [.forUploading], error: &error) { (zipUrl) in
@@ -315,7 +335,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
                         create: true
                 ).appendingPathComponent(baseDirectoryName)
                 try! fm.moveItem(at: zipUrl, to: tmpUrl)
-                archiveUrl = tmpUrl
                 saveZipFilesName.append(tmpUrl)
             }
         }

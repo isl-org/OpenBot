@@ -20,6 +20,7 @@ class AutopilotFragment: CameraController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        DeviceCurrentOrientation.shared.findDeviceOrientation()
         expandedAutoPilotView.backgroundColor = Colors.freeRoamButtonsColor
         expandedAutoPilotView.layer.cornerRadius = 15
         createCameraView()
@@ -36,12 +37,16 @@ class AutopilotFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThread), name: .updateThread, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
+        calculateFrame()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        print(width, " ", height)
-        if currentOrientation == .portrait {
+        calculateFrame()
+    }
+
+    func calculateFrame() {
+        if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
             expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height - 375)
         } else {
             expandedAutoPilotView.frame.origin = CGPoint(x: height - 375, y: 0)
