@@ -10,6 +10,7 @@ struct Images {
     static let dataCollection = UIImage(named: "dataCollection");
     static let controllerMapping = UIImage(named: "controllerMapping");
     static let autopilotIcon = UIImage(named: "autopilot");
+    static let objectTrackingIcon = UIImage(named: "objectTracking");
     static let bluetoothConnected = UIImage(named: "bluetoothConnected");
     static let bluetoothDisconnected = UIImage(named: "bluetoothDisconnected");
     static let frontCamera = UIImage(named: "frontCamera");
@@ -44,7 +45,8 @@ struct Constants {
         ModeItem(label: Strings.freeRoam, icon: Images.freeRoam!, identifier: Strings.ScreenFreeRoam),
         ModeItem(label: Strings.dataCollection, icon: Images.dataCollection!, identifier: Strings.ScreenDataCollection),
         ModeItem(label: Strings.controllerMapping, icon: Images.controllerMapping!, identifier: Strings.ScreenControllerMapping),
-        ModeItem(label: Strings.Autopilot, icon: Images.autopilotIcon!, identifier: Strings.AutopilotFragment)
+        ModeItem(label: Strings.Autopilot, icon: Images.autopilotIcon!, identifier: Strings.AutopilotFragment),
+        ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment)
     ];
 }
 

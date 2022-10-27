@@ -48,6 +48,7 @@ struct Strings {
     static let newLine: String = "\n"
     static let forwardSlash: String = "/"
     static let Autopilot: String = "Autopilot"
+    static let ObjectTracking: String = "Object Tracking"
 
 
 // Notifications
@@ -71,6 +72,7 @@ struct Strings {
     static let ScreenDataCollection: String = "dataCollection";
     static let ScreenControllerMapping: String = "controllerMapping";
     static let AutopilotFragment: String = "AutopilotFragment";
+    static let ObjectTrackingFragment: String = "ObjectTrackingFragment";
 
 
 // UIVIew Identifiers

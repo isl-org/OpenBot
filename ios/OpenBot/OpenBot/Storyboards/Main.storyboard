@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PA5-nf-qH0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PA5-nf-qH0">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <accessibilityOverrides isEnabled="YES" boldText="YES" buttonShapes="YES" onOffLabels="YES" increaseContrast="YES" reduceTransparency="YES" dynamicTypePreference="2"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -577,14 +578,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk">
-                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="34"/>
+                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="34.333332061767578"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34.333332061767578"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="321" y="0.0" width="88" height="34"/>
+                                            <rect key="frame" x="323.33333333333331" y="0.0" width="85.666666666666686" height="34.333333333333336"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">
@@ -614,10 +615,25 @@
             </objects>
             <point key="canvasLocation" x="1151" y="-577"/>
         </scene>
+        <!--Object Tracking Fragment-->
+        <scene sceneID="5jD-r1-2PK">
+            <objects>
+                <viewController storyboardIdentifier="ObjectTrackingFragment" useStoryboardIdentifierAsRestorationIdentifier="YES" id="42K-wY-e5x" customClass="ObjectTrackingFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LBb-ii-G8b">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="2Em-J9-IhB"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dej-AD-GUe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1788" y="-563"/>
+        </scene>
     </scenes>
     <resources>
         <image name="bluetoothConnected" width="14" height="22"/>
-        <image name="camera.fill" catalog="system" width="128" height="94"/>
+        <image name="camera.fill" catalog="system" width="128" height="93"/>
         <image name="controller" width="444.66665649414062" height="405.66665649414062"/>
         <image name="settings" width="48" height="41"/>
         <namedColor name="HomePageTitleColor">
@@ -630,13 +646,13 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
