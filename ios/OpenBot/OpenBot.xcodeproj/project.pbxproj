@@ -21,6 +21,7 @@
 		4FEF442F6DF5C31D0EE4FE2B /* OpenBotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */; };
 		4FEF44A3F41CE1D4898D1C4D /* ObjectTrackingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF492829E700076FAA4132 /* ObjectTrackingSettings.swift */; };
 		4FEF44E677749DA0D24FB857 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF42714D658342895B0A95 /* Network.swift */; };
+		4FEF459D92353F7D312A9EBD /* objectClassDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF42F0707A22B810E664F2 /* objectClassDropdown.swift */; };
 		4FEF47B52607872D6B0CD56F /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4178D0A2805591A6A3A6 /* Strings.swift */; };
 		4FEF47E6E6A09E51C9FDF010 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF49FAEA0EB5E01610A55B /* Model.swift */; };
 		4FEF483FCB45A3257C181C30 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4BD00A645A3985233A37 /* README.md */; };
@@ -98,6 +99,7 @@
 		4FEF421BF49FEE835C6DC5CB /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		4FEF42374776D62381BDE68C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		4FEF42714D658342895B0A95 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		4FEF42F0707A22B810E664F2 /* objectClassDropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = objectClassDropdown.swift; path = DropDowns/objectClassDropdown.swift; sourceTree = "<group>"; };
 		4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITests.swift; sourceTree = "<group>"; };
 		4FEF43EF931CFBA8BB09541E /* Control.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		4FEF443C3B9B9931D5108052 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -375,6 +377,7 @@
 				727D3ED0992B4A6AA00373B7 /* DevicesDropdown.swift */,
 				4FEF4C8C9707613D66A8051E /* ObjectTrackingView.swift */,
 				4FEF492829E700076FAA4132 /* ObjectTrackingSettings.swift */,
+				4FEF42F0707A22B810E664F2 /* objectClassDropdown.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -707,6 +710,7 @@
 				727D34B870DEC24C44407E97 /* DevicesDropdown.swift in Sources */,
 				4FEF4BA67C06F1863F3C2362 /* ObjectTrackingView.swift in Sources */,
 				4FEF44A3F41CE1D4898D1C4D /* ObjectTrackingSettings.swift in Sources */,
+				4FEF459D92353F7D312A9EBD /* objectClassDropdown.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

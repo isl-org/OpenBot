@@ -325,7 +325,6 @@ class expandedAutoPilot: UIView {
         value = (value ?? 1) - 1;
         threadLabel.text = String(value!)
         NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
-
     }
 
     func loadModels() -> [ModelItem] {

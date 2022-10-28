@@ -26,7 +26,10 @@ class Network {
                 tfliteOptions.isXNNPackEnabled = true;
                 break;
             case .GPU:
-                gpuDelegate = MetalDelegate();
+                var gpuOptions = MetalDelegate.Options();
+                gpuOptions.isPrecisionLossAllowed = true;
+                gpuOptions.waitType = ThreadWaitType.active;
+                gpuDelegate = MetalDelegate(options: gpuOptions);
                 delegates.append(gpuDelegate!);
                 break;
             case .CPU:
