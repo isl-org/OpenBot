@@ -99,6 +99,9 @@ boolean coast_mode = 1;
 
 //-------------------------KO_LAB_SCOOTER-----------------------//
 #if (OPENBOT == KO_LAB_SCOOTER)
+#define POT_MAX_LEFT 2640
+#define POT_MAX_RIGHT 1535
+#define POT_MID 2077
 #define analogWrite ledcWrite
 #include <Adafruit_DS3502.h>
 #define STEERING_DIR 1
@@ -420,10 +423,11 @@ void loop()
     display_time = millis();
   }
 #endif
-#if KO_LAB_SCOOTER
+
+#if OPENBOT == KO_LAB_SCOOTER
+  steeringPotVal = analogRead(PIN_STEERING_POT);
   if (ctrl_left != 0 || ctrl_right != 0)
   {
-    steeringPotVal = analogRead(PIN_STEERING_POT);
     if (steeringPotVal - STEERING_TOLERANCE > wantedSteering)
     {
       digitalWrite(PIN_L298N_ENA, 1);
