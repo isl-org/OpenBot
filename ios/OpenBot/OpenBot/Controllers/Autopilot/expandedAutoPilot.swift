@@ -7,18 +7,16 @@ import UIKit
 import DropDown
 
 class expandedAutoPilot: UIView {
-
-    let switchBtn = UISwitch()
+    let autoModeButton = UISwitch()
     var serverLabel = UILabel()
     var speedLabel = UILabel()
     var deviceDropDownLabel = UILabel()
     var modelDropdownLabel = UILabel()
-    var inputLabel = UILabel()
+    var imageInputLabel = UILabel()
     var threadLabel = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        let gameController = GameController.shared
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeDown.direction = .down
         addGestureRecognizer(swipeDown)
@@ -47,7 +45,6 @@ class expandedAutoPilot: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
     }
-
 
 
     required init?(coder aDecoder: NSCoder) {
@@ -134,15 +131,15 @@ class expandedAutoPilot: UIView {
     }
 
     func createSwitchButton() {
-        switchBtn.isOn = false
-        switchBtn.setOn(false, animated: true)
-        switchBtn.onTintColor = Colors.title
-        switchBtn.addTarget(self, action: #selector(switchButton(_:)), for: .valueChanged)
-        switchBtn.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(switchBtn)
-        switchBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        switchBtn.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 120).isActive = true
-        switchBtn.topAnchor.constraint(equalTo: topAnchor, constant: 25).isActive = true
+        autoModeButton.isOn = false
+        autoModeButton.setOn(false, animated: true)
+        autoModeButton.onTintColor = Colors.title
+        autoModeButton.addTarget(self, action: #selector(switchButton(_:)), for: .valueChanged)
+        autoModeButton.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(autoModeButton)
+        autoModeButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        autoModeButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 120).isActive = true
+        autoModeButton.topAnchor.constraint(equalTo: topAnchor, constant: 25).isActive = true
     }
 
     func createServerDropDown() {
@@ -163,7 +160,7 @@ class expandedAutoPilot: UIView {
         upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
         addSubview(dd)
         dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: topAnchor, constant:adapted(dimensionSize: 50, to: .height) ).isActive = true;
+        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 50, to: .height)).isActive = true;
         dd.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 180).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 180).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -199,9 +196,9 @@ class expandedAutoPilot: UIView {
     }
 
     func setupInput() {
-        inputLabel.frame = CGRect(x: width-80, y: adapted(dimensionSize: 120, to: .height), width: 100, height: 40)
-        inputLabel.text = "256x96";
-        addSubview(inputLabel)
+        imageInputLabel.frame = CGRect(x: width - 80, y: adapted(dimensionSize: 120, to: .height), width: 100, height: 40)
+        imageInputLabel.text = "256x96";
+        addSubview(imageInputLabel)
     }
 
     func setupSpeed() {
@@ -365,7 +362,7 @@ class expandedAutoPilot: UIView {
                 return
             }
             if model.name.prefix(upTo: index) == selectedModel {
-                inputLabel.text = model.inputSize
+                imageInputLabel.text = model.inputSize
                 break
             }
         }

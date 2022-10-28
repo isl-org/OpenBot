@@ -101,7 +101,7 @@ class AutopilotFragment: CameraController {
                 if !autoPilotMode {
                     timer.invalidate()
                 }
-                if(timer.isValid) {
+                if (timer.isValid) {
                     captureImage();
                     if (images.count > 0) {
                         let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0) ?? Control();
