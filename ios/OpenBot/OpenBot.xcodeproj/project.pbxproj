@@ -20,13 +20,13 @@
 		4FEF43788A6975AED9390369 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47EAC21A4C2BDD11B72B /* README.md */; };
 		4FEF442F6DF5C31D0EE4FE2B /* OpenBotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */; };
 		4FEF44E677749DA0D24FB857 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF42714D658342895B0A95 /* Network.swift */; };
-		4FEF46955180B4B2A54A9D76 /* ObjectTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF46AA2FDA4233BBEACB2B /* ObjectTrackingView.swift */; };
 		4FEF47B52607872D6B0CD56F /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4178D0A2805591A6A3A6 /* Strings.swift */; };
 		4FEF47E6E6A09E51C9FDF010 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF49FAEA0EB5E01610A55B /* Model.swift */; };
 		4FEF483FCB45A3257C181C30 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4BD00A645A3985233A37 /* README.md */; };
 		4FEF49D3149212EA208C893B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF443C3B9B9931D5108052 /* Constants.swift */; };
 		4FEF49DD79D9DD3CF5733B71 /* OpenBotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */; };
 		4FEF4A957CB4D38EBD818730 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45E913E70DDE5DE7F387 /* GameController.swift */; };
+		4FEF4BA67C06F1863F3C2362 /* ObjectTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4C8C9707613D66A8051E /* ObjectTrackingView.swift */; };
 		4FEF4BEFB4E329AFFBAB8B4D /* Autopilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4A4D501C2B9B7E5D248D /* Autopilot.swift */; };
 		4FEF4C5087962C2F3B2BB3A1 /* Modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45F4F7552D2FFF3D1130 /* Modes.swift */; };
 		4FEF4C9BF06BF69E5C67E86A /* OpenBotUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4D548F5BD4ABE07F1F71 /* OpenBotUITestsLaunchTests.swift */; };
@@ -106,13 +106,13 @@
 		4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4FEF466ED1A3047EB287B7CA /* OpenBotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEF46775439F2AC3ED4FE35 /* OpenBot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenBot.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4FEF46AA2FDA4233BBEACB2B /* ObjectTrackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectTrackingView.swift; sourceTree = "<group>"; };
 		4FEF47EAC21A4C2BDD11B72B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotTests.swift; sourceTree = "<group>"; };
 		4FEF49FAEA0EB5E01610A55B /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		4FEF4A4D501C2B9B7E5D248D /* Autopilot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Autopilot.swift; sourceTree = "<group>"; };
 		4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FEF4BD00A645A3985233A37 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		4FEF4C8C9707613D66A8051E /* ObjectTrackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjectTrackingView.swift; path = ObjectTracking/ObjectTrackingView.swift; sourceTree = "<group>"; };
 		4FEF4D548F5BD4ABE07F1F71 /* OpenBotUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		4FEF4D63E4FA9FB585EF1733 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		4FEF4DE90366ACF137F4AD9B /* DataCollectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataCollectionController.swift; sourceTree = "<group>"; };
@@ -371,7 +371,7 @@
 				727D3D9ED8FC7A8FEFF7483B /* ModelsDropdown.swift */,
 				727D30F298C6C48697AB606F /* ServerDropdown.swift */,
 				727D3ED0992B4A6AA00373B7 /* DevicesDropdown.swift */,
-				4FEF46AA2FDA4233BBEACB2B /* ObjectTrackingView.swift */,
+				4FEF4C8C9707613D66A8051E /* ObjectTrackingView.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -702,7 +702,7 @@
 				727D3FB2162AE0D1794DA7CE /* ModelsDropdown.swift in Sources */,
 				727D3168E1B1C70DBDC2652E /* ServerDropdown.swift in Sources */,
 				727D34B870DEC24C44407E97 /* DevicesDropdown.swift in Sources */,
-				4FEF46955180B4B2A54A9D76 /* ObjectTrackingView.swift in Sources */,
+				4FEF4BA67C06F1863F3C2362 /* ObjectTrackingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
