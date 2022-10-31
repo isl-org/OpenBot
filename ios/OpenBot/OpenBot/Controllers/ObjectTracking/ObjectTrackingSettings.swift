@@ -12,7 +12,7 @@ class ObjectTrackingSettings: UIView {
     var imageInputLabel = UILabel()
     var threadLabel = UILabel()
     var deviceDropDownLabel = UILabel()
-
+    var objectDropDownLabel = UILabel()
     override init(frame: CGRect) {
         super.init(frame: frame);
 
@@ -23,24 +23,26 @@ class ObjectTrackingSettings: UIView {
         swipeUp.direction = .up
         addGestureRecognizer(swipeUp)
         createBar()
-        addSubview(createLabel(text: "Auto Mode", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 15, to: .height))));
+        addSubview(createLabel(text: Strings.autoMode, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 15, to: .height))));
         createBluetoothIcon()
         createCameraIcon()
         createSwitchButton()
-        addSubview(createLabel(text: "Model", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 80, to: .height))))
+        addSubview(createLabel(text: Strings.model, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 60, to: .height))))
         createModelDropDown()
-        addSubview(createLabel(text: "Speed", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
+        addSubview(createLabel(text: Strings.speed, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 90, to: .height))))
         setupSpeed()
-        addSubview(createLabel(text: "Device", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
-        createDeviceDropDown()
-        addSubview(createLabel(text: "Input", leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
+        addSubview(createLabel(text: Strings.input, leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 90, to: .height))))
         setupInput();
-        addSubview(createLabel(text: "Threads", leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
+        addSubview(createLabel(text: Strings.object, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
+        setupObjectDropDown()
+        setupConfidence()
+        addSubview(createLabel(text: Strings.device, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 150, to: .height))))
+        createDeviceDropDown()
+        addSubview(createLabel(text: Strings.threads, leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 150, to: .height))))
         setupThreads();
         setupVehicleControls();
-
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(updateObject), name: .updateObject, object: nil)
 
     }
 
@@ -113,9 +115,9 @@ class ObjectTrackingSettings: UIView {
 
     func createBluetoothIcon() {
         if (isBluetoothConnected) {
-            createIcons(iconImg: Images.bluetoothConnected!, topAnchor: 10, trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            createIcons(iconImg: Images.bluetoothConnected!, topAnchor: 10, trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         } else {
-            createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: 10, trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: 10, trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         }
     }
 
@@ -151,23 +153,57 @@ class ObjectTrackingSettings: UIView {
     }
 
     func setupInput() {
-        imageInputLabel.frame = CGRect(x: width - 80, y: adapted(dimensionSize: 120, to: .height), width: 100, height: 40)
+        imageInputLabel.frame = CGRect(x: width - 80, y: adapted(dimensionSize: 90, to: .height), width: 100, height: 40)
         addSubview(imageInputLabel)
     }
 
     func setupSpeed() {
-        speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: Int(adapted(dimensionSize: 120, to: .height)))
+        speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: Int(adapted(dimensionSize: 90, to: .height)))
         addSubview(speedLabel)
+    }
+
+    func setupObjectDropDown(){
+        let object = ObjectClassDropdown(frame: CGRect(x: 91, y: 100, width: 40, height: 205), selectedObject: "Car");
+        addSubview(object)
+        object.translatesAutoresizingMaskIntoConstraints = false
+        object.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 200).isActive = true
+        object.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 91).isActive = true
+        let dd = UIView()
+        dd.backgroundColor = Colors.freeRoamButtonsColor
+        objectDropDownLabel.text = "person"
+        objectDropDownLabel.textColor = Colors.borderColor
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showObjectDropdown(_:)))
+        objectDropDownLabel.addGestureRecognizer(tap)
+        dd.addGestureRecognizer(tap)
+        let upwardImage = UIImageView()
+        upwardImage.frame.size = CGSize(width: 5, height: 5)
+        upwardImage.image = Images.downArrow
+        dd.addSubview(upwardImage)
+        upwardImage.translatesAutoresizingMaskIntoConstraints = false
+        upwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -20).isActive = true
+        upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
+        addSubview(dd)
+        dd.translatesAutoresizingMaskIntoConstraints = false
+        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 120, to: .height)).isActive = true;
+        dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 80).isActive = true
+        dd.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        dd.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        objectDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        dd.addSubview(objectDropDownLabel)
+    }
+
+    func setupConfidence(){
+
     }
 
     func setupThreads() {
         //setting plus
         let plusImageView = UIView();
         plusImageView.frame.size = CGSize(width: 30, height: 30);
-        plusImageView.frame.origin = CGPoint(x: width - 40, y: adapted(dimensionSize: 160, to: .height));
+        plusImageView.frame.origin = CGPoint(x: width - 40, y: adapted(dimensionSize: 150, to: .height));
         addSubview(plusImageView)
         let plusImage = UIImageView();
-        plusImage.image = UIImage(systemName: "plus");
+        plusImage.image = Images.plus
         plusImage.frame.size = CGSize(width: 20, height: 20);
         plusImage.isUserInteractionEnabled = true;
         let tapOnPlus = UITapGestureRecognizer(target: self, action: #selector(increaseThreads(_:)))
@@ -179,10 +215,10 @@ class ObjectTrackingSettings: UIView {
         //setting minus
         let minusImageView = UIView()
         minusImageView.frame.size = CGSize(width: 30, height: 30);
-        minusImageView.frame.origin = CGPoint(x: width - 90, y: adapted(dimensionSize: 160, to: .height))
+        minusImageView.frame.origin = CGPoint(x: width - 90, y: adapted(dimensionSize: 150, to: .height))
         addSubview(minusImageView)
         let minusImage = UIImageView()
-        minusImage.image = UIImage(systemName: "minus");
+        minusImage.image = Images.minus
         minusImage.frame.size = CGSize(width: 30, height: 30);
         minusImage.isUserInteractionEnabled = true;
         minusImageView.addSubview(minusImage)
@@ -233,7 +269,7 @@ class ObjectTrackingSettings: UIView {
 
 
     func createDeviceDropDown() {
-        let device = Devices(frame: CGRect(x: 91, y: 190, width: 40, height: 205));
+        let device = Devices(frame: CGRect(x: 91, y: 170, width: 40, height: 205));
         addSubview(device)
         let dd = UIView()
         dd.layer.cornerRadius = 10
@@ -251,7 +287,7 @@ class ObjectTrackingSettings: UIView {
         upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
         addSubview(dd)
         dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 160, to: .height)).isActive = true;
+        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 150, to: .height)).isActive = true;
         dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 80).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 100).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -263,10 +299,15 @@ class ObjectTrackingSettings: UIView {
         NotificationCenter.default.post(name: .showDeviceDD, object: nil)
     }
 
+    @objc func showObjectDropdown(_ sender: UIButton) {
+        NotificationCenter.default.post(name: .showObjectDD, object: nil)
+    }
+
+
 
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.objectTrackingMode);
-        let model = Models(frame: CGRect(x: 180, y: 120, width: 100, height: 200), selectedModels: selectedModels);
+        let model = Models(frame: CGRect(x: 180, y : adapted(dimensionSize: 60, to: .height), width: 100, height: 200), selectedModels: selectedModels);
         addSubview(model)
         let dd = UIView()
         dd.layer.cornerRadius = 10
@@ -284,7 +325,7 @@ class ObjectTrackingSettings: UIView {
         upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
         addSubview(dd)
         dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 90, to: .height)).isActive = true;
+        dd.topAnchor.constraint(equalTo: topAnchor,constant: adapted(dimensionSize: 60, to: .height)).isActive = true;
         dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 180).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 180).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -302,5 +343,16 @@ class ObjectTrackingSettings: UIView {
         let model = Common.loadSelectedModel(modeName: selectedModel)
         imageInputLabel.text = model.inputSize
     }
+
+    @objc func updateObject(_ notification: Notification) {
+        let selectedObject = notification.object as! String
+        objectDropDownLabel.text = selectedObject
+       print(selectedObject)
+    }
+}
+
+extension Notification.Name {
+    static let showObjectDD = Notification.Name("showObjectDD");
+    static let updateObject = Notification.Name("updateObject");
 
 }

@@ -50,4 +50,23 @@ class Common {
        return model
 
    }
+
+    static func loadAllObjectsList()->[String]{
+        var objects : [String] = []
+        let bundle = Bundle.main
+        if let filepath = Bundle.main.path(forResource: "labelmap", ofType: "txt") {
+            do {
+                let contents = try String(contentsOfFile: filepath)
+                 objects = contents.components(separatedBy: CharacterSet.newlines)
+            } catch {
+               print("file not found");
+            }
+        } else {
+            // example.txt not found!
+        }
+
+        return objects
+    }
+
+
 }

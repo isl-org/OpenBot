@@ -7,7 +7,7 @@ import UIKit
 
 class ObjectTrackingFragment: CameraController {
     let expandedAutoPilotView = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375))
-
+    var numberOfThreads: Int = 1
     override func viewDidLoad() {
         super.viewDidLoad()
         expandedAutoPilotView.backgroundColor = Colors.freeRoamButtonsColor
@@ -16,6 +16,10 @@ class ObjectTrackingFragment: CameraController {
         view.addSubview(expandedAutoPilotView)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateThread), name: .updateThread, object: nil)
+        print(Common.loadAllObjectsList())
+
 
     }
 
@@ -40,4 +44,18 @@ class ObjectTrackingFragment: CameraController {
     @objc func switchCamera() {
         switchCameraView();
     }
+
+    @objc func updateDevice(_ notification: Notification) {
+        let selectedDevice = notification.object as! String
+//        autopilot = Autopilot(model: models[0], device: RuntimeDevice(rawValue: selectedDevice) ?? RuntimeDevice.CPU, numThreads: numberOfThreads);
+//        selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(autopilot?.tfliteOptions.threadCount ?? 1))
+    print(selectedDevice)
+    }
+
+    @objc func updateThread(_ notification: Notification) {
+        let threadCount = notification.object as! String
+        numberOfThreads = Int(threadCount) ?? 1
+        print(numberOfThreads)
+    }
+
 }

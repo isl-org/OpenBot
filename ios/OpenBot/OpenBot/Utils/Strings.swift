@@ -49,6 +49,12 @@ struct Strings {
     static let forwardSlash: String = "/"
     static let Autopilot: String = "Autopilot"
     static let ObjectTracking: String = "Object Tracking"
+    static let autoMode : String = "Auto Mode"
+    static let model : String = "Model"
+    static let input : String = "Input"
+    static let device : String = "Device"
+    static let threads : String = "Threads"
+    static  let object : String = "Object"
 
 
 // Notifications

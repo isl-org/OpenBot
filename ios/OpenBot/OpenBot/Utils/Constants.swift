@@ -27,6 +27,8 @@ struct Images {
     static let driveIcon = UIImage(named: "drive")
     static let gameDriveIcon = UIImage(named: "game")
     static let downArrow = UIImage(systemName: "arrowtriangle.down.fill")
+    static let minus = UIImage(systemName: "minus");
+    static let plus = UIImage(systemName: "plus");
 }
 
 struct Colors {
