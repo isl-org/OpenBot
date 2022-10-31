@@ -27,7 +27,6 @@ class AutopilotFragment: CameraController {
         let modelItems = loadModels();
         if (modelItems.count > 0) {
             models = Model.fromModelItems(list: modelItems);
-            print("models are : ", models)
             autopilot = Autopilot(model: models[0], device: RuntimeDevice.CPU, numThreads: numberOfThreads);
         }
         view.addSubview(expandedAutoPilotView)

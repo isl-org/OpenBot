@@ -5,9 +5,11 @@
 import Foundation
 import UIKit
 import DropDown
-class Models : UIView {
+
+class Models: UIView {
     let model = DropDown();
-let modelLabel = UILabel()
+    let modelLabel = UILabel()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         NotificationCenter.default.addObserver(self, selector: #selector(showDropDown), name: .showModelsDD, object: nil)
@@ -18,18 +20,20 @@ let modelLabel = UILabel()
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setupModelDD(dataSource : [String]){
+
+
+    func setupModelDD(dataSource: [String]) {
         model.backgroundColor = Colors.freeRoamButtonsColor
         if let color = Colors.borderColor {
             model.textColor = color
         }
-            model.anchorView = self
-            model.dataSource = dataSource
-            model.selectionAction = { [self] (index: Int, item: String) in
-                modelLabel.text = item
-                NotificationCenter.default.post(name: .updateModel, object: item)
-            }
-            model.width = 150
+        model.anchorView = self
+        model.dataSource = dataSource
+        model.selectionAction = { [self] (index: Int, item: String) in
+            modelLabel.text = item
+            NotificationCenter.default.post(name: .updateModel, object: item)
+        }
+        model.width = 150
     }
 
     @objc func showDropDown() {
@@ -50,17 +54,29 @@ let modelLabel = UILabel()
         return [];
     }
 
-    func loadAllAutoPilotModels()->[String]{
-        var autoPilot :[String] = []
+    func loadAllAutoPilotModels() -> [String] {
+        var autoPilot: [String] = []
         let allModels = loadModels()
+        _ = Bundle.main
         for model in allModels {
-            if model.type == "AUTOPILOT" {
-                autoPilot.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
+            let split = model.path.split(separator: "/");
+            let index = split.count - 1;
+            let fileName = String(split[index]);
+            let bundle = Bundle.main
+            let path = bundle.path(forResource: fileName, ofType: "")
+            if let file = path {
+                if model.type == "AUTOPILOT"{
+                    autoPilot.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
+                }
+            } else {
+                print("file not found");
             }
+
         }
         return autoPilot
     }
 }
+
 extension Notification.Name {
     static let updateModel = Notification.Name("updateModel")
 }
