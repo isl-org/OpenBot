@@ -10,16 +10,15 @@ class Models: UIView {
     let model = DropDown();
     let modelLabel = UILabel()
 
-    override init(frame: CGRect) {
+    public init(frame: CGRect, selectedModels: [String]) {
         super.init(frame: frame)
         NotificationCenter.default.addObserver(self, selector: #selector(showDropDown), name: .showModelsDD, object: nil)
-        setupModelDD(dataSource: loadAllAutoPilotModels())
+        setupModelDD(dataSource: selectedModels)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 
 
     func setupModelDD(dataSource: [String]) {
@@ -38,42 +37,6 @@ class Models: UIView {
 
     @objc func showDropDown() {
         model.show()
-    }
-
-    func loadModels() -> [ModelItem] {
-        if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
-            do {
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                let jsonData = try decoder.decode([ModelItem].self, from: data)
-                return jsonData;
-            } catch {
-                print("error:\(error)")
-            }
-        }
-        return [];
-    }
-
-    func loadAllAutoPilotModels() -> [String] {
-        var autoPilot: [String] = []
-        let allModels = loadModels()
-        _ = Bundle.main
-        for model in allModels {
-            let split = model.path.split(separator: "/");
-            let index = split.count - 1;
-            let fileName = String(split[index]);
-            let bundle = Bundle.main
-            let path = bundle.path(forResource: fileName, ofType: "")
-            if let file = path {
-                if model.type == "AUTOPILOT"{
-                    autoPilot.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
-                }
-            } else {
-                print("file not found");
-            }
-
-        }
-        return autoPilot
     }
 }
 

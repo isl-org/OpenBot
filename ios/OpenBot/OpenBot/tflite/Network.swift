@@ -27,15 +27,17 @@ class Network {
                 break;
             case .GPU:
                 var gpuOptions = MetalDelegate.Options();
-                gpuOptions.isPrecisionLossAllowed = true;
-                gpuOptions.waitType = ThreadWaitType.active;
+                gpuOptions.isQuantizationEnabled = false;
+                gpuOptions.isPrecisionLossAllowed = false;
+                tfliteOptions.threadCount = 0;
+                gpuOptions.waitType = .none;
                 gpuDelegate = MetalDelegate(options: gpuOptions);
                 delegates.append(gpuDelegate!);
                 break;
             case .CPU:
+                tfliteOptions.threadCount = numThreads;
                 break;
             }
-            tfliteOptions.threadCount = numThreads;
             let split = model.path.split(separator: "/");
             let index = split.count - 1;
             let fileName = String(split[index]);

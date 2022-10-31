@@ -121,6 +121,7 @@ class ObjectTrackingSettings: UIView {
             createIcons(iconImg: image, topAnchor: 13, trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
         }
     }
+
     @objc func ble(_ sender: UIView) {
         NotificationCenter.default.post(name: .ble, object: nil)
     }
@@ -156,6 +157,7 @@ class ObjectTrackingSettings: UIView {
         speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: Int(adapted(dimensionSize: 120, to: .height)))
         addSubview(speedLabel)
     }
+
     func setupThreads() {
         //setting plus
         let plusImageView = UIView();
@@ -261,12 +263,13 @@ class ObjectTrackingSettings: UIView {
 
 
     func createModelDropDown() {
-        let model = Models(frame: CGRect(x: 180, y: 120, width: 100, height: 200));
+        let selectedModels = Common.loadSelectedModels(mode: Constants.objectTrackingMode);
+        let model = Models(frame: CGRect(x: 180, y: 120, width: 100, height: 200), selectedModels: selectedModels);
         addSubview(model)
         let dd = UIView()
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
-        modelDropdownLabel.text = "CIL-Mobile"
+        modelDropdownLabel.text = selectedModels.first
         modelDropdownLabel.textColor = Colors.borderColor
         let tap = UITapGestureRecognizer(target: self, action: #selector(showModelDropdown(_:)))
         dd.addGestureRecognizer(tap)

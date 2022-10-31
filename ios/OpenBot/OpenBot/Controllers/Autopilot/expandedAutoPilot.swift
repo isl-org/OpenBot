@@ -169,12 +169,13 @@ class expandedAutoPilot: UIView {
     }
 
     func createModelDropDown() {
-        let model = Models(frame: CGRect(x: 180, y: 120, width: 100, height: 200));
+        let selectedModels = Common.loadSelectedModels(mode: Constants.autopilotMode);
+        let model = Models(frame: CGRect(x: 180, y: 120, width: 100, height: 200), selectedModels: selectedModels);
         addSubview(model)
         let dd = UIView()
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
-        modelDropdownLabel.text = "CIL-Mobile"
+        modelDropdownLabel.text = selectedModels.first
         modelDropdownLabel.textColor = Colors.borderColor
         let tap = UITapGestureRecognizer(target: self, action: #selector(showModelDropdown(_:)))
         dd.addGestureRecognizer(tap)
@@ -212,7 +213,7 @@ class expandedAutoPilot: UIView {
         let dd = UIView()
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
-        deviceDropDownLabel.text = "CPU"
+        deviceDropDownLabel.text = RuntimeDevice.CPU.rawValue
         deviceDropDownLabel.textColor = Colors.borderColor
         let tap = UITapGestureRecognizer(target: self, action: #selector(showDeviceDropdown(_:)))
         dd.addGestureRecognizer(tap)

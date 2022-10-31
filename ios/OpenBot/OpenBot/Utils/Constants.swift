@@ -48,6 +48,9 @@ struct Constants {
         ModeItem(label: Strings.Autopilot, icon: Images.autopilotIcon!, identifier: Strings.AutopilotFragment),
         ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment)
     ];
+
+    static let autopilotMode = "AUTOPILOT";
+    static let objectTrackingMode = "DETECTOR";
 }
 
 enum SpeedMode: Float {
