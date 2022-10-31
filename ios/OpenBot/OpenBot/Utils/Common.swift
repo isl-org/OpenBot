@@ -5,7 +5,7 @@
 import Foundation
 
 class Common {
-    static func loadModels() -> [ModelItem] {
+    static func loadAllModels() -> [ModelItem] {
         if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
             do {
                 let data = try Data(contentsOf: url)
@@ -21,7 +21,7 @@ class Common {
 
     static func loadSelectedModels(mode: String) -> [String] {
         var selectedModels: [String] = []
-        let allModels = loadModels()
+        let allModels = loadAllModels()
         for model in allModels {
             let split = model.path.split(separator: "/");
             let index = split.count - 1;
@@ -36,4 +36,18 @@ class Common {
         }
         return selectedModels
     }
+
+   static func loadSelectedModel(modeName : String) -> ModelItem {
+       var model: ModelItem!
+       let allModels = loadAllModels()
+       for model in allModels {
+           if model.name != nil {
+               if model.name.prefix(upTo: model.name.index(of: ".")!) == modeName {
+                   return model
+               }
+           }
+       }
+       return model
+
+   }
 }

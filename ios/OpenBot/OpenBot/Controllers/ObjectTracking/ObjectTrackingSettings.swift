@@ -39,6 +39,9 @@ class ObjectTrackingSettings: UIView {
         setupThreads();
         setupVehicleControls();
 
+        NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
+
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -149,7 +152,6 @@ class ObjectTrackingSettings: UIView {
 
     func setupInput() {
         imageInputLabel.frame = CGRect(x: width - 80, y: adapted(dimensionSize: 120, to: .height), width: 100, height: 40)
-        imageInputLabel.text = "256x96";
         addSubview(imageInputLabel)
     }
 
@@ -242,7 +244,7 @@ class ObjectTrackingSettings: UIView {
         dd.addGestureRecognizer(tap)
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
-        upwardImage.image = UIImage(systemName: "arrowtriangle.down.fill")
+        upwardImage.image = Images.downArrow
         dd.addSubview(upwardImage)
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
         upwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -20).isActive = true
@@ -275,7 +277,7 @@ class ObjectTrackingSettings: UIView {
         dd.addGestureRecognizer(tap)
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
-        upwardImage.image = UIImage(systemName: "arrowtriangle.down.fill")
+        upwardImage.image = Images.downArrow
         dd.addSubview(upwardImage)
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
         upwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -10).isActive = true
@@ -293,4 +295,12 @@ class ObjectTrackingSettings: UIView {
     @objc func showModelDropdown(_ sender: UIButton) {
         NotificationCenter.default.post(name: .showModelsDD, object: nil)
     }
+
+    @objc func updateModel(_ notification: Notification) {
+        let selectedModel = notification.object as! String
+        modelDropdownLabel.text = selectedModel
+        let model = Common.loadSelectedModel(modeName: selectedModel)
+        imageInputLabel.text = model.inputSize
+    }
+
 }

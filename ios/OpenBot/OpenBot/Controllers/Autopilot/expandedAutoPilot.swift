@@ -153,7 +153,7 @@ class expandedAutoPilot: UIView {
         dd.addGestureRecognizer(tap)
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
-        upwardImage.image = UIImage(systemName: "arrowtriangle.down.fill")
+        upwardImage.image = Images.downArrow
         dd.addSubview(upwardImage)
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
         upwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -10).isActive = true
@@ -181,7 +181,7 @@ class expandedAutoPilot: UIView {
         dd.addGestureRecognizer(tap)
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
-        upwardImage.image = UIImage(systemName: "arrowtriangle.down.fill")
+        upwardImage.image = Images.downArrow
         dd.addSubview(upwardImage)
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
         upwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -10).isActive = true
@@ -219,7 +219,7 @@ class expandedAutoPilot: UIView {
         dd.addGestureRecognizer(tap)
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
-        upwardImage.image = UIImage(systemName: "arrowtriangle.down.fill")
+        upwardImage.image = Images.downArrow
         dd.addSubview(upwardImage)
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
         upwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -20).isActive = true
@@ -346,7 +346,7 @@ class expandedAutoPilot: UIView {
         var autoPilot: [ModelItem] = []
         let allModels = loadModels()
         for model in allModels {
-            if model.type == "AUTOPILOT" {
+            if model.type == Constants.autopilotMode {
                 autoPilot.append(model)
             }
         }

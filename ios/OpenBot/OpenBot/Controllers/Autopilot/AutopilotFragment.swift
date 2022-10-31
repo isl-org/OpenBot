@@ -83,7 +83,7 @@ class AutopilotFragment: CameraController {
     }
 
     @objc func openBluetoothSettings() {
-        let nextViewController = (storyboard?.instantiateViewController(withIdentifier: "bluetoothScreen"))
+        let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 

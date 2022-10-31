@@ -77,6 +77,7 @@ struct Strings {
 
 // UIVIew Identifiers
     static let secondView: String = "secondView"
+    static let bluetoothScreen : String = "bluetoothScreen"
 
 // Logging Headers
     static let acceleration: String = "TimeStamp[ns] x[m/s^2], y[m/s^2], z[m/s^2]\n"

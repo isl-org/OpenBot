@@ -14,6 +14,8 @@ class ObjectTrackingFragment: CameraController {
         expandedAutoPilotView.layer.cornerRadius = 15
         createCameraView()
         view.addSubview(expandedAutoPilotView)
+        NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
 
     }
 
@@ -28,5 +30,14 @@ class ObjectTrackingFragment: CameraController {
         } else {
             expandedAutoPilotView.frame.origin = CGPoint(x: height - 375, y: 0)
         }
+    }
+
+    @objc func openBluetoothSettings() {
+        let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
+        navigationController?.pushViewController(nextViewController!, animated: true)
+    }
+
+    @objc func switchCamera() {
+        switchCameraView();
     }
 }
