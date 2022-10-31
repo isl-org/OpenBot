@@ -236,7 +236,7 @@ class ObjectTrackingSettings: UIView {
         let dd = UIView()
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
-        deviceDropDownLabel.text = "CPU"
+        deviceDropDownLabel.text = RuntimeDevice.CPU.rawValue
         deviceDropDownLabel.textColor = Colors.borderColor
         let tap = UITapGestureRecognizer(target: self, action: #selector(showDeviceDropdown(_:)))
         dd.addGestureRecognizer(tap)
