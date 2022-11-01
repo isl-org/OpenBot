@@ -25,7 +25,6 @@ class Detector: Network {
     }
 
     func parseTFlite() {
-        preconditionFailure("This method must be overridden")
     }
 
     class Recognition {
