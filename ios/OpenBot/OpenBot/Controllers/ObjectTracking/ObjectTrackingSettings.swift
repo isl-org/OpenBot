@@ -11,6 +11,7 @@ class ObjectTrackingSettings: UIView {
     var modelDropdownLabel = UILabel()
     var imageInputLabel = UILabel()
     var threadLabel = UILabel()
+    var confidenceLabel = UILabel()
     var deviceDropDownLabel = UILabel()
     var objectDropDownLabel = UILabel()
     override init(frame: CGRect) {
@@ -35,6 +36,7 @@ class ObjectTrackingSettings: UIView {
         setupInput();
         addSubview(createLabel(text: Strings.object, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
         setupObjectDropDown()
+        addSubview(createLabel(text: Strings.confidence, leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
         setupConfidence()
         addSubview(createLabel(text: Strings.device, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 150, to: .height))))
         createDeviceDropDown()
@@ -89,7 +91,7 @@ class ObjectTrackingSettings: UIView {
             case .up:
                 UIView.animate(withDuration: 0.25) {
                     if currentOrientation == .portrait {
-                        self.frame.origin.y = height - 375;
+                        self.frame.origin.y = height - width;
                     } else {
                         self.frame.origin.y = adapted(dimensionSize: 20, to: .height)
                     }
@@ -193,7 +195,44 @@ class ObjectTrackingSettings: UIView {
     }
 
     func setupConfidence(){
-
+        let plusImageView = UIView();
+        plusImageView.frame.size = CGSize(width: 30, height: 30);
+        plusImageView.frame.origin = CGPoint(x: width - 40, y: adapted(dimensionSize: 120, to: .height));
+        addSubview(plusImageView)
+        let plusImage = UIImageView();
+        plusImage.image = Images.plus
+        plusImage.frame.size = CGSize(width: 20, height: 20);
+        plusImage.isUserInteractionEnabled = true;
+        let tapOnPlus = UITapGestureRecognizer(target: self, action: #selector(increaseConfidence(_:)))
+        plusImageView.addGestureRecognizer(tapOnPlus)
+        plusImageView.addSubview(plusImage)
+        plusImage.translatesAutoresizingMaskIntoConstraints = false
+        plusImage.leadingAnchor.constraint(equalTo: plusImageView.leadingAnchor, constant: 5.5).isActive = true
+        plusImage.topAnchor.constraint(equalTo: plusImageView.topAnchor, constant: 10).isActive = true
+        //setting minus
+        let minusImageView = UIView()
+        minusImageView.frame.size = CGSize(width: 30, height: 30);
+        minusImageView.frame.origin = CGPoint(x: width - 100, y: adapted(dimensionSize: 120, to: .height))
+        addSubview(minusImageView)
+        let minusImage = UIImageView()
+        minusImage.image = Images.minus
+        minusImage.frame.size = CGSize(width: 30, height: 30);
+        minusImage.isUserInteractionEnabled = true;
+        minusImageView.addSubview(minusImage)
+        let tapOnMinus = UITapGestureRecognizer(target: self, action: #selector(decreaseConfidence(_:)))
+        minusImageView.addGestureRecognizer(tapOnMinus)
+        minusImage.translatesAutoresizingMaskIntoConstraints = false
+        minusImage.leadingAnchor.constraint(equalTo: minusImageView.leadingAnchor, constant: 5.5).isActive = true
+        minusImage.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 10).isActive = true
+        //thread Label
+        confidenceLabel.frame.size = CGSize(width: 10, height: 40);
+        addSubview(confidenceLabel);
+        confidenceLabel.translatesAutoresizingMaskIntoConstraints = false
+        confidenceLabel.text = "50%";
+        confidenceLabel.textColor = Colors.borderColor
+        confidenceLabel.translatesAutoresizingMaskIntoConstraints = false
+        confidenceLabel.leadingAnchor.constraint(equalTo: minusImageView.trailingAnchor, constant: 0).isActive = true
+        confidenceLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 8).isActive = true
     }
 
     func setupThreads() {
@@ -215,7 +254,7 @@ class ObjectTrackingSettings: UIView {
         //setting minus
         let minusImageView = UIView()
         minusImageView.frame.size = CGSize(width: 30, height: 30);
-        minusImageView.frame.origin = CGPoint(x: width - 90, y: adapted(dimensionSize: 150, to: .height))
+        minusImageView.frame.origin = CGPoint(x: width - 100, y: adapted(dimensionSize: 150, to: .height))
         addSubview(minusImageView)
         let minusImage = UIImageView()
         minusImage.image = Images.minus
@@ -234,10 +273,30 @@ class ObjectTrackingSettings: UIView {
         threadLabel.text = "1";
         threadLabel.textColor = Colors.borderColor
         threadLabel.translatesAutoresizingMaskIntoConstraints = false
-        threadLabel.leadingAnchor.constraint(equalTo: minusImageView.trailingAnchor, constant: 4).isActive = true
+        threadLabel.leadingAnchor.constraint(equalTo: minusImageView.trailingAnchor, constant: 8).isActive = true
         threadLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 8).isActive = true
     }
 
+    @objc func increaseConfidence(_ sender: UIImage) {
+        if confidenceLabel.text == "100%"  {
+            return
+        }
+        var value = Int(confidenceLabel.text?.prefix((confidenceLabel.text?.count ?? 1)-1) ?? "50")
+        print("value is : ",value)
+        value = (value ?? 5) + 5;
+        confidenceLabel.text = String(value! ) + "%"
+        NotificationCenter.default.post(name: .updateConfidence, object: confidenceLabel.text)
+    }
+
+    @objc func decreaseConfidence(_ sender: UIImage) {
+        if confidenceLabel.text == "0%"  {
+            return
+        }
+        var value = Int(confidenceLabel.text?.prefix((confidenceLabel.text?.count ?? 1)-1) ?? "50")
+        value = (value ?? 5) - 5;
+        confidenceLabel.text = String(value!) + "%"
+        NotificationCenter.default.post(name: .updateConfidence, object: confidenceLabel.text)
+    }
 
     @objc func increaseThreads(_ sender: UIImage) {
         if threadLabel.text == "9" || threadLabel.text == "N/A" {
@@ -263,7 +322,7 @@ class ObjectTrackingSettings: UIView {
         let vehicleControls = VehicleControl();
         addSubview(vehicleControls)
         vehicleControls.translatesAutoresizingMaskIntoConstraints = false
-        vehicleControls.topAnchor.constraint(equalTo: threadLabel.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 10, to: .height)).isActive = true;
+        vehicleControls.topAnchor.constraint(equalTo: threadLabel.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 20, to: .height)).isActive = true;
         vehicleControls.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 7).isActive = true
     }
 
@@ -354,5 +413,6 @@ class ObjectTrackingSettings: UIView {
 extension Notification.Name {
     static let showObjectDD = Notification.Name("showObjectDD");
     static let updateObject = Notification.Name("updateObject");
+    static let updateConfidence = Notification.Name("updateConfidence");
 
 }

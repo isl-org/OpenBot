@@ -55,6 +55,7 @@ struct Strings {
     static let device : String = "Device"
     static let threads : String = "Threads"
     static  let object : String = "Object"
+    static let confidence : String = "Confidence"
 
 
 // Notifications
