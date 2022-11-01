@@ -5,6 +5,7 @@
 import Foundation
 
 class Detector: Network {
+    var labels: [String];
 
     func create(model: Model, device: RuntimeDevice, numThreads: Int) throws -> AnyObject? {
         switch (model.classType) {
@@ -17,6 +18,54 @@ class Detector: Network {
         }
     }
 
-    class Recognition {
+    override init(model: Model, device: RuntimeDevice, numThreads: Int) throws {
+        labels = Common.loadAllObjectsList();
+        try super.init(model: model, device: device, numThreads: numThreads);
+        parseTFlite();
     }
+
+    func parseTFlite() {
+        preconditionFailure("This method must be overridden")
+    }
+
+    class Recognition {
+        var id: String;
+        var title: String;
+        var confidence: Float;
+        var location: CGRect;
+        var classId: Int;
+
+        init(id: String, title: String, confidence: Float, location: CGRect, classId: Int) {
+            self.id = id;
+            self.title = title;
+            self.confidence = confidence;
+            self.location = location;
+            self.classId = classId;
+        }
+
+        public func getId() -> String {
+            id;
+        }
+
+        public func getTitle() -> String {
+            title;
+        }
+
+        public func getConfidence() -> Float {
+            confidence;
+        }
+
+        public func getLocation() -> CGRect {
+            location;
+        }
+
+        public func setLocation(location: CGRect) {
+            self.location = location;
+        }
+
+        public func getClassId() -> Int {
+            classId;
+        }
+    }
+
 }

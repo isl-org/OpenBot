@@ -30,7 +30,7 @@
 		4FEF49DD79D9DD3CF5733B71 /* OpenBotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */; };
 		4FEF4A1F9280139D278509D3 /* Detector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF49E95825B789A39EDA21 /* Detector.swift */; };
 		4FEF4A957CB4D38EBD818730 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45E913E70DDE5DE7F387 /* GameController.swift */; };
-		4FEF4BA67C06F1863F3C2362 /* ObjectTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4C8C9707613D66A8051E /* ObjectTrackingView.swift */; };
+		4FEF4BA67C06F1863F3C2362 /* ObjectTrackingFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4C8C9707613D66A8051E /* ObjectTrackingFragment.swift */; };
 		4FEF4BEFB4E329AFFBAB8B4D /* Autopilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4A4D501C2B9B7E5D248D /* Autopilot.swift */; };
 		4FEF4C449F206CF65324CD03 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4A59FF61753FF6DF0F79 /* Common.swift */; };
 		4FEF4C5087962C2F3B2BB3A1 /* Modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45F4F7552D2FFF3D1130 /* Modes.swift */; };
@@ -124,7 +124,7 @@
 		4FEF4A59FF61753FF6DF0F79 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FEF4BD00A645A3985233A37 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		4FEF4C8C9707613D66A8051E /* ObjectTrackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjectTrackingView.swift; path = ObjectTracking/ObjectTrackingView.swift; sourceTree = "<group>"; };
+		4FEF4C8C9707613D66A8051E /* ObjectTrackingFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjectTrackingFragment.swift; path = ObjectTracking/ObjectTrackingFragment.swift; sourceTree = "<group>"; };
 		4FEF4D548F5BD4ABE07F1F71 /* OpenBotUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		4FEF4D63E4FA9FB585EF1733 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		4FEF4DE90366ACF137F4AD9B /* DataCollectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataCollectionController.swift; sourceTree = "<group>"; };
@@ -387,7 +387,7 @@
 				727D3D9ED8FC7A8FEFF7483B /* ModelsDropdown.swift */,
 				727D30F298C6C48697AB606F /* ServerDropdown.swift */,
 				727D3ED0992B4A6AA00373B7 /* DevicesDropdown.swift */,
-				4FEF4C8C9707613D66A8051E /* ObjectTrackingView.swift */,
+				4FEF4C8C9707613D66A8051E /* ObjectTrackingFragment.swift */,
 				4FEF492829E700076FAA4132 /* ObjectTrackingSettings.swift */,
 				4FEF42F0707A22B810E664F2 /* ObjectClassDropdown.swift */,
 			);
@@ -720,7 +720,7 @@
 				727D3FB2162AE0D1794DA7CE /* ModelsDropdown.swift in Sources */,
 				727D3168E1B1C70DBDC2652E /* ServerDropdown.swift in Sources */,
 				727D34B870DEC24C44407E97 /* DevicesDropdown.swift in Sources */,
-				4FEF4BA67C06F1863F3C2362 /* ObjectTrackingView.swift in Sources */,
+				4FEF4BA67C06F1863F3C2362 /* ObjectTrackingFragment.swift in Sources */,
 				4FEF44A3F41CE1D4898D1C4D /* ObjectTrackingSettings.swift in Sources */,
 				4FEF459D92353F7D312A9EBD /* ObjectClassDropdown.swift in Sources */,
 				4FEF4C449F206CF65324CD03 /* Common.swift in Sources */,
