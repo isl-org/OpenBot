@@ -38,14 +38,13 @@ class ObjectTrackingSettings: UIView {
         setupObjectDropDown()
         addSubview(createLabel(text: Strings.confidence, leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
         setupConfidence()
-        addSubview(createLabel(text: Strings.device, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 150, to: .height))))
+        addSubview(createLabel(text: Strings.device, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 150, to: Dimension.height))))
         createDeviceDropDown()
         addSubview(createLabel(text: Strings.threads, leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 150, to: .height))))
         setupThreads();
         setupVehicleControls();
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateObject), name: .updateObject, object: nil)
-
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -190,7 +189,7 @@ class ObjectTrackingSettings: UIView {
         dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 80).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 100).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        objectDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        objectDropDownLabel.frame = CGRect(x: 10, y: 0, width: 80, height: 40)
         dd.addSubview(objectDropDownLabel)
     }
 

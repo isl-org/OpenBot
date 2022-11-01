@@ -24,7 +24,7 @@ class AutopilotFragment: CameraController {
         expandedAutoPilotView.backgroundColor = Colors.freeRoamButtonsColor
         expandedAutoPilotView.layer.cornerRadius = 15
         createCameraView()
-        let modelItems = loadModels();
+        let modelItems = Common.loadAllModels()
         if (modelItems.count > 0) {
             models = Model.fromModelItems(list: modelItems);
             autopilot = Autopilot(model: models[0], device: RuntimeDevice.CPU, numThreads: numberOfThreads);
@@ -50,20 +50,6 @@ class AutopilotFragment: CameraController {
         } else {
             expandedAutoPilotView.frame.origin = CGPoint(x: height - 375, y: 0)
         }
-    }
-
-    func loadModels() -> [ModelItem] {
-        if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
-            do {
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                let jsonData = try decoder.decode([ModelItem].self, from: data)
-                return jsonData;
-            } catch {
-                print("error:\(error)")
-            }
-        }
-        return [];
     }
 
     func setupNavigationBarItem() {

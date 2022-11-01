@@ -30,8 +30,8 @@ func resized(size: CGSize, basedOn dimension: Dimension) -> CGSize {
 }
 
 func adapted(dimensionSize: CGFloat, to dimension: Dimension) -> CGFloat {
-    let screenWidth  = UIScreen.main.bounds.size.width
-    let screenHeight = UIScreen.main.bounds.size.height
+    let screenWidth  = width
+    let screenHeight = height
 
     var ratio: CGFloat = 0.0
     var resultDimensionSize: CGFloat = 0.0
@@ -43,9 +43,7 @@ func adapted(dimensionSize: CGFloat, to dimension: Dimension) -> CGFloat {
         resultDimensionSize = screenWidth * ratio
     case .height:
         ratio = dimensionSize / Device.baseScreenSize.rawValue.height
-
         resultDimensionSize = screenHeight * ratio
     }
-
     return resultDimensionSize
 }

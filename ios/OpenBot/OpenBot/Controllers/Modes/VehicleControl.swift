@@ -180,8 +180,4 @@ class VehicleControl: UIView {
     @objc func updateRpmLabel(_ notification: Notification) {
         speedInRpm.text = notification.object as! String
     }
-
-
-
-
 }
