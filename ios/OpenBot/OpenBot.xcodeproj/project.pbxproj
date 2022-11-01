@@ -13,6 +13,7 @@
 		3A3C40C828B0A8A800AA40CF /* VideoRecordingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3C40C728B0A8A800AA40CF /* VideoRecordingController.swift */; };
 		3AD2794028AF703A00053CAD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD2793F28AF703A00053CAD /* CameraViewController.swift */; };
 		3AE7A38B28ACB0D6001ABE2F /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */; };
+		4FEF40039118AB286DD8CB0C /* DetectorQuantizedMobileNet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47209A4C03D66945462E /* DetectorQuantizedMobileNet.swift */; };
 		4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */; };
 		4FEF4209E4568C06F71C8E86 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF421BF49FEE835C6DC5CB /* config.json */; };
 		4FEF434E29022789D4FB8985 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4E0B9A9BAE2BD7321783 /* Main.storyboard */; };
@@ -27,6 +28,7 @@
 		4FEF483FCB45A3257C181C30 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4BD00A645A3985233A37 /* README.md */; };
 		4FEF49D3149212EA208C893B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF443C3B9B9931D5108052 /* Constants.swift */; };
 		4FEF49DD79D9DD3CF5733B71 /* OpenBotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */; };
+		4FEF4A1F9280139D278509D3 /* Detector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF49E95825B789A39EDA21 /* Detector.swift */; };
 		4FEF4A957CB4D38EBD818730 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45E913E70DDE5DE7F387 /* GameController.swift */; };
 		4FEF4BA67C06F1863F3C2362 /* ObjectTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4C8C9707613D66A8051E /* ObjectTrackingView.swift */; };
 		4FEF4BEFB4E329AFFBAB8B4D /* Autopilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4A4D501C2B9B7E5D248D /* Autopilot.swift */; };
@@ -36,6 +38,7 @@
 		4FEF4D4C829C1A8519999198 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF43EF931CFBA8BB09541E /* Control.swift */; };
 		4FEF4DAC98B9D01B10F7B3E9 /* DataCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4DE90366ACF137F4AD9B /* DataCollectionController.swift */; };
 		4FEF4DC031698B6DEEB01AEB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */; };
+		4FEF4E9F41A93B4F6CD1AEEC /* DetectorFloatYoloV4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4633FC7402D71728D03F /* DetectorFloatYoloV4.swift */; };
 		4FEF4F78919CCCC28C418C5B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4D63E4FA9FB585EF1733 /* SceneDelegate.swift */; };
 		525632FAD7D5CA948A20F6B9 /* Pods_OpenBot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADB8D624A9E1D1494E9F87D /* Pods_OpenBot.framework */; };
 		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
@@ -108,11 +111,14 @@
 		4FEF45E913E70DDE5DE7F387 /* GameController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		4FEF45F4F7552D2FFF3D1130 /* Modes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Modes.swift; sourceTree = "<group>"; };
 		4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4FEF4633FC7402D71728D03F /* DetectorFloatYoloV4.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectorFloatYoloV4.swift; sourceTree = "<group>"; };
 		4FEF466ED1A3047EB287B7CA /* OpenBotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEF46775439F2AC3ED4FE35 /* OpenBot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenBot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FEF47209A4C03D66945462E /* DetectorQuantizedMobileNet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectorQuantizedMobileNet.swift; sourceTree = "<group>"; };
 		4FEF47EAC21A4C2BDD11B72B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4FEF492829E700076FAA4132 /* ObjectTrackingSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjectTrackingSettings.swift; path = ObjectTracking/ObjectTrackingSettings.swift; sourceTree = "<group>"; };
 		4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotTests.swift; sourceTree = "<group>"; };
+		4FEF49E95825B789A39EDA21 /* Detector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Detector.swift; sourceTree = "<group>"; };
 		4FEF49FAEA0EB5E01610A55B /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		4FEF4A4D501C2B9B7E5D248D /* Autopilot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Autopilot.swift; sourceTree = "<group>"; };
 		4FEF4A59FF61753FF6DF0F79 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
@@ -335,6 +341,9 @@
 				4FEF4A4D501C2B9B7E5D248D /* Autopilot.swift */,
 				4FEF42714D658342895B0A95 /* Network.swift */,
 				4FEF49FAEA0EB5E01610A55B /* Model.swift */,
+				4FEF49E95825B789A39EDA21 /* Detector.swift */,
+				4FEF47209A4C03D66945462E /* DetectorQuantizedMobileNet.swift */,
+				4FEF4633FC7402D71728D03F /* DetectorFloatYoloV4.swift */,
 			);
 			path = tflite;
 			sourceTree = "<group>";
@@ -715,6 +724,9 @@
 				4FEF44A3F41CE1D4898D1C4D /* ObjectTrackingSettings.swift in Sources */,
 				4FEF459D92353F7D312A9EBD /* ObjectClassDropdown.swift in Sources */,
 				4FEF4C449F206CF65324CD03 /* Common.swift in Sources */,
+				4FEF4A1F9280139D278509D3 /* Detector.swift in Sources */,
+				4FEF40039118AB286DD8CB0C /* DetectorQuantizedMobileNet.swift in Sources */,
+				4FEF4E9F41A93B4F6CD1AEEC /* DetectorFloatYoloV4.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

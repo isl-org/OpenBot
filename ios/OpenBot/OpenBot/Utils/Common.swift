@@ -39,9 +39,10 @@ class Common {
     static func loadSelectedModel(modeName: String) -> ModelItem {
         var model: ModelItem!
         let allModels = loadAllModels()
-        for model in allModels {
+        for item in allModels {
+            model = item
             if model.name != nil {
-                if model.name.prefix(upTo: model.name.index(of: ".")!) == modeName {
+                if model.name.prefix(upTo: model.name.firstIndex(of: ".")!) == modeName {
                     return model
                 }
             }
@@ -52,7 +53,6 @@ class Common {
     static func loadAllObjectsList() -> [String] {
         var objects: [String] = []
         var result : [String] = []
-        let bundle = Bundle.main
         if let filepath = Bundle.main.path(forResource: "labelmap", ofType: "txt") {
             do {
                 let contents = try String(contentsOfFile: filepath)
