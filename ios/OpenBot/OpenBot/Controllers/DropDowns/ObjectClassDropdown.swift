@@ -9,10 +9,13 @@ import DropDown
 class ObjectClassDropdown: UIView {
     let object = DropDown();
     let objectLabel = UILabel()
-    public init(frame: CGRect, selectedObject: String) {
-        super.init(frame: frame)
+    let detector: Detector?;
+
+    public init(frame: CGRect, selectedObject: String, detector: Detector) {
+        self.detector = detector;
+        super.init(frame: frame);
         NotificationCenter.default.addObserver(self, selector: #selector(showDropDown), name: .showObjectDD, object: nil)
-        setupObjectDD(dataSource: Common.loadAllObjectsList())
+        setupObjectDD(dataSource: detector.getLabels())
     }
 
     func setupObjectDD(dataSource: [String]) {

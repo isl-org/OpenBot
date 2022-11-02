@@ -32,7 +32,6 @@ class Devices: UIView {
             NotificationCenter.default.post(name: .updateDevice, object: item)
         }
         deviceDD.width = 90
-        deviceDD.bottomOffset = CGPoint(x: -50, y:adapted(dimensionSize: 150, to: .height))
 
     }
 

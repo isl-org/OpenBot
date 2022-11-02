@@ -93,6 +93,18 @@ extension Model {
         }
         return models;
     }
+
+    static func fromModelItem(item: ModelItem) -> Model {
+        let model: Model = Model(
+                id: item.id,
+                classType: CLASS(rawValue: item.class) ?? CLASS.AUTOPILOT_F,
+                type: TYPE(rawValue: item.type) ?? TYPE.AUTOPILOT,
+                name: item.name,
+                pathType: PATH_TYPE(rawValue: item.pathType) ?? PATH_TYPE.ASSET,
+                path: item.path,
+                inputSize: item.inputSize);
+        return model;
+    }
 }
 
 extension Float {

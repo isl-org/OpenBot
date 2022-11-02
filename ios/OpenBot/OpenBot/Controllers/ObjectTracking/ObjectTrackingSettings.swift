@@ -14,10 +14,10 @@ class ObjectTrackingSettings: UIView {
     var confidenceLabel = UILabel()
     var deviceDropDownLabel = UILabel()
     var objectDropDownLabel = UILabel()
-
-    override init(frame: CGRect) {
+    var detector: Detector?;
+    init(frame: CGRect, detector: Detector?) {
+        self.detector = detector;
         super.init(frame: frame);
-
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeDown.direction = .down
         addGestureRecognizer(swipeDown)
@@ -168,7 +168,7 @@ class ObjectTrackingSettings: UIView {
     }
 
     func setupObjectDropDown() {
-        let object = ObjectClassDropdown(frame: CGRect(x: 91, y: 100, width: 40, height: 205), selectedObject: "Car");
+        let object = ObjectClassDropdown(frame: CGRect(x: 91, y: 100, width: 40, height: 205), selectedObject: "Car", detector: detector!);
         addSubview(object)
         let dd = UIView()
         dd.backgroundColor = Colors.freeRoamButtonsColor
@@ -338,9 +338,8 @@ class ObjectTrackingSettings: UIView {
 
 
     func createDeviceDropDown() {
-        let device = Devices();
-//        addSubview(device)
-        device.backgroundColor = Colors.sonar
+        let device = Devices(frame: CGRect(x: 80, y: adapted(dimensionSize: 150, to: .height), width: 100, height: 100));
+        addSubview(device)
         print(device.deviceDD.frame)
         let dd = UIView()
         dd.layer.cornerRadius = 10
@@ -378,7 +377,7 @@ class ObjectTrackingSettings: UIView {
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.objectTrackingMode);
         let model = Models(frame: CGRect(x: 180, y: adapted(dimensionSize: 60, to: .height), width: 100, height: 200), selectedModels: selectedModels);
-//        addSubview(model)
+        addSubview(model)
         let dd = UIView()
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
