@@ -3,6 +3,7 @@
 //
 
 import Foundation
+
 class Common {
     static func loadAllModels() -> [ModelItem] {
         if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
@@ -49,23 +50,4 @@ class Common {
         }
         return model
     }
-
-    static func loadAllObjectsList() -> [String] {
-        var objects: [String] = []
-        var result : [String] = []
-        if let filepath = Bundle.main.path(forResource: "labelmap", ofType: "txt") {
-            do {
-                let contents = try String(contentsOfFile: filepath)
-                objects = contents.components(separatedBy: CharacterSet.newlines)
-                result = objects.filter({ !$0.hasPrefix("???") })
-            } catch {
-                print("file not found");
-            }
-        } else {
-            print("labelmap.txt not found");
-        }
-        return result
-    }
-
-
 }
