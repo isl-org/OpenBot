@@ -41,15 +41,14 @@ class HomePageViewController: UIViewController {
         layout.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         layout.minimumLineSpacing = 30
         modesCollectionView.collectionViewLayout = layout;
-
         modesCollectionView.register(modesCollectionViewCell.nib(), forCellWithReuseIdentifier: modesCollectionViewCell.identifier)
         modesCollectionView.delegate = self
         modesCollectionView.dataSource = self
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         changeNavigationColor()
         DataLogger.shared.deleteFiles(path: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
-
-
+        NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
     }
 
     func changeNavigationColor() {
@@ -75,9 +74,6 @@ class HomePageViewController: UIViewController {
         } else {
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
-
-
-
     }
 
 
@@ -114,6 +110,10 @@ class HomePageViewController: UIViewController {
                 fatalError("guard failure handling has not been implemented")
             }
         }
+    }
+
+    @objc func updateControllerValues() {
+        gameController.updateControllerValues()
     }
 }
 
@@ -160,6 +160,8 @@ extension UIViewController: UICollectionViewDataSource {
 
 
 
+
+
 }
 
 
@@ -190,7 +192,7 @@ extension UIButton {
                 bottom: contentPadding.bottom,
                 right: contentPadding.right + imageTitlePadding
         )
-        self.titleEdgeInsets = UIEdgeInsets(
+        titleEdgeInsets = UIEdgeInsets(
                 top: 0,
                 left: imageTitlePadding,
                 bottom: 0,
