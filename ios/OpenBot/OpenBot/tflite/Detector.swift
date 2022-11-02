@@ -3,7 +3,7 @@
 //
 
 import Foundation
-
+import UIKit
 class Detector: Network {
     var labels: [String];
 

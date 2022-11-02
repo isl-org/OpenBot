@@ -11,7 +11,6 @@ class Devices: UIView {
     let deviceLabel = UILabel()
 
     override init(frame: CGRect) {
-        print("frame of device dd", frame);
         super.init(frame: frame)
         NotificationCenter.default.addObserver(self, selector: #selector(showDropDown), name: .showDeviceDD, object: nil)
         setupDeviceDD(dataSource: ["CPU","GPU","XNNPACK"]);
@@ -33,6 +32,8 @@ class Devices: UIView {
             NotificationCenter.default.post(name: .updateDevice, object: item)
         }
         deviceDD.width = 90
+        deviceDD.bottomOffset = CGPoint(x: -50, y:adapted(dimensionSize: 150, to: .height))
+
     }
 
     @objc func showDropDown() {

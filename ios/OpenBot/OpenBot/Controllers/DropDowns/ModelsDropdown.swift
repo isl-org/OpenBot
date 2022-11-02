@@ -33,10 +33,11 @@ class Models: UIView {
             NotificationCenter.default.post(name: .updateModel, object: item)
         }
         model.width = 150
+        model.bottomOffset = CGPoint(x: adapted(dimensionSize: 50, to: .height), y: adapted(dimensionSize: 100, to: .height))
     }
 
     @objc func showDropDown() {
-        model.show()
+        print(model.show())
     }
 }
 

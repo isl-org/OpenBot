@@ -14,6 +14,7 @@ class ObjectTrackingSettings: UIView {
     var confidenceLabel = UILabel()
     var deviceDropDownLabel = UILabel()
     var objectDropDownLabel = UILabel()
+
     override init(frame: CGRect) {
         super.init(frame: frame);
 
@@ -45,6 +46,9 @@ class ObjectTrackingSettings: UIView {
         setupVehicleControls();
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateObject), name: .updateObject, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -163,12 +167,9 @@ class ObjectTrackingSettings: UIView {
         addSubview(speedLabel)
     }
 
-    func setupObjectDropDown(){
+    func setupObjectDropDown() {
         let object = ObjectClassDropdown(frame: CGRect(x: 91, y: 100, width: 40, height: 205), selectedObject: "Car");
         addSubview(object)
-        object.translatesAutoresizingMaskIntoConstraints = false
-        object.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 200).isActive = true
-        object.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 91).isActive = true
         let dd = UIView()
         dd.backgroundColor = Colors.freeRoamButtonsColor
         objectDropDownLabel.text = "person"
@@ -193,7 +194,7 @@ class ObjectTrackingSettings: UIView {
         dd.addSubview(objectDropDownLabel)
     }
 
-    func setupConfidence(){
+    func setupConfidence() {
         let plusImageView = UIView();
         plusImageView.frame.size = CGSize(width: 30, height: 30);
         plusImageView.frame.origin = CGPoint(x: width - 40, y: adapted(dimensionSize: 120, to: .height));
@@ -277,21 +278,21 @@ class ObjectTrackingSettings: UIView {
     }
 
     @objc func increaseConfidence(_ sender: UIImage) {
-        if confidenceLabel.text == "100%"  {
+        if confidenceLabel.text == "100%" {
             return
         }
-        var value = Int(confidenceLabel.text?.prefix((confidenceLabel.text?.count ?? 1)-1) ?? "50")
-        print("value is : ",value)
+        var value = Int(confidenceLabel.text?.prefix((confidenceLabel.text?.count ?? 1) - 1) ?? "50")
+        print("value is : ", value)
         value = (value ?? 5) + 5;
-        confidenceLabel.text = String(value! ) + "%"
+        confidenceLabel.text = String(value!) + "%"
         NotificationCenter.default.post(name: .updateConfidence, object: confidenceLabel.text)
     }
 
     @objc func decreaseConfidence(_ sender: UIImage) {
-        if confidenceLabel.text == "0%"  {
+        if confidenceLabel.text == "0%" {
             return
         }
-        var value = Int(confidenceLabel.text?.prefix((confidenceLabel.text?.count ?? 1)-1) ?? "50")
+        var value = Int(confidenceLabel.text?.prefix((confidenceLabel.text?.count ?? 1) - 1) ?? "50")
         value = (value ?? 5) - 5;
         confidenceLabel.text = String(value!) + "%"
         NotificationCenter.default.post(name: .updateConfidence, object: confidenceLabel.text)
@@ -317,6 +318,16 @@ class ObjectTrackingSettings: UIView {
         NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
     }
 
+    @objc func updateDevice(_ notification: Notification) {
+        let selectedDevice = notification.object as! String
+        deviceDropDownLabel.text = selectedDevice
+    }
+
+    @objc func updateThreadLabel(_ notification: Notification) {
+        threadLabel.text = (notification.object as! String)
+
+    }
+
     func setupVehicleControls() {
         let vehicleControls = VehicleControl();
         addSubview(vehicleControls)
@@ -327,8 +338,10 @@ class ObjectTrackingSettings: UIView {
 
 
     func createDeviceDropDown() {
-        let device = Devices(frame: CGRect(x: 91, y: 170, width: 40, height: 205));
-        addSubview(device)
+        let device = Devices();
+//        addSubview(device)
+        device.backgroundColor = Colors.sonar
+        print(device.deviceDD.frame)
         let dd = UIView()
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
@@ -362,11 +375,10 @@ class ObjectTrackingSettings: UIView {
     }
 
 
-
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.objectTrackingMode);
-        let model = Models(frame: CGRect(x: 180, y : adapted(dimensionSize: 60, to: .height), width: 100, height: 200), selectedModels: selectedModels);
-        addSubview(model)
+        let model = Models(frame: CGRect(x: 180, y: adapted(dimensionSize: 60, to: .height), width: 100, height: 200), selectedModels: selectedModels);
+//        addSubview(model)
         let dd = UIView()
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
@@ -383,7 +395,7 @@ class ObjectTrackingSettings: UIView {
         upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
         addSubview(dd)
         dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: topAnchor,constant: adapted(dimensionSize: 60, to: .height)).isActive = true;
+        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 60, to: .height)).isActive = true;
         dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 180).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 180).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -405,7 +417,7 @@ class ObjectTrackingSettings: UIView {
     @objc func updateObject(_ notification: Notification) {
         let selectedObject = notification.object as! String
         objectDropDownLabel.text = selectedObject
-       print(selectedObject)
+        print(selectedObject)
     }
 }
 
