@@ -7,11 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3A0B835528ADFD6300A9FA0F /* DataSerialMonitorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0B835428ADFD6200A9FA0F /* DataSerialMonitorViewController.swift */; };
 		3A31E73028AE0E1A00FDD235 /* SensorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */; };
 		3A3AAA9E28FEBB2F006EE8D9 /* BluetoothTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3AAA9D28FEBB2F006EE8D9 /* BluetoothTable.swift */; };
-		3A3C40C828B0A8A800AA40CF /* VideoRecordingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3C40C728B0A8A800AA40CF /* VideoRecordingController.swift */; };
-		3AD2794028AF703A00053CAD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD2793F28AF703A00053CAD /* CameraViewController.swift */; };
 		3AE7A38B28ACB0D6001ABE2F /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */; };
 		4FEF40039118AB286DD8CB0C /* DetectorQuantizedMobileNet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47209A4C03D66945462E /* DetectorQuantizedMobileNet.swift */; };
 		4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */; };
@@ -59,6 +56,7 @@
 		727D3A805DDE14D8AD205D31 /* VehicleControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */; };
 		727D3B19FEA7A95C092DC11E /* collapseSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D316515ACC87CAEB31A26 /* collapseSettingView.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
+		727D3BF38CB798E8B3321E87 /* SettingsFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D0186944D629E367A9D /* SettingsFragment.swift */; };
 		727D3D12FAF02C416CC2CEC1 /* FreeRoamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */; };
 		727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B02AB471D9F31B0747 /* Font.swift */; };
 		727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */; };
@@ -93,11 +91,8 @@
 		14FEE4780CE79F3AAB630B6D /* Pods-OpenBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.release.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.release.xcconfig"; sourceTree = "<group>"; };
 		17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot_OpenBotUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
-		3A0B835428ADFD6200A9FA0F /* DataSerialMonitorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSerialMonitorViewController.swift; sourceTree = "<group>"; };
 		3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorsViewController.swift; sourceTree = "<group>"; };
 		3A3AAA9D28FEBB2F006EE8D9 /* BluetoothTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BluetoothTable.swift; path = OpenBot/BluetoothTable.swift; sourceTree = SOURCE_ROOT; };
-		3A3C40C728B0A8A800AA40CF /* VideoRecordingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecordingController.swift; sourceTree = "<group>"; };
-		3AD2793F28AF703A00053CAD /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		4FEF4178D0A2805591A6A3A6 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		4FEF421BF49FEE835C6DC5CB /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
@@ -147,6 +142,7 @@
 		727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bluetoothDataController.swift; sourceTree = "<group>"; };
 		727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VehicleControl.swift; path = Modes/VehicleControl.swift; sourceTree = "<group>"; };
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		727D3D0186944D629E367A9D /* SettingsFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsFragment.swift; path = Settings/SettingsFragment.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		727D3D78A49AC3693B1A2B7B /* CGFloatExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CGFloatExtension.swift; path = Adaptive/CGFloatExtension.swift; sourceTree = "<group>"; };
 		727D3D9ED8FC7A8FEFF7483B /* ModelsDropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelsDropdown.swift; path = DropDowns/ModelsDropdown.swift; sourceTree = "<group>"; };
@@ -372,12 +368,9 @@
 		BF5AF3BF28AE4A96008BAD95 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				3A3C40C728B0A8A800AA40CF /* VideoRecordingController.swift */,
 				3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */,
-				3AD2793F28AF703A00053CAD /* CameraViewController.swift */,
 				BF812E8528AE2C4200E0B682 /* modesCollectionViewCell.swift */,
 				3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */,
-				3A0B835428ADFD6200A9FA0F /* DataSerialMonitorViewController.swift */,
 				727D3486646629C6067A6656 /* Free Roam */,
 				BF72296328B0FD6D0013CD8E /* GameViewController.swift */,
 				4FEF40885316AD1AB57A55DD /* DataCollection */,
@@ -390,6 +383,7 @@
 				4FEF4C8C9707613D66A8051E /* ObjectTrackingFragment.swift */,
 				4FEF492829E700076FAA4132 /* ObjectTrackingSettings.swift */,
 				4FEF42F0707A22B810E664F2 /* ObjectClassDropdown.swift */,
+				727D3D0186944D629E367A9D /* SettingsFragment.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -677,14 +671,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FEF4DC031698B6DEEB01AEB /* AppDelegate.swift in Sources */,
-				3AD2794028AF703A00053CAD /* CameraViewController.swift in Sources */,
 				3AE7A38B28ACB0D6001ABE2F /* HomePageViewController.swift in Sources */,
-				3A0B835528ADFD6300A9FA0F /* DataSerialMonitorViewController.swift in Sources */,
 				BF72296428B0FD6D0013CD8E /* GameViewController.swift in Sources */,
 				3A31E73028AE0E1A00FDD235 /* SensorsViewController.swift in Sources */,
 				4FEF4F78919CCCC28C418C5B /* SceneDelegate.swift in Sources */,
 				BF812E8728AE2C4200E0B682 /* modesCollectionViewCell.swift in Sources */,
-				3A3C40C828B0A8A800AA40CF /* VideoRecordingController.swift in Sources */,
 				4FEF4C5087962C2F3B2BB3A1 /* Modes.swift in Sources */,
 				4FEF483FCB45A3257C181C30 /* README.md in Sources */,
 				727D3D12FAF02C416CC2CEC1 /* FreeRoamController.swift in Sources */,
@@ -727,6 +718,7 @@
 				4FEF4A1F9280139D278509D3 /* Detector.swift in Sources */,
 				4FEF40039118AB286DD8CB0C /* DetectorQuantizedMobileNet.swift in Sources */,
 				4FEF4E9F41A93B4F6CD1AEEC /* DetectorFloatYoloV4.swift in Sources */,
+				727D3BF38CB798E8B3321E87 /* SettingsFragment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

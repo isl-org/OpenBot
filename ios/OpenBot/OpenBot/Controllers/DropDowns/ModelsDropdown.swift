@@ -36,7 +36,7 @@ class Models: UIView {
     }
 
     @objc func showDropDown() {
-        print(model.show())
+        model.show()
     }
 }
 

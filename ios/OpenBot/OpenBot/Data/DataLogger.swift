@@ -4,6 +4,7 @@
 
 import Foundation
 import UIKit
+var bluetoothData = ""
 class DataLogger {
     static let shared : DataLogger = DataLogger()
     var enabled: Bool = false;
@@ -189,7 +190,7 @@ class DataLogger {
     }
 
     func recordVehicleLogs(){
-        if bluetoothData != "" {
+
             let timestamp = returnCurrentTimestamp()
             let index = bluetooth.sonarData.index(after: bluetooth.sonarData.startIndex)
             sonar = sonar + String(timestamp) + " " + String(bluetooth.sonarData[index...])  + "\n"
@@ -198,7 +199,7 @@ class DataLogger {
             if bluetooth.bumperData != ""{
                 bumper = bumper  + String(timestamp) + " " + String(bluetooth.bumperData[index...]) + "\n";
             }
-        }
+
     }
     func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
         String(XValue) + " " + String(YValue) + " " + String(ZValue);

@@ -96,19 +96,9 @@ class HomePageViewController: UIViewController {
     }
 
     @IBAction func onTapSettings() {
-        if isBluetoothConnected != false {
-            let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "bluetoothScreen"))!
-            guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
-                fatalError("guard failure handling has not been implemented")
-            }
-        } else {
-//            let yourAlert = UIAlertController(title: "Connection Error", message: "Please connect to BlueTooth", preferredStyle: UIAlertController.Style.alert)
-//            yourAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (handler) in}))
-//            self.present(yourAlert, animated: true, completion: nil)
-            let openDataSerialView = (storyboard?.instantiateViewController(withIdentifier: "bluetoothScreen"))!
-            guard (navigationController?.pushViewController(openDataSerialView, animated: true)) != nil else {
-                fatalError("guard failure handling has not been implemented")
-            }
+        let openDataSettingView = (storyboard?.instantiateViewController(withIdentifier: "settingScreen"))!
+        guard (navigationController?.pushViewController(openDataSettingView, animated: true)) != nil else {
+            fatalError("guard failure handling has not been implemented")
         }
     }
 
@@ -159,14 +149,11 @@ extension UIViewController: UICollectionViewDataSource {
     }
 
 
-
-
-
 }
 
 
 extension UIBarButtonItem {
-    convenience init(image :UIImage, title :String, target: Any?, action: Selector?) {
+    convenience init(image: UIImage, title: String, target: Any?, action: Selector?) {
         let button = UIButton(type: .custom)
         button.setInsets(forContentPadding: UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0), imageTitlePadding: 10)
         button.setImage(image, for: .normal)

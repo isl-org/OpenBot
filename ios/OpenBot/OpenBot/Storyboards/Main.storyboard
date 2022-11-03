@@ -16,70 +16,6 @@
         </array>
     </customFonts>
     <scenes>
-        <!--Send Data-->
-        <scene sceneID="xcY-xJ-ckS">
-            <objects>
-                <viewController storyboardIdentifier="dataSerialMonitor" title="Send Data" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7az-1S-5T9" customClass="DataSerialMonitorViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" restorationIdentifier="sendScreen" id="bbB-lb-dd0">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Text 1" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TUs-Ba-dkE">
-                                <rect key="frame" x="20" y="431" width="289" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U8r-31-Cis">
-                                <rect key="frame" x="317" y="430" width="72" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Send"/>
-                                <connections>
-                                    <action selector="sendData:" destination="7az-1S-5T9" eventType="touchUpInside" id="v66-c0-bNa"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ihl-gr-eWJ">
-                                <rect key="frame" x="148" y="536" width="119" height="53"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="logs">
-                                    <color key="baseBackgroundColor" name="gamepad"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="startLogs:" destination="7az-1S-5T9" eventType="touchUpInside" id="48g-wp-TM5"/>
-                                </connections>
-                            </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5T2-KX-uXY">
-                                <rect key="frame" x="58" y="44" width="240" height="320"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <color key="textColor" systemColor="labelColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0AQ-0n-qMu">
-                                <rect key="frame" x="126" y="665" width="58" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="temp"/>
-                                <connections>
-                                    <action selector="openTemp:" destination="7az-1S-5T9" eventType="touchUpInside" id="BEm-Sz-gtb"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="vT9-Wp-ph1"/>
-                    </view>
-                    <connections>
-                        <outlet property="bleSendData" destination="5T2-KX-uXY" id="Q64-SP-4g0"/>
-                        <outlet property="sendDataToBle" destination="TUs-Ba-dkE" id="yqR-DZ-vhv"/>
-                        <outlet property="view" destination="bbB-lb-dd0" id="4df-au-0b1"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="F3L-yC-2JR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1592.3076923076922" y="111.61137440758293"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="kIt-wE-ccE">
             <objects>
@@ -113,21 +49,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kag-im-1SP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-342" y="1670"/>
-        </scene>
-        <!--Testing Bottom Slider-->
-        <scene sceneID="gHQ-Dg-OCf">
-            <objects>
-                <viewController storyboardIdentifier="nitish" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zii-xm-H1y" customClass="TestingBottomSlider" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="CYc-Lq-Ws3">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="aGL-2M-ZDc"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="USW-F8-Q0R" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="583" y="1656"/>
         </scene>
         <!--Sensors View Controller-->
         <scene sceneID="DST-OZ-Qhc">
@@ -322,93 +243,6 @@
             </objects>
             <point key="canvasLocation" x="-342.02898550724638" y="963.61607142857133"/>
         </scene>
-        <!--Camera View Controller-->
-        <scene sceneID="SLa-hy-DHq">
-            <objects>
-                <viewController storyboardIdentifier="cameraScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YEf-aW-8Ip" customClass="CameraViewController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="TNt-JJ-CyR">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ha0-xm-yF0">
-                                <rect key="frame" x="38" y="68" width="337" height="360"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bEo-O0-uXF">
-                                <rect key="frame" x="0.0" y="601" width="129" height="78"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Take Photo"/>
-                                <connections>
-                                    <action selector="cameraButton:" destination="YEf-aW-8Ip" eventType="touchUpInside" id="cT5-Wj-SyF"/>
-                                </connections>
-                            </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dEH-tX-sk8">
-                                <rect key="frame" x="87" y="530" width="240" height="286"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="d70-x1-Hq8"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <connections>
-                        <outlet property="cameraView" destination="ha0-xm-yF0" id="Cwy-vg-55y"/>
-                        <outlet property="photoView" destination="dEH-tX-sk8" id="GQd-Ib-4fo"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="OcW-gC-09e" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="499" y="964"/>
-        </scene>
-        <!--Video Recording Controller-->
-        <scene sceneID="lXk-5M-wFM">
-            <objects>
-                <viewController storyboardIdentifier="videoRecorder" id="ZrD-XW-Sfy" customClass="VideoRecordingController" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="2kx-c8-CsP">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ti3-3b-RhN">
-                                <rect key="frame" x="87" y="570" width="307" height="264"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sFK-Wb-Hrd">
-                                <rect key="frame" x="38" y="415" width="155" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Record"/>
-                                <connections>
-                                    <action selector="startRec:" destination="ZrD-XW-Sfy" eventType="touchUpInside" id="utZ-eq-S2U"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohX-93-IKT">
-                                <rect key="frame" x="294" y="415" width="100" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="stop"/>
-                                <connections>
-                                    <action selector="stoprec:" destination="ZrD-XW-Sfy" eventType="touchUpInside" id="W19-fX-rNa"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="653-az-1Li">
-                                <rect key="frame" x="38" y="71" width="341" height="221"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="tE7-Yc-hV2"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <connections>
-                        <outlet property="camPreview" destination="653-az-1Li" id="GZQ-s3-bYb"/>
-                        <outlet property="videoView" destination="ti3-3b-RhN" id="bkX-mo-Uct"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="j14-sQ-On2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1375" y="951"/>
-        </scene>
         <!--Home Page View Controller-->
         <scene sceneID="8b0-hH-SCr">
             <objects>
@@ -537,6 +371,21 @@
             </objects>
             <point key="canvasLocation" x="2260.8695652173915" y="963.61607142857133"/>
         </scene>
+        <!--Settings Fragment-->
+        <scene sceneID="fKK-9h-rL4">
+            <objects>
+                <viewController storyboardIdentifier="settingScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="u5K-5y-IZH" customClass="SettingsFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oIa-f4-kBq">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="myF-8c-BUg"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="P6Y-JN-LMl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1405.7971014492755" y="267.85714285714283"/>
+        </scene>
         <!--Data Collection Controller-->
         <scene sceneID="2Fa-jB-MxX">
             <objects>
@@ -644,9 +493,6 @@
         <namedColor name="gamepad">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
