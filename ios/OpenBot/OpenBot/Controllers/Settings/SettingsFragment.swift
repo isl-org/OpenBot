@@ -4,6 +4,7 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 
 class SettingsFragment: UIViewController {
     var scrollView: UIScrollView!
@@ -38,22 +39,27 @@ class SettingsFragment: UIViewController {
         updateSwitchPosition()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        toggleSwitchButtons()
+
+    }
+
     func createScrollView() {
         scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height));
         scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
         view.addSubview(scrollView)
     }
 
-       func  updateScrollView(){
-          if currentOrientation == .portrait{
-              scrollView.frame.size.width = width
-              scrollView.frame.size.height = height
-          }
-           else{
-               scrollView.frame.size.width = height
-               scrollView.frame.size.height = width
-           }
-       }
+    func updateScrollView() {
+        if currentOrientation == .portrait {
+            scrollView.frame.size.width = width
+            scrollView.frame.size.height = height
+        } else {
+            scrollView.frame.size.width = height
+            scrollView.frame.size.height = width
+        }
+    }
 
     func createPermissionLabel() {
         let permission = createLabel(text: Strings.permission, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 10, to: .height));
@@ -81,6 +87,8 @@ class SettingsFragment: UIViewController {
         cameraSwitch.onTintColor = Colors.title
         scrollView.addSubview(cameraSwitch)
         cameraSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 50, to: .height))
+        cameraSwitch.addTarget(self, action: #selector(toggleCamera(_:)), for: .valueChanged)
+
 
     }
 
@@ -88,18 +96,22 @@ class SettingsFragment: UIViewController {
         storageSwitch.onTintColor = Colors.title
         scrollView.addSubview(storageSwitch)
         storageSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 100, to: .height))
+        storageSwitch.addTarget(self, action: #selector(toggleStorage(_:)), for: .valueChanged)
+
     }
 
     func createLocationSwitch() {
         locationSwitch.onTintColor = Colors.title
         scrollView.addSubview(locationSwitch)
         locationSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 150, to: .height))
+        locationSwitch.addTarget(self, action: #selector(toggleLocation(_:)), for: .valueChanged)
     }
 
     func createMicrophoneSwitch() {
         microphoneSwitch.onTintColor = Colors.title
         scrollView.addSubview(microphoneSwitch)
         microphoneSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 200, to: .height))
+        microphoneSwitch.addTarget(self, action: #selector(toggleMicrophone(_:)), for: .valueChanged)
     }
 
     func setupSwitchPositions() {
@@ -120,12 +132,117 @@ class SettingsFragment: UIViewController {
         }
     }
 
-    func updateSwitchPosition(){
+    func updateSwitchPosition() {
         cameraSwitch.frame.origin.x = switchButtonTrailingAnchor
         storageSwitch.frame.origin.x = switchButtonTrailingAnchor
         locationSwitch.frame.origin.x = switchButtonTrailingAnchor
         microphoneSwitch.frame.origin.x = switchButtonTrailingAnchor
     }
 
+    func checkPermissions() {
+        checkCamera()
+    }
+
+    @objc func toggleCamera(_ sender: UISwitch) {
+
+        checkCamera()
+    }
+
+
+    @objc func toggleStorage(_ sender: UISwitch) {
+
+    }
+
+    @objc func toggleLocation(_ sender: UISwitch) {
+
+    }
+
+    @objc func toggleMicrophone(_ sender: UISwitch) {
+
+    }
+
+    func checkCamera() {
+        let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        switch authStatus {
+        case .authorized:
+            print("authorized")
+            createAllowAlert(alertFor : "Camera")
+
+        case .denied:
+            print("denied")
+            createAllowAlert(alertFor : "Camera")
+        case .notDetermined:
+            print("not determined")
+            createPromptForCameraAccess()
+        default:
+            print("default")
+            alertToEncourageCameraAccessInitially()
+        }
+    }
+
+
+
+    func alertToEncourageCameraAccessInitially() {
+        let alert = UIAlertController(
+                title: "IMPORTANT",
+                message: "Camera access required for OpenBot",
+                preferredStyle: UIAlertController.Style.alert
+        )
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: {action in print(action)} ))
+        alert.addAction(UIAlertAction(title: "Allow Camera", style: .cancel, handler: { (alert) -> Void in
+            print("hello nitish")
+            UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
+        }))
+        present(alert, animated: true, completion: nil)
+
+    }
+
+    func someHandler() {
+       print("handler")
+    }
+
+
+    func createPromptForCameraAccess() {
+        print("inside alertPromptToAllowCameraAccessViaSetting ")
+            if AVCaptureDevice.devices(for: AVMediaType.video).count > 0 {
+                AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
+                    DispatchQueue.main.async() {
+//                        self.checkCamera()
+                    }
+                }
+            }
+    }
+
+    func createAllowAlert(alertFor : String){
+        let alert = UIAlertController(
+                title: "IMPORTANT",
+                message: "Please allow camera access for OpenBot",
+                preferredStyle: UIAlertController.Style.alert
+        )
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: {action in self.toggleSwitchButtons()}  ))
+        alert.addAction(UIAlertAction(title: "Allow " + alertFor, style: .cancel, handler: { (alert) -> Void in
+            UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+
+    func createDeniedAlert(){
+
+    }
+
+    func toggleSwitchButtons(){
+        //camera
+        let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        switch authStatus {
+        case .authorized:
+            cameraSwitch.isOn = true
+        case .denied:
+            cameraSwitch.isOn = false
+        case .notDetermined:
+            cameraSwitch.isOn = false
+        default:
+            cameraSwitch.isOn = false
+        }
+    }
 
 }

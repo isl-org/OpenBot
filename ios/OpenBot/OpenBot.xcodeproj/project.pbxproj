@@ -781,7 +781,7 @@
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Program requires GPS to track cars and job orders";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow for Location updates";
 				INFOPLIST_KEY_NSLocationUsageDescription = "Allow for Location updates";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow for Location updates";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow for Location updates ";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app uses your Microphone to allow Voice over IP communication with the Program Admin system";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
@@ -818,7 +818,7 @@
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Program requires GPS to track cars and job orders";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow for Location updates";
 				INFOPLIST_KEY_NSLocationUsageDescription = "Allow for Location updates";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow for Location updates";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow for Location updates ";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app uses your Microphone to allow Voice over IP communication with the Program Admin system";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
