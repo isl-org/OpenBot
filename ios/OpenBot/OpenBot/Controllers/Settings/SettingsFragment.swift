@@ -5,14 +5,17 @@
 import Foundation
 import UIKit
 import AVFoundation
+import CoreLocation
+import CoreLocationUI
 
-class SettingsFragment: UIViewController {
+class SettingsFragment: UIViewController, CLLocationManagerDelegate {
     var scrollView: UIScrollView!
     var cameraSwitch = UISwitch()
     let storageSwitch = UISwitch()
     let locationSwitch = UISwitch()
     let microphoneSwitch = UISwitch()
     var switchButtonTrailingAnchor = width - 80;
+    let locationManager = CLLocationManager()
 
 
     override func viewDidLoad() {
@@ -29,6 +32,7 @@ class SettingsFragment: UIViewController {
         createLocationSwitch()
         scrollView.addSubview(createLabel(text: Strings.microphone, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 200, to: .height)))
         createMicrophoneSwitch()
+
         updateSwitchPosition()
     }
 
@@ -139,12 +143,7 @@ class SettingsFragment: UIViewController {
         microphoneSwitch.frame.origin.x = switchButtonTrailingAnchor
     }
 
-    func checkPermissions() {
-        checkCamera()
-    }
-
     @objc func toggleCamera(_ sender: UISwitch) {
-
         checkCamera()
     }
 
@@ -154,7 +153,7 @@ class SettingsFragment: UIViewController {
     }
 
     @objc func toggleLocation(_ sender: UISwitch) {
-
+        checkLocation()
     }
 
     @objc func toggleMicrophone(_ sender: UISwitch) {
@@ -165,21 +164,20 @@ class SettingsFragment: UIViewController {
         let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         switch authStatus {
         case .authorized:
-            print("authorized")
-            createAllowAlert(alertFor : "Camera")
-
+            createAllowAlert(alertFor: "Camera")
         case .denied:
-            print("denied")
-            createAllowAlert(alertFor : "Camera")
+            createAllowAlert(alertFor: "Camera")
         case .notDetermined:
-            print("not determined")
             createPromptForCameraAccess()
         default:
-            print("default")
             alertToEncourageCameraAccessInitially()
         }
     }
 
+    func checkLocation(){
+        createAllowAlert(alertFor: "Location")
+
+    }
 
 
     func alertToEncourageCameraAccessInitially() {
@@ -188,7 +186,7 @@ class SettingsFragment: UIViewController {
                 message: "Camera access required for OpenBot",
                 preferredStyle: UIAlertController.Style.alert
         )
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: {action in print(action)} ))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action in print(action) }))
         alert.addAction(UIAlertAction(title: "Allow Camera", style: .cancel, handler: { (alert) -> Void in
             print("hello nitish")
             UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
@@ -197,43 +195,42 @@ class SettingsFragment: UIViewController {
 
     }
 
-    func someHandler() {
-       print("handler")
-    }
-
 
     func createPromptForCameraAccess() {
-        print("inside alertPromptToAllowCameraAccessViaSetting ")
-            if AVCaptureDevice.devices(for: AVMediaType.video).count > 0 {
-                AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
-                    DispatchQueue.main.async() {
+        if AVCaptureDevice.devices(for: AVMediaType.video).count > 0 {
+            AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
+                DispatchQueue.main.async() {
 //                        self.checkCamera()
-                    }
                 }
             }
+        }
     }
 
-    func createAllowAlert(alertFor : String){
+    func createPromptLocationAccess(){
+
+    }
+
+    func createAllowAlert(alertFor: String) {
         let alert = UIAlertController(
                 title: "IMPORTANT",
-                message: "Please allow camera access for OpenBot",
+                message: "Please allow " + alertFor + " access for OpenBot",
                 preferredStyle: UIAlertController.Style.alert
         )
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: {action in self.toggleSwitchButtons()}  ))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action in self.toggleSwitchButtons() }))
         alert.addAction(UIAlertAction(title: "Allow " + alertFor, style: .cancel, handler: { (alert) -> Void in
             UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
         }))
         present(alert, animated: true, completion: nil)
     }
 
-    func createDeniedAlert(){
+    func createDeniedAlert() {
 
     }
 
-    func toggleSwitchButtons(){
+    func toggleSwitchButtons() {
         //camera
-        let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
-        switch authStatus {
+        let cameraAuthStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        switch cameraAuthStatus {
         case .authorized:
             cameraSwitch.isOn = true
         case .denied:
@@ -243,6 +240,32 @@ class SettingsFragment: UIViewController {
         default:
             cameraSwitch.isOn = false
         }
+
+        //location
+
+        let locationAuthStatus = CLLocationManager.authorizationStatus()
+        switch locationAuthStatus {
+        case .notDetermined:
+           locationSwitch.isOn = false
+            print("notDetermined")
+        case .restricted:
+            locationSwitch.isOn = false
+            print("restricted")
+        case .denied:
+            locationSwitch.isOn = false
+            print("denied")
+        case .authorizedAlways:
+            locationSwitch.isOn = true
+            print("authorizedAlways")
+        case .authorizedWhenInUse:
+            locationSwitch.isOn = true
+            print("authorizedWhenInUse")
+
+        @unknown default:
+            locationSwitch.isOn = false
+        }
     }
+
+
 
 }
