@@ -1,35 +1,57 @@
-# Robot iOS App
+# Robot iOS App - Beta Release
 
 ## DISCLAIMERS
 
 1. **Safety:** Always make sure you operate in a safe environment. Keep in mind, that your phone could be damaged in a collision! Special
-   care is neccessary when using automated control (e.g. person following or driving policy). Make sure you always have a game controller connected and are familiar with the key mapping so you can stop the vehicle at any time. Use at your own risk!
+   care is necessary when using automated control (e.g. person following or driving policy). Make sure you always have a game controller connected and are familiar with the key mapping so you can stop the vehicle at any time. Use at your own risk!
 2. **App under development:** The application is under development and may crash or exhibit unexpected behaviour depending on your phone model and version of the operating system. Make sure to test all functionalities with no wheels connected. Use at your own risk!
 
 ## App Screens
 
 ### Main Menu
 
-The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon in the top right corner.The Bluetooth Settings screen can be opened from the button left to it. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
+The app starts with a menu screen that shows all available screens. The Bluetooth connection screen can be opened by clicking on the Bluetooth icon on top right hand side. The settings screen can be opened with a click on the settings icon right next to it. By clicking on the other icons, the user can access various screens whose functionalities are explained in subsequent sections.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/screen_main_ios.jpg" alt="Main Menu" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.jpeg" alt="Main Menu" width="30%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_bluetooth_screen.jpeg" alt="Bluetooth" width="30%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_settings_screen.jpeg" alt="Settings" width="30%"/>
 </p>
 
 #### Bluetooth Connection
 
-On Opening bluetooth screen you can see list of all the available devices to connect to bluetooth. You can choose your OpenBot device and connect to it. The default baud rate is 115200, and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
+Unlike the Android app which connects to the microcontroller using USB, iOS app uses Bluetooth. On Opening bluetooth screen, you can see a list of all the available devices to connect over bluetooth. You can choose your OpenBot microcontroller and connect to it. The default baud rate is 115200, and you should not need to change this unless you mess with the microcontroller firmware. The app will attempt to connect automatically, but in case you encounter issues, you can use this switch to manually disconnect / connect.
 
-#### Vehicle Status
+### Free Roam
 
-The field **Battery** displays the battery voltage as measured by the Arduino via the voltage divider. The field **Speed (l,r)** reports the left and right speed of the (front) wheels in rpm. It is measured by the Arduino via the optical wheel speed sensors. The field **Sonar** shows the free space in front of the car in centimeters. It is measured by the Arduino via the ultrasonic sensor. Note, you will only receive values a few seconds after the USB connections has been established.
+Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces. It also offers controls related to controller, drive mode and speed.
+
+<p align="left">
+<img src="../../docs/images/ios_free_roam_screen.jpeg" alt="Alt text" width="100%" />
+</p>
+
+- **Battery**: The battery icon shows realtime battery levels of the connected robot.
+
+- **Drive Mode**: There are 3 drive modes displayed on the view:
+
+    - D -> Drive, when the robot is driving forward
+
+    - N -> Neutral, when the robot is stationary
+
+    - R -> Reverse, when the robot is moving backwards
+
+- **Speed**: The speedometer shows the realtime speed of the robot.
+
+- **Sonar**: The sonar view distance of robot from an oncoming object in cm.
+
+- **Bluetooth**: Shows the status of bluetooth connection with the microcontroller. on tapping the icon, the user can also be redirected to the Bluetooth screen to view/modify the connection.
 
 #### Control
 
 The first button is for selecting the **control mode**. There are two different control modes:
 
 - **Gamepad**: The app receives controls from a connected BT controller.
-- **Phone**:  The robot can be controlled via another smartphone with the controller app installed or though a Python script running on a computer connected to the same network.
+- **Phone (Coming Soon)**:  The robot can be controlled via another smartphone with the controller app installed or though a Python script running on a computer connected to the same network.
 
 The second button is for selecting the **drive mode**. There are three different drive modes when using a game controller (e.g. PS4):
 
@@ -101,99 +123,79 @@ Running at higher speeds will reduce the lifetime of the motors but is more fun.
 [//]: # ()
 [//]: # (If a model is active, the inference speed in [ms] will be displayed next to the device which is running the model.)
 
-### Free Roam
+### Data Collection
 
-Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
+
+Simple UI for collection of data sets.
+
 
 <p align="left">
-<img src="../../docs/images/screen_free_roam.jpg" alt="Alt text" width="50%" />
+
+<img src="../../docs/images/ios_data_collection_screen.jpeg" alt="Data Collection" width="100%" />
+
 </p>
 
-- **Battery**: The battery icon shows realtime battery levels of the connected robot.
 
-- **Drive Mode**: There are 3 drive modes displayed on the view:
+- **Preview Resolution**: Used to switch between resolutions of camera preview. There are 3 settings:
 
-    - D -> Drive, when the robot is driving forward
+    - ***HIGH*** (1920x1080p)
 
-    - N -> Neutral, when the robot is stationary
+    - ***MEDIUM*** (1280x720p)
 
-    - R -> Reverse, when the robot is moving backwards
+    - ***LOW*** (640x360)
 
-- **Speed**: The speedometer shows the realtime speed of the robot.
 
-- **Sonar**: The sonar view distance of robot from an oncoming object in cm.
+- **Model Resolution**: Used to switch between resolutions of images saved for training different models.
 
-- **Control**: Controller, Drive Mode and Speed are used to control robot settings as described above in the Control section.
 
-[//]: # (### Data Collection)
+- **Log Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may:
 
-[//]: # ()
-[//]: # (Simple UI for collection of data sets.)
+    - press the **A button** to **start** the data collection process
 
-[//]: # ()
-[//]: # (<p align="left">)
+    - press the **A button again** to **stop** data collection and save the collected data in a .zip file
 
-[//]: # (<img src="../../../docs/images/screen_data_collection.jpg" alt="Alt text" width="50%" />)
+    - alternatively press the **R1 button** to **stop** data collection **without saving** the collected data (for instance because of an unexpected collision with the environment)
 
-[//]: # (</p>)
+    - remember to use the controller mapping fragment to ensure you are using the correct buttons.
 
-[//]: # ()
-[//]: # (- **Preview Resolution**: Used to switch between resolutions of camera preview. There are 3 settings:)
 
-[//]: # (    - ***FULL_HD*** &#40;1920x1080p&#41;)
+- **Vehicle Status**: The field **Battery** displays the battery voltage as measured by the microcontroller via the voltage divider. The field **Speed (l,r)** reports the left and right speed of the (front) wheels in rpm. It is measured by the microcontroller via the optical wheel speed sensors. The field **Sonar** shows the free space in front of the car in centimeters. It is measured by the microcontroller via the ultrasonic sensor. Note, you will only receive values a few seconds after the USB connections has been established.
 
-[//]: # (    - ***HD*** &#40;1280x720p&#41;)
 
-[//]: # (    - ***SD*** &#40;640x360&#41;)
+- **Sensors**: Reports measurements from vehicle sensors. Currently, we record readings from following sensors: camera, gyroscope, accelerometer, magnetometer, ambient light sensor, and barometer. Using the iOS API, we are able to obtain the following sensor readings: RGB images, angular speed, linear acceleration, gravity, magnetic field strength, light intensity, atmospheric pressure, latitude, longitude, altitude, bearing, and speed. In addition to the phone sensors, we record body sensor readings (wheel odometry, obstacle distance and battery voltage), which are transmitted via the serial link. We also record and timestamp control signals received from a connected controller, if present. Lastly, we integrate several neural networks for person following and autonomous navigation.
 
-[//]: # ()
-[//]: # (- **Model Resolution**: Used to switch between resolutions of images saved for training different models.)
 
-[//]: # ()
-[//]: # (- **Save/Discard the Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may:)
-
-[//]: # (    - press the **A button** to **start** the data collection process)
-
-[//]: # (    - press the **A button again** to **stop** data collection and save the collected data in a .zip file)
-
-[//]: # (    - alternatively press the **R1 button** to **stop** data collection **without saving** the collected data &#40;for instance because of an unexpected collision with the environment&#41;)
-
-[//]: # (    - remember to use the controller mapping fragment to ensure you are using the correct buttons.)
 
 ### Controller Mapping
 
 Simple UI to check the button and joystick mapping of a connected BT controller.
 
 <p align="left">
-<img src="../../docs/images/screen_controller_mapping.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/ios_controller_mapping.jpeg" alt="Controller mapping" width="50%" />
 </p>
 
-[//]: # (### Autopilot)
+### Autopilot
 
-[//]: # ()
-[//]: # (Simple UI for running autopilot models.)
 
-[//]: # ()
-[//]: # (<p align="left">)
+Simple UI for running autopilot models.
 
-[//]: # (<img src="../../../docs/images/screen_autopilot.jpg" alt="Alt text" width="50%" />)
 
-[//]: # (</p>)
+<p align="left">
 
-[//]: # ()
-[//]: # (### Object Tracking)
+<img src="../../docs/images/ios_autopilot_screen.jpeg" alt="Autopilot" width="100%" />
 
-[//]: # ()
-[//]: # (Simple UI for tracking objects of 80 different classes. A short description of the different AI models for object tracking and performance benchmarks can be found in [Model Management]&#40;#model-management&#41;.)
+</p>
 
-[//]: # ()
-[//]: # (<p align="left">)
 
-[//]: # (<img src="../../../docs/images/screen_object_tracking_1.jpg" alt="Alt text" width="49%" />)
+### Object Tracking
 
-[//]: # (<img src="../../../docs/images/screen_object_tracking_2.jpg" alt="Alt text" width="49%" />)
 
-[//]: # (</p>)
+Simple UI for tracking objects of 80 different classes. A short description of the different AI models for object tracking and performance benchmarks can be found in [Model Management](#model-management).
+
+
+<p align="left">
+<img src="../../docs/images/ios_object_tracking_screen.jpeg" alt="Object Tracking" width="100%" />
+</p>
 
 [//]: # ()
 [//]: # (### Point Goal Navigation)

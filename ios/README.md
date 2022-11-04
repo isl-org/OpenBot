@@ -20,10 +20,9 @@ Currently, the only way to run the iOS apps on your phones is via the developer 
 - Project is configured as "Automatically manage signing", so you can configure your own independent account for building the app -
   <img alt="iOS App" width="100%" src="../docs/images/ios_automatically_manage_signing.png" />
 - To configure your own team, add your iCloud Account via XCode > Settings > Accounts or directly from the Team menu above.
-- iOS device with minimum iOS 13 or Later.
-- [List of supported devices](https://support.apple.com/en-in/guide/iphone/iphe3fa5df43/ios).
+- iOS device with minimum iOS 13 or Later. [List of supported devices](https://support.apple.com/en-in/guide/iphone/iphe3fa5df43/ios).
 - [Developer mode](https://developer.apple.com/documentation/xcode/enabling-developer-mode-on-a-device) activated on your iOS device.
-- The added account should be [trusted by your iOS device](https://developer.apple.com/forums/thread/685271).
+- The added iCloud account should be [trusted by your iOS device](https://developer.apple.com/forums/thread/685271).
 
 ### Build Process
 
