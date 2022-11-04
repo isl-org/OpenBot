@@ -157,7 +157,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
     }
 
     @objc func toggleMicrophone(_ sender: UISwitch) {
-
+        checkMicrophone()
     }
 
     func checkCamera() {
@@ -176,7 +176,10 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
     func checkLocation(){
         createAllowAlert(alertFor: "Location")
+    }
 
+    func checkMicrophone(){
+        createAllowAlert(alertFor: "Microphone")
     }
 
 
@@ -247,22 +250,32 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         switch locationAuthStatus {
         case .notDetermined:
            locationSwitch.isOn = false
-            print("notDetermined")
         case .restricted:
             locationSwitch.isOn = false
-            print("restricted")
         case .denied:
             locationSwitch.isOn = false
-            print("denied")
         case .authorizedAlways:
             locationSwitch.isOn = true
-            print("authorizedAlways")
         case .authorizedWhenInUse:
             locationSwitch.isOn = true
-            print("authorizedWhenInUse")
-
         @unknown default:
             locationSwitch.isOn = false
+        }
+
+        //microphone
+
+        switch AVAudioSession.sharedInstance().recordPermission {
+        case .granted:
+            microphoneSwitch.isOn = true
+        case .denied:
+            microphoneSwitch.isOn = false
+        case .undetermined:
+            microphoneSwitch.isOn = false
+            AVAudioSession.sharedInstance().requestRecordPermission({ granted in
+               self.toggleSwitchButtons()
+            })
+        @unknown default:
+            microphoneSwitch.isOn = false
         }
     }
 
