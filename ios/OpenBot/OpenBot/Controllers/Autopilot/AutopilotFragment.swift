@@ -81,8 +81,6 @@ class AutopilotFragment: CameraController {
 
     @objc func toggleAutoMode() {
         autoPilotMode = !autoPilotMode;
-
-        if (autoPilotMode) {
             Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
                 if !autoPilotMode {
                     timer.invalidate()
@@ -96,10 +94,7 @@ class AutopilotFragment: CameraController {
                     }
                 }
             }
-        }
     }
-
-
 
     @objc func updateThread(_ notification: Notification) {
         let threadCount = notification.object as! String

@@ -15,12 +15,14 @@ class ObjectTrackingFragment: CameraController {
     var autoMode: Bool = false;
     var vehicleControl: Control = Control();
     let bluetooth = bluetoothDataController.shared;
+    var selectedModel: ModelItem!
 
     override func viewDidLoad() {
         let modelItems = Common.loadAllModels()
         if (modelItems.count > 0) {
             let model = modelItems.first(where: { $0.type == TYPE.DETECTOR.rawValue })
             models = Model.fromModelItems(list: modelItems);
+            selectedModel = model
             detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector;
         }
         objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector);
@@ -71,7 +73,7 @@ class ObjectTrackingFragment: CameraController {
         let selectedDevice = notification.object as! String
 //        autopilot = Autopilot(model: models[0], device: RuntimeDevice(rawValue: selectedDevice) ?? RuntimeDevice.CPU, numThreads: numberOfThreads);
 
-        selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String( 1))
+        selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(1))
 
 //        selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(autopilot?.tfliteOptions.threadCount ?? 1))
 
@@ -88,6 +90,7 @@ class ObjectTrackingFragment: CameraController {
         let confidence = notification.object as! String
         print("confidence is : ", confidence)
     }
+
     @objc func toggleAutoMode() {
         autoMode = !autoMode;
         if (autoMode) {
@@ -99,13 +102,14 @@ class ObjectTrackingFragment: CameraController {
                     if (timer.isValid) {
                         captureImage();
                         if (images.count > 0) {
-                            let image = cropImage(imageToCrop: images[images.count - 1].0, toRect: CGRect(x: 0, y: 0, width: 300, height: 300))
+                            let image = cropImage(imageToCrop: images[images.count - 1].0, toRect: CGRect(x: 0, y: 0, width: Int(selectedModel.inputSize.prefix(upTo: selectedModel.inputSize.firstIndex(of: "x")!)) ?? 300, height:
+                            Int(selectedModel.inputSize.suffix(from: selectedModel.inputSize.index(after: selectedModel.inputSize.firstIndex(of: "x")!))) ?? 300))
                             try detector?.recognizeImage(image: image.cgImage!);
 //                        print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
 //                        sendControl(control: controlResult);
                         }
                     }
-                }catch{
+                } catch {
                     print("error:\(error)")
                 }
             }
