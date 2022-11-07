@@ -4,9 +4,11 @@
 
 import Foundation
 import UIKit
+
 class Detector: Network {
     var labels: [String] = [];
     var NUM_DETECTIONS: Int = 0;
+    var selectedClass: String?;
 
     static func create(model: Model, device: RuntimeDevice, numThreads: Int) throws -> AnyObject? {
         switch (model.classType) {
@@ -22,10 +24,19 @@ class Detector: Network {
     override init(model: Model, device: RuntimeDevice, numThreads: Int) throws {
         try super.init(model: model, device: device, numThreads: numThreads);
         labels = loadLabelList(filePath: getLabelPath());
+        selectedClass = labels.first;
         parseTFlite();
     }
 
     func parseTFlite() {
+    }
+
+    func getNumDetections() -> Int {
+        NUM_DETECTIONS;
+    }
+
+    public func setSelectedClass(selectedClass: String) {
+        self.selectedClass = selectedClass;
     }
 
     class Recognition {
@@ -85,7 +96,6 @@ class Detector: Network {
     }
 
     func feedData() {
-
     }
 
     /**
@@ -110,5 +120,20 @@ class Detector: Network {
             print("labelmap.txt not found");
         }
         return result
+    }
+
+    func recognizeImage(image: CGImage) throws -> [Recognition] {
+
+        //make image input
+//        feedData();
+
+        convertImageToData(image: image);
+        try tflite?.copy(imgData, toInputAt: 0);
+        try tflite?.invoke();
+        try runInference();
+        return [];
+    }
+
+    func runInference() throws {
     }
 }
