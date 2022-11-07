@@ -7,13 +7,14 @@ import UIKit
 import AVFoundation
 import CoreLocation
 import CoreLocationUI
-
+import CoreBluetooth
 class SettingsFragment: UIViewController, CLLocationManagerDelegate {
     var scrollView: UIScrollView!
     var cameraSwitch = UISwitch()
     let storageSwitch = UISwitch()
     let locationSwitch = UISwitch()
     let microphoneSwitch = UISwitch()
+    let bluetoothSwitch = UISwitch()
     var switchButtonTrailingAnchor = width - 80;
     let locationManager = CLLocationManager()
 
@@ -32,7 +33,8 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         createLocationSwitch()
         scrollView.addSubview(createLabel(text: Strings.microphone, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 200, to: .height)))
         createMicrophoneSwitch()
-
+        scrollView.addSubview(createLabel(text: Strings.bluetooth, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 250, to: .height)))
+        createBluetoothSwitch()
         updateSwitchPosition()
     }
 
@@ -118,6 +120,13 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         microphoneSwitch.addTarget(self, action: #selector(toggleMicrophone(_:)), for: .valueChanged)
     }
 
+    func createBluetoothSwitch(){
+        bluetoothSwitch.onTintColor = Colors.title
+        scrollView.addSubview(bluetoothSwitch)
+        bluetoothSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 250, to: .height))
+        bluetoothSwitch.addTarget(self, action: #selector(toggleBluetooth(_:)), for: .valueChanged)
+    }
+
     func setupSwitchPositions() {
 
         switch (currentOrientation) {
@@ -141,6 +150,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         storageSwitch.frame.origin.x = switchButtonTrailingAnchor
         locationSwitch.frame.origin.x = switchButtonTrailingAnchor
         microphoneSwitch.frame.origin.x = switchButtonTrailingAnchor
+        bluetoothSwitch.frame.origin.x = switchButtonTrailingAnchor
     }
 
     @objc func toggleCamera(_ sender: UISwitch) {
@@ -158,6 +168,10 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
     @objc func toggleMicrophone(_ sender: UISwitch) {
         checkMicrophone()
+    }
+
+    @objc func toggleBluetooth(_ sender: UISwitch) {
+        checkBluetooth()
     }
 
     func checkCamera() {
@@ -180,6 +194,10 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
     func checkMicrophone(){
         createAllowAlert(alertFor: "Microphone")
+    }
+
+    func checkBluetooth(){
+        createAllowAlert(alertFor: "Bluetooth")
     }
 
 
@@ -277,7 +295,26 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         @unknown default:
             microphoneSwitch.isOn = false
         }
+
+        //bluetooth
+        switch CBCentralManager.authorization{
+
+        case .notDetermined:
+            bluetoothSwitch.isOn = false
+        case .restricted:
+            bluetoothSwitch.isOn = false
+        case .denied:
+            bluetoothSwitch.isOn = false
+        case .allowedAlways:
+            bluetoothSwitch.isOn = true
+        @unknown default:
+            bluetoothSwitch.isOn = false
+        }
     }
+
+
+
+
 
 
 

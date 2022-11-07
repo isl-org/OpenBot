@@ -276,7 +276,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
      */
     func captureImage() {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
-        stillImageOutput.capturePhoto(with: settings, delegate: self)
+            stillImageOutput.capturePhoto(with: settings, delegate: self)
+
     }
 
     func saveImages() {

@@ -64,6 +64,7 @@ struct Strings {
     static let location : String = "Location"
     static let permission : String = "Permission"
     static let videoStreaming : String = "Video Streaming"
+    static let bluetooth : String = "Bluetooth"
 
 
 // Notifications
