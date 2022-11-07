@@ -82,35 +82,21 @@ class AutopilotFragment: CameraController {
     @objc func toggleAutoMode() {
         autoPilotMode = !autoPilotMode;
 
-
-
-        if autoPilotMode {
-            DispatchQueue.main.async { [self] in
-                captureImage();
-                if (images.count > 0) {
-                    let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0) ?? Control();
-                    print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
-                    sendControl(control: controlResult);
+        if (autoPilotMode) {
+            Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
+                if !autoPilotMode {
+                    timer.invalidate()
+                }
+                if (timer.isValid) {
+                    captureImage();
+                    if (images.count > 0) {
+                        let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0) ?? Control();
+                        print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
+                        sendControl(control: controlResult);
+                    }
                 }
             }
         }
-
-
-//        if (autoPilotMode) {
-//            Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
-//                if !autoPilotMode {
-//                    timer.invalidate()
-//                }
-//                if (timer.isValid) {
-//                    captureImage();
-//                    if (images.count > 0) {
-//                        let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0) ?? Control();
-//                        print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
-//                        sendControl(control: controlResult);
-//                    }
-//                }
-//            }
-//        }
     }
 
 
