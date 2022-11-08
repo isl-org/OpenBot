@@ -17,6 +17,8 @@ class AutopilotFragment: CameraController {
     let gameController = GameController.shared
     let bluetooth = bluetoothDataController.shared;
     var vehicleControl: Control = Control();
+    var currentModel: ModelItem!
+    var currentDevice : RuntimeDevice = RuntimeDevice.CPU
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +29,7 @@ class AutopilotFragment: CameraController {
         let modelItems = Common.loadAllModels()
         if (modelItems.count > 0) {
             models = Model.fromModelItems(list: modelItems);
+            currentModel = modelItems[0]
             autopilot = Autopilot(model: models[0], device: RuntimeDevice.CPU, numThreads: numberOfThreads);
         }
         view.addSubview(expandedAutoPilotView)
@@ -36,6 +39,7 @@ class AutopilotFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThread), name: .updateThread, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         calculateFrame()
     }
 
@@ -74,10 +78,15 @@ class AutopilotFragment: CameraController {
     }
 
     @objc func updateDevice(_ notification: Notification) {
-        let selectedDevice = notification.object as! String
-        autopilot = Autopilot(model: models[0], device: RuntimeDevice(rawValue: selectedDevice) ?? RuntimeDevice.CPU, numThreads: numberOfThreads);
-        selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(autopilot?.tfliteOptions.threadCount ?? 1))
+        currentDevice = RuntimeDevice(rawValue: notification.object as! String) ?? RuntimeDevice.CPU
+        autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
+        currentDevice.rawValue == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
+    }
 
+    @objc func updateModel(_ notification: Notification) {
+        let selectedModelName = notification.object as! String
+        currentModel = Common.loadSelectedModel(modeName: selectedModelName)
+        autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
     }
 
     @objc func toggleAutoMode() {
@@ -101,6 +110,7 @@ class AutopilotFragment: CameraController {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 1
         autopilot?.tfliteOptions.threadCount = numberOfThreads
+
     }
 
     func sendControl(control: Control) {

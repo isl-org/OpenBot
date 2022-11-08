@@ -8,6 +8,7 @@
     "path": "networks/autopilot_float.tflite",
     "inputSize": "256x96"
   },
+
   {
     "id": 2,
     "class": "MOBILENETV1_1_0_Q",

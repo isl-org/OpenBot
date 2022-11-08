@@ -69,7 +69,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
     func createPermissionLabel() {
         let permission = createLabel(text: Strings.permission, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 10, to: .height));
-        permission.font = UIFont(name: permission.font.fontName, size: 20)
+        permission.font = HelveticaNeue.bold(size: 10)
         scrollView.addSubview(permission);
     }
 
@@ -78,8 +78,9 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         let label = UILabel()
         label.text = text;
         label.textColor = Colors.borderColor
+        label.font = HelveticaNeue.regular(size: 12)
         label.frame.origin = CGPoint(x: leadingAnchor, y: topAnchor)
-        label.frame.size = resized(size: CGSize(width: text.count * 10, height: 40), basedOn: .height)
+        label.frame.size = resized(size: CGSize(width: text.count * 12, height: 40), basedOn: .height)
         return label;
 
     }

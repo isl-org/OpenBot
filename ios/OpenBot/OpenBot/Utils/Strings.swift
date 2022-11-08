@@ -62,7 +62,7 @@ struct Strings {
     static let storage : String = "Storage"
    static let microphone : String = "Microphone"
     static let location : String = "Location"
-    static let permission : String = "Permission"
+    static let permission : String = "Permissions"
     static let videoStreaming : String = "Video Streaming"
     static let bluetooth : String = "Bluetooth"
 
