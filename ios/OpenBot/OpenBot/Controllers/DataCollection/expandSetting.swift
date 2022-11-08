@@ -510,13 +510,5 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
 }
 
-extension Notification.Name {
-    static let cancelButton = Notification.Name(Strings.cancelButton)
-    static let logData = Notification.Name(Strings.logDataNotify)
-    static let updateResolution = Notification.Name(Strings.updateResolution)
-    static let updatePreview = Notification.Name(Strings.updatePreview)
-    static let updateTraining = Notification.Name(Strings.updateTraining)
-    static let updateSensorsForLog = Notification.Name(Strings.updateSensorsForLog)
-    static let updateModelResolution = Notification.Name("updateModelResolution")
-}
+
 

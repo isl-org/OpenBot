@@ -47,6 +47,7 @@
 		727D34602C26673639AA0D0B /* Dimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3946DB74E63117B32AF4 /* Dimension.swift */; };
 		727D348793BC7E328164FDB2 /* DataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3157F2B5E5DBB1565EDD /* DataLogger.swift */; };
 		727D34B870DEC24C44407E97 /* DevicesDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3ED0992B4A6AA00373B7 /* DevicesDropdown.swift */; };
+		727D34F694C565E9A8F4D487 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D37FCEAA4FF7A957583C8 /* Notifications.swift */; };
 		727D3514A9B56B54E3FA4089 /* expandedAutoPilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35819C2D0A82BB4E5A7D /* expandedAutoPilot.swift */; };
 		727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */; };
 		727D373B2A839824AE8E6AE2 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31331A6716FD310082EB /* CameraController.swift */; };
@@ -137,6 +138,7 @@
 		727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutopilotFragment.swift; path = Autopilot/AutopilotFragment.swift; sourceTree = "<group>"; };
 		727D35819C2D0A82BB4E5A7D /* expandedAutoPilot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = expandedAutoPilot.swift; path = Autopilot/expandedAutoPilot.swift; sourceTree = "<group>"; };
 		727D37D0890B15799952F87A /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewExtension.swift; path = Adaptive/UIViewExtension.swift; sourceTree = "<group>"; };
+		727D37FCEAA4FF7A957583C8 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
 		727D39B02AB471D9F31B0747 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bluetoothDataController.swift; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 				727D37D0890B15799952F87A /* UIViewExtension.swift */,
 				727D3F5FE3F054BE4FA52191 /* timestamp.swift */,
 				4FEF4A59FF61753FF6DF0F79 /* Common.swift */,
+				727D37FCEAA4FF7A957583C8 /* Notifications.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -612,7 +615,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite exists.\"\nelse\ncurl -o ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite https://storage.googleapis.com/openbot_models/autopilot_float.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/mobile_ssd_v1_1.0_quant_coco.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/navigation.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/navigation.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/box_priors.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/box_priors.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/coco.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/coco.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/labelmap.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/labelmap.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt\nfi\n";
+			shellScript = "if [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite exists.\"\nelse\ncurl -o ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite https://storage.googleapis.com/openbot_models/autopilot_float.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/mobile_ssd_v1_1.0_quant_coco.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/navigation.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/navigation.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/box_priors.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/box_priors.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/coco.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/coco.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/labelmap.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/labelmap.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/yolov4-224-int8.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/yolov4-224-int8.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/yolov4-224-int8.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/yolov4-224-int8.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/yolov4-224-int8.tflite\nfi\n";
 		};
 		D2AEDA40E92036205C2665E9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -719,6 +722,7 @@
 				4FEF40039118AB286DD8CB0C /* DetectorQuantizedMobileNet.swift in Sources */,
 				4FEF4E9F41A93B4F6CD1AEEC /* DetectorFloatYoloV4.swift in Sources */,
 				727D3BF38CB798E8B3321E87 /* SettingsFragment.swift in Sources */,
+				727D34F694C565E9A8F4D487 /* Notifications.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

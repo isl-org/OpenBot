@@ -103,7 +103,7 @@ class Detector: Network {
      - Returns:
      */
     func getLabelPath() -> String {
-        "";
+       ""
     }
 
 
@@ -126,7 +126,6 @@ class Detector: Network {
 
         //make image input
 //        feedData();
-
         convertImageToData(image: image);
         try tflite?.copy(imgData, toInputAt: 0);
         try tflite?.invoke();

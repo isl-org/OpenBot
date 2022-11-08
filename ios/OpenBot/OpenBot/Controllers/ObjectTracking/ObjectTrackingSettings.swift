@@ -411,6 +411,7 @@ class ObjectTrackingSettings: UIView {
         modelDropdownLabel.text = selectedModel
         let model = Common.loadSelectedModel(modeName: selectedModel)
         imageInputLabel.text = model.inputSize
+
     }
 
     @objc func updateObject(_ notification: Notification) {
@@ -418,11 +419,4 @@ class ObjectTrackingSettings: UIView {
         objectDropDownLabel.text = selectedObject
         detector?.setSelectedClass(selectedClass: selectedObject);
     }
-}
-
-extension Notification.Name {
-    static let showObjectDD = Notification.Name("showObjectDD");
-    static let updateObject = Notification.Name("updateObject");
-    static let updateConfidence = Notification.Name("updateConfidence");
-
 }

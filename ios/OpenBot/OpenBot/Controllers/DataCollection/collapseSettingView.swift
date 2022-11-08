@@ -74,9 +74,3 @@ class collapseSettingView: UIView {
 
 }
 
-extension Notification.Name {
-    static let clickSetting = Notification.Name(Strings.clickSetting)
-    static let switchCamera = Notification.Name(Strings.switchCamera)
-    static let ble = Notification.Name(Strings.ble)
-
-}

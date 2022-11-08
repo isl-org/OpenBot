@@ -39,6 +39,3 @@ class Devices: UIView {
         deviceDD.show()
     }
 }
-extension Notification.Name{
-    static let updateDevice = Notification.Name("updateDevice")
-}

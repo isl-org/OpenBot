@@ -77,6 +77,7 @@ class AutopilotFragment: CameraController {
         let selectedDevice = notification.object as! String
         autopilot = Autopilot(model: models[0], device: RuntimeDevice(rawValue: selectedDevice) ?? RuntimeDevice.CPU, numThreads: numberOfThreads);
         selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(autopilot?.tfliteOptions.threadCount ?? 1))
+
     }
 
     @objc func toggleAutoMode() {

@@ -15,6 +15,7 @@ class ObjectClassDropdown: UIView {
         self.detector = detector;
         super.init(frame: frame);
         NotificationCenter.default.addObserver(self, selector: #selector(showDropDown), name: .showObjectDD, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateObjectList), name: .updateObjectList, object: nil)
         setupObjectDD(dataSource: detector.getLabels())
     }
 
@@ -30,10 +31,15 @@ class ObjectClassDropdown: UIView {
             NotificationCenter.default.post(name: .updateObject, object: item)
         }
         object.width = 150;
+
     }
 
     @objc func showDropDown() {
         object.show()
+    }
+
+    @objc func updateObjectList(_ notification: Notification) {
+       object.dataSource = notification.object as! [String]
     }
 
     required init?(coder: NSCoder) {

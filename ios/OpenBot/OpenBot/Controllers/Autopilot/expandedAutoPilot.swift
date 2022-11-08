@@ -302,6 +302,7 @@ class expandedAutoPilot: UIView {
 
     @objc func showModelDropdown(_ sender: UIButton) {
         NotificationCenter.default.post(name: .showModelsDD, object: nil)
+
     }
 
     @objc func showDeviceDropdown(_ sender: UIButton) {
@@ -379,11 +380,3 @@ class expandedAutoPilot: UIView {
     }
 }
 
-extension Notification.Name {
-    static let showModelsDD = Notification.Name("showModelsDD")
-    static let showServerDD = Notification.Name("showServerDD")
-    static let showDeviceDD = Notification.Name("showDeviceDD")
-    static let autoMode = Notification.Name("autoMode")
-    static let updateThread = Notification.Name("updateThread");
-    static let updateThreadLabel = Notification.Name("updateThreadLabel")
-}

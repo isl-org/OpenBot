@@ -40,6 +40,4 @@ class Models: UIView {
     }
 }
 
-extension Notification.Name {
-    static let updateModel = Notification.Name("updateModel")
-}
+

@@ -21,7 +21,6 @@ class ObjectTrackingFragment: CameraController {
         let modelItems = Common.loadAllModels()
         if (modelItems.count > 0) {
             let model = modelItems.first(where: { $0.type == TYPE.DETECTOR.rawValue })
-            models = Model.fromModelItems(list: modelItems);
             selectedModel = model
             detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector;
         }
@@ -43,6 +42,8 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateThread), name: .updateThread, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConfidence), name: .updateConfidence, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
+
         super.viewDidLoad()
     }
 
@@ -69,15 +70,19 @@ class ObjectTrackingFragment: CameraController {
         switchCameraView();
     }
 
-    @objc func updateDevice(_ notification: Notification) {
+    @objc func updateDevice(_ notification: Notification) throws {
         let selectedDevice = notification.object as! String
-//        autopilot = Autopilot(model: models[0], device: RuntimeDevice(rawValue: selectedDevice) ?? RuntimeDevice.CPU, numThreads: numberOfThreads);
-
-        selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(1))
-
-//        selectedDevice == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(autopilot?.tfliteOptions.threadCount ?? 1))
-
-        print(selectedDevice)
+        switch selectedDevice {
+        case RuntimeDevice.CPU.rawValue:
+            detector = try Detector(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice.CPU, numThreads: numberOfThreads)
+        case RuntimeDevice.GPU.rawValue:
+            detector = try Detector(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice.GPU, numThreads: 1)
+            NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A")
+        case RuntimeDevice.XNNPACK.rawValue:
+            detector = try Detector(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice.GPU, numThreads: numberOfThreads)
+        default:
+            detector = try Detector(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice.CPU, numThreads: numberOfThreads)
+        }
     }
 
     @objc func updateThread(_ notification: Notification) {
@@ -127,5 +132,12 @@ class ObjectTrackingFragment: CameraController {
             print("c" + String(left) + "," + String(right) + "\n");
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
         }
+    }
+
+    @objc func updateModel(_ notification: Notification) throws {
+        let selectedModelName = notification.object as! String
+        selectedModel = Common.loadSelectedModel(modeName: selectedModelName)
+        detector = try! Detector.create(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector;
+        NotificationCenter.default.post(name: .updateObjectList, object: detector?.labels)
     }
 }

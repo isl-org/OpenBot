@@ -193,10 +193,3 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
 
-extension Notification.Name {
-    static let updateLabel = Notification.Name("updateLabel")
-    static let updateSerialMonitor = Notification.Name("updateSerialMonitor")
-    static let bluetoothConnected = Notification.Name("bluetoothConnected")
-    static let bluetoothDisconnected = Notification.Name("bluetoothDisconnected")
-
-}

@@ -277,8 +277,3 @@ class GameController: GCController {
     }
 }
 
-extension Notification.Name {
-    static let updateSpeedLabel = Notification.Name("updateSpeedLabel");
-    static let updateRpmLabel = Notification.Name("updateRpmLabel");
-
-}
