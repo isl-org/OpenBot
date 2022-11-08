@@ -15,14 +15,14 @@ class ObjectTrackingFragment: CameraController {
     var autoMode: Bool = false;
     var vehicleControl: Control = Control();
     let bluetooth = bluetoothDataController.shared;
-    var selectedModel: ModelItem!
-    var selectedDevice : RuntimeDevice = RuntimeDevice.CPU
+    var currentModel: ModelItem!
+    var currentDevice: RuntimeDevice = RuntimeDevice.CPU
 
     override func viewDidLoad() {
         let modelItems = Common.loadAllModels()
         if (modelItems.count > 0) {
             let model = modelItems.first(where: { $0.type == TYPE.DETECTOR.rawValue })
-            selectedModel = model
+            currentModel = model
             detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector;
         }
         objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector);
@@ -72,9 +72,10 @@ class ObjectTrackingFragment: CameraController {
     }
 
     @objc func updateDevice(_ notification: Notification) throws {
-        selectedDevice = RuntimeDevice(rawValue: notification.object as! String) ?? RuntimeDevice.CPU
-        detector = try! Detector.create(model: Model.fromModelItem(item: selectedModel), device: selectedDevice, numThreads: numberOfThreads) as? Detector;
-        selectedDevice.rawValue == RuntimeDevice.GPU.rawValue ?  NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") :  NotificationCenter.default.post(name: .updateThreadLabel, object: String (numberOfThreads))
+        currentDevice = RuntimeDevice(rawValue: notification.object as! String) ?? RuntimeDevice.CPU
+        detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector;
+        currentDevice.rawValue == RuntimeDevice.GPU.rawValue ?  NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") :  NotificationCenter.default.post(name: .updateThreadLabel, object: String (numberOfThreads))
+        detector?.tfliteOptions.threadCount = numberOfThreads
     }
 
     @objc func updateThread(_ notification: Notification) {
@@ -100,7 +101,7 @@ class ObjectTrackingFragment: CameraController {
                         captureImage();
                         if (images.count > 0) {
 
-                            let image = cropImage(imageToCrop: images[images.count - 1].0, toRect: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize.parseSize(selectedModel.inputSize)))
+                            let image = cropImage(imageToCrop: images[images.count - 1].0, toRect: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize.parseSize(currentModel.inputSize)))
                             try detector?.recognizeImage(image: image.cgImage!);
 //                        print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
 //                        sendControl(control: controlResult);
@@ -128,8 +129,15 @@ class ObjectTrackingFragment: CameraController {
 
     @objc func updateModel(_ notification: Notification) throws {
         let selectedModelName = notification.object as! String
-        selectedModel = Common.loadSelectedModel(modeName: selectedModelName)
-        detector = try! Detector.create(model: Model.fromModelItem(item: selectedModel), device: selectedDevice, numThreads: numberOfThreads) as? Detector;
+        currentModel = Common.loadSelectedModel(modeName: selectedModelName)
+        detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector;
         NotificationCenter.default.post(name: .updateObjectList, object: detector?.labels)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if autoMode {
+            autoMode = false
+        }
     }
 }

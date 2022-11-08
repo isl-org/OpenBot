@@ -11,7 +11,6 @@ import CoreBluetooth
 class SettingsFragment: UIViewController, CLLocationManagerDelegate {
     var scrollView: UIScrollView!
     var cameraSwitch = UISwitch()
-    let storageSwitch = UISwitch()
     let locationSwitch = UISwitch()
     let microphoneSwitch = UISwitch()
     let bluetoothSwitch = UISwitch()
@@ -27,13 +26,11 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         scrollView.contentSize = CGSize(width: width, height: height)
         scrollView.addSubview(createLabel(text: Strings.camera, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 50, to: .height)))
         createCameraSwitch()
-        scrollView.addSubview(createLabel(text: Strings.storage, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 100, to: .height)))
-        createStorageSwitch()
-        scrollView.addSubview(createLabel(text: Strings.location, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 150, to: .height)))
+        scrollView.addSubview(createLabel(text: Strings.location, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 100, to: .height)))
         createLocationSwitch()
-        scrollView.addSubview(createLabel(text: Strings.microphone, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 200, to: .height)))
+        scrollView.addSubview(createLabel(text: Strings.microphone, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 150, to: .height)))
         createMicrophoneSwitch()
-        scrollView.addSubview(createLabel(text: Strings.bluetooth, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 250, to: .height)))
+        scrollView.addSubview(createLabel(text: Strings.bluetooth, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 200, to: .height)))
         createBluetoothSwitch()
         updateSwitchPosition()
     }
@@ -69,7 +66,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
     func createPermissionLabel() {
         let permission = createLabel(text: Strings.permission, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 10, to: .height));
-        permission.font = HelveticaNeue.bold(size: 10)
+        permission.font = UIFont.systemFont(ofSize: 17.0)
         scrollView.addSubview(permission);
     }
 
@@ -78,7 +75,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         let label = UILabel()
         label.text = text;
         label.textColor = Colors.borderColor
-        label.font = HelveticaNeue.regular(size: 12)
+        label.font = UIFont.systemFont(ofSize: 15.0)
         label.frame.origin = CGPoint(x: leadingAnchor, y: topAnchor)
         label.frame.size = resized(size: CGSize(width: text.count * 12, height: 40), basedOn: .height)
         return label;
@@ -99,32 +96,24 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
     }
 
-    func createStorageSwitch() {
-        storageSwitch.onTintColor = Colors.title
-        scrollView.addSubview(storageSwitch)
-        storageSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 100, to: .height))
-        storageSwitch.addTarget(self, action: #selector(toggleStorage(_:)), for: .valueChanged)
-
-    }
-
     func createLocationSwitch() {
         locationSwitch.onTintColor = Colors.title
         scrollView.addSubview(locationSwitch)
-        locationSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 150, to: .height))
+        locationSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 100, to: .height))
         locationSwitch.addTarget(self, action: #selector(toggleLocation(_:)), for: .valueChanged)
     }
 
     func createMicrophoneSwitch() {
         microphoneSwitch.onTintColor = Colors.title
         scrollView.addSubview(microphoneSwitch)
-        microphoneSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 200, to: .height))
+        microphoneSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 150, to: .height))
         microphoneSwitch.addTarget(self, action: #selector(toggleMicrophone(_:)), for: .valueChanged)
     }
 
     func createBluetoothSwitch(){
         bluetoothSwitch.onTintColor = Colors.title
         scrollView.addSubview(bluetoothSwitch)
-        bluetoothSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 250, to: .height))
+        bluetoothSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 200, to: .height))
         bluetoothSwitch.addTarget(self, action: #selector(toggleBluetooth(_:)), for: .valueChanged)
     }
 
@@ -148,7 +137,6 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
     func updateSwitchPosition() {
         cameraSwitch.frame.origin.x = switchButtonTrailingAnchor
-        storageSwitch.frame.origin.x = switchButtonTrailingAnchor
         locationSwitch.frame.origin.x = switchButtonTrailingAnchor
         microphoneSwitch.frame.origin.x = switchButtonTrailingAnchor
         bluetoothSwitch.frame.origin.x = switchButtonTrailingAnchor
@@ -156,11 +144,6 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
     @objc func toggleCamera(_ sender: UISwitch) {
         checkCamera()
-    }
-
-
-    @objc func toggleStorage(_ sender: UISwitch) {
-
     }
 
     @objc func toggleLocation(_ sender: UISwitch) {
@@ -250,6 +233,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
     }
 
     func toggleSwitchButtons() {
+
         //camera
         let cameraAuthStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         switch cameraAuthStatus {
@@ -264,7 +248,6 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         }
 
         //location
-
         let locationAuthStatus = CLLocationManager.authorizationStatus()
         switch locationAuthStatus {
         case .notDetermined:
@@ -282,7 +265,6 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         }
 
         //microphone
-
         switch AVAudioSession.sharedInstance().recordPermission {
         case .granted:
             microphoneSwitch.isOn = true
@@ -299,7 +281,6 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
         //bluetooth
         switch CBCentralManager.authorization{
-
         case .notDetermined:
             bluetoothSwitch.isOn = false
         case .restricted:
@@ -312,11 +293,4 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
             bluetoothSwitch.isOn = false
         }
     }
-
-
-
-
-
-
-
 }

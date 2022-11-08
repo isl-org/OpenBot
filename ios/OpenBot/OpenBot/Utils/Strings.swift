@@ -59,7 +59,6 @@ struct Strings {
 
     //settings
     static let camera : String = "Camera"
-    static let storage : String = "Storage"
    static let microphone : String = "Microphone"
     static let location : String = "Location"
     static let permission : String = "Permissions"
