@@ -16,6 +16,7 @@ class ObjectTrackingFragment: CameraController {
     var vehicleControl: Control = Control();
     let bluetooth = bluetoothDataController.shared;
     var selectedModel: ModelItem!
+    var selectedDevice : RuntimeDevice = RuntimeDevice.CPU
 
     override func viewDidLoad() {
         let modelItems = Common.loadAllModels()
@@ -71,10 +72,9 @@ class ObjectTrackingFragment: CameraController {
     }
 
     @objc func updateDevice(_ notification: Notification) throws {
-        let selectedDevice = notification.object as! String
-        detector = try! Detector.create(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice(rawValue: selectedDevice) ?? RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector;
-        print(numberOfThreads)
-        selectedDevice == RuntimeDevice.GPU.rawValue ?  NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") :  NotificationCenter.default.post(name: .updateThreadLabel, object: String (numberOfThreads))
+        selectedDevice = RuntimeDevice(rawValue: notification.object as! String) ?? RuntimeDevice.CPU
+        detector = try! Detector.create(model: Model.fromModelItem(item: selectedModel), device: selectedDevice, numThreads: numberOfThreads) as? Detector;
+        selectedDevice.rawValue == RuntimeDevice.GPU.rawValue ?  NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") :  NotificationCenter.default.post(name: .updateThreadLabel, object: String (numberOfThreads))
     }
 
     @objc func updateThread(_ notification: Notification) {
@@ -129,7 +129,7 @@ class ObjectTrackingFragment: CameraController {
     @objc func updateModel(_ notification: Notification) throws {
         let selectedModelName = notification.object as! String
         selectedModel = Common.loadSelectedModel(modeName: selectedModelName)
-        detector = try! Detector.create(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector;
+        detector = try! Detector.create(model: Model.fromModelItem(item: selectedModel), device: selectedDevice, numThreads: numberOfThreads) as? Detector;
         NotificationCenter.default.post(name: .updateObjectList, object: detector?.labels)
     }
 }
