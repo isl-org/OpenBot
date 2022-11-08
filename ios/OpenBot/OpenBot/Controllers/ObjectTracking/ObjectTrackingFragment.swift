@@ -72,23 +72,15 @@ class ObjectTrackingFragment: CameraController {
 
     @objc func updateDevice(_ notification: Notification) throws {
         let selectedDevice = notification.object as! String
-        switch selectedDevice {
-        case RuntimeDevice.CPU.rawValue:
-            detector = try Detector(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice.CPU, numThreads: numberOfThreads)
-        case RuntimeDevice.GPU.rawValue:
-            detector = try Detector(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice.GPU, numThreads: 1)
-            NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A")
-        case RuntimeDevice.XNNPACK.rawValue:
-            detector = try Detector(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice.GPU, numThreads: numberOfThreads)
-        default:
-            detector = try Detector(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice.CPU, numThreads: numberOfThreads)
-        }
+        detector = try! Detector.create(model: Model.fromModelItem(item: selectedModel), device: RuntimeDevice(rawValue: selectedDevice) ?? RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector;
+        print(numberOfThreads)
+        selectedDevice == RuntimeDevice.GPU.rawValue ?  NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") :  NotificationCenter.default.post(name: .updateThreadLabel, object: String (numberOfThreads))
     }
 
     @objc func updateThread(_ notification: Notification) {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 1
-        print(numberOfThreads)
+        detector?.tfliteOptions.threadCount = numberOfThreads
     }
 
     @objc func updateConfidence(_ notification: Notification) {
