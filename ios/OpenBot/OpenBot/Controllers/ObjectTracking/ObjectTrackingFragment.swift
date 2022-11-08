@@ -102,8 +102,8 @@ class ObjectTrackingFragment: CameraController {
                     if (timer.isValid) {
                         captureImage();
                         if (images.count > 0) {
-                            let image = cropImage(imageToCrop: images[images.count - 1].0, toRect: CGRect(x: 0, y: 0, width: Int(selectedModel.inputSize.prefix(upTo: selectedModel.inputSize.firstIndex(of: "x")!)) ?? 300, height:
-                            Int(selectedModel.inputSize.suffix(from: selectedModel.inputSize.index(after: selectedModel.inputSize.firstIndex(of: "x")!))) ?? 300))
+
+                            let image = cropImage(imageToCrop: images[images.count - 1].0, toRect: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize.parseSize(selectedModel.inputSize)))
                             try detector?.recognizeImage(image: image.cgImage!);
 //                        print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
 //                        sendControl(control: controlResult);

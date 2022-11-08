@@ -33,8 +33,6 @@ class DetectorQuantizedMobileNet: Detector {
     }
 
     override func parseTFlite() {
-        let input0 = try! tflite?.input(at: 0);
-        print(input0);
         let index0 = try! tflite?.output(at: 0);
         let index1 = try! tflite?.output(at: 1);
         let index2 = try! tflite?.output(at: 2);
