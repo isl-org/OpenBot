@@ -70,6 +70,7 @@ class HomePageViewController: UIViewController {
         viewControllerName = classNameFrom(self)
         if (isBluetoothConnected) {
             bluetooth.setImage(Images.bluetoothConnected, for: .normal)
+
         } else {
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }

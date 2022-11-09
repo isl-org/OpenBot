@@ -12,7 +12,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "clarity_bluetooth-off-solid 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -28,7 +27,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "clarity_bluetooth-off-solid 2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -44,7 +42,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "clarity_bluetooth-off-solid.png",
+      "filename" : "clarity_bluetooth-off-solid 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
