@@ -46,7 +46,6 @@ class HomePageViewController: UIViewController {
         modesCollectionView.dataSource = self
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         changeNavigationColor()
-        DataLogger.shared.deleteFiles(path: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
         NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
     }

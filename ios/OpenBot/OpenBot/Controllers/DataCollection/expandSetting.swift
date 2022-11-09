@@ -174,9 +174,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dropdownTopAnchor = dropDownView.topAnchor.constraint(equalTo: ddView.safeAreaLayoutGuide.bottomAnchor, constant: 5)
         dropdownTopAnchor.isActive = true
         dropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
-
-
-
     }
 
     func createServer() {
@@ -480,7 +477,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     func loadModelsNameAndResolution(){
-        let models = loadModels()
+        let models = Common.loadAllModels()
         if models.count > 0 {
             let model = Model.fromModelItems(list: models)
             for count in 0 ... models.count-1 {
@@ -494,19 +491,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         }
     }
 
-    func loadModels() -> [ModelItem] {
-        if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
-            do {
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                let jsonData = try decoder.decode([ModelItem].self, from: data)
-                return jsonData;
-            } catch {
-                print("error:\(error)")
-            }
-        }
-        return [];
-    }
+
 
 }
 

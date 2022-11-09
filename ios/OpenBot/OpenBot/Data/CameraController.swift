@@ -213,7 +213,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
      */
     func cameraWithPosition(_ position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let deviceDiscoverySession = AVCaptureDevice.DiscoverySession.init(deviceTypes: [AVCaptureDevice.DeviceType.builtInWideAngleCamera], mediaType: AVMediaType.video, position: AVCaptureDevice.Position.unspecified)
-
         for device in deviceDiscoverySession.devices {
             if device.position == position {
                 return device
@@ -275,7 +274,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         This function saves the output of the camera as image.
      */
     func captureImage() {
-
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
         stillImageOutput.capturePhoto(with: settings, delegate: self)
 
@@ -317,6 +315,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let activityManager = UIActivityViewController(activityItems: DataLogger.shared.allDirectories, applicationActivities: nil)
         present(activityManager, animated: true)
         _ = navigationController?.popViewController(animated: true)
+
 //        DataLogger.shared.deleteFiles(path: Strings.forwardSlash + baseDirectory)
     }
 
@@ -342,6 +341,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
         let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
         present(avc, animated: true)
+        avc.completionWithItemsHandler = { activity, success, items, error in
+            DataLogger.shared.deleteFiles(path: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
+        }
     }
 
     func setupImages() {

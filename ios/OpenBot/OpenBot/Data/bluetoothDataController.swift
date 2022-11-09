@@ -179,8 +179,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     }
 
-
-
     func startScan(){
         print("starting scan")
         centralManager?.scanForPeripherals(withServices: nil, options: nil)
