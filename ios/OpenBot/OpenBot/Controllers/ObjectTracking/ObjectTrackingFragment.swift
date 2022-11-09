@@ -76,6 +76,7 @@ class ObjectTrackingFragment: CameraController {
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector;
         currentDevice.rawValue == RuntimeDevice.GPU.rawValue ?  NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") :  NotificationCenter.default.post(name: .updateThreadLabel, object: String (numberOfThreads))
         detector?.tfliteOptions.threadCount = numberOfThreads
+
     }
 
     @objc func updateThread(_ notification: Notification) {

@@ -190,15 +190,16 @@ class DataLogger {
     }
 
     func recordVehicleLogs(){
-
             let timestamp = returnCurrentTimestamp()
+        if bluetoothData != "" {
             let index = bluetooth.sonarData.index(after: bluetooth.sonarData.startIndex)
-            sonar = sonar + String(timestamp) + " " + String(bluetooth.sonarData[index...])  + "\n"
-            wheels = wheels + String(timestamp) + " " + String(bluetooth.speedometer[index...])  + "\n"
+            sonar = sonar + String(timestamp) + " " + String(bluetooth.sonarData[index...]) + "\n"
+            wheels = wheels + String(timestamp) + " " + String(bluetooth.speedometer[index...]) + "\n"
             voltage = voltage + String(timestamp) + " " + String(bluetooth.voltageDivider[index...]) + "\n"
-            if bluetooth.bumperData != ""{
-                bumper = bumper  + String(timestamp) + " " + String(bluetooth.bumperData[index...]) + "\n";
+            if bluetooth.bumperData != "" {
+                bumper = bumper + String(timestamp) + " " + String(bluetooth.bumperData[index...]) + "\n";
             }
+        }
 
     }
     func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
