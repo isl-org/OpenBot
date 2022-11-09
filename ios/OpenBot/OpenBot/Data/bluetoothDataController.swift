@@ -188,6 +188,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     @objc func startNotification() {
 //        tempCentralManager = CBCentralManager(delegate: self, queue: nil)
     }
+
     }
 
 

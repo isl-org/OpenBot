@@ -10,10 +10,17 @@ class expandedAutoPilot: UIView {
     let autoModeButton = UISwitch()
     var serverLabel = UILabel()
     var speedLabel = UILabel()
+    var deviceDropDown = DropDown()
     var deviceDropDownLabel = UILabel()
     var modelDropdownLabel = UILabel()
     var imageInputLabel = UILabel()
     var threadLabel = UILabel()
+    var deviceDropDownView = UIView()
+    var modelDropDownView = UIView()
+    var ddView = UIView()
+    var modelDropDown = DropDown()
+    var dropDownWidth : NSLayoutConstraint!
+
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,8 +41,10 @@ class expandedAutoPilot: UIView {
         setupSpeed()
         addSubview(createLabel(text: "Device", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
         createDeviceDropDown()
+        deviceDropDown.hide()
         createServerDropDown()
         createModelDropDown()
+        modelDropDown.hide()
         addSubview(createLabel(text: "Input", leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
         setupInput();
         addSubview(createLabel(text: "Threads", leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
@@ -170,30 +179,36 @@ class expandedAutoPilot: UIView {
 
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.autopilotMode);
-        let model = Models(frame: CGRect(x: 180, y: 120, width: 100, height: 200), selectedModels: selectedModels);
-        addSubview(model)
-        let dd = UIView()
-        dd.layer.cornerRadius = 10
-        dd.backgroundColor = Colors.freeRoamButtonsColor
-        modelDropdownLabel.text = selectedModels.first
-        modelDropdownLabel.textColor = Colors.borderColor
-        let tap = UITapGestureRecognizer(target: self, action: #selector(showModelDropdown(_:)))
-        dd.addGestureRecognizer(tap)
+        modelDropDown.backgroundColor = Colors.freeRoamButtonsColor
+        if let color = Colors.borderColor {
+            modelDropDown.textColor = color
+        }
+        modelDropDown.anchorView = modelDropDownView
+        modelDropDown.dataSource = selectedModels
+        modelDropDown.show()
+        ddView = createDropdownView(borderColor: "", buttonName: "CLI-Mobile", leadingAnchor: 180, topAnchor: adapted(dimensionSize: 90, to: .height), action: #selector(showModelDropdown(_:)))
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
         upwardImage.image = Images.downArrow
-        dd.addSubview(upwardImage)
+        ddView.addSubview(upwardImage)
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
-        upwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -10).isActive = true
-        upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
-        addSubview(dd)
-        dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 90, to: .height)).isActive = true;
-        dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 180).isActive = true
-        dd.widthAnchor.constraint(equalToConstant: 180).isActive = true
-        dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        modelDropdownLabel.frame = CGRect(x: 0, y: 0, width: 210, height: 40)
-        dd.addSubview(modelDropdownLabel)
+        upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
+        upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
+        modelDropdownLabel.text = "CLI-Mobile"
+        modelDropdownLabel.textColor = Colors.borderColor
+        modelDropdownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        ddView.addSubview(modelDropdownLabel)
+        modelDropDown.selectionAction = { [self] (index: Int, item: String) in
+            modelDropdownLabel.text = item
+            NotificationCenter.default.post(name: .updateModel, object: item)
+
+        }
+        modelDropDown.width = 150
+        modelDropDownView.frame.size = CGSize(width: 200, height: 100);
+        modelDropDownView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(modelDropDownView)
+        modelDropDownView.topAnchor.constraint(equalTo: upwardImage.topAnchor, constant: 0).isActive = true
+        modelDropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 180).isActive = true;
     }
 
     func setupInput() {
@@ -208,30 +223,52 @@ class expandedAutoPilot: UIView {
     }
 
     func createDeviceDropDown() {
-        let device = Devices(frame: CGRect(x: 91, y: 190, width: 40, height: 205));
-        addSubview(device)
-        let dd = UIView()
-        dd.layer.cornerRadius = 10
-        dd.backgroundColor = Colors.freeRoamButtonsColor
-        deviceDropDownLabel.text = RuntimeDevice.CPU.rawValue
-        deviceDropDownLabel.textColor = Colors.borderColor
-        let tap = UITapGestureRecognizer(target: self, action: #selector(showDeviceDropdown(_:)))
-        dd.addGestureRecognizer(tap)
+        deviceDropDown.backgroundColor = Colors.freeRoamButtonsColor
+        if let color = Colors.borderColor {
+            deviceDropDown.textColor = color
+        }
+        deviceDropDown.anchorView = deviceDropDownView
+        deviceDropDown.dataSource = ["CPU","GPU","XNNPACK"]
+        deviceDropDown.show()
+        deviceDropDown.width = 90
+        ddView = createDropdownView(borderColor: "", buttonName: "CPU", leadingAnchor: 80, topAnchor: adapted(dimensionSize: 160, to: .height), action: #selector(showDeviceDropdown(_:)))
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
         upwardImage.image = Images.downArrow
-        dd.addSubview(upwardImage)
+        ddView.addSubview(upwardImage)
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
-        upwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -20).isActive = true
-        upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
+        upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
+        upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
+        deviceDropDownLabel.text = "CPU"
+        deviceDropDownLabel.textColor = Colors.borderColor
+        deviceDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        dropDownWidth.constant = 100
+        ddView.addSubview(deviceDropDownLabel)
+        deviceDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+            deviceDropDownLabel.text = item
+            NotificationCenter.default.post(name: .updateDevice, object: item)
+        }
+        deviceDropDownView.frame.size = CGSize(width: 200, height: 100);
+        deviceDropDownView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(deviceDropDownView)
+        deviceDropDownView.topAnchor.constraint(equalTo: topAnchor, constant: 190).isActive = true
+        deviceDropDownView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 91).isActive = true
+    }
+
+    func createDropdownView(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIView {
+        let dd = UIView()
+        dd.layer.cornerRadius = 10
+        dd.backgroundColor = Colors.freeRoamButtonsColor
+        let tap = UITapGestureRecognizer(target: self, action: action)
+        dd.addGestureRecognizer(tap)
         addSubview(dd)
         dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 160, to: .height)).isActive = true;
-        dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 80).isActive = true
-        dd.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        dd.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        deviceDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
-        dd.addSubview(deviceDropDownLabel)
+        dd.topAnchor.constraint(equalTo: self.topAnchor, constant: topAnchor).isActive = true;
+        dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: leadingAnchor).isActive = true
+        dropDownWidth = dd.widthAnchor.constraint(equalToConstant: 180)
+        dropDownWidth.isActive = true
+        dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        return dd
     }
 
     func setupThreads() {
@@ -301,12 +338,11 @@ class expandedAutoPilot: UIView {
     }
 
     @objc func showModelDropdown(_ sender: UIButton) {
-        NotificationCenter.default.post(name: .showModelsDD, object: nil)
-
+        modelDropDown.show()
     }
 
     @objc func showDeviceDropdown(_ sender: UIButton) {
-        NotificationCenter.default.post(name: .showDeviceDD, object: nil)
+        deviceDropDown.show()
     }
 
     @objc func increaseThreads(_ sender: UIImage) {

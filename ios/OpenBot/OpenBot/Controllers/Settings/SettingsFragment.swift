@@ -193,7 +193,6 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         )
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action in print(action) }))
         alert.addAction(UIAlertAction(title: "Allow Camera", style: .cancel, handler: { (alert) -> Void in
-            print("hello nitish")
             UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
         }))
         present(alert, animated: true, completion: nil)

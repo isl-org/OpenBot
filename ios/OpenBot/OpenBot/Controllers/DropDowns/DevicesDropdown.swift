@@ -7,7 +7,7 @@ import UIKit
 import DropDown
 
 class Devices: UIView {
-    let deviceDD = DropDown()
+    var deviceDD = DropDown()
     let deviceLabel = UILabel()
 
     override init(frame: CGRect) {
@@ -38,4 +38,5 @@ class Devices: UIView {
     @objc func showDropDown() {
         deviceDD.show()
     }
+
 }

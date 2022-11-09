@@ -154,7 +154,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
     func createDropdown() {
         loadModelsNameAndResolution()
-        dropDown.backgroundColor = Colors.freeRoamButtonsColor
+         dropDown.backgroundColor = Colors.freeRoamButtonsColor
         if let color = Colors.borderColor {
             dropDown.textColor = color
         }

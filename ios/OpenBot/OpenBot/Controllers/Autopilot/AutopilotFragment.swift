@@ -82,6 +82,7 @@ class AutopilotFragment: CameraController {
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
         currentDevice.rawValue == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
         autopilot?.tfliteOptions.threadCount = numberOfThreads
+        print("device is ",autopilot?.tfliteOptions)
 
     }
 
@@ -96,6 +97,7 @@ class AutopilotFragment: CameraController {
             Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
                 if !autoPilotMode {
                     timer.invalidate()
+                    sendControl(control: Control());
                 }
                 if (timer.isValid) {
                     captureImage();
@@ -132,5 +134,6 @@ class AutopilotFragment: CameraController {
         if autoPilotMode {
             autoPilotMode = false
         }
+
     }
 }

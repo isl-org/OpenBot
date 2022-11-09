@@ -71,7 +71,8 @@ class BluetoothTable: UITableViewController {
     }
 
     @objc func updateConnect(_ notification: Notification) {
-        isBluetoothConnected ? connectDisconnect.setTitle("Disconnect", for: .normal) : connectDisconnect.setTitle("Connect", for: .normal)
+            isBluetoothConnected ? connectDisconnect.setTitle("Disconnect", for: .normal) : connectDisconnect.setTitle("Connect", for: .normal)
+
     }
 
 }
