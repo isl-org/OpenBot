@@ -24,6 +24,9 @@ class DetectorFloatYoloV4: Detector {
         assignIndex(tensor: index0, index: 0);
         assignIndex(tensor: index1, index: 1);
         NUM_DETECTIONS = try! tflite?.output(at: outputLocationsIdx).shape.dimensions[1] ?? 0;
+        print(index0)
+        print(index1)
+        print(NUM_DETECTIONS)
     }
 
     func assignIndex(tensor: Tensor?, index: Int) {
@@ -77,25 +80,25 @@ class DetectorFloatYoloV4: Detector {
             let outputData =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
             outputLocationsTensor?.data.copyBytes(to: outputData);
-            var i: Int = 0;
-            print("outputLocationsTensor");
-            for item in outputData {
-                print("Index: ", i);
-                i += 1;
-                print(item);
-            }
+//            var i: Int = 0;
+//            print("outputLocationsTensor");
+//            for item in outputData {
+//                print("Index: ", i);
+//                i += 1;
+//                print(item);
+//            }
 
             let outputScoresTensorSize = outputScoresTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
             let outputScoresTensorData =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputScoresTensorSize)
             outputScoresTensor?.data.copyBytes(to: outputScoresTensorData);
-            i = 0;
-            print("outputScoresTensor")
-            for item in outputScoresTensorData {
-                print("Index: ", i);
-                i += 1;
-                print(item);
-            }
+//            i = 0;
+//            print("outputScoresTensor")
+//            for item in outputScoresTensorData {
+//                print("Index: ", i);
+//                i += 1;
+//                print(item);
+//            }
         } catch {
             print("error:\(error)")
         }

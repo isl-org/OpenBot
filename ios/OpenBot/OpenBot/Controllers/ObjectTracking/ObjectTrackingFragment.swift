@@ -74,7 +74,7 @@ class ObjectTrackingFragment: CameraController {
     @objc func updateDevice(_ notification: Notification) throws {
         currentDevice = RuntimeDevice(rawValue: notification.object as! String) ?? RuntimeDevice.CPU
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector;
-        currentDevice.rawValue == RuntimeDevice.GPU.rawValue ?  NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") :  NotificationCenter.default.post(name: .updateThreadLabel, object: String (numberOfThreads))
+        currentDevice.rawValue == RuntimeDevice.GPU.rawValue ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
         detector?.tfliteOptions.threadCount = numberOfThreads
 
     }
@@ -101,8 +101,8 @@ class ObjectTrackingFragment: CameraController {
                     if (timer.isValid) {
                         captureImage();
                         if (images.count > 0) {
-
-                            let image = cropImage(imageToCrop: images[images.count - 1].0, toRect: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize.parseSize(currentModel.inputSize)))
+                            let modelResolution = CGSize.parseSize(currentModel.inputSize);
+                            let image = cropImage(image: images[images.count - 1].0, height: modelResolution.height, width: modelResolution.width)
                             try detector?.recognizeImage(image: image.cgImage!);
 //                        print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
 //                        sendControl(control: controlResult);

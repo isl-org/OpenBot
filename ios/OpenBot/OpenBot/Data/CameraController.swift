@@ -230,6 +230,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
        - error:
      */
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        AudioServicesDisposeSystemSoundID(1108)
         guard let imageData = photo.fileDataRepresentation()
         else {
             return
@@ -237,23 +238,41 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         if !isTrainingSelected && !isPreviewSelected {
             return
         }
-        let image = UIImage(data: imageData)
-        if let image = image {
-            images.append((image, isPreviewSelected, isTrainingSelected))
+        if var image: UIImage = UIImage(data: imageData) {
 
+            switch (currentOrientation) {
+            case .landscapeLeft:
+                let newOrientation = UIImage.Orientation.up
+                image = UIImage(cgImage: image.cgImage!, scale: image.scale, orientation: newOrientation)
+                break;
+            case .landscapeRight:
+                let newOrientation = UIImage.Orientation.down
+                image = UIImage(cgImage: image.cgImage!, scale: image.scale, orientation: newOrientation)
+                break;
+            default:
+                break;
+            }
+            images.append((image, isPreviewSelected, isTrainingSelected))
         }
+        AudioServicesDisposeSystemSoundID(1108)
     }
 
     /**
         To crop the image into the required format.
      - Parameters:
-       - imageToCrop:
-       - rect:
+       - image:
+       - width:
+       - height:
      - Returns:
      */
-    func cropImage(imageToCrop: UIImage, toRect rect: CGRect) -> UIImage {
-        let imageRef: CGImage = imageToCrop.cgImage!.cropping(to: rect)!
-        let cropped: UIImage = UIImage(cgImage: imageRef)
+    func cropImage(image: UIImage, height: CGFloat, width: CGFloat) -> UIImage {
+        //cropping Top 20% and with height and width passed as parameters.
+        let top20 = image.size.height * 0.2;
+        let xPos = image.size.width / 2 - width / 2;
+        let yPos = image.size.height / 2 + top20 - height / 2;
+        let rectToCrop = CGRect(x: xPos, y: yPos, width: width, height: height)
+        let imageRef: CGImage = image.cgImage!.cropping(to: rectToCrop)!
+        let cropped: UIImage = UIImage(cgImage: imageRef);
         return cropped
     }
 
@@ -276,7 +295,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func captureImage() {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
         stillImageOutput.capturePhoto(with: settings, delegate: self)
-
+        AudioServicesDisposeSystemSoundID(1108)
     }
 
     func saveImages() {
@@ -300,7 +319,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
                 }
                 if img.2 {
                     let imageName = String(count) + Strings.underscore + Strings.crop
-                    let croppedImage = cropImage(imageToCrop: img.0, toRect: CGRectMake(0, 30, CGFloat(widthOfTrainingImage), CGFloat(heightOfTrainingImage)))
+                    let croppedImage = cropImage(image: img.0, height: CGFloat(heightOfTrainingImage), width: CGFloat(heightOfTrainingImage))
                     DataLogger.shared.saveImages(path: imagePath, image: croppedImage, name: imageName);
                 }
                 count = count + 1
