@@ -26,7 +26,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateModelResolution), name: .updateModelResolution, object: nil)
-
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -45,9 +44,39 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             print("Unable to access back camera!")
             return
         }
+
+
+        do {
+            try backCamera.lockForConfiguration()
+            if backCamera.isFocusPointOfInterestSupported {
+//                backCamera.focusPointOfInterest = focusPoint
+                backCamera.focusMode = AVCaptureDevice.FocusMode.autoFocus
+                print(backCamera.focusMode)
+            }
+            if backCamera.isExposurePointOfInterestSupported {
+//                backCamera.exposurePointOfInterest = focusPoint
+                backCamera.exposureMode = AVCaptureDevice.ExposureMode.autoExpose
+                print(backCamera.exposureMode)
+
+            }
+            backCamera.unlockForConfiguration()
+
+        } catch {
+            // Handle errors here
+            print("There was an error focusing the device's camera")
+        }
+
         do {
             let input = try AVCaptureDeviceInput(device: backCamera)
             stillImageOutput = AVCapturePhotoOutput()
+            stillImageOutput.isLivePhotoCaptureEnabled = false
+            stillImageOutput.isHighResolutionCaptureEnabled = false
+            stillImageOutput.isPortraitEffectsMatteDeliveryEnabled = false
+            stillImageOutput.isAppleProRAWEnabled = false
+            stillImageOutput.isContentAwareDistortionCorrectionEnabled = false
+            stillImageOutput.isDepthDataDeliveryEnabled = false
+            stillImageOutput.isLivePhotoAutoTrimmingEnabled = false
+            stillImageOutput.isVirtualDeviceConstituentPhotoDeliveryEnabled = false
             if captureSession.canAddInput(input) && captureSession.canAddOutput(stillImageOutput) {
                 captureSession.addInput(input)
                 captureSession.addOutput(stillImageOutput)
@@ -127,6 +156,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             orientation = .portrait
         }
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+//        videoPreviewLayer.fic
         videoPreviewLayer.removeFromSuperlayer()
         videoPreviewLayer.videoGravity = .resizeAspectFill
         videoPreviewLayer.connection?.videoOrientation = orientation;
@@ -230,7 +260,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
        - error:
      */
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        AudioServicesDisposeSystemSoundID(1108)
+//        AudioServicesDisposeSystemSoundID(1108)
         guard let imageData = photo.fileDataRepresentation()
         else {
             return
@@ -254,7 +284,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             }
             images.append((image, isPreviewSelected, isTrainingSelected))
         }
-        AudioServicesDisposeSystemSoundID(1108)
+//        AudioServicesDisposeSystemSoundID(1108)
+
     }
 
     /**
@@ -295,7 +326,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func captureImage() {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
         stillImageOutput.capturePhoto(with: settings, delegate: self)
-        AudioServicesDisposeSystemSoundID(1108)
+//        AudioServicesDisposeSystemSoundID(1108)
     }
 
     func saveImages() {
@@ -368,6 +399,5 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func setupImages() {
         images.removeAll()
     }
-
 
 }
