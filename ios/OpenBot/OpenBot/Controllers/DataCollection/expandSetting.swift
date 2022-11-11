@@ -10,7 +10,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     let logData = UISwitch()
     let bluetoothIcon = UIImageView()
     let cameraIcon = UIImageView()
-    let cancelButton = UIButton()
     var previewResolution = UILabel()
     var low = UIButton()
     var medium = UIButton()
@@ -40,7 +39,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var resolution = [String]()
     var models: [Model] = [];
 
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -48,12 +46,10 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         createLogDataButton()
         createBluetoothIcon()
         createCameraIcon()
-        createCancelButton()
         resolutionTitle()
         createResolutions()
         createModelResolutionTitle()
         createDropdown()
-        dropDown.hide()
         _ = createLabels(value: "server", leadingAnchor: 10, topAnchor: 250, labelWidth: 240, labelHeight: 40)
         createServer()
         createSecondView()
@@ -63,7 +59,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         createSensorButtons()
         createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
         createDelayField()
-//        let m = VehicleControl(frame: CGRect(x: 0, y: height - 150, width: width, height: 300))
         let vehicleControls = VehicleControl();
         addSubview(vehicleControls)
         vehicleControls.translatesAutoresizingMaskIntoConstraints = false
@@ -121,21 +116,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         cameraIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
     }
 
-    func createCancelButton() {
-
-        cancelButton.frame.size = CGSize(width: 60, height: 60)
-        let cancelIcon = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        cancelIcon.image = Images.closeIcon
-        cancelButton.addTarget(self, action: #selector(cancelExpandedView), for: .touchUpInside)
-        cancelButton.addSubview(cancelIcon)
-        cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(cancelButton)
-        cancelButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: -15).isActive = true
-        cancelButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
-
-
-    }
-
     func resolutionTitle() {
         previewResolution = createLabels(value: Strings.previewResolutionMedium, leadingAnchor: 10, topAnchor: 50, labelWidth: 240, labelHeight: 30)
     }
@@ -160,7 +140,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         }
         dropDown.anchorView = dropDownView
         dropDown.dataSource = modelsName
-        dropDown.show()
         ddView = createDropdownView(borderColor: "", buttonName: "CLI-Mobile", leadingAnchor: 10, topAnchor: 155, action: #selector(showDropdown(_:)))
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             dropdownLabel.text = item
@@ -210,11 +189,13 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     func refreshConstraints() {
 
         if currentOrientation == .portrait {
+            frame.size.width = width
             leadingConstraint.constant = 0
             topConstraint.constant = 320
             widthConstraint.constant = width
             heightConstraint.constant = height / 2
         } else {
+            self.frame.size.width = height
             leadingConstraint.constant = height / 2
             topConstraint.constant = 30
             widthConstraint.constant = height / 2
@@ -361,11 +342,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         return btn
     }
 
-
-    @objc func cancelExpandedView() {
-        NotificationCenter.default.post(name: .cancelButton, object: nil)
-    }
-
     @objc func reverseCamera(_ sender: UITapGestureRecognizer? = nil) {
         NotificationCenter.default.post(name: .switchCamera, object: nil)
     }
@@ -490,7 +466,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             }
         }
     }
-
 
 
 }

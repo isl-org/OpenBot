@@ -55,7 +55,6 @@
 		727D39499A8CF8EE76345872 /* AutopilotFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */; };
 		727D39CEBB2CF03D171BC311 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D37D0890B15799952F87A /* UIViewExtension.swift */; };
 		727D3A805DDE14D8AD205D31 /* VehicleControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */; };
-		727D3B19FEA7A95C092DC11E /* collapseSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D316515ACC87CAEB31A26 /* collapseSettingView.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
 		727D3BF38CB798E8B3321E87 /* SettingsFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D0186944D629E367A9D /* SettingsFragment.swift */; };
 		727D3D12FAF02C416CC2CEC1 /* FreeRoamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */; };
@@ -131,7 +130,6 @@
 		727D30F298C6C48697AB606F /* ServerDropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerDropdown.swift; path = DropDowns/ServerDropdown.swift; sourceTree = "<group>"; };
 		727D31331A6716FD310082EB /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
-		727D316515ACC87CAEB31A26 /* collapseSettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = collapseSettingView.swift; sourceTree = "<group>"; };
 		727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreeRoamController.swift; sourceTree = "<group>"; };
 		727D3327FAD14CEC3DE54D95 /* expandSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = expandSetting.swift; sourceTree = "<group>"; };
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
@@ -219,7 +217,6 @@
 			isa = PBXGroup;
 			children = (
 				4FEF4DE90366ACF137F4AD9B /* DataCollectionController.swift */,
-				727D316515ACC87CAEB31A26 /* collapseSettingView.swift */,
 				727D3327FAD14CEC3DE54D95 /* expandSetting.swift */,
 			);
 			path = DataCollection;
@@ -701,7 +698,6 @@
 				727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */,
 				727D39CEBB2CF03D171BC311 /* UIViewExtension.swift in Sources */,
 				4FEF4DAC98B9D01B10F7B3E9 /* DataCollectionController.swift in Sources */,
-				727D3B19FEA7A95C092DC11E /* collapseSettingView.swift in Sources */,
 				727D332F054456A4182DD7DF /* expandSetting.swift in Sources */,
 				727D373B2A839824AE8E6AE2 /* CameraController.swift in Sources */,
 				727D3A805DDE14D8AD205D31 /* VehicleControl.swift in Sources */,

@@ -28,10 +28,45 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateModelResolution), name: .updateModelResolution, object: nil)
     }
 
+
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         initializeCamera()
+        if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) != .authorized {
+            checkCameraPermission()
+        }
     }
+
+    /**
+     function that check whether camera permission is given to OpenBot or not
+     */
+     func checkCameraPermission(){
+         let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+         switch authStatus {
+         case .authorized:
+             initializeCamera()
+         default:
+             createAllowAlert(alertFor: "Camera")
+         }
+     }
+
+    /**
+     function that prompt setting to  turn on Camera permission
+     */
+
+    func createAllowAlert(alertFor: String) {
+        let alert = UIAlertController(
+                title: "IMPORTANT",
+                message: "Please allow " + alertFor + " access for OpenBot",
+                preferredStyle: UIAlertController.Style.alert
+        )
+        alert.addAction(UIAlertAction(title: "Allow " + alertFor, style: .cancel, handler: { (alert) -> Void in
+            UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+
 
     /**
         function to initialise camera view on the screen with back camera with medium quality view feed
@@ -300,9 +335,12 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let xPos = image.size.width / 2 - width / 2;
         let yPos = image.size.height / 2 + top20 - height / 2;
         let rectToCrop = CGRect(x: xPos, y: yPos, width: width, height: height)
-        let imageRef: CGImage = image.cgImage!.cropping(to: rectToCrop)!
-        let cropped: UIImage = UIImage(cgImage: imageRef);
-        return cropped
+        if let imageRef = image.cgImage!.cropping(to: rectToCrop) {
+            let imageRef: CGImage = imageRef
+            let cropped: UIImage = UIImage(cgImage: imageRef);
+            return cropped
+        }
+        return image
     }
 
     /**

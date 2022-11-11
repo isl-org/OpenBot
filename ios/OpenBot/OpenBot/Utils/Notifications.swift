@@ -9,7 +9,6 @@ extension Notification.Name {
     static let updateSerialMonitor = Notification.Name("updateSerialMonitor")
     static let bluetoothConnected = Notification.Name("bluetoothConnected")
     static let bluetoothDisconnected = Notification.Name("bluetoothDisconnected")
-    static let clickSetting = Notification.Name(Strings.clickSetting)
     static let switchCamera = Notification.Name(Strings.switchCamera)
     static let ble = Notification.Name(Strings.ble)
     static let updateModel = Notification.Name("updateModel")
@@ -19,7 +18,6 @@ extension Notification.Name {
     static let autoMode = Notification.Name("autoMode")
     static let updateThread = Notification.Name("updateThread");
     static let updateThreadLabel = Notification.Name("updateThreadLabel")
-    static let cancelButton = Notification.Name(Strings.cancelButton)
     static let logData = Notification.Name(Strings.logDataNotify)
     static let updateResolution = Notification.Name(Strings.updateResolution)
     static let updatePreview = Notification.Name(Strings.updatePreview)

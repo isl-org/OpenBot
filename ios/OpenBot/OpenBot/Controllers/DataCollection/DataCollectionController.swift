@@ -7,7 +7,6 @@ import UIKit
 import AVFoundation
 
 class DataCollectionController: CameraController {
-    let collapseView = collapseSettingView(frame: CGRect(x: 0, y: 0, width: width, height: height))
     let expandSettingView = expandSetting(frame: CGRect(x: 0, y: 0, width: width, height: height))
     var loggingEnabled: Bool = false;
     let sensorData = sensorDataRetrieve.shared
@@ -21,7 +20,8 @@ class DataCollectionController: CameraController {
     let bluetooth = bluetoothDataController.shared;
     let dataLogger = DataLogger.shared
     let gameController = GameController.shared
-    var isLoggedButtonPressed : Bool = false
+    var isLoggedButtonPressed: Bool = false
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -30,22 +30,20 @@ class DataCollectionController: CameraController {
     override func viewDidLoad() {
         super.viewDidLoad()
         createCameraView()
-        view.addSubview(collapseView)
+        view.backgroundColor = UIColor(named: "darkBg");
+        view.addSubview(expandSettingView)
         updateControlMode(nil);
 
         navigationItem.hidesBackButton = true
-        if UIImage(named: "back") != nil{
+        if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
             let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.dataCollection, target: self, action: #selector(DataCollectionController.back(sender:)))
             navigationItem.leftBarButtonItem = newBackButton
         }
 
-
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        NotificationCenter.default.addObserver(self, selector: #selector(loadExpandView), name: .clickSetting, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(loadCollapseView), name: .cancelButton, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchLogging), name: .logData, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
@@ -54,13 +52,11 @@ class DataCollectionController: CameraController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        setupCollapseView()
+
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-//        saveFolder()
-
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -68,20 +64,8 @@ class DataCollectionController: CameraController {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         expandSettingView.refreshConstraints()
         refreshConstraints()
-        setupCollapseView()
     }
 
-    func setupCollapseView() {
-        if currentOrientation == .portrait {
-            collapseView.frame = CGRect(x: 0, y: 0, width: width, height: height)
-            expandSettingView.frame = CGRect(x: 0, y: 0, width: width, height: height)
-
-        } else {
-            collapseView.frame = CGRect(x: 0, y: 0, width: height, height: width)
-            expandSettingView.frame = CGRect(x: 0, y: 0, width: height, height: width)
-
-        }
-    }
 
     func refreshConstraints() {
         if UIDevice.current.orientation == .portrait {
@@ -104,11 +88,6 @@ class DataCollectionController: CameraController {
 
     }
 
-    @objc func loadExpandView() {
-        collapseView.removeFromSuperview()
-        view.addSubview(expandSettingView)
-    }
-
     @objc func switchCamera() {
         switchCameraView();
 
@@ -120,10 +99,10 @@ class DataCollectionController: CameraController {
 
     }
 
-    @objc func loadCollapseView() {
-        expandSettingView.removeFromSuperview()
-        view.addSubview(collapseView)
-    }
+//    @objc func loadCollapseView() {
+//        expandSettingView.removeFromSuperview()
+//        view.addSubview(collapseView)
+//    }
 
     @objc func switchLogging() {
         loggingEnabled = !loggingEnabled;
@@ -200,11 +179,12 @@ class DataCollectionController: CameraController {
             switchLogging()
         }
         if let url = URL(string: openBotPath) {
-            if isLoggedButtonPressed{
+            if isLoggedButtonPressed {
                 createZip(path: url)
             }
         }
         _ = navigationController?.popViewController(animated: true)
     }
 }
+
 
