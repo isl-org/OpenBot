@@ -54,6 +54,10 @@ class Detector: Network {
             self.classId = classId;
         }
 
+        static func >(lhs: Recognition, rhs: Recognition) -> Bool {
+            lhs.confidence > rhs.confidence
+        }
+
         public func getId() -> String {
             id;
         }
@@ -95,15 +99,12 @@ class Detector: Network {
         return result
     }
 
-    func feedData() {
-    }
-
     /**
      this function will be overridden by child classes
      - Returns:
      */
     func getLabelPath() -> String {
-       ""
+        ""
     }
 
 
@@ -123,16 +124,76 @@ class Detector: Network {
     }
 
     func recognizeImage(image: CGImage) throws -> [Recognition] {
-
-        //make image input
-//        feedData();
         convertImageToData(image: image);
         try tflite?.copy(imgData, toInputAt: 0);
         try tflite?.invoke();
         try runInference();
-        return [];
+        return getRecognitions(className: selectedClass!);
     }
 
     func runInference() throws {
+    }
+
+    func getRecognitions(className: String) -> [Recognition] {
+        [];
+    }
+
+    var mNmsThresh: Float = 0.25;
+
+    //non maximum suppression
+
+    func nms(recognitions: [Recognition]) -> [Recognition] {
+        var nmsList: [Recognition] = [];
+
+        var pq = recognitions;
+        pq.sort(by: >);
+        while (pq.count > 0) {
+            var detections = pq;
+            detections.sort(by: >);
+            let max = detections[0];
+            nmsList.append(max);
+            pq.removeAll();
+            if (detections.count > 0) {
+                let size = detections.count - 1;
+                for i in stride(from: 1, to: size, by: 1) {
+//                print(i);
+                    let detection: Recognition = detections[i];
+                    let b = detection.getLocation();
+                    if (box_iou(a: max.getLocation(), b: b) < mNmsThresh) {
+                        pq.append(detection);
+                    }
+                }
+            }
+        }
+        return nmsList;
+    }
+
+    func box_iou(a: CGRect, b: CGRect) -> Float {
+        box_intersection(a: a, b: b) / box_union(a: a, b: b);
+    }
+
+    func box_intersection(a: CGRect, b: CGRect) -> Float {
+        let w = overlap(x1: Float(a.midX), w1: Float(a.width), x2: Float(b.midX), w2: Float(b.width));
+        let h = overlap(x1: Float(a.midY), w1: Float(a.height), x2: Float(b.midY), w2: Float(b.height));
+        if (w < 0 || h < 0) {
+            return 0
+        };
+        return w * h;
+    }
+
+    func box_union(a: CGRect, b: CGRect) -> Float {
+        let i = box_intersection(a: a, b: b);
+        let u = Float(a.width * a.height) + Float(b.width * b.height) - i;
+        return u;
+    }
+
+    func overlap(x1: Float, w1: Float, x2: Float, w2: Float) -> Float {
+        let l1: Float = x1 - w1 / 2;
+        let l2: Float = x2 - w2 / 2;
+        let left: Float = l1 > l2 ? l1 : l2;
+        let r1 = x1 + w1 / 2;
+        let r2 = x2 + w2 / 2;
+        let right = r1 < r2 ? r1 : r2;
+        return right - left;
     }
 }

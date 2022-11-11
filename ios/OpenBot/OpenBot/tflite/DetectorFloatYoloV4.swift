@@ -10,6 +10,13 @@ class DetectorFloatYoloV4: Detector {
     private var outputLocationsIdx: Int = -1;
     private var outputScoresIdx: Int = -1;
 
+    // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
+    // contains the location of detected boxes
+    private var outputLocations: UnsafeMutableBufferPointer<Float32>?;
+    // outputScores: array of shape [Batchsize, NUM_DETECTIONS]
+    // contains the scores of detected boxes
+    private var outputScores: UnsafeMutableBufferPointer<Float32>?;
+
     let IMAGE_MEAN: Float = 0.0;
     let IMAGE_STD: Float = 255.0;
 
@@ -20,13 +27,9 @@ class DetectorFloatYoloV4: Detector {
     override func parseTFlite() {
         let index0 = try! tflite?.output(at: 0);
         let index1 = try! tflite?.output(at: 1);
-
         assignIndex(tensor: index0, index: 0);
         assignIndex(tensor: index1, index: 1);
         NUM_DETECTIONS = try! tflite?.output(at: outputLocationsIdx).shape.dimensions[1] ?? 0;
-        print(index0)
-        print(index1)
-        print(NUM_DETECTIONS)
     }
 
     func assignIndex(tensor: Tensor?, index: Int) {
@@ -71,36 +74,40 @@ class DetectorFloatYoloV4: Detector {
 
     override func runInference() throws {
         do {
-
             let outputLocationsTensor = try tflite?.output(at: outputLocationsIdx);
-            print(outputLocationsTensor);
             let outputScoresTensor = try tflite?.output(at: outputScoresIdx);
-            print(outputScoresTensor);
             let outputSize = outputLocationsTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            let outputData =
+            outputLocations =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
-            outputLocationsTensor?.data.copyBytes(to: outputData);
-//            var i: Int = 0;
-//            print("outputLocationsTensor");
-//            for item in outputData {
-//                print("Index: ", i);
-//                i += 1;
-//                print(item);
-//            }
+            outputLocationsTensor?.data.copyBytes(to: outputLocations!);
 
             let outputScoresTensorSize = outputScoresTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            let outputScoresTensorData =
+            outputScores =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputScoresTensorSize)
-            outputScoresTensor?.data.copyBytes(to: outputScoresTensorData);
-//            i = 0;
-//            print("outputScoresTensor")
-//            for item in outputScoresTensorData {
-//                print("Index: ", i);
-//                i += 1;
-//                print(item);
-//            }
+            outputScoresTensor?.data.copyBytes(to: outputScores!);
         } catch {
             print("error:\(error)")
         }
+    }
+
+    override func getRecognitions(className: String) -> [Recognition] {
+        var recognitions: [Recognition] = [];
+        if (NUM_DETECTIONS > 0) {
+            for i in 0..<NUM_DETECTIONS {
+                var maxClassScore: Float = 0;
+                var classId = -1;
+                for c in stride(from: 0, to: labels.count, by: 1) {
+                    if (outputScores![c] > maxClassScore) {
+                        classId = c;
+                        maxClassScore = outputScores![c];
+                    }
+                }
+                let detection: CGRect = CGRect(x: CGFloat(outputLocations![4 * i]), y: CGFloat(outputLocations![(4 * i) + 1]), width: CGFloat(outputLocations![(4 * i) + 2]), height: CGFloat(outputLocations![(4 * i) + 3]))
+                if (classId > -1 && className == labels[classId]) {
+                    recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: outputScores![i], location: detection, classId: classId));
+                }
+            }
+        }
+        return nms(recognitions: recognitions);
     }
 }

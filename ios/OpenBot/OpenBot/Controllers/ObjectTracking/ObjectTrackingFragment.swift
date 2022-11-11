@@ -93,20 +93,27 @@ class ObjectTrackingFragment: CameraController {
     @objc func toggleAutoMode() {
         autoMode = !autoMode;
         if (autoMode) {
-            Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
+            Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [self] timer in
                 do {
                     if !autoMode {
                         timer.invalidate()
                     }
                     if (timer.isValid) {
+                        let startTime = returnCurrentTimestamp();
                         captureImage();
                         if (images.count > 0) {
                             let modelResolution = CGSize.parseSize(currentModel.inputSize);
                             let image = cropImage(image: images[images.count - 1].0, height: modelResolution.height, width: modelResolution.width)
-                            try detector?.recognizeImage(image: image.cgImage!);
-//                        print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
-//                        sendControl(control: controlResult);
+                            let res = try detector?.recognizeImage(image: image.cgImage!);
+                            if (res!.count > 0) {
+                                for item in res! {
+                                    print(item.getTitle() + " :: " + String(item.getConfidence()));
+                                }
+                            }
                         }
+                        images.removeAll();
+                        let endTime = returnCurrentTimestamp();
+                        print("timecost to run the image is ", endTime - startTime);
                     }
                 } catch {
                     print("error:\(error)")

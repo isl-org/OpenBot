@@ -17,16 +17,13 @@ class DetectorQuantizedMobileNet: Detector {
 
     // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
     // contains the location of detected boxes
-    private var outputLocations: Any?;
+    private var outputLocations: UnsafeMutableBufferPointer<Float32>?;
     // outputClasses: array of shape [Batchsize, NUM_DETECTIONS]
     // contains the classes of detected boxes
-    private var outputClasses: Any?;
+    private var outputClasses: UnsafeMutableBufferPointer<Float32>?;
     // outputScores: array of shape [Batchsize, NUM_DETECTIONS]
     // contains the scores of detected boxes
-    private var outputScores: Any?;
-    // numDetections: array of shape [Batchsize]
-
-    // contains the number of detected boxes
+    private var outputScores: UnsafeMutableBufferPointer<Float32>?;
 
     override init(model: Model, device: RuntimeDevice, numThreads: Int) throws {
         try super.init(model: model, device: device, numThreads: numThreads)
@@ -72,80 +69,27 @@ class DetectorQuantizedMobileNet: Detector {
         NUM_DETECTIONS;
     }
 
-    override func feedData() {
-        outputLocations = [getNumDetections()][4];
-        outputClasses = [getNumDetections()];
-        outputScores = [getNumDetections()];
-        let numDetections: Float32 = 0;
-        outputMap[outputLocationsIdx] = outputLocations;
-        outputMap[outputClassesIdx] = outputClasses;
-        outputMap[outputScoresIdx] = outputScores;
-        outputMap[numDetectionsIdx] = numDetections;
-    }
-
     override func runInference() throws {
         do {
 
             let outputLocationsTensor = try tflite?.output(at: outputLocationsIdx);
-            print(outputLocationsTensor);
             let outputClassesTensor = try tflite?.output(at: outputClassesIdx);
-            print(outputClassesTensor);
             let outputScoresTensor = try tflite?.output(at: outputScoresIdx);
-            print(outputScoresTensor);
-            let numDetectionsTensor = try tflite?.output(at: numDetectionsIdx);
-            print(numDetectionsTensor);
+
             let outputSize = outputLocationsTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            let outputData =
+            outputLocations =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
-            outputLocationsTensor?.data.copyBytes(to: outputData);
-            var i: Int = 0;
-            print("outputLocationsTensor");
-            for item in outputData {
-                print("Index: ", i);
-                i += 1;
-                print(item);
-            }
+            outputLocationsTensor?.data.copyBytes(to: outputLocations!);
 
-//            print(outputData[0]);
-//            print(outputData[1]);
-//            print(outputData[2]);
             let outputClassesTensorSize = outputClassesTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            let outputClassesTensorData =
+            outputClasses =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputClassesTensorSize)
-            outputClassesTensor?.data.copyBytes(to: outputClassesTensorData);
-            i = 0;
-            print("outputClassesTensor");
+            outputClassesTensor?.data.copyBytes(to: outputClasses!);
 
-            for item in outputClassesTensorData {
-                print("Index: ", i);
-                i += 1;
-                print(item);
-            }
             let outputScoresTensorSize = outputScoresTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            let outputScoresTensorData =
+            outputScores =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputScoresTensorSize)
-            outputScoresTensor?.data.copyBytes(to: outputScoresTensorData);
-            i = 0;
-            print("outputScoresTensor")
-            for item in outputScoresTensorData {
-                print("Index: ", i);
-                i += 1;
-                print(item);
-            }
-
-            let numDetectionsTensorSize = numDetectionsTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            let numDetectionsTensorData =
-                    UnsafeMutableBufferPointer<Float32>.allocate(capacity: numDetectionsTensorSize)
-            numDetectionsTensor?.data.copyBytes(to: numDetectionsTensorData);
-            i = 0;
-            print("numDetectionsTensor")
-            for item in numDetectionsTensorData {
-                print("Index: ", i);
-                i += 1;
-                print(item);
-            }
-
-
+            outputScoresTensor?.data.copyBytes(to: outputScores!);
         } catch {
             print("error:\(error)")
         }
@@ -171,10 +115,30 @@ class DetectorQuantizedMobileNet: Detector {
     }
 
     override func getImageSizeX() -> Int {
-        Int(imageSize.width) / 2;
+        Int(imageSize.width / 2);
     }
 
     override func getImageSizeY() -> Int {
-        Int(imageSize.height) / 2;
+        Int(imageSize.height / 2);
+    }
+
+    override func getRecognitions(className: String) -> [Recognition] {
+        var recognitions: [Recognition] = [];
+//        print("classname:: ", className);
+        for i in 0..<NUM_DETECTIONS {
+            let xPos = CGFloat(outputLocations![(4 * i) + 1]) * CGFloat(getImageSizeX());
+            let yPos = CGFloat(outputLocations![(4 * i)]) * CGFloat(getImageSizeY());
+            let width = CGFloat(outputLocations![(4 * i) + 2]) * CGFloat(getImageSizeX()) - xPos;
+            let height = CGFloat(outputLocations![(4 * i) + 3]) * CGFloat(getImageSizeY()) - yPos;
+            let rect = CGRect(x: xPos, y: yPos, width: width, height: height);
+            let classId: Int = Int(outputClasses![i]);
+            let labelId: Int = classId + 1;
+//            print("label, labelId:: " + labels[labelId], labelId);
+//            print("score:: " + String(outputScores![i]));
+            if (className == labels[labelId]) {
+                recognitions.append(Recognition(id: String(i), title: labels[labelId], confidence: outputScores![i], location: rect, classId: classId));
+            }
+        }
+        return nms(recognitions: recognitions);
     }
 }

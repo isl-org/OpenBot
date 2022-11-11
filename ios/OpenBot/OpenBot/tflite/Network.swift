@@ -59,7 +59,6 @@ class Network {
     func convertImageToData(image: CGImage) {
         do {
             imgData.removeAll();
-            let startTime = returnCurrentTimestamp();
             guard let context = CGContext(
                     data: nil,
                     width: image.width, height: image.height,
@@ -88,8 +87,6 @@ class Network {
                     addPixelValue(red: red, blue: blue, green: green)
                 }
             }
-            let endTime = returnCurrentTimestamp();
-            print("Timecost to convert image: ", endTime - startTime);
         } catch {
             print("error:\(error)")
         }
