@@ -19,7 +19,10 @@ class expandedAutoPilot: UIView {
     var modelDropDownView = UIView()
     var ddView = UIView()
     var modelDropDown = DropDown()
+    var serverDropDown = DropDown()
     var dropDownWidth : NSLayoutConstraint!
+    var serverDropDownLabel = UILabel()
+    var serverDropDownView = UIView()
 
 
     override init(frame: CGRect) {
@@ -43,6 +46,7 @@ class expandedAutoPilot: UIView {
         createDeviceDropDown()
         deviceDropDown.hide()
         createServerDropDown()
+        serverDropDown.hide()
         createModelDropDown()
         modelDropDown.hide()
         addSubview(createLabel(text: "Input", leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
@@ -152,29 +156,34 @@ class expandedAutoPilot: UIView {
     }
 
     func createServerDropDown() {
-        let server = Server(frame: CGRect(origin: CGPoint(x: 180, y: 80), size: resized(size: CGSize(width: 100, height: 40), basedOn: .height)));
-        addSubview(server)
-        let dd = UIView()
-        dd.layer.cornerRadius = 10
-        serverLabel.text = "No Server"
-        serverLabel.textColor = Colors.borderColor
-        let tap = UITapGestureRecognizer(target: self, action: #selector(showServerDropdown(_:)))
-        dd.addGestureRecognizer(tap)
+        serverDropDown.backgroundColor = Colors.freeRoamButtonsColor
+        if let color = Colors.borderColor {
+            serverDropDown.textColor = color
+        }
+        serverDropDown.anchorView = serverDropDownView
+        serverDropDown.dataSource = ["No Server"]
+        serverDropDown.show()
+        ddView = createDropdownView(borderColor: "", buttonName: "No Server", leadingAnchor: 180, topAnchor: adapted(dimensionSize: 50, to: .height), action: #selector(showServerDropdown(_:)))
+        serverDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+            serverDropDownLabel.text = item
+        }
+        serverDropDown.width = 150
+        serverDropDownView.frame.size = CGSize(width: 200, height: 100);
+        serverDropDownView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(serverDropDownView)
+        serverDropDownView.topAnchor.constraint(equalTo: self.topAnchor, constant: adapted(dimensionSize: 40, to: .height)).isActive = true
+        serverDropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 180).isActive = true;
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
         upwardImage.image = Images.downArrow
-        dd.addSubview(upwardImage)
+        ddView.addSubview(upwardImage)
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
-        upwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -10).isActive = true
-        upwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 11.5).isActive = true
-        addSubview(dd)
-        dd.translatesAutoresizingMaskIntoConstraints = false
-        dd.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 50, to: .height)).isActive = true;
-        dd.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 180).isActive = true
-        dd.widthAnchor.constraint(equalToConstant: 180).isActive = true
-        dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        serverLabel.frame = CGRect(x: 0, y: 0, width: 210, height: 40)
-        dd.addSubview(serverLabel)
+        upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
+        upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
+        serverDropDownLabel.text = "No Server"
+        serverDropDownLabel.textColor = Colors.borderColor
+        serverDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        ddView.addSubview(serverDropDownLabel)
     }
 
     func createModelDropDown() {
@@ -334,7 +343,7 @@ class expandedAutoPilot: UIView {
     }
 
     @objc func showServerDropdown(_ sender: UIButton) {
-        NotificationCenter.default.post(name: .showServerDD, object: nil)
+        serverDropDown.show()
     }
 
     @objc func showModelDropdown(_ sender: UIButton) {
@@ -414,5 +423,6 @@ class expandedAutoPilot: UIView {
         threadLabel.text = (notification.object as! String)
 
     }
+
 }
 

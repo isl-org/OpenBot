@@ -51,12 +51,10 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             if backCamera.isFocusPointOfInterestSupported {
 //                backCamera.focusPointOfInterest = focusPoint
                 backCamera.focusMode = AVCaptureDevice.FocusMode.autoFocus
-                print(backCamera.focusMode)
             }
             if backCamera.isExposurePointOfInterestSupported {
 //                backCamera.exposurePointOfInterest = focusPoint
                 backCamera.exposureMode = AVCaptureDevice.ExposureMode.autoExpose
-                print(backCamera.exposureMode)
 
             }
             backCamera.unlockForConfiguration()

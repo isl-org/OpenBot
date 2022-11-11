@@ -12,19 +12,22 @@ class AutopilotFragment: CameraController {
     var autopilot: Autopilot?;
     var models: [Model] = [];
     var numberOfThreads: Int = 1
-    let expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height - 375, width: width, height: 375))
+    var expandedAutoPilotView : expandedAutoPilot? = nil
     var autoPilotMode: Bool = false;
     let gameController = GameController.shared
     let bluetooth = bluetoothDataController.shared;
     var vehicleControl: Control = Control();
     var currentModel: ModelItem!
     var currentDevice : RuntimeDevice = RuntimeDevice.CPU
+    var bottomAnchorConstraint: NSLayoutConstraint!
+    var trailingAnchorConstraint: NSLayoutConstraint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        expandedAutoPilotView.backgroundColor = Colors.freeRoamButtonsColor
-        expandedAutoPilotView.layer.cornerRadius = 15
+        expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height - 375, width: width, height: 375))
+        expandedAutoPilotView!.backgroundColor = Colors.freeRoamButtonsColor
+        expandedAutoPilotView!.layer.cornerRadius = 15
         createCameraView()
         let modelItems = Common.loadAllModels()
         if (modelItems.count > 0) {
@@ -32,7 +35,14 @@ class AutopilotFragment: CameraController {
             currentModel = modelItems[0]
             autopilot = Autopilot(model: models[0], device: RuntimeDevice.CPU, numThreads: numberOfThreads);
         }
-        view.addSubview(expandedAutoPilotView)
+        view.addSubview(expandedAutoPilotView!)
+        expandedAutoPilotView!.translatesAutoresizingMaskIntoConstraints = false
+        expandedAutoPilotView!.widthAnchor.constraint(equalToConstant: width).isActive = true
+        expandedAutoPilotView!.heightAnchor.constraint(equalToConstant: width * 0.95).isActive = true
+        bottomAnchorConstraint = expandedAutoPilotView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5);
+        trailingAnchorConstraint = expandedAutoPilotView!.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0)
+        trailingAnchorConstraint.isActive = true
+        bottomAnchorConstraint.isActive = true
         setupNavigationBarItem()
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
@@ -50,9 +60,9 @@ class AutopilotFragment: CameraController {
 
     func calculateFrame() {
         if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
-            expandedAutoPilotView.frame.origin = CGPoint(x: 0, y: height - 375)
+            trailingAnchorConstraint.constant = 0;
         } else {
-            expandedAutoPilotView.frame.origin = CGPoint(x: height - 375, y: 0)
+            trailingAnchorConstraint.constant = 10;
         }
     }
 
