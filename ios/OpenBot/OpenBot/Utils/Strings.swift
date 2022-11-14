@@ -9,6 +9,7 @@ struct Strings {
     static let dataCollection: String = "Data Collection";
     static let controllerMapping: String = "Controller Mapping";
     static let autoPilot : String = "Auto Pilot"
+    static let objectTracking : String = "Object Tracking"
 
     static let controller: String = "Controller"
     static let speed: String = "Speed"
