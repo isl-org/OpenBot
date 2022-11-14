@@ -12,13 +12,13 @@ class AutopilotFragment: CameraController {
     var autopilot: Autopilot?;
     var models: [Model] = [];
     var numberOfThreads: Int = 1
-    var expandedAutoPilotView : expandedAutoPilot? = nil
+    var expandedAutoPilotView: expandedAutoPilot? = nil
     var autoPilotMode: Bool = false;
     let gameController = GameController.shared
     let bluetooth = bluetoothDataController.shared;
     var vehicleControl: Control = Control();
     var currentModel: ModelItem!
-    var currentDevice : RuntimeDevice = RuntimeDevice.CPU
+    var currentDevice: RuntimeDevice = RuntimeDevice.CPU
     var bottomAnchorConstraint: NSLayoutConstraint!
     var trailingAnchorConstraint: NSLayoutConstraint!
 
@@ -92,7 +92,7 @@ class AutopilotFragment: CameraController {
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
         currentDevice.rawValue == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
         autopilot?.tfliteOptions.threadCount = numberOfThreads
-        print("device is ",autopilot?.tfliteOptions)
+        print("device is ", autopilot?.tfliteOptions)
 
     }
 
@@ -104,27 +104,26 @@ class AutopilotFragment: CameraController {
 
     @objc func toggleAutoMode() {
         autoPilotMode = !autoPilotMode;
-            Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
-                if !autoPilotMode {
-                    timer.invalidate()
-                    sendControl(control: Control());
-                }
-                if (timer.isValid) {
-                    captureImage();
-                    if (images.count > 0) {
-                        let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0) ?? Control();
-                        print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
-                        sendControl(control: controlResult);
-                    }
+        Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
+            if !autoPilotMode {
+                timer.invalidate()
+                sendControl(control: Control());
+            }
+            if (timer.isValid) {
+                captureImage();
+                if (images.count > 0) {
+                    let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0) ?? Control();
+                    print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
+                    sendControl(control: controlResult);
                 }
             }
+        }
     }
 
     @objc func updateThread(_ notification: Notification) {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 1
-        autopilot?.tfliteOptions.threadCount = numberOfThreads
-
+        autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
     }
 
     func sendControl(control: Control) {

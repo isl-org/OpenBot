@@ -32,22 +32,29 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        initializeCamera()
         if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) != .authorized {
             checkCameraPermission()
         }
+        initializeCamera()
     }
 
     /**
      function that check whether camera permission is given to OpenBot or not
      */
      func checkCameraPermission(){
+         print("inside checkCameraPermission")
          let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
          switch authStatus {
          case .authorized:
              initializeCamera()
-         default:
-             createAllowAlert(alertFor: "Camera")
+         case .notDetermined:
+           print("notDetermined")
+         case .restricted:
+             createAllowAlert(alertFor: "Camera");
+         case .denied:
+             createAllowAlert(alertFor: "Camera");
+         @unknown default:
+             createAllowAlert(alertFor: "Camera");
          }
      }
 
