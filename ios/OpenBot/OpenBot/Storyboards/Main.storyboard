@@ -295,7 +295,7 @@
                                     <color key="baseForegroundColor" name="HomePageTitleColor"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <segue destination="vfx-gJ-ner" kind="show" id="bo6-UR-dkd"/>
+                                    <segue destination="vfx-gJ-ner" kind="show" id="JDO-Qs-BCo"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -344,7 +344,7 @@
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="controller" translatesAutoresizingMaskIntoConstraints="NO" id="HYS-00-IDW">
-                                <rect key="frame" x="0.0" y="129" width="414" height="374"/>
+                                <rect key="frame" x="-0.5" y="128.5" width="415" height="375"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="374" id="Xqu-ir-4R0"/>
                                 </constraints>
@@ -425,7 +425,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk" customClass="BluetoothTableViewCell" customModule="OpenBot" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="34"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
@@ -433,15 +433,12 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="323.33333333333331" y="0.0" width="85.666666666666686" height="34"/>
+                                            <rect key="frame" x="321" y="0.0" width="88" height="34"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">
                                                 <color key="baseForegroundColor" name="borderColor"/>
                                             </buttonConfiguration>
-                                            <connections>
-                                                <action selector="connectDisconnectBtn:" destination="vfx-gJ-ner" eventType="touchUpInside" id="6aK-Rd-Nmn"/>
-                                            </connections>
                                         </button>
                                     </subviews>
                                     <constraints>
@@ -450,6 +447,9 @@
                                         <constraint firstAttribute="trailing" secondItem="sXM-H5-QVt" secondAttribute="trailing" constant="5" id="VHf-bk-hPo"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="connectButton" destination="sXM-H5-QVt" id="01A-f9-f08"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -461,7 +461,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n0v-Tz-fi1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1151" y="-577"/>
+            <point key="canvasLocation" x="1122" y="-563"/>
         </scene>
         <!--Object Tracking Fragment-->
         <scene sceneID="5jD-r1-2PK">
@@ -477,6 +477,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dej-AD-GUe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1788" y="-563"/>
+        </scene>
+        <!--Bluetooth Fragment-->
+        <scene sceneID="DRy-se-GDa">
+            <objects>
+                <viewController storyboardIdentifier="bluetoothFragment" useStoryboardIdentifierAsRestorationIdentifier="YES" id="HZt-D5-sCm" customClass="BluetoothFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="aMo-26-YjA">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="Kmg-hJ-UEy"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="8Ia-1D-N1h"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DtM-JV-hCx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="494" y="178"/>
         </scene>
     </scenes>
     <resources>

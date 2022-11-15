@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3A31E73028AE0E1A00FDD235 /* SensorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */; };
-		3A3AAA9E28FEBB2F006EE8D9 /* BluetoothTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3AAA9D28FEBB2F006EE8D9 /* BluetoothTable.swift */; };
 		3AE7A38B28ACB0D6001ABE2F /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */; };
 		4FEF40039118AB286DD8CB0C /* DetectorQuantizedMobileNet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47209A4C03D66945462E /* DetectorQuantizedMobileNet.swift */; };
 		4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */; };
@@ -42,6 +41,7 @@
 		727D3074611DA874F01709A3 /* CGFloatExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D78A49AC3693B1A2B7B /* CGFloatExtension.swift */; };
 		727D3168E1B1C70DBDC2652E /* ServerDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30F298C6C48697AB606F /* ServerDropdown.swift */; };
 		727D332F054456A4182DD7DF /* expandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3327FAD14CEC3DE54D95 /* expandSetting.swift */; };
+		727D33A327A7D99A558EFDC4 /* BluetoothTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3B76CF73A97A22A8022E /* BluetoothTable.swift */; };
 		727D33DD6B69783CAE4035BD /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30501D6445D0C8AED362 /* GaugeView.swift */; };
 		727D3457F432B9743263C307 /* sensorDataRetrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */; };
 		727D34602C26673639AA0D0B /* Dimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3946DB74E63117B32AF4 /* Dimension.swift */; };
@@ -92,7 +92,6 @@
 		17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot_OpenBotUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
 		3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorsViewController.swift; sourceTree = "<group>"; };
-		3A3AAA9D28FEBB2F006EE8D9 /* BluetoothTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BluetoothTable.swift; path = OpenBot/BluetoothTable.swift; sourceTree = SOURCE_ROOT; };
 		3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		4FEF4178D0A2805591A6A3A6 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		4FEF421BF49FEE835C6DC5CB /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
@@ -141,6 +140,7 @@
 		727D39B02AB471D9F31B0747 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bluetoothDataController.swift; sourceTree = "<group>"; };
 		727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VehicleControl.swift; path = Modes/VehicleControl.swift; sourceTree = "<group>"; };
+		727D3B76CF73A97A22A8022E /* BluetoothTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BluetoothTable.swift; path = Bluetooth/BluetoothTable.swift; sourceTree = "<group>"; };
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		727D3D0186944D629E367A9D /* SettingsFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsFragment.swift; path = Settings/SettingsFragment.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
@@ -279,7 +279,6 @@
 				4FEF42374776D62381BDE68C /* Info.plist */,
 				4FEF4D63E4FA9FB585EF1733 /* SceneDelegate.swift */,
 				4FEF4A57E56E4EAB1B479871 /* Storyboards */,
-				3A3AAA9D28FEBB2F006EE8D9 /* BluetoothTable.swift */,
 				4FEF49E6B7BC995D19DD82E7 /* Data */,
 				4FEF4EFC6160B227C9A9BFF3 /* Vehicle */,
 				4FEF47EAC21A4C2BDD11B72B /* README.md */,
@@ -384,6 +383,7 @@
 				4FEF492829E700076FAA4132 /* ObjectTrackingSettings.swift */,
 				4FEF42F0707A22B810E664F2 /* ObjectClassDropdown.swift */,
 				727D3D0186944D629E367A9D /* SettingsFragment.swift */,
+				727D3B76CF73A97A22A8022E /* BluetoothTable.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -694,7 +694,6 @@
 				727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */,
 				727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */,
 				727D3074611DA874F01709A3 /* CGFloatExtension.swift in Sources */,
-				3A3AAA9E28FEBB2F006EE8D9 /* BluetoothTable.swift in Sources */,
 				727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */,
 				727D39CEBB2CF03D171BC311 /* UIViewExtension.swift in Sources */,
 				4FEF4DAC98B9D01B10F7B3E9 /* DataCollectionController.swift in Sources */,
@@ -719,6 +718,7 @@
 				4FEF4E9F41A93B4F6CD1AEEC /* DetectorFloatYoloV4.swift in Sources */,
 				727D3BF38CB798E8B3321E87 /* SettingsFragment.swift in Sources */,
 				727D34F694C565E9A8F4D487 /* Notifications.swift in Sources */,
+				727D33A327A7D99A558EFDC4 /* BluetoothTable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

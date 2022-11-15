@@ -103,7 +103,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
                 writeCharacteristics = characteristic
                 subscribeToNotifications(peripheral: tempPeripheral, characteristic: characteristic)
                 readValue(characteristic: characteristic)
-
                 peripheral.discoverDescriptors(for: characteristic)
             }
         }
@@ -167,7 +166,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     func disconnect() {
         centralManager?.cancelPeripheralConnection(tempPeripheral)
-        startScan()
+//        startScan()
         peri = nil
     }
 

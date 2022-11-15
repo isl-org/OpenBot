@@ -112,6 +112,10 @@ struct Strings {
     static let wheels: String = "timestamp[ns], leftWheel, rightWheel\n"
     static let motion: String = "timestamp[ns]"
 
-
+    //bluetooth Status
+    static let connect : String = "Connect"
+    static let disconnect : String = "Disconnect"
+    static let connecting : String = "Connecting"
+    static let disconnecting : String = "Disconnecting"
 
 }
