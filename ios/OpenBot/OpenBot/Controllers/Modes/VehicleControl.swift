@@ -30,6 +30,7 @@ class VehicleControl: UIView {
         createLabel(text: "Drive Mode", bottomAnchor: 0, leadingAnchor: width / 2 - 30, isBoldNeeded: true)
         createLabel(text: "Speed", bottomAnchor: 0, leadingAnchor: width / 2 + 50, isBoldNeeded: true)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoModeObjectTracking, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateRpmLabel), name: .updateRpmLabel, object: nil)
 
@@ -174,7 +175,7 @@ class VehicleControl: UIView {
     }
 
     @objc func updateSpeedLabel(_ notification: Notification) {
-       speedLabel.text = notification.object as! String
+        speedLabel.text = notification.object as! String
     }
 
     @objc func updateRpmLabel(_ notification: Notification) {

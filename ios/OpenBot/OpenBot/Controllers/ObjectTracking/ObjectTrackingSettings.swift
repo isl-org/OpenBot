@@ -77,7 +77,7 @@ class ObjectTrackingSettings: UIView {
     }
 
     @objc func switchButton(_ sender: UISwitch) {
-        NotificationCenter.default.post(name: .autoMode, object: nil)
+        NotificationCenter.default.post(name: .autoModeObjectTracking, object: nil)
     }
 
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {

@@ -92,19 +92,27 @@ class DetectorFloatYoloV4: Detector {
 
     override func getRecognitions(className: String) -> [Recognition] {
         var recognitions: [Recognition] = [];
+        var outputScores2D = Array(repeating: Array<Float32>(repeating: 0, count: labels.count), count: NUM_DETECTIONS);
+        for a in stride(from: 0, to: NUM_DETECTIONS, by: 1) {
+            for b in stride(from: 0, to: labels.count, by: 1) {
+                outputScores2D[a][b] = outputScores![b * labels.count + a];
+            }
+        }
         if (NUM_DETECTIONS > 0) {
             for i in 0..<NUM_DETECTIONS {
                 var maxClassScore: Float = 0;
                 var classId = -1;
-                for c in stride(from: 0, to: labels.count, by: 1) {
-                    if (outputScores![c] > maxClassScore) {
+                let classes = outputScores2D[i];
+                for c in stride(from: 0, to: classes.count, by: 1) {
+                    if (classes[c] > maxClassScore) {
                         classId = c;
-                        maxClassScore = outputScores![c];
+                        maxClassScore = classes[c];
                     }
                 }
-                let detection: CGRect = CGRect(x: CGFloat(outputLocations![4 * i]), y: CGFloat(outputLocations![(4 * i) + 1]), width: CGFloat(outputLocations![(4 * i) + 2]), height: CGFloat(outputLocations![(4 * i) + 3]))
+
                 if (classId > -1 && className == labels[classId]) {
-                    recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: outputScores![i], location: detection, classId: classId));
+                    let detection: CGRect = CGRect(x: CGFloat(outputLocations![4 * i]), y: CGFloat(outputLocations![(4 * i) + 1]), width: CGFloat(outputLocations![(4 * i) + 2]), height: CGFloat(outputLocations![(4 * i) + 3]))
+                    recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: maxClassScore, location: detection, classId: classId));
                 }
             }
         }

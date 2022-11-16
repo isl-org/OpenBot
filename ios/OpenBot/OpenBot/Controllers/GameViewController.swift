@@ -209,7 +209,4 @@ class Draw: UIView {
         color.set()
         bpath.fill()
     }
-
-
-
 }

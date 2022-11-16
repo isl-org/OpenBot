@@ -16,6 +16,7 @@ extension Notification.Name {
     static let showServerDD = Notification.Name("showServerDD")
     static let showDeviceDD = Notification.Name("showDeviceDD")
     static let autoMode = Notification.Name("autoMode")
+    static let autoModeObjectTracking = Notification.Name("autoModeObjectTracking")
     static let updateThread = Notification.Name("updateThread");
     static let updateThreadLabel = Notification.Name("updateThreadLabel")
     static let logData = Notification.Name(Strings.logDataNotify)

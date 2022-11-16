@@ -24,7 +24,9 @@ class Detector: Network {
     override init(model: Model, device: RuntimeDevice, numThreads: Int) throws {
         try super.init(model: model, device: device, numThreads: numThreads);
         labels = loadLabelList(filePath: getLabelPath());
-        selectedClass = labels.first;
+        selectedClass = labels.first {
+            $0 == "person"
+        };
         parseTFlite();
     }
 
@@ -156,7 +158,6 @@ class Detector: Network {
             if (detections.count > 0) {
                 let size = detections.count - 1;
                 for i in stride(from: 1, to: size, by: 1) {
-//                print(i);
                     let detection: Recognition = detections[i];
                     let b = detection.getLocation();
                     if (box_iou(a: max.getLocation(), b: b) < mNmsThresh) {

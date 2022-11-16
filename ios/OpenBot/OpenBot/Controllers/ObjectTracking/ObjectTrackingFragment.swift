@@ -17,6 +17,7 @@ class ObjectTrackingFragment: CameraController {
     let bluetooth = bluetoothDataController.shared;
     var currentModel: ModelItem!
     var currentDevice: RuntimeDevice = RuntimeDevice.CPU
+    private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 0.5;
 
     override func viewDidLoad() {
         let modelItems = Common.loadAllModels()
@@ -42,7 +43,7 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThread), name: .updateThread, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConfidence), name: .updateConfidence, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoModeObjectTracking, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         setupNavigationBarItem()
         super.viewDidLoad()
@@ -91,12 +92,18 @@ class ObjectTrackingFragment: CameraController {
     }
 
     @objc func toggleAutoMode() {
+        var frames: [UIView] = [];
         autoMode = !autoMode;
         if (autoMode) {
-            Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [self] timer in
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
                 do {
                     if !autoMode {
                         timer.invalidate()
+                    }
+                    if (frames.count > 0) {
+                        for frame in frames {
+                            frame.removeFromSuperview();
+                        }
                     }
                     if (timer.isValid) {
                         let startTime = returnCurrentTimestamp();
@@ -105,9 +112,17 @@ class ObjectTrackingFragment: CameraController {
                             let modelResolution = CGSize.parseSize(currentModel.inputSize);
                             let image = cropImage(image: images[images.count - 1].0, height: modelResolution.height, width: modelResolution.width)
                             let res = try detector?.recognizeImage(image: image.cgImage!);
+                            var i = 0;
                             if (res!.count > 0) {
                                 for item in res! {
                                     print(item.getTitle() + " :: " + String(item.getConfidence()));
+                                    print("Object :: ", item.getLocation());
+                                    if (item.getConfidence() * 100 > MINIMUM_CONFIDENCE_TF_OD_API) {
+                                        let frame = addFrame(item: item, color: Constants.frameColors[i % 5]);
+                                        frames.append(frame);
+                                        view.addSubview(frame);
+                                        i += 1;
+                                    }
                                 }
                             }
                         }
@@ -159,5 +174,13 @@ class ObjectTrackingFragment: CameraController {
 
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+    }
+
+    func addFrame(item: Detector.Recognition, color: UIColor) -> UIView {
+        let frame = UIView()
+        frame.frame = item.getLocation()
+        frame.layer.borderColor = color.cgColor;
+        frame.layer.borderWidth = 2.0
+        return frame;
     }
 }
