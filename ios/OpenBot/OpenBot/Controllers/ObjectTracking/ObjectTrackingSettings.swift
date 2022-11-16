@@ -15,6 +15,8 @@ class ObjectTrackingSettings: UIView {
     var deviceDropDownLabel = UILabel()
     var objectDropDownLabel = UILabel()
     var detector: Detector?;
+    var bluetoothIcon = UIImageView()
+
     init(frame: CGRect, detector: Detector?) {
         self.detector = detector;
         super.init(frame: frame);
@@ -48,7 +50,8 @@ class ObjectTrackingSettings: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateObject), name: .updateObject, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -120,15 +123,15 @@ class ObjectTrackingSettings: UIView {
 
     func createBluetoothIcon() {
         if (isBluetoothConnected) {
-            createIcons(iconImg: Images.bluetoothConnected!, topAnchor: 10, trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         } else {
-            createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: 10, trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            bluetoothIcon = createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         }
     }
 
     func createCameraIcon() {
         if let image = Images.frontCamera {
-            createIcons(iconImg: image, topAnchor: 13, trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
+            createIcons(iconImg: image, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
         }
     }
 
@@ -141,20 +144,18 @@ class ObjectTrackingSettings: UIView {
     }
 
 
-    func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) {
-        let icon = UIView()
+    func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?)->UIImageView {
         let iconImage = UIImageView(frame: CGRect(x: x, y: y, width: size.width, height: size.height))
         iconImage.image = iconImg
-        icon.addSubview(iconImage)
-        addSubview(icon)
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        icon.topAnchor.constraint(equalTo: self.topAnchor, constant: topAnchor).isActive = true
-        icon.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: trailingAnchor).isActive = true
-        icon.layer.cornerRadius = 30
+        addSubview(iconImage)
+        iconImage.translatesAutoresizingMaskIntoConstraints = false
+        iconImage.topAnchor.constraint(equalTo: self.topAnchor, constant: topAnchor).isActive = true
+        iconImage.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: trailingAnchor).isActive = true
+        iconImage.layer.cornerRadius = 30
         let tapGesture = UITapGestureRecognizer(target: self, action: action)
-        icon.addGestureRecognizer(tapGesture)
+        iconImage.isUserInteractionEnabled = true
+        iconImage.addGestureRecognizer(tapGesture)
+        return iconImage
     }
 
     func setupInput() {
@@ -418,5 +419,13 @@ class ObjectTrackingSettings: UIView {
         let selectedObject = notification.object as! String
         objectDropDownLabel.text = selectedObject
         detector?.setSelectedClass(selectedClass: selectedObject);
+    }
+
+    @objc func updateConnect(_ notification: Notification) {
+        if (isBluetoothConnected) {
+            bluetoothIcon.image = Images.bluetoothConnected
+        } else {
+            bluetoothIcon.image = Images.bluetoothDisconnected
+        }
     }
 }
