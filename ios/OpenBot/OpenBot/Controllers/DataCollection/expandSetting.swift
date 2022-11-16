@@ -64,6 +64,8 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         vehicleControls.translatesAutoresizingMaskIntoConstraints = false
         vehicleControls.topAnchor.constraint(equalTo: magnetic.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 13, to: .height)).isActive = true;
         vehicleControls.leadingAnchor.constraint(equalTo: secondView.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
 
     }
 
@@ -97,7 +99,9 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         else{
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
-
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ble(_:)))
+        bluetoothIcon.isUserInteractionEnabled = true
+        bluetoothIcon.addGestureRecognizer(tapGesture)
         addSubview(bluetoothIcon)
         bluetoothIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         bluetoothIcon.leadingAnchor.constraint(equalTo: logData.trailingAnchor, constant: 20).isActive = true
@@ -464,6 +468,18 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
                     modelsName.append(String(nameOfModel.prefix(upTo: index)))
                 }
             }
+        }
+    }
+
+    @objc func ble(_ sender: UIView) {
+        NotificationCenter.default.post(name: .ble, object: nil)
+    }
+
+    @objc func updateConnect(_ notification: Notification) {
+        if (isBluetoothConnected) {
+            bluetoothIcon.image = Images.bluetoothConnected
+        } else {
+            bluetoothIcon.image = Images.bluetoothDisconnected
         }
     }
 

@@ -21,6 +21,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     let secondView = UIView()
     let deviceOrientation = DeviceCurrentOrientation.shared
     let gameController = GameController.shared
+    var bluetoothIcon = UIImageView()
     private let mainView = UIView()
     var indicator = "i0,0\n";
 
@@ -48,6 +49,8 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         if currentOrientation == UIInterfaceOrientation.landscapeRight || currentOrientation == UIInterfaceOrientation.landscapeLeft {
             applyLandScapeConstraint()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -238,16 +241,20 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func createBluetoothIcon() {
         let blueToothIconRect = createRectangle(x: 220, y: 230, width: 40, height: 40, borderColor: "borderColor")
-        let blueToothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 4-10, y: blueToothIconRect.frame.size.height / 4, width: 20, height: 20))
+        bluetoothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 4-10, y: blueToothIconRect.frame.size.height / 4, width: 20, height: 20))
         if isBluetoothConnected {
-            blueToothIcon.image = Images.bluetoothConnected
+            bluetoothIcon.image = Images.bluetoothConnected
         }
         else{
-            blueToothIcon.image = Images.bluetoothDisconnected
+            bluetoothIcon.image = Images.bluetoothDisconnected
         }
+        let tapGesture = UITapGestureRecognizer(target: self, action:  #selector(openBluetoothSettings(tapGestureRecognizer:)))
+
+        blueToothIconRect.isUserInteractionEnabled = true
+        blueToothIconRect.addGestureRecognizer(tapGesture)
 
         firstView.addSubview(blueToothIconRect)
-        blueToothIconRect.addSubview(blueToothIcon)
+        blueToothIconRect.addSubview(bluetoothIcon)
     }
 
     func createVoltageController(h: Double) {
@@ -491,6 +498,20 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
         _ = navigationController?.popViewController(animated: true)
     }
+
+    @objc func openBluetoothSettings(tapGestureRecognizer: UITapGestureRecognizer) {
+        let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
+        navigationController?.pushViewController(nextViewController!, animated: true)
+    }
+
+    @objc func updateConnect(_ notification: Notification) {
+        if (isBluetoothConnected) {
+            bluetoothIcon.image = Images.bluetoothConnected
+        } else {
+            bluetoothIcon.image = Images.bluetoothDisconnected
+        }
+    }
+
 }
 
 
