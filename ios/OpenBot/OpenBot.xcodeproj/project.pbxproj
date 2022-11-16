@@ -355,13 +355,13 @@
 			);
 			sourceTree = "<group>";
 		};
-		727D3486646629C6067A6656 /* Free Roam */ = {
+		727D3486646629C6067A6656 /* FreeRoam */ = {
 			isa = PBXGroup;
 			children = (
 				727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */,
 				727D30501D6445D0C8AED362 /* GaugeView.swift */,
 			);
-			path = "Free Roam";
+			path = FreeRoam;
 			sourceTree = "<group>";
 		};
 		BF5AF3BF28AE4A96008BAD95 /* Controllers */ = {
@@ -370,7 +370,7 @@
 				3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */,
 				BF812E8528AE2C4200E0B682 /* modesCollectionViewCell.swift */,
 				3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */,
-				727D3486646629C6067A6656 /* Free Roam */,
+				727D3486646629C6067A6656 /* FreeRoam */,
 				BF72296328B0FD6D0013CD8E /* GameViewController.swift */,
 				4FEF40885316AD1AB57A55DD /* DataCollection */,
 				727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */,
