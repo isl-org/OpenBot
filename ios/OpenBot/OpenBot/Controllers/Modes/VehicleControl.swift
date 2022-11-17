@@ -15,6 +15,7 @@ class VehicleControl: UIView {
     var speedInRpm = UILabel()
     var isButtonEnable: Bool = true
     let gameController = GameController.shared
+    var downSwipe  : Bool = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,15 +24,13 @@ class VehicleControl: UIView {
         createControllerMode()
         createDriveMode()
         createSpeedMode()
-        createLeftSpeed()
-//        creatingTest()
+//        createLeftSpeed()
         createRpm()
         createLabel(text: "Controller", bottomAnchor: 0, leadingAnchor: width / 2 - 100, isBoldNeeded: true)
         createLabel(text: "Drive Mode", bottomAnchor: 0, leadingAnchor: width / 2 - 30, isBoldNeeded: true)
         createLabel(text: "Speed", bottomAnchor: 0, leadingAnchor: width / 2 + 50, isBoldNeeded: true)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoModeObjectTracking, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateRpmLabel), name: .updateRpmLabel, object: nil)
 
     }
@@ -150,16 +149,6 @@ class VehicleControl: UIView {
         label.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: bottomAnchor).isActive = true
     }
 
-    func createLeftSpeed() {
-        speedLabel.frame.size = CGSize(width: 100, height: 40);
-        speedLabel.text = "xxx,xxx"
-        addSubview(speedLabel)
-        speedLabel.font = speedLabel.font.withSize(13.5)
-        speedLabel.translatesAutoresizingMaskIntoConstraints = false
-        speedLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4).isActive = true
-        speedLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -40).isActive = true
-    }
-
     func createRpm() {
         speedInRpm.frame.size = CGSize(width: 100, height: 40);
         speedInRpm.text = "---,--- rpm"
@@ -174,11 +163,15 @@ class VehicleControl: UIView {
         isButtonEnable = !isButtonEnable
     }
 
-    @objc func updateSpeedLabel(_ notification: Notification) {
-        speedLabel.text = notification.object as! String
-    }
-
     @objc func updateRpmLabel(_ notification: Notification) {
         speedInRpm.text = notification.object as! String
+    }
+    @objc func swipeDown(_ notification: Notification) {
+       switch notification.object as! Bool {
+       case true:
+           downSwipe = true
+       case false:
+           downSwipe = false
+       }
     }
 }

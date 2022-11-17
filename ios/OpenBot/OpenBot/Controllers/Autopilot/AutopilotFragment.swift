@@ -113,7 +113,7 @@ class AutopilotFragment: CameraController {
                 captureImage();
                 if (images.count > 0) {
                     let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0) ?? Control();
-                    print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
+//                    print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
                     sendControl(control: controlResult);
                 }
             }
@@ -133,7 +133,7 @@ class AutopilotFragment: CameraController {
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
             NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())));
             vehicleControl = control;
-            print("c" + String(left) + "," + String(right) + "\n");
+//            print("c" + String(left) + "," + String(right) + "\n");
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
         }
     }
@@ -143,6 +143,5 @@ class AutopilotFragment: CameraController {
         if autoPilotMode {
             autoPilotMode = false
         }
-
     }
 }

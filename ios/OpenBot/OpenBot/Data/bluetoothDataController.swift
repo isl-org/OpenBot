@@ -134,6 +134,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             let data = characteristic.value!
             let x = String(data: data, encoding: .utf8) ?? ""
             bluetoothData = x
+//            print(bluetoothData)
             NotificationCenter.default.post(name: .updateSerialMonitor, object: nil)
             NotificationCenter.default.post(name: .updateLabel, object: nil)
             if x.prefix(1) == "s" {

@@ -34,31 +34,33 @@ class expandedAutoPilot: UIView {
         swipeUp.direction = .up
         addGestureRecognizer(swipeUp)
         createBar()
-        addSubview(createLabel(text: "Auto Mode", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 15, to: .height))));
+        addSubview(createLabel(text: Strings.autoMode, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 15, to: .height))));
         createBluetoothIcon()
         createCameraIcon()
         createSwitchButton()
         addSubview(createLabel(text: Strings.server, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 50, to: .height))))
-        addSubview(createLabel(text: "Model", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 90, to: .height))))
-        addSubview(createLabel(text: "Speed", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
+        addSubview(createLabel(text: Strings.model, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 90, to: .height))))
+        addSubview(createLabel(text: Strings.speed, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
         setupSpeed()
-        addSubview(createLabel(text: "Device", leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
+        addSubview(createLabel(text: Strings.device, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
         createDeviceDropDown()
         deviceDropDown.hide()
         createServerDropDown()
         serverDropDown.hide()
         createModelDropDown()
         modelDropDown.hide()
-        addSubview(createLabel(text: "Input", leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
+        addSubview(createLabel(text: Strings.input, leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
         setupInput();
-        addSubview(createLabel(text: "Threads", leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
+        addSubview(createLabel(text: Strings.threads, leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
         setupThreads();
         setupVehicleControls()
+        createLeftSpeed()
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
     }
 
 
@@ -330,6 +332,15 @@ class expandedAutoPilot: UIView {
         vehicleControls.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 7).isActive = true
     }
 
+    func createLeftSpeed() {
+        speedLabel.frame.size = CGSize(width: 100, height: 40);
+        speedLabel.frame.origin = CGPoint(x: 4, y: adapted(dimensionSize: 200, to: .height))
+        speedLabel.text = "xxx,xxx"
+        addSubview(speedLabel)
+        speedLabel.font = speedLabel.font.withSize(13.5)
+    }
+
+
     @objc func ble(_ sender: UIView) {
         NotificationCenter.default.post(name: .ble, object: nil)
     }
@@ -431,6 +442,12 @@ class expandedAutoPilot: UIView {
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
     }
+
+    @objc func updateSpeedLabel(_ notification: Notification) {
+            speedLabel.text = notification.object as! String
+    }
+
+
 
 }
 
