@@ -196,8 +196,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             orientation = .portrait
         }
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-//        videoPreviewLayer.fic
-        videoPreviewLayer.removeFromSuperlayer()
         videoPreviewLayer.videoGravity = .resizeAspectFill
         videoPreviewLayer.connection?.videoOrientation = orientation;
         cameraView.layer.addSublayer(videoPreviewLayer)
