@@ -47,6 +47,8 @@ class HomePageViewController: UIViewController {
         changeNavigationColor()
         NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
     }
 
     func changeNavigationColor() {
@@ -90,7 +92,6 @@ class HomePageViewController: UIViewController {
 
     func setUpTitle() {
         titleLabel.text = Strings.OpenBot;
-
         titleLabel.textColor = Colors.title;
     }
 
@@ -103,6 +104,14 @@ class HomePageViewController: UIViewController {
 
     @objc func updateControllerValues() {
         gameController.updateControllerValues()
+    }
+
+    @objc func updateConnect(_ notification: Notification) {
+        if (isBluetoothConnected) {
+            bluetooth.setImage(Images.bluetoothConnected, for: .normal)
+        } else {
+            bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
+        }
     }
 }
 
@@ -146,8 +155,6 @@ extension UIViewController: UICollectionViewDataSource {
         return currentViewControllerName
 
     }
-
-
 }
 
 
@@ -185,4 +192,5 @@ extension UIButton {
                 right: -imageTitlePadding
         )
     }
+
 }

@@ -188,6 +188,8 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 //        tempCentralManager = CBCentralManager(delegate: self, queue: nil)
     }
 
+
+
     }
 
 

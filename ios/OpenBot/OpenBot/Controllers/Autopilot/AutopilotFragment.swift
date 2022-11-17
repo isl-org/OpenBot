@@ -93,7 +93,6 @@ class AutopilotFragment: CameraController {
         currentDevice.rawValue == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
         autopilot?.tfliteOptions.threadCount = numberOfThreads
         print("device is ", autopilot?.tfliteOptions)
-
     }
 
     @objc func updateModel(_ notification: Notification) {
