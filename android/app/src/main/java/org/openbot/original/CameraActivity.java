@@ -1323,6 +1323,14 @@ public abstract class CameraActivity extends AppCompatActivity
               controllerHandler.handleIndicatorStop();
               break;
 
+            case "SPEED_UP":
+              controllerHandler.handleSpeedUp();
+              break;
+
+            case "SPEED_DOWN":
+              controllerHandler.handleSpeedDown();
+              break;
+
             case "NETWORK":
               controllerHandler.handleNetwork();
               break;
