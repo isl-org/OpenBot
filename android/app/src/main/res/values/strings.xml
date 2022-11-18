@@ -142,6 +142,7 @@
   <string-array name="stream_server">
     <item>WebRTC</item>
     <item>RTSP</item>
+    <item>RTP</item>
   </string-array>
   <!-- TODO: Remove or change this placeholder text -->
   <string-array name="speed_modes">

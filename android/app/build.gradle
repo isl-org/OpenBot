@@ -80,6 +80,9 @@ dependencies {
     implementation 'com.github.pedroSG94:RTSP-Server:1.0.8'
     implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:2.0.2'
 
+    //RTP Client
+    implementation 'com.github.ar-android:libstreaming:1.0.0'
+
     // RxJava
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'

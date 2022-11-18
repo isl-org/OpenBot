@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/usb_connection">
 
@@ -38,11 +39,32 @@
     <PreferenceCategory app:title="Video Streaming">
 
         <ListPreference
-            app:defaultValue="RTSP"
+            app:defaultValue="RTP"
             app:entries="@array/stream_server"
             app:entryValues="@array/stream_server"
             app:key="video_server"
             app:title="Stream Mode"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="71.125.50.10"
+            android:key="ip"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="IP Address"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="8046"
+            android:key="port_stream"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Stream Port"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:defaultValue="8040"
+            android:key="port_control"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Control Port"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
