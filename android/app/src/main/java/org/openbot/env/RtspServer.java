@@ -125,6 +125,11 @@ public class RtspServer
   }
 
   @Override
+  public void setServerAddress(String ip, String port) {
+
+  }
+
+  @Override
   public void setConnected(boolean connected) {
     int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
     andGate.set("camera permission", camera == PackageManager.PERMISSION_GRANTED);
