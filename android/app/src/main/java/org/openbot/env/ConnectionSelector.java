@@ -3,6 +3,7 @@ package org.openbot.env;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 public class ConnectionSelector {
   private static final String TAG = "ConnectionManager";
@@ -11,6 +12,7 @@ public class ConnectionSelector {
   private ILocalConnection connection;
 
   private final ILocalConnection networkConnection = new NetworkServiceConnection();
+  private final ILocalConnection mobileConnection = new MobileNetworkConnection();
   private final ILocalConnection nearbyConnection = new NearbyConnection();
 
   private ConnectionSelector() {
@@ -38,8 +40,14 @@ public class ConnectionSelector {
     }
 
     if (isConnectedViaWifi()) {
+      Log.i(TAG, "Connected via Wifi");
       connection = networkConnection;
-    } else {
+    } else if (isConnectedViaMobile()) {
+      Log.i(TAG, "Connected via mobile network");
+      connection = mobileConnection;
+    }
+    else {
+      Log.i(TAG, "Connected via Peer-to-Peer");
       connection = nearbyConnection;
     }
 
@@ -51,5 +59,12 @@ public class ConnectionSelector {
         (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo mWifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
     return mWifi.isConnected();
+  }
+
+  private boolean isConnectedViaMobile() {
+    ConnectivityManager connectivityManager =
+            (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo mMobile = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+    return mMobile.isConnected();
   }
 }
