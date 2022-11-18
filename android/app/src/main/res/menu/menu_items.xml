@@ -8,6 +8,11 @@
         android:title="@string/bluetooth"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/bluetoothFragment"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/bluetooth"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
