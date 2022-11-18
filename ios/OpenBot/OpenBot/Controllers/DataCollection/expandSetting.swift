@@ -38,6 +38,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var modelsName  = [String]()
     var resolution = [String]()
     var models: [Model] = [];
+    var leftSpeedLabel = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -60,6 +61,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
         createDelayField()
         let vehicleControls = VehicleControl();
+        createLeftSpeed()
         addSubview(vehicleControls)
         vehicleControls.translatesAutoresizingMaskIntoConstraints = false
         vehicleControls.topAnchor.constraint(equalTo: magnetic.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 13, to: .height)).isActive = true;
@@ -344,6 +346,14 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         text.frame = CGRect(x: 10, y: 0, width: buttonWidth, height: 40)
         btn.addSubview(text)
         return btn
+    }
+
+    func createLeftSpeed() {
+        leftSpeedLabel.frame.size = CGSize(width: 100, height: 40);
+        leftSpeedLabel.frame.origin = CGPoint(x: 4, y: adapted(dimensionSize: 200, to: .height))
+        leftSpeedLabel.text = "xxx,xxx"
+        secondView.addSubview(leftSpeedLabel)
+        leftSpeedLabel.font = leftSpeedLabel.font.withSize(13.5)
     }
 
     @objc func reverseCamera(_ sender: UITapGestureRecognizer? = nil) {

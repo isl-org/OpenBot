@@ -10,6 +10,7 @@ class expandedAutoPilot: UIView {
     let autoModeButton = UISwitch()
     var serverLabel = UILabel()
     var speedLabel = UILabel()
+    var leftSpeedLabel = UILabel()
     var deviceDropDown = DropDown()
     var deviceDropDownLabel = UILabel()
     var modelDropdownLabel = UILabel()
@@ -173,7 +174,7 @@ class expandedAutoPilot: UIView {
         serverDropDownView.frame.size = CGSize(width: 200, height: 100);
         serverDropDownView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(serverDropDownView)
-        serverDropDownView.topAnchor.constraint(equalTo: self.topAnchor, constant: adapted(dimensionSize: 40, to: .height)).isActive = true
+        serverDropDownView.topAnchor.constraint(equalTo: topAnchor, constant: adapted(dimensionSize: 40, to: .height)).isActive = true
         serverDropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 180).isActive = true;
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
@@ -333,11 +334,11 @@ class expandedAutoPilot: UIView {
     }
 
     func createLeftSpeed() {
-        speedLabel.frame.size = CGSize(width: 100, height: 40);
-        speedLabel.frame.origin = CGPoint(x: 4, y: adapted(dimensionSize: 200, to: .height))
-        speedLabel.text = "xxx,xxx"
-        addSubview(speedLabel)
-        speedLabel.font = speedLabel.font.withSize(13.5)
+        leftSpeedLabel.frame.size = CGSize(width: 100, height: 40);
+        leftSpeedLabel.frame.origin = CGPoint(x: 4, y: adapted(dimensionSize: 200, to: .height))
+        leftSpeedLabel.text = "xxx,xxx"
+        addSubview(leftSpeedLabel)
+        leftSpeedLabel.font = leftSpeedLabel.font.withSize(13.5)
     }
 
 
@@ -444,10 +445,7 @@ class expandedAutoPilot: UIView {
     }
 
     @objc func updateSpeedLabel(_ notification: Notification) {
-            speedLabel.text = notification.object as! String
+        leftSpeedLabel.text = notification.object as! String
     }
-
-
-
 }
 
