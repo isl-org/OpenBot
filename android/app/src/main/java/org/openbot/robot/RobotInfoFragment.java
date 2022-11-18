@@ -91,31 +91,32 @@ public class RobotInfoFragment extends ControlsFragment {
           binding.robotIcon.setImageResource(R.drawable.ic_openbot);
           break;
       }
-      binding.voltageSwitch.setChecked(vehicle.isHasVoltageDivider());
-      binding.sonarSwitch.setChecked(vehicle.isHasSonar());
-      binding.indicatorLedsSwitch.setChecked(vehicle.isHasIndicators());
-      binding.ledsFrontSwitch.setChecked(vehicle.isHasLedsFront());
-      binding.ledsBackSwitch.setChecked(vehicle.isHasLedsBack());
-      binding.ledsStatusSwitch.setChecked(vehicle.isHasLedsStatus());
-      binding.bumpersSwitch.setChecked(vehicle.isHasBumpSensor());
-      binding.wheelOdometryFrontSwitch.setChecked(vehicle.isHasWheelOdometryFront());
-      binding.wheelOdometryBackSwitch.setChecked(vehicle.isHasWheelOdometryBack());
     } else {
       binding.robotTypeInfo.setText(getString(R.string.n_a));
       binding.robotIcon.setImageResource(R.drawable.ic_openbot);
-      binding.voltageSwitch.setChecked(false);
-      binding.sonarSwitch.setChecked(false);
-      binding.indicatorLedsSwitch.setChecked(false);
-      binding.ledsFrontSwitch.setChecked(false);
-      binding.ledsBackSwitch.setChecked(false);
-      binding.ledsStatusSwitch.setChecked(false);
-      binding.bumpersSwitch.setChecked(false);
-      binding.wheelOdometryFrontSwitch.setChecked(false);
-      binding.wheelOdometryBackSwitch.setChecked(false);
       binding.voltageInfo.setText(R.string.voltage);
       binding.speedInfo.setText(R.string.rpm);
       binding.sonarInfo.setText(R.string.distance);
+      vehicle.setHasVoltageDivider(false);
+      vehicle.setHasSonar(false);
+      vehicle.setHasIndicators(false);
+      vehicle.setHasLedsFront(false);
+      vehicle.setHasLedsBack(false);
+      vehicle.setHasLedsStatus(false);
+      vehicle.setHasBumpSensor(false);
+      vehicle.setHasWheelOdometryFront(false);
+      vehicle.setHasWheelOdometryBack(false);
     }
+    binding.voltageSwitch.setChecked(vehicle.isHasVoltageDivider());
+    binding.sonarSwitch.setChecked(vehicle.isHasSonar());
+    binding.indicatorLedsSwitch.setChecked(vehicle.isHasIndicators());
+    binding.ledsFrontSwitch.setChecked(vehicle.isHasLedsFront());
+    binding.ledsBackSwitch.setChecked(vehicle.isHasLedsBack());
+    binding.ledsStatusSwitch.setChecked(vehicle.isHasLedsStatus());
+    binding.bumpersSwitch.setChecked(vehicle.isHasBumpSensor());
+    binding.wheelOdometryFrontSwitch.setChecked(vehicle.isHasWheelOdometryFront());
+    binding.wheelOdometryBackSwitch.setChecked(vehicle.isHasWheelOdometryBack());
+
     if (vehicle.isHasLedsFront() && vehicle.isHasLedsBack()) {
       binding.ledsLabel.setVisibility(View.VISIBLE);
       binding.lightsSlider.setVisibility(View.VISIBLE);
