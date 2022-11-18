@@ -365,7 +365,7 @@ public class BluetoothFragment extends Fragment {
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt discoveredGatt, int status, int newState) {
-            BleManager.getInstance().notify(device, curService.uuid, curCharacteristic.uuid, notifyCallback);
+//            BleManager.getInstance().notify(device, curService.uuid, curCharacteristic.uuid, notifyCallback);
             System.out.println("onConnectionStateChange Status: " + status);
             super.onConnectionStateChange(discoveredGatt, status, newState);
             switch (newState) {
