@@ -34,10 +34,7 @@ public class RobotInfoFragment extends ControlsFragment {
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
 
-    binding.usbToggle.setOnCheckedChangeListener(
-        (buttonView, isChecked) -> {
-          refreshGui();
-        });
+    binding.usbToggle.setOnCheckedChangeListener((buttonView, isChecked) -> refreshGui());
 
     binding.usbToggle.setOnClickListener(
         v -> {
@@ -45,30 +42,18 @@ public class RobotInfoFragment extends ControlsFragment {
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
 
-    binding.refreshToggle.setOnClickListener(
-        v -> {
-          refreshGui();
-        });
+    binding.refreshToggle.setOnClickListener(v -> refreshGui());
 
     binding.lightsSlider.addOnChangeListener(
         (slider, value, fromUser) -> {
           vehicle.sendLightIntensity(value / 100, value / 100);
         });
 
-    binding.motorsForwardButton.setOnClickListener(
-        v -> {
-          vehicle.setControl(0.5f, 0.5f);
-        });
+    binding.motorsForwardButton.setOnClickListener(v -> vehicle.setControl(0.5f, 0.5f));
 
-    binding.motorsBackwardButton.setOnClickListener(
-        v -> {
-          vehicle.setControl(-0.5f, -0.5f);
-        });
+    binding.motorsBackwardButton.setOnClickListener(v -> vehicle.setControl(-0.5f, -0.5f));
 
-    binding.motorsStopButton.setOnClickListener(
-        v -> {
-          vehicle.setControl(0.0f, 0.0f);
-        });
+    binding.motorsStopButton.setOnClickListener(v -> vehicle.setControl(0.0f, 0.0f));
 
     refreshGui();
   }
@@ -86,11 +71,7 @@ public class RobotInfoFragment extends ControlsFragment {
       binding.robotTypeInfo.setText(vehicle.getVehicleType());
       switch (vehicle.getVehicleType()) {
         case "DIY":
-          binding.robotIcon.setImageResource(R.drawable.diy);
-          break;
         case "PCB_V1":
-          binding.robotIcon.setImageResource(R.drawable.diy);
-          break;
         case "PCB_V2":
           binding.robotIcon.setImageResource(R.drawable.diy);
           break;
@@ -99,6 +80,9 @@ public class RobotInfoFragment extends ControlsFragment {
           break;
         case "RTR_520":
           binding.robotIcon.setImageResource(R.drawable.rtr_520);
+          break;
+        case "RC_CAR":
+          binding.robotIcon.setImageResource(R.drawable.rc_car);
           break;
         case "MTV":
           binding.robotIcon.setImageResource(R.drawable.mtv);
@@ -132,6 +116,13 @@ public class RobotInfoFragment extends ControlsFragment {
       binding.speedInfo.setText(R.string.rpm);
       binding.sonarInfo.setText(R.string.distance);
     }
+    if (vehicle.isHasLedsFront() && vehicle.isHasLedsBack()) {
+      binding.ledsLabel.setVisibility(View.VISIBLE);
+      binding.lightsSlider.setVisibility(View.VISIBLE);
+    } else {
+      binding.ledsLabel.setVisibility(View.INVISIBLE);
+      binding.lightsSlider.setVisibility(View.INVISIBLE);
+    }
   }
 
   @Override
@@ -146,8 +137,8 @@ public class RobotInfoFragment extends ControlsFragment {
       vehicle.requestVehicleConfig();
     }
     char header = data.charAt(0);
-    String body = data.substring(1);
-    int type = -1;
+    // String body = data.substring(1);
+    // int type = -1;
     switch (header) {
       case 'r':
         vehicle.requestVehicleConfig();
