@@ -161,4 +161,5 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation 'com.koushikdutta.ion:ion:3.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.github.Ficat:EasyBle:v2.0.2'
 }
