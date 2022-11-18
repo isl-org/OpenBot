@@ -3,3 +3,5 @@ opencv-python
 zeroconf
 click
 black
+traitlets
+approxeng.input
