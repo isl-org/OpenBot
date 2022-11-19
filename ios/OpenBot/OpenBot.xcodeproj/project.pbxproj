@@ -721,15 +721,12 @@
 				727D3BF38CB798E8B3321E87 /* SettingsFragment.swift in Sources */,
 				727D34F694C565E9A8F4D487 /* Notifications.swift in Sources */,
 				727D33A327A7D99A558EFDC4 /* BluetoothTable.swift in Sources */,
-<<<<<<< Updated upstream
 				4FEF44068B0C9DBF44BFE5A2 /* CVPixelBuffer.swift in Sources */,
-=======
 				727D37EF7FFD794AAD19F1F6 /* modesCollectionViewCell.swift in Sources */,
 				727D3D319744DCFF840F7C23 /* HomePageViewController.swift in Sources */,
 				727D378DB2E32C26828E73A9 /* GameViewController.swift in Sources */,
 				727D3D82257E17339EA26D94 /* ModelManagementFragment.swift in Sources */,
 				727D3AEFE62BB8644729D602 /* popupWindowView.swift in Sources */,
->>>>>>> Stashed changes
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
