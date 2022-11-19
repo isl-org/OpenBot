@@ -22,6 +22,7 @@ class DataCollectionController: CameraController {
     let gameController = GameController.shared
     var isLoggedButtonPressed: Bool = false
 
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()

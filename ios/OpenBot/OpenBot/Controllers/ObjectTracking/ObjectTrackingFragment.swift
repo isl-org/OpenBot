@@ -20,7 +20,7 @@ class ObjectTrackingFragment: CameraController {
     private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 20.0;
 
     override func viewDidLoad() {
-        let modelItems = Common.loadAllModels()
+        let modelItems = Common.loadAllModelItems()
         if (modelItems.count > 0) {
             let model = modelItems.first(where: { $0.type == TYPE.DETECTOR.rawValue })
             currentModel = model
