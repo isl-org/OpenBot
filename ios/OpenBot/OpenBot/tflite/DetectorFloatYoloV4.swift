@@ -53,25 +53,6 @@ class DetectorFloatYoloV4: Detector {
         NUM_DETECTIONS;
     }
 
-    /**
-     normalized to the range [-1.0, 1.0]
-    */
-    override func addPixelValue(red: UInt8, blue: UInt8, green: UInt8) {
-        var normalizedRed = (Float32(((red >> 16) & 0xFF)) - IMAGE_MEAN) / IMAGE_STD;
-        var normalizedGreen = (Float32((green >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD;
-        var normalizedBlue = (Float32((blue) & 0xFF) - IMAGE_MEAN) / IMAGE_STD;
-
-        let elementSize = MemoryLayout.size(ofValue: normalizedRed)
-        var bytes = [UInt8](repeating: 0, count: elementSize)
-        memcpy(&bytes, &normalizedRed, elementSize)
-        imgData.append(&bytes, count: elementSize)
-        memcpy(&bytes, &normalizedGreen, elementSize)
-        imgData.append(&bytes, count: elementSize)
-        memcpy(&bytes, &normalizedBlue, elementSize)
-        imgData.append(&bytes, count: elementSize)
-    }
-
-
     override func runInference() throws {
         do {
             let outputLocationsTensor = try tflite?.output(at: outputLocationsIdx);
@@ -103,7 +84,7 @@ class DetectorFloatYoloV4: Detector {
                 var maxClassScore: Float = 0;
                 var classId = -1;
                 let classes = outputScores2D[i];
-                for c in stride(from: 0, to: classes.count, by: 1) {
+                for c in stride(from: 0, to: labels.count, by: 1) {
                     if (classes[c] > maxClassScore) {
                         classId = c;
                         maxClassScore = classes[c];

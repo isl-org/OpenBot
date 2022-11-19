@@ -29,15 +29,19 @@ class Autopilot: Network {
         }
     }
 
-    func recogniseImage(image: CGImage, indicator: Float) -> Control {
+    func recogniseImage(image: UIImage, indicator: Float) -> Control {
         do {
             var indicatorData: Data = Data();
             indicatorData.append(contentsOf: indicator.bytes);
             try tflite?.copy(indicatorData, toInputAt: cmdIndex);
 
-            //make image input
-            convertImageToData(image: image);
-            try tflite?.copy(imgData, toInputAt: imgIndex);
+//            //make image input
+//            convertImageToData(image: image);
+            let inputTensor = try tflite!.input(at: 0);
+            let imageData = image.pixelBuffer(width: getImageSizeX(), height: getImageSizeY());
+            let rgbData = rgbDataFromBuffer(imageData!,
+                    isModelQuantized: inputTensor.dataType == .uInt8);
+            try tflite?.copy(rgbData!, toInputAt: imgIndex);
 
             try tflite?.invoke();
 
@@ -51,23 +55,5 @@ class Autopilot: Network {
             print("error:\(error)")
             return Control(left: 0, right: 0)
         };
-    }
-
-    /**
-     normalized to the range [-1.0, 1.0]
-    */
-    override func addPixelValue(red: UInt8, blue: UInt8, green: UInt8) {
-        var normalizedRed = (Float32(((red >> 16) & 0xFF)) - IMAGE_MEAN) / IMAGE_STD;
-        var normalizedGreen = (Float32((green >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD;
-        var normalizedBlue = (Float32((blue) & 0xFF) - IMAGE_MEAN) / IMAGE_STD;
-
-        let elementSize = MemoryLayout.size(ofValue: normalizedRed)
-        var bytes = [UInt8](repeating: 0, count: elementSize)
-        memcpy(&bytes, &normalizedRed, elementSize)
-        imgData.append(&bytes, count: elementSize)
-        memcpy(&bytes, &normalizedGreen, elementSize)
-        imgData.append(&bytes, count: elementSize)
-        memcpy(&bytes, &normalizedBlue, elementSize)
-        imgData.append(&bytes, count: elementSize)
     }
 }

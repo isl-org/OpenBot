@@ -95,36 +95,16 @@ class DetectorQuantizedMobileNet: Detector {
         }
     }
 
-
-    /**
-     normalized to the range
-    */
-    override func addPixelValue(red: UInt8, blue: UInt8, green: UInt8) {
-        var normalizedRed = Float32(((red >> 16) & 0xFF))
-        var normalizedGreen = Float32(((green >> 8) & 0xFF))
-        var normalizedBlue = Float32(((blue) & 0xFF))
-
-        let elementSize = MemoryLayout.size(ofValue: normalizedRed)
-        var bytes = [UInt8](repeating: 0, count: elementSize)
-        memcpy(&bytes, &normalizedRed, elementSize)
-        imgData.append(&bytes, count: elementSize)
-        memcpy(&bytes, &normalizedGreen, elementSize)
-        imgData.append(&bytes, count: elementSize)
-        memcpy(&bytes, &normalizedBlue, elementSize)
-        imgData.append(&bytes, count: elementSize)
-    }
-
     override func getImageSizeX() -> Int {
-        Int(imageSize.width / 2);
+        Int(imageSize.width);
     }
 
     override func getImageSizeY() -> Int {
-        Int(imageSize.height / 2);
+        Int(imageSize.height);
     }
 
     override func getRecognitions(className: String) -> [Recognition] {
         var recognitions: [Recognition] = [];
-//        print("classname:: ", className);
         for i in 0..<NUM_DETECTIONS {
             let xPos = CGFloat(outputLocations![(4 * i) + 1]) * CGFloat(getImageSizeX());
             let yPos = CGFloat(outputLocations![(4 * i)]) * CGFloat(getImageSizeY());
@@ -133,8 +113,6 @@ class DetectorQuantizedMobileNet: Detector {
             let rect = CGRect(x: xPos, y: yPos, width: width, height: height);
             let classId: Int = Int(outputClasses![i]);
             let labelId: Int = classId + 1;
-//            print("label, labelId:: " + labels[labelId], labelId);
-//            print("score:: " + String(outputScores![i]));
             if (className == labels[labelId]) {
                 recognitions.append(Recognition(id: String(i), title: labels[labelId], confidence: outputScores![i], location: rect, classId: classId));
             }

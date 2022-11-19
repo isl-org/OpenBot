@@ -25,7 +25,7 @@ class Detector: Network {
         try super.init(model: model, device: device, numThreads: numThreads);
         labels = loadLabelList(filePath: getLabelPath());
         selectedClass = labels.first {
-            $0 == "person"
+            $0.capitalized == "person".capitalized
         };
         parseTFlite();
     }
@@ -125,9 +125,13 @@ class Detector: Network {
         return result
     }
 
-    func recognizeImage(image: CGImage) throws -> [Recognition] {
-        convertImageToData(image: image);
-        try tflite?.copy(imgData, toInputAt: 0);
+    func recognizeImage(image: UIImage) throws -> [Recognition] {
+        let inputTensor = try tflite!.input(at: 0);
+        let imageData = image.pixelBuffer(width: getImageSizeX(), height: getImageSizeY());
+        let rgbData = rgbDataFromBuffer(imageData!,
+                isModelQuantized: inputTensor.dataType == .uInt8);
+
+        try tflite?.copy(rgbData!, toInputAt: 0);
         try tflite?.invoke();
         try runInference();
         return getRecognitions(className: selectedClass!);
