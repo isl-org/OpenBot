@@ -467,7 +467,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     func loadModelsNameAndResolution(){
-        let models = Common.loadAllModelItems()
+        let models = Common.loadAllModels()
         if models.count > 0 {
             let model = Model.fromModelItems(list: models)
             for count in 0 ... models.count-1 {

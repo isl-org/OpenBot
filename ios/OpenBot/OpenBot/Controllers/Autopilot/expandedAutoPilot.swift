@@ -244,13 +244,13 @@ class expandedAutoPilot: UIView {
         deviceDropDown.show()
         deviceDropDown.width = 90
         ddView = createDropdownView(borderColor: "", buttonName: "CPU", leadingAnchor: 80, topAnchor: adapted(dimensionSize: 160, to: .height), action: #selector(showDeviceDropdown(_:)))
-        let downwardImage = UIImageView()
-        downwardImage.frame.size = CGSize(width: 5, height: 5)
-        downwardImage.image = Images.downArrow
-        ddView.addSubview(downwardImage)
-        downwardImage.translatesAutoresizingMaskIntoConstraints = false
-        downwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
-        downwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
+        let upwardImage = UIImageView()
+        upwardImage.frame.size = CGSize(width: 5, height: 5)
+        upwardImage.image = Images.downArrow
+        ddView.addSubview(upwardImage)
+        upwardImage.translatesAutoresizingMaskIntoConstraints = false
+        upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
+        upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
         deviceDropDownLabel.text = "CPU"
         deviceDropDownLabel.textColor = Colors.borderColor
         deviceDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
