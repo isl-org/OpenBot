@@ -11,6 +11,7 @@ struct Images {
     static let controllerMapping = UIImage(named: "controllerMapping");
     static let autopilotIcon = UIImage(named: "autopilot");
     static let objectTrackingIcon = UIImage(named: "objectTracking");
+    static let modelManagementIcon = UIImage(named: "modelManagement")
     static let bluetoothConnected = UIImage(named: "bluetoothConnected");
     static let bluetoothDisconnected = UIImage(named: "bluetoothDisconnected");
     static let frontCamera = UIImage(named: "frontCamera");
@@ -29,6 +30,7 @@ struct Images {
     static let downArrow = UIImage(systemName: "arrowtriangle.down.fill")
     static let minus = UIImage(systemName: "minus");
     static let plus = UIImage(systemName: "plus");
+
 }
 
 struct Colors {
@@ -49,7 +51,8 @@ struct Constants {
         ModeItem(label: Strings.dataCollection, icon: Images.dataCollection!, identifier: Strings.ScreenDataCollection),
         ModeItem(label: Strings.controllerMapping, icon: Images.controllerMapping!, identifier: Strings.ScreenControllerMapping),
         ModeItem(label: Strings.Autopilot, icon: Images.autopilotIcon!, identifier: Strings.AutopilotFragment),
-        ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment)
+        ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment),
+        ModeItem(label: Strings.modelManagement, icon : Images.modelManagementIcon!, identifier : Strings.ScreenModelManagement)
     ];
     static let frameColors: [UIColor] = [UIColor.red, UIColor.yellow, UIColor.blue, UIColor.green, UIColor.brown];
     static let autopilotMode = "AUTOPILOT";

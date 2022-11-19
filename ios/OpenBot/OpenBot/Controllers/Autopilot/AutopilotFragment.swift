@@ -29,7 +29,7 @@ class AutopilotFragment: CameraController {
         expandedAutoPilotView!.backgroundColor = Colors.freeRoamButtonsColor
         expandedAutoPilotView!.layer.cornerRadius = 15
         createCameraView()
-        let modelItems = Common.loadAllModels()
+        let modelItems = Common.loadAllModelItems()
         if (modelItems.count > 0) {
             models = Model.fromModelItems(list: modelItems);
             currentModel = modelItems[0]
