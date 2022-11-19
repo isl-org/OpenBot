@@ -15,6 +15,7 @@
 		4FEF434E29022789D4FB8985 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4E0B9A9BAE2BD7321783 /* Main.storyboard */; };
 		4FEF43565A0B8A9578E85B54 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4EE1E197D3F52EFF3B88 /* Launch Screen.storyboard */; };
 		4FEF43788A6975AED9390369 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47EAC21A4C2BDD11B72B /* README.md */; };
+		4FEF44068B0C9DBF44BFE5A2 /* CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF41FCA3B501192D417D73 /* CVPixelBuffer.swift */; };
 		4FEF442F6DF5C31D0EE4FE2B /* OpenBotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */; };
 		4FEF44A3F41CE1D4898D1C4D /* ObjectTrackingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF492829E700076FAA4132 /* ObjectTrackingSettings.swift */; };
 		4FEF44E677749DA0D24FB857 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF42714D658342895B0A95 /* Network.swift */; };
@@ -94,6 +95,7 @@
 		3A31E72F28AE0E1A00FDD235 /* SensorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorsViewController.swift; sourceTree = "<group>"; };
 		3AE7A38A28ACB0D6001ABE2F /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		4FEF4178D0A2805591A6A3A6 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		4FEF41FCA3B501192D417D73 /* CVPixelBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CVPixelBuffer.swift; path = extensions/CVPixelBuffer.swift; sourceTree = "<group>"; };
 		4FEF421BF49FEE835C6DC5CB /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		4FEF42374776D62381BDE68C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		4FEF42714D658342895B0A95 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 				727D3F5FE3F054BE4FA52191 /* timestamp.swift */,
 				4FEF4A59FF61753FF6DF0F79 /* Common.swift */,
 				727D37FCEAA4FF7A957583C8 /* Notifications.swift */,
+				4FEF41FCA3B501192D417D73 /* CVPixelBuffer.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -719,6 +722,7 @@
 				727D3BF38CB798E8B3321E87 /* SettingsFragment.swift in Sources */,
 				727D34F694C565E9A8F4D487 /* Notifications.swift in Sources */,
 				727D33A327A7D99A558EFDC4 /* BluetoothTable.swift in Sources */,
+				4FEF44068B0C9DBF44BFE5A2 /* CVPixelBuffer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

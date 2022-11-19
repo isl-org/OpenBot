@@ -111,7 +111,7 @@ class AutopilotFragment: CameraController {
             if (timer.isValid) {
                 captureImage();
                 if (images.count > 0) {
-                    let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0.cgImage!, indicator: 0) ?? Control();
+                    let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0, indicator: 0) ?? Control();
 //                    print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
                     sendControl(control: controlResult);
                 }

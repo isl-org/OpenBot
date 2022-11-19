@@ -17,7 +17,7 @@ class ObjectTrackingFragment: CameraController {
     let bluetooth = bluetoothDataController.shared;
     var currentModel: ModelItem!
     var currentDevice: RuntimeDevice = RuntimeDevice.CPU
-    private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 0.5;
+    private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 20.0;
 
     override func viewDidLoad() {
         let modelItems = Common.loadAllModels()
@@ -95,7 +95,7 @@ class ObjectTrackingFragment: CameraController {
         var frames: [UIView] = [];
         autoMode = !autoMode;
         if (autoMode) {
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
+            Timer.scheduledTimer(withTimeInterval: 0.7, repeats: true) { [self] timer in
                 do {
                     if !autoMode {
                         timer.invalidate()
@@ -105,18 +105,16 @@ class ObjectTrackingFragment: CameraController {
                             frame.removeFromSuperview();
                         }
                     }
+                    frames.removeAll();
                     if (timer.isValid) {
                         let startTime = returnCurrentTimestamp();
                         captureImage();
                         if (images.count > 0) {
-                            let modelResolution = CGSize.parseSize(currentModel.inputSize);
-                            let image = cropImage(image: images[images.count - 1].0, height: modelResolution.height, width: modelResolution.width)
-                            let res = try detector?.recognizeImage(image: image.cgImage!);
+
+                            let res = try detector?.recognizeImage(image: images[images.count - 1].0);
                             var i = 0;
                             if (res!.count > 0) {
                                 for item in res! {
-                                    print(item.getTitle() + " :: " + String(item.getConfidence()));
-                                    print("Object :: ", item.getLocation());
                                     if (item.getConfidence() * 100 > MINIMUM_CONFIDENCE_TF_OD_API) {
                                         let frame = addFrame(item: item, color: Constants.frameColors[i % 5]);
                                         frames.append(frame);

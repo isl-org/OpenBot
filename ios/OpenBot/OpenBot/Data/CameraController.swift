@@ -21,13 +21,13 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     var widthOfTrainingImage: Float = 256
     var heightOfTrainingImage: Float = 96
     var saveZipFilesName = [URL]()
+    var pixelBuffer: CVPixelBuffer?;
 
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateModelResolution), name: .updateModelResolution, object: nil)
     }
-
 
 
     override func viewDidAppear(_ animated: Bool) {
@@ -41,22 +41,22 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     /**
      function that check whether camera permission is given to OpenBot or not
      */
-     func checkCameraPermission(){
-         print("inside checkCameraPermission")
-         let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
-         switch authStatus {
-         case .authorized:
-             initializeCamera()
-         case .notDetermined:
-           print("notDetermined")
-         case .restricted:
-             createAllowAlert(alertFor: "Camera");
-         case .denied:
-             createAllowAlert(alertFor: "Camera");
-         @unknown default:
-             createAllowAlert(alertFor: "Camera");
-         }
-     }
+    func checkCameraPermission() {
+        print("inside checkCameraPermission")
+        let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        switch authStatus {
+        case .authorized:
+            initializeCamera()
+        case .notDetermined:
+            print("notDetermined")
+        case .restricted:
+            createAllowAlert(alertFor: "Camera");
+        case .denied:
+            createAllowAlert(alertFor: "Camera");
+        @unknown default:
+            createAllowAlert(alertFor: "Camera");
+        }
+    }
 
     /**
      function that prompt setting to  turn on Camera permission
@@ -174,15 +174,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         function to dispatch the camera feed into the screen in portrait mode.
      */
     func setupLivePreview() {
-
         var orientation: AVCaptureVideoOrientation = .portrait;
         switch currentOrientation {
-        case .unknown:
-            orientation = .portrait
-            break;
-        case .portrait:
-            orientation = .portrait
-            break;
         case .portraitUpsideDown:
             orientation = .portraitUpsideDown
             break;
@@ -192,11 +185,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         case .landscapeRight:
             orientation = .landscapeLeft
             break;
-        @unknown default:
-            orientation = .portrait
+        default: break
         }
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        videoPreviewLayer.videoGravity = .resizeAspectFill
         videoPreviewLayer.connection?.videoOrientation = orientation;
         cameraView.layer.addSublayer(videoPreviewLayer)
         DispatchQueue.global(qos: .userInitiated).async { //[weak self] in
@@ -298,7 +289,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
        - error:
      */
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-//        AudioServicesDisposeSystemSoundID(1108)
         guard let imageData = photo.fileDataRepresentation()
         else {
             return
@@ -322,7 +312,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             }
             images.append((image, isPreviewSelected, isTrainingSelected))
         }
-//        AudioServicesDisposeSystemSoundID(1108)
 
     }
 
@@ -335,17 +324,21 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
      - Returns:
      */
     func cropImage(image: UIImage, height: CGFloat, width: CGFloat) -> UIImage {
-        //cropping Top 20% and with height and width passed as parameters.
-        let top20 = image.size.height * 0.2;
-        let xPos = image.size.width / 2 - width / 2;
-        let yPos = image.size.height / 2 + top20 - height / 2;
-        let rectToCrop = CGRect(x: xPos, y: yPos, width: width, height: height)
-        if let imageRef = image.cgImage!.cropping(to: rectToCrop) {
-            let imageRef: CGImage = imageRef
-            let cropped: UIImage = UIImage(cgImage: imageRef);
-            return cropped
-        }
-        return image
+//        //cropping Top 20% and with height and width passed as parameters.
+////        let top20 = image.size.height * 0.2;
+//        let xPos = image.size.width / 2;
+//        let yPos = 0.0;
+//        print("size::", width, "X", height);
+//        print("xPos: ", xPos, " yPos: ", yPos);
+////
+//        let rectToCrop = CGRect(x: xPos, y: yPos, width: width, height: height)
+//
+//        if let imageRef = image.cgImage!.cropping(to: rectToCrop) {
+//            let imageRef: CGImage = imageRef
+//            let cropped: UIImage = UIImage(cgImage: imageRef);
+//            return cropped
+//        }
+         image.resized(to: CGSize(width: width, height: height))
     }
 
     /**
@@ -367,7 +360,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     func captureImage() {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
         stillImageOutput.capturePhoto(with: settings, delegate: self)
-//        AudioServicesDisposeSystemSoundID(1108)
     }
 
     func saveImages() {
