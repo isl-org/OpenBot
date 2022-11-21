@@ -21,6 +21,7 @@
 		4FEF47B52607872D6B0CD56F /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4178D0A2805591A6A3A6 /* Strings.swift */; };
 		4FEF47E6E6A09E51C9FDF010 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF49FAEA0EB5E01610A55B /* Model.swift */; };
 		4FEF483FCB45A3257C181C30 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4BD00A645A3985233A37 /* README.md */; };
+		4FEF48E013A1477BE882AA7F /* FileDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4C55CFB1E29CF626C0CC /* FileDownloader.swift */; };
 		4FEF49D3149212EA208C893B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF443C3B9B9931D5108052 /* Constants.swift */; };
 		4FEF49DD79D9DD3CF5733B71 /* OpenBotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF43E1577F7EE5E2E2A653 /* OpenBotUITests.swift */; };
 		4FEF4A1F9280139D278509D3 /* Detector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF49E95825B789A39EDA21 /* Detector.swift */; };
@@ -119,6 +120,7 @@
 		4FEF4A59FF61753FF6DF0F79 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FEF4BD00A645A3985233A37 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		4FEF4C55CFB1E29CF626C0CC /* FileDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
 		4FEF4C8C9707613D66A8051E /* ObjectTrackingFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjectTrackingFragment.swift; path = ObjectTracking/ObjectTrackingFragment.swift; sourceTree = "<group>"; };
 		4FEF4D548F5BD4ABE07F1F71 /* OpenBotUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		4FEF4D63E4FA9FB585EF1733 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 				4FEF4A59FF61753FF6DF0F79 /* Common.swift */,
 				727D37FCEAA4FF7A957583C8 /* Notifications.swift */,
 				4FEF41FCA3B501192D417D73 /* CVPixelBuffer.swift */,
+				4FEF4C55CFB1E29CF626C0CC /* FileDownloader.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -727,6 +730,7 @@
 				727D378DB2E32C26828E73A9 /* GameViewController.swift in Sources */,
 				727D3D82257E17339EA26D94 /* ModelManagementFragment.swift in Sources */,
 				727D3AEFE62BB8644729D602 /* popupWindowView.swift in Sources */,
+				4FEF48E013A1477BE882AA7F /* FileDownloader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
