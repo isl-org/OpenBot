@@ -9,14 +9,14 @@ import CoreMotion
 class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPeripheralDelegate {
     static let shared: bluetoothDataController = bluetoothDataController()
     var centralManager: CBCentralManager?
-    var tempCentralManager : CBCentralManager?
+    var tempCentralManager: CBCentralManager?
     var peri: CBPeripheral?
     var peripherals = Array<CBPeripheral>()
     var tempPeripheral: CBPeripheral!
     var sonarData: String = ""
     var voltageDivider: String = ""
     var speedometer: String = ""
-    var bumperData : String = ""
+    var bumperData: String = ""
     private var allServices: [CBService]?
     var writeCharacteristics: CBCharacteristic?
 
@@ -51,7 +51,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         if peripheral.name != nil {
-            if !peripherals.contains(peripheral){
+            if !peripherals.contains(peripheral) {
                 peripherals.append(peripheral)
                 print(peripherals)
 
@@ -101,10 +101,13 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
-                writeCharacteristics = characteristic
-                subscribeToNotifications(peripheral: tempPeripheral, characteristic: characteristic)
-                readValue(characteristic: characteristic)
-                peripheral.discoverDescriptors(for: characteristic)
+                if (characteristic.properties == .write) {
+                    writeCharacteristics = characteristic;
+                } else if (characteristic.properties == .notify) {
+                    subscribeToNotifications(peripheral: tempPeripheral, characteristic: characteristic)
+                    readValue(characteristic: characteristic)
+                    peripheral.discoverDescriptors(for: characteristic)
+                }
             }
         }
     }
@@ -143,8 +146,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
                 voltageDivider = x
             } else if x.prefix(1) == "w" {
                 speedometer = x
-            }
-            else if x.prefix(1) == "b"{
+            } else if x.prefix(1) == "b" {
                 bumperData = x;
             }
         }
@@ -178,7 +180,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         centralManager?.stopScan()
     }
 
-    func startScan(){
+    func startScan() {
         print("starting scan")
         centralManager?.scanForPeripherals(withServices: nil, options: nil)
 
@@ -189,7 +191,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
 
-
-    }
+}
 
 
