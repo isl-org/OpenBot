@@ -108,13 +108,13 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         modelDropdown.textColor = Colors.borderColor!
         let dropDownView = UIView(frame: CGRect(x: width / 2 + 20, y: 100, width: width / 2 - 80, height: 200));
         view.addSubview(dropDownView);
-        modelDropdown.dataSource = ["All", "AUTOPilot", "Detector", "Navigation"];
+        modelDropdown.dataSource = ["All", "AutoPilot", "Detector", "Navigation"];
         modelDropdown.anchorView = dropDownView
         modelDropdown.width = 100;
         modelDropdown.selectionAction = { [unowned self] (index: Int, item: String) in
             modelClassLabel.text = item
-            updateTable()
             updateModelItemList(type: item)
+            updateTable()
         }
     }
 
@@ -206,8 +206,20 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = modelTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-        cell.imgUser.image = UIImage(named: "download-cloud")
         cell.textLabel?.text = models[indexPath.item]
+        if Common.isModelItemAvailable(modelName: models[indexPath.item]) {
+            return cell;
+        }
+        cell.imgUser.isUserInteractionEnabled = true;
+        cell.imgUser.tag = indexPath.row
+        let tap = UITapGestureRecognizer(target: self, action: #selector(download(_:)))
+        cell.imgUser.addGestureRecognizer(tap)
+        switch Common.isModelItemAvailable(modelName: models[indexPath.item]) || Common.isModelItemAvailableInDocument(modelName: models[indexPath.item]) {
+        case true:
+            cell.imgUser.image = UIImage(named: "trash")
+        case false:
+            cell.imgUser.image = UIImage(named: "download-cloud")
+        }
         return cell
     }
 
@@ -266,7 +278,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         switch type {
         case "All":
             models = Common.loadAllModels()
-        case "AUTOPilot":
+        case "AutoPilot":
             models = Common.loadAllSelectedModelItems(mode: "AUTOPILOT")
         case "Detector":
             models = Common.loadAllSelectedModelItems(mode: "DETECTOR")
@@ -281,16 +293,54 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     func updateTable() {
         modelTable.reloadData()
     }
+
+    @objc func download(_ sender: UITapGestureRecognizer) {
+        let indexOfSelectedModel = sender.view?.tag ?? 0
+        switch Common.isModelItemAvailableInDocument(modelName: models[indexOfSelectedModel]) {
+        case true:
+            deleteModel(modelName: models[indexOfSelectedModel])
+        case false:
+            downloadModel(modelName: models[indexOfSelectedModel])
+        }
+
+    }
+
+    func deleteModel(modelName: String) {
+        let filesPath = DataLogger.shared.getDocumentDirectoryInformation()
+        print(modelName)
+        for url in filesPath {
+            let indexOfUrl = url.absoluteString.lastIndex(of: "/")!;
+            let indexFromApi = Common.loadSelectedModel(modeName: modelName).path.lastIndex(of: "/")!;
+            if Common.loadSelectedModel(modeName: modelName).path.substring(from: indexFromApi) == url.absoluteString.substring(from: indexOfUrl) {
+                DataLogger.shared.deleteFiles(fileNameToDelete: url.absoluteString.substring(from: url.absoluteString.index(after: indexOfUrl)))
+            }
+        }
+        print(DataLogger.shared.getDocumentDirectoryInformation())
+    }
+
+    func downloadModel(modelName: String) {
+        if  !Common.isModelItemAvailableInDocument(modelName: modelName) {
+            let model = Common.loadSelectedModel(modeName: modelName)
+            let url = URL.init(string: model.path)!
+            FileDownloader.loadFileAsync(url: url) { s, error in
+                print("File downloaded to : \(s!)")
+            }
+        }
+        updateTable()
+    }
+
+
 }
 
 class CustomTableViewCell: UITableViewCell {
 
     let imgUser = UIImageView()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(imgUser)
-        imgUser.widthAnchor.constraint(equalToConstant: 40).isActive = true;
-        imgUser.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        imgUser.widthAnchor.constraint(equalToConstant: 30).isActive = true;
+        imgUser.heightAnchor.constraint(equalToConstant: 30).isActive = true
         imgUser.translatesAutoresizingMaskIntoConstraints = false
         imgUser.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25).isActive = true
         imgUser.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true

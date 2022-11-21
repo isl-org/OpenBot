@@ -4,46 +4,50 @@
 
 import Foundation
 import UIKit
+
 var bluetoothData = ""
+
 class DataLogger {
-    static let shared : DataLogger = DataLogger()
+    static let shared: DataLogger = DataLogger()
     var enabled: Bool = false;
     let sensorData = sensorDataRetrieve.shared
     let bluetooth = bluetoothDataController.shared;
-    var carSensorsData : String = ""
-    var acceleration : String = ""
-    var gyroscope : String = ""
-    var magnetometer : String = ""
-    var locationCoordinates : String = ""
-    var gps : String = ""
-    var baseDirectory :  String = ""
+    var carSensorsData: String = ""
+    var acceleration: String = ""
+    var gyroscope: String = ""
+    var magnetometer: String = ""
+    var locationCoordinates: String = ""
+    var gps: String = ""
+    var baseDirectory: String = ""
     var allDirectoriesName = [String]()
-    var bumper : String = ""
-    var ctrlLog : String = ""
-    var indicator : String = ""
-    var inferenceTime : String = ""
-    var light : String = ""
-    var sonar : String = ""
-    var voltage : String = ""
-    var wheels : String = ""
-    var motion : String = ""
+    var bumper: String = ""
+    var ctrlLog: String = ""
+    var indicator: String = ""
+    var inferenceTime: String = ""
+    var light: String = ""
+    var sonar: String = ""
+    var voltage: String = ""
+    var wheels: String = ""
+    var motion: String = ""
     var allDirectories = [URL]()
-    var isVehicleLogSelected : Bool = true
-    var isAccelerationLogSelected : Bool = true
-    var isGpsLogSelected : Bool = true
-    var isMagneticLogSelected : Bool = true
-    var isGyroscopeLogSelected : Bool = true
-    init(){
+    var isVehicleLogSelected: Bool = true
+    var isAccelerationLogSelected: Bool = true
+    var isGpsLogSelected: Bool = true
+    var isMagneticLogSelected: Bool = true
+    var isGyroscopeLogSelected: Bool = true
+
+    init() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .updateSensorsForLog, object: nil)
     }
+
     func getDirectoryInfo() -> URL {
         allDirectories.removeAll()
         let fileManager = FileManager.default
         var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  baseDirectory)
+        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash + baseDirectory)
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-                allDirectories = fileURLs
+            allDirectories = fileURLs
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
         }
@@ -89,7 +93,7 @@ class DataLogger {
 
     }
 
-    func saveImages(path: String , image : UIImage,name : String) {
+    func saveImages(path: String, image: UIImage, name: String) {
 
         let imagePath = URL(string: path)
         let imageName = imagePath?.appendingPathComponent(name);
@@ -101,18 +105,37 @@ class DataLogger {
         }
     }
 
-    func deleteFiles(path: String) {
-        let fileManager = FileManager.default
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    func deleteFiles(fileNameToDelete: String) {
+
+        print("fileNameToDelete : ",fileNameToDelete)
+        var filePath = ""
+// Fine documents directory on device
+        let dirs : [String] = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
+        if dirs.count > 0 {
+            let dir = dirs[0] //documents directory
+            filePath = dir.appendingFormat("/" + fileNameToDelete)
+            print("Local path = \(filePath)")
+
+        } else {
+            print("Could not find local directory to store file")
+            return
+        }
         do {
-            try FileManager.default.removeItem(atPath: documentsURL.path)
-//            try FileManager.default.removeItem(atPath: documentsURL.path + path)
-        } catch {
-            print(error)
+            let fileManager = FileManager.default
+            if fileManager.fileExists(atPath: filePath) {
+                // Delete file
+                try fileManager.removeItem(atPath: filePath)
+            } else {
+                print("File does not exist")
+            }
+
+        }
+        catch let error as NSError {
+            print("An error took place: \(error)")
         }
     }
 
-    func saveSensorFiles(path: String,data : String,fileName : String) {
+    func saveSensorFiles(path: String, data: String, fileName: String) {
         let fileManager = FileManager.default
         let sensorPath = URL(string: path)
         let sensorFileName = sensorPath?.appendingPathComponent(fileName)
@@ -121,7 +144,7 @@ class DataLogger {
         fileManager.createFile(atPath: sen ?? "", contents: str.data(using: String.Encoding.utf8))
     }
 
-    func saveAccelerationFile(path : String , data : String){
+    func saveAccelerationFile(path: String, data: String) {
         let fileManager = FileManager.default
         let sensorPath = URL(string: path)
         let sensor = sensorPath?.appendingPathComponent("acceleration.txt")
@@ -138,31 +161,34 @@ class DataLogger {
         return dateOrTime
     }
 
-    func saveFramesFile(path : String , data : String){
+    func saveFramesFile(path: String, data: String) {
         let fileManager = FileManager.default
         let sensorPath = URL(string: path)
-        let frame =  sensorPath?.appendingPathComponent("rgbFrames.txt")
+        let frame = sensorPath?.appendingPathComponent("rgbFrames.txt")
         let f = frame?.absoluteString
         let str = data
         if let f = f {
             fileManager.createFile(atPath: f, contents: str.data(using: String.Encoding.utf8))
         }
     }
-    func getBaseDirectoryName()-> String{
+
+    func getBaseDirectoryName() -> String {
         knowDateOrTime(format: "yyyy") + knowDateOrTime(format: "MM") + knowDateOrTime(format: "dd") + "_"
                 + knowDateOrTime(format: "H") + knowDateOrTime(format: "mm") + knowDateOrTime(format: "ss")
     }
-    func getDocumentDirectoryInformation(){
 
+    func getDocumentDirectoryInformation() -> [URL] {
+        var fileURLs : [URL] = []
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
 //        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
         do {
-            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-            print(fileURLs)
+            fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+            return fileURLs
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
         }
+        return fileURLs
     }
 
     func recordLogs() {
@@ -171,7 +197,7 @@ class DataLogger {
             carSensorsData = carSensorsData + bluetoothData + "\n"
         }
         if isGpsLogSelected {
-            if(sensorData.location != nil) {
+            if (sensorData.location != nil) {
                 gps = gps + String(timestamp) + " " + String(sensorData.location.coordinate.latitude) + " " + String(sensorData.location.coordinate.longitude) + " " + String(sensorData.location.altitude) + " " + String(sensorData.location.speed) + "\n"
             }
         }
@@ -189,8 +215,8 @@ class DataLogger {
         }
     }
 
-    func recordVehicleLogs(){
-            let timestamp = returnCurrentTimestamp()
+    func recordVehicleLogs() {
+        let timestamp = returnCurrentTimestamp()
         if bluetoothData != "" {
             let index = bluetooth.sonarData.index(after: bluetooth.sonarData.startIndex)
             sonar = sonar + String(timestamp) + " " + String(bluetooth.sonarData[index...]) + "\n"
@@ -202,10 +228,12 @@ class DataLogger {
         }
 
     }
+
     func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
         String(XValue) + " " + String(YValue) + " " + String(ZValue);
     }
-    func setupFilesForLogging(){
+
+    func setupFilesForLogging() {
         carSensorsData = "";
         acceleration = Strings.acceleration
         locationCoordinates = Strings.locationCoordinates
@@ -224,29 +252,31 @@ class DataLogger {
         motion = Strings.motion
         ctrlLog = Strings.ctrlLog
     }
+
     @objc func updateLogger(_ notification: Notification?) {
-       let selectedButton = notification?.object as! UIButton
+        let selectedButton = notification?.object as! UIButton
         let tag = selectedButton.tag
-        switch tag{
-        case 1 :
+        switch tag {
+        case 1:
             isVehicleLogSelected = !isVehicleLogSelected
-        case 2 :
+        case 2:
             isGpsLogSelected = !isGpsLogSelected
-        case 3 :
+        case 3:
             isAccelerationLogSelected = !isAccelerationLogSelected
-        case 4 :
+        case 4:
             isMagneticLogSelected = !isMagneticLogSelected
-        default :
+        default:
             isGyroscopeLogSelected = !isGyroscopeLogSelected
         }
     }
-    func setControlLogs(left : String, right : String){
+
+    func setControlLogs(left: String, right: String) {
         ctrlLog = ctrlLog + String(returnCurrentTimestamp()) + " " + left + " " + right + "\n";
     }
-    func setIndicatorLogs(indicator  :String){
+
+    func setIndicatorLogs(indicator: String) {
         self.indicator = self.indicator + String(returnCurrentTimestamp()) + " " + indicator + "\n";
     }
-
 
 
 }

@@ -19,7 +19,6 @@ class GaugeView: UIView {
             print("no ctx found")
             return
         }
-            print("segment value is",segmentValue)
             segmentValue = abs(segmentValue)
             segmentValue = min(180, segmentValue)
             segmentValue = Int(Double(segmentValue) * 0.705)

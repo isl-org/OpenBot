@@ -83,9 +83,44 @@ class Common {
         let allModels = loadAllModelItems()
         for model in allModels {
             if model.type == mode {
-                    selectedModels.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
+
+                selectedModels.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
             }
         }
         return selectedModels
+    }
+
+    static func isModelItemAvailable(modelName: String) -> Bool {
+        let allModels = loadAllModelItems()
+        for model in allModels {
+            let split = model.path.split(separator: "/");
+            let index = split.count - 1;
+            let fileName = String(split[index]);
+            if model.name.prefix(upTo: model.name.index(of: ".")!) == modelName {
+                let bundle = Bundle.main
+                let path = bundle.path(forResource: fileName, ofType: "")
+                if path != nil {
+                    return true;
+                }
+            }
+
+
+        }
+        return false
+    }
+
+    static func isModelItemAvailableInDocument(modelName: String) -> Bool {
+        for url in DataLogger.shared.getDocumentDirectoryInformation() {
+            if returnNameOfFile(url: url) == returnNameOfFile(url: URL(string: Common.loadSelectedModel(modeName: modelName).path)!) {
+                return true
+            }
+        }
+        return false
+    }
+
+    static func returnNameOfFile(url: URL) -> String {
+        let filepath = url.absoluteString
+        let index = filepath.lastIndex(of: "/")!
+        return filepath.substring(from: index)
     }
 }

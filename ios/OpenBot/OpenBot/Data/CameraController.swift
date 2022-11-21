@@ -425,7 +425,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
         present(avc, animated: true)
         avc.completionWithItemsHandler = { activity, success, items, error in
-            DataLogger.shared.deleteFiles(path: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
+            DataLogger.shared.deleteFiles(fileNameToDelete: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
         }
     }
 
