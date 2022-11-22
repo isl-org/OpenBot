@@ -30,6 +30,7 @@ struct Images {
     static let downArrow = UIImage(systemName: "arrowtriangle.down.fill")
     static let minus = UIImage(systemName: "minus");
     static let plus = UIImage(systemName: "plus");
+    static let edit = UIImage(named: "edit")
 
 }
 
@@ -52,7 +53,7 @@ struct Constants {
         ModeItem(label: Strings.controllerMapping, icon: Images.controllerMapping!, identifier: Strings.ScreenControllerMapping),
         ModeItem(label: Strings.Autopilot, icon: Images.autopilotIcon!, identifier: Strings.AutopilotFragment),
         ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment),
-        ModeItem(label: Strings.modelManagement, icon : Images.modelManagementIcon!, identifier : Strings.ScreenModelManagement)
+        ModeItem(label: Strings.modelManagement, icon: Images.modelManagementIcon!, identifier: Strings.ScreenModelManagement)
     ];
     static let frameColors: [UIColor] = [UIColor.red, UIColor.yellow, UIColor.blue, UIColor.green, UIColor.brown];
     static let autopilotMode = "AUTOPILOT";

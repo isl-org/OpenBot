@@ -50,9 +50,15 @@ class Network {
                 tflite = try Interpreter(modelPath: file, options: tfliteOptions, delegates: delegates);
                 try tflite?.allocateTensors()
             } else {
-                print("file not found");
-            }
+                let modelsInDocumentDirectory = DataLogger.shared.getDocumentDirectoryInformation();
+                for modelUrl in modelsInDocumentDirectory {
+                  if(modelUrl.absoluteString.contains(fileName)){
+                      tflite = try Interpreter(modelPath: modelUrl.absoluteString.replacingOccurrences(of: "file:///", with: ""), options: tfliteOptions, delegates: delegates);
+                      try tflite?.allocateTensors()
 
+                  }
+                }
+            }
             imageSize = model.getInputSize();
             intValues = [Int(imageSize.width) * Int(imageSize.height)];
         }

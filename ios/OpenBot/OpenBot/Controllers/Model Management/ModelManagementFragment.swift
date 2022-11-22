@@ -234,7 +234,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        popupWindow = popupWindowView()
+        popupWindow = popupWindowView(frame: .zero, models[indexPath.row])
         createBlankScreen()
         createPopupWindow()
     }

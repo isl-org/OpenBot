@@ -121,4 +121,15 @@ struct Strings {
     static let connecting : String = "Connecting"
     static let disconnecting : String = "Disconnecting"
 
+    //model management
+    static let modelDetails : String = "Model Details"
+    static let name : String = "Name";
+    static let type : String = "Type";
+    static let `class` : String = "Class";
+    static let inputOfModel : String = "Input(w x h)"
+    static let tflit : String = ".tflit";
+
+
+
+
 }

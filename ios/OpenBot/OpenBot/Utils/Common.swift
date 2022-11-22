@@ -43,7 +43,13 @@ class Common {
                 if path != nil {
                     selectedModels.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
                 }
+                if isModelItemAvailableInDocument(modelName: String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!))){
+                    selectedModels.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
+                }
             }
+
+
+
         }
         return selectedModels
     }

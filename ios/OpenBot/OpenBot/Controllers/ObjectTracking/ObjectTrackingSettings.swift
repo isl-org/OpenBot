@@ -377,6 +377,7 @@ class ObjectTrackingSettings: UIView {
 
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.objectTrackingMode);
+        print(selectedModels)
         let model = Models(frame: CGRect(x: 180, y: adapted(dimensionSize: 60, to: .height), width: 100, height: 200), selectedModels: selectedModels);
         addSubview(model)
         let dd = UIView()
