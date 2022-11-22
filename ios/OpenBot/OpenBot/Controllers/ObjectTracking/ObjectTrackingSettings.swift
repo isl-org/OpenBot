@@ -16,6 +16,7 @@ class ObjectTrackingSettings: UIView {
     var objectDropDownLabel = UILabel()
     var detector: Detector?;
     var bluetoothIcon = UIImageView()
+    var leftSpeedLabel = UILabel()
 
     init(frame: CGRect, detector: Detector?) {
         self.detector = detector;
@@ -46,6 +47,7 @@ class ObjectTrackingSettings: UIView {
         addSubview(createLabel(text: Strings.threads, leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 150, to: .height))))
         setupThreads();
         setupVehicleControls();
+        createLeftSpeed()
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateObject), name: .updateObject, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
@@ -402,6 +404,14 @@ class ObjectTrackingSettings: UIView {
         dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
         modelDropdownLabel.frame = CGRect(x: 0, y: 0, width: 210, height: 40)
         dd.addSubview(modelDropdownLabel)
+    }
+
+    func createLeftSpeed() {
+        leftSpeedLabel.frame.size = CGSize(width: 100, height: 40);
+        leftSpeedLabel.frame.origin = CGPoint(x: 4, y: adapted(dimensionSize: 200, to: .height))
+        leftSpeedLabel.text = "xxx,xxx"
+        addSubview(leftSpeedLabel)
+        leftSpeedLabel.font = leftSpeedLabel.font.withSize(13.5)
     }
 
     @objc func showModelDropdown(_ sender: UIButton) {
