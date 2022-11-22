@@ -29,6 +29,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     var popupWindowWidth: NSLayoutConstraint!
     var popupWindowLeadingAnchor: NSLayoutConstraint!
     var popupWindowTopAnchor: NSLayoutConstraint!
+    var selectedIndex : IndexPath!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +38,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         setupNavigationBarItem()
         setupConfiguration()
         createDropdownSelector()
+        NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
     }
 
 
@@ -207,14 +209,22 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = modelTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         cell.textLabel?.text = models[indexPath.item]
+
         if Common.isModelItemAvailable(modelName: models[indexPath.item]) {
             return cell;
         }
+       return createImageOnCell(cell: cell, index: indexPath.row);
+
+    }
+
+
+
+    func createImageOnCell(cell : CustomTableViewCell, index : Int)->CustomTableViewCell{
         cell.imgUser.isUserInteractionEnabled = true;
-        cell.imgUser.tag = indexPath.row
+        cell.imgUser.tag = index
         let tap = UITapGestureRecognizer(target: self, action: #selector(download(_:)))
         cell.imgUser.addGestureRecognizer(tap)
-        switch Common.isModelItemAvailable(modelName: models[indexPath.item]) || Common.isModelItemAvailableInDocument(modelName: models[indexPath.item]) {
+        switch Common.isModelItemAvailableInDocument(modelName: models[index]) {
         case true:
             cell.imgUser.image = UIImage(named: "trash")
         case false:
@@ -296,18 +306,21 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
 
     @objc func download(_ sender: UITapGestureRecognizer) {
         let indexOfSelectedModel = sender.view?.tag ?? 0
+        selectedIndex = IndexPath(row: indexOfSelectedModel, section: 0);
         switch Common.isModelItemAvailableInDocument(modelName: models[indexOfSelectedModel]) {
         case true:
             deleteModel(modelName: models[indexOfSelectedModel])
         case false:
             downloadModel(modelName: models[indexOfSelectedModel])
+
+
         }
+
 
     }
 
     func deleteModel(modelName: String) {
         let filesPath = DataLogger.shared.getDocumentDirectoryInformation()
-        print(modelName)
         for url in filesPath {
             let indexOfUrl = url.absoluteString.lastIndex(of: "/")!;
             let indexFromApi = Common.loadSelectedModel(modeName: modelName).path.lastIndex(of: "/")!;
@@ -316,26 +329,29 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
             }
         }
         print(DataLogger.shared.getDocumentDirectoryInformation())
+        let myIndexPath = IndexPath(row: 4, section: 0)
+        modelTable.reloadRows(at: [selectedIndex] , with:.bottom)
     }
 
     func downloadModel(modelName: String) {
         if  !Common.isModelItemAvailableInDocument(modelName: modelName) {
             let model = Common.loadSelectedModel(modeName: modelName)
             let url = URL.init(string: model.path)!
-            FileDownloader.loadFileAsync(url: url) { s, error in
+            FileDownloader.loadFileSync(url: url) { s, error in
                 print("File downloaded to : \(s!)")
             }
         }
-        updateTable()
     }
 
+    @objc func fileDownloaded() {
+        let myIndexPath = IndexPath(row: 3, section: 0);
+        modelTable.reloadRows(at: [selectedIndex], with: .bottom)
 
+    }
 }
 
 class CustomTableViewCell: UITableViewCell {
-
     let imgUser = UIImageView()
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(imgUser)

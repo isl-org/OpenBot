@@ -31,7 +31,8 @@ extension Notification.Name {
     static let showObjectDD = Notification.Name("showObjectDD");
     static let updateObject = Notification.Name("updateObject");
     static let updateConfidence = Notification.Name("updateConfidence");
-    static let updateObjectList = Notification.Name("updateObjectList")
+    static let updateObjectList = Notification.Name("updateObjectList");
+    static let fileDownloaded = Notification.Name("fileDownloaded")
 
 
 

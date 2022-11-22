@@ -23,6 +23,7 @@ class FileDownloader {
             {
                 print("file saved [\(destinationUrl.path)]")
                 completion(destinationUrl.path, nil)
+
             }
             else
             {
@@ -36,6 +37,7 @@ class FileDownloader {
             let error = NSError(domain:"Error downloading file", code:1002, userInfo:nil)
             completion(destinationUrl.path, error)
         }
+        NotificationCenter.default.post(name: .fileDownloaded, object:nil);
     }
 
     static func loadFileAsync(url: URL, completion: @escaping (String?, Error?) -> Void)
