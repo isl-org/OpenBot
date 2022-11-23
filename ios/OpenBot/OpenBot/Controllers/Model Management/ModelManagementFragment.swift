@@ -27,6 +27,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     var blankScreenLeadingAnchor: NSLayoutConstraint!
     var blankScreenTopAnchor: NSLayoutConstraint!
     var popupWindowWidth: NSLayoutConstraint!
+    var popupWindowHeight : NSLayoutConstraint!
     var popupWindowLeadingAnchor: NSLayoutConstraint!
     var popupWindowTopAnchor: NSLayoutConstraint!
     var selectedIndex : IndexPath!
@@ -39,6 +40,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         setupConfiguration()
         createDropdownSelector()
         NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
     }
 
 
@@ -49,7 +51,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
 
     func createHeader() {
         view.addSubview(header);
-        setupHeader()
+        setupHeader();
     }
 
     func setupHeader() {
@@ -96,6 +98,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
             widthOfTable = modelTable.widthAnchor.constraint(equalToConstant: width)
             heightOfTable = modelTable.heightAnchor.constraint(equalToConstant: height)
             widthOfHeader = header.widthAnchor.constraint(equalToConstant: width);
+
         } else {
             widthOfHeader = header.widthAnchor.constraint(equalToConstant: height);
             widthOfTable = modelTable.widthAnchor.constraint(equalToConstant: height)
@@ -116,7 +119,6 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         modelDropdown.selectionAction = { [unowned self] (index: Int, item: String) in
             modelClassLabel.text = item
             updateModelItemList(type: item)
-            updateTable()
         }
     }
 
@@ -166,6 +168,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
                 popupWindowWidth.constant = width - 20
                 popupWindowTopAnchor.constant = 100;
                 popupWindowLeadingAnchor.constant = 10
+                popupWindowHeight.constant = 400;
             }
 
 
@@ -178,8 +181,9 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
                 blankScreenWidth.constant = height
                 blankScreenHeight.constant = width
                 popupWindowWidth.constant = height - 50
-                popupWindowTopAnchor.constant = 10;
+                popupWindowTopAnchor.constant = -50;
                 popupWindowLeadingAnchor.constant = 25
+                popupWindowHeight.constant = width + 20;
             }
 
         }
@@ -264,17 +268,19 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     func createPopupWindow() {
         view.addSubview(popupWindow)
         popupWindow.translatesAutoresizingMaskIntoConstraints = false
-        popupWindow.heightAnchor.constraint(equalToConstant: 400).isActive = true;
         popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10)
-        popupWindowTopAnchor = popupWindow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100)
         if currentOrientation == .portrait {
+            popupWindowHeight = popupWindow.heightAnchor.constraint(equalToConstant: 400);
+            popupWindowHeight.isActive = true;
             popupWindowWidth = popupWindow.widthAnchor.constraint(equalToConstant: width - 20)
             popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10)
             popupWindowTopAnchor = popupWindow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100)
         } else {
-            popupWindowWidth = popupWindow.widthAnchor.constraint(equalToConstant: height - 50);
+            popupWindowHeight = popupWindow.heightAnchor.constraint(equalToConstant: width);
+            popupWindowHeight.isActive = true;
+            popupWindowWidth = popupWindow.widthAnchor.constraint(equalToConstant: width + 20);
             popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25)
-            popupWindowTopAnchor = popupWindow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10)
+            popupWindowTopAnchor = popupWindow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -50)
         }
         NSLayoutConstraint.activate([popupWindowWidth, popupWindowTopAnchor, popupWindowLeadingAnchor])
         popupWindow.backgroundColor = .black
@@ -346,6 +352,11 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     @objc func fileDownloaded() {
         let myIndexPath = IndexPath(row: 3, section: 0);
         modelTable.reloadRows(at: [selectedIndex], with: .bottom)
+
+    }
+
+    @objc func removeBlankScreen() {
+        blankScreen.removeFromSuperview();
 
     }
 }

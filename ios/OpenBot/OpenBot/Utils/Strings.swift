@@ -128,6 +128,9 @@ struct Strings {
     static let `class` : String = "Class";
     static let inputOfModel : String = "Input(w x h)"
     static let tflit : String = ".tflit";
+    static let cancel : String = "Cancel"
+    static let done : String = "Done";
+
 
 
 

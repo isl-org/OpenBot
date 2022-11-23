@@ -98,6 +98,7 @@ class AutopilotFragment: CameraController {
     @objc func updateModel(_ notification: Notification) {
         let selectedModelName = notification.object as! String
         currentModel = Common.loadSelectedModel(modeName: selectedModelName)
+        print(currentModel)
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
     }
 

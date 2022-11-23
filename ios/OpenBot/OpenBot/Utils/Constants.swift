@@ -58,6 +58,8 @@ struct Constants {
     static let frameColors: [UIColor] = [UIColor.red, UIColor.yellow, UIColor.blue, UIColor.green, UIColor.brown];
     static let autopilotMode = "AUTOPILOT";
     static let objectTrackingMode = "DETECTOR";
+    static let types : [String] = ["AUTOPILOT","DETECTOR","NAVIGATION"];
+    static let classes : [String] = ["AUTOPILOT_F","MOBILENETV1_1_0_Q","MOBILENETV3_S_Q","YOLOV4","NAVIGATION" ]
 }
 
 enum SpeedMode: Float {
@@ -133,3 +135,4 @@ enum PATH_TYPE: String {
          ASSET = "ASSET",
          FILE = "FILE"
 }
+

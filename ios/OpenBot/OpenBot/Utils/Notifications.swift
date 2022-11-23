@@ -33,6 +33,7 @@ extension Notification.Name {
     static let updateConfidence = Notification.Name("updateConfidence");
     static let updateObjectList = Notification.Name("updateObjectList");
     static let fileDownloaded = Notification.Name("fileDownloaded")
+    static let removeBlankScreen = Notification.Name("removeBlankScreen")
 
 
 
