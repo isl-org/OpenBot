@@ -206,7 +206,6 @@ public class BluetoothFragment extends Fragment {
                 progressBar.setVisibility(View.VISIBLE);
                 for (BleDevice d : deviceList) {
                     if (device.address.equals(d.address)) {
-                        Log.e("TAG", "start scan = " + device);
                         return;
                     }
                 }
@@ -228,7 +227,6 @@ public class BluetoothFragment extends Fragment {
             @Override
             public void onFinish() {
                 Log.e("TAG", "scan finish");
-                Log.e("TAG", "Devices = " + deviceList);
                 progressBar.setVisibility(View.INVISIBLE);
                 refreshButton.setVisibility(View.VISIBLE);
             }
@@ -284,7 +282,6 @@ public class BluetoothFragment extends Fragment {
             childList.clear();
             adapter.notifyDataSetChanged();
             updateConnectionStateUi();
-
         }
     };
 
@@ -292,14 +289,12 @@ public class BluetoothFragment extends Fragment {
         @Override
         public void onWriteSuccess(byte[] data, BleDevice device) {
             Logger.e("write success:" + ByteUtils.bytes2HexStr(data));
-//            tvWriteResult.setText(ByteUtils.bytes2HexStr(data));
         }
 
         @Override
         public void onFailure(int failCode, String info, BleDevice device) {
             Logger.e("write fail:" + info);
             Logger.e("write failCode:" + failCode);
-//            tvWriteResult.setText("write fail:" + info);
         }
     };
 
@@ -307,9 +302,7 @@ public class BluetoothFragment extends Fragment {
         @Override
         public void onCharacteristicChanged(byte[] data, BleDevice device) {
             String s1 = new String(data);
-
             System.out.println("testing here output" + s1);
-            updateNotificationInfo(s1);
         }
 
         @Override
@@ -318,7 +311,6 @@ public class BluetoothFragment extends Fragment {
             if (!notifySuccessUuids.contains(notifySuccessUuid)) {
                 notifySuccessUuids.add(notifySuccessUuid);
             }
-            updateNotificationInfo("");
         }
 
         @Override
@@ -326,18 +318,6 @@ public class BluetoothFragment extends Fragment {
             Logger.e("notify fail:" + info);
         }
     };
-
-    private void updateNotificationInfo(String notification) {
-        StringBuilder builder = new StringBuilder("Notify Uuid:");
-        for (String s : notifySuccessUuids) {
-            builder.append("\n");
-            builder.append(s);
-        }
-        if (!TextUtils.isEmpty(notification)) {
-            builder.append("\nReceive Data:\n");
-            builder.append(notification);
-        }
-    }
 
     private void updateConnectionStateUi() {
         String state;
