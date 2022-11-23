@@ -6,7 +6,7 @@ import Foundation
 import UIKit
 import DropDown
 
-class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableViewDataSource, UIDocumentPickerDelegate {
     var header = UIView()
     var modelTable = UITableView()
     var widthOfTable: NSLayoutConstraint!;
@@ -39,6 +39,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         setupNavigationBarItem()
         setupConfiguration()
         createDropdownSelector()
+        createAddModelButton()
         NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
     }
@@ -254,6 +255,8 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     func createBlankScreen() {
         view.addSubview(blankScreen);
         blankScreen.backgroundColor = Colors.freeRoamButtonsColor;
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
+        blankScreen.addGestureRecognizer(tap)
         blankScreen.translatesAutoresizingMaskIntoConstraints = false
         if currentOrientation == .portrait {
             blankScreenWidth = blankScreen.widthAnchor.constraint(equalToConstant: width);
@@ -286,9 +289,37 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         popupWindow.backgroundColor = .black
     }
 
+    func createAddModelButton(){
+        let addModel = UIButton();
+        view.addSubview(addModel);
+        addModel.backgroundColor = .blue;
+        addModel.setImage(Images.plus, for: .normal)
+        addModel.translatesAutoresizingMaskIntoConstraints = false;
+        addModel.layer.cornerRadius = 10;
+        addModel.widthAnchor.constraint(equalToConstant: 40).isActive = true;
+        addModel.heightAnchor.constraint(equalToConstant: 40).isActive = true;
+        addModel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true;
+        addModel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
+        addModel.addTarget(self, action: #selector(addModels(_:)), for: .touchUpInside);
+    }
+
     @objc func showModelDropdown(_ sender: UIButton) {
         modelDropdown.show()
     }
+
+    @objc func addModels(_ sender: UIButton) {
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.jpeg, .png, .pdf])
+        documentPicker.delegate = self
+        documentPicker.modalPresentationStyle = .overFullScreen
+        present(documentPicker, animated: true)
+    }
+
+    func processImportedFileAt(fileURL: URL) {
+        print(fileURL)
+    }
+
+
+
 
     func updateModelItemList(type: String) {
         switch type {
@@ -318,8 +349,71 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
             deleteModel(modelName: models[indexOfSelectedModel])
         case false:
             downloadModel(modelName: models[indexOfSelectedModel])
+        }
+    }
+
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        print("inside documentPickerWasCancelled")
+    }
+
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        dismiss(animated: true)
+        let tmpDirURL = URL(fileURLWithPath: NSTemporaryDirectory())
+        print(tmpDirURL)
+        guard url.startAccessingSecurityScopedResource() else {
+            return
+        }
+
+        defer {
+            url.stopAccessingSecurityScopedResource()
+        }
+
+        // Copy the file with FileManager
+        print("inside didPickDocumentAt")
+
+        var tempURL = URL(fileURLWithPath: NSTemporaryDirectory())
+        // Apend filename (name+extension) to URL
+        tempURL.appendPathComponent(url.lastPathComponent)
+        do {
+            // If file with same name exists remove it (replace file with new one)
+            if FileManager.default.fileExists(atPath: tempURL.path) {
+                try FileManager.default.removeItem(atPath: tempURL.path)
+            }
+            // Move file from app_id-Inbox to tmp/filename
+            try FileManager.default.moveItem(atPath: url.path, toPath: tempURL.path);
+        } catch {
+            print(error.localizedDescription)
+
+        }
 
 
+
+
+
+
+        var error: NSError? = nil
+        NSFileCoordinator().coordinate(readingItemAt: url, error: &error) { (url) in
+
+            let keys: [URLResourceKey] = [.nameKey, .isDirectoryKey]
+            // Get an enumerator for the directory's content.
+            guard let fileList = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys)
+            else {
+                Swift.debugPrint("*** Unable to access the contents of \(url.path) ***\n")
+                return
+            }
+            print(fileList)
+            for case let file as URL in fileList {
+                // Start accessing the content's security-scoped URL.
+                guard url.startAccessingSecurityScopedResource() else {
+                    // Handle the failure here.
+                    continue
+                }
+
+                // Do something with the file here.
+                print("hello ",file.bookmarkData)
+                // Make sure you release the security-scoped resource when you finish.
+                url.stopAccessingSecurityScopedResource()
+            }
         }
 
 
@@ -359,6 +453,10 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         blankScreen.removeFromSuperview();
 
     }
+
+    @objc func dismissKeyboard(_ sender: UIButton) {
+        view.endEditing(true);
+    }
 }
 
 class CustomTableViewCell: UITableViewCell {
@@ -376,7 +474,4 @@ class CustomTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }
-
-

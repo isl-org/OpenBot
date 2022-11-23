@@ -22,6 +22,8 @@ class popupWindowView: UIView {
     init(frame: CGRect, _ modelName: String) {
         super.init(frame: frame)
         self.modelName = modelName
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
+        addGestureRecognizer(tap)
         createHeading();
         createLabel(text: Strings.name, leadingAnchor: 20, topAnchor: 60);
         createTextField(text: modelName, trailingAnchor: -width / 2 - 50, topAnchor: 50);
@@ -35,8 +37,8 @@ class popupWindowView: UIView {
         firstBoxLeadingAnchor = createBox(leadingAnchor: width / 2 - 50, topAnchor: 250);
         createLabel(text: "x", leadingAnchor: width / 2 + 10, topAnchor: 250)
         secondBoxLeadingAnchor = createBox(leadingAnchor: width / 2 + 50, topAnchor: 250);
-        createButton(label: Strings.cancel, leadingAnchor: 20, backgroundColor: UIColor.red, buttonWidth: 100, action:  #selector(cancel(_:)))
-        createButton(label: Strings.done, leadingAnchor: width / 2 - 50 , backgroundColor: UIColor.green, buttonWidth: 200, action:  #selector(done(_:)));
+        createButton(label: Strings.cancel, leadingAnchor: 20, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 100, action:  #selector(cancel(_:)))
+        createButton(label: Strings.done, leadingAnchor: width / 2 - 50 , backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 200, action:  #selector(done(_:)));
     }
 
 
@@ -236,7 +238,7 @@ class popupWindowView: UIView {
         button.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true;
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true;
         button.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
-        button.addTarget(self, action: action!, for: .allTouchEvents)
+        button.addTarget(self, action: action!, for: . touchUpInside)
     }
 
     @objc func showTypeDropdown(_ sender: UITapGestureRecognizer? = nil) {
@@ -253,8 +255,24 @@ class popupWindowView: UIView {
     }
 
     @objc func done(_ sender: UIButton) {
-
+        if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                let jsonData = try decoder.decode([ModelItem].self, from: data)
+                print(jsonData);
+            } catch {
+                print("error:\(error)")
+            }
+        }
+        NotificationCenter.default.post(name: .removeBlankScreen, object: nil);
+        removeFromSuperview();
     }
+
+    @objc func dismissKeyboard(_ sender: UIButton) {
+        endEditing(true);
+    }
+
 }
 
 
