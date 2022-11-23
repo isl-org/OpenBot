@@ -1,4 +1,4 @@
-package org.openbot.main;
+package org.openbot.utils;
 
 public class ByteUtils {
     public static String bytes2HexStr(byte[] bytes) {
