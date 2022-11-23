@@ -8,15 +8,15 @@ from common import *
 from racer import OpenBotRacer
 import numpy as np
 
-s_socket = ServerSocket(PORT=8040) # port for TCP/IP control data
+s_socket = ServerSocket(PORT=8040)  # port for TCP/IP control data
 
-#Create publishers with the ServerSocket
+# Create publishers with the ServerSocket
 racer = OpenBotRacer(s_socket)
 
 
 class CommandHandler:
     def __init__(self):
-        #Variable initialization
+        # Variable initialization
         self.gear = 1
         self.autodrive = False
         self.running = True
@@ -29,15 +29,15 @@ class CommandHandler:
 
     def reset(self):
         self.send_drive_command(self.left.reset(), self.right.reset())
-    
+
     def set_steering(self, value, racer):
         self.steering = value
         racer.steering = self.steering
-	
+
     def set_throttle(self, value, racer):
         self.throttle = value
         racer.throttle = self.throttle
-    
+
     def stop_service(self):
         if self.autodrive:
             self.autodrive = not self.autodrive
@@ -55,12 +55,12 @@ class CommandHandler:
                     # t2 = int(time.time()*10**9)
                     print("Found a joystick 🎮 and connected")
                     while joystick.connected and self.running:
-                        t1 = int(time.time()*10**9)
+                        t1 = int(time.time() * 10**9)
                         # Get a corrected value for the left stick y-axis
                         # set the value to throttle
                         left_y = np.round(joystick.l[1], 2)
                         self.set_throttle(left_y, racer)
-                        
+
                         # Get a corrected value for the right stick x-axis
                         # set the value to steering
                         right_x = np.round(joystick.r[0], 2)
@@ -93,8 +93,9 @@ class CommandHandler:
             except IOError:
                 # No joystick found, wait for a bit before trying again
                 self.stop_service()
-                print('Unable to find any joysticks')
+                print("Unable to find any joysticks")
                 time.sleep(10.0)
+
 
 (zc, info) = register("OPEN_BOT_CONTROLLER", 8040)
 
@@ -117,7 +118,7 @@ def handle_status(data):
     # Writing to sample.json
     with open("sample.json", "w") as outfile:
         outfile.write(json_object)
-    
+
     parsed_data = json.loads(data)
     if not "status" in parsed_data:
         return
@@ -132,7 +133,10 @@ def handle_status(data):
                 print(f"Stopping video...")
 
         if "VIDEO_PROTOCOL" in status:
-            if status["VIDEO_PROTOCOL"] == "WEBRTC" or status["VIDEO_PROTOCOL"] == "RTSP":
+            if (
+                status["VIDEO_PROTOCOL"] == "WEBRTC"
+                or status["VIDEO_PROTOCOL"] == "RTSP"
+            ):
                 print(
                     "WebRTC/RTSP video not supported here. Please set your Android app to use RTP."
                 )
@@ -179,4 +183,3 @@ def run():
 if __name__ == "__main__":
     # cli
     run()
-

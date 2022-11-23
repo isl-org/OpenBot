@@ -14,7 +14,6 @@ import org.openbot.R;
 import org.openbot.customview.AutoFitSurfaceGlView;
 import org.openbot.customview.WebRTCSurfaceView;
 import org.openbot.utils.CameraUtils;
-
 import timber.log.Timber;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -65,18 +64,20 @@ public class PhoneController {
     videoServer.init(context);
     videoServer.setCanStart(true);
 
-    //Video Stream port
+    // Video Stream port
     String[] videoServerAddress = ControllerConfig.getInstance().getVideoServerAddress();
     videoServer.setServerAddress(videoServerAddress[0], videoServerAddress[1]);
 
-    //Controller port
+    // Controller port
     this.connectionSelector = ConnectionSelector.getInstance(context);
-    connectionSelector.getConnection().setServerAddress(videoServerAddress[0], videoServerAddress[2]);
+    connectionSelector
+        .getConnection()
+        .setServerAddress(videoServerAddress[0], videoServerAddress[2]);
     connectionSelector.getConnection().setDataCallback(new DataReceived());
 
-    //1280 x 960 is the best resolution that is desirable for both video streaming quality and efficiency
-    Size resolution =
-        CameraUtils.getClosestCameraResolution(context, new Size(1280, 960));
+    // 1280 x 960 is the best resolution that is desirable for both video streaming quality and
+    // efficiency
+    Size resolution = CameraUtils.getClosestCameraResolution(context, new Size(1280, 960));
     videoServer.setResolution(resolution.getWidth(), resolution.getHeight());
 
     handleBotEvents();

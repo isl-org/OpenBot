@@ -45,8 +45,7 @@ public class ConnectionSelector {
     } else if (isConnectedViaMobile()) {
       Log.i(TAG, "Connected via mobile network");
       connection = mobileConnection;
-    }
-    else {
+    } else {
       Log.i(TAG, "Connected via Peer-to-Peer");
       connection = nearbyConnection;
     }
@@ -63,7 +62,7 @@ public class ConnectionSelector {
 
   private boolean isConnectedViaMobile() {
     ConnectivityManager connectivityManager =
-            (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo mMobile = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
     return mMobile.isConnected();
   }

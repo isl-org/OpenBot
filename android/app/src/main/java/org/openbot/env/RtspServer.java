@@ -125,9 +125,7 @@ public class RtspServer
   }
 
   @Override
-  public void setServerAddress(String ip, String port) {
-
-  }
+  public void setServerAddress(String ip, String port) {}
 
   @Override
   public void setConnected(boolean connected) {
