@@ -93,6 +93,10 @@
   <string name="tracking_lost">Tracking lost.</string>
   <string name="no_initial_ar_core_pose">No initial AR Core pose.</string>
   <string name="ar_core_session_paused">AR Core session paused.</string>
+  <string name="tips_connect_timeout">connect timeout</string>
+  <string name="tips_connect_fail">connect fail</string>
+  <string name="tips_connection_disconnected">connection has disconnected</string>
+  <string name="tips_write_operation">please enter a hex string</string>
   <string-array name="servers">
     <item>No server</item>
   </string-array>
