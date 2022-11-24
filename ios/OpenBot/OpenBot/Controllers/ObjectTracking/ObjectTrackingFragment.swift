@@ -26,7 +26,7 @@ class ObjectTrackingFragment: CameraController {
             currentModel = model
             detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector;
         }
-        objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector);
+        objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector, model: currentModel);
         objectTrackingSettings!.backgroundColor = Colors.freeRoamButtonsColor
         objectTrackingSettings!.layer.cornerRadius = 15
         createCameraView()
@@ -45,6 +45,7 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConfidence), name: .updateConfidence, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoModeObjectTracking, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSelectedObject), name: .updateObject, object: nil)
         setupNavigationBarItem()
         super.viewDidLoad()
     }
@@ -152,7 +153,11 @@ class ObjectTrackingFragment: CameraController {
         let selectedModelName = notification.object as! String
         currentModel = Common.loadSelectedModel(modeName: selectedModelName)
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector;
-        NotificationCenter.default.post(name: .updateObjectList, object: detector?.labels)
+        NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels())
+    }
+
+    @objc func updateSelectedObject(_ notification: Notification) throws {
+        detector?.setSelectedClass(newClass: notification.object as! String)
     }
 
     override func viewDidDisappear(_ animated: Bool) {

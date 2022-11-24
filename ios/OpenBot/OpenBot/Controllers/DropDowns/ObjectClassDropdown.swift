@@ -31,7 +31,6 @@ class ObjectClassDropdown: UIView {
             NotificationCenter.default.post(name: .updateObject, object: item)
         }
         object.width = 150;
-
     }
 
     @objc func showDropDown() {
@@ -39,7 +38,9 @@ class ObjectClassDropdown: UIView {
     }
 
     @objc func updateObjectList(_ notification: Notification) {
-       object.dataSource = notification.object as! [String]
+        object.dataSource = notification.object as! [String]
+        NotificationCenter.default.post(name: .updateObject, object: object.dataSource.first)
+
     }
 
     required init?(coder: NSCoder) {

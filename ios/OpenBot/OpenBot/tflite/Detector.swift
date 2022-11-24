@@ -39,7 +39,6 @@ class Detector: Network {
     }
 
     public func setSelectedClass(newClass: String) {
-        print(newClass);
         selectedClass = newClass;
     }
 

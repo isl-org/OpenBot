@@ -15,11 +15,13 @@ class ObjectTrackingSettings: UIView {
     var deviceDropDownLabel = UILabel()
     var objectDropDownLabel = UILabel()
     var detector: Detector?;
+    var selectedModel: ModelItem?;
     var bluetoothIcon = UIImageView()
     var leftSpeedLabel = UILabel()
 
-    init(frame: CGRect, detector: Detector?) {
+    init(frame: CGRect, detector: Detector?, model: ModelItem) {
         self.detector = detector;
+        selectedModel = model
         super.init(frame: frame);
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeDown.direction = .down
@@ -133,7 +135,7 @@ class ObjectTrackingSettings: UIView {
 
     func createCameraIcon() {
         if let image = Images.frontCamera {
-            createIcons(iconImg: image, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
+            _ = createIcons(iconImg: image, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
         }
     }
 
@@ -146,7 +148,7 @@ class ObjectTrackingSettings: UIView {
     }
 
 
-    func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?)->UIImageView {
+    func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) -> UIImageView {
         let iconImage = UIImageView(frame: CGRect(x: x, y: y, width: size.width, height: size.height))
         iconImage.image = iconImg
         addSubview(iconImage)
@@ -162,6 +164,7 @@ class ObjectTrackingSettings: UIView {
 
     func setupInput() {
         imageInputLabel.frame = CGRect(x: width - 80, y: adapted(dimensionSize: 90, to: .height), width: 100, height: 40)
+        imageInputLabel.text = selectedModel?.inputSize
         addSubview(imageInputLabel)
     }
 
@@ -285,7 +288,6 @@ class ObjectTrackingSettings: UIView {
             return
         }
         var value = Int(confidenceLabel.text?.prefix((confidenceLabel.text?.count ?? 1) - 1) ?? "50")
-        print("value is : ", value)
         value = (value ?? 5) + 5;
         confidenceLabel.text = String(value!) + "%"
         NotificationCenter.default.post(name: .updateConfidence, object: confidenceLabel.text)
@@ -422,6 +424,7 @@ class ObjectTrackingSettings: UIView {
         let selectedModel = notification.object as! String
         modelDropdownLabel.text = selectedModel
         let model = Common.loadSelectedModel(modeName: selectedModel)
+        self.selectedModel = model
         imageInputLabel.text = model.inputSize
 
     }
@@ -429,7 +432,6 @@ class ObjectTrackingSettings: UIView {
     @objc func updateObject(_ notification: Notification) {
         let selectedObject = notification.object as! String
         objectDropDownLabel.text = selectedObject
-        detector?.setSelectedClass(newClass: selectedObject);
     }
 
     @objc func updateConnect(_ notification: Notification) {
