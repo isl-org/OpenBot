@@ -92,13 +92,11 @@ class AutopilotFragment: CameraController {
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
         currentDevice.rawValue == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
         autopilot?.tfliteOptions.threadCount = numberOfThreads
-        print("device is ", autopilot?.tfliteOptions)
     }
 
     @objc func updateModel(_ notification: Notification) {
         let selectedModelName = notification.object as! String
         currentModel = Common.loadSelectedModel(modeName: selectedModelName)
-        print(currentModel)
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
     }
 
@@ -112,8 +110,7 @@ class AutopilotFragment: CameraController {
             if (timer.isValid) {
                 captureImage();
                 if (images.count > 0) {
-                    let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0, indicator: 0) ?? Control();
-//                    print(controlResult.getLeft() as Any, controlResult.getRight() as Any);
+                    let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0, indicator: 0, width: originalWidth, height: originalHeight) ?? Control();
                     sendControl(control: controlResult);
                 }
             }
@@ -133,7 +130,6 @@ class AutopilotFragment: CameraController {
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
             NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())));
             vehicleControl = control;
-//            print("c" + String(left) + "," + String(right) + "\n");
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
         }
     }

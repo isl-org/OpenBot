@@ -95,6 +95,7 @@ class ObjectTrackingFragment: CameraController {
         var frames: [UIView] = [];
         autoMode = !autoMode;
         if (autoMode) {
+            images.removeAll();
             Timer.scheduledTimer(withTimeInterval: 0.7, repeats: true) { [self] timer in
                 do {
                     if !autoMode {
@@ -110,10 +111,10 @@ class ObjectTrackingFragment: CameraController {
                         let startTime = returnCurrentTimestamp();
                         captureImage();
                         if (images.count > 0) {
-
-                            let res = try detector?.recognizeImage(image: images[images.count - 1].0);
+                            let res = try detector?.recognizeImage(image: images[images.count - 1].0, height: originalHeight, width: originalWidth);
                             var i = 0;
                             if (res!.count > 0) {
+                                print(res!.first!.getConfidence());
                                 for item in res! {
                                     if (item.getConfidence() * 100 > MINIMUM_CONFIDENCE_TF_OD_API) {
                                         let frame = addFrame(item: item, color: Constants.frameColors[i % 5]);
@@ -124,7 +125,6 @@ class ObjectTrackingFragment: CameraController {
                                 }
                             }
                         }
-                        images.removeAll();
                         let endTime = returnCurrentTimestamp();
                         print("timecost to run the image is ", endTime - startTime);
                     }

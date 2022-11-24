@@ -24,6 +24,14 @@ class DetectorFloatYoloV4: Detector {
         try super.init(model: model, device: device, numThreads: numThreads)
     }
 
+    override func getImageMean() -> Float {
+        IMAGE_MEAN;
+    }
+
+    override func getImageStd() -> Float {
+        IMAGE_STD;
+    }
+
     override func parseTFlite() {
         let index0 = try! tflite?.output(at: 0);
         let index1 = try! tflite?.output(at: 1);
@@ -57,15 +65,14 @@ class DetectorFloatYoloV4: Detector {
         do {
             let outputLocationsTensor = try tflite?.output(at: outputLocationsIdx);
             let outputScoresTensor = try tflite?.output(at: outputScoresIdx);
-            let outputSize = outputLocationsTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
+            let outputSize = outputLocationsTensor?.data.count ?? 0
             outputLocations =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
-            outputLocationsTensor?.data.copyBytes(to: outputLocations!);
-
-            let outputScoresTensorSize = outputScoresTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
+            _ = outputLocationsTensor?.data.copyBytes(to: outputLocations!);
+            let outputScoresTensorSize = outputScoresTensor?.data.count ?? 0
             outputScores =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputScoresTensorSize)
-            outputScoresTensor?.data.copyBytes(to: outputScores!);
+            _ = outputScoresTensor?.data.copyBytes(to: outputScores!);
         } catch {
             print("error:\(error)")
         }
@@ -74,17 +81,19 @@ class DetectorFloatYoloV4: Detector {
     override func getRecognitions(className: String) -> [Recognition] {
         var recognitions: [Recognition] = [];
         var outputScores2D = Array(repeating: Array<Float32>(repeating: 0, count: labels.count), count: NUM_DETECTIONS);
-        for a in stride(from: 0, to: NUM_DETECTIONS, by: 1) {
-            for b in stride(from: 0, to: labels.count, by: 1) {
-                outputScores2D[a][b] = outputScores![b * labels.count + a];
+        for a in 0..<NUM_DETECTIONS {
+            for b in 0..<labels.count {
+                outputScores2D[a][b] = outputScores![a * labels.count + b];
             }
         }
+
         if (NUM_DETECTIONS > 0) {
             for i in 0..<NUM_DETECTIONS {
                 var maxClassScore: Float = 0;
                 var classId = -1;
                 let classes = outputScores2D[i];
-                for c in stride(from: 0, to: labels.count, by: 1) {
+
+                for c in 0..<classes.count {
                     if (classes[c] > maxClassScore) {
                         classId = c;
                         maxClassScore = classes[c];

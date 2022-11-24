@@ -9,6 +9,7 @@ class Detector: Network {
     var labels: [String] = [];
     var NUM_DETECTIONS: Int = 0;
     var selectedClass: String?;
+    let ciContext = CIContext()
 
     static func create(model: Model, device: RuntimeDevice, numThreads: Int) throws -> AnyObject? {
         switch (model.classType) {
@@ -37,8 +38,9 @@ class Detector: Network {
         NUM_DETECTIONS;
     }
 
-    public func setSelectedClass(selectedClass: String) {
-        self.selectedClass = selectedClass;
+    public func setSelectedClass(newClass: String) {
+        print(newClass);
+        selectedClass = newClass;
     }
 
     class Recognition {
@@ -94,7 +96,7 @@ class Detector: Network {
         var result: [String] = []
 
         for label in labels {
-            if (label != "???" && label != "") {
+            if (label != "???" && label != "" && label != " ") {
                 result.append(label);
             }
         }
@@ -115,22 +117,27 @@ class Detector: Network {
         if let filepath = Bundle.main.path(forResource: filePath, ofType: "") {
             do {
                 let contents = try String(contentsOfFile: filepath)
-                result = contents.components(separatedBy: CharacterSet.newlines)
+                let output = contents.components(separatedBy: "\n")
+                for label in output {
+                    if (label != " " && label != "") {
+                        result.append(label);
+                    }
+                }
             } catch {
                 print("cannot convert file content to string");
             }
         } else {
-            print("labelmap.txt not found");
+            print("labelmap.txt or coco.txt not found");
         }
         return result
     }
 
-    func recognizeImage(image: UIImage) throws -> [Recognition] {
+    func recognizeImage(image: UIImage, height: Double, width: Double) throws -> [Recognition] {
         let inputTensor = try tflite!.input(at: 0);
-        let imageData = image.pixelBuffer(width: getImageSizeX(), height: getImageSizeY());
-        let rgbData = rgbDataFromBuffer(imageData!,
+        let imageData = image.pixelBuffer(width: Int(width), height: Int(height));
+        let resizedImage = imageData?.resized(to: CGSize(width: getImageSizeX(), height: getImageSizeY()))
+        let rgbData = rgbDataFromBuffer(resizedImage!,
                 isModelQuantized: inputTensor.dataType == .uInt8);
-
         try tflite?.copy(rgbData!, toInputAt: 0);
         try tflite?.invoke();
         try runInference();

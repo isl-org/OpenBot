@@ -22,6 +22,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     var heightOfTrainingImage: Float = 96
     var saveZipFilesName = [URL]()
     var pixelBuffer: CVPixelBuffer?;
+    var originalHeight = 0.0;
+    var originalWidth = 0.0;
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +31,13 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateModelResolution), name: .updateModelResolution, object: nil)
     }
 
+    func getImageOriginalHeight() -> Double {
+        originalHeight
+    }
+
+    func getImageOriginalWidth() -> Double {
+        originalWidth
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -297,7 +306,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             return
         }
         if var image: UIImage = UIImage(data: imageData) {
-
             switch (currentOrientation) {
             case .landscapeLeft:
                 let newOrientation = UIImage.Orientation.up
@@ -310,6 +318,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
             default:
                 break;
             }
+            originalHeight = image.size.height;
+            originalWidth = image.size.width;
             images.append((image, isPreviewSelected, isTrainingSelected))
         }
 
@@ -338,7 +348,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
 //            let cropped: UIImage = UIImage(cgImage: imageRef);
 //            return cropped
 //        }
-         image.resized(to: CGSize(width: width, height: height))
+        image.resized(to: CGSize(width: width, height: height))
     }
 
     /**

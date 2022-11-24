@@ -15,45 +15,58 @@ class Autopilot: Network {
         try! super.init(model: model, device: device, numThreads: numThreads)
         do {
             let index0 = try tflite?.input(at: 0);
-            let index1 = try tflite?.input(at: 0);
-            if (index0?.name == "serving_default_cmd_input:0" || index0?.name == "cmd_input") {
-                cmdIndex = 0;
-                imgIndex = 1;
-            } else {
-                imgIndex = 0;
-                cmdIndex = 1;
-            }
-
+            let index1 = try tflite?.input(at: 1);
+            assignIndex(tensor: index0, index: 0);
+            assignIndex(tensor: index1, index: 1);
         } catch {
             print("error:\(error)")
         }
     }
 
-    func recogniseImage(image: UIImage, indicator: Float) -> Control {
+    func assignIndex(tensor: Tensor?, index: Int) {
+        switch (tensor?.name) {
+        case "serving_default_cmd_input:0", "cmd_input":
+            cmdIndex = index;
+            break
+        case "serving_default_img_input:0", "img_input":
+            imgIndex = index;
+            break
+        default:
+            break;
+        }
+    }
+
+
+    func recogniseImage(image: UIImage, indicator: Float, width: Double, height: Double) -> Control {
         do {
             var indicatorData: Data = Data();
             indicatorData.append(contentsOf: indicator.bytes);
             try tflite?.copy(indicatorData, toInputAt: cmdIndex);
-
-//            //make image input
-//            convertImageToData(image: image);
-            let inputTensor = try tflite!.input(at: 0);
-            let imageData = image.pixelBuffer(width: getImageSizeX(), height: getImageSizeY());
-            let rgbData = rgbDataFromBuffer(imageData!,
+            let inputTensor = try tflite!.input(at: imgIndex);
+            let imageData = image.pixelBuffer(width: Int(width), height: Int(height));
+            let resizedImage = imageData?.resized(to: CGSize(width: getImageSizeX(), height: getImageSizeY()))
+            let rgbData = rgbDataFromBuffer(resizedImage!,
                     isModelQuantized: inputTensor.dataType == .uInt8);
             try tflite?.copy(rgbData!, toInputAt: imgIndex);
-
             try tflite?.invoke();
-
             let outputTensor = try tflite?.output(at: 0);
             let outputSize = outputTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
             let outputData =
                     UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
-            outputTensor?.data.copyBytes(to: outputData)
+            _ = outputTensor?.data.copyBytes(to: outputData)
             return Control(left: outputData[0], right: outputData[1])
         } catch {
             print("error:\(error)")
             return Control(left: 0, right: 0)
         };
     }
+
+    override func getImageMean() -> Float {
+        IMAGE_MEAN;
+    }
+
+    override func getImageStd() -> Float {
+        IMAGE_STD;
+    }
+
 }

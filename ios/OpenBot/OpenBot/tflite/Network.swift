@@ -52,11 +52,11 @@ class Network {
             } else {
                 let modelsInDocumentDirectory = DataLogger.shared.getDocumentDirectoryInformation();
                 for modelUrl in modelsInDocumentDirectory {
-                  if(modelUrl.absoluteString.contains(fileName)){
-                      tflite = try Interpreter(modelPath: modelUrl.absoluteString.replacingOccurrences(of: "file:///", with: ""), options: tfliteOptions, delegates: delegates);
-                      try tflite?.allocateTensors()
+                    if (modelUrl.absoluteString.contains(fileName)) {
+                        tflite = try Interpreter(modelPath: modelUrl.absoluteString.replacingOccurrences(of: "file:///", with: ""), options: tfliteOptions, delegates: delegates);
+                        try tflite?.allocateTensors()
 
-                  }
+                    }
                 }
             }
             imageSize = model.getInputSize();
@@ -133,43 +133,22 @@ class Network {
         let bytes = Array<UInt8>(unsafeData: byteData)!
         var floats = [Float32]()
         for i in 0..<bytes.count {
-            floats.append((Float32(bytes[i]) - 0) / 255)
+            floats.append((Float32(bytes[i]) - getImageMean()) / getImageStd())
         }
 
         return Data(copyingBufferOf: floats)
     }
 
+    func getImageMean() -> Float {
+        0;
+    }
 
+    func getImageStd() -> Float {
+        255;
+    }
 }
 
 extension UIImage {
-    func pixelData() -> [UInt8]? {
-        guard let cgImage = cgImage else {
-            return nil
-        }
-        let w = cgImage.width
-        let h = cgImage.height
-
-        let bytesPerPixel = 4
-        let bytesPerRow = bytesPerPixel * w
-        let bitsPerComponent = 8
-        var rawBytes: [UInt8] = [UInt8](repeating: 0, count: w * h * 4)
-        rawBytes.withUnsafeMutableBytes { ptr in
-            if let cgImage = self.cgImage,
-               let context = CGContext(data: ptr.baseAddress,
-                       width: w,
-                       height: h,
-                       bitsPerComponent: bitsPerComponent,
-                       bytesPerRow: bytesPerRow,
-                       space: CGColorSpaceCreateDeviceRGB(),
-                       bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) {
-                let rect = CGRect(x: 0, y: 0, width: w, height: h)
-                context.draw(cgImage, in: rect)
-            }
-        }
-        return rawBytes
-    }
-
     func resized(to newSize: CGSize, scale: CGFloat = 1) -> UIImage {
         let format = UIGraphicsImageRendererFormat.default()
         format.scale = scale
@@ -204,7 +183,7 @@ extension UIImage {
                 bitsPerComponent: 8,
                 bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
                 space: CGColorSpaceCreateDeviceRGB(),
-                bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue)
+                bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
         else {
             return nil
         }

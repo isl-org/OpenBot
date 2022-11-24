@@ -429,7 +429,7 @@ class ObjectTrackingSettings: UIView {
     @objc func updateObject(_ notification: Notification) {
         let selectedObject = notification.object as! String
         objectDropDownLabel.text = selectedObject
-        detector?.setSelectedClass(selectedClass: selectedObject);
+        detector?.setSelectedClass(newClass: selectedObject);
     }
 
     @objc func updateConnect(_ notification: Notification) {
