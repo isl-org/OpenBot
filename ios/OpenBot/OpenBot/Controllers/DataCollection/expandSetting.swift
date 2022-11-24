@@ -408,7 +408,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     @objc func serverHandler(_ sender: UIView) {
-        print("hello server")
+//        print("hello server")
     }
 
     @objc func updateResolution() {

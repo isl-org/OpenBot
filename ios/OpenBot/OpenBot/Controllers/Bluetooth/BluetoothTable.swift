@@ -81,7 +81,7 @@ class BluetoothTable: UITableViewController {
     }
 
     @objc func updateConnect(_ notification: Notification) {
-        print(bluetooth.peripherals)
+//        print(bluetooth.peripherals)
         tableView.reloadData()
     }
 

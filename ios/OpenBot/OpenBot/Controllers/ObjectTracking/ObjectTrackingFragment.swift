@@ -17,7 +17,7 @@ class ObjectTrackingFragment: CameraController {
     let bluetooth = bluetoothDataController.shared;
     var currentModel: ModelItem!
     var currentDevice: RuntimeDevice = RuntimeDevice.CPU
-    private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 20.0;
+    private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 50.0;
 
     override func viewDidLoad() {
         let modelItems = Common.loadAllModelItems()
@@ -88,8 +88,8 @@ class ObjectTrackingFragment: CameraController {
     }
 
     @objc func updateConfidence(_ notification: Notification) {
-        let confidence = notification.object as! String
-        print("confidence is : ", confidence)
+        let confidence = notification.object as! Int
+        MINIMUM_CONFIDENCE_TF_OD_API = Float(confidence)
     }
 
     @objc func toggleAutoMode() {

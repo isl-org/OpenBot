@@ -137,7 +137,7 @@ class DataCollectionController: CameraController {
         if let controlMode = notification?.userInfo?["mode"] as? ControlMode {
             selectedControlMode = controlMode;
         }
-        print(selectedControlMode);
+//        print(selectedControlMode);
         if selectedControlMode == .gamepad {
             gameControllerObj = GameController();
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
@@ -158,7 +158,7 @@ class DataCollectionController: CameraController {
         if let speedMode = notification.userInfo?["speed"] as? SpeedMode {
             selectedSpeedMode = speedMode;
             gameController.selectedSpeedMode = selectedSpeedMode
-            print(selectedSpeedMode)
+//            print(selectedSpeedMode)
         }
 
     }

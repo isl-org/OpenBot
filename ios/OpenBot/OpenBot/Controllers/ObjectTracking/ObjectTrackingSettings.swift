@@ -290,7 +290,7 @@ class ObjectTrackingSettings: UIView {
         var value = Int(confidenceLabel.text?.prefix((confidenceLabel.text?.count ?? 1) - 1) ?? "50")
         value = (value ?? 5) + 5;
         confidenceLabel.text = String(value!) + "%"
-        NotificationCenter.default.post(name: .updateConfidence, object: confidenceLabel.text)
+        NotificationCenter.default.post(name: .updateConfidence, object: value)
     }
 
     @objc func decreaseConfidence(_ sender: UIImage) {
@@ -300,7 +300,7 @@ class ObjectTrackingSettings: UIView {
         var value = Int(confidenceLabel.text?.prefix((confidenceLabel.text?.count ?? 1) - 1) ?? "50")
         value = (value ?? 5) - 5;
         confidenceLabel.text = String(value!) + "%"
-        NotificationCenter.default.post(name: .updateConfidence, object: confidenceLabel.text)
+        NotificationCenter.default.post(name: .updateConfidence, object: value)
     }
 
     @objc func increaseThreads(_ sender: UIImage) {
