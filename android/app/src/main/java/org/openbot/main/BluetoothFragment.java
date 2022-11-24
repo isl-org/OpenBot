@@ -7,7 +7,7 @@ import android.graphics.Rect;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -116,10 +116,9 @@ public class BluetoothFragment extends Fragment {
         adapter.setOnItemClickListener(new CommonRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-                System.out.println("pos"+position);
-                manager.stopScan();
+//̉                manager.stopScan();
                 BleDevice bleDevice = deviceList.get(position);
-                if(connectedDevice == null || !bleDevice.address.equals(connectedDevice.address)) {
+                if (connectedDevice == null || !bleDevice.address.equals(connectedDevice.address)) {
                     connectedDevice = bleDevice;
                 }
                 selectedViewItem = itemView;
@@ -185,11 +184,18 @@ public class BluetoothFragment extends Fragment {
                     notifyCharacteristic = characteristicInfo;
                     BleManager.getInstance().notify(connectedDevice, e.getKey().uuid, notifyCharacteristic.uuid, notifyCallback);
                 }
-                if (characteristicInfo.writable) {
-                    writeCharacteristic = characteristicInfo;
-                    String str = "c100";
-                    BleManager.getInstance().write(connectedDevice, e.getKey().uuid, writeCharacteristic.uuid, ByteUtils.hexStr2Bytes("c100"), writeCallback);
-                }
+//                setInterval(function () {element.innerHTML += "Hello"}, 1000);
+                new Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                System.out.println("write post delayed");
+                                if (characteristicInfo.writable) {
+                                    writeCharacteristic = characteristicInfo;
+                                    String str = "c100";
+                                    BleManager.getInstance().write(connectedDevice, e.getKey().uuid, writeCharacteristic.uuid, ByteUtils.hexStr2Bytes("c100"), writeCallback);
+                                }
+                            }
+                        }, 1000);
             }
             groupList.add(e.getKey());
             childList.add(e.getValue());
@@ -234,10 +240,10 @@ public class BluetoothFragment extends Fragment {
     }
 
     private void connectToDevice() {
-        if(connectedDevice.connected){
+        if (connectedDevice.connected) {
             BleManager.getInstance().disconnect(connectedDevice.address);
             connectedDevice = null;
-        } else{
+        } else {
             BleManager.getInstance().connect(connectedDevice.address, connectCallback);
         }
     }
