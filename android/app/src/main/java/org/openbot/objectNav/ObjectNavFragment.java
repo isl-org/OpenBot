@@ -21,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -38,6 +39,7 @@ import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.CameraUtils;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.MovingAverage;
@@ -51,7 +53,7 @@ public class ObjectNavFragment extends CameraFragment {
   private HandlerThread handlerThread;
 
   private boolean computingNetwork = false;
-  private static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
+  public static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
 
   private static final float TEXT_SIZE_DIP = 10;
 
@@ -102,7 +104,7 @@ public class ObjectNavFragment extends CameraFragment {
         v -> {
           String trimConfVaue = binding.confidenceValue.getText().toString().trim();
           int confValue = Integer.parseInt(trimConfVaue.substring(0, trimConfVaue.length() - 1));
-          if (confValue > 100) return;
+          if (confValue >= 95) return;
           confValue += 5;
           binding.confidenceValue.setText(confValue + "%");
           MINIMUM_CONFIDENCE_TF_OD_API = confValue / 100f;
@@ -111,9 +113,8 @@ public class ObjectNavFragment extends CameraFragment {
         v -> {
           String trimConfVaue = binding.confidenceValue.getText().toString().trim();
           int confValue = Integer.parseInt(trimConfVaue.substring(0, trimConfVaue.length() - 1));
-          if (confValue < 5) return;
+          if (confValue <= 5) return;
           confValue -= 5;
-
           binding.confidenceValue.setText(confValue + "%");
           MINIMUM_CONFIDENCE_TF_OD_API = confValue / 100f;
         });
@@ -421,7 +422,12 @@ public class ObjectNavFragment extends CameraFragment {
       runInBackground(
           () -> {
             final Canvas canvas = new Canvas(croppedBitmap);
-            canvas.drawBitmap(bitmap, frameToCropTransform, null);
+            if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+              canvas.drawBitmap(
+                  CameraUtils.flipBitmapHorizontal(bitmap), frameToCropTransform, null);
+            } else {
+              canvas.drawBitmap(bitmap, frameToCropTransform, null);
+            }
 
             if (detector != null) {
               Timber.i("Running detection on image %s", frameNum);

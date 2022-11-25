@@ -2,6 +2,8 @@ package org.openbot.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -113,5 +115,12 @@ public class CameraUtils {
       return Long.signum(
           (long) lhs.getWidth() * lhs.getHeight() - (long) rhs.getWidth() * rhs.getHeight());
     }
+  }
+
+  /** Flip bitmap horizontally (left to right) */
+  public static Bitmap flipBitmapHorizontal(Bitmap bitmap) {
+    Matrix matrix = new Matrix();
+    matrix.preScale(-1.0f, 1.0f);
+    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
   }
 }
