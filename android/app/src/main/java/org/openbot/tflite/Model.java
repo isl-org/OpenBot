@@ -28,6 +28,7 @@ public class Model {
     MOBILENETV1_1_0_Q,
     MOBILENETV3_S_Q,
     YOLOV4,
+    YOLOV5,
     NAVIGATION
   }
 
