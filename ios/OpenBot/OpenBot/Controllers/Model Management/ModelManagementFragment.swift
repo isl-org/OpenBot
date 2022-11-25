@@ -429,7 +429,6 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
             }
         }
         print(DataLogger.shared.getDocumentDirectoryInformation())
-        let myIndexPath = IndexPath(row: 4, section: 0)
         modelTable.reloadRows(at: [selectedIndex] , with:.bottom)
     }
 
@@ -444,9 +443,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     }
 
     @objc func fileDownloaded() {
-        let myIndexPath = IndexPath(row: 3, section: 0);
         modelTable.reloadRows(at: [selectedIndex], with: .bottom)
-
     }
 
     @objc func removeBlankScreen() {
@@ -475,3 +472,4 @@ class CustomTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
+

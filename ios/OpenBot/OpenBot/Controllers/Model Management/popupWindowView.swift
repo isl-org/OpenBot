@@ -16,13 +16,19 @@ class popupWindowView: UIView {
     var headingLeadingAnchor: NSLayoutConstraint!
     var typeDropdownLeadingAnchor: NSLayoutConstraint!
     var classDropdownLeadingAnchor: NSLayoutConstraint!
+    var firstBox = UIView()
+    var secondBox = UIView()
     var firstBoxLeadingAnchor: NSLayoutConstraint!
     var secondBoxLeadingAnchor: NSLayoutConstraint!
+    var model: ModelItem!
+    var widthOfModel: String!
+    var heightOfModel: String!
 
     init(frame: CGRect, _ modelName: String) {
         super.init(frame: frame)
         self.modelName = modelName
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
+        setupModelItem();
         addGestureRecognizer(tap)
         createHeading();
         createLabel(text: Strings.name, leadingAnchor: 20, topAnchor: 60);
@@ -34,11 +40,14 @@ class popupWindowView: UIView {
         createLabel(text: Strings.class, leadingAnchor: 20, topAnchor: 200);
         createClassDropdown()
         createLabel(text: Strings.inputOfModel, leadingAnchor: 20, topAnchor: 250);
-        firstBoxLeadingAnchor = createBox(leadingAnchor: width / 2 - 50, topAnchor: 250);
-        createLabel(text: "x", leadingAnchor: width / 2 + 10, topAnchor: 250)
-        secondBoxLeadingAnchor = createBox(leadingAnchor: width / 2 + 50, topAnchor: 250);
-        createButton(label: Strings.cancel, leadingAnchor: 20, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 100, action:  #selector(cancel(_:)))
-        createButton(label: Strings.done, leadingAnchor: width / 2 - 50 , backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 200, action:  #selector(done(_:)));
+        firstBox = createBox(leadingAnchor: width / 2 - 50, topAnchor: 250, isFirst: true);
+        createLabel(text: "x", leadingAnchor: width / 2, topAnchor: 250)
+        secondBox = createBox(leadingAnchor: width / 2 + 50, topAnchor: 250, isFirst: false);
+        createFirstInputTextField();
+        createSecondInputField()
+        createButton(label: Strings.cancel, leadingAnchor: 20, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 100, action: #selector(cancel(_:)))
+        createButton(label: Strings.done, leadingAnchor: width / 2 - 50, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 200, action: #selector(done(_:)));
+
     }
 
 
@@ -48,6 +57,7 @@ class popupWindowView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+
         if currentOrientation == .portrait {
             textFieldLeadingConstraints.constant = -width / 2 - 50
             headingLeadingAnchor.constant = width / 2 - CGFloat(Strings.modelDetails.count * 5)
@@ -64,6 +74,12 @@ class popupWindowView: UIView {
             secondBoxLeadingAnchor.constant = -height / 2 + 50
         }
 
+    }
+
+    func setupModelItem() {
+        model = Common.loadSelectedModel(modeName: modelName)
+        widthOfModel = ModelItem.getWidthOfInput(model.inputSize);
+        heightOfModel = ModelItem.getHeightOfInput(model.inputSize);
     }
 
     func createHeading() {
@@ -97,8 +113,9 @@ class popupWindowView: UIView {
         let textField = UITextField();
         textField.text = text
         addSubview(textField);
+        textField.addTarget(self, action: #selector(nameDidChange(_:)), for: .editingChanged);
         textField.translatesAutoresizingMaskIntoConstraints = false;
-        textField.widthAnchor.constraint(equalToConstant: 200).isActive = true;
+        textField.widthAnchor.constraint(equalToConstant: 170).isActive = true;
         textField.heightAnchor.constraint(equalToConstant: 60).isActive = true;
         textFieldLeadingConstraints = textField.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: trailingAnchor)
         textFieldLeadingConstraints.isActive = true;
@@ -154,6 +171,7 @@ class popupWindowView: UIView {
         modelTypeLabel.textColor = Colors.borderColor
         typeDropdown.selectionAction = { [self] (index: Int, item: String) in
             modelTypeLabel.text = item
+            model.type = item;
         }
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
@@ -177,7 +195,7 @@ class popupWindowView: UIView {
         ddView.heightAnchor.constraint(equalToConstant: 35).isActive = true;
         classDropdownLeadingAnchor = ddView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -width / 2 - 50)
         classDropdownLeadingAnchor.isActive = true;
-        ddView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 190).isActive = true;
+        ddView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 200).isActive = true;
         let tap = UITapGestureRecognizer(target: self, action: #selector(showClassDropdown(_:)))
         ddView.addGestureRecognizer(tap)
         let classLabel = UILabel();
@@ -191,6 +209,7 @@ class popupWindowView: UIView {
         classLabel.textColor = Colors.borderColor
         classDropdown.selectionAction = { [self] (index: Int, item: String) in
             classLabel.text = item
+            model.class = item
         }
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
@@ -203,7 +222,7 @@ class popupWindowView: UIView {
 
     }
 
-    func createBox(leadingAnchor: CGFloat, topAnchor: CGFloat) -> NSLayoutConstraint {
+    func createBox(leadingAnchor: CGFloat, topAnchor: CGFloat, isFirst: Bool) -> UIView {
         let box = UIView();
         box.layer.borderColor = Colors.borderColor?.cgColor;
         box.layer.borderWidth = 1;
@@ -211,23 +230,53 @@ class popupWindowView: UIView {
         box.translatesAutoresizingMaskIntoConstraints = false
         box.widthAnchor.constraint(equalToConstant: 50).isActive = true;
         box.heightAnchor.constraint(equalToConstant: 40).isActive = true;
-        let boxLeadingAnchor = box.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -width / 2 - 50)
+        let boxLeadingAnchor = box.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: leadingAnchor)
         boxLeadingAnchor.isActive = true
         box.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topAnchor).isActive = true;
+        if isFirst {
+            firstBoxLeadingAnchor = box.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: leadingAnchor);
+            firstBoxLeadingAnchor.isActive = true;
+        } else {
+            secondBoxLeadingAnchor = box.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: leadingAnchor);
+            secondBoxLeadingAnchor.isActive = true;
+        }
+        return box
+    }
+
+    func createFirstInputTextField() {
         let input = UITextField();
+        input.keyboardType = .numberPad;
         let modelInputSize = Common.loadSelectedModel(modeName: modelName).inputSize
         let index = modelInputSize.index(modelInputSize.startIndex, offsetBy: 3)
         input.text = String(modelInputSize[..<index])
-        box.addSubview(input);
+        input.addTarget(self, action: #selector(wDidChange(_:)), for: .editingChanged);
+        firstBox.addSubview(input);
         input.translatesAutoresizingMaskIntoConstraints = false;
-        input.widthAnchor.constraint(equalToConstant: 68).isActive = true;
-        input.heightAnchor.constraint(equalToConstant: 68).isActive = true;
-        input.leadingAnchor.constraint(equalTo: box.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
-        input.topAnchor.constraint(equalTo: box.safeAreaLayoutGuide.topAnchor, constant: -12).isActive = true
-        return boxLeadingAnchor
+        input.widthAnchor.constraint(equalToConstant: 40).isActive = true;
+        input.heightAnchor.constraint(equalToConstant: 38).isActive = true;
+        input.leadingAnchor.constraint(equalTo: firstBox.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
+        input.topAnchor.constraint(equalTo: firstBox.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
     }
 
-    func createButton(label: String, leadingAnchor: CGFloat, backgroundColor: UIColor, buttonWidth: CGFloat, action : Selector?) {
+    func createSecondInputField() {
+        let input = UITextField();
+        input.keyboardType = .numberPad;
+        let modelInputSize = Common.loadSelectedModel(modeName: modelName).inputSize
+        print(modelInputSize)
+        let index = modelInputSize.index(of: "x");
+        let nextIndex = modelInputSize.index(after: index!)
+        input.text = String(modelInputSize.suffix(from: nextIndex))
+        input.addTarget(self, action: #selector(hDidChange(_:)), for: .editingChanged);
+        secondBox.addSubview(input);
+        input.translatesAutoresizingMaskIntoConstraints = false;
+        input.widthAnchor.constraint(equalToConstant: 40).isActive = true;
+        input.heightAnchor.constraint(equalToConstant: 38).isActive = true;
+        input.leadingAnchor.constraint(equalTo: secondBox.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
+        input.topAnchor.constraint(equalTo: secondBox.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+    }
+
+
+    func createButton(label: String, leadingAnchor: CGFloat, backgroundColor: UIColor, buttonWidth: CGFloat, action: Selector?) {
         let button = UIButton()
         button.setTitle(label, for: .normal);
         button.backgroundColor = backgroundColor
@@ -238,7 +287,13 @@ class popupWindowView: UIView {
         button.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true;
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true;
         button.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
-        button.addTarget(self, action: action!, for: . touchUpInside)
+        button.addTarget(self, action: action!, for: .touchUpInside)
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        endEditing(true)
+        print("inside textFieldShouldReturn")
+        return true
     }
 
     @objc func showTypeDropdown(_ sender: UITapGestureRecognizer? = nil) {
@@ -249,21 +304,46 @@ class popupWindowView: UIView {
         classDropdown.show()
     }
 
+    @objc func nameDidChange(_ textField: UITextField) {
+        model.name = textField.text ?? model.name
+        if !model.name.contains(Strings.tflit) {
+            model.name.append(Strings.tflit)
+        }
+    }
+
+    @objc func wDidChange(_ textField: UITextField) {
+        widthOfModel = textField.text ?? ModelItem.getWidthOfInput(model.inputSize);
+    }
+
+    @objc func hDidChange(_ textField: UITextField) {
+        heightOfModel = textField.text ?? ModelItem.getHeightOfInput(model.inputSize);
+    }
+
+
     @objc func cancel(_ sender: UIButton) {
         NotificationCenter.default.post(name: .removeBlankScreen, object: nil);
         removeFromSuperview();
     }
 
-    @objc func done(_ sender: UIButton) {
-        if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
-            do {
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                let jsonData = try decoder.decode([ModelItem].self, from: data)
-                print(jsonData);
-            } catch {
-                print("error:\(error)")
+    @objc func done(_ sender: UIButton) throws {
+
+        let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
+        var isFoundConfigFile: Bool = false;
+        for url in documentDirectoryURls {
+            if url.absoluteString.contains("config.json") {
+                isFoundConfigFile = true
+                break;
             }
+
+        }
+        switch isFoundConfigFile {
+        case true:
+            print("mil gya bhae party");
+            modifyModels()
+        case false:
+            print("oops");
+            try saveConfigFileToDocument();
+            modifyModels();
         }
         NotificationCenter.default.post(name: .removeBlankScreen, object: nil);
         removeFromSuperview();
@@ -273,6 +353,98 @@ class popupWindowView: UIView {
         endEditing(true);
     }
 
+    func saveConfigFileToDocument() throws {
+        let json = ModelItem.toJson(modifyModels());
+        let valid = JSONSerialization.isValidJSONObject(json)
+        var x = popupWindowView.stringify(json: json)
+        let fileManager = FileManager.default
+        do {
+            let documentDirectory = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create:false)
+            let fileURL = documentDirectory.appendingPathComponent("config,json")
+              try x.write(to: fileURL, atomically: true, encoding: .utf8);
+        } catch {
+            print(error)
+        }
+        readTheContent()
+
+
+    }
+
+    static func stringify(json: Any, prettyPrinted: Bool = true) -> String {
+        var options: JSONSerialization.WritingOptions = []
+        if prettyPrinted {
+            options = JSONSerialization.WritingOptions.prettyPrinted
+        }
+
+        do {
+            let data = try JSONSerialization.data(withJSONObject: json, options: options)
+            if let string = String(data: data, encoding: String.Encoding.utf8) {
+                return string
+            }
+        } catch {
+            print(error)
+        }
+
+        return ""
+    }
+
+    func modifyModels() -> [ModelItem] {
+//        DataLogger.shared.deleteFiles(fileNameToDelete: "")
+        let newModel = ModelItem.init(id: model.id, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: model.path, inputSize: widthOfModel + "x" + heightOfModel);
+        var allModels = Common.loadAllModelItems();
+        var index = 0;
+        for model in allModels {
+            if model.id == newModel.id {
+                break;
+            }
+            index = index + 1;
+        }
+        allModels[index] = newModel;
+        return allModels;
+    }
+
+    func jsonData() -> [ModelItem] {
+        if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                let jsonData = try decoder.decode([ModelItem].self, from: data)
+                return jsonData
+            } catch {
+                print("error:\(error)")
+            }
+        }
+        return []
+    }
+
+    func readTheContent(){
+        let fileName = "config.json"
+        var filePath = ""
+        print("indside read contains")
+        // Fine documents directory on device
+        let dirs : [String] = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
+        if dirs.count > 0 {
+            let dir = dirs[0] //documents directory
+            filePath = dir.appending("/" + fileName)
+            print("Local path = \(filePath)")
+        } else {
+            print("Could not find local directory to store file")
+            return
+        }
+
+        // Read file content. Example in Swift
+        do {
+            // Read file content
+            let contentFromFile = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue)
+            print("hello",contentFromFile)
+        }
+        catch let error as NSError {
+            print("An error took place: \(error)")
+        }
+    }
+
 }
+
+
 
 
