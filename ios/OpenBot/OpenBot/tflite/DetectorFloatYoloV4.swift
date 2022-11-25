@@ -101,7 +101,11 @@ class DetectorFloatYoloV4: Detector {
                 }
 
                 if (classId > -1 && className == labels[classId]) {
-                    let detection: CGRect = CGRect(x: CGFloat(outputLocations![4 * i]), y: CGFloat(outputLocations![(4 * i) + 1]), width: CGFloat(outputLocations![(4 * i) + 2]), height: CGFloat(outputLocations![(4 * i) + 3]))
+                    let xPos = outputLocations![4 * i];
+                    let yPos = outputLocations![4 * i + 1];
+                    let w = outputLocations![4 * i + 2];
+                    let h = outputLocations![4 * i + 3];
+                    let detection: CGRect = CGRect(x: CGFloat(max(0, xPos - w / 2)), y: CGFloat(max(0, yPos - h / 2)), width: CGFloat(w), height: CGFloat(h))
                     recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: maxClassScore, location: detection, classId: classId));
                 }
             }

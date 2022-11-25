@@ -197,6 +197,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         default: break
         }
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        videoPreviewLayer.videoGravity = .resizeAspectFill
         videoPreviewLayer.connection?.videoOrientation = orientation;
         cameraView.layer.addSublayer(videoPreviewLayer)
         DispatchQueue.global(qos: .userInitiated).async { //[weak self] in
