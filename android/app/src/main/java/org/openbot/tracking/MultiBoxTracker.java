@@ -149,15 +149,21 @@ public class MultiBoxTracker {
       final RectF trackedPos = new RectF(trackedObjects.get(0).location);
       final boolean rotated = sensorOrientation % 180 == 90;
       float imgWidth = (float) (rotated ? frameHeight : frameWidth);
+      float trackboxWidth = (rotated ? trackedPos.height() : trackedPos.width()); // calculate box width for distance estimate
       float centerX = (rotated ? trackedPos.centerY() : trackedPos.centerX());
       // Make sure object center is in frame
       centerX = Math.max(0.0f, Math.min(centerX, imgWidth));
       // Scale relative position along x-axis between -1 and 1
-      float x_pos_norm = 1.0f - 2.0f * centerX / imgWidth;
+      float x_pos_norm = 1.0f - 2.0f * centerX / imgWidth; // test values range approx. -0.7x to 0.7x
       // Scale to control signal and account for rotation
       float x_pos_scaled = rotated ? -x_pos_norm * 1.0f : x_pos_norm * 1.0f;
       //// Scale by "exponential" function: y = x / sqrt(1-x^2)
-      // Math.max (Math.min(x_pos_norm / Math.sqrt(1 - x_pos_norm * x_pos_norm),2),-2) * 255.0f;
+      // Math.max (Math.min(x_pos_norm / Math.sqrt(1 - x_pos_norm * x_pos_norm),2),-2);
+
+      // reduce speed depending on size of detected object box
+      // assuming, lage box means close to tracked object, if below a threshold stop robot.
+      float distancefactor = 1 - (trackboxWidth / frameWidth); // estimate relative distance 0 - 0.9x
+      if (distancefactor < 0.15f) distancefactor = 0.0f;
 
       if (x_pos_scaled < 0) {
         leftControl = 1.0f;
@@ -166,6 +172,8 @@ public class MultiBoxTracker {
         leftControl = 1.0f - x_pos_scaled;
         rightControl = 1.0f;
       }
+      leftControl = leftControl * distancefactor;
+      rightControl = rightControl * distancefactor;
     } else {
       leftControl = 0.0f;
       rightControl = 0.0f;
