@@ -101,6 +101,7 @@ class ObjectTrackingFragment: CameraController {
                 do {
                     if !autoMode {
                         timer.invalidate()
+                        sendControl(control: Control())
                     }
                     if (frames.count > 0) {
                         for frame in frames {
@@ -115,7 +116,6 @@ class ObjectTrackingFragment: CameraController {
                             let res = try detector?.recognizeImage(image: images[images.count - 1].0, height: originalHeight, width: originalWidth);
                             var i = 0;
                             if (res!.count > 0) {
-                                print(res!.first!.getConfidence());
                                 for item in res! {
                                     if (item.getConfidence() * 100 > MINIMUM_CONFIDENCE_TF_OD_API) {
                                         let frame = addFrame(item: item, color: Constants.frameColors[i % 5], size: CGSize(width: originalWidth, height: originalHeight));
@@ -124,6 +124,8 @@ class ObjectTrackingFragment: CameraController {
                                         i += 1;
                                     }
                                 }
+                                let control: Control = updateTarget(location: res!.first!.getLocation());
+                                sendControl(control: control);
                             }
                         }
                         let endTime = returnCurrentTimestamp();
@@ -134,6 +136,23 @@ class ObjectTrackingFragment: CameraController {
                 }
             }
         }
+    }
+
+    func updateTarget(location: CGRect) -> Control {
+
+        var centerX: Float = Float(location.midX);
+        centerX = max(0, min(centerX, Float(originalWidth)));
+        let x_pos_norm: Float = 1.0 - 2.0 * centerX / Float(originalWidth);
+        var left: Float = 0.0;
+        var right: Float = 0.0;
+        if (x_pos_norm < 0) {
+            left = 1;
+            right = 1.0 + x_pos_norm;
+        } else {
+            left = 1 - x_pos_norm;
+            right = 1;
+        }
+        return Control(left: left, right: right)
     }
 
 
@@ -187,6 +206,14 @@ class ObjectTrackingFragment: CameraController {
         frame.frame = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
         frame.layer.borderColor = color.cgColor;
         frame.layer.borderWidth = 2.0
+        let nameString = UITextView();
+        nameString.textColor = UIColor.white;
+        nameString.font = nameString.font?.withSize(12)
+        nameString.backgroundColor = color.withAlphaComponent(0.5);
+        nameString.text = item.getTitle() + " : " + String(format: "%.3f", item.getConfidence());
+        nameString.translatesAutoresizingMaskIntoConstraints = true
+        nameString.sizeToFit()
+        frame.addSubview(nameString);
         return frame;
     }
 }

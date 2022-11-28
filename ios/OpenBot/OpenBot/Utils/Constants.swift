@@ -55,7 +55,7 @@ struct Constants {
         ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment),
         ModeItem(label: Strings.modelManagement, icon: Images.modelManagementIcon!, identifier: Strings.ScreenModelManagement)
     ];
-    static let frameColors: [UIColor] = [UIColor.red, UIColor.yellow, UIColor.blue, UIColor.green, UIColor.brown];
+    static let frameColors: [UIColor] = [UIColor.red, UIColor.orange, UIColor.blue, UIColor.green, UIColor.brown];
     static let autopilotMode = "AUTOPILOT";
     static let objectTrackingMode = "DETECTOR";
     static let types : [String] = ["AUTOPILOT","DETECTOR","NAVIGATION"];
