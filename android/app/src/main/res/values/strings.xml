@@ -92,6 +92,30 @@
   <string name="tracking_lost">Tracking lost.</string>
   <string name="no_initial_ar_core_pose">No initial AR Core pose.</string>
   <string name="ar_core_session_paused">AR Core session paused.</string>
+
+  <string name="bumpers">Bumpers</string>
+  <string name="n_a">N/A</string>
+  <string name="robot_type">Robot Type:</string>
+  <string name="indicators">Indicators</string>
+  <string name="back">Back</string>
+  <string name="voltage_divider">Voltage Divider</string>
+  <string name="status">Status</string>
+  <string name="front">Front</string>
+  <string name="robot_icon">Robot Icon</string>
+  <string name="wheel_odometry_front">Wheel Odometry Front</string>
+  <string name="wheel_odometry_back">Wheel Odometry Back</string>
+  <string name="backward">Backward</string>
+  <string name="forward">Forward</string>
+  <string name="stop">Stop</string>
+  <string name="motors">Motors</string>
+  <string name="leds">LEDs</string>
+  <string name="lights">Lights</string>
+  <string name="sensors">Sensors</string>
+  <string name="send_commands">Send Commands</string>
+  <string name="wheel_odometry">Wheel Odometry</string>
+  <string name="readings">Readings</string>
+  <string name="lights_slider">lights slider</string>
+
   <string-array name="servers">
     <item>No server</item>
   </string-array>
@@ -133,7 +157,6 @@
     <item>Game</item>
     <item>Joystick</item>
   </string-array>
-
   <string-array name="preview_resolutions">
     <item>Low</item>
     <item>Medium</item>
@@ -143,7 +166,6 @@
     <item>WebRTC</item>
     <item>RTSP</item>
   </string-array>
-  <!-- TODO: Remove or change this placeholder text -->
   <string-array name="speed_modes">
     <item>Slow</item>
     <item>Normal</item>
