@@ -139,7 +139,6 @@ class ObjectTrackingFragment: CameraController {
     }
 
     func updateTarget(location: CGRect) -> Control {
-
         var centerX: Float = Float(location.midX);
         centerX = max(0, min(centerX, Float(originalWidth)));
         let x_pos_norm: Float = 1.0 - 2.0 * centerX / Float(originalWidth);
@@ -147,7 +146,7 @@ class ObjectTrackingFragment: CameraController {
         var right: Float = 0.0;
         if (x_pos_norm < 0) {
             left = 1;
-            right = 1.0 + x_pos_norm;
+            right = 1.0 - x_pos_norm;
         } else {
             left = 1 - x_pos_norm;
             right = 1;
@@ -202,7 +201,7 @@ class ObjectTrackingFragment: CameraController {
         let frame = UIView()
         let detection = item.getLocation();
         let dx = size.width / detection.width;
-        let dy = size.height / detection.width;
+        let dy = size.height / detection.height;
         frame.frame = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
         frame.layer.borderColor = color.cgColor;
         frame.layer.borderWidth = 2.0
