@@ -18,10 +18,11 @@ class AdaptedConstraint: NSLayoutConstraint {
 }
 
 // MARK: - Adapt constant
+
 extension AdaptedConstraint {
     func adaptConstant() {
         if let dimension = getDimension(from: firstAttribute) {
-            self.constant = adapted(dimensionSize: self.constant, to: dimension)
+            constant = adapted(dimensionSize: constant, to: dimension)
         }
     }
 
@@ -39,17 +40,14 @@ extension AdaptedConstraint {
             return nil
         }
     }
-}
 
-// MARK: - Reset constant
-extension AdaptedConstraint {
     func saveConstant() {
-        initialConstant = self.constant
+        initialConstant = constant
     }
 
     func resetConstant() {
         if let initialConstant = initialConstant {
-            self.constant = initialConstant
+            constant = initialConstant
         }
     }
 }

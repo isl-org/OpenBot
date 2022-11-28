@@ -179,7 +179,7 @@ extension UIButton {
             forContentPadding contentPadding: UIEdgeInsets,
             imageTitlePadding: CGFloat
     ) {
-        self.contentEdgeInsets = UIEdgeInsets(
+        contentEdgeInsets = UIEdgeInsets(
                 top: contentPadding.top,
                 left: contentPadding.left,
                 bottom: contentPadding.bottom,

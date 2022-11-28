@@ -9,3 +9,9 @@ extension CGFloat {
         adapted(dimensionSize: self, to: dimension)
     }
 }
+
+extension Float {
+    var bytes: [UInt8] {
+        withUnsafeBytes(of: self, Array.init)
+    }
+}

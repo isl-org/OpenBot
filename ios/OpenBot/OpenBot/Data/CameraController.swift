@@ -316,9 +316,15 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
                 let newOrientation = UIImage.Orientation.down
                 image = UIImage(cgImage: image.cgImage!, scale: image.scale, orientation: newOrientation)
                 break;
+            case .portrait:
+                let currentCameraInput: AVCaptureDeviceInput = captureSession.inputs[0] as! AVCaptureDeviceInput;
+                if (currentCameraInput.device.position == .front) {
+                    image = image.flipHorizontally()
+                }
             default:
                 break;
             }
+
             originalHeight = image.size.height;
             originalWidth = image.size.width;
             images.append((image, isPreviewSelected, isTrainingSelected))

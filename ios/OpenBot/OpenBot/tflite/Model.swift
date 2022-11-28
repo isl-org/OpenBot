@@ -140,9 +140,3 @@ extension Model {
         return model;
     }
 }
-
-extension Float {
-    var bytes: [UInt8] {
-        withUnsafeBytes(of: self, Array.init)
-    }
-}
