@@ -118,9 +118,9 @@ class ObjectTrackingFragment: CameraController {
                                 print(res!.first!.getConfidence());
                                 for item in res! {
                                     if (item.getConfidence() * 100 > MINIMUM_CONFIDENCE_TF_OD_API) {
-                                        let frame = addFrame(item: item, color: Constants.frameColors[i % 5]);
+                                        let frame = addFrame(item: item, color: Constants.frameColors[i % 5], size: CGSize(width: originalWidth, height: originalHeight));
                                         frames.append(frame);
-                                        view.addSubview(frame);
+                                        cameraView.addSubview(frame);
                                         i += 1;
                                     }
                                 }
@@ -179,9 +179,12 @@ class ObjectTrackingFragment: CameraController {
         _ = navigationController?.popViewController(animated: true)
     }
 
-    func addFrame(item: Detector.Recognition, color: UIColor) -> UIView {
+    func addFrame(item: Detector.Recognition, color: UIColor, size: CGSize) -> UIView {
         let frame = UIView()
-        frame.frame = item.getLocation()
+        let detection = item.getLocation();
+        let dx = size.width / detection.width;
+        let dy = size.height / detection.width;
+        frame.frame = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
         frame.layer.borderColor = color.cgColor;
         frame.layer.borderWidth = 2.0
         return frame;

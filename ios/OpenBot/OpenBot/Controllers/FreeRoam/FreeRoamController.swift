@@ -310,9 +310,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     func updateControlMode() {
         let gamePadController = createMode(x: 35, y: 55, width: Int(width / 3), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
         let phoneController = createMode(x: Int(width / 2) + 20, y: 60, width: Int(width / 3), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
-        phoneController.backgroundColor = Colors.freeRoamButtonsColor
-        gamePadController.backgroundColor = Colors.freeRoamButtonsColor
-
         if selectedControlMode == ControlMode.gamepad {
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             gameControllerObj = gameController
@@ -330,10 +327,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let joystick = createMode(x: 35, y: 145, width: Int(width / 4), label: Strings.joystick, icon: "joystick", action: #selector(joystick(_:)))
         let game = createMode(x: 145, y: 145, width: Int(width / 4), label: Strings.game, icon: "game", action: #selector(gameMode(_:)))
         let dual = createMode(x: 250, y: 145, width: Int(width / 4), label: Strings.dual, icon: "dual", action: #selector(dualMode(_:)))
-        joystick.backgroundColor = Colors.freeRoamButtonsColor
-        game.backgroundColor = Colors.freeRoamButtonsColor
-        dual.backgroundColor = Colors.freeRoamButtonsColor
-
         if selectedDriveMode == DriveMode.joystick {
             joystick.backgroundColor = Colors.title
         } else if selectedDriveMode == DriveMode.gameController {
@@ -367,10 +360,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let slowMode = createMode(x: 35, y: 242, width: Int(width / 4), label: Strings.slow, icon: "slow", action: #selector(slow(_:)))
         let mediumMode = createMode(x: 145, y: 242, width: Int(width / 4), label: Strings.medium, icon: "medium", action: #selector(medium(_:)))
         let fastMode = createMode(x: 250, y: 242, width: Int(width / 4), label: Strings.fast, icon: "fast", action: #selector(fast(_:)))
-        slowMode.backgroundColor = Colors.freeRoamButtonsColor
-        mediumMode.backgroundColor = Colors.freeRoamButtonsColor
-        fastMode.backgroundColor = Colors.freeRoamButtonsColor
-
         if selectedSpeedMode == SpeedMode.slow {
             slowMode.backgroundColor = Colors.title
         } else if selectedSpeedMode == SpeedMode.medium {
@@ -410,7 +399,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func createMode(x: Int, y: Int, width: Int, label: String, icon: String, action: Selector?) -> UIView {
         let modeRectangle = createRectangle(x: x, y: y, width: width, height: 55, borderColor: "noColor")
-        modeRectangle.backgroundColor = UIColor(named: "gamepad")
+        modeRectangle.backgroundColor = Colors.freeRoamButtonsColor
         let modeRectangleLabel = UILabel(frame: CGRect(x: 10, y: 4, width: 100, height: 50))
         modeRectangleLabel.text = label
         modeRectangleLabel.textColor = .white

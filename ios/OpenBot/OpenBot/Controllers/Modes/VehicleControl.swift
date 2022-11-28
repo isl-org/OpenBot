@@ -6,8 +6,6 @@ import Foundation
 import UIKit
 
 class VehicleControl: UIView {
-    var gamepad = UIButton()
-    var phone = UIButton()
     var controlMode: ControlMode = ControlMode.phone;
     var speedMode: SpeedMode = SpeedMode.slow;
     var driveMode: DriveMode = DriveMode.dual;
@@ -15,7 +13,7 @@ class VehicleControl: UIView {
     var speedInRpm = UILabel()
     var isButtonEnable: Bool = true
     let gameController = GameController.shared
-    var downSwipe  : Bool = false
+    var downSwipe: Bool = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -56,7 +54,7 @@ class VehicleControl: UIView {
         updateSpeedMode(self)
     }
 
-    func createAndUpdateButton(iconName: UIImage, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIButton {
+    func createAndUpdateButton(iconName: UIImage, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) {
         let btn = UIButton()
         btn.layer.cornerRadius = 3
         btn.backgroundColor = Colors.title
@@ -72,7 +70,6 @@ class VehicleControl: UIView {
         btn.widthAnchor.constraint(equalToConstant: 60).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 60).isActive = true
         btn.addSubview(modeIcon)
-        return btn
     }
 
 
@@ -80,14 +77,13 @@ class VehicleControl: UIView {
         if (isButtonEnable) {
             if (controlMode == ControlMode.gamepad) {
                 controlMode = ControlMode.phone;
-                phone = createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)));
+                createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)));
 
             } else {
                 controlMode = ControlMode.gamepad;
-                gamepad = createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)));
+                createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)));
 
             }
-            let userInfo = ["mode": controlMode];
             gameController.selectedControlMode = controlMode
         }
     }
@@ -108,7 +104,6 @@ class VehicleControl: UIView {
                 createAndUpdateButton(iconName: Images.joystickIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)));
                 break;
             }
-            let userInfo = ["drive": driveMode];
             gameController.selectedDriveMode = driveMode
         }
     }
@@ -129,7 +124,6 @@ class VehicleControl: UIView {
                 createAndUpdateButton(iconName: Images.slowIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
                 break;
             }
-            let userInfo = ["speed": speedMode];
             gameController.selectedSpeedMode = speedMode
 
         }
@@ -164,14 +158,15 @@ class VehicleControl: UIView {
     }
 
     @objc func updateRpmLabel(_ notification: Notification) {
-        speedInRpm.text = notification.object as! String
+        speedInRpm.text = (notification.object as! String)
     }
+
     @objc func swipeDown(_ notification: Notification) {
-       switch notification.object as! Bool {
-       case true:
-           downSwipe = true
-       case false:
-           downSwipe = false
-       }
+        switch notification.object as! Bool {
+        case true:
+            downSwipe = true
+        case false:
+            downSwipe = false
+        }
     }
 }
