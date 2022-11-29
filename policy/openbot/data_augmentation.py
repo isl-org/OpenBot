@@ -18,6 +18,7 @@ def augment_img(img):
     img = tf.image.random_saturation(img, 0.6, 1.6)
     img = tf.image.random_brightness(img, 0.05)
     img = tf.image.random_contrast(img, 0.7, 1.3)
+    img = tf.clip_by_value(img, clip_value_min=0.0, clip_value_max=1.0)
     return img
 
 
