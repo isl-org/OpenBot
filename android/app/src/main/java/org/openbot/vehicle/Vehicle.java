@@ -60,7 +60,6 @@ public class Vehicle {
 
     public float getMinMotorVoltage() {
         return minMotorVoltage;
-
     }
 
 
@@ -567,5 +566,4 @@ public class Vehicle {
     public void setConnectionType(String type) {
         setConnectionPreferences("connection_type", type);
     }
-
 }
