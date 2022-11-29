@@ -1,11 +1,19 @@
 package org.openbot.vehicle;
 
 import android.content.Context;
+
+import androidx.annotation.NonNull;
+
+import com.ficat.easyble.BleDevice;
+
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.openbot.env.GameController;
 import org.openbot.env.SensorReading;
+import org.openbot.main.CommonRecyclerViewAdapter;
+import org.openbot.main.ScanDeviceAdapter;
 import org.openbot.utils.Enums;
 
 public class Vehicle {
@@ -41,6 +49,9 @@ public class Vehicle {
   private boolean hasLedsFront = false;
   private boolean hasLedsBack = false;
   private boolean hasLedsStatus = false;
+
+  private BluetoothManager bluetoothManager;
+
 
   public float getMinMotorVoltage() {
     return minMotorVoltage;
@@ -147,7 +158,7 @@ public class Vehicle {
   }
 
   public void requestVehicleConfig() {
-    sendStringToUsb(String.format(Locale.US, "f\n"));
+    sendStringToDevice(String.format(Locale.US, "f\n"));
   }
 
   public void processVehicleConfig(String message) {
@@ -329,13 +340,13 @@ public class Vehicle {
     this.indicator = indicator;
     switch (indicator) {
       case -1:
-        sendStringToUsb(String.format(Locale.US, "i1,0\n"));
+        sendStringToDevice(String.format(Locale.US, "i1,0\n"));
         break;
       case 0:
-        sendStringToUsb(String.format(Locale.US, "i0,0\n"));
+        sendStringToDevice(String.format(Locale.US, "i0,0\n"));
         break;
       case 1:
-        sendStringToUsb(String.format(Locale.US, "i0,1\n"));
+        sendStringToDevice(String.format(Locale.US, "i0,1\n"));
         break;
     }
   }
@@ -368,8 +379,9 @@ public class Vehicle {
     return usbConnected;
   }
 
-  private void sendStringToUsb(String message) {
-    if (usbConnection != null) usbConnection.send(message);
+  private void sendStringToDevice(String message) {
+    if (usbConnection.isOpen()) usbConnection.send(message);
+    else if (bluetoothManager.bleDevice.connected) sendStringToBle(message);
   }
 
   public float getLeftSpeed() {
@@ -391,7 +403,8 @@ public class Vehicle {
     // raw control value is used
     if (noiseEnabled && noise.getDirection() > 0)
       right = (int) ((control.getRight() - noise.getValue()) * speedMultiplier);
-    sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
+
+    sendStringToDevice(String.format(Locale.US, "c%d,%d\n", left, right));
   }
 
   protected void sendHeartbeat(int timeout_ms) {
@@ -444,4 +457,59 @@ public class Vehicle {
     Control control = new Control(0, 0);
     setControl(control);
   }
+
+  public BluetoothManager getBluetoothManager() {
+    return bluetoothManager;
+  }
+
+  public ScanDeviceAdapter getBleAdapter(){
+    return bluetoothManager.adapter;
+  }
+
+  public void setBleAdapter(ScanDeviceAdapter adapter, @NonNull CommonRecyclerViewAdapter.OnItemClickListener onItemClickListener){
+    bluetoothManager.adapter = adapter;
+    bluetoothManager.adapter.setOnItemClickListener(onItemClickListener);
+  }
+
+  public void startScan() {
+    bluetoothManager.startScan();
+  }
+
+  public List<BleDevice> getDeviceList() {
+    return bluetoothManager.deviceList;
+  }
+
+  public void setDeviceList(List<BleDevice> deviceList){
+    bluetoothManager.deviceList = deviceList;
+  }
+
+  public void addBleDevice(BleDevice device){
+    bluetoothManager.deviceList.add(device);
+  }
+
+  public void removeBleDevice(BleDevice device){
+    bluetoothManager.deviceList.remove(device);
+  }
+
+  public void setBleDevice(BleDevice device){
+    bluetoothManager.bleDevice = device;
+  }
+
+  public BleDevice getBleDevice() {
+    return bluetoothManager.bleDevice;
+  }
+
+  public void toggleConnection(int position) {
+    bluetoothManager.toggleConnection(position);
+  }
+
+  public void initBle(){
+    bluetoothManager = new BluetoothManager(context);
+  }
+
+  private void sendStringToBle(String message){
+    bluetoothManager.write(message);
+  }
+
+
 }

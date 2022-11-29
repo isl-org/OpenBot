@@ -6,7 +6,7 @@
     android:paddingRight="12dp">
 
     <TextView
-        android:id="@+id/tv_name"
+        android:id="@+id/ble_name"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -17,7 +17,7 @@
         android:textColor="@color/semi_transparent" />
 
     <TextView
-        android:id="@+id/tv_address"
+        android:id="@+id/ble_address"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -28,7 +28,7 @@
         android:textColor="@color/semi_transparent" />
 
     <TextView
-        android:id="@+id/tv_connection_state"
+        android:id="@+id/ble_connection_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

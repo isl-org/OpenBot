@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
+
 import org.jetbrains.annotations.NotNull;
 import org.openbot.vehicle.Vehicle;
 import timber.log.Timber;
@@ -13,7 +14,6 @@ public class OpenBotApplication extends Application {
 
   static Context context;
   public static Vehicle vehicle;
-
   public static Context getContext() {
     return context;
   }
@@ -26,6 +26,7 @@ public class OpenBotApplication extends Application {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
     vehicle = new Vehicle(this, baudRate);
+    vehicle.initBle();
     vehicle.connectUsb();
     if (BuildConfig.DEBUG) {
       Timber.plant(
@@ -38,4 +39,9 @@ public class OpenBotApplication extends Application {
           });
     }
   }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+    }
 }
