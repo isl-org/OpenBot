@@ -143,37 +143,48 @@ public class MultiBoxTracker {
             false);
   }
 
+  /**
+   * Determine the robot controls/steering from the position of the tracked object/person on screen,
+   * additionally the follow speed is adjusted by the size/area of the tracked object box on screen
+   * (assumption: large object box = close to object = slow down).
+   *
+   * @return the adjusted speed control for left and right wheels in the range -1.0 ... 1.0
+   */
   public synchronized Control updateTarget() {
     if (!trackedObjects.isEmpty()) {
       // Pick person with highest probability
       final RectF trackedPos = new RectF(trackedObjects.get(0).location);
       final boolean rotated = sensorOrientation % 180 == 90;
       float imgWidth = (float) (rotated ? frameHeight : frameWidth);
-      float trackboxWidth = (rotated ? trackedPos.height() : trackedPos.width()); // calculate box width for distance estimate
+      // calculate track box area for distance estimate
+      float trackboxArea = trackedPos.height() * trackedPos.width();
       float centerX = (rotated ? trackedPos.centerY() : trackedPos.centerX());
       // Make sure object center is in frame
       centerX = Math.max(0.0f, Math.min(centerX, imgWidth));
       // Scale relative position along x-axis between -1 and 1
-      float x_pos_norm = 1.0f - 2.0f * centerX / imgWidth; // test values range approx. -0.7x to 0.7x
-      // Scale to control signal and account for rotation
+      float x_pos_norm = 1.0f - 2.0f * centerX / imgWidth;
+      // Scale for steering signal and account for rotation,
       float x_pos_scaled = rotated ? -x_pos_norm * 1.0f : x_pos_norm * 1.0f;
       //// Scale by "exponential" function: y = x / sqrt(1-x^2)
       // Math.max (Math.min(x_pos_norm / Math.sqrt(1 - x_pos_norm * x_pos_norm),2),-2);
 
       // reduce speed depending on size of detected object box
       // assuming, lage box means close to tracked object, if below a threshold stop robot.
-      float distancefactor = 1 - (trackboxWidth / frameWidth); // estimate relative distance 0 - 0.9x
-      if (distancefactor < 0.15f) distancefactor = 0.0f;
+      // calculate ratio of object tracking box of screen area to estimate a relative distance
+      // if phone is in landscape (rotated = false) as not working so well in portrait
+      float distancefactor = 1 - (trackboxArea / (frameWidth * frameHeight));
+      if (distancefactor < 0.2f)
+        distancefactor = 0.0f; // tracked object very near, stop robot
+      else if (rotated || distancefactor > 0.8f) // if landscape (rotated=true) leave as is.
+        distancefactor = 1.0f; // tracked object far, use predefined follow speed
 
       if (x_pos_scaled < 0) {
-        leftControl = 1.0f;
-        rightControl = 1.0f + x_pos_scaled;
+        leftControl = distancefactor;
+        rightControl = distancefactor + x_pos_scaled;
       } else {
-        leftControl = 1.0f - x_pos_scaled;
-        rightControl = 1.0f;
+        leftControl = distancefactor - x_pos_scaled;
+        rightControl = distancefactor;
       }
-      leftControl = leftControl * distancefactor;
-      rightControl = rightControl * distancefactor;
     } else {
       leftControl = 0.0f;
       rightControl = 0.0f;
