@@ -6,6 +6,7 @@ import Foundation
 import UIKit
 import DropDown
 
+
 class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableViewDataSource, UIDocumentPickerDelegate {
     var header = UIView()
     var modelTable = UITableView()
@@ -42,12 +43,16 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         createAddModelButton()
         NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
+        print(Common.loadAllModelFromDocumentDirectory())
+//        DataLogger.shared.deleteFiles(fileNameToDelete: "config.json");
+        DataLogger.shared.getDocumentDirectoryInformation()
+
     }
 
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        updateModelItemList(type: "All")
+        updateModelItemList(type:"All")
     }
 
     func createHeader() {
@@ -97,7 +102,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     func setupConfiguration() {
         if currentOrientation == .portrait {
             widthOfTable = modelTable.widthAnchor.constraint(equalToConstant: width)
-            heightOfTable = modelTable.heightAnchor.constraint(equalToConstant: height)
+            heightOfTable = modelTable.heightAnchor.constraint(equalToConstant: height-200)
             widthOfHeader = header.widthAnchor.constraint(equalToConstant: width);
 
         } else {
@@ -172,7 +177,6 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
                 popupWindowHeight.constant = 400;
             }
 
-
         } else {
             widthOfHeader.constant = height;
             widthOfTable.constant = height;
@@ -215,7 +219,7 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         let cell = modelTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         cell.textLabel?.text = models[indexPath.item]
 
-        if Common.isModelItemAvailable(modelName: models[indexPath.item]) {
+        if Common.isModelItemAvailableInBundle(modelName: models[indexPath.item]) {
             return cell;
         }
        return createImageOnCell(cell: cell, index: indexPath.row);
@@ -239,7 +243,8 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        popupWindow = popupWindowView(frame: .zero, models[indexPath.row])
+        popupWindow = popupWindowView(frame: .zero, models[indexPath.row], "")
+        selectedIndex = indexPath
         createBlankScreen()
         createPopupWindow()
     }
@@ -307,11 +312,15 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         modelDropdown.show()
     }
 
+
+
     @objc func addModels(_ sender: UIButton) {
-        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.jpeg, .png, .pdf])
-        documentPicker.delegate = self
-        documentPicker.modalPresentationStyle = .overFullScreen
-        present(documentPicker, animated: true)
+    if let vc = self.storyboard?.instantiateViewController(withIdentifier: "ScreenBottomSheet") as? UIViewController{
+        if let sheet = vc.sheetPresentationController{
+            sheet.detents = [.medium()]
+        }
+        self.navigationController?.present(vc , animated: true)
+    }
     }
 
     func processImportedFileAt(fileURL: URL) {
@@ -324,15 +333,15 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
     func updateModelItemList(type: String) {
         switch type {
         case "All":
-            models = Common.loadAllModels()
+            models = Common.loadAllModelsName()
         case "AutoPilot":
-            models = Common.loadAllSelectedModelItems(mode: "AUTOPILOT")
+            models = Common.returnAllModelItemsName(mode: "AUTOPILOT")
         case "Detector":
-            models = Common.loadAllSelectedModelItems(mode: "DETECTOR")
+            models = Common.returnAllModelItemsName(mode: "DETECTOR")
         case "Navigation":
             models = []
         default:
-            models = Common.loadAllModels()
+            models = Common.loadAllModelsName()
         }
         updateTable()
     }
@@ -352,81 +361,15 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         }
     }
 
-    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-        print("inside documentPickerWasCancelled")
-    }
-
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        dismiss(animated: true)
-        let tmpDirURL = URL(fileURLWithPath: NSTemporaryDirectory())
-        print(tmpDirURL)
-        guard url.startAccessingSecurityScopedResource() else {
-            return
-        }
-
-        defer {
-            url.stopAccessingSecurityScopedResource()
-        }
-
-        // Copy the file with FileManager
-        print("inside didPickDocumentAt")
-
-        var tempURL = URL(fileURLWithPath: NSTemporaryDirectory())
-        // Apend filename (name+extension) to URL
-        tempURL.appendPathComponent(url.lastPathComponent)
-        do {
-            // If file with same name exists remove it (replace file with new one)
-            if FileManager.default.fileExists(atPath: tempURL.path) {
-                try FileManager.default.removeItem(atPath: tempURL.path)
-            }
-            // Move file from app_id-Inbox to tmp/filename
-            try FileManager.default.moveItem(atPath: url.path, toPath: tempURL.path);
-        } catch {
-            print(error.localizedDescription)
-
-        }
 
 
-
-
-
-
-        var error: NSError? = nil
-        NSFileCoordinator().coordinate(readingItemAt: url, error: &error) { (url) in
-
-            let keys: [URLResourceKey] = [.nameKey, .isDirectoryKey]
-            // Get an enumerator for the directory's content.
-            guard let fileList = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys)
-            else {
-                Swift.debugPrint("*** Unable to access the contents of \(url.path) ***\n")
-                return
-            }
-            print(fileList)
-            for case let file as URL in fileList {
-                // Start accessing the content's security-scoped URL.
-                guard url.startAccessingSecurityScopedResource() else {
-                    // Handle the failure here.
-                    continue
-                }
-
-                // Do something with the file here.
-                print("hello ",file.bookmarkData)
-                // Make sure you release the security-scoped resource when you finish.
-                url.stopAccessingSecurityScopedResource()
-            }
-        }
-
-
-    }
 
     func deleteModel(modelName: String) {
         let filesPath = DataLogger.shared.getDocumentDirectoryInformation()
         for url in filesPath {
-            let indexOfUrl = url.absoluteString.lastIndex(of: "/")!;
-            let indexFromApi = Common.loadSelectedModel(modeName: modelName).path.lastIndex(of: "/")!;
-            if Common.loadSelectedModel(modeName: modelName).path.substring(from: indexFromApi) == url.absoluteString.substring(from: indexOfUrl) {
-                DataLogger.shared.deleteFiles(fileNameToDelete: url.absoluteString.substring(from: url.absoluteString.index(after: indexOfUrl)))
-            }
+           if Common.returnModelItem(modelName: modelName).name == url.lastPathComponent{
+               DataLogger.shared.deleteFiles(fileNameToDelete: url.lastPathComponent)
+           }
         }
         print(DataLogger.shared.getDocumentDirectoryInformation())
         modelTable.reloadRows(at: [selectedIndex] , with:.bottom)
@@ -434,10 +377,12 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
 
     func downloadModel(modelName: String) {
         if  !Common.isModelItemAvailableInDocument(modelName: modelName) {
-            let model = Common.loadSelectedModel(modeName: modelName)
-            let url = URL.init(string: model.path)!
-            FileDownloader.loadFileSync(url: url) { s, error in
-                print("File downloaded to : \(s!)")
+            let model = Common.returnModelItem(modelName: modelName)
+            if model.path != ""{
+                let url = URL.init(string: model.path)!
+                FileDownloader.loadFileSync(url: url, fileName: model.name) { s, error in
+                    print("File downloaded to : \(s!)")
+                }
             }
         }
     }
@@ -446,8 +391,19 @@ class ModelManagementFragment: UIViewController, UITableViewDelegate, UITableVie
         modelTable.reloadRows(at: [selectedIndex], with: .bottom)
     }
 
-    @objc func removeBlankScreen() {
+    @objc func removeBlankScreen(_ notification : Notification) {
+        if selectedIndex == nil{
+            updateModelItemList(type: "All")
+            blankScreen.removeFromSuperview();
+            return;
+        }
+        if notification.object != nil{
+            models[selectedIndex.row] = notification.object as! String ?? ""
+            modelTable.reloadRows(at: [selectedIndex], with: .bottom);
+
+        }
         blankScreen.removeFromSuperview();
+
 
     }
 

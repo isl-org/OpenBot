@@ -423,7 +423,7 @@ class ObjectTrackingSettings: UIView {
     @objc func updateModel(_ notification: Notification) {
         let selectedModel = notification.object as! String
         modelDropdownLabel.text = selectedModel
-        let model = Common.loadSelectedModel(modeName: selectedModel)
+        let model = Common.returnModelItem(modelName: selectedModel)
         self.selectedModel = model
         imageInputLabel.text = model.inputSize
 

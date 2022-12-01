@@ -29,7 +29,7 @@ class AutopilotFragment: CameraController {
         expandedAutoPilotView!.backgroundColor = Colors.freeRoamButtonsColor
         expandedAutoPilotView!.layer.cornerRadius = 15
         createCameraView()
-        let modelItems = Common.loadAllModelItems()
+        let modelItems = Common.loadAllModelItemsFromBundle()
         if (modelItems.count > 0) {
             models = Model.fromModelItems(list: modelItems);
             currentModel = modelItems[0]
@@ -96,7 +96,7 @@ class AutopilotFragment: CameraController {
 
     @objc func updateModel(_ notification: Notification) {
         let selectedModelName = notification.object as! String
-        currentModel = Common.loadSelectedModel(modeName: selectedModelName)
+        currentModel = Common.returnModelItem(modelName: selectedModelName)
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
     }
 

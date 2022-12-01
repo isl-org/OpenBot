@@ -24,6 +24,7 @@ struct ModelItem: Codable {
                         "type": item.type,
                         "name": item.name,
                         "pathType": item.pathType,
+                        "path" : item.path,
                         "inputSize": item.inputSize
                     ];
             result.append(jsonObject)
@@ -42,7 +43,8 @@ struct ModelItem: Codable {
     static func getHeightOfInput(_ inputSize : String)->String{
         if inputSize != "" {
             let index = inputSize.firstIndex(of: "x")!;
-            return String(inputSize.suffix(from: index));
+            let nextIndex = inputSize.index(after: index);
+            return String(inputSize.suffix(from: nextIndex));
         }
         return ""
     }

@@ -53,7 +53,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         if peripheral.name != nil {
             if !peripherals.contains(peripheral) {
                 peripherals.append(peripheral)
-                print(peripherals)
+//                print(peripherals)
 
             }
         }

@@ -11,7 +11,7 @@ class Common {
      - Returns:
      All modelItems
      */
-    static func loadAllModelItems() -> [ModelItem] {
+    static func loadAllModelItemsFromBundle() -> [ModelItem] {
         if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
             do {
                 let data = try Data(contentsOf: url)
@@ -25,6 +25,35 @@ class Common {
         return [];
     }
 
+    static func loadAllModelItems() ->[ModelItem]{
+        if loadAllModelFromDocumentDirectory().count > 0 {
+            return loadAllModelFromDocumentDirectory()
+        }
+        return loadAllModelItemsFromBundle()
+    }
+
+    static func loadAllModelFromDocumentDirectory()  ->[ModelItem] {
+        let fileName = "config.json"
+        var filePath = ""
+        let dirs: [String] = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
+        if dirs.count > 0 {
+            let dir = dirs[0] //documents directory
+            filePath = dir.appending("/" + fileName)
+        } else {
+            print("Could not find local directory to store file")
+        }
+        do {
+            let data = try Data.init(contentsOf: URL(string: "file://"+filePath)!)
+            let decoder = JSONDecoder()
+            let jsonData = try decoder.decode([ModelItem].self, from: data)
+            return jsonData
+        } catch let error as NSError {
+            print("An error took place: \(error)")
+        }
+        return []
+    }
+
+
     /**
      Takes modes as argument
      - Returns:
@@ -32,7 +61,7 @@ class Common {
      */
     static func loadSelectedModels(mode: String) -> [String] {
         var selectedModels: [String] = []
-        let allModels = loadAllModelItems()
+        let allModels = loadAllModelItemsFromBundle()
         for model in allModels {
             let split = model.path.split(separator: "/");
             let index = split.count - 1;
@@ -54,27 +83,30 @@ class Common {
         return selectedModels
     }
 
-    static func loadAllModels() -> [String] {
+    static func loadAllModelsName() -> [String] {
         var models: [String] = []
         let allModels = loadAllModelItems()
         for model in allModels {
-            models.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
+            if model.name != ""{
+                models.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
+            }
         }
         return models
     }
 
-    static func loadSelectedModel(modeName: String) -> ModelItem {
-        var model: ModelItem!
+    static func returnModelItem(modelName: String) -> ModelItem {
         let allModels = loadAllModelItems()
+        print(allModels)
         for item in allModels {
-            model = item
-            if model.name != nil {
-                if model.name.prefix(upTo: model.name.firstIndex(of: ".")!) == modeName {
-                    return model
+            if item.name != nil {
+                if item.name == modelName + ".tflite" {
+                    return item
                 }
             }
         }
-        return model
+        var model : ModelItem = ModelItem.init(id: allModels.count + 1, class: allModels[0].class, type: allModels[0].type, name: "", pathType: allModels[allModels.count-1].pathType, path: "", inputSize: allModels[0].inputSize)
+        print("hello model ",model)
+        return model;
     }
 
     /**
@@ -84,7 +116,7 @@ class Common {
      List of all model of type mode which are defined in config.json
      */
 
-    static func loadAllSelectedModelItems(mode: String) -> [String] {
+    static func returnAllModelItemsName(mode: String) -> [String] {
         var selectedModels: [String] = []
         let allModels = loadAllModelItems()
         for model in allModels {
@@ -96,9 +128,10 @@ class Common {
         return selectedModels
     }
 
-    static func isModelItemAvailable(modelName: String) -> Bool {
-        let allModels = loadAllModelItems()
-        for model in allModels {
+    static func isModelItemAvailableInBundle(modelName: String) -> Bool {
+        let allModels = loadAllModelItemsFromBundle()
+        for model in allModels
+        {
             let split = model.path.split(separator: "/");
             let index = split.count - 1;
             let fileName = String(split[index]);
@@ -116,17 +149,26 @@ class Common {
     }
 
     static func isModelItemAvailableInDocument(modelName: String) -> Bool {
+
         for url in DataLogger.shared.getDocumentDirectoryInformation() {
-            if returnNameOfFile(url: url) == returnNameOfFile(url: URL(string: Common.loadSelectedModel(modeName: modelName).path)!) {
+            let model = returnModelItem(modelName: modelName)
+            if model.pathType == "ASSET"{
+                return false
+            }
+            if url.lastPathComponent == model.name{
                 return true
             }
         }
+
         return false
     }
 
     static func returnNameOfFile(url: URL) -> String {
         let filepath = url.absoluteString
-        let index = filepath.lastIndex(of: "/")!
-        return filepath.substring(from: index)
+        let index = filepath.lastIndex(of: "/")
+        if let index {
+            return filepath.substring(from: index)
+        }
+        return "unnamed"
     }
 }

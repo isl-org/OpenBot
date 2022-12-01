@@ -23,30 +23,34 @@ class popupWindowView: UIView {
     var model: ModelItem!
     var widthOfModel: String!
     var heightOfModel: String!
+    var modelAddress: String = ""
 
-    init(frame: CGRect, _ modelName: String) {
+    init(frame: CGRect, _ modelName: String, _ modelAddress: String) {
         super.init(frame: frame)
         self.modelName = modelName
+        self.modelAddress = modelAddress
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         setupModelItem();
         addGestureRecognizer(tap)
         createHeading();
-        createLabel(text: Strings.name, leadingAnchor: 20, topAnchor: 60);
-        createTextField(text: modelName, trailingAnchor: -width / 2 - 50, topAnchor: 50);
+        _ = createLabel(text: Strings.name, leadingAnchor: 20, topAnchor: 60);
+        _ = createTextField(text: modelName, trailingAnchor: -width / 2 - 50, topAnchor: 50);
         createtfliteLabel()
         createEditIcon()
-        createLabel(text: Strings.type, leadingAnchor: 20, topAnchor: 130);
+        _ = createLabel(text: Strings.type, leadingAnchor: 20, topAnchor: 130);
         createTypeDropDown()
-        createLabel(text: Strings.class, leadingAnchor: 20, topAnchor: 200);
+        _ = createLabel(text: Strings.class, leadingAnchor: 20, topAnchor: 200);
         createClassDropdown()
-        createLabel(text: Strings.inputOfModel, leadingAnchor: 20, topAnchor: 250);
-        firstBox = createBox(leadingAnchor: width / 2 - 50, topAnchor: 250, isFirst: true);
-        createLabel(text: "x", leadingAnchor: width / 2, topAnchor: 250)
-        secondBox = createBox(leadingAnchor: width / 2 + 50, topAnchor: 250, isFirst: false);
+        _ = createLabel(text: Strings.inputOfModel, leadingAnchor: 20, topAnchor: 250);
+        firstBox = createBox(isFirst: true);
+        addSubview(firstBox)
+        _ = createLabel(text: "x", leadingAnchor: width / 2 + 20 , topAnchor: 250)
+        secondBox = createBox(isFirst: false);
+        addSubview(secondBox)
         createFirstInputTextField();
         createSecondInputField()
-        createButton(label: Strings.cancel, leadingAnchor: 20, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 100, action: #selector(cancel(_:)))
-        createButton(label: Strings.done, leadingAnchor: width / 2 - 50, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 200, action: #selector(done(_:)));
+        createButton(label: Strings.cancel, leadingAnchor: 20, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 100, action: #selector(onCancelBtnTap(_:)))
+        createButton(label: Strings.done, leadingAnchor: width / 2 - 50, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 200, action: #selector(onDoneBtnTap(_:)));
 
     }
 
@@ -57,33 +61,33 @@ class popupWindowView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-
         if currentOrientation == .portrait {
             textFieldLeadingConstraints.constant = -width / 2 - 50
             headingLeadingAnchor.constant = width / 2 - CGFloat(Strings.modelDetails.count * 5)
             typeDropdownLeadingAnchor.constant = -width / 2 - 50
             classDropdownLeadingAnchor.constant = -width / 2 - 50
-            firstBoxLeadingAnchor.constant = -width / 2 - 50
-            secondBoxLeadingAnchor.constant = -width / 2 + 50
+        firstBox.frame.origin = CGPoint(x: width/2 - 50, y: 250)
+            secondBox.frame.origin = CGPoint(x: width/2 + 50, y: 250);
         } else {
             textFieldLeadingConstraints.constant = -height / 2 - 50
             headingLeadingAnchor.constant = height / 2 - CGFloat(Strings.modelDetails.count * 5)
             typeDropdownLeadingAnchor.constant = -height / 2 - 50
             classDropdownLeadingAnchor.constant = -height / 2 - 50
-            firstBoxLeadingAnchor.constant = -height / 2 - 50
-            secondBoxLeadingAnchor.constant = -height / 2 + 50
+            firstBox.frame.origin = CGPoint(x: height/2 - 50, y: 250)
+            secondBox.frame.origin = CGPoint(x: height/2 + 50, y: 250);
         }
-
     }
 
     func setupModelItem() {
-        model = Common.loadSelectedModel(modeName: modelName)
+        model = Common.returnModelItem(modelName: modelName)
+        print("model is ",model)
         widthOfModel = ModelItem.getWidthOfInput(model.inputSize);
         heightOfModel = ModelItem.getHeightOfInput(model.inputSize);
+        print(widthOfModel);
+        print(heightOfModel)
     }
 
     func createHeading() {
-
         let heading = UILabel();
         heading.text = Strings.modelDetails;
         heading.tintColor = Colors.title;
@@ -136,10 +140,10 @@ class popupWindowView: UIView {
 
     func createtfliteLabel() {
         let label = UILabel();
-        label.text = Strings.tflit;
+        label.text = Strings.tflite;
         addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false;
-        label.widthAnchor.constraint(equalToConstant: CGFloat(Strings.tflit.count * 10)).isActive = true;
+        label.widthAnchor.constraint(equalToConstant: CGFloat(Strings.tflite.count * 10)).isActive = true;
         label.heightAnchor.constraint(equalToConstant: 40).isActive = true;
         label.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
         label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 60).isActive = true
@@ -161,7 +165,7 @@ class popupWindowView: UIView {
         let tap = UITapGestureRecognizer(target: self, action: #selector(showTypeDropdown(_:)))
         ddView.addGestureRecognizer(tap)
         let modelTypeLabel = UILabel();
-        modelTypeLabel.text = Common.loadSelectedModel(modeName: modelName).type
+        modelTypeLabel.text = Common.returnModelItem(modelName: modelName).type
         ddView.addSubview(modelTypeLabel)
         modelTypeLabel.translatesAutoresizingMaskIntoConstraints = false;
         modelTypeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true;
@@ -199,7 +203,7 @@ class popupWindowView: UIView {
         let tap = UITapGestureRecognizer(target: self, action: #selector(showClassDropdown(_:)))
         ddView.addGestureRecognizer(tap)
         let classLabel = UILabel();
-        classLabel.text = Common.loadSelectedModel(modeName: modelName).class
+        classLabel.text = Common.returnModelItem(modelName: modelName).class
         ddView.addSubview(classLabel)
         classLabel.translatesAutoresizingMaskIntoConstraints = false;
         classLabel.widthAnchor.constraint(equalToConstant: 150).isActive = true;
@@ -222,31 +226,18 @@ class popupWindowView: UIView {
 
     }
 
-    func createBox(leadingAnchor: CGFloat, topAnchor: CGFloat, isFirst: Bool) -> UIView {
+    func createBox(isFirst: Bool) -> UIView {
         let box = UIView();
         box.layer.borderColor = Colors.borderColor?.cgColor;
         box.layer.borderWidth = 1;
-        addSubview(box);
-        box.translatesAutoresizingMaskIntoConstraints = false
-        box.widthAnchor.constraint(equalToConstant: 50).isActive = true;
-        box.heightAnchor.constraint(equalToConstant: 40).isActive = true;
-        let boxLeadingAnchor = box.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: leadingAnchor)
-        boxLeadingAnchor.isActive = true
-        box.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topAnchor).isActive = true;
-        if isFirst {
-            firstBoxLeadingAnchor = box.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: leadingAnchor);
-            firstBoxLeadingAnchor.isActive = true;
-        } else {
-            secondBoxLeadingAnchor = box.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: leadingAnchor);
-            secondBoxLeadingAnchor.isActive = true;
-        }
+      box.frame.size = CGSize(width: 50, height: 40);
         return box
     }
 
     func createFirstInputTextField() {
         let input = UITextField();
         input.keyboardType = .numberPad;
-        let modelInputSize = Common.loadSelectedModel(modeName: modelName).inputSize
+        let modelInputSize = Common.returnModelItem(modelName: modelName).inputSize
         let index = modelInputSize.index(modelInputSize.startIndex, offsetBy: 3)
         input.text = String(modelInputSize[..<index])
         input.addTarget(self, action: #selector(wDidChange(_:)), for: .editingChanged);
@@ -261,9 +252,8 @@ class popupWindowView: UIView {
     func createSecondInputField() {
         let input = UITextField();
         input.keyboardType = .numberPad;
-        let modelInputSize = Common.loadSelectedModel(modeName: modelName).inputSize
-        print(modelInputSize)
-        let index = modelInputSize.index(of: "x");
+        let modelInputSize = Common.returnModelItem(modelName: modelName).inputSize
+        let index = modelInputSize.firstIndex(of: "x");
         let nextIndex = modelInputSize.index(after: index!)
         input.text = String(modelInputSize.suffix(from: nextIndex))
         input.addTarget(self, action: #selector(hDidChange(_:)), for: .editingChanged);
@@ -292,7 +282,6 @@ class popupWindowView: UIView {
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         endEditing(true)
-        print("inside textFieldShouldReturn")
         return true
     }
 
@@ -306,8 +295,8 @@ class popupWindowView: UIView {
 
     @objc func nameDidChange(_ textField: UITextField) {
         model.name = textField.text ?? model.name
-        if !model.name.contains(Strings.tflit) {
-            model.name.append(Strings.tflit)
+        if !model.name.contains(Strings.tflite) {
+            model.name.append(Strings.tflite)
         }
     }
 
@@ -320,32 +309,17 @@ class popupWindowView: UIView {
     }
 
 
-    @objc func cancel(_ sender: UIButton) {
+    @objc func onCancelBtnTap(_ sender: UIButton) {
         NotificationCenter.default.post(name: .removeBlankScreen, object: nil);
         removeFromSuperview();
     }
 
-    @objc func done(_ sender: UIButton) throws {
+    @objc func onDoneBtnTap(_ sender: UIButton) throws {
 
-        let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
-        var isFoundConfigFile: Bool = false;
-        for url in documentDirectoryURls {
-            if url.absoluteString.contains("config.json") {
-                isFoundConfigFile = true
-                break;
-            }
-
+        try saveConfigFileToDocument(modelItems: modifyModels());
+        if let index = model.name.firstIndex(of: ".") {
+            NotificationCenter.default.post(name: .removeBlankScreen, object: model.name.prefix(upTo: index));
         }
-        switch isFoundConfigFile {
-        case true:
-            print("mil gya bhae party");
-            modifyModels()
-        case false:
-            print("oops");
-            try saveConfigFileToDocument();
-            modifyModels();
-        }
-        NotificationCenter.default.post(name: .removeBlankScreen, object: nil);
         removeFromSuperview();
     }
 
@@ -353,98 +327,58 @@ class popupWindowView: UIView {
         endEditing(true);
     }
 
-    func saveConfigFileToDocument() throws {
-        let json = ModelItem.toJson(modifyModels());
-        let valid = JSONSerialization.isValidJSONObject(json)
-        var x = popupWindowView.stringify(json: json)
+    func saveConfigFileToDocument(modelItems : [ModelItem]) throws {
         let fileManager = FileManager.default
         do {
-            let documentDirectory = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create:false)
-            let fileURL = documentDirectory.appendingPathComponent("config,json")
-              try x.write(to: fileURL, atomically: true, encoding: .utf8);
-        } catch {
-            print(error)
-        }
-        readTheContent()
-
-
-    }
-
-    static func stringify(json: Any, prettyPrinted: Bool = true) -> String {
-        var options: JSONSerialization.WritingOptions = []
-        if prettyPrinted {
-            options = JSONSerialization.WritingOptions.prettyPrinted
-        }
-
-        do {
-            let data = try JSONSerialization.data(withJSONObject: json, options: options)
-            if let string = String(data: data, encoding: String.Encoding.utf8) {
-                return string
+            let documentDirectory = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            let fileURL = documentDirectory.appendingPathComponent("config.json")
+            let jsonEncoder = JSONEncoder()
+            do {
+                let jsonData = try jsonEncoder.encode(modelItems)
+                let jsonString = String(data: jsonData, encoding: .utf8)
+                if let jsonString = jsonString {
+                    try jsonString.write(to: fileURL, atomically: true, encoding: .utf8)
+                }
+            }
+            catch {
+                print("inside catch",error)
             }
         } catch {
             print(error)
         }
-
-        return ""
     }
 
+
     func modifyModels() -> [ModelItem] {
-//        DataLogger.shared.deleteFiles(fileNameToDelete: "")
-        let newModel = ModelItem.init(id: model.id, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: model.path, inputSize: widthOfModel + "x" + heightOfModel);
-        var allModels = Common.loadAllModelItems();
+        var allModels : [ModelItem] = [];
+        let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
+        var isFoundConfigFile: Bool = false;
+        for url in documentDirectoryURls {
+            if url.absoluteString.contains("config.json") {
+                isFoundConfigFile = true
+                break;
+            }
+        }
+        switch isFoundConfigFile {
+        case true:
+            allModels = Common.loadAllModelFromDocumentDirectory()
+        case false:
+           allModels = Common.loadAllModelItemsFromBundle();
+        }
+        let newModel = modelAddress == "" ? ModelItem.init(id: model.id, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: model.path, inputSize: widthOfModel + "x" + heightOfModel) :
+                ModelItem.init(id: allModels.count + 1, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: modelAddress, inputSize: widthOfModel + "x" + heightOfModel);
         var index = 0;
         for model in allModels {
             if model.id == newModel.id {
-                break;
+                allModels[index] = newModel;
+                return allModels;
             }
             index = index + 1;
         }
-        allModels[index] = newModel;
-        return allModels;
+        allModels.append(newModel);
+        return allModels
     }
-
-    func jsonData() -> [ModelItem] {
-        if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
-            do {
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                let jsonData = try decoder.decode([ModelItem].self, from: data)
-                return jsonData
-            } catch {
-                print("error:\(error)")
-            }
-        }
-        return []
-    }
-
-    func readTheContent(){
-        let fileName = "config.json"
-        var filePath = ""
-        print("indside read contains")
-        // Fine documents directory on device
-        let dirs : [String] = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
-        if dirs.count > 0 {
-            let dir = dirs[0] //documents directory
-            filePath = dir.appending("/" + fileName)
-            print("Local path = \(filePath)")
-        } else {
-            print("Could not find local directory to store file")
-            return
-        }
-
-        // Read file content. Example in Swift
-        do {
-            // Read file content
-            let contentFromFile = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue)
-            print("hello",contentFromFile)
-        }
-        catch let error as NSError {
-            print("An error took place: \(error)")
-        }
-    }
-
 }
-
 
 
 

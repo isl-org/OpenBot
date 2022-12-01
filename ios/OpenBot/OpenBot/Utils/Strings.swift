@@ -92,6 +92,7 @@ struct Strings {
     static let AutopilotFragment: String = "AutopilotFragment";
     static let ObjectTrackingFragment: String = "ObjectTrackingFragment";
     static let ScreenModelManagement : String = "ScreenModelManagement"
+    static let ScreenBottomSheet : String = "ScreenBottomSheet"
 
 
 // UIVIew Identifiers
@@ -127,10 +128,12 @@ struct Strings {
     static let type : String = "Type";
     static let `class` : String = "Class";
     static let inputOfModel : String = "Input(w x h)"
-    static let tflit : String = ".tflit";
+    static let tflite: String = ".tflite";
     static let cancel : String = "Cancel"
     static let done : String = "Done";
-
+    static let file : String = "File";
+    static let url : String = "URL"
+    static let addNewModel : String = "Add New Model"
 
 
 

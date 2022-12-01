@@ -20,7 +20,7 @@ class ObjectTrackingFragment: CameraController {
     private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 50.0;
 
     override func viewDidLoad() {
-        let modelItems = Common.loadAllModelItems()
+        let modelItems = Common.loadAllModelItemsFromBundle()
         if (modelItems.count > 0) {
             let model = modelItems.first(where: { $0.type == TYPE.DETECTOR.rawValue })
             currentModel = model
@@ -152,7 +152,7 @@ class ObjectTrackingFragment: CameraController {
 
     @objc func updateModel(_ notification: Notification) throws {
         let selectedModelName = notification.object as! String
-        currentModel = Common.loadSelectedModel(modeName: selectedModelName)
+        currentModel = Common.returnModelItem(modelName: selectedModelName)
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector;
         NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels())
     }

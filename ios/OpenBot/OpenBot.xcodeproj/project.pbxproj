@@ -45,6 +45,7 @@
 		525632FAD7D5CA948A20F6B9 /* Pods_OpenBot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADB8D624A9E1D1494E9F87D /* Pods_OpenBot.framework */; };
 		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
 		727D3168E1B1C70DBDC2652E /* ServerDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30F298C6C48697AB606F /* ServerDropdown.swift */; };
+		727D319EA6CD65DE80FF750C /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */; };
 		727D332F054456A4182DD7DF /* expandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3327FAD14CEC3DE54D95 /* expandSetting.swift */; };
 		727D33A327A7D99A558EFDC4 /* BluetoothTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3B76CF73A97A22A8022E /* BluetoothTable.swift */; };
 		727D33DD6B69783CAE4035BD /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30501D6445D0C8AED362 /* GaugeView.swift */; };
@@ -159,6 +160,8 @@
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		727D3D0186944D629E367A9D /* SettingsFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsFragment.swift; path = Settings/SettingsFragment.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
+		727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BottomSheet.swift; path = "Model Management/BottomSheet.swift"; sourceTree = "<group>"; };
+		727D3D78A49AC3693B1A2B7B /* CGFloatExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CGFloatExtension.swift; path = Adaptive/CGFloatExtension.swift; sourceTree = "<group>"; };
 		727D3D9ED8FC7A8FEFF7483B /* ModelsDropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelsDropdown.swift; path = DropDowns/ModelsDropdown.swift; sourceTree = "<group>"; };
 		727D3ED0992B4A6AA00373B7 /* DevicesDropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DevicesDropdown.swift; path = DropDowns/DevicesDropdown.swift; sourceTree = "<group>"; };
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
@@ -402,6 +405,7 @@
 				727D3879029901392BD7F608 /* GameViewController.swift */,
 				727D397801018EFBE3DCE993 /* ModelManagementFragment.swift */,
 				727D3281CA65425580EDD4A4 /* popupWindowView.swift */,
+				727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -743,6 +747,7 @@
 				4FEF4A75DC32E831C53777FE /* Float.swift in Sources */,
 				4FEF403935216C3C68714E27 /* UIViewExtension.swift in Sources */,
 				4FEF496FF652DF735361C16A /* Notifications.swift in Sources */,
+				727D319EA6CD65DE80FF750C /* BottomSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,11 +6,11 @@ import Foundation
 
 class FileDownloader {
 
-    static func loadFileSync(url: URL, completion: @escaping (String?, Error?) -> Void)
+    static func loadFileSync(url: URL,fileName : String, completion: @escaping (String?, Error?) -> Void)
     {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 
-        let destinationUrl = documentsUrl.appendingPathComponent(url.lastPathComponent)
+        let destinationUrl = documentsUrl.appendingPathComponent(fileName)
 
         if FileManager().fileExists(atPath: destinationUrl.path)
         {
