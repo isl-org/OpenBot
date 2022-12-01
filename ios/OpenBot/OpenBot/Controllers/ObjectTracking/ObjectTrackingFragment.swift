@@ -124,7 +124,7 @@ class ObjectTrackingFragment: CameraController {
                                         i += 1;
                                     }
                                 }
-                                let control: Control = updateTarget(location: res!.first!.getLocation());
+                                let control: Control = updateTarget(res!.first!.getLocation());
                                 sendControl(control: control);
                             }
                         }
@@ -137,23 +137,6 @@ class ObjectTrackingFragment: CameraController {
             }
         }
     }
-
-    func updateTarget(location: CGRect) -> Control {
-        var centerX: Float = Float(location.midX);
-        centerX = max(0, min(centerX, Float(originalWidth)));
-        let x_pos_norm: Float = 1.0 - 2.0 * centerX / Float(originalWidth);
-        var left: Float = 0.0;
-        var right: Float = 0.0;
-        if (x_pos_norm < 0) {
-            left = 1;
-            right = 1.0 - x_pos_norm;
-        } else {
-            left = 1 - x_pos_norm;
-            right = 1;
-        }
-        return Control(left: left, right: right)
-    }
-
 
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
@@ -197,19 +180,40 @@ class ObjectTrackingFragment: CameraController {
         _ = navigationController?.popViewController(animated: true)
     }
 
+    func updateTarget(_ detection: CGRect) -> Control {
+        let dx: CGFloat = originalWidth / CGFloat(detector!.getImageSizeX());
+        let dy: CGFloat = originalHeight / CGFloat(detector!.getImageSizeY());
+        let location = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
+        var centerX: Float = Float(location.midX);
+        centerX = max(0, min(centerX, Float(originalWidth)));
+        let x_pos_norm: Float = 1.0 - 2.0 * centerX / Float(originalWidth);
+        var left: Float = 0.0;
+        var right: Float = 0.0;
+        if (x_pos_norm < 0.0) {
+            left = 1;
+            right = 1.0 + x_pos_norm;
+        } else {
+            left = 1 - x_pos_norm;
+            right = 1;
+        }
+        return Control(left: left, right: right)
+    }
+
     func addFrame(item: Detector.Recognition, color: UIColor, size: CGSize) -> UIView {
         let frame = UIView()
         let detection = item.getLocation();
-        let dx = size.width / detection.width;
-        let dy = size.height / detection.height;
-        frame.frame = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
+        let dx = size.width / CGFloat(detector!.getImageSizeX());
+        let dy = size.height / CGFloat(detector!.getImageSizeY());
+        let rect = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
+
+        frame.frame = rect;
         frame.layer.borderColor = color.cgColor;
         frame.layer.borderWidth = 2.0
         let nameString = UITextView();
         nameString.textColor = UIColor.white;
         nameString.font = nameString.font?.withSize(12)
         nameString.backgroundColor = color.withAlphaComponent(0.5);
-        nameString.text = item.getTitle() + " : " + String(format: "%.3f", item.getConfidence());
+        nameString.text = item.getTitle() + " " + String(format: "%.2f", item.getConfidence() * 100) + "%";
         nameString.translatesAutoresizingMaskIntoConstraints = true
         nameString.sizeToFit()
         frame.addSubview(nameString);
