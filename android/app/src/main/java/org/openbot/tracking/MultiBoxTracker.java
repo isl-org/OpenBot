@@ -173,10 +173,9 @@ public class MultiBoxTracker {
       // calculate ratio of object tracking box of screen area to estimate a relative distance
       // if phone is in landscape (rotated = false) as not working so well in portrait
       float distancefactor = 1 - (trackboxArea / (frameWidth * frameHeight));
-      if (distancefactor < 0.2f)
-        distancefactor = 0.0f; // tracked object very near, stop robot
+      if (distancefactor < 0.2f) distancefactor = 0.0f; // tracked object very near, stop robot
       else if (rotated || distancefactor > 0.8f) // if landscape (rotated=true) leave as is.
-        distancefactor = 1.0f; // tracked object far, use predefined follow speed
+      distancefactor = 1.0f; // tracked object far, use predefined follow speed
 
       if (x_pos_scaled < 0) {
         leftControl = distancefactor;
