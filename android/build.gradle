@@ -39,7 +39,12 @@ task checkStyle(type:Exec) {
     commandLine './checkStyle.sh'
 }
 
-task applyStyle(type:Exec) {
-    workingDir 'utils'
-    commandLine './applyStyle.sh'
+task applyStyle(type:JavaExec) {
+    workingDir = "utils"
+    classpath = files("utils/google-java-format-1.7-all-deps.jar")
+    FileTree tree = fileTree('app/src/main/java') {
+        include '**/*.java'
+    }
+    args("-r") // replace cmd, means write changes back to source file
+    tree.toList().each {args = args + (it.toString())}
 }
