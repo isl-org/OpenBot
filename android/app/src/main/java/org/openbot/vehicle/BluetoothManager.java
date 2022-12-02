@@ -1,7 +1,10 @@
 package org.openbot.vehicle;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.ficat.easyble.BleDevice;
 import com.ficat.easyble.BleManager;
@@ -13,8 +16,10 @@ import com.ficat.easyble.gatt.callback.BleNotifyCallback;
 import com.ficat.easyble.gatt.callback.BleWriteCallback;
 import com.ficat.easyble.scan.BleScanCallback;
 
+
 import org.openbot.main.ScanDeviceAdapter;
 import org.openbot.utils.ByteUtils;
+import org.openbot.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +37,13 @@ public class BluetoothManager {
     private Context context;
     public ScanDeviceAdapter adapter;
     private int indexValue;
+    public String readValue;
+    private final LocalBroadcastManager localBroadcastManager;
 
     public BluetoothManager(Context context) {
         this.context = context;
         initBleManager();
+        localBroadcastManager = LocalBroadcastManager.getInstance(this.context);
     }
 
     public void initBleManager() {
@@ -75,7 +83,7 @@ public class BluetoothManager {
                 if (!device.name.equals("unknown")) {
                     deviceList.add(device);
                 }
-                if (bleDevice != null && !deviceList.contains(bleDevice) && bleDevice.connected) {
+                if (isBleConnected() && !deviceList.contains(bleDevice)) {
                     deviceList.add(bleDevice);
                 }
                 adapter.notifyDataSetChanged();
@@ -83,7 +91,6 @@ public class BluetoothManager {
 
             @Override
             public void onStart(boolean startScanSuccess, String info) {
-//                Log.e("TAG", "start scan = " + startScanSuccess + "   info: " + info);
                 if (startScanSuccess) {
                     deviceList.clear();
                 }
@@ -96,9 +103,13 @@ public class BluetoothManager {
         });
     }
 
+    public void stopScan() {
+        manager.stopScan();
+    }
+
     public void toggleConnection(int position) {
         indexValue = position;
-        if (bleDevice != null && bleDevice.connected) {
+        if (isBleConnected()) {
             BleManager.getInstance().disconnect(bleDevice.address);
             bleDevice = null;
         } else {
@@ -167,13 +178,14 @@ public class BluetoothManager {
     }
 
     public void read() {
-        if (bleDevice != null)
+        if (isBleConnected())
             BleManager.getInstance().notify(bleDevice, notifyServiceInfo.uuid, notifyCharacteristic.uuid, notifyCallback);
     }
 
     public void write(String msg) {
-        if (bleDevice != null)
-        BleManager.getInstance().write(bleDevice, writeServiceInfo.uuid, writeCharacteristic.uuid, msg.getBytes(), writeCallback);
+        if (isBleConnected()) {
+            BleManager.getInstance().write(bleDevice, writeServiceInfo.uuid, writeCharacteristic.uuid, msg.getBytes(), writeCallback);
+        }
     }
 
     public BleWriteCallback writeCallback = new BleWriteCallback() {
@@ -191,8 +203,8 @@ public class BluetoothManager {
     public BleNotifyCallback notifyCallback = new BleNotifyCallback() {
         @Override
         public void onCharacteristicChanged(byte[] data, BleDevice device) {
-            String s1 = new String(data);
-            System.out.println("testing here output" + s1);
+            readValue = new String(data);
+            onSerialDataReceived(readValue);
         }
 
         @Override
@@ -207,5 +219,18 @@ public class BluetoothManager {
             Logger.e("notify fail:" + info);
         }
     };
+
+    public boolean isBleConnected() {
+        return bleDevice != null && bleDevice.connected;
+    }
+
+    private void onSerialDataReceived(String data) {
+        // Add whatever you want here
+        Logger.e("Serial data received from BLE: " + data);
+        localBroadcastManager.sendBroadcast(
+                new Intent(Constants.BLE_ACTION_DATA_RECEIVED)
+                        .putExtra("from", "usb")
+                        .putExtra("data", data));
+    }
 
 }

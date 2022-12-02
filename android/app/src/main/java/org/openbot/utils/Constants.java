@@ -5,6 +5,7 @@ import android.Manifest;
 public class Constants {
 
   public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
+  public static final String BLE_ACTION_DATA_RECEIVED = "ble.data_received";
 
   public static final int REQUEST_CAMERA_PERMISSION = 1;
   public static final int REQUEST_AUDIO_PERMISSION = 2;

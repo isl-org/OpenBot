@@ -1,8 +1,10 @@
 package org.openbot.vehicle;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
 import com.ficat.easyble.BleDevice;
 
@@ -51,7 +53,8 @@ public class Vehicle {
   private boolean hasLedsStatus = false;
 
   private BluetoothManager bluetoothManager;
-
+  SharedPreferences sharedPreferences;
+  public String connectionType;
 
   public float getMinMotorVoltage() {
     return minMotorVoltage;
@@ -162,7 +165,6 @@ public class Vehicle {
   }
 
   public void processVehicleConfig(String message) {
-
     setVehicleType(message.split(":")[0]);
 
     if (message.contains(":v:")) {
@@ -206,6 +208,9 @@ public class Vehicle {
     this.context = context;
     this.baudRate = baudRate;
     gameController = new GameController(driveMode);
+    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    connectionType = getConnectionPreferences("connection_type", "USB");
+    System.out.println("vehicle type" + connectionType);
   }
 
   public float getBatteryVoltage() {
@@ -381,7 +386,7 @@ public class Vehicle {
 
   private void sendStringToDevice(String message) {
     if (usbConnection.isOpen()) usbConnection.send(message);
-    else if (bluetoothManager.bleDevice.connected) sendStringToBle(message);
+    else if (bluetoothManager.isBleConnected()) sendStringToBle(message);
   }
 
   public float getLeftSpeed() {
@@ -475,6 +480,10 @@ public class Vehicle {
     bluetoothManager.startScan();
   }
 
+  public void stopScan(){
+    bluetoothManager.stopScan();
+  }
+
   public List<BleDevice> getDeviceList() {
     return bluetoothManager.deviceList;
   }
@@ -511,5 +520,35 @@ public class Vehicle {
     bluetoothManager.write(message);
   }
 
+  public boolean bleConnected() {
+    return bluetoothManager.isBleConnected();
+  }
+
+  enum CONNECTION_TYPE {
+    Bluetooth,
+    USB
+  }
+
+  private void setConnectionPreferences(String name, String value) {
+    SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor.putString(name, value);
+    editor.apply();
+  }
+
+  private String getConnectionPreferences(String name, String defaultValue) {
+    try {
+      return sharedPreferences.getString(name, defaultValue);
+    } catch (ClassCastException e) {
+      return defaultValue;
+    }
+  }
+
+  public String getConnectionType() {
+    return getConnectionPreferences("connection_type", "USB");
+  }
+
+  public void setConnectionType(String type) {
+    setConnectionPreferences("connection_type", type);
+  }
 
 }

@@ -74,7 +74,6 @@ public class AutopilotFragment extends CameraFragment {
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     binding = FragmentAutopilotBinding.inflate(inflater, container, false);
-
     return inflateFragment(binding, inflater, container);
   }
 
@@ -93,6 +92,7 @@ public class AutopilotFragment extends CameraFragment {
             f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL);
     initModelSpinner(binding.modelSpinner, models, preferencesManager.getAutopilotModel());
     initServerSpinner(binding.serverSpinner);
+//    System.out.println("connection type = " + vehicle.getConnectionType());
 
     setAnalyserResolution(Enums.Preview.HD.getValue());
     binding.deviceSpinner.setOnItemSelectedListener(

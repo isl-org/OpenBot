@@ -130,6 +130,7 @@ public class BluetoothFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        vehicle.stopScan();
 //        if (manager != null) {
 //            manager.destroy();
 //        }

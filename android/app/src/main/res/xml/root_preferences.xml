@@ -47,4 +47,16 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Connection Type">
+
+        <ListPreference
+            app:defaultValue="USB"
+            app:entries="@array/connection_type"
+            app:entryValues="@array/connection_type"
+            app:key="connection_type"
+            app:title="Connectivity Mode"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

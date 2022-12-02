@@ -1,6 +1,7 @@
 package org.openbot.main;
 
 import static org.openbot.utils.Constants.USB_ACTION_DATA_RECEIVED;
+import static org.openbot.utils.Constants.BLE_ACTION_DATA_RECEIVED;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                   Timber.i("USB device detached");
                   break;
                 case USB_ACTION_DATA_RECEIVED:
+                case BLE_ACTION_DATA_RECEIVED:
                   viewModel.setUsbData(intent.getStringExtra("data"));
                   break;
               }
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         };
     IntentFilter localIntentFilter = new IntentFilter();
     localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
+    localIntentFilter.addAction(BLE_ACTION_DATA_RECEIVED);
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
     localIntentFilter.addAction(UsbConnection.ACTION_USB_PERMISSION);
@@ -141,6 +144,10 @@ public class MainActivity extends AppCompatActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu_items, menu);
+    System.out.println("onCreateOptionsMenu = " + vehicle.bleConnected() );
+    if(vehicle.bleConnected()) {
+      menu.findItem(R.id.bluetoothFragment).setIcon(R.drawable.ic_bluetooth);
+    } else menu.findItem(R.id.bluetoothFragment).setIcon(R.drawable.ic_bluetooth_off);
     return true;
   }
 
