@@ -4,6 +4,7 @@
 
 import Foundation
 import UIKit
+import UniformTypeIdentifiers
 
 class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate, UIDocumentPickerDelegate, UITextFieldDelegate {
     let table = UITableView()
@@ -153,7 +154,8 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
     }
 
     func openDocumentPicker() {
-        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.jpeg, .png, .pdf, .text])
+        let tfliteFile = UTType("com.openbot.tflite")!
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [tfliteFile])
         documentPicker.delegate = self
         documentPicker.modalPresentationStyle = .overFullScreen
         present(documentPicker, animated: true)
