@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,11 +25,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 import org.openbot.OpenBotApplication;
 import org.openbot.R;
 import org.openbot.utils.Constants;
 import org.openbot.vehicle.UsbConnection;
 import org.openbot.vehicle.Vehicle;
+
 import timber.log.Timber;
 
 // For a library module, uncomment the following line
@@ -197,13 +200,13 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-  }
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
-  @Override
-  protected void onPause() {
-    super.onPause();
-  }
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }

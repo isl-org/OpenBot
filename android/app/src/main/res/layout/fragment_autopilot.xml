@@ -253,7 +253,6 @@
             app:layout_constraintEnd_toStartOf="@+id/camera_toggle"
             app:layout_constraintTop_toTopOf="@+id/camera_toggle" />
 
-
         <ImageView
             android:id="@+id/camera_toggle"
             android:layout_width="40dp"

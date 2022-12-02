@@ -166,6 +166,7 @@
     <item>WebRTC</item>
     <item>RTSP</item>
   </string-array>
+
   <string-array name="connection_type">
     <item>Bluetooth</item>
     <item>USB</item>
