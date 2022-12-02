@@ -23,7 +23,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     let gameController = GameController.shared
     var bluetoothIcon = UIImageView()
     private let mainView = UIView()
-    var indicator = "i0,0\n";
 
     override func viewDidLoad() {
         super.viewDidLoad()
