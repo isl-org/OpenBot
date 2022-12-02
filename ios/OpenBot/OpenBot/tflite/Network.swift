@@ -46,17 +46,16 @@ class Network {
             let fileName = String(split[index]);
             let bundle = Bundle.main
             let path = bundle.path(forResource: fileName, ofType: "")
-            if let file = path {
-                tflite = try Interpreter(modelPath: file, options: tfliteOptions, delegates: delegates);
+            if path != nil {
+                tflite = try Interpreter(modelPath: path!, options: tfliteOptions, delegates: delegates);
                 try tflite?.allocateTensors()
             } else {
                 let modelsInDocumentDirectory = DataLogger.shared.getDocumentDirectoryInformation();
                 for modelUrl in modelsInDocumentDirectory {
-                    if (modelUrl.absoluteString.contains(fileName)) {
-                        tflite = try Interpreter(modelPath: modelUrl.absoluteString.replacingOccurrences(of: "file:///", with: ""), options: tfliteOptions, delegates: delegates);
-                        try tflite?.allocateTensors()
-
-                    }
+                   if modelUrl.lastPathComponent.contains(model.name){
+                       tflite = try Interpreter(modelPath: modelUrl.absoluteString.replacingOccurrences(of: "file:///", with: ""), options: tfliteOptions, delegates: delegates);
+                       try tflite?.allocateTensors()
+                   }
                 }
             }
             imageSize = model.getInputSize();

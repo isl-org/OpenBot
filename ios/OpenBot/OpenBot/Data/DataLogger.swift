@@ -135,6 +135,19 @@ class DataLogger {
         }
     }
 
+    func deleteAllFilesFromDocument(){
+        let fileManager = FileManager.default
+        do {
+            let documentDirectoryURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            let fileURLs = try fileManager.contentsOfDirectory(at: documentDirectoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            for url in fileURLs {
+                try fileManager.removeItem(at: url)
+            }
+        } catch {
+            print(error)
+        }
+    }
+
     func saveSensorFiles(path: String, data: String, fileName: String) {
         let fileManager = FileManager.default
         let sensorPath = URL(string: path)
@@ -184,7 +197,7 @@ class DataLogger {
 //        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
         do {
             fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-            print(fileURLs)
+//            print(fileURLs)
             return fileURLs
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")

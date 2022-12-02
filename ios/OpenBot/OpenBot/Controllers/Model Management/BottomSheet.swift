@@ -156,71 +156,68 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
     func openDocumentPicker() {
         let tfliteFile = UTType("com.openbot.tflite")!
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [tfliteFile])
+
         documentPicker.delegate = self
         documentPicker.modalPresentationStyle = .overFullScreen
         present(documentPicker, animated: true)
-
     }
 
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        dismiss(animated: true)
-        let tmpDirURL = URL(fileURLWithPath: NSTemporaryDirectory())
-        print(tmpDirURL)
+//        dismiss(animated: true)
         guard url.startAccessingSecurityScopedResource() else {
             return
         }
-
         defer {
             url.stopAccessingSecurityScopedResource()
         }
-
-        // Copy the file with FileManager
-        print("inside didPickDocumentAt")
-
-        var tempURL = URL(fileURLWithPath: NSTemporaryDirectory())
-        // Apend filename (name+extension) to URL
-        tempURL.appendPathComponent(url.lastPathComponent)
+        var newURL = FileManager.getDocumentsDirectory()
+        newURL.appendPathComponent(url.lastPathComponent)
         do {
-            // If file with same name exists remove it (replace file with new one)
-            if FileManager.default.fileExists(atPath: tempURL.path) {
-                try FileManager.default.removeItem(atPath: tempURL.path)
+            if FileManager.default.fileExists(atPath: newURL.path) {
+                try FileManager.default.removeItem(atPath: newURL.path)
             }
-            // Move file from app_id-Inbox to tmp/filename
-            try FileManager.default.moveItem(atPath: url.path, toPath: tempURL.path);
+            try FileManager.default.copyItem(atPath: url.path, toPath: newURL.path)
+            print("The new URL: \(newURL)")
         } catch {
             print(error.localizedDescription)
-
         }
+
         var error: NSError? = nil
         NSFileCoordinator().coordinate(readingItemAt: url, error: &error) { (url) in
 
             let keys: [URLResourceKey] = [.nameKey, .isDirectoryKey]
-            // Get an enumerator for the directory's content.
             guard let fileList = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys)
             else {
                 Swift.debugPrint("*** Unable to access the contents of \(url.path) ***\n")
                 return
             }
-            print(fileList)
-            for case let file as URL in fileList {
-                // Start accessing the content's security-scoped URL.
+            for case let _ as URL in fileList {
                 guard url.startAccessingSecurityScopedResource() else {
-                    // Handle the failure here.
                     continue
                 }
-
-                // Do something with the file here.
-                print("hello ", file.bookmarkData)
-                // Make sure you release the security-scoped resource when you finish.
                 url.stopAccessingSecurityScopedResource()
             }
         }
-
+        let  vc = self
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.large()]
+        }
+        let index = url.lastPathComponent.firstIndex(of: ".");
+        var modelName : String = ""
+        if index != nil{
+            modelName = String(url.lastPathComponent.prefix(upTo: index!))
+        }
+        let popWindowView = popupWindowView(frame: CGRect(x: 10, y: 0, width: width - 20, height: 400),modelName, "", "ASSET")
+        print(url.lastPathComponent)
+        view.addSubview(popWindowView);
+        popWindowView.backgroundColor = Colors.freeRoamButtonsColor
     }
 
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         print("inside documentPickerWasCancelled")
     }
+
+
 
     @objc func cancel(_ sender: UISwitch) {
        self.dismiss(animated: true)
@@ -234,7 +231,11 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
                 print("File downloaded to : \(s!)")
             })
         }
-        let popWindowView = popupWindowView(frame: CGRect(x: 10, y: 0, width: width - 20, height: 400),"", urlInputBox.text ?? "")
+        let  vc = self
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.large()]
+        }
+        let popWindowView = popupWindowView(frame: CGRect(x: 10, y: 0, width: width - 20, height: 400),"", urlInputBox.text ?? "", "URL")
         view.addSubview(popWindowView);
         popWindowView.backgroundColor = Colors.freeRoamButtonsColor
 
@@ -252,3 +253,15 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
 
 
 }
+
+extension FileManager {
+
+    static func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
+    }
+}
+//extension UTType {
+//    static let tflite : Self = .init(filenameExtension: ".tflite")!
+//}

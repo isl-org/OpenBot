@@ -12,6 +12,7 @@ class Detector: Network {
     let ciContext = CIContext()
 
     static func create(model: Model, device: RuntimeDevice, numThreads: Int) throws -> AnyObject? {
+
         switch (model.classType) {
         case .MOBILENETV1_1_0_Q, .MOBILENETV3_S_Q:
             return try DetectorQuantizedMobileNet(model: model, device: device, numThreads: numThreads);

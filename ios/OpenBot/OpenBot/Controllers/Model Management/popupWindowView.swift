@@ -11,6 +11,7 @@ class popupWindowView: UIView {
     var typeDropdown = DropDown()
     var typeDropdownView = UIView()
     var modelName: String = ""
+    var pathType : String = ""
     var classDropdown = DropDown()
     var classDropdownView = UIView()
     var headingLeadingAnchor: NSLayoutConstraint!
@@ -25,10 +26,12 @@ class popupWindowView: UIView {
     var heightOfModel: String!
     var modelAddress: String = ""
 
-    init(frame: CGRect, _ modelName: String, _ modelAddress: String) {
+    init(frame: CGRect, _ modelName: String, _ modelAddress: String, _ pathType : String) {
         super.init(frame: frame)
         self.modelName = modelName
+        print("self.name",self.modelName)
         self.modelAddress = modelAddress
+        self.pathType = pathType
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         setupModelItem();
         addGestureRecognizer(tap)
@@ -80,11 +83,14 @@ class popupWindowView: UIView {
 
     func setupModelItem() {
         model = Common.returnModelItem(modelName: modelName)
-        print("model is ",model)
         widthOfModel = ModelItem.getWidthOfInput(model.inputSize);
         heightOfModel = ModelItem.getHeightOfInput(model.inputSize);
-        print(widthOfModel);
-        print(heightOfModel)
+        if pathType == "ASSET" {
+            model.pathType = "ASSET"
+        }
+        else{
+            model.pathType = "URL"
+        }
     }
 
     func createHeading() {

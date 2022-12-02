@@ -61,10 +61,13 @@ class Common {
      */
     static func loadSelectedModels(mode: String) -> [String] {
         var selectedModels: [String] = []
-        let allModels = loadAllModelItemsFromBundle()
+        let allModels = loadAllModelItems()
         for model in allModels {
             let split = model.path.split(separator: "/");
             let index = split.count - 1;
+            if index < 0{
+                continue;
+            }
             let fileName = String(split[index]);
             if model.type == mode {
                 let bundle = Bundle.main
@@ -76,9 +79,6 @@ class Common {
                     selectedModels.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
                 }
             }
-
-
-
         }
         return selectedModels
     }
@@ -88,7 +88,14 @@ class Common {
         let allModels = loadAllModelItems()
         for model in allModels {
             if model.name != ""{
-                models.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
+                let index = model.name.firstIndex(of: ".")
+                if index == nil{
+                    models.append(model.name);
+                }
+                else{
+                    models.append(String(model.name.prefix(upTo: index!)))
+                }
+
             }
         }
         return models
@@ -96,7 +103,7 @@ class Common {
 
     static func returnModelItem(modelName: String) -> ModelItem {
         let allModels = loadAllModelItems()
-        print(allModels)
+//        print(allModels)
         for item in allModels {
             if item.name != nil {
                 if item.name == modelName + ".tflite" {
@@ -104,8 +111,8 @@ class Common {
                 }
             }
         }
-        var model : ModelItem = ModelItem.init(id: allModels.count + 1, class: allModels[0].class, type: allModels[0].type, name: "", pathType: allModels[allModels.count-1].pathType, path: "", inputSize: allModels[0].inputSize)
-        print("hello model ",model)
+        var model : ModelItem = ModelItem.init(id: allModels.count + 1, class: allModels[0].class, type: allModels[0].type, name: modelName, pathType: allModels[allModels.count-1].pathType, path: "", inputSize: allModels[0].inputSize)
+//        print("hello model ",model)
         return model;
     }
 
@@ -120,9 +127,8 @@ class Common {
         var selectedModels: [String] = []
         let allModels = loadAllModelItems()
         for model in allModels {
-            if model.type == mode {
-
-                selectedModels.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
+            if model.type == mode, let index = model.name.firstIndex(of: ".") {
+                selectedModels.append(String(model.name.prefix(upTo: index)))
             }
         }
         return selectedModels
@@ -152,9 +158,6 @@ class Common {
 
         for url in DataLogger.shared.getDocumentDirectoryInformation() {
             let model = returnModelItem(modelName: modelName)
-            if model.pathType == "ASSET"{
-                return false
-            }
             if url.lastPathComponent == model.name{
                 return true
             }

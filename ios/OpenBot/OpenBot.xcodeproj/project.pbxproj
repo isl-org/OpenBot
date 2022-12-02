@@ -47,6 +47,7 @@
 		727D3168E1B1C70DBDC2652E /* ServerDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30F298C6C48697AB606F /* ServerDropdown.swift */; };
 		727D319EA6CD65DE80FF750C /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */; };
 		727D332F054456A4182DD7DF /* expandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3327FAD14CEC3DE54D95 /* expandSetting.swift */; };
+		727D3344CC8742EB020E2992 /* ModelManagementTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31518A6A6FE099F41F49 /* ModelManagementTable.swift */; };
 		727D33A327A7D99A558EFDC4 /* BluetoothTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3B76CF73A97A22A8022E /* BluetoothTable.swift */; };
 		727D33DD6B69783CAE4035BD /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30501D6445D0C8AED362 /* GaugeView.swift */; };
 		727D3457F432B9743263C307 /* sensorDataRetrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */; };
@@ -67,7 +68,6 @@
 		727D3D12FAF02C416CC2CEC1 /* FreeRoamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */; };
 		727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B02AB471D9F31B0747 /* Font.swift */; };
 		727D3D319744DCFF840F7C23 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D396BDB689AFF9C3931C6 /* HomePageViewController.swift */; };
-		727D3D82257E17339EA26D94 /* ModelManagementFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D397801018EFBE3DCE993 /* ModelManagementFragment.swift */; };
 		727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */; };
 		727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3C4EBE89B9B6E537BE8B /* Device.swift */; };
 		727D3FB2162AE0D1794DA7CE /* ModelsDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D9ED8FC7A8FEFF7483B /* ModelsDropdown.swift */; };
@@ -141,6 +141,7 @@
 		727D30501D6445D0C8AED362 /* GaugeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GaugeView.swift; sourceTree = "<group>"; };
 		727D30F298C6C48697AB606F /* ServerDropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerDropdown.swift; path = DropDowns/ServerDropdown.swift; sourceTree = "<group>"; };
 		727D31331A6716FD310082EB /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
+		727D31518A6A6FE099F41F49 /* ModelManagementTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelManagementTable.swift; path = "Model Management/ModelManagementTable.swift"; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
 		727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreeRoamController.swift; sourceTree = "<group>"; };
 		727D3281CA65425580EDD4A4 /* popupWindowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = popupWindowView.swift; path = "Model Management/popupWindowView.swift"; sourceTree = "<group>"; };
@@ -152,7 +153,6 @@
 		727D3879029901392BD7F608 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameViewController.swift; path = GameView/GameViewController.swift; sourceTree = "<group>"; };
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
 		727D396BDB689AFF9C3931C6 /* HomePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomePageViewController.swift; path = HomePage/HomePageViewController.swift; sourceTree = "<group>"; };
-		727D397801018EFBE3DCE993 /* ModelManagementFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelManagementFragment.swift; path = "Model Management/ModelManagementFragment.swift"; sourceTree = "<group>"; };
 		727D39B02AB471D9F31B0747 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bluetoothDataController.swift; sourceTree = "<group>"; };
 		727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VehicleControl.swift; path = Modes/VehicleControl.swift; sourceTree = "<group>"; };
@@ -403,9 +403,9 @@
 				727D3421CB0D9D6B68ADB5B7 /* modesCollectionViewCell.swift */,
 				727D396BDB689AFF9C3931C6 /* HomePageViewController.swift */,
 				727D3879029901392BD7F608 /* GameViewController.swift */,
-				727D397801018EFBE3DCE993 /* ModelManagementFragment.swift */,
 				727D3281CA65425580EDD4A4 /* popupWindowView.swift */,
 				727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */,
+				727D31518A6A6FE099F41F49 /* ModelManagementTable.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -738,7 +738,6 @@
 				727D37EF7FFD794AAD19F1F6 /* modesCollectionViewCell.swift in Sources */,
 				727D3D319744DCFF840F7C23 /* HomePageViewController.swift in Sources */,
 				727D378DB2E32C26828E73A9 /* GameViewController.swift in Sources */,
-				727D3D82257E17339EA26D94 /* ModelManagementFragment.swift in Sources */,
 				727D3AEFE62BB8644729D602 /* popupWindowView.swift in Sources */,
 				4FEF48E013A1477BE882AA7F /* FileDownloader.swift in Sources */,
 				4FEF47BB348E0DF6D9C4BA48 /* UIImage.swift in Sources */,
@@ -748,6 +747,7 @@
 				4FEF403935216C3C68714E27 /* UIViewExtension.swift in Sources */,
 				4FEF496FF652DF735361C16A /* Notifications.swift in Sources */,
 				727D319EA6CD65DE80FF750C /* BottomSheet.swift in Sources */,
+				727D3344CC8742EB020E2992 /* ModelManagementTable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

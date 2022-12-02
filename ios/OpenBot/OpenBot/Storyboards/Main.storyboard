@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PA5-nf-qH0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PA5-nf-qH0">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <accessibilityOverrides isEnabled="YES" boldText="YES" buttonShapes="YES" onOffLabels="YES" increaseContrast="YES" reduceTransparency="YES" dynamicTypePreference="2"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -50,21 +52,6 @@
             </objects>
             <point key="canvasLocation" x="-370" y="820"/>
         </scene>
-        <!--Model Management Fragment-->
-        <scene sceneID="CX7-ea-Oke">
-            <objects>
-                <viewController storyboardIdentifier="ScreenModelManagement" id="yOo-I3-mGl" customClass="ModelManagementFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="xp9-Hd-W7c">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="ZXH-Va-fLY"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ug5-L8-4OP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1042" y="1635"/>
-        </scene>
         <!--Bottom Sheet-->
         <scene sceneID="cEZ-Ck-omL">
             <objects>
@@ -79,6 +66,53 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3tI-dx-eNX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-143" y="1611"/>
+        </scene>
+        <!--Model Management Table-->
+        <scene sceneID="lMB-ug-fnV">
+            <objects>
+                <tableViewController storyboardIdentifier="ScreenModelManagement" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mxb-7b-oJN" customClass="ModelManagementTable" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="XUH-fs-Nbc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="rkf-18-iZb" customClass="modelManagementCell" customModule="OpenBot" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="43.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rkf-18-iZb" id="AHb-Ms-y93">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MJ5-Jm-ZQP">
+                                            <rect key="frame" x="306" y="6.3333333333333304" width="123" height="29.666666666666671"/>
+                                            <color key="tintColor" name="borderColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="123" id="8bU-Sf-vIE"/>
+                                                <constraint firstAttribute="height" constant="33" id="Dau-Mo-naw"/>
+                                                <constraint firstAttribute="width" secondItem="MJ5-Jm-ZQP" secondAttribute="height" multiplier="41:11" id="gNj-KX-Per"/>
+                                            </constraints>
+                                            <imageReference key="image" image="trash" catalog="system" symbolScale="small" variableValue="1"/>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="MJ5-Jm-ZQP" secondAttribute="trailing" constant="-15" id="YNP-Cv-cOi"/>
+                                        <constraint firstItem="MJ5-Jm-ZQP" firstAttribute="top" secondItem="AHb-Ms-y93" secondAttribute="top" constant="5" id="rm0-PD-myQ"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="downloadIcon" destination="MJ5-Jm-ZQP" id="Q2K-Qh-TyY"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="mxb-7b-oJN" id="ZJB-bb-eGW"/>
+                            <outlet property="delegate" destination="mxb-7b-oJN" id="QRE-5J-MZb"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xYC-3P-f8m" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="708.69565217391312" y="1627.9017857142856"/>
         </scene>
         <!--Home Page View Controller-->
         <scene sceneID="8b0-hH-SCr">
@@ -267,14 +301,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk" customClass="BluetoothTableViewCell" customModule="OpenBot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="33.666667938232422"/>
+                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="34.333332061767578"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="33.666667938232422"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34.333332061767578"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="321" y="0.0" width="88" height="33.666666666666664"/>
+                                            <rect key="frame" x="323.33333333333331" y="0.0" width="85.666666666666686" height="34.333333333333336"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">
@@ -340,6 +374,7 @@
         <image name="bluetoothConnected" width="14" height="22"/>
         <image name="controller" width="444.66665649414062" height="405.66665649414062"/>
         <image name="settings" width="39" height="39"/>
+        <image name="trash" catalog="system" width="117" height="128"/>
         <namedColor name="HomePageTitleColor">
             <color red="0.0" green="0.4392156862745098" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -353,7 +388,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.69803921568627447" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
