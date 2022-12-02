@@ -14,7 +14,6 @@ class modesCollectionViewCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     public func configure(with gridItem: ModeItem) {
