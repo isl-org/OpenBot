@@ -46,5 +46,5 @@ task applyStyle(type:JavaExec) {
         include '**/*.java'
     }
     args("-r") // replace cmd, means write changes back to source file
-    tree.toList().each {args = args + (it.toString())}
+    tree.each {args += it}
 }
