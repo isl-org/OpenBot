@@ -191,7 +191,7 @@ All models are quantized for better performance on embedded devices. Please refe
 
 #### MobileNetV1-300 (pre-installed) - mAP: 18%
 
-SSD object detector with MobileNet V1 backbone and input resolution of 300x300.
+SSD object detector with [MobileNet V1](https://tfhub.dev/tensorflow/lite-model/ssd_mobilenet_v1/1/metadata/2) backbone and input resolution of 300x300.
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
