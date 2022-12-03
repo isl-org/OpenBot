@@ -108,37 +108,37 @@ def associate(first_list, second_list, max_offset):
 
 
 def match_frame_ctrl_input(
-    data_dir, datasets, max_offset, redo_matching=False, remove_zeros=True, mode="autopilot"
+    data_dir, datasets, max_offset, redo_matching=False, remove_zeros=True, policy="autopilot"
 ):
     frames = []
     for dataset in datasets:
         for folder in utils.list_dirs(os.path.join(data_dir, dataset)):
             session_dir = os.path.join(data_dir, dataset, folder)
             frame_list = match_frame_session(
-                session_dir, max_offset, redo_matching, remove_zeros, mode
+                session_dir, max_offset, redo_matching, remove_zeros, policy
             )
             for timestamp in list(frame_list):
                 frames.append(frame_list[timestamp][0])
     return frames
 
 def match_frame_session(
-    session_dir, max_offset, redo_matching=False, remove_zeros=True, mode="autopilot"
+    session_dir, max_offset, redo_matching=False, remove_zeros=True, policy="autopilot"
 ):
 
-    if mode == "autopilot":
+    if policy == "autopilot":
         matched_frames_file_name = "matched_frame_ctrl_cmd.txt"
         processed_frames_file_name = "matched_frame_ctrl_cmd_processed.txt"
         log_file = "indicatorLog.txt"
         csv_label_string = "timestamp (frame),time_offset (cmd-frame),time_offset (ctrl-frame),frame,left,right,cmd\n"
         csv_label_string_processed = "timestamp,frame,left,right,cmd\n"
-    elif mode == "point_goal_nav":
+    elif policy == "point_goal_nav":
         matched_frames_file_name = "matched_frame_ctrl_goal.txt"
         processed_frames_file_name = "matched_frame_ctrl_goal_processed.txt"
         log_file = "goalLog.txt"
         csv_label_string = "timestamp (frame),time_offset (goal-frame),time_offset (ctrl-frame),frame,left,right,dist,sinYaw,cosYaw\n"
         csv_label_string_processed = "timestamp,frame,left,right,dist,sinYaw,cosYaw\n"
     else:
-        raise Exception("Unknown mode")
+        raise Exception("Unknown policy")
         
     sensor_path = os.path.join(session_dir, "sensor_data")
     img_path = os.path.join(session_dir, "images")
@@ -181,12 +181,12 @@ def match_frame_session(
             raise Exception("Empty matched_frame_ctrl.txt")
         cmd_list = read_file_list(os.path.join(sensor_path, log_file))
         
-        if mode == "autopilot":
+        if policy == "autopilot":
             # Set indicator signal to 0 for initial frames
             if len(cmd_list) == 0 or sorted(frame_list)[0] < sorted(cmd_list)[0]:
                 cmd_list[sorted(frame_list)[0]] = ["0"]
             
-        elif mode == "point_goal_nav":
+        elif policy == "point_goal_nav":
             if len(cmd_list) == 0:
                 raise Exception("Empty goalLog.txt")
     
@@ -224,7 +224,7 @@ def match_frame_session(
                 if len(frame) < 6:
                     continue
                 
-                if mode == "autopilot":
+                if policy == "autopilot":
                     left = int(frame[3])
                     right = int(frame[4])
                     # left = normalize(max_ctrl, frame[3])
@@ -239,7 +239,7 @@ def match_frame_session(
                             "%s,%s,%d,%d,%d\n" % (timestamp, frame_name, left, right, cmd)
                         )
                     
-                elif mode == "point_goal_nav":
+                elif policy == "point_goal_nav":
                     left = float(frame_list[timestamp][3])
                     right = float(frame_list[timestamp][4])
                     if remove_zeros and left == 0.0 and right == 0.0:

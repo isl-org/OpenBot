@@ -105,8 +105,7 @@ def convert_dataset(
         max_offset,
         redo_matching=redo_matching,
         remove_zeros=remove_zeros,
-        policy,
-    )
+        policy=policy)
 
     # creating TFRecords output folder.
     if not os.path.exists(tfrecords_dir):

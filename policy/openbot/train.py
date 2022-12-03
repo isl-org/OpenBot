@@ -163,16 +163,15 @@ def process_data(tr: Training):
         max_offset,
         redo_matching=tr.redo_matching,
         remove_zeros=tr.remove_zeros,
-        tr.hyperparameters.POLICY,
-    )
+        policy=tr.hyperparameters.POLICY)
+        
     test_frames = associate_frames.match_frame_ctrl_input(
         tr.test_data_dir,
         tr.test_datasets,
         max_offset,
         redo_matching=tr.redo_matching,
         remove_zeros=tr.remove_zeros,
-        tr.hyperparameters.POLICY,
-    )
+        policy=tr.hyperparameters.POLICY)
 
     tr.image_count_train = len(train_frames)
     tr.image_count_test = len(test_frames)
