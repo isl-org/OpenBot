@@ -14,7 +14,7 @@
     "type": "DETECTOR",
     "name": "MobileNetV1-300.tflite",
     "pathType": "ASSET",
-    "path": "networks/mobile_ssd_v1_1.0_quant_coco.tflite",
+    "path": "networks/ssd_mobilenet_v1_1_metadata.tflite",
     "inputSize": "300x300"
   },
   {

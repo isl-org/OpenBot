@@ -22,7 +22,6 @@ public class DetectorYoloV5 extends Detector {
                   + Math.pow((inputSize / 16), 2)
                   + Math.pow((inputSize / 8), 2))
               * 3);
-  // float getObjThresh = 0.5f;
   int numClass;
   boolean isModelQuantized;
   private float inputScale;
