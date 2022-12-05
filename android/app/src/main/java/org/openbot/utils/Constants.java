@@ -5,7 +5,6 @@ import android.Manifest;
 public class Constants {
 
   public static final String DEVICE_ACTION_DATA_RECEIVED = "device.data_received";
-
   public static final int REQUEST_CAMERA_PERMISSION = 1;
   public static final int REQUEST_AUDIO_PERMISSION = 2;
   public static final int REQUEST_STORAGE_PERMISSION = 3;
