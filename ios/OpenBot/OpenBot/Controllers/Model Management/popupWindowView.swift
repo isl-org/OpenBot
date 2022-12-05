@@ -54,7 +54,6 @@ class popupWindowView: UIView {
         createSecondInputField()
         createButton(label: Strings.cancel, leadingAnchor: 20, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 100, action: #selector(onCancelBtnTap(_:)))
         createButton(label: Strings.done, leadingAnchor: width / 2 - 50, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 200, action: #selector(onDoneBtnTap(_:)));
-
     }
 
 
@@ -83,6 +82,7 @@ class popupWindowView: UIView {
 
     func setupModelItem() {
         model = Common.returnModelItem(modelName: modelName)
+        print(modelName,model)
         widthOfModel = ModelItem.getWidthOfInput(model.inputSize);
         heightOfModel = ModelItem.getHeightOfInput(model.inputSize);
         if pathType == "ASSET" {
@@ -356,6 +356,7 @@ class popupWindowView: UIView {
 
 
     func modifyModels() -> [ModelItem] {
+        print("inside modify model", model)
         var allModels : [ModelItem] = [];
         let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
         var isFoundConfigFile: Bool = false;
@@ -371,6 +372,7 @@ class popupWindowView: UIView {
         case false:
            allModels = Common.loadAllModelItemsFromBundle();
         }
+
         let newModel = modelAddress == "" ? ModelItem.init(id: model.id, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: model.path, inputSize: widthOfModel + "x" + heightOfModel) :
                 ModelItem.init(id: allModels.count + 1, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: modelAddress, inputSize: widthOfModel + "x" + heightOfModel);
         var index = 0;

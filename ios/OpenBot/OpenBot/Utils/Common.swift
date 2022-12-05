@@ -63,6 +63,13 @@ class Common {
         var selectedModels: [String] = []
         let allModels = loadAllModelItems()
         for model in allModels {
+
+            if model.type == mode && model.pathType == "ASSET"{
+                print(model.name)
+                if isModelItemAvailableInDocument(modelName: model.name + Strings.tflite){
+                    selectedModels.append(model.name)
+                }
+            }
             let split = model.path.split(separator: "/");
             let index = split.count - 1;
             if index < 0{
@@ -78,6 +85,7 @@ class Common {
                 if isModelItemAvailableInDocument(modelName: String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!))){
                     selectedModels.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
                 }
+
             }
         }
         return selectedModels
@@ -106,9 +114,13 @@ class Common {
 //        print(allModels)
         for item in allModels {
             if item.name != nil {
-                if item.name == modelName + ".tflite" {
-                    return item
+
+                if item.name.contains(modelName){
+                    return item;
                 }
+//                if item.name == modelName + ".tflite" {
+//                    return item
+//                }
             }
         }
         var model : ModelItem = ModelItem.init(id: allModels.count + 1, class: allModels[0].class, type: allModels[0].type, name: modelName, pathType: allModels[allModels.count-1].pathType, path: "", inputSize: allModels[0].inputSize)

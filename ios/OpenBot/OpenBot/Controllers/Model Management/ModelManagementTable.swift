@@ -36,6 +36,8 @@ class ModelManagementTable: UITableViewController {
 //        DataLogger.shared.deleteFiles(fileNameToDelete: "config.json");
 //        DataLogger.shared.getDocumentDirectoryInformation()
 //        DataLogger.shared.deleteAllFilesFromDocument()
+//        print(Common.loadAllModelFromDocumentDirectory())
+    print(Common.loadAllModelItems())
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -325,6 +327,7 @@ class ModelManagementTable: UITableViewController {
     @objc func removeBlankScreen(_ notification: Notification) {
         if notification.object == nil{
             blankScreen.removeFromSuperview();
+            updateModelItemList(type: "All")
             return;
         }
         if selectedIndex == nil {
@@ -337,7 +340,7 @@ class ModelManagementTable: UITableViewController {
             tableView.reloadRows(at: [selectedIndex], with: .bottom);
             blankScreen.removeFromSuperview();
         }
-
+        updateModelItemList(type: "All")
     }
 
 

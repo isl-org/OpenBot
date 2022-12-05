@@ -43,7 +43,19 @@ class Network {
             }
             let split = model.path.split(separator: "/");
             let index = split.count - 1;
-            let fileName = String(split[index]);
+            if index < 0 {
+                let modelsInDocumentDirectory = DataLogger.shared.getDocumentDirectoryInformation();
+                for modelUrl in modelsInDocumentDirectory {
+                    if modelUrl.lastPathComponent.contains(model.name){
+                        tflite = try Interpreter(modelPath: modelUrl.absoluteString.replacingOccurrences(of: "file:///", with: ""), options: tfliteOptions, delegates: delegates);
+                        try tflite?.allocateTensors()
+                    }
+                }
+            }
+            var fileName = "";
+            if index >= 0 {
+                fileName = String(split[index]);
+            }
             let bundle = Bundle.main
             let path = bundle.path(forResource: fileName, ofType: "")
             if path != nil {

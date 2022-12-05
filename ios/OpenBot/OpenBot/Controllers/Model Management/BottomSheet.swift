@@ -163,7 +163,6 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
     }
 
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-//        dismiss(animated: true)
         guard url.startAccessingSecurityScopedResource() else {
             return
         }
@@ -208,7 +207,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
             modelName = String(url.lastPathComponent.prefix(upTo: index!))
         }
         let popWindowView = popupWindowView(frame: CGRect(x: 10, y: 0, width: width - 20, height: 400),modelName, "", "ASSET")
-        print(url.lastPathComponent)
+        print("hello ",url.lastPathComponent)
         view.addSubview(popWindowView);
         popWindowView.backgroundColor = Colors.freeRoamButtonsColor
     }
@@ -238,8 +237,6 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
         let popWindowView = popupWindowView(frame: CGRect(x: 10, y: 0, width: width - 20, height: 400),"", urlInputBox.text ?? "", "URL")
         view.addSubview(popWindowView);
         popWindowView.backgroundColor = Colors.freeRoamButtonsColor
-
-
     }
 
     @objc func nameDidChange(_ textField: UITextField) {
@@ -262,6 +259,3 @@ extension FileManager {
         return documentsDirectory
     }
 }
-//extension UTType {
-//    static let tflite : Self = .init(filenameExtension: ".tflite")!
-//}
