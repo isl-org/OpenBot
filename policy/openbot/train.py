@@ -564,7 +564,7 @@ def start_train(
     return tr
 
 
-def create_tfrecord(callback: MyCallback):
+def create_tfrecord(callback: MyCallback, policy):
     callback.broadcast(
         "message", "Converting data to tfrecord (this may take some time)..."
     )
@@ -572,11 +572,13 @@ def create_tfrecord(callback: MyCallback):
         os.path.join(dataset_dir, "train_data"),
         os.path.join(dataset_dir, "tfrecords"),
         "train.tfrec",
+        policy = policy
     )
     tfrecord.convert_dataset(
         os.path.join(dataset_dir, "test_data"),
         os.path.join(dataset_dir, "tfrecords"),
         "test.tfrec",
+        policy = policy
     )
 
 
@@ -661,6 +663,6 @@ if __name__ == "__main__":
     my_callback = MyCallback(broadcast, event)
 
     if args.create_tf_record:
-        create_tfrecord(my_callback)
+        create_tfrecord(my_callback, args.policy)
 
     start_train(params, my_callback, verbose=1, no_tf_record=args.no_tf_record)
