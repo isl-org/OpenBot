@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -87,6 +88,17 @@ public class AutopilotFragment extends CameraFragment {
     binding.threads.setText(String.valueOf(getNumThreads()));
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
+    CheckBox bleCb = getView().findViewById(R.id.bleToggle);
+    CheckBox USBCb = getView().findViewById(R.id.usbToggle);
+    if(vehicle.getConnectionType().equals("USB")) {
+      USBCb.setVisibility(View.VISIBLE);
+      bleCb.setVisibility(View.INVISIBLE);
+    }
+    else if (vehicle.getConnectionType().equals("Bluetooth")){
+      bleCb.setVisibility(View.VISIBLE);
+      USBCb.setVisibility(View.INVISIBLE);
+    }
+
     List<String> models =
         getModelNames(
             f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL);
@@ -130,12 +142,19 @@ public class AutopilotFragment extends CameraFragment {
         .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
+    binding.bleToggle.setChecked(vehicle.bleConnected());
+
 
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
+    binding.bleToggle.setOnClickListener(
+            v -> {
+              binding.bleToggle.setChecked(vehicle.bleConnected());
+              Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+            });
 
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));

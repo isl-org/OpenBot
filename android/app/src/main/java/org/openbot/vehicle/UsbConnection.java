@@ -162,7 +162,7 @@ public class UsbConnection {
     // Add whatever you want here
     LOGGER.i("Serial data received from USB: " + data);
     localBroadcastManager.sendBroadcast(
-        new Intent(Constants.USB_ACTION_DATA_RECEIVED)
+        new Intent(Constants.DEVICE_ACTION_DATA_RECEIVED)
             .putExtra("from", "usb")
             .putExtra("data", data));
   }

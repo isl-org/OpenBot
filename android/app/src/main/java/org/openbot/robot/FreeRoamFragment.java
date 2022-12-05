@@ -114,7 +114,7 @@ public class FreeRoamFragment extends ControlsFragment {
     binding.bleToggle.setOnClickListener(
             v -> {
               binding.bleToggle.setChecked(vehicle.bleConnected());
-              Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+              Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
             });
   }
 

@@ -228,7 +228,7 @@ public class BluetoothManager {
         // Add whatever you want here
         Logger.e("Serial data received from BLE: " + data);
         localBroadcastManager.sendBroadcast(
-                new Intent(Constants.BLE_ACTION_DATA_RECEIVED)
+                new Intent(Constants.DEVICE_ACTION_DATA_RECEIVED)
                         .putExtra("from", "usb")
                         .putExtra("data", data));
     }

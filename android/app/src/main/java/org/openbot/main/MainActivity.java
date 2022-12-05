@@ -1,7 +1,6 @@
 package org.openbot.main;
 
-import static org.openbot.utils.Constants.USB_ACTION_DATA_RECEIVED;
-import static org.openbot.utils.Constants.BLE_ACTION_DATA_RECEIVED;
+import static org.openbot.utils.Constants.DEVICE_ACTION_DATA_RECEIVED;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -96,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
                   viewModel.setUsbStatus(vehicle.isUsbConnected());
                   Timber.i("USB device detached");
                   break;
-                case USB_ACTION_DATA_RECEIVED:
-                case BLE_ACTION_DATA_RECEIVED:
+                case DEVICE_ACTION_DATA_RECEIVED:
                   viewModel.setUsbData(intent.getStringExtra("data"));
                   break;
               }
@@ -105,8 +103,7 @@ public class MainActivity extends AppCompatActivity {
           }
         };
     IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
-    localIntentFilter.addAction(BLE_ACTION_DATA_RECEIVED);
+    localIntentFilter.addAction(DEVICE_ACTION_DATA_RECEIVED);
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
     localIntentFilter.addAction(UsbConnection.ACTION_USB_PERMISSION);
