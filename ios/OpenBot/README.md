@@ -131,7 +131,7 @@ Simple UI for collection of data sets.
 
 <p align="left">
 
-<img src="../../docs/images/ios_data_collection_screen.jpeg" alt="Data Collection" width="100%" />
+<img src="../../docs/images/ios_data_collection_screen.jpg" alt="Data Collection" width="100%" />
 
 </p>
 
