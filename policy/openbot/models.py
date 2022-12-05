@@ -78,9 +78,9 @@ def create_mlp(in_dim, hidden_dim, out_dim, activation="relu", dropout=0.2):
 
 def pilot_net(img_width, img_height, bn=False, policy="autopilot"):
 
-    if self.policy == "autopilot":
+    if policy == "autopilot":
         mlp = create_mlp(1, 1, 1, dropout=0)
-    elif self.policy == "point_goal_nav":
+    elif policy == "point_goal_nav":
         mlp = create_mlp(3, 16, 16, dropout=0)
     else: 
         raise Exception("Unknown policy")
@@ -117,9 +117,9 @@ def pilot_net(img_width, img_height, bn=False, policy="autopilot"):
 
 def cil_mobile(img_width, img_height, bn=True, policy="autopilot"):
     
-    if self.policy == "autopilot":
+    if policy == "autopilot":
         mlp = create_mlp(1, 16, 16, dropout=0.5)
-    elif self.policy == "point_goal_nav":
+    elif policy == "point_goal_nav":
         mlp = create_mlp(3, 16, 16, dropout=0.5)
     else: 
         raise Exception("Unknown policy")
@@ -160,9 +160,9 @@ def cil_mobile(img_width, img_height, bn=True, policy="autopilot"):
 
 def cil_mobile_fast(img_width, img_height, bn=True, policy="autopilot"):
 
-    if self.policy == "autopilot":
+    if policy == "autopilot":
         mlp = create_mlp(1, 16, 16)
-    elif self.policy == "point_goal_nav":
+    elif policy == "point_goal_nav":
         mlp = create_mlp(3, 16, 16)
     else: 
         raise Exception("Unknown policy")
@@ -202,9 +202,9 @@ def cil_mobile_fast(img_width, img_height, bn=True, policy="autopilot"):
 
 def cil(img_width, img_height, bn=True, policy="autopilot"):
 
-    if self.policy == "autopilot":
+    if policy == "autopilot":
         mlp = create_mlp(1, 64, 64, dropout=0.5)
-    elif self.policy == "point_goal_nav":
+    elif policy == "point_goal_nav":
         mlp = create_mlp(3, 64, 64, dropout=0.5)
     else: 
         raise Exception("Unknown policy")

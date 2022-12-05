@@ -112,7 +112,9 @@ def convert_dataset(
         os.makedirs(tfrecords_dir)
 
     # generate data in the TFRecord format.
-    samples = load_labels(data_dir, datasets)
+    samples = load_labels(data_dir, datasets, policy)
+    
+    print(samples)
     with tf.io.TFRecordWriter(tfrecords_dir + "/" + tfrecords_name) as writer:
         for image_path, ctrl_input in samples.items():
             try:
