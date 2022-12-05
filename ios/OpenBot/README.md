@@ -20,7 +20,7 @@ The app starts with a menu screen that shows all available screens. The Bluetoot
 
 #### Bluetooth Connection
 
-Unlike the Android app which connects to the microcontroller using USB, iOS app uses Bluetooth. On Opening bluetooth screen, you can see a list of all the available devices to connect over bluetooth. You can choose your OpenBot microcontroller and connect to it. The default baud rate is 115200, and you should not need to change this unless you mess with the microcontroller firmware. The app will attempt to connect automatically, but in case you encounter issues, you can use this switch to manually disconnect / connect.
+Unlike the Android app which connects to the microcontroller using USB, iOS app only uses Bluetooth. On Opening bluetooth screen, you can see a list of all the available devices to connect over bluetooth. You can choose your OpenBot microcontroller and connect to it. The default baud rate is 115200, and you should not need to change this unless you mess with the microcontroller firmware. The app will attempt to connect automatically, but in case you encounter issues, you can use this switch to manually disconnect / connect.
 
 ### Free Roam
 

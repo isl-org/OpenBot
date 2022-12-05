@@ -118,7 +118,7 @@ class ObjectTrackingFragment: CameraController {
                             if (res!.count > 0) {
                                 for item in res! {
                                     if (item.getConfidence() * 100 > MINIMUM_CONFIDENCE_TF_OD_API) {
-                                        let frame = addFrame(item: item, color: Constants.frameColors[i % 5], size: CGSize(width: originalWidth, height: originalHeight));
+                                        let frame = addFrame(item: item, color: Constants.frameColors[i % 5]);
                                         frames.append(frame);
                                         cameraView.addSubview(frame);
                                         i += 1;
@@ -181,12 +181,14 @@ class ObjectTrackingFragment: CameraController {
     }
 
     func updateTarget(_ detection: CGRect) -> Control {
-        let dx: CGFloat = originalWidth / CGFloat(detector!.getImageSizeX());
-        let dy: CGFloat = originalHeight / CGFloat(detector!.getImageSizeY());
+        let screenWidth  = UIScreen.main.bounds.size.width
+        let screenHeight = UIScreen.main.bounds.size.height
+        let dx: CGFloat = screenWidth / CGFloat(detector!.getImageSizeX());
+        let dy: CGFloat = screenHeight / CGFloat(detector!.getImageSizeY());
         let location = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
         var centerX: Float = Float(location.midX);
-        centerX = max(0, min(centerX, Float(originalWidth)));
-        let x_pos_norm: Float = 1.0 - 2.0 * centerX / Float(originalWidth);
+        centerX = max(0, min(centerX, Float(screenWidth)));
+        let x_pos_norm: Float = 1.0 - 2.0 * centerX / Float(screenWidth);
         var left: Float = 0.0;
         var right: Float = 0.0;
         if (x_pos_norm < 0.0) {
@@ -199,11 +201,13 @@ class ObjectTrackingFragment: CameraController {
         return Control(left: left, right: right)
     }
 
-    func addFrame(item: Detector.Recognition, color: UIColor, size: CGSize) -> UIView {
+    func addFrame(item: Detector.Recognition, color: UIColor) -> UIView {
         let frame = UIView()
+        let screenWidth  = UIScreen.main.bounds.size.width
+        let screenHeight = UIScreen.main.bounds.size.height
         let detection = item.getLocation();
-        let dx = size.width / CGFloat(detector!.getImageSizeX());
-        let dy = size.height / CGFloat(detector!.getImageSizeY());
+        let dx = screenWidth / CGFloat(detector!.getImageSizeX());
+        let dy = screenHeight / CGFloat(detector!.getImageSizeY());
         let rect = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
 
         frame.frame = rect;

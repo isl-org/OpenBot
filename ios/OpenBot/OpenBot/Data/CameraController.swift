@@ -89,7 +89,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
      */
     func initializeCamera() {
         captureSession = AVCaptureSession()
-        captureSession.sessionPreset = .medium
+        captureSession.sessionPreset = .high
         guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
         else {
             print("Unable to access back camera!")
@@ -140,9 +140,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let resolution = notification?.object as! Resolutions
         switch resolution {
         case .low:
-            captureSession.sessionPreset = .iFrame960x540
+            captureSession.sessionPreset = .low
         case .medium:
-            captureSession.sessionPreset = .hd1280x720
+            captureSession.sessionPreset = .medium
         case .high:
             captureSession.sessionPreset = .high
         }
