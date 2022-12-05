@@ -186,7 +186,7 @@ All models are quantized for better performance on embedded devices. Please refe
 | Samsung S20FE 5G | Snapdragon 865 |  6GB | 12 |
 | Huawei P30 Pro   | Kirin 980      |  8GB | 10 |
 | Google Pixel 6XL | Google Tensor  | 12GB | 12 |
-| Xiaomi Mi9       | Snapdragon 855 |  6GB |  9 |
+| Xiaomi Mi9       | Snapdragon 855 |  6GB | 10 |
 | Google Pixel 4XL | Snapdragon 855 |  6GB | 13 |
 
 #### MobileNetV1-300 (pre-installed) - mAP: 18%
@@ -261,6 +261,7 @@ Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
 | Samsung S22 Ultra|  21 |  10 |   21  |
+| Xiaomi Mi9       |  13 |  15 |  0.8  |
 | Google Pixel 4XL |  12 |  17 |   18  |
 
 #### YoloV5s-640 - mAP: 34%
@@ -270,6 +271,7 @@ Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
 | Samsung S22 Ultra| 5.5 | 4.9 |  5.0  |
+| Xiaomi Mi9       | 4.1 | 4.6 |   -   |
 | Google Pixel 4XL | 3.7 | 4.6 |  4.6  |
 
 #### YoloV5m-320 - mAP: 35%
@@ -279,6 +281,7 @@ Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
 | Samsung S22 Ultra|  13 | 8.2 |   11  |
+| Xiaomi Mi9       | 9.7 | 9.9 |   -   |
 | Google Pixel 4XL | 7.9 | 9.2 |   15  |
 
 #### YoloV5l-320 - mAP: 38%
@@ -288,6 +291,7 @@ Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
 | Samsung S22 Ultra| 7.6 | 3.4 |  7.6  |
+| Xiaomi Mi9       | 5.5 | 5.0 |   -   |
 | Google Pixel 4XL | 5.3 | 4.0 |  5.3  |
 
 ## Add your own fragment
