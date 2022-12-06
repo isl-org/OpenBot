@@ -41,7 +41,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if (central.state == .poweredOn) {
             let options: [String: Any] = [CBCentralManagerScanOptionAllowDuplicatesKey: true]
-            centralManager?.scanForPeripherals(withServices: [CBUUID(string: Constants.openbotService)], options: options)
+            centralManager?.scanForPeripherals(withServices: nil, options: options)
         } else {
             print("bluetooth is off ")
         }
