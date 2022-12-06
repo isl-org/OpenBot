@@ -67,6 +67,7 @@ class HomePageViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
         DeviceCurrentOrientation.shared.findDeviceOrientation()
+        DataLogger.shared.deleteZipFileFromDocument()
         viewControllerName = classNameFrom(self)
         if (isBluetoothConnected) {
             bluetooth.setImage(Images.bluetoothConnected, for: .normal)

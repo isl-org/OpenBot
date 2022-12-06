@@ -9,6 +9,7 @@ import DropDown
 class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     let logData = UISwitch()
     let bluetoothIcon = UIImageView()
+    let delayTextField = UITextField()
     let cameraIcon = UIImageView()
     var previewResolution = UILabel()
     var low = UIButton()
@@ -51,7 +52,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         createResolutions()
         createModelResolutionTitle()
         createDropdown()
-        _ = createLabels(value: "server", leadingAnchor: 10, topAnchor: 250, labelWidth: 240, labelHeight: 40)
+        _ = createLabels(value: "server", leadingAnchor: 10, topAnchor: 200, labelWidth: 240, labelHeight: 40)
         createServer()
         createSecondView()
         createSecondViewLabel(value: "Images", leadingAnchor: 10, topAnchor: 10, labelWidth: 100, labelHeight: 40)
@@ -68,6 +69,8 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         vehicleControls.leadingAnchor.constraint(equalTo: secondView.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
+        addGestureRecognizer(tap)
 
     }
 
@@ -162,7 +165,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     func createServer() {
-        server = createButton(borderColor: "red", buttonName: Strings.server, leadingAnchor: 10, topAnchor: 280, action: #selector(serverHandler(_:)))
+        server = createButton(borderColor: "red", buttonName: Strings.server, leadingAnchor: 10, topAnchor: 230, action: #selector(serverHandler(_:)))
     }
 
     func createSecondView() {
@@ -170,7 +173,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         addSubview(secondView)
         if currentOrientation == .portrait {
             leadingConstraint = secondView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 0)
-            topConstraint = secondView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 320);
+            topConstraint = secondView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 290);
             widthConstraint = secondView.widthAnchor.constraint(equalToConstant: width)
             heightConstraint = secondView.heightAnchor.constraint(equalToConstant: height / 2)
         } else {
@@ -197,7 +200,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         if currentOrientation == .portrait {
             frame.size.width = width
             leadingConstraint.constant = 0
-            topConstraint.constant = 320
+            topConstraint.constant = 290
             widthConstraint.constant = width
             heightConstraint.constant = height / 2
         } else {
@@ -485,12 +488,21 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         NotificationCenter.default.post(name: .ble, object: nil)
     }
 
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        delayTextField.resignFirstResponder()  //if desired
+        return true
+    }
+
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
             bluetoothIcon.image = Images.bluetoothConnected
         } else {
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
+    }
+
+    @objc func dismissKeyboard(_ sender: UIButton) {
+        endEditing(true);
     }
 
 

@@ -28,7 +28,6 @@ class ModelManagementTable: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.frame.origin.y = 250;
-        print(view.frame)
         setupHeader()
         createAddModelButton()
         NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
@@ -37,7 +36,12 @@ class ModelManagementTable: UITableViewController {
 //        DataLogger.shared.getDocumentDirectoryInformation()
 //        DataLogger.shared.deleteAllFilesFromDocument()
 //        print(Common.loadAllModelFromDocumentDirectory())
-    print(Common.loadAllModelItems())
+//    print(Common.loadAllModelItems())
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateModelItemList(type: "All")
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -122,7 +126,6 @@ class ModelManagementTable: UITableViewController {
         modelDropdown.width = 100;
         modelDropdown.selectionAction = { [unowned self] (index: Int, item: String) in
             modelClassLabel.text = item
-            print(modelClassLabel)
             updateModelItemList(type: item)
 
         }

@@ -29,7 +29,6 @@ class popupWindowView: UIView {
     init(frame: CGRect, _ modelName: String, _ modelAddress: String, _ pathType : String) {
         super.init(frame: frame)
         self.modelName = modelName
-        print("self.name",self.modelName)
         self.modelAddress = modelAddress
         self.pathType = pathType
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
@@ -82,7 +81,6 @@ class popupWindowView: UIView {
 
     func setupModelItem() {
         model = Common.returnModelItem(modelName: modelName)
-        print(modelName,model)
         widthOfModel = ModelItem.getWidthOfInput(model.inputSize);
         heightOfModel = ModelItem.getHeightOfInput(model.inputSize);
         if pathType == "ASSET" {
@@ -356,7 +354,6 @@ class popupWindowView: UIView {
 
 
     func modifyModels() -> [ModelItem] {
-        print("inside modify model", model)
         var allModels : [ModelItem] = [];
         let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
         var isFoundConfigFile: Bool = false;

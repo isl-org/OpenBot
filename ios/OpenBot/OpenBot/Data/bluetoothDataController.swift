@@ -5,7 +5,6 @@
 import Foundation
 import CoreBluetooth
 import CoreMotion
-
 class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPeripheralDelegate {
     static let shared: bluetoothDataController = bluetoothDataController()
     var centralManager: CBCentralManager?
@@ -32,12 +31,10 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
                 selector: #selector(startNotification),
                 name: Notification.Name("updateLabel"),
                 object: nil)
-
         NotificationCenter.default.addObserver(self,
                 selector: #selector(startNotification),
                 name: Notification.Name("updateSerialMonitor"),
                 object: nil)
-
     }
 
 
@@ -52,9 +49,8 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         if peripheral.name != nil {
             if !peripherals.contains(peripheral) {
+                print("services are ",peripheral.services)
                 peripherals.append(peripheral)
-//                print(peripherals)
-
             }
         }
     }

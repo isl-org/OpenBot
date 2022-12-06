@@ -148,6 +148,21 @@ class DataLogger {
         }
     }
 
+    func deleteZipFileFromDocument(){
+        let fileManager = FileManager.default
+        let documentDirectoryURL = FileManager.getDocumentsDirectory()
+        do {
+            let fileURLs = try fileManager.contentsOfDirectory(at: documentDirectoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            for url in fileURLs {
+                if url.lastPathComponent.first == "2" && !url.lastPathComponent.contains("."){
+                    deleteFiles(fileNameToDelete: url.lastPathComponent);
+                }
+            }
+        } catch {
+            print("Error in deleting .zip file")
+        }
+    }
+
     func saveSensorFiles(path: String, data: String, fileName: String) {
         let fileManager = FileManager.default
         let sensorPath = URL(string: path)
