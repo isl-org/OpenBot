@@ -24,6 +24,7 @@ class ModelManagementTable: UITableViewController {
     var popupWindowLeadingAnchor: NSLayoutConstraint!
     var popupWindowTopAnchor: NSLayoutConstraint!
     var dropDown = UIView()
+    let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -247,8 +248,18 @@ class ModelManagementTable: UITableViewController {
         case true:
             deleteModel(modelName: models[indexOfSelectedModel])
         case false:
+            createOverlayAlert()
             downloadModel(modelName: models[indexOfSelectedModel])
         }
+    }
+
+    func createOverlayAlert(){
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
+        loadingIndicator.startAnimating();
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = UIActivityIndicatorView.Style.gray
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
     }
 
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -324,6 +335,7 @@ class ModelManagementTable: UITableViewController {
     }
 
     @objc func fileDownloaded() {
+       alert.dismiss(animated: true);
         tableView.reloadRows(at: [selectedIndex], with: .bottom)
     }
 
