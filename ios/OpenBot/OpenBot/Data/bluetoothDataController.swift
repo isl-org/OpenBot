@@ -40,14 +40,18 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if (central.state == .poweredOn) {
-            centralManager?.scanForPeripherals(withServices: nil, options: nil)
+            centralManager?.scanForPeripherals(withServices: [CBUUID.init(string: Constants.openbotService)], options: nil)
         } else {
             print("bluetooth is off ")
         }
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-
+        if peripheral.name != nil {
+            if !peripherals.contains(peripheral) {
+                peripherals.append(peripheral)
+            }
+        }
     }
 
 
@@ -75,9 +79,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let services = peripheral.services {
             for service in services {
-                if !peripherals.contains(peripheral) && service.uuid.isEqual(Constants.openbotService) {
-                    peripherals.append(peripheral)
-                }
                 peripheral.discoverCharacteristics([], for: service)
             }
         }
