@@ -265,21 +265,25 @@ Train your own [Driving Policy](../../policy/README.md)
 for Bluetooth connection make sure that your android device has BLE(Bluetooth Low Energy) support.
 
 Select the connection type Bluetooth from the Settings menu.
-
+<p align="left">
 <img src="../../docs/images/ble_1.jpeg" alt="Settings Menu" width="25%"/>
 <img src="../../docs/images/ble_2.jpeg" alt="Choose connection type" width="25%"/>
+</p>
 
 If your Android version is greater than or equal to 7.0, you need to turn on the location service and allow location permission from setting to search for nearby BLE devices.
 
 If you choose the Bluetooth connection type, you get a Bluetooth icon on the home screen of the app. Tap the icon to start BLE scanning, it takes 4 seconds to scan all nearby BLE devices. Then you will get the list of all available BLE devices.
-
+<p align="left">
 <img src="../../docs/images/ble_3.jpeg" alt="Home Screen" width="25%"/>
+</p>
 
 After getting the list of BLE devices you can easily connect with your openBot by tapping on Connect button.
-
+<p align="left">
 <img src="../../docs/images/ble_4.jpeg" alt="BLE devices" width="25%"/>
 <img src="../../docs/images/ble_5.jpeg" alt="Connecting device" width="25%"/>
+</p>
 
 On successful connection the Connect button will change to Disconnect. You can now go back to the Home screen.
-
+<p align="left">
 <img src="../../docs/images/ble_6.jpeg" alt="Disconnect button" width="25%"/>
+</p>
