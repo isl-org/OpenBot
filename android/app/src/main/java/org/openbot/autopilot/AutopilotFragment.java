@@ -144,7 +144,6 @@ public class AutopilotFragment extends CameraFragment {
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
     binding.bleToggle.setChecked(vehicle.bleConnected());
 
-
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());

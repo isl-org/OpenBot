@@ -18,9 +18,9 @@ import com.ficat.easyble.scan.BleScanCallback;
 
 
 import org.openbot.main.ScanDeviceAdapter;
-import org.openbot.utils.ByteUtils;
 import org.openbot.utils.Constants;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -191,7 +191,8 @@ public class BluetoothManager {
     public BleWriteCallback writeCallback = new BleWriteCallback() {
         @Override
         public void onWriteSuccess(byte[] data, BleDevice device) {
-            Logger.e("write success:" + ByteUtils.bytes2HexStr(data));
+            String value = new String(data, StandardCharsets.UTF_8);
+            Logger.e("write success:" + value);
         }
 
         @Override

@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
   private BroadcastReceiver localBroadcastReceiver;
   private Vehicle vehicle;
   private LocalBroadcastManager localBroadcastManager;
+  private boolean bluetoothConnection;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -141,10 +142,12 @@ public class MainActivity extends AppCompatActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu_items, menu);
-    System.out.println("onCreateOptionsMenu = " + vehicle.bleConnected() );
     if(vehicle.bleConnected()) {
       menu.findItem(R.id.bluetoothFragment).setIcon(R.drawable.ic_bluetooth);
-    } else menu.findItem(R.id.bluetoothFragment).setIcon(R.drawable.ic_bluetooth_off);
+    } else {
+      menu.findItem(R.id.bluetoothFragment).setIcon(R.drawable.ic_bluetooth_off);
+    }
+
     return true;
   }
 
