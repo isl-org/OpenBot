@@ -5,6 +5,7 @@
 import Foundation
 import CoreBluetooth
 import CoreMotion
+
 class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPeripheralDelegate {
     static let shared: bluetoothDataController = bluetoothDataController()
     var centralManager: CBCentralManager?
@@ -16,7 +17,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     var voltageDivider: String = ""
     var speedometer: String = ""
     var bumperData: String = ""
-    private var allServices: [CBService]?
     var writeCharacteristics: CBCharacteristic?
 
     required init?(coder: NSCoder) {
@@ -47,11 +47,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        if peripheral.name != nil {
-            if !peripherals.contains(peripheral) {
-                peripherals.append(peripheral)
-            }
-        }
+
     }
 
 
@@ -79,7 +75,9 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let services = peripheral.services {
             for service in services {
-                allServices?.append(service)
+                if !peripherals.contains(peripheral) && service.uuid.isEqual(Constants.openbotService) {
+                    peripherals.append(peripheral)
+                }
                 peripheral.discoverCharacteristics([], for: service)
             }
         }
