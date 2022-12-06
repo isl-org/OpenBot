@@ -240,7 +240,7 @@ class expandedAutoPilot: UIView {
             deviceDropDown.textColor = color
         }
         deviceDropDown.anchorView = deviceDropDownView
-        deviceDropDown.dataSource = ["CPU","GPU","XNNPACK"]
+        deviceDropDown.dataSource = Constants.devices
         deviceDropDown.show()
         deviceDropDown.width = 90
         ddView = createDropdownView(borderColor: "", buttonName: "CPU", leadingAnchor: 80, topAnchor: adapted(dimensionSize: 160, to: .height), action: #selector(showDeviceDropdown(_:)))

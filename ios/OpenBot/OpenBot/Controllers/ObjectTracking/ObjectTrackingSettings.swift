@@ -21,6 +21,7 @@ class ObjectTrackingSettings: UIView {
     var leftSpeedLabel = UILabel()
     var deviceDropDown = DropDown()
     var deviceDropDownView = UIView()
+    var modelDropDown = DropDown()
 
     init(frame: CGRect, detector: Detector?, model: ModelItem) {
         self.detector = detector;
@@ -360,7 +361,6 @@ class ObjectTrackingSettings: UIView {
         deviceDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             deviceDropDownLabel.text = item
             NotificationCenter.default.post(name: .updateDevice, object: item)
-
         }
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
@@ -397,9 +397,19 @@ class ObjectTrackingSettings: UIView {
 
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.objectTrackingMode);
-        let model = Models(frame: CGRect(x: 180, y: adapted(dimensionSize: 60, to: .height), width: 100, height: 200), selectedModels: selectedModels);
-        addSubview(model)
+        modelDropDown.backgroundColor = Colors.freeRoamButtonsColor;
+        if let color = Colors.borderColor {
+            modelDropDown.textColor = color
+        }
         let dd = UIView()
+        let modelDropDownAnchor = UIView(frame: CGRect(x: 180, y: adapted(dimensionSize: 60, to: .height), width: 100, height: 200));
+        modelDropDown.anchorView = modelDropDownAnchor;
+        addSubview(modelDropDownAnchor);
+        modelDropDown.dataSource = selectedModels
+        modelDropDown.selectionAction = { [self] (index: Int, item: String) in
+            modelDropdownLabel.text = item
+            NotificationCenter.default.post(name: .updateModel, object: item)
+        }
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
         modelDropdownLabel.text = selectedModels.first
@@ -432,7 +442,7 @@ class ObjectTrackingSettings: UIView {
     }
 
     @objc func showModelDropdown(_ sender: UIButton) {
-        NotificationCenter.default.post(name: .showModelsDD, object: nil)
+        modelDropDown.show()
     }
 
     @objc func updateModel(_ notification: Notification) {
@@ -441,7 +451,6 @@ class ObjectTrackingSettings: UIView {
         let model = Common.returnModelItem(modelName: selectedModel)
         self.selectedModel = model
         imageInputLabel.text = model.inputSize
-
     }
 
     @objc func updateObject(_ notification: Notification) {
