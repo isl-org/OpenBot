@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/bluetoothFragment"
-        android:icon="@drawable/ic_bluetooth_off"
+        android:icon="@drawable/ic_bluetooth"
         android:title="@string/bluetooth"
         app:showAsAction="ifRoom" />
     <item
