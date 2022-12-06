@@ -44,6 +44,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
+        loadModelsNameAndResolution()
         applyBlurEffect()
         createLogDataButton()
         createBluetoothIcon()
@@ -142,7 +143,8 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     func createDropdown() {
-        loadModelsNameAndResolution()
+        modelsName = Common.loadAllModelsName()
+//        loadModelsNameAndResolution()
          dropDown.backgroundColor = Colors.freeRoamButtonsColor
         if let color = Colors.borderColor {
             dropDown.textColor = color
@@ -469,20 +471,14 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dropDown.show()
     }
 
-    func loadModelsNameAndResolution(){
-        let models = Common.loadAllModelItemsFromBundle()
-        if models.count > 0 {
-            let model = Model.fromModelItems(list: models)
-            for count in 0 ... models.count-1 {
-                let nameOfModel = Model.getName(model[count])()
-                resolution.append(model[count].inputSize)
-                let index = nameOfModel.firstIndex(of: ".")
-                if let index = index {
-                    modelsName.append(String(nameOfModel.prefix(upTo: index)))
-                }
-            }
-        }
+func loadModelsNameAndResolution(){
+    modelsName = Common.loadAllModelsName();
+    for model in Common.loadAllModelItems(){
+        resolution.append(model.inputSize);
     }
+}
+
+
 
     @objc func ble(_ sender: UIView) {
         NotificationCenter.default.post(name: .ble, object: nil)

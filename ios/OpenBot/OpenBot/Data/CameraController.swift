@@ -156,10 +156,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
                 widthOfTrainingImage = Float(dimensionOfImage?.prefix(upTo: indexOfx) ?? "256") ?? 256
                 let indexAfterX = dimensionOfImage?.index(after: indexOfx)
                 if let indexAfterX = indexAfterX {
-                    heightOfTrainingImage = Float(dimensionOfImage?.suffix(from: indexAfterX) ?? "56") ?? 96
+                    heightOfTrainingImage = Float(dimensionOfImage?.suffix(from: indexAfterX) ?? "96") ?? 96
                 }
             }
-
         }
     }
 
@@ -400,7 +399,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
                 }
                 if img.2 {
                     let imageName = String(count) + Strings.underscore + Strings.crop
-                    let croppedImage = cropImage(image: img.0, height: CGFloat(heightOfTrainingImage), width: CGFloat(heightOfTrainingImage))
+                    let croppedImage = cropImage(image: img.0, height: CGFloat(heightOfTrainingImage), width: CGFloat(widthOfTrainingImage))
                     DataLogger.shared.saveImages(path: imagePath, image: croppedImage, name: imageName);
                 }
                 count = count + 1
