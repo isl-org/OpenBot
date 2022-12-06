@@ -308,7 +308,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func updateControlMode() {
         let gamePadController = createMode(x: 35, y: 55, width: Int(width / 3), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
-        let phoneController = createMode(x: Int(width / 2) + 20, y: 60, width: Int(width / 3), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
+        let phoneController = createMode(x: Int(width / 2) + 20, y: 55, width: Int(width / 3), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
         if selectedControlMode == ControlMode.gamepad {
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             gameControllerObj = gameController

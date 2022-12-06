@@ -4,6 +4,7 @@
 
 import Foundation
 import UIKit
+import DropDown
 
 class ObjectTrackingSettings: UIView {
     let autoModeButton = UISwitch()
@@ -18,6 +19,8 @@ class ObjectTrackingSettings: UIView {
     var selectedModel: ModelItem?;
     var bluetoothIcon = UIImageView()
     var leftSpeedLabel = UILabel()
+    var deviceDropDown = DropDown()
+    var deviceDropDownView = UIView()
 
     init(frame: CGRect, detector: Detector?, model: ModelItem) {
         self.detector = detector;
@@ -343,10 +346,22 @@ class ObjectTrackingSettings: UIView {
 
 
     func createDeviceDropDown() {
-        let device = Devices(frame: CGRect(x: 80, y: adapted(dimensionSize: 150, to: .height), width: 100, height: 100));
-        addSubview(device)
-        print(device.deviceDD.frame)
+        deviceDropDown.backgroundColor = Colors.freeRoamButtonsColor
+        if let borderColor = Colors.borderColor {
+            deviceDropDown.textColor = borderColor
+        }
+
+        deviceDropDown.dataSource = Constants.devices
+        deviceDropDown.width = 90
         let dd = UIView()
+        deviceDropDown.anchorView = dd;
+        deviceDropDownLabel.text = RuntimeDevice.CPU.rawValue
+        deviceDropDownLabel.textColor = Colors.borderColor
+        deviceDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+            deviceDropDownLabel.text = item
+            NotificationCenter.default.post(name: .updateDevice, object: item)
+
+        }
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
         deviceDropDownLabel.text = RuntimeDevice.CPU.rawValue
@@ -371,7 +386,8 @@ class ObjectTrackingSettings: UIView {
     }
 
     @objc func showDeviceDropdown(_ sender: UIButton) {
-        NotificationCenter.default.post(name: .showDeviceDD, object: nil)
+        deviceDropDown.show()
+//        NotificationCenter.default.post(name: .showDeviceDD, object: nil)
     }
 
     @objc func showObjectDropdown(_ sender: UIButton) {
