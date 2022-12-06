@@ -353,7 +353,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
     func createLeftSpeed() {
         leftSpeedLabel.frame.size = CGSize(width: 100, height: 40);
-        leftSpeedLabel.frame.origin = CGPoint(x: 4, y: adapted(dimensionSize: 200, to: .height))
+        leftSpeedLabel.frame.origin = CGPoint(x: 10, y: 240)
         leftSpeedLabel.text = "xxx,xxx"
         secondView.addSubview(leftSpeedLabel)
         leftSpeedLabel.font = leftSpeedLabel.font.withSize(13.5)
