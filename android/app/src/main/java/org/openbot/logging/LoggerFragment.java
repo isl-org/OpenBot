@@ -201,6 +201,7 @@ public class LoggerFragment extends CameraFragment {
     handlerThread = new HandlerThread("logging");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
+    binding.bleToggle.setChecked(vehicle.bleConnected());
     super.onResume();
   }
 

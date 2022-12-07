@@ -103,7 +103,7 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
     startAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.blink);
 
     mViewModel
-        .getUsbData()
+        .getDeviceData()
         .observe(
             getViewLifecycleOwner(),
             data -> {

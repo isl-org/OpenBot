@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
   private BroadcastReceiver localBroadcastReceiver;
   private Vehicle vehicle;
   private LocalBroadcastManager localBroadcastManager;
-  private boolean bluetoothConnection;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                   Timber.i("USB device detached");
                   break;
                 case DEVICE_ACTION_DATA_RECEIVED:
-                  viewModel.setUsbData(intent.getStringExtra("data"));
+                  viewModel.setDeviceData(intent.getStringExtra("data"));
                   break;
               }
             }

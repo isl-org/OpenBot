@@ -336,6 +336,7 @@ public class ObjectNavFragment extends CameraFragment {
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
+    binding.bleToggle.setChecked(vehicle.bleConnected());
     super.onResume();
   }
 

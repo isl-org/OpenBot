@@ -16,14 +16,15 @@ import com.ficat.easyble.gatt.callback.BleNotifyCallback;
 import com.ficat.easyble.gatt.callback.BleWriteCallback;
 import com.ficat.easyble.scan.BleScanCallback;
 
-
 import org.openbot.main.ScanDeviceAdapter;
 import org.openbot.utils.Constants;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class BluetoothManager {
     private BleManager manager;
@@ -39,6 +40,8 @@ public class BluetoothManager {
     private int indexValue;
     public String readValue;
     private final LocalBroadcastManager localBroadcastManager;
+    private String serviceUUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
+    UUID[] uuidArray = new UUID[]{ UUID.fromString(serviceUUID) };
 
     public BluetoothManager(Context context) {
         this.context = context;
@@ -57,7 +60,9 @@ public class BluetoothManager {
         BleManager.ScanOptions scanOptions = BleManager.ScanOptions
                 .newInstance()
                 .scanPeriod(4000)
-                .scanDeviceName(null);
+                .scanDeviceName(null)
+                .scanServiceUuids(uuidArray);
+
 
         BleManager.ConnectOptions connectOptions = BleManager.ConnectOptions
                 .newInstance()
@@ -141,8 +146,8 @@ public class BluetoothManager {
             bleDevice = null;
             deviceList.remove(indexValue);
             deviceList.add(indexValue, device);
-            Logger.e("disconnected!");
             adapter.notifyDataSetChanged();
+            Logger.e("disconnected!");
         }
 
         @Override
