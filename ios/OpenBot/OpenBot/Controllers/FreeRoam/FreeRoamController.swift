@@ -202,11 +202,11 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     func createLabels() {
         createLabel(value: Strings.controller, x: 35, y: 20, width: 100, height: 40)
         createLabel(value: Strings.speed, x: 35, y: 207, width: 100, height: 40)
-        createLabel(value: Strings.driveMode, x: 35, y: 115, width: 100, height: 40)
+        createLabel(value: Strings.driveMode, x: 35, y: 110, width: 100, height: 40)
     }
 
     func createVoltageLabel() {
-        voltageLabel.frame = CGRect(x: 35, y: 300, width: 50, height: 40)
+        voltageLabel.frame = CGRect(x: 43, y: 300, width: 50, height: 40)
         voltageLabel.text = "0V"
         voltageLabel.textColor = .white
         voltageLabel.font = voltageLabel.font.withSize(15)
@@ -308,7 +308,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func updateControlMode() {
         let gamePadController = createMode(x: 35, y: 55, width: Int(width / 3), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
-        let phoneController = createMode(x: Int(width / 2) + 20, y: 55, width: Int(width / 3), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
+        let phoneController = createMode(x: Int(width / 3) + 48, y: 55, width: Int(width / 3), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
         if selectedControlMode == ControlMode.gamepad {
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             gameControllerObj = gameController
@@ -326,8 +326,8 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func updateGameControllerModeType() {
         let joystick = createMode(x: 35, y: 145, width: Int(width / 4), label: Strings.joystick, icon: "joystick", action: #selector(joystick(_:)))
-        let game = createMode(x: 145, y: 145, width: Int(width / 4), label: Strings.game, icon: "game", action: #selector(gameMode(_:)))
-        let dual = createMode(x: 250, y: 145, width: Int(width / 4), label: Strings.dual, icon: "dual", action: #selector(dualMode(_:)))
+        let game = createMode(x: 140, y: 145, width: Int(width / 4), label: Strings.game, icon: "game", action: #selector(gameMode(_:)))
+        let dual = createMode(x: 245, y: 145, width: Int(width / 4), label: Strings.dual, icon: "dual", action: #selector(dualMode(_:)))
         if selectedDriveMode == DriveMode.joystick {
             joystick.backgroundColor = Colors.title
         } else if selectedDriveMode == DriveMode.gameController {
@@ -362,8 +362,8 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func updateSpeedModes() {
         let slowMode = createMode(x: 35, y: 242, width: Int(width / 4), label: Strings.slow, icon: "slow", action: #selector(slow(_:)))
-        let mediumMode = createMode(x: 145, y: 242, width: Int(width / 4), label: Strings.medium, icon: "medium", action: #selector(medium(_:)))
-        let fastMode = createMode(x: 250, y: 242, width: Int(width / 4), label: Strings.fast, icon: "fast", action: #selector(fast(_:)))
+        let mediumMode = createMode(x: 140, y: 242, width: Int(width / 4), label: Strings.medium, icon: "medium", action: #selector(medium(_:)))
+        let fastMode = createMode(x: 245, y: 242, width: Int(width / 4), label: Strings.fast, icon: "fast", action: #selector(fast(_:)))
         if selectedSpeedMode == SpeedMode.slow {
             slowMode.backgroundColor = Colors.title
         } else if selectedSpeedMode == SpeedMode.medium {
@@ -439,6 +439,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     func updateVoltage() {
         let voltage = bluetooth.voltageDivider
+        voltageLabel.frame.origin.x = 35;
         if voltage != "" {
             let index = voltage.index(after: voltage.startIndex)
             voltageLabel.text = String(voltage[index...]) + " V"
