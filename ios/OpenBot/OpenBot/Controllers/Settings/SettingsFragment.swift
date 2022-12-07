@@ -48,6 +48,8 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
     }
 
+
+
     func createScrollView() {
         scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height));
         scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
@@ -265,16 +267,22 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
         //microphone
         switch AVAudioSession.sharedInstance().recordPermission {
+
         case .granted:
+            print("granted")
             microphoneSwitch.isOn = true
         case .denied:
+            print("denied")
             microphoneSwitch.isOn = false
         case .undetermined:
-            microphoneSwitch.isOn = false
+            print("undetermined")
+            microphoneSwitch.isOn = true
             AVAudioSession.sharedInstance().requestRecordPermission({ granted in
                self.toggleSwitchButtons()
+                self.microphoneSwitch.isOn = true
             })
         @unknown default:
+            print("default")
             microphoneSwitch.isOn = false
         }
 
@@ -292,4 +300,6 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
             bluetoothSwitch.isOn = false
         }
     }
+
+
 }

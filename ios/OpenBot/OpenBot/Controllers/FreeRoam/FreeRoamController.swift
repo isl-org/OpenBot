@@ -233,6 +233,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     func createDriveIcon() {
         let driveIconRect = createRectangle(x: 160, y: 230, width: 40, height: 40, borderColor: "borderColor")
         let driveIcon = UIImageView(frame: CGRect(x: driveIconRect.frame.size.width / 4, y: driveIconRect.frame.size.height / 4, width: 20, height: 20))
+        print(driveIconRect)
         driveIcon.image = UIImage(named: "drive")
         firstView.addSubview(driveIconRect)
         driveIconRect.addSubview(driveIcon)
@@ -499,7 +500,6 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
     }
-
 }
 
 
