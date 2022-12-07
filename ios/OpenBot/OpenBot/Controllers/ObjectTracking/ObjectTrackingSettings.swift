@@ -22,6 +22,8 @@ class ObjectTrackingSettings: UIView {
     var deviceDropDown = DropDown()
     var deviceDropDownView = UIView()
     var modelDropDown = DropDown()
+    var objectDropDown = DropDown();
+    var objectDropDownView = UIView()
 
     init(frame: CGRect, detector: Detector?, model: ModelItem) {
         self.detector = detector;
@@ -178,8 +180,17 @@ class ObjectTrackingSettings: UIView {
     }
 
     func setupObjectDropDown() {
-        let object = ObjectClassDropdown(frame: CGRect(x: 91, y: 100, width: 40, height: 205), selectedObject: "Car", detector: detector!);
-        addSubview(object)
+        objectDropDown.backgroundColor = Colors.freeRoamButtonsColor;
+        if let color = Colors.borderColor {
+            objectDropDown.textColor = color
+        }
+        objectDropDown.anchorView = objectDropDownView;
+        objectDropDown.dataSource = detector?.getLabels() ?? [" "];
+        deviceDropDown.width = 150;
+        objectDropDown.selectionAction = { [self] (index: Int, item: String) in
+            objectDropDownLabel.text = item
+            NotificationCenter.default.post(name: .updateObject, object: item)
+        }
         let dd = UIView()
         dd.backgroundColor = Colors.freeRoamButtonsColor
         objectDropDownLabel.text = "person"
@@ -202,6 +213,12 @@ class ObjectTrackingSettings: UIView {
         dd.heightAnchor.constraint(equalToConstant: 30).isActive = true
         objectDropDownLabel.frame = CGRect(x: 10, y: 0, width: 80, height: 40)
         dd.addSubview(objectDropDownLabel)
+        addSubview(objectDropDownView)
+        objectDropDownView.frame.size = CGSize(width: 200, height: 100);
+        objectDropDownView.translatesAutoresizingMaskIntoConstraints = false
+        objectDropDownView.topAnchor.constraint(equalTo: topAnchor, constant: -150).isActive = true
+        objectDropDownView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 91).isActive = true
+
     }
 
     func setupConfidence() {
@@ -387,11 +404,10 @@ class ObjectTrackingSettings: UIView {
 
     @objc func showDeviceDropdown(_ sender: UIButton) {
         deviceDropDown.show()
-//        NotificationCenter.default.post(name: .showDeviceDD, object: nil)
     }
 
     @objc func showObjectDropdown(_ sender: UIButton) {
-        NotificationCenter.default.post(name: .showObjectDD, object: nil)
+        objectDropDown.show()
     }
 
 
