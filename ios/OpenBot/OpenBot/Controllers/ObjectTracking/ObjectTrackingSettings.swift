@@ -62,6 +62,7 @@ class ObjectTrackingSettings: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -451,7 +452,7 @@ class ObjectTrackingSettings: UIView {
 
     func createLeftSpeed() {
         leftSpeedLabel.frame.size = CGSize(width: 100, height: 40);
-        leftSpeedLabel.frame.origin = CGPoint(x: 4, y: adapted(dimensionSize: 200, to: .height))
+        leftSpeedLabel.frame.origin = CGPoint(x: 20, y: adapted(dimensionSize: 200, to: .height))
         leftSpeedLabel.text = "xxx,xxx"
         addSubview(leftSpeedLabel)
         leftSpeedLabel.font = leftSpeedLabel.font.withSize(13.5)
@@ -480,5 +481,9 @@ class ObjectTrackingSettings: UIView {
         } else {
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
+    }
+
+    @objc func updateSpeedLabel(_ notification: Notification) {
+        leftSpeedLabel.text = notification.object as! String
     }
 }
