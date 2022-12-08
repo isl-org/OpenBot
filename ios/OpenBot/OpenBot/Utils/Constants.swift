@@ -31,6 +31,7 @@ struct Images {
     static let minus = UIImage(systemName: "minus");
     static let plus = UIImage(systemName: "plus");
     static let edit = UIImage(named: "edit")
+    static let upwardArrow = UIImage(named: "upward-arrow")
 
 }
 

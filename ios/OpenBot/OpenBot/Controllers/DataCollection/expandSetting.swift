@@ -36,7 +36,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     let dropDown = DropDown()
     var dropdownLabel = UILabel()
     var dropdownTopAnchor: NSLayoutConstraint!
-    var modelsName  = [String]()
+    var modelsName = [String]()
     var resolution = [String]()
     var models: [Model] = [];
     var leftSpeedLabel = UILabel()
@@ -53,14 +53,14 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         createResolutions()
         createModelResolutionTitle()
         createDropdown()
-        _ = createLabels(value: "server", leadingAnchor: 10, topAnchor: 200, labelWidth: 240, labelHeight: 40)
+        createLabels(value: Strings.server, leadingAnchor: 10, topAnchor: 200, labelWidth: 240, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
         createServer()
         createSecondView()
-        createSecondViewLabel(value: "Images", leadingAnchor: 10, topAnchor: 10, labelWidth: 100, labelHeight: 40)
+        createSecondViewLabel(value: "Images", leadingAnchor: 10, topAnchor: 10, labelWidth: 100, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
         createImagesButton()
-        createSecondViewLabel(value: Strings.sensorData, leadingAnchor: 10, topAnchor: 90, labelWidth: 200, labelHeight: 40)
+        createSecondViewLabel(value: Strings.sensorData, leadingAnchor: 10, topAnchor: 90, labelWidth: 200, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
         createSensorButtons()
-        createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
+        _ = createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
         createDelayField()
         let vehicleControls = VehicleControl();
         createLeftSpeed()
@@ -99,10 +99,9 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     func createBluetoothIcon() {
         bluetoothIcon.frame.size = CGSize(width: 30, height: 30)
         bluetoothIcon.translatesAutoresizingMaskIntoConstraints = false
-        if isBluetoothConnected{
+        if isBluetoothConnected {
             bluetoothIcon.image = Images.bluetoothConnected
-        }
-        else{
+        } else {
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ble(_:)))
@@ -128,6 +127,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
     func resolutionTitle() {
         previewResolution = createLabels(value: Strings.previewResolutionMedium, leadingAnchor: 10, topAnchor: 50, labelWidth: 240, labelHeight: 30)
+        previewResolution.font = UIFont.boldSystemFont(ofSize: 16.0)
     }
 
 
@@ -140,34 +140,43 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
     func createModelResolutionTitle() {
         modelResolution = createLabels(value: Strings.modelResolution + "256x96", leadingAnchor: 10, topAnchor: 130, labelWidth: 240, labelHeight: 30)
+        modelResolution.font = UIFont.boldSystemFont(ofSize: 16.0);
     }
 
     func createDropdown() {
         modelsName = Common.loadAllModelsName()
-//        loadModelsNameAndResolution()
-         dropDown.backgroundColor = Colors.freeRoamButtonsColor
+        dropDown.backgroundColor = Colors.freeRoamButtonsColor
         if let color = Colors.borderColor {
             dropDown.textColor = color
         }
         dropDown.anchorView = dropDownView
         dropDown.dataSource = modelsName
         ddView = createDropdownView(borderColor: "", buttonName: "CLI-Mobile", leadingAnchor: 10, topAnchor: 155, action: #selector(showDropdown(_:)))
+        ddView.backgroundColor = Colors.title
+        let upwardImage = UIImageView(image: Images.upwardArrow);
+        ddView.addSubview(upwardImage);
+        upwardImage.frame.size = CGSize(width: 20, height: 20);
+        upwardImage.translatesAutoresizingMaskIntoConstraints = false;
+        upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true;
+        upwardImage.topAnchor.constraint(equalTo: ddView.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true;
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             dropdownLabel.text = item
             modelResolution.text = Strings.modelResolution + resolution[index]
             NotificationCenter.default.post(name: .updateModelResolution, object: resolution[index])
         }
-        dropDown.width = 200
+        dropDown.width = 210
+        dropDown.cornerRadius = 5
         dropDownView.frame.size = CGSize(width: 200, height: 100);
         dropDownView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(dropDownView)
-        dropdownTopAnchor = dropDownView.topAnchor.constraint(equalTo: ddView.safeAreaLayoutGuide.bottomAnchor, constant: 5)
+        dropdownTopAnchor = dropDownView.topAnchor.constraint(equalTo: ddView.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         dropdownTopAnchor.isActive = true
         dropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
     }
 
     func createServer() {
         server = createButton(borderColor: "red", buttonName: Strings.server, leadingAnchor: 10, topAnchor: 230, action: #selector(serverHandler(_:)))
+
     }
 
     func createSecondView() {
@@ -205,21 +214,23 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             topConstraint.constant = 290
             widthConstraint.constant = width
             heightConstraint.constant = height / 2
+            dropdownTopAnchor.constant = 0;
         } else {
-            self.frame.size.width = height
+            frame.size.width = height
             leadingConstraint.constant = height / 2
             topConstraint.constant = 30
             widthConstraint.constant = height / 2
-            heightConstraint.constant = width
+            heightConstraint.constant = width;
+            dropdownTopAnchor.constant = 150;
+
         }
     }
 
 
     func createImagesButton() {
-        preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 80, action: #selector(applyPreview(_:)), borderColor: Colors.freeRoamButtonsColor!.cgColor)
-
+        preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 120, action: #selector(applyPreview(_:)), borderColor: Colors.freeRoamButtonsColor!.cgColor)
         preview.tag = 0
-        training = createSecondViewButton(buttonName: Strings.training, leadingAnchor: 100, topAnchor: 40, buttonWidth: 80, action: #selector(applyTraining(_:)), borderColor: Colors.title!.cgColor)
+        training = createSecondViewButton(buttonName: Strings.training, leadingAnchor: 140, topAnchor: 40, buttonWidth: 120, action: #selector(applyTraining(_:)), borderColor: Colors.title!.cgColor)
         training.tag = 1
         setupImageMode()
     }
@@ -317,7 +328,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         return label
     }
 
-    func createSecondViewLabel(value: String, leadingAnchor: CGFloat, topAnchor: CGFloat, labelWidth: CGFloat, labelHeight: CGFloat) {
+    func createSecondViewLabel(value: String, leadingAnchor: CGFloat, topAnchor: CGFloat, labelWidth: CGFloat, labelHeight: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = value
         label.font = UIFont(name: "medium", size: adapted(dimensionSize: 30, to: .width))
@@ -328,6 +339,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         secondView.addSubview(label)
         label.topAnchor.constraint(equalTo: secondView.topAnchor, constant: topAnchor).isActive = true
         label.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
+        return label
     }
 
     func createSecondViewButton(buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, buttonWidth: CGFloat, action: Selector?, borderColor: CGColor) -> UIButton {
@@ -471,13 +483,12 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dropDown.show()
     }
 
-func loadModelsNameAndResolution(){
-    modelsName = Common.loadAllModelsName();
-    for model in Common.loadAllModelItems(){
-        resolution.append(model.inputSize);
+    func loadModelsNameAndResolution() {
+        modelsName = Common.loadAllModelsName();
+        for model in Common.loadAllModelItems() {
+            resolution.append(model.inputSize);
+        }
     }
-}
-
 
 
     @objc func ble(_ sender: UIView) {
