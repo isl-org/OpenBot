@@ -70,6 +70,8 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         vehicleControls.leadingAnchor.constraint(equalTo: secondView.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         addGestureRecognizer(tap)
 
@@ -188,7 +190,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             widthConstraint = secondView.widthAnchor.constraint(equalToConstant: width)
             heightConstraint = secondView.heightAnchor.constraint(equalToConstant: height / 2)
         } else {
-            leadingConstraint = secondView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: height / 2)
+            leadingConstraint = secondView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: height / 2-50)
             leadingConstraint.identifier = Strings.expendSetting;
             topConstraint = secondView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 30);
             topConstraint.identifier = Strings.expendSetting
@@ -217,7 +219,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             dropdownTopAnchor.constant = 0;
         } else {
             frame.size.width = height
-            leadingConstraint.constant = height / 2
+            leadingConstraint.constant = height / 2-50
             topConstraint.constant = 30
             widthConstraint.constant = height / 2
             heightConstraint.constant = width;
@@ -511,6 +513,28 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     @objc func dismissKeyboard(_ sender: UIButton) {
         endEditing(true);
     }
+
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if currentOrientation == .portrait{
+            topConstraint.constant = 260
+        }
+       else{
+           topConstraint.constant = 10
+       }
+    }
+
+    @objc func keyboardWillHide(_ notification: Notification) {
+        if currentOrientation == .portrait{
+            topConstraint.constant = 290
+        }
+        else{
+            topConstraint.constant = 30
+        }
+    }
+
+
+
+
 
 
 }
