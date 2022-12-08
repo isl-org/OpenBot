@@ -69,6 +69,22 @@ class ObjectTrackingFragment: CameraController {
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        switch objectTrackingSettings?.autoModeButton.isOn {
+        case false :
+            autoMode = false;
+        case true :
+            autoMode = false;
+            toggleAutoMode()
+        case .none:
+            autoMode = false;
+        case .some(_):
+            autoMode = false;
+        }
+    }
+
     @objc func switchCamera() {
         switchCameraView();
     }
