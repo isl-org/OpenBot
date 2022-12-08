@@ -240,6 +240,7 @@ class GameController: GCController {
             dataLogger.setControlLogs(left: (String(left)), right: String(right))
             controlData = String(left) + " " + String(right)
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+            NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
         }
     }
 
