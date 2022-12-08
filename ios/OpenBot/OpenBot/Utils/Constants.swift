@@ -65,7 +65,7 @@ struct Constants {
     static let objectTrackingMode = "DETECTOR";
     static let types: [String] = ["AUTOPILOT", "DETECTOR", "NAVIGATION"];
     static let classes: [String] = ["AUTOPILOT_F", "MOBILENETV1_1_0_Q", "MOBILENETV3_S_Q", "YOLOV4", "NAVIGATION"]
-    static let devices : [String] = ["CPU","GPU","XNNPACK"]
+    static let devices : [String] = ["CPU","XNNPACK"]
 }
 
 enum SpeedMode: Float {
