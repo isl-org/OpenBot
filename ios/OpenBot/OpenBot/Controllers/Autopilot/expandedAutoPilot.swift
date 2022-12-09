@@ -45,11 +45,9 @@ class expandedAutoPilot: UIView {
         setupSpeed()
         addSubview(createLabel(text: Strings.device, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
         createDeviceDropDown()
-        deviceDropDown.hide()
         createServerDropDown()
         serverDropDown.hide()
         createModelDropDown()
-        modelDropDown.hide()
         addSubview(createLabel(text: Strings.input, leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 120, to: .height))))
         setupInput();
         addSubview(createLabel(text: Strings.threads, leadingAnchor: 180, topAnchor: Int(adapted(dimensionSize: 160, to: .height))))
@@ -62,6 +60,8 @@ class expandedAutoPilot: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(toggleNetwork), name: .toggleNetworks, object: nil)
+
     }
 
 
@@ -197,11 +197,11 @@ class expandedAutoPilot: UIView {
         }
         modelDropDown.anchorView = modelDropDownView
         modelDropDown.dataSource = selectedModels
-        modelDropDown.show()
         ddView = createDropdownView(borderColor: "", buttonName: "CLI-Mobile", leadingAnchor: 180, topAnchor: adapted(dimensionSize: 90, to: .height), action: #selector(showModelDropdown(_:)))
         let upwardImage = UIImageView()
         upwardImage.frame.size = CGSize(width: 5, height: 5)
         upwardImage.image = Images.downArrow
+        upwardImage.backgroundColor = Colors.freeRoamButtonsColor
         ddView.addSubview(upwardImage)
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
         upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
@@ -241,7 +241,6 @@ class expandedAutoPilot: UIView {
         }
         deviceDropDown.anchorView = deviceDropDownView
         deviceDropDown.dataSource = Constants.devices
-        deviceDropDown.show()
         deviceDropDown.width = 90
         ddView = createDropdownView(borderColor: "", buttonName: "CPU", leadingAnchor: 80, topAnchor: adapted(dimensionSize: 160, to: .height), action: #selector(showDeviceDropdown(_:)))
         let downwardImage = UIImageView()
@@ -446,6 +445,14 @@ class expandedAutoPilot: UIView {
 
     @objc func updateSpeedLabel(_ notification: Notification) {
         leftSpeedLabel.text = notification.object as! String
+    }
+
+    @objc func toggleNetwork(_ notification: Notification) {
+        autoModeButton.isOn = !autoModeButton.isOn
+        if autoModeButton.isOn {
+            NotificationCenter.default.post(name: .autoMode, object: nil)
+        }
+
     }
 }
 

@@ -34,5 +34,6 @@ extension Notification.Name {
     static let updateObjectList = Notification.Name("updateObjectList");
     static let fileDownloaded = Notification.Name("fileDownloaded");
     static let removeBlankScreen = Notification.Name("removeBlankScreen");
+    static let toggleNetworks = Notification.Name("toggleNetworks");
 
 }

@@ -71,7 +71,6 @@ class ObjectTrackingFragment: CameraController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
         switch objectTrackingSettings?.autoModeButton.isOn {
         case false :
             autoMode = false;
@@ -151,6 +150,11 @@ class ObjectTrackingFragment: CameraController {
                 }
             }
         }
+        else{
+            objectTrackingSettings?.autoModeButton.isOn = !(objectTrackingSettings?.autoModeButton.isOn ?? false)
+
+        }
+
     }
 
     func sendControl(control: Control) {

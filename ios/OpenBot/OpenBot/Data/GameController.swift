@@ -181,6 +181,7 @@ class GameController: GCController {
      - Returns: Events
      */
     public func processControllerKeyData(element: GCControllerElement) -> Any {
+        print(element.localizedName)
         switch (element.localizedName) {
         case Keymap.KEY_CIRCLE.rawValue:
             return IndicatorEvent.Right;
@@ -192,8 +193,10 @@ class GameController: GCController {
             return CMD_Events.TOGGLE_LOGS;
         case Keymap.KEY_Options.rawValue:
             return CMD_Events.TOGGLE_NOISE;
-        case Keymap.KEY_R1.rawValue:
-            return CMD_Events.TOGGLE_NOISE;
+        case Keymap.KEY_L1.rawValue :
+            return DriveMode.joystick;
+        case Keymap.KEY_R1.rawValue :
+                return CMD_Events.TOGGLE_NETWORK;
         default:
             return "";
         }
@@ -261,6 +264,10 @@ class GameController: GCController {
         case ControlEvent.FORWARD:
             break;
         case CMD_Events.TOGGLE_LOGS:
+            startLogging()
+            break;
+        case CMD_Events.TOGGLE_NETWORK :
+            startNetwork()
             break;
         default:
             break;
@@ -276,5 +283,15 @@ class GameController: GCController {
             indicator = indicatorValues;
         }
     }
+
+    func startLogging(){
+        NotificationCenter.default.post(name: .logData, object: nil)
+    }
+
+    func startNetwork(){
+        NotificationCenter.default.post(name: .toggleNetworks, object: nil)
+    }
+
+
 }
 

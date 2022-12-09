@@ -39,7 +39,7 @@ class AutopilotFragment: CameraController {
         expandedAutoPilotView!.translatesAutoresizingMaskIntoConstraints = false
         expandedAutoPilotView!.widthAnchor.constraint(equalToConstant: width).isActive = true
         expandedAutoPilotView!.heightAnchor.constraint(equalToConstant: width * 0.95).isActive = true
-        bottomAnchorConstraint = expandedAutoPilotView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5);
+        bottomAnchorConstraint = expandedAutoPilotView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 5);
         trailingAnchorConstraint = expandedAutoPilotView!.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0)
         trailingAnchorConstraint.isActive = true
         bottomAnchorConstraint.isActive = true
@@ -62,7 +62,7 @@ class AutopilotFragment: CameraController {
         if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
             trailingAnchorConstraint.constant = 0;
         } else {
-            trailingAnchorConstraint.constant = 10;
+            trailingAnchorConstraint.constant = -10;
         }
     }
 

@@ -106,8 +106,9 @@ class DataCollectionController: CameraController {
 
     @objc func switchLogging() {
         loggingEnabled = !loggingEnabled;
-        isLoggedButtonPressed = true
+        isLoggedButtonPressed = true;
         if (loggingEnabled) {
+            expandSettingView.logData.isOn = true
             dataLogger.setupFilesForLogging();
             images.removeAll()
             Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
@@ -119,6 +120,7 @@ class DataCollectionController: CameraController {
                 dataLogger.recordLogs();
             }
         } else {
+            expandSettingView.logData.isOn = false
             baseDirectory = dataLogger.getBaseDirectoryName()
             dataLogger.allDirectoriesName.append(baseDirectory)
             DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash + baseDirectory);
@@ -130,10 +132,10 @@ class DataCollectionController: CameraController {
 
     @objc func updateControllerValues() {
         gameController.updateControllerValues()
+
     }
 
     @objc func updateControlMode(_ notification: Notification?) {
-
         if let controlMode = notification?.userInfo?["mode"] as? ControlMode {
             selectedControlMode = controlMode;
         }

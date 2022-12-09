@@ -63,6 +63,8 @@ class ObjectTrackingSettings: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(toggleNetwork), name: .toggleNetworks, object: nil)
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -486,4 +488,11 @@ class ObjectTrackingSettings: UIView {
     @objc func updateSpeedLabel(_ notification: Notification) {
         leftSpeedLabel.text = notification.object as! String
     }
+
+    @objc func toggleNetwork(_ notification: Notification) {
+        NotificationCenter.default.post(name: .autoModeObjectTracking, object: nil)
+        autoModeButton.isOn = !autoModeButton.isOn
+    }
+
+
 }
