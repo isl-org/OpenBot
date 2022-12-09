@@ -79,7 +79,7 @@ class ModelManagementTable: UITableViewController {
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
-            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.modelManagement, target: self, action: #selector(ModelManagementTable.back(sender:)))
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.modelManagement, target: self, action: #selector(back(sender:)))
             navigationItem.leftBarButtonItem = newBackButton
         }
     }
