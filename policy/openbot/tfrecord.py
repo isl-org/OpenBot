@@ -36,14 +36,14 @@ def get_parser():
 
 def load_labels(data_dir, datasets, policy="autopilot"):
     """Returns a dictionary of matched images path[string] and actions tuple, namely (left[int], right[int], cmd[int]) for autopilot policy and (left[int], right[int], dist[float],sinYaw[float],cosYaw[float]) for point_goal_nav policy."""
-    
+
     if policy == "autopilot":
         processed_frames_file_name = "matched_frame_ctrl_cmd_processed.txt"
     elif policy == "point_goal_nav":
         processed_frames_file_name = "matched_frame_ctrl_goal_processed.txt"
     else:
         raise Exception("Unknown policy")
-        
+
     corpus = []
     for dataset in datasets:
         dataset_folders = [
@@ -79,11 +79,16 @@ def load_labels(data_dir, datasets, policy="autopilot"):
 
 
 def convert_dataset(
-    data_dir, tfrecords_dir, tfrecords_name, redo_matching=True, remove_zeros=True, policy="autopilot"
+    data_dir,
+    tfrecords_dir,
+    tfrecords_name,
+    redo_matching=True,
+    remove_zeros=True,
+    policy="autopilot",
 ):
     print(f"Reading dataset from {data_dir}")
     print(f"TFRecord will be saved at {tfrecords_dir}/{tfrecords_name}")
-    
+
     if policy == "autopilot":
         processed_frames_file_name = "matched_frame_ctrl_cmd_processed.txt"
     elif policy == "point_goal_nav":
@@ -96,8 +101,8 @@ def convert_dataset(
         d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))
     ]
     print("Number of Datasets Available: ", len(datasets))
-    
-    # match frames. 
+
+    # match frames.
     max_offset = 1e3  # 1ms
     frames = associate_frames.match_frame_ctrl_input(
         data_dir,
@@ -105,7 +110,8 @@ def convert_dataset(
         max_offset,
         redo_matching=redo_matching,
         remove_zeros=remove_zeros,
-        policy=policy)
+        policy=policy,
+    )
 
     # creating TFRecords output folder.
     if not os.path.exists(tfrecords_dir):
@@ -113,17 +119,21 @@ def convert_dataset(
 
     # generate data in the TFRecord format.
     samples = load_labels(data_dir, datasets, policy)
-    
+
     print(samples)
     with tf.io.TFRecordWriter(tfrecords_dir + "/" + tfrecords_name) as writer:
         for image_path, ctrl_input in samples.items():
             try:
                 image = tf.io.decode_jpeg(tf.io.read_file(image_path))
                 if policy == "autopilot":
-                    example = tfrecord_utils.create_example_autopilot(image, image_path, ctrl_input)
+                    example = tfrecord_utils.create_example_autopilot(
+                        image, image_path, ctrl_input
+                    )
                 elif policy == "point_goal_nav":
-                    example = tfrecord_utils.create_example_point_goal_nav(image, image_path, ctrl_input)
-                
+                    example = tfrecord_utils.create_example_point_goal_nav(
+                        image, image_path, ctrl_input
+                    )
+
                 writer.write(example.SerializeToString())
             except:
                 print(f"Oops! Image {image_path} cannot be found.")

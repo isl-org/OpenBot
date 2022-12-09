@@ -70,7 +70,7 @@ def parse_tfrecord_fn_point_goal_nav(example):
     img = tf.image.convert_image_dtype(img, tf.float32)
     example["image"] = img
     return example
-    
+
 
 def create_example_autopilot(image, path, ctrl_cmd):
     """Converts the train features into a `tf.train.Example` eady to be written to a tfrecord file."""

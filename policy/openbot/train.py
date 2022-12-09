@@ -56,7 +56,9 @@ class Hyperparameters:
 
     @classmethod
     def parse(cls, name):
-        m = re.match(r".*_((cil|pilot)_.+)_lr(\d+.\d+)_bz(\d+)(_bn)?(_flip)?(_cmd)?", name)
+        m = re.match(
+            r".*_((cil|pilot)_.+)_lr(\d+.\d+)_bz(\d+)(_bn)?(_flip)?(_cmd)?", name
+        )
         params = Hyperparameters(m[1], int(m[4]), int(m[4]), float(m[3]))
         params.BATCH_NORM = m[5] is not None
         params.FLIP_AUG = m[6] is not None
@@ -102,7 +104,7 @@ class Training:
         self.loss_fn = None
         self.metric_list = None
         self.custom_objects = None
-        
+
 
 class CancelledException(BaseException):
     pass
@@ -163,15 +165,17 @@ def process_data(tr: Training):
         max_offset,
         redo_matching=tr.redo_matching,
         remove_zeros=tr.remove_zeros,
-        policy=tr.hyperparameters.POLICY)
-        
+        policy=tr.hyperparameters.POLICY,
+    )
+
     test_frames = associate_frames.match_frame_ctrl_input(
         tr.test_data_dir,
         tr.test_datasets,
         max_offset,
         redo_matching=tr.redo_matching,
         remove_zeros=tr.remove_zeros,
-        policy=tr.hyperparameters.POLICY)
+        policy=tr.hyperparameters.POLICY,
+    )
 
     tr.image_count_train = len(train_frames)
     tr.image_count_test = len(test_frames)
@@ -185,35 +189,45 @@ def load_tfrecord(tr: Training, verbose=0):
     def process_train_sample(features):
         # image = tf.image.resize(features["image"], size=(224, 224))
         image = features["image"]
-        
+
         if tr.hyperparameters.POLICY == "autopilot":
             cmd_input = features["cmd"]
             label = [features["left"], features["right"]]
             image = data_augmentation.augment_img(image)
             if tr.hyperparameters.FLIP_AUG:
-                image, cmd_input, label = data_augmentation.flip_sample(image, cmd_input, label)
+                image, cmd_input, label = data_augmentation.flip_sample(
+                    image, cmd_input, label
+                )
             if tr.hyperparameters.CMD_AUG:
                 cmd_input = data_augmentation.augment_cmd(cmd_input)
         elif tr.hyperparameters.POLICY == "point_goal_nav":
-            image = tf.image.crop_to_bounding_box(image, tf.shape(image)[0] - 90, tf.shape(image)[1] - 160, 90, 160)
+            image = tf.image.crop_to_bounding_box(
+                image, tf.shape(image)[0] - 90, tf.shape(image)[1] - 160, 90, 160
+            )
             cmd_input = [features["dist"], features["sinYaw"], features["cosYaw"]]
             label = [features["left"], features["right"]]
             image = data_augmentation.augment_img(image)
             if tr.hyperparameters.FLIP_AUG:
-                print("Image flip augmentation is not implemented for Point Goal Navigation.")
+                print(
+                    "Image flip augmentation is not implemented for Point Goal Navigation."
+                )
             if tr.hyperparameters.CMD_AUG:
-                print("Command augmentation is not implemented for Point Goal Navigation.")
+                print(
+                    "Command augmentation is not implemented for Point Goal Navigation."
+                )
 
         return (image, cmd_input), label
 
     def process_test_sample(features):
         image = features["image"]
-        
+
         if tr.hyperparameters.POLICY == "autopilot":
             cmd_input = features["cmd"]
-            
+
         elif tr.hyperparameters.POLICY == "point_goal_nav":
-            image = tf.image.crop_to_bounding_box(image, tf.shape(image)[0] - 90, tf.shape(image)[1] - 160, 90, 160)
+            image = tf.image.crop_to_bounding_box(
+                image, tf.shape(image)[0] - 90, tf.shape(image)[1] - 160, 90, 160
+            )
             cmd_input = [features["dist"], features["sinYaw"], features["cosYaw"]]
 
         label = [features["left"], features["right"]]
@@ -222,13 +236,18 @@ def load_tfrecord(tr: Training, verbose=0):
     if tr.hyperparameters.POLICY == "autopilot":
         train_dataset = (
             tf.data.TFRecordDataset(tr.train_data_dir, num_parallel_reads=AUTOTUNE)
-            .map(tfrecord_utils.parse_tfrecord_fn_autopilot, num_parallel_calls=AUTOTUNE)
+            .map(
+                tfrecord_utils.parse_tfrecord_fn_autopilot, num_parallel_calls=AUTOTUNE
+            )
             .map(process_train_sample, num_parallel_calls=AUTOTUNE)
         )
     elif tr.hyperparameters.POLICY == "point_goal_nav":
         train_dataset = (
             tf.data.TFRecordDataset(tr.train_data_dir, num_parallel_reads=AUTOTUNE)
-            .map(tfrecord_utils.parse_tfrecord_fn_point_goal_nav, num_parallel_calls=AUTOTUNE)
+            .map(
+                tfrecord_utils.parse_tfrecord_fn_point_goal_nav,
+                num_parallel_calls=AUTOTUNE,
+            )
             .map(process_train_sample, num_parallel_calls=AUTOTUNE)
         )
 
@@ -244,13 +263,18 @@ def load_tfrecord(tr: Training, verbose=0):
     if tr.hyperparameters.POLICY == "autopilot":
         test_dataset = (
             tf.data.TFRecordDataset(tr.test_data_dir, num_parallel_reads=AUTOTUNE)
-            .map(tfrecord_utils.parse_tfrecord_fn_autopilot, num_parallel_calls=AUTOTUNE)
+            .map(
+                tfrecord_utils.parse_tfrecord_fn_autopilot, num_parallel_calls=AUTOTUNE
+            )
             .map(process_test_sample, num_parallel_calls=AUTOTUNE)
         )
     elif tr.hyperparameters.POLICY == "point_goal_nav":
         test_dataset = (
             tf.data.TFRecordDataset(tr.test_data_dir, num_parallel_reads=AUTOTUNE)
-            .map(tfrecord_utils.parse_tfrecord_fn_point_goal_nav, num_parallel_calls=AUTOTUNE)
+            .map(
+                tfrecord_utils.parse_tfrecord_fn_point_goal_nav,
+                num_parallel_calls=AUTOTUNE,
+            )
             .map(process_test_sample, num_parallel_calls=AUTOTUNE)
         )
 
@@ -284,8 +308,12 @@ def load_data(tr: Training, verbose=0):
     list_test_ds = tf.data.Dataset.list_files(
         [str(tr.test_data_dir + "/" + ds + "/*/images/*") for ds in tr.test_datasets]
     )
-    train_data = dataloader.dataloader(tr.train_data_dir, tr.train_datasets, tr.hyperparameters.POLICY)
-    test_data = dataloader.dataloader(tr.test_data_dir, tr.test_datasets, tr.hyperparameters.POLICY)
+    train_data = dataloader.dataloader(
+        tr.train_data_dir, tr.train_datasets, tr.hyperparameters.POLICY
+    )
+    test_data = dataloader.dataloader(
+        tr.test_data_dir, tr.test_datasets, tr.hyperparameters.POLICY
+    )
 
     if verbose:
         for f in list_train_ds.take(5):
@@ -337,13 +365,19 @@ def load_data(tr: Training, verbose=0):
 
 def visualize_train_data(tr: Training):
     (image_batch, cmd_batch), label_batch = next(iter(tr.train_ds))
-    utils.show_train_batch(image_batch.numpy(), cmd_batch.numpy(), label_batch.numpy(), 1, policy=tr.hyperparameters.POLICY)
+    utils.show_train_batch(
+        image_batch.numpy(),
+        cmd_batch.numpy(),
+        label_batch.numpy(),
+        1,
+        policy=tr.hyperparameters.POLICY,
+    )
     savefig(os.path.join(models_dir, "train_preview.png"))
 
 
 def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     tr.model_name = tr.dataset_name + "_" + str(tr.hyperparameters)
-    tr.checkpoint_path = os.path.join(models_dir, tr.model_name, "checkpoints")     
+    tr.checkpoint_path = os.path.join(models_dir, tr.model_name, "checkpoints")
     tr.custom_objects = {
         "direction_metric": metrics.direction_metric,
         "angle_metric": metrics.angle_metric,
@@ -360,11 +394,11 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
         config.learning_rate = tr.hyperparameters.LEARNING_RATE
         config.batch_size = tr.hyperparameters.TRAIN_BATCH_SIZE
         config["model_name"] = tr.model_name
-    
+
     model_path = os.path.join(models_dir, tr.model_name, "model")
     resume_training = False
     model: tf.keras.Model
-    
+
     if tr.hyperparameters.USE_LAST:
         resume_training = True
         model = tf.keras.models.load_model(
@@ -382,14 +416,13 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
         dot_img_file = os.path.join(models_dir, tr.model_name, "model.png")
         tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True)
 
-
     callback.broadcast("model", tr.model_name)
 
     if tr.hyperparameters.POLICY == "autopilot":
         tr.loss_fn = losses.sq_weighted_mse_angle
     elif tr.hyperparameters.POLICY == "point_goal_nav":
         tr.loss_fn = losses.mae_raw_weighted_mse_angle
-    
+
     tr.metric_list = [
         "mean_absolute_error",
         tr.custom_objects["direction_metric"],
@@ -400,20 +433,20 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     model.compile(optimizer=optimizer, loss=tr.loss_fn, metrics=tr.metric_list)
     if verbose:
         print(model.summary())
-        
+
     tr.log_path = os.path.join(models_dir, tr.model_name, "logs")
     if verbose:
         print(tr.model_name)
-    
+
     STEPS_PER_EPOCH = np.ceil(
         tr.image_count_train / tr.hyperparameters.TRAIN_BATCH_SIZE
     )
     callback.broadcast("message", "Fit model...")
     callback_list = [
         callbacks.checkpoint_cb(tr.checkpoint_path),
-        #callbacks.checkpoint_last_cb(tr.checkpoint_path),
-        #callbacks.checkpoint_best_train_cb(tr.checkpoint_path),
-        #callbacks.checkpoint_best_val_cb(tr.checkpoint_path),
+        # callbacks.checkpoint_last_cb(tr.checkpoint_path),
+        # callbacks.checkpoint_best_train_cb(tr.checkpoint_path),
+        # callbacks.checkpoint_best_val_cb(tr.checkpoint_path),
         callbacks.tensorboard_cb(tr.log_path),
         callbacks.logger_cb(tr.log_path, resume_training),
         callback,
@@ -435,7 +468,7 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     if tr.hyperparameters.WANDB:
         wandb.save(model_path)
         wandb.finish()
-    
+
     callback.broadcast("message", "...Done")
 
 
@@ -479,7 +512,7 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
         + np.array(tr.history.history["val_direction_metric"])
     )
     best_checkpoint = str("cp-%04d.ckpt" % (best_index + 1))
-    #best_checkpoint = "cp-best-train.ckpt"
+    # best_checkpoint = "cp-best-train.ckpt"
     best_tflite = utils.generate_tflite(checkpoint_path, best_checkpoint)
     utils.save_tflite(best_tflite, checkpoint_path, "best")
     print(
@@ -492,7 +525,7 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
     )
 
     last_checkpoint = sorted(utils.list_dirs(checkpoint_path))[-1]
-    #last_checkpoint = "cp-last.ckpt"
+    # last_checkpoint = "cp-last.ckpt"
     last_tflite = utils.generate_tflite(checkpoint_path, last_checkpoint)
     utils.save_tflite(last_tflite, checkpoint_path, "last")
     print(
@@ -521,14 +554,29 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
 
     NUM_SAMPLES = 15
     (image_batch, cmd_batch), label_batch = next(iter(tr.test_ds))
-    pred_batch = best_model.predict(
-        (
-            tf.slice(image_batch, [0, 0, 0, 0], [NUM_SAMPLES, -1, -1, -1]),
-            tf.slice(cmd_batch, [0], [NUM_SAMPLES]),
+
+    if tr.hyperparameters.POLICY == "autopilot":
+        pred_batch = best_model.predict(
+            (
+                tf.slice(image_batch, [0, 0, 0, 0], [NUM_SAMPLES, -1, -1, -1]),
+                tf.slice(cmd_batch, [0], [NUM_SAMPLES]),
+            )
         )
-    )
+    elif tr.hyperparameters.POLICY == "point_goal_nav":
+        pred_batch = best_model.predict(
+            (
+                tf.slice(image_batch, [0, 0, 0, 0], [NUM_SAMPLES, -1, -1, -1]),
+                tf.slice(cmd_batch, [0, 0], [NUM_SAMPLES, -1]),
+            )
+        )
+
     utils.show_test_batch(
-        image_batch.numpy(), cmd_batch.numpy(), label_batch.numpy(), pred_batch, 1, policy=tr.hyperparameters.POLICY
+        image_batch.numpy(),
+        cmd_batch.numpy(),
+        label_batch.numpy(),
+        pred_batch,
+        1,
+        policy=tr.hyperparameters.POLICY,
     )
     savefig(os.path.join(tr.log_path, "test_preview.png"))
     utils.compare_tf_tflite(best_model, best_tflite, policy=tr.hyperparameters.POLICY)
@@ -572,13 +620,13 @@ def create_tfrecord(callback: MyCallback, policy):
         os.path.join(dataset_dir, "train_data"),
         os.path.join(dataset_dir, "tfrecords"),
         "train.tfrec",
-        policy = policy
+        policy=policy,
     )
     tfrecord.convert_dataset(
         os.path.join(dataset_dir, "test_data"),
         os.path.join(dataset_dir, "tfrecords"),
         "test.tfrec",
-        policy = policy
+        policy=policy,
     )
 
 
@@ -597,7 +645,7 @@ if __name__ == "__main__":
         type=str,
         default="pilot_net",
         choices=["cil_mobile", "cil_mobile_fast", "cil", "pilot_net"],
-        help="network architecture (default: cil_mobile)",
+        help="network architecture (default: pilot_net)",
     )
     parser.add_argument(
         "--batch_size",
@@ -653,7 +701,7 @@ if __name__ == "__main__":
     params.CMD_AUG = args.cmd_aug
     params.USE_LAST = args.resume
     params.WANDB = args.wandb
-    params.IS_CROP = (args.policy == "point_goal_nav")
+    params.IS_CROP = args.policy == "point_goal_nav"
 
     def broadcast(event, payload=None):
         print()
