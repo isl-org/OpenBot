@@ -41,7 +41,7 @@ public class BluetoothManager {
     public String readValue;
     private final LocalBroadcastManager localBroadcastManager;
     private String serviceUUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
-    UUID[] uuidArray = new UUID[]{ UUID.fromString(serviceUUID) };
+    UUID[] uuidArray = new UUID[]{UUID.fromString(serviceUUID)};
 
     public BluetoothManager(Context context) {
         this.context = context;
@@ -85,12 +85,7 @@ public class BluetoothManager {
                         return;
                     }
                 }
-                if (!device.name.equals("unknown")) {
-                    deviceList.add(device);
-                }
-                if (isBleConnected() && !deviceList.contains(bleDevice)) {
-                    deviceList.add(bleDevice);
-                }
+                deviceList.add(device);
                 adapter.notifyDataSetChanged();
             }
 
@@ -98,6 +93,9 @@ public class BluetoothManager {
             public void onStart(boolean startScanSuccess, String info) {
                 if (startScanSuccess) {
                     deviceList.clear();
+                }
+                if (isBleConnected() && !deviceList.contains(bleDevice)) {
+                    deviceList.add(bleDevice);
                 }
             }
 
