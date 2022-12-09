@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "download-cloud.svg",
+      "filename" : "download_icon 5.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,7 +12,7 @@
           "value" : "light"
         }
       ],
-      "filename" : "download-cloud -light 1.svg",
+      "filename" : "download_icon.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -23,11 +23,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "download-cloud 1.svg",
+      "filename" : "download_dark.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "download_icon 4.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -38,6 +39,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "download_icon 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -48,10 +50,12 @@
           "value" : "dark"
         }
       ],
+      "filename" : "download_dark 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "download_icon 3.svg",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -62,6 +66,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "download_icon 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -72,6 +77,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "download_dark 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }
