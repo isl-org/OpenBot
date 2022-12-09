@@ -14,7 +14,7 @@
         android:maxLines="1"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="@color/semi_transparent" />
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/ble_address"
@@ -25,7 +25,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="12sp"
-        android:textColor="@color/semi_transparent" />
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/ble_connection_state"
