@@ -5,7 +5,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
-        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -83,24 +82,36 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MJ5-Jm-ZQP">
-                                            <rect key="frame" x="306" y="6.3333333333333304" width="123" height="29.666666666666671"/>
-                                            <color key="tintColor" name="borderColor"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JlZ-sr-XGp">
+                                            <rect key="frame" x="324" y="5.6666666666666679" width="82" height="32.333333333333329"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MJ5-Jm-ZQP">
+                                                    <rect key="frame" x="-20.333333333333314" y="-0.3333333333333357" width="123" height="33"/>
+                                                    <color key="tintColor" name="borderColor"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="123" id="8bU-Sf-vIE"/>
+                                                        <constraint firstAttribute="height" constant="33" id="Dau-Mo-naw"/>
+                                                        <constraint firstAttribute="width" secondItem="MJ5-Jm-ZQP" secondAttribute="height" multiplier="41:11" id="gNj-KX-Per"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="123" id="8bU-Sf-vIE"/>
-                                                <constraint firstAttribute="height" constant="33" id="Dau-Mo-naw"/>
-                                                <constraint firstAttribute="width" secondItem="MJ5-Jm-ZQP" secondAttribute="height" multiplier="41:11" id="gNj-KX-Per"/>
+                                                <constraint firstItem="MJ5-Jm-ZQP" firstAttribute="centerY" secondItem="JlZ-sr-XGp" secondAttribute="centerY" id="FiZ-av-V6j"/>
+                                                <constraint firstItem="MJ5-Jm-ZQP" firstAttribute="top" secondItem="JlZ-sr-XGp" secondAttribute="top" constant="-0.33333333333333215" id="ZCc-jl-ELI"/>
+                                                <constraint firstItem="MJ5-Jm-ZQP" firstAttribute="centerX" secondItem="JlZ-sr-XGp" secondAttribute="centerX" id="dkv-cZ-T0e"/>
                                             </constraints>
-                                            <imageReference key="image" image="trash" catalog="system" symbolScale="small" variableValue="1"/>
-                                        </imageView>
+                                        </view>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="MJ5-Jm-ZQP" secondAttribute="trailing" constant="-15" id="YNP-Cv-cOi"/>
-                                        <constraint firstItem="MJ5-Jm-ZQP" firstAttribute="top" secondItem="AHb-Ms-y93" secondAttribute="top" constant="5" id="rm0-PD-myQ"/>
+                                        <constraint firstItem="JlZ-sr-XGp" firstAttribute="leading" secondItem="AHb-Ms-y93" secondAttribute="leading" constant="324" id="V68-aR-6Iz"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="JlZ-sr-XGp" secondAttribute="trailing" constant="-12" id="ato-Bl-yTk"/>
+                                        <constraint firstItem="JlZ-sr-XGp" firstAttribute="centerY" secondItem="AHb-Ms-y93" secondAttribute="centerY" id="rSU-7l-G37"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="downloadIcon" destination="MJ5-Jm-ZQP" id="Q2K-Qh-TyY"/>
+                                    <outlet property="downloadIconView" destination="JlZ-sr-XGp" id="dhw-QF-OxC"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -301,14 +312,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk" customClass="BluetoothTableViewCell" customModule="OpenBot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="34.333332061767578"/>
+                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="33.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34.333332061767578"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="33.666667938232422"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="323.33333333333331" y="0.0" width="85.666666666666686" height="34.333333333333336"/>
+                                            <rect key="frame" x="321" y="0.0" width="88" height="33.666666666666664"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">
@@ -374,7 +385,6 @@
         <image name="bluetoothConnected" width="14" height="22"/>
         <image name="controller" width="444.66665649414062" height="405.66665649414062"/>
         <image name="settings" width="39" height="39"/>
-        <image name="trash" catalog="system" width="117" height="128"/>
         <namedColor name="HomePageTitleColor">
             <color red="0.0" green="0.4392156862745098" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

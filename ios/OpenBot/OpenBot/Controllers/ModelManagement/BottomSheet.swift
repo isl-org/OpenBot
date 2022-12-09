@@ -108,12 +108,12 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
             widthOfTable.constant = width;
-            heightOfTable.constant = height/2
+            heightOfTable.constant = height / 2
             label.frame.origin = CGPoint(x: width / 2 - 50, y: 0)
             urlInputBox.frame.size.width = width - 40;
         } else {
             widthOfTable.constant = height;
-            heightOfTable.constant = width/2
+            heightOfTable.constant = width / 2
             label.frame.origin = CGPoint(x: height / 2 - 50, y: 0)
             urlInputBox.frame.size.width = height - 40;
 
@@ -122,7 +122,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
 
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        50
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -142,7 +142,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
             openDocumentPicker()
         case 1:
             urlInputBox.isHidden = false
-           let  vc = self
+            let vc = self
             if let sheet = vc.sheetPresentationController {
                 sheet.detents = [.large()]
 
@@ -190,24 +190,24 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
                 Swift.debugPrint("*** Unable to access the contents of \(url.path) ***\n")
                 return
             }
-            for case let _ as URL in fileList {
+            for case _ as URL in fileList {
                 guard url.startAccessingSecurityScopedResource() else {
                     continue
                 }
                 url.stopAccessingSecurityScopedResource()
             }
         }
-        let  vc = self
+        let vc = self
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [.large()]
         }
         let index = url.lastPathComponent.firstIndex(of: ".");
-        var modelName : String = ""
-        if index != nil{
+        var modelName: String = ""
+        if index != nil {
             modelName = String(url.lastPathComponent.prefix(upTo: index!))
         }
-        let popWindowView = popupWindowView(frame: CGRect(x: 10, y: 0, width: width - 20, height: 400),modelName, "", "ASSET")
-        print("hello ",url.lastPathComponent)
+        let popWindowView = popupWindowView(frame: CGRect(x: 10, y: 0, width: width - 20, height: 400), modelName, "", "ASSET")
+        print("hello ", url.lastPathComponent)
         view.addSubview(popWindowView);
         popWindowView.backgroundColor = Colors.freeRoamButtonsColor
     }
@@ -217,9 +217,8 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
     }
 
 
-
     @objc func cancel(_ sender: UISwitch) {
-       self.dismiss(animated: true)
+        dismiss(animated: true)
     }
 
     @objc func done(_ sender: UISwitch) {
@@ -228,13 +227,13 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
         if let url = url {
             FileDownloader.loadFileAsync(url: url, completion: { s, error in
                 print("File downloaded to : \(s!)")
-            })
+            }, fileName: nil)
         }
-        let  vc = self
+        let vc = self
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [.large()]
         }
-        let popWindowView = popupWindowView(frame: CGRect(x: 10, y: 0, width: width - 20, height: 400),"", urlInputBox.text ?? "", "URL")
+        let popWindowView = popupWindowView(frame: CGRect(x: 10, y: 0, width: width - 20, height: 400), "", urlInputBox.text ?? "", "URL")
         view.addSubview(popWindowView);
         popWindowView.backgroundColor = Colors.freeRoamButtonsColor
     }

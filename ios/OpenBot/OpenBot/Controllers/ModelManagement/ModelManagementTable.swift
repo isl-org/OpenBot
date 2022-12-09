@@ -33,11 +33,6 @@ class ModelManagementTable: UITableViewController {
         createAddModelButton()
         NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
-//        DataLogger.shared.deleteFiles(fileNameToDelete: "config.json");
-//        DataLogger.shared.getDocumentDirectoryInformation()
-//        DataLogger.shared.deleteAllFilesFromDocument()
-//        print(Common.loadAllModelFromDocumentDirectory())
-//    print(Common.loadAllModelItems())
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -51,22 +46,21 @@ class ModelManagementTable: UITableViewController {
         modelLabel.frame = CGRect.init(x: 20, y: 5, width: headerView.frame.width - 10, height: headerView.frame.height - 10)
         modelLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
         headerView.addSubview(modelLabel)
-         dropDown = createDropDown()
+        dropDown = createDropDown()
         headerView.addSubview(dropDown);
         return headerView
     }
 
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
+        50
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
-           dropDown.frame.origin.x = width / 2;
-        }
-        else{
+            dropDown.frame.origin.x = width / 2;
+        } else {
             dropDown.frame.origin.x = height / 2;
         }
     }
@@ -100,7 +94,7 @@ class ModelManagementTable: UITableViewController {
 
     func createDropDown() -> UIView {
         let ddView = UIView();
-        ddView.frame = CGRect(x: Int(width) / 2, y: 0, width: Int(width)/2, height: 50);
+        ddView.frame = CGRect(x: Int(width) / 2, y: 0, width: Int(width) / 2, height: 50);
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showModelDropdown(_:)))
         ddView.addGestureRecognizer(tapGesture)
         modelClassLabel = createLabel(text: "All");
@@ -175,11 +169,11 @@ class ModelManagementTable: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return models.count
+        models.count
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -191,11 +185,11 @@ class ModelManagementTable: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath) as! modelManagementCell
         cell.textLabel?.text = models[indexPath.item]
         if Common.isModelItemAvailableInBundle(modelName: models[indexPath.item]) {
-            cell.downloadIcon.isHidden = true
+            cell.downloadIconView.isHidden = true;
             return cell;
         }
         if Common.returnModelItem(modelName: models[indexPath.item]).pathType == "ASSET" {
-            cell.downloadIcon.isHidden = true
+            cell.downloadIconView.isHidden = true;
             return cell;
         }
         return createImageOnCell(cell: cell, index: indexPath.row);
@@ -216,17 +210,17 @@ class ModelManagementTable: UITableViewController {
     }
 
     @objc func addModels(_ sender: UIButton) {
-        if let vc = self.storyboard?.instantiateViewController(withIdentifier: "ScreenBottomSheet") as? UIViewController {
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "ScreenBottomSheet") as? UIViewController {
             if let sheet = vc.sheetPresentationController {
                 sheet.detents = [.medium()]
             }
-            self.navigationController?.present(vc, animated: true)
+            navigationController?.present(vc, animated: true)
         }
     }
 
 
     func createImageOnCell(cell: modelManagementCell, index: Int) -> modelManagementCell {
-        cell.downloadIcon.isHidden = false
+        cell.downloadIconView.isHidden = false
         cell.downloadIcon.isUserInteractionEnabled = true;
         cell.downloadIcon.tag = index
         let tap = UITapGestureRecognizer(target: self, action: #selector(download(_:)))
@@ -234,11 +228,16 @@ class ModelManagementTable: UITableViewController {
         switch Common.isModelItemAvailableInDocument(modelName: models[index]) {
         case true:
             cell.downloadIcon.image = UIImage(named: "trash")
+            break;
         case false:
-            cell.downloadIcon.image =  UIImage(named: "download-cloud")
-//
+            cell.downloadIcon.image = UIImage(named: "download-cloud")
+            break;
         }
         return cell
+    }
+
+    func addProgressIcon(index: Int) {
+
     }
 
     @objc func download(_ sender: UITapGestureRecognizer) {
@@ -247,13 +246,15 @@ class ModelManagementTable: UITableViewController {
         switch Common.isModelItemAvailableInDocument(modelName: models[indexOfSelectedModel]) {
         case true:
             deleteModel(modelName: models[indexOfSelectedModel])
+            break;
         case false:
             createOverlayAlert()
             downloadModel(modelName: models[indexOfSelectedModel])
+            break;
         }
     }
 
-    func createOverlayAlert(){
+    func createOverlayAlert() {
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
         loadingIndicator.startAnimating();
         loadingIndicator.hidesWhenStopped = true
@@ -275,15 +276,17 @@ class ModelManagementTable: UITableViewController {
     }
 
     func downloadModel(modelName: String) {
-        if !Common.isModelItemAvailableInDocument(modelName: modelName) {
-            let model = Common.returnModelItem(modelName: modelName)
-            if model.path != "" {
-                let url = URL.init(string: model.path)!
-                FileDownloader.loadFileSync(url: url, fileName: model.name) { s, error in
-                    print("File downloaded to : \(s!)")
+        let model = Common.returnModelItem(modelName: modelName)
+        if model.path != "" {
+            let url = URL.init(string: model.path)!
+            FileDownloader.loadFileAsync(url: url, completion: { s, error in
+                print("File downloaded to : \(s!)")
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .fileDownloaded, object: nil);
                 }
-            }
+            }, fileName: model.name);
         }
+        tableView.reloadRows(at: [selectedIndex], with: .bottom)
     }
 
     func createPopupWindow() {
@@ -315,7 +318,6 @@ class ModelManagementTable: UITableViewController {
             }
         }
         tableView.reloadRows(at: [selectedIndex], with: .bottom)
-//    tableView.reloadData()
     }
 
     @objc func updateConnect(_ notification: Notification) {
@@ -335,12 +337,12 @@ class ModelManagementTable: UITableViewController {
     }
 
     @objc func fileDownloaded() {
-       alert.dismiss(animated: true);
+        alert.dismiss(animated: true);
         tableView.reloadRows(at: [selectedIndex], with: .bottom)
     }
 
     @objc func removeBlankScreen(_ notification: Notification) {
-        if notification.object == nil{
+        if notification.object == nil {
             blankScreen.removeFromSuperview();
             updateModelItemList(type: "All")
             return;
@@ -351,7 +353,7 @@ class ModelManagementTable: UITableViewController {
             return;
         }
         if notification.object != nil {
-            models[selectedIndex.row] = notification.object as! String ?? ""
+            models[selectedIndex.row] = (notification.object as! String)
             tableView.reloadRows(at: [selectedIndex], with: .bottom);
             blankScreen.removeFromSuperview();
         }
@@ -363,4 +365,5 @@ class ModelManagementTable: UITableViewController {
 
 class modelManagementCell: UITableViewCell {
     @IBOutlet weak var downloadIcon: UIImageView!
+    @IBOutlet weak var downloadIconView: UIView!
 }
