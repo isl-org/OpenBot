@@ -8,14 +8,14 @@ import tensorflow as tf
 class dataloader:
     def __init__(self, data_dir: str, datasets: List[str], policy: str):
         self.data_dir = data_dir
-        self.policy = policy # "autopilot" or "point_goal_nav"
+        self.policy = policy  # "autopilot" or "point_goal_nav"
         self.datasets = datasets
         self.labels = self.load_labels()
         self.index_table = self.lookup_table()
         self.label_values = tf.constant(
             [(float(label[0]), float(label[1])) for label in self.labels.values()]
         )
-        
+
         if self.policy == "autopilot":
             self.label_divider = 255.0
             self.processed_frames_file_name = "matched_frame_ctrl_cmd_processed.txt"
@@ -28,7 +28,7 @@ class dataloader:
             self.cmd_values = tf.constant(
                 [(float(l[2]), float(l[3]), float(l[4])) for l in self.labels.values()]
             )
-        else: 
+        else:
             raise Exception("Unknown policy")
 
     # Load labels
@@ -47,10 +47,10 @@ class dataloader:
                     "sensor_data",
                     self.processed_frames_file_name,
                 )
-                
+
                 if os.path.isfile(labels_file):
                     with open(labels_file) as f_input:
-                    
+
                         # discard header
                         header = f_input.readline()
                         data = f_input.read()

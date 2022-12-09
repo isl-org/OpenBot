@@ -49,7 +49,9 @@ def prepare_for_training(
     return ds
 
 
-def show_train_batch(image_batch, cmd_batch, label_batch, fig_num=1, policy="autopilot"):
+def show_train_batch(
+    image_batch, cmd_batch, label_batch, fig_num=1, policy="autopilot"
+):
     if policy == "autopilot":
         command_input_name = "Cmd"
         size = (15, 10)
@@ -67,17 +69,17 @@ def show_train_batch(image_batch, cmd_batch, label_batch, fig_num=1, policy="aut
             "%s: %s, Label: [%.2f %.2f]"
             % (
                 command_input_name,
-                cmd_batch[n], 
-                float(label_batch[n][0]), 
-                float(label_batch[n][1])
+                cmd_batch[n],
+                float(label_batch[n][0]),
+                float(label_batch[n][1]),
             )
         )
         plt.axis("off")
-    
-    
 
 
-def show_test_batch(image_batch, cmd_batch, label_batch, pred_batch, fig_num=1, policy="autopilot"):
+def show_test_batch(
+    image_batch, cmd_batch, label_batch, pred_batch, fig_num=1, policy="autopilot"
+):
     if policy == "autopilot":
         command_input_name = "Cmd"
         size = (15, 10)
@@ -103,7 +105,7 @@ def show_test_batch(image_batch, cmd_batch, label_batch, pred_batch, fig_num=1, 
             )
         )
         plt.axis("off")
-    
+
 
 def generate_tflite(path, filename):
     converter = tf.lite.TFLiteConverter.from_saved_model(os.path.join(path, filename))
@@ -137,10 +139,10 @@ def compare_tf_tflite(model, tflite_model, img=None, cmd=None, policy="autopilot
     # Get input and output tensors.
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
-    
+
     print("input_details:", input_details)
     print("output_details:", output_details)
-    
+
     if policy == "autopilot":
         command_input_name = "cmd_input"
     elif policy == "point_goal_nav":
@@ -168,7 +170,9 @@ def compare_tf_tflite(model, tflite_model, img=None, cmd=None, policy="autopilot
             else:
                 print(cmd)
                 input_data[input_detail["name"]] = cmd[0]
-            interpreter.set_tensor(input_detail["index"], input_data[command_input_name])
+            interpreter.set_tensor(
+                input_detail["index"], input_data[command_input_name]
+            )
         else:
             ValueError("Unknown input")
 
@@ -181,7 +185,10 @@ def compare_tf_tflite(model, tflite_model, img=None, cmd=None, policy="autopilot
 
     # Test the TensorFlow model on random input data.
     tf_results = model.predict(
-        (tf.constant(input_data["img_input"]), tf.constant(input_data[command_input_name]))
+        (
+            tf.constant(input_data["img_input"]),
+            tf.constant(input_data[command_input_name]),
+        )
     )
     print("tf:", tf_results)
 
@@ -196,7 +203,8 @@ def compare_tf_tflite(model, tflite_model, img=None, cmd=None, policy="autopilot
 
 def list_dirs(path):
     return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
-    
+
+
 def load_img(file_path, is_crop=True):
     img = tf.io.read_file(file_path)
     img = tf.image.decode_image(img, channels=3, dtype=tf.float32)
@@ -205,6 +213,7 @@ def load_img(file_path, is_crop=True):
             img, tf.shape(img)[0] - 90, tf.shape(img)[1] - 160, 90, 160
         )
     return img
+
 
 def read_csv_dict(csv_path):
     logs = []

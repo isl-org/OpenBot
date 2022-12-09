@@ -17,6 +17,7 @@ def checkpoint_cb(checkpoint_path, steps_per_epoch=-1, num_epochs=10):
     )
     return checkpoint_callback
 
+
 def checkpoint_last_cb(checkpoint_path, steps_per_epoch=-1, num_epochs=10):
     checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
         filepath=os.path.join(checkpoint_path, "cp-last.ckpt"),
@@ -54,7 +55,7 @@ def checkpoint_best_val_cb(checkpoint_path, steps_per_epoch=-1, num_epochs=10):
         save_freq="epoch" if steps_per_epoch < 0 else int(num_epochs * steps_per_epoch),
     )
     return checkpoint_callback
-    
+
 
 def tensorboard_cb(log_path):
     tensorboard_callback = tf.keras.callbacks.TensorBoard(

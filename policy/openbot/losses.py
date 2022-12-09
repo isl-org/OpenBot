@@ -34,11 +34,11 @@ def weighted_mse_raw(y_gt, y_pred):
 
 def weighted_mse_angle(y_gt, y_pred):
     return angle_weight(y_gt) * mse_angle(y_gt, y_pred)
-    
-    
+
+
 def sq_weighted_mse_angle(y_gt, y_pred):
     return angle_weight(y_gt) * mse_angle(y_gt, y_pred)
-    
+
 
 def weighted_mse_raw_angle(y_gt, y_pred):
     return angle_weight(y_gt) * (mse_raw(y_gt, y_pred) + mse_angle(y_gt, y_pred))
@@ -51,7 +51,7 @@ def mae_raw_weighted_mse_angle(y_gt, y_pred):
 def weighted_mse_raw(y_true, y_pred):
     weight = tf.math.abs(y_true[:, 0] - y_true[:, 1] + 0.05)
     return weight * tf.keras.losses.mean_squared_error(y_true, y_pred)
-    
+
 
 def sq_weighted_mse_angle(y_true, y_pred):
     angle_true = y_true[:, 1] - y_true[:, 0]
