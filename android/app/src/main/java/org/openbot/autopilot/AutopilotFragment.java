@@ -104,8 +104,6 @@ public class AutopilotFragment extends CameraFragment {
             f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL);
     initModelSpinner(binding.modelSpinner, models, preferencesManager.getAutopilotModel());
     initServerSpinner(binding.serverSpinner);
-//    System.out.println("connection type = " + vehicle.getConnectionType());
-
     setAnalyserResolution(Enums.Preview.HD.getValue());
     binding.deviceSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
@@ -179,9 +177,9 @@ public class AutopilotFragment extends CameraFragment {
   }
 
   private void updateCropImageInfo() {
-    //    Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
-    //    Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
-    // getMaxAnalyseImageSize().getHeight());
+//        Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
+//        Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
+//     getMaxAnalyseImageSize().getHeight());
     frameToCropTransform = null;
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
@@ -276,15 +274,16 @@ public class AutopilotFragment extends CameraFragment {
 
   @Override
   public synchronized void onResume() {
+    super.onResume();
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
     binding.bleToggle.setChecked(vehicle.bleConnected());
-    super.onResume();
   }
 
   @Override
   public synchronized void onPause() {
+    croppedBitmap = null;
     handlerThread.quitSafely();
     try {
       handlerThread.join();
