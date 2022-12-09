@@ -25,7 +25,7 @@ class AutopilotFragment: CameraController {
     override func viewDidLoad() {
         super.viewDidLoad()
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height - 375, width: width, height: 375))
+        expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height - 375, width: width, height: 400))
         expandedAutoPilotView!.backgroundColor = Colors.freeRoamButtonsColor
         expandedAutoPilotView!.layer.cornerRadius = 15
         createCameraView()
@@ -38,7 +38,7 @@ class AutopilotFragment: CameraController {
         view.addSubview(expandedAutoPilotView!)
         expandedAutoPilotView!.translatesAutoresizingMaskIntoConstraints = false
         expandedAutoPilotView!.widthAnchor.constraint(equalToConstant: width).isActive = true
-        expandedAutoPilotView!.heightAnchor.constraint(equalToConstant: width * 0.95).isActive = true
+        expandedAutoPilotView!.heightAnchor.constraint(equalToConstant: width ).isActive = true
         bottomAnchorConstraint = expandedAutoPilotView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 5);
         trailingAnchorConstraint = expandedAutoPilotView!.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0)
         trailingAnchorConstraint.isActive = true

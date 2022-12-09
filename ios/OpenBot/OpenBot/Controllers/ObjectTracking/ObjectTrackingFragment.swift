@@ -26,18 +26,18 @@ class ObjectTrackingFragment: CameraController {
             currentModel = model
             detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector;
         }
-        objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector, model: currentModel);
+        if currentOrientation == .portrait{
+            objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector, model: currentModel);
+        }
+        else{
+            objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: height - 375, y: 30, width: width, height: 375), detector: detector, model: currentModel);
+        }
         objectTrackingSettings!.backgroundColor = Colors.freeRoamButtonsColor
-        objectTrackingSettings!.layer.cornerRadius = 15
+        objectTrackingSettings!.layer.cornerRadius = 5
         createCameraView()
         view.addSubview(objectTrackingSettings!)
-        objectTrackingSettings!.translatesAutoresizingMaskIntoConstraints = false
-        objectTrackingSettings!.widthAnchor.constraint(equalToConstant: width).isActive = true
-        objectTrackingSettings!.heightAnchor.constraint(equalToConstant: width * 0.95).isActive = true
         bottomAnchorConstraint = objectTrackingSettings!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5);
         trailingAnchorConstraint = objectTrackingSettings!.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0)
-        trailingAnchorConstraint.isActive = true
-        bottomAnchorConstraint.isActive = true
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
@@ -57,10 +57,12 @@ class ObjectTrackingFragment: CameraController {
 
     func calculateFrame() {
         if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
-            trailingAnchorConstraint.constant = 0;
-
+            objectTrackingSettings?.frame.origin.x = 0;
+            objectTrackingSettings?.frame.origin.y = height - 375;
         } else {
-            trailingAnchorConstraint.constant = 10;
+            objectTrackingSettings?.frame.origin.x = height - 375;
+            objectTrackingSettings?.frame.origin.y = 30;
+
         }
     }
 
@@ -151,7 +153,7 @@ class ObjectTrackingFragment: CameraController {
             }
         }
         else{
-            objectTrackingSettings?.autoModeButton.isOn = !(objectTrackingSettings?.autoModeButton.isOn ?? false)
+            objectTrackingSettings?.autoModeButton.isOn = false
 
         }
 
