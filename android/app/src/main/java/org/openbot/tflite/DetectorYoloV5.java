@@ -31,7 +31,7 @@ public class DetectorYoloV5 extends Detector {
   private ByteBuffer outData;
 
   /**
-   * Initializes a {@code ClassifierQuantizedMobileNet}.
+   * Initializes a {@code DetectorYoloV5}.
    *
    * @param activity
    */

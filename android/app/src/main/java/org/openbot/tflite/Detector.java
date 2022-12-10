@@ -61,11 +61,11 @@ public abstract class Detector extends Network {
   public static Detector create(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
     switch (model.classType) {
-      case MOBILENETV1_1_0_Q:
-      case MOBILENETV3_S_Q:
-        return new DetectorQuantizedMobileNet(activity, model, device, numThreads);
+      case MOBILENET:
+      case EFFICIENTDET:
+        return new DetectorDefault(activity, model, device, numThreads);
       case YOLOV4:
-        return new DetectorFloatYoloV4(activity, model, device, numThreads);
+        return new DetectorYoloV4(activity, model, device, numThreads);
       case YOLOV5:
         return new DetectorYoloV5(activity, model, device, numThreads);
       default:
