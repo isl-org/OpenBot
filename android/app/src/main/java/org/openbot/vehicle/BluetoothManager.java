@@ -59,8 +59,8 @@ public class BluetoothManager {
         BleManager.ScanOptions scanOptions = BleManager.ScanOptions
                 .newInstance()
                 .scanPeriod(4000)
-                .scanDeviceName(null);
-//                .scanServiceUuids(uuidArray);
+                .scanDeviceName(null)
+                .scanServiceUuids(uuidArray);
 
 
         BleManager.ConnectOptions connectOptions = BleManager.ConnectOptions

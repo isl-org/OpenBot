@@ -108,7 +108,6 @@ public class FreeRoamFragment extends ControlsFragment {
 
         binding.usbToggle.setChecked(vehicle.isUsbConnected());
         binding.bleToggle.setChecked(vehicle.bleConnected());
-        System.out.println("ble connection = " + vehicle.bleConnected());
 
         binding.usbToggle.setOnClickListener(
                 v -> {
