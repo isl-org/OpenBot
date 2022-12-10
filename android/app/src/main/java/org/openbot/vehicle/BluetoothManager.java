@@ -59,8 +59,8 @@ public class BluetoothManager {
         BleManager.ScanOptions scanOptions = BleManager.ScanOptions
                 .newInstance()
                 .scanPeriod(4000)
-                .scanDeviceName(null)
-                .scanServiceUuids(uuidArray);
+                .scanDeviceName(null);
+//                .scanServiceUuids(uuidArray);
 
 
         BleManager.ConnectOptions connectOptions = BleManager.ConnectOptions
@@ -90,7 +90,8 @@ public class BluetoothManager {
 
             @Override
             public void onStart(boolean startScanSuccess, String info) {
-                if (startScanSuccess) {
+                if (bleDevice != null && bleDevice.connecting) {
+                } else {
                     deviceList.clear();
                 }
                 if (isBleConnected() && !deviceList.contains(bleDevice)) {
@@ -109,11 +110,16 @@ public class BluetoothManager {
         manager.stopScan();
     }
 
-    public void toggleConnection(int position) {
+    public void toggleConnection(int position, BleDevice device) {
+        if (bleDevice.connecting) return;
         indexValue = position;
         if (isBleConnected()) {
-            BleManager.getInstance().disconnect(bleDevice.address);
-            bleDevice = null;
+            if (bleDevice.address.equals(device.address)) {
+                BleManager.getInstance().disconnect(bleDevice.address);
+                bleDevice = null;
+            }
+//            BleManager.getInstance().connect(device.address, connectCallback);
+//            bleDevice = device;
         } else {
             BleManager.getInstance().connect(bleDevice.address, connectCallback);
         }
@@ -141,8 +147,6 @@ public class BluetoothManager {
         @Override
         public void onDisconnected(String info, int status, BleDevice device) {
             bleDevice = null;
-            deviceList.remove(indexValue);
-            deviceList.add(indexValue, device);
             adapter.notifyDataSetChanged();
             Logger.e("disconnected!");
         }

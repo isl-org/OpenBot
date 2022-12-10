@@ -61,11 +61,16 @@ public class BluetoothFragment extends Fragment {
         vehicle.setBleAdapter(new ScanDeviceAdapter(getActivity(), vehicle.getDeviceList(), res),new CommonRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
+                vehicle.stopScan();
+                ProgressBar pb = getView().findViewById(R.id.progress_bar);
+                TextView tv = getView().findViewById(R.id.btn_refresh);
+                pb.setVisibility(View.INVISIBLE);
+                tv.setVisibility(View.VISIBLE);
                 BleDevice device = vehicle.getDeviceList().get(position);
                 if (vehicle.getBleDevice() == null || vehicle.getBleDevice().address.equals(device.address)) {
                     vehicle.setBleDevice(device);
                 }
-                vehicle.toggleConnection(position);
+                vehicle.toggleConnection(position, device);
             }
         });
         rv.setAdapter(vehicle.getBleAdapter());

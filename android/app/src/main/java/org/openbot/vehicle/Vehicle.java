@@ -513,8 +513,8 @@ public class Vehicle {
         return bluetoothManager.bleDevice;
     }
 
-    public void toggleConnection(int position) {
-        bluetoothManager.toggleConnection(position);
+    public void toggleConnection(int position, BleDevice device) {
+        bluetoothManager.toggleConnection(position, device);
     }
 
     public void initBle() {
