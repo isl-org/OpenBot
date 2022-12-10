@@ -113,7 +113,7 @@ class ModelManagementTable: UITableViewController {
 
     func createModelSelectorDropDown() {
         modelDropdown.backgroundColor = Colors.freeRoamButtonsColor;
-        modelDropdown.textColor = Colors.border!
+        modelDropdown.textColor = UIColor(named: "bdColor") ?? .white
         let dropDownView = UIView(frame: CGRect(x: width / 2 + 20, y: 100, width: width / 2 - 80, height: 200));
         view.addSubview(dropDownView);
         modelDropdown.dataSource = ["All", "AutoPilot", "Detector", "Navigation"];

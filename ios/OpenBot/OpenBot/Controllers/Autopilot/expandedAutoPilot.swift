@@ -86,7 +86,7 @@ class expandedAutoPilot: UIView {
                     if currentOrientation == .portrait {
                         self.frame.origin.y = height - 375;
                     } else {
-                        self.frame.origin.y = adapted(dimensionSize: 20, to: .height)
+                        self.frame.origin.y = adapted(dimensionSize: 5, to: .height)
                     }
                 }
             default:

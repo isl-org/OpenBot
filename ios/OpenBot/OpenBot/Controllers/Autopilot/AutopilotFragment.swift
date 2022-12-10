@@ -62,7 +62,7 @@ class AutopilotFragment: CameraController {
         if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
             trailingAnchorConstraint.constant = 0;
         } else {
-            trailingAnchorConstraint.constant = -10;
+            trailingAnchorConstraint.constant = 0;
         }
     }
 

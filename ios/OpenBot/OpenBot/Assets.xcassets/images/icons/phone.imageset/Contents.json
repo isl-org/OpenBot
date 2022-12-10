@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Group 67.svg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "phone 3.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -17,7 +27,16 @@
       "scale" : "1x"
     },
     {
-      "filename" : "Group 68.svg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -33,7 +52,16 @@
       "scale" : "2x"
     },
     {
-      "filename" : "Group 69.svg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
       "idiom" : "universal",
       "scale" : "3x"
     },

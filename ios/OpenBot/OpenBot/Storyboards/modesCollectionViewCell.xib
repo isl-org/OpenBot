@@ -68,7 +68,7 @@
     <resources>
         <image name="arrow" width="65.5" height="12"/>
         <namedColor name="gridItemColor">
-            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.15000000059604646" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="listItemColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

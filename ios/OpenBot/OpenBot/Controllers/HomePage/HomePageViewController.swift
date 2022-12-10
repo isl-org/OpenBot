@@ -154,6 +154,7 @@ extension UIBarButtonItem {
         button.setImage(image, for: .normal)
         button.imageView?.layer.transform = CATransform3DMakeScale(1.3, 1.3, 1.3)
         button.setTitle(title, for: .normal)
+        button.setTitleColor(UIColor(named: "bdColor"), for: .normal)
         button.frame = CGRect(x: 0, y: 0, width: image.size.width + 10, height: image.size.height)
         if let target = target, let action = action {
             button.addTarget(target, action: action, for: .touchUpInside)
