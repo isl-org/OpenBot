@@ -252,7 +252,7 @@ class expandedAutoPilot: UIView {
         downwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
         deviceDropDownLabel.text = "CPU"
         deviceDropDownLabel.textColor = Colors.borderColor
-        deviceDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        deviceDropDownLabel.frame = CGRect(x: 10, y: 0, width: 60, height: 40)
         dropDownWidth.constant = 100
         ddView.addSubview(deviceDropDownLabel)
         deviceDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
@@ -445,6 +445,12 @@ class expandedAutoPilot: UIView {
 
     @objc func updateSpeedLabel(_ notification: Notification) {
         leftSpeedLabel.text = notification.object as! String
+        if  notification.object as! String != "0,0"{
+            speedLabel.text = "30 fps";
+        }
+        else{
+            speedLabel.text = "0 fps";
+        }
     }
 
     @objc func toggleNetwork(_ notification: Notification) {

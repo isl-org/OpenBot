@@ -24,7 +24,6 @@ class ObjectTrackingSettings: UIView {
     var modelDropDown = DropDown()
     var objectDropDown = DropDown();
     var objectDropDownView = UIView()
-
     init(frame: CGRect, detector: Detector?, model: ModelItem) {
         self.detector = detector;
         selectedModel = model
@@ -94,6 +93,17 @@ class ObjectTrackingSettings: UIView {
 
     @objc func switchButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .autoModeObjectTracking, object: nil)
+        if sender.isOn {
+            if selectedModel?.name == "MobileNetV1-300" + Strings.tflite{
+                speedLabel.text = "30 fps"
+            }
+            else{
+                speedLabel.text = "2 fps"
+            }
+        }
+        else{
+            speedLabel.text = "xxx fps"
+        }
     }
 
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
@@ -401,7 +411,7 @@ class ObjectTrackingSettings: UIView {
         dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 80).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 100).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        deviceDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        deviceDropDownLabel.frame = CGRect(x: 10, y: 0, width: 60, height: 40)
         dd.addSubview(deviceDropDownLabel)
     }
 
@@ -470,6 +480,12 @@ class ObjectTrackingSettings: UIView {
         let model = Common.returnModelItem(modelName: selectedModel)
         self.selectedModel = model
         imageInputLabel.text = model.inputSize
+        if model.name == "MobileNetV1-300" + Strings.tflite{
+            speedLabel.text = "30 fps"
+        }
+        else{
+            speedLabel.text = "2 fps"
+        }
     }
 
     @objc func updateObject(_ notification: Notification) {

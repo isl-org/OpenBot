@@ -18,6 +18,7 @@ class ObjectTrackingFragment: CameraController {
     var currentModel: ModelItem!
     var currentDevice: RuntimeDevice = RuntimeDevice.CPU
     private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 50.0;
+    private var TIMER_OF_MODEL: Float = 0.03
 
     override func viewDidLoad() {
         let modelItems = Common.loadAllModelItemsFromBundle()
@@ -26,10 +27,9 @@ class ObjectTrackingFragment: CameraController {
             currentModel = model
             detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector;
         }
-        if currentOrientation == .portrait{
+        if currentOrientation == .portrait {
             objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector, model: currentModel);
-        }
-        else{
+        } else {
             objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: height - 375, y: 30, width: width, height: 375), detector: detector, model: currentModel);
         }
         objectTrackingSettings!.backgroundColor = Colors.freeRoamButtonsColor
@@ -74,9 +74,9 @@ class ObjectTrackingFragment: CameraController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         switch objectTrackingSettings?.autoModeButton.isOn {
-        case false :
+        case false:
             autoMode = false;
-        case true :
+        case true:
             autoMode = false;
             toggleAutoMode()
         case .none:
@@ -113,7 +113,7 @@ class ObjectTrackingFragment: CameraController {
         autoMode = !autoMode;
         if (autoMode) {
             images.removeAll();
-            Timer.scheduledTimer(withTimeInterval: 0.7, repeats: true) { [self] timer in
+            Timer.scheduledTimer(withTimeInterval: TimeInterval(TIMER_OF_MODEL), repeats: true) { [self] timer in
                 do {
                     if !autoMode {
                         timer.invalidate()
@@ -151,12 +151,9 @@ class ObjectTrackingFragment: CameraController {
                     print("error:\(error)")
                 }
             }
-        }
-        else{
+        } else {
             objectTrackingSettings?.autoModeButton.isOn = false
-
         }
-
     }
 
     func sendControl(control: Control) {
@@ -176,6 +173,11 @@ class ObjectTrackingFragment: CameraController {
         currentModel = Common.returnModelItem(modelName: selectedModelName)
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector;
         NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels())
+        if selectedModelName == "MobileNetV1-300" {
+            TIMER_OF_MODEL = 0.03
+        } else {
+            TIMER_OF_MODEL = 0.7
+        }
     }
 
     @objc func updateSelectedObject(_ notification: Notification) throws {
@@ -202,7 +204,7 @@ class ObjectTrackingFragment: CameraController {
     }
 
     func updateTarget(_ detection: CGRect) -> Control {
-        let screenWidth  = UIScreen.main.bounds.size.width
+        let screenWidth = UIScreen.main.bounds.size.width
         let screenHeight = UIScreen.main.bounds.size.height
         let dx: CGFloat = screenWidth / CGFloat(detector!.getImageSizeX());
         let dy: CGFloat = screenHeight / CGFloat(detector!.getImageSizeY());
@@ -224,7 +226,7 @@ class ObjectTrackingFragment: CameraController {
 
     func addFrame(item: Detector.Recognition, color: UIColor) -> UIView {
         let frame = UIView()
-        let screenWidth  = UIScreen.main.bounds.size.width
+        let screenWidth = UIScreen.main.bounds.size.width
         let screenHeight = UIScreen.main.bounds.size.height
         let detection = item.getLocation();
         let dx = screenWidth / CGFloat(detector!.getImageSizeX());
@@ -244,4 +246,6 @@ class ObjectTrackingFragment: CameraController {
         frame.addSubview(nameString);
         return frame;
     }
+
+
 }
