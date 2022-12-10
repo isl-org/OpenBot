@@ -197,7 +197,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
 
   private static int YUV2RGB(int y, int u, int v) {
     // Adjust and check YUV values
-    y = (y - 16) < 0 ? 0 : (y - 16);
+    y = Math.max((y - 16), 0);
     u -= 128;
     v -= 128;
 
@@ -212,9 +212,9 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
     int b = (y1192 + 2066 * u);
 
     // Clipping RGB values to be inside boundaries [ 0 , kMaxChannelValue ]
-    r = r > kMaxChannelValue ? kMaxChannelValue : (r < 0 ? 0 : r);
-    g = g > kMaxChannelValue ? kMaxChannelValue : (g < 0 ? 0 : g);
-    b = b > kMaxChannelValue ? kMaxChannelValue : (b < 0 ? 0 : b);
+    r = r > kMaxChannelValue ? kMaxChannelValue : (Math.max(r, 0));
+    g = g > kMaxChannelValue ? kMaxChannelValue : (Math.max(g, 0));
+    b = b > kMaxChannelValue ? kMaxChannelValue : (Math.max(b, 0));
 
     return 0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
   }
@@ -364,7 +364,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
                 // x: right, z: backwards
                 startDriving(-left, -forward);
               } else {
-                getActivity().onBackPressed();
+                requireActivity().onBackPressed();
               }
             });
   }
@@ -386,7 +386,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
               if (restart) {
                 showStartDialog();
               } else {
-                getActivity().onBackPressed();
+                requireActivity().onBackPressed();
               }
             });
   }
@@ -411,7 +411,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
                 isPermissionRequested = false;
                 resume();
               } else {
-                getActivity().onBackPressed();
+                requireActivity().onBackPressed();
               }
             });
   }
@@ -438,7 +438,7 @@ public class PointGoalNavigationFragment extends ControlsFragment implements ArC
         new Model(
             0,
             CLASS.NAVIGATION,
-            TYPE.NAVIGATION,
+            TYPE.GOALNAV,
             "navigation.tflite",
             PATH_TYPE.ASSET,
             "networks/navigation.tflite",

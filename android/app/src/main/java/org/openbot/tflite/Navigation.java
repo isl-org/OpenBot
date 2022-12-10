@@ -17,11 +17,10 @@ import timber.log.Timber;
 public class Navigation extends Network {
 
   private static final float IMAGE_MEAN = 0.0f;
-
   private static final float IMAGE_STD = 255.0f;
 
   /**
-   * Creates a autopilot with the provided configuration.
+   * Creates a goal navigation policy with the provided configuration.
    *
    * @param activity The current Activity.
    * @param model The model to use for classification.

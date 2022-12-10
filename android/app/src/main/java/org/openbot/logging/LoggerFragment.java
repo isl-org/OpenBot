@@ -168,7 +168,7 @@ public class LoggerFragment extends CameraFragment {
             Bitmap.Config.ARGB_8888);
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
-    if (selected.type == Model.TYPE.AUTOPILOT) {
+    if (selected.type == Model.TYPE.CMDNAV) {
       cropRect = new RectF(0.0f, 240.0f / 720.0f, 0.0f, 0.0f);
       maintainAspectRatio = true;
     } else {
