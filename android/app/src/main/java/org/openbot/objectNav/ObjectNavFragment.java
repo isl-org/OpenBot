@@ -102,8 +102,8 @@ public class ObjectNavFragment extends CameraFragment {
 
     binding.plusConfidence.setOnClickListener(
         v -> {
-          String trimConfVaue = binding.confidenceValue.getText().toString().trim();
-          int confValue = Integer.parseInt(trimConfVaue.substring(0, trimConfVaue.length() - 1));
+          String trimConfValue = binding.confidenceValue.getText().toString().trim();
+          int confValue = Integer.parseInt(trimConfValue.substring(0, trimConfValue.length() - 1));
           if (confValue >= 95) return;
           confValue += 5;
           binding.confidenceValue.setText(confValue + "%");
@@ -111,8 +111,8 @@ public class ObjectNavFragment extends CameraFragment {
         });
     binding.minusConfidence.setOnClickListener(
         v -> {
-          String trimConfVaue = binding.confidenceValue.getText().toString().trim();
-          int confValue = Integer.parseInt(trimConfVaue.substring(0, trimConfVaue.length() - 1));
+          String trimConfValue = binding.confidenceValue.getText().toString().trim();
+          int confValue = Integer.parseInt(trimConfValue.substring(0, trimConfValue.length() - 1));
           if (confValue <= 5) return;
           confValue -= 5;
           binding.confidenceValue.setText(confValue + "%");
@@ -287,6 +287,7 @@ public class ObjectNavFragment extends CameraFragment {
       Timber.d("Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
       detector = Detector.create(requireActivity(), model, device, numThreads);
 
+      assert detector != null;
       croppedBitmap =
           Bitmap.createBitmap(
               detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
@@ -315,7 +316,11 @@ public class ObjectNavFragment extends CameraFragment {
                 binding.classType.setSelection(
                     detector.getLabels().indexOf(preferencesManager.getObjectType()));
                 binding.inputResolution.setText(
-                    String.format("%dx%d", detector.getImageSizeX(), detector.getImageSizeY()));
+                    String.format(
+                        Locale.getDefault(),
+                        "%dx%d",
+                        detector.getImageSizeX(),
+                        detector.getImageSizeY()));
               });
 
     } catch (IllegalArgumentException | IOException e) {

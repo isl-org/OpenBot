@@ -24,7 +24,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
   public interface OnItemClickListener<T> {
     void onItemClick(T item);
 
-    void onModelDownloadClicked();
+    boolean onModelDownloadClicked();
 
     void onModelDownloaded(boolean status, Model mItem);
 
@@ -50,29 +50,30 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
     holder.title.setOnClickListener(v -> itemClickListener.onItemClick(holder.mItem));
     holder.imgDownload.setOnClickListener(
         v -> {
-          holder.imgDownload.setClickable(false);
-          itemClickListener.onModelDownloadClicked();
-          Ion.with(holder.itemView.getContext())
-              .load(holder.mItem.path)
-              .progress(
-                  (downloaded, total) -> {
-                    System.out.println("" + downloaded + " / " + total);
-                    holder.progressBar.setProgress((int) (downloaded * 100 / total));
-                  })
-              //              .write(new File("/sdcard/openbot/tf.tflite"))
-              .write(
-                  new File(
-                      holder.itemView.getContext().getFilesDir()
-                          + File.separator
-                          + holder.mItem.name))
-              .setCallback(
-                  (e, file) -> {
-                    holder.imgDownload.setClickable(true);
-                    holder.imgDownload.setVisibility(View.GONE);
-                    holder.imgDelete.setVisibility(View.VISIBLE);
-                    holder.progressBar.setProgress(0);
-                    itemClickListener.onModelDownloaded(e == null, holder.mItem);
-                  });
+          if (itemClickListener.onModelDownloadClicked()) {
+            holder.imgDownload.setClickable(false);
+            Ion.with(holder.itemView.getContext())
+                .load(holder.mItem.path)
+                .progress(
+                    (downloaded, total) -> {
+                      System.out.println("" + downloaded + " / " + total);
+                      holder.progressBar.setProgress((int) (downloaded * 100 / total));
+                    })
+                //              .write(new File("/sdcard/openbot/tf.tflite"))
+                .write(
+                    new File(
+                        holder.itemView.getContext().getFilesDir()
+                            + File.separator
+                            + holder.mItem.name))
+                .setCallback(
+                    (e, file) -> {
+                      holder.imgDownload.setClickable(true);
+                      holder.imgDownload.setVisibility(View.GONE);
+                      holder.imgDelete.setVisibility(View.VISIBLE);
+                      holder.progressBar.setProgress(0);
+                      itemClickListener.onModelDownloaded(e == null, holder.mItem);
+                    });
+          }
         });
 
     holder.imgDownload.setVisibility(

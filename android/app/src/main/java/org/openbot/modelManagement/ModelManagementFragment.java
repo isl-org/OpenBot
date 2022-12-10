@@ -1,7 +1,10 @@
 package org.openbot.modelManagement;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -112,8 +115,8 @@ public class ModelManagementFragment extends Fragment
     Model item =
         new Model(
             masterList.size() + 1,
-            Model.CLASS.AUTOPILOT_F,
-            Model.TYPE.AUTOPILOT,
+            Model.CLASS.AUTOPILOT,
+            Model.TYPE.CMDNAV,
             fileName,
             Model.PATH_TYPE.FILE,
             requireActivity().getFilesDir() + File.separator + fileName,
@@ -224,10 +227,17 @@ public class ModelManagementFragment extends Fragment
     if (masterList == null) masterList = new ArrayList<>();
 
     List<Model> modelInfoList = new ArrayList<>();
-    if (filter.equals(Model.TYPE.AUTOPILOT.toString()) || filter.equals(ALL)) {
+    if (filter.equals(Model.TYPE.CMDNAV.toString()) || filter.equals(ALL)) {
       modelInfoList.addAll(
           masterList.stream()
-              .filter(f -> f.type.equals(Model.TYPE.AUTOPILOT))
+              .filter(f -> f.type.equals(Model.TYPE.CMDNAV))
+              .collect(Collectors.toList()));
+    }
+
+    if (filter.equals(Model.TYPE.GOALNAV.toString()) || filter.equals(ALL)) {
+      modelInfoList.addAll(
+          masterList.stream()
+              .filter(f -> f.type.equals(Model.TYPE.GOALNAV))
               .collect(Collectors.toList()));
     }
 
@@ -255,8 +265,18 @@ public class ModelManagementFragment extends Fragment
   }
 
   @Override
-  public void onModelDownloadClicked() {
-    isDownloading = true;
+  public boolean onModelDownloadClicked() {
+    ConnectivityManager cm =
+        (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo nInfo = cm.getActiveNetworkInfo();
+    isDownloading = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+    if (!isDownloading)
+      Toast.makeText(
+              requireContext().getApplicationContext(),
+              "Please connect to the internet to download models.",
+              Toast.LENGTH_SHORT)
+          .show();
+    return isDownloading;
   }
 
   @Override

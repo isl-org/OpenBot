@@ -238,8 +238,10 @@ public abstract class CameraActivity extends AppCompatActivity
     List<String> models =
         masterList.stream()
             .filter(f -> f.pathType != Model.PATH_TYPE.URL)
+            .filter(f -> f.type != Model.TYPE.GOALNAV)
             .map(f -> FileUtils.nameWithoutExtension(f.name))
             .collect(Collectors.toList());
+
     masterList.stream()
         .filter(f -> f.name.contains(preferencesManager.getDefaultModel()))
         .findFirst()
@@ -630,8 +632,8 @@ public abstract class CameraActivity extends AppCompatActivity
     Model item =
         new Model(
             masterList.size() + 1,
-            Model.CLASS.AUTOPILOT_F,
-            Model.TYPE.AUTOPILOT,
+            Model.CLASS.AUTOPILOT,
+            Model.TYPE.CMDNAV,
             model,
             Model.PATH_TYPE.FILE,
             getFilesDir() + File.separator + model,
