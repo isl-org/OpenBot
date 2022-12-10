@@ -22,7 +22,7 @@ class Server: UIView {
 
     func setupServerDD(dataSource: [String]) {
         serverDD.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.borderColor {
+        if let color = Colors.border {
             serverDD.textColor = color
         }
         serverDD.anchorView = self

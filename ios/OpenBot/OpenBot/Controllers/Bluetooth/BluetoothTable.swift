@@ -63,8 +63,8 @@ class BluetoothTable: UITableViewController {
         switch peripheral.state {
         case .disconnected:
             cell.connectButton.setTitle(Strings.connect, for: .normal)
-            cell.textLabel?.textColor = Colors.borderColor
-            cell.connectButton.setTitleColor(Colors.borderColor, for: .normal)
+            cell.textLabel?.textColor = Colors.border
+            cell.connectButton.setTitleColor(Colors.border, for: .normal)
         case .connected:
             cell.connectButton.setTitle(Strings.disconnect, for: .normal)
             cell.textLabel?.textColor = Colors.title

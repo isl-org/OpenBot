@@ -155,7 +155,7 @@ class popupWindowView: UIView {
 
     func createTypeDropDown() {
         typeDropdown.backgroundColor = Colors.freeRoamButtonsColor
-        typeDropdown.textColor = Colors.borderColor ?? .black
+        typeDropdown.textColor = Colors.border ?? .black
         typeDropdown.anchorView = typeDropdownView;
         typeDropdown.dataSource = Constants.types;
         let ddView = UIView();
@@ -176,7 +176,7 @@ class popupWindowView: UIView {
         modelTypeLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true;
         modelTypeLabel.leadingAnchor.constraint(equalTo: ddView.leadingAnchor, constant: 0).isActive = true;
         modelTypeLabel.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 0).isActive = true
-        modelTypeLabel.textColor = Colors.borderColor
+        modelTypeLabel.textColor = Colors.border
         typeDropdown.selectionAction = { [self] (index: Int, item: String) in
             modelTypeLabel.text = item
             model.type = item;
@@ -185,7 +185,7 @@ class popupWindowView: UIView {
         upwardImage.frame.size = CGSize(width: 5, height: 5)
         upwardImage.image = Images.downArrow
         ddView.addSubview(upwardImage)
-        upwardImage.tintColor = Colors.borderColor
+        upwardImage.tintColor = Colors.border
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
         upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
         upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
@@ -193,7 +193,7 @@ class popupWindowView: UIView {
 
     func createClassDropdown() {
         classDropdown.backgroundColor = Colors.freeRoamButtonsColor
-        classDropdown.textColor = Colors.borderColor ?? .black
+        classDropdown.textColor = Colors.border ?? .black
         classDropdown.anchorView = classDropdownView;
         classDropdown.dataSource = ["AUTOPILOT_F", "MOBILENETV1_1_0_Q", "MOBILENETV3_S_Q", "YOLOV4", "NAVIGATION"]
         let ddView = UIView();
@@ -214,7 +214,7 @@ class popupWindowView: UIView {
         classLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true;
         classLabel.leadingAnchor.constraint(equalTo: ddView.leadingAnchor, constant: 0).isActive = true;
         classLabel.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 0).isActive = true
-        classLabel.textColor = Colors.borderColor
+        classLabel.textColor = Colors.border
         classDropdown.selectionAction = { [self] (index: Int, item: String) in
             classLabel.text = item
             model.class = item
@@ -223,7 +223,7 @@ class popupWindowView: UIView {
         upwardImage.frame.size = CGSize(width: 5, height: 5)
         upwardImage.image = Images.downArrow
         ddView.addSubview(upwardImage)
-        upwardImage.tintColor = Colors.borderColor
+        upwardImage.tintColor = Colors.border
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
         upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
         upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
@@ -232,7 +232,7 @@ class popupWindowView: UIView {
 
     func createBox(isFirst: Bool) -> UIView {
         let box = UIView();
-        box.layer.borderColor = Colors.borderColor?.cgColor;
+        box.layer.borderColor = Colors.border?.cgColor;
         box.layer.borderWidth = 1;
       box.frame.size = CGSize(width: 50, height: 40);
         return box

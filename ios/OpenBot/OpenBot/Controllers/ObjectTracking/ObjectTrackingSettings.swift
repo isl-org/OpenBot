@@ -85,7 +85,7 @@ class ObjectTrackingSettings: UIView {
     func createLabel(text: String, leadingAnchor: Int, topAnchor: Int) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.textColor = Colors.borderColor
+        label.textColor = Colors.border
         label.frame.origin = CGPoint(x: leadingAnchor, y: topAnchor)
         label.frame.size = resized(size: CGSize(width: text.count * 10, height: 40), basedOn: .height)
         return label
@@ -194,7 +194,7 @@ class ObjectTrackingSettings: UIView {
 
     func setupObjectDropDown() {
         objectDropDown.backgroundColor = Colors.freeRoamButtonsColor;
-        if let color = Colors.borderColor {
+        if let color = Colors.border {
             objectDropDown.textColor = color
         }
         objectDropDown.anchorView = objectDropDownView;
@@ -207,7 +207,7 @@ class ObjectTrackingSettings: UIView {
         let dd = UIView()
         dd.backgroundColor = Colors.freeRoamButtonsColor
         objectDropDownLabel.text = "person"
-        objectDropDownLabel.textColor = Colors.borderColor
+        objectDropDownLabel.textColor = Colors.border
         let tap = UITapGestureRecognizer(target: self, action: #selector(showObjectDropdown(_:)))
         objectDropDownLabel.addGestureRecognizer(tap)
         dd.addGestureRecognizer(tap)
@@ -269,7 +269,7 @@ class ObjectTrackingSettings: UIView {
         addSubview(confidenceLabel);
         confidenceLabel.translatesAutoresizingMaskIntoConstraints = false
         confidenceLabel.text = "50%";
-        confidenceLabel.textColor = Colors.borderColor
+        confidenceLabel.textColor = Colors.border
         confidenceLabel.translatesAutoresizingMaskIntoConstraints = false
         confidenceLabel.leadingAnchor.constraint(equalTo: minusImageView.trailingAnchor, constant: 0).isActive = true
         confidenceLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 8).isActive = true
@@ -311,7 +311,7 @@ class ObjectTrackingSettings: UIView {
         addSubview(threadLabel);
         threadLabel.translatesAutoresizingMaskIntoConstraints = false
         threadLabel.text = "1";
-        threadLabel.textColor = Colors.borderColor
+        threadLabel.textColor = Colors.border
         threadLabel.translatesAutoresizingMaskIntoConstraints = false
         threadLabel.leadingAnchor.constraint(equalTo: minusImageView.trailingAnchor, constant: 8).isActive = true
         threadLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 8).isActive = true
@@ -378,7 +378,7 @@ class ObjectTrackingSettings: UIView {
 
     func createDeviceDropDown() {
         deviceDropDown.backgroundColor = Colors.freeRoamButtonsColor
-        if let borderColor = Colors.borderColor {
+        if let borderColor = Colors.border {
             deviceDropDown.textColor = borderColor
         }
 
@@ -387,7 +387,7 @@ class ObjectTrackingSettings: UIView {
         let dd = UIView()
         deviceDropDown.anchorView = dd;
         deviceDropDownLabel.text = RuntimeDevice.CPU.rawValue
-        deviceDropDownLabel.textColor = Colors.borderColor
+        deviceDropDownLabel.textColor = Colors.border
         deviceDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             deviceDropDownLabel.text = item
             NotificationCenter.default.post(name: .updateDevice, object: item)
@@ -395,7 +395,7 @@ class ObjectTrackingSettings: UIView {
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
         deviceDropDownLabel.text = RuntimeDevice.CPU.rawValue
-        deviceDropDownLabel.textColor = Colors.borderColor
+        deviceDropDownLabel.textColor = Colors.border
         let tap = UITapGestureRecognizer(target: self, action: #selector(showDeviceDropdown(_:)))
         dd.addGestureRecognizer(tap)
         let upwardImage = UIImageView()
@@ -427,7 +427,7 @@ class ObjectTrackingSettings: UIView {
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.objectTrackingMode);
         modelDropDown.backgroundColor = Colors.freeRoamButtonsColor;
-        if let color = Colors.borderColor {
+        if let color = Colors.border {
             modelDropDown.textColor = color
         }
         let dd = UIView()
@@ -442,7 +442,7 @@ class ObjectTrackingSettings: UIView {
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
         modelDropdownLabel.text = selectedModels.first
-        modelDropdownLabel.textColor = Colors.borderColor
+        modelDropdownLabel.textColor = Colors.border
         let tap = UITapGestureRecognizer(target: self, action: #selector(showModelDropdown(_:)))
         dd.addGestureRecognizer(tap)
         let upwardImage = UIImageView()

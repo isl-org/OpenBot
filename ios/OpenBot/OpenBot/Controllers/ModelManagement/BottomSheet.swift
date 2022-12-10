@@ -79,7 +79,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
         btn.backgroundColor = color
         btn.layer.cornerRadius = 5
         btn.setTitle(title, for: .normal);
-        btn.titleLabel?.textColor = Colors.borderColor;
+        btn.titleLabel?.textColor = Colors.border;
         btn.addTarget(self, action: action, for: .touchUpInside);
     }
 
@@ -87,7 +87,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
 
         label.text = Strings.addNewModel
         label.frame = CGRect(x: width / 2 - 50, y: 0, width: 120, height: 50);
-        label.textColor = Colors.borderColor
+        label.textColor = Colors.border
         label.font = label.font.withSize(15)
         view.addSubview(label)
     }
@@ -98,7 +98,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
         urlInputBox.isHidden = true;
         urlInputBox.addTarget(self, action: #selector(nameDidChange(_:)), for: .editingChanged);
         urlInputBox.frame = CGRect(x: 20, y: 150, width: width - 40, height: 50);
-        urlInputBox.layer.borderColor = Colors.borderColor?.cgColor
+        urlInputBox.layer.borderColor = Colors.border?.cgColor
         urlInputBox.layer.borderWidth = 1;
         urlInputBox.layer.cornerRadius = 5;
 
@@ -132,7 +132,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
         cell.textLabel?.text = bottomSheetArray[indexPath.row]
-        cell.textLabel?.textColor = Colors.borderColor
+        cell.textLabel?.textColor = Colors.border
         return cell
     }
 

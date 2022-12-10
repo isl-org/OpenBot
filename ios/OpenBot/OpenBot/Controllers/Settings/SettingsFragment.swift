@@ -76,7 +76,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
     func createLabel(text: String, leadingAnchor: CGFloat, topAnchor: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = text;
-        label.textColor = Colors.borderColor
+        label.textColor = Colors.border
         label.font = UIFont.systemFont(ofSize: 15.0)
         label.frame.origin = CGPoint(x: leadingAnchor, y: topAnchor)
         label.frame.size = resized(size: CGSize(width: text.count * 12, height: 40), basedOn: .height)

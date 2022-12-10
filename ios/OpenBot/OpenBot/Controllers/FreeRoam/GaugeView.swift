@@ -51,7 +51,7 @@ class GaugeView: UIView {
 
     func setUp() {
         valueLabel.font = valueFont
-        valueLabel.textColor = .white
+        valueLabel.textColor = UIColor(named: "bdColor")
         valueLabel.textAlignment = .center
         valueLabel.frame = CGRect(x: 130, y: 100, width: 100, height: 100)
         addSubview(valueLabel)

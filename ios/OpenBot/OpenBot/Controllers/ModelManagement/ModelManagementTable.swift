@@ -87,7 +87,7 @@ class ModelManagementTable: UITableViewController {
     func createLabel(text: String) -> UILabel {
         let label = UILabel()
         label.text = text;
-        label.textColor = Colors.borderColor;
+        label.textColor = Colors.border;
         return label;
 
     }
@@ -104,7 +104,7 @@ class ModelManagementTable: UITableViewController {
         downwardImage.frame.size = CGSize(width: 5, height: 5)
         downwardImage.image = Images.downArrow
         ddView.addSubview(downwardImage)
-        downwardImage.tintColor = Colors.borderColor
+        downwardImage.tintColor = Colors.border
         downwardImage.translatesAutoresizingMaskIntoConstraints = false
         downwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -30).isActive = true
         downwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
@@ -113,7 +113,7 @@ class ModelManagementTable: UITableViewController {
 
     func createModelSelectorDropDown() {
         modelDropdown.backgroundColor = Colors.freeRoamButtonsColor;
-        modelDropdown.textColor = Colors.borderColor!
+        modelDropdown.textColor = Colors.border!
         let dropDownView = UIView(frame: CGRect(x: width / 2 + 20, y: 100, width: width / 2 - 80, height: 200));
         view.addSubview(dropDownView);
         modelDropdown.dataSource = ["All", "AutoPilot", "Detector", "Navigation"];

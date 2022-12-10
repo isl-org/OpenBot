@@ -22,7 +22,7 @@ class Devices: UIView {
 
     func setupDeviceDD(dataSource: [String]){
         deviceDD.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.borderColor {
+        if let color = Colors.border {
             deviceDD.textColor = color
         }
         deviceDD.anchorView = self

@@ -126,7 +126,7 @@ class expandedAutoPilot: UIView {
     func createLabel(text: String, leadingAnchor: Int, topAnchor: Int) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.textColor = Colors.borderColor
+        label.textColor = Colors.border
         label.frame.origin = CGPoint(x: leadingAnchor, y: topAnchor)
         label.frame.size = resized(size: CGSize(width: text.count * 10, height: 40), basedOn: .height)
         return label
@@ -160,7 +160,7 @@ class expandedAutoPilot: UIView {
 
     func createServerDropDown() {
         serverDropDown.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.borderColor {
+        if let color = Colors.border {
             serverDropDown.textColor = color
         }
         serverDropDown.anchorView = serverDropDownView
@@ -184,7 +184,7 @@ class expandedAutoPilot: UIView {
         upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
         upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
         serverDropDownLabel.text = "No Server"
-        serverDropDownLabel.textColor = Colors.borderColor
+        serverDropDownLabel.textColor = Colors.border
         serverDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
         ddView.addSubview(serverDropDownLabel)
     }
@@ -192,7 +192,7 @@ class expandedAutoPilot: UIView {
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.autopilotMode);
         modelDropDown.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.borderColor {
+        if let color = Colors.border {
             modelDropDown.textColor = color
         }
         modelDropDown.anchorView = modelDropDownView
@@ -207,7 +207,7 @@ class expandedAutoPilot: UIView {
         upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
         upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
         modelDropdownLabel.text = "CLI-Mobile"
-        modelDropdownLabel.textColor = Colors.borderColor
+        modelDropdownLabel.textColor = Colors.border
         modelDropdownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
         ddView.addSubview(modelDropdownLabel)
         modelDropDown.selectionAction = { [self] (index: Int, item: String) in
@@ -236,7 +236,7 @@ class expandedAutoPilot: UIView {
 
     func createDeviceDropDown() {
         deviceDropDown.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.borderColor {
+        if let color = Colors.border {
             deviceDropDown.textColor = color
         }
         deviceDropDown.anchorView = deviceDropDownView
@@ -251,7 +251,7 @@ class expandedAutoPilot: UIView {
         downwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
         downwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
         deviceDropDownLabel.text = "CPU"
-        deviceDropDownLabel.textColor = Colors.borderColor
+        deviceDropDownLabel.textColor = Colors.border
         deviceDropDownLabel.frame = CGRect(x: 10, y: 0, width: 60, height: 40)
         dropDownWidth.constant = 100
         ddView.addSubview(deviceDropDownLabel)
@@ -318,7 +318,7 @@ class expandedAutoPilot: UIView {
         addSubview(threadLabel);
         threadLabel.translatesAutoresizingMaskIntoConstraints = false
         threadLabel.text = "1";
-        threadLabel.textColor = Colors.borderColor
+        threadLabel.textColor = Colors.border
         threadLabel.translatesAutoresizingMaskIntoConstraints = false
         threadLabel.leadingAnchor.constraint(equalTo: minusImageView.trailingAnchor, constant: 4).isActive = true
         threadLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 8).isActive = true

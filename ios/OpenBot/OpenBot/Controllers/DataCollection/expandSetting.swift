@@ -149,7 +149,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     func createDropdown() {
         modelsName = Common.loadAllModelsName()
         dropDown.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.borderColor {
+        if let color = Colors.border {
             dropDown.textColor = color
         }
         dropDown.anchorView = dropDownView
@@ -283,7 +283,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         btn.backgroundColor = Colors.freeRoamButtonsColor
         let text = UILabel()
         text.text = buttonName
-        text.textColor = Colors.borderColor
+        text.textColor = Colors.border
         if let action = action {
             btn.addTarget(self, action: action, for: .touchUpInside)
         }
@@ -303,7 +303,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dd.layer.cornerRadius = 10
         dd.backgroundColor = Colors.freeRoamButtonsColor
         dropdownLabel.text = buttonName
-        dropdownLabel.textColor = Colors.borderColor
+        dropdownLabel.textColor = Colors.border
         let tap = UITapGestureRecognizer(target: self, action: #selector(showDropdown(_:)))
         dd.addGestureRecognizer(tap)
         addSubview(dd)
@@ -351,7 +351,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         btn.backgroundColor = Colors.freeRoamButtonsColor
         let text = UILabel()
         text.text = buttonName
-        text.textColor = Colors.borderColor
+        text.textColor = Colors.border
         if let action = action {
             btn.addTarget(self, action: action, for: .touchUpInside)
         }
