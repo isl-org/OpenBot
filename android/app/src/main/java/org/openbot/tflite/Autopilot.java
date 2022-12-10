@@ -4,6 +4,7 @@ package org.openbot.tflite;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.RectF;
 import android.os.SystemClock;
 import android.os.Trace;
 import java.io.IOException;
@@ -13,10 +14,10 @@ import java.util.Arrays;
 import org.openbot.vehicle.Control;
 import timber.log.Timber;
 
-public abstract class Autopilot extends Network {
+public class Autopilot extends Network {
 
   /**
-   * Creates a autopilot with the provided configuration.
+   * Creates an autopilot policy with the provided configuration.
    *
    * @param activity The current Activity.
    * @param model The model to use for classification.
@@ -26,19 +27,18 @@ public abstract class Autopilot extends Network {
    */
 
   /** A ByteBuffer to hold data, to be feed into Tensorflow Lite as inputs. */
-  protected ByteBuffer cmdBuffer = null;
+  protected ByteBuffer cmdBuffer;
 
   private int cmdIndex;
   private int imgIndex;
 
-  public static Autopilot create(Activity activity, Model model, Device device, int numThreads)
-      throws IOException, IllegalArgumentException {
-    return new AutopilotFloat(activity, model, device, numThreads);
-  }
+  /** Additional normalization of the used input. */
+  private static final float IMAGE_MEAN = 0.0f;
 
-  /** Initializes a {@code Autopilot}. */
-  protected Autopilot(Activity activity, Model model, Device device, int numThreads)
-      throws IOException, IllegalArgumentException {
+  private static final float IMAGE_STD = 255.0f;
+
+  public Autopilot(Activity activity, Model model, Device device, int numThreads)
+      throws IOException {
     super(activity, model, device, numThreads);
     try {
       cmdIndex = tflite.getInputIndex("serving_default_cmd_input:0");
@@ -93,5 +93,27 @@ public abstract class Autopilot extends Network {
 
     Trace.endSection(); // "recognizeImage"
     return new Control(predicted_ctrl[0][0], predicted_ctrl[0][1]);
+  }
+
+  @Override
+  public boolean getMaintainAspect() {
+    return true;
+  }
+
+  @Override
+  public RectF getCropRect() {
+    return new RectF(0.0f, 240.0f / 720.0f, 0.0f, 0.0f);
+  }
+
+  @Override
+  protected int getNumBytesPerChannel() {
+    return 4; // Float.SIZE / Byte.SIZE;
+  }
+
+  @Override
+  protected void addPixelValue(int pixelValue) {
+    imgData.putFloat((((pixelValue >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+    imgData.putFloat((((pixelValue >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+    imgData.putFloat(((pixelValue & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
   }
 }

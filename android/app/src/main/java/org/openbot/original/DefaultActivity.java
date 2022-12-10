@@ -378,7 +378,7 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
       } else {
         LOGGER.d(
             "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-        autopilot = Autopilot.create(this, model, device, numThreads);
+        autopilot = new Autopilot(this, model, device, numThreads);
         croppedBitmap =
             Bitmap.createBitmap(
                 autopilot.getImageSizeX(), autopilot.getImageSizeY(), Config.ARGB_8888);

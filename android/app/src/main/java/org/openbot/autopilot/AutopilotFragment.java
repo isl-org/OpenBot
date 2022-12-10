@@ -100,8 +100,7 @@ public class AutopilotFragment extends CameraFragment {
     }
 
     List<String> models =
-        getModelNames(
-            f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL);
+        getModelNames(f -> f.type.equals(Model.TYPE.CMDNAV) && f.pathType != Model.PATH_TYPE.URL);
     initModelSpinner(binding.modelSpinner, models, preferencesManager.getAutopilotModel());
     initServerSpinner(binding.serverSpinner);
     setAnalyserResolution(Enums.Preview.HD.getValue());
@@ -235,7 +234,7 @@ public class AutopilotFragment extends CameraFragment {
     try {
       Timber.d(
           "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-      autopilot = Autopilot.create(requireActivity(), model, device, numThreads);
+      autopilot = new Autopilot(requireActivity(), model, device, numThreads);
       croppedBitmap =
           Bitmap.createBitmap(
               autopilot.getImageSizeX(), autopilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
@@ -253,7 +252,10 @@ public class AutopilotFragment extends CameraFragment {
               () ->
                   binding.inputResolution.setText(
                       String.format(
-                          "%dx%d", autopilot.getImageSizeX(), autopilot.getImageSizeY())));
+                          Locale.getDefault(),
+                          "%dx%d",
+                          autopilot.getImageSizeX(),
+                          autopilot.getImageSizeY())));
 
       Matrix cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
