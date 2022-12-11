@@ -44,12 +44,13 @@ task checkStyle(type:JavaExec) {
     args(["-n","--set-exit-if-changed"]) // -n prints filename if using wrong style
 
     tree.each {args += it}
-
+    //color codes: "\u001B[33m" - yellow, "\u001B[32m" - green, "\u001B[0m" - reset (Unix)
     doFirst {
-        println("The following java files follow the wrong style. Please use ./gradlew applyStyle")
+        println("You can fix the style of the files below (if any) with "
+                + "\u001B[33m" + "./gradlew applyStyle" + "\u001B[0m")
     }
     doLast { // will only execute on success (exitcode=0)
-        println ("-> All java files follow the correct style.")
+        println ("\u001B[32m" + " -> All java files follow the correct style." + "\u001B[0m")
     }
 }
 
