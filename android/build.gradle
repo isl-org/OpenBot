@@ -34,7 +34,26 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task checkStyle(type:Exec) {
+task checkStyle(type:JavaExec) {
+    workingDir = "utils"
+    classpath = files("utils/google-java-format-1.7-all-deps.jar")
+    FileTree tree = fileTree('app/src/main/java') {
+        include '**/*.java'
+    }
+
+    args(["-n","--set-exit-if-changed"]) // -n prints filename if using wrong style
+
+    tree.each {args += it}
+
+    doFirst {
+        println("The following java files follow the wrong style. Please use ./gradlew applyStyle")
+    }
+    doLast { // will only execute on success (exitcode=0)
+        println ("-> All java files follow the correct style.")
+    }
+}
+
+task checkStyleUnix(type:Exec) {
     workingDir 'utils'
     commandLine './checkStyle.sh'
 }
@@ -47,4 +66,9 @@ task applyStyle(type:JavaExec) {
     }
     args("-r") // replace cmd, means write changes back to source file
     tree.each {args += it}
+}
+
+task applyStyleUnix(type:Exec) {
+    workingDir 'utils'
+    commandLine './applyStyle.sh'
 }
