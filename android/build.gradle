@@ -47,7 +47,8 @@ task checkStyle(type:JavaExec) {
         println("You can fix the style of the files below (if any) with "
                 + "\u001B[33m" + "./gradlew applyStyle" + "\u001B[0m")
     }
-    doLast { // will only execute on success (exitcode = 0)
+
+    doLast { // will only execute on success (exitcode=0)
         println ("\u001B[32m" + " -> All java files follow the correct style." + "\u001B[0m")
     }
 }
