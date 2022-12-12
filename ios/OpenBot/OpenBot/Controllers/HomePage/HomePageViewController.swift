@@ -151,13 +151,13 @@ extension UIViewController: UICollectionViewDataSource {
 
 
 extension UIBarButtonItem {
-    convenience init(image: UIImage, title: String, target: Any?, action: Selector?) {
+    convenience init(image: UIImage, title: String, target: Any?, action: Selector?,titleColor : UIColor) {
         let button = UIButton(type: .custom)
         button.setInsets(forContentPadding: UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0), imageTitlePadding: 10)
         button.setImage(image, for: .normal)
         button.imageView?.layer.transform = CATransform3DMakeScale(1.3, 1.3, 1.3)
         button.setTitle(title, for: .normal)
-        button.setTitleColor(UIColor(named: "bdColor"), for: .normal)
+        button.setTitleColor(titleColor, for: .normal)
         button.frame = CGRect(x: 0, y: 0, width: image.size.width + 10, height: image.size.height)
         if let target = target, let action = action {
             button.addTarget(target, action: action, for: .touchUpInside)

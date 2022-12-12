@@ -30,6 +30,7 @@ class ModelManagementTable: UITableViewController {
         super.viewDidLoad()
         view.frame.origin.y = 250;
         setupHeader()
+        setupNavigationBarItem()
         createAddModelButton()
         NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
@@ -73,7 +74,7 @@ class ModelManagementTable: UITableViewController {
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
-            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.modelManagement, target: self, action: #selector(back(sender:)))
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.modelManagement, target: self, action: #selector(back(sender:)), titleColor: Colors.navigationColor ?? .white)
             navigationItem.leftBarButtonItem = newBackButton
         }
     }

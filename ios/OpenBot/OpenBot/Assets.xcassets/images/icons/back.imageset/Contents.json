@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "back_lite.svg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "left.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -17,7 +27,17 @@
       "scale" : "1x"
     },
     {
-      "filename" : "back_lite 1.svg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "left 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -33,7 +53,17 @@
       "scale" : "2x"
     },
     {
-      "filename" : "back_lite 2.svg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "left 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     },

@@ -69,7 +69,7 @@ class AutopilotFragment: CameraController {
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
-            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.autoPilot, target: self, action: #selector(AutopilotFragment.back(sender:)))
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.autoPilot, target: self, action: #selector(AutopilotFragment.back(sender:)), titleColor: Colors.navigationColor ?? .white)
             navigationItem.leftBarButtonItem = newBackButton
         }
     }
@@ -102,7 +102,8 @@ class AutopilotFragment: CameraController {
 
     @objc func toggleAutoMode() {
         autoPilotMode = !autoPilotMode;
-        Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [self] timer in
+        Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
+            let startTime = Date().millisecondsSince1970
             if !autoPilotMode {
                 timer.invalidate()
                 sendControl(control: Control());
@@ -114,6 +115,11 @@ class AutopilotFragment: CameraController {
                     sendControl(control: controlResult);
                 }
             }
+            let endTime = Date().millisecondsSince1970
+            print(endTime - startTime)
+           if (endTime - startTime) != 0{
+//               NotificationCenter.default.post(name: .updateAutoPilotFps, object: 1000 / (endTime - startTime));
+           }
         }
     }
 
@@ -128,6 +134,7 @@ class AutopilotFragment: CameraController {
             let left = control.getLeft() * gameController.selectedSpeedMode.rawValue;
             let right = control.getRight() * gameController.selectedSpeedMode.rawValue;
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
+
             NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())));
             vehicleControl = control;
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
@@ -139,5 +146,14 @@ class AutopilotFragment: CameraController {
         if autoPilotMode {
             autoPilotMode = false
         }
+    }
+}
+extension Date {
+    var millisecondsSince1970: Int64 {
+        Int64((self.timeIntervalSince1970 * 1000.0).rounded())
+    }
+
+    init(milliseconds: Int64) {
+        self = Date(timeIntervalSince1970: TimeInterval(milliseconds) / 1000)
     }
 }

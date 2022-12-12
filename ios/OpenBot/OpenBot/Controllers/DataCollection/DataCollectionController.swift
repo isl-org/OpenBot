@@ -38,7 +38,7 @@ class DataCollectionController: CameraController {
         navigationItem.hidesBackButton = true
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
-            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.dataCollection, target: self, action: #selector(DataCollectionController.back(sender:)))
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.dataCollection, target: self, action: #selector(DataCollectionController.back(sender:)), titleColor:Colors.navigationColor ?? .white)
             navigationItem.leftBarButtonItem = newBackButton
         }
 

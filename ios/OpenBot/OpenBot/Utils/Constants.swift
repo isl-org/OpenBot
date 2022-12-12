@@ -44,6 +44,7 @@ struct Colors {
     static let freeRoamButtonsColor = UIColor(named: "gamepad")
     static let border = UIColor(named: "borderColor")
     static let bdColor = UIColor(named: "bdColor")
+    static let navigationColor = UIColor(named: "navigationColor")
 
 }
 
