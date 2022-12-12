@@ -30,6 +30,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.PriorityQueue;
+import org.openbot.objectNav.ObjectNavFragment;
 import timber.log.Timber;
 
 /**
@@ -65,6 +66,8 @@ public abstract class Detector extends Network {
         return new DetectorQuantizedMobileNet(activity, model, device, numThreads);
       case YOLOV4:
         return new DetectorFloatYoloV4(activity, model, device, numThreads);
+      case YOLOV5:
+        return new DetectorYoloV5(activity, model, device, numThreads);
       default:
         return null;
     }
@@ -181,7 +184,11 @@ public abstract class Detector extends Network {
     Trace.beginSection("recognizeImage");
 
     Trace.beginSection("preprocessBitmap");
+    long startTime = SystemClock.elapsedRealtime();
     convertBitmapToByteBuffer(bitmap);
+    long endTime = SystemClock.elapsedRealtime();
+    Timber.v("Timecost to convertBitmapToByteBuffer: %s", (endTime - startTime));
+
     Trace.endSection(); // preprocessBitmap
 
     // Copy the input data into TensorFlow.
@@ -191,17 +198,27 @@ public abstract class Detector extends Network {
 
     // Run the inference call.
     Trace.beginSection("runInference");
-    long startTime = SystemClock.elapsedRealtime();
+    startTime = SystemClock.elapsedRealtime();
     runInference();
-    long endTime = SystemClock.elapsedRealtime();
+    endTime = SystemClock.elapsedRealtime();
     Trace.endSection();
     Timber.v("Timecost to run model inference: %s", (endTime - startTime));
 
     Trace.endSection(); // "recognizeImage"
-    return getRecognitions(className);
+
+    startTime = SystemClock.elapsedRealtime();
+    List<Recognition> recognitions = getRecognitions(className);
+    endTime = SystemClock.elapsedRealtime();
+    Timber.v("Timecost for postprocessing: %s", (endTime - startTime));
+
+    return recognitions;
   }
 
   protected float mNmsThresh = 0.25f;
+
+  protected float getObjThresh() {
+    return ObjectNavFragment.MINIMUM_CONFIDENCE_TF_OD_API;
+  }
 
   // non maximum suppression
   protected ArrayList<Recognition> nms(ArrayList<Recognition> list) {
