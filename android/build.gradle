@@ -40,9 +40,7 @@ task checkStyle(type:JavaExec) {
     FileTree tree = fileTree('app/src/main/java') {
         include '**/*.java'
     }
-
     args(["-n","--set-exit-if-changed"]) // -n prints filename if using wrong style
-
     tree.each {args += it}
     //color codes: "\u001B[33m" - yellow, "\u001B[32m" - green, "\u001B[0m" - reset (Unix)
     doFirst {
