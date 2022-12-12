@@ -181,7 +181,8 @@ class GameController: GCController {
      - Returns: Events
      */
     public func processControllerKeyData(element: GCControllerElement) -> Any {
-        print(element.localizedName)
+        print(element.localizedName);
+        print(connectedController?.gamepad?.dpad)
         switch (element.localizedName) {
         case Keymap.KEY_CIRCLE.rawValue:
             return IndicatorEvent.Right;
@@ -189,17 +190,20 @@ class GameController: GCController {
             return IndicatorEvent.Left;
         case Keymap.KEY_TRIANGLE.rawValue:
             return ControlEvent.STOP;
-        case Keymap.KEY_CROSS.rawValue:
-            return CMD_Events.TOGGLE_LOGS;
-        case Keymap.KEY_Options.rawValue:
+        case Keymap.KEY_CROSS.rawValue :
+            if (connectedController?.gamepad?.buttonA.isPressed == false){
+                return CMD_Events.TOGGLE_LOGS;
+            }
+        case Keymap.KEY_Options.rawValue :
             return CMD_Events.TOGGLE_NOISE;
         case Keymap.KEY_L1.rawValue :
             return DriveMode.joystick;
         case Keymap.KEY_R1.rawValue :
-                return CMD_Events.TOGGLE_NETWORK;
+            return CMD_Events.TOGGLE_NETWORK;
         default:
             return "";
         }
+        return "";
     }
 
     /**

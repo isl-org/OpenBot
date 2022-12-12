@@ -146,7 +146,6 @@ class Network {
         for i in 0..<bytes.count {
             floats.append((Float32(bytes[i]) - getImageMean()) / getImageStd())
         }
-
         return Data(copyingBufferOf: floats)
     }
 
