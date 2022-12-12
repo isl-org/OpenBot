@@ -15,6 +15,7 @@ var isBluetoothConnected = false;
 var viewControllerName: String?
 let gameController = GameController.shared
 var leadingConstraint = NSLayoutConstraint()
+var connection: NetworkServiceConnection = NetworkServiceConnection();
 
 class HomePageViewController: UIViewController {
     @IBOutlet weak var bluetooth: UIButton!
@@ -49,6 +50,8 @@ class HomePageViewController: UIViewController {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+
+        connection.discoverServices();
     }
 
     func changeNavigationColor() {

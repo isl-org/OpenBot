@@ -29,6 +29,11 @@
 	</array>
 	<key>GCSupportsControllerUserInteraction</key>
 	<true/>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_openbot._tcp.</string>
+		<string>_openbot-server._tcp.</string>
+	</array>
 	<key>NSSupportsSuddenTermination</key>
 	<false/>
 	<key>UIAppFonts</key>
