@@ -149,9 +149,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     func createDropdown() {
         modelsName = Common.loadAllModelsName()
         dropDown.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.border {
-            dropDown.textColor = color
-        }
+        dropDown.textColor = Colors.bdColor ?? .black
         dropDown.anchorView = dropDownView
         dropDown.dataSource = modelsName
         ddView = createDropdownView(borderColor: "", buttonName: "CLI-Mobile", leadingAnchor: 10, topAnchor: 155, action: #selector(showDropdown(_:)))

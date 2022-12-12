@@ -21,9 +21,7 @@ class ObjectClassDropdown: UIView {
 
     func setupObjectDD(dataSource: [String]) {
         object.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.border {
-            object.textColor = color
-        }
+        object.textColor = Colors.bdColor ?? .black
         object.anchorView = self
         object.dataSource = dataSource
         object.selectionAction = { [self] (index: Int, item: String) in

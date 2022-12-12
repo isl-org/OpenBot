@@ -23,9 +23,7 @@ class Models: UIView {
 
     func setupModelDD(dataSource: [String]) {
         model.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.border {
-            model.textColor = color
-        }
+        model.textColor = Colors.bdColor ?? .black
         model.anchorView = self
         model.dataSource = dataSource
         model.selectionAction = { [self] (index: Int, item: String) in

@@ -194,12 +194,10 @@ class ObjectTrackingSettings: UIView {
 
     func setupObjectDropDown() {
         objectDropDown.backgroundColor = Colors.freeRoamButtonsColor;
-        if let color = Colors.border {
-            objectDropDown.textColor = color
-        }
+        objectDropDown.textColor = Colors.bdColor ?? .black
         objectDropDown.anchorView = objectDropDownView;
         objectDropDown.dataSource = detector?.getLabels() ?? [" "];
-        deviceDropDown.width = 150;
+        objectDropDown.width = 150;
         objectDropDown.selectionAction = { [self] (index: Int, item: String) in
             objectDropDownLabel.text = item
             NotificationCenter.default.post(name: .updateObject, object: item)
@@ -378,10 +376,7 @@ class ObjectTrackingSettings: UIView {
 
     func createDeviceDropDown() {
         deviceDropDown.backgroundColor = Colors.freeRoamButtonsColor
-        if let borderColor = Colors.border {
-            deviceDropDown.textColor = borderColor
-        }
-
+        deviceDropDown.textColor = Colors.bdColor ?? .black
         deviceDropDown.dataSource = Constants.devices
         deviceDropDown.width = 90
         let dd = UIView()
@@ -427,9 +422,7 @@ class ObjectTrackingSettings: UIView {
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.objectTrackingMode);
         modelDropDown.backgroundColor = Colors.freeRoamButtonsColor;
-        if let color = Colors.border {
-            modelDropDown.textColor = color
-        }
+        modelDropDown.textColor = UIColor(named: "bdColor") ?? .black
         let dd = UIView()
         let modelDropDownAnchor = UIView(frame: CGRect(x: 180, y: adapted(dimensionSize: 60, to: .height), width: 100, height: 200));
         modelDropDown.anchorView = modelDropDownAnchor;

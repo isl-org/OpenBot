@@ -43,6 +43,7 @@ struct Colors {
     static let voltageDividerColor = UIColor(named: "voltageDivider")
     static let freeRoamButtonsColor = UIColor(named: "gamepad")
     static let border = UIColor(named: "borderColor")
+    static let bdColor = UIColor(named: "bdColor")
 
 }
 

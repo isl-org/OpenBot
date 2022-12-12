@@ -160,9 +160,8 @@ class expandedAutoPilot: UIView {
 
     func createServerDropDown() {
         serverDropDown.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.border {
-            serverDropDown.textColor = color
-        }
+        serverDropDown.textColor = UIColor(named: "bdColor") ?? .black
+
         serverDropDown.anchorView = serverDropDownView
         serverDropDown.dataSource = ["No Server"]
         serverDropDown.show()
@@ -192,9 +191,7 @@ class expandedAutoPilot: UIView {
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.autopilotMode);
         modelDropDown.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.border {
-            modelDropDown.textColor = color
-        }
+        modelDropDown.textColor = UIColor(named: "bdColor") ?? .black
         modelDropDown.anchorView = modelDropDownView
         modelDropDown.dataSource = selectedModels
         ddView = createDropdownView(borderColor: "", buttonName: "CLI-Mobile", leadingAnchor: 180, topAnchor: adapted(dimensionSize: 90, to: .height), action: #selector(showModelDropdown(_:)))
@@ -236,9 +233,7 @@ class expandedAutoPilot: UIView {
 
     func createDeviceDropDown() {
         deviceDropDown.backgroundColor = Colors.freeRoamButtonsColor
-        if let color = Colors.border {
-            deviceDropDown.textColor = color
-        }
+        deviceDropDown.textColor = Colors.bdColor ?? .black
         deviceDropDown.anchorView = deviceDropDownView
         deviceDropDown.dataSource = Constants.devices
         deviceDropDown.width = 90
