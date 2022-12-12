@@ -59,11 +59,11 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         case .notDetermined:
             print("notDetermined")
         case .restricted:
-            createAllowAlert(alertFor: "Camera");
+            createAllowAlert(alertFor: Strings.camera);
         case .denied:
-            createAllowAlert(alertFor: "Camera");
+            createAllowAlert(alertFor: Strings.camera);
         @unknown default:
-            createAllowAlert(alertFor: "Camera");
+            createAllowAlert(alertFor: Strings.camera);
         }
     }
 

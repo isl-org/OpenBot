@@ -143,3 +143,20 @@ enum PATH_TYPE: String {
          FILE = "FILE"
 }
 
+struct FileName {
+    static let accelerator : String = "accelerometerLog.txt";
+    static let magnetic : String = "magneticLog.txt";
+    static let gyroscopeLog : String = "gyroscopeLog.txt";
+    static let gpsLog : String = "gpsLog.txt";
+    static let bumperLog : String = "bumperLog.txt";
+    static let ctrlLog : String = "ctrlLog.txt";
+    static let indicatorLog : String = "indicatorLog.txt";
+    static let inferenceLog : String = "inferenceLog.txt"
+    static let lightLog  : String = "lightLog.txt";
+    static let motionLog : String = "motionLog.txt";
+    static let sonarLog : String = "sonarLog.txt";
+    static let voltageLog : String = "voltageLog.txt";
+    static let wheelsLog : String = "wheelsLog.txt"
+
+}
+

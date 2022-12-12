@@ -70,19 +70,19 @@ class DataLogger {
 
         createFolder(path: sensorDataPath)
         if URL(string: openBotPath) != nil {
-            saveSensorFiles(path: sensorDataPath, data: acceleration, fileName: "accelerometerLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: magnetometer, fileName: "magneticLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: gyroscope, fileName: "gyroscopeLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: gps, fileName: "gpsLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: bumper, fileName: "bumperLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: ctrlLog, fileName: "ctrlLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: indicator, fileName: "indicatorLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: inferenceTime, fileName: "inferenceLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: light, fileName: "lightLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: motion, fileName: "motionLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: sonar, fileName: "sonarLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: voltage, fileName: "voltageLog.txt")
-            saveSensorFiles(path: sensorDataPath, data: wheels, fileName: "wheelsLog.txt")
+            saveSensorFiles(path: sensorDataPath, data: acceleration, fileName: FileName.accelerator)
+            saveSensorFiles(path: sensorDataPath, data: magnetometer, fileName: FileName.magnetic)
+            saveSensorFiles(path: sensorDataPath, data: gyroscope, fileName: FileName.gyroscopeLog)
+            saveSensorFiles(path: sensorDataPath, data: gps, fileName: FileName.gpsLog)
+            saveSensorFiles(path: sensorDataPath, data: bumper, fileName: FileName.bumperLog)
+            saveSensorFiles(path: sensorDataPath, data: ctrlLog, fileName: FileName.ctrlLog)
+            saveSensorFiles(path: sensorDataPath, data: indicator, fileName: FileName.indicatorLog)
+            saveSensorFiles(path: sensorDataPath, data: inferenceTime, fileName: FileName.inferenceLog)
+            saveSensorFiles(path: sensorDataPath, data: light, fileName: FileName.lightLog)
+            saveSensorFiles(path: sensorDataPath, data: motion, fileName: FileName.motionLog)
+            saveSensorFiles(path: sensorDataPath, data: sonar, fileName: FileName.sonarLog)
+            saveSensorFiles(path: sensorDataPath, data: voltage, fileName: FileName.voltageLog)
+            saveSensorFiles(path: sensorDataPath, data: wheels, fileName: FileName.wheelsLog)
         }
     }
 
@@ -212,7 +212,6 @@ class DataLogger {
 //        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
         do {
             fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-            print(fileURLs)
             return fileURLs
         } catch {
             print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")

@@ -269,20 +269,16 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         switch AVAudioSession.sharedInstance().recordPermission {
 
         case .granted:
-            print("granted")
             microphoneSwitch.isOn = true
         case .denied:
-            print("denied")
             microphoneSwitch.isOn = false
         case .undetermined:
-            print("undetermined")
             microphoneSwitch.isOn = true
             AVAudioSession.sharedInstance().requestRecordPermission({ granted in
                self.toggleSwitchButtons()
                 self.microphoneSwitch.isOn = true
             })
         @unknown default:
-            print("default")
             microphoneSwitch.isOn = false
         }
 

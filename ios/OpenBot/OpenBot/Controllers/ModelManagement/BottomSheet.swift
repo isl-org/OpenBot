@@ -148,7 +148,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
 
             }
         default:
-            print("default")
+            break;
         }
 
     }
