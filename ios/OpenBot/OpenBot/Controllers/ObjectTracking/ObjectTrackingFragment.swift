@@ -127,6 +127,7 @@ class ObjectTrackingFragment: CameraController {
                     frames.removeAll();
                     if (timer.isValid) {
                         let startTime = returnCurrentTimestamp();
+                        let start = Date().millisecondsSince1970;
                         captureImage();
                         if (images.count > 0) {
                             let res = try detector?.recognizeImage(image: images[images.count - 1].0, height: originalHeight, width: originalWidth);
@@ -145,6 +146,10 @@ class ObjectTrackingFragment: CameraController {
                             }
                         }
                         let endTime = returnCurrentTimestamp();
+                        let end = Date().millisecondsSince1970;
+                        if (end - start) != 0{
+                            NotificationCenter.default.post(name: .updateObjectTrackingFps, object: Double(1000 / (end - start)));
+                        }
                         print("timecost to run the image is ", endTime - startTime);
                     }
                 } catch {

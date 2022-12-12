@@ -61,6 +61,7 @@ class expandedAutoPilot: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleNetwork), name: .toggleNetworks, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateFps), name: .updateAutoPilotFps, object: nil)
 
     }
 
@@ -440,12 +441,6 @@ class expandedAutoPilot: UIView {
 
     @objc func updateSpeedLabel(_ notification: Notification) {
         leftSpeedLabel.text = notification.object as! String
-        if  notification.object as! String != "0,0"{
-            speedLabel.text = "30 fps";
-        }
-        else{
-            speedLabel.text = "0 fps";
-        }
     }
 
     @objc func toggleNetwork(_ notification: Notification) {
@@ -453,7 +448,10 @@ class expandedAutoPilot: UIView {
         if autoModeButton.isOn {
             NotificationCenter.default.post(name: .autoMode, object: nil)
         }
+    }
 
+    @objc func updateFps(_ notification: Notification) {
+        speedLabel.text = String(notification.object as! Double)
     }
 }
 

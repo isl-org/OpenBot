@@ -38,7 +38,7 @@ class AutopilotFragment: CameraController {
         view.addSubview(expandedAutoPilotView!)
         expandedAutoPilotView!.translatesAutoresizingMaskIntoConstraints = false
         expandedAutoPilotView!.widthAnchor.constraint(equalToConstant: width).isActive = true
-        expandedAutoPilotView!.heightAnchor.constraint(equalToConstant: width ).isActive = true
+        expandedAutoPilotView!.heightAnchor.constraint(equalToConstant: width).isActive = true
         bottomAnchorConstraint = expandedAutoPilotView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 5);
         trailingAnchorConstraint = expandedAutoPilotView!.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0)
         trailingAnchorConstraint.isActive = true
@@ -103,7 +103,6 @@ class AutopilotFragment: CameraController {
     @objc func toggleAutoMode() {
         autoPilotMode = !autoPilotMode;
         Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
-            let startTime = Date().millisecondsSince1970
             if !autoPilotMode {
                 timer.invalidate()
                 sendControl(control: Control());
@@ -111,15 +110,16 @@ class AutopilotFragment: CameraController {
             if (timer.isValid) {
                 captureImage();
                 if (images.count > 0) {
+                    let startTime = Date().millisecondsSince1970
                     let controlResult: Control = autopilot?.recogniseImage(image: images[images.count - 1].0, indicator: 0, width: originalWidth, height: originalHeight) ?? Control();
+                    let endTime = Date().millisecondsSince1970
+                    if (endTime - startTime) != 0 {
+                        NotificationCenter.default.post(name: .updateAutoPilotFps, object: 1000 / (endTime - startTime));
+                    }
                     sendControl(control: controlResult);
                 }
             }
-            let endTime = Date().millisecondsSince1970
-            print(endTime - startTime)
-           if (endTime - startTime) != 0{
-//               NotificationCenter.default.post(name: .updateAutoPilotFps, object: 1000 / (endTime - startTime));
-           }
+
         }
     }
 
@@ -148,9 +148,10 @@ class AutopilotFragment: CameraController {
         }
     }
 }
+
 extension Date {
     var millisecondsSince1970: Int64 {
-        Int64((self.timeIntervalSince1970 * 1000.0).rounded())
+        Int64((timeIntervalSince1970 * 1000.0).rounded())
     }
 
     init(milliseconds: Int64) {

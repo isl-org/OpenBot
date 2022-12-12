@@ -62,7 +62,9 @@ class ObjectTrackingSettings: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(toggleNetwork), name: .toggleNetworks, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(toggleNetwork), name: .toggleNetworks, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSpeed), name: .updateObjectTrackingFps, object: nil);
+
 
     }
 
@@ -473,12 +475,6 @@ class ObjectTrackingSettings: UIView {
         let model = Common.returnModelItem(modelName: selectedModel)
         self.selectedModel = model
         imageInputLabel.text = model.inputSize
-        if model.name == "MobileNetV1-300" + Strings.tflite{
-            speedLabel.text = "30 fps"
-        }
-        else{
-            speedLabel.text = "2 fps"
-        }
     }
 
     @objc func updateObject(_ notification: Notification) {
@@ -501,6 +497,10 @@ class ObjectTrackingSettings: UIView {
     @objc func toggleNetwork(_ notification: Notification) {
         NotificationCenter.default.post(name: .autoModeObjectTracking, object: nil)
         autoModeButton.isOn = !autoModeButton.isOn
+    }
+
+    @objc func updateSpeed(_ notification: Notification) {
+        speedLabel.text = String(notification.object as! Double);
     }
 
 
