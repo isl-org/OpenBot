@@ -181,8 +181,6 @@ class GameController: GCController {
      - Returns: Events
      */
     public func processControllerKeyData(element: GCControllerElement) -> Any {
-        print(element.localizedName);
-        print(connectedController?.gamepad?.rightShoulder.isPressed)
         switch (element.localizedName) {
         case Keymap.KEY_CIRCLE.rawValue:
             return IndicatorEvent.Right;
