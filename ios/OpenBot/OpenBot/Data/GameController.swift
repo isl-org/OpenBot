@@ -182,7 +182,7 @@ class GameController: GCController {
      */
     public func processControllerKeyData(element: GCControllerElement) -> Any {
         print(element.localizedName);
-        print(connectedController?.gamepad?.dpad)
+        print(connectedController?.gamepad?.rightShoulder.isPressed)
         switch (element.localizedName) {
         case Keymap.KEY_CIRCLE.rawValue:
             return IndicatorEvent.Right;
@@ -199,7 +199,10 @@ class GameController: GCController {
         case Keymap.KEY_L1.rawValue :
             return DriveMode.joystick;
         case Keymap.KEY_R1.rawValue :
-            return CMD_Events.TOGGLE_NETWORK;
+            if(connectedController?.gamepad?.rightShoulder.isPressed ==  false){
+                return CMD_Events.TOGGLE_NETWORK;
+            }
+
         default:
             return "";
         }
