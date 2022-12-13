@@ -14,26 +14,27 @@ class GameViewController: UIViewController {
     private let maximumControllerCount: Int = 1
     var gameControllerObj: GameController?;
     weak var delegate: InputManagerDelegate?
-    let overlayLeft = Draw(frame: CGRect(origin: CGPoint(x: 45, y: 270), size: CGSize(width: 18, height: 18)))
-    let overlayRight = Draw(frame: CGRect(origin: CGPoint(x: 87, y: 270), size: CGSize(width: 18, height: 18)))
-    let overlayUp = Draw(frame: CGRect(origin: CGPoint(x: 67, y: 248), size: CGSize(width: 18, height: 18)))
-    let overlayDown = Draw(frame: CGRect(origin: CGPoint(x: 67, y: 290), size: CGSize(width: 18, height: 18)))
+    let controllerImage : UIImageView! = nil
+    let overlayLeft = Draw(frame: CGRect(origin: CGPoint(x: 35, y: 300), size: CGSize(width: 18, height: 18)))
+    let overlayRight = Draw(frame: CGRect(origin: CGPoint(x: 77, y: 300), size: CGSize(width: 18, height: 18)))
+    let overlayUp = Draw(frame: CGRect(origin: CGPoint(x: 52, y: 278), size: CGSize(width: 18, height: 18)))
+    let overlayDown = Draw(frame: CGRect(origin: CGPoint(x: 52, y: 330), size: CGSize(width: 18, height: 18)))
 
-    let overlayA = Draw(frame: CGRect(origin: CGPoint(x: 298, y: 292), size: CGSize(width: 28, height: 28)))
-    let overlayB = Draw(frame: CGRect(origin: CGPoint(x: 325, y: 264), size: CGSize(width: 28, height: 28)))
-    let overlayX = Draw(frame: CGRect(origin: CGPoint(x: 270, y: 264), size: CGSize(width: 28, height: 28)))
-    let overlayY = Draw(frame: CGRect(origin: CGPoint(x: 298, y: 237), size: CGSize(width: 28, height: 28)))
+    let overlayA = Draw(frame: CGRect(origin: CGPoint(x: 298, y: 325), size: CGSize(width: 28, height: 28)))
+    let overlayB = Draw(frame: CGRect(origin: CGPoint(x: 325, y: 295), size: CGSize(width: 28, height: 28)))
+    let overlayX = Draw(frame: CGRect(origin: CGPoint(x: 270, y: 295), size: CGSize(width: 28, height: 28)))
+    let overlayY = Draw(frame: CGRect(origin: CGPoint(x: 298, y: 267), size: CGSize(width: 28, height: 28)))
 
     let overlayOptions = Draw(frame: CGRect(origin: CGPoint(x: 115, y: 140), size: CGSize(width: 12, height: 12)))
     let overlayMenu = Draw(frame: CGRect(origin: CGPoint(x: 265, y: 140), size: CGSize(width: 12, height: 12)))
 
-    let overlayL1Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 78, y: 170), size: CGSize(width: 20, height: 20)))
-    let overlayL2Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 78, y: 140), size: CGSize(width: 20, height: 20)))
-    let overlayR1Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 310, y: 170), size: CGSize(width: 20, height: 20)))
-    let overlayR2Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 310, y: 140), size: CGSize(width: 20, height: 20)))
+    let overlayL1Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 58, y: 200), size: CGSize(width: 20, height: 20)))
+    let overlayL2Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 58, y: 160), size: CGSize(width: 20, height: 20)))
+    let overlayR1Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 300, y: 200), size: CGSize(width: 20, height: 20)))
+    let overlayR2Shoulder = Draw(frame: CGRect(origin: CGPoint(x: 300, y: 160), size: CGSize(width: 20, height: 20)))
 
-    let overlayLeftThumb = Draw(frame: CGRect(origin: CGPoint(x: 112, y: 307), size: CGSize(width: 46, height: 46)))
-    let overlayRightThumb = Draw(frame: CGRect(origin: CGPoint(x: 232, y: 307), size: CGSize(width: 46, height: 46)))
+    let overlayLeftThumb = Draw(frame: CGRect(origin: CGPoint(x: 102, y: 342), size: CGSize(width: 46, height: 46)))
+    let overlayRightThumb = Draw(frame: CGRect(origin: CGPoint(x: 226, y: 342), size: CGSize(width: 46, height: 46)))
 
     var restrictRotation: UIInterfaceOrientationMask = .portrait
 
@@ -46,7 +47,6 @@ class GameViewController: UIViewController {
         dateFormatter.dateFormat = "HH:mm:ss.SSSS"
         clearLog()
         NotificationCenter.default.addObserver(self, selector: #selector(didConnectController), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
-
     }
 
 
