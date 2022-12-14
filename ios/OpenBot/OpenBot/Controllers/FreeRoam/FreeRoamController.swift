@@ -49,8 +49,11 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         if currentOrientation == UIInterfaceOrientation.landscapeRight || currentOrientation == UIInterfaceOrientation.landscapeLeft {
             applyLandScapeConstraint()
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(decreaseSpeedMode), name: .decreaseSpeedMode, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(increaseSpeedMode), name: .increaseSpeedMode, object: nil)
+
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -515,6 +518,34 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         } else {
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
+    }
+
+    @objc func decreaseSpeedMode(_ notification: Notification) {
+            switch selectedSpeedMode {
+            case .slow :
+                return;
+            case .medium :
+                selectedSpeedMode = .slow;
+                break;
+            case .fast :
+                selectedSpeedMode = .medium;
+                break;
+            }
+        updateSpeedModes()
+    }
+
+    @objc func increaseSpeedMode(_ notification: Notification) {
+        switch selectedSpeedMode {
+        case .slow :
+            selectedSpeedMode = .medium;
+            break;
+        case .medium :
+            selectedSpeedMode = .fast;
+            break;
+        case .fast :
+            return
+        }
+        updateSpeedModes()
     }
 
     func setupSpeedMode() {

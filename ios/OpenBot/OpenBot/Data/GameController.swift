@@ -10,7 +10,7 @@ import GameController
 
 public var connectedController: GCController?;
 
-class GameController: GCController {
+class GameController: GCPhysicalInputProfile {
     static let shared: GameController = GameController();
     private let maximumControllerCount: Int = 1
     private(set) var controllers = Set<GCController>()
@@ -181,6 +181,7 @@ class GameController: GCController {
      - Returns: Events
      */
     public func processControllerKeyData(element: GCControllerElement) -> Any {
+
         switch (element.localizedName) {
         case Keymap.KEY_CIRCLE.rawValue:
             return IndicatorEvent.Right;
@@ -188,19 +189,27 @@ class GameController: GCController {
             return IndicatorEvent.Left;
         case Keymap.KEY_TRIANGLE.rawValue:
             return ControlEvent.STOP;
-        case Keymap.KEY_CROSS.rawValue :
-            if (connectedController?.gamepad?.buttonA.isPressed == false){
+        case Keymap.KEY_CROSS.rawValue:
+            if (connectedController?.gamepad?.buttonA.isPressed == false) {
                 return CMD_Events.TOGGLE_LOGS;
             }
-        case Keymap.KEY_Options.rawValue :
+        case Keymap.KEY_Options.rawValue:
             return CMD_Events.TOGGLE_NOISE;
-        case Keymap.KEY_L1.rawValue :
+        case Keymap.KEY_L1.rawValue:
             return DriveMode.joystick;
-        case Keymap.KEY_R1.rawValue :
-            if(connectedController?.gamepad?.rightShoulder.isPressed ==  false){
+        case Keymap.KEY_R1.rawValue:
+            if (connectedController?.gamepad?.rightShoulder.isPressed == false) {
                 return CMD_Events.TOGGLE_NETWORK;
             }
 
+        case Keymap.KEY_L3.rawValue :
+            if(connectedController?.extendedGamepad?.leftThumbstickButton?.isPressed == false){
+                NotificationCenter.default.post(name: .decreaseSpeedMode, object: nil);
+            }
+        case Keymap.KEY_R3.rawValue :
+            if(connectedController?.extendedGamepad?.rightThumbstickButton?.isPressed == false){
+                NotificationCenter.default.post(name: .increaseSpeedMode, object: nil);
+            }
         default:
             return "";
         }
@@ -253,6 +262,7 @@ class GameController: GCController {
     }
 
     @objc func sendKeyUpdates(keyCommand: Any) {
+
         switch (keyCommand) {
         case IndicatorEvent.Right:
             setIndicator(keyCommand: keyCommand as! IndicatorEvent);
@@ -271,7 +281,7 @@ class GameController: GCController {
         case CMD_Events.TOGGLE_LOGS:
             startLogging()
             break;
-        case CMD_Events.TOGGLE_NETWORK :
+        case CMD_Events.TOGGLE_NETWORK:
             startNetwork()
             break;
         default:
@@ -289,11 +299,11 @@ class GameController: GCController {
         }
     }
 
-    func startLogging(){
+    func startLogging() {
         NotificationCenter.default.post(name: .logData, object: nil)
     }
 
-    func startNetwork(){
+    func startNetwork() {
         NotificationCenter.default.post(name: .toggleNetworks, object: nil)
     }
 

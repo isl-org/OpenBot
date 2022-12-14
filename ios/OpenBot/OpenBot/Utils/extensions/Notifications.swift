@@ -37,6 +37,8 @@ extension Notification.Name {
     static let toggleNetworks = Notification.Name("toggleNetworks");
     static let updateAutoPilotFps = Notification.Name("updateAutoPilotFps")
     static let updateObjectTrackingFps = Notification.Name("updateObjectTrackingFps")
+    static let decreaseSpeedMode = Notification.Name("decreaseSpeedMode")
+    static let increaseSpeedMode = Notification.Name("increaseSpeedMode")
 
 
 }

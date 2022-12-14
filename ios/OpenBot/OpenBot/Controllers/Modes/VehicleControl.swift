@@ -30,7 +30,8 @@ class VehicleControl: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoModeObjectTracking, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateRpmLabel), name: .updateRpmLabel, object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(decreaseSpeedMode), name: .decreaseSpeedMode, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(increaseSpeedMode), name: .increaseSpeedMode, object: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -167,6 +168,32 @@ class VehicleControl: UIView {
             downSwipe = true
         case false:
             downSwipe = false
+        }
+    }
+
+    @objc func decreaseSpeedMode(_ notification: Notification) {
+        switch speedMode {
+        case .slow :
+            return;
+        case .medium :
+            speedMode = .fast
+            break;
+        case .fast :
+            speedMode = .slow;
+            break;
+        }
+        updateSpeedMode(self);
+    }
+
+    @objc func increaseSpeedMode(_ notification: Notification) {
+        switch speedMode {
+        case .slow :
+            updateSpeedMode(self);
+        case .medium :
+            updateSpeedMode(self);
+            break;
+        case .fast :
+           return;
         }
     }
 }
