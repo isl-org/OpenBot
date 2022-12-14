@@ -179,7 +179,7 @@ class ModelManagementTable: UITableViewController {
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         super.tableView(tableView, heightForRowAt: indexPath)
-        return 44
+        return 60
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -229,9 +229,11 @@ class ModelManagementTable: UITableViewController {
         switch Common.isModelItemAvailableInDocument(modelName: models[index]) {
         case true:
             cell.downloadIcon.image = UIImage(named: "trash")
+            cell.downloadIcon.frame.size = CGSize(width: 10, height: 10)
             break;
         case false:
             cell.downloadIcon.image = UIImage(named: "download-cloud")
+            cell.downloadIcon.frame.size = CGSize(width: 10, height: 10)
             break;
         }
         return cell
@@ -360,7 +362,6 @@ class ModelManagementTable: UITableViewController {
         }
         updateModelItemList(type: "All")
     }
-
 
 }
 

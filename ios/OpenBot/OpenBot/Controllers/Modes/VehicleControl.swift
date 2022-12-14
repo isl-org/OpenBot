@@ -6,9 +6,9 @@ import Foundation
 import UIKit
 
 class VehicleControl: UIView {
-    var controlMode: ControlMode = ControlMode.phone;
+    var controlMode: ControlMode = ControlMode.PHONE;
     var speedMode: SpeedMode = SpeedMode.SLOW;
-    var driveMode: DriveMode = DriveMode.dual;
+    var driveMode: DriveMode = DriveMode.DUAL;
     var speedLabel = UILabel()
     var speedInRpm = UILabel()
     var isButtonEnable: Bool = true
@@ -24,13 +24,15 @@ class VehicleControl: UIView {
         createSpeedMode()
 //        createLeftSpeed()
         createRpm()
-        createLabel(text: "Controller", bottomAnchor: 0, leadingAnchor: width / 2 - 100, isBoldNeeded: true)
-        createLabel(text: "Drive Mode", bottomAnchor: 0, leadingAnchor: width / 2 - 30, isBoldNeeded: true)
-        createLabel(text: "Speed", bottomAnchor: 0, leadingAnchor: width / 2 + 50, isBoldNeeded: true)
+        createLabel(text: Strings.controller, bottomAnchor: 0, leadingAnchor: width / 2 - 100, isBoldNeeded: true)
+        createLabel(text: Strings.driveMode, bottomAnchor: 0, leadingAnchor: width / 2 - 30, isBoldNeeded: true)
+        createLabel(text: Strings.speed, bottomAnchor: 0, leadingAnchor: width / 2 + 50, isBoldNeeded: true)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoModeObjectTracking, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateRpmLabel), name: .updateRpmLabel, object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(decreaseSpeedMode), name: .decreaseSpeedMode, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(increaseSpeedMode), name: .increaseSpeedMode, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDrive), name: .updateDriveMode, object: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -72,15 +74,14 @@ class VehicleControl: UIView {
         btn.addSubview(modeIcon)
     }
 
-
     @objc func updateControlMode(_ sender: UIView) {
         if (isButtonEnable) {
-            if (controlMode == ControlMode.gamepad) {
-                controlMode = ControlMode.phone;
+            if (controlMode == ControlMode.GAMEPAD) {
+                controlMode = ControlMode.PHONE;
                 createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)));
 
             } else {
-                controlMode = ControlMode.gamepad;
+                controlMode = ControlMode.GAMEPAD;
                 createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)));
 
             }
@@ -89,18 +90,18 @@ class VehicleControl: UIView {
     }
 
     @objc func updateDriveMode(_ sender: UIView) {
-        if (controlMode == .gamepad && isButtonEnable) {
+        if (controlMode == .GAMEPAD && isButtonEnable) {
             switch (driveMode) {
-            case .joystick:
-                driveMode = .gameController;
+            case .JOYSTICK:
+                driveMode = .GAME;
                 createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)));
                 break;
-            case .gameController:
-                driveMode = .dual;
+            case .GAME:
+                driveMode = .DUAL;
                 createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)));
                 break;
-            case .dual:
-                driveMode = .joystick;
+            case .DUAL:
+                driveMode = .JOYSTICK;
                 createAndUpdateButton(iconName: Images.joystickIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)));
                 break;
             }
@@ -168,5 +169,35 @@ class VehicleControl: UIView {
         case false:
             downSwipe = false
         }
+    }
+
+    @objc func decreaseSpeedMode(_ notification: Notification) {
+        switch speedMode {
+        case .SLOW:
+            return;
+        case .NORMAL:
+            speedMode = .FAST
+            break;
+        case .FAST:
+            speedMode = .SLOW;
+            break;
+        }
+        updateSpeedMode(self);
+    }
+
+    @objc func increaseSpeedMode(_ notification: Notification) {
+        switch speedMode {
+        case .SLOW:
+            updateSpeedMode(self);
+        case .NORMAL:
+            updateSpeedMode(self);
+            break;
+        case .FAST:
+           return;
+        }
+    }
+
+    @objc func updateDrive(_ notification: Notification) {
+        updateDriveMode(self)
     }
 }

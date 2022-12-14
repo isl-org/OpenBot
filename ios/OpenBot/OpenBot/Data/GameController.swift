@@ -10,14 +10,14 @@ import GameController
 
 public var connectedController: GCController?;
 
-class GameController: GCController {
+class GameController: GCPhysicalInputProfile {
     static let shared: GameController = GameController();
     private let maximumControllerCount: Int = 1
     private(set) var controllers = Set<GCController>()
     private var panRecognizer: UIPanGestureRecognizer!
     var selectedSpeedMode: SpeedMode = SpeedMode.SLOW;
-    var selectedControlMode: ControlMode = ControlMode.gamepad;
-    var selectedDriveMode: DriveMode = DriveMode.joystick;
+    var selectedControlMode: ControlMode = ControlMode.GAMEPAD;
+    var selectedDriveMode: DriveMode = DriveMode.JOYSTICK;
     var vehicleControl = Control();
     let bluetooth = bluetoothDataController.shared;
     let dataLogger = DataLogger.shared
@@ -71,9 +71,9 @@ class GameController: GCController {
      */
     public func processJoystickInput(mode: DriveMode, gamepad: GCExtendedGamepad) -> Control {
         switch (mode) {
-        case .dual:
+        case .DUAL:
             return convertDualToControl(leftStick: gamepad.leftThumbstick.yAxis.value.rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero), rightStick: gamepad.rightThumbstick.yAxis.value);
-        case .gameController:
+        case .GAME:
             var rightTrigger: Float = gamepad.rightShoulder.value;
             if (rightTrigger == 0) {
                 rightTrigger = gamepad.rightTrigger.value;
@@ -93,7 +93,7 @@ class GameController: GCController {
             }
 
             return convertGameToControl(leftTrigger: leftTrigger, rightTrigger: rightTrigger, steeringOffset: steeringOffset);
-        case .joystick:
+        case .JOYSTICK:
             var yAxis: Float = gamepad.leftThumbstick.yAxis.value;
             if (yAxis == 0) {
                 yAxis = gamepad.dpad.yAxis.value;
@@ -185,7 +185,7 @@ class GameController: GCController {
         switch (element.localizedName) {
         case Keymap.KEYCODE_BUTTON_X.rawValue:
             if (connectedController?.extendedGamepad?.buttonX.isPressed == false){
-                return IndicatorEvent.Left;
+                return IndicatorEvent.LEFT;
             }
         case Keymap.KEYCODE_BUTTON_Y.rawValue:
             if (connectedController?.extendedGamepad?.buttonY.isPressed == false){
@@ -193,7 +193,7 @@ class GameController: GCController {
             }
         case Keymap.KEYCODE_BUTTON_B.rawValue:
             if (connectedController?.extendedGamepad?.buttonB.isPressed == false){
-                return IndicatorEvent.Right;
+                return IndicatorEvent.RIGHT;
             }
         case Keymap.KEYCODE_BUTTON_A.rawValue:
             if (connectedController?.extendedGamepad?.buttonA.isPressed == false){
@@ -205,7 +205,7 @@ class GameController: GCController {
             }
         case Keymap.KEYCODE_BUTTON_L1.rawValue:
             if (connectedController?.extendedGamepad?.leftShoulder.isPressed == false){
-                return DriveMode.joystick;
+                return DriveMode.JOYSTICK;
             }
         case Keymap.KEYCODE_BUTTON_R1.rawValue:
             if(connectedController?.extendedGamepad?.rightShoulder.isPressed ==  false){
@@ -219,6 +219,8 @@ class GameController: GCController {
             if(connectedController?.extendedGamepad?.rightThumbstickButton?.isPressed ==  false){
                 return CMD_Events.CMD_SPEED_UP;
             }
+        case Keymap.CMD_INDICATOR_STOP.rawValue :
+            return IndicatorEvent.STOP
         default:
             return "";
         }
@@ -231,11 +233,11 @@ class GameController: GCController {
      - Returns: [String]
      */
     public func getIndicatorEventValue(event: IndicatorEvent) -> String {
-        if (event == IndicatorEvent.Stop) {
+        if (event == IndicatorEvent.STOP) {
             return "i0,0\n";
-        } else if (event == IndicatorEvent.Left) {
+        } else if (event == IndicatorEvent.LEFT) {
             return "i1,0\n"
-        } else if (event == IndicatorEvent.Right) {
+        } else if (event == IndicatorEvent.RIGHT) {
             return "i0,1\n";
         }
         return "i1,1\n";
@@ -272,13 +274,13 @@ class GameController: GCController {
 
     @objc func sendKeyUpdates(keyCommand: Any) {
         switch (keyCommand) {
-        case IndicatorEvent.Right:
+        case IndicatorEvent.RIGHT:
             setIndicator(keyCommand: keyCommand as! IndicatorEvent);
             break;
-        case IndicatorEvent.Left:
+        case IndicatorEvent.LEFT:
             setIndicator(keyCommand: keyCommand as! IndicatorEvent);
             break;
-        case IndicatorEvent.Stop:
+        case IndicatorEvent.STOP:
             setIndicator(keyCommand: keyCommand as! IndicatorEvent);
             break;
         case ControlEvent.STOP:
@@ -293,11 +295,13 @@ class GameController: GCController {
             startNetwork()
             break;
         case CMD_Events.CMD_SPEED_UP:
-            toggleSpeed(direction: Direction.UP, speedMode: selectedSpeedMode)
+            NotificationCenter.default.post(name: .increaseSpeedMode, object: nil);
             break;
         case CMD_Events.CMD_SPEED_DOWN:
-            toggleSpeed(direction: Direction.DOWN, speedMode: selectedSpeedMode)
+            NotificationCenter.default.post(name: .decreaseSpeedMode, object: nil);
             break;
+        case DriveMode.JOYSTICK :
+            updateDriveMode()
         default:
             break;
         }
@@ -313,40 +317,16 @@ class GameController: GCController {
         }
     }
 
-    func toggleSpeed(direction: Direction, speedMode: SpeedMode) {
-        switch (speedMode) {
-        case SpeedMode.SLOW:
-            if (direction != Direction.DOWN){
-                selectedSpeedMode = SpeedMode.NORMAL;
-            }
-            break;
-            
-        case SpeedMode.NORMAL:
-            if (direction == Direction.DOWN){
-                selectedSpeedMode = SpeedMode.SLOW;
-            }
-            else{
-                selectedSpeedMode = SpeedMode.FAST;
-            }
-            
-        case SpeedMode.FAST:
-            if (direction == Direction.DOWN){
-                selectedSpeedMode = SpeedMode.NORMAL;
-            }
-            if (direction == Direction.CYCLIC){
-                selectedSpeedMode = SpeedMode.SLOW;
-            }
-            break;
-        }
-        NotificationCenter.default.post(name: .updateSpeedLabel, object: String(selectedSpeedMode.rawValue) + "," + String(selectedSpeedMode.rawValue))
-    }
-
     func startLogging(){
         NotificationCenter.default.post(name: .logData, object: nil)
     }
 
     func startNetwork(){
         NotificationCenter.default.post(name: .toggleNetworks, object: nil)
+    }
+
+    func updateDriveMode(){
+        NotificationCenter.default.post(name: .updateDriveMode, object: nil)
     }
 
 

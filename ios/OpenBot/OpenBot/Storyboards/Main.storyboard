@@ -86,12 +86,11 @@
                                             <rect key="frame" x="324" y="5.6666666666666679" width="82" height="32.333333333333329"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MJ5-Jm-ZQP">
-                                                    <rect key="frame" x="-20.333333333333314" y="-0.3333333333333357" width="123" height="33"/>
+                                                    <rect key="frame" x="26" y="-0.3333333333333357" width="30" height="33"/>
                                                     <color key="tintColor" name="borderColor"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="123" id="8bU-Sf-vIE"/>
+                                                        <constraint firstAttribute="width" constant="30" id="8bU-Sf-vIE"/>
                                                         <constraint firstAttribute="height" constant="33" id="Dau-Mo-naw"/>
-                                                        <constraint firstAttribute="width" secondItem="MJ5-Jm-ZQP" secondAttribute="height" multiplier="41:11" id="gNj-KX-Per"/>
                                                     </constraints>
                                                 </imageView>
                                             </subviews>
@@ -312,14 +311,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk" customClass="BluetoothTableViewCell" customModule="OpenBot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="34"/>
+                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="34.333332061767578"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34.333332061767578"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="323.33333333333331" y="0.0" width="85.666666666666686" height="34"/>
+                                            <rect key="frame" x="321" y="0.0" width="88" height="34.333333333333336"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">

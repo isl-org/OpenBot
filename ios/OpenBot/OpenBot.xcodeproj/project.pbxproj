@@ -262,12 +262,12 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		4FEF44F0837469F66D5A7156 /* models */ = {
+		4FEF44F0837469F66D5A7156 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				4FEF45F4F7552D2FFF3D1130 /* Modes.swift */,
 			);
-			path = models;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		4FEF4549B0D1FC8F591E63FE /* OpenBotUITests */ = {
@@ -283,7 +283,7 @@
 			isa = PBXGroup;
 			children = (
 				BF9BAED628AF94A800EF3E48 /* Frameworks */,
-				4FEF44F0837469F66D5A7156 /* models */,
+				4FEF44F0837469F66D5A7156 /* Models */,
 				4FEF42AB3B7AC14D55B7DBA3 /* Utils */,
 				BF5AF3BF28AE4A96008BAD95 /* Controllers */,
 				4FEF4A209F128B8F5AC06E17 /* Products */,

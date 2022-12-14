@@ -147,7 +147,14 @@ class AutopilotFragment: CameraController {
             autoPilotMode = false
         }
     }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        print("memory is low");
+    }
 }
+
+
 
 extension Date {
     var millisecondsSince1970: Int64 {

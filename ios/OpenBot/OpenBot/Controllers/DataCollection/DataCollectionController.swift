@@ -13,8 +13,8 @@ class DataCollectionController: CameraController {
     var sensorDataTemp: String = ""
     var gameControllerObj: GameController?;
     var selectedSpeedMode: SpeedMode = SpeedMode.NORMAL;
-    var selectedControlMode: ControlMode = ControlMode.gamepad;
-    var selectedDriveMode: DriveMode = DriveMode.joystick;
+    var selectedControlMode: ControlMode = ControlMode.GAMEPAD;
+    var selectedDriveMode: DriveMode = DriveMode.JOYSTICK;
     var vehicleControl = Control();
     var indicator = "i0,0\n";
     let bluetooth = bluetoothDataController.shared;
@@ -140,10 +140,10 @@ class DataCollectionController: CameraController {
             selectedControlMode = controlMode;
         }
 //        print(selectedControlMode);
-        if selectedControlMode == .gamepad {
+        if selectedControlMode == .GAMEPAD {
             gameControllerObj = GameController();
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
-        } else if selectedControlMode == .phone {
+        } else if selectedControlMode == .PHONE {
             gameControllerObj = nil;
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
         }

@@ -6,6 +6,8 @@ import Foundation
 import Network
 
 public class NetworkServiceConnection: NSObject {
+
+
     private var browser: NWBrowser?
 //    private var netService: NetService?
 //    private var completion: ((Bool) -> Void)?
@@ -40,6 +42,69 @@ public class NetworkServiceConnection: NSObject {
             for (index, element) in results.enumerated() {
                 print("Service found at index \(index):")
                 print("Service name: \(element.endpoint)")
+//                print("Service name: \(element.nw)")
+                let connection = NWConnection(to: element.endpoint, using: .tcp)
+
+                connection.stateUpdateHandler = { state in
+                    switch state {
+                    case .ready:
+                        if let innerEndpoint = connection.currentPath?.remoteEndpoint,
+                           case .hostPort(let host, let port) = innerEndpoint {
+                            print("Connected to", "\(host):\(port)")
+                            do {
+//                                let listener = try NWListener(using: .tcp)
+////                                listener.port = port
+//
+//                                listener.newConnectionHandler = { (connection) in
+//                                    // Listen for data on the new connection
+//                                    connection.receive(minimumIncompleteLength: 1, maximumLength: 1024) { (data, _, _, error) in
+//                                        if let error = error {
+//                                            // Handle the error
+//                                            // ...
+//                                        }
+//
+//                                        if let data = data {
+//                                            // Handle the received data
+//                                            // ...
+//                                        }
+//                                    }
+//                                }
+//
+//                                listener.start(queue: .global())
+                            } catch {
+                            }
+//                            self.listener.service = NWListener.Service(name: name, type: type, domain: domain, txtRecord: txtRecord)
+
+                        }
+                    default:
+                        break
+                    }
+                }
+                connection.start(queue: .global())
+            }
+            for (index, change) in changes.enumerated() {
+                switch change {
+                case .added(let browseResult):
+                    switch browseResult.endpoint {
+                    case .hostPort(let host, let port):
+                        print("added hostPort \(host) \(port)")
+                    case .service(let name, let type, let domain, let interface):
+                        print("added service \(name) \(type) \(domain) \(String(describing: interface))")
+                    default:
+                        print("fail")
+                    }
+                case .removed(let browseResult):
+                    print("removed \(browseResult.endpoint)")
+                case .changed(_, let browseResult, let flags):
+                    if flags.contains(.interfaceAdded) {
+                        print("\(browseResult.endpoint) added interfaces")
+                    }
+                    if flags.contains(.interfaceRemoved) {
+                        print("\(browseResult.endpoint) removed interfaces")
+                    }
+                default:
+                    print("no change")
+                }
             }
         }
 //        netService = NetService(domain: "local.", type:"_lnp._tcp.", name: "LocalNetworkPrivacy", port: 1100)
