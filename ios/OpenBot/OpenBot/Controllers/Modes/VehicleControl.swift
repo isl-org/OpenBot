@@ -32,6 +32,7 @@ class VehicleControl: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateRpmLabel), name: .updateRpmLabel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(decreaseSpeedMode), name: .decreaseSpeedMode, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(increaseSpeedMode), name: .increaseSpeedMode, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDrive), name: .updateDriveMode, object: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -195,5 +196,9 @@ class VehicleControl: UIView {
         case .fast :
            return;
         }
+    }
+
+    @objc func updateDrive(_ notification: Notification) {
+        updateDriveMode(self)
     }
 }

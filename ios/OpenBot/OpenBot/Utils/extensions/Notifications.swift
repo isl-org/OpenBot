@@ -35,10 +35,9 @@ extension Notification.Name {
     static let fileDownloaded = Notification.Name("fileDownloaded");
     static let removeBlankScreen = Notification.Name("removeBlankScreen");
     static let toggleNetworks = Notification.Name("toggleNetworks");
-    static let updateAutoPilotFps = Notification.Name("updateAutoPilotFps")
-    static let updateObjectTrackingFps = Notification.Name("updateObjectTrackingFps")
-    static let decreaseSpeedMode = Notification.Name("decreaseSpeedMode")
-    static let increaseSpeedMode = Notification.Name("increaseSpeedMode")
-
-
+    static let updateAutoPilotFps = Notification.Name("updateAutoPilotFps");
+    static let updateObjectTrackingFps = Notification.Name("updateObjectTrackingFps");
+    static let decreaseSpeedMode = Notification.Name("decreaseSpeedMode");
+    static let increaseSpeedMode = Notification.Name("increaseSpeedMode");
+    static let updateDriveMode = Notification.Name("updateDriveMode");
 }

@@ -53,6 +53,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(decreaseSpeedMode), name: .decreaseSpeedMode, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(increaseSpeedMode), name: .increaseSpeedMode, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDriveMode), name: .updateDriveMode, object: nil)
 
     }
 
@@ -381,6 +382,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         } else {
             fastMode.backgroundColor = Colors.title
         }
+        gameController.selectedSpeedMode = selectedSpeedMode;
         secondView.addSubview(slowMode)
         secondView.addSubview(mediumMode)
         secondView.addSubview(fastMode)
@@ -546,6 +548,21 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             return
         }
         updateSpeedModes()
+    }
+
+    @objc func updateDriveMode(_ notification: Notification) {
+        switch selectedDriveMode {
+        case .joystick :
+            selectedDriveMode = .gameController
+            break;
+        case .dual :
+            selectedDriveMode = .joystick;
+            break;
+        case .gameController :
+            selectedDriveMode = .dual
+            break;
+        }
+        updateGameControllerModeType()
     }
 
     func setupSpeedMode() {

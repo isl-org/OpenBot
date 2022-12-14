@@ -181,7 +181,6 @@ class GameController: GCPhysicalInputProfile {
      - Returns: Events
      */
     public func processControllerKeyData(element: GCControllerElement) -> Any {
-
         switch (element.localizedName) {
         case Keymap.KEY_CIRCLE.rawValue:
             return IndicatorEvent.Right;
@@ -196,7 +195,10 @@ class GameController: GCPhysicalInputProfile {
         case Keymap.KEY_Options.rawValue:
             return CMD_Events.TOGGLE_NOISE;
         case Keymap.KEY_L1.rawValue:
-            return DriveMode.joystick;
+            if (connectedController?.gamepad?.leftShoulder.isPressed == false){
+                return DriveMode.joystick;
+            }
+
         case Keymap.KEY_R1.rawValue:
             if (connectedController?.gamepad?.rightShoulder.isPressed == false) {
                 return CMD_Events.TOGGLE_NETWORK;
@@ -262,7 +264,6 @@ class GameController: GCPhysicalInputProfile {
     }
 
     @objc func sendKeyUpdates(keyCommand: Any) {
-
         switch (keyCommand) {
         case IndicatorEvent.Right:
             setIndicator(keyCommand: keyCommand as! IndicatorEvent);
@@ -284,6 +285,8 @@ class GameController: GCPhysicalInputProfile {
         case CMD_Events.TOGGLE_NETWORK:
             startNetwork()
             break;
+        case DriveMode.joystick :
+            updateDriveMode()
         default:
             break;
         }
@@ -305,6 +308,10 @@ class GameController: GCPhysicalInputProfile {
 
     func startNetwork() {
         NotificationCenter.default.post(name: .toggleNetworks, object: nil)
+    }
+
+    func updateDriveMode(){
+        NotificationCenter.default.post(name: .updateDriveMode, object: nil)
     }
 
 
