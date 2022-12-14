@@ -71,9 +71,15 @@ struct Constants {
 }
 
 enum SpeedMode: Float {
-    case slow = 128
-    case medium = 192
-    case fast = 255
+    case SLOW = 128
+    case NORMAL = 192
+    case FAST = 255
+}
+
+enum Direction: Int {
+    case UP = 1
+    case CYCLIC = 0
+    case DOWN = -1
 }
 
 enum ControlMode {
@@ -95,22 +101,21 @@ enum ControlEvent {
 }
 
 enum Keymap: String {
-    case KEY_TRIANGLE = "Triangle Button"
-    case KEY_SQUARE = "Square Button"
-    case KEY_CIRCLE = "Circle Button"
-    case KEY_CROSS = "Cross Button"
-    case KEY_R1 = "R1 Button"
-    case KEY_R2 = "R2 Button"
-    case KEY_R3 = "R3 Button"
-    case KEY_L1 = "L1 Button"
-    case KEY_L2 = "L2 Button"
-    case KEY_L3 = "L3 Button"
-    case KEY_Options = "OPTIONS Button"
-    case KEY_Share = "SHARE Button"
+    case KEYCODE_BUTTON_Y = "Triangle Button"
+    case KEYCODE_BUTTON_X = "Square Button"
+    case KEYCODE_BUTTON_B = "Circle Button"
+    case KEYCODE_BUTTON_A = "Cross Button"
+    case KEYCODE_BUTTON_R1 = "R1 Button"
+    case KEYCODE_BUTTON_R2 = "R2 Button"
+    case KEYCODE_BUTTON_L1 = "L1 Button"
+    case KEYCODE_BUTTON_L2 = "L2 Button"
+    case KEYCODE_BUTTON_THUMBL = "L3 Button"
+    case KEYCODE_BUTTON_THUMBR = "R3 Button"
+    case KEYCODE_BUTTON_START = "OPTIONS Button"
 }
 
 enum CMD_Events {
-    case TOGGLE_LOGS, TOGGLE_NOISE, TOGGLE_CAMERA, TOGGLE_NETWORK
+    case TOGGLE_LOGS, TOGGLE_NOISE, TOGGLE_CAMERA, TOGGLE_NETWORK, CMD_SPEED_UP, CMD_SPEED_DOWN, CMD_DRIVE_MODE
 }
 
 enum Resolutions {

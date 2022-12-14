@@ -7,7 +7,7 @@ import UIKit
 
 class VehicleControl: UIView {
     var controlMode: ControlMode = ControlMode.phone;
-    var speedMode: SpeedMode = SpeedMode.slow;
+    var speedMode: SpeedMode = SpeedMode.SLOW;
     var driveMode: DriveMode = DriveMode.dual;
     var speedLabel = UILabel()
     var speedInRpm = UILabel()
@@ -111,16 +111,16 @@ class VehicleControl: UIView {
     @objc func updateSpeedMode(_ sender: UIView) {
         if isButtonEnable {
             switch (speedMode) {
-            case .slow:
-                speedMode = .medium;
+            case .SLOW:
+                speedMode = .NORMAL;
                 createAndUpdateButton(iconName: Images.mediumIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
                 break;
-            case .medium:
-                speedMode = .fast;
+            case .NORMAL:
+                speedMode = .FAST;
                 createAndUpdateButton(iconName: Images.fastIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
                 break;
-            case .fast:
-                speedMode = .slow;
+            case .FAST:
+                speedMode = .SLOW;
                 createAndUpdateButton(iconName: Images.slowIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
                 break;
             }

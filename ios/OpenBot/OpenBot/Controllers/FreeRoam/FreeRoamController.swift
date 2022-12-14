@@ -11,7 +11,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     var sonarLabel = UILabel()
     var voltageLabel = UILabel()
     var outerSonar: UIView!
-    var selectedSpeedMode: SpeedMode = SpeedMode.medium;
+    var selectedSpeedMode: SpeedMode = SpeedMode.NORMAL;
     var selectedControlMode: ControlMode = ControlMode.gamepad;
     var selectedDriveMode: DriveMode = DriveMode.joystick;
     let bluetooth = bluetoothDataController.shared;
@@ -371,9 +371,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         let slowMode = createMode(x: 35, y: 242, width: Int(width / 4), label: Strings.slow, icon: "slow", action: #selector(slow(_:)))
         let mediumMode = createMode(x: 140, y: 242, width: Int(width / 4), label: Strings.medium, icon: "medium", action: #selector(medium(_:)))
         let fastMode = createMode(x: 245, y: 242, width: Int(width / 4), label: Strings.fast, icon: "fast", action: #selector(fast(_:)))
-        if selectedSpeedMode == SpeedMode.slow {
+        if selectedSpeedMode == SpeedMode.SLOW {
             slowMode.backgroundColor = Colors.title
-        } else if selectedSpeedMode == SpeedMode.medium {
+        } else if selectedSpeedMode == SpeedMode.NORMAL {
             mediumMode.backgroundColor = Colors.title
         } else {
             fastMode.backgroundColor = Colors.title
@@ -394,20 +394,20 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func slow(_ sender: UIView) {
-        selectedSpeedMode = SpeedMode.slow
-        gameController.selectedSpeedMode = SpeedMode.slow
+        selectedSpeedMode = SpeedMode.SLOW
+        gameController.selectedSpeedMode = SpeedMode.SLOW
         updateSpeedModes()
     }
 
     @objc func medium(_ sender: UIView) {
-        selectedSpeedMode = SpeedMode.medium
-        gameController.selectedSpeedMode = SpeedMode.medium
+        selectedSpeedMode = SpeedMode.NORMAL
+        gameController.selectedSpeedMode = SpeedMode.NORMAL
         updateSpeedModes()
     }
 
     @objc func fast(_ sender: UIView) {
-        selectedSpeedMode = SpeedMode.fast
-        gameController.selectedSpeedMode = SpeedMode.fast
+        selectedSpeedMode = SpeedMode.FAST
+        gameController.selectedSpeedMode = SpeedMode.FAST
         updateSpeedModes()
     }
 
@@ -518,7 +518,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     func setupSpeedMode() {
-        gameController.selectedSpeedMode = SpeedMode.medium;
+        gameController.selectedSpeedMode = SpeedMode.NORMAL;
         gameController.selectedDriveMode = DriveMode.joystick;
     }
 }

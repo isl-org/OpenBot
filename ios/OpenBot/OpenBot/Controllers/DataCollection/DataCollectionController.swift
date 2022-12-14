@@ -12,7 +12,7 @@ class DataCollectionController: CameraController {
     let sensorData = sensorDataRetrieve.shared
     var sensorDataTemp: String = ""
     var gameControllerObj: GameController?;
-    var selectedSpeedMode: SpeedMode = SpeedMode.medium;
+    var selectedSpeedMode: SpeedMode = SpeedMode.NORMAL;
     var selectedControlMode: ControlMode = ControlMode.gamepad;
     var selectedDriveMode: DriveMode = DriveMode.joystick;
     var vehicleControl = Control();

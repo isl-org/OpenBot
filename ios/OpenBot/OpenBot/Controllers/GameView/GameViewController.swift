@@ -98,7 +98,6 @@ class GameViewController: UIViewController {
         controller!.extendedGamepad?.dpad.down.pressedChangedHandler = { (button, value, pressed) in
             self.buttonChangedHandler("↓", pressed, self.overlayDown)
         }
-
         controller!.extendedGamepad?.buttonA.pressedChangedHandler = { (button, value, pressed) in
             self.buttonChangedHandler("A", pressed, self.overlayA)
         }
@@ -111,21 +110,18 @@ class GameViewController: UIViewController {
         controller!.extendedGamepad?.buttonY.pressedChangedHandler = { (button, value, pressed) in
             self.buttonChangedHandler("Y", pressed, self.overlayY)
         }
-
         controller!.extendedGamepad?.buttonOptions?.pressedChangedHandler = { (button, value, pressed) in
             self.buttonChangedHandler("SHARE", pressed, self.overlayOptions)
         }
         controller!.extendedGamepad?.buttonMenu.pressedChangedHandler = { (button, value, pressed) in
             self.buttonChangedHandler("OPTIONS", pressed, self.overlayMenu)
         }
-
         controller!.extendedGamepad?.leftShoulder.pressedChangedHandler = { (button, value, pressed) in
             self.buttonChangedHandler("L1", pressed, self.overlayL1Shoulder)
         }
         controller!.extendedGamepad?.rightShoulder.pressedChangedHandler = { (button, value, pressed) in
             self.buttonChangedHandler("R1", pressed, self.overlayR1Shoulder)
         }
-
         controller!.extendedGamepad?.leftTrigger.pressedChangedHandler = { (button, value, pressed) in
             self.buttonChangedHandler("L2", pressed, self.overlayL2Shoulder)
         }
@@ -138,14 +134,12 @@ class GameViewController: UIViewController {
         controller!.extendedGamepad?.rightTrigger.valueChangedHandler = { (button, value, pressed) in
             self.triggerChangedHandler("R2", value, pressed)
         }
-
         controller!.extendedGamepad?.leftThumbstick.valueChangedHandler = { (button, xvalue, yvalue) in
             self.thumbstickChangedHandler("THUMB-LEFT", xvalue, yvalue)
         }
         controller!.extendedGamepad?.rightThumbstick.valueChangedHandler = { (button, xvalue, yvalue) in
             self.thumbstickChangedHandler("THUMB-RIGHT", xvalue, yvalue)
         }
-
         controller!.extendedGamepad?.leftThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
             self.buttonChangedHandler("THUMB-LEFT", pressed, self.overlayLeftThumb)
         }
