@@ -212,6 +212,8 @@ class GameController: GCPhysicalInputProfile {
             if(connectedController?.extendedGamepad?.rightThumbstickButton?.isPressed == false){
                 NotificationCenter.default.post(name: .increaseSpeedMode, object: nil);
             }
+        case Keymap.CMD_INDICATOR_STOP.rawValue :
+            return IndicatorEvent.Stop
         default:
             return "";
         }

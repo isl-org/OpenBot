@@ -67,7 +67,7 @@ struct Constants {
     static let objectTrackingMode = "DETECTOR";
     static let types: [String] = ["AUTOPILOT", "DETECTOR", "NAVIGATION"];
     static let classes: [String] = ["AUTOPILOT_F", "MOBILENETV1_1_0_Q", "MOBILENETV3_S_Q", "YOLOV4", "NAVIGATION"]
-    static let devices : [String] = ["CPU","XNNPACK"]
+    static let devices: [String] = ["CPU", "XNNPACK"]
 }
 
 enum SpeedMode: Float {
@@ -107,6 +107,7 @@ enum Keymap: String {
     case KEY_L3 = "L3 Button"
     case KEY_Options = "OPTIONS Button"
     case KEY_Share = "SHARE Button"
+    case CMD_INDICATOR_STOP = "INDICATOR_STOP";
 }
 
 enum CMD_Events {
@@ -145,19 +146,19 @@ enum PATH_TYPE: String {
 }
 
 struct FileName {
-    static let accelerator : String = "accelerometerLog.txt";
-    static let magnetic : String = "magneticLog.txt";
-    static let gyroscopeLog : String = "gyroscopeLog.txt";
-    static let gpsLog : String = "gpsLog.txt";
-    static let bumperLog : String = "bumperLog.txt";
-    static let ctrlLog : String = "ctrlLog.txt";
-    static let indicatorLog : String = "indicatorLog.txt";
-    static let inferenceLog : String = "inferenceLog.txt"
-    static let lightLog  : String = "lightLog.txt";
-    static let motionLog : String = "motionLog.txt";
-    static let sonarLog : String = "sonarLog.txt";
-    static let voltageLog : String = "voltageLog.txt";
-    static let wheelsLog : String = "wheelsLog.txt"
+    static let accelerator: String = "accelerometerLog.txt";
+    static let magnetic: String = "magneticLog.txt";
+    static let gyroscopeLog: String = "gyroscopeLog.txt";
+    static let gpsLog: String = "gpsLog.txt";
+    static let bumperLog: String = "bumperLog.txt";
+    static let ctrlLog: String = "ctrlLog.txt";
+    static let indicatorLog: String = "indicatorLog.txt";
+    static let inferenceLog: String = "inferenceLog.txt"
+    static let lightLog: String = "lightLog.txt";
+    static let motionLog: String = "motionLog.txt";
+    static let sonarLog: String = "sonarLog.txt";
+    static let voltageLog: String = "voltageLog.txt";
+    static let wheelsLog: String = "wheelsLog.txt"
 
 }
 
