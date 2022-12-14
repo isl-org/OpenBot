@@ -445,9 +445,7 @@ class expandedAutoPilot: UIView {
 
     @objc func toggleNetwork(_ notification: Notification) {
         autoModeButton.isOn = !autoModeButton.isOn
-        if autoModeButton.isOn {
-            NotificationCenter.default.post(name: .autoMode, object: nil)
-        }
+        NotificationCenter.default.post(name: .autoMode, object: nil)
     }
 
     @objc func updateFps(_ notification: Notification) {
