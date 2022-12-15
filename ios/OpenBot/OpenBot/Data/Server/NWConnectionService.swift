@@ -9,7 +9,7 @@ public class NetworkServiceConnection: NSObject {
 
 
     private var browser: NWBrowser?
-//    private var netService: NetService?
+    private var netService: NetService?
 //    private var completion: ((Bool) -> Void)?
     let SERVICE_TYPE: String = "_openbot._tcp.";
 
@@ -52,25 +52,27 @@ public class NetworkServiceConnection: NSObject {
                            case .hostPort(let host, let port) = innerEndpoint {
                             print("Connected to", "\(host):\(port)")
                             do {
-//                                let listener = try NWListener(using: .tcp)
-////                                listener.port = port
-//
-//                                listener.newConnectionHandler = { (connection) in
-//                                    // Listen for data on the new connection
-//                                    connection.receive(minimumIncompleteLength: 1, maximumLength: 1024) { (data, _, _, error) in
-//                                        if let error = error {
-//                                            // Handle the error
-//                                            // ...
-//                                        }
-//
-//                                        if let data = data {
-//                                            // Handle the received data
-//                                            // ...
-//                                        }
-//                                    }
-//                                }
-//
-//                                listener.start(queue: .global())
+                                let listener = try NWListener(using: .tcp)
+//                                listener.port = port
+                                print(listener)
+                                print(connection)
+                                listener.newConnectionHandler = { (connection) in
+                                    // Listen for data on the new connection
+                                    connection.receive(minimumIncompleteLength: 1, maximumLength: 1024) { (data, _, _, error) in
+                                        if let error = error {
+                                            // Handle the error
+                                            // ...
+                                        }
+
+                                        if let data = data {
+                                            // Handle the received data
+                                            // ...
+                                            print(data)
+                                        }
+                                    }
+                                }
+
+                                listener.start(queue: .global())
                             } catch {
                             }
 //                            self.listener.service = NWListener.Service(name: name, type: type, domain: domain, txtRecord: txtRecord)
@@ -111,7 +113,7 @@ public class NetworkServiceConnection: NSObject {
 //        netService?.delegate = self
 
         self.browser?.start(queue: .main)
-//        netService?.publish()
+        netService?.publish()
     }
 
     private func reset() {

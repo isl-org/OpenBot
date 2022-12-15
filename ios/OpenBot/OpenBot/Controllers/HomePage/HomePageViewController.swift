@@ -51,7 +51,10 @@ class HomePageViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
 
-        connection.discoverServices();
+//        connection.discoverServices();
+        server?.start()
+       client.start();
+        server?.send()
     }
 
     func changeNavigationColor() {
