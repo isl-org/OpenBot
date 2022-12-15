@@ -52,9 +52,7 @@ class HomePageViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
 
 //        connection.discoverServices();
-        server?.start()
-       client.start();
-        server?.send()
+
     }
 
     func changeNavigationColor() {
@@ -154,7 +152,7 @@ extension UIViewController: UICollectionViewDataSource {
 
 
 extension UIBarButtonItem {
-    convenience init(image: UIImage, title: String, target: Any?, action: Selector?,titleColor : UIColor) {
+    convenience init(image: UIImage, title: String, target: Any?, action: Selector?, titleColor: UIColor) {
         let button = UIButton(type: .custom)
         button.setInsets(forContentPadding: UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0), imageTitlePadding: 10)
         button.setImage(image, for: .normal)

@@ -6,7 +6,7 @@ import Foundation
 import Network
 import UIKit
 
-let server = try? Server()
+var server = try? Server()
 
 class Server {
 
@@ -39,7 +39,6 @@ class Server {
     }
 
     func send() {
-
         for connection in connections {
             connection.send("super message from the server! \(Int(Date().timeIntervalSince1970))")
         }

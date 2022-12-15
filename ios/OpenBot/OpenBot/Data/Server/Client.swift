@@ -6,7 +6,7 @@ import Foundation
 
 import Foundation
 
-let client = Client()
+var client = Client()
 
 class Client {
 
@@ -15,6 +15,7 @@ class Client {
     var connection: Connection?
 
     func start() {
+        print("new client")
         browser.start { [weak self] result in
             guard let self = self,
                   self.connection == nil else { return }

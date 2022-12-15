@@ -325,11 +325,16 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             gameControllerObj = gameController
             gameController.selectedControlMode = ControlMode.gamepad
             gamePadController.backgroundColor = Colors.title
+            server = nil
+            client = Client()
+            sharedConnection = nil
         } else if selectedControlMode == ControlMode.phone {
             gameControllerObj = nil;
             gameController.selectedControlMode = ControlMode.phone
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             phoneController.backgroundColor = Colors.title
+            server?.start();
+            client.start();
         }
         secondView.addSubview(gamePadController)
         secondView.addSubview(phoneController)

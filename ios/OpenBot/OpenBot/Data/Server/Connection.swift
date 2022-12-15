@@ -34,9 +34,15 @@ class Connection {
     func start() {
         connection.stateUpdateHandler = { newState in
             print("connection.stateUpdateHandler \(newState)")
-            if case .ready = newState {
+            switch newState {
+            case .ready :
                 self.receiveMessage()
+            case .preparing :
+                return
+            default:
+                break;
             }
+
         }
         connection.start(queue: .main)
     }
@@ -48,12 +54,16 @@ class Connection {
     }
 
     func receiveMessage() {
-        connection.receive(minimumIncompleteLength: 1, maximumLength: 100) { data, _, _, _ in
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 1000) { data, _, _, error in
+            if let error = error {
+                return
+            }
             if let data = data,
                let message = String(data: data, encoding: .utf8) {
                 print("Connection receiveMessage message: \(message)")
             }
             self.receiveMessage()
+
         }
     }
 }

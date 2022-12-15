@@ -124,25 +124,25 @@ public class NetworkServiceConnection: NSObject {
     }
 }
 
-@available(iOS 14.0, *)
-extension NetworkServiceConnection: NetServiceDelegate, NetServiceBrowserDelegate {
-    public func netServiceDidPublish(_ sender: NetService) {
-        reset()
-        print("Local network permission has been granted")
-    }
-
-    public func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
-        print("did find", service);
-    }
-
-    public func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String: NSNumber]) {
-        print("errorDict", errorDict)
-    }
-
-    public func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-    }
-
-    public func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
-
-    }
-}
+//@available(iOS 14.0, *)
+//extension NetworkServiceConnection: NetServiceDelegate, NetServiceBrowserDelegate {
+//    public func netServiceDidPublish(_ sender: NetService) {
+//        reset()
+//        print("Local network permission has been granted")
+//    }
+//
+//    public func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
+//        print("did find", service);
+//    }
+//
+//    public func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String: NSNumber]) {
+//        print("errorDict", errorDict)
+//    }
+//
+//    public func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
+//    }
+//
+//    public func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
+//
+//    }
+//}
