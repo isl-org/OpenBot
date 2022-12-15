@@ -120,10 +120,12 @@
     <item>No server</item>
   </string-array>
   <string-array name="models">
-    <item>Autopilot_F</item>
-    <item>MobileNetV1_1_0_Q</item>
-    <item>MobileNetV3_S_Q</item>
+    <item>CmdNav</item>
+    <item>GoalNav</item>
+    <item>MobileNet</item>
+    <item>EfficientDet</item>
     <item>YoloV4</item>
+    <item>YoloV5</item>
   </string-array>
   <string-array name="devices">
     <item>CPU</item>
