@@ -294,6 +294,36 @@ Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution
 | Xiaomi Mi9       | 5.5 | 5.0 |   -   |
 | Google Pixel 4XL | 5.3 | 4.0 |  5.3  |
 
+#### EfficientDet-L0-320 - mAP: 26%
+
+[EfficientDet-L0](https://tfhub.dev/tensorflow/lite-model/efficientdet/lite0/detection/metadata/1) with input resolution of 320x320. Note: Model performance deteriorates in landscape mode; the confidence threshold might need to be adjusted.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra|  18 |  10 |   16  |
+| Xiaomi Mi9       |  16 |  20 |  1.2  |
+| Google Pixel 4XL |  17 |  17 |   16  |
+
+#### EfficientDet-L1-384 - mAP: 31%
+
+[EfficientDet-L1](https://tfhub.dev/tensorflow/lite-model/efficientdet/lite1/detection/metadata/1) with input resolution of 384x384. Note: Model performance deteriorates in landscape mode; the confidence threshold might need to be adjusted.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra|  12 | 9.2 |   10  |
+| Xiaomi Mi9       |  10 |  13 |    -  |
+| Google Pixel 4XL |  11 |  11 |   10  |
+
+#### EfficientDet-L2-448 - mAP: 34%
+
+[EfficientDet-L2](https://tfhub.dev/tensorflow/lite-model/efficientdet/lite2/detection/metadata/1) with input resolution of 448x448. Note: Model performance deteriorates in landscape mode; the confidence threshold might need to be adjusted.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra| 9.8 | 8.4 |  8.2  |
+| Xiaomi Mi9       | 6.4 | 9.4 |   -   |
+| Google Pixel 4XL | 7.7 | 8.3 |  7.6  |
+
 ## Add your own fragment
 
 Please refer to the [ContributionGuide](ContributionGuide.md) to learn how to add your own fragments to the OpenBot app.

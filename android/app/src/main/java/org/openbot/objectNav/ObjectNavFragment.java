@@ -209,9 +209,9 @@ public class ObjectNavFragment extends CameraFragment {
   }
 
   private void updateCropImageInfo() {
-    //    Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
-    //    Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
-    // getMaxAnalyseImageSize().getHeight());
+//    Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
+//    Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
+//     getMaxAnalyseImageSize().getHeight());
     frameToCropTransform = null;
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
@@ -235,7 +235,7 @@ public class ObjectNavFragment extends CameraFragment {
     binding.trackingOverlay.addCallback(
         canvas -> {
           tracker.draw(canvas);
-          //          tracker.drawDebug(canvas);
+//          tracker.drawDebug(canvas);
         });
     tracker.setFrameConfiguration(
         getMaxAnalyseImageSize().getWidth(),
