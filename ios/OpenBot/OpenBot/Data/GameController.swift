@@ -72,46 +72,50 @@ class GameController: GCPhysicalInputProfile {
     public func processJoystickInput(mode: DriveMode, gamepad: GCExtendedGamepad) -> Control {
         switch (mode) {
         case .DUAL:
-            return convertDualToControl(leftStick: gamepad.leftThumbstick.yAxis.value.rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero), rightStick: gamepad.rightThumbstick.yAxis.value);
+            return convertDualToControl(leftStick: getCenteredAxis(gamepad.leftThumbstick.yAxis.value), rightStick: getCenteredAxis(gamepad.rightThumbstick.yAxis.value));
         case .GAME:
-            var rightTrigger: Float = gamepad.rightShoulder.value;
+            var rightTrigger: Float = getCenteredAxis(gamepad.rightShoulder.value);
             if (rightTrigger == 0) {
-                rightTrigger = gamepad.rightTrigger.value;
+                rightTrigger = getCenteredAxis(gamepad.rightTrigger.value);
             }
 
-            var leftTrigger: Float = gamepad.leftShoulder.value;
+            var leftTrigger: Float = getCenteredAxis(gamepad.leftShoulder.value);
             if (leftTrigger == 0) {
-                leftTrigger = gamepad.leftTrigger.value;
+                leftTrigger = getCenteredAxis(gamepad.leftTrigger.value);
             }
 
-            var steeringOffset: Float = gamepad.leftThumbstick.xAxis.value;
+            var steeringOffset: Float = getCenteredAxis(gamepad.leftThumbstick.xAxis.value);
             if (steeringOffset == 0) {
-                steeringOffset = gamepad.dpad.yAxis.value;
+                steeringOffset = getCenteredAxis(gamepad.dpad.yAxis.value);
             }
             if (steeringOffset == 0) {
-                steeringOffset = gamepad.rightThumbstick.xAxis.value;
+                steeringOffset = getCenteredAxis(gamepad.rightThumbstick.xAxis.value);
             }
 
             return convertGameToControl(leftTrigger: leftTrigger, rightTrigger: rightTrigger, steeringOffset: steeringOffset);
         case .JOYSTICK:
-            var yAxis: Float = gamepad.leftThumbstick.yAxis.value;
+            var yAxis: Float = getCenteredAxis(gamepad.leftThumbstick.yAxis.value);
             if (yAxis == 0) {
-                yAxis = gamepad.dpad.yAxis.value;
+                yAxis = getCenteredAxis(gamepad.dpad.yAxis.value);
             }
 
             if (yAxis == 0) {
-                yAxis = gamepad.rightThumbstick.yAxis.value;
+                yAxis = getCenteredAxis(gamepad.rightThumbstick.yAxis.value);
             }
 
-            var xAxis: Float = gamepad.leftThumbstick.xAxis.value;
+            var xAxis: Float = getCenteredAxis(gamepad.leftThumbstick.xAxis.value);
             if (xAxis == 0) {
-                xAxis = gamepad.dpad.xAxis.value;
+                xAxis = getCenteredAxis(gamepad.dpad.xAxis.value);
             }
             if (xAxis == 0) {
-                xAxis = gamepad.rightThumbstick.xAxis.value;
+                xAxis = getCenteredAxis(gamepad.rightThumbstick.xAxis.value);
             }
             return convertJoystickToControl(xAxis: xAxis, yAxis: yAxis);
         }
+    }
+
+    private func getCenteredAxis(_ value: Float) -> Float {
+        return value;
     }
 
     /**
@@ -181,42 +185,42 @@ class GameController: GCPhysicalInputProfile {
      - Returns: Events
      */
     public func processControllerKeyData(element: GCControllerElement) -> Any {
-        
+
         switch (element.localizedName) {
         case Keymap.KEYCODE_BUTTON_X.rawValue:
-            if (connectedController?.extendedGamepad?.buttonX.isPressed == false){
+            if (connectedController?.extendedGamepad?.buttonX.isPressed == false) {
                 return IndicatorEvent.LEFT;
             }
         case Keymap.KEYCODE_BUTTON_Y.rawValue:
-            if (connectedController?.extendedGamepad?.buttonY.isPressed == false){
+            if (connectedController?.extendedGamepad?.buttonY.isPressed == false) {
                 return ControlEvent.STOP;
             }
         case Keymap.KEYCODE_BUTTON_B.rawValue:
-            if (connectedController?.extendedGamepad?.buttonB.isPressed == false){
+            if (connectedController?.extendedGamepad?.buttonB.isPressed == false) {
                 return IndicatorEvent.RIGHT;
             }
         case Keymap.KEYCODE_BUTTON_A.rawValue:
-            if (connectedController?.extendedGamepad?.buttonA.isPressed == false){
+            if (connectedController?.extendedGamepad?.buttonA.isPressed == false) {
                 return CMD_Events.TOGGLE_LOGS;
             }
         case Keymap.KEYCODE_BUTTON_START.rawValue:
-            if (connectedController?.extendedGamepad?.buttonOptions?.isPressed == false){
+            if (connectedController?.extendedGamepad?.buttonOptions?.isPressed == false) {
                 return CMD_Events.TOGGLE_NOISE;
             }
         case Keymap.KEYCODE_BUTTON_L1.rawValue:
-            if (connectedController?.extendedGamepad?.leftShoulder.isPressed == false){
+            if (connectedController?.extendedGamepad?.leftShoulder.isPressed == false) {
                 return DriveMode.JOYSTICK;
             }
         case Keymap.KEYCODE_BUTTON_R1.rawValue:
-            if(connectedController?.extendedGamepad?.rightShoulder.isPressed ==  false){
+            if (connectedController?.extendedGamepad?.rightShoulder.isPressed == false) {
                 return CMD_Events.TOGGLE_NETWORK;
             }
         case Keymap.KEYCODE_BUTTON_THUMBL.rawValue:
-            if(connectedController?.extendedGamepad?.leftThumbstickButton?.isPressed ==  false){
+            if (connectedController?.extendedGamepad?.leftThumbstickButton?.isPressed == false) {
                 return CMD_Events.CMD_SPEED_DOWN;
             }
         case Keymap.KEYCODE_BUTTON_THUMBR.rawValue:
-            if(connectedController?.extendedGamepad?.rightThumbstickButton?.isPressed ==  false){
+            if (connectedController?.extendedGamepad?.rightThumbstickButton?.isPressed == false) {
                 return CMD_Events.CMD_SPEED_UP;
             }
         case Keymap.CMD_INDICATOR_STOP.rawValue:
@@ -300,13 +304,13 @@ class GameController: GCPhysicalInputProfile {
         case CMD_Events.CMD_SPEED_DOWN:
             NotificationCenter.default.post(name: .decreaseSpeedMode, object: nil);
             break;
-        case DriveMode.JOYSTICK :
+        case DriveMode.JOYSTICK:
             updateDriveMode()
         default:
             break;
         }
     }
-    
+
     func setIndicator(keyCommand: IndicatorEvent) {
         let indicatorValues: String = getIndicatorEventValue(event: keyCommand);
         if (indicator != indicatorValues) {
@@ -317,15 +321,15 @@ class GameController: GCPhysicalInputProfile {
         }
     }
 
-    func toggleLogging(){
+    func toggleLogging() {
         NotificationCenter.default.post(name: .logData, object: nil)
     }
 
-    func toggleNetwork(){
+    func toggleNetwork() {
         NotificationCenter.default.post(name: .toggleNetworks, object: nil)
     }
 
-    func updateDriveMode(){
+    func updateDriveMode() {
         NotificationCenter.default.post(name: .updateDriveMode, object: nil)
     }
 
