@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import AVFoundation
 import UIKit
 
 class ObjectTrackingFragment: CameraController {
@@ -19,6 +20,10 @@ class ObjectTrackingFragment: CameraController {
     var currentDevice: RuntimeDevice = RuntimeDevice.CPU
     private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 50.0;
     private var TIMER_OF_MODEL: Float = 0.03
+    private let inferenceQueue = DispatchQueue(label: "openbot.autopilot.inferencequeue")
+    private var isInferenceQueueBusy = false
+    private var result: Control?
+    private var frames: [UIView] = [];
 
     override func viewDidLoad() {
         let modelItems = Common.loadAllModelItemsFromBundle()
@@ -110,9 +115,10 @@ class ObjectTrackingFragment: CameraController {
     }
 
     @objc func toggleAutoMode() {
-        var frames: [UIView] = [];
+        //var frames: [UIView] = [];
         autoMode = !autoMode;
-        if (autoMode) {
+        //if (autoMode) {
+            /*
             images.removeAll();
             Timer.scheduledTimer(withTimeInterval: TimeInterval(TIMER_OF_MODEL), repeats: true) { [self] timer in
                 do {
@@ -156,10 +162,11 @@ class ObjectTrackingFragment: CameraController {
                 } catch {
                     print("error:\(error)")
                 }
-            }
+             
+              }
         } else {
             objectTrackingSettings?.autoModeButton.isOn = false
-        }
+        }*/
     }
 
     func sendControl(control: Control) {
@@ -169,7 +176,7 @@ class ObjectTrackingFragment: CameraController {
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
             NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())));
             vehicleControl = control;
-            print("c" + String(left) + "," + String(right) + "\n");
+            //print("c" + String(left) + "," + String(right) + "\n");
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
         }
     }
@@ -252,7 +259,75 @@ class ObjectTrackingFragment: CameraController {
         frame.addSubview(nameString);
         return frame;
     }
+    
+    override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        
+        // extract the image buffer from the sample buffer
+        let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
+        
+        guard let imagePixelBuffer = pixelBuffer else {
+            debugPrint("unable to get image from sample buffer")
+            return
+        }
+        
+        guard !self.isInferenceQueueBusy else { return }
+            
+        inferenceQueue.async{
+            if self.autoMode {
+                self.isInferenceQueueBusy = true
+                
+                let startTime = Date().millisecondsSince1970
+                
+                let res = self.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, height: self.originalHeight, width: self.originalWidth)
+                
+                let endTime = Date().millisecondsSince1970
+                
+                if (res!.count > 0) {
+                    self.result = self.updateTarget(res!.first!.getLocation());
+                }
+                else {
+                    self.result = Control(left: 0, right: 0)
+                }
+                
+                guard let controlResult = self.result else { return }
 
+                DispatchQueue.main.async {
+                    
+                    if (self.frames.count > 0) {
+                        for frame in self.frames {
+                            frame.removeFromSuperview();
+                        }
+                    }
+                    self.frames.removeAll();
+                    
+                    var i = 0;
+                    if (res!.count > 0) {
+                        for item in res! {
+                            if (item.getConfidence() * 100 > self.MINIMUM_CONFIDENCE_TF_OD_API) {
+                                let frame = self.addFrame(item: item, color: Constants.frameColors[i % 5]);
+                                self.frames.append(frame);
+                                self.cameraView.addSubview(frame);
+                                i += 1;
+                            }
+                        }
+                    }
+                    
+                    if (endTime - startTime) != 0 {
+                        NotificationCenter.default.post(name: .updateObjectTrackingFps, object: 1000 / (endTime - startTime));
+                    }
+                    self.sendControl(control: controlResult)
+                }
+            }
+            else {
+                DispatchQueue.main.async {
+                    self.sendControl(control: Control())
+                }
+            }
+            self.isInferenceQueueBusy = false
+        
+    }
+
+    }
     @objc func updateDataFromControllerApp(_ notification: Notification) {
         if notification.object != nil {
             let command = notification.object as! String
@@ -261,6 +336,4 @@ class ObjectTrackingFragment: CameraController {
             sendControl(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)));
         }
     }
-
-
 }

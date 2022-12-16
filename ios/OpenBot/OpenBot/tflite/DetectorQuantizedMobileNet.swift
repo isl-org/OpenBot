@@ -108,8 +108,8 @@ class DetectorQuantizedMobileNet: Detector {
         for i in 0..<NUM_DETECTIONS {
             let xPos = CGFloat(outputLocations![(4 * i) + 1]) * CGFloat(getImageSizeX());
             let yPos = CGFloat(outputLocations![(4 * i)]) * CGFloat(getImageSizeY());
-            let width = CGFloat(outputLocations![(4 * i) + 2]) * CGFloat(getImageSizeX()) - xPos;
-            let height = CGFloat(outputLocations![(4 * i) + 3]) * CGFloat(getImageSizeY()) - yPos;
+            let width = CGFloat(outputLocations![(4 * i) + 3]) * CGFloat(getImageSizeX()) - xPos;
+            let height = CGFloat(outputLocations![(4 * i) + 2]) * CGFloat(getImageSizeY()) - yPos;
             let rect = CGRect(x: xPos, y: yPos, width: width, height: height);
             let classId: Int = Int(outputClasses![i]);
             let labelId: Int = classId + 1;

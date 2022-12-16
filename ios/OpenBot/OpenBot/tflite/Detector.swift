@@ -132,16 +132,20 @@ class Detector: Network {
         return result
     }
 
-    func recognizeImage(image: UIImage, height: Double, width: Double) throws -> [Recognition] {
-        let inputTensor = try tflite!.input(at: 0);
-        let imageData = image.pixelBuffer(width: Int(width), height: Int(height));
-        let resizedImage = imageData?.resized(to: CGSize(width: getImageSizeX(), height: getImageSizeY()))
-        let rgbData = rgbDataFromBuffer(resizedImage!,
-                isModelQuantized: inputTensor.dataType == .uInt8);
-        try tflite?.copy(rgbData!, toInputAt: 0);
-        try tflite?.invoke();
-        try runInference();
-        return getRecognitions(className: selectedClass!);
+    func recognizeImage(pixelBuffer: CVPixelBuffer, height: Double, width: Double) -> [Recognition] {
+        do {
+            let inputTensor = try tflite!.input(at: 0);
+            let resizedImage = pixelBuffer.resized(to: CGSize(width: getImageSizeX(), height: getImageSizeY()))
+            let rgbData = rgbDataFromBuffer(resizedImage!,
+                                            isModelQuantized: inputTensor.dataType == .uInt8);
+            try tflite?.copy(rgbData!, toInputAt: 0);
+            try tflite?.invoke();
+            try runInference();
+            return getRecognitions(className: selectedClass!);
+        } catch {
+            print("error:\(error)")
+            return getRecognitions(className: selectedClass!);
+        };
     }
 
     func runInference() throws {
