@@ -1,16 +1,6 @@
-# openbot_controller
+# OpenBot Flutter (iOS and Android) Controller
 
-controller application to control android and ios openbot application
+## Introduction
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This is a Flutter(iOS & Android) Application acting as a controller for the OpenBot vehicle.
+The server is this flutter application running on a iOS or Android device on the same network as the Robot.  

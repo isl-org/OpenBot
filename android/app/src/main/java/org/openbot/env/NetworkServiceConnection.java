@@ -28,7 +28,7 @@ public class NetworkServiceConnection implements ILocalConnection {
   private static final String TAG = "NetworkServiceConn";
   private Context context;
 
-  private String SERVICE_NAME_CONTROLLER = "OPEN_BOT_CONTROLLER";
+  private String SERVICE_NAME_CONTROLLER = "OPEN_BOT_CONTROLLER_FLUTTER";
   private String MY_SERVICE_NAME = "OPEN_BOT";
   private String ALL_SERVICE_TYPES = "_services._dns-sd._udp";
   private String SERVICE_TYPE = "_openbot._tcp.";
@@ -136,6 +136,7 @@ public class NetworkServiceConnection implements ILocalConnection {
         try {
           if (service.getServiceType().equals(SERVICE_TYPE)
               && service.getServiceName().equals(SERVICE_NAME_CONTROLLER)) {
+            System.out.println("found service");
             mNsdManager.resolveService(service, mResolveListener);
           } else if (service.getServiceName().equals(MY_SERVICE_NAME)) {
             Log.d(TAG, "Same machine: " + MY_SERVICE_NAME);
@@ -289,7 +290,7 @@ public class NetworkServiceConnection implements ILocalConnection {
       try {
         while (true) {
           String msg = reader.nextLine().trim();
-
+          System.out.println("msg"+msg);
           if (!stopped) {
             ((Activity) context).runOnUiThread(() -> dataReceivedCallback.dataReceived(msg));
           }
