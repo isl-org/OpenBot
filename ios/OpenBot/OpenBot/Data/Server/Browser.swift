@@ -69,22 +69,18 @@ class Browser {
                 default:
                     print("no change")
                 }
-
             }
                     netService = NetService(domain: "local.", type:"_openbot._tcp.", name: "_openbot._tcp.", port: 1100)
                     netService?.remove(from: .main, forMode: .default);
-
         }
 
         browser.start(queue: .main)
-
-         func reset() {
-            browser.cancel()
-//        netService?.stop()
-//        netService = nil
-        }
     }
-
+        func reset() {
+        browser.cancel()
+        netService?.stop()
+        netService = nil
+}
 
 
 }

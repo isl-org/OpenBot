@@ -49,7 +49,9 @@ class AutopilotFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThread), name: .updateThread, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateDataFromControllerApp, object: nil)
+
         calculateFrame()
     }
 
@@ -151,6 +153,15 @@ class AutopilotFragment: CameraController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         print("memory is low");
+    }
+
+    @objc func updateDataFromControllerApp(_ notification: Notification) {
+        if notification.object != nil {
+            let command = notification.object as! String
+            let rightSpeed = command.slice(from: "r:", to: ", ");
+            let leftSpeed = command.slice(from: "l:", to: "}}")
+            sendControl(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)));
+        }
     }
 }
 

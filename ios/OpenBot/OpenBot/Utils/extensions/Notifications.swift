@@ -40,4 +40,6 @@ extension Notification.Name {
     static let decreaseSpeedMode = Notification.Name("decreaseSpeedMode");
     static let increaseSpeedMode = Notification.Name("increaseSpeedMode");
     static let updateDriveMode = Notification.Name("updateDriveMode");
+    static let updateDataFromControllerApp = Notification.Name("updateDataFromControllerApp");
+
 }

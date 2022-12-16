@@ -80,7 +80,8 @@ class VehicleControl: UIView {
             if (controlMode == ControlMode.gamepad) {
                 controlMode = ControlMode.phone;
                 createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)));
-
+                server?.start();
+                client.start();
             } else {
                 controlMode = ControlMode.gamepad;
                 createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)));

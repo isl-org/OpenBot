@@ -50,6 +50,7 @@ class Connection {
     func send(_ message: String) {
         connection.send(content: message.data(using: .utf8), contentContext: .defaultMessage, isComplete: true, completion: .contentProcessed({ error in
             print("Connection send error: \(String(describing: error))")
+
         }))
     }
 
@@ -60,10 +61,11 @@ class Connection {
             }
             if let data = data,
                let message = String(data: data, encoding: .utf8) {
-                print("Connection receiveMessage message: \(message)")
+//                print("Connection receiveMessage message: \(message)")
+                NotificationCenter.default.post(name: .updateDataFromControllerApp, object: message);
+
             }
             self.receiveMessage()
-
         }
     }
 }
