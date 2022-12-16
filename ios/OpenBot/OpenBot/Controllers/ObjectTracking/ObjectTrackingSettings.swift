@@ -495,8 +495,8 @@ class ObjectTrackingSettings: UIView {
     }
 
     @objc func toggleNetwork(_ notification: Notification) {
-        NotificationCenter.default.post(name: .autoModeObjectTracking, object: nil)
         autoModeButton.isOn = !autoModeButton.isOn
+        NotificationCenter.default.post(name: .autoModeObjectTracking, object: nil)
     }
 
     @objc func updateSpeed(_ notification: Notification) {

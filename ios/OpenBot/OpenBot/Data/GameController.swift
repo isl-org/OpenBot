@@ -219,7 +219,7 @@ class GameController: GCPhysicalInputProfile {
             if(connectedController?.extendedGamepad?.rightThumbstickButton?.isPressed ==  false){
                 return CMD_Events.CMD_SPEED_UP;
             }
-        case Keymap.CMD_INDICATOR_STOP.rawValue :
+        case Keymap.CMD_INDICATOR_STOP.rawValue:
             return IndicatorEvent.STOP
         default:
             return "";
@@ -289,10 +289,10 @@ class GameController: GCPhysicalInputProfile {
         case ControlEvent.FORWARD:
             break;
         case CMD_Events.TOGGLE_LOGS:
-            startLogging()
+            toggleLogging()
             break;
         case CMD_Events.TOGGLE_NETWORK:
-            startNetwork()
+            toggleNetwork()
             break;
         case CMD_Events.CMD_SPEED_UP:
             NotificationCenter.default.post(name: .increaseSpeedMode, object: nil);
@@ -317,11 +317,11 @@ class GameController: GCPhysicalInputProfile {
         }
     }
 
-    func startLogging(){
+    func toggleLogging(){
         NotificationCenter.default.post(name: .logData, object: nil)
     }
 
-    func startNetwork(){
+    func toggleNetwork(){
         NotificationCenter.default.post(name: .toggleNetworks, object: nil)
     }
 

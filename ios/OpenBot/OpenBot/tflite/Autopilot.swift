@@ -36,17 +36,14 @@ class Autopilot: Network {
         }
     }
 
-
-    func recogniseImage(image: UIImage, indicator: Float, width: Double, height: Double) -> Control {
+    func recogniseImage(pixelBuffer: CVPixelBuffer, indicator: Float, width: Double, height: Double) -> Control {
         do {
             var indicatorData: Data = Data();
             indicatorData.append(contentsOf: indicator.bytes);
             try tflite?.copy(indicatorData, toInputAt: cmdIndex);
             let inputTensor = try tflite!.input(at: imgIndex);
-            let imageData = image.pixelBuffer(width: Int(width), height: Int(height));
-            let resizedImage = imageData?.resized(to: CGSize(width: getImageSizeX(), height: getImageSizeY()))
-            let rgbData = rgbDataFromBuffer(resizedImage!,
-                    isModelQuantized: inputTensor.dataType == .uInt8);
+            let resizedImage = pixelBuffer.resized(to: CGSize(width: getImageSizeX(), height: getImageSizeY()))
+            let rgbData = rgbDataFromBuffer(resizedImage!, isModelQuantized: inputTensor.dataType == .uInt8);
             try tflite?.copy(rgbData!, toInputAt: imgIndex);
             try tflite?.invoke();
             let outputTensor = try tflite?.output(at: 0);

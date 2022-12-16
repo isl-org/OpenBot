@@ -6,9 +6,11 @@ import Foundation
 import AVFoundation
 import UIKit
 
-class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
+
+class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+  
     var captureSession: AVCaptureSession!
-    var stillImageOutput: AVCapturePhotoOutput!
+    var videoOutput: AVCaptureVideoDataOutput!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     let cameraView: UIView = UIView()
     var heightConstraint: NSLayoutConstraint! = nil
@@ -29,6 +31,20 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateModelResolution), name: .updateModelResolution, object: nil)
+    }
+    
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        
+        // extract the image buffer from the sample buffer
+        let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
+        
+        guard let imagePixelBuffer = pixelBuffer else {
+            debugPrint("unable to get image from sample buffer")
+            return
+        }
+        print("did receive image frame")
+        
+        
     }
 
     func getImageOriginalHeight() -> Double {
@@ -88,6 +104,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         function to initialise camera view on the screen with back camera with medium quality view feed
      */
     func initializeCamera() {
+        videoOutput = AVCaptureVideoDataOutput()
         captureSession = AVCaptureSession()
         captureSession.sessionPreset = .high
         guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
@@ -116,21 +133,26 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
 
         do {
+            // set the pixel format to receive
+            videoOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as NSString) : NSNumber(value: kCVPixelFormatType_32BGRA)] as [String : Any]
+            
+            // avoid building up a frame backlog by setting alwaysDiscardLateVideoFrames to true
+            videoOutput.alwaysDiscardsLateVideoFrames = true
+            
+            // tell videoOutput to send the camera feed image to our ViewController instance on a serial background thread
+            videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "image_processing_queue"))
+            
+            // add videoOutput as part of the capture session
             let input = try AVCaptureDeviceInput(device: backCamera)
-            stillImageOutput = AVCapturePhotoOutput()
-            stillImageOutput.isLivePhotoCaptureEnabled = false
-            stillImageOutput.isHighResolutionCaptureEnabled = false
-            stillImageOutput.isPortraitEffectsMatteDeliveryEnabled = false
-            stillImageOutput.isAppleProRAWEnabled = false
-            stillImageOutput.isContentAwareDistortionCorrectionEnabled = false
-            stillImageOutput.isDepthDataDeliveryEnabled = false
-            stillImageOutput.isLivePhotoAutoTrimmingEnabled = false
-            stillImageOutput.isVirtualDeviceConstituentPhotoDeliveryEnabled = false
-            if captureSession.canAddInput(input) && captureSession.canAddOutput(stillImageOutput) {
+            if captureSession.canAddInput(input) && captureSession.canAddOutput(videoOutput) {
                 captureSession.addInput(input)
-                captureSession.addOutput(stillImageOutput)
+                captureSession.addOutput(videoOutput)
                 setupLivePreview()
             }
+            
+            guard let connection = videoOutput.connection(with: AVMediaType.video), connection.isVideoOrientationSupported else { return }
+            connection.videoOrientation = .portrait
+            
         } catch let error {
             print("Error Unable to initialize back camera:  \(error.localizedDescription)")
         }
@@ -289,7 +311,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         return nil
     }
 
-
     /**
         This function calls automatically whenever any image click function is called.
      - Parameters:
@@ -375,7 +396,7 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
      */
     func captureImage() {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
-        stillImageOutput.capturePhoto(with: settings, delegate: self)
+        //videoOutput.capturePhoto(with: settings, delegate: self)
     }
 
     func saveImages() {
