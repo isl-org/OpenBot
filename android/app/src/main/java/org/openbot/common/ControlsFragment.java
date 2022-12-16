@@ -1,6 +1,7 @@
 package org.openbot.common;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -95,7 +96,16 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
         .setFragmentResultListener(
             Constants.KEY_EVENT,
             this,
-            (requestKey, result) -> processKeyEvent(result.getParcelable(Constants.DATA)));
+            (requestKey, result) -> {
+              KeyEvent event = result.getParcelable(Constants.DATA);
+              if(KeyEvent.ACTION_UP == event.getAction()){
+                processKeyEvent(result.getParcelable(Constants.DATA));
+              }
+              Control newControl = vehicle.getGameController().processButtonInput(result.getParcelable(Constants.DATA));
+                if(vehicle.getControl().getLeft() != newControl.getLeft() && vehicle.getControl().getRight() != newControl.getRight()){
+                vehicle.setControl(newControl);
+              }
+            });
 
     mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 

@@ -1,5 +1,7 @@
 package org.openbot.vehicle;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
@@ -190,7 +192,7 @@ public class BluetoothManager {
 
     public void write(String msg) {
         if (isBleConnected()) {
-            BleManager.getInstance().write(bleDevice, writeServiceInfo.uuid, writeCharacteristic.uuid, msg.getBytes(), writeCallback);
+            BleManager.getInstance().write(bleDevice, writeServiceInfo.uuid, writeCharacteristic.uuid, msg.getBytes(UTF_8), writeCallback);
         }
     }
 
