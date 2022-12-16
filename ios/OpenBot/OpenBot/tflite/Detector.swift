@@ -12,7 +12,6 @@ class Detector: Network {
     let ciContext = CIContext()
 
     static func create(model: Model, device: RuntimeDevice, numThreads: Int) throws -> AnyObject? {
-
         switch (model.classType) {
         case .MOBILENETV1_1_0_Q, .MOBILENETV3_S_Q:
             return try DetectorQuantizedMobileNet(model: model, device: device, numThreads: numThreads);
@@ -25,6 +24,7 @@ class Detector: Network {
 
     override init(model: Model, device: RuntimeDevice, numThreads: Int) throws {
         try super.init(model: model, device: device, numThreads: numThreads);
+        NotificationCenter.default.addObserver(self, selector: #selector(updateObject), name: .updateObject, object: nil)
         labels = loadLabelList(filePath: getLabelPath());
         selectedClass = labels.first {
             $0.capitalized == "person".capitalized
@@ -212,4 +212,12 @@ class Detector: Network {
         let right = r1 < r2 ? r1 : r2;
         return right - left;
     }
+
+
+
+
+    @objc func updateObject(_ notification: Notification) {
+        selectedClass = notification.object as! String
+    }
 }
+

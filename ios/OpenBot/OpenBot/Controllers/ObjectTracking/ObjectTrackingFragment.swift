@@ -18,6 +18,7 @@ class ObjectTrackingFragment: CameraController {
     let bluetooth = bluetoothDataController.shared;
     var currentModel: ModelItem!
     var currentDevice: RuntimeDevice = RuntimeDevice.CPU
+    var currentObject : String = "person"
     private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 50.0;
     private var TIMER_OF_MODEL: Float = 0.03
     private let inferenceQueue = DispatchQueue(label: "openbot.autopilot.inferencequeue")
@@ -186,6 +187,7 @@ class ObjectTrackingFragment: CameraController {
         currentModel = Common.returnModelItem(modelName: selectedModelName)
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector;
         NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels())
+        NotificationCenter.default.post(name: .updateObject, object: currentObject)
         if selectedModelName == "MobileNetV1-300" {
             TIMER_OF_MODEL = 0.03
         } else {
@@ -194,6 +196,7 @@ class ObjectTrackingFragment: CameraController {
     }
 
     @objc func updateSelectedObject(_ notification: Notification) throws {
+        currentObject = notification.object as! String;
         detector?.setSelectedClass(newClass: notification.object as! String)
     }
 
