@@ -48,6 +48,8 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(switchLogging), name: .logData, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateDataFromControllerApp, object: nil)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -186,6 +188,15 @@ class DataCollectionController: CameraController {
             }
         }
         _ = navigationController?.popViewController(animated: true)
+    }
+
+    @objc func updateDataFromControllerApp(_ notification: Notification) {
+        if notification.object != nil {
+            let command = notification.object as! String
+            let rightSpeed = command.slice(from: "r:", to: ", ");
+            let leftSpeed = command.slice(from: "l:", to: "}}")
+            gameController.sendControl(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
+        }
     }
 }
 

@@ -50,7 +50,8 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConfidence), name: .updateConfidence, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoModeObjectTracking, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateSelectedObject), name: .updateObject, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSelectedObject), name: .updateObject, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateDataFromControllerApp, object: nil)
         setupNavigationBarItem()
         super.viewDidLoad()
     }
@@ -123,7 +124,7 @@ class ObjectTrackingFragment: CameraController {
                 do {
                     if !autoMode {
                         timer.invalidate()
-                        sendControl(control: Control())
+                        sendControl(control: Control());
                     }
                     if (frames.count > 0) {
                         for frame in frames {
@@ -327,5 +328,12 @@ class ObjectTrackingFragment: CameraController {
     }
 
     }
-
+    @objc func updateDataFromControllerApp(_ notification: Notification) {
+        if notification.object != nil {
+            let command = notification.object as! String
+            let rightSpeed = command.slice(from: "r:", to: ", ");
+            let leftSpeed = command.slice(from: "l:", to: "}}")
+            sendControl(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)));
+        }
+    }
 }

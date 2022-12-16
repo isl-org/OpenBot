@@ -54,7 +54,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(decreaseSpeedMode), name: .decreaseSpeedMode, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(increaseSpeedMode), name: .increaseSpeedMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDriveMode), name: .updateDriveMode, object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateDataFromControllerApp, object: nil)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -326,10 +326,21 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             gameController.selectedControlMode = ControlMode.GAMEPAD
             gamePadController.backgroundColor = Colors.title
         } else if selectedControlMode == ControlMode.PHONE {
+            let jsonObject: Any = [
+                "status": [
+                    "CONNECTION_ACTIVE": false
+                ]
+            ]
+
+            let data = try! JSONSerialization.data(withJSONObject: jsonObject)
+            let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+            server?.send(jsonObject: string! as String);
             gameControllerObj = nil;
             gameController.selectedControlMode = ControlMode.PHONE
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             phoneController.backgroundColor = Colors.title
+            server?.start();
+            client.start();
         }
         secondView.addSubview(gamePadController)
         secondView.addSubview(phoneController)
@@ -499,7 +510,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
-            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.freeRoam, target: self, action: #selector(FreeRoamController.back(sender:)),titleColor: Colors.navigationColor ?? .white)
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.freeRoam, target: self, action: #selector(FreeRoamController.back(sender:)), titleColor: Colors.navigationColor ?? .white)
             navigationItem.leftBarButtonItem = newBackButton
         }
     }
@@ -565,9 +576,30 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         updateGameControllerModeType()
     }
 
+    @objc func updateDataFromControllerApp(_ notification: Notification) {
+        if notification.object != nil {
+            let command = notification.object as! String
+            let rightSpeed = command.slice(from: "r:", to: ", ");
+            let leftSpeed = command.slice(from: "l:", to: "}}")
+            gameController.sendControl(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
+        }
+    }
+
     func setupSpeedMode() {
         gameController.selectedSpeedMode = SpeedMode.NORMAL;
         gameController.selectedDriveMode = DriveMode.JOYSTICK;
+    }
+
+}
+
+extension String {
+
+    func slice(from: String, to: String) -> String? {
+        return (range(of: from)?.upperBound).flatMap { substringFrom in
+            (range(of: to, range: substringFrom..<endIndex)?.lowerBound).map { substringTo in
+                String(self[substringFrom..<substringTo])
+            }
+        }
     }
 }
 
