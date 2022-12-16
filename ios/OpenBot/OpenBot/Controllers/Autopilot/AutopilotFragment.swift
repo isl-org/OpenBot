@@ -25,7 +25,7 @@ class AutopilotFragment: CameraController {
     private let inferenceQueue = DispatchQueue(label: "openbot.autopilot.inferencequeue")
     private var isInferenceQueueBusy = false
     private var result: Control?
-    
+
     var autopilotEnabled = false
 
     override func viewDidLoad() {
@@ -141,25 +141,29 @@ class AutopilotFragment: CameraController {
         super.didReceiveMemoryWarning()
         print("memory is low");
     }
-    
+
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
+
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-        
+
         guard let imagePixelBuffer = pixelBuffer else {
             debugPrint("unable to get image from sample buffer")
             return
         }
-        
-        guard !self.isInferenceQueueBusy else { return }
-            
-        inferenceQueue.async{
+
+        guard !self.isInferenceQueueBusy else {
+            return
+        }
+
+        inferenceQueue.async {
             if self.autoPilotMode {
                 self.isInferenceQueueBusy = true
                 let startTime = Date().millisecondsSince1970
                 self.result = self.autopilot?.recogniseImage(pixelBuffer: imagePixelBuffer, indicator: 0, width: self.originalWidth, height: self.originalHeight) ?? Control();
-                guard let controlResult = self.result else { return }
+                guard let controlResult = self.result else {
+                    return
+                }
                 let endTime = Date().millisecondsSince1970
                 DispatchQueue.main.async {
                     if (endTime - startTime) != 0 {
@@ -167,13 +171,14 @@ class AutopilotFragment: CameraController {
                     }
                     self.sendControl(control: controlResult)
                 }
-            }
-            else {
+            } else {
                 DispatchQueue.main.async {
                     self.sendControl(control: Control())
                 }
             }
             self.isInferenceQueueBusy = false
+        }
+    }
 
     @objc func updateDataFromControllerApp(_ notification: Notification) {
         if notification.object != nil {
