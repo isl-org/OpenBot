@@ -115,7 +115,7 @@ class GameController: GCPhysicalInputProfile {
     }
 
     private func getCenteredAxis(_ value: Float) -> Float {
-        return value;
+        return roundf(value)
     }
 
     /**
@@ -332,7 +332,5 @@ class GameController: GCPhysicalInputProfile {
     func updateDriveMode() {
         NotificationCenter.default.post(name: .updateDriveMode, object: nil)
     }
-
-
 }
 
