@@ -484,35 +484,41 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
 def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     callback.broadcast("message", "Generate plots...")
 
-    x = np.arange(tr.INITIAL_EPOCH + 1, tr.history.params['epochs'] + 1, 1)
+    x = np.arange(tr.INITIAL_EPOCH + 1, tr.history.params["epochs"] + 1, 1)
 
     plt.figure().gca().xaxis.get_major_locator().set_params(integer=True)
-    plt.plot(x,tr.history.history["loss"], label="loss")
-    plt.plot(x,tr.history.history["val_loss"], label="val_loss")
+    plt.plot(x, tr.history.history["loss"], label="loss")
+    plt.plot(x, tr.history.history["val_loss"], label="val_loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend(loc="upper right")
     utils.savefig(os.path.join(tr.log_path, "loss.png"))
 
     plt.figure().gca().xaxis.get_major_locator().set_params(integer=True)
-    plt.plot(x,tr.history.history["mean_absolute_error"], label="mean_absolute_error")
-    plt.plot(x,tr.history.history["val_mean_absolute_error"], label="val_mean_absolute_error")
+    plt.plot(x, tr.history.history["mean_absolute_error"], label="mean_absolute_error")
+    plt.plot(
+        x,
+        tr.history.history["val_mean_absolute_error"],
+        label="val_mean_absolute_error",
+    )
     plt.xlabel("Epoch")
     plt.ylabel("Mean Absolute Error")
     plt.legend(loc="upper right")
     utils.savefig(os.path.join(tr.log_path, "error.png"))
 
     plt.figure().gca().xaxis.get_major_locator().set_params(integer=True)
-    plt.plot(x,tr.history.history["direction_metric"], label="direction_metric")
-    plt.plot(x,tr.history.history["val_direction_metric"], label="val_direction_metric")
+    plt.plot(x, tr.history.history["direction_metric"], label="direction_metric")
+    plt.plot(
+        x, tr.history.history["val_direction_metric"], label="val_direction_metric"
+    )
     plt.xlabel("Epoch")
     plt.ylabel("Direction Metric")
     plt.legend(loc="lower right")
     utils.savefig(os.path.join(tr.log_path, "direction.png"))
 
     plt.figure().gca().xaxis.get_major_locator().set_params(integer=True)
-    plt.plot(x,tr.history.history["angle_metric"], label="angle_metric")
-    plt.plot(x,tr.history.history["val_angle_metric"], label="val_angle_metric")
+    plt.plot(x, tr.history.history["angle_metric"], label="angle_metric")
+    plt.plot(x, tr.history.history["val_angle_metric"], label="val_angle_metric")
     plt.xlabel("Epoch")
     plt.ylabel("Angle Metric")
     plt.legend(loc="lower right")
@@ -521,40 +527,50 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
     callback.broadcast("message", "Generate tflite models...")
     checkpoint_path = tr.checkpoint_path
     print("checkpoint_path", checkpoint_path)
-    
+
     best_train_checkpoint = "cp-best-train.ckpt"
     best_train_tflite = utils.generate_tflite(tr.checkpoint_path, best_train_checkpoint)
-    utils.save_tflite (best_train_tflite, tr.checkpoint_path, "best-train")
-    best_train_index = np.argmin(np.array(tr.history.history['loss']))
-    print("Best Train Checkpoint (epoch %s) - angle: %.4f, val_angle: %.4f, direction: %.4f, val_direction: %.4f" \
-        %(best_train_index, \
-            tr.history.history['angle_metric'][best_train_index], \
-            tr.history.history['val_angle_metric'][best_train_index], \
-            tr.history.history['direction_metric'][best_train_index], \
-            tr.history.history['val_direction_metric'][best_train_index])
+    utils.save_tflite(best_train_tflite, tr.checkpoint_path, "best-train")
+    best_train_index = np.argmin(np.array(tr.history.history["loss"]))
+    print(
+        "Best Train Checkpoint (epoch %s) - angle: %.4f, val_angle: %.4f, direction: %.4f, val_direction: %.4f"
+        % (
+            best_train_index,
+            tr.history.history["angle_metric"][best_train_index],
+            tr.history.history["val_angle_metric"][best_train_index],
+            tr.history.history["direction_metric"][best_train_index],
+            tr.history.history["val_direction_metric"][best_train_index],
+        )
     )
 
     best_val_checkpoint = "cp-best-val.ckpt"
     best_val_tflite = utils.generate_tflite(tr.checkpoint_path, best_val_checkpoint)
-    utils.save_tflite (best_val_tflite, tr.checkpoint_path, "best")
-    utils.save_tflite (best_val_tflite, tr.checkpoint_path, "best-val")
-    best_val_index = np.argmin(np.array(tr.history.history['val_loss']))
-    print("Best Val Checkpoint (epoch %s) - angle: %.4f, val_angle: %.4f, direction: %.4f, val_direction: %.4f" \
-        %(best_val_index, \
-            tr.history.history['angle_metric'][best_val_index], \
-            tr.history.history['val_angle_metric'][best_val_index], \
-            tr.history.history['direction_metric'][best_val_index], \
-            tr.history.history['val_direction_metric'][best_val_index])
+    utils.save_tflite(best_val_tflite, tr.checkpoint_path, "best")
+    utils.save_tflite(best_val_tflite, tr.checkpoint_path, "best-val")
+    best_val_index = np.argmin(np.array(tr.history.history["val_loss"]))
+    print(
+        "Best Val Checkpoint (epoch %s) - angle: %.4f, val_angle: %.4f, direction: %.4f, val_direction: %.4f"
+        % (
+            best_val_index,
+            tr.history.history["angle_metric"][best_val_index],
+            tr.history.history["val_angle_metric"][best_val_index],
+            tr.history.history["direction_metric"][best_val_index],
+            tr.history.history["val_direction_metric"][best_val_index],
+        )
     )
 
     last_checkpoint = "cp-last.ckpt"
     last_tflite = utils.generate_tflite(tr.checkpoint_path, last_checkpoint)
     utils.save_tflite(last_tflite, tr.checkpoint_path, "last")
-    print("Last Checkpoint - angle: %.4f, val_angle: %.4f, direction: %.4f, val_direction: %.4f" \
-        %(tr.history.history['angle_metric'][-1], \
-            tr.history.history['val_angle_metric'][-1], \
-            tr.history.history['direction_metric'][-1], \
-            tr.history.history['val_direction_metric'][-1]))
+    print(
+        "Last Checkpoint - angle: %.4f, val_angle: %.4f, direction: %.4f, val_direction: %.4f"
+        % (
+            tr.history.history["angle_metric"][-1],
+            tr.history.history["val_angle_metric"][-1],
+            tr.history.history["direction_metric"][-1],
+            tr.history.history["val_direction_metric"][-1],
+        )
+    )
 
     callback.broadcast("message", "Evaluate model...")
     last_model = utils.load_model(
@@ -571,7 +587,9 @@ def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0
     )
     print(res)
 
-    utils.show_batch(dataset=tr.test_ds, policy=tr.hyperparameters.POLICY, model=last_model)
+    utils.show_batch(
+        dataset=tr.test_ds, policy=tr.hyperparameters.POLICY, model=last_model
+    )
     utils.savefig(os.path.join(tr.log_path, "test_preview.png"))
     utils.compare_tf_tflite(last_model, last_tflite, policy=tr.hyperparameters.POLICY)
 

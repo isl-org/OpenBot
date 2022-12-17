@@ -191,7 +191,7 @@ async def start(params):
     hyper_params = Hyperparameters()
     for p in params:
         setattr(hyper_params, p, params[p])
-    setattr(hyper_params, 'POLICY', 'autopilot')
+    setattr(hyper_params, "POLICY", "autopilot")
     print(hyper_params.__dict__)
     loop.run_in_executor(None, train, hyper_params, broadcast, event_cancelled)
     return True
