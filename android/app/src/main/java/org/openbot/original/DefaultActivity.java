@@ -104,7 +104,7 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
     previewWidth = size.getWidth();
     previewHeight = size.getHeight();
 
-    sensorOrientation = rotation - getScreenOrientation();
+    sensorOrientation = rotation - ImageUtils.getScreenOrientation(this);
     LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
     LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);

@@ -849,6 +849,11 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
+  /**
+   * @deprecated redundant code, candidate for deletion for next release, use
+   *     ImageUtils.getScreenOrientation() instead.
+   */
+  @Deprecated
   protected int getScreenOrientation() {
     switch (getWindowManager().getDefaultDisplay().getRotation()) {
       case Surface.ROTATION_270:
