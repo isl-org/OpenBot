@@ -49,63 +49,64 @@ def prepare_for_training(
     return ds
 
 
-def show_train_batch(
-    image_batch, cmd_batch, label_batch, fig_num=1, policy="autopilot"
-):
+def show_batch(dataset, policy = "autopilot", model = None, fig_num = 1):
+
+    (image_batch, cmd_batch), label_batch = next(iter(dataset))
     if policy == "autopilot":
         command_input_name = "Cmd"
         size = (15, 10)
+        if model is not None:
+            pred_batch = model.predict(
+                (
+                    tf.slice(image_batch, [0, 0, 0, 0], [15, -1, -1, -1]),
+                    tf.slice(cmd_batch, [0], [15]),
+                )
+            )
     elif policy == "point_goal_nav":
         command_input_name = "Goal"
         size = (15, 15)
+        if model is not None:
+            pred_batch = model.predict(
+                (
+                    tf.slice(image_batch, [0, 0, 0, 0], [15, -1, -1, -1]),
+                    tf.slice(cmd_batch, [0, 0], [15, -1]),
+                )
+            )
     else:
         raise Exception("Unknown policy")
 
+    plt.switch_backend('Agg') 
     plt.figure(num=fig_num, figsize=size)
     for n in range(15):
         ax = plt.subplot(5, 3, n + 1)
         plt.imshow(image_batch[n])
-        plt.title(
-            "%s: %s, Label: [%.2f %.2f]"
-            % (
-                command_input_name,
-                cmd_batch[n],
-                float(label_batch[n][0]),
-                float(label_batch[n][1]),
+        if model is None:
+            plt.title(
+                "%s: %s, Label: [%.2f %.2f]"
+                % (
+                    command_input_name,
+                    cmd_batch.numpy()[n],
+                    float(label_batch[n][0]),
+                    float(label_batch[n][1]),
+                )
             )
-        )
+        else:
+            plt.title(
+                "%s: %s, Label: [%.2f %.2f], Pred: [%.2f %.2f]"
+                % (
+                    command_input_name,
+                    cmd_batch.numpy()[n],
+                    float(label_batch[n][0]),
+                    float(label_batch[n][1]),
+                    float(pred_batch[n][0]),
+                    float(pred_batch[n][1]),
+                )
+            )
         plt.axis("off")
 
-
-def show_test_batch(
-    image_batch, cmd_batch, label_batch, pred_batch, fig_num=1, policy="autopilot"
-):
-    if policy == "autopilot":
-        command_input_name = "Cmd"
-        size = (15, 10)
-    elif policy == "point_goal_nav":
-        command_input_name = "Goal"
-        size = (15, 15)
-    else:
-        raise Exception("Unknown policy")
-
-    plt.figure(num=fig_num, figsize=size)
-    for n in range(15):
-        ax = plt.subplot(5, 3, n + 1)
-        plt.imshow(image_batch[n])
-        plt.title(
-            "%s: %s, Label: [%.2f %.2f], Pred: [%.2f %.2f]"
-            % (
-                command_input_name,
-                cmd_batch[n],
-                float(label_batch[n][0]),
-                float(label_batch[n][1]),
-                float(pred_batch[n][0]),
-                float(pred_batch[n][1]),
-            )
-        )
-        plt.axis("off")
-
+def savefig(path):
+    plt.savefig(path, bbox_inches="tight")
+    plt.clf()
 
 def generate_tflite(path, filename):
     converter = tf.lite.TFLiteConverter.from_saved_model(os.path.join(path, filename))
@@ -131,7 +132,7 @@ def load_model(model_path, loss_fn, metric_list, custom_objects):
     return model
 
 
-def compare_tf_tflite(model, tflite_model, img=None, cmd=None, policy="autopilot"):
+def compare_tf_tflite(model, tflite_model, img=None, cmd=None, policy="autopilot", debug=False):
     # Load TFLite model and allocate tensors.
     interpreter = tf.lite.Interpreter(model_content=tflite_model)
     interpreter.allocate_tensors()
@@ -140,8 +141,9 @@ def compare_tf_tflite(model, tflite_model, img=None, cmd=None, policy="autopilot
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    print("input_details:", input_details)
-    print("output_details:", output_details)
+    if (debug):
+        print("input_details:", input_details)
+        print("output_details:", output_details)
 
     if policy == "autopilot":
         command_input_name = "cmd_input"
@@ -181,22 +183,20 @@ def compare_tf_tflite(model, tflite_model, img=None, cmd=None, policy="autopilot
     # The function `get_tensor()` returns a copy of the tensor data.
     # Use `tensor()` in order to get a pointer to the tensor.
     tflite_results = interpreter.get_tensor(output_details[0]["index"])
-    print("tflite:", tflite_results)
-
-    # Test the TensorFlow model on random input data.
     tf_results = model.predict(
         (
             tf.constant(input_data["img_input"]),
             tf.constant(input_data[command_input_name]),
         )
     )
+    print("tflite:", tflite_results)
     print("tf:", tf_results)
 
     # Compare the result.
     for tf_result, tflite_result in zip(tf_results, tflite_results):
         print(
-            "Almost equal (5% tolerance):",
-            np.allclose(tf_result, tflite_result, rtol=5e-02),
+            "Almost equal (10% tolerance):",
+            np.allclose(tf_result, tflite_result, rtol=0.1),
         )
         # np.testing.assert_almost_equal(tf_result, tflite_result, decimal=2)
 
