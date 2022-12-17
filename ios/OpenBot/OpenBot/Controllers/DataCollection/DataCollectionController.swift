@@ -34,7 +34,6 @@ class DataCollectionController: CameraController {
         view.backgroundColor = UIColor(named: "darkBg");
         view.addSubview(expandSettingView)
         updateControlMode(nil);
-
         navigationItem.hidesBackButton = true
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -102,10 +101,6 @@ class DataCollectionController: CameraController {
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
-//    @objc func loadCollapseView() {
-//        expandSettingView.removeFromSuperview()
-//        view.addSubview(collapseView)
-//    }
 
     @objc func switchLogging() {
         loggingEnabled = !loggingEnabled;
@@ -206,24 +201,6 @@ class DataCollectionController: CameraController {
             loggingEnabled = logData;
         }
     }
-
-
-//    override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-//
-//       let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-//        print("running in data Controller")
-//       guard let imagePixelBuffer = pixelBuffer else {
-//           debugPrint("unable to get image from sample buffer")
-//           return
-//       }
-//        if loggingEnabled {
-//            let image = CIImage(cvImageBuffer: imagePixelBuffer)
-////            let finalImage = UIImage(cgImage: image as! CGImage)
-////            images.append((finalImage, isPreviewSelected, isTrainingSelected))
-//        }
-//
-//
-//   }
 }
 
 

@@ -116,11 +116,9 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         do {
             try backCamera.lockForConfiguration()
             if backCamera.isFocusPointOfInterestSupported {
-//                backCamera.focusPointOfInterest = focusPoint
                 backCamera.focusMode = AVCaptureDevice.FocusMode.autoFocus
             }
             if backCamera.isExposurePointOfInterestSupported {
-//                backCamera.exposurePointOfInterest = focusPoint
                 backCamera.exposureMode = AVCaptureDevice.ExposureMode.autoExpose
 
             }
