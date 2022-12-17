@@ -49,7 +49,7 @@ def prepare_for_training(
     return ds
 
 
-def show_batch(dataset, policy = "autopilot", model = None, fig_num = 1):
+def show_batch(dataset, policy="autopilot", model=None, fig_num=1):
 
     (image_batch, cmd_batch), label_batch = next(iter(dataset))
     if policy == "autopilot":
@@ -75,7 +75,7 @@ def show_batch(dataset, policy = "autopilot", model = None, fig_num = 1):
     else:
         raise Exception("Unknown policy")
 
-    plt.switch_backend('Agg') 
+    plt.switch_backend("Agg")
     plt.figure(num=fig_num, figsize=size)
     for n in range(15):
         ax = plt.subplot(5, 3, n + 1)
@@ -104,9 +104,11 @@ def show_batch(dataset, policy = "autopilot", model = None, fig_num = 1):
             )
         plt.axis("off")
 
+
 def savefig(path):
     plt.savefig(path, bbox_inches="tight")
     plt.clf()
+
 
 def generate_tflite(path, filename):
     converter = tf.lite.TFLiteConverter.from_saved_model(os.path.join(path, filename))
@@ -132,7 +134,9 @@ def load_model(model_path, loss_fn, metric_list, custom_objects):
     return model
 
 
-def compare_tf_tflite(model, tflite_model, img=None, cmd=None, policy="autopilot", debug=False):
+def compare_tf_tflite(
+    model, tflite_model, img=None, cmd=None, policy="autopilot", debug=False
+):
     # Load TFLite model and allocate tensors.
     interpreter = tf.lite.Interpreter(model_content=tflite_model)
     interpreter.allocate_tensors()
@@ -141,7 +145,7 @@ def compare_tf_tflite(model, tflite_model, img=None, cmd=None, policy="autopilot
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    if (debug):
+    if debug:
         print("input_details:", input_details)
         print("output_details:", output_details)
 
