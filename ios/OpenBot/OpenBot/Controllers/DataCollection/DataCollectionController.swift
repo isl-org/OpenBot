@@ -49,6 +49,7 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateDataFromControllerApp, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateLogData), name: .logData, object: nil)
 
     }
 
@@ -127,7 +128,7 @@ class DataCollectionController: CameraController {
             dataLogger.allDirectoriesName.append(baseDirectory)
             DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash + baseDirectory);
             saveImages();
-            setupImages()
+//            setupImages()
             dataLogger.setupFilesForLogging()
         }
     }
@@ -198,6 +199,31 @@ class DataCollectionController: CameraController {
             gameController.sendControl(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
         }
     }
+
+    @objc func updateLogData(_ notification: Notification) {
+        if notification.object != nil {
+            let logData = notification.object as! Bool
+            loggingEnabled = logData;
+        }
+    }
+
+
+//    override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+//
+//       let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
+//        print("running in data Controller")
+//       guard let imagePixelBuffer = pixelBuffer else {
+//           debugPrint("unable to get image from sample buffer")
+//           return
+//       }
+//        if loggingEnabled {
+//            let image = CIImage(cvImageBuffer: imagePixelBuffer)
+////            let finalImage = UIImage(cgImage: image as! CGImage)
+////            images.append((finalImage, isPreviewSelected, isTrainingSelected))
+//        }
+//
+//
+//   }
 }
 
 

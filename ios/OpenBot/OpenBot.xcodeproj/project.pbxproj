@@ -55,7 +55,6 @@
 		727D3514A9B56B54E3FA4089 /* expandedAutoPilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35819C2D0A82BB4E5A7D /* expandedAutoPilot.swift */; };
 		727D36915DB88577316D9C46 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A8D7ACD08EF11740FC2 /* Connection.swift */; };
 		727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */; };
-		727D373B2A839824AE8E6AE2 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31331A6716FD310082EB /* CameraController.swift */; };
 		727D378DB2E32C26828E73A9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3879029901392BD7F608 /* GameViewController.swift */; };
 		727D37CCB5EF78FE0C60C19E /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3698249A1C0DBF567004 /* Server.swift */; };
 		727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F5FE3F054BE4FA52191 /* timestamp.swift */; };
@@ -72,6 +71,7 @@
 		727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */; };
 		727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3C4EBE89B9B6E537BE8B /* Device.swift */; };
 		727D3E780CA6260A927019BD /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D368915F3602E605FEA51 /* Client.swift */; };
+		727D3E79BEE56349F166C70A /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3CE316DD4B67FB82F0BB /* CameraController.swift */; };
 		BF812E8828AE2C4200E0B682 /* modesCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF812E8628AE2C4200E0B682 /* modesCollectionViewCell.xib */; };
 		BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9BAED728AF94A800EF3E48 /* GameController.framework */; };
 		DB5B604C1844E78F9C021354 /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */; };
@@ -140,7 +140,6 @@
 		4FEF4F7AB94F76161A467A24 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Notifications.swift; path = extensions/Notifications.swift; sourceTree = "<group>"; };
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
 		727D30501D6445D0C8AED362 /* GaugeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GaugeView.swift; sourceTree = "<group>"; };
-		727D31331A6716FD310082EB /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		727D31518A6A6FE099F41F49 /* ModelManagementTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelManagementTable.swift; path = ModelManagement/ModelManagementTable.swift; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
 		727D3189735FC4F7A4E4A6C1 /* Browser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
@@ -162,6 +161,7 @@
 		727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VehicleControl.swift; path = Modes/VehicleControl.swift; sourceTree = "<group>"; };
 		727D3B76CF73A97A22A8022E /* BluetoothTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BluetoothTable.swift; path = Bluetooth/BluetoothTable.swift; sourceTree = "<group>"; };
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		727D3CE316DD4B67FB82F0BB /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		727D3D0186944D629E367A9D /* SettingsFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsFragment.swift; path = Settings/SettingsFragment.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BottomSheet.swift; path = ModelManagement/BottomSheet.swift; sourceTree = "<group>"; };
@@ -317,7 +317,6 @@
 				727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */,
 				727D3157F2B5E5DBB1565EDD /* DataLogger.swift */,
 				727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */,
-				727D31331A6716FD310082EB /* CameraController.swift */,
 				4FEF4E8F0A2942C4C971E2BA /* Server */,
 			);
 			path = Data;
@@ -416,6 +415,7 @@
 				727D3281CA65425580EDD4A4 /* popupWindowView.swift */,
 				727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */,
 				727D31518A6A6FE099F41F49 /* ModelManagementTable.swift */,
+				727D3CE316DD4B67FB82F0BB /* CameraController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -724,7 +724,6 @@
 				727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */,
 				4FEF4DAC98B9D01B10F7B3E9 /* DataCollectionController.swift in Sources */,
 				727D332F054456A4182DD7DF /* expandSetting.swift in Sources */,
-				727D373B2A839824AE8E6AE2 /* CameraController.swift in Sources */,
 				727D3A805DDE14D8AD205D31 /* VehicleControl.swift in Sources */,
 				727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */,
 				4FEF4BEFB4E329AFFBAB8B4D /* Autopilot.swift in Sources */,
@@ -759,6 +758,7 @@
 				727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */,
 				727D36915DB88577316D9C46 /* Connection.swift in Sources */,
 				727D3E780CA6260A927019BD /* Client.swift in Sources */,
+				727D3E79BEE56349F166C70A /* CameraController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

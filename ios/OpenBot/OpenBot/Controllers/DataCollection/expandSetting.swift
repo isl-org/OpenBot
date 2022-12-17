@@ -386,7 +386,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     @objc func switchLogButton(_ sender: UISwitch) {
-        NotificationCenter.default.post(name: .logData, object: nil)
+        NotificationCenter.default.post(name: .logData, object: logData.isOn);
         if sender.isOn {
             for sensor in sensorButtons {
                 sensor.isEnabled = false
