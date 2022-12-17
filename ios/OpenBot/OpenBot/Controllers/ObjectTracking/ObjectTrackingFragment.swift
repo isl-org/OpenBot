@@ -20,7 +20,6 @@ class ObjectTrackingFragment: CameraController {
     var currentDevice: RuntimeDevice = RuntimeDevice.CPU
     var currentObject : String = "person"
     private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 50.0;
-    private var TIMER_OF_MODEL: Float = 0.03
     private let inferenceQueue = DispatchQueue(label: "openbot.autopilot.inferencequeue")
     private var isInferenceQueueBusy = false
     private var result: Control?
@@ -186,13 +185,9 @@ class ObjectTrackingFragment: CameraController {
         let selectedModelName = notification.object as! String
         currentModel = Common.returnModelItem(modelName: selectedModelName)
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector;
-        NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels())
-        NotificationCenter.default.post(name: .updateObject, object: currentObject)
-        if selectedModelName == "MobileNetV1-300" {
-            TIMER_OF_MODEL = 0.03
-        } else {
-            TIMER_OF_MODEL = 0.7
-        }
+        NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels());
+        NotificationCenter.default.post(name: .updateObject, object: currentObject);
+
     }
 
     @objc func updateSelectedObject(_ notification: Notification) throws {
@@ -247,11 +242,17 @@ class ObjectTrackingFragment: CameraController {
         let detection = item.getLocation();
         let dx = screenWidth / CGFloat(detector!.getImageSizeX());
         let dy = screenHeight / CGFloat(detector!.getImageSizeY());
-        let rect = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
-
+        var rect = detection.applying(CGAffineTransform(scaleX: dx, y: dy));
         frame.frame = rect;
+        if currentOrientation == .portrait{
+//            frame.frame.origin.x = rect.
+        }
+        else{
+            frame.frame.origin.y = width - rect.size.height;
+        }
+        print(frame.frame," : ",detection);
         frame.layer.borderColor = color.cgColor;
-        frame.layer.borderWidth = 2.0
+        frame.layer.borderWidth = 2.0;
         let nameString = UITextView();
         nameString.textColor = UIColor.white;
         nameString.font = nameString.font?.withSize(12)
