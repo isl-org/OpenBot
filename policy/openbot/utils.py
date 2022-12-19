@@ -50,10 +50,10 @@ def prepare_for_training(
 
 
 def show_batch(dataset, policy="autopilot", model=None, fig_num=1):
-    
+
     (image_batch, cmd_batch), label_batch = next(iter(dataset))
     NUM_SAMPLES = min(image_batch.numpy().shape[0], 15)
-    
+
     if policy == "autopilot":
         command_input_name = "Cmd"
         size = (15, 10)
@@ -78,7 +78,7 @@ def show_batch(dataset, policy="autopilot", model=None, fig_num=1):
         raise Exception("Unknown policy")
 
     plt.figure(num=fig_num, figsize=size)
-    
+
     for n in range(NUM_SAMPLES):
         ax = plt.subplot(5, 3, n + 1)
         plt.imshow(image_batch[n])
