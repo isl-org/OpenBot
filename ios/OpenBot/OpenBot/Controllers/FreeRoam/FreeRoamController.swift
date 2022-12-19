@@ -20,7 +20,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     let firstView = UIView()
     let secondView = UIView()
     let deviceOrientation = DeviceCurrentOrientation.shared
-    let gameController = GameController.shared
+    var gameController = GameController.shared
     var bluetoothIcon = UIImageView()
     private let mainView = UIView()
 
@@ -325,22 +325,23 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             gameControllerObj = gameController
             gameController.selectedControlMode = ControlMode.GAMEPAD
             gamePadController.backgroundColor = Colors.title
+            server?.send(jsonObject: "hello Nitish");
         } else if selectedControlMode == ControlMode.PHONE {
             let jsonObject: Any = [
                 "status": [
-                    "CONNECTION_ACTIVE": false
+                    "CONNECTION_ACTIVE": true
                 ]
             ]
 
             let data = try! JSONSerialization.data(withJSONObject: jsonObject)
             let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-            server?.send(jsonObject: string! as String);
             gameControllerObj = nil;
             gameController.selectedControlMode = ControlMode.PHONE
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             phoneController.backgroundColor = Colors.title
             server?.start();
             client.start();
+            server?.send(jsonObject: "hello Nitish");
         }
         secondView.addSubview(gamePadController)
         secondView.addSubview(phoneController)
@@ -577,11 +578,14 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func updateDataFromControllerApp(_ notification: Notification) {
+        if gameController.selectedControlMode == ControlMode.GAMEPAD{
+            return
+        }
         if notification.object != nil {
             let command = notification.object as! String
             let rightSpeed = command.slice(from: "r:", to: ", ");
             let leftSpeed = command.slice(from: "l:", to: "}}")
-            gameController.sendControl(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
+            gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
         }
     }
 

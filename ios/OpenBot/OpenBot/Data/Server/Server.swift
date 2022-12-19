@@ -40,17 +40,8 @@ class Server {
 
     func send(jsonObject : String) {
         for connection in connections {
-            connection.send("super message from the server! \(Int(Date().timeIntervalSince1970))")
             connection.send(jsonObject);
         }
     }
 
-    func stop() {
-        print("will stop")
-        print(listener)
-        listener.stateUpdateHandler = nil
-        listener.newConnectionHandler = nil
-        listener.cancel()
-        print("did stop")
-    }
 }

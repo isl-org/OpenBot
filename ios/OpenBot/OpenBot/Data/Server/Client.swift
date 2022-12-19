@@ -21,7 +21,9 @@ class Client {
                   self.connection == nil else { return }
             print("client.handler result: \(result)")
             self.connection = Connection(endpoint: result.endpoint)
+            print(" client is :",client)
         }
     }
+
 
 }

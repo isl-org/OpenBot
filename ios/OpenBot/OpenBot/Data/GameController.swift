@@ -248,6 +248,7 @@ class GameController: GCPhysicalInputProfile {
     }
 
     func updateControllerValues() {
+        print("inside updateControllerValues",connectedController)
         if (connectedController == nil) {
             return
         }
@@ -264,6 +265,22 @@ class GameController: GCPhysicalInputProfile {
     }
 
     func sendControl(control: Control) {
+        if selectedControlMode == ControlMode.PHONE{
+            return
+        }
+        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
+            let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
+            let right = (control.getRight() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
+            vehicleControl = control;
+            print("c" + String(left) + "," + String(right) + "\n");
+            dataLogger.setControlLogs(left: (String(left)), right: String(right))
+            controlData = String(left) + " " + String(right)
+            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+            NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
+        }
+    }
+
+    func sendControlFromPhoneController(control: Control){
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             let right = (control.getRight() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
