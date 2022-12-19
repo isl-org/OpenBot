@@ -337,7 +337,7 @@ class ObjectTrackingFragment: CameraController {
             let command = notification.object as! String
             let rightSpeed = command.slice(from: "r:", to: ", ");
             let leftSpeed = command.slice(from: "l:", to: "}}")
-            sendControl(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)));
+            gameController.sendControl(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)));
         }
     }
 }
