@@ -49,7 +49,6 @@ import android.os.SystemClock;
 import android.os.Trace;
 import android.util.Log;
 import android.util.Size;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -846,19 +845,6 @@ public abstract class CameraActivity extends AppCompatActivity
   protected void readyForNextImage() {
     if (postInferenceCallback != null) {
       postInferenceCallback.run();
-    }
-  }
-
-  protected int getScreenOrientation() {
-    switch (getWindowManager().getDefaultDisplay().getRotation()) {
-      case Surface.ROTATION_270:
-        return 270;
-      case Surface.ROTATION_180:
-        return 180;
-      case Surface.ROTATION_90:
-        return 90;
-      default:
-        return 0;
     }
   }
 
