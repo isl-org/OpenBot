@@ -5,14 +5,14 @@
 <h1 align="center"><a>Turning Smartphones into Robots</a></h1>
 
 <p align="center">
-   <img alt="GitHub build" src="https://img.shields.io/github/workflow/status/Intel-ISL/OpenBot/Java%20CI%20with%20Gradle"></a>
-   <img alt="GitHub issues" src="https://img.shields.io/github/issues/intel-isl/OpenBot"></a>
-   <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/intel-isl/OpenBot"></a>
-   <img alt="GitHub forks" src="https://img.shields.io/github/forks/intel-isl/OpenBot"></a>
-   <img alt="GitHub stars" src="https://img.shields.io/github/stars/intel-isl/OpenBot"></a>
-   <img alt="Github downloads" src="https://img.shields.io/github/downloads/Intel-ISL/OpenBot/total"></a>
-   <img alt="Github size" src="https://img.shields.io/github/repo-size/Intel-ISL/OpenBot"></a>
-   <img alt="Github license" src="https://img.shields.io/github/license/intel-isl/OpenBot"></a>
+   <img alt="GitHub build" src="https://img.shields.io/github/actions/workflow/status/isl-org/OpenBot/gradle.yml?branch=master"></a>
+   <img alt="GitHub issues" src="https://img.shields.io/github/issues/isl-org/OpenBot"></a>
+   <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/isl-org/OpenBot"></a>
+   <img alt="GitHub forks" src="https://img.shields.io/github/forks/isl-org/OpenBot"></a>
+   <img alt="GitHub stars" src="https://img.shields.io/github/stars/isl-org/OpenBot"></a>
+   <img alt="Github downloads" src="https://img.shields.io/github/downloads/isl-org/OpenBot/total"></a>
+   <img alt="Github size" src="https://img.shields.io/github/repo-size/isl-org/OpenBot"></a>
+   <img alt="Github license" src="https://img.shields.io/github/license/isl-org/OpenBot"></a>
 </p>
 
 <p align="center">
