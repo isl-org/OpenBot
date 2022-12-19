@@ -50,16 +50,18 @@ def prepare_for_training(
 
 
 def show_batch(dataset, policy="autopilot", model=None, fig_num=1):
-
+    
     (image_batch, cmd_batch), label_batch = next(iter(dataset))
+    NUM_SAMPLES = min(image_batch.numpy().shape[0], 15)
+    
     if policy == "autopilot":
         command_input_name = "Cmd"
         size = (15, 10)
         if model is not None:
             pred_batch = model.predict(
                 (
-                    tf.slice(image_batch, [0, 0, 0, 0], [15, -1, -1, -1]),
-                    tf.slice(cmd_batch, [0], [15]),
+                    tf.slice(image_batch, [0, 0, 0, 0], [NUM_SAMPLES, -1, -1, -1]),
+                    tf.slice(cmd_batch, [0], [NUM_SAMPLES]),
                 )
             )
     elif policy == "point_goal_nav":
@@ -68,16 +70,16 @@ def show_batch(dataset, policy="autopilot", model=None, fig_num=1):
         if model is not None:
             pred_batch = model.predict(
                 (
-                    tf.slice(image_batch, [0, 0, 0, 0], [15, -1, -1, -1]),
-                    tf.slice(cmd_batch, [0, 0], [15, -1]),
+                    tf.slice(image_batch, [0, 0, 0, 0], [NUM_SAMPLES, -1, -1, -1]),
+                    tf.slice(cmd_batch, [0, 0], [NUM_SAMPLES, -1]),
                 )
             )
     else:
         raise Exception("Unknown policy")
 
-    plt.switch_backend("Agg")
     plt.figure(num=fig_num, figsize=size)
-    for n in range(15):
+    
+    for n in range(NUM_SAMPLES):
         ax = plt.subplot(5, 3, n + 1)
         plt.imshow(image_batch[n])
         if model is None:
