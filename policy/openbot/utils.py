@@ -209,7 +209,7 @@ def list_dirs(path):
     return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
 
 
-def load_img(file_path, is_crop=True):
+def load_img(file_path, is_crop=False):
     img = tf.io.read_file(file_path)
     img = tf.image.decode_image(img, channels=3, dtype=tf.float32)
     if is_crop:
