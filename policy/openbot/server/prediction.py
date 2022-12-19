@@ -47,7 +47,7 @@ def getPrediction(params):
         if params["indicator"] is None:
             cmd_input = np.array([[ind]], dtype=np.float32)
 
-        img = utils.load_img(path)
+        img = utils.load_img(path, is_crop=False)
         img_input = np.expand_dims(img, axis=0)
 
         interpreter.set_tensor(input_details[0]["index"], cmd_input)

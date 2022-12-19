@@ -34,19 +34,19 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
-dataset_name = "my_openbot"
-
 
 @dataclass
 class Hyperparameters:
-    MODEL: str = "cil_mobile"
+    MODEL: str = "pilot_net"
+    POLICY: str = "autopilot"
 
-    TRAIN_BATCH_SIZE: int = 16
+    TRAIN_BATCH_SIZE: int = 128
     TEST_BATCH_SIZE: int = 16
-    LEARNING_RATE: float = 0.0001
-    NUM_EPOCHS: int = 10
+    LEARNING_RATE: float = 0.0003
+    NUM_EPOCHS: int = 100
 
     BATCH_NORM: bool = True
+    IS_CROP: bool = False
     FLIP_AUG: bool = False
     CMD_AUG: bool = False
 
@@ -86,6 +86,7 @@ class Training:
         self.hyperparameters = params
         self.NETWORK_IMG_WIDTH = 0
         self.NETWORK_IMG_HEIGHT = 0
+        self.INITIAL_EPOCH = 0
         self.train_data_dir = ""
         self.test_data_dir = ""
         self.train_datasets = []
@@ -98,6 +99,7 @@ class Training:
         self.test_ds = None
         self.history = None
         self.model_name = ""
+        self.dataset_name = "openbot"
         self.checkpoint_path = ""
         self.log_path = ""
         self.loss_fn = None
@@ -158,19 +160,22 @@ def process_data(tr: Training):
 
     # 1ms
     max_offset = 1e3
-    train_frames = associate_frames.match_frame_ctrl_cmd(
+    train_frames = associate_frames.match_frame_ctrl_input(
         tr.train_data_dir,
         tr.train_datasets,
         max_offset,
         redo_matching=tr.redo_matching,
         remove_zeros=tr.remove_zeros,
+        policy=tr.hyperparameters.POLICY,
     )
-    test_frames = associate_frames.match_frame_ctrl_cmd(
+
+    test_frames = associate_frames.match_frame_ctrl_input(
         tr.test_data_dir,
         tr.test_datasets,
         max_offset,
         redo_matching=tr.redo_matching,
         remove_zeros=tr.remove_zeros,
+        policy=tr.hyperparameters.POLICY,
     )
 
     tr.image_count_train = len(train_frames)
@@ -185,42 +190,94 @@ def load_tfrecord(tr: Training, verbose=0):
     def process_train_sample(features):
         # image = tf.image.resize(features["image"], size=(224, 224))
         image = features["image"]
-        cmd = features["cmd"]
-        label = [features["left"], features["right"]]
-        image = data_augmentation.augment_img(image)
-        if tr.hyperparameters.FLIP_AUG:
-            img, cmd, label = data_augmentation.flip_sample(img, cmd, label)
-        if tr.hyperparameters.CMD_AUG:
-            cmd = data_augmentation.augment_cmd(cmd)
 
-        return (image, cmd), label
+        if tr.hyperparameters.POLICY == "autopilot":
+            cmd_input = features["cmd"]
+            label = [features["left"], features["right"]]
+            image = data_augmentation.augment_img(image)
+            if tr.hyperparameters.FLIP_AUG:
+                image, cmd_input, label = data_augmentation.flip_sample(
+                    image, cmd_input, label
+                )
+            if tr.hyperparameters.CMD_AUG:
+                cmd_input = data_augmentation.augment_cmd(cmd_input)
+        elif tr.hyperparameters.POLICY == "point_goal_nav":
+            image = tf.image.crop_to_bounding_box(
+                image, tf.shape(image)[0] - 90, tf.shape(image)[1] - 160, 90, 160
+            )
+            cmd_input = [features["dist"], features["sinYaw"], features["cosYaw"]]
+            label = [features["left"], features["right"]]
+            image = data_augmentation.augment_img(image)
+            if tr.hyperparameters.FLIP_AUG:
+                print(
+                    "Image flip augmentation is not implemented for Point Goal Navigation."
+                )
+            if tr.hyperparameters.CMD_AUG:
+                print(
+                    "Command augmentation is not implemented for Point Goal Navigation."
+                )
+
+        return (image, cmd_input), label
 
     def process_test_sample(features):
         image = features["image"]
-        cmd = features["cmd"]
-        label = [features["left"], features["right"]]
-        return (image, cmd), label
 
-    train_dataset = (
-        tf.data.TFRecordDataset(tr.train_data_dir, num_parallel_reads=AUTOTUNE)
-        .map(tfrecord_utils.parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
-        .map(process_train_sample, num_parallel_calls=AUTOTUNE)
-    )
+        if tr.hyperparameters.POLICY == "autopilot":
+            cmd_input = features["cmd"]
+
+        elif tr.hyperparameters.POLICY == "point_goal_nav":
+            image = tf.image.crop_to_bounding_box(
+                image, tf.shape(image)[0] - 90, tf.shape(image)[1] - 160, 90, 160
+            )
+            cmd_input = [features["dist"], features["sinYaw"], features["cosYaw"]]
+
+        label = [features["left"], features["right"]]
+        return (image, cmd_input), label
+
+    if tr.hyperparameters.POLICY == "autopilot":
+        train_dataset = (
+            tf.data.TFRecordDataset(tr.train_data_dir, num_parallel_reads=AUTOTUNE)
+            .map(
+                tfrecord_utils.parse_tfrecord_fn_autopilot, num_parallel_calls=AUTOTUNE
+            )
+            .map(process_train_sample, num_parallel_calls=AUTOTUNE)
+        )
+    elif tr.hyperparameters.POLICY == "point_goal_nav":
+        train_dataset = (
+            tf.data.TFRecordDataset(tr.train_data_dir, num_parallel_reads=AUTOTUNE)
+            .map(
+                tfrecord_utils.parse_tfrecord_fn_point_goal_nav,
+                num_parallel_calls=AUTOTUNE,
+            )
+            .map(process_train_sample, num_parallel_calls=AUTOTUNE)
+        )
 
     # Obtains the images shapes of records from .tfrecords.
-    for (image, cmd), label in train_dataset.take(1):
+    for (image, cmd_input), label in train_dataset.take(1):
         shape = image.numpy().shape
         tr.NETWORK_IMG_HEIGHT = shape[0]
         tr.NETWORK_IMG_WIDTH = shape[1]
         print("Image shape: ", shape)
-        print("Command: ", cmd.numpy())
+        print("Command: ", cmd_input.numpy())
         print("Label: ", label.numpy())
 
-    test_dataset = (
-        tf.data.TFRecordDataset(tr.test_data_dir, num_parallel_reads=AUTOTUNE)
-        .map(tfrecord_utils.parse_tfrecord_fn, num_parallel_calls=AUTOTUNE)
-        .map(process_test_sample, num_parallel_calls=AUTOTUNE)
-    )
+    if tr.hyperparameters.POLICY == "autopilot":
+        test_dataset = (
+            tf.data.TFRecordDataset(tr.test_data_dir, num_parallel_reads=AUTOTUNE)
+            .map(
+                tfrecord_utils.parse_tfrecord_fn_autopilot, num_parallel_calls=AUTOTUNE
+            )
+            .map(process_test_sample, num_parallel_calls=AUTOTUNE)
+        )
+    elif tr.hyperparameters.POLICY == "point_goal_nav":
+        test_dataset = (
+            tf.data.TFRecordDataset(tr.test_data_dir, num_parallel_reads=AUTOTUNE)
+            .map(
+                tfrecord_utils.parse_tfrecord_fn_point_goal_nav,
+                num_parallel_calls=AUTOTUNE,
+            )
+            .map(process_test_sample, num_parallel_calls=AUTOTUNE)
+        )
 
     # Obtains the total number of records from .tfrecords file
     # https://stackoverflow.com/questions/40472139/obtaining-total-number-of-records-from-tfrecords-file-in-tensorflow
@@ -252,8 +309,12 @@ def load_data(tr: Training, verbose=0):
     list_test_ds = tf.data.Dataset.list_files(
         [str(tr.test_data_dir + "/" + ds + "/*/images/*") for ds in tr.test_datasets]
     )
-    train_data = dataloader.dataloader(tr.train_data_dir, tr.train_datasets)
-    test_data = dataloader.dataloader(tr.test_data_dir, tr.test_datasets)
+    train_data = dataloader.dataloader(
+        tr.train_data_dir, tr.train_datasets, tr.hyperparameters.POLICY
+    )
+    test_data = dataloader.dataloader(
+        tr.test_data_dir, tr.test_datasets, tr.hyperparameters.POLICY
+    )
 
     if verbose:
         for f in list_train_ds.take(5):
@@ -261,36 +322,37 @@ def load_data(tr: Training, verbose=0):
         print()
         for f in list_test_ds.take(5):
             print(f.numpy())
-        print("Number of train samples: %d" % len(train_data.labels))
-        print("Number of test samples: %d" % len(test_data.labels))
+        print()
+    print("Number of train samples: %d" % len(train_data.labels))
+    print("Number of test samples: %d" % len(test_data.labels))
 
     def process_train_path(file_path):
-        cmd, label = train_data.get_label(
+        cmd_input, label = train_data.get_label(
             tf.strings.regex_replace(file_path, "[/\\\\]", "/")
         )
-        img = utils.load_img(file_path)
+        img = utils.load_img(file_path, tr.hyperparameters.IS_CROP)
         img = data_augmentation.augment_img(img)
         if tr.hyperparameters.FLIP_AUG:
-            img, cmd, label = data_augmentation.flip_sample(img, cmd, label)
+            img, cmd_input, label = data_augmentation.flip_sample(img, cmd_input, label)
         if tr.hyperparameters.CMD_AUG:
-            cmd = data_augmentation.augment_cmd(cmd)
-        return (img, cmd), label
+            cmd_input = data_augmentation.augment_cmd(cmd_input)
+        return (img, cmd_input), label
 
     def process_test_path(file_path):
-        cmd, label = test_data.get_label(
+        cmd_input, label = test_data.get_label(
             tf.strings.regex_replace(file_path, "[/\\\\]", "/")
         )
-        img = utils.load_img(file_path)
-        return (img, cmd), label
+        img = utils.load_img(file_path, tr.hyperparameters.IS_CROP)
+        return (img, cmd_input), label
 
     # Set `num_parallel_calls` so multiple images are loaded/processed in parallel.
     labeled_ds = list_train_ds.map(process_train_path, num_parallel_calls=4)
-    for (image, cmd), label in labeled_ds.take(1):
+    for (image, cmd_input), label in labeled_ds.take(1):
         shape = image.numpy().shape
         tr.NETWORK_IMG_HEIGHT = shape[0]
         tr.NETWORK_IMG_WIDTH = shape[1]
         print("Image shape: ", shape)
-        print("Command: ", cmd.numpy())
+        print("Command: ", cmd_input.numpy())
         print("Label: ", label.numpy())
     tr.train_ds = utils.prepare_for_training(
         ds=labeled_ds,
@@ -304,19 +366,19 @@ def load_data(tr: Training, verbose=0):
 
 
 def visualize_train_data(tr: Training):
-    (image_batch, cmd_batch), label_batch = next(iter(tr.train_ds))
-    utils.show_train_batch(image_batch.numpy(), cmd_batch.numpy(), label_batch.numpy())
-    savefig(os.path.join(models_dir, "train_preview.png"))
+    utils.show_batch(dataset=tr.train_ds, policy=tr.hyperparameters.POLICY, model=None)
+    utils.savefig(os.path.join(models_dir, "train_preview.png"))
 
 
 def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
-    tr.model_name = dataset_name + "_" + str(tr.hyperparameters)
+    tr.model_name = tr.dataset_name + "_" + str(tr.hyperparameters)
     tr.checkpoint_path = os.path.join(models_dir, tr.model_name, "checkpoints")
+    tr.log_path = os.path.join(models_dir, tr.model_name, "logs")
+
     tr.custom_objects = {
         "direction_metric": metrics.direction_metric,
         "angle_metric": metrics.angle_metric,
     }
-    model_path = os.path.join(models_dir, tr.model_name, "model")
 
     if tr.hyperparameters.WANDB:
         import wandb
@@ -330,27 +392,49 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
         config.batch_size = tr.hyperparameters.TRAIN_BATCH_SIZE
         config["model_name"] = tr.model_name
 
-    append_logs = False
+    resume_training = False
     model: tf.keras.Model
+
     if tr.hyperparameters.USE_LAST:
-        append_logs = True
-        model = tf.keras.models.load_model(
-            model_path,
-            custom_objects=tr.custom_objects,
-            compile=False,
-        )
-    else:
+        try:
+            dirs = utils.list_dirs(tr.checkpoint_path)
+            last_checkpoint = os.path.join(tr.checkpoint_path, "cp-last.ckpt")
+            os.path.join(tr.checkpoint_path, last_checkpoint)
+            model = tf.keras.models.load_model(
+                last_checkpoint,
+                custom_objects=tr.custom_objects,
+                compile=False,
+            )
+            log_file = open(os.path.join(tr.log_path, "log.csv"), "r")
+            tr.INITIAL_EPOCH = int(log_file.readlines()[-1].split(",")[0]) + 1
+            log_file.close()
+            resume_training = True
+            print(f"Resuming from checkpoint: {last_checkpoint}")
+            # print(f"Resuming from saved model.")
+        except FileNotFoundError as err:
+            print("No checkpoint or log file found, training new model!")
+            print(err)
+        except Exception as err:
+            print(err)
+            raise
+
+    if not resume_training:
         model = getattr(models, tr.hyperparameters.MODEL)(
             tr.NETWORK_IMG_WIDTH,
             tr.NETWORK_IMG_HEIGHT,
             tr.hyperparameters.BATCH_NORM,
+            tr.hyperparameters.POLICY,
         )
         dot_img_file = os.path.join(models_dir, tr.model_name, "model.png")
         tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True)
 
     callback.broadcast("model", tr.model_name)
 
-    tr.loss_fn = losses.sq_weighted_mse_angle
+    if tr.hyperparameters.POLICY == "autopilot":
+        tr.loss_fn = losses.sq_weighted_mse_angle
+    elif tr.hyperparameters.POLICY == "point_goal_nav":
+        tr.loss_fn = losses.mae_raw_weighted_mse_angle
+
     tr.metric_list = [
         "mean_absolute_error",
         tr.custom_objects["direction_metric"],
@@ -362,7 +446,6 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     if verbose:
         print(model.summary())
 
-    tr.log_path = os.path.join(models_dir, tr.model_name, "logs")
     if verbose:
         print(tr.model_name)
 
@@ -371,126 +454,144 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     )
     callback.broadcast("message", "Fit model...")
     callback_list = [
-        callbacks.checkpoint_cb(tr.checkpoint_path),
+        callbacks.checkpoint_last_cb(tr.checkpoint_path),
+        callbacks.checkpoint_best_train_cb(tr.checkpoint_path),
+        callbacks.checkpoint_best_val_cb(tr.checkpoint_path),
         callbacks.tensorboard_cb(tr.log_path),
-        callbacks.logger_cb(tr.log_path, append_logs),
+        callbacks.logger_cb(tr.log_path, resume_training),
         callback,
     ]
 
     if tr.hyperparameters.WANDB:
         callback_list += [WandbCallback()]
-
     tr.history = model.fit(
         tr.train_ds,
         epochs=tr.hyperparameters.NUM_EPOCHS,
         steps_per_epoch=STEPS_PER_EPOCH,
+        initial_epoch=tr.INITIAL_EPOCH,
         validation_data=tr.test_ds,
         verbose=verbose,
         callbacks=callback_list,
     )
-    model.save(model_path)
 
     if tr.hyperparameters.WANDB:
-        wandb.save(model_path)
+        wandb.save(tr.log_path)
         wandb.finish()
+
+    callback.broadcast("message", "...Done")
 
 
 def do_evaluation(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     callback.broadcast("message", "Generate plots...")
-    plt.plot(tr.history.history["mean_absolute_error"], label="mean_absolute_error")
+
+    x = np.arange(tr.INITIAL_EPOCH + 1, tr.history.params["epochs"] + 1, 1)
+
+    plt.figure().gca().xaxis.get_major_locator().set_params(integer=True)
+    plt.plot(x, tr.history.history["loss"], label="loss")
+    plt.plot(x, tr.history.history["val_loss"], label="val_loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.legend(loc="upper right")
+    utils.savefig(os.path.join(tr.log_path, "loss.png"))
+
+    plt.figure().gca().xaxis.get_major_locator().set_params(integer=True)
+    plt.plot(x, tr.history.history["mean_absolute_error"], label="mean_absolute_error")
     plt.plot(
-        tr.history.history["val_mean_absolute_error"], label="val_mean_absolute_error"
+        x,
+        tr.history.history["val_mean_absolute_error"],
+        label="val_mean_absolute_error",
     )
     plt.xlabel("Epoch")
     plt.ylabel("Mean Absolute Error")
-    plt.legend(loc="lower right")
-    savefig(os.path.join(tr.log_path, "error.png"))
+    plt.legend(loc="upper right")
+    utils.savefig(os.path.join(tr.log_path, "error.png"))
 
-    plt.plot(tr.history.history["direction_metric"], label="direction_metric")
-    plt.plot(tr.history.history["val_direction_metric"], label="val_direction_metric")
+    plt.figure().gca().xaxis.get_major_locator().set_params(integer=True)
+    plt.plot(x, tr.history.history["direction_metric"], label="direction_metric")
+    plt.plot(
+        x, tr.history.history["val_direction_metric"], label="val_direction_metric"
+    )
     plt.xlabel("Epoch")
     plt.ylabel("Direction Metric")
     plt.legend(loc="lower right")
-    savefig(os.path.join(tr.log_path, "direction.png"))
+    utils.savefig(os.path.join(tr.log_path, "direction.png"))
 
-    plt.plot(tr.history.history["angle_metric"], label="angle_metric")
-    plt.plot(tr.history.history["val_angle_metric"], label="val_angle_metric")
+    plt.figure().gca().xaxis.get_major_locator().set_params(integer=True)
+    plt.plot(x, tr.history.history["angle_metric"], label="angle_metric")
+    plt.plot(x, tr.history.history["val_angle_metric"], label="val_angle_metric")
     plt.xlabel("Epoch")
     plt.ylabel("Angle Metric")
     plt.legend(loc="lower right")
-    savefig(os.path.join(tr.log_path, "angle.png"))
-
-    plt.plot(tr.history.history["loss"], label="loss")
-    plt.plot(tr.history.history["val_loss"], label="val_loss")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.legend(loc="lower right")
-    savefig(os.path.join(tr.log_path, "loss.png"))
+    utils.savefig(os.path.join(tr.log_path, "angle.png"))
 
     callback.broadcast("message", "Generate tflite models...")
     checkpoint_path = tr.checkpoint_path
     print("checkpoint_path", checkpoint_path)
-    best_index = np.argmax(
-        np.array(tr.history.history["val_angle_metric"])
-        + np.array(tr.history.history["val_direction_metric"])
-    )
-    best_checkpoint = str("cp-%04d.ckpt" % (best_index + 1))
-    best_tflite = utils.generate_tflite(checkpoint_path, best_checkpoint)
-    utils.save_tflite(best_tflite, checkpoint_path, "best")
+
+    best_train_checkpoint = "cp-best-train.ckpt"
+    best_train_tflite = utils.generate_tflite(tr.checkpoint_path, best_train_checkpoint)
+    utils.save_tflite(best_train_tflite, tr.checkpoint_path, "best-train")
+    best_train_index = np.argmin(np.array(tr.history.history["loss"]))
     print(
-        "Best Checkpoint (val_angle: %s, val_direction: %s): %s"
+        "Best Train Checkpoint (epoch %s) - angle: %.4f, val_angle: %.4f, direction: %.4f, val_direction: %.4f"
         % (
-            tr.history.history["val_angle_metric"][best_index],
-            tr.history.history["val_direction_metric"][best_index],
-            best_checkpoint,
+            best_train_index,
+            tr.history.history["angle_metric"][best_train_index],
+            tr.history.history["val_angle_metric"][best_train_index],
+            tr.history.history["direction_metric"][best_train_index],
+            tr.history.history["val_direction_metric"][best_train_index],
         )
     )
 
-    last_checkpoint = sorted(utils.list_dirs(checkpoint_path))[-1]
-    last_tflite = utils.generate_tflite(checkpoint_path, last_checkpoint)
-    utils.save_tflite(last_tflite, checkpoint_path, "last")
+    best_val_checkpoint = "cp-best-val.ckpt"
+    best_val_tflite = utils.generate_tflite(tr.checkpoint_path, best_val_checkpoint)
+    utils.save_tflite(best_val_tflite, tr.checkpoint_path, "best")
+    utils.save_tflite(best_val_tflite, tr.checkpoint_path, "best-val")
+    best_val_index = np.argmin(np.array(tr.history.history["val_loss"]))
     print(
-        "Last Checkpoint (val_angle: %s, val_direction: %s): %s"
+        "Best Val Checkpoint (epoch %s) - angle: %.4f, val_angle: %.4f, direction: %.4f, val_direction: %.4f"
         % (
+            best_val_index,
+            tr.history.history["angle_metric"][best_val_index],
+            tr.history.history["val_angle_metric"][best_val_index],
+            tr.history.history["direction_metric"][best_val_index],
+            tr.history.history["val_direction_metric"][best_val_index],
+        )
+    )
+
+    last_checkpoint = "cp-last.ckpt"
+    last_tflite = utils.generate_tflite(tr.checkpoint_path, last_checkpoint)
+    utils.save_tflite(last_tflite, tr.checkpoint_path, "last")
+    print(
+        "Last Checkpoint - angle: %.4f, val_angle: %.4f, direction: %.4f, val_direction: %.4f"
+        % (
+            tr.history.history["angle_metric"][-1],
             tr.history.history["val_angle_metric"][-1],
+            tr.history.history["direction_metric"][-1],
             tr.history.history["val_direction_metric"][-1],
-            last_checkpoint,
         )
     )
 
     callback.broadcast("message", "Evaluate model...")
-    best_model = utils.load_model(
-        os.path.join(checkpoint_path, best_checkpoint),
+    last_model = utils.load_model(
+        os.path.join(tr.checkpoint_path, last_checkpoint),
         tr.loss_fn,
         tr.metric_list,
         tr.custom_objects,
     )
-    # test_loss, test_acc, test_dir, test_ang = best_model.evaluate(tr.test_ds,
-    res = best_model.evaluate(
+    # test_loss, test_acc, test_dir, test_ang
+    res = last_model.evaluate(
         tr.test_ds,
         steps=tr.image_count_test / tr.hyperparameters.TEST_BATCH_SIZE,
         verbose=2,
     )
     print(res)
 
-    NUM_SAMPLES = 15
-    (image_batch, cmd_batch), label_batch = next(iter(tr.test_ds))
-    pred_batch = best_model.predict(
-        (
-            tf.slice(image_batch, [0, 0, 0, 0], [NUM_SAMPLES, -1, -1, -1]),
-            tf.slice(cmd_batch, [0], [NUM_SAMPLES]),
-        )
+    utils.show_batch(
+        dataset=tr.test_ds, policy=tr.hyperparameters.POLICY, model=last_model
     )
-    utils.show_test_batch(
-        image_batch.numpy(), cmd_batch.numpy(), label_batch.numpy(), pred_batch
-    )
-    savefig(os.path.join(tr.log_path, "test_preview.png"))
-    utils.compare_tf_tflite(best_model, best_tflite)
-
-
-def savefig(path):
-    plt.savefig(path, bbox_inches="tight")
-    plt.clf()
+    utils.savefig(os.path.join(tr.log_path, "test_preview.png"))
+    utils.compare_tf_tflite(last_model, last_tflite, policy=tr.hyperparameters.POLICY)
 
 
 def start_train(
@@ -518,7 +619,7 @@ def start_train(
     return tr
 
 
-def create_tfrecord(callback: MyCallback):
+def create_tfrecord(callback: MyCallback, policy="autopilot"):
     callback.broadcast(
         "message", "Converting data to tfrecord (this may take some time)..."
     )
@@ -526,11 +627,13 @@ def create_tfrecord(callback: MyCallback):
         os.path.join(dataset_dir, "train_data"),
         os.path.join(dataset_dir, "tfrecords"),
         "train.tfrec",
+        policy=policy,
     )
     tfrecord.convert_dataset(
         os.path.join(dataset_dir, "test_data"),
         os.path.join(dataset_dir, "tfrecords"),
         "test.tfrec",
+        policy=policy,
     )
 
 
@@ -549,22 +652,22 @@ if __name__ == "__main__":
         type=str,
         default="pilot_net",
         choices=["cil_mobile", "cil_mobile_fast", "cil", "pilot_net"],
-        help="network architecture (default: cil_mobile)",
+        help="network architecture (default: pilot_net)",
     )
     parser.add_argument(
         "--batch_size",
         type=int,
-        default=16,
-        help="number of training epochs (default: 16)",
+        default=128,
+        help="number of training epochs (default: 128)",
     )
     parser.add_argument(
         "--learning_rate",
         type=float,
-        default=0.0001,
-        help="learning rate (default: 0.0001)",
+        default=0.0003,
+        help="learning rate (default: 0.0003)",
     )
     parser.add_argument(
-        "--num_epochs", type=int, default=10, help="number of epochs (default: 10)"
+        "--num_epochs", type=int, default=100, help="number of epochs (default: 100)"
     )
     parser.add_argument("--batch_norm", action="store_true", help="use batch norm")
     parser.add_argument(
@@ -583,11 +686,19 @@ if __name__ == "__main__":
     parser.add_argument(
         "--wandb", action="store_true", help="training logs with weights & biases"
     )
+    parser.add_argument(
+        "--policy",
+        type=str,
+        default="autopilot",
+        choices=["autopilot", "point_goal_nav"],
+        help="the type of policy to be trained (default: autopilot)",
+    )
 
     args = parser.parse_args()
 
     params = Hyperparameters()
     params.MODEL = args.model
+    params.POLICY = args.policy
     params.TRAIN_BATCH_SIZE = args.batch_size
     params.TEST_BATCH_SIZE = args.batch_size
     params.LEARNING_RATE = args.learning_rate
@@ -597,6 +708,7 @@ if __name__ == "__main__":
     params.CMD_AUG = args.cmd_aug
     params.USE_LAST = args.resume
     params.WANDB = args.wandb
+    params.IS_CROP = args.policy == "point_goal_nav"
 
     def broadcast(event, payload=None):
         print()
@@ -606,6 +718,6 @@ if __name__ == "__main__":
     my_callback = MyCallback(broadcast, event)
 
     if args.create_tf_record:
-        create_tfrecord(my_callback)
+        create_tfrecord(my_callback, args.policy)
 
     start_train(params, my_callback, verbose=1, no_tf_record=args.no_tf_record)
