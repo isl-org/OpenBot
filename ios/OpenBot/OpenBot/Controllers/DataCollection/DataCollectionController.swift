@@ -99,6 +99,7 @@ class DataCollectionController: CameraController {
     @objc func openBluetoothSettings() {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: "bluetoothScreen"))
         navigationController?.pushViewController(nextViewController!, animated: true)
+        stopSession()
     }
 
 

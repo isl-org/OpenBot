@@ -104,7 +104,9 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     func initializeCamera() {
         videoOutput = AVCaptureVideoDataOutput()
         captureSession = AVCaptureSession()
-        captureSession.addOutput(photoOutput);
+        if captureSession.canAddOutput(photoOutput) {
+            captureSession.addOutput(photoOutput)
+        }
         captureSession.sessionPreset = .high
         guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
         else {
@@ -466,6 +468,10 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
 
     func setupImages() {
         images.removeAll()
+    }
+
+    func stopSession(){
+        captureSession.stopRunning()
     }
 
 }

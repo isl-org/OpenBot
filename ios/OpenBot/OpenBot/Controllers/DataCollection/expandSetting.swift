@@ -494,6 +494,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
     @objc func ble(_ sender: UIView) {
         NotificationCenter.default.post(name: .ble, object: nil)
+
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

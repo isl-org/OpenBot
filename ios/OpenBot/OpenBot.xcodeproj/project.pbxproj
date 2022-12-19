@@ -818,6 +818,7 @@
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Allow Camera for Free Roam Mode";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow local Network for controller";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Program requires GPS to track cars and job orders";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow for Location updates";
 				INFOPLIST_KEY_NSLocationUsageDescription = "Allow for Location updates";
@@ -855,6 +856,7 @@
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Allow Camera for Free Roam Mode";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow local Network for controller";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Program requires GPS to track cars and job orders";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow for Location updates";
 				INFOPLIST_KEY_NSLocationUsageDescription = "Allow for Location updates";
