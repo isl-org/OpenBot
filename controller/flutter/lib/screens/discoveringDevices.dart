@@ -20,13 +20,21 @@ class DiscoveringDeviceState extends State<DiscoveringDevice> {
     return Scaffold(
       body: Container(
           alignment: Alignment.center,
-          child: widget.isDeviceConnected
+          // child: widget.isDeviceConnected
+          child: selectController
               ? const ControlSelector()
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset("images/openbot_icon.png"),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectController = true;
+                        });
+                      },
+                     child: Image.asset("images/openbot_icon.png"),
+                    ),
                     const Text("Searching for OpenBot..."),
                     const Text(
                         "Select Phone as control mode in the bot app to Connect"),
