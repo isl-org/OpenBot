@@ -57,7 +57,7 @@ public class PhoneController {
       case "RTSP":
         videoServer = new RtspServer();
         break;
-      case "WEBRTC":
+      case "WebRTC":
         videoServer = new WebRtcServer();
     }
 
