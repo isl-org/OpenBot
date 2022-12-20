@@ -66,6 +66,22 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/openbot_icon.png
+    - images/arrow_icon.png
+    - images/controller_icon.png
+    - images/tilting_phone_icon.png
+    - images/cross_icon.png
+    - images/pause_icon_blue.png
+    - images/speaker_icon_blue.png
+    - images/camera_icon_blue.png
+    - images/left_indicator_icon_blue.png
+    - images/right_indicator_icon_blue.png
+    - images/pause_icon_white.png
+    - images/speaker_icon_white.png
+    - images/camera_icon_white.png
+    - images/left_indicator_icon_white.png
+    - images/right_indicator_icon_white.png
+    - images/forward_icon.png
+    - images/reverse_icon.png
 #     - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
