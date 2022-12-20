@@ -27,7 +27,7 @@ class Connection {
     // incoming connection
     init(connection: NWConnection) {
         print("PeerConnection incoming connection: \(connection)")
-        self.connection = connection
+        self.connection = tempConnection ?? connection
         start()
     }
 
@@ -49,8 +49,7 @@ class Connection {
     }
 
     func send(_ message: String) {
-        print("send data")
-        let message1 = "hello world"
+        let message1 = "sending message to controller"
         let content: Data = message1.data(using: .utf8)!
         connection.send(content: content, completion: NWConnection.SendCompletion.contentProcessed(({ (NWError) in
             if (NWError == nil) {
@@ -60,8 +59,6 @@ class Connection {
                 print("ERROR! Error when data (Type: Data) sending. NWError: \n \(NWError!)")
             }
         })))
-
-
 
 
 
@@ -101,6 +98,9 @@ class Connection {
             }
             if let data = data,
                let message = String(data: data, encoding: .utf8) {
+                if message.contains("SWITCH_CAMERA"){
+                    NotificationCenter.default.post(name: .switchCamera, object: nil);
+                }
                 NotificationCenter.default.post(name: .updateDataFromControllerApp, object: message);
             }
             self.receiveMessage()

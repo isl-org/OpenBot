@@ -72,7 +72,7 @@ public class NetworkServiceConnection: NSObject {
                                     }
                                 }
 
-                                listener.start(queue: .global())
+                                listener.start(queue: .main)
                             } catch {
                             }
 //                            self.listener.service = NWListener.Service(name: name, type: type, domain: domain, txtRecord: txtRecord)

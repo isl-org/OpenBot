@@ -7,12 +7,13 @@ import Network
 import UIKit
 
 var server = try? Server()
-
+var tempConnection : NWConnection?
 class Server {
 
     let listener: NWListener
 
     var connections: [Connection] = []
+    var shareConnection : Connection? = nil;
 
     init() throws {
         let tcpOptions = NWProtocolTCP.Options()
@@ -33,15 +34,20 @@ class Server {
         listener.newConnectionHandler = { [weak self] newConnection in
             print("listener.newConnectionHandler \(newConnection)")
             let connection = Connection(connection: newConnection)
+            tempConnection = newConnection;
+            sharedConnection = connection;
+            print("share connection is :",sharedConnection)
             self?.connections += [connection]
         }
         listener.start(queue: .main)
     }
 
     func send(jsonObject : String) {
-        for connection in connections {
-            connection.send(jsonObject);
-        }
+        sharedConnection?.send("sending message to connection");
+        print(connections.count)
+//        for connection in connections {
+//            connection.send(jsonObject);
+//        }
     }
 
 }

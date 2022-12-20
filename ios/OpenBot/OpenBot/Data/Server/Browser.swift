@@ -70,8 +70,8 @@ class Browser {
                     print("no change")
                 }
             }
-                    netService = NetService(domain: "local.", type:"_openbot._tcp.", name: "_openbot._tcp.", port: 1100)
-                    netService?.remove(from: .main, forMode: .default);
+//                    netService = NetService(domain: "local.", type:"_openbot._tcp.", name: "_openbot._tcp.", port: 1100)
+//                    netService?.remove(from: .main, forMode: .default);
         }
 
         browser.start(queue: .main)
