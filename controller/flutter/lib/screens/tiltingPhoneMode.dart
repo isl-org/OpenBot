@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:openbot_controller/utils/forwardSpeed.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 
 class TiltingPhoneMode extends StatefulWidget {
   const TiltingPhoneMode({super.key});
@@ -10,8 +14,25 @@ class TiltingPhoneMode extends StatefulWidget {
 }
 
 class TiltingPhoneModeState extends State<TiltingPhoneMode> {
+  Timer? timer;
   bool forward = false;
   bool reverse = false;
+
+
+  Future<void> gyroscopeData() async {
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      print(event);
+      //Output: [GyroscopeEvent (x: 0.08372224867343903, y: -0.09925820678472519, z: 0.21376553177833557)]
+    });
+  }
+
+  @override
+  void initState() {
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      // print("inside init state $event" );
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +64,28 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
               children: [
                 GestureDetector(
                     onTap: () {
+                      print("pressed on reverse");
+                      ForwardSpeed.reset();
+                      setState(() {});
+                    },
+                    onLongPressStart: (detail) {
                       setState(() {
-                        forward = !forward;
+                        timer = Timer.periodic(const Duration(milliseconds: 333),
+                            (t) {
+                          reverse = !reverse;
+                          double decrementSpeed = ForwardSpeed.minNegative/3;
+                          ForwardSpeed.decrementNegative(decrementSpeed);
+                          print(ForwardSpeed.value);
+                        });
                       });
-                    }, // Image tapped
+                    },
+                    onLongPressEnd: (detail) {
+                      if (timer != null) {
+                        ForwardSpeed.reset();
+                        timer!.cancel();
+                      }
+                    },
+                    // Image tapped
                     child: Container(
                       margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                       // padding: const EdgeInsets.all(10),
@@ -65,8 +104,28 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                 GestureDetector(
                     onTap: () {
                       setState(() {
-                        reverse = !reverse;
+                        forward = !forward;
+                        print("forward tapped");
+                        ForwardSpeed.reset();
                       });
+                    },
+                    onLongPressStart: (detail) {
+                      setState(() {
+                        timer = Timer.periodic(const Duration(milliseconds: 200),
+                            (t) {
+                          forward = !forward;
+                          double incrementValue = (ForwardSpeed.max-ForwardSpeed.value)/5;
+                          ForwardSpeed.increment(incrementValue);
+                          print(ForwardSpeed.value);
+
+                        });
+                      });
+                    },
+                    onLongPressEnd: (detail) {
+                      if (timer != null) {
+                        ForwardSpeed.reset();
+                        timer!.cancel();
+                      }
                     }, // Image tapped
                     child: Container(
                       margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),

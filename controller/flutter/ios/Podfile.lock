@@ -6,6 +6,8 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - nsd_ios (from `.symlinks/plugins/nsd_ios/ios`)
+ - sensors_plus: ^1.2.2
+
 
 EXTERNAL SOURCES:
   Flutter:
