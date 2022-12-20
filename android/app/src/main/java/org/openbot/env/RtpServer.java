@@ -46,7 +46,12 @@ public class RtpServer implements IVideoServer, SurfaceHolder.Callback {
   public void init(Context context) {
     Log.d(TAG, "initialized");
     this.context = context;
-    imageListener = (ImageReader.OnImageAvailableListener) context;
+    try {
+      imageListener = (ImageReader.OnImageAvailableListener) context; // image listener for camera2 in DefaultActivity
+    } catch (Exception e) {
+      imageListener = imageReader -> {}; // dummy imageListener
+    }
+//    imageListener = (ImageReader.OnImageAvailableListener) context;
     /*
     AndGate will run 'startServer()' if all its input conditions are met.
     This is useful if we do not know the order of the updates to the conditions.

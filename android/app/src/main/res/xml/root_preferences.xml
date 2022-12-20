@@ -46,7 +46,7 @@
             app:title="Stream Mode"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
-            android:defaultValue="172.217.22.14"
+            android:defaultValue="127.0.0.1"
             android:key="ip"
             android:selectAllOnFocus="true"
             android:singleLine="true"

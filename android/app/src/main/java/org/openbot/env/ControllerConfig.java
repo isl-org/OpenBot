@@ -64,7 +64,7 @@ public class ControllerConfig {
   }
 
   public String[] getVideoServerAddress() {
-    String ip = get("ip", "172.217.22.14");
+    String ip = get("ip", "127.0.0.1");
     String port_stream = get("port_stream", "8046");
     String port_control = get("port_control", "8040");
     return new String[] {ip, port_stream, port_control};
