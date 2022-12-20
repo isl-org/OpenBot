@@ -51,10 +51,12 @@ class OnScreenModeState extends State<OnScreenMode> {
                         child: RotatedBox(
                           quarterTurns: -1,
                           child: Slider(
-                            onChanged: (value) =>
-                                setState(() => sliderValueLeft = value),
-                            onChangeEnd: (value) => setState(() => sliderValueLeft = 50),
                             value: sliderValueLeft,
+                            onChanged: (value) =>
+                                {setState(() => sliderValueLeft = value),
+                                  getLeftSliderValue()},
+                            onChangeEnd: (value) =>
+                                {setState(() => sliderValueLeft = 50),getLeftSliderValue()},
                             min: 0,
                             max: 100,
                             activeColor: Colors.white,
@@ -79,10 +81,11 @@ class OnScreenModeState extends State<OnScreenMode> {
                           child: RotatedBox(
                             quarterTurns: -1,
                             child: Slider(
-                              onChanged: (value) =>
-                                  setState(() => sliderValueRight = value),
-                              onChangeEnd: (value) => setState(() => sliderValueRight = 50),
                               value: sliderValueRight,
+                              onChanged: (value) =>
+                                  {setState(() => sliderValueRight = value),getRightSliderValue()},
+                              onChangeEnd: (value) =>
+                                  {setState(() => sliderValueRight = 50),getRightSliderValue()},
                               min: 0,
                               max: 100,
                               activeColor: Colors.white,
@@ -92,57 +95,14 @@ class OnScreenModeState extends State<OnScreenMode> {
                 ],
               ),
             ),
-            // Row(
-            //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   // crossAxisAlignment: CrossAxisAlignment.end,
-            //   children: [
-            //     Theme(
-            //         data: Theme.of(context).copyWith(
-            //           sliderTheme: SliderThemeData(
-            //             thumbShape: SquareSliderComponentShape(),
-            //             trackShape: const MyRoundedRectSliderTrackShape(),
-            //           ),
-            //         ),
-            //         child: RotatedBox(
-            //           quarterTurns: -1,
-            //           child: Slider(
-            //             onChanged: (value) =>
-            //                 setState(() => sliderValueLeft = value),
-            //             value: sliderValueLeft,
-            //             min: 0,
-            //             max: 100,
-            //             activeColor: Colors.white,
-            //             inactiveColor: const Color(0xFF292929),
-            //           ),
-            //         )),
-            //     Container(
-            //       alignment: AlignmentDirectional.bottomEnd,
-            //       // margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-            //       child: const OnScreenIcon(),
-            //     ),
-            //     Theme(
-            //         data: Theme.of(context).copyWith(
-            //           sliderTheme: SliderThemeData(
-            //             thumbShape: SquareSliderComponentShape(),
-            //             trackShape: const MyRoundedRectSliderTrackShape(),
-            //           ),
-            //         ),
-            //         child: RotatedBox(
-            //           quarterTurns: -1,
-            //           child: Slider(
-            //             onChanged: (value) =>
-            //                 setState(() => sliderValueRight = value),
-            //             value: sliderValueRight,
-            //             min: 0,
-            //             max: 100,
-            //             activeColor: Colors.white,
-            //             inactiveColor: const Color(0xFF292929),
-            //           ),
-            //         )),
-            //   ],
-            // )
           ],
         ));
+  }
+  Future<void> getLeftSliderValue()async {
+    print(sliderValueLeft);
+  }
+  Future<void> getRightSliderValue()async {
+    print(sliderValueRight);
   }
 }
 

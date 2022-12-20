@@ -73,13 +73,13 @@ class ControlSelectorState extends State<ControlSelector> {
                             ),
                           ),
                           const SizedBox(
-                            height: 60,
+                            height: 55,
                           ),
                           Container(
                             alignment: Alignment.bottomRight,
                             child: Image.asset(
                               "images/arrow_icon.png",
-                              width: 43,
+                              width: 50,
                             ),
                           ),
                         ]),
@@ -132,13 +132,13 @@ class ControlSelectorState extends State<ControlSelector> {
                             ),
                           ),
                           const SizedBox(
-                            height: 60,
+                            height: 55,
                           ),
                           Container(
                             alignment: Alignment.bottomRight,
                             child: Image.asset(
                               "images/arrow_icon.png",
-                              width: 43,
+                              width: 50,
                             ),
                           ),
                         ]),
