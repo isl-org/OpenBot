@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:nsd/nsd.dart';
+import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/screens/controlSelector.dart';
 import 'package:openbot_controller/screens/tiltingPhoneMode.dart';
 
@@ -63,6 +64,7 @@ class ControllerState extends State<Controller> {
         socket.close();
       } else {
         clientSocket = socket;
+        clientSock = clientSocket;
         print('$clientSocket, == msg');
         _broadcast = socket.asBroadcastStream();
         print('$_broadcast, == msg');

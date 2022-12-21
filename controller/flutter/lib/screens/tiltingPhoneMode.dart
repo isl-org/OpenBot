@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/utils/forwardSpeed.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
@@ -76,6 +77,8 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                           double decrementSpeed = ForwardSpeed.minNegative/3;
                           ForwardSpeed.decrementNegative(decrementSpeed);
                           print(ForwardSpeed.value);
+                          print("client socket is : $clientSock");
+                          clientSock?.write("hello sanjeev kya haal hai ");
                         });
                       });
                     },
