@@ -13,7 +13,7 @@ care is neccessary when using automated control (e.g. person following or drivin
 The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon at the top right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/screen_main.jpg" alt="Main Menu" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/screen_main.gif" alt="Main Menu" width="25%"/>
 <img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="25%"/>
 </p>
 
@@ -95,7 +95,7 @@ If a model is active, the inference speed in [ms] will be displayed next to the 
 Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
 
 <p align="left">
-<img src="../../docs/images/screen_free_roam.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_free_roam.jpg" alt="Free Roam" width="50%" />
 </p>
 
 - **Battery**: The battery icon shows realtime battery levels of the connected robot.
@@ -119,7 +119,7 @@ Free Roam offers simple robot control with real time updates and information abo
 Simple UI for collection of data sets.
 
 <p align="left">
-<img src="../../docs/images/screen_data_collection.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_data_collection.jpg" alt="Data Collection" width="50%" />
 </p>
 
 - **Preview Resolution**: Used to switch between resolutions of camera preview. There are 3 settings:
@@ -140,7 +140,15 @@ Simple UI for collection of data sets.
 Simple UI to check the button and joystick mapping of a connected BT controller.
 
 <p align="left">
-<img src="../../docs/images/screen_controller_mapping.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_controller_mapping.jpg" alt="Controller Mapping" width="50%" />
+</p>
+
+### Robot Info
+
+Simple UI to get robot info and test basic functionality. The **Robot Type** as configured in the firmware is displayed as text and animation. The checkmarks in the sections **Sensors**, **Wheel Odometry** and **LEDs** show which features are supported by the connected robot. The section **Readings** provides the most important sensor measurements. In the section **Send Commands**, users can send basic motor commands by pressing the corresponding buttons and control the front and rear LEDs with a slider. 
+
+<p align="left">
+<img src="../../docs/images/screen_robot_info.gif" alt="Robot Info" width="50%" />
 </p>
 
 ### Autopilot
@@ -148,7 +156,7 @@ Simple UI to check the button and joystick mapping of a connected BT controller.
 Simple UI for running autopilot models.
 
 <p align="left">
-<img src="../../docs/images/screen_autopilot.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_autopilot.jpg" alt="Autopilot" width="50%" />
 </p>
 
 ### Object Tracking
@@ -173,7 +181,7 @@ Note that this fragment requires ARCore and camera permission. If your device do
 All models are quantized for better performance on embedded devices. Please refer to section below for a short description of the available models and benchmarking results. The [mean Average Precision (mAP)](https://kharshit.github.io/blog/2019/09/20/evaluation-metrics-for-object-detection-and-segmentation) is computed on the validation set of the [COCO Detection 2017](https://cocodataset.org/#detection-2017) dataset. Each model is run for about 1 minute; the inference time is averaged across the last 100 frames and reported in frames per second (fps). Note that models with larger input resolution might be better for smaller objects despite lower mAP.
 
 <p align="left">
-<img src="../../docs/images/screen_model_management.jpg" alt="Alt text" width="25%" />
+<img src="../../docs/images/screen_model_management.gif" alt="Model Management" width="25%" />
 </p>
 
 ### Benchmark
