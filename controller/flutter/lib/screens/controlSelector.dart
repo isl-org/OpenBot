@@ -150,7 +150,11 @@ class ControlSelectorState extends State<ControlSelector> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
+                GestureDetector(
+                  onTap: (){
+                    print("{command: LOGS}");
+                  },
+                  child: Container(
                   height: 30,
                   width: 85,
                   margin: const EdgeInsets.all(20),
@@ -168,8 +172,12 @@ class ControlSelectorState extends State<ControlSelector> {
                       ),
                     ),
                   ),
-                ),
-                Container(
+                )),
+                GestureDetector(
+                  onTap: (){
+                    print("{command: NOISE}");
+                  },
+                  child: Container(
                   height: 30,
                   width: 85,
                   margin: const EdgeInsets.all(20),
@@ -187,8 +195,12 @@ class ControlSelectorState extends State<ControlSelector> {
                       ),
                     ),
                   ),
-                ),
-                Container(
+                )),
+                GestureDetector(
+                  onTap: (){
+                    print("{command: NETWORK}");
+                  },
+                  child: Container(
                   height: 30,
                   width: 85,
                   margin: const EdgeInsets.all(20),
@@ -206,8 +218,12 @@ class ControlSelectorState extends State<ControlSelector> {
                       ),
                     ),
                   ),
-                ),
-                Container(
+                )),
+                GestureDetector(
+                  onTap: (){
+                    print("GAME");
+                  },
+                child: Container(
                   height: 30,
                   width: 85,
                   margin: const EdgeInsets.all(20),
@@ -225,7 +241,7 @@ class ControlSelectorState extends State<ControlSelector> {
                       ),
                     ),
                   ),
-                )
+                ))
               ],
             )
           ],

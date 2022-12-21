@@ -77,6 +77,7 @@ class OnScreenIconState extends State<OnScreenIcon> {
           ),
           GestureDetector(
               onTap: () {
+                print("{command: SWITCH_CAMERA}");
                 setState(() {
                   camera = !camera;
                 });
@@ -104,6 +105,11 @@ class OnScreenIconState extends State<OnScreenIcon> {
           ),
           GestureDetector(
               onTap: () {
+                if(leftIndicator) {
+                  print("{command: INDICATOR_STOP}");
+                } else {
+                  print("{command: INDICATOR_LEFT}");
+                }
                 setState(() {
                   leftIndicator = !leftIndicator;
                 });
@@ -131,6 +137,11 @@ class OnScreenIconState extends State<OnScreenIcon> {
           ),
           GestureDetector(
               onTap: () {
+                if(rightIndicator) {
+                  print("{command: INDICATOR_STOP}");
+                } else {
+                  print("{command: INDICATOR_RIGHT}");
+                }
                 setState(() {
                   rightIndicator = !rightIndicator;
                 });

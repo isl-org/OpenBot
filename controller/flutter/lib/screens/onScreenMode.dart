@@ -12,8 +12,8 @@ class OnScreenMode extends StatefulWidget {
 }
 
 class OnScreenModeState extends State<OnScreenMode> {
-  double sliderValueLeft = 50;
-  double sliderValueRight = 50;
+  double sliderValueLeft = 0;
+  double sliderValueRight = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +56,9 @@ class OnScreenModeState extends State<OnScreenMode> {
                                 {setState(() => sliderValueLeft = value),
                                   getLeftSliderValue()},
                             onChangeEnd: (value) =>
-                                {setState(() => sliderValueLeft = 50),getLeftSliderValue()},
-                            min: 0,
-                            max: 100,
+                                {setState(() => sliderValueLeft = 0),getLeftSliderValue()},
+                            min: -1,
+                            max: 1,
                             activeColor: Colors.white,
                             inactiveColor: const Color(0xFF292929),
                           ),
@@ -85,9 +85,9 @@ class OnScreenModeState extends State<OnScreenMode> {
                               onChanged: (value) =>
                                   {setState(() => sliderValueRight = value),getRightSliderValue()},
                               onChangeEnd: (value) =>
-                                  {setState(() => sliderValueRight = 50),getRightSliderValue()},
-                              min: 0,
-                              max: 100,
+                                  {setState(() => sliderValueRight = 0),getRightSliderValue()},
+                              min: -1,
+                              max: 1,
                               activeColor: Colors.white,
                               inactiveColor: const Color(0xFF292929),
                             ),
@@ -152,7 +152,7 @@ class MyRoundedRectSliderTrackShape extends SliderTrackShape
     bool isEnabled = false,
     double additionalTrackHeight = 30,
   }) {
-    if (sliderTheme.trackHeight == null || sliderTheme.trackHeight! <= 0) {
+    if (sliderTheme.trackHeight == null) {
       return;
     }
 
