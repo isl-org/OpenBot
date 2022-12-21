@@ -101,6 +101,7 @@ class Connection {
                 if message.contains("SWITCH_CAMERA"){
                     NotificationCenter.default.post(name: .switchCamera, object: nil);
                 }
+                print(message);
                 NotificationCenter.default.post(name: .updateDataFromControllerApp, object: message);
             }
             self.receiveMessage()
