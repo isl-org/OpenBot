@@ -77,8 +77,8 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                           double decrementSpeed = ForwardSpeed.minNegative/3;
                           ForwardSpeed.decrementNegative(decrementSpeed);
                           print(ForwardSpeed.value);
-                          print("client socket is : $clientSock");
-                          clientSock?.write("hello sanjeev kya haal hai ");
+                          print("client socket is : $clientSocket");
+                          clientSocket?.write("hello sanjeev kya haal hai ");
                         });
                       });
                     },

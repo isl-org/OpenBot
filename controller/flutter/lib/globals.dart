@@ -1,3 +1,3 @@
 import 'dart:io';
 
-Socket? clientSock;
+Socket? clientSocket;

@@ -26,7 +26,6 @@ class ControllerState extends State<Controller> {
   final discoveries = <Discovery>[];
   final registrations = <Registration>[];
   ServerSocket? _serverSocket;
-  Socket? clientSocket;
   Stream<Uint8List>? _broadcast;
   bool isDeviceConnected = false;
 
@@ -64,7 +63,6 @@ class ControllerState extends State<Controller> {
         socket.close();
       } else {
         clientSocket = socket;
-        clientSock = clientSocket;
         print('$clientSocket, == msg');
         _broadcast = socket.asBroadcastStream();
         print('$_broadcast, == msg');
