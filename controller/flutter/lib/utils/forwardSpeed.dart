@@ -22,16 +22,11 @@ class ForwardSpeed{
   }
 
  static void  decrementNegative(double decrementValue) {
-    if (value < -1) {
-      value = minNegative;
-      return;
-    }
-    if (value - decrementValue >=minNegative) {
+    if (value + decrementValue >minNegative) {
       value = (value + decrementValue).toPrecision(2);
     } else{
       value = minNegative;
     }
-
   }
 
  static void reset(){

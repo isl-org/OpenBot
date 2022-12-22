@@ -5,6 +5,8 @@ import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/utils/forwardSpeed.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
+import 'driveCommandReducer.dart';
+
 class TiltingPhoneMode extends StatefulWidget {
   const TiltingPhoneMode({super.key});
 
@@ -76,15 +78,14 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                           reverse = !reverse;
                           double decrementSpeed = ForwardSpeed.minNegative/3;
                           ForwardSpeed.decrementNegative(decrementSpeed);
-                          print(ForwardSpeed.value);
-                          print("client socket is : $clientSocket");
-                          clientSocket?.write("hello sanjeev kya haal hai ");
+                          DriveCommandReducer.filter(ForwardSpeed.value, ForwardSpeed.value);
                         });
                       });
                     },
                     onLongPressEnd: (detail) {
                       if (timer != null) {
                         ForwardSpeed.reset();
+                        DriveCommandReducer.filter(0, 0);
                         timer!.cancel();
                       }
                     },
@@ -119,14 +120,14 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                           forward = !forward;
                           double incrementValue = (ForwardSpeed.max-ForwardSpeed.value)/5;
                           ForwardSpeed.increment(incrementValue);
-                          print(ForwardSpeed.value);
-
+                          DriveCommandReducer.filter(ForwardSpeed.value, ForwardSpeed.value);
                         });
                       });
                     },
                     onLongPressEnd: (detail) {
                       if (timer != null) {
                         ForwardSpeed.reset();
+                        DriveCommandReducer.filter(0, 0);
                         timer!.cancel();
                       }
                     }, // Image tapped
