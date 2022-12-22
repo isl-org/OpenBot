@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:openbot_controller/globals.dart';
+import 'package:openbot_controller/screens/driveCommandReducer.dart';
+import 'package:openbot_controller/utils/forwardSpeed.dart';
 
 import 'component/onScreenIcon.dart';
 
@@ -40,7 +43,7 @@ class OnScreenModeState extends State<OnScreenMode> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                    margin: const EdgeInsets.only(left: 30),
                     child: Theme(
                         data: Theme.of(context).copyWith(
                           sliderTheme: SliderThemeData(
@@ -52,11 +55,17 @@ class OnScreenModeState extends State<OnScreenMode> {
                           quarterTurns: -1,
                           child: Slider(
                             value: sliderValueLeft,
-                            onChanged: (value) =>
-                                {setState(() => sliderValueLeft = value),
-                                  getLeftSliderValue()},
-                            onChangeEnd: (value) =>
-                                {setState(() => sliderValueLeft = 0),getLeftSliderValue()},
+                            onChanged: (value) => {
+                              setState(
+                                  () => sliderValueLeft = value.toPrecision(2)),
+                              DriveCommandReducer.filter(
+                                  sliderValueRight, sliderValueLeft)
+                            },
+                            onChangeEnd: (value) => {
+                              setState(() => sliderValueLeft = 0),
+                              DriveCommandReducer.filter(
+                                  sliderValueRight, sliderValueLeft)
+                            },
                             min: -1,
                             max: 1,
                             activeColor: Colors.white,
@@ -82,10 +91,17 @@ class OnScreenModeState extends State<OnScreenMode> {
                             quarterTurns: -1,
                             child: Slider(
                               value: sliderValueRight,
-                              onChanged: (value) =>
-                                  {setState(() => sliderValueRight = value),getRightSliderValue()},
-                              onChangeEnd: (value) =>
-                                  {setState(() => sliderValueRight = 0),getRightSliderValue()},
+                              onChanged: (value) => {
+                                setState(() =>
+                                    sliderValueRight = value.toPrecision(2)),
+                                DriveCommandReducer.filter(
+                                    sliderValueRight, sliderValueLeft)
+                              },
+                              onChangeEnd: (value) => {
+                                setState(() => sliderValueRight = 0),
+                                DriveCommandReducer.filter(
+                                    sliderValueRight, sliderValueLeft)
+                              },
                               min: -1,
                               max: 1,
                               activeColor: Colors.white,
@@ -97,12 +113,6 @@ class OnScreenModeState extends State<OnScreenMode> {
             ),
           ],
         ));
-  }
-  Future<void> getLeftSliderValue()async {
-    print(sliderValueLeft);
-  }
-  Future<void> getRightSliderValue()async {
-    print(sliderValueRight);
   }
 }
 

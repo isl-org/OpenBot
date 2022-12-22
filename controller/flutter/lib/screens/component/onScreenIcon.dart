@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:openbot_controller/buttonCommands/leftIndicator.dart';
+import 'package:openbot_controller/buttonCommands/rightIndicator.dart';
+import 'package:openbot_controller/buttonCommands/stopIndicator.dart';
+import 'package:openbot_controller/buttonCommands/switchCamera.dart';
+import 'package:openbot_controller/screens/component/blinkingButton.dart';
 
 class OnScreenIcon extends StatefulWidget {
   const OnScreenIcon({super.key});
@@ -15,6 +20,7 @@ class OnScreenIconState extends State<OnScreenIcon> {
   bool camera = false;
   bool leftIndicator = false;
   bool rightIndicator = false;
+  // String Indicator = "";
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +83,10 @@ class OnScreenIconState extends State<OnScreenIcon> {
           ),
           GestureDetector(
               onTap: () {
-                print("{command: SWITCH_CAMERA}");
                 setState(() {
                   camera = !camera;
                 });
+                SwitchCamera().toSwitchCamera();
               }, // Image tapped
               child: Container(
                 // height: 50,
@@ -105,13 +111,27 @@ class OnScreenIconState extends State<OnScreenIcon> {
           ),
           GestureDetector(
               onTap: () {
-                if(leftIndicator) {
-                  print("{command: INDICATOR_STOP}");
+                if (rightIndicator) {
+                  StopIndicator().toStopIndicator();
+                  LeftIndicator().toLeftIndicator();
                 } else {
-                  print("{command: INDICATOR_LEFT}");
+                  if (leftIndicator) {
+                    StopIndicator().toStopIndicator();
+                  } else {
+                    LeftIndicator().toLeftIndicator();
+                  }
                 }
                 setState(() {
-                  leftIndicator = !leftIndicator;
+                  if (rightIndicator) {
+                    rightIndicator = false;
+                    leftIndicator = true;
+                  } else {
+                    if (leftIndicator) {
+                      leftIndicator = false;
+                    } else {
+                      leftIndicator = true;
+                    }
+                  }
                 });
               }, // Image tapped
               child: Container(
@@ -137,13 +157,27 @@ class OnScreenIconState extends State<OnScreenIcon> {
           ),
           GestureDetector(
               onTap: () {
-                if(rightIndicator) {
-                  print("{command: INDICATOR_STOP}");
+                if (leftIndicator) {
+                  StopIndicator().toStopIndicator();
+                  RightIndicator().toRightIndicator();
                 } else {
-                  print("{command: INDICATOR_RIGHT}");
+                  if (rightIndicator) {
+                    StopIndicator().toStopIndicator();
+                  } else {
+                    RightIndicator().toRightIndicator();
+                  }
                 }
                 setState(() {
-                  rightIndicator = !rightIndicator;
+                  if (leftIndicator) {
+                    leftIndicator = false;
+                    rightIndicator = true;
+                  } else {
+                    if (rightIndicator) {
+                      rightIndicator = false;
+                    } else {
+                      rightIndicator = true;
+                    }
+                  }
                 });
               }, // Image tapped
               child: Container(
@@ -156,7 +190,7 @@ class OnScreenIconState extends State<OnScreenIcon> {
                       ? const Color(0xFF0071C5).withOpacity(0.5)
                       : Colors.white.withOpacity(0.5),
                 ),
-                child: Image.asset(
+                child:rightIndicator? const MyBlinkingButton(): Image.asset(
                   rightIndicator
                       ? "images/right_indicator_icon_white.png"
                       : "images/right_indicator_icon_blue.png",
