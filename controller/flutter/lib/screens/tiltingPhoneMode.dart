@@ -17,7 +17,8 @@ class TiltingPhoneMode extends StatefulWidget {
 }
 
 class TiltingPhoneModeState extends State<TiltingPhoneMode> {
-  Timer? timer;
+  Timer? forwardSpeedTimer;
+  Timer? backwardSpeedTimer;
   bool forward = false;
   bool reverse = false;
 
@@ -73,7 +74,7 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                     },
                     onLongPressStart: (detail) {
                       setState(() {
-                        timer = Timer.periodic(const Duration(milliseconds: 333),
+                        backwardSpeedTimer = Timer.periodic(const Duration(milliseconds: 333),
                             (t) {
                           reverse = !reverse;
                           double decrementSpeed = ForwardSpeed.minNegative/3;
@@ -83,10 +84,10 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                       });
                     },
                     onLongPressEnd: (detail) {
-                      if (timer != null) {
+                      if (backwardSpeedTimer != null) {
                         ForwardSpeed.reset();
                         DriveCommandReducer.filter(0, 0);
-                        timer!.cancel();
+                        backwardSpeedTimer!.cancel();
                       }
                     },
                     // Image tapped
@@ -115,7 +116,7 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                     },
                     onLongPressStart: (detail) {
                       setState(() {
-                        timer = Timer.periodic(const Duration(milliseconds: 200),
+                        forwardSpeedTimer = Timer.periodic(const Duration(milliseconds: 200),
                             (t) {
                           forward = !forward;
                           double incrementValue = (ForwardSpeed.max-ForwardSpeed.value)/5;
@@ -125,10 +126,10 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                       });
                     },
                     onLongPressEnd: (detail) {
-                      if (timer != null) {
+                      if (forwardSpeedTimer != null) {
                         ForwardSpeed.reset();
                         DriveCommandReducer.filter(0, 0);
-                        timer!.cancel();
+                        forwardSpeedTimer!.cancel();
                       }
                     }, // Image tapped
                     child: Container(
