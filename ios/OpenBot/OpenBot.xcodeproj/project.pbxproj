@@ -63,6 +63,7 @@
 		727D3A805DDE14D8AD205D31 /* VehicleControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */; };
 		727D3AEFE62BB8644729D602 /* popupWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3281CA65425580EDD4A4 /* popupWindowView.swift */; };
 		727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3189735FC4F7A4E4A6C1 /* Browser.swift */; };
+		727D3B90FC0EB50ACC220F11 /* RobotInfoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
 		727D3BF38CB798E8B3321E87 /* SettingsFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D0186944D629E367A9D /* SettingsFragment.swift */; };
 		727D3D12FAF02C416CC2CEC1 /* FreeRoamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */; };
@@ -72,6 +73,7 @@
 		727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3C4EBE89B9B6E537BE8B /* Device.swift */; };
 		727D3E780CA6260A927019BD /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D368915F3602E605FEA51 /* Client.swift */; };
 		727D3E79BEE56349F166C70A /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3CE316DD4B67FB82F0BB /* CameraController.swift */; };
+		727D3FC61322D948A9F1F31C /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F8E752887E2A76CC901 /* CheckBox.swift */; };
 		BF812E8828AE2C4200E0B682 /* modesCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF812E8628AE2C4200E0B682 /* modesCollectionViewCell.xib */; };
 		BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9BAED728AF94A800EF3E48 /* GameController.framework */; };
 		DB5B604C1844E78F9C021354 /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */; };
@@ -152,6 +154,7 @@
 		727D35819C2D0A82BB4E5A7D /* expandedAutoPilot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = expandedAutoPilot.swift; path = Autopilot/expandedAutoPilot.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		727D3698249A1C0DBF567004 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RobotInfoFrame.swift; path = RobotInfo/RobotInfoFrame.swift; sourceTree = "<group>"; };
 		727D3879029901392BD7F608 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameViewController.swift; path = GameView/GameViewController.swift; sourceTree = "<group>"; };
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
 		727D396BDB689AFF9C3931C6 /* HomePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomePageViewController.swift; path = HomePage/HomePageViewController.swift; sourceTree = "<group>"; };
@@ -167,6 +170,7 @@
 		727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BottomSheet.swift; path = ModelManagement/BottomSheet.swift; sourceTree = "<group>"; };
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
+		727D3F8E752887E2A76CC901 /* CheckBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CheckBox.swift; path = RobotInfo/CheckBox.swift; sourceTree = "<group>"; };
 		74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
 		9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBotTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -416,6 +420,8 @@
 				727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */,
 				727D31518A6A6FE099F41F49 /* ModelManagementTable.swift */,
 				727D3CE316DD4B67FB82F0BB /* CameraController.swift */,
+				727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */,
+				727D3F8E752887E2A76CC901 /* CheckBox.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -759,6 +765,8 @@
 				727D36915DB88577316D9C46 /* Connection.swift in Sources */,
 				727D3E780CA6260A927019BD /* Client.swift in Sources */,
 				727D3E79BEE56349F166C70A /* CameraController.swift in Sources */,
+				727D3B90FC0EB50ACC220F11 /* RobotInfoFrame.swift in Sources */,
+				727D3FC61322D948A9F1F31C /* CheckBox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

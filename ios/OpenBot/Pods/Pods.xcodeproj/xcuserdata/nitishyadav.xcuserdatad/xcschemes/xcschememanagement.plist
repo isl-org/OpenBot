@@ -4,13 +4,10 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>BottomPopup.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>1</integer>
-		</dict>
 		<key>DropDown.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false />
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
@@ -19,14 +16,14 @@
 			<key>isShown</key>
 			<false />
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>3</integer>
 		</dict>
 		<key>Pods-OpenBot.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false />
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>4</integer>
 		</dict>
 		<key>Pods-OpenBotTests.xcscheme</key>
 		<dict>

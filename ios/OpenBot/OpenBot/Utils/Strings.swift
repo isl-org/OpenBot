@@ -10,7 +10,8 @@ struct Strings {
     static let controllerMapping: String = "Controller Mapping";
     static let autoPilot : String = "Auto Pilot"
     static let objectTracking : String = "Object Tracking"
-    static let modelManagement : String = "model Management"
+    static let modelManagement : String = "Model Management"
+    static let robotInfo : String = "Robot Info"
 
 
     static let controller: String = "Controller"
@@ -93,6 +94,7 @@ struct Strings {
     static let ObjectTrackingFragment: String = "ObjectTrackingFragment";
     static let ScreenModelManagement : String = "ScreenModelManagement"
     static let ScreenBottomSheet : String = "ScreenBottomSheet"
+    static let ScreenRobotInfo : String = "ScreenRobotInfo";
 
 
 // UIVIew Identifiers
@@ -135,6 +137,11 @@ struct Strings {
     static let url : String = "URL"
     static let addNewModel : String = "Add New Model"
 
+    //Robot Info
+    static let voltageDivider : String = "Voltage Divider"
+    static let sonarText : String = "Sonar";
+    static let bumperText : String = "Bumpers"
+    static let wheelOdometer : String = "Wheel Odometry"
 
 
 
