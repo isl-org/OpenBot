@@ -1,4 +1,5 @@
 import 'dart:math';
+
 class ForwardSpeed{
   static const  max = 1.0;
   static const  min = 0.0;

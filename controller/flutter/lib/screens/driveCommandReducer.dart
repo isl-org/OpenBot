@@ -1,4 +1,5 @@
 import 'package:openbot_controller/globals.dart';
+import 'package:openbot_controller/utils/forwardSpeed.dart';
 class DriveCommandReducer {
   static double lastRight = 0;
   static double lastLeft = 0;
@@ -8,7 +9,7 @@ class DriveCommandReducer {
     if (isDifferent(rightValue, leftValue)) {
       lastLeft = leftValue;
       lastRight = rightValue;
-      String msg = "{driveCmd: {r:${rightValue}, l:${leftValue}}}";
+      String msg = "{driveCmd: {r:${rightValue.toPrecision(2)}, l:${leftValue.toPrecision(2)}}}";
       clientSocket?.write(msg);
       print(msg);
     }

@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/utils/forwardSpeed.dart';
+import 'package:openbot_controller/utils/phoneSensorToDualDriveConvertor.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import 'driveCommandReducer.dart';
@@ -21,19 +20,25 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
   Timer? backwardSpeedTimer;
   bool forward = false;
   bool reverse = false;
-
-
-  Future<void> gyroscopeData() async {
-    gyroscopeEvents.listen((GyroscopeEvent event) {
-      print(event);
-      //Output: [GyroscopeEvent (x: 0.08372224867343903, y: -0.09925820678472519, z: 0.21376553177833557)]
-    });
-  }
+  late double azimuth;
+  late double pitch;
+  late double roll;
+  var phoneAccelerometerToDualDriveConverted =
+      PhoneSensorToDualDriveConvertor();
+  double leftSpeedValue = 0;
+  double rightSpeedValue = 0;
 
   @override
   void initState() {
-    gyroscopeEvents.listen((GyroscopeEvent event) {
-      // print("inside init state $event" );
+    accelerometerEvents.listen((event) {
+      print("object = , $event");
+      azimuth = event.x;
+      pitch = event.y;
+      roll = event.z;
+      var sliderValues =
+          phoneAccelerometerToDualDriveConverted.convert(azimuth, pitch, roll);
+      leftSpeedValue = sliderValues.left;
+      rightSpeedValue = sliderValues.right;
     });
     super.initState();
   }
@@ -74,12 +79,13 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                     },
                     onLongPressStart: (detail) {
                       setState(() {
-                        backwardSpeedTimer = Timer.periodic(const Duration(milliseconds: 333),
-                            (t) {
+                        backwardSpeedTimer = Timer.periodic(
+                            const Duration(milliseconds: 333), (t) {
                           reverse = !reverse;
-                          double decrementSpeed = ForwardSpeed.minNegative/3;
+                          double decrementSpeed = ForwardSpeed.minNegative / 3;
                           ForwardSpeed.decrementNegative(decrementSpeed);
-                          DriveCommandReducer.filter(ForwardSpeed.value, ForwardSpeed.value);
+                          DriveCommandReducer.filter(
+                              rightSpeedValue, leftSpeedValue);
                         });
                       });
                     },
@@ -116,12 +122,14 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                     },
                     onLongPressStart: (detail) {
                       setState(() {
-                        forwardSpeedTimer = Timer.periodic(const Duration(milliseconds: 200),
-                            (t) {
+                        forwardSpeedTimer = Timer.periodic(
+                            const Duration(milliseconds: 200), (t) {
                           forward = !forward;
-                          double incrementValue = (ForwardSpeed.max-ForwardSpeed.value)/5;
+                          double incrementValue =
+                              (ForwardSpeed.max - ForwardSpeed.value) / 5;
                           ForwardSpeed.increment(incrementValue);
-                          DriveCommandReducer.filter(ForwardSpeed.value, ForwardSpeed.value);
+                          DriveCommandReducer.filter(
+                              rightSpeedValue, leftSpeedValue);
                         });
                       });
                     },
