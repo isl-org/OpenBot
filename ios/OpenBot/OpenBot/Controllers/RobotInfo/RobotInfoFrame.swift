@@ -51,7 +51,6 @@ class RobotInfoFrame: UIViewController {
         createWheelOdometerCheckBoxes();
         createLedHeading();
         createLedCheckBoxes();
-        createLedCheckBoxes();
         createReadingHeading();
         createReadings();
         createSendCommandHeading()
@@ -141,7 +140,6 @@ class RobotInfoFrame: UIViewController {
 
     }
 
-
     func createIcons(iconName: String, leadingAnchor: CGFloat, topAnchor: CGFloat) -> UIImageView {
         let icon = UIImageView();
         icon.image = Images.bluetoothDisconnected;
@@ -183,6 +181,7 @@ class RobotInfoFrame: UIViewController {
         checkbox.uncheckedBorderColor = Colors.bdColor;
         checkbox.checkmarkStyle = .tick;
         checkbox.checkmarkColor = Colors.bdColor;
+        checkbox.isEnabled = false;
         view.addSubview(checkbox);
         checkbox.addTarget(self, action: action!, for: .valueChanged)
         return checkbox
@@ -216,6 +215,14 @@ class RobotInfoFrame: UIViewController {
             backCheckBox.frame.origin = CGPoint(x: 125, y: 385);
             backLabel.frame.origin = CGPoint(x: 165, y: 375);
             ledHeading.frame.origin = CGPoint(x: 10, y: 420);
+            indicatorCheckbox.frame.origin = CGPoint(x: 20, y: 470);
+            indicatorLabel.frame.origin = CGPoint(x: 55, y: 460);
+            frontLedCheckbox.frame.origin = CGPoint(x: 135, y: 470);
+            frontLedLabel.frame.origin = CGPoint(x: 165, y: 460);
+            backLedCheckbox.frame.origin = CGPoint(x: 215, y: 470);
+            backLedLabel.frame.origin = CGPoint(x: 245, y: 460);
+            statusCheckbox.frame.origin = CGPoint(x: 290, y: 470);
+            statusLabel.frame.origin = CGPoint(x: 320, y: 460);
             readingHeading.frame.origin = CGPoint(x: 10, y: 500);
             battery.frame.origin = CGPoint(x: 20, y: 530);
             speed.frame.origin = CGPoint(x: 110, y: 530);
@@ -225,6 +232,7 @@ class RobotInfoFrame: UIViewController {
             backwardButton.frame.origin = CGPoint(x: 180, y: 610);
             stopButton.frame.origin = CGPoint(x: 290, y: 610);
             sendCommandsHeading.frame.origin = CGPoint(x: 10, y: 565);
+
 
 
         } else {
