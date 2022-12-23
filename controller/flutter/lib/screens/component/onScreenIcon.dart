@@ -17,17 +17,13 @@ class OnScreenIcon extends StatefulWidget {
 class OnScreenIconState extends State<OnScreenIcon> {
   bool pause = false;
   bool speaker = false;
-  bool camera = false;
   bool leftIndicator = false;
   bool rightIndicator = false;
-  // String Indicator = "";
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: Row(
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisAlignment: MainAxisAlignment.end,
         children: [
           GestureDetector(
               onTap: () {
@@ -81,27 +77,19 @@ class OnScreenIconState extends State<OnScreenIcon> {
           const SizedBox(
             width: 15,
           ),
-          GestureDetector(
+          InkWell(
+              borderRadius: const BorderRadius.all(Radius.circular(45)),
               onTap: () {
-                setState(() {
-                  camera = !camera;
-                });
                 SwitchCamera().toSwitchCamera();
               }, // Image tapped
               child: Container(
-                // height: 50,
-                // width: 50,
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(45),
-                  color: camera
-                      ? const Color(0xFF0071C5).withOpacity(0.5)
-                      : Colors.white.withOpacity(0.5),
+                  color: Colors.white.withOpacity(0.5),
                 ),
                 child: Image.asset(
-                  camera
-                      ? "images/camera_icon_white.png"
-                      : "images/camera_icon_blue.png",
+                  "images/camera_icon_blue.png",
                   height: 23,
                   width: 23,
                 ),
@@ -135,8 +123,6 @@ class OnScreenIconState extends State<OnScreenIcon> {
                 });
               }, // Image tapped
               child: Container(
-                // height: 50,
-                // width: 50,
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(45),
@@ -144,13 +130,13 @@ class OnScreenIconState extends State<OnScreenIcon> {
                       ? const Color(0xFF0071C5).withOpacity(0.5)
                       : Colors.white.withOpacity(0.5),
                 ),
-                child: Image.asset(
-                  leftIndicator
-                      ? "images/left_indicator_icon_white.png"
-                      : "images/left_indicator_icon_blue.png",
-                  height: 23,
-                  width: 23,
-                ),
+                child: leftIndicator
+                    ? const MyBlinkingButton("LEFT")
+                    : Image.asset(
+                        "images/left_indicator_icon_blue.png",
+                        height: 23,
+                        width: 23,
+                      ),
               )),
           const SizedBox(
             width: 15,
@@ -181,8 +167,6 @@ class OnScreenIconState extends State<OnScreenIcon> {
                 });
               }, // Image tapped
               child: Container(
-                // height: 50,
-                // width: 50,
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(45),
@@ -190,13 +174,13 @@ class OnScreenIconState extends State<OnScreenIcon> {
                       ? const Color(0xFF0071C5).withOpacity(0.5)
                       : Colors.white.withOpacity(0.5),
                 ),
-                child:rightIndicator? const MyBlinkingButton(): Image.asset(
-                  rightIndicator
-                      ? "images/right_indicator_icon_white.png"
-                      : "images/right_indicator_icon_blue.png",
-                  height: 23,
-                  width: 23,
-                ),
+                child: rightIndicator
+                    ? const MyBlinkingButton("RIGHT")
+                    : Image.asset(
+                        "images/right_indicator_icon_blue.png",
+                        height: 23,
+                        width: 23,
+                      ),
               )),
         ],
       ),
