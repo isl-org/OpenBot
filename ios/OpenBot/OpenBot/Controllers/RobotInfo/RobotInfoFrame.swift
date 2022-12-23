@@ -38,10 +38,24 @@ class RobotInfoFrame: UIViewController {
     var forwardButton = UIButton();
     var backwardButton = UIButton();
     var stopButton = UIButton();
+    let bluetooth = bluetoothDataController.shared;
 
 
     override func viewDidLoad() {
         super.viewDidLoad();
+        createUI();
+        updateConstraints();
+        updateRobot();
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil);
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        updateConstraints();
+    }
+
+    func createUI() {
         _ = createLabels(text: "N/A", topAnchor: 10, leadingAnchor: width / 2);
         bluetoothIcon = createIcons(iconName: "", leadingAnchor: width - 40, topAnchor: 10);
         _ = createLogoIcon();
@@ -55,12 +69,6 @@ class RobotInfoFrame: UIViewController {
         createReadings();
         createSendCommandHeading()
         createSendCommand();
-        updateConstraints();
-    }
-
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        updateConstraints();
     }
 
     func crateRobotTypeHeading() {
@@ -108,13 +116,13 @@ class RobotInfoFrame: UIViewController {
     }
 
     func createLedCheckBoxes() {
-        indicatorCheckbox = createCheckbox(leadingAnchor: 20, topAnchor: 470, action:  #selector(updateSonarCheckBox(_:)));
+        indicatorCheckbox = createCheckbox(leadingAnchor: 20, topAnchor: 470, action: #selector(updateSonarCheckBox(_:)));
         indicatorLabel = createLabels(text: Strings.indicatorText, topAnchor: 460, leadingAnchor: 55);
-        frontLedCheckbox = createCheckbox(leadingAnchor: 135, topAnchor: 470, action:  #selector(updateSonarCheckBox(_:)));
+        frontLedCheckbox = createCheckbox(leadingAnchor: 135, topAnchor: 470, action: #selector(updateSonarCheckBox(_:)));
         frontLedLabel = createLabels(text: Strings.front, topAnchor: 460, leadingAnchor: 165);
         backLedCheckbox = createCheckbox(leadingAnchor: 215, topAnchor: 470, action: #selector(updateSonarCheckBox(_:)));
         backLedLabel = createLabels(text: Strings.back, topAnchor: 460, leadingAnchor: 245);
-        statusCheckbox = createCheckbox(leadingAnchor: 290, topAnchor: 470, action:  #selector(updateSonarCheckBox(_:)));
+        statusCheckbox = createCheckbox(leadingAnchor: 290, topAnchor: 470, action: #selector(updateSonarCheckBox(_:)));
         statusLabel = createLabels(text: Strings.status, topAnchor: 460, leadingAnchor: 320);
     }
 
@@ -134,9 +142,9 @@ class RobotInfoFrame: UIViewController {
 
     func createSendCommand() {
         motorLabel = createLabels(text: Strings.motors, topAnchor: 610, leadingAnchor: 20);
-        forwardButton = createButton(width: 100, height:45, title: Strings.forward,leadingAnchor: 70,topAnchor: 610);
-        backwardButton = createButton(width: 100, height: 45, title: Strings.backward,leadingAnchor: 180,topAnchor: 610);
-        stopButton = createButton(width: 70, height: 45, title: Strings.stop,leadingAnchor: 290,topAnchor: 610);
+        forwardButton = createButton(width: 100, height: 45, title: Strings.forward, leadingAnchor: 70, topAnchor: 610,action: #selector(forwardButton(_:)));
+        backwardButton = createButton(width: 100, height: 45, title: Strings.backward, leadingAnchor: 180, topAnchor: 610,action:  #selector(backwardButton(_:)));
+        stopButton = createButton(width: 70, height: 45, title: Strings.stop, leadingAnchor: 290, topAnchor: 610,action: #selector(stopButton(_:)));
 
     }
 
@@ -188,7 +196,7 @@ class RobotInfoFrame: UIViewController {
     }
 
 
-    func createButton(width: Double, height: Double, title: String, leadingAnchor : CGFloat, topAnchor : CGFloat)-> UIButton{
+    func createButton(width: Double, height: Double, title: String, leadingAnchor: CGFloat, topAnchor: CGFloat,action : Selector) -> UIButton {
         let button = UIButton();
         button.frame.size = CGSize(width: width, height: height);
         button.setTitle(title, for: .normal);
@@ -196,6 +204,7 @@ class RobotInfoFrame: UIViewController {
         button.frame.origin = CGPoint(x: leadingAnchor, y: topAnchor);
         button.backgroundColor = Colors.title;
         button.layer.cornerRadius = 5;
+        button.addTarget(nil, action: action, for: .touchDown);
         view.addSubview(button)
         return button;
     }
@@ -234,7 +243,6 @@ class RobotInfoFrame: UIViewController {
             sendCommandsHeading.frame.origin = CGPoint(x: 10, y: 565);
 
 
-
         } else {
             sensorHeading.frame.origin = CGPoint(x: height / 2 - 15, y: 20);
             wheelOdometerHeadingHeading.frame.origin = CGPoint(x: height / 2 - 15, y: 80);
@@ -249,33 +257,70 @@ class RobotInfoFrame: UIViewController {
             backCheckBox.frame.origin = CGPoint(x: height / 2 + 95, y: 120);
             backLabel.frame.origin = CGPoint(x: height / 2 + 135, y: 110);
             ledHeading.frame.origin = CGPoint(x: height / 2 - 15, y: 155);
-            indicatorCheckbox.frame.origin = CGPoint(x: height/2 - 10, y: 195);
-            indicatorLabel.frame.origin = CGPoint(x: height/2 + 30, y: 185);
-            frontLedCheckbox.frame.origin = CGPoint(x: height/2 + 110, y: 195);
-            frontLedLabel.frame.origin = CGPoint(x: height/2 + 145, y: 185);
-            backLedCheckbox.frame.origin = CGPoint(x: height/2 + 185, y: 195);
-            backLedLabel.frame.origin = CGPoint(x: height/2+215, y: 185);
-            statusCheckbox.frame.origin = CGPoint(x: height/2+260, y: 195);
-            statusLabel.frame.origin = CGPoint(x:height/2 + 290, y: 185);
-            readingHeading.frame.origin = CGPoint(x: height/2-15, y:235);
-            battery.frame.origin = CGPoint(x: height/2-10, y: 265);
-            speed.frame.origin = CGPoint(x: height/2+90, y: 265);
-            sonar.frame.origin = CGPoint(x: height/2+250, y: 265);
-            sendCommandsHeading.frame.origin = CGPoint(x: 20, y:readingHeading.frame.origin.y+30);
-            motorLabel.frame.origin = CGPoint(x: 25, y: sendCommandsHeading.frame.origin.y+50);
-            forwardButton.frame.origin = CGPoint(x: 90, y: sendCommandsHeading.frame.origin.y+50);
-            backwardButton.frame.origin = CGPoint(x: 200, y: sendCommandsHeading.frame.origin.y+50);
-            stopButton.frame.origin = CGPoint(x: 315, y: sendCommandsHeading.frame.origin.y+50);
+            indicatorCheckbox.frame.origin = CGPoint(x: height / 2 - 10, y: 195);
+            indicatorLabel.frame.origin = CGPoint(x: height / 2 + 30, y: 185);
+            frontLedCheckbox.frame.origin = CGPoint(x: height / 2 + 110, y: 195);
+            frontLedLabel.frame.origin = CGPoint(x: height / 2 + 145, y: 185);
+            backLedCheckbox.frame.origin = CGPoint(x: height / 2 + 185, y: 195);
+            backLedLabel.frame.origin = CGPoint(x: height / 2 + 215, y: 185);
+            statusCheckbox.frame.origin = CGPoint(x: height / 2 + 260, y: 195);
+            statusLabel.frame.origin = CGPoint(x: height / 2 + 290, y: 185);
+            readingHeading.frame.origin = CGPoint(x: height / 2 - 15, y: 235);
+            battery.frame.origin = CGPoint(x: height / 2 - 10, y: 265);
+            speed.frame.origin = CGPoint(x: height / 2 + 90, y: 265);
+            sonar.frame.origin = CGPoint(x: height / 2 + 250, y: 265);
+            sendCommandsHeading.frame.origin = CGPoint(x: 20, y: readingHeading.frame.origin.y + 30);
+            motorLabel.frame.origin = CGPoint(x: 25, y: sendCommandsHeading.frame.origin.y + 50);
+            forwardButton.frame.origin = CGPoint(x: 90, y: sendCommandsHeading.frame.origin.y + 50);
+            backwardButton.frame.origin = CGPoint(x: 200, y: sendCommandsHeading.frame.origin.y + 50);
+            stopButton.frame.origin = CGPoint(x: 315, y: sendCommandsHeading.frame.origin.y + 50);
         }
     }
 
+    func updateRobot() {
+        if isBluetoothConnected {
+            bluetoothIcon.image = UIImage(named: "bluetoothConnected");
+        }
+        else{
+            bluetoothIcon.image = UIImage(named: "bluetoothDisconnected");
+        }
+        if bluetooth.sonarData != ""{
+            sonarCheckBox.isChecked = true;
+        }
+        if bluetooth.voltageDivider != ""{
+            voltageDividerCheckBox.isChecked = true;
+        }
+        if bluetooth.bumperData != ""{
+            bumperCheckBox.isChecked = true;
+        }
+
+
+
+    }
+
     @objc func updateSonarCheckBox(_ sender: UIButton) {
-        print("hello checkbox")
     }
 
     @objc func updateBumperCheckBox(_ sender: UIButton) {
-        print("hello bumper checkbox")
     }
 
+    @objc func updateConnect(_ notification: Notification) {
+        if (isBluetoothConnected) {
+            bluetoothIcon.image = Images.bluetoothConnected
+        } else {
+            bluetoothIcon.image = Images.bluetoothDisconnected
+        }
+    }
 
+    @objc func forwardButton(_ sender: UIButton) {
+        bluetooth.sendData(payload: "c" + String(192) + "," + String(192) + "\n");
+    }
+
+    @objc func backwardButton(_ sender: UIButton) {
+        bluetooth.sendData(payload: "c" + String(-192) + "," + String(-192) + "\n");
+    }
+
+    @objc func stopButton(_ sender: UIButton) {
+        bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n");
+    }
 }
