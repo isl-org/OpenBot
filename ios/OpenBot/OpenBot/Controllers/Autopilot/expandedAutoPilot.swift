@@ -62,7 +62,6 @@ class expandedAutoPilot: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleNetwork), name: .toggleNetworks, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateFps), name: .updateAutoPilotFps, object: nil)
-
     }
 
 
