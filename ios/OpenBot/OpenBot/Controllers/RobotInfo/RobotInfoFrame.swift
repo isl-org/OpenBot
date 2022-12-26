@@ -64,7 +64,7 @@ class RobotInfoFrame: UIViewController {
     func createUI() {
         crateRobotTypeHeading()
         robotName = createLabels(text: "N/A", topAnchor: topPadding + adapted(dimensionSize: 30, to: .height), leadingAnchor: width / 2);
-        bluetoothIcon = createIcons(iconName: "", leadingAnchor: width - 40, topAnchor: topPadding + adapted(dimensionSize: 40, to: .height));
+        createBluetoothIcon()
         _ = createLogoIcon();
         createSensorHeading()
         createSensorCheckBoxes();
@@ -81,6 +81,13 @@ class RobotInfoFrame: UIViewController {
     func crateRobotTypeHeading() {
         robotType = createHeadings(text: "Robot Type");
         robotType.frame.origin = CGPoint(x: 10, y: topPadding + adapted(dimensionSize: 30, to: .height));
+    }
+
+    func createBluetoothIcon(){
+        bluetoothIcon = createIcons(iconName: "", leadingAnchor: width - 40, topAnchor: topPadding + adapted(dimensionSize: 40, to: .height));
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openBluetoothSettings(tapGestureRecognizer:)));
+        bluetoothIcon.isUserInteractionEnabled = true;
+        bluetoothIcon.addGestureRecognizer(tapGesture);
     }
 
     func createSensorHeading() {
@@ -372,6 +379,11 @@ class RobotInfoFrame: UIViewController {
             speed.text = Strings.speed + " (l,r) " + String(leftFront!) + " " + String(rightFont!) + " rpm";
             print(speedometer);
         }
+    }
+
+    @objc func openBluetoothSettings(tapGestureRecognizer: UITapGestureRecognizer) {
+        let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
+        navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
 
