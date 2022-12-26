@@ -13,6 +13,7 @@ class ControlSelector extends StatefulWidget {
 }
 
 class ControlSelectorState extends State<ControlSelector> {
+  final opecColor = Color(0xFFffffff).withOpacity(0.1);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,13 +45,23 @@ class ControlSelectorState extends State<ControlSelector> {
                         color: Color(0xFF292929),
                         boxShadow: [
                           BoxShadow(
-                            blurRadius: 14,
+                            blurRadius: 0.5,
+                            spreadRadius: 0.1,
+                            color: Color(0xFFffffff),
+                            offset: Offset(
+                              -1,
+                              -1,
+                            ),
+                          ),
+                          BoxShadow(
+                            blurRadius: 1,
+                            spreadRadius: 0.1,
                             color: Color(0xFF000000),
                             offset: Offset(
-                              0,
-                              4,
+                              -1,
+                              -1,
                             ),
-                          )
+                          ),
                         ]),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,13 +114,23 @@ class ControlSelectorState extends State<ControlSelector> {
                         color: Color(0xFF292929),
                         boxShadow: [
                           BoxShadow(
-                            blurRadius: 14,
+                            blurRadius: 0.5,
+                            spreadRadius: 0.1,
+                            color: Color(0xFFffffff),
+                            offset: Offset(
+                              -1,
+                              -1,
+                            ),
+                          ),
+                          BoxShadow(
+                            blurRadius: 1,
+                            spreadRadius: 0.1,
                             color: Color(0xFF000000),
                             offset: Offset(
-                              0,
-                              4,
+                              -1,
+                              -1,
                             ),
-                          )
+                          ),
                         ]),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
