@@ -248,7 +248,6 @@ class GameController: GCPhysicalInputProfile {
     }
 
     func updateControllerValues() {
-        print("inside updateControllerValues",connectedController)
         if (connectedController == nil) {
             return
         }

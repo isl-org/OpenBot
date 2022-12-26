@@ -174,7 +174,8 @@ class RobotInfoFrame: UIViewController {
         label.text = text;
         label.textColor = Colors.bdColor;
         label.frame.size.width = CGFloat(text.count * 10);
-        label.font = label.font.withSize(adapted(dimensionSize: 12, to: .height));
+        label.font = label.font.withSize(15);
+//        label.font = label.font.withSize(adapted(dimensionSize: 12, to: .height));
         label.frame.size.height = 40;
         view.addSubview(label);
         label.frame.origin.x = leadingAnchor;
@@ -293,9 +294,6 @@ class RobotInfoFrame: UIViewController {
         if bluetooth.bumperData != ""{
             bumperCheckBox.isChecked = true;
         }
-
-
-
     }
 
     @objc func updateSonarCheckBox(_ sender: UIButton) {
