@@ -28,7 +28,7 @@ public class NetworkServiceConnection implements ILocalConnection {
   private static final String TAG = "NetworkServiceConn";
   private Context context;
 
-  private String SERVICE_NAME_CONTROLLER = "OPEN_BOT_CONTROLLER_FLUTTER";
+  private String SERVICE_NAME_CONTROLLER = "OPEN_BOT_CONTROLLER";
   private String MY_SERVICE_NAME = "OPEN_BOT";
   private String ALL_SERVICE_TYPES = "_services._dns-sd._udp";
   private String SERVICE_TYPE = "_openbot._tcp.";

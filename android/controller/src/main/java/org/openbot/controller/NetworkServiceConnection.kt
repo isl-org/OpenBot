@@ -26,7 +26,7 @@ object NetworkServiceConnection : ILocalConnection {
 
     private const val TAG = "NetworkServiceConn"
     private var mNsdManager: NsdManager? = null
-    private var SERVICE_NAME = "OPEN_BOT_CONTROLLER_FLUTTER"
+    private var SERVICE_NAME = "OPEN_BOT_CONTROLLER"
     private val SERVICE_TYPE = "_openbot._tcp."
     private var dataReceivedCallback: IDataReceived? = null
     private const val port = 19400
