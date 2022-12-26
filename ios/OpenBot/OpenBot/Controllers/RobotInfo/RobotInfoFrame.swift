@@ -6,7 +6,9 @@ import Foundation
 import UIKit
 
 class RobotInfoFrame: UIViewController {
+    var topPadding: CGFloat = 0;
     var robotType = UILabel();
+    var robotName = UILabel();
     var bluetoothIcon: UIImageView!;
     var sensorHeading = UILabel();
     var voltageDividerCheckBox = Checkbox();
@@ -43,11 +45,15 @@ class RobotInfoFrame: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad();
+        let window = UIApplication.shared.keyWindow
+        topPadding = window?.safeAreaInsets.top ?? 20
         createUI();
         updateConstraints();
         updateRobot();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .updateLabel, object: nil);
+
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -56,8 +62,9 @@ class RobotInfoFrame: UIViewController {
     }
 
     func createUI() {
-        _ = createLabels(text: "N/A", topAnchor: 10, leadingAnchor: width / 2);
-        bluetoothIcon = createIcons(iconName: "", leadingAnchor: width - 40, topAnchor: 10);
+        crateRobotTypeHeading()
+        robotName = createLabels(text: "N/A", topAnchor: topPadding + adapted(dimensionSize: 30, to: .height), leadingAnchor: width / 2);
+        bluetoothIcon = createIcons(iconName: "", leadingAnchor: width - 40, topAnchor: topPadding + adapted(dimensionSize: 40, to: .height));
         _ = createLogoIcon();
         createSensorHeading()
         createSensorCheckBoxes();
@@ -73,7 +80,7 @@ class RobotInfoFrame: UIViewController {
 
     func crateRobotTypeHeading() {
         robotType = createHeadings(text: "Robot Type");
-        robotType.frame.origin = CGPoint(x: 10, y: 40);
+        robotType.frame.origin = CGPoint(x: 10, y: topPadding + adapted(dimensionSize: 30, to: .height));
     }
 
     func createSensorHeading() {
@@ -84,10 +91,11 @@ class RobotInfoFrame: UIViewController {
     func createLogoIcon() -> UIImageView {
         let icon = UIImageView();
         icon.image = Images.robotInfoIcon;
-        icon.frame.size = UIImage(named: "openBotLogo")!.size;
+        let imageSize = UIImage(named: "openBotLogo")!.size;
+        icon.frame.size = resized(size: imageSize, basedOn: .height);
         view.addSubview(icon);
-        icon.frame.origin.x = (width - 239) / 2;
-        icon.frame.origin.y = 50;
+        icon.frame.origin.x = (width - icon.frame.width) / 2;
+        icon.frame.origin.y = robotType.frame.origin.y + adapted(dimensionSize: 30, to: .height);
         return icon;
     }
 
@@ -133,6 +141,7 @@ class RobotInfoFrame: UIViewController {
     func createReadings() {
         battery = createLabels(text: Strings.battery, topAnchor: 530, leadingAnchor: 20);
         speed = createLabels(text: Strings.speedText, topAnchor: 530, leadingAnchor: 110);
+        speed.font = speed.font.withSize(14);
         sonar = createLabels(text: Strings.sonarLabel, topAnchor: 530, leadingAnchor: 255);
     }
 
@@ -142,9 +151,9 @@ class RobotInfoFrame: UIViewController {
 
     func createSendCommand() {
         motorLabel = createLabels(text: Strings.motors, topAnchor: 610, leadingAnchor: 20);
-        forwardButton = createButton(width: 100, height: 45, title: Strings.forward, leadingAnchor: 70, topAnchor: 610,action: #selector(forwardButton(_:)));
-        backwardButton = createButton(width: 100, height: 45, title: Strings.backward, leadingAnchor: 180, topAnchor: 610,action:  #selector(backwardButton(_:)));
-        stopButton = createButton(width: 70, height: 45, title: Strings.stop, leadingAnchor: 290, topAnchor: 610,action: #selector(stopButton(_:)));
+        forwardButton = createButton(width: 100, height: 45, title: Strings.forward, leadingAnchor: 70, topAnchor: 610, action: #selector(forwardButton(_:)));
+        backwardButton = createButton(width: 100, height: 45, title: Strings.backward, leadingAnchor: 180, topAnchor: 610, action: #selector(backwardButton(_:)));
+        stopButton = createButton(width: 70, height: 45, title: Strings.stop, leadingAnchor: 290, topAnchor: 610, action: #selector(stopButton(_:)));
 
     }
 
@@ -162,7 +171,7 @@ class RobotInfoFrame: UIViewController {
         let label = UILabel();
         label.text = text;
         label.textColor = Colors.bdColor;
-        label.frame.size.width = CGFloat(text.count * 10);
+        label.frame.size.width = CGFloat(text.count * 15);
         label.frame.size.height = 40;
         view.addSubview(label);
         label.font = HelveticaNeue.bold(size: 12);
@@ -197,7 +206,7 @@ class RobotInfoFrame: UIViewController {
     }
 
 
-    func createButton(width: Double, height: Double, title: String, leadingAnchor: CGFloat, topAnchor: CGFloat,action : Selector) -> UIButton {
+    func createButton(width: Double, height: Double, title: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector) -> UIButton {
         let button = UIButton();
         button.frame.size = CGSize(width: width, height: height);
         button.setTitle(title, for: .normal);
@@ -212,41 +221,48 @@ class RobotInfoFrame: UIViewController {
 
     func updateConstraints() {
         if currentOrientation == .portrait {
+            robotType.frame.origin.y = topPadding + adapted(dimensionSize: 30, to: .height);
+            robotName.frame.origin.y = topPadding + adapted(dimensionSize: 30, to: .height);
             sensorHeading.frame.origin = CGPoint(x: 10, y: 260);
-            wheelOdometerHeadingHeading.frame.origin = CGPoint(x: 10, y: 340);
-            voltageDividerCheckBox.frame.origin = CGPoint(x: 20, y: 305);
-            voltageDividerLabel.frame.origin = CGPoint(x: 55, y: 295);
-            sonarLabel.frame.origin = CGPoint(x: 205, y: 295);
-            sonarCheckBox.frame.origin = CGPoint(x: 170, y: 305);
-            bumperCheckBox.frame.origin = CGPoint(x: 275, y: 305);
-            bumperLabel.frame.origin = CGPoint(x: 310, y: 295);
-            frontCheckBox.frame.origin = CGPoint(x: 20, y: 385);
-            frontCheckBoxLabel.frame.origin = CGPoint(x: 65, y: 375);
-            backCheckBox.frame.origin = CGPoint(x: 125, y: 385);
-            backLabel.frame.origin = CGPoint(x: 165, y: 375);
-            ledHeading.frame.origin = CGPoint(x: 10, y: 420);
-            indicatorCheckbox.frame.origin = CGPoint(x: 20, y: 470);
-            indicatorLabel.frame.origin = CGPoint(x: 55, y: 460);
-            frontLedCheckbox.frame.origin = CGPoint(x: 135, y: 470);
-            frontLedLabel.frame.origin = CGPoint(x: 165, y: 460);
-            backLedCheckbox.frame.origin = CGPoint(x: 215, y: 470);
-            backLedLabel.frame.origin = CGPoint(x: 245, y: 460);
-            statusCheckbox.frame.origin = CGPoint(x: 290, y: 470);
-            statusLabel.frame.origin = CGPoint(x: 320, y: 460);
-            readingHeading.frame.origin = CGPoint(x: 10, y: 500);
-            battery.frame.origin = CGPoint(x: 20, y: 530);
-            speed.frame.origin = CGPoint(x: 110, y: 530);
-            sonar.frame.origin = CGPoint(x: 255, y: 530);
-            motorLabel.frame.origin = CGPoint(x: 20, y: 610);
-            forwardButton.frame.origin = CGPoint(x: 70, y: 610);
-            backwardButton.frame.origin = CGPoint(x: 180, y: 610);
-            stopButton.frame.origin = CGPoint(x: 290, y: 610);
-            sendCommandsHeading.frame.origin = CGPoint(x: 10, y: 565);
+            bluetoothIcon.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 40, to: .height));
+            voltageDividerCheckBox.frame.origin = CGPoint(x: 20, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
+            voltageDividerLabel.frame.origin = CGPoint(x: 55, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            sonarLabel.frame.origin = CGPoint(x: 205, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            sonarCheckBox.frame.origin = CGPoint(x: 170, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
+            bumperCheckBox.frame.origin = CGPoint(x: 265, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
+            bumperLabel.frame.origin = CGPoint(x: 300, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            wheelOdometerHeadingHeading.frame.origin = CGPoint(x: 10, y: voltageDividerLabel.frame.origin.y + adapted(dimensionSize: 40, to: .height));
+            frontCheckBox.frame.origin = CGPoint(x: 20, y: wheelOdometerHeadingHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
+            frontCheckBoxLabel.frame.origin = CGPoint(x: 65, y: wheelOdometerHeadingHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            backCheckBox.frame.origin = CGPoint(x: 125, y: wheelOdometerHeadingHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
+            backLabel.frame.origin = CGPoint(x: 165, y: wheelOdometerHeadingHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            ledHeading.frame.origin = CGPoint(x: 10, y: wheelOdometerHeadingHeading.frame.origin.y + adapted(dimensionSize: 65, to: .height));
+            indicatorCheckbox.frame.origin = CGPoint(x: 20, y: ledHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
+            indicatorLabel.frame.origin = CGPoint(x: 55, y: ledHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            frontLedCheckbox.frame.origin = CGPoint(x: 135, y: ledHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
+            frontLedLabel.frame.origin = CGPoint(x: 165, y: ledHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            backLedCheckbox.frame.origin = CGPoint(x: 215, y: ledHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
+            backLedLabel.frame.origin = CGPoint(x: 245, y: ledHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            statusCheckbox.frame.origin = CGPoint(x: 290, y: ledHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
+            statusLabel.frame.origin = CGPoint(x: 320, y: ledHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            readingHeading.frame.origin = CGPoint(x: 10, y: ledHeading.frame.origin.y + adapted(dimensionSize: 65, to: .height));
+            battery.frame.origin = CGPoint(x: 20, y: readingHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            speed.frame.origin = CGPoint(x: 120, y: readingHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            sonar.frame.origin = CGPoint(x: 275, y: readingHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            sendCommandsHeading.frame.origin = CGPoint(x: 10, y: readingHeading.frame.origin.y + adapted(dimensionSize: 65, to: .height));
+            motorLabel.frame.origin = CGPoint(x: 20, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            forwardButton.frame.origin = CGPoint(x: 70, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            backwardButton.frame.origin = CGPoint(x: 180, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            stopButton.frame.origin = CGPoint(x: 290, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
 
 
         } else {
+            bluetoothIcon.frame.origin = CGPoint(x: width - 100, y: 30);
+            robotName.frame.origin.y = 20;
+            robotType.frame.origin = CGPoint(x: topPadding, y: 20)
             sensorHeading.frame.origin = CGPoint(x: height / 2 - 15, y: 20);
             wheelOdometerHeadingHeading.frame.origin = CGPoint(x: height / 2 - 15, y: 80);
+            voltageDividerCheckBox.frame.origin = CGPoint(x: height / 2 - 10, y: 50);
             voltageDividerCheckBox.frame.origin = CGPoint(x: height / 2 - 10, y: 50);
             voltageDividerLabel.frame.origin = CGPoint(x: height / 2 + 35, y: 40);
             sonarLabel.frame.origin = CGPoint(x: height / 2 + 180, y: 40);
@@ -270,8 +286,8 @@ class RobotInfoFrame: UIViewController {
             battery.frame.origin = CGPoint(x: height / 2 - 10, y: 265);
             speed.frame.origin = CGPoint(x: height / 2 + 90, y: 265);
             sonar.frame.origin = CGPoint(x: height / 2 + 250, y: 265);
-            sendCommandsHeading.frame.origin = CGPoint(x: 20, y: readingHeading.frame.origin.y + 30);
-            motorLabel.frame.origin = CGPoint(x: 25, y: sendCommandsHeading.frame.origin.y + 50);
+            sendCommandsHeading.frame.origin = CGPoint(x: topPadding, y: readingHeading.frame.origin.y + 30);
+            motorLabel.frame.origin = CGPoint(x: 20, y: sendCommandsHeading.frame.origin.y + 50);
             forwardButton.frame.origin = CGPoint(x: 90, y: sendCommandsHeading.frame.origin.y + 50);
             backwardButton.frame.origin = CGPoint(x: 200, y: sendCommandsHeading.frame.origin.y + 50);
             stopButton.frame.origin = CGPoint(x: 315, y: sendCommandsHeading.frame.origin.y + 50);
@@ -281,17 +297,16 @@ class RobotInfoFrame: UIViewController {
     func updateRobot() {
         if isBluetoothConnected {
             bluetoothIcon.image = UIImage(named: "bluetoothConnected");
-        }
-        else{
+        } else {
             bluetoothIcon.image = UIImage(named: "bluetoothDisconnected");
         }
-        if bluetooth.sonarData != ""{
+        if bluetooth.sonarData != "" {
             sonarCheckBox.isChecked = true;
         }
-        if bluetooth.voltageDivider != ""{
+        if bluetooth.voltageDivider != "" {
             voltageDividerCheckBox.isChecked = true;
         }
-        if bluetooth.bumperData != ""{
+        if bluetooth.bumperData != "" {
             bumperCheckBox.isChecked = true;
         }
     }
@@ -321,4 +336,43 @@ class RobotInfoFrame: UIViewController {
     @objc func stopButton(_ sender: UIButton) {
         bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n");
     }
+
+    @objc func updateScreen() {
+        updateSonar()
+        updateVoltage()
+        updateSpeedometer()
+    }
+
+    func updateSonar() {
+        let sonarData = bluetooth.sonarData
+        if sonarData != "" {
+            let index = sonarData.index(after: sonarData.startIndex)
+            let actualSonarValue = min(Int(String(sonarData[index...])) ?? 0, 300)
+            sonar.text = "Sonar " + String(actualSonarValue) + " CM"
+        }
+    }
+
+    func updateVoltage() {
+        let voltageData = bluetooth.voltageDivider
+        if voltageData != "" {
+            let index = voltageData.index(after: voltageData.startIndex)
+            battery.text = "Battery " + String(voltageData[index...]) + " V"
+        }
+    }
+
+    func updateSpeedometer() {
+
+        let speedometer = bluetooth.speedometer
+        if speedometer != "" {
+            let index_1 = speedometer.index(after: speedometer.startIndex)
+            let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
+            let index_2 = speedometer.index(before: indexOfComma)
+            let leftFront = Float(speedometer[index_1...index_2])
+            let rightFont = Float(speedometer[speedometer.index(after: indexOfComma)...])
+            speed.text = Strings.speed + " (l,r) " + String(leftFront!) + " " + String(rightFont!) + " rpm";
+            print(speedometer);
+        }
+    }
+
+
 }

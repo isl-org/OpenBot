@@ -38,7 +38,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         createLabels()
         createVoltageController(h: 0)
         createSonarController(h: 0)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .updateLabel, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .updateLabel, object: nil);
         createDIcon()
         createDriveIcon()
         createBluetoothIcon()
