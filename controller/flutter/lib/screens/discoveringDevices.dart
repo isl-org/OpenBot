@@ -21,8 +21,8 @@ class DiscoveringDeviceState extends State<DiscoveringDevice> {
     return Scaffold(
       body: Container(
           alignment: Alignment.center,
-          // child: widget.isDeviceConnected
-          child: selectController
+          child: widget.isDeviceConnected
+          // child: selectController
               ? const ControlSelector()
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

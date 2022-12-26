@@ -31,7 +31,6 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
   @override
   void initState() {
     accelerometerEvents.listen((event) {
-      print("object = , $event");
       azimuth = event.x;
       pitch = event.y;
       roll = event.z;
@@ -72,16 +71,23 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 GestureDetector(
-                    onTap: () {
-                      print("pressed on reverse");
-                      ForwardSpeed.reset();
-                      setState(() {});
+                    onTapDown: (details) {
+                      setState(() {
+                        ForwardSpeed.reset();
+                        reverse = true;
+                      });
+                    },
+                    onTapUp: (details) {
+                      setState(() {
+                        ForwardSpeed.reset();
+                        reverse = false;
+                      });
                     },
                     onLongPressStart: (detail) {
                       setState(() {
+                        reverse = true;
                         backwardSpeedTimer = Timer.periodic(
                             const Duration(milliseconds: 333), (t) {
-                          reverse = !reverse;
                           double decrementSpeed = ForwardSpeed.minNegative / 3;
                           ForwardSpeed.decrementNegative(decrementSpeed);
                           DriveCommandReducer.filter(
@@ -90,6 +96,9 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                       });
                     },
                     onLongPressEnd: (detail) {
+                      setState(() {
+                        reverse = false;
+                      });
                       if (backwardSpeedTimer != null) {
                         ForwardSpeed.reset();
                         DriveCommandReducer.filter(0, 0);
@@ -102,8 +111,8 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                       // padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: forward
-                            ? const Color(0xFF292929).withOpacity(0.8)
+                        color: reverse
+                            ? const Color(0xFF292929)
                             : const Color(0xFF292929).withOpacity(0.3),
                       ),
                       child: Image.asset(
@@ -113,18 +122,23 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                       ),
                     )),
                 GestureDetector(
-                    onTap: () {
+                    onTapDown: (details) {
                       setState(() {
-                        forward = !forward;
-                        print("forward tapped");
+                        forward = true;
+                        ForwardSpeed.reset();
+                      });
+                    },
+                    onTapUp: (details) {
+                      setState(() {
+                        forward = false;
                         ForwardSpeed.reset();
                       });
                     },
                     onLongPressStart: (detail) {
                       setState(() {
+                        forward = true;
                         forwardSpeedTimer = Timer.periodic(
                             const Duration(milliseconds: 200), (t) {
-                          forward = !forward;
                           double incrementValue =
                               (ForwardSpeed.max - ForwardSpeed.value) / 5;
                           ForwardSpeed.increment(incrementValue);
@@ -134,19 +148,23 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                       });
                     },
                     onLongPressEnd: (detail) {
+                      setState(() {
+                        forward = false;
+                      });
                       if (forwardSpeedTimer != null) {
                         ForwardSpeed.reset();
                         DriveCommandReducer.filter(0, 0);
                         forwardSpeedTimer!.cancel();
                       }
-                    }, // Image tapped
+                    },
+                    // Image tapped
                     child: Container(
                       margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                       // padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: reverse
-                            ? const Color(0xFF292929).withOpacity(0.8)
+                        color: forward
+                            ? const Color(0xFF292929)
                             : const Color(0xFF292929).withOpacity(0.3),
                       ),
                       child: Image.asset(

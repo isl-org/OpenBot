@@ -53,17 +53,14 @@ class ControllerState extends State<Controller> {
         txt: createTxt());
 
     final registration = await register(service);
-    print("registration  === , $service");
     _serverSocket = await ServerSocket.bind(service.host, port);
     _serverSocket?.listen((socket) {
       print('Connection from'
           ' ${socket.remoteAddress.address}:${socket.remotePort}');
       if (clientSocket != null) {
-        print('$clientSocket, == msg');
         socket.close();
       } else {
         clientSocket = socket;
-        print('$clientSocket, == msg');
         _broadcast = socket.asBroadcastStream();
         print('$_broadcast, == msg');
         //
