@@ -51,8 +51,6 @@ class HomePageViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
 
-//        connection.discoverServices();
-
     }
 
     func changeNavigationColor() {
@@ -79,6 +77,7 @@ class HomePageViewController: UIViewController {
         } else {
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
+
     }
 
 

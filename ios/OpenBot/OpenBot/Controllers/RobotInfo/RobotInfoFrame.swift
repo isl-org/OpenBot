@@ -10,6 +10,7 @@ class RobotInfoFrame: UIViewController {
     var robotType = UILabel();
     var robotName = UILabel();
     var bluetoothIcon: UIImageView!;
+    var refreshIcon : UIImageView!
     var sensorHeading = UILabel();
     var voltageDividerCheckBox = Checkbox();
     var sonarCheckBox = Checkbox();
@@ -40,7 +41,10 @@ class RobotInfoFrame: UIViewController {
     var forwardButton = UIButton();
     var backwardButton = UIButton();
     var stopButton = UIButton();
+    var lightLabel = UILabel();
     let bluetooth = bluetoothDataController.shared;
+    var robotInfo: String = "";
+    var lightSlider: UISlider!
 
 
     override func viewDidLoad() {
@@ -49,11 +53,10 @@ class RobotInfoFrame: UIViewController {
         topPadding = window?.safeAreaInsets.top ?? 20
         createUI();
         updateConstraints();
-        updateRobot();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .updateLabel, object: nil);
-
+        robotInfo = bluetooth.robotInfo;
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -61,10 +64,20 @@ class RobotInfoFrame: UIViewController {
         updateConstraints();
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getRobotInfo();
+        updateRobotInfo();
+        if !isBluetoothConnected {
+            updateScreenOnBluetoothDisconnection();
+        }
+    }
+
     func createUI() {
         crateRobotTypeHeading()
         robotName = createLabels(text: "N/A", topAnchor: topPadding + adapted(dimensionSize: 30, to: .height), leadingAnchor: width / 2);
         createBluetoothIcon()
+        createRefreshIcon()
         _ = createLogoIcon();
         createSensorHeading()
         createSensorCheckBoxes();
@@ -76,6 +89,8 @@ class RobotInfoFrame: UIViewController {
         createReadings();
         createSendCommandHeading()
         createSendCommand();
+        createLight()
+        showLight(isHidden: true);
     }
 
     func crateRobotTypeHeading() {
@@ -83,8 +98,17 @@ class RobotInfoFrame: UIViewController {
         robotType.frame.origin = CGPoint(x: 10, y: topPadding + adapted(dimensionSize: 30, to: .height));
     }
 
-    func createBluetoothIcon(){
-        bluetoothIcon = createIcons(iconName: "", leadingAnchor: width - 40, topAnchor: topPadding + adapted(dimensionSize: 40, to: .height));
+    func createRefreshIcon() {
+        if let image = UIImage(named: "refresh") {
+            refreshIcon = createIcons(iconImage: image, leadingAnchor: width - 100, topAnchor: topPadding + adapted(dimensionSize: 30, to: .height))
+        }
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(refresh(tapGestureRecognizer:)));
+        refreshIcon.isUserInteractionEnabled = true;
+        refreshIcon.addGestureRecognizer(tapGesture);
+    }
+
+    func createBluetoothIcon() {
+        bluetoothIcon = createIcons(iconImage: Images.bluetoothDisconnected!, leadingAnchor: width - 40, topAnchor: topPadding + adapted(dimensionSize: 40, to: .height));
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openBluetoothSettings(tapGestureRecognizer:)));
         bluetoothIcon.isUserInteractionEnabled = true;
         bluetoothIcon.addGestureRecognizer(tapGesture);
@@ -102,7 +126,7 @@ class RobotInfoFrame: UIViewController {
         icon.frame.size = resized(size: imageSize, basedOn: .height);
         view.addSubview(icon);
         icon.frame.origin.x = (width - icon.frame.width) / 2;
-        icon.frame.origin.y = robotType.frame.origin.y + adapted(dimensionSize: 30, to: .height);
+        icon.frame.origin.y = robotType.frame.origin.y + adapted(dimensionSize: 0, to: .height);
         return icon;
     }
 
@@ -161,12 +185,16 @@ class RobotInfoFrame: UIViewController {
         forwardButton = createButton(width: 100, height: 45, title: Strings.forward, leadingAnchor: 70, topAnchor: 610, action: #selector(forwardButton(_:)));
         backwardButton = createButton(width: 100, height: 45, title: Strings.backward, leadingAnchor: 180, topAnchor: 610, action: #selector(backwardButton(_:)));
         stopButton = createButton(width: 70, height: 45, title: Strings.stop, leadingAnchor: 290, topAnchor: 610, action: #selector(stopButton(_:)));
-
     }
 
-    func createIcons(iconName: String, leadingAnchor: CGFloat, topAnchor: CGFloat) -> UIImageView {
+    func createLight() {
+        lightLabel = createLabels(text: Strings.lightLabel, topAnchor: 610, leadingAnchor: 10);
+        lightSlider = createSlider();
+    }
+
+    func createIcons(iconImage: UIImage, leadingAnchor: CGFloat, topAnchor: CGFloat) -> UIImageView {
         let icon = UIImageView();
-        icon.image = Images.bluetoothDisconnected;
+        icon.image = iconImage;
         icon.frame.size = CGSize(width: 20, height: 20);
         view.addSubview(icon);
         icon.frame.origin.x = leadingAnchor;
@@ -226,12 +254,22 @@ class RobotInfoFrame: UIViewController {
         return button;
     }
 
+    func createSlider() -> UISlider {
+        let slider = UISlider();
+        slider.frame = CGRect(x: 100, y: 610, width: 200, height: 50);
+        view.addSubview(slider);
+        slider.thumbTintColor = Colors.title;
+        slider.minimumTrackTintColor = Colors.title;
+        slider.addTarget(self, action: #selector(lightValueChange(_:)), for: .valueChanged)
+        return slider;
+    }
+
     func updateConstraints() {
         if currentOrientation == .portrait {
-            robotType.frame.origin.y = topPadding + adapted(dimensionSize: 30, to: .height);
-            robotName.frame.origin.y = topPadding + adapted(dimensionSize: 30, to: .height);
-            sensorHeading.frame.origin = CGPoint(x: 10, y: 260);
-            bluetoothIcon.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 40, to: .height));
+            robotType.frame.origin.y = topPadding + adapted(dimensionSize: 20, to: .height);
+            robotName.frame.origin.y = topPadding + adapted(dimensionSize: 20, to: .height);
+            sensorHeading.frame.origin = CGPoint(x: 10, y: 210);
+            bluetoothIcon.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 30, to: .height));
             voltageDividerCheckBox.frame.origin = CGPoint(x: 20, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
             voltageDividerLabel.frame.origin = CGPoint(x: 55, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
             sonarLabel.frame.origin = CGPoint(x: 205, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
@@ -258,15 +296,18 @@ class RobotInfoFrame: UIViewController {
             sonar.frame.origin = CGPoint(x: 275, y: readingHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
             sendCommandsHeading.frame.origin = CGPoint(x: 10, y: readingHeading.frame.origin.y + adapted(dimensionSize: 65, to: .height));
             motorLabel.frame.origin = CGPoint(x: 20, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            motorLabel.isHidden = false
             forwardButton.frame.origin = CGPoint(x: 70, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
             backwardButton.frame.origin = CGPoint(x: 180, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
             stopButton.frame.origin = CGPoint(x: 290, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
-
+            lightLabel.frame.origin = CGPoint(x: 10, y: motorLabel.frame.origin.y + 50)
+            lightSlider.frame = CGRect(x: 70, y: (motorLabel.frame.origin.y + adapted(dimensionSize: 45, to: .height)), width: width - 90, height: 40);
 
         } else {
             bluetoothIcon.frame.origin = CGPoint(x: width - 100, y: 30);
             robotName.frame.origin.y = 20;
             robotType.frame.origin = CGPoint(x: topPadding, y: 20)
+            refreshIcon.frame.origin = CGPoint(x: width - 140, y: 30);
             sensorHeading.frame.origin = CGPoint(x: height / 2 - 15, y: 20);
             wheelOdometerHeadingHeading.frame.origin = CGPoint(x: height / 2 - 15, y: 80);
             voltageDividerCheckBox.frame.origin = CGPoint(x: height / 2 - 10, y: 50);
@@ -294,28 +335,117 @@ class RobotInfoFrame: UIViewController {
             speed.frame.origin = CGPoint(x: height / 2 + 90, y: 265);
             sonar.frame.origin = CGPoint(x: height / 2 + 250, y: 265);
             sendCommandsHeading.frame.origin = CGPoint(x: topPadding, y: readingHeading.frame.origin.y + 30);
-            motorLabel.frame.origin = CGPoint(x: 20, y: sendCommandsHeading.frame.origin.y + 50);
-            forwardButton.frame.origin = CGPoint(x: 90, y: sendCommandsHeading.frame.origin.y + 50);
-            backwardButton.frame.origin = CGPoint(x: 200, y: sendCommandsHeading.frame.origin.y + 50);
-            stopButton.frame.origin = CGPoint(x: 315, y: sendCommandsHeading.frame.origin.y + 50);
+            motorLabel.isHidden = true
+            forwardButton.frame.origin = CGPoint(x: 10, y: sendCommandsHeading.frame.origin.y + 50);
+            backwardButton.frame.origin = CGPoint(x: 120, y: sendCommandsHeading.frame.origin.y + 50);
+            stopButton.frame.origin = CGPoint(x: 230, y: sendCommandsHeading.frame.origin.y + 50);
+            lightLabel.frame.origin = CGPoint(x: height / 2 - 15, y: stopButton.frame.origin.y);
+            lightSlider.frame = CGRect(x: height / 2 + 55, y: sendCommandsHeading.frame.origin.y + 50, width: height - 390, height: 40);
         }
     }
 
-    func updateRobot() {
+    func getRobotInfo() {
         if isBluetoothConnected {
             bluetoothIcon.image = UIImage(named: "bluetoothConnected");
+            bluetooth.sendData(payload: "f\n");
         } else {
             bluetoothIcon.image = UIImage(named: "bluetoothDisconnected");
         }
-        if bluetooth.sonarData != "" {
-            sonarCheckBox.isChecked = true;
+    }
+
+    func updateRobotInfo() {
+        robotInfo = bluetooth.robotInfo;
+        if robotInfo != "" {
+            setRobotName();
+            setVoltageCheck();
+            setSonarCheck();
+            setBumperCheck();
+            setFrontWheelOdometryCheck();
+            setBackWheelOdometryCheck();
+            setFrontLedCheck();
+            setBackLedCheck();
+            setIndicatorCheck();
+            setFrontLedCheck();
+            setBackLedCheck();
+            setStatusLedCheck();
+            showLight(isHidden: false)
         }
-        if bluetooth.voltageDivider != "" {
+    }
+
+
+    func getRobotName() -> String {
+        let firstIndex = robotInfo.index(after: robotInfo.firstIndex(of: "f")!);
+        let lastIndex = robotInfo.firstIndex(of: ":")!;
+        if (firstIndex != nil) && (lastIndex != nil) {
+            return robotInfo.substring(with: firstIndex..<lastIndex);
+        }
+        return "N/A"
+    }
+
+    func setRobotName() {
+        robotName.text = getRobotName();
+        robotName.frame.size.width = CGFloat(getRobotName().count * 10);
+        robotName.frame.origin.x = width / 2 - CGFloat(getRobotName().count * 10) / 2 - 20;
+    }
+
+    func setVoltageCheck() {
+        if robotInfo.contains(":v") {
             voltageDividerCheckBox.isChecked = true;
         }
-        if bluetooth.bumperData != "" {
+    }
+
+    func setSonarCheck() {
+        if robotInfo.contains(":s") {
+            sonarCheckBox.isChecked = true;
+        }
+    }
+
+    func setBumperCheck() {
+        if robotInfo.contains(":b") {
             bumperCheckBox.isChecked = true;
         }
+    }
+
+    func setFrontWheelOdometryCheck() {
+        if robotInfo.contains(":wf") {
+            frontCheckBox.isChecked = true;
+        }
+    }
+
+    func setBackWheelOdometryCheck() {
+        if robotInfo.contains(":wb") {
+            backCheckBox.isChecked = true;
+        }
+    }
+
+    func setIndicatorCheck() {
+        if robotInfo.contains("i:") {
+            indicatorCheckbox.isChecked = true;
+        }
+    }
+
+    func setFrontLedCheck() {
+        if robotInfo.contains("lf:") {
+            frontLedCheckbox.isChecked = true;
+        }
+    }
+
+    func setBackLedCheck() {
+        if robotInfo.contains("lb:") {
+            backLedCheckbox.isChecked = true;
+        }
+    }
+
+    func setStatusLedCheck() {
+        if robotInfo.contains("ls:") {
+            print("hello Nitish setStatusLedCheck")
+            statusCheckbox.isChecked = true;
+        }
+    }
+
+    func showLight(isHidden: Bool) {
+        lightLabel.isHidden = isHidden;
+        lightSlider.isHidden = isHidden;
     }
 
     @objc func updateSonarCheckBox(_ sender: UIButton) {
@@ -327,8 +457,10 @@ class RobotInfoFrame: UIViewController {
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
             bluetoothIcon.image = Images.bluetoothConnected
+            updateRobotInfo()
         } else {
             bluetoothIcon.image = Images.bluetoothDisconnected
+            updateScreenOnBluetoothDisconnection();
         }
     }
 
@@ -368,7 +500,6 @@ class RobotInfoFrame: UIViewController {
     }
 
     func updateSpeedometer() {
-
         let speedometer = bluetooth.speedometer
         if speedometer != "" {
             let index_1 = speedometer.index(after: speedometer.startIndex)
@@ -381,10 +512,59 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    func updateScreenOnBluetoothDisconnection() {
+        robotName.text = "N/A";
+        sonarCheckBox.isChecked = false;
+        bumperCheckBox.isChecked = false;
+        frontCheckBox.isChecked = false;
+        backCheckBox.isChecked = false;
+        indicatorCheckbox.isChecked = false;
+        frontLedCheckbox.isChecked = false;
+        backLedCheckbox.isChecked = false;
+        statusCheckbox.isChecked = false;
+        voltageDividerCheckBox.isChecked = false;
+        showLight(isHidden: true)
+    }
+
     @objc func openBluetoothSettings(tapGestureRecognizer: UITapGestureRecognizer) {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
+    @objc func refresh(tapGestureRecognizer: UITapGestureRecognizer) {
+        if isBluetoothConnected {
+            updateRobotInfo();
+        }
+    }
+
+
+    @objc func lightValueChange(_ sender: UISlider) {
+        print(sender.value)
+        var front = round((sender.value * 255) * 100) / 100;
+        var back = round((sender.value * 255) * 100) / 100;
+        bluetooth.sendData(payload: "l" + String(front) + "," + String(back) + "\n");
+    }
+}
+
+extension String {
+    func index(from: Int) -> Index {
+        self.index(startIndex, offsetBy: from)
+    }
+
+    func substring(from: Int) -> String {
+        let fromIndex = index(from: from)
+        return String(self[fromIndex...])
+    }
+
+    func substring(to: Int) -> String {
+        let toIndex = index(from: to)
+        return String(self[..<toIndex])
+    }
+
+    func substring(with r: Range<Int>) -> String {
+        let startIndex = index(from: r.lowerBound)
+        let endIndex = index(from: r.upperBound)
+        return String(self[startIndex..<endIndex])
+    }
 
 }

@@ -28,6 +28,11 @@ class BluetoothTable: UITableViewController {
         super.viewWillAppear(animated)
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        bluetooth.sendData(payload:"f\n");
+    }
+
     func connectToBle(Btn: UIButton, index: Int) {
         bluetooth.peri = bluetooth.peripherals[index]
         isBluetoothConnected = true

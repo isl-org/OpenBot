@@ -156,5 +156,6 @@ struct Strings {
     static let speedText : String = "Speed (l,r) ***,*** rpm"
     static let sonarLabel  : String = "Sonar *** cm";
     static let sendCommand : String = "Send Commands"
+    static let lightLabel : String  = "Lights"
 
 }

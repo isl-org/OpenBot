@@ -18,6 +18,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     var speedometer: String = ""
     var bumperData: String = ""
     var writeCharacteristics: CBCharacteristic?
+    var robotInfo : String = ""
 
     required init?(coder: NSCoder) {
         super.init()
@@ -41,7 +42,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if (central.state == .poweredOn) {
             let options: [String: Any] = [CBCentralManagerScanOptionAllowDuplicatesKey: true]
-            centralManager?.scanForPeripherals(withServices: [CBUUID(string: Constants.openbotService)], options: options)
+            centralManager?.scanForPeripherals(withServices: [CBUUID(string: Constants.openbotService)], options: options);
         } else {
             print("bluetooth is off ")
         }
@@ -59,7 +60,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("connected to", peripheral)
         isBluetoothConnected = true;
-        NotificationCenter.default.post(name: .bluetoothConnected, object: nil)
+        NotificationCenter.default.post(name: .bluetoothConnected, object: nil);
         peripheral.discoverServices(nil)
 
     }
@@ -132,7 +133,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             let data = characteristic.value!
             let x = String(data: data, encoding: .utf8) ?? ""
             bluetoothData = x
-//            print(bluetoothData)
+            print(bluetoothData)
             NotificationCenter.default.post(name: .updateSerialMonitor, object: nil)
             NotificationCenter.default.post(name: .updateLabel, object: nil)
             if x.prefix(1) == "s" {
@@ -144,6 +145,10 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             } else if x.prefix(1) == "b" {
                 bumperData = x;
             }
+            else if x.prefix(1) == "f"{
+                robotInfo = x;
+            }
+
         }
     }
 
@@ -158,13 +163,14 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func sendData(payload: String) {
         let dataToSend: Data? = payload.data(using: String.Encoding.utf8)
         if (dataToSend != nil && tempPeripheral != nil) {
-            tempPeripheral!.writeValue(dataToSend!, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
+            print("Sending ",payload, " to OpenBot");
+            tempPeripheral.writeValue(dataToSend!, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
         }
     }
 
     func disconnect() {
         centralManager?.cancelPeripheralConnection(tempPeripheral)
-//        startScan()
+        startScan()
         peri = nil
     }
 
@@ -176,9 +182,8 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     func startScan() {
-        print("starting scan")
-        centralManager?.scanForPeripherals(withServices: nil, options: nil)
-
+        let options: [String: Any] = [CBCentralManagerScanOptionAllowDuplicatesKey: true]
+        centralManager?.scanForPeripherals(withServices: [CBUUID(string: Constants.openbotService)], options: options);
     }
 
     @objc func startNotification() {
