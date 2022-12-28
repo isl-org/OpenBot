@@ -1,7 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "bluetooth-unselect.svg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -16,7 +25,16 @@
       "scale" : "1x"
     },
     {
-      "filename" : "bluetooth-unselect 1.svg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -31,7 +49,17 @@
       "scale" : "2x"
     },
     {
-      "filename" : "bluetooth-unselect 2.svg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "bluetooth-unselect 3.svg",
       "idiom" : "universal",
       "scale" : "3x"
     },

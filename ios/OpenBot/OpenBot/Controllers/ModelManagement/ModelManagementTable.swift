@@ -310,7 +310,7 @@ class ModelManagementTable: UITableViewController {
             popupWindowTopAnchor = popupWindow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -50)
         }
         NSLayoutConstraint.activate([popupWindowWidth, popupWindowTopAnchor, popupWindowLeadingAnchor])
-        popupWindow.backgroundColor = .black
+        popupWindow.backgroundColor = Colors.modelDetail;
     }
 
     func deleteModel(modelName: String) {

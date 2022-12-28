@@ -50,6 +50,7 @@ class RobotInfoFrame: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad();
+        setupNavigationBarItem();
         let window = UIApplication.shared.keyWindow
         topPadding = window?.safeAreaInsets.top ?? 20
         createUI();
@@ -102,9 +103,10 @@ class RobotInfoFrame: UIViewController {
     }
 
     func createRefreshIcon() {
-        if let image = UIImage(named: "refresh") {
+        if let image = UIImage(named: "refresh")?.withRenderingMode(.alwaysTemplate) {
             refreshIcon = createIcons(iconImage: image, leadingAnchor: width - 100, topAnchor: topPadding + adapted(dimensionSize: 30, to: .height));
         }
+        refreshIcon.tintColor = Colors.bdColor;
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(refresh(tapGestureRecognizer:)));
         refreshIcon.isUserInteractionEnabled = true;
         refreshIcon.addGestureRecognizer(tapGesture);
@@ -281,7 +283,7 @@ class RobotInfoFrame: UIViewController {
             robotName.frame.origin.y = topPadding + adapted(dimensionSize: 20, to: .height);
             robotName.frame.origin.x = robotType.frame.origin.x + CGFloat((robotType.text?.count ?? 0) * 10) + adapted(dimensionSize: 35, to: .height);
             sensorHeading.frame.origin = CGPoint(x: 10, y: 210);
-            blueToothIconButton.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 25, to: .height));
+            blueToothIconButton.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 22, to: .height));
             refreshIcon.frame.origin.y = topPadding + adapted(dimensionSize: 30, to: .height);
             refreshIcon.frame.origin.x = blueToothIconButton.frame.origin.x - 50;
             voltageDividerCheckBox.frame.origin = CGPoint(x: 20, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
@@ -598,6 +600,18 @@ class RobotInfoFrame: UIViewController {
         var front = round((sender.value * 255) * 100) / 100;
         var back = round((sender.value * 255) * 100) / 100;
         bluetooth.sendData(payload: "l" + String(front) + "," + String(back) + "\n");
+    }
+
+    func setupNavigationBarItem() {
+        if UIImage(named: "back") != nil {
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.robotInfo, target: self, action: #selector(RobotInfoFrame.back(sender:)), titleColor: Colors.navigationColor ?? .white)
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+    }
+
+    @objc func back(sender: UIBarButtonItem) {
+        _ = navigationController?.popViewController(animated: true)
     }
 }
 

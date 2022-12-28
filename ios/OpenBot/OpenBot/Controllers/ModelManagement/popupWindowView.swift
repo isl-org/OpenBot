@@ -11,7 +11,7 @@ class popupWindowView: UIView {
     var typeDropdown = DropDown()
     var typeDropdownView = UIView()
     var modelName: String = ""
-    var pathType : String = ""
+    var pathType: String = ""
     var classDropdown = DropDown()
     var classDropdownView = UIView()
     var headingLeadingAnchor: NSLayoutConstraint!
@@ -26,7 +26,7 @@ class popupWindowView: UIView {
     var heightOfModel: String!
     var modelAddress: String = ""
 
-    init(frame: CGRect, _ modelName: String, _ modelAddress: String, _ pathType : String) {
+    init(frame: CGRect, _ modelName: String, _ modelAddress: String, _ pathType: String) {
         super.init(frame: frame)
         self.modelName = modelName
         self.modelAddress = modelAddress
@@ -46,7 +46,7 @@ class popupWindowView: UIView {
         _ = createLabel(text: Strings.inputOfModel, leadingAnchor: 20, topAnchor: 250);
         firstBox = createBox(isFirst: true);
         addSubview(firstBox)
-        _ = createLabel(text: "x", leadingAnchor: width / 2 + 20 , topAnchor: 250)
+        _ = createLabel(text: "x", leadingAnchor: width / 2 + 20, topAnchor: 250)
         secondBox = createBox(isFirst: false);
         addSubview(secondBox)
         createFirstInputTextField();
@@ -67,15 +67,15 @@ class popupWindowView: UIView {
             headingLeadingAnchor.constant = width / 2 - CGFloat(Strings.modelDetails.count * 5)
             typeDropdownLeadingAnchor.constant = -width / 2 - 50
             classDropdownLeadingAnchor.constant = -width / 2 - 50
-        firstBox.frame.origin = CGPoint(x: width/2 - 50, y: 250)
-            secondBox.frame.origin = CGPoint(x: width/2 + 50, y: 250);
+            firstBox.frame.origin = CGPoint(x: width / 2 - 50, y: 250)
+            secondBox.frame.origin = CGPoint(x: width / 2 + 50, y: 250);
         } else {
             textFieldLeadingConstraints.constant = -height / 2 - 50
             headingLeadingAnchor.constant = height / 2 - CGFloat(Strings.modelDetails.count * 5)
             typeDropdownLeadingAnchor.constant = -height / 2 - 50
             classDropdownLeadingAnchor.constant = -height / 2 - 50
-            firstBox.frame.origin = CGPoint(x: height/2 - 50, y: 250)
-            secondBox.frame.origin = CGPoint(x: height/2 + 50, y: 250);
+            firstBox.frame.origin = CGPoint(x: height / 2 - 50, y: 250)
+            secondBox.frame.origin = CGPoint(x: height / 2 + 50, y: 250);
         }
     }
 
@@ -85,8 +85,7 @@ class popupWindowView: UIView {
         heightOfModel = ModelItem.getHeightOfInput(model.inputSize);
         if pathType == "ASSET" {
             model.pathType = "ASSET"
-        }
-        else{
+        } else {
             model.pathType = "URL"
         }
     }
@@ -234,7 +233,7 @@ class popupWindowView: UIView {
         let box = UIView();
         box.layer.borderColor = Colors.border?.cgColor;
         box.layer.borderWidth = 1;
-      box.frame.size = CGSize(width: 50, height: 40);
+        box.frame.size = CGSize(width: 50, height: 40);
         return box
     }
 
@@ -331,7 +330,7 @@ class popupWindowView: UIView {
         endEditing(true);
     }
 
-    func saveConfigFileToDocument(modelItems : [ModelItem]) throws {
+    func saveConfigFileToDocument(modelItems: [ModelItem]) throws {
         let fileManager = FileManager.default
         do {
             let documentDirectory = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -343,9 +342,8 @@ class popupWindowView: UIView {
                 if let jsonString = jsonString {
                     try jsonString.write(to: fileURL, atomically: true, encoding: .utf8)
                 }
-            }
-            catch {
-                print("inside catch",error)
+            } catch {
+                print("inside catch", error)
             }
         } catch {
             print(error)
@@ -354,7 +352,7 @@ class popupWindowView: UIView {
 
 
     func modifyModels() -> [ModelItem] {
-        var allModels : [ModelItem] = [];
+        var allModels: [ModelItem] = [];
         let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
         var isFoundConfigFile: Bool = false;
         for url in documentDirectoryURls {
@@ -367,7 +365,7 @@ class popupWindowView: UIView {
         case true:
             allModels = Common.loadAllModelFromDocumentDirectory()
         case false:
-           allModels = Common.loadAllModelItemsFromBundle();
+            allModels = Common.loadAllModelItemsFromBundle();
         }
 
         let newModel = modelAddress == "" ? ModelItem.init(id: model.id, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: model.path, inputSize: widthOfModel + "x" + heightOfModel) :
