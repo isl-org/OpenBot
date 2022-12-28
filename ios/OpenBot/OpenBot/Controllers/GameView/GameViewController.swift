@@ -9,7 +9,7 @@ import UIKit
 import GameController
 
 class GameViewController: UIViewController {
-    @IBOutlet weak var logTextView: UITextView!
+
     var dateFormatter = DateFormatter()
     private let maximumControllerCount: Int = 1
     var gameControllerObj: GameController?;
@@ -45,7 +45,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         dateFormatter.dateFormat = "HH:mm:ss.SSSS"
-        clearLog()
+      
         NotificationCenter.default.addObserver(self, selector: #selector(didConnectController), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
     }
 
@@ -68,22 +68,18 @@ class GameViewController: UIViewController {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
 
-    func clearLog() {
-        logTextView.text = ""
-    }
+    
 
-    func writeToLog(newLine: String) {
-        logTextView.text = newLine + "\n" + logTextView.text
-    }
+    
 
     @objc func didConnectController() {
         if (connectedController == nil) {
             return
         }
-        writeToLog(newLine: Strings.controllerConnected)
+       
         let controller = connectedController;
         let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
-        writeToLog(newLine: "Battery Level:" + batteryLevel);
+
         delegate?.inputManager(self, didConnect: controller!)
 
         controller!.extendedGamepad?.dpad.left.pressedChangedHandler = { (button, value, pressed) in
@@ -154,10 +150,10 @@ class GameViewController: UIViewController {
 
     func buttonChangedHandler(_ button: String, _ pressed: Bool, _ overlay: UIView) {
         if pressed {
-            writeToLog(newLine: getTimestamp() + " - " + button + " " + "down")
+            
             view.addSubview(overlay)
         } else {
-            writeToLog(newLine: getTimestamp() + " - " + button + " " + "up")
+            
             overlay.removeFromSuperview()
         }
     }
@@ -165,14 +161,14 @@ class GameViewController: UIViewController {
     func triggerChangedHandler(_ button: String, _ value: Float, _ pressed: Bool) {
         if pressed {
             let analogValue = String(format: "%.2f", value)
-            writeToLog(newLine: getTimestamp() + " - " + button + " " + analogValue)
+            
         }
     }
 
     func thumbstickChangedHandler(_ button: String, _ xvalue: Float, _ yvalue: Float) {
         let analogValueX = String(format: "%.2f", xvalue)
         let analogValueY = String(format: "%.2f", yvalue)
-        writeToLog(newLine: getTimestamp() + " - " + button + " " + analogValueX + " / " + analogValueY)
+        
     }
 
 }

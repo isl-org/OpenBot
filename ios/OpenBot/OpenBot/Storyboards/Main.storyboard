@@ -220,16 +220,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" indicatorStyle="white" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNw-oB-7R8">
-                                <rect key="frame" x="0.0" y="511" width="445.66666666666669" height="351"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
-                            </textView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="controller" translatesAutoresizingMaskIntoConstraints="NO" id="HYS-00-IDW">
-                                <rect key="frame" x="-16.5" y="128.5" width="446.66666666666669" height="375"/>
+                                <rect key="frame" x="-16.5" y="128.5" width="447" height="375"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="374" id="Xqu-ir-4R0"/>
                                 </constraints>
@@ -238,19 +230,12 @@
                         <viewLayoutGuide key="safeArea" id="cVs-ib-gs6"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="HYS-00-IDW" firstAttribute="leading" secondItem="cVs-ib-gs6" secondAttribute="leading" constant="-16" id="038-e8-eTI"/>
-                            <constraint firstItem="ZNw-oB-7R8" firstAttribute="bottom" secondItem="cVs-ib-gs6" secondAttribute="bottom" id="1RJ-KR-Kt8"/>
-                            <constraint firstItem="HYS-00-IDW" firstAttribute="leading" secondItem="ZNw-oB-7R8" secondAttribute="leading" constant="-16" id="8Hm-cI-zdH"/>
-                            <constraint firstItem="ZNw-oB-7R8" firstAttribute="centerX" secondItem="HYS-00-IDW" secondAttribute="centerX" constant="16" id="C6Q-mJ-WM6"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="ZNw-oB-7R8" secondAttribute="trailing" constant="-51.666666666666686" id="I42-4m-h8h"/>
-                            <constraint firstItem="ZNw-oB-7R8" firstAttribute="top" secondItem="HYS-00-IDW" secondAttribute="bottom" constant="8" symbolic="YES" id="Xcx-ru-nmM"/>
+                            <constraint firstItem="HYS-00-IDW" firstAttribute="leading" secondItem="VcJ-Kq-j9A" secondAttribute="leadingMargin" constant="-36" id="J5h-D0-noP"/>
                             <constraint firstItem="HYS-00-IDW" firstAttribute="top" secondItem="VcJ-Kq-j9A" secondAttribute="top" constant="129" id="oZ9-1C-nJL"/>
+                            <constraint firstItem="HYS-00-IDW" firstAttribute="centerX" secondItem="VcJ-Kq-j9A" secondAttribute="centerX" id="uD9-9H-LYn"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="3hd-BS-i2M"/>
-                    <connections>
-                        <outlet property="logTextView" destination="ZNw-oB-7R8" id="9cP-ig-Yws"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d4V-wJ-6BY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -311,14 +296,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk" customClass="BluetoothTableViewCell" customModule="OpenBot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="33.666667938232422"/>
+                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="34"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="33.666667938232422"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="323.33333333333331" y="0.0" width="85.666666666666686" height="33.666666666666664"/>
+                                            <rect key="frame" x="323.33333333333331" y="0.0" width="85.666666666666686" height="34"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">

@@ -58,6 +58,7 @@ class RobotInfoFrame: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .updateLabel, object: nil);
         robotInfo = bluetooth.robotInfo;
+        updateRobotInfo();
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -72,6 +73,7 @@ class RobotInfoFrame: UIViewController {
         if !isBluetoothConnected {
             updateScreenOnBluetoothDisconnection();
         }
+
     }
 
     func createUI() {
@@ -277,9 +279,11 @@ class RobotInfoFrame: UIViewController {
         if currentOrientation == .portrait {
             robotType.frame.origin.y = topPadding + adapted(dimensionSize: 20, to: .height);
             robotName.frame.origin.y = topPadding + adapted(dimensionSize: 20, to: .height);
+            robotName.frame.origin.x = robotType.frame.origin.x + CGFloat((robotType.text?.count ?? 0) * 10) + adapted(dimensionSize: 35, to: .height);
             sensorHeading.frame.origin = CGPoint(x: 10, y: 210);
-            blueToothIconButton.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 20, to: .height));
+            blueToothIconButton.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 25, to: .height));
             refreshIcon.frame.origin.y = topPadding + adapted(dimensionSize: 30, to: .height);
+            refreshIcon.frame.origin.x = blueToothIconButton.frame.origin.x - 50;
             voltageDividerCheckBox.frame.origin = CGPoint(x: 20, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
             voltageDividerLabel.frame.origin = CGPoint(x: 55, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
             sonarLabel.frame.origin = CGPoint(x: 205, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
@@ -301,9 +305,9 @@ class RobotInfoFrame: UIViewController {
             statusCheckbox.frame.origin = CGPoint(x: 290, y: ledHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
             statusLabel.frame.origin = CGPoint(x: 320, y: ledHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
             readingHeading.frame.origin = CGPoint(x: 10, y: ledHeading.frame.origin.y + adapted(dimensionSize: 65, to: .height));
-            battery.frame.origin = CGPoint(x: 20, y: readingHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
-            speed.frame.origin = CGPoint(x: 120, y: readingHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
-            sonar.frame.origin = CGPoint(x: 275, y: readingHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
+            battery.frame.origin = CGPoint(x: 20, y: readingHeading.frame.origin.y + adapted(dimensionSize: 30, to: .height));
+            speed.frame.origin = CGPoint(x: 120, y: readingHeading.frame.origin.y + adapted(dimensionSize: 30, to: .height));
+            sonar.frame.origin = CGPoint(x: 275, y: readingHeading.frame.origin.y + adapted(dimensionSize: 30, to: .height));
             sendCommandsHeading.frame.origin = CGPoint(x: 10, y: readingHeading.frame.origin.y + adapted(dimensionSize: 65, to: .height));
             motorLabel.frame.origin = CGPoint(x: 20, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
             motorLabel.isHidden = false
@@ -317,7 +321,9 @@ class RobotInfoFrame: UIViewController {
             blueToothIconButton.frame.origin = CGPoint(x: width - 100, y: 20);
             robotName.frame.origin.y = 20;
             robotType.frame.origin = CGPoint(x: topPadding, y: 20)
+            robotName.frame.origin.x = robotType.frame.origin.x + CGFloat((robotType.text?.count ?? 0) * 10) + adapted(dimensionSize: 20, to: .height);
             refreshIcon.frame.origin = CGPoint(x: width - 140, y: 30);
+            refreshIcon.frame.origin.x = blueToothIconButton.frame.origin.x - 20;
             sensorHeading.frame.origin = CGPoint(x: height / 2 - 15, y: 20);
             wheelOdometerHeadingHeading.frame.origin = CGPoint(x: height / 2 - 15, y: 80);
             voltageDividerCheckBox.frame.origin = CGPoint(x: height / 2 - 10, y: 50);
@@ -357,7 +363,9 @@ class RobotInfoFrame: UIViewController {
     func getRobotInfo() {
         if isBluetoothConnected {
 //            bluetoothIcon.image = UIImage(named: "bluetoothConnected");
-            bluetooth.sendData(payload: "f\n");
+            bluetooth.sendData(payload:"f\n");
+            robotInfo = bluetooth.robotInfo;
+
         } else {
 //            bluetoothIcon.image = UIImage(named: "bluetoothDisconnected");
         }
@@ -429,7 +437,6 @@ class RobotInfoFrame: UIViewController {
     func setRobotName() {
         robotName.text = getRobotName();
         robotName.frame.size.width = CGFloat(getRobotName().count * 10);
-        robotName.frame.origin.x = width / 2 - CGFloat(getRobotName().count * 10) / 2 - 20;
     }
 
     func setVoltageCheck() {
@@ -578,7 +585,7 @@ class RobotInfoFrame: UIViewController {
 
     @objc func refresh(tapGestureRecognizer: UITapGestureRecognizer) {
         if isBluetoothConnected {
-            bluetooth.sendData(payload: "f/n");
+            bluetooth.sendData(payload:"f\n");
             updateRobotInfo();
         } else {
             updateScreenOnBluetoothDisconnection()
