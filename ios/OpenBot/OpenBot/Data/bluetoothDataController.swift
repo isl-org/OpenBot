@@ -163,8 +163,10 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func sendData(payload: String) {
         let dataToSend: Data? = payload.data(using: String.Encoding.utf8)
         if (dataToSend != nil && tempPeripheral != nil) {
-            print("Sending ",payload, " to OpenBot");
-            tempPeripheral.writeValue(dataToSend!, for: writeCharacteristics!, type: CBCharacteristicWriteType.withResponse)
+            print("Sending ",payload, " to OpenBot")
+            if let writeCharacteristics {
+                tempPeripheral.writeValue(dataToSend!, for: writeCharacteristics, type: CBCharacteristicWriteType.withResponse)
+            }
         }
     }
 

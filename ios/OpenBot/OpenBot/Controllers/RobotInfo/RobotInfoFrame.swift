@@ -9,8 +9,9 @@ class RobotInfoFrame: UIViewController {
     var topPadding: CGFloat = 0;
     var robotType = UILabel();
     var robotName = UILabel();
-    var bluetoothIcon: UIImageView!;
-    var refreshIcon : UIImageView!
+    var blueToothIconButton: UIButton!
+    var refreshIcon: UIImageView!
+    var openBotIcon: UIImageView!
     var sensorHeading = UILabel();
     var voltageDividerCheckBox = Checkbox();
     var sonarCheckBox = Checkbox();
@@ -76,9 +77,9 @@ class RobotInfoFrame: UIViewController {
     func createUI() {
         crateRobotTypeHeading()
         robotName = createLabels(text: "N/A", topAnchor: topPadding + adapted(dimensionSize: 30, to: .height), leadingAnchor: width / 2);
-        createBluetoothIcon()
+        blueToothIconButton = createBluetoothIcon();
         createRefreshIcon()
-        _ = createLogoIcon();
+        openBotIcon = createLogoIcon();
         createSensorHeading()
         createSensorCheckBoxes();
         createWheelOdometerHeading();
@@ -107,11 +108,17 @@ class RobotInfoFrame: UIViewController {
         refreshIcon.addGestureRecognizer(tapGesture);
     }
 
-    func createBluetoothIcon() {
-        bluetoothIcon = createIcons(iconImage: Images.bluetoothDisconnected!, leadingAnchor: width - 40, topAnchor: topPadding + adapted(dimensionSize: 40, to: .height));
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openBluetoothSettings(tapGestureRecognizer:)));
-        bluetoothIcon.isUserInteractionEnabled = true;
-        bluetoothIcon.addGestureRecognizer(tapGesture);
+    func createBluetoothIcon() -> UIButton {
+        let bleButton = UIButton();
+        if isBluetoothConnected {
+            bleButton.setImage(Images.bluetoothConnected!, for: .normal);
+        } else {
+            bleButton.setImage(Images.bluetoothDisconnected!, for: .normal);
+        }
+        bleButton.frame = CGRect(x: width - 60, y: topPadding + adapted(dimensionSize: 40, to: .height), width: 40, height: 40)
+        view.addSubview(bleButton);
+        bleButton.addTarget(self, action: #selector(openBluetoothSettings(_:)), for: .touchDown);
+        return bleButton;
     }
 
     func createSensorHeading() {
@@ -123,12 +130,12 @@ class RobotInfoFrame: UIViewController {
         let icon = UIImageView();
         icon.image = UIImage(named: "openBotLogo");
         let imageSize = UIImage(named: "openBotLogo")!.size;
-        let logoWidth = imageSize.width * 0.70;
+        let logoWidth = imageSize.width * 0.85;
         let logoHeight = imageSize.height * 0.70;
-        icon.frame.size = CGSize(width: logoWidth , height: logoHeight);
+        icon.frame.size = CGSize(width: logoWidth, height: logoHeight);
         view.addSubview(icon);
         icon.frame.origin.x = (width - icon.frame.width) / 2;
-        icon.frame.origin.y = robotType.frame.origin.y + adapted(dimensionSize: 15, to: .height);
+        icon.frame.origin.y = robotType.frame.origin.y + adapted(dimensionSize: 25, to: .height);
         return icon;
     }
 
@@ -271,7 +278,7 @@ class RobotInfoFrame: UIViewController {
             robotType.frame.origin.y = topPadding + adapted(dimensionSize: 20, to: .height);
             robotName.frame.origin.y = topPadding + adapted(dimensionSize: 20, to: .height);
             sensorHeading.frame.origin = CGPoint(x: 10, y: 210);
-            bluetoothIcon.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 30, to: .height));
+            blueToothIconButton.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 20, to: .height));
             refreshIcon.frame.origin.y = topPadding + adapted(dimensionSize: 30, to: .height);
             voltageDividerCheckBox.frame.origin = CGPoint(x: 20, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
             voltageDividerLabel.frame.origin = CGPoint(x: 55, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
@@ -307,7 +314,7 @@ class RobotInfoFrame: UIViewController {
             lightSlider.frame = CGRect(x: 70, y: (motorLabel.frame.origin.y + adapted(dimensionSize: 45, to: .height)), width: width - 90, height: 40);
 
         } else {
-            bluetoothIcon.frame.origin = CGPoint(x: width - 100, y: 30);
+            blueToothIconButton.frame.origin = CGPoint(x: width - 100, y: 20);
             robotName.frame.origin.y = 20;
             robotType.frame.origin = CGPoint(x: topPadding, y: 20)
             refreshIcon.frame.origin = CGPoint(x: width - 140, y: 30);
@@ -349,10 +356,10 @@ class RobotInfoFrame: UIViewController {
 
     func getRobotInfo() {
         if isBluetoothConnected {
-            bluetoothIcon.image = UIImage(named: "bluetoothConnected");
+//            bluetoothIcon.image = UIImage(named: "bluetoothConnected");
             bluetooth.sendData(payload: "f\n");
         } else {
-            bluetoothIcon.image = UIImage(named: "bluetoothDisconnected");
+//            bluetoothIcon.image = UIImage(named: "bluetoothDisconnected");
         }
     }
 
@@ -372,6 +379,40 @@ class RobotInfoFrame: UIViewController {
             setBackLedCheck();
             setStatusLedCheck();
             showLight(isHidden: false)
+            updateLogo(robotName: getRobotName());
+        }
+    }
+
+    func updateLogo(robotName: String) {
+        var asset: NSDataAsset? = nil
+//        let data = asset?.data
+//        icon.image = UIImage.gifImageWithData(data!)
+
+        switch robotName {
+        case "N/A":
+            openBotIcon.image = UIImage(named: "openBotLogo");
+            break;
+        case "DIY":
+            asset = NSDataAsset(name: "diy");
+            break
+        case "MTV":
+            asset = NSDataAsset(name: "mtv");
+            break;
+        case "DIY_ITINKER":
+            asset = NSDataAsset(name: "diy");
+        case "RC_CAR":
+            asset = NSDataAsset(name: "rc_car");
+        case "RTR_520":
+            asset = NSDataAsset(name: "rtr_520");
+        case "rtr_tt":
+            asset = NSDataAsset(name: "rtr_tt");
+        default:
+            openBotIcon.image = UIImage(named: "openBotLogo");
+            return;
+        }
+        let data = asset?.data
+        if let data {
+            openBotIcon.image = UIImage.gifImageWithData(data)
         }
     }
 
@@ -441,7 +482,6 @@ class RobotInfoFrame: UIViewController {
 
     func setStatusLedCheck() {
         if robotInfo.contains("ls:") {
-            print("hello Nitish setStatusLedCheck")
             statusCheckbox.isChecked = true;
         }
     }
@@ -460,10 +500,10 @@ class RobotInfoFrame: UIViewController {
 
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
-            bluetoothIcon.image = Images.bluetoothConnected
+            blueToothIconButton.setImage(Images.bluetoothConnected, for: .normal);
             updateRobotInfo()
         } else {
-            bluetoothIcon.image = Images.bluetoothDisconnected
+            blueToothIconButton.setImage(Images.bluetoothDisconnected, for: .normal);
             updateScreenOnBluetoothDisconnection();
         }
     }
@@ -528,16 +568,20 @@ class RobotInfoFrame: UIViewController {
         statusCheckbox.isChecked = false;
         voltageDividerCheckBox.isChecked = false;
         showLight(isHidden: true)
+        updateLogo(robotName: "N/A")
     }
 
-    @objc func openBluetoothSettings(tapGestureRecognizer: UITapGestureRecognizer) {
+    @objc func openBluetoothSettings(_ sender: UIButton) {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
     @objc func refresh(tapGestureRecognizer: UITapGestureRecognizer) {
         if isBluetoothConnected {
+            bluetooth.sendData(payload: "f/n");
             updateRobotInfo();
+        } else {
+            updateScreenOnBluetoothDisconnection()
         }
     }
 
@@ -570,5 +614,4 @@ extension String {
         let endIndex = index(from: r.upperBound)
         return String(self[startIndex..<endIndex])
     }
-
 }

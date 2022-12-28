@@ -150,7 +150,7 @@ class expandedAutoPilot: UIView {
         autoModeButton.isOn = false
         autoModeButton.setOn(false, animated: true)
         autoModeButton.onTintColor = Colors.title
-        autoModeButton.addTarget(self, action: #selector(switchButton(_:)), for: .valueChanged)
+        autoModeButton.addTarget(self, action: #selector(switchButton(_:)), for: .valueChanged);
         autoModeButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(autoModeButton)
         autoModeButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
