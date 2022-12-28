@@ -100,7 +100,7 @@ class RobotInfoFrame: UIViewController {
 
     func createRefreshIcon() {
         if let image = UIImage(named: "refresh") {
-            refreshIcon = createIcons(iconImage: image, leadingAnchor: width - 100, topAnchor: topPadding + adapted(dimensionSize: 30, to: .height))
+            refreshIcon = createIcons(iconImage: image, leadingAnchor: width - 100, topAnchor: topPadding + adapted(dimensionSize: 30, to: .height));
         }
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(refresh(tapGestureRecognizer:)));
         refreshIcon.isUserInteractionEnabled = true;
@@ -121,12 +121,14 @@ class RobotInfoFrame: UIViewController {
 
     func createLogoIcon() -> UIImageView {
         let icon = UIImageView();
-        icon.image = Images.robotInfoIcon;
+        icon.image = UIImage(named: "openBotLogo");
         let imageSize = UIImage(named: "openBotLogo")!.size;
-        icon.frame.size = resized(size: imageSize, basedOn: .height);
+        let logoWidth = imageSize.width * 0.70;
+        let logoHeight = imageSize.height * 0.70;
+        icon.frame.size = CGSize(width: logoWidth , height: logoHeight);
         view.addSubview(icon);
         icon.frame.origin.x = (width - icon.frame.width) / 2;
-        icon.frame.origin.y = robotType.frame.origin.y + adapted(dimensionSize: 0, to: .height);
+        icon.frame.origin.y = robotType.frame.origin.y + adapted(dimensionSize: 15, to: .height);
         return icon;
     }
 
@@ -270,6 +272,7 @@ class RobotInfoFrame: UIViewController {
             robotName.frame.origin.y = topPadding + adapted(dimensionSize: 20, to: .height);
             sensorHeading.frame.origin = CGPoint(x: 10, y: 210);
             bluetoothIcon.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 30, to: .height));
+            refreshIcon.frame.origin.y = topPadding + adapted(dimensionSize: 30, to: .height);
             voltageDividerCheckBox.frame.origin = CGPoint(x: 20, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height));
             voltageDividerLabel.frame.origin = CGPoint(x: 55, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
             sonarLabel.frame.origin = CGPoint(x: 205, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height));
@@ -449,6 +452,7 @@ class RobotInfoFrame: UIViewController {
     }
 
     @objc func updateSonarCheckBox(_ sender: UIButton) {
+
     }
 
     @objc func updateBumperCheckBox(_ sender: UIButton) {

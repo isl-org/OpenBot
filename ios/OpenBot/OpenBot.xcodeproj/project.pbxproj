@@ -71,6 +71,7 @@
 		727D3D319744DCFF840F7C23 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D396BDB689AFF9C3931C6 /* HomePageViewController.swift */; };
 		727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */; };
 		727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3C4EBE89B9B6E537BE8B /* Device.swift */; };
+		727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A51A7A6155C22E62412 /* GifLoader.swift */; };
 		727D3E780CA6260A927019BD /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D368915F3602E605FEA51 /* Client.swift */; };
 		727D3E79BEE56349F166C70A /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3CE316DD4B67FB82F0BB /* CameraController.swift */; };
 		727D3FC61322D948A9F1F31C /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F8E752887E2A76CC901 /* CheckBox.swift */; };
@@ -159,6 +160,7 @@
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
 		727D396BDB689AFF9C3931C6 /* HomePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomePageViewController.swift; path = HomePage/HomePageViewController.swift; sourceTree = "<group>"; };
 		727D39B02AB471D9F31B0747 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
+		727D3A51A7A6155C22E62412 /* GifLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifLoader.swift; sourceTree = "<group>"; };
 		727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bluetoothDataController.swift; sourceTree = "<group>"; };
 		727D3A8D7ACD08EF11740FC2 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VehicleControl.swift; path = Modes/VehicleControl.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				4FEF4C51BA4B5AE6C546F733 /* Float.swift */,
 				4FEF47C56474B6324A408225 /* UIViewExtension.swift */,
 				4FEF4F7AB94F76161A467A24 /* Notifications.swift */,
+				727D3A51A7A6155C22E62412 /* GifLoader.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -767,6 +770,7 @@
 				727D3E79BEE56349F166C70A /* CameraController.swift in Sources */,
 				727D3B90FC0EB50ACC220F11 /* RobotInfoFrame.swift in Sources */,
 				727D3FC61322D948A9F1F31C /* CheckBox.swift in Sources */,
+				727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
