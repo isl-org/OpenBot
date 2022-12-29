@@ -61,7 +61,7 @@ class ControllerState extends State<Controller> {
         socket.close();
       } else {
         clientSocket = socket;
-        _broadcast = socket.asBroadcastStream();
+        _broadcast = clientSocket?.asBroadcastStream();
         print('$_broadcast, == msg');
         //
         // clientSocket!.write("{driveCmd: {r:0.0, l:0.26}}");
