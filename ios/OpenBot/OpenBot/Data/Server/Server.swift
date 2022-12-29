@@ -43,8 +43,8 @@ class Server {
     }
 
     func send(jsonObject : String) {
-        sharedConnection?.send("sending message to connection");
-        print(connections.count)
+        sharedConnection?.send(jsonObject);
+        print("connections are : ",connections)
 //        for connection in connections {
 //            connection.send(jsonObject);
 //        }

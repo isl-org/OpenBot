@@ -341,7 +341,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             phoneController.backgroundColor = Colors.title
             server?.start();
             client.start();
-            server?.send(jsonObject: "hello Nitish");
+            server?.send(jsonObject: "{\"status\":{\"CONNECTION_ACTIVE\":\"true\"}}");
         }
         secondView.addSubview(gamePadController)
         secondView.addSubview(phoneController)

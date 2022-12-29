@@ -49,7 +49,8 @@ class Connection {
     }
 
     func send(_ message: String) {
-        let message1 = "sending message to controller"
+        let message1 = "{\"status\":{\"CONNECTION_ACTIVE\":\"true\"}}"
+
         let content: Data = message1.data(using: .utf8)!
         connection.send(content: content, completion: NWConnection.SendCompletion.contentProcessed(({ (NWError) in
             if (NWError == nil) {
@@ -59,13 +60,6 @@ class Connection {
                 print("ERROR! Error when data (Type: Data) sending. NWError: \n \(NWError!)")
             }
         })))
-
-
-
-
-
-
-
 //        let jsonObject: Any = [
 //            "status": [
 //                "CONNECTION_ACTIVE": "false"
