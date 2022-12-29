@@ -79,8 +79,12 @@ public class EditModelDialogFragment extends DialogFragment {
                     .map(Enum::toString)
                     .filter(
                         f ->
-                            selected.equals(Model.TYPE.AUTOPILOT.name())
-                                == f.equals(Model.CLASS.AUTOPILOT_F.toString()))
+                            selected.equals(Model.TYPE.CMDNAV.name())
+                                == f.equals(Model.CLASS.AUTOPILOT.toString()))
+                    .filter(
+                        f ->
+                            selected.equals(Model.TYPE.GOALNAV.name())
+                                == f.equals(Model.CLASS.NAVIGATION.toString()))
                     .collect(Collectors.toList()));
             classAdapter.notifyDataSetChanged();
             binding.classSpinner.setSelection(classAdapter.getPosition(model.classType.toString()));

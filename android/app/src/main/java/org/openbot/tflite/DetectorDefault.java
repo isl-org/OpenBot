@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/** This TensorFlow Lite classifier works with the quantized MobileNet model. */
-public class DetectorQuantizedMobileNet extends Detector {
+/** This TensorFlow Lite detector works with the quantized MobileNet and EfficientDet model. */
+public class DetectorDefault extends Detector {
 
   // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
   // contains the location of detected boxes
@@ -46,11 +46,11 @@ public class DetectorQuantizedMobileNet extends Detector {
   private int numDetectionsIdx;
 
   /**
-   * Initializes a {@code ClassifierQuantizedMobileNet}.
+   * Initializes a {@code DetectorDefault}.
    *
    * @param activity
    */
-  public DetectorQuantizedMobileNet(Activity activity, Model model, Device device, int numThreads)
+  public DetectorDefault(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
     super(activity, model, device, numThreads);
   }
@@ -83,11 +83,19 @@ public class DetectorQuantizedMobileNet extends Detector {
 
   @Override
   protected final void parseTflite() {
-    outputLocationsIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess");
-    outputClassesIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess:1");
-    outputScoresIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess:2");
-    numDetectionsIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess:3");
-    NUM_DETECTIONS = tflite.getOutputTensor(outputLocationsIdx).shape()[1];
+    try {
+      outputLocationsIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess");
+      outputClassesIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess:1");
+      outputScoresIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess:2");
+      numDetectionsIdx = tflite.getOutputIndex("TFLite_Detection_PostProcess:3");
+      NUM_DETECTIONS = tflite.getOutputTensor(outputLocationsIdx).shape()[1];
+    } catch (IllegalArgumentException e) {
+      outputLocationsIdx = tflite.getOutputIndex("StatefulPartitionedCall:3");
+      outputClassesIdx = tflite.getOutputIndex("StatefulPartitionedCall:2");
+      outputScoresIdx = tflite.getOutputIndex("StatefulPartitionedCall:1");
+      numDetectionsIdx = tflite.getOutputIndex("StatefulPartitionedCall:0");
+      NUM_DETECTIONS = tflite.getOutputTensor(outputLocationsIdx).shape()[1];
+    }
   }
 
   @Override
