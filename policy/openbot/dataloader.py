@@ -6,17 +6,30 @@ import tensorflow as tf
 
 
 class dataloader:
-    def __init__(self, data_dir: str, datasets: List[str]):
+    def __init__(self, data_dir: str, datasets: List[str], policy: str):
         self.data_dir = data_dir
+        self.policy = policy  # "autopilot" or "point_goal_nav"
         self.datasets = datasets
         self.labels = self.load_labels()
         self.index_table = self.lookup_table()
         self.label_values = tf.constant(
             [(float(label[0]), float(label[1])) for label in self.labels.values()]
         )
-        self.cmd_values = tf.constant(
-            [(float(label[2])) for label in self.labels.values()]
-        )
+
+        if self.policy == "autopilot":
+            self.label_divider = 255.0
+            self.processed_frames_file_name = "matched_frame_ctrl_cmd_processed.txt"
+            self.cmd_values = tf.constant(
+                [(float(label[2])) for label in self.labels.values()]
+            )
+        elif self.policy == "point_goal_nav":
+            self.label_divider = 1.0
+            self.processed_frames_file_name = "matched_frame_ctrl_goal_processed.txt"
+            self.cmd_values = tf.constant(
+                [(float(l[2]), float(l[3]), float(l[4])) for l in self.labels.values()]
+            )
+        else:
+            raise Exception("Unknown policy")
 
     # Load labels
     def load_labels(self):
@@ -27,34 +40,39 @@ class dataloader:
                 for f in os.listdir(os.path.join(self.data_dir, dataset))
                 if not f.startswith(".")
             ]:
-                with open(
-                    os.path.join(
-                        self.data_dir,
-                        dataset,
-                        folder,
-                        "sensor_data",
-                        "matched_frame_ctrl_cmd_processed.txt",
-                    )
-                ) as f_input:
-                    # discard header
-                    header = f_input.readline()
-                    data = f_input.read()
-                    lines = (
-                        data.replace(",", " ")
-                        .replace("\\", "/")
-                        .replace("\r", "")
-                        .replace("\t", " ")
-                        .split("\n")
-                    )
-                    data = [
-                        [v.strip() for v in line.split(" ") if v.strip() != ""]
-                        for line in lines
-                        if len(line) > 0 and line[0] != "#"
-                    ]
-                    # Tuples containing id: framepath and label: left,right,cmd
-                    data = [(line[1], line[2:]) for line in data if len(line) > 1]
-                    corpus.extend(data)
-        return dict(corpus)
+                labels_file = os.path.join(
+                    self.data_dir,
+                    dataset,
+                    folder,
+                    "sensor_data",
+                    self.processed_frames_file_name,
+                )
+
+                if os.path.isfile(labels_file):
+                    with open(labels_file) as f_input:
+
+                        # discard header
+                        header = f_input.readline()
+                        data = f_input.read()
+                        lines = (
+                            data.replace(",", " ")
+                            .replace("\\", "/")
+                            .replace("\r", "")
+                            .replace("\t", " ")
+                            .split("\n")
+                        )
+                        data = [
+                            [v.strip() for v in line.split(" ") if v.strip() != ""]
+                            for line in lines
+                            if len(line) > 0 and line[0] != "#"
+                        ]
+                        # Tuples containing id: framepath and respectively labels "left,right,cmd" for autopilot policy
+                        # and labels "left,right,dist,sinYaw,cosYaw" point_goal_nav policy
+                        data = [(line[1], line[2:]) for line in data if len(line) > 1]
+                        corpus.extend(data)
+                else:
+                    print(f"Skipping {folder}")
+        return dict(corpus) / self.label_divider
 
     # build a lookup table to get the frame index for the label
     def lookup_table(self):
@@ -70,4 +88,4 @@ class dataloader:
 
     def get_label(self, file_path):
         index = self.index_table.lookup(file_path)
-        return self.cmd_values[index], self.label_values[index] / 255
+        return self.cmd_values[index], self.label_values[index]

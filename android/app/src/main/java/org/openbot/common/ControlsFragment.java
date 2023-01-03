@@ -415,8 +415,8 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
     Model item =
         new Model(
             masterList.size() + 1,
-            Model.CLASS.AUTOPILOT_F,
-            Model.TYPE.AUTOPILOT,
+            Model.CLASS.AUTOPILOT,
+            Model.TYPE.CMDNAV,
             model,
             Model.PATH_TYPE.FILE,
             requireActivity().getFilesDir() + File.separator + model,
