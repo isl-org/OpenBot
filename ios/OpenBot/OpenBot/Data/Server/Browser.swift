@@ -15,7 +15,6 @@ class Browser {
         parameters.includePeerToPeer = true
 
         browser = NWBrowser(for: .bonjour(type: "_openbot._tcp.", domain: nil), using: parameters)
-
     }
 
     func start(handler: @escaping (NWBrowser.Result) -> Void) {
@@ -36,8 +35,6 @@ class Browser {
 
         }
         browser.browseResultsChangedHandler = { results, changes in
-            print("results", results.count);
-            print("changes", changes.count);
             for result in results {
                 print(result)
                 if case NWEndpoint.service = result.endpoint {
@@ -53,7 +50,7 @@ class Browser {
                         print("added hostPort \(host) \(port)")
                     case .service(let name, let type, let domain, let interface):
                         print("added service \(name) \(type) \(domain) \(String(describing: interface))")
-                        Connection(endpoint: browseResult.endpoint)
+                        sharedConnection = Connection(endpoint: browseResult.endpoint)
                     default:
                         print("fail")
                     }

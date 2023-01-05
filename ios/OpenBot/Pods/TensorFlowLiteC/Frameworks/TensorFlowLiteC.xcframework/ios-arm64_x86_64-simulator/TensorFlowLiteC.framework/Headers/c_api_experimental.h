@@ -12,12 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
-#ifndef TENSORFLOW_LITE_C_C_API_EXPERIMENTAL_H_
-#define TENSORFLOW_LITE_C_C_API_EXPERIMENTAL_H_
+/// WARNING: Users of TensorFlow Lite should not include this file directly,
+/// but should instead include
+/// "third_party/tensorflow/lite/c/c_api_experimental.h".
+/// Only the TensorFlow Lite implementation itself should include this
+/// file directly.
+#ifndef TENSORFLOW_LITE_CORE_C_C_API_EXPERIMENTAL_H_
+#define TENSORFLOW_LITE_CORE_C_C_API_EXPERIMENTAL_H_
 
 #include "builtin_ops.h"
 #include "c_api.h"
 #include "common.h"
+#include "profiler.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -380,14 +386,35 @@ TFL_CAPI_EXPORT extern const char* TfLiteSignatureRunnerGetOutputName(
 TFL_CAPI_EXPORT extern const TfLiteTensor* TfLiteSignatureRunnerGetOutputTensor(
     const TfLiteSignatureRunner* signature_runner, const char* output_name);
 
+/// Attempts to cancel in flight invocation if any.
+/// This will not affect calls to `Invoke` that happend after this.
+/// Non blocking and thread safe.
+/// Returns kTfLiteError if cancellation is not enabled, otherwise returns
+/// kTfLiteOk.
+/// NOTE: Calling this function will cancel in-flight invocations
+/// in all SignatureRunners built from the same interpreter.
+///
+/// WARNING: This is an experimental API and subject to change.
+TFL_CAPI_EXPORT extern TfLiteStatus TfLiteSignatureRunnerCancel(
+    TfLiteSignatureRunner* signature_runner);
+
 /// Destroys the signature runner.
 ///
 /// WARNING: This is an experimental API and subject to change.
 TFL_CAPI_EXPORT extern void TfLiteSignatureRunnerDelete(
     TfLiteSignatureRunner* signature_runner);
 
+/// Sets the telemetry profiler to the interpreter.
+/// The interpreter takes the ownership of profiler, but the caller needs to
+/// own the underlying profiler->data and ensure it outlives the interpreter.
+///
+/// WARNING: This is an experimental API and subject to change.
+TFL_CAPI_EXPORT extern void TfLiteInterpreterSetTelemetryProfiler(
+    const TfLiteInterpreter* interpreter,
+    TfLiteTelemetryProfilerStruct* profiler);
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif  // __cplusplus
 
-#endif  // TENSORFLOW_LITE_C_C_API_EXPERIMENTAL_H_
+#endif  // TENSORFLOW_LITE_CORE_C_C_API_EXPERIMENTAL_H_

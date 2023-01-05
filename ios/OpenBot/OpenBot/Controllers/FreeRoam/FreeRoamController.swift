@@ -325,27 +325,25 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             gameControllerObj = gameController
             gameController.selectedControlMode = ControlMode.GAMEPAD
             gamePadController.backgroundColor = Colors.title
-            server?.send(jsonObject: "hello Nitish");
+            client.send(message: "{\"status\":{\"CONNECTION_ACTIVE\":\"false\"}}");
         } else if selectedControlMode == ControlMode.PHONE {
-            let jsonObject: Any = [
-                "status": [
-                    "CONNECTION_ACTIVE": true
-                ]
-            ]
-
-            let data = try! JSONSerialization.data(withJSONObject: jsonObject)
-            let string = NSString(data: data, encoding: NSUTF8StringEncoding)
             gameControllerObj = nil;
             gameController.selectedControlMode = ControlMode.PHONE
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             phoneController.backgroundColor = Colors.title
-            server?.start();
+//            server?.start();
             client.start();
-            server?.send(jsonObject: "{\"status\":{\"CONNECTION_ACTIVE\":\"true\"}}");
+            client.send(message: "{\"status\":{\"CONNECTION_ACTIVE\":\"true\"}}\n");
+            client.send(message: "{\"status\":{\"VIDEO_PROTOCOL\":\"WEBRTC\"}}\n");
+            client.send(message: "{\"status\":{\"VIDEO_SERVER_URL\":\"\"}}\n");
+            client.send(message: "{\"status\":{\"VIDEO_COMMAND\":\"START\"}}\n");
+            client.send(message: "{\"status\":{\"LOGS\":false,\"NOISE\":false,\"NETWORK\":false,\"DRIVE_MODE\":\"GAME\",\"INDICATOR_LEFT\":false,\"INDICATOR_RIGHT\":false,\"INDICATOR_STOP\":true}}\n")
+
         }
         secondView.addSubview(gamePadController)
         secondView.addSubview(phoneController)
     }
+
 
     func updateGameControllerModeType() {
         let joystick = createMode(x: 35, y: 145, width: Int(width / 4), label: Strings.joystick, icon: "joystick", action: #selector(joystick(_:)))

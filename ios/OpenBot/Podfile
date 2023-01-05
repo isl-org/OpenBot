@@ -6,7 +6,8 @@ target 'OpenBot' do
   use_frameworks!
   pod 'TensorFlowLiteSwift', '~> 0.0.1-nightly', :subspecs => ['CoreML', 'Metal']
   pod 'DropDown'
-
+  pod 'Starscream', '~> 3.0.1'
+  pod 'GoogleWebRTC'
 
   # Pods for OpenBot
 

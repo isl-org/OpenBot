@@ -4,26 +4,19 @@
 
 import Foundation
 
-import Foundation
-
 var client = Client()
-
 class Client {
-
     let browser = Browser()
-
-    var connection: Connection?
-
     func start() {
         print("new client")
-        browser.start { [weak self] result in
-            guard let self = self,
-                  self.connection == nil else { return }
+        browser.start { result in
             print("client.handler result: \(result)")
-            self.connection = Connection(endpoint: result.endpoint)
-            print(" client is :",client)
+//            sharedConnection = Connection(endpoint: result.endpoint)
+            print(" client is :", client)
         }
     }
 
-
+    func send(message: String) {
+        sharedConnection?.send(message);
+    }
 }

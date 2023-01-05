@@ -1,37 +1,45 @@
 PODS:
   - DropDown (2.3.13)
-  - TensorFlowLiteC (0.0.1-nightly.20220921):
-    - TensorFlowLiteC/Core (= 0.0.1-nightly.20220921)
-  - TensorFlowLiteC/Core (0.0.1-nightly.20220921)
-  - TensorFlowLiteC/CoreML (0.0.1-nightly.20220921):
+  - GoogleWebRTC (1.1.31999)
+  - Starscream (3.0.6)
+  - TensorFlowLiteC (0.0.1-nightly.20221227):
+    - TensorFlowLiteC/Core (= 0.0.1-nightly.20221227)
+  - TensorFlowLiteC/Core (0.0.1-nightly.20221227)
+  - TensorFlowLiteC/CoreML (0.0.1-nightly.20221227):
     - TensorFlowLiteC/Core
-  - TensorFlowLiteC/Metal (0.0.1-nightly.20220921):
+  - TensorFlowLiteC/Metal (0.0.1-nightly.20221227):
     - TensorFlowLiteC/Core
-  - TensorFlowLiteSwift/Core (0.0.1-nightly.20220921):
-    - TensorFlowLiteC (= 0.0.1-nightly.20220921)
-  - TensorFlowLiteSwift/CoreML (0.0.1-nightly.20220921):
-    - TensorFlowLiteC/CoreML (= 0.0.1-nightly.20220921)
-    - TensorFlowLiteSwift/Core (= 0.0.1-nightly.20220921)
-  - TensorFlowLiteSwift/Metal (0.0.1-nightly.20220921):
-    - TensorFlowLiteC/Metal (= 0.0.1-nightly.20220921)
-    - TensorFlowLiteSwift/Core (= 0.0.1-nightly.20220921)
+  - TensorFlowLiteSwift/Core (0.0.1-nightly.20221227):
+    - TensorFlowLiteC (= 0.0.1-nightly.20221227)
+  - TensorFlowLiteSwift/CoreML (0.0.1-nightly.20221227):
+    - TensorFlowLiteC/CoreML (= 0.0.1-nightly.20221227)
+    - TensorFlowLiteSwift/Core (= 0.0.1-nightly.20221227)
+  - TensorFlowLiteSwift/Metal (0.0.1-nightly.20221227):
+    - TensorFlowLiteC/Metal (= 0.0.1-nightly.20221227)
+    - TensorFlowLiteSwift/Core (= 0.0.1-nightly.20221227)
 
 DEPENDENCIES:
   - DropDown
+  - GoogleWebRTC
+  - Starscream (~> 3.0.2)
   - TensorFlowLiteSwift/CoreML (~> 0.0.1-nightly)
   - TensorFlowLiteSwift/Metal (~> 0.0.1-nightly)
 
 SPEC REPOS:
   trunk:
     - DropDown
+    - GoogleWebRTC
+    - Starscream
     - TensorFlowLiteC
     - TensorFlowLiteSwift
 
 SPEC CHECKSUMS:
   DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
-  TensorFlowLiteC: d42f35b583a023fa14c12ae0e9d6995a075a5b5b
-  TensorFlowLiteSwift: 98956ceb717a98b6999f2aa49e683a7628f7f913
+  GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0
+  Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
+  TensorFlowLiteC: e1bb000be1bc8e93172becb0d3ac6c55b46f7ff9
+  TensorFlowLiteSwift: c2f36a053eaf7b786d3b960f5dcfac069c7e94ea
 
-PODFILE CHECKSUM: 7ca849df822ebba7be8ecd0823c20dc2ecb1c20e
+PODFILE CHECKSUM: f4a6745f048e54339e08089b8ff42b13528ad6fe
 
 COCOAPODS: 1.10.2
