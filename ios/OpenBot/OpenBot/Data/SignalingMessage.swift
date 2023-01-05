@@ -23,8 +23,9 @@ struct SignalingMessage: Codable {
 
 
 struct Candidate: Codable {
-    let sdp: String
-    let sdpMLineIndex: Int32
-    let sdpMid: String
+    var candidate: String
+    var label: Int32
+    var id: String
+    var type: String
 }
 

@@ -338,11 +338,36 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             phoneController.backgroundColor = Colors.title
 //            server?.start();
             client.start();
-            client.send(message: "{\"status\":{\"CONNECTION_ACTIVE\":\"true\"}}\n");
-            client.send(message: "{\"status\":{\"VIDEO_PROTOCOL\":\"WEBRTC\"}}\n");
-            client.send(message: "{\"status\":{\"VIDEO_SERVER_URL\":\"\"}}\n");
-            client.send(message: "{\"status\":{\"VIDEO_COMMAND\":\"START\"}}\n");
-            client.send(message: "{\"status\":{\"LOGS\":false,\"NOISE\":false,\"NETWORK\":false,\"DRIVE_MODE\":\"GAME\",\"INDICATOR_LEFT\":false,\"INDICATOR_RIGHT\":false,\"INDICATOR_STOP\":true}}\n")
+            var msg = """
+                      {
+                          "status": {"CONNECTION_ACTIVE": "true"}
+                      }
+                      """;
+            client.send(message: msg);
+            msg = """
+                  {
+                      "status": {"VIDEO_PROTOCOL": "WEBRTC"}
+                  }
+                  """;
+            client.send(message: msg);
+            msg = """
+                  {
+                      "status": {"VIDEO_SERVER_URL": ""}
+                  }
+                  """;
+            client.send(message: msg);
+            msg = """
+                  {
+                      "status": {"VIDEO_COMMAND": "START"}
+                  }
+                  """;
+            client.send(message: msg);
+            msg = """
+                  {
+                      "status": {"LOGS":false,"NOISE":false,"NETWORK":false,"DRIVE_MODE":"GAME","INDICATOR_LEFT":false,"INDICATOR_RIGHT":false,"INDICATOR_STOP":true}
+                  }
+                  """;
+            client.send(message: msg)
 
         }
         secondView.addSubview(gamePadController)
