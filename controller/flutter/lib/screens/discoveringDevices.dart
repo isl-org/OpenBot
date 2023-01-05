@@ -1,11 +1,18 @@
 import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
-import 'package:openbot_controller/screens/controlSelector.dart';
+import 'package:openbot_controller/utils/videoViewWebRTC.dart';
 
 class DiscoveringDevice extends StatefulWidget {
   final bool isDeviceConnected;
+  final String sdp;
+  final String type;
+  final String id;
+  final int label;
+  final String candidate;
 
-  DiscoveringDevice(this.isDeviceConnected);
+  const DiscoveringDevice(this.isDeviceConnected, this.sdp, this.type, this.id,
+      this.label, this.candidate,
+      {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -22,8 +29,10 @@ class DiscoveringDeviceState extends State<DiscoveringDevice> {
       body: Container(
           alignment: Alignment.center,
           child: widget.isDeviceConnected
-          // child: selectController
-              ? const ControlSelector()
+              // child: selectController
+              //     ? const ControlSelector()
+              ? VideoViewWebRTC(widget.sdp, widget.type, widget.id,
+                  widget.label, widget.candidate)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -47,7 +56,7 @@ class DiscoveringDeviceState extends State<DiscoveringDevice> {
                             beginColor: Colors.black,
                             endColor: Colors.white,
                             // times: 10,
-                            duration: Duration(seconds: 1))),
+                            duration: Duration(milliseconds: 500))),
                     const Text(
                       "Select Phone as control mode in the bot app to Connect",
                       style: TextStyle(fontSize: 20),

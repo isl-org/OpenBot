@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nsd/nsd.dart';
 import 'package:openbot_controller/globals.dart';
@@ -27,6 +28,11 @@ class ControllerState extends State<Controller> {
   final registrations = <Registration>[];
   ServerSocket? _serverSocket;
   Stream<Uint8List>? _broadcast;
+  String sdp = "";
+  String type = "";
+  String id = "";
+  int label = 0;
+  String candidate = "";
   bool isDeviceConnected = false;
 
   var _nextPort = 56360;
@@ -62,27 +68,38 @@ class ControllerState extends State<Controller> {
       } else {
         clientSocket = socket;
         _broadcast = clientSocket?.asBroadcastStream();
-        print('$_broadcast, == msg');
         //
         // clientSocket!.write("{driveCmd: {r:0.0, l:0.26}}");
         // clientSocket!.write("{command: SWITCH_CAMERA}");
 
         _broadcast?.map((data) => String.fromCharCodes(data)).listen(
           (message) {
-            print('$message, == msg2');
-            if (message.contains("CONNECTION_ACTIVE")) {
-              if (message.contains("true")) {
-                setDeviceConnected(true);
-                print("device connected");
-              } else if (message.contains("false")) {
-                setDeviceConnected(false);
-                print("device disconnected");
+            log(message);
+            var msgInObject;
+            try {
+              var jsonArr = message.split("\n");
+              for (var element in jsonArr) {
+                var jsonMsg = json.encode(element);
+                if (jsonMsg.isNotEmpty && jsonMsg != "\"\"") {
+                  msgInObject = json.decode(json.decode(jsonMsg));
+                  if (msgInObject["status"] != null) {
+                    processMessageFromBot(msgInObject["status"]);
+                  }
+                  // log(msgInObject.toString() + "_____");
+                  // setDeviceConnected();
+                }
               }
+            } catch (e) {
+              // log("res: $e : $msgInObject");
             }
           },
           onDone: () {
-            print('client left');
-            setDeviceConnected(false);
+            if (kDebugMode) {
+              print('client left');
+            }
+            setState(() {
+              isDeviceConnected = false;
+            });
             socket.destroy();
             socket.close();
             clientSocket?.destroy();
@@ -97,10 +114,16 @@ class ControllerState extends State<Controller> {
     });
   }
 
-  setDeviceConnected(value) {
-    setState(() {
-      isDeviceConnected = value;
-    });
+  setDeviceConnected(status) {
+    if (status == "true") {
+      setState(() {
+        isDeviceConnected = true;
+      });
+    } else if (status == "false") {
+      setState(() {
+        isDeviceConnected = false;
+      });
+    }
   }
 
   Future<void> dismissRegistration(Registration registration) async {
@@ -117,13 +140,36 @@ class ControllerState extends State<Controller> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-        routes: {
-          '/': (context) => DiscoveringDevice(isDeviceConnected),
-          '/ControlSelector': (context) => const ControlSelector(),
-          '/OnScreenMode': (context) => const OnScreenMode(),
-          '/TiltingPhoneMode': (context) => const TiltingPhoneMode(),
-        },
+      routes: {
+        '/': (context) => DiscoveringDevice(
+            isDeviceConnected, sdp, type, id, label, candidate),
+        '/ControlSelector': (context) => const ControlSelector(),
+        '/OnScreenMode': (context) => const OnScreenMode(),
+        '/TiltingPhoneMode': (context) => const TiltingPhoneMode(),
+      },
     );
+  }
+
+  void processMessageFromBot(items) {
+    print(items);
+    if (items["CONNECTION_ACTIVE"] != null) {
+      setDeviceConnected(items["CONNECTION_ACTIVE"]);
+    }
+
+    if (items["WEB_RTC_EVENT"] != null) {
+      var webRTCResponse = json.decode(items["WEB_RTC_EVENT"]);
+      if (webRTCResponse["type"].toString() == "offer") {
+        type = webRTCResponse["type"];
+        sdp = webRTCResponse["sdp"];
+        setState(() {});
+      }
+      if (webRTCResponse["type"].toString() == "candidate") {
+        id = webRTCResponse["id"];
+        label = webRTCResponse["label"];
+        candidate = webRTCResponse["candidate"].toString();
+        setState(() {});
+      }
+    }
   }
 }
 
