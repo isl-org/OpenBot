@@ -113,24 +113,21 @@ class VideoFragment: UIViewController, WebRTCClientDelegate, CameraSessionDelega
             type = "answer"
         }
 
-        let sdp = SDP.init(sdp: sessionDescription.sdp)
-        let signalingMessage = SignalingMessage.init(type: type, sessionDescription: sdp, candidate: nil)
+        let signalingMessage = SignalingMessage.init(type: type, sdp: sessionDescription.sdp, candidate: nil)
         do {
             let data = try JSONEncoder().encode(signalingMessage)
             let message = String(data: data, encoding: String.Encoding.utf8)!
-            let messageToSend = "{\"status\":{\"WEB_RTC_EVENT\"" + message;
-            msg = getJSONForEvent(message);
+//            let messageToSend = "{\"status\":{\"WEB_RTC_EVENT\"" + message;
+            let   msg = getJSONForEvent(output: message);
             client.send(message: msg);
         } catch {
             print(error)
         }
     }
 
-    func getJSONForEvent(output: String) {
+    func getJSONForEvent(output: String)->String {
         struct msg: Codable {
             var status: WEB_RTC_EVENT
-
-
         }
 
         struct WEB_RTC_EVENT: Codable {
@@ -144,17 +141,19 @@ class VideoFragment: UIViewController, WebRTCClientDelegate, CameraSessionDelega
         jsonEncoder.outputFormatting = .prettyPrinted
 
         do {
-            let encodePerson = try jsonEncoder.encode(message)
-            let endcodeStringPerson = String(data: encodePerson, encoding: .utf8)!
-            print(endcodeStringPerson)
+            let encodedString = try jsonEncoder.encode(message)
+            let endcodedStr = String(data: encodedString, encoding: .utf8)!
+            print(endcodedStr)
+            return endcodedStr
         } catch {
             print(error.localizedDescription)
         }
+        return ""
     }
 
     private func sendCandidate(iceCandidate: RTCIceCandidate) {
         let candidate = Candidate.init(sdp: iceCandidate.sdp, sdpMLineIndex: iceCandidate.sdpMLineIndex, sdpMid: iceCandidate.sdpMid!)
-        let signalingMessage = SignalingMessage.init(type: "candidate", sessionDescription: nil, candidate: candidate)
+        let signalingMessage = SignalingMessage.init(type: "candidate",sdp: iceCandidate.sdp,candidate: candidate)
         do {
             let data = try JSONEncoder().encode(signalingMessage)
             let message = String(data: data, encoding: String.Encoding.utf8)!
@@ -175,11 +174,11 @@ extension VideoFragment {
             let signalingMessage = try JSONDecoder().decode(SignalingMessage.self, from: text.data(using: .utf8)!)
 
             if signalingMessage.type == "offer" {
-                webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.sessionDescription?.sdp)!), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
+                webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.sdp)), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
                     self.sendSDP(sessionDescription: answerSDP)
                 })
             } else if signalingMessage.type == "answer" {
-                webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.sessionDescription?.sdp)!))
+                webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.sdp)))
             } else if signalingMessage.type == "candidate" {
                 let candidate = signalingMessage.candidate!
                 webRTCClient.receiveCandidate(candidate: RTCIceCandidate(sdp: candidate.sdp, sdpMLineIndex: candidate.sdpMLineIndex, sdpMid: candidate.sdpMid))
@@ -219,6 +218,8 @@ extension VideoFragment {
         case .failed:
             state = "failed"
         case .new:
+            state = "new..."
+        @unknown default:
             state = "new..."
         }
         self.webRTCStatusLabel.text = self.webRTCStatusMesasgeBase + state

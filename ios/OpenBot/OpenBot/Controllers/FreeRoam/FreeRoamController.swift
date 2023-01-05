@@ -327,7 +327,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             gamePadController.backgroundColor = Colors.title
             let msg = """
                       {
-                          "status": {"CONNECTION_ACTIVE": "false"};
+                          "status": {"CONNECTION_ACTIVE": "false"}
                       }
                       """;
             client.send(message: msg);

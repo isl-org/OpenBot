@@ -276,7 +276,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
             // find target device
             let devicies = RTCCameraVideoCapturer.captureDevices()
             devicies.forEach { (device) in
-                if device.position == cameraPositon {
+                if device.position == cameraPosition {
                     targetDevice = device
                 }
             }
