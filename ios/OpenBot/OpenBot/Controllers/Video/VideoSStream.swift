@@ -119,9 +119,36 @@ class VideoFragment: UIViewController, WebRTCClientDelegate, CameraSessionDelega
             let data = try JSONEncoder().encode(signalingMessage)
             let message = String(data: data, encoding: String.Encoding.utf8)!
             let messageToSend = "{\"status\":{\"WEB_RTC_EVENT\"" + message;
-            client.send(message: messageToSend);
+            msg = getJSONForEvent(message);
+            client.send(message: msg);
         } catch {
             print(error)
+        }
+    }
+
+    func getJSONForEvent(output: String) {
+        struct msg: Codable {
+            var status: WEB_RTC_EVENT
+
+
+        }
+
+        struct WEB_RTC_EVENT: Codable {
+            var WEB_RTC_EVENT: String
+        }
+
+        let event: WEB_RTC_EVENT = WEB_RTC_EVENT(WEB_RTC_EVENT: output);
+        let message = msg(status: event)
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+
+        do {
+            let encodePerson = try jsonEncoder.encode(message)
+            let endcodeStringPerson = String(data: encodePerson, encoding: .utf8)!
+            print(endcodeStringPerson)
+        } catch {
+            print(error.localizedDescription)
         }
     }
 
