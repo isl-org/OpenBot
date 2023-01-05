@@ -25,8 +25,8 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     let altitudeManager = CMAltimeter()
     var interval: Double = 0.03
-    var sensorData : String = ""
-    var location : CLLocation!
+    var sensorData: String = ""
+    var location: CLLocation!
 
     override init() {
         super.init()
@@ -54,9 +54,9 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     }
 
     func startSensorsUpdates() {
-            accelerometer()
-            gyroscope()
-            magnetometer()
+        accelerometer()
+        gyroscope()
+        magnetometer()
     }
 
     func accelerometer() {

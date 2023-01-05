@@ -194,7 +194,7 @@ class VehicleControl: UIView {
             updateSpeedMode(self);
             break;
         case .FAST:
-           return;
+            return;
         }
     }
 

@@ -264,7 +264,7 @@ class GameController: GCPhysicalInputProfile {
     }
 
     func sendControl(control: Control) {
-        if selectedControlMode == ControlMode.PHONE{
+        if selectedControlMode == ControlMode.PHONE {
             return
         }
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
@@ -279,7 +279,7 @@ class GameController: GCPhysicalInputProfile {
         }
     }
 
-    func sendControlFromPhoneController(control: Control){
+    func sendControlFromPhoneController(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             let right = (control.getRight() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);

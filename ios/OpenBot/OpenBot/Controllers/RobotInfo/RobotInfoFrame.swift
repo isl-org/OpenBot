@@ -365,7 +365,7 @@ class RobotInfoFrame: UIViewController {
     func getRobotInfo() {
         if isBluetoothConnected {
 //            bluetoothIcon.image = UIImage(named: "bluetoothConnected");
-            bluetooth.sendData(payload:"f\n");
+            bluetooth.sendData(payload: "f\n");
             robotInfo = bluetooth.robotInfo;
 
         } else {
@@ -587,7 +587,7 @@ class RobotInfoFrame: UIViewController {
 
     @objc func refresh(tapGestureRecognizer: UITapGestureRecognizer) {
         if isBluetoothConnected {
-            bluetooth.sendData(payload:"f\n");
+            bluetooth.sendData(payload: "f\n");
             updateRobotInfo();
         } else {
             updateScreenOnBluetoothDisconnection()

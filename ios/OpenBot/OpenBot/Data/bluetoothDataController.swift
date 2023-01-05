@@ -18,7 +18,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     var speedometer: String = ""
     var bumperData: String = ""
     var writeCharacteristics: CBCharacteristic?
-    var robotInfo : String = ""
+    var robotInfo: String = ""
 
     required init?(coder: NSCoder) {
         super.init()
@@ -144,8 +144,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
                 speedometer = x
             } else if x.prefix(1) == "b" {
                 bumperData = x;
-            }
-            else if x.prefix(1) == "f"{
+            } else if x.prefix(1) == "f" {
                 robotInfo = x;
             }
 
@@ -163,7 +162,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func sendData(payload: String) {
         let dataToSend: Data? = payload.data(using: String.Encoding.utf8)
         if (dataToSend != nil && tempPeripheral != nil) {
-            print("Sending ",payload, " to OpenBot")
+            print("Sending ", payload, " to OpenBot")
             if let writeCharacteristics {
                 tempPeripheral.writeValue(dataToSend!, for: writeCharacteristics, type: CBCharacteristicWriteType.withResponse)
             }

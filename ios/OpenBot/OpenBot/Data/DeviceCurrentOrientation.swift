@@ -16,7 +16,7 @@ class DeviceCurrentOrientation {
             return
         }
         switch UIDevice.current.orientation {
-        case .landscapeLeft :
+        case .landscapeLeft:
             currentOrientation = .landscapeLeft
             break
         case .landscapeRight:
@@ -25,7 +25,7 @@ class DeviceCurrentOrientation {
         case .portrait:
             currentOrientation = .portrait
             break
-        default :
+        default:
             currentOrientation = .portrait
             break
         }

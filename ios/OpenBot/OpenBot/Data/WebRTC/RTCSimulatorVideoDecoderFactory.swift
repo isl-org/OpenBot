@@ -14,7 +14,9 @@ class RTCSimulatorVideoDecoderFactory: RTCDefaultVideoDecoderFactory {
 
     override func supportedCodecs() -> [RTCVideoCodecInfo] {
         var codecs = super.supportedCodecs()
-        codecs = codecs.filter{$0.name != "H264"}
+        codecs = codecs.filter {
+            $0.name != "H264"
+        }
         return codecs
     }
 }

@@ -107,10 +107,10 @@ class DataLogger {
 
     func deleteFiles(fileNameToDelete: String) {
 
-        print("fileNameToDelete : ",fileNameToDelete)
+        print("fileNameToDelete : ", fileNameToDelete)
         var filePath = ""
 // Fine documents directory on device
-        let dirs : [String] = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
+        let dirs: [String] = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
         if dirs.count > 0 {
             let dir = dirs[0] //documents directory
             filePath = dir.appendingFormat("/" + fileNameToDelete)
@@ -129,13 +129,12 @@ class DataLogger {
                 print("File does not exist")
             }
 
-        }
-        catch let error as NSError {
+        } catch let error as NSError {
             print("An error took place: \(error)")
         }
     }
 
-    func deleteAllFilesFromDocument(){
+    func deleteAllFilesFromDocument() {
         let fileManager = FileManager.default
         do {
             let documentDirectoryURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -148,13 +147,13 @@ class DataLogger {
         }
     }
 
-    func deleteZipFileFromDocument(){
+    func deleteZipFileFromDocument() {
         let fileManager = FileManager.default
         let documentDirectoryURL = FileManager.getDocumentsDirectory()
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentDirectoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
             for url in fileURLs {
-                if url.lastPathComponent.first == "2" && !url.lastPathComponent.contains("."){
+                if url.lastPathComponent.first == "2" && !url.lastPathComponent.contains(".") {
                     deleteFiles(fileNameToDelete: url.lastPathComponent);
                 }
             }
@@ -206,7 +205,7 @@ class DataLogger {
     }
 
     func getDocumentDirectoryInformation() -> [URL] {
-        var fileURLs : [URL] = []
+        var fileURLs: [URL] = []
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
 //        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)

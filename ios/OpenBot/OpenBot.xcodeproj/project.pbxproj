@@ -63,7 +63,6 @@
 		727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F5FE3F054BE4FA52191 /* timestamp.swift */; };
 		727D37EF7FFD794AAD19F1F6 /* modesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3421CB0D9D6B68ADB5B7 /* modesCollectionViewCell.swift */; };
 		727D388FE6AEA3562F58D52D /* RTCSimulatorVideoDecoderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3893AF82740A963BBD37 /* RTCSimulatorVideoDecoderFactory.swift */; };
-		727D38C2EFA404FADF41AF52 /* SignalingCandidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3FDD99A1F8A80AAEA47A /* SignalingCandidate.swift */; };
 		727D392FE397D97428ECA290 /* ScreenSizeUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D34C4952446BF8CED903D /* ScreenSizeUtil.swift */; };
 		727D39499A8CF8EE76345872 /* AutopilotFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */; };
 		727D39A18B5A9793BFEC3DFC /* RTCSimluatorVideoEncoderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35176F5210BE178D2A44 /* RTCSimluatorVideoEncoderFactory.swift */; };
@@ -194,7 +193,6 @@
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
 		727D3F616208713BD627CD7A /* CameraFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraFilter.swift; path = CameraFilter/CameraFilter.swift; sourceTree = "<group>"; };
 		727D3F8E752887E2A76CC901 /* CheckBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CheckBox.swift; path = RobotInfo/CheckBox.swift; sourceTree = "<group>"; };
-		727D3FDD99A1F8A80AAEA47A /* SignalingCandidate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingCandidate.swift; sourceTree = "<group>"; };
 		74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
 		9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBotTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -352,7 +350,6 @@
 				4FEF4E8F0A2942C4C971E2BA /* Server */,
 				727D3F616208713BD627CD7A /* CameraFilter.swift */,
 				727D3B9C28423AD20525879B /* CameraSession.swift */,
-				727D3FDD99A1F8A80AAEA47A /* SignalingCandidate.swift */,
 				727D37586F16DE497CEA62CE /* SignalingMessage.swift */,
 				727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */,
 				727D35176F5210BE178D2A44 /* RTCSimluatorVideoEncoderFactory.swift */,
@@ -814,7 +811,6 @@
 				727D3BF65519AA9BA28F65DE /* VideoSStream.swift in Sources */,
 				727D374363C3C2C96F9EC78B /* CameraFilter.swift in Sources */,
 				727D322ED39BF49B9B9CA404 /* CameraSession.swift in Sources */,
-				727D38C2EFA404FADF41AF52 /* SignalingCandidate.swift in Sources */,
 				727D3D7ED38D147ECD48C9BA /* SignalingMessage.swift in Sources */,
 				727D3096D68C8091820BF737 /* UIColorExtension.swift in Sources */,
 				727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */,

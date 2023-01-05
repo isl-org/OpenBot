@@ -8,6 +8,7 @@ import AVFoundation
 @objc protocol CameraSessionDelegate {
     func didOutput(_ sampleBuffer: CMSampleBuffer)
 }
+
 class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     private var session: AVCaptureSession?
@@ -19,7 +20,7 @@ class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         super.init()
     }
 
-    func setupSession(){
+    func setupSession() {
         self.session = AVCaptureSession()
         session?.sessionPreset = AVCaptureSession.Preset.medium
         self.device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
@@ -34,7 +35,7 @@ class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         let queue: DispatchQueue = DispatchQueue(label: "videodata", attributes: .concurrent)
         self.output?.setSampleBufferDelegate(self, queue: queue)
         self.output?.alwaysDiscardsLateVideoFrames = false
-        self.output?.videoSettings = [kCVPixelBufferPixelFormatTypeKey: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] as [String : Any]
+        self.output?.videoSettings = [kCVPixelBufferPixelFormatTypeKey: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] as [String: Any]
         self.session?.addOutput(self.output!)
 
         self.session?.sessionPreset = AVCaptureSession.Preset.inputPriority

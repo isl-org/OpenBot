@@ -8,6 +8,7 @@ import AVFoundation
 import CoreLocation
 import CoreLocationUI
 import CoreBluetooth
+
 class SettingsFragment: UIViewController, CLLocationManagerDelegate {
     var scrollView: UIScrollView!
     var cameraSwitch = UISwitch()
@@ -47,7 +48,6 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         toggleSwitchButtons()
 
     }
-
 
 
     func createScrollView() {
@@ -112,7 +112,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         microphoneSwitch.addTarget(self, action: #selector(toggleMicrophone(_:)), for: .valueChanged)
     }
 
-    func createBluetoothSwitch(){
+    func createBluetoothSwitch() {
         bluetoothSwitch.onTintColor = Colors.title
         scrollView.addSubview(bluetoothSwitch)
         bluetoothSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 200, to: .height))
@@ -174,15 +174,15 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         }
     }
 
-    func checkLocation(){
+    func checkLocation() {
         createAllowAlert(alertFor: "Location")
     }
 
-    func checkMicrophone(){
+    func checkMicrophone() {
         createAllowAlert(alertFor: "Microphone")
     }
 
-    func checkBluetooth(){
+    func checkBluetooth() {
         createAllowAlert(alertFor: "Bluetooth")
     }
 
@@ -212,7 +212,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         }
     }
 
-    func createPromptLocationAccess(){
+    func createPromptLocationAccess() {
 
     }
 
@@ -252,7 +252,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         let locationAuthStatus = CLLocationManager.authorizationStatus()
         switch locationAuthStatus {
         case .notDetermined:
-           locationSwitch.isOn = false
+            locationSwitch.isOn = false
         case .restricted:
             locationSwitch.isOn = false
         case .denied:
@@ -275,7 +275,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         case .undetermined:
             microphoneSwitch.isOn = true
             AVAudioSession.sharedInstance().requestRecordPermission({ granted in
-               self.toggleSwitchButtons()
+                self.toggleSwitchButtons()
                 self.microphoneSwitch.isOn = true
             })
         @unknown default:
@@ -283,7 +283,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         }
 
         //bluetooth
-        switch CBCentralManager.authorization{
+        switch CBCentralManager.authorization {
         case .notDetermined:
             bluetoothSwitch.isOn = false
         case .restricted:

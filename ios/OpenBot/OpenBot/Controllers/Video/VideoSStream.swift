@@ -55,18 +55,18 @@ class VideoFragment: UIViewController, WebRTCClientDelegate, CameraSessionDelega
     }
 
     // MARK: - UI
-    private func setupUI(){
-        let remoteVideoViewContainter = UIView(frame: CGRect(x: 0, y: 0, width: ScreenSizeUtil.width(), height: ScreenSizeUtil.height()*0.7))
+    private func setupUI() {
+        let remoteVideoViewContainter = UIView(frame: CGRect(x: 0, y: 0, width: ScreenSizeUtil.width(), height: ScreenSizeUtil.height() * 0.7))
         remoteVideoViewContainter.backgroundColor = .gray
         self.view.addSubview(remoteVideoViewContainter)
 
         let remoteVideoView = webRTCClient.remoteVideoView()
-        webRTCClient.setupRemoteViewFrame(frame: CGRect(x: 0, y: 0, width: ScreenSizeUtil.width()*0.7, height: ScreenSizeUtil.height()*0.7))
+        webRTCClient.setupRemoteViewFrame(frame: CGRect(x: 0, y: 0, width: ScreenSizeUtil.width() * 0.7, height: ScreenSizeUtil.height() * 0.7))
         remoteVideoView.center = remoteVideoViewContainter.center
         remoteVideoViewContainter.addSubview(remoteVideoView)
 
         let localVideoView = webRTCClient.localVideoView()
-        webRTCClient.setupLocalViewFrame(frame: CGRect(x: 0, y: 0, width: ScreenSizeUtil.width()/3, height: ScreenSizeUtil.height()/3))
+        webRTCClient.setupLocalViewFrame(frame: CGRect(x: 0, y: 0, width: ScreenSizeUtil.width() / 3, height: ScreenSizeUtil.height() / 3))
         localVideoView.center.y = self.view.center.y
         localVideoView.subviews.last?.isUserInteractionEnabled = true
         self.view.addSubview(localVideoView)
@@ -91,7 +91,7 @@ class VideoFragment: UIViewController, WebRTCClientDelegate, CameraSessionDelega
     }
 
     // MARK: - UI Events
-    @objc func callButtonTapped(_ sender: UIButton){
+    @objc func callButtonTapped(_ sender: UIButton) {
         if !webRTCClient.isConnected {
             webRTCClient.connect(onSuccess: { (offerSDP: RTCSessionDescription) -> Void in
                 self.sendSDP(sessionDescription: offerSDP)
@@ -105,11 +105,11 @@ class VideoFragment: UIViewController, WebRTCClientDelegate, CameraSessionDelega
     }
 
     // MARK: - WebRTC Signaling
-    private func sendSDP(sessionDescription: RTCSessionDescription){
+    private func sendSDP(sessionDescription: RTCSessionDescription) {
         var type = ""
         if sessionDescription.type == .offer {
             type = "offer"
-        }else if sessionDescription.type == .answer {
+        } else if sessionDescription.type == .answer {
             type = "answer"
         }
 
@@ -118,21 +118,21 @@ class VideoFragment: UIViewController, WebRTCClientDelegate, CameraSessionDelega
         do {
             let data = try JSONEncoder().encode(signalingMessage)
             let message = String(data: data, encoding: String.Encoding.utf8)!
-            let messageToSend =    "{\"status\":{\"WEB_RTC_EVENT\"" + message;
+            let messageToSend = "{\"status\":{\"WEB_RTC_EVENT\"" + message;
             client.send(message: messageToSend);
-        }catch{
+        } catch {
             print(error)
         }
     }
 
-    private func sendCandidate(iceCandidate: RTCIceCandidate){
+    private func sendCandidate(iceCandidate: RTCIceCandidate) {
         let candidate = Candidate.init(sdp: iceCandidate.sdp, sdpMLineIndex: iceCandidate.sdpMLineIndex, sdpMid: iceCandidate.sdpMid!)
         let signalingMessage = SignalingMessage.init(type: "candidate", sessionDescription: nil, candidate: candidate)
         do {
             let data = try JSONEncoder().encode(signalingMessage)
             let message = String(data: data, encoding: String.Encoding.utf8)!
             client.send(message: message);
-        }catch{
+        } catch {
             print(error)
         }
     }
@@ -144,26 +144,27 @@ extension VideoFragment {
 
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
 
-        do{
+        do {
             let signalingMessage = try JSONDecoder().decode(SignalingMessage.self, from: text.data(using: .utf8)!)
 
             if signalingMessage.type == "offer" {
-                webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.sessionDescription?.sdp)!), onCreateAnswer: {(answerSDP: RTCSessionDescription) -> Void in
+                webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.sessionDescription?.sdp)!), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
                     self.sendSDP(sessionDescription: answerSDP)
                 })
-            }else if signalingMessage.type == "answer" {
+            } else if signalingMessage.type == "answer" {
                 webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.sessionDescription?.sdp)!))
-            }else if signalingMessage.type == "candidate" {
+            } else if signalingMessage.type == "candidate" {
                 let candidate = signalingMessage.candidate!
                 webRTCClient.receiveCandidate(candidate: RTCIceCandidate(sdp: candidate.sdp, sdpMLineIndex: candidate.sdpMLineIndex, sdpMid: candidate.sdpMid))
             }
-        }catch{
+        } catch {
             print(error)
         }
 
     }
 
-    func websocketDidReceiveData(socket: WebSocketClient, data: Data) { }
+    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+    }
 }
 
 // MARK: - WebRTCClient Delegate
@@ -220,13 +221,13 @@ extension VideoFragment {
 extension VideoFragment {
     func didOutput(_ sampleBuffer: CMSampleBuffer) {
         if self.useCustomCapturer {
-            if let cvpixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer){
-                if let buffer = self.cameraFilter?.apply(cvpixelBuffer){
+            if let cvpixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
+                if let buffer = self.cameraFilter?.apply(cvpixelBuffer) {
                     self.webRTCClient.captureCurrentFrame(sampleBuffer: buffer)
-                }else{
+                } else {
                     print("no applied image")
                 }
-            }else{
+            } else {
                 print("no pixelbuffer")
             }
         }

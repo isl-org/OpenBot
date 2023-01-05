@@ -325,7 +325,12 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             gameControllerObj = gameController
             gameController.selectedControlMode = ControlMode.GAMEPAD
             gamePadController.backgroundColor = Colors.title
-            client.send(message: "{\"status\":{\"CONNECTION_ACTIVE\":\"false\"}}");
+            let msg = """
+                      {
+                          "status": {"CONNECTION_ACTIVE": "false"};
+                      }
+                      """;
+            client.send(message: msg);
         } else if selectedControlMode == ControlMode.PHONE {
             gameControllerObj = nil;
             gameController.selectedControlMode = ControlMode.PHONE
@@ -533,28 +538,28 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func decreaseSpeedMode(_ notification: Notification) {
-            switch selectedSpeedMode {
-            case .SLOW :
-                return;
-            case .NORMAL :
-                selectedSpeedMode = .SLOW;
-                break;
-            case .FAST :
-                selectedSpeedMode = .NORMAL;
-                break;
-            }
+        switch selectedSpeedMode {
+        case .SLOW:
+            return;
+        case .NORMAL:
+            selectedSpeedMode = .SLOW;
+            break;
+        case .FAST:
+            selectedSpeedMode = .NORMAL;
+            break;
+        }
         updateSpeedModes()
     }
 
     @objc func increaseSpeedMode(_ notification: Notification) {
         switch selectedSpeedMode {
-        case .SLOW :
+        case .SLOW:
             selectedSpeedMode = .NORMAL;
             break;
-        case .NORMAL :
+        case .NORMAL:
             selectedSpeedMode = .FAST;
             break;
-        case .FAST :
+        case .FAST:
             return
         }
         updateSpeedModes()
@@ -562,13 +567,13 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     @objc func updateDriveMode(_ notification: Notification) {
         switch selectedDriveMode {
-        case .JOYSTICK :
+        case .JOYSTICK:
             selectedDriveMode = .GAME
             break;
-        case .DUAL :
+        case .DUAL:
             selectedDriveMode = .JOYSTICK;
             break;
-        case .GAME :
+        case .GAME:
             selectedDriveMode = .DUAL
             break;
         }
@@ -576,7 +581,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func updateDataFromControllerApp(_ notification: Notification) {
-        if gameController.selectedControlMode == ControlMode.GAMEPAD{
+        if gameController.selectedControlMode == ControlMode.GAMEPAD {
             return
         }
         if notification.object != nil {
