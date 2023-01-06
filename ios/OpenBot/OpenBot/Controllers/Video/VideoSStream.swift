@@ -112,13 +112,13 @@ class VideoFragment: UIViewController, WebRTCClientDelegate, CameraSessionDelega
         } else if sessionDescription.type == .answer {
             type = "answer"
         }
-        let signalingMessage = JSON.toString(StatusEvent(status: JSON.toString(WebRTCEvent(WEB_RTC_EVENT: JSON.toString(OfferEvent(type: type, sdp: sessionDescription.sdp))))));
+        let signalingMessage = JSON.toString(OfferEvent(status: .init(WEB_RTC_EVENT: .init(type: type, sdp: sessionDescription.sdp))));
         client.send(message: signalingMessage);
     }
 
     private func sendCandidate(iceCandidate: RTCIceCandidate) {
-        let candidate = JSON.toString(Candidate(candidate: iceCandidate.sdp, label: iceCandidate.sdpMLineIndex, id: iceCandidate.sdpMid!, type: "candidate"));
-        let signalingMessage = JSON.toString(StatusEvent(status: JSON.toString(WebRTCEvent(WEB_RTC_EVENT: candidate))));
+        let candidate = Candidate(candidate: iceCandidate.sdp, label: iceCandidate.sdpMLineIndex, id: iceCandidate.sdpMid!, type: "candidate");
+        let signalingMessage = JSON.toString(CandidateEvent(status: .init(WEB_RTC_EVENT: candidate)));
         client.send(message: signalingMessage);
     }
 }

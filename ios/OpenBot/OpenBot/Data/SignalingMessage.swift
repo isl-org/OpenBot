@@ -10,6 +10,30 @@ struct SignalingMessage: Codable {
     let candidate: Candidate?
 }
 
+struct ConnectionActiveEvent: Codable {
+    var status: ConnectionActive
+
+    struct ConnectionActive: Codable {
+        var CONNECTION_ACTIVE: String
+    }
+}
+
+struct VideoProtocolEvent: Codable {
+    var status: VideoProtocol
+
+    struct VideoProtocol: Codable {
+        var VIDEO_PROTOCOL: String
+    }
+}
+
+struct VideoServerUrlEvent: Codable {
+    var status: VideoServerUrl
+
+    struct VideoServerUrl: Codable {
+        var VIDEO_SERVER_URL: String
+    }
+}
+
 
 struct Candidate: Codable {
     var candidate: String
@@ -18,41 +42,45 @@ struct Candidate: Codable {
     var type: String
 }
 
-struct StatusEvent: Codable {
-    var status: String
-}
-
-struct ConnectionActiveEvent: Codable {
-    var CONNECTION_ACTIVE: String
-}
-
-struct VideoProtocolEvent: Codable {
-    var VIDEO_PROTOCOL: String
-}
-
-struct VideoServerUrlEvent: Codable {
-    var VIDEO_SERVER_URL: String
-}
-
 struct VideoCommandEvent: Codable {
-    var VIDEO_COMMAND: String
+    var status: VideoCommand
+
+    struct VideoCommand: Codable {
+        var VIDEO_COMMAND: String
+    }
 }
 
 struct VehicleStatusEvent: Codable {
-    var LOGS: Bool
-    var NOISE: Bool
-    var NETWORK: Bool
-    var DRIVE_MODE: String
-    var INDICATOR_LEFT: Bool
-    var INDICATOR_RIGHT: Bool
-    var INDICATOR_STOP: Bool
+    var status: VehicleStatus
+
+    struct VehicleStatus: Codable {
+        var LOGS: Bool
+        var NOISE: Bool
+        var NETWORK: Bool
+        var DRIVE_MODE: String
+        var INDICATOR_LEFT: Bool
+        var INDICATOR_RIGHT: Bool
+        var INDICATOR_STOP: Bool
+    }
 }
 
 struct OfferEvent: Codable {
-    var type: String
-    var sdp: String
+    var status: WebRTC
+
+    struct WebRTC: Codable {
+        var WEB_RTC_EVENT: Offer
+    }
+
+    struct Offer: Codable {
+        var type: String
+        var sdp: String
+    }
 }
 
-struct WebRTCEvent: Codable {
-    var WEB_RTC_EVENT: String
+struct CandidateEvent: Codable {
+    var status: WebRTC
+
+    struct WebRTC: Codable {
+        var WEB_RTC_EVENT: Candidate
+    }
 }

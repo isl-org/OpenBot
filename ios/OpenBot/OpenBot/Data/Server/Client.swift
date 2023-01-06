@@ -5,8 +5,10 @@
 import Foundation
 
 var client = Client()
+
 class Client {
     let browser = Browser()
+
     func start() {
         print("new client")
         browser.start { result in
@@ -17,6 +19,6 @@ class Client {
     }
 
     func send(message: String) {
-        sharedConnection?.send(message);
+        sharedConnection?.send(message + "\n");
     }
 }
