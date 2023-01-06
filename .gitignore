@@ -6,6 +6,7 @@ composer.lock
 .DS_Store
 Thumbs.db
 wandb/
+/ios/OpenBot/Pods/
 
 # IDE's
 .idea/

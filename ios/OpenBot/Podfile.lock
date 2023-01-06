@@ -21,7 +21,7 @@ PODS:
 DEPENDENCIES:
   - DropDown
   - GoogleWebRTC
-  - Starscream (~> 3.0.2)
+  - Starscream (~> 3.0.1)
   - TensorFlowLiteSwift/CoreML (~> 0.0.1-nightly)
   - TensorFlowLiteSwift/Metal (~> 0.0.1-nightly)
 
@@ -40,6 +40,6 @@ SPEC CHECKSUMS:
   TensorFlowLiteC: e1bb000be1bc8e93172becb0d3ac6c55b46f7ff9
   TensorFlowLiteSwift: c2f36a053eaf7b786d3b960f5dcfac069c7e94ea
 
-PODFILE CHECKSUM: f4a6745f048e54339e08089b8ff42b13528ad6fe
+PODFILE CHECKSUM: 6ad387c784c40c8a2265fbb548a75abdbfaa2f10
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.11.3

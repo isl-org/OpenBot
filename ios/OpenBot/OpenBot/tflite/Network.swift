@@ -18,7 +18,6 @@ class Network {
     var gpuDelegate: MetalDelegate? = nil;
     var imageSize: CGSize;
     var intValues: [Int];
-    var imgData: Data = Data();
     var outputMap: [Int: Any] = [Int: Any]();
 
     init(model: Model, device: RuntimeDevice, numThreads: Int) throws {
@@ -134,27 +133,35 @@ class Network {
         } else if (CVPixelBufferGetPixelFormatType(buffer) == kCVPixelFormatType_32ARGB) {
             vImageConvert_ARGB8888toRGB888(&sourceBuffer, &destinationBuffer, UInt32(kvImageNoFlags))
         }
-
+        
+        
         let byteData = Data(bytes: destinationBuffer.data, count: destinationBuffer.rowBytes * height)
         if isModelQuantized {
             return byteData
         }
+        else {
+            // Set up the destination buffer for the float values
+            var floatBuffer = [Float](repeating: 0.0, count: byteData.count)
 
-        // Not quantized, convert to floats
-        let bytes = Array<UInt8>(unsafeData: byteData)!
-        var floats = [Float32]()
-        for i in 0..<bytes.count {
-            floats.append((Float32(bytes[i]) - getImageMean()) / getImageStd())
+            // Convert the image buffer to float values
+            vDSP_vfltu8(destinationBuffer.data, 1, &floatBuffer, 1, vDSP_Length(byteData.count))
+            
+            // Apply normalization factor
+            var normalizationFactor: Float = 1.0 / getImageStd()
+            vDSP_vsmul(floatBuffer, 1, &normalizationFactor, &floatBuffer, 1, vDSP_Length(floatBuffer.count))
+
+            // Create a Data object from the float buffer
+            return Data(bytes: floatBuffer, count: byteData.count * MemoryLayout<Float>.size)
         }
-        return Data(copyingBufferOf: floats)
+
     }
 
-    func getImageMean() -> Float {
-        0;
+    func getImageMean() -> Float32 {
+        0.0;
     }
 
-    func getImageStd() -> Float {
-        255;
+    func getImageStd() -> Float32 {
+        255.0;
     }
 }
 
