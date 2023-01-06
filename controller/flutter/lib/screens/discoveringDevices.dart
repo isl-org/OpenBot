@@ -1,18 +1,12 @@
 import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
+import 'package:openbot_controller/screens/controlSelector.dart';
 import 'package:openbot_controller/utils/videoViewWebRTC.dart';
 
 class DiscoveringDevice extends StatefulWidget {
   final bool isDeviceConnected;
-  final String sdp;
-  final String type;
-  final String id;
-  final int label;
-  final String candidate;
 
-  const DiscoveringDevice(this.isDeviceConnected, this.sdp, this.type, this.id,
-      this.label, this.candidate,
-      {super.key});
+  const DiscoveringDevice(this.isDeviceConnected, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -30,9 +24,8 @@ class DiscoveringDeviceState extends State<DiscoveringDevice> {
           alignment: Alignment.center,
           child: widget.isDeviceConnected
               // child: selectController
-              //     ? const ControlSelector()
-              ? VideoViewWebRTC(widget.sdp, widget.type, widget.id,
-                  widget.label, widget.candidate)
+                  ? const ControlSelector()
+              // ? VideoViewWebRTC()
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,

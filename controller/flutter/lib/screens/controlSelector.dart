@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/screens/tiltingPhoneMode.dart';
 
 import 'onScreenMode.dart';
@@ -173,6 +174,7 @@ class ControlSelectorState extends State<ControlSelector> {
               children: <Widget>[
                 GestureDetector(
                   onTap: (){
+                    clientSocket?.writeln("{command: LOGS}");
                     print("{command: LOGS}");
                   },
                   child: Container(
@@ -196,6 +198,7 @@ class ControlSelectorState extends State<ControlSelector> {
                 )),
                 GestureDetector(
                   onTap: (){
+                    clientSocket?.writeln("{command: NOISE}");
                     print("{command: NOISE}");
                   },
                   child: Container(
@@ -219,6 +222,7 @@ class ControlSelectorState extends State<ControlSelector> {
                 )),
                 GestureDetector(
                   onTap: (){
+                    clientSocket?.writeln("{command: NETWORK}");
                     print("{command: NETWORK}");
                   },
                   child: Container(
