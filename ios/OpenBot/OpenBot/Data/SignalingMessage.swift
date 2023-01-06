@@ -4,10 +4,26 @@
 
 import Foundation
 
+struct decodingSignalingMessage: Decodable {
+    let type: String
+    let sdp: String
+    let candidate: Candidate?
+}
+
 struct SignalingMessage: Codable {
     let type: String
     let sdp: String
     let candidate: Candidate?
+
+}
+
+struct AnswerEvent: Decodable {
+    var webrtc_event: Answer
+
+    struct Answer: Codable {
+        var type: String
+        var sdp: String
+    }
 }
 
 struct ConnectionActiveEvent: Codable {

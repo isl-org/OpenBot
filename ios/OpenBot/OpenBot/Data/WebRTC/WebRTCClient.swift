@@ -162,6 +162,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     }
 
     func receiveAnswer(answerSDP: RTCSessionDescription) {
+        print("inside receiveAnswer");
         self.peerConnection!.setRemoteDescription(answerSDP) { (err) in
             if let error = err {
                 print("failed to set remote answer SDP")

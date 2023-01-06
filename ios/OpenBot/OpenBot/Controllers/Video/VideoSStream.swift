@@ -31,7 +31,7 @@ class VideoFragment: UIViewController, WebRTCClientDelegate, CameraSessionDelega
         webRTCClient = WebRTCClient()
         webRTCClient.delegate = self
         webRTCClient.setup(videoTrack: true, audioTrack: true, dataChannel: true, customFrameCapturer: useCustomCapturer)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(websocketDidReceiveMessage), name: .updateDataFromControllerApp, object: nil)
         if useCustomCapturer {
             print("--- use custom capturer ---")
             self.cameraSession = CameraSession()
@@ -126,28 +126,29 @@ class VideoFragment: UIViewController, WebRTCClientDelegate, CameraSessionDelega
 // MARK: - WebSocket Delegate
 extension VideoFragment {
 
-    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+    @objc func websocketDidReceiveMessage(_ notification: Notification) {
+        print("inside websocketDidReceiveMessage")
+        let text: Data = notification.object as! Data;
 
-        do {
-            let signalingMessage = try JSONDecoder().decode(SignalingMessage.self, from: text.data(using: .utf8)!)
-            print("message from controller :", signalingMessage);
-            if signalingMessage.type == "offer" {
-                webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.sdp)), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
-                    self.sendSDP(sessionDescription: answerSDP)
-                })
-            } else if signalingMessage.type == "answer" {
-                webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.sdp)))
-            } else if signalingMessage.type == "candidate" {
-                let candidate = signalingMessage.candidate!
-                webRTCClient.receiveCandidate(candidate: RTCIceCandidate(sdp: candidate.candidate, sdpMLineIndex: candidate.label, sdpMid: candidate.id))
+            do {
+                let signalingMessage = try JSONDecoder().decode(AnswerEvent.self, from: text)
+                print("signalingMessage",signalingMessage)
+                if signalingMessage.webrtc_event.type == "offer" {
+                    webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.webrtc_event.sdp)), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
+                        self.sendSDP(sessionDescription: answerSDP)
+                    })
+                } else if signalingMessage.webrtc_event.type == "answer" {
+                    print("it is answer");
+                    webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.webrtc_event.sdp)))
+                } else if signalingMessage.webrtc_event.type == "candidate" {
+//                    let candidate = signalingMessage.candidate!
+//                    webRTCClient.receiveCandidate(candidate: RTCIceCandidate(sdp: candidate.candidate, sdpMLineIndex: candidate.label, sdpMid: candidate.id))
+                }
+            } catch {
+                print(error)
+
             }
-        } catch {
-            print(error)
-        }
 
-    }
-
-    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
     }
 }
 
@@ -180,15 +181,17 @@ extension VideoFragment {
         @unknown default:
             state = "new..."
         }
-        self.webRTCStatusLabel.text = self.webRTCStatusMesasgeBase + state
+//        self.webRTCStatusLabel.text = self.webRTCStatusMesasgeBase
     }
 
     func didConnectWebRTC() {
-        self.webRTCStatusLabel.textColor = .green
+//        self.webRTCStatusLabel.textColor = .green
+    print("didConnectWebRTC")
     }
 
     func didDisconnectWebRTC() {
-        self.webRTCStatusLabel.textColor = .red
+//        self.webRTCStatusLabel.textColor = .red
+    print("didDisconnectWebRTC")
     }
 
     func didOpenDataChannel() {
@@ -200,7 +203,8 @@ extension VideoFragment {
     }
 
     func didReceiveMessage(message: String) {
-        self.webRTCMessageLabel.text = message
+//        self.webRTCMessageLabel.text = message
+    print("message is : ",message);
     }
 }
 

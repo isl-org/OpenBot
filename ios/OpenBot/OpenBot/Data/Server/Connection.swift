@@ -50,19 +50,41 @@ class Connection {
     }
 
     func receiveMessage() {
-        connection.receive(minimumIncompleteLength: 1, maximumLength: 1000) { data, _, _, error in
-            if let error = error {
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 100000) { data, _, _, error in
+            if error != nil {
                 return
             }
             if let data = data,
                let message = String(data: data, encoding: .utf8) {
-                if message.contains("SWITCH_CAMERA"){
-                    NotificationCenter.default.post(name: .switchCamera, object: nil);
+                let commands = message.split(separator: "\n");
+                for command in commands {
+                    if command.contains("SWITCH_CAMERA"){
+                        NotificationCenter.default.post(name: .switchCamera, object: nil);
+                    }
+                    if command.contains("answer"){
+                        NotificationCenter.default.post(name: .updateDataFromControllerApp, object: command.data(using: .utf8));
+                    }
+                    print("received message ->",command);
                 }
-                print(message);
-                NotificationCenter.default.post(name: .updateDataFromControllerApp, object: message);
+
             }
             self.receiveMessage()
         }
+//        connection.receive(minimumIncompleteLength: 1, maximumLength: 10000) { data, _, _, error in
+//            if let error = error {
+//                return
+//            }
+//            if let data = data,
+//               let message = String(data: data, encoding: .utf8) {
+//                if message.contains("SWITCH_CAMERA"){
+//                    NotificationCenter.default.post(name: .switchCamera, object: nil);
+//                }
+//                if message.contains("answer"){
+//                    NotificationCenter.default.post(name: .updateDataFromControllerApp, object: data);
+//                }
+//                print("received message ->",message);
+//            }
+//            self.receiveMessage()
+//        }
     }
 }
