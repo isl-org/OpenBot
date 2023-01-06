@@ -19,6 +19,7 @@
 		4FEF442F6DF5C31D0EE4FE2B /* OpenBotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */; };
 		4FEF44A3F41CE1D4898D1C4D /* ObjectTrackingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF492829E700076FAA4132 /* ObjectTrackingSettings.swift */; };
 		4FEF44E677749DA0D24FB857 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF42714D658342895B0A95 /* Network.swift */; };
+		4FEF46257887327B74C4900E /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF482EC43FA3B64007EBD2 /* JSON.swift */; };
 		4FEF4647C767D9C244C2EB41 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF45E01C9A309D6E30E558 /* Data.swift */; };
 		4FEF47B52607872D6B0CD56F /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4178D0A2805591A6A3A6 /* Strings.swift */; };
 		4FEF47BB348E0DF6D9C4BA48 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4E5F632AD6ADE2049FB8 /* UIImage.swift */; };
@@ -132,6 +133,7 @@
 		4FEF47209A4C03D66945462E /* DetectorQuantizedMobileNet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectorQuantizedMobileNet.swift; sourceTree = "<group>"; };
 		4FEF47C56474B6324A408225 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewExtension.swift; path = extensions/UIViewExtension.swift; sourceTree = "<group>"; };
 		4FEF47EAC21A4C2BDD11B72B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		4FEF482EC43FA3B64007EBD2 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		4FEF492829E700076FAA4132 /* ObjectTrackingSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ObjectTrackingSettings.swift; path = ObjectTracking/ObjectTrackingSettings.swift; sourceTree = "<group>"; };
 		4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotTests.swift; sourceTree = "<group>"; };
 		4FEF49E95825B789A39EDA21 /* Detector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Detector.swift; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 				727D3E0C80EA698A6B6B38AC /* UIColorExtension.swift */,
 				727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */,
 				727D34C4952446BF8CED903D /* ScreenSizeUtil.swift */,
+				4FEF482EC43FA3B64007EBD2 /* JSON.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -819,6 +822,7 @@
 				727D39A18B5A9793BFEC3DFC /* RTCSimluatorVideoEncoderFactory.swift in Sources */,
 				727D388FE6AEA3562F58D52D /* RTCSimulatorVideoDecoderFactory.swift in Sources */,
 				727D34E3CC491BD7758C572F /* WebRTCClient.swift in Sources */,
+				4FEF46257887327B74C4900E /* JSON.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

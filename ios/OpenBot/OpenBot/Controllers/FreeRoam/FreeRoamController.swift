@@ -325,11 +325,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             gameControllerObj = gameController
             gameController.selectedControlMode = ControlMode.GAMEPAD
             gamePadController.backgroundColor = Colors.title
-            let msg = """
-                      {
-                          "status": {"CONNECTION_ACTIVE": "false"}
-                      }
-                      """;
+            let msg = JSON.toString(StatusEvent(status: JSON.toString(ConnectionActiveEvent(CONNECTION_ACTIVE: "false"))));
             client.send(message: msg);
         } else if selectedControlMode == ControlMode.PHONE {
             gameControllerObj = nil;
@@ -338,35 +334,18 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             phoneController.backgroundColor = Colors.title
 //            server?.start();
             client.start();
-            var msg = """
-                      {
-                          "status": {"CONNECTION_ACTIVE": "true"}
-                      }
-                      """;
+            var msg = JSON.toString(StatusEvent(status: JSON.toString(ConnectionActiveEvent(CONNECTION_ACTIVE: "true"))));
+
             client.send(message: msg);
-            msg = """
-                  {
-                      "status": {"VIDEO_PROTOCOL": "WEBRTC"}
-                  }
-                  """;
+            msg = JSON.toString(StatusEvent(status: JSON.toString(VideoProtocolEvent(VIDEO_PROTOCOL: "WEBRTC"))));
             client.send(message: msg);
-            msg = """
-                  {
-                      "status": {"VIDEO_SERVER_URL": ""}
-                  }
-                  """;
+            msg = JSON.toString(StatusEvent(status: JSON.toString(VideoServerUrlEvent(VIDEO_SERVER_URL: ""))));
+
             client.send(message: msg);
-            msg = """
-                  {
-                      "status": {"VIDEO_COMMAND": "START"}
-                  }
-                  """;
+            msg = JSON.toString(StatusEvent(status: JSON.toString(VideoCommandEvent(VIDEO_COMMAND: "START"))));
+
             client.send(message: msg);
-            msg = """
-                  {
-                      "status": {"LOGS":false,"NOISE":false,"NETWORK":false,"DRIVE_MODE":"GAME","INDICATOR_LEFT":false,"INDICATOR_RIGHT":false,"INDICATOR_STOP":true}
-                  }
-                  """;
+            msg = JSON.toString(StatusEvent(status: JSON.toString(VehicleStatusEvent(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true))));
             client.send(message: msg)
 
         }
