@@ -332,21 +332,9 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
             gameController.selectedControlMode = ControlMode.PHONE
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             phoneController.backgroundColor = Colors.title
-//            server?.start();
             client.start();
             var msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
-
             client.send(message: msg);
-            msg = JSON.toString(VideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC")));
-            client.send(message: msg);
-            msg = JSON.toString(VideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: "")));
-
-            client.send(message: msg);
-            msg = JSON.toString(VideoCommandEvent(status: .init(VIDEO_COMMAND: "START")));
-
-            client.send(message: msg);
-            msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true)));
-            client.send(message: msg)
 
         }
         secondView.addSubview(gamePadController)

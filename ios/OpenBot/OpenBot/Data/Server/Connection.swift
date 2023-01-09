@@ -5,10 +5,17 @@
 import Foundation
 import Network
 var sharedConnection: Connection?
-class Connection {
+protocol sendInitialMessageDelegate: class {
+   func sendMessage()
+}
+class Connection: sendInitialMessageDelegate {
+
+
     let connection: NWConnection
     // outgoing connection
+    weak var msgDelegate: sendInitialMessageDelegate?
     init(endpoint: NWEndpoint) {
+
         print("PeerConnection outgoing endpoint: \(endpoint)")
         let tcpOptions = NWProtocolTCP.Options()
         tcpOptions.enableKeepalive = true
@@ -17,12 +24,11 @@ class Connection {
         parameters.includePeerToPeer = true
         connection = NWConnection(to: endpoint, using: parameters)
         start()
+        msgDelegate = self
     }
 
     // incoming connection
     init(connection: NWConnection) {
-        print("inside init");
-        print("PeerConnection incoming connection: \(connection)")
         self.connection = connection
         start()
     }
@@ -33,6 +39,7 @@ class Connection {
             switch newState {
             case .ready :
                 self.receiveMessage();
+                self.msgDelegate?.sendMessage()
             case .preparing :
                 return
             default:
@@ -66,25 +73,21 @@ class Connection {
                     }
                     print("received message ->",command);
                 }
-
             }
             self.receiveMessage()
         }
-//        connection.receive(minimumIncompleteLength: 1, maximumLength: 10000) { data, _, _, error in
-//            if let error = error {
-//                return
-//            }
-//            if let data = data,
-//               let message = String(data: data, encoding: .utf8) {
-//                if message.contains("SWITCH_CAMERA"){
-//                    NotificationCenter.default.post(name: .switchCamera, object: nil);
-//                }
-//                if message.contains("answer"){
-//                    NotificationCenter.default.post(name: .updateDataFromControllerApp, object: data);
-//                }
-//                print("received message ->",message);
-//            }
-//            self.receiveMessage()
-//        }
+    }
+
+    func sendMessage() {
+        var msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
+        client.send(message: msg);
+        msg = JSON.toString(VideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC")));
+        client.send(message: msg);
+        msg = JSON.toString(VideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: "")));
+        client.send(message: msg);
+        msg = JSON.toString(VideoCommandEvent(status: .init(VIDEO_COMMAND: "START")));
+        client.send(message: msg);
+        msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true)));
+        client.send(message: msg)
     }
 }

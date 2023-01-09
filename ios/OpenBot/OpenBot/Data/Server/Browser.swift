@@ -28,7 +28,6 @@ class Browser {
             case let .waiting(error):
                 print("Local network permission has been denied: \(error)")
                 self.browser.cancel()
-
             default:
                 break
             }
@@ -67,8 +66,6 @@ class Browser {
                     print("no change")
                 }
             }
-//                    netService = NetService(domain: "local.", type:"_openbot._tcp.", name: "_openbot._tcp.", port: 1100)
-//                    netService?.remove(from: .main, forMode: .default);
         }
 
         browser.start(queue: .main)

@@ -10,7 +10,6 @@ public class NetworkServiceConnection: NSObject {
 
     private var browser: NWBrowser?
     private var netService: NetService?
-//    private var completion: ((Bool) -> Void)?
     let SERVICE_TYPE: String = "_openbot._tcp.";
 
     public func discoverServices() {

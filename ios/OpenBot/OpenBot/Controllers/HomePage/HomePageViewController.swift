@@ -15,7 +15,7 @@ var isBluetoothConnected = false;
 var viewControllerName: String?
 let gameController = GameController.shared
 var leadingConstraint = NSLayoutConstraint()
-var connection: NetworkServiceConnection = NetworkServiceConnection();
+//var connection: NetworkServiceConnection = NetworkServiceConnection();
 
 class HomePageViewController: UIViewController {
     @IBOutlet weak var bluetooth: UIButton!
