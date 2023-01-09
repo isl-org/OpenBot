@@ -54,7 +54,7 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(decreaseSpeedMode), name: .decreaseSpeedMode, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(increaseSpeedMode), name: .increaseSpeedMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDriveMode), name: .updateDriveMode, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateDataFromControllerApp, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
     }
 
     override func viewDidDisappear(_ animated: Bool) {

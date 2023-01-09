@@ -49,6 +49,7 @@
 		727D322ED39BF49B9B9CA404 /* CameraSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3B9C28423AD20525879B /* CameraSession.swift */; };
 		727D332F054456A4182DD7DF /* expandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3327FAD14CEC3DE54D95 /* expandSetting.swift */; };
 		727D3344CC8742EB020E2992 /* ModelManagementTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31518A6A6FE099F41F49 /* ModelManagementTable.swift */; };
+		727D338AB7E821641A477554 /* VideoViewWebRtc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* VideoViewWebRtc.swift */; };
 		727D33A327A7D99A558EFDC4 /* BluetoothTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3B76CF73A97A22A8022E /* BluetoothTable.swift */; };
 		727D33DD6B69783CAE4035BD /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30501D6445D0C8AED362 /* GaugeView.swift */; };
 		727D3457F432B9743263C307 /* sensorDataRetrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */; };
@@ -73,7 +74,6 @@
 		727D3B90FC0EB50ACC220F11 /* RobotInfoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
 		727D3BF38CB798E8B3321E87 /* SettingsFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D0186944D629E367A9D /* SettingsFragment.swift */; };
-		727D3BF65519AA9BA28F65DE /* VideoSStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A0E804B8CCE75D55E5A /* VideoSStream.swift */; };
 		727D3D12FAF02C416CC2CEC1 /* FreeRoamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */; };
 		727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B02AB471D9F31B0747 /* Font.swift */; };
 		727D3D319744DCFF840F7C23 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D396BDB689AFF9C3931C6 /* HomePageViewController.swift */; };
@@ -158,6 +158,7 @@
 		727D3189735FC4F7A4E4A6C1 /* Browser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
 		727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreeRoamController.swift; sourceTree = "<group>"; };
 		727D3281CA65425580EDD4A4 /* popupWindowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = popupWindowView.swift; path = ModelManagement/popupWindowView.swift; sourceTree = "<group>"; };
+		727D32E3FF7FA5BADAAEDBE6 /* VideoViewWebRtc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VideoViewWebRtc.swift; path = WebRTC/VideoViewWebRtc.swift; sourceTree = "<group>"; };
 		727D3327FAD14CEC3DE54D95 /* expandSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = expandSetting.swift; sourceTree = "<group>"; };
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
 		727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutopilotFragment.swift; path = Autopilot/AutopilotFragment.swift; sourceTree = "<group>"; };
@@ -174,7 +175,6 @@
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
 		727D396BDB689AFF9C3931C6 /* HomePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomePageViewController.swift; path = HomePage/HomePageViewController.swift; sourceTree = "<group>"; };
 		727D39B02AB471D9F31B0747 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
-		727D3A0E804B8CCE75D55E5A /* VideoSStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VideoSStream.swift; path = Video/VideoSStream.swift; sourceTree = "<group>"; };
 		727D3A51A7A6155C22E62412 /* GifLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifLoader.swift; sourceTree = "<group>"; };
 		727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bluetoothDataController.swift; sourceTree = "<group>"; };
 		727D3A8D7ACD08EF11740FC2 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
@@ -356,6 +356,7 @@
 				727D35176F5210BE178D2A44 /* RTCSimluatorVideoEncoderFactory.swift */,
 				727D3893AF82740A963BBD37 /* RTCSimulatorVideoDecoderFactory.swift */,
 				727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */,
+				727D32E3FF7FA5BADAAEDBE6 /* VideoViewWebRtc.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -454,7 +455,6 @@
 				727D3CE316DD4B67FB82F0BB /* CameraController.swift */,
 				727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */,
 				727D3F8E752887E2A76CC901 /* CheckBox.swift */,
-				727D3A0E804B8CCE75D55E5A /* VideoSStream.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -807,7 +807,6 @@
 				727D3B90FC0EB50ACC220F11 /* RobotInfoFrame.swift in Sources */,
 				727D3FC61322D948A9F1F31C /* CheckBox.swift in Sources */,
 				727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */,
-				727D3BF65519AA9BA28F65DE /* VideoSStream.swift in Sources */,
 				727D374363C3C2C96F9EC78B /* CameraFilter.swift in Sources */,
 				727D322ED39BF49B9B9CA404 /* CameraSession.swift in Sources */,
 				727D3D7ED38D147ECD48C9BA /* SignalingMessage.swift in Sources */,
@@ -819,6 +818,7 @@
 				727D388FE6AEA3562F58D52D /* RTCSimulatorVideoDecoderFactory.swift in Sources */,
 				727D34E3CC491BD7758C572F /* WebRTCClient.swift in Sources */,
 				4FEF46257887327B74C4900E /* JSON.swift in Sources */,
+				727D338AB7E821641A477554 /* VideoViewWebRtc.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

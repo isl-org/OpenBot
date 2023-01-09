@@ -8,12 +8,16 @@ var sharedConnection: Connection?
 protocol sendInitialMessageDelegate: class {
    func sendMessage()
 }
-class Connection: sendInitialMessageDelegate {
+protocol startStreamDelegate: class {
+    func startVideoStream()
+}
+class Connection: sendInitialMessageDelegate, startStreamDelegate {
 
 
     let connection: NWConnection
     // outgoing connection
     weak var msgDelegate: sendInitialMessageDelegate?
+    weak var startStreamDelegate : startStreamDelegate?
     init(endpoint: NWEndpoint) {
 
         print("PeerConnection outgoing endpoint: \(endpoint)")
@@ -25,6 +29,7 @@ class Connection: sendInitialMessageDelegate {
         connection = NWConnection(to: endpoint, using: parameters)
         start()
         msgDelegate = self
+        startStreamDelegate = self
     }
 
     // incoming connection
@@ -40,6 +45,7 @@ class Connection: sendInitialMessageDelegate {
             case .ready :
                 self.receiveMessage();
                 self.msgDelegate?.sendMessage()
+                self.startStreamDelegate?.startVideoStream()
             case .preparing :
                 return
             default:
@@ -71,6 +77,9 @@ class Connection: sendInitialMessageDelegate {
                     if command.contains("answer"){
                         NotificationCenter.default.post(name: .updateDataFromControllerApp, object: command.data(using: .utf8));
                     }
+                    if command.contains("driveCmd"){
+                        NotificationCenter.default.post(name: .updateStringFromControllerApp, object: message);
+                    }
                     print("received message ->",command);
                 }
             }
@@ -89,5 +98,10 @@ class Connection: sendInitialMessageDelegate {
         client.send(message: msg);
         msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true)));
         client.send(message: msg)
+    }
+
+    func startVideoStream(){
+        print("inside delegate of startVideoStream")
+        VideoViewWebRtc();
     }
 }

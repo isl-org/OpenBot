@@ -56,7 +56,7 @@ class AutopilotFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateThread), name: .updateThread, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil);
-        NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateDataFromControllerApp, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
 
         calculateFrame()
     }

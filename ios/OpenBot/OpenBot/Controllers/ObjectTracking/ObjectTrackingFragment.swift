@@ -51,7 +51,7 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoModeObjectTracking, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSelectedObject), name: .updateObject, object: nil);
-        NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateDataFromControllerApp, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
         setupNavigationBarItem()
         super.viewDidLoad()
     }
