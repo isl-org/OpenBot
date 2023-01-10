@@ -14,8 +14,8 @@ import 'package:openbot_controller/utils/videoViewWebRTC.dart';
 import 'discoveringDevices.dart';
 import 'onScreenMode.dart';
 
-const String serviceTypeDiscover = '_1openbot._tcp';
-const String serviceTypeRegister = '_1openbot._tcp';
+const String serviceTypeDiscover = '_openbot._tcp';
+const String serviceTypeRegister = '_openbot._tcp';
 const utf8encoder = Utf8Encoder();
 
 class Controller extends StatefulWidget {
@@ -44,10 +44,10 @@ class ControllerState extends State<Controller> {
 
   //webRTC________________
 
-  final _remoteVideoRenderer = RTCVideoRenderer();
+  RTCVideoRenderer _remoteVideoRenderer = RTCVideoRenderer();
   RTCPeerConnection? _peerConnection;
 
-  get remoteRenderer => _remoteVideoRenderer;
+  // get remoteRenderer => _remoteVideoRenderer;
 
   Future<void> videoConnection() async {
     initRenderers();
@@ -58,7 +58,10 @@ class ControllerState extends State<Controller> {
   }
 
   initRenderers() async {
-    await _remoteVideoRenderer.initialize();
+    print("_remoteVideoRenderer = $_remoteVideoRenderer");
+    if(_remoteVideoRenderer != null) {
+      await _remoteVideoRenderer.initialize();
+    }
   }
 
   void handleWebRtcEvent() async {
@@ -105,8 +108,8 @@ class ControllerState extends State<Controller> {
     };
     final Map<String, dynamic> offerSdpConstraints = {
       "mandatory": {
-        "OfferToReceiveAudio": false,
-        "OfferToReceiveVideo": true,
+        "OfferToReceiveAudio": "false",
+        "OfferToReceiveVideo": "true",
       },
       "optional": [],
     };
@@ -114,6 +117,15 @@ class ControllerState extends State<Controller> {
     RTCPeerConnection pc =
         await createPeerConnection(configuration, offerSdpConstraints);
     print("peer connection ${pc.iceConnectionState}");
+    pc.onAddStream = (MediaStream stream) {
+      // var remoteVideoTrack = stream.getVideoTracks();
+      // MediaStream srcStream = stream;
+      // print("connection stream = $stream");
+      _remoteVideoRenderer.srcObject = stream;
+      setState(() {_remoteVideoRenderer;});
+      print("_remoteVideoRenderer =  $_remoteVideoRenderer");
+    };
+
     pc.onIceCandidate = (e) {
       print("on ice candidate");
       if (e.candidate != null) {
@@ -133,13 +145,14 @@ class ControllerState extends State<Controller> {
       print("connection state 2 = ${pc.connectionState}");
     };
 
-    pc.onAddStream = (stream) {
-      print("connection stream = ${stream.getVideoTracks()}");
-      _remoteVideoRenderer.srcObject = stream;
-      setState(() {
-        videoView = true;
+    pc.onTrack = (RTCTrackEvent event){
+      print("onTrack = ${event.streams[0]}");
+      event.streams[0].getTracks().forEach((track) {
+
+        log("add track to remote = $track");
       });
     };
+
     return pc;
   }
 
@@ -148,10 +161,13 @@ class ControllerState extends State<Controller> {
     final Map<String, dynamic> offerSdpConstraints = {
       "mandatory": {
         "OfferToReceiveAudio": "false",
-        "OfferToReceiveVideo": "false",
+        "OfferToReceiveVideo": "true",
       },
       "optional": [],
     };
+    setState(() {
+      videoView = true;
+    });
 
     RTCSessionDescription? description =
         await _peerConnection?.createAnswer(offerSdpConstraints);
@@ -167,8 +183,8 @@ class ControllerState extends State<Controller> {
   void sendMessage(message) async {
     print("send message chala");
     var newMessage = jsonEncode(message);
-    clientSocket?.writeln(newMessage);
-    clientSocket?.writeln("newMessage");
+    clientSocket?.writeln({"webrtc_event":newMessage});
+    // clientSocket?.writeln("newMessage");
   }
 
   //________________webRTC
@@ -186,7 +202,7 @@ class ControllerState extends State<Controller> {
   Future<void> registerNewService() async {
     var port = nextPort;
     final service = Service(
-        name: 'OPEN_BOT_CONTROLLER_SANJEEV',
+        name: 'OPEN_BOT_CONTROLLER',
         host: InternetAddress.anyIPv4.address,
         type: serviceTypeRegister,
         port: port,
@@ -208,7 +224,7 @@ class ControllerState extends State<Controller> {
 
         _broadcast?.map((data) => String.fromCharCodes(data)).listen(
           (message) {
-            // log(message);
+            log(message);
             var msgInObject;
             try {
               var jsonArr = message.split("\n");
@@ -273,7 +289,9 @@ class ControllerState extends State<Controller> {
   @override
   Widget build(BuildContext context) {
     if (videoView) {
-      return RTCVideoView(_remoteVideoRenderer);
+      return Container(
+        child: RTCVideoView(_remoteVideoRenderer),
+      );
     } else {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -289,7 +307,7 @@ class ControllerState extends State<Controller> {
   }
 
   void processMessageFromBot(items) {
-    print(items);
+    print("items = $items");
     if (items["CONNECTION_ACTIVE"] != null) {
       setDeviceConnected(items["CONNECTION_ACTIVE"]);
     }
