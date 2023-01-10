@@ -31,7 +31,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     private var remoteDataChannel: RTCDataChannel?
     private var channels: (video: Bool, audio: Bool, datachannel: Bool) = (false, false, false)
     private var customFrameCapturer: Bool = false
-    private var cameraDevicePosition: AVCaptureDevice.Position = .back
+    private var cameraDevicePosition: AVCaptureDevice.Position = .front
 
     var delegate: WebRTCClientDelegate?
     public private(set) var isConnected: Bool = false
@@ -77,7 +77,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         setupLocalTracks()
 
         if channels.video {
-            startCaptureLocalVideo(cameraPosition: cameraDevicePosition, videoWidth: 640, videoHeight: 640 * 16 / 9, videoFps: 30)
+            startCaptureLocalVideo(cameraPosition: cameraDevicePosition, videoWidth: 1920, videoHeight: 1080, videoFps: 30)
             self.localVideoTrack?.add(localRenderView!)
         }
     }
@@ -276,12 +276,14 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         if let capturer = self.videoCapturer as? RTCCameraVideoCapturer {
             var targetDevice: AVCaptureDevice?
             var targetFormat: AVCaptureDevice.Format?
+
             print("inside startCaptureLocalVideo")
             // find target device
             let devicies = RTCCameraVideoCapturer.captureDevices()
             devicies.forEach { (device) in
                 if device.position == cameraPosition {
                     targetDevice = device
+                    print("devices are :", device);
                 }
             }
 
