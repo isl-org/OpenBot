@@ -23,7 +23,7 @@ class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     func setupSession() {
         self.session = AVCaptureSession()
         session?.sessionPreset = AVCaptureSession.Preset.medium
-        self.device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+        self.device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
         guard let input = try? AVCaptureDeviceInput(device: device!) else {
             print("Caught exception!")
             return
@@ -48,8 +48,8 @@ class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     }
 
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        self.delegate?.didOutput(sampleBuffer)
-    }
+//    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+//        self.delegate?.didOutput(sampleBuffer)
+//    }
 }
 

@@ -31,7 +31,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     private var remoteDataChannel: RTCDataChannel?
     private var channels: (video: Bool, audio: Bool, datachannel: Bool) = (false, false, false)
     private var customFrameCapturer: Bool = false
-    private var cameraDevicePosition: AVCaptureDevice.Position = .front
+    private var cameraDevicePosition: AVCaptureDevice.Position = .back
 
     var delegate: WebRTCClientDelegate?
     public private(set) var isConnected: Bool = false
@@ -194,6 +194,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         if let _dataChannel = self.remoteDataChannel {
             if _dataChannel.readyState == .open {
                 let buffer = RTCDataBuffer(data: data, isBinary: true)
+                print("inside data channel")
                 _dataChannel.sendData(buffer)
             }
         }
@@ -202,12 +203,14 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     func captureCurrentFrame(sampleBuffer: CMSampleBuffer) {
         if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
             capturer.capture(sampleBuffer)
+            print("inside captureCurrentFrame")
         }
     }
 
     func captureCurrentFrame(sampleBuffer: CVPixelBuffer) {
         if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
             capturer.capture(sampleBuffer)
+            print("inside captureCurrentFrame CVPixelBuffer")
         }
     }
 
@@ -273,7 +276,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         if let capturer = self.videoCapturer as? RTCCameraVideoCapturer {
             var targetDevice: AVCaptureDevice?
             var targetFormat: AVCaptureDevice.Format?
-
+            print("inside startCaptureLocalVideo")
             // find target device
             let devicies = RTCCameraVideoCapturer.captureDevices()
             devicies.forEach { (device) in

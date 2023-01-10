@@ -68,13 +68,15 @@ class VideoViewWebRtc:  WebRTCClientDelegate, CameraSessionDelegate {
     }
 
     func didOutput(_ sampleBuffer: CMSampleBuffer) {
+        print("inside didOutput");
         if self.useCustomCapturer {
             if let cvpixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
-                if let buffer = self.cameraFilter?.apply(cvpixelBuffer) {
-                    self.webRTCClient.captureCurrentFrame(sampleBuffer: buffer)
-                } else {
-                    print("no applied image")
-                }
+                self.webRTCClient.captureCurrentFrame(sampleBuffer: cvpixelBuffer)
+//                if let buffer = self.cameraFilter?.apply(cvpixelBuffer) {
+//
+//                } else {
+//                    print("no applied image")
+//                }
             } else {
                 print("no pixelbuffer")
             }
@@ -91,10 +93,14 @@ class VideoViewWebRtc:  WebRTCClientDelegate, CameraSessionDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(websocketDidReceiveMessage), name: .updateDataFromControllerApp, object: nil)
         if useCustomCapturer {
             print("--- use custom capturer ---")
-            self.cameraSession = CameraSession()
+//            self.cameraSession = CameraSession()
             self.cameraSession?.delegate = self
             self.cameraSession?.setupSession()
-            self.cameraFilter = CameraFilter()
+           let tempCameraSession = CameraController();
+            tempCameraSession.setupLivePreview()
+            tempCameraSession.initializeCamera();
+
+//            self.cameraFilter = CameraFilter()
         }
         if !webRTCClient.isConnected {
             webRTCClient.connect(onSuccess: { (offerSDP: RTCSessionDescription) -> Void in
