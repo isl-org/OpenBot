@@ -263,9 +263,10 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         if let capturer = self.videoCapturer as? RTCCameraVideoCapturer {
             var targetDevice: AVCaptureDevice?
             var targetFormat: AVCaptureDevice.Format?
+
             print("inside startCaptureLocalVideo")
             // find target device
-            let devicies = RTCCameraVideoCapturer.captureDevices();
+            let devicies = RTCCameraVideoCapturer.captureDevices()
             devicies.forEach { (device) in
                 if device.position == cameraPosition {
                     targetDevice = device
@@ -276,10 +277,10 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
             // find target format
             let formats = RTCCameraVideoCapturer.supportedFormats(for: targetDevice!)
             formats.forEach { (format) in
-                print("inside formasts")
                 for _ in format.videoSupportedFrameRateRanges {
                     let description = format.formatDescription as CMFormatDescription
                     let dimensions = CMVideoFormatDescriptionGetDimensions(description)
+
                     if dimensions.width == videoWidth && dimensions.height == videoHeight ?? 0 {
                         targetFormat = format
                     } else if dimensions.width == videoWidth {
@@ -291,8 +292,16 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
             capturer.startCapture(with: targetDevice!,
                     format: targetFormat!,
                     fps: videoFps)
+        } else if let capturer = self.videoCapturer as? RTCFileVideoCapturer {
+            print("setup file video capturer")
+            if let _ = Bundle.main.path(forResource: "sample.mp4", ofType: nil) {
+                capturer.startCapturing(fromFileNamed: "sample.mp4") { (err) in
+                    print(err)
+                }
+            } else {
+                print("file did not faund")
+            }
         }
-
     }
 
     // MARK: - Local Data
