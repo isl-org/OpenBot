@@ -101,7 +101,6 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
     }
 
     func startVideoStream(){
-        print("inside delegate of startVideoStream")
         VideoViewWebRtc();
     }
 }

@@ -72,11 +72,6 @@ class VideoViewWebRtc:  WebRTCClientDelegate, CameraSessionDelegate {
         if self.useCustomCapturer {
             if let cvpixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
                 self.webRTCClient.captureCurrentFrame(sampleBuffer: cvpixelBuffer)
-//                if let buffer = self.cameraFilter?.apply(cvpixelBuffer) {
-//
-//                } else {
-//                    print("no applied image")
-//                }
             } else {
                 print("no pixelbuffer")
             }

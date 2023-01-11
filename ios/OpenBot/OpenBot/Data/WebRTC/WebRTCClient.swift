@@ -47,6 +47,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     override init() {
         super.init()
         print("WebRTC Client initialize")
+        NotificationCenter.default.addObserver(self, selector: #selector(switchCameraPosition), name: .switchCamera, object: nil)
     }
 
     deinit {
@@ -77,7 +78,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         setupLocalTracks()
 
         if channels.video {
-            startCaptureLocalVideo(cameraPosition: cameraDevicePosition, videoWidth: 1920, videoHeight: 1080, videoFps: 30)
+            startCaptureLocalVideo(cameraPosition: cameraDevicePosition, videoWidth: 1920, videoHeight: 1080, videoFps: 40)
             self.localVideoTrack?.add(localRenderView!)
         }
     }
@@ -92,7 +93,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         remoteRenderView?.frame = remoteView.frame
     }
 
-    func switchCameraPosition() {
+   @objc func switchCameraPosition() {
         if let capturer = self.videoCapturer as? RTCCameraVideoCapturer {
             capturer.stopCapture {
                 let position = (self.cameraDevicePosition == .front) ? AVCaptureDevice.Position.back : AVCaptureDevice.Position.front
@@ -252,8 +253,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         let audioConstrains = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
         let audioSource = self.peerConnectionFactory.audioSource(with: audioConstrains)
         let audioTrack = self.peerConnectionFactory.audioTrack(with: audioSource, trackId: "audio0")
-
-        // audioTrack.source.volume = 10
+         audioTrack.source.volume = 10
         return audioTrack
     }
 
