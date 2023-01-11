@@ -245,15 +245,17 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
             self.localVideoTrack = createVideoTrack()
         }
         if self.channels.audio == true {
+            print("inside channels.audio")
             self.localAudioTrack = createAudioTrack()
         }
     }
 
     private func createAudioTrack() -> RTCAudioTrack {
+        print("inside createAudioTrack");
         let audioConstrains = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
         let audioSource = self.peerConnectionFactory.audioSource(with: audioConstrains)
         let audioTrack = self.peerConnectionFactory.audioTrack(with: audioSource, trackId: "audio0")
-         audioTrack.source.volume = 10
+         audioTrack.source.volume = 10.0
         return audioTrack
     }
 

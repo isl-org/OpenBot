@@ -46,7 +46,6 @@
 		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
 		727D3096D68C8091820BF737 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E0C80EA698A6B6B38AC /* UIColorExtension.swift */; };
 		727D319EA6CD65DE80FF750C /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */; };
-		727D322ED39BF49B9B9CA404 /* CameraSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3B9C28423AD20525879B /* CameraSession.swift */; };
 		727D332F054456A4182DD7DF /* expandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3327FAD14CEC3DE54D95 /* expandSetting.swift */; };
 		727D3344CC8742EB020E2992 /* ModelManagementTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31518A6A6FE099F41F49 /* ModelManagementTable.swift */; };
 		727D338AB7E821641A477554 /* VideoViewWebRtc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* VideoViewWebRtc.swift */; };
@@ -59,7 +58,6 @@
 		727D3514A9B56B54E3FA4089 /* expandedAutoPilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35819C2D0A82BB4E5A7D /* expandedAutoPilot.swift */; };
 		727D36915DB88577316D9C46 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A8D7ACD08EF11740FC2 /* Connection.swift */; };
 		727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */; };
-		727D374363C3C2C96F9EC78B /* CameraFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F616208713BD627CD7A /* CameraFilter.swift */; };
 		727D378DB2E32C26828E73A9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3879029901392BD7F608 /* GameViewController.swift */; };
 		727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F5FE3F054BE4FA52191 /* timestamp.swift */; };
 		727D37EF7FFD794AAD19F1F6 /* modesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3421CB0D9D6B68ADB5B7 /* modesCollectionViewCell.swift */; };
@@ -180,7 +178,6 @@
 		727D3A8D7ACD08EF11740FC2 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VehicleControl.swift; path = Modes/VehicleControl.swift; sourceTree = "<group>"; };
 		727D3B76CF73A97A22A8022E /* BluetoothTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BluetoothTable.swift; path = Bluetooth/BluetoothTable.swift; sourceTree = "<group>"; };
-		727D3B9C28423AD20525879B /* CameraSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraSession.swift; path = CameraSession/CameraSession.swift; sourceTree = "<group>"; };
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		727D3CE316DD4B67FB82F0BB /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		727D3D0186944D629E367A9D /* SettingsFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsFragment.swift; path = Settings/SettingsFragment.swift; sourceTree = "<group>"; };
@@ -191,7 +188,6 @@
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIDeviceExtension.swift; path = extensions/UIDeviceExtension.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
-		727D3F616208713BD627CD7A /* CameraFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraFilter.swift; path = CameraFilter/CameraFilter.swift; sourceTree = "<group>"; };
 		727D3F8E752887E2A76CC901 /* CheckBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CheckBox.swift; path = RobotInfo/CheckBox.swift; sourceTree = "<group>"; };
 		74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -349,8 +345,6 @@
 				727D3157F2B5E5DBB1565EDD /* DataLogger.swift */,
 				727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */,
 				4FEF4E8F0A2942C4C971E2BA /* Server */,
-				727D3F616208713BD627CD7A /* CameraFilter.swift */,
-				727D3B9C28423AD20525879B /* CameraSession.swift */,
 				727D37586F16DE497CEA62CE /* SignalingMessage.swift */,
 				727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */,
 				727D35176F5210BE178D2A44 /* RTCSimluatorVideoEncoderFactory.swift */,
@@ -807,8 +801,6 @@
 				727D3B90FC0EB50ACC220F11 /* RobotInfoFrame.swift in Sources */,
 				727D3FC61322D948A9F1F31C /* CheckBox.swift in Sources */,
 				727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */,
-				727D374363C3C2C96F9EC78B /* CameraFilter.swift in Sources */,
-				727D322ED39BF49B9B9CA404 /* CameraSession.swift in Sources */,
 				727D3D7ED38D147ECD48C9BA /* SignalingMessage.swift in Sources */,
 				727D3096D68C8091820BF737 /* UIColorExtension.swift in Sources */,
 				727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */,

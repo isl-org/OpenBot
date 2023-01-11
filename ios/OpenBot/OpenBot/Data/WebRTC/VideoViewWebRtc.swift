@@ -7,14 +7,14 @@ import AVFoundation
 import Starscream
 import WebRTC
 
-class VideoViewWebRtc:  WebRTCClientDelegate, CameraSessionDelegate {
+class VideoViewWebRtc:  WebRTCClientDelegate{
 
     var webRTCClient: WebRTCClient!
-    var cameraSession: CameraSession?
+
 
     // You can create video source from CMSampleBuffer :)
     var useCustomCapturer: Bool = false
-    var cameraFilter: CameraFilter?
+
     let webRTCStatusMesasgeBase = "WebRTC: "
 
     func didGenerateCandidate(iceCandidate: RTCIceCandidate) {
@@ -89,8 +89,7 @@ class VideoViewWebRtc:  WebRTCClientDelegate, CameraSessionDelegate {
         if useCustomCapturer {
             print("--- use custom capturer ---")
 //            self.cameraSession = CameraSession()
-            self.cameraSession?.delegate = self
-            self.cameraSession?.setupSession()
+
            let tempCameraSession = CameraController();
             tempCameraSession.setupLivePreview()
             tempCameraSession.initializeCamera();
