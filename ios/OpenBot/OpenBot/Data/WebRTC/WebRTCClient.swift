@@ -68,7 +68,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         var videoDecoderFactory = RTCDefaultVideoDecoderFactory()
 
         if TARGET_OS_SIMULATOR != 0 {
-            print("setup vp8 codec")
             videoEncoderFactory = RTCSimluatorVideoEncoderFactory()
             videoDecoderFactory = RTCSimulatorVideoDecoderFactory()
         }
@@ -201,22 +200,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         }
     }
 
-    func captureCurrentFrame(sampleBuffer: CMSampleBuffer) {
-        if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
-            capturer.capture(sampleBuffer)
-            print("inside captureCurrentFrame")
-        }
-    }
-
-    func captureCurrentFrame(sampleBuffer: CVPixelBuffer) {
-        if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
-            capturer.capture(sampleBuffer)
-            print("inside captureCurrentFrame CVPixelBuffer")
-        }
-    }
-
-    // MARK: - Private functions
-    // MARK: - Setup
     private func setupPeerConnection() -> RTCPeerConnection {
         print("inside setupPeerConnection")
         let rtcConf = RTCConfiguration()
@@ -264,10 +247,12 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
 
         if self.customFrameCapturer {
             self.videoCapturer = RTCCustomFrameCapturer(delegate: videoSource)
+            print("inside RTCCustomFrameCapturer")
         } else if TARGET_OS_SIMULATOR != 0 {
             print("now runnnig on simulator...")
             self.videoCapturer = RTCFileVideoCapturer(delegate: videoSource)
         } else {
+            print("inside RTCCameraVideoCapturer")
             self.videoCapturer = RTCCameraVideoCapturer(delegate: videoSource)
         }
         let videoTrack = self.peerConnectionFactory.videoTrack(with: videoSource, trackId: "video0")

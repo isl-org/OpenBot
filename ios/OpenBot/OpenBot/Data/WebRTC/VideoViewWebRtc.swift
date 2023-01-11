@@ -67,16 +67,7 @@ class VideoViewWebRtc:  WebRTCClientDelegate{
         print("didDisconnectWebRTC")
     }
 
-    func didOutput(_ sampleBuffer: CMSampleBuffer) {
-        print("inside didOutput");
-        if self.useCustomCapturer {
-            if let cvpixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
-                self.webRTCClient.captureCurrentFrame(sampleBuffer: cvpixelBuffer)
-            } else {
-                print("no pixelbuffer")
-            }
-        }
-    }
+
     init(){
         #if targetEnvironment(simulator)
         // simulator does not have camera
