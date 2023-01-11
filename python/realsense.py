@@ -64,7 +64,10 @@ class Realsense(threading.Thread):
 
         super().__init__(name='realsense-thread')
 
-        self.start()
+        if self.pipeline:
+            self.start()
+        else:
+            print("Realsense not found. Not starting Realsense Thread.")
 
     def run(self):
         """Runs retrieving images in an infinite loop and stores the current image

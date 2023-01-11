@@ -63,10 +63,12 @@ See `tests/test_export_openvino.py` for an example.
 
 ## Tests and example code
 
-**Note:** For testing the code, please run the script `get_test_data.sh` that downloads and unzips a zip file containing `test_data` and `test_models` with the data for debug mode and models for inference respectively.
+**Note:** For testing the code, the test data and test model called `test_data` and `test_model` respectively are required to be in `OpenBot/python/tests`. The function `get_data()` in `download_data.py` provides download functionality and is called at the beginning of `test_infer.py`, `test_export_openvino.py`, and `test_generate_data.py`. Alternatively,
+ please run the script `get_test_data.sh` (unix systems only) that downloads and unzips a zip file containing `test_data` and `test_models` with the data for debug mode and models for inference respectively.
 
 Run `pytest` in the folder `tests` or run the `test_*.py` files individually to test the functionalities of
 
+- downloading test data and test model from the cloud via `test_download_data.py`
 - export to OpenVino via `test_export_openvino.py`
 - generating training data via `test_generate_data.py`.
 - inference in debug mode for OpenVino, Tensorflow, and Tflite via `test_infer.py`.
