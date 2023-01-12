@@ -24,8 +24,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     private var localAudioTrack: RTCAudioTrack!
     private var localRenderView: RTCEAGLVideoView?
     private var localView: UIView!
-    private var remoteRenderView: RTCEAGLVideoView?
-    private var remoteView: UIView!
     private var remoteStream: RTCMediaStream?
     private var dataChannel: RTCDataChannel?
     private var remoteDataChannel: RTCDataChannel?
@@ -39,18 +37,13 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         localView
     }
 
-    func remoteVideoView() -> UIView {
-        remoteView
-    }
 
     override init() {
         super.init()
-        print("WebRTC Client initialize")
         NotificationCenter.default.addObserver(self, selector: #selector(switchCameraPosition), name: .switchCamera, object: nil)
     }
 
     deinit {
-        print("WebRTC Client Deinit")
         peerConnectionFactory = nil
         peerConnection = nil
     }
@@ -98,10 +91,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         }
     }
 
-    func setupRemoteViewFrame(frame: CGRect) {
-        remoteView.frame = frame
-        remoteRenderView?.frame = remoteView.frame
-    }
+
 
    @objc func switchCameraPosition() {
         if let capturer = self.videoCapturer as? RTCCameraVideoCapturer {
@@ -128,8 +118,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
             self.dataChannel = self.setupDataChannel()
             self.dataChannel?.delegate = self
         }
-
-
         makeOffer(onSuccess: onSuccess)
     }
 
@@ -158,8 +146,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
             }
 
         }
-
-        print("set remote description")
         self.peerConnection!.setRemoteDescription(offerSDP) { (err) in
             if let error = err {
                 print("failed to set remote offer SDP")
@@ -226,11 +212,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         localRenderView!.delegate = self
         localView = UIView()
         localView.addSubview(localRenderView!)
-        // remote
-        remoteRenderView = RTCEAGLVideoView()
-        remoteRenderView?.delegate = self
-        remoteView = UIView()
-        remoteView.addSubview(remoteRenderView!)
     }
 
     //MARK: - Local Media
@@ -377,7 +358,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         self.isConnected = true
 
         DispatchQueue.main.async {
-            self.remoteRenderView?.isHidden = false
             self.delegate?.didConnectWebRTC()
         }
     }
@@ -389,7 +369,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
             print("--- on dis connected ---")
             self.peerConnection!.close()
             self.peerConnection = nil
-            self.remoteRenderView?.isHidden = true
             self.dataChannel = nil
             self.delegate?.didDisconnectWebRTC()
         }
@@ -435,7 +414,6 @@ extension WebRTCClient {
 
         if let track = stream.videoTracks.first {
             print("video track faund")
-            track.add(remoteRenderView!)
         }
 
         if let audioTrack = stream.audioTracks.first {
@@ -479,21 +457,18 @@ extension WebRTCClient {
             parentView = localView
         }
 
-        if videoView.isEqual(remoteRenderView!) {
-            print("remote video size changed to: ", size)
-            renderView = remoteRenderView
-            parentView = remoteView
-        }
 
         guard let _renderView = renderView, let _parentView = parentView else {
             return
         }
 
         if (isLandScape) {
+            print("inside landscape")
             let ratio = size.width / size.height
             _renderView.frame = CGRect(x: 0, y: 0, width: _parentView.frame.height * ratio, height: _parentView.frame.height)
             _renderView.center.x = _parentView.frame.width / 2
         } else {
+            print("inside else landscape")
             let ratio = size.height / size.width
             _renderView.frame = CGRect(x: 0, y: 0, width: _parentView.frame.width, height: _parentView.frame.width * ratio)
             _renderView.center.y = _parentView.frame.height / 2

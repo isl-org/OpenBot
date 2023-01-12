@@ -26,7 +26,6 @@ class RTCCustomFrameCapturer: RTCVideoCapturer {
     }
 
     public func capture(_ pixelBuffer: CVPixelBuffer) {
-        print("inside CVPixelBuffer")
         let rtcPixelBuffer = RTCCVPixelBuffer(pixelBuffer: pixelBuffer)
         let timeStampNs = nanoseconds * kNanosecondsPerSecond
         let rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._90, timeStampNs: Int64(timeStampNs))

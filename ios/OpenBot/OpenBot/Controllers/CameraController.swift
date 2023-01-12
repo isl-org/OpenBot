@@ -6,9 +6,7 @@ import Foundation
 import AVFoundation
 import UIKit
 
- protocol CameraSessionDelegate : class {
-    func didOutput(_ sampleBuffer: CMSampleBuffer)
-}
+
 class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapturePhotoCaptureDelegate {
     static let shared: CameraController = CameraController();
     var captureSession: AVCaptureSession!
@@ -29,8 +27,8 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     var originalWidth = 0.0;
     var images: [(UIImage, Bool, Bool)] = []
     var photoOutput = AVCapturePhotoOutput()
-    var delegate: CameraSessionDelegate?
-
+    private var isInferenceQueueBusy = false
+    private let inferenceQueue = DispatchQueue(label: "openbot.cameraController.inferencequeue")
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
@@ -42,16 +40,21 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
         NotificationCenter.default.post(name: .cameraBuffer, object : sampleBuffer);
-        if webRTCClient != nil {
-            webRTCClient.captureCurrentFrame(sampleBuffer: sampleBuffer);
-        }
-        delegate?.didOutput(sampleBuffer);
+
         guard let imagePixelBuffer = pixelBuffer else {
             debugPrint("unable to get image from sample buffer")
             return
         }
-
-
+        guard !self.isInferenceQueueBusy else {
+            print("queue is busy")
+            return
+        }
+        if webRTCClient != nil {
+            inferenceQueue.async {
+                webRTCClient.captureCurrentFrame(sampleBuffer: sampleBuffer);
+                self.isInferenceQueueBusy = false
+            }
+        }
     }
 
     func getImageOriginalHeight() -> Double {

@@ -7,8 +7,7 @@ import AVFoundation
 import Starscream
 import WebRTC
 var webRTCClient: WebRTCClient!
-class VideoViewWebRtc: WebRTCClientDelegate, CameraSessionDelegate {
-    var cameraDelegate: CameraSessionDelegate?
+class VideoViewWebRtc: WebRTCClientDelegate {
 
     // You can create video source from CMSampleBuffer :)
     var useCustomCapturer: Bool = true
@@ -71,15 +70,12 @@ class VideoViewWebRtc: WebRTCClientDelegate, CameraSessionDelegate {
         #endif
         webRTCClient = WebRTCClient()
         webRTCClient.delegate = self
-        cameraDelegate = self
-        print("camera delegate is :", cameraDelegate)
         webRTCClient.setup(videoTrack: true, audioTrack: true, dataChannel: true, customFrameCapturer: useCustomCapturer)
         NotificationCenter.default.addObserver(self, selector: #selector(websocketDidReceiveMessage), name: .updateDataFromControllerApp, object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(cameraBuffer), name: .cameraBuffer, object: nil)
         if useCustomCapturer {
             print("--- use custom capturer ---")
             let tempCameraSession = CameraController.shared.captureSession;
-            CameraController.shared.delegate = self;
         }
         if !webRTCClient.isConnected {
             webRTCClient.connect(onSuccess: { (offerSDP: RTCSessionDescription) -> Void in
