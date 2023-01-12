@@ -15,7 +15,7 @@ protocol WebRTCClientDelegate {
     func didDisconnectWebRTC()
 }
 
-class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, RTCDataChannelDelegate {
+class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate {
 
     private var peerConnectionFactory: RTCPeerConnectionFactory!
     private var peerConnection: RTCPeerConnection?
@@ -70,11 +70,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         if channels.video {
             self.localVideoTrack?.add(localRenderView!)
         }
-    }
-
-    func setupLocalViewFrame(frame: CGRect) {
-//        localView.frame = frame
-//        localRenderView?.frame = localView.frame
     }
 
     func captureCurrentFrame(sampleBuffer: CMSampleBuffer){
@@ -195,7 +190,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     private func setupView() {
         // local
         localRenderView = RTCEAGLVideoView()
-        localRenderView!.delegate = self
         localView = UIView()
         localView.addSubview(localRenderView!)
     }
@@ -387,35 +381,10 @@ extension WebRTCClient {
 }
 
 // MARK: - RTCVideoView Delegate
-extension WebRTCClient {
-    func videoView(_ videoView: RTCVideoRenderer, didChangeVideoSize size: CGSize) {
-        let isLandScape = size.width < size.height
-        var renderView: RTCEAGLVideoView?
-        var parentView: UIView?
-        if videoView.isEqual(localRenderView) {
-            print("local video size changed")
-            renderView = localRenderView
-            parentView = localView
-        }
-
-
-        guard let _renderView = renderView, let _parentView = parentView else {
-            return
-        }
-
-        if (isLandScape) {
-            print("inside landscape")
-            let ratio = size.width / size.height
-            _renderView.frame = CGRect(x: 0, y: 0, width: _parentView.frame.height * ratio, height: _parentView.frame.height)
-            _renderView.center.x = _parentView.frame.width / 2
-        } else {
-            print("inside else landscape")
-            let ratio = size.height / size.width
-            _renderView.frame = CGRect(x: 0, y: 0, width: _parentView.frame.width, height: _parentView.frame.width * ratio)
-            _renderView.center.y = _parentView.frame.height / 2
-        }
-    }
-}
+//extension WebRTCClient {
+//    func videoView(_ videoView: RTCVideoRenderer, didChangeVideoSize size: CGSize) {
+//    }
+//}
 
 // MARK: - RTCDataChannelDelegate
 extension WebRTCClient {
