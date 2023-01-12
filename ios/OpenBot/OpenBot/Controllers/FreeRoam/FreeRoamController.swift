@@ -6,8 +6,8 @@
 //
 
 import UIKit
-
-class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
+import AVFoundation
+class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var sonarLabel = UILabel()
     var voltageLabel = UILabel()
     var outerSonar: UIView!
@@ -97,6 +97,12 @@ class FreeRoamController: UIViewController, UIGestureRecognizerDelegate {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+
+    override func captureOutput(_ output: AVFoundation.AVCaptureOutput, didOutput sampleBuffer: CoreMedia.CMSampleBuffer, from connection: AVFoundation.AVCaptureConnection) {
+        super.captureOutput(output, didOutput: sampleBuffer, from: connection)
+
+        delegate?.didOutput(sampleBuffer);
     }
 
     func ApplyPortraitConstraint() {

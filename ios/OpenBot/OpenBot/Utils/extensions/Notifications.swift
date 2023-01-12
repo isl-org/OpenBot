@@ -42,5 +42,6 @@ extension Notification.Name {
     static let updateDriveMode = Notification.Name("updateDriveMode");
     static let updateStringFromControllerApp = Notification.Name("updateStringFromControllerApp");
     static let updateDataFromControllerApp = Notification.Name("updateDataFromControllerApp");
+    static let cameraBuffer = Notification.Name("cameraBuffer");
 
 }

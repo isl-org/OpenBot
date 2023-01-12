@@ -30,9 +30,8 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     private var dataChannel: RTCDataChannel?
     private var remoteDataChannel: RTCDataChannel?
     private var channels: (video: Bool, audio: Bool, datachannel: Bool) = (false, false, false)
-    private var customFrameCapturer: Bool = false
+    private var customFrameCapturer: Bool = true
     private var cameraDevicePosition: AVCaptureDevice.Position = .front
-
     var delegate: WebRTCClientDelegate?
     public private(set) var isConnected: Bool = false
 
@@ -85,6 +84,20 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     func setupLocalViewFrame(frame: CGRect) {
         localView.frame = frame
         localRenderView?.frame = localView.frame
+    }
+
+    func captureCurrentFrame(sampleBuffer: CMSampleBuffer){
+        print("inside captureCurrentFrame CMSampleBuffer")
+        if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
+            capturer.capture(sampleBuffer)
+        }
+    }
+
+    func captureCurrentFrame(sampleBuffer: CVPixelBuffer){
+        print("inside captureCurrentFrame webrtcclient")
+        if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
+            capturer.capture(sampleBuffer)
+        }
     }
 
     func setupRemoteViewFrame(frame: CGRect) {
@@ -244,7 +257,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
 
     private func createVideoTrack() -> RTCVideoTrack {
         let videoSource = self.peerConnectionFactory.videoSource()
-
         if self.customFrameCapturer {
             self.videoCapturer = RTCCustomFrameCapturer(delegate: videoSource)
             print("inside RTCCustomFrameCapturer")

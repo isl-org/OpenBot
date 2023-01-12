@@ -11,10 +11,12 @@ class RTCCustomFrameCapturer: RTCVideoCapturer {
     var nanoseconds: Float64 = 0
 
     override init(delegate: RTCVideoCapturerDelegate) {
+        print("inside init RTCVideoCapturerDelegate")
         super.init(delegate: delegate)
     }
 
     public func capture(_ sampleBuffer: CMSampleBuffer) {
+        print("inside capture")
         let _pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         if let pixelBuffer = _pixelBuffer {
             let rtcPixelBuffer = RTCCVPixelBuffer(pixelBuffer: pixelBuffer)
@@ -25,9 +27,9 @@ class RTCCustomFrameCapturer: RTCVideoCapturer {
     }
 
     public func capture(_ pixelBuffer: CVPixelBuffer) {
+        print("inside CVPixelBuffer")
         let rtcPixelBuffer = RTCCVPixelBuffer(pixelBuffer: pixelBuffer)
         let timeStampNs = nanoseconds * kNanosecondsPerSecond
-
         let rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._90, timeStampNs: Int64(timeStampNs))
         self.delegate?.capturer(self, didCapture: rtcVideoFrame)
         nanoseconds += 1

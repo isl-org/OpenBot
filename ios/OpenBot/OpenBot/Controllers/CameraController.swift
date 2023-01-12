@@ -6,9 +6,11 @@ import Foundation
 import AVFoundation
 import UIKit
 
-
-class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate,AVCapturePhotoCaptureDelegate {
-
+@objc protocol CameraSessionDelegate : class {
+    func didOutput(_ sampleBuffer: CMSampleBuffer)
+}
+class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapturePhotoCaptureDelegate {
+    static let shared: CameraController = CameraController();
     var captureSession: AVCaptureSession!
     var videoOutput: AVCaptureVideoDataOutput!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
@@ -27,6 +29,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     var originalWidth = 0.0;
     var images: [(UIImage, Bool, Bool)] = []
     var photoOutput = AVCapturePhotoOutput()
+    var delegate: CameraSessionDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,11 +41,13 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
 
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-
+        NotificationCenter.default.post(name: .cameraBuffer, object : sampleBuffer);
+        delegate?.didOutput(sampleBuffer);
         guard let imagePixelBuffer = pixelBuffer else {
             debugPrint("unable to get image from sample buffer")
             return
         }
+
 
     }
 
@@ -137,12 +142,12 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
 
             // avoid building up a frame backlog by setting alwaysDiscardLateVideoFrames to true
             videoOutput.alwaysDiscardsLateVideoFrames = true
-
             // tell videoOutput to send the camera feed image to our ViewController instance on a serial background thread
             videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "image_processing_queue"))
 
             // add videoOutput as part of the capture session
             let input = try AVCaptureDeviceInput(device: backCamera)
+            captureSession.usesApplicationAudioSession = true;
             if captureSession.canAddInput(input) && captureSession.canAddOutput(videoOutput) {
                 captureSession.addInput(input)
                 captureSession.addOutput(videoOutput)
@@ -470,7 +475,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         images.removeAll()
     }
 
-    func stopSession(){
+    func stopSession() {
         captureSession.stopRunning()
     }
 
