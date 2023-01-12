@@ -21,104 +21,85 @@ class OnScreenModeState extends State<OnScreenMode> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.transparent,
-        body: Column(
-          children: [
-            GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  alignment: Alignment.topRight,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
-                  child: Image.asset(
-                    "images/cross_icon.png",
-                    height: 55,
-                    width: 55,
-                  ),
-                )),
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 30),
-                    child: Theme(
-                        data: Theme.of(context).copyWith(
-                          sliderTheme: SliderThemeData(
-                            thumbShape: SquareSliderComponentShape(),
-                            trackShape: const MyRoundedRectSliderTrackShape(),
-                          ),
-                        ),
-                        child: RotatedBox(
-                          quarterTurns: -1,
-                          child: Slider(
-                            value: sliderValueLeft,
-                            onChanged: (value) => {
-                              setState(
-                                  () => sliderValueLeft = value.toPrecision(2)),
-                              DriveCommandReducer.filter(
-                                  sliderValueRight, sliderValueLeft)
-                            },
-                            onChangeEnd: (value) => {
-                              setState(() => sliderValueLeft = 0),
-                              DriveCommandReducer.filter(
-                                  sliderValueRight, sliderValueLeft)
-                            },
-                            min: -1,
-                            max: 1,
-                            activeColor: Colors.white,
-                            inactiveColor: const Color(0xFF292929),
-                          ),
-                        )),
-                  ),
-                  Container(
-                    alignment: AlignmentDirectional.bottomEnd,
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                    child: const OnScreenIcon(),
-                  ),
-                  Container(
-                      margin: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-                      child: Theme(
-                          data: Theme.of(context).copyWith(
-                            sliderTheme: SliderThemeData(
-                              thumbShape: SquareSliderComponentShape(),
-                              trackShape: const MyRoundedRectSliderTrackShape(),
-                            ),
-                          ),
-                          child: RotatedBox(
-                            quarterTurns: -1,
-                            child: Slider(
-                              value: sliderValueRight,
-                              onChanged: (value) => {
-                                setState(() =>
-                                    sliderValueRight = value.toPrecision(2)),
-                                DriveCommandReducer.filter(
-                                    sliderValueRight, sliderValueLeft)
-                              },
-                              onChangeEnd: (value) => {
-                                setState(() => sliderValueRight = 0),
-                                DriveCommandReducer.filter(
-                                    sliderValueRight, sliderValueLeft)
-                              },
-                              min: -1,
-                              max: 1,
-                              activeColor: Colors.white,
-                              inactiveColor: const Color(0xFF292929),
-                            ),
-                          ))),
-                ],
-              ),
-            ),
-          ],
-        ));
+        body: Row(
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             children: [
+               Container(
+                 margin: const EdgeInsets.only(left: 50),
+                 child: Theme(
+                     data: Theme.of(context).copyWith(
+                       sliderTheme: SliderThemeData(
+                         thumbShape: SquareSliderComponentShape(),
+                         trackShape: const MyRoundedRectSliderTrackShape(),
+                       ),
+                     ),
+                     child: RotatedBox(
+                       quarterTurns: -1,
+                       child: Slider(
+                         value: sliderValueLeft,
+                         onChanged: (value) => {
+                           setState(
+                               () => sliderValueLeft = value.toPrecision(2)),
+                           DriveCommandReducer.filter(
+                               sliderValueRight, sliderValueLeft)
+                         },
+                         onChangeEnd: (value) => {
+                           setState(() => sliderValueLeft = 0),
+                           DriveCommandReducer.filter(
+                               sliderValueRight, sliderValueLeft)
+                         },
+                         min: -1,
+                         max: 1,
+                         activeColor: Colors.white,
+                         inactiveColor: const Color(0xFF292929),
+                       ),
+                     )),
+               ),
+               Container(
+                 alignment: AlignmentDirectional.bottomEnd,
+                 margin: const EdgeInsets.only(bottom: 20),
+                 child: const OnScreenIcon(),
+               ),
+               Container(
+                   margin: const EdgeInsets.only(right: 50),
+                   child: Theme(
+                       data: Theme.of(context).copyWith(
+                         sliderTheme: SliderThemeData(
+                           thumbShape: SquareSliderComponentShape(),
+                           trackShape: const MyRoundedRectSliderTrackShape(),
+                         ),
+                       ),
+                       child: RotatedBox(
+                         quarterTurns: -1,
+                         child: Slider(
+                           value: sliderValueRight,
+                           onChanged: (value) => {
+                             setState(() =>
+                                 sliderValueRight = value.toPrecision(2)),
+                             DriveCommandReducer.filter(
+                                 sliderValueRight, sliderValueLeft)
+                           },
+                           onChangeEnd: (value) => {
+                             setState(() => sliderValueRight = 0),
+                             DriveCommandReducer.filter(
+                                 sliderValueRight, sliderValueLeft)
+                           },
+                           min: -1,
+                           max: 1,
+                           activeColor: Colors.white,
+                           inactiveColor: const Color(0xFF292929),
+                         ),
+                       ))),
+             ],
+           ),
+         );
   }
 }
 
 class SquareSliderComponentShape extends SliderComponentShape {
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    return const Size(20, 30);
+    return const Size(20, 50);
   }
 
   @override

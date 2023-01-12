@@ -26,11 +26,6 @@ class ControllerState extends State<Controller> {
   final registrations = <Registration>[];
   ServerSocket? _serverSocket;
   Stream<Uint8List>? _broadcast;
-  String sdp = "";
-  String type = "";
-  String id = "";
-  int label = 0;
-  String candidate = "";
   bool videoView = false;
 
   var _nextPort = 56360;
@@ -39,24 +34,22 @@ class ControllerState extends State<Controller> {
 
   //webRTC________________
 
-  RTCVideoRenderer _remoteVideoRenderer = RTCVideoRenderer();
+  final RTCVideoRenderer _remoteVideoRenderer = RTCVideoRenderer();
   RTCPeerConnection? _peerConnection;
 
-  // get remoteRenderer => _remoteVideoRenderer;
 
   Future<void> videoConnection() async {
     initRenderers();
     _createPeerConnection().then((pc) {
       _peerConnection = pc;
     });
-    handleWebRtcEvent();
   }
 
   initRenderers() async {
     await _remoteVideoRenderer.initialize();
   }
 
-  void handleWebRtcEvent() async {
+  void handleWebRtcEvent(type, sdp, id, label, candidate) async {
     var description = {
       "type": type,
       "sdp": sdp,
@@ -133,7 +126,6 @@ class ControllerState extends State<Controller> {
   }
 
   void createAnswer() async {
-    log("create answer call");
     final Map<String, dynamic> offerSdpConstraints = {
       "mandatory": {
         "OfferToReceiveAudio": "false",
@@ -152,7 +144,6 @@ class ControllerState extends State<Controller> {
   }
 
   void sendMessage(message) async {
-    log("send message chala");
     var newMessage = jsonEncode(message);
     clientSocket?.writeln({"webrtc_event": newMessage});
   }
@@ -167,6 +158,13 @@ class ControllerState extends State<Controller> {
   void initState() {
     super.initState();
     registerNewService();
+    videoConnection();
+  }
+
+  @override
+  void dispose() async {
+    await _remoteVideoRenderer.dispose();
+    super.dispose();
   }
 
   Future<void> registerNewService() async {
@@ -188,13 +186,10 @@ class ControllerState extends State<Controller> {
       } else {
         clientSocket = socket;
         _broadcast = clientSocket?.asBroadcastStream();
-        //
-        // clientSocket!.write("{driveCmd: {r:0.0, l:0.26}}");
-        // clientSocket!.write("{command: SWITCH_CAMERA}");
 
         _broadcast?.map((data) => String.fromCharCodes(data)).listen(
           (message) {
-            var msgInObject;
+            Map msgInObject;
             try {
               var jsonArr = message.split("\n");
               for (var element in jsonArr) {
@@ -203,7 +198,6 @@ class ControllerState extends State<Controller> {
                   msgInObject = json.decode(json.decode(jsonMsg));
                   if (msgInObject["status"] != null) {
                     processMessageFromBot(msgInObject["status"]);
-                    handleWebRtcEvent();
                   }
                   // log(msgInObject.toString() + "_____");
                   // setDeviceConnected();
@@ -280,13 +274,14 @@ class ControllerState extends State<Controller> {
   }
 
   void processMessageFromBot(items) {
-    log("items = $items");
+    String sdp = "";
+    String type = "";
+    String id = "";
+    int label = 0;
+    String candidate = "";
+    print("items = $items");
     if (items["CONNECTION_ACTIVE"] != null) {
       setDeviceConnected(items["CONNECTION_ACTIVE"]);
-    }
-
-    if (items["VIDEO_COMMAND"].toString() == "START") {
-      videoConnection();
     }
 
     if (items["WEB_RTC_EVENT"] != null) {
@@ -305,6 +300,7 @@ class ControllerState extends State<Controller> {
           candidate = webRTCResponse["candidate"].toString();
         });
       }
+      handleWebRtcEvent(type, sdp, id, label, candidate);
     }
   }
 }

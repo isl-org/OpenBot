@@ -45,24 +45,11 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF202020),
+      backgroundColor: Colors.transparent,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                alignment: Alignment.topRight,
-                padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
-                child: Image.asset(
-                  "images/cross_icon.png",
-                  height: 55,
-                  width: 55,
-                ),
-              )),
           Expanded(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,7 +92,7 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                   },
                   // Image tapped
                   child: Container(
-                    margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(40, 0, 0, 20),
                     // padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
@@ -157,7 +144,7 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
                   },
                   // Image tapped
                   child: Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 40, 20),
                     // padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
