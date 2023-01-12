@@ -40,7 +40,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
 
     override init() {
         super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(switchCameraPosition), name: .switchCamera, object: nil)
     }
 
     deinit {
@@ -69,14 +68,13 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         setupLocalTracks()
 
         if channels.video {
-            startCaptureLocalVideo(cameraPosition: cameraDevicePosition, videoWidth: 1920, videoHeight: 1080, videoFps: 40)
             self.localVideoTrack?.add(localRenderView!)
         }
     }
 
     func setupLocalViewFrame(frame: CGRect) {
-        localView.frame = frame
-        localRenderView?.frame = localView.frame
+//        localView.frame = frame
+//        localRenderView?.frame = localView.frame
     }
 
     func captureCurrentFrame(sampleBuffer: CMSampleBuffer){
@@ -88,18 +86,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     func captureCurrentFrame(sampleBuffer: CVPixelBuffer){
         if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
             capturer.capture(sampleBuffer)
-        }
-    }
-
-
-
-   @objc func switchCameraPosition() {
-        if let capturer = self.videoCapturer as? RTCCameraVideoCapturer {
-            capturer.stopCapture {
-                let position = (self.cameraDevicePosition == .front) ? AVCaptureDevice.Position.back : AVCaptureDevice.Position.front
-                self.cameraDevicePosition = position
-                self.startCaptureLocalVideo(cameraPosition: position, videoWidth: 640, videoHeight: 640 * 16 / 9, videoFps: 30)
-            }
         }
     }
 
@@ -248,51 +234,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
         }
         let videoTrack = self.peerConnectionFactory.videoTrack(with: videoSource, trackId: "video0")
         return videoTrack
-    }
-
-    private func startCaptureLocalVideo(cameraPosition: AVCaptureDevice.Position, videoWidth: Int, videoHeight: Int?, videoFps: Int) {
-        if let capturer = self.videoCapturer as? RTCCameraVideoCapturer {
-            var targetDevice: AVCaptureDevice?
-            var targetFormat: AVCaptureDevice.Format?
-
-            print("inside startCaptureLocalVideo")
-            // find target device
-            let devicies = RTCCameraVideoCapturer.captureDevices()
-            devicies.forEach { (device) in
-                if device.position == cameraPosition {
-                    targetDevice = device
-                    print("devices are :", device);
-                }
-            }
-
-            // find target format
-            let formats = RTCCameraVideoCapturer.supportedFormats(for: targetDevice!)
-            formats.forEach { (format) in
-                for _ in format.videoSupportedFrameRateRanges {
-                    let description = format.formatDescription as CMFormatDescription
-                    let dimensions = CMVideoFormatDescriptionGetDimensions(description)
-
-                    if dimensions.width == videoWidth && dimensions.height == videoHeight ?? 0 {
-                        targetFormat = format
-                    } else if dimensions.width == videoWidth {
-                        targetFormat = format
-                    }
-                }
-            }
-
-            capturer.startCapture(with: targetDevice!,
-                    format: targetFormat!,
-                    fps: videoFps)
-        } else if let capturer = self.videoCapturer as? RTCFileVideoCapturer {
-            print("setup file video capturer")
-            if let _ = Bundle.main.path(forResource: "sample.mp4", ofType: nil) {
-                capturer.startCapturing(fromFileNamed: "sample.mp4") { (err) in
-                    print(err)
-                }
-            } else {
-                print("file did not faund")
-            }
-        }
     }
 
     // MARK: - Local Data
