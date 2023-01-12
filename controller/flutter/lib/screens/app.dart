@@ -8,14 +8,10 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:nsd/nsd.dart';
 import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/screens/controlSelector.dart';
-import 'package:openbot_controller/screens/tiltingPhoneMode.dart';
-import 'package:openbot_controller/utils/videoViewWebRTC.dart';
 
 import 'discoveringDevices.dart';
-import 'onScreenMode.dart';
 
-const String serviceTypeDiscover = '_openbot._tcp';
-const String serviceTypeRegister = '_openbot._tcp';
+const String serviceTypeRegister = '_1openbot._tcp';
 const utf8encoder = Utf8Encoder();
 
 class Controller extends StatefulWidget {
@@ -35,7 +31,6 @@ class ControllerState extends State<Controller> {
   String id = "";
   int label = 0;
   String candidate = "";
-  bool isDeviceConnected = false;
   bool videoView = false;
 
   var _nextPort = 56360;
@@ -58,10 +53,7 @@ class ControllerState extends State<Controller> {
   }
 
   initRenderers() async {
-    print("_remoteVideoRenderer = $_remoteVideoRenderer");
-    if(_remoteVideoRenderer != null) {
-      await _remoteVideoRenderer.initialize();
-    }
+    await _remoteVideoRenderer.initialize();
   }
 
   void handleWebRtcEvent() async {
@@ -69,7 +61,6 @@ class ControllerState extends State<Controller> {
       "type": type,
       "sdp": sdp,
     };
-    print("description is: $description");
     if (description["type"] == "offer") {
       _setRemoteDescription(description);
     }
@@ -84,10 +75,8 @@ class ControllerState extends State<Controller> {
   }
 
   void _setRemoteDescription(doc) async {
-    print('remote description');
     RTCSessionDescription description =
         RTCSessionDescription(doc["sdp"], doc["type"]);
-    print('remote description = ' + jsonEncode(doc));
     await _peerConnection
         ?.setRemoteDescription(description)
         .whenComplete(() => createAnswer());
@@ -96,7 +85,6 @@ class ControllerState extends State<Controller> {
   void _addCandidate(candidateValue) async {
     dynamic candidate = RTCIceCandidate(candidateValue['candidate'],
         candidateValue['id'], candidateValue['label']);
-    print("to string = ${candidateValue}");
     await _peerConnection?.addCandidate(candidate);
   }
 
@@ -116,18 +104,8 @@ class ControllerState extends State<Controller> {
 
     RTCPeerConnection pc =
         await createPeerConnection(configuration, offerSdpConstraints);
-    print("peer connection ${pc.iceConnectionState}");
-    pc.onAddStream = (MediaStream stream) {
-      // var remoteVideoTrack = stream.getVideoTracks();
-      // MediaStream srcStream = stream;
-      // print("connection stream = $stream");
-      _remoteVideoRenderer.srcObject = stream;
-      setState(() {_remoteVideoRenderer;});
-      print("_remoteVideoRenderer =  $_remoteVideoRenderer");
-    };
 
     pc.onIceCandidate = (e) {
-      print("on ice candidate");
       if (e.candidate != null) {
         var temp = {
           'type': 'candidate',
@@ -141,15 +119,13 @@ class ControllerState extends State<Controller> {
     };
 
     pc.onIceConnectionState = (e) {
-      print("connection state = $e");
-      print("connection state 2 = ${pc.connectionState}");
+      log("onIceConnectionState = $e");
     };
 
-    pc.onTrack = (RTCTrackEvent event){
-      print("onTrack = ${event.streams[0]}");
-      event.streams[0].getTracks().forEach((track) {
-
-        log("add track to remote = $track");
+    pc.onAddStream = (MediaStream stream) {
+      _remoteVideoRenderer.srcObject = stream;
+      setState(() {
+        _remoteVideoRenderer;
       });
     };
 
@@ -157,7 +133,7 @@ class ControllerState extends State<Controller> {
   }
 
   void createAnswer() async {
-    print("create answer call");
+    log("create answer call");
     final Map<String, dynamic> offerSdpConstraints = {
       "mandatory": {
         "OfferToReceiveAudio": "false",
@@ -165,10 +141,6 @@ class ControllerState extends State<Controller> {
       },
       "optional": [],
     };
-    setState(() {
-      videoView = true;
-    });
-
     RTCSessionDescription? description =
         await _peerConnection?.createAnswer(offerSdpConstraints);
     await _peerConnection?.setLocalDescription(description!);
@@ -176,15 +148,13 @@ class ControllerState extends State<Controller> {
       'type': 'answer',
       'sdp': description?.sdp.toString(),
     };
-    print("message = $data");
     sendMessage(data);
   }
 
   void sendMessage(message) async {
-    print("send message chala");
+    log("send message chala");
     var newMessage = jsonEncode(message);
-    clientSocket?.writeln({"webrtc_event":newMessage});
-    // clientSocket?.writeln("newMessage");
+    clientSocket?.writeln({"webrtc_event": newMessage});
   }
 
   //________________webRTC
@@ -202,7 +172,7 @@ class ControllerState extends State<Controller> {
   Future<void> registerNewService() async {
     var port = nextPort;
     final service = Service(
-        name: 'OPEN_BOT_CONTROLLER',
+        name: 'OPEN_BOT_CONTROLLER_SANJEEV',
         host: InternetAddress.anyIPv4.address,
         type: serviceTypeRegister,
         port: port,
@@ -211,7 +181,7 @@ class ControllerState extends State<Controller> {
     final registration = await register(service);
     _serverSocket = await ServerSocket.bind(service.host, port);
     _serverSocket?.listen((socket) {
-      print('Connection from'
+      log('Connection from'
           ' ${socket.remoteAddress.address}:${socket.remotePort}');
       if (clientSocket != null) {
         socket.close();
@@ -224,7 +194,6 @@ class ControllerState extends State<Controller> {
 
         _broadcast?.map((data) => String.fromCharCodes(data)).listen(
           (message) {
-            log(message);
             var msgInObject;
             try {
               var jsonArr = message.split("\n");
@@ -249,7 +218,7 @@ class ControllerState extends State<Controller> {
               print('client left');
             }
             setState(() {
-              isDeviceConnected = false;
+              videoView = false;
             });
             socket.destroy();
             socket.close();
@@ -268,11 +237,11 @@ class ControllerState extends State<Controller> {
   setDeviceConnected(status) {
     if (status == "true") {
       setState(() {
-        isDeviceConnected = true;
+        videoView = true;
       });
     } else if (status == "false") {
       setState(() {
-        isDeviceConnected = false;
+        videoView = false;
       });
     }
   }
@@ -289,32 +258,34 @@ class ControllerState extends State<Controller> {
   @override
   Widget build(BuildContext context) {
     if (videoView) {
-      return Container(
-        child: RTCVideoView(_remoteVideoRenderer),
+      return MaterialApp(
+        home: Stack(
+          children: [
+            RTCVideoView(
+              _remoteVideoRenderer,
+              objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+              mirror: false,
+            ),
+            const ControlSelector()
+          ],
+        ),
+        debugShowCheckedModeBanner: false,
       );
     } else {
-      return MaterialApp(
+      return const MaterialApp(
+        home: DiscoveringDevice(),
         debugShowCheckedModeBanner: false,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => DiscoveringDevice(isDeviceConnected),
-          '/ControlSelector': (context) => const ControlSelector(),
-          '/OnScreenMode': (context) => const OnScreenMode(),
-          '/TiltingPhoneMode': (context) => const TiltingPhoneMode(),
-        },
       );
     }
   }
 
   void processMessageFromBot(items) {
-    print("items = $items");
+    log("items = $items");
     if (items["CONNECTION_ACTIVE"] != null) {
       setDeviceConnected(items["CONNECTION_ACTIVE"]);
     }
-    print("item is = ${items["CONNECTION_ACTIVE"]}, ${items["VIDEO_COMMAND"]}");
 
     if (items["VIDEO_COMMAND"].toString() == "START") {
-      print("call Video connection");
       videoConnection();
     }
 

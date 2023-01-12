@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:openbot_controller/globals.dart';
-import 'package:openbot_controller/screens/tiltingPhoneMode.dart';
-
-import 'onScreenMode.dart';
 
 class ControlSelector extends StatefulWidget {
   const ControlSelector({super.key});
@@ -14,11 +11,12 @@ class ControlSelector extends StatefulWidget {
 }
 
 class ControlSelectorState extends State<ControlSelector> {
-  final opecColor = Color(0xFFffffff).withOpacity(0.1);
+  bool onScreenMode = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFF202020),
+        backgroundColor: Colors.transparent,
         body: Center(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,11 +28,11 @@ class ControlSelectorState extends State<ControlSelector> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const OnScreenMode()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => const OnScreenMode()),
+                    // );
                   },
                   child: Container(
                     height: 180,
@@ -99,11 +97,11 @@ class ControlSelectorState extends State<ControlSelector> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TiltingPhoneMode()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => const TiltingPhoneMode()),
+                    // );
                   },
                   child: Container(
                     height: 180,
@@ -173,104 +171,102 @@ class ControlSelectorState extends State<ControlSelector> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 GestureDetector(
-                  onTap: (){
-                    clientSocket?.writeln("{command: LOGS}");
-                    print("{command: LOGS}");
-                  },
-                  child: Container(
-                  height: 30,
-                  width: 85,
-                  margin: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                    color: Color(0xFF0071C5),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Logs",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFFffffff),
+                    onTap: () {
+                      clientSocket?.writeln("{command: LOGS}");
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 85,
+                      margin: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                        color: Color(0xFF0071C5),
                       ),
-                    ),
-                  ),
-                )),
+                      child: const Center(
+                        child: Text(
+                          "Logs",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFFffffff),
+                          ),
+                        ),
+                      ),
+                    )),
                 GestureDetector(
-                  onTap: (){
-                    clientSocket?.writeln("{command: NOISE}");
-                    print("{command: NOISE}");
-                  },
-                  child: Container(
-                  height: 30,
-                  width: 85,
-                  margin: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                    color: Color(0xFF0071C5),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Noise",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFFffffff),
+                    onTap: () {
+                      clientSocket?.writeln("{command: NOISE}");
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 85,
+                      margin: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                        color: Color(0xFF0071C5),
                       ),
-                    ),
-                  ),
-                )),
+                      child: const Center(
+                        child: Text(
+                          "Noise",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFFffffff),
+                          ),
+                        ),
+                      ),
+                    )),
                 GestureDetector(
-                  onTap: (){
-                    clientSocket?.writeln("{command: NETWORK}");
-                    print("{command: NETWORK}");
-                  },
-                  child: Container(
-                  height: 30,
-                  width: 85,
-                  margin: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                    color: Color(0xFF0071C5),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Network",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFFffffff),
+                    onTap: () {
+                      clientSocket?.writeln("{command: NETWORK}");
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 85,
+                      margin: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                        color: Color(0xFF0071C5),
                       ),
-                    ),
-                  ),
-                )),
+                      child: const Center(
+                        child: Text(
+                          "Network",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFFffffff),
+                          ),
+                        ),
+                      ),
+                    )),
                 GestureDetector(
-                  onTap: (){
-                    print("GAME");
-                  },
-                child: Container(
-                  height: 30,
-                  width: 85,
-                  margin: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                    color: Color(0xFF0071C5),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Game",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFFffffff),
+                    onTap: () {
+                      print("GAME");
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 85,
+                      margin: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                        color: Color(0xFF0071C5),
                       ),
-                    ),
-                  ),
-                ))
+                      child: const Center(
+                        child: Text(
+                          "Game",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFFffffff),
+                          ),
+                        ),
+                      ),
+                    ))
               ],
             )
           ],
         ) // color: const Color(0xFF292929),
+
             ));
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/screens/driveCommandReducer.dart';
 import 'package:openbot_controller/utils/forwardSpeed.dart';
 
@@ -21,7 +20,7 @@ class OnScreenModeState extends State<OnScreenMode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFF202020),
+        backgroundColor: Colors.transparent,
         body: Column(
           children: [
             GestureDetector(
