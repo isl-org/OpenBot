@@ -6,16 +6,18 @@ import Foundation
 import AVFoundation
 import Starscream
 import WebRTC
+var webRTCClient: WebRTCClient!
+class VideoViewWebRtc: WebRTCClientDelegate, CameraSessionDelegate {
+    var cameraDelegate: CameraSessionDelegate?
 
-class VideoViewWebRtc:  WebRTCClientDelegate,CameraSessionDelegate{
-    var cameraDelegate : CameraSessionDelegate?
-    var webRTCClient: WebRTCClient!
     // You can create video source from CMSampleBuffer :)
     var useCustomCapturer: Bool = true
     let webRTCStatusMesasgeBase = "WebRTC: "
+
     func didGenerateCandidate(iceCandidate: RTCIceCandidate) {
         self.sendCandidate(iceCandidate: iceCandidate)
     }
+
     func didIceConnectionStateChanged(iceConnectionState: RTCIceConnectionState) {
         var state = ""
 
@@ -50,7 +52,7 @@ class VideoViewWebRtc:  WebRTCClientDelegate,CameraSessionDelegate{
     }
 
     func didReceiveMessage(message: String) {
-        print("message is : ",message);
+        print("message is : ", message);
 
     }
 
@@ -63,21 +65,21 @@ class VideoViewWebRtc:  WebRTCClientDelegate,CameraSessionDelegate{
     }
 
 
-    init(){
+    init() {
         #if targetEnvironment(simulator)
         self.useCustomCapturer = true
         #endif
         webRTCClient = WebRTCClient()
         webRTCClient.delegate = self
         cameraDelegate = self
-        print("camera delegate is :",cameraDelegate)
+        print("camera delegate is :", cameraDelegate)
         webRTCClient.setup(videoTrack: true, audioTrack: true, dataChannel: true, customFrameCapturer: useCustomCapturer)
         NotificationCenter.default.addObserver(self, selector: #selector(websocketDidReceiveMessage), name: .updateDataFromControllerApp, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(cameraBuffer), name: .cameraBuffer, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(cameraBuffer), name: .cameraBuffer, object: nil)
         if useCustomCapturer {
             print("--- use custom capturer ---")
-
-           let tempCameraSession = CameraController.shared.captureSession;
+            let tempCameraSession = CameraController.shared.captureSession;
+            CameraController.shared.delegate = self;
         }
         if !webRTCClient.isConnected {
             webRTCClient.connect(onSuccess: { (offerSDP: RTCSessionDescription) -> Void in
@@ -86,7 +88,7 @@ class VideoViewWebRtc:  WebRTCClientDelegate,CameraSessionDelegate{
         }
     }
 
-     func sendCandidate(iceCandidate: RTCIceCandidate) {
+    func sendCandidate(iceCandidate: RTCIceCandidate) {
         let candidate = Candidate(candidate: iceCandidate.sdp, label: iceCandidate.sdpMLineIndex, id: iceCandidate.sdpMid!, type: "candidate");
         let signalingMessage = JSON.toString(CandidateEvent(status: .init(WEB_RTC_EVENT: candidate)));
         client.send(message: signalingMessage);
@@ -97,7 +99,7 @@ class VideoViewWebRtc:  WebRTCClientDelegate,CameraSessionDelegate{
         let text: Data = notification.object as! Data;
         do {
             let signalingMessage = try JSONDecoder().decode(AnswerEvent.self, from: text)
-            print("signalingMessage",signalingMessage)
+            print("signalingMessage", signalingMessage)
             if signalingMessage.webrtc_event.type == "offer" {
                 webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.webrtc_event.sdp)), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
                     self.sendSDP(sessionDescription: answerSDP)
@@ -129,13 +131,11 @@ class VideoViewWebRtc:  WebRTCClientDelegate,CameraSessionDelegate{
     }
 
 
-
     @objc func cameraBuffer(_ notification: Notification) {
         if self.useCustomCapturer {
-
-            if let cvpixelBuffer = CMSampleBufferGetImageBuffer(notification.object as! CMSampleBuffer){
-                self.webRTCClient.captureCurrentFrame(sampleBuffer: cvpixelBuffer)
-            }else{
+            if let cvpixelBuffer = CMSampleBufferGetImageBuffer(notification.object as! CMSampleBuffer) {
+                webRTCClient.captureCurrentFrame(sampleBuffer: cvpixelBuffer)
+            } else {
                 print("no pixelbuffer")
             }
             //            self.webRTCClient.captureCurrentFrame(sampleBuffer: buffer)
@@ -143,18 +143,15 @@ class VideoViewWebRtc:  WebRTCClientDelegate,CameraSessionDelegate{
     }
 
 
-
-
     func didOutput(_ sampleBuffer: CMSampleBuffer) {
-
+        print("didOutput delegate");
         if self.useCustomCapturer {
 
-            if let cvpixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer){
-                self.webRTCClient.captureCurrentFrame(sampleBuffer: cvpixelBuffer)
-            }else{
+            if let cvpixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
+                webRTCClient.captureCurrentFrame(sampleBuffer: cvpixelBuffer)
+            } else {
                 print("no pixelbuffer")
             }
-            //            self.webRTCClient.captureCurrentFrame(sampleBuffer: buffer)
         }
     }
 

@@ -6,7 +6,7 @@ import Foundation
 import AVFoundation
 import UIKit
 
-@objc protocol CameraSessionDelegate : class {
+ protocol CameraSessionDelegate : class {
     func didOutput(_ sampleBuffer: CMSampleBuffer)
 }
 class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapturePhotoCaptureDelegate {
@@ -42,6 +42,9 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
         NotificationCenter.default.post(name: .cameraBuffer, object : sampleBuffer);
+        if webRTCClient != nil {
+            webRTCClient.captureCurrentFrame(sampleBuffer: sampleBuffer);
+        }
         delegate?.didOutput(sampleBuffer);
         guard let imagePixelBuffer = pixelBuffer else {
             debugPrint("unable to get image from sample buffer")

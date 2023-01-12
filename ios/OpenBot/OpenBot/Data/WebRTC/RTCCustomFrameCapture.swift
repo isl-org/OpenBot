@@ -16,7 +16,6 @@ class RTCCustomFrameCapturer: RTCVideoCapturer {
     }
 
     public func capture(_ sampleBuffer: CMSampleBuffer) {
-        print("inside capture")
         let _pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         if let pixelBuffer = _pixelBuffer {
             let rtcPixelBuffer = RTCCVPixelBuffer(pixelBuffer: pixelBuffer)

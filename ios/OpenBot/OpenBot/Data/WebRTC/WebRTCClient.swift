@@ -87,14 +87,12 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCVideoViewDelegate, R
     }
 
     func captureCurrentFrame(sampleBuffer: CMSampleBuffer){
-        print("inside captureCurrentFrame CMSampleBuffer")
         if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
             capturer.capture(sampleBuffer)
         }
     }
 
     func captureCurrentFrame(sampleBuffer: CVPixelBuffer){
-        print("inside captureCurrentFrame webrtcclient")
         if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
             capturer.capture(sampleBuffer)
         }
