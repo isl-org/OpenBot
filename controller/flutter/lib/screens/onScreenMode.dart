@@ -5,7 +5,11 @@ import 'package:openbot_controller/utils/forwardSpeed.dart';
 import 'component/onScreenIcon.dart';
 
 class OnScreenMode extends StatefulWidget {
-  const OnScreenMode({super.key});
+  final dynamic updateMirrorView;
+  bool indicatorLeft;
+  bool indicatorRight;
+
+  OnScreenMode(this.updateMirrorView, this.indicatorLeft, this.indicatorRight, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -20,79 +24,77 @@ class OnScreenModeState extends State<OnScreenMode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Row(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             children: [
-               Container(
-                 margin: const EdgeInsets.only(left: 50),
-                 child: Theme(
-                     data: Theme.of(context).copyWith(
-                       sliderTheme: SliderThemeData(
-                         thumbShape: SquareSliderComponentShape(),
-                         trackShape: const MyRoundedRectSliderTrackShape(),
-                       ),
-                     ),
-                     child: RotatedBox(
-                       quarterTurns: -1,
-                       child: Slider(
-                         value: sliderValueLeft,
-                         onChanged: (value) => {
-                           setState(
-                               () => sliderValueLeft = value.toPrecision(2)),
-                           DriveCommandReducer.filter(
-                               sliderValueRight, sliderValueLeft)
-                         },
-                         onChangeEnd: (value) => {
-                           setState(() => sliderValueLeft = 0),
-                           DriveCommandReducer.filter(
-                               sliderValueRight, sliderValueLeft)
-                         },
-                         min: -1,
-                         max: 1,
-                         activeColor: Colors.white,
-                         inactiveColor: const Color(0xFF292929),
-                       ),
-                     )),
-               ),
-               Container(
-                 alignment: AlignmentDirectional.bottomEnd,
-                 margin: const EdgeInsets.only(bottom: 20),
-                 child: const OnScreenIcon(),
-               ),
-               Container(
-                   margin: const EdgeInsets.only(right: 50),
-                   child: Theme(
-                       data: Theme.of(context).copyWith(
-                         sliderTheme: SliderThemeData(
-                           thumbShape: SquareSliderComponentShape(),
-                           trackShape: const MyRoundedRectSliderTrackShape(),
-                         ),
-                       ),
-                       child: RotatedBox(
-                         quarterTurns: -1,
-                         child: Slider(
-                           value: sliderValueRight,
-                           onChanged: (value) => {
-                             setState(() =>
-                                 sliderValueRight = value.toPrecision(2)),
-                             DriveCommandReducer.filter(
-                                 sliderValueRight, sliderValueLeft)
-                           },
-                           onChangeEnd: (value) => {
-                             setState(() => sliderValueRight = 0),
-                             DriveCommandReducer.filter(
-                                 sliderValueRight, sliderValueLeft)
-                           },
-                           min: -1,
-                           max: 1,
-                           activeColor: Colors.white,
-                           inactiveColor: const Color(0xFF292929),
-                         ),
-                       ))),
-             ],
-           ),
-         );
+      backgroundColor: Colors.transparent,
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 50),
+            child: Theme(
+                data: Theme.of(context).copyWith(
+                  sliderTheme: SliderThemeData(
+                    thumbShape: SquareSliderComponentShape(),
+                    trackShape: const MyRoundedRectSliderTrackShape(),
+                  ),
+                ),
+                child: RotatedBox(
+                  quarterTurns: -1,
+                  child: Slider(
+                    value: sliderValueLeft,
+                    onChanged: (value) => {
+                      setState(() => sliderValueLeft = value.toPrecision(2)),
+                      DriveCommandReducer.filter(
+                          sliderValueRight, sliderValueLeft)
+                    },
+                    onChangeEnd: (value) => {
+                      setState(() => sliderValueLeft = 0),
+                      DriveCommandReducer.filter(
+                          sliderValueRight, sliderValueLeft)
+                    },
+                    min: -1,
+                    max: 1,
+                    activeColor: Colors.white,
+                    inactiveColor: const Color(0xFF292929),
+                  ),
+                )),
+          ),
+          Container(
+            alignment: AlignmentDirectional.bottomEnd,
+            margin: const EdgeInsets.only(bottom: 20),
+            child: OnScreenIcon(widget.updateMirrorView, widget.indicatorLeft, widget.indicatorRight),
+          ),
+          Container(
+              margin: const EdgeInsets.only(right: 50),
+              child: Theme(
+                  data: Theme.of(context).copyWith(
+                    sliderTheme: SliderThemeData(
+                      thumbShape: SquareSliderComponentShape(),
+                      trackShape: const MyRoundedRectSliderTrackShape(),
+                    ),
+                  ),
+                  child: RotatedBox(
+                    quarterTurns: -1,
+                    child: Slider(
+                      value: sliderValueRight,
+                      onChanged: (value) => {
+                        setState(() => sliderValueRight = value.toPrecision(2)),
+                        DriveCommandReducer.filter(
+                            sliderValueRight, sliderValueLeft)
+                      },
+                      onChangeEnd: (value) => {
+                        setState(() => sliderValueRight = 0),
+                        DriveCommandReducer.filter(
+                            sliderValueRight, sliderValueLeft)
+                      },
+                      min: -1,
+                      max: 1,
+                      activeColor: Colors.white,
+                      inactiveColor: const Color(0xFF292929),
+                    ),
+                  ))),
+        ],
+      ),
+    );
   }
 }
 

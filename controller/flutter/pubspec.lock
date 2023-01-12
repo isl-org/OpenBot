@@ -127,7 +127,14 @@ packages:
       name: flutter_webrtc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.18"
+    version: "0.9.19"
+  fluttertoast:
+    dependency: "direct main"
+    description:
+      name: fluttertoast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "8.1.2"
   html:
     dependency: transitive
     description:
@@ -475,7 +482,7 @@ packages:
       name: xdg_directories
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0+2"
+    version: "0.2.0+3"
 sdks:
   dart: ">=2.18.5 <3.0.0"
   flutter: ">=3.0.0"

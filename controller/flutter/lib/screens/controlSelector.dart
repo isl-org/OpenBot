@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:openbot_controller/globals.dart';
-import 'package:openbot_controller/screens/OnScreenMode.dart';
 import 'package:openbot_controller/screens/tiltingPhoneMode.dart';
 
+import 'OnScreenMode.dart';
+
 class ControlSelector extends StatefulWidget {
-  const ControlSelector({super.key});
+  final dynamic updateMirrorView;
+  bool indicatorLeft;
+  bool indicatorRight;
+
+  ControlSelector(this.updateMirrorView, this.indicatorLeft, this.indicatorRight, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -13,7 +19,6 @@ class ControlSelector extends StatefulWidget {
 }
 
 class ControlSelectorState extends State<ControlSelector> {
-
   bool isTiltingPhoneMode = false;
   bool isScreenMode = false;
 
@@ -21,23 +26,22 @@ class ControlSelectorState extends State<ControlSelector> {
   Widget build(BuildContext context) {
     if (isTiltingPhoneMode) {
       return GestureDetector(
-        onDoubleTap: (){
-          print("double tap tilting");
-          setState(() {
-            isTiltingPhoneMode = false;
-          });
-        },
-          child: const TiltingPhoneMode()
-      );
+          onDoubleTap: () {
+            print("double tap tilting");
+            setState(() {
+              isTiltingPhoneMode = false;
+            });
+          },
+          child: const TiltingPhoneMode());
     } else if (isScreenMode) {
       return GestureDetector(
-        onDoubleTap: (){
+        onDoubleTap: () {
           print("double tap onScreen");
           setState(() {
             isScreenMode = false;
           });
         },
-          child: const OnScreenMode(),
+        child: OnScreenMode(widget.updateMirrorView, widget.indicatorLeft, widget.indicatorRight),
       );
     } else {
       return Scaffold(
@@ -53,14 +57,17 @@ class ControlSelectorState extends State<ControlSelector> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
+                      Fluttertoast.showToast(
+                          msg: "Double tap on screen to get back",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.grey,
+                          textColor: Colors.white,
+                          fontSize: 18
+                      );
                       setState(() {
                         isScreenMode = true;
                       });
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => const isScreenMode()),
-                      // );
                     },
                     child: Container(
                       height: 180,
@@ -125,14 +132,17 @@ class ControlSelectorState extends State<ControlSelector> {
                   ),
                   GestureDetector(
                     onTap: () {
+                      Fluttertoast.showToast(
+                          msg: "Double tap on screen to get back",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.grey,
+                          textColor: Colors.white,
+                          fontSize: 18
+                      );
                       setState(() {
                         isTiltingPhoneMode = true;
                       });
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => const TiltingPhoneMode()),
-                      // );
                     },
                     child: Container(
                       height: 180,

@@ -6,7 +6,12 @@ import 'package:openbot_controller/buttonCommands/switchCamera.dart';
 import 'package:openbot_controller/screens/component/blinkingButton.dart';
 
 class OnScreenIcon extends StatefulWidget {
-  const OnScreenIcon({super.key});
+  final dynamic updateMirrorView;
+  bool indicatorLeft;
+  bool indicatorRight;
+
+  OnScreenIcon(this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
+      {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -15,10 +20,20 @@ class OnScreenIcon extends StatefulWidget {
 }
 
 class OnScreenIconState extends State<OnScreenIcon> {
-  bool pause = false;
+  bool mirrorView = false;
   bool speaker = false;
   bool leftIndicator = false;
   bool rightIndicator = false;
+
+  @override
+  void didUpdateWidget(covariant OnScreenIcon oldWidget) {
+    // TODO: implement didUpdateWidget
+    setState(() {
+      leftIndicator = widget.indicatorLeft;
+      rightIndicator = widget.indicatorRight;
+    });
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,21 +43,22 @@ class OnScreenIconState extends State<OnScreenIcon> {
           GestureDetector(
               onTap: () {
                 setState(() {
-                  pause = !pause;
+                  mirrorView = !mirrorView;
+                  widget.updateMirrorView.call();
                 });
               }, // Image tapped
               child: Container(
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(45),
-                  color: pause
+                  color: mirrorView
                       ? const Color(0xFF0071C5).withOpacity(0.5)
                       : Colors.white.withOpacity(0.5),
                 ),
                 child: Image.asset(
-                  pause
-                      ? "images/pause_icon_white.png"
-                      : "images/pause_icon_blue.png",
+                  mirrorView
+                      ? "images/mirror_view_icon_white.png"
+                      : "images/mirror_view_icon_blue.png",
                   height: 23,
                   width: 23,
                 ),
@@ -109,18 +125,6 @@ class OnScreenIconState extends State<OnScreenIcon> {
                     LeftIndicator().toLeftIndicator();
                   }
                 }
-                setState(() {
-                  if (rightIndicator) {
-                    rightIndicator = false;
-                    leftIndicator = true;
-                  } else {
-                    if (leftIndicator) {
-                      leftIndicator = false;
-                    } else {
-                      leftIndicator = true;
-                    }
-                  }
-                });
               }, // Image tapped
               child: Container(
                 padding: const EdgeInsets.all(15),
@@ -153,18 +157,6 @@ class OnScreenIconState extends State<OnScreenIcon> {
                     RightIndicator().toRightIndicator();
                   }
                 }
-                setState(() {
-                  if (leftIndicator) {
-                    leftIndicator = false;
-                    rightIndicator = true;
-                  } else {
-                    if (rightIndicator) {
-                      rightIndicator = false;
-                    } else {
-                      rightIndicator = true;
-                    }
-                  }
-                });
               }, // Image tapped
               child: Container(
                 padding: const EdgeInsets.all(15),

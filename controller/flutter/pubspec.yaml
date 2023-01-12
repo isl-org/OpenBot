@@ -44,6 +44,7 @@ dependencies:
   blinking_text: ^1.0.2
   video_player: ^2.4.10
   flutter_webrtc: ^0.9.18
+  fluttertoast: ^8.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -73,12 +74,12 @@ flutter:
     - images/controller_icon.png
     - images/tilting_phone_icon.png
     - images/cross_icon.png
-    - images/pause_icon_blue.png
+    - images/mirror_view_icon_blue.png
     - images/speaker_icon_blue.png
     - images/camera_icon_blue.png
     - images/left_indicator_icon_blue.png
     - images/right_indicator_icon_blue.png
-    - images/pause_icon_white.png
+    - images/mirror_view_icon_white.png
     - images/speaker_icon_white.png
     - images/camera_icon_white.png
     - images/left_indicator_icon_white.png

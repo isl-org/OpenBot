@@ -27,16 +27,23 @@ class ControllerState extends State<Controller> {
   ServerSocket? _serverSocket;
   Stream<Uint8List>? _broadcast;
   bool videoView = false;
-
+  bool mirroredVideo = false;
+  bool indicatorLeft = false;
+  bool indicatorRight = false;
   var _nextPort = 56360;
 
   int get nextPort => _nextPort++;
+
+  setMirrorVideo() {
+    setState(() {
+      mirroredVideo = !mirroredVideo;
+    });
+  }
 
   //webRTC________________
 
   final RTCVideoRenderer _remoteVideoRenderer = RTCVideoRenderer();
   RTCPeerConnection? _peerConnection;
-
 
   Future<void> videoConnection() async {
     initRenderers();
@@ -258,9 +265,9 @@ class ControllerState extends State<Controller> {
             RTCVideoView(
               _remoteVideoRenderer,
               objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-              mirror: false,
+              mirror: mirroredVideo,
             ),
-            const ControlSelector()
+            ControlSelector(setMirrorVideo, indicatorLeft, indicatorRight)
           ],
         ),
         debugShowCheckedModeBanner: false,
@@ -282,6 +289,29 @@ class ControllerState extends State<Controller> {
     print("items = $items");
     if (items["CONNECTION_ACTIVE"] != null) {
       setDeviceConnected(items["CONNECTION_ACTIVE"]);
+    }
+    if (items["INDICATOR_LEFT"] != null){
+      if(items["INDICATOR_LEFT"] == "true") {
+        setState(() {
+          indicatorLeft = true;
+        });
+      } else {
+        setState(() {
+          indicatorLeft = false;
+        });
+      }
+    }
+
+    if (items["INDICATOR_RIGHT"] != null){
+      if(items["INDICATOR_RIGHT"] == "true") {
+        setState(() {
+          indicatorRight = true;
+        });
+      } else {
+        setState(() {
+          indicatorRight = false;
+        });
+      }
     }
 
     if (items["WEB_RTC_EVENT"] != null) {
