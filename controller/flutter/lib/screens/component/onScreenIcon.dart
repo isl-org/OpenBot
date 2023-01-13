@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:openbot_controller/buttonCommands/leftIndicator.dart';
-import 'package:openbot_controller/buttonCommands/rightIndicator.dart';
-import 'package:openbot_controller/buttonCommands/stopIndicator.dart';
-import 'package:openbot_controller/buttonCommands/switchCamera.dart';
+import 'package:openbot_controller/buttonCommands/buttonCommands.dart';
 import 'package:openbot_controller/screens/component/blinkingButton.dart';
 
 class OnScreenIcon extends StatefulWidget {
   final dynamic updateMirrorView;
-  bool indicatorLeft;
-  bool indicatorRight;
+  final bool indicatorLeft;
+  final bool indicatorRight;
 
-  OnScreenIcon(this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
+  const OnScreenIcon(
+      this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
       {super.key});
 
   @override
@@ -96,7 +94,7 @@ class OnScreenIconState extends State<OnScreenIcon> {
           InkWell(
               borderRadius: const BorderRadius.all(Radius.circular(45)),
               onTap: () {
-                SwitchCamera().toSwitchCamera();
+                ButtonCommands.toSwitchCamera();
               }, // Image tapped
               child: Container(
                 padding: const EdgeInsets.all(15),
@@ -116,13 +114,13 @@ class OnScreenIconState extends State<OnScreenIcon> {
           GestureDetector(
               onTap: () {
                 if (rightIndicator) {
-                  StopIndicator().toStopIndicator();
-                  LeftIndicator().toLeftIndicator();
+                  ButtonCommands.toStopIndicator();
+                  ButtonCommands.toLeftIndicator();
                 } else {
                   if (leftIndicator) {
-                    StopIndicator().toStopIndicator();
+                    ButtonCommands.toStopIndicator();
                   } else {
-                    LeftIndicator().toLeftIndicator();
+                    ButtonCommands.toLeftIndicator();
                   }
                 }
               }, // Image tapped
@@ -148,13 +146,13 @@ class OnScreenIconState extends State<OnScreenIcon> {
           GestureDetector(
               onTap: () {
                 if (leftIndicator) {
-                  StopIndicator().toStopIndicator();
-                  RightIndicator().toRightIndicator();
+                  ButtonCommands.toStopIndicator();
+                  ButtonCommands.toRightIndicator();
                 } else {
                   if (rightIndicator) {
-                    StopIndicator().toStopIndicator();
+                    ButtonCommands.toStopIndicator();
                   } else {
-                    RightIndicator().toRightIndicator();
+                    ButtonCommands.toRightIndicator();
                   }
                 }
               }, // Image tapped
