@@ -27,7 +27,6 @@ class ControlSelectorState extends State<ControlSelector> {
     if (isTiltingPhoneMode) {
       return GestureDetector(
           onDoubleTap: () {
-            print("double tap tilting");
             setState(() {
               isTiltingPhoneMode = false;
             });
@@ -36,7 +35,6 @@ class ControlSelectorState extends State<ControlSelector> {
     } else if (isScreenMode) {
       return GestureDetector(
         onDoubleTap: () {
-          print("double tap onScreen");
           setState(() {
             isScreenMode = false;
           });

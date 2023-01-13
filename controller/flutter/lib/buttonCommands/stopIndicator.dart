@@ -4,6 +4,5 @@ class StopIndicator {
 
   void toStopIndicator() {
     clientSocket?.writeln("{command: INDICATOR_STOP}");
-    print("{command: INDICATOR_STOP}");
   }
 }

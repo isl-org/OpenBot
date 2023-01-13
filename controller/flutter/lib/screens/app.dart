@@ -206,12 +206,10 @@ class ControllerState extends State<Controller> {
                   if (msgInObject["status"] != null) {
                     processMessageFromBot(msgInObject["status"]);
                   }
-                  // log(msgInObject.toString() + "_____");
-                  // setDeviceConnected();
                 }
               }
             } catch (e) {
-              // log("res: $e : $msgInObject");
+              log("error in parsing msg: $e");
             }
           },
           onDone: () {
@@ -286,12 +284,11 @@ class ControllerState extends State<Controller> {
     String id = "";
     int label = 0;
     String candidate = "";
-    print("items = $items");
     if (items["CONNECTION_ACTIVE"] != null) {
       setDeviceConnected(items["CONNECTION_ACTIVE"]);
     }
-    if (items["INDICATOR_LEFT"] != null){
-      if(items["INDICATOR_LEFT"] == "true") {
+    if (items["INDICATOR_LEFT"] != null) {
+      if (items["INDICATOR_LEFT"] == "true") {
         setState(() {
           indicatorLeft = true;
         });
@@ -302,8 +299,8 @@ class ControllerState extends State<Controller> {
       }
     }
 
-    if (items["INDICATOR_RIGHT"] != null){
-      if(items["INDICATOR_RIGHT"] == "true") {
+    if (items["INDICATOR_RIGHT"] != null) {
+      if (items["INDICATOR_RIGHT"] == "true") {
         setState(() {
           indicatorRight = true;
         });

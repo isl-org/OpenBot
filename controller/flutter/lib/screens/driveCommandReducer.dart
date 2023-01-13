@@ -11,7 +11,6 @@ class DriveCommandReducer {
       lastRight = rightValue;
       String msg = "{driveCmd: {r:${rightValue.toPrecision(2)}, l:${leftValue.toPrecision(2)}}}";
       clientSocket?.writeln(msg);
-      print(msg);
     }
   }
 

@@ -4,6 +4,5 @@ class RightIndicator {
 
   void toRightIndicator() {
     clientSocket?.writeln("{command: INDICATOR_RIGHT}");
-    print("{command: INDICATOR_RIGHT}");
   }
 }
