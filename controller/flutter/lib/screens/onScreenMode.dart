@@ -6,10 +6,11 @@ import 'component/onScreenIcon.dart';
 
 class OnScreenMode extends StatefulWidget {
   final dynamic updateMirrorView;
-  bool indicatorLeft;
-  bool indicatorRight;
+  final bool indicatorLeft;
+  final bool indicatorRight;
 
-  OnScreenMode(this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
+  const OnScreenMode(
+      this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
       {super.key});
 
   @override

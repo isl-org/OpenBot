@@ -7,10 +7,10 @@ import 'OnScreenMode.dart';
 
 class ControlSelector extends StatefulWidget {
   final dynamic updateMirrorView;
-  bool indicatorLeft;
-  bool indicatorRight;
+  final bool indicatorLeft;
+  final bool indicatorRight;
 
-  ControlSelector(
+  const ControlSelector(
       this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
       {super.key});
 
