@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nsd/nsd.dart';
 
-import 'app.dart';
+import '../utils/constants.dart';
 
 class RegistrationWidget extends StatelessWidget {
   final Registration registration;
@@ -18,7 +18,7 @@ class RegistrationWidget extends StatelessWidget {
         children: <Widget>[
           ListTile(
             leading: const Icon(Icons.wifi_tethering),
-            title: Text('Registration ${shorten(registration.id)}'),
+            title: Text('Registration ${Constants.shorten(registration.id)}'),
             subtitle: Text(
               'Name: ${service.name} ▪️ '
               'Type: ${service.type} ▪️ '

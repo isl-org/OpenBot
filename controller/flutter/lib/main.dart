@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:openbot_controller/screens/app.dart';
+import 'package:openbot_controller/screens/controller.dart';
 
 void main() {
   // We need to call it manually,

@@ -9,6 +9,7 @@ import 'package:nsd/nsd.dart';
 import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/screens/controlSelector.dart';
 
+import '../utils/constants.dart';
 import 'discoveringDevices.dart';
 
 const String serviceTypeRegister = '_openbot._tcp';
@@ -39,8 +40,6 @@ class ControllerState extends State<Controller> {
       mirroredVideo = !mirroredVideo;
     });
   }
-
-  //webRTC________________
 
   final RTCVideoRenderer _remoteVideoRenderer = RTCVideoRenderer();
   RTCPeerConnection? _peerConnection;
@@ -89,31 +88,22 @@ class ControllerState extends State<Controller> {
   }
 
   Future<RTCPeerConnection> _createPeerConnection() async {
-    Map<String, dynamic> configuration = {
-      "iceServers": [
-        {"url": "stun:stun.l.google.com:19302"},
-      ]
-    };
-    final Map<String, dynamic> offerSdpConstraints = {
-      "mandatory": {
-        "OfferToReceiveAudio": "false",
-        "OfferToReceiveVideo": "true",
-      },
-      "optional": [],
-    };
+    Map<String, dynamic> configuration = Constants.peerConfiguration;
+    final Map<String, dynamic> offerSdpConstraints =
+        Constants.offerSdpConstraints;
 
     RTCPeerConnection pc =
         await createPeerConnection(configuration, offerSdpConstraints);
 
     pc.onIceCandidate = (e) {
       if (e.candidate != null) {
-        var temp = {
+        var output = {
           'type': 'candidate',
           'candidate': e.candidate.toString(),
           'sdpMid': e.sdpMid.toString(),
           'sdpMLineIndex': e.sdpMLineIndex,
         };
-        final message = jsonEncode(temp);
+        final message = jsonEncode(output);
         sendMessage(message);
       }
     };
@@ -133,13 +123,8 @@ class ControllerState extends State<Controller> {
   }
 
   void createAnswer() async {
-    final Map<String, dynamic> offerSdpConstraints = {
-      "mandatory": {
-        "OfferToReceiveAudio": "false",
-        "OfferToReceiveVideo": "true",
-      },
-      "optional": [],
-    };
+    final Map<String, dynamic> offerSdpConstraints =
+        Constants.offerSdpConstraints;
     RTCSessionDescription? description =
         await _peerConnection?.createAnswer(offerSdpConstraints);
     await _peerConnection?.setLocalDescription(description!);
@@ -154,8 +139,6 @@ class ControllerState extends State<Controller> {
     var newMessage = jsonEncode(message);
     clientSocket?.writeln({"webrtc_event": newMessage});
   }
-
-  //________________webRTC
 
   ControllerState() {
     enableLogging(LogTopic.calls);
@@ -181,7 +164,7 @@ class ControllerState extends State<Controller> {
         host: InternetAddress.anyIPv4.address,
         type: serviceTypeRegister,
         port: port,
-        txt: createTxt());
+        txt: Constants.textAttribute);
 
     final registration = await register(service);
     _serverSocket = await ServerSocket.bind(service.host, port);
@@ -330,18 +313,4 @@ class ControllerState extends State<Controller> {
       handleWebRtcEvent(type, sdp, id, label, candidate);
     }
   }
-}
-
-/// Shortens the id for display on-screen.
-String shorten(String? id) {
-  return id?.toString().substring(0, 4) ?? 'unknown';
-}
-
-/// Creates a txt attribute object that showcases the most common use cases.
-Map<String, Uint8List?> createTxt() {
-  return <String, Uint8List?>{
-    'a-string': utf8encoder.convert('κόσμε'),
-    'a-blank': Uint8List(0),
-    'a-null': null,
-  };
 }
