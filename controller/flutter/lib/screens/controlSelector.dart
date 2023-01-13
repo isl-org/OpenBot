@@ -282,7 +282,7 @@ class ControlSelectorState extends State<ControlSelector> {
                       )),
                   GestureDetector(
                       onTap: () {
-                        print("GAME");
+                        clientSocket?.writeln("{command: DRIVE_MODE}");
                       },
                       child: Container(
                         height: 30,
