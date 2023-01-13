@@ -11,7 +11,7 @@ import 'package:openbot_controller/screens/controlSelector.dart';
 
 import 'discoveringDevices.dart';
 
-const String serviceTypeRegister = '_1openbot._tcp';
+const String serviceTypeRegister = '_openbot._tcp';
 const utf8encoder = Utf8Encoder();
 
 class Controller extends StatefulWidget {
@@ -177,7 +177,7 @@ class ControllerState extends State<Controller> {
   Future<void> registerNewService() async {
     var port = nextPort;
     final service = Service(
-        name: 'OPEN_BOT_CONTROLLER_SANJEEV',
+        name: 'OPEN_BOT_CONTROLLER',
         host: InternetAddress.anyIPv4.address,
         type: serviceTypeRegister,
         port: port,
