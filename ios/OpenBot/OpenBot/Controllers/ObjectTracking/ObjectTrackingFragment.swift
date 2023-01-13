@@ -115,58 +115,7 @@ class ObjectTrackingFragment: CameraController {
     }
 
     @objc func toggleAutoMode() {
-        //var frames: [UIView] = [];
         autoMode = !autoMode;
-        //if (autoMode) {
-            /*
-            images.removeAll();
-            Timer.scheduledTimer(withTimeInterval: TimeInterval(TIMER_OF_MODEL), repeats: true) { [self] timer in
-                do {
-                    if !autoMode {
-                        timer.invalidate()
-                        sendControl(control: Control());
-                    }
-                    if (frames.count > 0) {
-                        for frame in frames {
-                            frame.removeFromSuperview();
-                        }
-                    }
-                    frames.removeAll();
-                    if (timer.isValid) {
-                        let startTime = returnCurrentTimestamp();
-                        let start = Date().millisecondsSince1970;
-                        captureImage();
-                        if (images.count > 0) {
-                            let res = try detector?.recognizeImage(image: images[images.count - 1].0, height: originalHeight, width: originalWidth);
-                            var i = 0;
-                            if (res!.count > 0) {
-                                for item in res! {
-                                    if (item.getConfidence() * 100 > MINIMUM_CONFIDENCE_TF_OD_API) {
-                                        let frame = addFrame(item: item, color: Constants.frameColors[i % 5]);
-                                        frames.append(frame);
-                                        cameraView.addSubview(frame);
-                                        i += 1;
-                                    }
-                                }
-                                let control: Control = updateTarget(res!.first!.getLocation());
-                                sendControl(control: control);
-                            }
-                        }
-                        let endTime = returnCurrentTimestamp();
-                        let end = Date().millisecondsSince1970;
-                        if (end - start) != 0{
-                            NotificationCenter.default.post(name: .updateObjectTrackingFps, object: Double(1000 / (end - start)));
-                        }
-                        print("timecost to run the image is ", endTime - startTime);
-                    }
-                } catch {
-                    print("error:\(error)")
-                }
-             
-              }
-        } else {
-            objectTrackingSettings?.autoModeButton.isOn = false
-        }*/
     }
 
     func sendControl(control: Control) {
@@ -273,7 +222,12 @@ class ObjectTrackingFragment: CameraController {
             debugPrint("unable to get image from sample buffer")
             return
         }
-        
+        if webRTCClient != nil {
+            inferenceQueue.async {
+                webRTCClient.captureCurrentFrame(sampleBuffer: sampleBuffer);
+                self.isInferenceQueueBusy = false
+            }
+        }
         guard !self.isInferenceQueueBusy else { return }
             
         inferenceQueue.async{

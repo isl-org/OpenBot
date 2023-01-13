@@ -7,7 +7,9 @@
 
 import UIKit
 import AVFoundation
+
 class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
+
     var sonarLabel = UILabel()
     var voltageLabel = UILabel()
     var outerSonar: UIView!
@@ -22,8 +24,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     let deviceOrientation = DeviceCurrentOrientation.shared
     var gameController = GameController.shared
     var bluetoothIcon = UIImageView()
+    var isClientConnected : Bool = false
     private let mainView = UIView()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBarItem()
@@ -55,7 +57,11 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(increaseSpeedMode), name: .increaseSpeedMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDriveMode), name: .updateDriveMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
+
     }
+
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated);
@@ -64,6 +70,12 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     func applySafeAreaConstraints() {
         mainView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mainView)
+    }
+
+    override func initializeCamera() {
+        if isClientConnected {
+            super.initializeCamera()
+        }
     }
 
     func apply() {
@@ -587,6 +599,17 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
         }
     }
+
+    @objc func clientConnected(_ notification: Notification) {
+        isClientConnected = true;
+        initializeCamera()
+    }
+
+    @objc func clientDisconnected(_ notification: Notification) {
+        isClientConnected = false
+        stopSession()
+    }
+
 
     func setupSpeedMode() {
         gameController.selectedSpeedMode = SpeedMode.NORMAL;

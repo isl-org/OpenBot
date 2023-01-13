@@ -7,7 +7,7 @@
 
 import UIKit
 import CoreBluetooth
-
+import AVFoundation
 let height = max(UIScreen.main.bounds.height, UIScreen.main.bounds.width)
 let width = min(UIScreen.main.bounds.height, UIScreen.main.bounds.width)
 var currentOrientation: UIInterfaceOrientation = UIInterfaceOrientation.portrait
@@ -15,7 +15,8 @@ var isBluetoothConnected = false;
 var viewControllerName: String?
 let gameController = GameController.shared
 var leadingConstraint = NSLayoutConstraint()
-class HomePageViewController: UIViewController {
+var isClientConnected : Bool = false
+class HomePageViewController: CameraController {
     @IBOutlet weak var bluetooth: UIButton!
     @IBOutlet weak var settings: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
@@ -48,7 +49,16 @@ class HomePageViewController: UIViewController {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
 
+
+    }
+
+    override func initializeCamera() {
+        if isClientConnected {
+            super.initializeCamera()
+        }
     }
 
     func changeNavigationColor() {
@@ -113,6 +123,16 @@ class HomePageViewController: UIViewController {
         } else {
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
+    }
+
+    @objc func clientConnected(_ notification: Notification) {
+        isClientConnected = true;
+        initializeCamera()
+    }
+
+    @objc func clientDisconnected(_ notification: Notification) {
+        isClientConnected = false
+        stopSession()
     }
 }
 

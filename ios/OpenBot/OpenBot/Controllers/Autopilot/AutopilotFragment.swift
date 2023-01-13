@@ -150,7 +150,12 @@ class AutopilotFragment: CameraController {
             debugPrint("unable to get image from sample buffer")
             return
         }
-
+        if webRTCClient != nil {
+            inferenceQueue.async {
+                webRTCClient.captureCurrentFrame(sampleBuffer: sampleBuffer);
+                self.isInferenceQueueBusy = false
+            }
+        }
         guard !self.isInferenceQueueBusy else {
             return
         }

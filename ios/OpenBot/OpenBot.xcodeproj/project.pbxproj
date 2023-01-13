@@ -61,10 +61,8 @@
 		727D378DB2E32C26828E73A9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3879029901392BD7F608 /* GameViewController.swift */; };
 		727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F5FE3F054BE4FA52191 /* timestamp.swift */; };
 		727D37EF7FFD794AAD19F1F6 /* modesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3421CB0D9D6B68ADB5B7 /* modesCollectionViewCell.swift */; };
-		727D388FE6AEA3562F58D52D /* RTCSimulatorVideoDecoderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3893AF82740A963BBD37 /* RTCSimulatorVideoDecoderFactory.swift */; };
 		727D392FE397D97428ECA290 /* ScreenSizeUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D34C4952446BF8CED903D /* ScreenSizeUtil.swift */; };
 		727D39499A8CF8EE76345872 /* AutopilotFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */; };
-		727D39A18B5A9793BFEC3DFC /* RTCSimluatorVideoEncoderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35176F5210BE178D2A44 /* RTCSimluatorVideoEncoderFactory.swift */; };
 		727D3A805DDE14D8AD205D31 /* VehicleControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */; };
 		727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */; };
 		727D3AEFE62BB8644729D602 /* popupWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3281CA65425580EDD4A4 /* popupWindowView.swift */; };
@@ -162,14 +160,12 @@
 		727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutopilotFragment.swift; path = Autopilot/AutopilotFragment.swift; sourceTree = "<group>"; };
 		727D3421CB0D9D6B68ADB5B7 /* modesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = modesCollectionViewCell.swift; path = HomePage/modesCollectionViewCell.swift; sourceTree = "<group>"; };
 		727D34C4952446BF8CED903D /* ScreenSizeUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenSizeUtil.swift; sourceTree = "<group>"; };
-		727D35176F5210BE178D2A44 /* RTCSimluatorVideoEncoderFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCSimluatorVideoEncoderFactory.swift; path = WebRTC/RTCSimluatorVideoEncoderFactory.swift; sourceTree = "<group>"; };
 		727D35819C2D0A82BB4E5A7D /* expandedAutoPilot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = expandedAutoPilot.swift; path = Autopilot/expandedAutoPilot.swift; sourceTree = "<group>"; };
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
 		727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RobotInfoFrame.swift; path = RobotInfo/RobotInfoFrame.swift; sourceTree = "<group>"; };
 		727D3879029901392BD7F608 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameViewController.swift; path = GameView/GameViewController.swift; sourceTree = "<group>"; };
-		727D3893AF82740A963BBD37 /* RTCSimulatorVideoDecoderFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCSimulatorVideoDecoderFactory.swift; path = WebRTC/RTCSimulatorVideoDecoderFactory.swift; sourceTree = "<group>"; };
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
 		727D396BDB689AFF9C3931C6 /* HomePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomePageViewController.swift; path = HomePage/HomePageViewController.swift; sourceTree = "<group>"; };
 		727D39B02AB471D9F31B0747 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
@@ -347,8 +343,6 @@
 				4FEF4E8F0A2942C4C971E2BA /* Server */,
 				727D37586F16DE497CEA62CE /* SignalingMessage.swift */,
 				727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */,
-				727D35176F5210BE178D2A44 /* RTCSimluatorVideoEncoderFactory.swift */,
-				727D3893AF82740A963BBD37 /* RTCSimulatorVideoDecoderFactory.swift */,
 				727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */,
 				727D32E3FF7FA5BADAAEDBE6 /* VideoViewWebRtc.swift */,
 			);
@@ -536,7 +530,7 @@
 						DevelopmentTeam = 45P94DZS6G;
 					};
 					4FEF4A2489AA3ABCE29B9356 = {
-						DevelopmentTeam = 45Z6GA35YN;
+						DevelopmentTeam = 45P94DZS6G;
 						ProvisioningStyle = Automatic;
 					};
 					4FEF4C57C33D71B6DD56207E = {
@@ -806,8 +800,6 @@
 				727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */,
 				727D392FE397D97428ECA290 /* ScreenSizeUtil.swift in Sources */,
 				727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */,
-				727D39A18B5A9793BFEC3DFC /* RTCSimluatorVideoEncoderFactory.swift in Sources */,
-				727D388FE6AEA3562F58D52D /* RTCSimulatorVideoDecoderFactory.swift in Sources */,
 				727D34E3CC491BD7758C572F /* WebRTCClient.swift in Sources */,
 				4FEF46257887327B74C4900E /* JSON.swift in Sources */,
 				727D338AB7E821641A477554 /* VideoViewWebRtc.swift in Sources */,
@@ -865,7 +857,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 45Z6GA35YN;
+				DEVELOPMENT_TEAM = 45P94DZS6G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
@@ -903,7 +895,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 45Z6GA35YN;
+				DEVELOPMENT_TEAM = 45P94DZS6G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";

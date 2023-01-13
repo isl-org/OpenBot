@@ -49,12 +49,15 @@ class Browser {
                         print("added hostPort \(host) \(port)")
                     case .service(let name, let type, let domain, let interface):
                         print("added service \(name) \(type) \(domain) \(String(describing: interface))")
+                        NotificationCenter.default.post(name: .clientConnected, object: nil);
                         sharedConnection = Connection(endpoint: browseResult.endpoint)
                     default:
                         print("fail")
                     }
                 case .removed(let browseResult):
+                    NotificationCenter.default.post(name: .clientDisConnected, object: nil);
                     print("removed \(browseResult.endpoint)")
+                    sharedConnection = nil;
                 case .changed(_, let browseResult, let flags):
                     if flags.contains(.interfaceAdded) {
                         print("\(browseResult.endpoint) added interfaces")

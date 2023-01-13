@@ -49,7 +49,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate 
 
     // MARK: - Public functions
     func setup(videoTrack: Bool, audioTrack: Bool, dataChannel: Bool, customFrameCapturer: Bool) {
-        print("set up")
         channels.video = videoTrack
         channels.audio = audioTrack
         channels.datachannel = dataChannel
@@ -57,19 +56,8 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate 
 
         var videoEncoderFactory = RTCDefaultVideoEncoderFactory()
         var videoDecoderFactory = RTCDefaultVideoDecoderFactory()
-
-        if TARGET_OS_SIMULATOR != 0 {
-            videoEncoderFactory = RTCSimluatorVideoEncoderFactory()
-            videoDecoderFactory = RTCSimulatorVideoDecoderFactory()
-        }
         peerConnectionFactory = RTCPeerConnectionFactory(encoderFactory: videoEncoderFactory, decoderFactory: videoDecoderFactory)
-
-        setupView()
         setupLocalTracks()
-
-        if channels.video {
-            self.localVideoTrack?.add(localRenderView!)
-        }
     }
 
     func captureCurrentFrame(sampleBuffer: CMSampleBuffer){
@@ -187,13 +175,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate 
         return pc
     }
 
-    private func setupView() {
-        // local
-        localRenderView = RTCEAGLVideoView()
-        localView = UIView()
-        localView.addSubview(localRenderView!)
-    }
-
     //MARK: - Local Media
     private func setupLocalTracks() {
         if self.channels.video == true {
@@ -219,12 +200,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate 
         if self.customFrameCapturer {
             self.videoCapturer = RTCCustomFrameCapturer(delegate: videoSource)
             print("inside RTCCustomFrameCapturer")
-        } else if TARGET_OS_SIMULATOR != 0 {
-            print("now runnnig on simulator...")
-            self.videoCapturer = RTCFileVideoCapturer(delegate: videoSource)
-        } else {
-            print("inside RTCCameraVideoCapturer")
-            self.videoCapturer = RTCCameraVideoCapturer(delegate: videoSource)
         }
         let videoTrack = self.peerConnectionFactory.videoTrack(with: videoSource, trackId: "video0")
         return videoTrack
@@ -234,7 +209,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate 
     private func setupDataChannel() -> RTCDataChannel {
         let dataChannelConfig = RTCDataChannelConfiguration()
         dataChannelConfig.channelId = 0
-
         let _dataChannel = self.peerConnection?.dataChannel(forLabel: "dataChannel", configuration: dataChannelConfig)
         return _dataChannel!
     }

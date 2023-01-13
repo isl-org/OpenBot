@@ -11,8 +11,8 @@ protocol sendInitialMessageDelegate: class {
 protocol startStreamDelegate: class {
     func startVideoStream()
 }
-class Connection: sendInitialMessageDelegate, startStreamDelegate {
 
+class Connection: sendInitialMessageDelegate, startStreamDelegate {
 
     let connection: NWConnection
     // outgoing connection
@@ -103,4 +103,6 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
     func startVideoStream(){
         VideoViewWebRtc();
     }
+
+
 }
