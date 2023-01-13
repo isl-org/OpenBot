@@ -3,7 +3,6 @@ import 'package:nsd/nsd.dart';
 
 import 'app.dart';
 
-
 class RegistrationWidget extends StatelessWidget {
   final Registration registration;
 

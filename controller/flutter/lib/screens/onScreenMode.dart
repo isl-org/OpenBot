@@ -9,7 +9,8 @@ class OnScreenMode extends StatefulWidget {
   bool indicatorLeft;
   bool indicatorRight;
 
-  OnScreenMode(this.updateMirrorView, this.indicatorLeft, this.indicatorRight, {super.key});
+  OnScreenMode(this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
+      {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -61,7 +62,8 @@ class OnScreenModeState extends State<OnScreenMode> {
           Container(
             alignment: AlignmentDirectional.bottomEnd,
             margin: const EdgeInsets.only(bottom: 20),
-            child: OnScreenIcon(widget.updateMirrorView, widget.indicatorLeft, widget.indicatorRight),
+            child: OnScreenIcon(widget.updateMirrorView, widget.indicatorLeft,
+                widget.indicatorRight),
           ),
           Container(
               margin: const EdgeInsets.only(right: 50),

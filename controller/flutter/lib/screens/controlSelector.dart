@@ -10,7 +10,9 @@ class ControlSelector extends StatefulWidget {
   bool indicatorLeft;
   bool indicatorRight;
 
-  ControlSelector(this.updateMirrorView, this.indicatorLeft, this.indicatorRight, {super.key});
+  ControlSelector(
+      this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
+      {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -39,7 +41,8 @@ class ControlSelectorState extends State<ControlSelector> {
             isScreenMode = false;
           });
         },
-        child: OnScreenMode(widget.updateMirrorView, widget.indicatorLeft, widget.indicatorRight),
+        child: OnScreenMode(widget.updateMirrorView, widget.indicatorLeft,
+            widget.indicatorRight),
       );
     } else {
       return Scaffold(
@@ -61,8 +64,7 @@ class ControlSelectorState extends State<ControlSelector> {
                           gravity: ToastGravity.BOTTOM,
                           backgroundColor: Colors.grey,
                           textColor: Colors.white,
-                          fontSize: 18
-                      );
+                          fontSize: 18);
                       setState(() {
                         isScreenMode = true;
                       });
@@ -136,8 +138,7 @@ class ControlSelectorState extends State<ControlSelector> {
                           gravity: ToastGravity.BOTTOM,
                           backgroundColor: Colors.grey,
                           textColor: Colors.white,
-                          fontSize: 18
-                      );
+                          fontSize: 18);
                       setState(() {
                         isTiltingPhoneMode = true;
                       });
