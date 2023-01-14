@@ -19,7 +19,25 @@ class RTCCustomFrameCapturer: RTCVideoCapturer {
         if let pixelBuffer = _pixelBuffer {
             let rtcPixelBuffer = RTCCVPixelBuffer(pixelBuffer: pixelBuffer)
             let timeStampNs = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) * kNanosecondsPerSecond
-            let rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._0, timeStampNs: Int64(timeStampNs))
+            let rtcVideoFrame : RTCVideoFrame!
+            switch currentOrientation {
+            case .portrait :
+                rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._0, timeStampNs: Int64(timeStampNs))
+            case .unknown:
+                rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._0, timeStampNs: Int64(timeStampNs))
+            case .portraitUpsideDown:
+                rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._0, timeStampNs: Int64(timeStampNs))
+
+            case .landscapeLeft:
+                rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._270, timeStampNs: Int64(timeStampNs))
+
+            case .landscapeRight:
+                rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._90, timeStampNs: Int64(timeStampNs))
+
+            @unknown default:
+                rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._0, timeStampNs: Int64(timeStampNs))
+
+            }
             self.delegate?.capturer(self, didCapture: rtcVideoFrame)
         }
     }
