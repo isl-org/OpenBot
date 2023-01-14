@@ -48,7 +48,7 @@
 		727D319EA6CD65DE80FF750C /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */; };
 		727D332F054456A4182DD7DF /* expandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3327FAD14CEC3DE54D95 /* expandSetting.swift */; };
 		727D3344CC8742EB020E2992 /* ModelManagementTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31518A6A6FE099F41F49 /* ModelManagementTable.swift */; };
-		727D338AB7E821641A477554 /* VideoViewWebRtc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* VideoViewWebRtc.swift */; };
+		727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */; };
 		727D33A327A7D99A558EFDC4 /* BluetoothTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3B76CF73A97A22A8022E /* BluetoothTable.swift */; };
 		727D33DD6B69783CAE4035BD /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30501D6445D0C8AED362 /* GaugeView.swift */; };
 		727D3457F432B9743263C307 /* sensorDataRetrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */; };
@@ -154,7 +154,7 @@
 		727D3189735FC4F7A4E4A6C1 /* Browser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
 		727D31C90AF5C778DF525EE1 /* FreeRoamController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreeRoamController.swift; sourceTree = "<group>"; };
 		727D3281CA65425580EDD4A4 /* popupWindowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = popupWindowView.swift; path = ModelManagement/popupWindowView.swift; sourceTree = "<group>"; };
-		727D32E3FF7FA5BADAAEDBE6 /* VideoViewWebRtc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VideoViewWebRtc.swift; path = WebRTC/VideoViewWebRtc.swift; sourceTree = "<group>"; };
+		727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRTCDelegates.swift; path = WebRTC/WebRTCDelegates.swift; sourceTree = "<group>"; };
 		727D3327FAD14CEC3DE54D95 /* expandSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = expandSetting.swift; sourceTree = "<group>"; };
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
 		727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutopilotFragment.swift; path = Autopilot/AutopilotFragment.swift; sourceTree = "<group>"; };
@@ -344,7 +344,7 @@
 				727D37586F16DE497CEA62CE /* SignalingMessage.swift */,
 				727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */,
 				727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */,
-				727D32E3FF7FA5BADAAEDBE6 /* VideoViewWebRtc.swift */,
+				727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -802,7 +802,7 @@
 				727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */,
 				727D34E3CC491BD7758C572F /* WebRTCClient.swift in Sources */,
 				4FEF46257887327B74C4900E /* JSON.swift in Sources */,
-				727D338AB7E821641A477554 /* VideoViewWebRtc.swift in Sources */,
+				727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

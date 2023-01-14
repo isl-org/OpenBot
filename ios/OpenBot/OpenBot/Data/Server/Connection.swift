@@ -101,7 +101,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
     }
 
     func startVideoStream(){
-        VideoViewWebRtc();
+        WebRTCDelegates();
     }
 
 

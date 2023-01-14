@@ -7,7 +7,7 @@ import AVFoundation
 import Starscream
 import WebRTC
 var webRTCClient: WebRTCClient!
-class VideoViewWebRtc: WebRTCClientDelegate {
+class WebRTCDelegates: WebRTCClientDelegate {
 
     var useCustomCapturer: Bool = true
     func didGenerateCandidate(iceCandidate: RTCIceCandidate) {
