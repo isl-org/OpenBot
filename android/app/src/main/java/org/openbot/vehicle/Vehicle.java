@@ -211,7 +211,6 @@ public class Vehicle {
         gameController = new GameController(driveMode);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         connectionType = getConnectionPreferences("connection_type", "USB");
-        System.out.println("vehicle type" + connectionType);
     }
 
     public float getBatteryVoltage() {

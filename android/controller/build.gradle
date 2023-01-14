@@ -52,10 +52,13 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
-
     packagingOptions {
-        exclude 'META-INF/*.kotlin_module'
+        resources {
+            excludes += ['META-INF/*.kotlin_module']
+        }
     }
+
+    namespace 'org.openbot.controller'
 }
 
 dependencies {
