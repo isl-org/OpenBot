@@ -482,7 +482,6 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
 
     func stopSession() {
         captureSession.stopRunning()
-        print("capture Session is ",captureSession)
     }
 
     func shouldStartCamera()->Bool{

@@ -29,7 +29,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var acceleration = UIButton()
     var magnetic = UIButton()
     var gyroscope = UIButton()
-    var selectedResolution: Resolutions = Resolutions.high
+    var selectedResolution: Resolutions = Resolutions.medium
     var sensorButtons = [UIButton]()
     var dropDownView = UIView()
     var ddView = UIView()
