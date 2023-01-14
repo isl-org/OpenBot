@@ -83,10 +83,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
         if self.channels.audio {
             self.peerConnection!.add(localAudioTrack, streamIds: ["stream0"])
         }
-//        if self.channels.datachannel {
-//            self.dataChannel = self.setupDataChannel()
-//            self.dataChannel?.delegate = self
-//        }
         makeOffer(onSuccess: onSuccess)
     }
 
@@ -100,7 +96,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     // MARK: Signaling Event
     func receiveOffer(offerSDP: RTCSessionDescription, onCreateAnswer: @escaping (RTCSessionDescription) -> Void) {
         if (self.peerConnection == nil) {
-            print("offer received, create peerconnection")
             self.peerConnection = setupPeerConnection()
             self.peerConnection!.delegate = self
             if self.channels.video {
@@ -121,14 +116,11 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
                 print(error)
                 return
             }
-
-            print("succeed to set remote offer SDP")
             self.makeAnswer(onCreateAnswer: onCreateAnswer)
         }
     }
 
     func receiveAnswer(answerSDP: RTCSessionDescription) {
-        print("inside receiveAnswer");
         self.peerConnection!.setRemoteDescription(answerSDP) { (err) in
             if let error = err {
                 print("failed to set remote answer SDP")
@@ -142,32 +134,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
         self.peerConnection!.add(candidate)
     }
 
-    // MARK: DataChannel Event
-    func sendMessge(message: String) {
-//        if let _dataChannel = self.remoteDataChannel {
-//            if _dataChannel.readyState == .open {
-//                let buffer = RTCDataBuffer(data: message.data(using: String.Encoding.utf8)!, isBinary: false)
-//                _dataChannel.sendData(buffer)
-//            } else {
-//                print("data channel is not ready state")
-//            }
-//        } else {
-//            print("no data channel")
-//        }
-    }
-
-    func sendData(data: Data) {
-//        if let _dataChannel = self.remoteDataChannel {
-//            if _dataChannel.readyState == .open {
-//                let buffer = RTCDataBuffer(data: data, isBinary: true)
-//                print("inside data channel")
-//                _dataChannel.sendData(buffer)
-//            }
-//        }
-    }
-
     private func setupPeerConnection() -> RTCPeerConnection {
-        print("inside setupPeerConnection")
         let rtcConf = RTCConfiguration()
         rtcConf.iceServers = [RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"])]
         let mediaConstraints = RTCMediaConstraints.init(mandatoryConstraints: nil, optionalConstraints: nil)
@@ -181,13 +148,11 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
             self.localVideoTrack = createVideoTrack()
         }
         if self.channels.audio == true {
-            print("inside channels.audio")
             self.localAudioTrack = createAudioTrack()
         }
     }
 
     private func createAudioTrack() -> RTCAudioTrack {
-        print("inside createAudioTrack");
         let audioConstrains = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
         let audioSource = self.peerConnectionFactory.audioSource(with: audioConstrains)
         let audioTrack = self.peerConnectionFactory.audioTrack(with: audioSource, trackId: "audio0")
@@ -199,7 +164,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
         let videoSource = self.peerConnectionFactory.videoSource()
         if self.customFrameCapturer {
             self.videoCapturer = RTCCustomFrameCapturer(delegate: videoSource)
-            print("inside RTCCustomFrameCapturer")
         }
         let videoTrack = self.peerConnectionFactory.videoTrack(with: videoSource, trackId: "video0")
         return videoTrack
@@ -223,14 +187,12 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
             }
 
             if let offerSDP = sdp {
-                print("make offer, created local sdp")
                 self.peerConnection!.setLocalDescription(offerSDP, completionHandler: { (err) in
                     if let error = err {
                         print("error with set local offer sdp")
                         print(error)
                         return
                     }
-                    print("succeed to set local offer SDP")
                     onSuccess(offerSDP)
                 })
             }
@@ -245,8 +207,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
                 print(error)
                 return
             }
-
-            print("succeed to create local answer SDP")
             if let answerSDP = answerSessionDescription {
                 self.peerConnection!.setLocalDescription(answerSDP, completionHandler: { (err) in
                     if let error = err {
@@ -254,7 +214,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
                         print(error)
                         return
                     }
-
                     print("succeed to set local answer SDP")
                     onCreateAnswer(answerSDP)
                 })
@@ -273,7 +232,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     private func onDisConnected() {
         self.isConnected = false
-
         DispatchQueue.main.async {
             print("--- on dis connected ---")
             self.peerConnection!.close()
