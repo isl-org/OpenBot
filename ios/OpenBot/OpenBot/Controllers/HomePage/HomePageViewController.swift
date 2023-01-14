@@ -61,6 +61,12 @@ class HomePageViewController: CameraController {
         }
     }
 
+    override func captureOutput(_ output: AVFoundation.AVCaptureOutput, didOutput sampleBuffer: CoreMedia.CMSampleBuffer, from connection: AVFoundation.AVCaptureConnection) {
+        if isClientConnected{
+            super.captureOutput(output, didOutput: sampleBuffer, from: connection)
+        }
+    }
+
     func changeNavigationColor() {
         if traitCollection.userInterfaceStyle == .light {
             navigationController?.navigationBar.tintColor = Colors.title
@@ -131,6 +137,7 @@ class HomePageViewController: CameraController {
     }
 
     @objc func clientDisconnected(_ notification: Notification) {
+        print("inside clientDisconnected")
         isClientConnected = false
         stopSession()
     }
