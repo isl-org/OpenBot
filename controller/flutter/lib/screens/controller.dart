@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nsd/nsd.dart';
 import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/screens/controlSelector.dart';
@@ -151,12 +152,6 @@ class ControllerState extends State<Controller> {
     videoConnection();
   }
 
-  @override
-  void dispose() async {
-    await _remoteVideoRenderer.dispose();
-    super.dispose();
-  }
-
   Future<void> registerNewService() async {
     var port = nextPort;
     final service = Service(
@@ -262,6 +257,7 @@ class ControllerState extends State<Controller> {
   }
 
   void processMessageFromBot(items) {
+    log("item , $items");
     String sdp = "";
     String type = "";
     String id = "";
@@ -270,6 +266,20 @@ class ControllerState extends State<Controller> {
     if (items["CONNECTION_ACTIVE"] != null) {
       setDeviceConnected(items["CONNECTION_ACTIVE"]);
     }
+
+    if (items["VIDEO_PROTOCOL"] != null) {
+      if (items["VIDEO_PROTOCOL"] == "RTSP") {
+        Fluttertoast.showToast(
+            msg: "RTSP not supported by this controller. For video, set your main app to use WebRTC.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white,
+            fontSize: 14);
+        log("RTSP not supported by this controller. For video, set your main app to use WebRTC.");
+      }
+    }
+
     if (items["INDICATOR_LEFT"] != null) {
       if (items["INDICATOR_LEFT"] == "true") {
         setState(() {
