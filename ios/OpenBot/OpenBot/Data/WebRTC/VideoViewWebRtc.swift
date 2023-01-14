@@ -9,10 +9,7 @@ import WebRTC
 var webRTCClient: WebRTCClient!
 class VideoViewWebRtc: WebRTCClientDelegate {
 
-    // You can create video source from CMSampleBuffer :)
     var useCustomCapturer: Bool = true
-    let webRTCStatusMesasgeBase = "WebRTC: "
-
     func didGenerateCandidate(iceCandidate: RTCIceCandidate) {
         self.sendCandidate(iceCandidate: iceCandidate)
     }
@@ -74,7 +71,6 @@ class VideoViewWebRtc: WebRTCClientDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(websocketDidReceiveMessage), name: .updateDataFromControllerApp, object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(cameraBuffer), name: .cameraBuffer, object: nil)
         if useCustomCapturer {
-            print("--- use custom capturer ---")
             let tempCameraSession = CameraController.shared.captureSession;
         }
         if !webRTCClient.isConnected {
@@ -91,11 +87,9 @@ class VideoViewWebRtc: WebRTCClientDelegate {
     }
 
     @objc func websocketDidReceiveMessage(_ notification: Notification) {
-        print("inside websocketDidReceiveMessage")
         let text: Data = notification.object as! Data;
         do {
             let signalingMessage = try JSONDecoder().decode(AnswerEvent.self, from: text)
-            print("signalingMessage", signalingMessage)
             if signalingMessage.webrtc_event.type == "offer" {
                 webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.webrtc_event.sdp)), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
                     self.sendSDP(sessionDescription: answerSDP)
@@ -104,9 +98,6 @@ class VideoViewWebRtc: WebRTCClientDelegate {
                 print("it is answer");
                 webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.webrtc_event.sdp)))
             } else if signalingMessage.webrtc_event.type == "candidate" {
-//                    let candidate = signalingMessage.candidate!
-//                    webRTCClient.receiveCandidate(candidate: RTCIceCandidate(sdp: candidate.candidate, sdpMLineIndex: candidate.label, sdpMid: candidate.id))
-
             }
         } catch {
             print(error)
@@ -124,31 +115,6 @@ class VideoViewWebRtc: WebRTCClientDelegate {
         }
         let signalingMessage = JSON.toString(OfferEvent(status: .init(WEB_RTC_EVENT: .init(type: type, sdp: sessionDescription.sdp))));
         client.send(message: signalingMessage);
-    }
-
-
-    @objc func cameraBuffer(_ notification: Notification) {
-        if self.useCustomCapturer {
-            if let cvpixelBuffer = CMSampleBufferGetImageBuffer(notification.object as! CMSampleBuffer) {
-                webRTCClient.captureCurrentFrame(sampleBuffer: cvpixelBuffer)
-            } else {
-                print("no pixelbuffer")
-            }
-            //            self.webRTCClient.captureCurrentFrame(sampleBuffer: buffer)
-        }
-    }
-
-
-    func didOutput(_ sampleBuffer: CMSampleBuffer) {
-        print("didOutput delegate");
-        if self.useCustomCapturer {
-
-            if let cvpixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
-                webRTCClient.captureCurrentFrame(sampleBuffer: cvpixelBuffer)
-            } else {
-                print("no pixelbuffer")
-            }
-        }
     }
 
 }
