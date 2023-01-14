@@ -11,12 +11,11 @@ class RTCCustomFrameCapturer: RTCVideoCapturer {
     var nanoseconds: Float64 = 0
 
     override init(delegate: RTCVideoCapturerDelegate) {
-        print("inside init RTCVideoCapturerDelegate")
         super.init(delegate: delegate)
     }
 
     public func capture(_ sampleBuffer: CMSampleBuffer) {
-        let _pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        let _pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
         if let pixelBuffer = _pixelBuffer {
             let rtcPixelBuffer = RTCCVPixelBuffer(pixelBuffer: pixelBuffer)
             let timeStampNs = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) * kNanosecondsPerSecond

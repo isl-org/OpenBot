@@ -15,7 +15,7 @@ protocol WebRTCClientDelegate {
     func didDisconnectWebRTC()
 }
 
-class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate {
+class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     private var peerConnectionFactory: RTCPeerConnectionFactory!
     private var peerConnection: RTCPeerConnection?
@@ -83,10 +83,10 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate 
         if self.channels.audio {
             self.peerConnection!.add(localAudioTrack, streamIds: ["stream0"])
         }
-        if self.channels.datachannel {
-            self.dataChannel = self.setupDataChannel()
-            self.dataChannel?.delegate = self
-        }
+//        if self.channels.datachannel {
+//            self.dataChannel = self.setupDataChannel()
+//            self.dataChannel?.delegate = self
+//        }
         makeOffer(onSuccess: onSuccess)
     }
 
@@ -111,7 +111,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate 
             }
             if self.channels.datachannel {
                 self.dataChannel = self.setupDataChannel()
-                self.dataChannel?.delegate = self
+
             }
 
         }
@@ -144,26 +144,26 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate 
 
     // MARK: DataChannel Event
     func sendMessge(message: String) {
-        if let _dataChannel = self.remoteDataChannel {
-            if _dataChannel.readyState == .open {
-                let buffer = RTCDataBuffer(data: message.data(using: String.Encoding.utf8)!, isBinary: false)
-                _dataChannel.sendData(buffer)
-            } else {
-                print("data channel is not ready state")
-            }
-        } else {
-            print("no data channel")
-        }
+//        if let _dataChannel = self.remoteDataChannel {
+//            if _dataChannel.readyState == .open {
+//                let buffer = RTCDataBuffer(data: message.data(using: String.Encoding.utf8)!, isBinary: false)
+//                _dataChannel.sendData(buffer)
+//            } else {
+//                print("data channel is not ready state")
+//            }
+//        } else {
+//            print("no data channel")
+//        }
     }
 
     func sendData(data: Data) {
-        if let _dataChannel = self.remoteDataChannel {
-            if _dataChannel.readyState == .open {
-                let buffer = RTCDataBuffer(data: data, isBinary: true)
-                print("inside data channel")
-                _dataChannel.sendData(buffer)
-            }
-        }
+//        if let _dataChannel = self.remoteDataChannel {
+//            if _dataChannel.readyState == .open {
+//                let buffer = RTCDataBuffer(data: data, isBinary: true)
+//                print("inside data channel")
+//                _dataChannel.sendData(buffer)
+//            }
+//        }
     }
 
     private func setupPeerConnection() -> RTCPeerConnection {
@@ -351,41 +351,6 @@ extension WebRTCClient {
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
-    }
-}
-
-// MARK: - RTCVideoView Delegate
-//extension WebRTCClient {
-//    func videoView(_ videoView: RTCVideoRenderer, didChangeVideoSize size: CGSize) {
-//    }
-//}
-
-// MARK: - RTCDataChannelDelegate
-extension WebRTCClient {
-    func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
-        DispatchQueue.main.async {
-            if buffer.isBinary {
-                self.delegate?.didReceiveData(data: buffer.data)
-            } else {
-                self.delegate?.didReceiveMessage(message: String(data: buffer.data, encoding: String.Encoding.utf8)!)
-            }
-        }
-    }
-
-    func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
-        print("data channel did change state")
-        switch dataChannel.readyState {
-        case .closed:
-            print("closed")
-        case .closing:
-            print("closing")
-        case .connecting:
-            print("connecting")
-        case .open:
-            print("open")
-        @unknown default:
-            print("default case")
-        }
     }
 }
 
