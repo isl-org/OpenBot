@@ -15,7 +15,7 @@ class BluetoothTable: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.clearsSelectionOnViewWillAppear = false
+        clearsSelectionOnViewWillAppear = false
 //        let timer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { timer in
 //            self.bluetooth.startScan()
 //            self.tableView.reloadData()
@@ -47,11 +47,11 @@ class BluetoothTable: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return bluetooth.peripherals.count
+        bluetooth.peripherals.count
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

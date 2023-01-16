@@ -13,7 +13,6 @@ class Client {
         print("new client")
         browser.start { result in
             print("client.handler result: \(result)")
-//            sharedConnection = Connection(endpoint: result.endpoint)
             print(" client is :", client)
         }
     }

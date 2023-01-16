@@ -7,11 +7,11 @@ import Network
 
 var sharedConnection: Connection?
 
-protocol sendInitialMessageDelegate: class {
+protocol sendInitialMessageDelegate: AnyObject {
     func sendMessage()
 }
 
-protocol startStreamDelegate: class {
+protocol startStreamDelegate: AnyObject {
     func startVideoStream()
 }
 

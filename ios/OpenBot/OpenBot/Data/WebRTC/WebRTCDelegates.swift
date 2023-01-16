@@ -14,12 +14,11 @@ class WebRTCDelegates: WebRTCClientDelegate {
     var useCustomCapturer: Bool = true
 
     func didGenerateCandidate(iceCandidate: RTCIceCandidate) {
-        self.sendCandidate(iceCandidate: iceCandidate)
+        sendCandidate(iceCandidate: iceCandidate)
     }
 
     func didIceConnectionStateChanged(iceConnectionState: RTCIceConnectionState) {
         var state = ""
-
         switch iceConnectionState {
         case .checking:
             state = "checking..."
@@ -66,15 +65,14 @@ class WebRTCDelegates: WebRTCClientDelegate {
 
     init() {
         #if targetEnvironment(simulator)
-        self.useCustomCapturer = true
+        useCustomCapturer = true
         #endif
         webRTCClient = WebRTCClient()
         webRTCClient.delegate = self
         webRTCClient.setup(videoTrack: true, audioTrack: true, dataChannel: true, customFrameCapturer: useCustomCapturer)
         NotificationCenter.default.addObserver(self, selector: #selector(websocketDidReceiveMessage), name: .updateDataFromControllerApp, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(cameraBuffer), name: .cameraBuffer, object: nil)
         if useCustomCapturer {
-            let tempCameraSession = CameraController.shared.captureSession;
+            _ = CameraController.shared.captureSession;
         }
         if !webRTCClient.isConnected {
             webRTCClient.connect(onSuccess: { (offerSDP: RTCSessionDescription) -> Void in

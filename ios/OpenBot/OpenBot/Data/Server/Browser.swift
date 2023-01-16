@@ -43,7 +43,7 @@ class Browser {
                 }
             }
 
-            for (index, change) in changes.enumerated() {
+            for (_, change) in changes.enumerated() {
                 switch change {
                 case .added(let browseResult):
                     switch browseResult.endpoint {

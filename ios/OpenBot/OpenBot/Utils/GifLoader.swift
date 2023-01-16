@@ -1,7 +1,7 @@
 import UIKit
 import ImageIO
 
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// FIXME: comparison operators with optionals were removed from the Swift Standard Library.
 // Consider refactoring the code to use the non-optional operators.
 fileprivate func <<T: Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
@@ -27,12 +27,12 @@ extension UIImage {
     }
 
     public class func gifImageWithURL(_ gifUrl: String) -> UIImage? {
-        guard let bundleURL: URL? = URL(string: gifUrl)
+        guard let bundleURL: URL = URL(string: gifUrl)
         else {
             print("image named \"\(gifUrl)\" doesn't exist")
             return nil
         }
-        guard let imageData = try? Data(contentsOf: bundleURL!) else {
+        guard let imageData = try? Data(contentsOf: bundleURL) else {
             print("image named \"\(gifUrl)\" into NSData")
             return nil
         }
@@ -142,16 +142,13 @@ extension UIImage {
                     source: source)
             delays.append(Int(delaySeconds * 1000.0)) // Seconds to ms
         }
+        var sum = 0
 
-        let duration: Int = {
-            var sum = 0
+        for val: Int in delays {
+            sum += val
+        }
 
-            for val: Int in delays {
-                sum += val
-            }
-
-            return sum
-        }()
+        let duration: Int = sum
 
         let gcd = gcdForArray(delays)
         var frames = [UIImage]()

@@ -205,7 +205,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
     func createPromptForCameraAccess() {
         if AVCaptureDevice.devices(for: AVMediaType.video).count > 0 {
             AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
-                DispatchQueue.main.async() {
+                DispatchQueue.main.async {
 //                        self.checkCamera()
                 }
             }

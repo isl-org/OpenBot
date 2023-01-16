@@ -7,7 +7,7 @@ import UIKit
 extension UIView {
     func updateAdaptedConstraints() {
         let adaptedConstraints = constraints.filter { (constraint) -> Bool in
-            return constraint is AdaptedConstraint
+            constraint is AdaptedConstraint
         } as! [AdaptedConstraint]
 
         for constraint in adaptedConstraints {
@@ -21,7 +21,7 @@ extension UIView {
 
     var top: CGFloat {
         get {
-            return self.frame.origin.y
+            self.frame.origin.y
         }
         set {
             var frame = self.frame
@@ -32,7 +32,7 @@ extension UIView {
 
     var bottom: CGFloat {
         get {
-            return frame.origin.y + frame.size.height
+            frame.origin.y + frame.size.height
         }
         set {
             var frame = self.frame
@@ -43,7 +43,7 @@ extension UIView {
 
     var right: CGFloat {
         get {
-            return self.frame.origin.x + self.frame.size.width
+            self.frame.origin.x + self.frame.size.width
         }
         set {
             var frame = self.frame
@@ -54,7 +54,7 @@ extension UIView {
 
     var left: CGFloat {
         get {
-            return self.frame.origin.x
+            self.frame.origin.x
         }
         set {
             var frame = self.frame

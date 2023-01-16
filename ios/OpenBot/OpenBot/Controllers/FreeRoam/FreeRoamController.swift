@@ -350,7 +350,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             phoneController.backgroundColor = Colors.title
             client.start();
-            var msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
+            let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
             client.send(message: msg);
 
         }
@@ -620,9 +620,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 }
 
 extension String {
-
     func slice(from: String, to: String) -> String? {
-        return (range(of: from)?.upperBound).flatMap { substringFrom in
+        (range(of: from)?.upperBound).flatMap { substringFrom in
             (range(of: to, range: substringFrom..<endIndex)?.lowerBound).map { substringTo in
                 String(self[substringFrom..<substringTo])
             }

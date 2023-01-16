@@ -227,7 +227,7 @@ class ObjectTrackingFragment: CameraController {
                 self.isInferenceQueueBusy = false
             }
         }
-        guard !self.isInferenceQueueBusy else {
+        guard !isInferenceQueueBusy else {
             return
         }
 

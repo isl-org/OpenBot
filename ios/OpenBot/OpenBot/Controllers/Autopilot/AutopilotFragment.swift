@@ -156,7 +156,7 @@ class AutopilotFragment: CameraController {
                 self.isInferenceQueueBusy = false
             }
         }
-        guard !self.isInferenceQueueBusy else {
+        guard !isInferenceQueueBusy else {
             return
         }
 
@@ -195,15 +195,5 @@ class AutopilotFragment: CameraController {
             let leftSpeed = command.slice(from: "l:", to: "}}")
             gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)));
         }
-    }
-}
-
-extension Date {
-    var millisecondsSince1970: Int64 {
-        Int64((timeIntervalSince1970 * 1000.0).rounded())
-    }
-
-    init(milliseconds: Int64) {
-        self = Date(timeIntervalSince1970: TimeInterval(milliseconds) / 1000)
     }
 }

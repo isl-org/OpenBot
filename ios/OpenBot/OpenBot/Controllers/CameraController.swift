@@ -39,11 +39,11 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
 
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-        guard let imagePixelBuffer = pixelBuffer else {
+        guard pixelBuffer != nil else {
             debugPrint("unable to get image from sample buffer")
             return
         }
-        guard !self.isInferenceQueueBusy else {
+        guard !isInferenceQueueBusy else {
             print("queue is busy")
             return
         }
@@ -486,7 +486,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     }
 
     func shouldStartCamera() -> Bool {
-        return true;
+        true;
     }
 
 }

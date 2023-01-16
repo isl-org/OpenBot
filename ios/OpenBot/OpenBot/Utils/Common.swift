@@ -118,7 +118,7 @@ class Common {
 
             }
         }
-        var model: ModelItem = ModelItem.init(id: allModels.count + 1, class: allModels[0].class, type: allModels[0].type, name: modelName, pathType: allModels[allModels.count - 1].pathType, path: "", inputSize: allModels[0].inputSize)
+        let model: ModelItem = ModelItem.init(id: allModels.count + 1, class: allModels[0].class, type: allModels[0].type, name: modelName, pathType: allModels[allModels.count - 1].pathType, path: "", inputSize: allModels[0].inputSize)
         return model;
     }
 

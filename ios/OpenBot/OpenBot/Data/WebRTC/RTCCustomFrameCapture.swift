@@ -38,7 +38,7 @@ class RTCCustomFrameCapturer: RTCVideoCapturer {
                 rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._0, timeStampNs: Int64(timeStampNs))
 
             }
-            self.delegate?.capturer(self, didCapture: rtcVideoFrame)
+            delegate?.capturer(self, didCapture: rtcVideoFrame)
         }
     }
 
@@ -46,7 +46,7 @@ class RTCCustomFrameCapturer: RTCVideoCapturer {
         let rtcPixelBuffer = RTCCVPixelBuffer(pixelBuffer: pixelBuffer)
         let timeStampNs = nanoseconds * kNanosecondsPerSecond
         let rtcVideoFrame = RTCVideoFrame(buffer: rtcPixelBuffer, rotation: RTCVideoRotation._0, timeStampNs: Int64(timeStampNs))
-        self.delegate?.capturer(self, didCapture: rtcVideoFrame)
+        delegate?.capturer(self, didCapture: rtcVideoFrame)
         nanoseconds += 1
     }
 }
