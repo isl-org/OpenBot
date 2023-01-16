@@ -124,7 +124,6 @@ class DataCollectionController: CameraController {
             dataLogger.allDirectoriesName.append(baseDirectory)
             DataLogger.shared.createSensorData(openBotPath: Strings.forwardSlash + baseDirectory);
             saveImages();
-//            setupImages()
             dataLogger.setupFilesForLogging()
         }
     }
@@ -138,7 +137,6 @@ class DataCollectionController: CameraController {
         if let controlMode = notification?.userInfo?["mode"] as? ControlMode {
             selectedControlMode = controlMode;
         }
-//        print(selectedControlMode);
         if selectedControlMode == .GAMEPAD {
             gameControllerObj = GameController();
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
@@ -159,7 +157,6 @@ class DataCollectionController: CameraController {
         if let speedMode = notification.userInfo?["speed"] as? SpeedMode {
             selectedSpeedMode = speedMode;
             gameController.selectedSpeedMode = selectedSpeedMode
-//            print(selectedSpeedMode)
         }
 
     }

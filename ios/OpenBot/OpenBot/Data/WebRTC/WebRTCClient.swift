@@ -233,7 +233,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     private func onDisConnected() {
         isConnected = false
         DispatchQueue.main.async {
-            print("--- on dis connected ---")
             self.peerConnection!.close()
             self.peerConnection = nil
             self.dataChannel = nil
@@ -245,16 +244,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 // MARK: - PeerConnection Delegeates
 extension WebRTCClient {
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
-        var state = ""
-        if stateChanged == .stable {
-            state = "stable"
-        }
-
-        if stateChanged == .closed {
-            state = "closed"
-        }
-
-        print("signaling state changed: ", state)
+        print("signaling state changed: ", stateChanged)
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
@@ -276,9 +266,7 @@ extension WebRTCClient {
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
-        print("did add stream")
         remoteStream = stream
-
         if let track = stream.videoTracks.first {
             print("video track faund")
         }
@@ -294,7 +282,7 @@ extension WebRTCClient {
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
-        print("--- did remove stream ---")
+
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {

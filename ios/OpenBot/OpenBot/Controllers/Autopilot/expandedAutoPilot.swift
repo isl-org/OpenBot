@@ -439,7 +439,7 @@ class expandedAutoPilot: UIView {
     }
 
     @objc func updateSpeedLabel(_ notification: Notification) {
-        leftSpeedLabel.text = notification.object as! String
+        leftSpeedLabel.text = (notification.object as! String)
     }
 
     @objc func toggleNetwork(_ notification: Notification) {

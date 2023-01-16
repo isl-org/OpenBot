@@ -21,7 +21,6 @@ class Browser {
 
     func start(handler: @escaping (NWBrowser.Result) -> Void) {
         browser.stateUpdateHandler = { newState in
-            print("i am here ")
             switch newState {
             case .failed(let error):
                 print(error.localizedDescription)

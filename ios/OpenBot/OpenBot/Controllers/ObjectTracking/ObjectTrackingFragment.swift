@@ -191,10 +191,9 @@ class ObjectTrackingFragment: CameraController {
         let detection = item.getLocation();
         let dx = screenWidth / CGFloat(detector!.getImageSizeX());
         let dy = screenHeight / CGFloat(detector!.getImageSizeY());
-        var rect = detection.applying(CGAffineTransform(scaleX: dx, y: dy));
+        let rect = detection.applying(CGAffineTransform(scaleX: dx, y: dy));
         frame.frame = rect;
         if currentOrientation == .portrait {
-//            frame.frame.origin.x = rect.
         } else {
             frame.frame.origin.y = width - rect.size.height;
         }

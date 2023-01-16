@@ -18,27 +18,7 @@ class WebRTCDelegates: WebRTCClientDelegate {
     }
 
     func didIceConnectionStateChanged(iceConnectionState: RTCIceConnectionState) {
-        var state = ""
-        switch iceConnectionState {
-        case .checking:
-            state = "checking..."
-        case .closed:
-            state = "closed"
-        case .completed:
-            state = "completed"
-        case .connected:
-            state = "connected"
-        case .count:
-            state = "count..."
-        case .disconnected:
-            state = "disconnected"
-        case .failed:
-            state = "failed"
-        case .new:
-            state = "new..."
-        @unknown default:
-            state = "new..."
-        }
+        print("ice connection state is : ",iceConnectionState);
     }
 
     func didOpenDataChannel() {
@@ -96,7 +76,6 @@ class WebRTCDelegates: WebRTCClientDelegate {
                     self.sendSDP(sessionDescription: answerSDP)
                 })
             } else if signalingMessage.webrtc_event.type == "answer" {
-                print("it is answer");
                 webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.webrtc_event.sdp)))
             } else if signalingMessage.webrtc_event.type == "candidate" {
             }

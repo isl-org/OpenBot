@@ -132,8 +132,8 @@ class RobotInfoFrame: UIViewController {
 
     func createLogoIcon() -> UIImageView {
         let icon = UIImageView();
-        icon.image = UIImage(named: "openBotLogo");
-        let imageSize = UIImage(named: "openBotLogo")!.size;
+        icon.image = Images.openBotLogo
+        let imageSize = Images.openBotLogo!.size;
         let logoWidth = imageSize.width * 0.85;
         let logoHeight = imageSize.height * 0.70;
         icon.frame.size = CGSize(width: logoWidth, height: logoHeight);
@@ -232,7 +232,6 @@ class RobotInfoFrame: UIViewController {
         label.textColor = Colors.bdColor;
         label.frame.size.width = CGFloat(text.count * 10);
         label.font = label.font.withSize(15);
-//        label.font = label.font.withSize(adapted(dimensionSize: 12, to: .height));
         label.frame.size.height = 40;
         view.addSubview(label);
         label.frame.origin.x = leadingAnchor;
@@ -597,8 +596,8 @@ class RobotInfoFrame: UIViewController {
 
     @objc func lightValueChange(_ sender: UISlider) {
         print(sender.value)
-        var front = round((sender.value * 255) * 100) / 100;
-        var back = round((sender.value * 255) * 100) / 100;
+        let front = round((sender.value * 255) * 100) / 100;
+        let back = round((sender.value * 255) * 100) / 100;
         bluetooth.sendData(payload: "l" + String(front) + "," + String(back) + "\n");
     }
 

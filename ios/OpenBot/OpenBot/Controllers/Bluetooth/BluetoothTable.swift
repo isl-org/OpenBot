@@ -16,9 +16,6 @@ class BluetoothTable: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = false
-//        let timer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { timer in
-//            self.bluetooth.startScan()
-//            self.tableView.reloadData()
 //        }
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
@@ -86,7 +83,6 @@ class BluetoothTable: UITableViewController {
     }
 
     @objc func updateConnect(_ notification: Notification) {
-//        print(bluetooth.peripherals)
         tableView.reloadData()
     }
 
@@ -94,7 +90,7 @@ class BluetoothTable: UITableViewController {
 
         if isBluetoothConnected {
             disconnectToBle();
-            if sender.title(for: .normal) == "Connect" {
+            if sender.title(for: .normal) == Strings.connect {
                 connectToBle(Btn: sender, index: sender.tag)
             }
         } else {

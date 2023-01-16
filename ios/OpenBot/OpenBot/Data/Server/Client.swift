@@ -8,9 +8,7 @@ var client = Client()
 
 class Client {
     let browser = Browser()
-
     func start() {
-        print("new client")
         browser.start { result in
             print("client.handler result: \(result)")
             print(" client is :", client)

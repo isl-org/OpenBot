@@ -74,7 +74,7 @@ class GameViewController: UIViewController {
         }
 
         let controller = connectedController;
-        let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
+        _ = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
 
         delegate?.inputManager(self, didConnect: controller!)
 
@@ -156,14 +156,14 @@ class GameViewController: UIViewController {
 
     func triggerChangedHandler(_ button: String, _ value: Float, _ pressed: Bool) {
         if pressed {
-            let analogValue = String(format: "%.2f", value)
+            _ = String(format: "%.2f", value)
 
         }
     }
 
     func thumbstickChangedHandler(_ button: String, _ xvalue: Float, _ yvalue: Float) {
-        let analogValueX = String(format: "%.2f", xvalue)
-        let analogValueY = String(format: "%.2f", yvalue)
+        _ = String(format: "%.2f", xvalue)
+        _ = String(format: "%.2f", yvalue)
 
     }
 

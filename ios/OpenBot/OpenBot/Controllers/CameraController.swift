@@ -372,20 +372,6 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
      - Returns:
      */
     func cropImage(image: UIImage, height: CGFloat, width: CGFloat) -> UIImage {
-//        //cropping Top 20% and with height and width passed as parameters.
-////        let top20 = image.size.height * 0.2;
-//        let xPos = image.size.width / 2;
-//        let yPos = 0.0;
-//        print("size::", width, "X", height);
-//        print("xPos: ", xPos, " yPos: ", yPos);
-////
-//        let rectToCrop = CGRect(x: xPos, y: yPos, width: width, height: height)
-//
-//        if let imageRef = image.cgImage!.cropping(to: rectToCrop) {
-//            let imageRef: CGImage = imageRef
-//            let cropped: UIImage = UIImage(cgImage: imageRef);
-//            return cropped
-//        }
         image.resized(to: CGSize(width: width, height: height))
     }
 
@@ -446,13 +432,9 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         let activityManager = UIActivityViewController(activityItems: DataLogger.shared.allDirectories, applicationActivities: nil)
         present(activityManager, animated: true)
         _ = navigationController?.popViewController(animated: true)
-
-//        DataLogger.shared.deleteFiles(path: Strings.forwardSlash + baseDirectory)
     }
 
     func createZip(path: URL) {
-//        let baseDirectoryName = dataLogger.knowDateOrTime(format: "yyyy") + dataLogger.knowDateOrTime(format: "MM") + dataLogger.knowDateOrTime(format: "dd") + "_"
-//                + dataLogger.knowDateOrTime(format: "H") + dataLogger.knowDateOrTime(format: "mm") + dataLogger.knowDateOrTime(format: "ss") + ".zip"
         for t in DataLogger.shared.allDirectoriesName {
             let baseDirectoryName = t + ".zip";
             let fm = FileManager.default

@@ -33,6 +33,7 @@ struct Images {
     static let plus = UIImage(systemName: "plus");
     static let edit = UIImage(named: "edit")
     static let upwardArrow = UIImage(named: "upward-arrow")
+    static let openBotLogo = UIImage(named: "openBotLogo");
 
 }
 

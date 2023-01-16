@@ -23,7 +23,6 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
     weak var startStreamDelegate: startStreamDelegate?
 
     init(endpoint: NWEndpoint) {
-
         print("PeerConnection outgoing endpoint: \(endpoint)")
         let tcpOptions = NWProtocolTCP.Options()
         tcpOptions.enableKeepalive = true
@@ -60,7 +59,6 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
     }
 
     func send(_ message: String) {
-        print("message is :", message)
         connection.send(content: message.data(using: .utf8), contentContext: .defaultMessage, isComplete: true, completion: .contentProcessed({ error in
             print("Connection send error: \(String(describing: error))")
         }))
@@ -84,7 +82,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
                     if command.contains("driveCmd") {
                         NotificationCenter.default.post(name: .updateStringFromControllerApp, object: message);
                     }
-                    print("received message ->", command);
+                    print(command);
                 }
             }
             self.receiveMessage()
