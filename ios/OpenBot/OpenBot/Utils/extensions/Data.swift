@@ -3,6 +3,7 @@
 //
 
 import Foundation
+
 extension Data {
     /// Creates a new buffer by copying the buffer pointer of the given array.
     ///

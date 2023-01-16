@@ -24,8 +24,9 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     let deviceOrientation = DeviceCurrentOrientation.shared
     var gameController = GameController.shared
     var bluetoothIcon = UIImageView()
-    var isClientConnected : Bool = false
+    var isClientConnected: Bool = false
     private let mainView = UIView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBarItem()

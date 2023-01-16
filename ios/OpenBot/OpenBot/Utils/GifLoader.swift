@@ -1,8 +1,9 @@
 import UIKit
 import ImageIO
+
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
 // Consider refactoring the code to use the non-optional operators.
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+fileprivate func <<T: Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
         return l < r
@@ -12,7 +13,6 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         return false
     }
 }
-
 
 
 extension UIImage {
@@ -26,8 +26,8 @@ extension UIImage {
         return UIImage.animatedImageWithSource(source)
     }
 
-    public class func gifImageWithURL(_ gifUrl:String) -> UIImage? {
-        guard let bundleURL:URL? = URL(string: gifUrl)
+    public class func gifImageWithURL(_ gifUrl: String) -> UIImage? {
+        guard let bundleURL: URL? = URL(string: gifUrl)
         else {
             print("image named \"\(gifUrl)\" doesn't exist")
             return nil
@@ -42,7 +42,8 @@ extension UIImage {
 
     public class func gifImageWithName(_ name: String) -> UIImage? {
         guard let bundleURL = Bundle.main
-                .url(forResource: name, withExtension: "gif") else {
+                .url(forResource: name, withExtension: "gif")
+        else {
             print("SwiftGif: This image named \"\(name)\" does not exist")
             return nil
         }

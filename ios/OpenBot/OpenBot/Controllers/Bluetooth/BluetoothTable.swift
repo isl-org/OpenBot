@@ -30,7 +30,7 @@ class BluetoothTable: UITableViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        bluetooth.sendData(payload:"f\n");
+        bluetooth.sendData(payload: "f\n");
     }
 
     func connectToBle(Btn: UIButton, index: Int) {
@@ -74,10 +74,10 @@ class BluetoothTable: UITableViewController {
             cell.connectButton.setTitle(Strings.disconnect, for: .normal)
             cell.textLabel?.textColor = Colors.title
             cell.connectButton.setTitleColor(UIColor.red, for: .normal)
-        case .connecting :
+        case .connecting:
             cell.connectButton.setTitle(Strings.connecting, for: .normal)
             cell.connectButton.setTitleColor(UIColor.green, for: .normal)
-        case .disconnecting :
+        case .disconnecting:
             cell.connectButton.setTitle(Strings.disconnecting, for: .normal)
         @unknown default:
             cell.connectButton.setTitle(Strings.connect, for: .normal)
@@ -94,11 +94,10 @@ class BluetoothTable: UITableViewController {
 
         if isBluetoothConnected {
             disconnectToBle();
-            if sender.title(for: .normal) == "Connect"{
+            if sender.title(for: .normal) == "Connect" {
                 connectToBle(Btn: sender, index: sender.tag)
             }
-        }
-        else{
+        } else {
             connectToBle(Btn: sender, index: sender.tag)
         }
         tableView.reloadData()

@@ -1,11 +1,13 @@
 //
 // Created by Nitish Yadav on 15/12/22.
 //
+
 import Foundation
 import Network
 
 let browser = Browser()
 var netService: NetService?
+
 class Browser {
 
     var browser: NWBrowser
@@ -41,7 +43,7 @@ class Browser {
                 }
             }
 
-            for (index, change) in changes.enumerated(){
+            for (index, change) in changes.enumerated() {
                 switch change {
                 case .added(let browseResult):
                     switch browseResult.endpoint {
@@ -73,11 +75,12 @@ class Browser {
 
         browser.start(queue: .main)
     }
-        func reset() {
+
+    func reset() {
         browser.cancel()
         netService?.stop()
         netService = nil
-}
+    }
 
 
 }

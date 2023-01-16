@@ -189,7 +189,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             widthConstraint = secondView.widthAnchor.constraint(equalToConstant: width)
             heightConstraint = secondView.heightAnchor.constraint(equalToConstant: height / 2)
         } else {
-            leadingConstraint = secondView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: height / 2-50)
+            leadingConstraint = secondView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: height / 2 - 50)
             leadingConstraint.identifier = Strings.expendSetting;
             topConstraint = secondView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 30);
             topConstraint.identifier = Strings.expendSetting
@@ -218,7 +218,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             dropdownTopAnchor.constant = 0;
         } else {
             frame.size.width = height
-            leadingConstraint.constant = height / 2-50
+            leadingConstraint.constant = height / 2 - 50
             topConstraint.constant = 30
             widthConstraint.constant = height / 2
             heightConstraint.constant = width;
@@ -515,19 +515,17 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     @objc func keyboardWillShow(_ notification: Notification) {
-        if currentOrientation == .portrait{
+        if currentOrientation == .portrait {
             topConstraint.constant = 260
+        } else {
+            topConstraint.constant = 10
         }
-       else{
-           topConstraint.constant = 10
-       }
     }
 
     @objc func keyboardWillHide(_ notification: Notification) {
-        if currentOrientation == .portrait{
+        if currentOrientation == .portrait {
             topConstraint.constant = 290
-        }
-        else{
+        } else {
             topConstraint.constant = 30
         }
     }

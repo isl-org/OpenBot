@@ -6,10 +6,13 @@ import Foundation
 import AVFoundation
 import Starscream
 import WebRTC
+
 var webRTCClient: WebRTCClient!
+
 class WebRTCDelegates: WebRTCClientDelegate {
 
     var useCustomCapturer: Bool = true
+
     func didGenerateCandidate(iceCandidate: RTCIceCandidate) {
         self.sendCandidate(iceCandidate: iceCandidate)
     }

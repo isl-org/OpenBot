@@ -43,7 +43,7 @@ extension Notification.Name {
     static let updateStringFromControllerApp = Notification.Name("updateStringFromControllerApp");
     static let updateDataFromControllerApp = Notification.Name("updateDataFromControllerApp");
     static let cameraBuffer = Notification.Name("cameraBuffer");
-    static let clientConnected  = Notification.Name("clientConnected")
+    static let clientConnected = Notification.Name("clientConnected")
     static let clientDisConnected = Notification.Name("clientDisConnected");
 
 

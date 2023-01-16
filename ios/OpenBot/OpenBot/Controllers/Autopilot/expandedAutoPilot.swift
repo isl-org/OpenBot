@@ -21,7 +21,7 @@ class expandedAutoPilot: UIView {
     var ddView = UIView()
     var modelDropDown = DropDown()
     var serverDropDown = DropDown()
-    var dropDownWidth : NSLayoutConstraint!
+    var dropDownWidth: NSLayoutConstraint!
     var serverDropDownLabel = UILabel()
     var serverDropDownView = UIView()
     var bluetoothIcon = UIImageView()
@@ -109,9 +109,9 @@ class expandedAutoPilot: UIView {
 
     func createBluetoothIcon() {
         if (isBluetoothConnected) {
-           bluetoothIcon =  createIcons(iconImg: Images.bluetoothConnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         } else {
-           bluetoothIcon =  createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            bluetoothIcon = createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         }
     }
 
@@ -132,7 +132,7 @@ class expandedAutoPilot: UIView {
         return label
     }
 
-    func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) ->UIImageView {
+    func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) -> UIImageView {
         let iconImage = UIImageView(frame: CGRect(x: x, y: y, width: size.width, height: size.height))
         iconImage.image = iconImg
         addSubview(iconImage)

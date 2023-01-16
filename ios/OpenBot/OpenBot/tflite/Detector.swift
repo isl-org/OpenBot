@@ -137,7 +137,7 @@ class Detector: Network {
             let inputTensor = try tflite!.input(at: 0);
             let resizedImage = pixelBuffer.resized(to: CGSize(width: getImageSizeX(), height: getImageSizeY()))
             let rgbData = rgbDataFromBuffer(resizedImage!,
-                                            isModelQuantized: inputTensor.dataType == .uInt8);
+                    isModelQuantized: inputTensor.dataType == .uInt8);
             try tflite?.copy(rgbData!, toInputAt: 0);
             try tflite?.invoke();
             try runInference();
@@ -212,8 +212,6 @@ class Detector: Network {
         let right = r1 < r2 ? r1 : r2;
         return right - left;
     }
-
-
 
 
     @objc func updateObject(_ notification: Notification) {

@@ -185,7 +185,7 @@ class AutopilotFragment: CameraController {
     }
 
     @objc func updateDataFromControllerApp(_ notification: Notification) {
-        if gameController.selectedControlMode == ControlMode.GAMEPAD{
+        if gameController.selectedControlMode == ControlMode.GAMEPAD {
             return
         }
 

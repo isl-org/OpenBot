@@ -8,7 +8,7 @@ import Foundation
  return the amount of time the system has been awake since the last time it was restarted in nanosecond.
  **/
 func returnCurrentTimestamp() -> Int {
-    Int(ProcessInfo.processInfo.systemUptime * 1000000 )
+    Int(ProcessInfo.processInfo.systemUptime * 1000000)
 }
 
 /**
@@ -17,7 +17,7 @@ func returnCurrentTimestamp() -> Int {
     Time after 1970 in millisecond
  */
 
-func returnCurrentTimeStampSince1970() -> Int{
+func returnCurrentTimeStampSince1970() -> Int {
     let currentDate = Date()
     let since1970 = currentDate.timeIntervalSince1970
     return Int(since1970 * 1000)

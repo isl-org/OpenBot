@@ -24,6 +24,7 @@ class ObjectTrackingSettings: UIView {
     var modelDropDown = DropDown()
     var objectDropDown = DropDown();
     var objectDropDownView = UIView()
+
     init(frame: CGRect, detector: Detector?, model: ModelItem) {
         self.detector = detector;
         selectedModel = model
@@ -96,14 +97,12 @@ class ObjectTrackingSettings: UIView {
     @objc func switchButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .autoModeObjectTracking, object: nil)
         if sender.isOn {
-            if selectedModel?.name == "MobileNetV1-300" + Strings.tflite{
+            if selectedModel?.name == "MobileNetV1-300" + Strings.tflite {
                 speedLabel.text = "30 fps"
-            }
-            else{
+            } else {
                 speedLabel.text = "2 fps"
             }
-        }
-        else{
+        } else {
             speedLabel.text = "xxx fps"
         }
     }

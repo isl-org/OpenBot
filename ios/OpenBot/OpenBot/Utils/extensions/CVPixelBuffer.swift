@@ -33,7 +33,7 @@ extension CVPixelBuffer {
         var inputVImageBuffer = vImage_Buffer(data: inputBaseAddress, height: UInt(imageHeight), width: UInt(imageWidth), rowBytes: inputImageRowBytes)
 
         let scaledImageRowBytes = Int(size.width) * imageChannels
-        guard  let scaledImageBytes = malloc(Int(size.height) * scaledImageRowBytes) else {
+        guard let scaledImageBytes = malloc(Int(size.height) * scaledImageRowBytes) else {
             return nil
         }
 
@@ -49,7 +49,7 @@ extension CVPixelBuffer {
             return nil
         }
 
-        let releaseCallBack: CVPixelBufferReleaseBytesCallback = {mutablePointer, pointer in
+        let releaseCallBack: CVPixelBufferReleaseBytesCallback = { mutablePointer, pointer in
 
             if let pointer = pointer {
                 free(UnsafeMutableRawPointer(mutating: pointer))

@@ -14,7 +14,7 @@ class GameViewController: UIViewController {
     private let maximumControllerCount: Int = 1
     var gameControllerObj: GameController?;
     weak var delegate: InputManagerDelegate?
-    let controllerImage : UIImageView! = nil
+    let controllerImage: UIImageView! = nil
     let overlayLeft = Draw(frame: CGRect(origin: CGPoint(x: 35, y: 300), size: CGSize(width: 18, height: 18)))
     let overlayRight = Draw(frame: CGRect(origin: CGPoint(x: 77, y: 300), size: CGSize(width: 18, height: 18)))
     let overlayUp = Draw(frame: CGRect(origin: CGPoint(x: 52, y: 278), size: CGSize(width: 18, height: 18)))
@@ -45,7 +45,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         dateFormatter.dateFormat = "HH:mm:ss.SSSS"
-      
+
         NotificationCenter.default.addObserver(self, selector: #selector(didConnectController), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
     }
 
@@ -55,7 +55,6 @@ class GameViewController: UIViewController {
         gameControllerObj = GameController();
         didConnectController();
     }
-
 
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,15 +67,12 @@ class GameViewController: UIViewController {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
 
-    
-
-    
 
     @objc func didConnectController() {
         if (connectedController == nil) {
             return
         }
-       
+
         let controller = connectedController;
         let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
 
@@ -150,10 +146,10 @@ class GameViewController: UIViewController {
 
     func buttonChangedHandler(_ button: String, _ pressed: Bool, _ overlay: UIView) {
         if pressed {
-            
+
             view.addSubview(overlay)
         } else {
-            
+
             overlay.removeFromSuperview()
         }
     }
@@ -161,14 +157,14 @@ class GameViewController: UIViewController {
     func triggerChangedHandler(_ button: String, _ value: Float, _ pressed: Bool) {
         if pressed {
             let analogValue = String(format: "%.2f", value)
-            
+
         }
     }
 
     func thumbstickChangedHandler(_ button: String, _ xvalue: Float, _ yvalue: Float) {
         let analogValueX = String(format: "%.2f", xvalue)
         let analogValueY = String(format: "%.2f", yvalue)
-        
+
     }
 
 }

@@ -37,7 +37,7 @@ class DataCollectionController: CameraController {
         navigationItem.hidesBackButton = true
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
-            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.dataCollection, target: self, action: #selector(DataCollectionController.back(sender:)), titleColor:Colors.navigationColor ?? .white)
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.dataCollection, target: self, action: #selector(DataCollectionController.back(sender:)), titleColor: Colors.navigationColor ?? .white)
             navigationItem.leftBarButtonItem = newBackButton
         }
 
@@ -188,7 +188,7 @@ class DataCollectionController: CameraController {
     }
 
     @objc func updateDataFromControllerApp(_ notification: Notification) {
-        if gameController.selectedControlMode == ControlMode.GAMEPAD{
+        if gameController.selectedControlMode == ControlMode.GAMEPAD {
             return
         }
         if notification.object != nil {

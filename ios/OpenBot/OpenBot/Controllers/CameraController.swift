@@ -28,6 +28,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     var photoOutput = AVCapturePhotoOutput()
     private var isInferenceQueueBusy = false
     private let inferenceQueue = DispatchQueue(label: "openbot.cameraController.inferencequeue")
+
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
@@ -484,7 +485,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         captureSession.stopRunning()
     }
 
-    func shouldStartCamera()->Bool{
+    func shouldStartCamera() -> Bool {
         return true;
     }
 

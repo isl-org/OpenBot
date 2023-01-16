@@ -6,22 +6,24 @@
 //
 
 import UIKit
+
 class GaugeView: UIView {
     var segmentWidth: CGFloat = 40
     var segmentColors = [UIColor(red: 0.10, green: 0.66, blue: 0.98, alpha: 1.00), UIColor(red: 0.00, green: 0.44, blue: 0.77, alpha: 1.00)]
     var rotation: CGFloat = -89
     let valueLabel = UILabel()
-    var valueFont = UIFont(name:"medium", size: 100.0)
-    var segmentValue : Int = 50
+    var valueFont = UIFont(name: "medium", size: 100.0)
+    var segmentValue: Int = 50
+
     override func draw(_ rect: CGRect) {
         guard let ctx = UIGraphicsGetCurrentContext() else {
             print("no ctx found")
             return
         }
-            segmentValue = abs(segmentValue)
-            segmentValue = min(180, segmentValue)
-            segmentValue = Int(Double(segmentValue) * 0.705)
-            drawSegments(in: rect, context: ctx, value: abs(segmentValue))
+        segmentValue = abs(segmentValue)
+        segmentValue = min(180, segmentValue)
+        segmentValue = Int(Double(segmentValue) * 0.705)
+        drawSegments(in: rect, context: ctx, value: abs(segmentValue))
     }
 
     func deg2rad(_ number: CGFloat) -> CGFloat {

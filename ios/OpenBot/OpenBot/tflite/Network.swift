@@ -45,7 +45,7 @@ class Network {
             if index < 0 {
                 let modelsInDocumentDirectory = DataLogger.shared.getDocumentDirectoryInformation();
                 for modelUrl in modelsInDocumentDirectory {
-                    if modelUrl.lastPathComponent.contains(model.name){
+                    if modelUrl.lastPathComponent.contains(model.name) {
                         tflite = try Interpreter(modelPath: modelUrl.absoluteString.replacingOccurrences(of: "file:///", with: ""), options: tfliteOptions, delegates: delegates);
                         try tflite?.allocateTensors()
                     }
@@ -63,10 +63,10 @@ class Network {
             } else {
                 let modelsInDocumentDirectory = DataLogger.shared.getDocumentDirectoryInformation();
                 for modelUrl in modelsInDocumentDirectory {
-                   if modelUrl.lastPathComponent.contains(model.name){
-                       tflite = try Interpreter(modelPath: modelUrl.absoluteString.replacingOccurrences(of: "file:///", with: ""), options: tfliteOptions, delegates: delegates);
-                       try tflite?.allocateTensors()
-                   }
+                    if modelUrl.lastPathComponent.contains(model.name) {
+                        tflite = try Interpreter(modelPath: modelUrl.absoluteString.replacingOccurrences(of: "file:///", with: ""), options: tfliteOptions, delegates: delegates);
+                        try tflite?.allocateTensors()
+                    }
                 }
             }
             imageSize = model.getInputSize();
@@ -133,19 +133,18 @@ class Network {
         } else if (CVPixelBufferGetPixelFormatType(buffer) == kCVPixelFormatType_32ARGB) {
             vImageConvert_ARGB8888toRGB888(&sourceBuffer, &destinationBuffer, UInt32(kvImageNoFlags))
         }
-        
-        
+
+
         let byteData = Data(bytes: destinationBuffer.data, count: destinationBuffer.rowBytes * height)
         if isModelQuantized {
             return byteData
-        }
-        else {
+        } else {
             // Set up the destination buffer for the float values
             var floatBuffer = [Float](repeating: 0.0, count: byteData.count)
 
             // Convert the image buffer to float values
             vDSP_vfltu8(destinationBuffer.data, 1, &floatBuffer, 1, vDSP_Length(byteData.count))
-            
+
             // Apply normalization factor
             var normalizationFactor: Float = 1.0 / getImageStd()
             vDSP_vsmul(floatBuffer, 1, &normalizationFactor, &floatBuffer, 1, vDSP_Length(floatBuffer.count))

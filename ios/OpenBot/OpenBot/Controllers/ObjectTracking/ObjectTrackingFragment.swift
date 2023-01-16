@@ -18,7 +18,7 @@ class ObjectTrackingFragment: CameraController {
     let bluetooth = bluetoothDataController.shared;
     var currentModel: ModelItem!
     var currentDevice: RuntimeDevice = RuntimeDevice.CPU
-    var currentObject : String = "person"
+    var currentObject: String = "person"
     private var MINIMUM_CONFIDENCE_TF_OD_API: Float = 50.0;
     private let inferenceQueue = DispatchQueue(label: "openbot.autopilot.inferencequeue")
     private var isInferenceQueueBusy = false
@@ -154,7 +154,7 @@ class ObjectTrackingFragment: CameraController {
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
-            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.objectTracking, target: self, action: #selector(ObjectTrackingFragment.back(sender:)),titleColor:Colors.navigationColor ?? .white)
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.objectTracking, target: self, action: #selector(ObjectTrackingFragment.back(sender:)), titleColor: Colors.navigationColor ?? .white)
             navigationItem.leftBarButtonItem = newBackButton
         }
     }
@@ -193,13 +193,12 @@ class ObjectTrackingFragment: CameraController {
         let dy = screenHeight / CGFloat(detector!.getImageSizeY());
         var rect = detection.applying(CGAffineTransform(scaleX: dx, y: dy));
         frame.frame = rect;
-        if currentOrientation == .portrait{
+        if currentOrientation == .portrait {
 //            frame.frame.origin.x = rect.
-        }
-        else{
+        } else {
             frame.frame.origin.y = width - rect.size.height;
         }
-        print(frame.frame," : ",detection);
+        print(frame.frame, " : ", detection);
         frame.layer.borderColor = color.cgColor;
         frame.layer.borderWidth = 2.0;
         let nameString = UITextView();
@@ -212,12 +211,12 @@ class ObjectTrackingFragment: CameraController {
         frame.addSubview(nameString);
         return frame;
     }
-    
+
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
+
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-        
+
         guard let imagePixelBuffer = pixelBuffer else {
             debugPrint("unable to get image from sample buffer")
             return
@@ -228,36 +227,39 @@ class ObjectTrackingFragment: CameraController {
                 self.isInferenceQueueBusy = false
             }
         }
-        guard !self.isInferenceQueueBusy else { return }
-            
-        inferenceQueue.async{
+        guard !self.isInferenceQueueBusy else {
+            return
+        }
+
+        inferenceQueue.async {
             if self.autoMode {
                 self.isInferenceQueueBusy = true
-                
+
                 let startTime = Date().millisecondsSince1970
-                
+
                 let res = self.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, height: self.originalHeight, width: self.originalWidth)
-                
+
                 let endTime = Date().millisecondsSince1970
-                
+
                 if (res!.count > 0) {
                     self.result = self.updateTarget(res!.first!.getLocation());
-                }
-                else {
+                } else {
                     self.result = Control(left: 0, right: 0)
                 }
-                
-                guard let controlResult = self.result else { return }
+
+                guard let controlResult = self.result else {
+                    return
+                }
 
                 DispatchQueue.main.async {
-                    
+
                     if (self.frames.count > 0) {
                         for frame in self.frames {
                             frame.removeFromSuperview();
                         }
                     }
                     self.frames.removeAll();
-                    
+
                     var i = 0;
                     if (res!.count > 0) {
                         for item in res! {
@@ -269,25 +271,25 @@ class ObjectTrackingFragment: CameraController {
                             }
                         }
                     }
-                    
+
                     if (endTime - startTime) != 0 {
                         NotificationCenter.default.post(name: .updateObjectTrackingFps, object: 1000 / (endTime - startTime));
                     }
                     self.sendControl(control: controlResult)
                 }
-            }
-            else {
+            } else {
                 DispatchQueue.main.async {
                     self.sendControl(control: Control())
                 }
             }
             self.isInferenceQueueBusy = false
-        
-    }
+
+        }
 
     }
+
     @objc func updateDataFromControllerApp(_ notification: Notification) {
-        if gameController.selectedControlMode == ControlMode.GAMEPAD{
+        if gameController.selectedControlMode == ControlMode.GAMEPAD {
             return
         }
         if notification.object != nil {

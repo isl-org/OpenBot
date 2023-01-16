@@ -60,13 +60,13 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
         setupLocalTracks()
     }
 
-    func captureCurrentFrame(sampleBuffer: CMSampleBuffer){
+    func captureCurrentFrame(sampleBuffer: CMSampleBuffer) {
         if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
             capturer.capture(sampleBuffer)
         }
     }
 
-    func captureCurrentFrame(sampleBuffer: CVPixelBuffer){
+    func captureCurrentFrame(sampleBuffer: CVPixelBuffer) {
         if let capturer = self.videoCapturer as? RTCCustomFrameCapturer {
             capturer.capture(sampleBuffer)
         }
@@ -156,7 +156,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
         let audioConstrains = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
         let audioSource = self.peerConnectionFactory.audioSource(with: audioConstrains)
         let audioTrack = self.peerConnectionFactory.audioTrack(with: audioSource, trackId: "audio0")
-         audioTrack.source.volume = 10.0
+        audioTrack.source.volume = 10.0
         return audioTrack
     }
 

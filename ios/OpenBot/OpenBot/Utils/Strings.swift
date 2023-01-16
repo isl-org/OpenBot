@@ -150,12 +150,12 @@ struct Strings {
     static let motors: String = "Motors"
     static let forward: String = "Forward";
     static let backward: String = "Backward";
-    static let stop : String = "Stop";
-    static let readings : String = "Readings";
-    static let battery : String = "Battery **.* V";
-    static let speedText : String = "Speed (l,r) ***,*** rpm"
-    static let sonarLabel  : String = "Sonar *** cm";
-    static let sendCommand : String = "Send Commands"
-    static let lightLabel : String  = "Lights"
+    static let stop: String = "Stop";
+    static let readings: String = "Readings";
+    static let battery: String = "Battery **.* V";
+    static let speedText: String = "Speed (l,r) ***,*** rpm"
+    static let sonarLabel: String = "Sonar *** cm";
+    static let sendCommand: String = "Send Commands"
+    static let lightLabel: String = "Lights"
 
 }

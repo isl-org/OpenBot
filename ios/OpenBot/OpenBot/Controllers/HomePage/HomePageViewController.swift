@@ -8,6 +8,7 @@
 import UIKit
 import CoreBluetooth
 import AVFoundation
+
 let height = max(UIScreen.main.bounds.height, UIScreen.main.bounds.width)
 let width = min(UIScreen.main.bounds.height, UIScreen.main.bounds.width)
 var currentOrientation: UIInterfaceOrientation = UIInterfaceOrientation.portrait
@@ -15,7 +16,8 @@ var isBluetoothConnected = false;
 var viewControllerName: String?
 let gameController = GameController.shared
 var leadingConstraint = NSLayoutConstraint()
-var isClientConnected : Bool = false
+var isClientConnected: Bool = false
+
 class HomePageViewController: CameraController {
     @IBOutlet weak var bluetooth: UIButton!
     @IBOutlet weak var settings: UIButton!
@@ -62,7 +64,7 @@ class HomePageViewController: CameraController {
     }
 
     override func captureOutput(_ output: AVFoundation.AVCaptureOutput, didOutput sampleBuffer: CoreMedia.CMSampleBuffer, from connection: AVFoundation.AVCaptureConnection) {
-        if isClientConnected{
+        if isClientConnected {
             super.captureOutput(output, didOutput: sampleBuffer, from: connection)
         }
     }

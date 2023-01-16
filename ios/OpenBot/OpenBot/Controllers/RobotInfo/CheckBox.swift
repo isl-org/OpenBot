@@ -2,6 +2,7 @@
 // Created by Nitish Yadav on 22/12/22.
 //
 //
+
 import Foundation
 import UIKit
 
@@ -112,7 +113,9 @@ public class Checkbox: UIControl {
     /// Indicates whether the checkbox is currently in a state of being
     /// checked or not.
     public var isChecked: Bool = false {
-        didSet { setNeedsDisplay() }
+        didSet {
+            setNeedsDisplay()
+        }
     }
 
     /// Determines if tapping the checkbox generates haptic feedback to the user.
@@ -159,10 +162,10 @@ public class Checkbox: UIControl {
     // MARK: - Borders
 
     private func drawBorder(shape: BorderStyle, in rect: CGRect) {
-        let adjustedRect = CGRect(x: borderLineWidth/2,
-                y: borderLineWidth/2,
-                width: rect.width-borderLineWidth,
-                height: rect.height-borderLineWidth)
+        let adjustedRect = CGRect(x: borderLineWidth / 2,
+                y: borderLineWidth / 2,
+                width: rect.width - borderLineWidth,
+                height: rect.height - borderLineWidth)
 
         switch shape {
         case .circle:

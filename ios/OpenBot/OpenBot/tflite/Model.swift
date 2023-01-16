@@ -15,7 +15,7 @@ struct ModelItem: Codable {
     var inputSize: String;
 
     static func toJson(_ models: [ModelItem]) -> Any {
-        var result : [Any] = []
+        var result: [Any] = []
         for item in models {
             let jsonObject: Any =
                     [
@@ -24,7 +24,7 @@ struct ModelItem: Codable {
                         "type": item.type,
                         "name": item.name,
                         "pathType": item.pathType,
-                        "path" : item.path,
+                        "path": item.path,
                         "inputSize": item.inputSize
                     ];
             result.append(jsonObject)
@@ -32,7 +32,7 @@ struct ModelItem: Codable {
         return result;
     }
 
-    static func getWidthOfInput(_ inputSize : String)->String{
+    static func getWidthOfInput(_ inputSize: String) -> String {
         if inputSize != "" {
             let index = inputSize.firstIndex(of: "x")!;
             return String(inputSize.prefix(upTo: index));
@@ -40,7 +40,7 @@ struct ModelItem: Codable {
         return ""
     }
 
-    static func getHeightOfInput(_ inputSize : String)->String{
+    static func getHeightOfInput(_ inputSize: String) -> String {
         if inputSize != "" {
             let index = inputSize.firstIndex(of: "x")!;
             let nextIndex = inputSize.index(after: index);
@@ -51,57 +51,57 @@ struct ModelItem: Codable {
 
 }
 
-    class Model {
-        var id: Int;
-        var classType: CLASS;
-        var type: TYPE;
-        var name: String;
-        var pathType: PATH_TYPE;
-        var path: String;
-        var inputSize: String;
+class Model {
+    var id: Int;
+    var classType: CLASS;
+    var type: TYPE;
+    var name: String;
+    var pathType: PATH_TYPE;
+    var path: String;
+    var inputSize: String;
 
-        init(id: Int, classType: CLASS, type: TYPE, name: String, pathType: PATH_TYPE, path: String, inputSize: String) {
-            self.id = id;
-            self.classType = classType;
-            self.type = type;
-            self.name = name;
-            self.pathType = pathType;
-            self.path = path;
-            self.inputSize = inputSize;
-        }
-
-        func getName() -> String {
-            name;
-        }
-
-        func getInputSize() -> CGSize {
-            CGSize.parseSize(inputSize);
-        }
-
-        func setPath(path: String) {
-            self.path = path;
-        }
-
-        func setPathType(pathType: PATH_TYPE) {
-            self.pathType = pathType;
-        }
-
-        func setInputSize(inputSize: String) {
-            self.inputSize = inputSize;
-        }
-
-        func setName(name: String) {
-            self.name = name;
-        }
-
-        func setClassType(classType: CLASS) {
-            self.classType = classType;
-        }
-
-        func setType(type: TYPE) {
-            self.type = type;
-        }
+    init(id: Int, classType: CLASS, type: TYPE, name: String, pathType: PATH_TYPE, path: String, inputSize: String) {
+        self.id = id;
+        self.classType = classType;
+        self.type = type;
+        self.name = name;
+        self.pathType = pathType;
+        self.path = path;
+        self.inputSize = inputSize;
     }
+
+    func getName() -> String {
+        name;
+    }
+
+    func getInputSize() -> CGSize {
+        CGSize.parseSize(inputSize);
+    }
+
+    func setPath(path: String) {
+        self.path = path;
+    }
+
+    func setPathType(pathType: PATH_TYPE) {
+        self.pathType = pathType;
+    }
+
+    func setInputSize(inputSize: String) {
+        self.inputSize = inputSize;
+    }
+
+    func setName(name: String) {
+        self.name = name;
+    }
+
+    func setClassType(classType: CLASS) {
+        self.classType = classType;
+    }
+
+    func setType(type: TYPE) {
+        self.type = type;
+    }
+}
 
 
 extension CGSize {

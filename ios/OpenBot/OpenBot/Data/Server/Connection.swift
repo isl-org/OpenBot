@@ -4,10 +4,13 @@
 
 import Foundation
 import Network
+
 var sharedConnection: Connection?
+
 protocol sendInitialMessageDelegate: class {
-   func sendMessage()
+    func sendMessage()
 }
+
 protocol startStreamDelegate: class {
     func startVideoStream()
 }
@@ -17,7 +20,8 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
     let connection: NWConnection
     // outgoing connection
     weak var msgDelegate: sendInitialMessageDelegate?
-    weak var startStreamDelegate : startStreamDelegate?
+    weak var startStreamDelegate: startStreamDelegate?
+
     init(endpoint: NWEndpoint) {
 
         print("PeerConnection outgoing endpoint: \(endpoint)")
@@ -42,11 +46,11 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         connection.stateUpdateHandler = { newState in
             print("connection.stateUpdateHandler \(newState)")
             switch newState {
-            case .ready :
+            case .ready:
                 self.receiveMessage();
                 self.msgDelegate?.sendMessage()
                 self.startStreamDelegate?.startVideoStream()
-            case .preparing :
+            case .preparing:
                 return
             default:
                 break;
@@ -56,7 +60,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
     }
 
     func send(_ message: String) {
-        print("message is :",message)
+        print("message is :", message)
         connection.send(content: message.data(using: .utf8), contentContext: .defaultMessage, isComplete: true, completion: .contentProcessed({ error in
             print("Connection send error: \(String(describing: error))")
         }))
@@ -71,16 +75,16 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
                let message = String(data: data, encoding: .utf8) {
                 let commands = message.split(separator: "\n");
                 for command in commands {
-                    if command.contains("SWITCH_CAMERA"){
+                    if command.contains("SWITCH_CAMERA") {
                         NotificationCenter.default.post(name: .switchCamera, object: nil);
                     }
-                    if command.contains("answer"){
+                    if command.contains("answer") {
                         NotificationCenter.default.post(name: .updateDataFromControllerApp, object: command.data(using: .utf8));
                     }
-                    if command.contains("driveCmd"){
+                    if command.contains("driveCmd") {
                         NotificationCenter.default.post(name: .updateStringFromControllerApp, object: message);
                     }
-                    print("received message ->",command);
+                    print("received message ->", command);
                 }
             }
             self.receiveMessage()
@@ -100,7 +104,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         client.send(message: msg)
     }
 
-    func startVideoStream(){
+    func startVideoStream() {
         WebRTCDelegates();
     }
 
