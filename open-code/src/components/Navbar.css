@@ -1,0 +1,88 @@
+.nav{
+    background-color: #0071C5;
+    position: absolute;
+    width: 1440px;
+    height: 76px;
+    left: 0px;
+    top: 0px;
+}
+.nav-title{
+    position: absolute;
+    width: 103px;
+    height: 24px;
+    left: 117.75px;
+    top: 26px;
+    font-family: "Gilroy";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.title-icon{
+    position: absolute;
+    width: 32.5px;
+    height: 30px;
+    left: 68px;
+    top: 23px;
+    background-image: url(../assets/images/ICON.png);
+}
+
+.info-icon{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 1184px;
+    top: 26px;
+    background-image: url(../assets/images/info.png);
+}
+
+.moon-icon{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 1228px;
+    top: 26px;
+    background-image: url(../assets/images/moon.png);
+}
+
+.line-icon{
+    position: absolute;
+    width: 33px;
+    height: 0px;
+    left: 1259px;
+    top: 36px;
+    border: 0.8px solid #97D3FF;
+    transform: rotate(90deg);
+}
+
+.signIn-icon{
+    position: relative;
+    border: 1.5px solid white;
+    width: 80px;
+    height: 33px;
+    box-sizing: border-box;
+    top: 20px;
+    border-radius: 8px;
+    padding: 15px;
+    left:1300px;
+}
+
+.sigIn-name{
+    text-decoration: none;
+    left: 1318px;
+    position: absolute;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    display: flex;
+    top: 26px;
+    align-items: center;
+    color: #FFFEFE;
+}
