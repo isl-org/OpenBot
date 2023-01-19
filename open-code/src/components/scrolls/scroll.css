@@ -1,0 +1,10 @@
+
+.scroll{
+    display: flex;
+    margin-left: 7%;
+    margin-right: 7.36%;
+    row-gap: 10rem;
+    justify-content: space-between;
+    height: 25%;
+    margin-top: 8rem;
+}

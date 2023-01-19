@@ -1,9 +1,11 @@
 import './App.css';
 import Home from "./pages/home/home";
-
 function App() {
     return (
-        <Home/>
+        <div style={{fontStyle : 'Gilroy-Black'}}>
+            <Home/>
+        </div>
+
     );
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import "./Navbar.css"
 
-function Navbar(){
+export function Navbar(){
         return (
             <nav className="nav">
                 <a href="/" className="title-icon" ></a>
@@ -18,4 +18,3 @@ function Navbar(){
         );
     }
 
-export default Navbar;
