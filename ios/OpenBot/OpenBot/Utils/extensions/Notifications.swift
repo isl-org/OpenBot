@@ -5,12 +5,12 @@
 import Foundation
 
 extension Notification.Name {
-    static let updateLabel = Notification.Name("updateLabel")
-    static let updateSerialMonitor = Notification.Name("updateSerialMonitor")
-    static let bluetoothConnected = Notification.Name("bluetoothConnected")
-    static let bluetoothDisconnected = Notification.Name("bluetoothDisconnected")
-    static let switchCamera = Notification.Name(Strings.switchCamera)
-    static let ble = Notification.Name(Strings.ble)
+    static let updateLabel = Notification.Name("updateLabel");
+    static let updateSerialMonitor = Notification.Name("updateSerialMonitor");
+    static let bluetoothConnected = Notification.Name("bluetoothConnected");
+    static let bluetoothDisconnected = Notification.Name("bluetoothDisconnected");
+    static let switchCamera = Notification.Name(Strings.switchCamera);
+    static let ble = Notification.Name(Strings.ble);
     static let updateModel = Notification.Name("updateModel");
     static let showModelsDD = Notification.Name("showModelsDD");
     static let showServerDD = Notification.Name("showServerDD");
@@ -43,8 +43,6 @@ extension Notification.Name {
     static let updateStringFromControllerApp = Notification.Name("updateStringFromControllerApp");
     static let updateDataFromControllerApp = Notification.Name("updateDataFromControllerApp");
     static let cameraBuffer = Notification.Name("cameraBuffer");
-    static let clientConnected = Notification.Name("clientConnected")
+    static let clientConnected = Notification.Name("clientConnected");
     static let clientDisConnected = Notification.Name("clientDisConnected");
-
-
 }

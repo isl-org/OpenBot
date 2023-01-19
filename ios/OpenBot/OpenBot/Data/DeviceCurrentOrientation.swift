@@ -13,7 +13,7 @@ class DeviceCurrentOrientation {
         let isPortrait = UIDevice.current.orientation.isPortrait
         let isLandscape = UIDevice.current.orientation.isLandscape
         if (isPortrait == false && isLandscape == false) {
-            return
+            return // improper orientation (i.e. camera facing the ground or the sky)
         }
         switch UIDevice.current.orientation {
         case .landscapeLeft:
@@ -25,8 +25,11 @@ class DeviceCurrentOrientation {
         case .portrait:
             currentOrientation = .portrait
             break
+        case .portraitUpsideDown:
+            currentOrientation = .portraitUpsideDown
+            break
         default:
-            currentOrientation = .portrait
+            currentOrientation = .unknown
             break
         }
     }

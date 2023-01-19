@@ -28,15 +28,15 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     var photoOutput = AVCapturePhotoOutput()
     private var isInferenceQueueBusy = false
     private let inferenceQueue = DispatchQueue(label: "openbot.cameraController.inferencequeue")
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCameraPreview), name: .updateResolution, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateModelResolution), name: .updateModelResolution, object: nil)
     }
-
+    
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-
+        
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
         guard pixelBuffer != nil else {
@@ -54,15 +54,15 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             }
         }
     }
-
+    
     func getImageOriginalHeight() -> Double {
         originalHeight
     }
-
+    
     func getImageOriginalWidth() -> Double {
         originalWidth
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) != .authorized {
@@ -70,7 +70,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         }
         initializeCamera()
     }
-
+    
     /**
      function that check whether camera permission is given to OpenBot or not
      */
@@ -89,26 +89,26 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             createAllowAlert(alertFor: Strings.camera);
         }
     }
-
+    
     /**
      function that prompt setting to  turn on Camera permission
      */
-
+    
     func createAllowAlert(alertFor: String) {
         let alert = UIAlertController(
-                title: "IMPORTANT",
-                message: "Please allow " + alertFor + " access for OpenBot",
-                preferredStyle: UIAlertController.Style.alert
+            title: "IMPORTANT",
+            message: "Please allow " + alertFor + " access for OpenBot",
+            preferredStyle: UIAlertController.Style.alert
         )
         alert.addAction(UIAlertAction(title: "Allow " + alertFor, style: .cancel, handler: { (alert) -> Void in
             UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
         }))
         present(alert, animated: true, completion: nil)
     }
-
-
+    
+    
     /**
-        function to initialise camera view on the screen with back camera with medium quality view feed
+     function to initialise camera view on the screen with back camera with medium quality view feed
      */
     func initializeCamera() {
         if shouldStartCamera() {
@@ -123,8 +123,8 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
                 print("Unable to access back camera!")
                 return
             }
-
-
+            
+            
             do {
                 try backCamera.lockForConfiguration()
                 if backCamera.isFocusPointOfInterestSupported {
@@ -132,44 +132,39 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
                 }
                 if backCamera.isExposurePointOfInterestSupported {
                     backCamera.exposureMode = AVCaptureDevice.ExposureMode.autoExpose
-
+                    
                 }
                 backCamera.unlockForConfiguration()
-
+                
             } catch {
                 // Handle errors here
                 print("There was an error focusing the device's camera")
             }
-
+            
             do {
                 // set the pixel format to receive
-                videoOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as NSString): NSNumber(value: kCVPixelFormatType_32BGRA)] as [String: Any]
-
+                videoOutput.videoSettings = [ String(kCVPixelBufferPixelFormatTypeKey) : kCMPixelFormat_32BGRA]//[(kCVPixelBufferPixelFormatTypeKey as NSString): NSNumber(value: kCVPixelFormatType_32BGRA)] as [String: Any]
+                
                 // avoid building up a frame backlog by setting alwaysDiscardLateVideoFrames to true
                 videoOutput.alwaysDiscardsLateVideoFrames = true
                 // tell videoOutput to send the camera feed image to our ViewController instance on a serial background thread
                 videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "image_processing_queue"))
-
+                
                 // add videoOutput as part of the capture session
                 let input = try AVCaptureDeviceInput(device: backCamera)
                 captureSession.usesApplicationAudioSession = true;
                 if captureSession.canAddInput(input) && captureSession.canAddOutput(videoOutput) {
                     captureSession.addInput(input)
                     captureSession.addOutput(videoOutput)
+                    videoOutput.connection(with: .video)?.videoOrientation = .portrait
                     setupLivePreview()
                 }
-
-                guard let connection = videoOutput.connection(with: AVMediaType.video), connection.isVideoOrientationSupported else {
-                    return
-                }
-                connection.videoOrientation = .portrait
-
             } catch let error {
                 print("Error Unable to initialize back camera:  \(error.localizedDescription)")
             }
         }
     }
-
+    
     @objc func updateCameraPreview(_ notification: Notification?) {
         let resolution = notification?.object as! Resolutions
         switch resolution {
@@ -181,7 +176,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             captureSession.sessionPreset = .high
         }
     }
-
+    
     @objc func updateModelResolution(_ notification: Notification?) {
         if notification != nil {
             let dimensionOfImage = notification?.object as? String
@@ -195,15 +190,15 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             }
         }
     }
-
+    
     @objc func updateImageMode(_ notification: Notification?) {
         let value = notification?.object as! NSArray
         if value[0] as! Int == 1 {
         }
     }
-
+    
     /**
-        function to create the camera view frame with corner to corner screen without constraints.
+     function to create the camera view frame with corner to corner screen without constraints.
      */
     func createCameraView() {
         cameraView.frame.origin = CGPoint(x: 0, y: 0)
@@ -211,9 +206,9 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         view.addSubview(cameraView)
         applyConstraints()
     }
-
+    
     /**
-        function to dispatch the camera feed into the screen in portrait mode.
+     function to dispatch the camera feed into the screen in portrait mode.
      */
     func setupLivePreview() {
         var orientation: AVCaptureVideoOrientation = .portrait;
@@ -240,20 +235,20 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             }
         }
     }
-
+    
     /**
-        function to load the subviews, manage anything on the screen when screen view updates.
+     function to load the subviews, manage anything on the screen when screen view updates.
      */
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         configureVideoOrientation()
     }
-
+    
     /**
-        function to apply the constraints on the screen view and also manage the rotation of the camera view
+     function to apply the constraints on the screen view and also manage the rotation of the camera view
      */
     func applyConstraints() {
-        if currentOrientation == .portrait {
+        if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown{
             widthConstraint = cameraView.widthAnchor.constraint(equalToConstant: width)
             heightConstraint = cameraView.heightAnchor.constraint(equalToConstant: height)
         } else {
@@ -262,36 +257,36 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         }
         widthConstraint.identifier = "width"
         heightConstraint.identifier = "height"
-
+        
         NSLayoutConstraint.activate([
             widthConstraint, heightConstraint
         ])
     }
-
+    
     /**
-        To configure the video(camera output) rotation when screen orientation changes.
+     To configure the video(camera output) rotation when screen orientation changes.
      */
     private func configureVideoOrientation() {
-        if let previewLayer = videoPreviewLayer,
-           let connection = videoPreviewLayer.connection {
-            let orientation = UIDevice.current.orientation
-            if connection.isVideoOrientationSupported,
-               let videoOrientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue) {
+        let orientation = UIDevice.current.orientation
+        if let previewLayer = videoPreviewLayer, let previewConnection = videoPreviewLayer.connection {
+            if previewConnection.isVideoOrientationSupported, let previewOrientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue) {
                 previewLayer.frame = view.bounds
-                connection.videoOrientation = videoOrientation
+                previewConnection.videoOrientation = previewOrientation
+                videoOutput.connection(with: .video)?.videoOrientation = previewOrientation
             }
         }
+        
     }
-
+    
     /**
-        To switch between front camera and back camera
+     To switch between front camera and back camera
      */
     func switchCameraView() {
         let currentCameraInput: AVCaptureInput = captureSession.inputs[0]
         captureSession.removeInput(currentCameraInput)
         var newCamera: AVCaptureDevice
         newCamera = AVCaptureDevice.default(for: AVMediaType.video)!
-
+        
         if (currentCameraInput as! AVCaptureDeviceInput).device.position == .back {
             UIView.transition(with: cameraView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
                 newCamera = self.cameraWithPosition(.front)!
@@ -307,9 +302,9 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             print("error: \(error.localizedDescription)")
         }
     }
-
+    
     /**
-        To set the camera position for switching camera
+     To set the camera position for switching camera
      - Parameter position: new camera position.
      - Returns: device feed.
      */
@@ -322,13 +317,13 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         }
         return nil
     }
-
+    
     /**
-        This function calls automatically whenever any image click function is called.
+     This function calls automatically whenever any image click function is called.
      - Parameters:
-       - output:
-       - photo:
-       - error:
+     - output:
+     - photo:
+     - error:
      */
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation()
@@ -360,42 +355,42 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             originalWidth = image.size.width;
             images.append((image, isPreviewSelected, isTrainingSelected))
         }
-
+        
     }
-
+    
     /**
-        To crop the image into the required format.
+     To crop the image into the required format.
      - Parameters:
-       - image:
-       - width:
-       - height:
+     - image:
+     - width:
+     - height:
      - Returns:
      */
     func cropImage(image: UIImage, height: CGFloat, width: CGFloat) -> UIImage {
         image.resized(to: CGSize(width: width, height: height))
     }
-
+    
     /**
-        To create a rectangle on the image to crop it.
+     To create a rectangle on the image to crop it.
      - Parameters:
-       - x:
-       - y:
-       - width:
-       - height:
+     - x:
+     - y:
+     - width:
+     - height:
      - Returns:
      */
     func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
         CGRect(x: x, y: y, width: width, height: height)
     }
-
+    
     /**
-        This function saves the output of the camera as image.
+     This function saves the output of the camera as image.
      */
     func captureImage() {
         let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
         photoOutput.capturePhoto(with: settings, delegate: self)
     }
-
+    
     func saveImages() {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory: String = paths.first ?? ""
@@ -426,14 +421,14 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         setupImages()
         DataLogger.shared.saveFramesFile(path: sensorPath, data: rgbFrames);
     }
-
+    
     func saveFolder() {
         _ = DataLogger.shared.getDirectoryInfo()
         let activityManager = UIActivityViewController(activityItems: DataLogger.shared.allDirectories, applicationActivities: nil)
         present(activityManager, animated: true)
         _ = navigationController?.popViewController(animated: true)
     }
-
+    
     func createZip(path: URL) {
         for t in DataLogger.shared.allDirectoriesName {
             let baseDirectoryName = t + ".zip";
@@ -443,10 +438,10 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             let coordinator = NSFileCoordinator()
             coordinator.coordinate(readingItemAt: baseDirectoryUrl, options: [.forUploading], error: &error) { (zipUrl) in
                 let tmpUrl = try! fm.url(
-                        for: .itemReplacementDirectory,
-                        in: .userDomainMask,
-                        appropriateFor: zipUrl,
-                        create: true
+                    for: .itemReplacementDirectory,
+                    in: .userDomainMask,
+                    appropriateFor: zipUrl,
+                    create: true
                 ).appendingPathComponent(baseDirectoryName)
                 try! fm.moveItem(at: zipUrl, to: tmpUrl)
                 saveZipFilesName.append(tmpUrl)
@@ -458,17 +453,17 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             DataLogger.shared.deleteFiles(fileNameToDelete: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
         }
     }
-
+    
     func setupImages() {
         images.removeAll()
     }
-
+    
     func stopSession() {
         captureSession.stopRunning()
     }
-
+    
     func shouldStartCamera() -> Bool {
         true;
     }
-
+    
 }

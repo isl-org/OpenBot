@@ -70,7 +70,7 @@ struct Constants {
     static let autopilotMode = "AUTOPILOT";
     static let objectTrackingMode = "DETECTOR";
     static let types: [String] = ["AUTOPILOT", "DETECTOR", "NAVIGATION"];
-    static let classes: [String] = ["AUTOPILOT_F", "MOBILENETV1_1_0_Q", "MOBILENETV3_S_Q", "YOLOV4", "NAVIGATION"]
+    static let classes: [String] = ["AUTOPILOT_F", "MOBILENET", "YOLOV4", "YOLOV5", "EFFICIENTDET", "NAVIGATION"]
     static let devices: [String] = ["CPU", "XNNPACK"]
 }
 
@@ -131,9 +131,10 @@ enum RuntimeDevice: String {
 
 enum CLASS: String {
     case AUTOPILOT_F = "AUTOPILOT_F",
-         MOBILENETV1_1_0_Q = "MOBILENETV1_1_0_Q",
-         MOBILENETV3_S_Q = "MOBILENETV3_S_Q",
+         MOBILENET = "MOBILENET",
          YOLOV4 = "YOLOV4",
+         YOLOV5 = "YOLOV5",
+         EFFICIENTDET = "EFFICIENTDET",
          NAVIGATION = "NAVIGATION"
 }
 
