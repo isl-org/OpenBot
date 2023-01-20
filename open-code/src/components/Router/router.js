@@ -3,7 +3,6 @@ import Home from "../../pages/home/home";
 export const RouterComponent = ()=>{
     return(
         <Router>
-
             <Routes>
                 <Route exact path="/" element={<Home/>}/>
             </Routes>

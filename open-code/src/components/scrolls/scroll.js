@@ -1,7 +1,6 @@
 import './scroll.css'
 
 export const Scroll = (props)=>{
-    console.log(props.img)
     return(
         <>
             <div className={"scroll"}>

@@ -138,6 +138,7 @@ export const SavedProjectsStyles = makeStyles((theme) => ({
         fontSize: "15px",
         lineHeight: "17px",
         color: "#000000",
-    }
+    },
+
 
 }));
