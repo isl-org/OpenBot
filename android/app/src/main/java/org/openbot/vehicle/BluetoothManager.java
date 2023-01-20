@@ -140,10 +140,19 @@ public class BluetoothManager {
           adapter.notifyDataSetChanged();
           addDeviceInfoDataAndUpdate();
           Logger.e("Successfully connected: " + " " + device);
+          bleDevice = device;
+          deviceList.remove(indexValue);
+          deviceList.add(indexValue, device);
+          adapter.notifyDataSetChanged();
+          addDeviceInfoDataAndUpdate();
+          Logger.e("Successfully connected: " + " " + device);
         }
 
         @Override
         public void onDisconnected(String info, int status, BleDevice device) {
+          bleDevice = null;
+          adapter.notifyDataSetChanged();
+          Logger.e("disconnected!");
           bleDevice = null;
           adapter.notifyDataSetChanged();
           Logger.e("disconnected!");

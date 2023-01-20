@@ -374,6 +374,7 @@ On successful connection the Connect button will change to Disconnect. You can n
 <p align="left">
 <img src="../../docs/images/ble_6.jpeg" alt="Disconnect button" width="25%"/>
 </p>
+
 ### Troubleshooting
 
 #### Versions

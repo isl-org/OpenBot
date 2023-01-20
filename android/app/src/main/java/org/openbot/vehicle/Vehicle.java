@@ -14,12 +14,6 @@ import org.openbot.env.SensorReading;
 import org.openbot.main.CommonRecyclerViewAdapter;
 import org.openbot.main.ScanDeviceAdapter;
 import org.openbot.utils.Enums;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-import org.openbot.env.GameController;
-import org.openbot.env.SensorReading;
-import org.openbot.utils.Enums;
 
 public class Vehicle {
 
@@ -55,7 +49,6 @@ public class Vehicle {
   private boolean hasLedsBack = false;
   private boolean hasLedsStatus = false;
   private boolean isReady = false;
-
   private BluetoothManager bluetoothManager;
   SharedPreferences sharedPreferences;
   public String connectionType;
@@ -399,7 +392,9 @@ public class Vehicle {
   private void sendStringToDevice(String message) {
     if (getConnectionType().equals("USB") && usbConnection != null && usbConnection.isOpen()) {
       usbConnection.send(message);
-    } else if (getConnectionType().equals("Bluetooth") && bluetoothManager != null && bluetoothManager.isBleConnected()) {
+    } else if (getConnectionType().equals("Bluetooth")
+        && bluetoothManager != null
+        && bluetoothManager.isBleConnected()) {
       sendStringToBle(message);
     }
   }
@@ -538,9 +533,9 @@ public class Vehicle {
 
   private String getConnectionPreferences(String name, String defaultValue) {
     try {
-      if(sharedPreferences != null) {
+      if (sharedPreferences != null) {
         return sharedPreferences.getString(name, defaultValue);
-      }else return defaultValue;
+      } else return defaultValue;
     } catch (ClassCastException e) {
       return defaultValue;
     }
