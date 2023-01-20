@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/screens/tiltingPhoneMode.dart';
 
-import 'OnScreenMode.dart';
+import 'onScreenMode.dart';
 
 class ControlSelector extends StatefulWidget {
   final dynamic updateMirrorView;
