@@ -10,6 +10,7 @@ export const NewProjectStyles = makeStyles((theme) => ({
         paddingLeft: "102px",
         paddingTop: "81px",
         paddingBottom:"62px",
+        marginTop : "2rem"
     },
     Heading: {
         fontSize: "25px",

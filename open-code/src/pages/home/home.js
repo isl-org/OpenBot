@@ -20,8 +20,10 @@ import {SavedProjectsStyles as useStyles} from "../../components/Home/MyProjects
         return (
             <Carousel duration={1000} interval={3000} swipe={true} dir = 'rtl' animation={"slide"}  stopAutoPlayOnHover={false} indicatorIconButtonProps={{
                 style: {
-                    padding: '10px',
-                    color: '#C7EBFF'
+                    padding: '8px',
+                    color: '#C7EBFF',
+                    marginTop : '8rem'
+
                 }
             }}
                       activeIndicatorIconButtonProps={{
@@ -30,7 +32,6 @@ import {SavedProjectsStyles as useStyles} from "../../components/Home/MyProjects
                           }
                       }}
             >
-
                 {
                     screens.map(screen =>screen.component)
                 }
