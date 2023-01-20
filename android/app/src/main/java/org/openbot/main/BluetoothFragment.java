@@ -10,17 +10,14 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ProgressBar;
-
-import org.openbot.OpenBotApplication;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.ficat.easyble.BleDevice;
 import com.ficat.easyble.BleManager;
@@ -28,6 +25,7 @@ import com.ficat.easypermissions.EasyPermissions;
 import com.ficat.easypermissions.RequestExecutor;
 import com.ficat.easypermissions.bean.Permission;
 
+import org.openbot.OpenBotApplication;
 import org.openbot.R;
 import org.openbot.databinding.FragmentBluetoothBinding;
 import org.openbot.vehicle.Vehicle;

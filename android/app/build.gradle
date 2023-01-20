@@ -162,4 +162,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.github.Ficat:EasyBle:v2.0.2'
     implementation 'com.github.Ficat:EasyPermissions:v2.1.0'
+
+    //openCodeCompiler
+    implementation 'com.github.evgenyneu:js-evaluator-for-android:v6.0.0'
 }

@@ -14,6 +14,7 @@ public class FeatureList {
   public static final String GENERAL = "General";
   public static final String LEGACY = "Legacy";
   public static final String DEFAULT = "Default";
+  public static final String PROJECTS = "Projects";
   public static final String CONTROLLER = "Controller";
   public static final String CONTROLLER_MAPPING = "Controller Mapping";
 
@@ -71,6 +72,7 @@ public class FeatureList {
 
     subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(DEFAULT, R.drawable.openbot_icon, "#4B7BFF"));
+    subCategories.add(new SubCategory(PROJECTS, R.drawable.ic_projects, "#FFAC6C"));
     categories.add(new Category(LEGACY, subCategories));
 
     subCategories = new ArrayList<>();
