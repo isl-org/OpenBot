@@ -1,0 +1,6 @@
+{
+  "sideEffects": false,
+  "module": "./index.js",
+  "main": "../node/SnackbarUnstyled/index.js",
+  "types": "./index.d.ts"
+}

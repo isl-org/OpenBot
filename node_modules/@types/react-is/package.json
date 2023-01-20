@@ -1,0 +1,37 @@
+{
+    "name": "@types/react-is",
+    "version": "17.0.3",
+    "description": "TypeScript definitions for react-is",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-is",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Avi Vahl",
+            "url": "https://github.com/AviVahl",
+            "githubUsername": "AviVahl"
+        },
+        {
+            "name": "Christian Chown",
+            "url": "https://github.com/christianchown",
+            "githubUsername": "christianchown"
+        },
+        {
+            "name": "Sebastian Silbermann",
+            "url": "https://github.com/eps1lon",
+            "githubUsername": "eps1lon"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/react-is"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/react": "*"
+    },
+    "typesPublisherContentHash": "c01a7973dd3e5ca6e347feb8c2b6e15655980fb8dc18959f97505bd7305a51da",
+    "typeScriptVersion": "3.7"
+}

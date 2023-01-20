@@ -1,0 +1,31 @@
+import * as React from 'react';
+import { DistributiveOmit } from '@mui/types';
+declare module '@mui/material/OverridableComponent' {
+    /**
+     * A component whose root component can be controlled via a `component` prop.
+     *
+     * Adjusts valid props based on the type of `component`.
+     */
+    interface OverridableComponent<M extends OverridableTypeMap> {
+        <C extends React.ElementType>(props: {
+            /**
+             * The component used for the root node.
+             * Either a string to use a HTML element or a component.
+             */
+            component: C;
+        } & OverridePropsVer2<M, C>): JSX.Element;
+        (props: DefaultComponentPropsVer2<M>): JSX.Element;
+    }
+    /**
+     * Props of the component if `component={Component}` is used.
+     */
+    type OverridePropsVer2<M extends OverridableTypeMap, C extends React.ElementType> = (BaseProps<M> & DistributiveOmit<React.ComponentPropsWithoutRef<C>, keyof BaseProps<M>> & {
+        ref?: React.Ref<Element>;
+    });
+    /**
+     * Props if `component={Component}` is NOT used.
+     */
+    type DefaultComponentPropsVer2<M extends OverridableTypeMap> = BaseProps<M> & DistributiveOmit<React.ComponentPropsWithoutRef<M['defaultComponent']>, keyof BaseProps<M>> & {
+        ref?: React.Ref<Element>;
+    };
+}

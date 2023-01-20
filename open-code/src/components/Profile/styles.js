@@ -43,7 +43,7 @@ export const LeftSectionStyles = makeStyles((theme) => ({
         height: "24px",
     },
     Content: {
-        fontFamily: 'Gilroy-Regular',
+        fontFamily: 'Gilroy-Light',
         fontWeight: "400",
         fontSize: "20px",
         lineHeight: "23px",
@@ -60,7 +60,7 @@ export const RightSectionStyles = makeStyles((theme) => ({
         paddingTop: "69px",
     },
     Header: {
-        fontFamily: 'Gilroy-SemiBold',
+        fontFamily: 'Gilroy-Medium',
         fontWeight: 600,
         fontSize: "20px",
         lineHeight: "24px",
@@ -95,7 +95,7 @@ export const RightSectionStyles = makeStyles((theme) => ({
         flexDirection: "column"
     },
     lable: {
-        fontFamily: 'Gilroy-Medium',
+        fontFamily: 'Gilroy-Regular',
         fontSize: "18px",
         lineHeight: "27px",
         color: "#000000",
@@ -104,7 +104,7 @@ export const RightSectionStyles = makeStyles((theme) => ({
     InputArea: {
         height: "28px",
         width: "269px",
-        fontFamily: 'Gilroy-Regular',
+        fontFamily: 'Gilroy-Light',
         padding: "10px 20px",
         fontSize: "20px",
         lineHeight: "27px",
@@ -119,7 +119,7 @@ export const RightSectionStyles = makeStyles((theme) => ({
         width: "100%",
     },
     lableEmail: {
-        fontFamily: 'Gilroy-Medium',
+        fontFamily: 'Gilroy-Regular',
         fontSize: "18px",
         lineHeight: "27px",
         color: "#CCCCCC",
@@ -128,7 +128,7 @@ export const RightSectionStyles = makeStyles((theme) => ({
     InputAreaEmail: {
         height: "28px",
         width: "100%",
-        fontFamily: 'Gilroy-Regular',
+        fontFamily: 'Gilroy-Light',
         padding: "10px 20px",
         fontSize: "20px",
         lineHeight: "27px",
@@ -149,7 +149,7 @@ export const RightSectionStyles = makeStyles((theme) => ({
         width: "51px",
         height: "26px",
         borderRadius: 6,
-        fontFamily: "Gilroy-SemiBold",
+        fontFamily: "Gilroy-Medium",
         color: "#ffffff",
         fontSize: "22px",
         background: "#0071c5",
@@ -162,7 +162,7 @@ export const RightSectionStyles = makeStyles((theme) => ({
         height: "24px",
         border: "1px solid #0071C5",
         borderRadius: 6,
-        fontFamily: "Gilroy-SemiBold",
+        fontFamily: "Gilroy-Medium",
         color: "#0071c5",
         fontSize: "22px",
         background: "#ffffff",

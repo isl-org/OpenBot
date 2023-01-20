@@ -6,23 +6,28 @@
   src: url('assets/font/Gilroy/Gilroy-Black.ttf') format('truetype');
 }
 @font-face {
-  font-family: 'Gilroy-Regular';
+  font-family: 'Gilroy-Light';
   /*400*/
+  src: url('assets/font/Gilroy/Gilroy-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Gilroy-Regular';
+  /*500*/
   src: url('assets/font/Gilroy/Gilroy-Regular.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Gilroy-Medium';
-  /*500*/
+  /*600*/
   src: url('assets/font/Gilroy/Gilroy-Medium.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Gilroy-SemiBold';
-  /*600*/
+  /*700*/
   src: url('assets/font/Gilroy/Gilroy-SemiBold.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Gilroy-Bold';
-  /*700*/
+  /*800*/
   src: url('assets/font/Gilroy/Gilroy-Bold.ttf') format('truetype');
 }
 

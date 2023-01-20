@@ -1,0 +1,6 @@
+{
+  "sideEffects": false,
+  "module": "../esm/composeClasses/index.js",
+  "main": "./index.js",
+  "types": "./index.d.ts"
+}
