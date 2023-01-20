@@ -352,8 +352,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             client.start();
             let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
             client.send(message: msg);
-
         }
+        updateGameControllerModeType()
         secondView.addSubview(gamePadController)
         secondView.addSubview(phoneController)
     }
@@ -363,12 +363,18 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         let joystick = createMode(x: 35, y: 145, width: Int(width / 4), label: Strings.joystick, icon: "joystick", action: #selector(joystick(_:)))
         let game = createMode(x: 140, y: 145, width: Int(width / 4), label: Strings.game, icon: "game", action: #selector(gameMode(_:)))
         let dual = createMode(x: 245, y: 145, width: Int(width / 4), label: Strings.dual, icon: "dual", action: #selector(dualMode(_:)))
-        if selectedDriveMode == DriveMode.JOYSTICK {
-            joystick.backgroundColor = Colors.title
-        } else if selectedDriveMode == DriveMode.GAME {
-            game.backgroundColor = Colors.title
-        } else if selectedDriveMode == DriveMode.DUAL {
-            dual.backgroundColor = Colors.title
+        if selectedControlMode == ControlMode.PHONE {
+            selectedDriveMode = DriveMode.DUAL
+            gameController.selectedDriveMode = DriveMode.DUAL
+            dual.backgroundColor = Colors.titleDeactivated
+        } else {
+            if selectedDriveMode == DriveMode.JOYSTICK {
+                joystick.backgroundColor = Colors.title
+            } else if selectedDriveMode == DriveMode.GAME {
+                game.backgroundColor = Colors.title
+            } else if selectedDriveMode == DriveMode.DUAL {
+                dual.backgroundColor = Colors.title
+            }
         }
         secondView.addSubview(joystick)
         secondView.addSubview(game)
@@ -384,7 +390,6 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     @objc func gameMode(_ sender: UIView) {
         selectedDriveMode = DriveMode.GAME
         gameController.selectedDriveMode = DriveMode.GAME
-
         updateGameControllerModeType()
     }
 
@@ -392,7 +397,6 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         selectedDriveMode = DriveMode.DUAL
         gameController.selectedDriveMode = DriveMode.DUAL
         updateGameControllerModeType()
-
     }
 
     func updateSpeedModes() {
@@ -575,16 +579,21 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     }
 
     @objc func updateDriveMode(_ notification: Notification) {
-        switch selectedDriveMode {
-        case .JOYSTICK:
-            selectedDriveMode = .GAME
-            break;
-        case .DUAL:
-            selectedDriveMode = .JOYSTICK;
-            break;
-        case .GAME:
+        if selectedControlMode == .PHONE {
             selectedDriveMode = .DUAL
-            break;
+        }
+        else {
+            switch selectedDriveMode {
+            case .JOYSTICK:
+                selectedDriveMode = .GAME
+                break;
+            case .DUAL:
+                selectedDriveMode = .JOYSTICK;
+                break;
+            case .GAME:
+                selectedDriveMode = .DUAL
+                break;
+            }
         }
         updateGameControllerModeType()
     }
