@@ -53,6 +53,7 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateSelectedObject), name: .updateObject, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
         setupNavigationBarItem()
+        calculateFrame()
         super.viewDidLoad()
     }
 
@@ -214,13 +215,7 @@ class ObjectTrackingFragment: CameraController {
 
 
         frame.frame = convertedRect;
-        // print(frame.frame, " : ", detection);
-        //        if currentOrientation == .portrait {
-        //        } else {
-        ////            frame.frame.origin.y = width - frame.frame.size.height;
-        //            frame.frame.origin.y = width - CGFloat(bufferHeight);
-        //        }
-
+         print(frame.frame.origin, " : ", detection.origin.x);
         frame.layer.borderColor = color.cgColor;
         frame.layer.borderWidth = 3.0;
         let nameString = UITextView();
