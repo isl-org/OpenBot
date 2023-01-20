@@ -18,7 +18,7 @@ class WebRTCDelegates: WebRTCClientDelegate {
     }
 
     func didIceConnectionStateChanged(iceConnectionState: RTCIceConnectionState) {
-        print("ice connection state is : ",iceConnectionState);
+        print("ice connection state is : ", iceConnectionState);
     }
 
     func didOpenDataChannel() {

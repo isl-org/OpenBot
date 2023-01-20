@@ -8,6 +8,7 @@ var client = Client()
 
 class Client {
     let browser = Browser()
+
     func start() {
         browser.start { result in
             print("client.handler result: \(result)")

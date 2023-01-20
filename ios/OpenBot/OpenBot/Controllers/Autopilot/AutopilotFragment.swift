@@ -25,9 +25,9 @@ class AutopilotFragment: CameraController {
     private let inferenceQueue = DispatchQueue(label: "openbot.autopilot.inferencequeue")
     private var isInferenceQueueBusy = false
     private var result: Control?
-    
+
     var autopilotEnabled = false
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -57,15 +57,15 @@ class AutopilotFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(toggleAutoMode), name: .autoMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
-        
+
         calculateFrame()
     }
-    
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         calculateFrame()
     }
-    
+
     func calculateFrame() {
         if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
             trailingAnchorConstraint.constant = 0;
@@ -73,7 +73,7 @@ class AutopilotFragment: CameraController {
             trailingAnchorConstraint.constant = 0;
         }
     }
-    
+
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -81,43 +81,43 @@ class AutopilotFragment: CameraController {
             navigationItem.leftBarButtonItem = newBackButton
         }
     }
-    
+
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
-    
+
     @objc func switchCamera() {
         switchCameraView();
     }
-    
+
     @objc func openBluetoothSettings() {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
-    
+
     @objc func updateDevice(_ notification: Notification) {
         currentDevice = RuntimeDevice(rawValue: notification.object as! String) ?? RuntimeDevice.CPU
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
         currentDevice.rawValue == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
         autopilot?.tfliteOptions.threadCount = numberOfThreads
     }
-    
+
     @objc func updateModel(_ notification: Notification) {
         let selectedModelName = notification.object as! String
         currentModel = Common.returnModelItem(modelName: selectedModelName)
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
     }
-    
+
     @objc func toggleAutoMode() {
         autoPilotMode = !autoPilotMode;
     }
-    
+
     @objc func updateThread(_ notification: Notification) {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 1
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
     }
-    
+
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = control.getLeft() * gameController.selectedSpeedMode.rawValue;
@@ -128,24 +128,24 @@ class AutopilotFragment: CameraController {
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
         }
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if autoPilotMode {
             autoPilotMode = false
         }
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         print("memory is low");
     }
-    
+
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
+
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-        
+
         guard let imagePixelBuffer = pixelBuffer else {
             debugPrint("unable to get image from sample buffer")
             return
@@ -159,13 +159,15 @@ class AutopilotFragment: CameraController {
         guard !isInferenceQueueBusy else {
             return
         }
-        
+
         inferenceQueue.async {
             if self.autoPilotMode {
                 self.isInferenceQueueBusy = true
                 let startTime = Date().millisecondsSince1970
                 self.result = self.autopilot?.recognizeImage(pixelBuffer: imagePixelBuffer, indicator: 0) ?? Control();
-                guard let controlResult = self.result else { return }
+                guard let controlResult = self.result else {
+                    return
+                }
                 let endTime = Date().millisecondsSince1970
                 DispatchQueue.main.async {
                     if (endTime - startTime) != 0 {
@@ -181,12 +183,12 @@ class AutopilotFragment: CameraController {
             self.isInferenceQueueBusy = false
         }
     }
-    
+
     @objc func updateDataFromControllerApp(_ notification: Notification) {
         if gameController.selectedControlMode == ControlMode.GAMEPAD {
             return
         }
-        
+
         if notification.object != nil {
             let command = notification.object as! String
             let rightSpeed = command.slice(from: "r:", to: ", ");
