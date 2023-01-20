@@ -1,6 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "./index.js",
-  "main": "../node/SelectUnstyled/index.js",
-  "types": "./index.d.ts"
-}

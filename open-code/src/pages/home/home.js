@@ -12,7 +12,6 @@ import {SavedProjectsStyles as useStyles} from "../../components/Home/MyProjects
             <Navbar/>
             <HomeCarousel/>
             <NewProject/>
-            {/*<SavedProjects/>*/}
         </div>
 
     }

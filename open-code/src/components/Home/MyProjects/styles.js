@@ -3,6 +3,7 @@ import {makeStyles} from "@material-ui/core";
 export const NewProjectStyles = makeStyles((theme) => ({
     Main: {
         minHeight: "450px",
+        width:"100%",
         backgroundColor: "#F8F9FB",
         display: "flex",
         flexDirection: "column",
