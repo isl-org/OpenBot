@@ -3,6 +3,7 @@ import {makeStyles} from "@material-ui/core";
 export const NewProjectStyles = makeStyles((theme) => ({
     Main: {
         minHeight: "450px",
+        width:"100%",
         backgroundColor: "#F8F9FB",
         display: "flex",
         flexDirection: "column",
@@ -14,7 +15,7 @@ export const NewProjectStyles = makeStyles((theme) => ({
     },
     Heading: {
         fontSize: "25px",
-        fontFamily: "Gilroy",
+        fontFamily: "Gilroy-SemiBold",
         fontWeight: 600,
         lineHeight: "30px",
     },
@@ -30,7 +31,7 @@ export const NewProjectStyles = makeStyles((theme) => ({
     },
     Button: {
         width: "258px",
-        height: "162px",
+        height: "160px",
         backgroundColor: "#ffffff",
         border: "1.3px dashed #0071C5",
         borderRadius: "12px",
@@ -96,7 +97,7 @@ export const SavedProjectsStyles = makeStyles((theme) => ({
     },
     Heading: {
         fontSize: "25px",
-        fontFamily: "Gilroy",
+        fontFamily: "Gilroy-SemiBold",
         fontWeight: 600,
         lineHeight: "30px",
     },
@@ -107,7 +108,7 @@ export const SavedProjectsStyles = makeStyles((theme) => ({
     },
     CardMain:{
       display:"flex",
-      gap:"0 42px",
+      gap:"21px 42px",
       flexWrap:"wrap"
     },
     Card: {
@@ -124,7 +125,7 @@ export const SavedProjectsStyles = makeStyles((theme) => ({
     CardHeading: {
         paddingLeft: "31px",
         paddingTop: "33px",
-        fontFamily: 'Gilroy',
+        fontFamily: 'Gilroy-SemiBold',
         fontWeight: "600",
         fontSize: "25px",
         lineHeight: "30px",
@@ -134,7 +135,7 @@ export const SavedProjectsStyles = makeStyles((theme) => ({
     Date: {
         paddingLeft: "31px",
         paddingTop: "5px",
-        fontFamily: 'Gilroy',
+        fontFamily: 'Gilroy-Regular',
         fontWeight: "400",
         fontSize: "15px",
         lineHeight: "17px",
