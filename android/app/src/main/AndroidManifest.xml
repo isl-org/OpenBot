@@ -10,6 +10,8 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
@@ -23,6 +25,9 @@
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false"/>
     <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="false"/>
     <uses-feature android:name="android.hardware.sensor.light" android:required="false"/>
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+    <uses-feature android:name="android.hardware.location.gps" android:required="true"/>
+
 
 
     <application
@@ -51,15 +56,15 @@
             android:name=".original.DefaultActivity"
             android:label="@string/activity_name"
             android:noHistory="false">
-<!--
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-            </intent-filter>
+            <!--
+                        <intent-filter>
+                            <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                        </intent-filter>
 
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
--->
+                        <meta-data
+                            android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                            android:resource="@xml/device_filter" />
+            -->
 
         </activity>
 

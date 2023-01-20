@@ -7,7 +7,13 @@ import java.util.TimerTask;
 import org.openbot.env.GameController;
 import org.openbot.env.SensorReading;
 import org.openbot.utils.Enums;
-
+import android.content.SharedPreferences;
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+import com.ficat.easyble.BleDevice;
+import java.util.List;
+import org.openbot.main.CommonRecyclerViewAdapter;
+import org.openbot.main.ScanDeviceAdapter;
 public class Vehicle {
 
   private final Noise noise = new Noise(1000, 2000, 5000);
@@ -42,7 +48,11 @@ public class Vehicle {
   private boolean hasLedsBack = false;
   private boolean hasLedsStatus = false;
   private boolean isReady = false;
-
+  
+  private BluetoothManager bluetoothManager;
+  SharedPreferences sharedPreferences;
+  public String connectionType;
+  
   public float getMinMotorVoltage() {
     return minMotorVoltage;
   }
@@ -156,7 +166,7 @@ public class Vehicle {
   }
 
   public void requestVehicleConfig() {
-    sendStringToUsb(String.format(Locale.US, "f\n"));
+    sendStringToDevice(String.format(Locale.US, "f\n"));
   }
 
   public void processVehicleConfig(String message) {
@@ -204,6 +214,8 @@ public class Vehicle {
     this.context = context;
     this.baudRate = baudRate;
     gameController = new GameController(driveMode);
+    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    connectionType = getConnectionPreferences("connection_type", "USB");
   }
 
   public float getBatteryVoltage() {
@@ -338,13 +350,13 @@ public class Vehicle {
     this.indicator = indicator;
     switch (indicator) {
       case -1:
-        sendStringToUsb(String.format(Locale.US, "i1,0\n"));
+        sendStringToDevice(String.format(Locale.US, "i1,0\n"));
         break;
       case 0:
-        sendStringToUsb(String.format(Locale.US, "i0,0\n"));
+        sendStringToDevice(String.format(Locale.US, "i0,0\n"));
         break;
       case 1:
-        sendStringToUsb(String.format(Locale.US, "i0,1\n"));
+        sendStringToDevice(String.format(Locale.US, "i0,1\n"));
         break;
     }
   }
@@ -377,8 +389,12 @@ public class Vehicle {
     return usbConnected;
   }
 
-  private void sendStringToUsb(String message) {
-    if (usbConnection != null) usbConnection.send(message);
+  private void sendStringToDevice(String message) {
+    if (getConnectionType().equals("USB") && usbConnection.isOpen()) {
+      usbConnection.send(message);
+    } else if (getConnectionType().equals("Bluetooth") && bluetoothManager.isBleConnected()) {
+      sendStringToBle(message);
+    }
   }
 
   public float getLeftSpeed() {
@@ -392,7 +408,7 @@ public class Vehicle {
   public void sendLightIntensity(float frontPercent, float backPercent) {
     int front = (int) (frontPercent * 255.f);
     int back = (int) (backPercent * 255.f);
-    sendStringToUsb(String.format(Locale.US, "l%d,%d\n", front, back));
+    sendStringToDevice(String.format(Locale.US, "l%d,%d\n", front, back));
   }
 
   public void sendControl() {
@@ -406,30 +422,30 @@ public class Vehicle {
     // raw control value is used
     if (noiseEnabled && noise.getDirection() > 0)
       right = (int) ((control.getRight() - noise.getValue()) * speedMultiplier);
-    sendStringToUsb(String.format(Locale.US, "c%d,%d\n", left, right));
+    sendStringToDevice(String.format(Locale.US, "c%d,%d\n", left, right));
   }
 
   protected void sendHeartbeat(int timeout_ms) {
     if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      usbConnection.send(String.format(Locale.getDefault(), "h%d\n", timeout_ms));
+      sendStringToDevice(String.format(Locale.getDefault(), "h%d\n", timeout_ms));
     }
   }
 
   protected void setSonarFrequency(int interval_ms) {
     if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      usbConnection.send(String.format(Locale.getDefault(), "s%d\n", interval_ms));
+      sendStringToDevice(String.format(Locale.getDefault(), "s%d\n", interval_ms));
     }
   }
 
   protected void setVoltageFrequency(int interval_ms) {
     if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      usbConnection.send(String.format(Locale.getDefault(), "v%d\n", interval_ms));
+      sendStringToDevice(String.format(Locale.getDefault(), "v%d\n", interval_ms));
     }
   }
 
   protected void setWheelOdometryFrequency(int interval_ms) {
     if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      usbConnection.send(String.format(Locale.getDefault(), "w%d\n", interval_ms));
+      sendStringToDevice(String.format(Locale.getDefault(), "w%d\n", interval_ms));
     }
   }
 
@@ -459,4 +475,69 @@ public class Vehicle {
     Control control = new Control(0, 0);
     setControl(control);
   }
+
+
+  public ScanDeviceAdapter getBleAdapter() {
+    return bluetoothManager.adapter;
+  }
+
+  public void setBleAdapter(ScanDeviceAdapter adapter, @NonNull CommonRecyclerViewAdapter.OnItemClickListener onItemClickListener) {
+    bluetoothManager.adapter = adapter;
+    bluetoothManager.adapter.setOnItemClickListener(onItemClickListener);
+  }
+
+  public void startScan() {
+    bluetoothManager.startScan();
+  }
+
+  public void stopScan() {
+    bluetoothManager.stopScan();
+  }
+
+  public List<BleDevice> getDeviceList() {
+    return bluetoothManager.deviceList;
+  }
+
+
+  public void setBleDevice(BleDevice device) {
+    bluetoothManager.bleDevice = device;
+  }
+
+  public BleDevice getBleDevice() {
+    return bluetoothManager.bleDevice;
+  }
+
+  public void toggleConnection(int position, BleDevice device) {
+    bluetoothManager.toggleConnection(position, device);
+  }
+
+  public void initBle() {
+    bluetoothManager = new BluetoothManager(context);
+  }
+
+  private void sendStringToBle(String message) {
+    bluetoothManager.write(message);
+  }
+
+  public boolean bleConnected() {
+    return bluetoothManager.isBleConnected();
+  }
+  private void setConnectionPreferences(String name, String value) {
+    SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor.putString(name, value);
+    editor.apply();
+  }
+
+  private String getConnectionPreferences(String name, String defaultValue) {
+    try {
+      return sharedPreferences.getString(name, defaultValue);
+    } catch (ClassCastException e) {
+      return defaultValue;
+    }
+  }
+
+  public String getConnectionType() {
+    return getConnectionPreferences("connection_type", "USB");
+  }
+
 }

@@ -47,6 +47,14 @@
         app:layout_constraintStart_toEndOf="@+id/battery"
         app:layout_constraintTop_toBottomOf="@+id/speed" />
 
+    <CheckBox
+        android:id="@+id/bleToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@drawable/ble_toggle"
+        app:layout_constraintStart_toEndOf="@+id/battery"
+        app:layout_constraintTop_toBottomOf="@+id/speed" />
+
 
     <ProgressBar
         android:id="@+id/sonar"

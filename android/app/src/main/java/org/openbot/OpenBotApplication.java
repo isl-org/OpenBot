@@ -27,7 +27,8 @@ public class OpenBotApplication extends Application {
     int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
     vehicle = new Vehicle(this, baudRate);
     vehicle.connectUsb();
-    if (BuildConfig.DEBUG) {
+    vehicle.initBle();
+      if (BuildConfig.DEBUG) {
       Timber.plant(
           new Timber.DebugTree() {
             @NonNull
@@ -38,4 +39,8 @@ public class OpenBotApplication extends Application {
           });
     }
   }
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+    }
 }

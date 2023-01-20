@@ -45,6 +45,7 @@ import org.openbot.utils.MovingAverage;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Control;
 import timber.log.Timber;
+import android.widget.CheckBox;
 
 public class ObjectNavFragment extends CameraFragment {
   private FragmentObjectNavBinding binding;
@@ -120,6 +121,17 @@ public class ObjectNavFragment extends CameraFragment {
 
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
 
+    CheckBox bleCb = getView().findViewById(R.id.bleToggle);
+    CheckBox USBCb = getView().findViewById(R.id.usbToggle);
+    if(vehicle.getConnectionType().equals("USB")) {
+      USBCb.setVisibility(View.VISIBLE);
+      bleCb.setVisibility(View.INVISIBLE);
+    }
+    else if (vehicle.getConnectionType().equals("Bluetooth")){
+      bleCb.setVisibility(View.VISIBLE);
+      USBCb.setVisibility(View.INVISIBLE);
+    }
+
     classType = preferencesManager.getObjectType();
     binding.classType.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
@@ -178,11 +190,17 @@ public class ObjectNavFragment extends CameraFragment {
         .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
+    binding.bleToggle.setChecked(vehicle.bleConnected());
 
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+        });
+    binding.bleToggle.setOnClickListener(
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
         });
 
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));

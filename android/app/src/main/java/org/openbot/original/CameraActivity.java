@@ -363,7 +363,7 @@ public abstract class CameraActivity extends AppCompatActivity
             if (action != null) {
 
               switch (action) {
-                case Constants.USB_ACTION_DATA_RECEIVED:
+                case Constants.DEVICE_ACTION_DATA_RECEIVED:
                   long timestamp = SystemClock.elapsedRealtimeNanos();
                   String data = intent.getStringExtra("data");
                   char header = data.charAt(0);
@@ -447,7 +447,7 @@ public abstract class CameraActivity extends AppCompatActivity
           }
         };
     IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction(Constants.USB_ACTION_DATA_RECEIVED);
+    localIntentFilter.addAction(Constants.DEVICE_ACTION_DATA_RECEIVED);
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
     vehicle.requestVehicleConfig();
