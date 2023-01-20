@@ -1,6 +1,6 @@
 import 'package:openbot_controller/utils/forwardSpeed.dart';
 
-class PhoneSensorToDualDriveConvertor {
+class PhoneSensorToDualDriveConverter {
   static double g = 9.81;
 
   DualDriveValues convert(double azimuth, double pitch, double roll) {

@@ -1,4 +1,4 @@
-package com.itinker.openbot.controller.openbot_controller
+package org.openbot.flutter_controller
 
 import io.flutter.embedding.android.FlutterActivity
 

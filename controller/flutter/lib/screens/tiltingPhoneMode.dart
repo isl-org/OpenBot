@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:openbot_controller/utils/forwardSpeed.dart';
-import 'package:openbot_controller/utils/phoneSensorToDualDriveConvertor.dart';
+import 'package:openbot_controller/utils/phoneSensorToDualDriveConverter.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import 'driveCommandReducer.dart';
@@ -25,7 +25,7 @@ class TiltingPhoneModeState extends State<TiltingPhoneMode> {
   late double pitch;
   late double roll;
   var phoneAccelerometerToDualDriveConverted =
-      PhoneSensorToDualDriveConvertor();
+      PhoneSensorToDualDriveConverter();
   double leftSpeedValue = 0;
   double rightSpeedValue = 0;
 
