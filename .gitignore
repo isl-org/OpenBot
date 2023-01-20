@@ -7,9 +7,9 @@ composer.lock
 Thumbs.db
 wandb/
 /ios/OpenBot/Pods/
-ios/OpenBot/OpenBot.xcodeproj/xcuserdata/*.xcuserdatad/
-ios/OpenBot/OpenBot.xcworkspace/xcuserdata/*.xcuserdatad/
-ios/OpenBot/Podfile.lock/
+/ios/OpenBot/OpenBot.xcodeproj/xcuserdata/*.xcuserdatad/
+/ios/OpenBot/OpenBot.xcworkspace/xcuserdata/*.xcuserdatad/
+/ios/OpenBot/Podfile.lock/
 
 # IDE's
 .idea/
