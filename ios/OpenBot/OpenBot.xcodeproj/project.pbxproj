@@ -536,7 +536,7 @@
 						DevelopmentTeam = 45P94DZS6G;
 					};
 					4FEF4A2489AA3ABCE29B9356 = {
-						DevelopmentTeam = 88W2U97SJQ;
+						DevelopmentTeam = 45P94DZS6G;
 						ProvisioningStyle = Automatic;
 					};
 					4FEF4C57C33D71B6DD56207E = {
@@ -865,7 +865,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 88W2U97SJQ;
+				DEVELOPMENT_TEAM = 45P94DZS6G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
@@ -882,7 +882,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.emboidedai.openbot;
@@ -904,7 +904,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 88W2U97SJQ;
+				DEVELOPMENT_TEAM = 45P94DZS6G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
@@ -921,7 +921,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.emboidedai.openbot;

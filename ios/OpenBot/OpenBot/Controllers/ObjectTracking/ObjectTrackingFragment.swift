@@ -192,11 +192,9 @@ class ObjectTrackingFragment: CameraController {
         let dx = screenWidth / CGFloat(bufferWidth);
         let dy = screenHeight / CGFloat(bufferHeight);
         let transform = CGAffineTransform.identity
-                .scaledBy(x: dx, y: dy)
-        //.translatedBy(x: -CGFloat(30), y: -CGFloat(0))
-
-        var convertedRect = detection.applying(transform);
-
+                .scaledBy(x: dx, y: dy);
+        let t = transform.concatenating(__CGAffineTransformMake( -1.0, 0.0, 0.0, 1.0, CGFloat(width), 0.0))
+        var convertedRect = detection.applying(t);
         if convertedRect.origin.x < 0 {
             convertedRect.origin.x = self.edgeOffset
         }
@@ -213,9 +211,8 @@ class ObjectTrackingFragment: CameraController {
             convertedRect.size.width = UIScreen.main.bounds.maxX - convertedRect.origin.x - self.edgeOffset
         }
 
-
         frame.frame = convertedRect;
-         print(frame.frame.origin, " : ", detection.origin.x);
+//         print(frame.frame.origin, " : ", detection.origin.x);
         frame.layer.borderColor = color.cgColor;
         frame.layer.borderWidth = 3.0;
         let nameString = UITextView();
