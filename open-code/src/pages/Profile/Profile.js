@@ -1,7 +1,7 @@
 import React from 'react';
 import {ProfileStyles as useStyles} from "./styles";
-import LeftSection from "../../components/Profile/LeftSection";
-import RightSection from "../../components/Profile/RightSection";
+import LeftSection from "../../Components/Profile/LeftSection";
+import RightSection from "../../Components/Profile/RightSection";
 import Moon from "../../assets/Profile/moon.png";
 import User from "../../assets/Profile/user.png";
 import Logout from "../../assets/Profile/log-out.png";

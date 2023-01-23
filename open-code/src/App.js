@@ -1,6 +1,5 @@
 import './App.css';
-import Home from "./pages/home/home";
-import {RouterComponent} from "./components/Router/router";
+import {RouterComponent} from "./Components/Router/router";
 function App() {
     return (
         <div style={{fontStyle : 'Gilroy-Black'}}>
