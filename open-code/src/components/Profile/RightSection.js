@@ -2,9 +2,12 @@ import React from 'react';
 import {RightSectionStyles as useStyles} from "./styles";
 import ProfileImage from "../../assets/Profile/profileImage.png";
 import EditIcon from "../../assets/Profile/EditProfileIcon.png";
+import {Content} from "../../utils/constants";
 
 function RightSection(props) {
+    const{tab}=props
     const classes = useStyles();
+
     return (
         <div className={classes.Main}>
             <header className={classes.Header}>Edit Profile</header>
@@ -45,3 +48,5 @@ function RightSection(props) {
 }
 
 export default RightSection;
+
+

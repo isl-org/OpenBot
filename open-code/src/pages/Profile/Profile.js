@@ -1,44 +1,40 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ProfileStyles as useStyles} from "./styles";
 import LeftSection from "../../components/Profile/LeftSection";
 import RightSection from "../../components/Profile/RightSection";
-import Moon from "../../assets/Profile/moon.png";
-import User from "../../assets/Profile/user.png";
-import Logout from "../../assets/Profile/log-out.png";
-import Help from "../../assets/Profile/help-circle.png";
+import {Content} from "../../utils/constants";
+import HowToUpload from "../../components/HowToUpLoad/HowToUpload";
 
+
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function Profile(props) {
     const classes = useStyles();
+    const [tab, setTab] = useState(Content[0].title);
     return (
         <div className={classes.Main}>
-            <LeftSection content={Content}/>
-            <RightSection/>
+            <LeftSection content={Content} tab={tab} setTab={setTab}/>
+            {handleTabBaseRendering(tab)}
         </div>
     );
 }
 
-const Content = [
-    {
-        Icon: User,
-        title: "My Profile",
-        selected:true,
-    },
-    {
-        Icon: Moon,
-        title: "Change Theme",
-        selected:false,
-    },
-    {
-        Icon: Help,
-        title: "How To Upload",
-        selected:false,
-    },
-    {
-        Icon: Logout,
-        title: "Logout",
-        selected:false,
-    },
-
-]
-
 export default Profile;
+
+function handleTabBaseRendering(tab){
+    switch (tab){
+        case Content[0].title:
+            return(
+                <RightSection/>
+            )
+        case Content[2].title:
+            return (
+               <HowToUpload/>
+            )
+
+    }
+}
