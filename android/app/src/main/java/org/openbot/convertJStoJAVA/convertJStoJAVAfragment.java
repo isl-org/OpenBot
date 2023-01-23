@@ -42,7 +42,6 @@ public class convertJStoJAVAfragment extends Fragment {
     private void evaluate() {
         JsEvaluator jsEvaluator = new JsEvaluator(this.getActivity());
 
-        System.out.println("FATAL = " + jsEvaluator);
         jsEvaluator.evaluate("2 * 20", new JsCallback() {
             @Override
             public void onResult(String result) {
@@ -60,7 +59,7 @@ public class convertJStoJAVAfragment extends Fragment {
             }
         });
 
-        jsEvaluator.callFunction("function greet(name) { return \"ajhdcdsjhc, \" + name; }", new JsCallback() {
+        jsEvaluator.callFunction("function greet(name) { return \"hello, \" + name; }", new JsCallback() {
             @Override
             public void onResult(String value) {
                 System.out.println(value);
@@ -68,9 +67,9 @@ public class convertJStoJAVAfragment extends Fragment {
 
             @Override
             public void onError(String errorMessage) {
-                System.out.println(errorMessage);
+                System.out.println("error = " + errorMessage);
             }
-        }, "name", 1);
+        }, "greet", "dfjvjdfv");
     }
 
 }
