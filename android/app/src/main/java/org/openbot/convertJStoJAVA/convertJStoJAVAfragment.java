@@ -69,7 +69,19 @@ public class convertJStoJAVAfragment extends Fragment {
             public void onError(String errorMessage) {
                 System.out.println("error = " + errorMessage);
             }
-        }, "greet", "dfjvjdfv");
+        }, "greet", "something");
+
+        jsEvaluator.callFunction("function greet() { var name = 1; while (name <= 3){ console.log(\"sanjeev\"); name = name + 1} return name;}", new JsCallback() {
+            @Override
+            public void onResult(String value) {
+                System.out.println(value);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                System.out.println("error = " + errorMessage);
+            }
+        }, "greet");
     }
 
 }
