@@ -257,7 +257,6 @@ class ControllerState extends State<Controller> {
   }
 
   void processMessageFromBot(items) {
-    log("item , $items");
     String sdp = "";
     String type = "";
     String id = "";
