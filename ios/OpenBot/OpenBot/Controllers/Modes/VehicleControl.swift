@@ -56,10 +56,14 @@ class VehicleControl: UIView {
         updateSpeedMode(self)
     }
 
-    func createAndUpdateButton(iconName: UIImage, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) {
+    func createAndUpdateButton(iconName: UIImage, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?, activated: Bool) {
         let btn = UIButton()
         btn.layer.cornerRadius = 3
-        btn.backgroundColor = Colors.title
+        if (activated == true) {
+            btn.backgroundColor = Colors.title
+        } else {
+            btn.backgroundColor = Colors.titleDeactivated
+        }
         let modeIcon = UIImageView(frame: CGRect(x: 15, y: 15, width: 30, height: 30))
         modeIcon.image = iconName;
         if let action = action {
@@ -78,7 +82,9 @@ class VehicleControl: UIView {
         if (isButtonEnable) {
             if (controlMode == ControlMode.GAMEPAD) {
                 controlMode = ControlMode.PHONE;
-                createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)));
+                driveMode = DriveMode.DUAL;
+                createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
+                createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: false);
 
                 client.start();
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
@@ -86,7 +92,9 @@ class VehicleControl: UIView {
 
             } else {
                 controlMode = ControlMode.GAMEPAD;
-                createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)));
+                driveMode = DriveMode.GAME;
+                createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
+                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
                 client.send(message: msg);
 
@@ -101,15 +109,15 @@ class VehicleControl: UIView {
             switch (driveMode) {
             case .JOYSTICK:
                 driveMode = .GAME;
-                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)));
+                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 break;
             case .GAME:
                 driveMode = .DUAL;
-                createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)));
+                createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 break;
             case .DUAL:
                 driveMode = .JOYSTICK;
-                createAndUpdateButton(iconName: Images.joystickIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)));
+                createAndUpdateButton(iconName: Images.joystickIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 break;
             }
             gameController.selectedDriveMode = driveMode
@@ -121,15 +129,15 @@ class VehicleControl: UIView {
             switch (speedMode) {
             case .SLOW:
                 speedMode = .NORMAL;
-                createAndUpdateButton(iconName: Images.mediumIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
+                createAndUpdateButton(iconName: Images.mediumIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
                 break;
             case .NORMAL:
                 speedMode = .FAST;
-                createAndUpdateButton(iconName: Images.fastIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
+                createAndUpdateButton(iconName: Images.fastIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
                 break;
             case .FAST:
                 speedMode = .SLOW;
-                createAndUpdateButton(iconName: Images.slowIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)));
+                createAndUpdateButton(iconName: Images.slowIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
                 break;
             }
             gameController.selectedSpeedMode = speedMode

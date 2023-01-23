@@ -318,6 +318,7 @@
 		4FEF489C07FD5C967FFDCDE8 /* OpenBot */ = {
 			isa = PBXGroup;
 			children = (
+				660F8791297A8810001E3AA0 /*  pointGoalNavigation  */,
 				BF9BAED628AF94A800EF3E48 /* Frameworks */,
 				4FEF44F0837469F66D5A7156 /* Models */,
 				4FEF42AB3B7AC14D55B7DBA3 /* Utils */,
@@ -417,6 +418,13 @@
 				37A05E57C6BA519D6B86A37B /* Pods */,
 				158970C63E9775BD41F614A3 /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		660F8791297A8810001E3AA0 /*  pointGoalNavigation  */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = " pointGoalNavigation ";
 			sourceTree = "<group>";
 		};
 		727D3486646629C6067A6656 /* FreeRoam */ = {

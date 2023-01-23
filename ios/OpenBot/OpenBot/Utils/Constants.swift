@@ -41,6 +41,7 @@ struct Colors {
     //Colors
     static let gridShadowColor = UIColor(named: "gridItemShadowColor");
     static let title = UIColor(named: "HomePageTitleColor");
+    static let titleDeactivated = UIColor(named: "HomePageTitleColorDeactivated");
     static let sonar = UIColor(named: "sonar")
     static let voltageDividerColor = UIColor(named: "voltageDivider")
     static let freeRoamButtonsColor = UIColor(named: "gamepad")
