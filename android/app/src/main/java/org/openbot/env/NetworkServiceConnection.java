@@ -10,6 +10,9 @@ import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.util.Log;
+
+import org.openbot.utils.ConnectionUtils;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -20,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import org.openbot.utils.ConnectionUtils;
+
 import timber.log.Timber;
 
 public class NetworkServiceConnection implements ILocalConnection {
@@ -136,7 +139,7 @@ public class NetworkServiceConnection implements ILocalConnection {
         try {
           if (service.getServiceType().equals(SERVICE_TYPE)
               && service.getServiceName().equals(SERVICE_NAME_CONTROLLER)) {
-            System.out.println("found service");
+            Timber.e("found service");
             mNsdManager.resolveService(service, mResolveListener);
           } else if (service.getServiceName().equals(MY_SERVICE_NAME)) {
             Log.d(TAG, "Same machine: " + MY_SERVICE_NAME);
@@ -290,7 +293,6 @@ public class NetworkServiceConnection implements ILocalConnection {
       try {
         while (true) {
           String msg = reader.nextLine().trim();
-          System.out.println("msg"+msg);
           if (!stopped) {
             ((Activity) context).runOnUiThread(() -> dataReceivedCallback.dataReceived(msg));
           }
