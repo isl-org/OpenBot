@@ -186,21 +186,34 @@ class ObjectTrackingFragment: CameraController {
 
     func addFrame(item: Detector.Recognition, color: UIColor) -> UIView {
         let frame = UIView()
-        let screenWidth = UIScreen.main.bounds.size.width
-        let screenHeight = UIScreen.main.bounds.size.height
-        let detection = item.getLocation();
-        let dx = screenWidth / CGFloat(bufferWidth);
-        let dy = screenHeight / CGFloat(bufferHeight);
-        let transform = CGAffineTransform.identity
-                .scaledBy(x: dx, y: dy);
-        let t = transform.concatenating(__CGAffineTransformMake( -1.0, 0.0, 0.0, 1.0, CGFloat(width), 0.0))
-        var convertedRect = detection.applying(t);
+        var convertedRect : CGRect = item.getLocation();
+        if currentOrientation == .portrait{
+            let detection = item.getLocation();
+            let dx = width / CGFloat(bufferWidth);
+            let dy = height / CGFloat(bufferHeight);
+            let transform = CGAffineTransform.identity
+                    .scaledBy(x: dx, y: dy);
+            let revertTransform = transform.concatenating(__CGAffineTransformMake( -1.0, 0.0, 0.0, 1.0, CGFloat(width), 0.0));
+             convertedRect = detection.applying(revertTransform)
+        }
+        else{
+            let screenWidth = height
+            let screenHeight = width
+            let detection = item.getLocation();
+            let dx = screenWidth / CGFloat(bufferWidth);
+            let dy = screenHeight / CGFloat(bufferHeight);
+            let transform = CGAffineTransform.identity
+                    .scaledBy(x: dx, y: dy);
+            let revertTransform = transform.concatenating(__CGAffineTransformMake( -1.0, 0.0, 0.0, 1.0,height, 0.0));
+             convertedRect = detection.applying(revertTransform);
+            convertedRect.origin.y = convertedRect.origin.y - convertedRect.origin.y * 0.2 //lifting the rect up by 20%
+        }
         if convertedRect.origin.x < 0 {
-            convertedRect.origin.x = self.edgeOffset
+            convertedRect.origin.x = edgeOffset
         }
 
         if convertedRect.origin.y < 0 {
-            convertedRect.origin.y = self.edgeOffset
+            convertedRect.origin.y = edgeOffset
         }
 
         if convertedRect.maxY > UIScreen.main.bounds.maxY {
@@ -208,11 +221,9 @@ class ObjectTrackingFragment: CameraController {
         }
 
         if convertedRect.maxX > UIScreen.main.bounds.maxX {
-            convertedRect.size.width = UIScreen.main.bounds.maxX - convertedRect.origin.x - self.edgeOffset
+            convertedRect.size.width = UIScreen.main.bounds.maxX - convertedRect.origin.x - edgeOffset
         }
-
         frame.frame = convertedRect;
-//         print(frame.frame.origin, " : ", detection.origin.x);
         frame.layer.borderColor = color.cgColor;
         frame.layer.borderWidth = 3.0;
         let nameString = UITextView();
