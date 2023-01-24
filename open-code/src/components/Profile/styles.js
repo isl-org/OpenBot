@@ -1,6 +1,4 @@
-import {makeStyles} from "@material-ui/core";
-
-export const LeftSectionStyles = makeStyles((theme) => ({
+export const LeftSectionStyles = {
     Main: {
         width: "21.4%",
         minWidth:"308px",
@@ -52,9 +50,9 @@ export const LeftSectionStyles = makeStyles((theme) => ({
         letterSpacing: "-0.01em",
         color: "#0071C5",
     }
-}));
+};
 
-export const RightSectionStyles = makeStyles((theme) => ({
+export const RightSectionStyles = {
     Main: {
         width: "78.6%",
         paddingLeft: "90px",
@@ -147,7 +145,7 @@ export const RightSectionStyles = makeStyles((theme) => ({
         display: "flex",
         gap: "0px 25px",
     },
-    Savebtn: {
+    SaveBtn: {
         width: "51px",
         height: "26px",
         borderRadius: 6,
@@ -159,7 +157,7 @@ export const RightSectionStyles = makeStyles((theme) => ({
         textDecoration: "none",
         cursor:"pointer",
     },
-    Canclebtn: {
+    CancelBtn: {
         width: "71px",
         height: "24px",
         border: "1px solid #0071C5",
@@ -173,4 +171,4 @@ export const RightSectionStyles = makeStyles((theme) => ({
         cursor:"pointer",
     }
 
-}));
+};

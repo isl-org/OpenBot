@@ -1,6 +1,4 @@
-import {makeStyles} from "@material-ui/core";
-
-export const HowToUploadStyles = makeStyles((theme) => ({
+export const HowToUploadStyles = {
     Main: {
         width: "100%",
     },
@@ -112,4 +110,4 @@ export const HowToUploadStyles = makeStyles((theme) => ({
     },
 
 
-}));
+};

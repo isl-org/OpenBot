@@ -1,6 +1,5 @@
-import {makeStyles} from "@material-ui/core";
 
-export const NewProjectStyles = makeStyles((theme) => ({
+export const NewProjectStyles = {
     Main: {
         minHeight: "450px",
         width: "100%",
@@ -139,7 +138,7 @@ export const NewProjectStyles = makeStyles((theme) => ({
         borderStyle: "solid",
         borderRadius: "6px",
     },
-    Savebtn: {
+    SaveBtn: {
         width: "144px",
         height: "50px",
         borderRadius: 6,
@@ -155,9 +154,9 @@ export const NewProjectStyles = makeStyles((theme) => ({
         marginLeft: "497px",
     },
 
-}));
+};
 
-export const SavedProjectsStyles = makeStyles((theme) => ({
+export const SavedProjectsStyles = {
     Main: {
         minHeight: "450px",
         backgroundColor: "#F8F9FB",
@@ -216,4 +215,4 @@ export const SavedProjectsStyles = makeStyles((theme) => ({
     },
 
 
-}));
+};

@@ -1,11 +1,10 @@
 import React from 'react';
 import {useNavigate} from "react-router-dom";
-import {NewProjectStyles as useStyles} from "./styles";
+import {NewProjectStyles} from "./styles";
 import cross from "../../../assets/Model/Cross.png";
-import {Box, Modal, Typography} from "@material-ui/core";
+import {Box, Modal} from "@mui/material";
 
 function NewProjectButton(props) {
-    const classes = useStyles();
     let navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -20,10 +19,10 @@ function NewProjectButton(props) {
 
     return (
         <>
-            <div className={classes.Content} onClick={handleOpen}>
-                <div className={classes.Button}>
-                    <div className={classes.AddIconImage}>
-                        <div className={classes.plus}>+</div>
+            <div style={NewProjectStyles.Content} onClick={handleOpen}>
+                <div style={NewProjectStyles.Button}>
+                    <div style={NewProjectStyles.AddIconImage}>
+                        <div style={NewProjectStyles.plus}>+</div>
                     </div>
                 </div>
             </div>
@@ -31,17 +30,17 @@ function NewProjectButton(props) {
                 open={open}
                 onClose={handleClose}
             >
-                <Box className={classes.model}>
-                    <div className={classes.ModelHeading}>
+                <Box style={NewProjectStyles.model}>
+                    <div style={NewProjectStyles.ModelHeading}>
                         <div>Create a New Project</div>
-                        <img src={cross} className={classes.CrossIcon} onClick={handleClose}/>
+                        <img src={cross} style={NewProjectStyles.CrossIcon} onClick={handleClose}/>
                     </div>
-                    <div className={classes.Input}>
-                        <label className={classes.lable}> Give your project a name. </label>
-                        <input className={classes.InputArea} type="text"/>
+                    <div style={NewProjectStyles.Input}>
+                        <label style={NewProjectStyles.lable}> Give your project a name. </label>
+                        <input style={NewProjectStyles.InputArea} type="text"/>
                     </div>
 
-                    <div className={classes.Savebtn} onClick={OpenNewProjectHandle}>Create</div>
+                    <div style={NewProjectStyles.SaveBtn} onClick={OpenNewProjectHandle}>Create</div>
 
                 </Box>
             </Modal>

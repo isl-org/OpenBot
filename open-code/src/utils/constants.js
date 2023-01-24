@@ -1,4 +1,4 @@
-import {Scroll} from "../Components/scrolls/scroll";
+import {Scroll} from "../components/scrolls/scroll";
 import blocklyCode from "../assets/images/screenshot.png";
 import qrImage from "../assets/images/qrImage.png";
 import vehicleImage from "../assets/images/vehiceImage.png";

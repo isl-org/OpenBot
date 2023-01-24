@@ -1,8 +1,6 @@
-import {makeStyles} from "@material-ui/core";
-
-export const ProfileStyles = makeStyles((theme) => ({
+export const ProfileStyles = {
     Main: {
-        display:"flex",
-        width:"100%",
+        display: "flex",
+        width: "100%",
     }
-}));
+};

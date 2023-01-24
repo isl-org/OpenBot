@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {ProfileStyles as useStyles} from "./styles";
-import LeftSection from "../../Components/Profile/LeftSection";
-import RightSection from "../../Components/Profile/RightSection";
+import {ProfileStyles} from "./styles";
+import LeftSection from "../../components/Profile/LeftSection";
+import RightSection from "../../components/Profile/RightSection";
 import {Content} from "../../utils/constants";
-import HowToUpload from "../../Components/HowToUpLoad/HowToUpload";
+import HowToUpload from "../../components/HowToUpLoad/HowToUpload";
 
 
 /**
@@ -13,10 +13,9 @@ import HowToUpload from "../../Components/HowToUpLoad/HowToUpload";
  * @constructor
  */
 function Profile(props) {
-    const classes = useStyles();
     const [tab, setTab] = useState(Content[0].title);
     return (
-        <div className={classes.Main}>
+        <div style={ProfileStyles.Main}>
             <LeftSection content={Content} tab={tab} setTab={setTab}/>
             {handleTabBaseRendering(tab)}
         </div>
