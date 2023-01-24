@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {ProfileStyles} from "./styles";
-import LeftSection from "../../components/Profile/LeftSection";
-import RightSection from "../../components/Profile/RightSection";
+import LeftSection from "../../components/profile/LeftSection";
+import RightSection from "../../components/profile/RightSection";
 import {Content} from "../../utils/constants";
-import HowToUpload from "../../components/HowToUpLoad/HowToUpload";
+import HowToUpload from "../../components/howToUpLoad/HowToUpload";
 
 
 /**

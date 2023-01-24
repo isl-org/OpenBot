@@ -29,7 +29,7 @@ Carry out desired actions such as activating indicator lights, detecting objects
 export const Content = [
     {
         Icon: User,
-        title: "My Profile",
+        title: "My profile",
         selected:true,
     },
     {

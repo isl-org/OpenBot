@@ -3,7 +3,7 @@
 import {Navbar} from "../../components/navBar/Navbar";
 import React from "react";
 import {screens} from "../../utils/constants";
-import NewProject from "../../components/Home/MyProjects/NewProject";
+import NewProject from "../../components/home/MyProjects/NewProject";
 import Carousel from 'react-material-ui-carousel'
 
 
