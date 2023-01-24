@@ -11,7 +11,7 @@ function NewProjectButton(props) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const OpenNewProjectHandle = () => {
-        let path = `workspace`;
+        let path = `playground`;
         navigate(path);
         handleOpen();
 
