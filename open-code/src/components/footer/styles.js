@@ -42,7 +42,7 @@ export const FooterStyle = {
 
     textFont: {
         fontSize: "1.1em",
-        fontFamily: "Gilroy-Bold"
+        fontFamily: "Gilroy-Medium"
     },
 
 };
