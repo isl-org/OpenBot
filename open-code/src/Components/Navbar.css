@@ -1,0 +1,43 @@
+.nav-bar {
+    width: 100%;
+    height: 5vw;
+    background-color: #0071C5;
+    align-items: center;
+    padding: 26px;
+    display: flex;
+}
+
+.title-icon{
+    margin-left: 55px;
+    width:32.5px;
+    height: 30px;
+}
+
+.nav-title{
+    margin-left: 17.25px;
+    font-family: "Gilroy";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 24px;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+
+a,button{
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: normal;
+    color: #FFFEFE;
+    cursor: pointer;
+    align-items: center;
+}
+
+.sigInButton{
+    background: transparent;
+    padding: 6px 15px;
+    border: 1px solid white;
+    border-radius: 8px;
+}
+

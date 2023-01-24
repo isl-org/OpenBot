@@ -4,7 +4,7 @@ import {Block, Category, Field, Shadow, Value} from "../index";
 function Toolbox(props) {
     return (
         <>
-            <Category name="Loops">
+            <Category name="Control" colour="#567AE4">
                 <Block type="controls_whileUntil"/>,
                 <Block type="controls_repeat"/>,
                 <Block type="controls_for">
@@ -34,8 +34,7 @@ function Toolbox(props) {
                     </Value>
                 </Block>
             </Category>
-
-            <Category name="Logic">
+            <Category name="Operators" colour="#C54E30">
                 <Block type="controls_if"/>,
                 <Block type="controls_ifelse"/>,
                 <Block type="logic_ternary"/>,
@@ -45,8 +44,7 @@ function Toolbox(props) {
                 <Block type="logic_boolean"/>,
                 <Block type="logic_null" disabled="true"/>
             </Category>
-
-            <Category name="Math">
+            <Category colour="#8156C9" name="Variables">
                 <Block type="math_arithmetic"/>,
                 <Block type="math_number"/>,
                 <Block type="math_modulo"/>,
@@ -59,8 +57,7 @@ function Toolbox(props) {
                 <Block type="math_random_int"/>,
                 <Block type="math_atan2"/>,
             </Category>
-
-            <Category name="Others">
+            <Category colour="#D030BA" name="Text">
                 <Block type="test_react_field"/>,
                 <Block type="test_react_date_field"/>,
                 <Block type="text_charAt">
@@ -83,8 +80,7 @@ function Toolbox(props) {
                 </Block>
                 <Block type="print"/>
             </Category>
-
-            <Category name="Text">
+            <Category colour="#506481" name="Lists">
                 <Block type="text"/>
                 <Block type="text_multiline"/>
                 <Block type="text_join"/>
@@ -185,6 +181,144 @@ function Toolbox(props) {
                         </Shadow>
                     </Value>
                 </Block>
+            </Category>
+            <Category colour="#C26F87" name="Events">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+            <Category colour="#5BBC73" name="Sound">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+            <Category colour="#61A8EC" name="Sensing">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+            <Category colour="#DA4B5D" name="Bumper">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+            <Category colour="#9B61E2" name="Movement">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+            <Category colour="#717171" name="Detection">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
             </Category>
         </>
     );
