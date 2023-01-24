@@ -186,17 +186,16 @@ class ObjectTrackingFragment: CameraController {
 
     func addFrame(item: Detector.Recognition, color: UIColor) -> UIView {
         let frame = UIView()
-        var convertedRect : CGRect = item.getLocation();
-        if currentOrientation == .portrait{
+        var convertedRect: CGRect = item.getLocation();
+        if currentOrientation == .portrait {
             let detection = item.getLocation();
             let dx = width / CGFloat(bufferWidth);
             let dy = height / CGFloat(bufferHeight);
             let transform = CGAffineTransform.identity
                     .scaledBy(x: dx, y: dy);
-            let revertTransform = transform.concatenating(__CGAffineTransformMake( -1.0, 0.0, 0.0, 1.0, CGFloat(width), 0.0));
-             convertedRect = detection.applying(revertTransform)
-        }
-        else{
+            let revertTransform = transform.concatenating(__CGAffineTransformMake(-1.0, 0.0, 0.0, 1.0, CGFloat(width), 0.0));
+            convertedRect = detection.applying(revertTransform)
+        } else {
             let screenWidth = height
             let screenHeight = width
             let detection = item.getLocation();
@@ -204,8 +203,8 @@ class ObjectTrackingFragment: CameraController {
             let dy = screenHeight / CGFloat(bufferHeight);
             let transform = CGAffineTransform.identity
                     .scaledBy(x: dx, y: dy);
-            let revertTransform = transform.concatenating(__CGAffineTransformMake( -1.0, 0.0, 0.0, 1.0,height, 0.0));
-             convertedRect = detection.applying(revertTransform);
+            let revertTransform = transform.concatenating(__CGAffineTransformMake(-1.0, 0.0, 0.0, 1.0, height, 0.0));
+            convertedRect = detection.applying(revertTransform);
             convertedRect.origin.y = convertedRect.origin.y - convertedRect.origin.y * 0.2 //lifting the rect up by 20%
         }
         if convertedRect.origin.x < 0 {
@@ -217,7 +216,7 @@ class ObjectTrackingFragment: CameraController {
         }
 
         if convertedRect.maxY > UIScreen.main.bounds.maxY {
-            convertedRect.size.height = UIScreen.main.bounds.maxY - convertedRect.origin.y - self.edgeOffset
+            convertedRect.size.height = UIScreen.main.bounds.maxY - convertedRect.origin.y - edgeOffset
         }
 
         if convertedRect.maxX > UIScreen.main.bounds.maxX {
