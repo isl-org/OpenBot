@@ -123,7 +123,6 @@ public class ObjectNavFragment extends CameraFragment {
 
     CheckBox bleCb = getView().findViewById(R.id.bleToggle);
     CheckBox USBCb = getView().findViewById(R.id.usbToggle);
-
     if (vehicle.getConnectionType().equals("USB")) {
       USBCb.setVisibility(View.VISIBLE);
       bleCb.setVisibility(View.INVISIBLE);
