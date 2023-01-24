@@ -1,5 +1,4 @@
 
-
 import {Navbar} from "../../components/navBar/Navbar";
 import React from "react";
 import {screens} from "../../utils/constants";
