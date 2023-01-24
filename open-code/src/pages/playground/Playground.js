@@ -1,6 +1,6 @@
 import React from 'react';
-import BlocklyComponent from "../blockly";
-import Toolbox from "../blockly/toolbox/Toolbox";
+import BlocklyComponent from "../../components/blockly";
+import Toolbox from "../../components/blockly/toolbox/Toolbox";
 
 function Playground (){
         return (
