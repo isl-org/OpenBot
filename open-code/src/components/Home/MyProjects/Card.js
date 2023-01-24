@@ -1,16 +1,15 @@
 import React from 'react';
-import {SavedProjectsStyles as useStyles} from "./styles";
+import {SavedProjectsStyles} from "./styles";
 
 function Card(props) {
-    const classes = useStyles();
     return (
-        <div className={classes.Content}>
-            <div className={classes.Card}>
-                <div className={classes.CardHeadingIcon}>
-                    <div className={classes.CardHeading}>Blink Led</div>
+        <div style={SavedProjectsStyles.Content}>
+            <div style={SavedProjectsStyles.Card}>
+                <div style={SavedProjectsStyles.CardHeadingIcon}>
+                    <div style={SavedProjectsStyles.CardHeading}>Blink Led</div>
                     {/*<div className={classes.Icon}>Icon</div>*/}
                 </div>
-                <div className={classes.Date}>Jan 4, 2023</div>
+                <div style={SavedProjectsStyles.Date}>Jan 4, 2023</div>
             </div>
         </div>
     );

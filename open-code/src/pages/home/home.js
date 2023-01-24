@@ -1,13 +1,12 @@
+
 import {Navbar} from "../../Components/navBar/Navbar";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {screens} from "../../utils/constants";
 import NewProject from "../../Components/Home/MyProjects/NewProject";
-import SavedProjects from "../../Components/Home/MyProjects/SavedProjects";
 import Carousel from 'react-material-ui-carousel'
-import {SavedProjectsStyles as useStyles} from "../../Components/Home/MyProjects/styles";
 import Footer from "../../Components/footer/Footer";
+
 function Home() {
-    const classes = useStyles();
     return <div>
         <Navbar/>
         <HomeCarousel/>

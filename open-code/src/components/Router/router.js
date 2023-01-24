@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Home from "../../pages/home/home";
 import Profile from "../../pages/Profile/Profile";
-// import WorkSpace from "../../pages/BlocklyWorkSpace/WorkSpace";
 import Playground from "../Playground/Playground";
 export const RouterComponent = ()=>{
     return(

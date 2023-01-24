@@ -1,54 +1,53 @@
 import React from 'react';
-import {HowToUploadStyles as useStyles} from "./styles";
+import {HowToUploadStyles} from "./styles";
 import BlocklyCode from "../../assets/Profile/BlocklyCodeImage.png";
 import QRCode from "../../assets/Profile/QRCode.png";
 import OpenBoat from "../../assets/Profile/OpenBoatImage.png";
 function HowToUpload(props) {
-    const classes = useStyles();
     return (
-        <div className={classes.Main}>
-            <div className={classes.HeadingContent}>
-                <div className={classes.MainHeading}>How to Upload?</div>
-                <div className={classes.Content}>
+        <div style={HowToUploadStyles.Main}>
+            <div style={HowToUploadStyles.HeadingContent}>
+                <div style={HowToUploadStyles.MainHeading}>How to Upload?</div>
+                <div style={HowToUploadStyles.Content}>
                     <span style={{color: "#0071C5"}}>OpenCode</span> is an open source platform that
                     provides you an easy three step process of turning your smartphone into a robot with
                     the help of block coding.
                 </div>
             </div>
-            <div className={classes.DragAndDropImage}>
-                <div className={classes.DragAndDrop}>
-                    <div className={classes.NumberOne}>1</div>
-                    <div className={classes.DragAndDropHeading}>Drag and Drop</div>
-                    <div className={classes.DragAndDropContent}>
+            <div style={HowToUploadStyles.DragAndDropImage}>
+                <div style={HowToUploadStyles.DragAndDrop}>
+                    <div style={HowToUploadStyles.NumberOne}>1</div>
+                    <div style={HowToUploadStyles.DragAndDropHeading}>Drag and Drop</div>
+                    <div style={HowToUploadStyles.DragAndDropContent}>
                         Drag and drop the selected block of code into the input field.<br/>
                         Repeat the steps of selecting and placing all required code blocks, and then
                         connecting them together to create a sequence of actions.
                     </div>
                 </div>
-                <img src={BlocklyCode} className={classes.ImageDrag}/>
+                <img src={BlocklyCode} style={HowToUploadStyles.ImageDrag}/>
             </div>
-            <div className={classes.SaveAndDownloadImage}>
-                <img src={QRCode} className={classes.ImageSave}/>
-                <div className={classes.DragAndDrop}>
-                    <div className={classes.NumberTwo}>2</div>
-                    <div className={classes.SaveAndDownloadHeading}>Save and Download </div>
-                    <div className={classes.SaveAndDownloadContent}>
+            <div style={HowToUploadStyles.SaveAndDownloadImage}>
+                <img src={QRCode} style={HowToUploadStyles.ImageSave}/>
+                <div style={HowToUploadStyles.DragAndDrop}>
+                    <div style={HowToUploadStyles.NumberTwo}>2</div>
+                    <div style={HowToUploadStyles.SaveAndDownloadHeading}>Save and Download </div>
+                    <div style={HowToUploadStyles.SaveAndDownloadContent}>
                         Check for errors by compiling the code and, upon successful compilation, generate the QR code.<br/>
                         Use the OpenBot android application to scan the QR code and successfully save the block code on your device.
                     </div>
                 </div>
 
             </div>
-            <div className={classes.ConnectAndDriveImage}>
-                <div className={classes.DragAndDrop}>
-                    <div className={classes.NumberThree}>3</div>
-                    <div className={classes.DragAndDropHeading}>Connect and Drive </div>
-                    <div className={classes.DragAndDropContent}>
+            <div style={HowToUploadStyles.ConnectAndDriveImage}>
+                <div style={HowToUploadStyles.DragAndDrop}>
+                    <div style={HowToUploadStyles.NumberThree}>3</div>
+                    <div style={HowToUploadStyles.DragAndDropHeading}>Connect and Drive </div>
+                    <div style={HowToUploadStyles.DragAndDropContent}>
                         Pair your smartphone with the OpenBot car and run the code that you have downloaded.<br/>
                         Carry out desired actions such as activating indicator lights, detecting objects, and more on your robot car.
                     </div>
                 </div>
-                <img src={OpenBoat} className={classes.ImageSave}/>
+                <img src={OpenBoat} style={HowToUploadStyles.ImageSave}/>
             </div>
         </div>
     );

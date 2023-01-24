@@ -1,6 +1,6 @@
 /**
  * @license
- * 
+ *
  * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@
  * @author samelh@google.com (Sam El-Husseini)
  */
 
- import React from 'react';
+import React from 'react';
 import BlocklyComponent from './BlocklyComponent';
 
 export default BlocklyComponent;
@@ -37,12 +37,6 @@ const Category = (p) => {
     props.is = "blockly";
     return React.createElement("category", props, children);
 };
-
-const ColorBar=(p)=>{
-    const {children,...props}=p;
-    props.is="blockly";
-    return React.createElement("color",props,children);
-}
 
 const Value = (p) => {
     const { children, ...props } = p;
@@ -62,4 +56,4 @@ const Shadow = (p) => {
     return React.createElement("shadow", props, children);
 };
 
-export { Block, Category, Value, Field, Shadow,ColorBar }
+export { Block, Category, Value, Field, Shadow }

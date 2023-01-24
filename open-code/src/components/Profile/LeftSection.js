@@ -1,21 +1,18 @@
 import React from 'react';
-import {LeftSectionStyles as useStyles} from "./styles";
+import {LeftSectionStyles} from "./styles";
 
 
 function LeftSection(props) {
     const {content, setTab, tab} = props
-    console.log(tab)
-    const classes = useStyles();
-
     return (
-        <div className={classes.Main}>
-            <div className={classes.IconContent}>
+        <div style={LeftSectionStyles.Main}>
+            <div style={LeftSectionStyles.IconContent}>
                 {
                     content.map((data) => (
-                        <div className={(data.title === tab) ? classes.ItemsSelected : classes.Items}
+                        <div style={(data.title === tab) ? LeftSectionStyles.ItemsSelected : LeftSectionStyles.Items}
                              onClick={() => setTab(data.title)}>
-                            <img alt="Icon" className={classes.Icon} src={data.Icon}/>
-                            <div className={classes.Content}>{data.title}</div>
+                            <img alt="Icon" style={LeftSectionStyles.Icon} src={data.Icon}/>
+                            <div style={LeftSectionStyles.Content}>{data.title}</div>
                         </div>
                     ))
                 }
