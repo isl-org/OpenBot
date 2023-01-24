@@ -28,7 +28,7 @@ public class OpenBotApplication extends Application {
     vehicle = new Vehicle(this, baudRate);
     vehicle.connectUsb();
     vehicle.initBle();
-      if (BuildConfig.DEBUG) {
+    if (BuildConfig.DEBUG) {
       Timber.plant(
           new Timber.DebugTree() {
             @NonNull
@@ -39,8 +39,9 @@ public class OpenBotApplication extends Application {
           });
     }
   }
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
+
+  @Override
+  public void onTerminate() {
+    super.onTerminate();
+  }
 }

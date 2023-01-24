@@ -14,15 +14,16 @@ public class Constants {
   public static final int REQUEST_CONTROLLER_PERMISSIONS = 7;
   public static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
   public static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-  public static final String PERMISSION_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+  public static final String PERMISSION_COARSE_LOCATION =
+      Manifest.permission.ACCESS_COARSE_LOCATION;
   public static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
   public static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
   public static final String PERMISSION_AUDIO = Manifest.permission.RECORD_AUDIO;
 
   public static final String[] PERMISSIONS_LOGGING =
-          new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE, PERMISSION_LOCATION};
+      new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE, PERMISSION_LOCATION};
   public static final String[] PERMISSIONS_CONTROLLER =
-          new String[] {PERMISSION_CAMERA, PERMISSION_AUDIO, PERMISSION_LOCATION};
+      new String[] {PERMISSION_CAMERA, PERMISSION_AUDIO, PERMISSION_LOCATION};
 
   public static final String GENERIC_MOTION_EVENT = "dispatchGenericMotionEvent";
   public static final String KEY_EVENT = "dispatchKeyEvent";

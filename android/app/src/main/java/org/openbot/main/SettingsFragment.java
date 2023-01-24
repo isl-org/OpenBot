@@ -214,22 +214,24 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     ListPreference connectivityMode = findPreference("connection_type");
 
     if (connectivityMode != null)
-        connectivityMode.setOnPreferenceChangeListener((preference, newValue) -> {
+      connectivityMode.setOnPreferenceChangeListener(
+          (preference, newValue) -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder.setTitle(R.string.confirm_title);
             builder.setMessage(R.string.stream_change_body);
             builder.setPositiveButton(
-                    "Yes",
-                    (dialog, id) -> {
-                        connectivityMode.setValue(newValue.toString());
-                        restartApp();
-                    });
+                "Yes",
+                (dialog, id) -> {
+                  connectivityMode.setValue(newValue.toString());
+                  restartApp();
+                });
             builder.setNegativeButton(
-                    "Cancel", (dialog, id) -> connectivityMode.setValue(connectivityMode.getEntry().toString()));
+                "Cancel",
+                (dialog, id) -> connectivityMode.setValue(connectivityMode.getEntry().toString()));
             AlertDialog dialog = builder.create();
             dialog.show();
             return false;
-        });
+          });
   }
 
   private void restartApp() {

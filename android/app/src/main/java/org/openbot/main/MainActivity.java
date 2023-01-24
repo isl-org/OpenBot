@@ -1,6 +1,7 @@
 package org.openbot.main;
 
 import static org.openbot.utils.Constants.DEVICE_ACTION_DATA_RECEIVED;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

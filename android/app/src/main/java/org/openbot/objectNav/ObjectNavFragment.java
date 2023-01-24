@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,7 +46,6 @@ import org.openbot.utils.MovingAverage;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Control;
 import timber.log.Timber;
-import android.widget.CheckBox;
 
 public class ObjectNavFragment extends CameraFragment {
   private FragmentObjectNavBinding binding;
@@ -123,11 +123,10 @@ public class ObjectNavFragment extends CameraFragment {
 
     CheckBox bleCb = getView().findViewById(R.id.bleToggle);
     CheckBox USBCb = getView().findViewById(R.id.usbToggle);
-    if(vehicle.getConnectionType().equals("USB")) {
+    if (vehicle.getConnectionType().equals("USB")) {
       USBCb.setVisibility(View.VISIBLE);
       bleCb.setVisibility(View.INVISIBLE);
-    }
-    else if (vehicle.getConnectionType().equals("Bluetooth")){
+    } else if (vehicle.getConnectionType().equals("Bluetooth")) {
       bleCb.setVisibility(View.VISIBLE);
       USBCb.setVisibility(View.INVISIBLE);
     }

@@ -1,19 +1,20 @@
 package org.openbot.vehicle;
 
 import android.content.Context;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-import org.openbot.env.GameController;
-import org.openbot.env.SensorReading;
-import org.openbot.utils.Enums;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import com.ficat.easyble.BleDevice;
 import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
+import org.openbot.env.GameController;
+import org.openbot.env.SensorReading;
 import org.openbot.main.CommonRecyclerViewAdapter;
 import org.openbot.main.ScanDeviceAdapter;
+import org.openbot.utils.Enums;
+
 public class Vehicle {
 
   private final Noise noise = new Noise(1000, 2000, 5000);
@@ -48,11 +49,11 @@ public class Vehicle {
   private boolean hasLedsBack = false;
   private boolean hasLedsStatus = false;
   private boolean isReady = false;
-  
+
   private BluetoothManager bluetoothManager;
   SharedPreferences sharedPreferences;
   public String connectionType;
-  
+
   public float getMinMotorVoltage() {
     return minMotorVoltage;
   }
@@ -476,12 +477,13 @@ public class Vehicle {
     setControl(control);
   }
 
-
   public ScanDeviceAdapter getBleAdapter() {
     return bluetoothManager.adapter;
   }
 
-  public void setBleAdapter(ScanDeviceAdapter adapter, @NonNull CommonRecyclerViewAdapter.OnItemClickListener onItemClickListener) {
+  public void setBleAdapter(
+      ScanDeviceAdapter adapter,
+      @NonNull CommonRecyclerViewAdapter.OnItemClickListener onItemClickListener) {
     bluetoothManager.adapter = adapter;
     bluetoothManager.adapter.setOnItemClickListener(onItemClickListener);
   }
@@ -497,7 +499,6 @@ public class Vehicle {
   public List<BleDevice> getDeviceList() {
     return bluetoothManager.deviceList;
   }
-
 
   public void setBleDevice(BleDevice device) {
     bluetoothManager.bleDevice = device;
@@ -522,6 +523,7 @@ public class Vehicle {
   public boolean bleConnected() {
     return bluetoothManager.isBleConnected();
   }
+
   private void setConnectionPreferences(String name, String value) {
     SharedPreferences.Editor editor = sharedPreferences.edit();
     editor.putString(name, value);
@@ -539,5 +541,4 @@ public class Vehicle {
   public String getConnectionType() {
     return getConnectionPreferences("connection_type", "USB");
   }
-
 }

@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -70,7 +69,7 @@ public class LoggerFragment extends CameraFragment {
 
   @Override
   public View onCreateView(
-          @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     binding = FragmentLoggerBinding.inflate(inflater, container, false);
 
@@ -89,38 +88,37 @@ public class LoggerFragment extends CameraFragment {
 
     CheckBox bleCb = getView().findViewById(R.id.bleToggle);
     CheckBox USBCb = getView().findViewById(R.id.usbToggle);
-    if(vehicle.getConnectionType().equals("USB")) {
+    if (vehicle.getConnectionType().equals("USB")) {
       USBCb.setVisibility(View.VISIBLE);
       bleCb.setVisibility(View.INVISIBLE);
-    }
-    else if (vehicle.getConnectionType().equals("Bluetooth")){
+    } else if (vehicle.getConnectionType().equals("Bluetooth")) {
       bleCb.setVisibility(View.VISIBLE);
       USBCb.setVisibility(View.INVISIBLE);
     }
 
     binding.sensorDataButton.setOnClickListener(
-            v -> {
-              SensorsDialog sensorsDialog = new SensorsDialog();
-              sensorsDialog.show(getChildFragmentManager(), sensorsDialog.getTag());
-            });
+        v -> {
+          SensorsDialog sensorsDialog = new SensorsDialog();
+          sensorsDialog.show(getChildFragmentManager(), sensorsDialog.getTag());
+        });
     binding.controllerContainer.controlMode.setOnClickListener(
-            v -> {
-              Enums.ControlMode controlMode =
-                      Enums.ControlMode.getByID(preferencesManager.getControlMode());
-              if (controlMode != null) setControlMode(Enums.switchControlMode(controlMode));
-            });
+        v -> {
+          Enums.ControlMode controlMode =
+              Enums.ControlMode.getByID(preferencesManager.getControlMode());
+          if (controlMode != null) setControlMode(Enums.switchControlMode(controlMode));
+        });
     binding.controllerContainer.driveMode.setOnClickListener(
-            v -> setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode())));
+        v -> setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode())));
 
     binding.controllerContainer.speedMode.setOnClickListener(
-            v ->
-                    setSpeedMode(
-                            Enums.toggleSpeed(
-                                    Enums.Direction.CYCLIC.getValue(),
-                                    Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()))));
+        v ->
+            setSpeedMode(
+                Enums.toggleSpeed(
+                    Enums.Direction.CYCLIC.getValue(),
+                    Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()))));
 
     binding.loggerSwitch.setOnCheckedChangeListener(
-            (buttonView, isChecked) -> setLoggingActive(isChecked));
+        (buttonView, isChecked) -> setLoggingActive(isChecked));
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
@@ -129,62 +127,62 @@ public class LoggerFragment extends CameraFragment {
     initServerSpinner(binding.serverSpinner);
 
     binding.resolutionSpinner.setOnItemSelectedListener(
-            new AdapterView.OnItemSelectedListener() {
-              @Override
-              public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                  case 0:
-                    setAnalyserResolution(Enums.Preview.SD.getValue());
-                    break;
-                  case 1:
-                    setAnalyserResolution(Enums.Preview.HD.getValue());
-                    break;
-                  case 2:
-                    setAnalyserResolution(Enums.Preview.FULL_HD.getValue());
-                    break;
-                }
-              }
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            switch (position) {
+              case 0:
+                setAnalyserResolution(Enums.Preview.SD.getValue());
+                break;
+              case 1:
+                setAnalyserResolution(Enums.Preview.HD.getValue());
+                break;
+              case 2:
+                setAnalyserResolution(Enums.Preview.FULL_HD.getValue());
+                break;
+            }
+          }
 
-              @Override
-              public void onNothingSelected(AdapterView<?> parent) {}
-            });
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
     BottomSheetBehavior.from(binding.loggerBottomSheet)
-            .setState(BottomSheetBehavior.STATE_EXPANDED);
+        .setState(BottomSheetBehavior.STATE_EXPANDED);
 
     mViewModel
-            .getUsbStatus()
-            .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
+        .getUsbStatus()
+        .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
     binding.bleToggle.setChecked(vehicle.bleConnected());
 
     binding.usbToggle.setOnClickListener(
-            v -> {
-              binding.usbToggle.setChecked(vehicle.isUsbConnected());
-              Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
-            });
+        v -> {
+          binding.usbToggle.setChecked(vehicle.isUsbConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+        });
     binding.bleToggle.setOnClickListener(
-            v -> {
-              binding.bleToggle.setChecked(vehicle.bleConnected());
-              Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
-            });
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+        });
   }
 
   @Override
   protected void setModel(Model selected) {
     frameToCropTransform = null;
     binding.cropInfo.setText(
-            String.format(
-                    Locale.US,
-                    "%d x %d",
-                    selected.getInputSize().getWidth(),
-                    selected.getInputSize().getHeight()));
+        String.format(
+            Locale.US,
+            "%d x %d",
+            selected.getInputSize().getWidth(),
+            selected.getInputSize().getHeight()));
 
     croppedBitmap =
-            Bitmap.createBitmap(
-                    selected.getInputSize().getWidth(),
-                    selected.getInputSize().getHeight(),
-                    Bitmap.Config.ARGB_8888);
+        Bitmap.createBitmap(
+            selected.getInputSize().getWidth(),
+            selected.getInputSize().getHeight(),
+            Bitmap.Config.ARGB_8888);
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
     if (selected.type == Model.TYPE.CMDNAV) {
@@ -227,19 +225,19 @@ public class LoggerFragment extends CameraFragment {
   Messenger sensorMessenger;
 
   ServiceConnection sensorConnection =
-          new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName className, IBinder binder) {
-              sensorMessenger = new Messenger(binder);
-              Timber.d("SensorServiceConnection: connected");
-            }
+      new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder binder) {
+          sensorMessenger = new Messenger(binder);
+          Timber.d("SensorServiceConnection: connected");
+        }
 
-            @Override
-            public void onServiceDisconnected(ComponentName className) {
-              sensorMessenger = null;
-              Timber.d("SensorServiceConnection: disconnected");
-            }
-          };
+        @Override
+        public void onServiceDisconnected(ComponentName className) {
+          sensorMessenger = null;
+          Timber.d("SensorServiceConnection: disconnected");
+        }
+      };
 
   protected void sendFrameNumberToSensorService(long frameNumber) {
     if (sensorMessenger != null) {
@@ -255,8 +253,8 @@ public class LoggerFragment extends CameraFragment {
     if (sensorMessenger != null) {
       try {
         sensorMessenger.send(
-                LogDataUtils.generateControlDataMessage(
-                        (int) vehicle.getLeftSpeed(), (int) vehicle.getRightSpeed()));
+            LogDataUtils.generateControlDataMessage(
+                (int) vehicle.getLeftSpeed(), (int) vehicle.getRightSpeed()));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -285,25 +283,25 @@ public class LoggerFragment extends CameraFragment {
 
   private void startLogging() {
     logFolder =
-            Environment.getExternalStorageDirectory().getAbsolutePath()
-                    + File.separator
-                    + getString(R.string.app_name)
-                    + File.separator
-                    + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        Environment.getExternalStorageDirectory().getAbsolutePath()
+            + File.separator
+            + getString(R.string.app_name)
+            + File.separator
+            + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
     intentSensorService.putExtra("logFolder", logFolder + File.separator + "sensor_data");
     requireActivity().startService(intentSensorService);
     requireActivity().bindService(intentSensorService, sensorConnection, Context.BIND_AUTO_CREATE);
     runInBackground(
-            () -> {
-              try {
-                // Send current vehicle state to log
-                TimeUnit.MILLISECONDS.sleep(500);
-                sendControlToSensorService();
-                sendIndicatorToSensorService();
-              } catch (InterruptedException e) {
-                Timber.e(e, "Got interrupted.");
-              }
-            });
+        () -> {
+          try {
+            // Send current vehicle state to log
+            TimeUnit.MILLISECONDS.sleep(500);
+            sendControlToSensorService();
+            sendIndicatorToSensorService();
+          } catch (InterruptedException e) {
+            Timber.e(e, "Got interrupted.");
+          }
+        });
   }
 
   private void stopLogging(boolean isCancel) {
@@ -312,19 +310,19 @@ public class LoggerFragment extends CameraFragment {
 
     // Pack and upload the collected data
     runInBackground(
-            () -> {
-              try {
-                File folder = new File(logFolder);
-                if (!isCancel) {
-                  // Zip the log folder and then upload it
-                  serverCommunication.upload(zip(folder));
-                }
-                TimeUnit.MILLISECONDS.sleep(500);
-                FileUtils.deleteQuietly(folder);
-              } catch (InterruptedException e) {
-                Timber.e(e, "Got interrupted.");
-              }
-            });
+        () -> {
+          try {
+            File folder = new File(logFolder);
+            if (!isCancel) {
+              // Zip the log folder and then upload it
+              serverCommunication.upload(zip(folder));
+            }
+            TimeUnit.MILLISECONDS.sleep(500);
+            FileUtils.deleteQuietly(folder);
+          } catch (InterruptedException e) {
+            Timber.e(e, "Got interrupted.");
+          }
+        });
     loggingEnabled = false;
   }
 
@@ -367,15 +365,15 @@ public class LoggerFragment extends CameraFragment {
 
   private boolean allGranted = true;
   protected final ActivityResultLauncher<String[]> requestPermissionLauncherLogging =
-          registerForActivityResult(
-                  new ActivityResultContracts.RequestMultiplePermissions(),
-                  result -> {
-                    result.forEach((permission, granted) -> allGranted = allGranted && granted);
-                    if (allGranted) setLoggingActive(true);
-                    else {
-                      PermissionUtils.showLoggingPermissionsToast(requireActivity());
-                    }
-                  });
+      registerForActivityResult(
+          new ActivityResultContracts.RequestMultiplePermissions(),
+          result -> {
+            result.forEach((permission, granted) -> allGranted = allGranted && granted);
+            if (allGranted) setLoggingActive(true);
+            else {
+              PermissionUtils.showLoggingPermissionsToast(requireActivity());
+            }
+          });
 
   @Override
   protected void processUSBData(String data) {
@@ -398,13 +396,13 @@ public class LoggerFragment extends CameraFragment {
       case 'w':
         type = SensorService.MSG_WHEELS;
         binding.controllerContainer.speedInfo.setText(
-                getString(
-                        R.string.speedInfo,
-                        String.format(
-                                Locale.US,
-                                "%3.0f,%3.0f",
-                                vehicle.getLeftWheelRpm(),
-                                vehicle.getRightWheelRpm())));
+            getString(
+                R.string.speedInfo,
+                String.format(
+                    Locale.US,
+                    "%3.0f,%3.0f",
+                    vehicle.getLeftWheelRpm(),
+                    vehicle.getRightWheelRpm())));
         break;
       case 'b':
         type = SensorService.MSG_BUMPER;
@@ -441,15 +439,15 @@ public class LoggerFragment extends CameraFragment {
 
       case Constants.CMD_SPEED_DOWN:
         setSpeedMode(
-                Enums.toggleSpeed(
-                        Enums.Direction.DOWN.getValue(),
-                        Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+            Enums.toggleSpeed(
+                Enums.Direction.DOWN.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
         break;
       case Constants.CMD_SPEED_UP:
         setSpeedMode(
-                Enums.toggleSpeed(
-                        Enums.Direction.UP.getValue(),
-                        Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+            Enums.toggleSpeed(
+                Enums.Direction.UP.getValue(),
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
         break;
       case Constants.CMD_NETWORK:
         cancelLogging();
@@ -461,7 +459,7 @@ public class LoggerFragment extends CameraFragment {
     float left = vehicle.getLeftSpeed();
     float right = vehicle.getRightSpeed();
     binding.controllerContainer.controlInfo.setText(
-            String.format(Locale.US, "%.0f,%.0f", left, right));
+        String.format(Locale.US, "%.0f,%.0f", left, right));
     runInBackground(this::sendControlToSensorService);
   }
 
@@ -549,10 +547,10 @@ public class LoggerFragment extends CameraFragment {
     if (binding != null) {
       if (isAdded())
         requireActivity()
-                .runOnUiThread(
-                        () ->
-                                binding.frameInfo.setText(
-                                        String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
+            .runOnUiThread(
+                () ->
+                    binding.frameInfo.setText(
+                        String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
 
       if (!binding.loggerSwitch.isChecked()) return;
 
@@ -563,24 +561,24 @@ public class LoggerFragment extends CameraFragment {
       if (binding.previewCheckBox.isChecked()) {
         if (bitmap != null)
           ImageUtils.saveBitmap(
-                  bitmap, logFolder + File.separator + "images", frameNum + "_preview.jpeg");
+              bitmap, logFolder + File.separator + "images", frameNum + "_preview.jpeg");
       }
       if (binding.trainingDataCheckBox.isChecked()) {
         if (frameToCropTransform == null)
           frameToCropTransform =
-                  ImageUtils.getTransformationMatrix(
-                          getMaxAnalyseImageSize().getWidth(),
-                          getMaxAnalyseImageSize().getHeight(),
-                          croppedBitmap.getWidth(),
-                          croppedBitmap.getHeight(),
-                          sensorOrientation,
-                          cropRect,
-                          maintainAspectRatio);
+              ImageUtils.getTransformationMatrix(
+                  getMaxAnalyseImageSize().getWidth(),
+                  getMaxAnalyseImageSize().getHeight(),
+                  croppedBitmap.getWidth(),
+                  croppedBitmap.getHeight(),
+                  sensorOrientation,
+                  cropRect,
+                  maintainAspectRatio);
 
         final Canvas canvas = new Canvas(croppedBitmap);
         canvas.drawBitmap(bitmap, frameToCropTransform, null);
         ImageUtils.saveBitmap(
-                croppedBitmap, logFolder + File.separator + "images", frameNum + "_crop.jpeg");
+            croppedBitmap, logFolder + File.separator + "images", frameNum + "_crop.jpeg");
       }
     }
   }

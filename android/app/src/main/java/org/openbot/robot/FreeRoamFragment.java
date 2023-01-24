@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
@@ -25,7 +26,6 @@ import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import timber.log.Timber;
-import android.widget.CheckBox;
 
 public class FreeRoamFragment extends ControlsFragment {
 
@@ -110,10 +110,10 @@ public class FreeRoamFragment extends ControlsFragment {
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
     binding.bleToggle.setOnClickListener(
-            v -> {
-              binding.bleToggle.setChecked(vehicle.bleConnected());
-              Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
-            });
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+        });
   }
 
   @Override

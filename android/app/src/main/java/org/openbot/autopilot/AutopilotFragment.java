@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,7 +40,6 @@ import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Control;
 import timber.log.Timber;
-import android.widget.CheckBox;
 
 public class AutopilotFragment extends CameraFragment {
 
@@ -91,11 +91,10 @@ public class AutopilotFragment extends CameraFragment {
 
     CheckBox bleCb = getView().findViewById(R.id.bleToggle);
     CheckBox USBCb = getView().findViewById(R.id.usbToggle);
-    if(vehicle.getConnectionType().equals("USB")) {
+    if (vehicle.getConnectionType().equals("USB")) {
       USBCb.setVisibility(View.VISIBLE);
       bleCb.setVisibility(View.INVISIBLE);
-    }
-    else if (vehicle.getConnectionType().equals("Bluetooth")){
+    } else if (vehicle.getConnectionType().equals("Bluetooth")) {
       bleCb.setVisibility(View.VISIBLE);
       USBCb.setVisibility(View.INVISIBLE);
     }
@@ -149,10 +148,10 @@ public class AutopilotFragment extends CameraFragment {
         });
 
     binding.bleToggle.setOnClickListener(
-            v -> {
-              binding.bleToggle.setChecked(vehicle.bleConnected());
-              Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
-            });
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+        });
 
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
