@@ -1,73 +1,166 @@
-/**
- * @license
- *
- * Copyright 2019 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
- * @fileoverview Sample React Blockly Field.
- * This shows you how to create a custom Blockly field that renders a React
- * component inside of the dropdown div when shown.
- * @author samelh@google.com (Sam El-Husseini)
- */
-
-import React from 'react';
-import ReactDOM from 'react-dom';
-
 import * as Blockly from 'blockly/core';
 
+import '../fields/BlocklyReactField';
+import '../fields/DateField';
 
-class BlocklyReactField extends Blockly.Field {
+import '@blockly/field-date';
 
-    SERIALIZABLE = true
+let reactDateField = {
+    "type": "test_react_date_field",
+    "message0": "date field: %1",
+    "args0": [
+        {
+            "type": "field_date",
+            "name": "DATE",
+            "date": "2020-02-20"
+        }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+};
 
-    static fromJson(options) {
-        return new BlocklyReactField(options['text']);
-    }
-
-    showEditor_() {
-        this.div_ = Blockly.DropDownDiv.getContentDiv();
-        ReactDOM.render(this.render(),
-            this.div_);
-
-        var border = this.sourceBlock_.style.colourTertiary;
-        border = border.colourBorder || border.colourLight;
-        Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), border);
-
-        Blockly.DropDownDiv.showPositionedByField(
-            this, this.dropdownDispose_.bind(this));
-    }
-
-    dropdownDispose_() {
-        ReactDOM.unmountComponentAtNode(this.div_);
-    }
-
-    render() {
-        return <FieldRenderComponent />
+Blockly.Blocks['test_react_date_field'] = {
+    init: function () {
+        this.jsonInit(reactDateField);
+        this.setStyle('loop_blocks');
     }
 }
 
-class FieldRenderComponent extends React.Component {
+var testReactField = {
+    "type": "test_react_field",
+    "message0": "custom field %1",
+    "args0": [
+        {
+            "type": "field_react_component",
+            "name": "FIELD",
+            "text": "Click me"
+        },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+};
 
-    render() {
-        return <div style={{ color: '#fff' }}>
-            Hello from React!
-        </div>;
+Blockly.Blocks['test_react_field'] = {
+    init: function () {
+        this.jsonInit(testReactField);
+        this.setStyle('loop_blocks');
     }
-}
+};
+Blockly.Blocks["append_text"] = {
+    init: function () {
+        this.setColour(230)
+        this.appendDummyInput()
+            .appendField('to')
+            .appendField(new Blockly.FieldDropdown([
+                ['x', 'ITEM1'],
+                ['item', 'ITEM2'],
+                ['Delete the x variable', 'ITEM3']
+            ]), "ITEMS")
+            .appendField('append text')
+            .appendField(new Blockly.FieldTextInput("default text"), "VARIABLE")
+        this.setPreviousStatement(true);
+        this.setNextStatement(true, 'Action')
+    }
+};
 
-Blockly.fieldRegistry.register('field_react_component', BlocklyReactField);
 
-export default BlocklyReactField;
+Blockly.Blocks["sensebox_display_clearDisplay"] = {
+    init: function () {
+        this.appendDummyInput().appendField(
+            Blockly.Msg.senseBox_display_clearDisplay
+        );
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setTooltip(Blockly.Msg.senseBox_display_clearDisplay_tooltip);
+        this.setHelpUrl(Blockly.Msg.senseBox_display_helpurl);
+    },
+};
+
+Blockly.Blocks['controls_repeat_ext'] = {
+    init: function () {
+        this.jsonInit({
+            "message0": "repeat %1 times",
+            "args0": [
+                {
+                    "type": "input_value",
+                    "name": "TIMES",
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "tooltip": "Do some statements several times.",
+            "helpUrl": "https://en.wikipedia.org/wiki/For_loop"
+        });
+        this.appendStatementInput('DO')
+            .appendField("do");
+    }
+};
+
+Blockly.Blocks['Add'] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "sum %1 + %2",
+            "args0": [
+                {
+                    "type": "input_value",
+                    "name": "A",
+                    "check": "Number"
+                },
+                {
+                    "type": "input_value",
+                    "name": "B",
+                    "check": "Number"
+                }
+            ],
+            "inputsInline": true,
+            "output": "Number",
+            "colour": 165,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+
+Blockly.Blocks['area_of_circle'] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "Area of Circle = %1",
+            "args0": [
+                {
+                    "type": "input_value",
+                    "name": "Area",
+                    "check": "Number",
+                    "align": "CENTRE"
+                }
+            ],
+            "inputsInline": true,
+            "colour": 270,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks['print'] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "Print %1",
+            "args0": [
+                {
+                    "type": "input_value",
+                    "name": "print"
+                }
+            ],
+            "inputsInline": true,
+            "previousStatement": null,
+            "colour": 270,
+            "tooltip": "",
+            "helpUrl": ""
+
+        });
+    }
+};
