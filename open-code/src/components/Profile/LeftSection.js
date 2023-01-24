@@ -3,13 +3,17 @@ import {LeftSectionStyles as useStyles} from "./styles";
 
 
 function LeftSection(props) {
+    const {content, setTab, tab} = props
+    console.log(tab)
     const classes = useStyles();
+
     return (
         <div className={classes.Main}>
             <div className={classes.IconContent}>
                 {
-                    props.content.map((data) => (
-                        <div className={!data.selected ? classes.Items : classes.ItemsSelected}>
+                    content.map((data) => (
+                        <div className={(data.title === tab) ? classes.ItemsSelected : classes.Items}
+                             onClick={() => setTab(data.title)}>
                             <img alt="Icon" className={classes.Icon} src={data.Icon}/>
                             <div className={classes.Content}>{data.title}</div>
                         </div>

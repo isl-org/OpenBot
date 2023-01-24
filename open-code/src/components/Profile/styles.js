@@ -3,6 +3,8 @@ import {makeStyles} from "@material-ui/core";
 export const LeftSectionStyles = makeStyles((theme) => ({
     Main: {
         width: "21.4%",
+        minWidth:"308px",
+        minHeight:"100vh",
         paddingTop: "61px",
         borderWidth: "1px",
         borderColor: "#CCCCCC",
