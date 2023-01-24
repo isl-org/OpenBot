@@ -1,5 +1,3 @@
-import {colors} from "../../utils/color";
-
 export const FooterStyle = {
     footerDiv: {
         display: "flex",
@@ -47,4 +45,4 @@ export const FooterStyle = {
         fontFamily: "Gilroy-Bold"
     },
 
-}
+};
