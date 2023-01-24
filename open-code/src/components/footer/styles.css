@@ -1,7 +1,7 @@
 export const FooterStyle = {
     footerDiv: {
         display: "flex",
-        backgroundColor: "#e8f4f8",
+        backgroundColor: "red",
         justifyContent: "space-between",
         height: "8rem",
         alignItems: "center",

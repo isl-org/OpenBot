@@ -1,4 +1,4 @@
-import {Navbar} from "../../Components/Navbar";
+import {Navbar} from "../../Components/navBar/Navbar";
 import React, {useEffect, useState} from "react";
 import {screens} from "../../utils/constants";
 import NewProject from "../../Components/Home/MyProjects/NewProject";
