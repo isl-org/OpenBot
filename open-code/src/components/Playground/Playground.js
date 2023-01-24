@@ -1,5 +1,5 @@
 import React from 'react';
-import BlocklyComponent, {Block, Category, ColorBar, Field, Shadow, Value} from "../Blockly";
+import BlocklyComponent from "../Blockly";
 import Toolbox from "../Blockly/toolbox/Toolbox";
 
 function Playground (){
