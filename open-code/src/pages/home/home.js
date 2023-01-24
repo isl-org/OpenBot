@@ -5,7 +5,7 @@ import NewProject from "../../Components/Home/MyProjects/NewProject";
 import SavedProjects from "../../Components/Home/MyProjects/SavedProjects";
 import Carousel from 'react-material-ui-carousel'
 import {SavedProjectsStyles as useStyles} from "../../Components/Home/MyProjects/styles";
-import Footer from "../../Components/Footer";
+import Footer from "../../Components/footer/Footer";
 function Home() {
     const classes = useStyles();
     return <div>

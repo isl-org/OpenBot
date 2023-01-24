@@ -16,7 +16,7 @@ export function Navbar(){
                 <li><img src={line} alt={""}/></li>
             </ul>
             </nav>
-                <button><a href="/" className="sigIn-name">Sign in</a></button>
+                <button className={"sigInButton"}><a href="/" >Sign in</a></button>
             </header>
         );
     }

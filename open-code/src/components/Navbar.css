@@ -34,24 +34,10 @@ a,button{
     align-items: center;
 }
 
-
-button{
-    background-color: #0071C5;
+.sigInButton{
+    background: transparent;
     padding: 6px 15px;
     border: 1px solid white;
     border-radius: 8px;
 }
 
-
-.nav ul{
-
-    margin-left: 920px;
-    display: flex;
-    align-items: center;
-
-}
-
-.nav li{
-    margin: 0px 15px;
-    list-style: none;
-}
