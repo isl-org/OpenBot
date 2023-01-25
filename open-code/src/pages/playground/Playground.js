@@ -1,10 +1,10 @@
 import React from 'react';
 import BlocklyComponent from "../../components/blockly";
 import {Toolbox} from "../../components/blockly/toolbox/Toolbox";
-
+import {UploadCode} from "../../components/uploadCodeBar/UploadCode";
 function Playground (){
         return (
-
+            <div>
             <header>
                 <BlocklyComponent readOnly={false}
                                   trashcan={true} media={'media/'}
@@ -20,7 +20,11 @@ function Playground (){
                 >
                     <Toolbox/>
                 </BlocklyComponent>
+
             </header>
+                <UploadCode/>
+            </div>
+
 
         );
 

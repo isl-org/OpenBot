@@ -5,7 +5,7 @@ export const Toolbox = (props)=>{
     return(
         <>
             <Category name="Loops">
-                <Block type="controls_whileUntil"/>,
+                <Block type="controls_whileUntil"/>,\
                 <Block type="controls_repeat"/>,
                 <Block type="controls_for">
                     <Value name="FROM">
