@@ -4,6 +4,7 @@ import LeftSection from "../../components/profile/LeftSection";
 import RightSection from "../../components/profile/RightSection";
 import {Content} from "../../utils/constants";
 import HowToUpload from "../../components/howToUpLoad/HowToUpload";
+import Footer from "../../components/footer/Footer";
 
 
 /**
@@ -15,9 +16,12 @@ import HowToUpload from "../../components/howToUpLoad/HowToUpload";
 function Profile(props) {
     const [tab, setTab] = useState(Content[0].title);
     return (
+        <div>
         <div style={ProfileStyles.Main}>
             <LeftSection content={Content} tab={tab} setTab={setTab}/>
             {handleTabBaseRendering(tab)}
+
+        </div>
         </div>
     );
 }

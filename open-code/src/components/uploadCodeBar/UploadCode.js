@@ -3,14 +3,26 @@ import {UploadBarStyle} from "./styles";
 import undoIcon from "../../assets/images/undo.png";
 import redoIcon from "../../assets/images/redo.png";
 import driveIcon from "../../assets/images/drive.png";
+import {javascriptGenerator} from 'blockly/javascript';
+import {useRef} from "react";
 
 export const UploadCode = ()=>{
+
+    let primaryWorkspace = useRef();
+        const generateCode = () => {
+            const code = javascriptGenerator.workspaceToCode(
+                primaryWorkspace.current
+            );
+            console.log(code);
+        }
+
+
     return(
 
         <div style={UploadBarStyle.barDiv}>
 
             <div style={UploadBarStyle.iconMargin}>
-                <button style={UploadBarStyle.uploadCodeButton}>
+                <button style={UploadBarStyle.uploadCodeButton} onClick={generateCode}>
                     <span style={{...UploadBarStyle.leftButton, ...UploadBarStyle.iconMargin}}>Upload Code</span>
                     <img style={{...UploadBarStyle.iconDiv,...UploadBarStyle.iconMargin}} src={uploadIcon}/>
 

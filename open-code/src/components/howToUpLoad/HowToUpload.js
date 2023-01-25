@@ -3,8 +3,10 @@ import {HowToUploadStyles} from "./styles";
 import BlocklyCode from "../../assets/Profile/BlocklyCodeImage.png";
 import QRCode from "../../assets/Profile/QRCode.png";
 import OpenBoat from "../../assets/Profile/OpenBoatImage.png";
+import Footer from "../footer/Footer";
 function HowToUpload(props) {
     return (
+        <div>
         <div style={HowToUploadStyles.Main}>
             <div style={HowToUploadStyles.HeadingContent}>
                 <div style={HowToUploadStyles.MainHeading}>How to Upload?</div>
@@ -49,7 +51,10 @@ function HowToUpload(props) {
                 </div>
                 <img src={OpenBoat} style={HowToUploadStyles.ImageSave}/>
             </div>
+
         </div>
+    <Footer/>
+    </div>
     );
 }
 

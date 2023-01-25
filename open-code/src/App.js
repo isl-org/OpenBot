@@ -5,7 +5,6 @@ function App() {
     return (
         <div style={{fontStyle : 'Gilroy-Black'}}>
             <RouterComponent/>
-            <Footer/>
         </div>
 
     );

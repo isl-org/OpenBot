@@ -9,17 +9,12 @@ import 'blockly/blocks';
 
 Blockly.setLocale(locale);
 
+
 function BlocklyComponent(props) {
     const blocklyDiv = useRef();
     const toolbox = useRef();
     let primaryWorkspace = useRef();
 
-    const generateCode = () => {
-        var code = javascriptGenerator.workspaceToCode(
-            primaryWorkspace.current
-        );
-        console.log(code);
-    }
 
     useEffect(() => {
         const {initialXml, children, ...rest} = props;
@@ -44,9 +39,10 @@ function BlocklyComponent(props) {
             <div style={{display: 'none'}} ref={toolbox}>
                 {props.children}
             </div>
-            <button onClick={generateCode}>Convert</button>
         </React.Fragment>);
 }
+
+
 
 export default BlocklyComponent;
  
