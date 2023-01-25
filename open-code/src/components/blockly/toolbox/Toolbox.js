@@ -1,8 +1,8 @@
 import React from 'react';
 import {Block, Category, Field, Shadow, Value} from "../index";
 
-function Toolbox(props) {
-    return (
+export const Toolbox = (props)=>{
+    return(
         <>
             <Category name="Loops">
                 <Block type="controls_whileUntil"/>,
@@ -186,8 +186,144 @@ function Toolbox(props) {
                     </Value>
                 </Block>
             </Category>
+            <Category colour="#C26F87" name="Events">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+            <Category colour="#5BBC73" name="Sound">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+            <Category colour="#61A8EC" name="Sensing">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+            <Category colour="#DA4B5D" name="Bumper">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+            <Category colour="#9B61E2" name="Movement">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+            <Category colour="#717171" name="Detection">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
         </>
     );
 }
-
-export default Toolbox;
