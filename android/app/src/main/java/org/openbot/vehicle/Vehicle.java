@@ -14,10 +14,12 @@ import org.openbot.env.SensorReading;
 import org.openbot.main.CommonRecyclerViewAdapter;
 import org.openbot.main.ScanDeviceAdapter;
 import org.openbot.utils.Enums;
-
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.openbot.env.GameController;
+import org.openbot.env.SensorReading;
+import org.openbot.utils.Enums;
 
 public class Vehicle {
 
