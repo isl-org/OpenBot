@@ -3,7 +3,6 @@ import {HowToUploadStyles} from "./styles";
 import BlocklyCode from "../../assets/Profile/BlocklyCodeImage.png";
 import QRCode from "../../assets/Profile/QRCode.png";
 import OpenBoat from "../../assets/Profile/OpenBoatImage.png";
-import Footer from "../footer/Footer";
 function HowToUpload(props) {
     return (
         <div>
@@ -53,7 +52,7 @@ function HowToUpload(props) {
             </div>
 
         </div>
-    <Footer/>
+
     </div>
     );
 }

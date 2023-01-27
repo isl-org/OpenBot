@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {NewProjectStyles} from "./styles";
 import cross from "../../../assets/Model/Cross.png";
@@ -6,7 +6,7 @@ import {Box, Modal} from "@mui/material";
 
 function NewProjectButton(props) {
     let navigate = useNavigate();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const OpenNewProjectHandle = () => {

@@ -42,7 +42,7 @@ export const HowToUploadStyles = {
         fontFamily: 'Gilroy',
         opacity: "0.05",
         lineHeight: "140px",
-        right:"29rem",
+        right:"26rem",
     },
     NumberThree: {
         position: "absolute",

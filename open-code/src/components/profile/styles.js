@@ -1,8 +1,8 @@
 export const LeftSectionStyles = {
     Main: {
         width: "21.4%",
-        minWidth:"308px",
-        minHeight:"100vh",
+        minWidth: "308px",
+        minHeight: "100vh",
         paddingTop: "61px",
         borderWidth: "1px",
         borderColor: "#CCCCCC",
@@ -22,7 +22,7 @@ export const LeftSectionStyles = {
         paddingLeft: "66px",
         alignItems: "center",
         justifyContent: "flex-start",
-        cursor:"pointer",
+        cursor: "pointer",
     },
     ItemsSelected: {
         display: "flex",
@@ -35,7 +35,7 @@ export const LeftSectionStyles = {
         borderWidth: "4.38px",
         borderColor: "#0071C5",
         borderStyle: "none none none solid",
-        cursor:"pointer",
+        cursor: "pointer",
     },
 
     Icon: {
@@ -81,7 +81,7 @@ export const RightSectionStyles = {
         position: "relative",
         bottom: "2px",
         right: "43px",
-        cursor:"pointer",
+        cursor: "pointer",
     },
     Edit: {
         width: "682px",
@@ -139,7 +139,7 @@ export const RightSectionStyles = {
         borderStyle: "solid",
         borderRadius: "6px",
         marginTop: "7px",
-        cursor:"no-drop",
+        cursor: "no-drop",
     },
     btn: {
         display: "flex",
@@ -155,7 +155,7 @@ export const RightSectionStyles = {
         background: "#0071c5",
         padding: "13px 58px 14px 58px",
         textDecoration: "none",
-        cursor:"pointer",
+        cursor: "pointer",
     },
     CancelBtn: {
         width: "71px",
@@ -168,7 +168,74 @@ export const RightSectionStyles = {
         background: "#ffffff",
         padding: "13px 47px 14px 47px",
         textDecoration: "none",
-        cursor:"pointer",
+        cursor: "pointer",
     }
 
 };
+export const LogoutStyles = {
+    model: {
+        width: "464px",
+        height: "246px",
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        background: '#FFFFFF',
+        boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.25)",
+        borderRadius: "6px",
+    },
+    ModelHeading: {
+        fontFamily: 'Gilroy-Regular',
+        fontSize: "23px",
+        lineHeight: "27px",
+        color: "#000000",
+        paddingTop: "31px",
+        paddingLeft: "35px",
+    },
+    Input: {
+        fontFamily: 'Gilroy-Regular',
+        fontSize: "18px",
+        opacity: "0.5",
+        lineHeight: "21px",
+        color: "#000000",
+        paddingTop: "31px",
+        paddingLeft: "35px",
+    },
+    btnGroup: {
+        display: "flex",
+        justifyContent: "end",
+        alignItems: "center",
+        gap: "16px",
+        marginTop: ' 67px',
+        paddingRight: "40px",
+    },
+    CancelBtn: {
+        width: "133px",
+        height: "46px",
+        borderRadius: 7.7,
+        fontFamily: "Gilroy-SemiBold",
+        color: "#0071c5",
+        fontSize: "22px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        textDecoration: "none",
+        cursor: "pointer",
+        border: "1.5px solid #0071c5",
+    },
+    OkBtn: {
+        width: "101px",
+        height: "46px",
+        borderRadius: 7.7,
+        fontFamily: "Gilroy-SemiBold",
+        color: "#ffffff",
+        fontSize: "22px",
+        background: "#0071c5",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        textDecoration: "none",
+        cursor: "pointer",
+
+    },
+}
