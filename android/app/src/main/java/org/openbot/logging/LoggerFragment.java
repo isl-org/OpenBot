@@ -20,16 +20,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
-
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -44,14 +47,6 @@ import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
 import timber.log.Timber;
 
 public class LoggerFragment extends CameraFragment {
@@ -270,7 +265,8 @@ public class LoggerFragment extends CameraFragment {
 
   private void startLogging() {
     logFolder =
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                .getAbsolutePath()
             + File.separator
             + getString(R.string.app_name)
             + File.separator
