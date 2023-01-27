@@ -4,7 +4,18 @@ import {Block, Category, Field, Shadow, Value} from "../index";
 export const Toolbox = (props)=>{
     return(
         <>
-            <Category name="Loops">
+            <Category name="Control" colour = "#567AE4">
+                <Block type="controls_if"/>,
+                <Block type="controls_ifelse"/>,
+                <Block type="logic_ternary"/>,
+                <Block type="logic_compare"/>,
+                <Block type="logic_operation"/>,
+                <Block type="logic_negate"/>,
+                <Block type="logic_boolean"/>,
+                <Block type="logic_null" disabled="true"/>
+            </Category>
+
+            <Category name="Operators" colour = "#C54E30">
                 <Block type="controls_whileUntil"/>,\
                 <Block type="controls_repeat"/>,
                 <Block type="controls_for">
@@ -35,32 +46,7 @@ export const Toolbox = (props)=>{
                 </Block>
             </Category>
 
-            <Category name="Logic">
-                <Block type="controls_if"/>,
-                <Block type="controls_ifelse"/>,
-                <Block type="logic_ternary"/>,
-                <Block type="logic_compare"/>,
-                <Block type="logic_operation"/>,
-                <Block type="logic_negate"/>,
-                <Block type="logic_boolean"/>,
-                <Block type="logic_null" disabled="true"/>
-            </Category>
-
-            <Category name="Math">
-                <Block type="math_arithmetic"/>,
-                <Block type="math_number"/>,
-                <Block type="math_modulo"/>,
-                <Block type="math_single"/>,
-                <Block type="math_trig"/>,
-                <Block type="math_constant"/>,
-                <Block type="math_number_property"/>,
-                <Block type="math_round"/>,
-                <Block type="math_on_list"/>,
-                <Block type="math_random_int"/>,
-                <Block type="math_atan2"/>,
-            </Category>
-
-            <Category name="Others">
+            <Category colour="#8156C9" name="Variables">
                 <Block type="test_react_field"/>,
                 <Block type="test_react_date_field"/>,
                 <Block type="text_charAt">
@@ -84,7 +70,7 @@ export const Toolbox = (props)=>{
                 <Block type="print"/>
             </Category>
 
-            <Category name="Text">
+            <Category name="Text" colour = "#D030BA">
                 <Block type="text"/>
                 <Block type="text_multiline"/>
                 <Block type="text_join"/>
@@ -186,6 +172,45 @@ export const Toolbox = (props)=>{
                     </Value>
                 </Block>
             </Category>
+
+            <Category colour="#506481" name="List">
+                <Block type="test_react_field"/>,
+                <Block type="test_react_date_field"/>,
+                <Block type="text_charAt">
+                    <Value name="VALUE">
+                        <Block type="variables_get">
+                            <Field name="VAR">text</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="Add"/>
+                <Block type="math_number">
+                    <Field name="NUM">0</Field>
+                </Block>
+                <Block type="area_of_circle">
+                    <Value name="Area">
+                        <Block type="math_number">
+                            <Field name="NUM">9</Field>
+                        </Block>
+                    </Value>
+                </Block>
+                <Block type="print"/>
+            </Category>
+
+            {/*<Category name="Math">*/}
+            {/*    <Block type="math_arithmetic"/>,*/}
+            {/*    <Block type="math_number"/>,*/}
+            {/*    <Block type="math_modulo"/>,*/}
+            {/*    <Block type="math_single"/>,*/}
+            {/*    <Block type="math_trig"/>,*/}
+            {/*    <Block type="math_constant"/>,*/}
+            {/*    <Block type="math_number_property"/>,*/}
+            {/*    <Block type="math_round"/>,*/}
+            {/*    <Block type="math_on_list"/>,*/}
+            {/*    <Block type="math_random_int"/>,*/}
+            {/*    <Block type="math_atan2"/>,*/}
+            {/*</Category>*/}
+
             <Category colour="#C26F87" name="Events">
                 <Block type="test_react_field"/>,
                 <Block type="test_react_date_field"/>,
