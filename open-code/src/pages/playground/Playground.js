@@ -2,9 +2,11 @@ import React from 'react';
 import BlocklyComponent from "../../components/blockly";
 import {Toolbox} from "../../components/blockly/toolbox/Toolbox";
 import {UploadCode} from "../../components/uploadCodeBar/UploadCode";
+import {WorkspaceNavbar} from "../../components/playgroundNavbar/WorkspaceNavbar";
 function Playground (){
         return (
             <div>
+                <WorkspaceNavbar/>
             <header>
                 <BlocklyComponent readOnly={false}
                                   trashcan={true} media={'media/'}

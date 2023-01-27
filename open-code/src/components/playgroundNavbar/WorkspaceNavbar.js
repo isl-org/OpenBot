@@ -4,6 +4,7 @@ import info from "../../assets/images/info.png";
 import moon from "../../assets/images/moon.png";
 import line from "../../assets/images/Line.png";
 import React from "react";
+import downArrow from "../../assets/images/down-arrow.png";
 
 export const WorkspaceNavbar= ()=>{
     return (
@@ -11,6 +12,10 @@ export const WorkspaceNavbar= ()=>{
             <div style={PlaygroundNavbarStyles.navbarTitleDiv}>
                 <img style={{...PlaygroundNavbarStyles.mainIcon,...PlaygroundNavbarStyles.iconMargin}} src={icon} />
                 <span style={{...PlaygroundNavbarStyles.mainTitle,...PlaygroundNavbarStyles.iconMargin}}>OpenCode</span>
+            </div>
+            <div style={PlaygroundNavbarStyles.playgroundName}>
+                <span style={{...PlaygroundNavbarStyles.mainTitle,...PlaygroundNavbarStyles.arrowMargin}}>Blink LED</span>
+                <img src={downArrow} style={{...PlaygroundNavbarStyles.infoIcon,...PlaygroundNavbarStyles.arrowMargin}}/>
             </div>
             <div style={PlaygroundNavbarStyles.navbarIconDiv}>
                 <img src={info} style={{...PlaygroundNavbarStyles.infoIcon,...PlaygroundNavbarStyles.iconMargin}}/>

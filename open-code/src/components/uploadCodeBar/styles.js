@@ -1,5 +1,4 @@
 import {colors} from "../../utils/color";
-import undoIcon from "../../assets/images/undo.png";
 
 export const UploadBarStyle={
     barDiv:{
@@ -11,10 +10,10 @@ export const UploadBarStyle={
         position:"fixed",
         bottom:0,
         width:"100%",
-        border: "1px solid #000000"
+
     },
     uploadCodeButton:{
-        marginLeft: "10.25rem",
+        marginLeft: "4.25rem",
         display:"flex",
         alignItems:"center",
         justifyContent: "center",
