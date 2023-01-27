@@ -60,25 +60,16 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import java.io.File;
-import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+
 import org.json.JSONObject;
 import org.openbot.OpenBotApplication;
 import org.openbot.R;
@@ -109,6 +100,20 @@ import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Control;
 import org.openbot.vehicle.Vehicle;
 import org.zeroturnaround.zip.ZipUtil;
+
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import timber.log.Timber;
 
 public abstract class CameraActivity extends AppCompatActivity
@@ -1082,7 +1087,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void startLogging() {
     logFolder =
-        Environment.getExternalStorageDirectory().getAbsolutePath()
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()
             + File.separator
             + getString(R.string.app_name)
             + File.separator
