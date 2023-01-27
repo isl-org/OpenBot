@@ -13,14 +13,19 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.widget.Toast;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
+
 import org.openbot.env.Logger;
 import org.openbot.utils.Constants;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 public class UsbConnection {
   private static final int USB_VENDOR_ID = 6790; // 0x2341; // 9025
@@ -50,8 +55,14 @@ public class UsbConnection {
     this.baudRate = baudRate;
     localBroadcastManager = LocalBroadcastManager.getInstance(this.context);
     usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
-    usbPermissionIntent =
-        PendingIntent.getBroadcast(this.context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      usbPermissionIntent =
+              PendingIntent.getBroadcast(
+                      this.context, 0, new Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      usbPermissionIntent =
+              PendingIntent.getBroadcast(this.context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+    }
   }
 
   private final UsbSerialInterface.UsbReadCallback callback =

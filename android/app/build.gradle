@@ -15,12 +15,12 @@ apply plugin: 'de.undercouch.download'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.3'
+    compileSdkVersion 33
+    buildToolsVersion '33.0.1'
     defaultConfig {
         applicationId "org.openbot"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 32
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
@@ -32,26 +32,25 @@ android {
         }
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
 
     buildFeatures {
         viewBinding true
     }
 
-    aaptOptions {
-        noCompress "tflite", "mp3"
-    }
     compileOptions {
         coreLibraryDesugaringEnabled true
 
         sourceCompatibility = '11'
         targetCompatibility = '11'
     }
+    androidResources {
+        noCompress 'tflite', 'mp3'
+    }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+    namespace 'org.openbot'
 }
 
 // Download default models
