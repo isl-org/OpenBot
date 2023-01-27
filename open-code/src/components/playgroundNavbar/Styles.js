@@ -65,6 +65,6 @@ export const PlaygroundNavbarStyles={
 
     arrowMargin:{
         margin: 2
-    }
+    },
 
 }
