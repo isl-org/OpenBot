@@ -1,23 +1,23 @@
 import React from 'react';
 import {Block, Category, Field, Shadow, Value} from "../index";
-
+import {controlsBlocks, loopBlocks} from "../blocks/generalBlocks";
+import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
+let x = [""];
 export const Toolbox = (props)=>{
     return(
         <>
             <Category name="Control" colour = "#567AE4">
-                <Block type="controls_if"/>,
-                <Block type="controls_ifelse"/>,
-                <Block type="logic_ternary"/>,
-                <Block type="logic_compare"/>,
-                <Block type="logic_operation"/>,
-                <Block type="logic_negate"/>,
-                <Block type="logic_boolean"/>,
-                <Block type="logic_null" disabled="true"/>
+                {controlBlocksType.map((type)=>{
+                       return controlsBlocks(type)
+                })}
             </Category>
 
-            <Category name="Operators" colour = "#C54E30">
-                <Block type="controls_whileUntil"/>,\
-                <Block type="controls_repeat"/>,
+            <Category name="Loops" colour = "#C54E30">
+
+                {loopBlocksType.map((type)=>{
+                    return loopBlocks(type)
+                })}
+
                 <Block type="controls_for">
                     <Value name="FROM">
                         <Shadow type="math_number">
@@ -35,8 +35,6 @@ export const Toolbox = (props)=>{
                         </Shadow>
                     </Value>
                 </Block>,
-                <Block type="controls_forEach"/>,
-                <Block type="controls_flow_statements"/>,
                 <Block type="controls_repeat_ext">
                     <Value name="TIMES">
                         <Shadow type="math_number">
@@ -44,6 +42,10 @@ export const Toolbox = (props)=>{
                         </Shadow>
                     </Value>
                 </Block>
+            </Category>
+
+            <Category name="Operators" colour = "#C54E30">
+
             </Category>
 
             <Category colour="#8156C9" name="Variables">

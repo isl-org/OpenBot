@@ -3,7 +3,7 @@ import {NewProjectStyles} from "./styles";
 import Triangle from "../../../assets/Triangle.png";
 import NewProjectButton from "./NewProjectButton";
 
-function NewProject(props) {
+export const NewProject =(props)=> {
     return (
         <div style={NewProjectStyles.Main}>
             <div style={NewProjectStyles.Heading}>My Projects</div>
@@ -19,4 +19,3 @@ function NewProject(props) {
     );
 }
 
-export default NewProject;

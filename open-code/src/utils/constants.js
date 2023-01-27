@@ -49,3 +49,7 @@ export const Content = [
     },
 
 ]
+
+export const controlBlocksType = ["controls_if","controls_ifelse","logic_ternary","logic_compare","logic_operation","logic_negate","logic_boolean","logic_null"];
+export const loopBlocksType = ["controls_whileUntil","controls_repeat","controls_forEach","controls_flow_statements"];
+
