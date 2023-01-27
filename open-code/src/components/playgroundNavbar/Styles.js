@@ -1,61 +1,62 @@
 import {colors} from "../../utils/color";
-export const PlaygroundNavbarStyles={
+
+export const PlaygroundNavbarStyles = {
     navbarDiv: {
         display: "flex",
         backgroundColor: colors.openBotBlue,
         justifyContent: "space-between",
         height: "5rem",
         alignItems: "center",
-        position:"fixed",
-        width:"100%"
+        position: "fixed",
+        width: "100%"
     },
-    navbarTitleDiv:{
+    navbarTitleDiv: {
         marginLeft: "4.25rem",
-        display:"flex",
-        alignItems:"center"
+        display: "flex",
+        alignItems: "center"
     },
 
-    navbarIconDiv:{
+    navbarIconDiv: {
         display: "flex",
         alignItems: "center",
         marginRight: "4.25rem",
     },
-    playgroundName:{
+    playgroundName: {
         display: "flex",
         alignItems: "center",
     },
 
-    mainIcon:{
+    mainIcon: {
         height: "2.031rem",
-        width:"2.031rem"
+        width: "2.031rem"
     },
 
-    mainTitle:{
+    mainTitle: {
         fontSize: "1.25em",
         fontFamily: "Gilroy-Medium",
-        color:colors.whiteFont
+        color: colors.whiteFont
     },
-    infoIcon:{
-        height:"1.5rem",
+    infoIcon: {
+        height: "1.5rem",
         width: "1.5rem"
     },
-    moonIcon:{
-        height:"1.5rem",
+    moonIcon: {
+        height: "1.5rem",
         width: "1.5rem"
     },
 
-    lineIcon:{
-        width:"0.065em"
+    lineIcon: {
+        width: "0.065em"
     },
 
-    buttonIcon:{
+    buttonIcon: {
         border: "0.00621em solid #FFFEFE",
-        borderRadius:"0.5rem",
+        borderRadius: "0.5rem",
         fontSize: "0.993em",
-        height:"2.063rem",
-        width:"4.563rem",
+        height: "2.063rem",
+        width: "4.563rem",
         fontFamily: "Gilroy-Medium",
-        color:colors.whiteFont,
+        color: colors.whiteFont,
         backgroundColor: colors.openBotBlue
     },
 
@@ -63,8 +64,7 @@ export const PlaygroundNavbarStyles={
         margin: 10
     },
 
-    arrowMargin:{
+    arrowMargin: {
         margin: 2
     },
-
 }
