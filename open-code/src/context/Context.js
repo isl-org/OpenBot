@@ -7,7 +7,6 @@ export default ({children}) => {
 
     const store = {
         projectName, setProjectName
-
     }
 
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>

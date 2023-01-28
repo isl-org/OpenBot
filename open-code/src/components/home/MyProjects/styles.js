@@ -1,8 +1,7 @@
 
 export const NewProjectStyles = {
     Main: {
-        minHeight: "450px",
-        width: "100%",
+        minHeight: "307px",
         backgroundColor: "#F8F9FB",
         display: "flex",
         flexDirection: "column",
@@ -10,7 +9,6 @@ export const NewProjectStyles = {
         paddingLeft: "102px",
         paddingTop: "81px",
         paddingBottom: "62px",
-        marginTop: "2rem"
     },
     Heading: {
         fontSize: "25px",
