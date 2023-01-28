@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, { useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {NewProjectStyles} from "./styles";
 import cross from "../../../assets/Model/Cross.png";
 import {Box, Modal} from "@mui/material";
-
 function NewProjectButton(props) {
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
+    const [projectName, setProjectName] = useState("");
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const OpenNewProjectHandle = () => {
@@ -37,7 +37,8 @@ function NewProjectButton(props) {
                     </div>
                     <div style={NewProjectStyles.Input}>
                         <label style={NewProjectStyles.lable}> Give your project a name. </label>
-                        <input style={NewProjectStyles.InputArea} type="text"/>
+                        <input style={NewProjectStyles.InputArea} type="text" value={projectName}
+                               onChange={(e) => setProjectName(e.target.value)}/>
                     </div>
 
                     <div style={NewProjectStyles.SaveBtn} onClick={OpenNewProjectHandle}>Create</div>

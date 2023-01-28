@@ -5,7 +5,7 @@
     font-size: 20px;
     line-height: 24px;
     font-family: "Gilroy-SemiBold", serif;
-
+    max-width: 500px;
 }
 
 .Edit:focus, .Edit:focus {
@@ -13,10 +13,10 @@
 }
 
 .option {
-    width: 263px;
-    height: 117px;
+    width: 226px;
+    height: 96px;
     position: absolute;
-    top: 70px;
+    top: 65px;
     left: 35em;
     background: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.15);
@@ -32,6 +32,9 @@
     display: flex;
     justify-content: flex-start;
     align-content: center;
+    margin-bottom: 19px;
+    gap: 20px;
+    cursor: pointer;
 }
 
 .icon {

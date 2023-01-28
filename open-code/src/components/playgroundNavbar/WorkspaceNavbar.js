@@ -1,5 +1,6 @@
 import {PlaygroundNavbarStyles} from "./Styles";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useState} from "react";
+import { useNavigate } from "react-router-dom";
 import icon from "../../assets/images/ICON.png";
 import info from "../../assets/images/info.png";
 import moon from "../../assets/images/moon.png";
@@ -9,12 +10,11 @@ import UpArrow from "../../assets/images/DownArrow.png";
 import Edit from "../../assets/images/edit.png";
 import trash from "../../assets/images/trash.png";
 import styles from "./workSpace.module.css";
-import {Box, Popover, Popper, Typography} from "@mui/material";
-import {LeftSectionStyles} from "../profile/styles";
+import {Popper} from "@mui/material";
 
 
 export const WorkspaceNavbar = () => {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     const [projectName, setProjectName] = useState("Anything");
 
     const handleClick = (event) => {
@@ -24,12 +24,18 @@ export const WorkspaceNavbar = () => {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popper' : undefined;
 
+    let navigate = useNavigate();
+    const handleDeleteProject = () =>{
+        let path = `/`;
+        navigate(path);
+    }
 
     return (
         <>
             <div style={PlaygroundNavbarStyles.navbarDiv}>
                 <div style={PlaygroundNavbarStyles.navbarTitleDiv}>
-                    <img style={{...PlaygroundNavbarStyles.mainIcon, ...PlaygroundNavbarStyles.iconMargin}} src={icon}/>
+                    <img style={{...PlaygroundNavbarStyles.mainIcon, ...PlaygroundNavbarStyles.iconMargin}} src={icon}
+                         alt={icon}/>
                     <span
                         style={{...PlaygroundNavbarStyles.mainTitle, ...PlaygroundNavbarStyles.iconMargin}}>OpenCode</span>
                 </div>
@@ -38,7 +44,8 @@ export const WorkspaceNavbar = () => {
                     <span
                         style={{...PlaygroundNavbarStyles.mainTitle, ...PlaygroundNavbarStyles.arrowMargin}}>{projectName}</span>
                         <img src={downArrow}
-                             style={{...PlaygroundNavbarStyles.infoIcon, ...PlaygroundNavbarStyles.arrowMargin}}/>
+                             style={{...PlaygroundNavbarStyles.infoIcon, ...PlaygroundNavbarStyles.arrowMargin}}
+                             alt={icon}/>
                     </div>
                     :
                     <>
@@ -51,16 +58,15 @@ export const WorkspaceNavbar = () => {
                             />
                             <img src={UpArrow}
                                  style={{...PlaygroundNavbarStyles.infoIcon, ...PlaygroundNavbarStyles.arrowMargin}}
-                                 onClick={handleClick}/>
+                                 onClick={handleClick} alt={icon}/>
                         </div>
                         <Popper id={id} open={open} anchorEl={anchorEl}>
                             <div className={styles.option}>
-                                <div className={styles.item}>
+                                <div className={styles.item}  onClick={handleClick} >
                                     <img alt="Icon" className={styles.icon} src={Edit}/>
-                                    <div>Rename</div>
+                                    <div >Rename</div>
                                 </div>
-                                <div
-                                    className={styles.item}>
+                                <div className={styles.item} onClick={handleDeleteProject} >
                                     <img alt="Icon" className={styles.icon} src={trash}/>
                                     <div> Delete File</div>
                                 </div>
@@ -69,9 +75,12 @@ export const WorkspaceNavbar = () => {
                     </>
                 }
                 <div style={PlaygroundNavbarStyles.navbarIconDiv}>
-                    <img src={info} style={{...PlaygroundNavbarStyles.infoIcon, ...PlaygroundNavbarStyles.iconMargin}}/>
-                    <img src={moon} style={{...PlaygroundNavbarStyles.moonIcon, ...PlaygroundNavbarStyles.iconMargin}}/>
-                    <img src={line} style={{...PlaygroundNavbarStyles.lineIcon, ...PlaygroundNavbarStyles.iconMargin}}/>
+                    <img src={info} style={{...PlaygroundNavbarStyles.infoIcon, ...PlaygroundNavbarStyles.iconMargin}}
+                         alt={icon}/>
+                    <img src={moon} style={{...PlaygroundNavbarStyles.moonIcon, ...PlaygroundNavbarStyles.iconMargin}}
+                         alt={icon}/>
+                    <img src={line} style={{...PlaygroundNavbarStyles.lineIcon, ...PlaygroundNavbarStyles.iconMargin}}
+                         alt={icon}/>
                     <button style={{...PlaygroundNavbarStyles.buttonIcon, ...PlaygroundNavbarStyles.iconMargin}}><span>Sign in</span>
                     </button>
                 </div>
