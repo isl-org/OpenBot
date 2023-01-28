@@ -1,9 +1,13 @@
 import './App.css';
 import {RouterComponent} from "./components/router/router";
+import StoreProvider from './context/Context'
+
 function App() {
     return (
         <div style={{fontStyle: 'Gilroy-Black'}}>
-            <RouterComponent/>
+            <StoreProvider>
+                <RouterComponent/>
+            </StoreProvider>
         </div>
 
     );

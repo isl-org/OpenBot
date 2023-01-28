@@ -1,5 +1,5 @@
 import {PlaygroundNavbarStyles} from "./Styles";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import icon from "../../assets/images/ICON.png";
 import info from "../../assets/images/info.png";
@@ -11,12 +11,12 @@ import Edit from "../../assets/images/edit.png";
 import trash from "../../assets/images/trash.png";
 import styles from "./workSpace.module.css";
 import {Popper} from "@mui/material";
+import {StoreContext} from "../../context/Context"
 
 
 export const WorkspaceNavbar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
-    const [projectName, setProjectName] = useState("Anything");
-
+    const {projectName,setProjectName} = useContext(StoreContext)
     const handleClick = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
     };
