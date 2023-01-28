@@ -13,7 +13,6 @@ function NewProjectButton(props) {
         let path = `playground`;
         navigate(path);
         handleOpen();
-
     }
 
 
@@ -29,8 +28,10 @@ function NewProjectButton(props) {
             <Modal
                 open={open}
                 onClose={handleClose}
+                className={"model"}
             >
-                <Box style={NewProjectStyles.model}>
+                {/*<Box style={NewProjectStyles.model}>*/}
+                    <div style={NewProjectStyles.model} >
                     <div style={NewProjectStyles.ModelHeading}>
                         <div>Create a New Project</div>
                         <img src={cross} style={NewProjectStyles.CrossIcon} onClick={handleClose}/>
@@ -42,8 +43,8 @@ function NewProjectButton(props) {
                     </div>
 
                     <div style={NewProjectStyles.SaveBtn} onClick={OpenNewProjectHandle}>Create</div>
-
-                </Box>
+                    </div>
+                {/*</Box>*/}
             </Modal>
         </>
 
