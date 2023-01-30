@@ -12,6 +12,7 @@ import trash from "../../assets/images/trash.png";
 import styles from "./workSpace.module.css";
 import {Popper} from "@mui/material";
 import {StoreContext} from "../../context/Context"
+import {QrDrawer} from "../drower/drower";
 
 
 export const WorkspaceNavbar = () => {
@@ -85,6 +86,7 @@ export const WorkspaceNavbar = () => {
                     </button>
                 </div>
             </div>
+            <QrDrawer/>
         </>
     );
 }

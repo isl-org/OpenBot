@@ -4,9 +4,13 @@ export const StoreContext = React.createContext(null)
 
 export default ({children}) => {
     const [projectName, setProjectName] = useState("Project1");
+    const [drawer,setDrawer] = useState(false);
+    const [workspaceWidth,setWorkspaceWidth] = useState(100);
 
     const store = {
-        projectName, setProjectName
+        projectName, setProjectName,
+        drawer,setDrawer,
+        workspaceWidth,setWorkspaceWidth
 
     }
 

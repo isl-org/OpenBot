@@ -1,21 +1,24 @@
+import React from "react";
 import uploadIcon from "../../assets/images/upload-cloud.png"
 import {UploadBarStyle} from "./styles";
 import undoIcon from "../../assets/images/undo.png";
 import redoIcon from "../../assets/images/redo.png";
 import driveIcon from "../../assets/images/drive.png";
 import {javascriptGenerator} from 'blockly/javascript';
-import {useRef} from "react";
-
+import {useRef,useContext} from "react";
+import {StoreContext} from "../../context/Context";
 export const UploadCode = ()=>{
-
+    const {drawer,setDrawer} = useContext(StoreContext);
+    const {workspaceWidth,setWorkspaceWidth} = useContext(StoreContext)
     let primaryWorkspace = useRef();
         const generateCode = () => {
             const code = javascriptGenerator.workspaceToCode(
                 primaryWorkspace.current
             );
             console.log(code);
+            const changeWorkspaceWidth = drawer ? setWorkspaceWidth(100) : setWorkspaceWidth(80)
+            const openDrawer = drawer ? setDrawer(false) : setDrawer(true);
         }
-
 
     return(
 
@@ -50,7 +53,6 @@ export const UploadCode = ()=>{
                 </button>
                 </div>
             </div>
-
         </div>
     );
 }

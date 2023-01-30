@@ -14,7 +14,6 @@ export const NewProject =(props)=> {
                     <div style={NewProjectStyles.Message}>Click to create a new project.</div>
                 </div>
             </div>
-
         </div>
     );
 }
