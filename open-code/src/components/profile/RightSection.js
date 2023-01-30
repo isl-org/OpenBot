@@ -2,10 +2,23 @@ import React from 'react';
 import {RightSectionStyles} from "./styles";
 import ProfileImage from "../../assets/Profile/profileImage.png";
 import EditIcon from "../../assets/Profile/EditProfileIcon.png";
+import {handleTabBaseRendering} from "../../pages/profile/Profile";
+import LogoutModel from "./LogoutModel";
 function RightSection(props) {
-    const{tab}=props
-
+    const{tab,logOut ,setLogOut}=props
     return (
+        <>
+            {handleTabBaseRendering(tab)}
+            { logOut && <LogoutModel setLogOut={setLogOut} />}
+        </>
+    );
+}
+
+export default RightSection;
+
+export function  EditProfile(){
+
+    return(
         <div style={RightSectionStyles.Main}>
             <header style={RightSectionStyles.Header}>Edit Profile</header>
             <form>
@@ -41,9 +54,6 @@ function RightSection(props) {
                 </div>
             </form>
         </div>
-    );
+    )
 }
-
-export default RightSection;
-
 

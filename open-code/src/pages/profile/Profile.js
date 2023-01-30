@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import {ProfileStyles} from "./styles";
 import LeftSection from "../../components/profile/LeftSection";
-import RightSection from "../../components/profile/RightSection";
+import RightSection, {EditProfile} from "../../components/profile/RightSection";
 import {Content} from "../../utils/constants";
 import HowToUpload from "../../components/howToUpLoad/HowToUpload";
 import Footer from "../../components/footer/Footer";
-import LogoutModel from "../../components/profile/LogoutModel";
 import {Navbar} from "../../components/navBar/Navbar";
 
 
@@ -17,14 +16,14 @@ import {Navbar} from "../../components/navBar/Navbar";
  */
 function Profile(props) {
     const [tab, setTab] = useState(Content[0].title);
-
+    const [logOut, setLogOut] = useState(false);
     return (
         <div>
             <Navbar/>
-            <div style={ProfileStyles.Main}>
-                <LeftSection content={Content} tab={tab} setTab={setTab}/>
-                {handleTabBaseRendering(tab)}
-            </div>
+                <div style={ProfileStyles.Main}>
+                    <LeftSection content={Content} tab={tab} setTab={setTab} setLogOut={setLogOut}/>
+                    <RightSection tab={tab} setLogOut={setLogOut} logOut={logOut}/>
+                </div>
             <Footer/>
         </div>
     );
@@ -32,21 +31,17 @@ function Profile(props) {
 
 export default Profile;
 
-function handleTabBaseRendering(tab) {
+export function handleTabBaseRendering(tab) {
+
     switch (tab) {
         case Content[0].title:
             return (
-                <RightSection/>
+                <EditProfile/>
             )
 
         case Content[2].title:
             return (
                 <HowToUpload/>
-            )
-
-        case Content[3].title:
-            return (
-                <LogoutModel/>
             )
 
     }

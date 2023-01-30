@@ -4,31 +4,27 @@ import Help from "../assets/Profile/help-circle.png";
 import Logout from "../assets/Profile/log-out.png";
 
 
-
 export const Content = [
     {
         Icon: User,
         title: "My profile",
-        selected:true,
     },
     {
         Icon: Moon,
         title: "Change Theme",
-        selected:false,
     },
     {
         Icon: Help,
         title: "How To Upload",
-        selected:false,
     },
     {
         Icon: Logout,
         title: "Logout",
-        selected:false,
+
     },
 
 ]
 
-export const controlBlocksType = ["controls_if","controls_ifelse","logic_ternary","logic_compare","logic_operation","logic_negate","logic_boolean","logic_null"];
-export const loopBlocksType = ["controls_whileUntil","controls_repeat","controls_forEach","controls_flow_statements"];
+export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
+export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_forEach", "controls_flow_statements"];
 

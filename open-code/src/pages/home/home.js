@@ -1,10 +1,8 @@
 import {Navbar} from "../../components/navBar/Navbar";
 import React from "react";
 import Cookies from "../../components/home/Cookies/Cookies";
-
-import {NewProject} from "../../components/home/MyProjects/NewProject";
 import {HomeCarousel} from "../../components/home/carousel/carousel";
-
+import {NewProject} from "../../components/home/MyProjects/NewProject";
 
 function Home() {
     return (
@@ -15,8 +13,6 @@ function Home() {
             <Cookies/>
         </div>
     )
-
 }
-
 
 export default Home;

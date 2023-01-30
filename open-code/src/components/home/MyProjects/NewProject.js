@@ -9,10 +9,10 @@ export const NewProject =(props)=> {
             <div style={NewProjectStyles.Heading}>My Projects</div>
             <div style={NewProjectStyles.ButtonsMessage}>
                 <NewProjectButton/>
-                <div style={NewProjectStyles.MessageIcon}>
+                {<div style={NewProjectStyles.MessageIcon}>
                     <img alt="Triangle" style={NewProjectStyles.TriangleIcon} src={Triangle}/>
                     <div style={NewProjectStyles.Message}>Click to create a new project.</div>
-                </div>
+                </div>}
             </div>
         </div>
     );
