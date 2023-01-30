@@ -3,7 +3,6 @@ import './BlocklyComponent.css';
 import React,{useEffect, useRef,useContext} from 'react';
 
 import Blockly from 'blockly/core';
-import {javascriptGenerator} from 'blockly/javascript';
 import locale from 'blockly/msg/en';
 import 'blockly/blocks';
 import {StoreContext} from "../../context/Context";
@@ -39,7 +38,8 @@ function BlocklyComponent(props) {
             <div style={{display: 'none'}} ref={toolbox}>
                 {props.children}
             </div>
-        </React.Fragment>);
+        </React.Fragment>)
+
 }
 
 

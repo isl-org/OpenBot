@@ -3,3 +3,8 @@ export const colors = {
     whiteFont: "#F8F9FB",
     blackFont: "#000000",
 }
+
+export const buttonColor={
+    background: "#61A8EC",
+    opacity: "0.3",
+}

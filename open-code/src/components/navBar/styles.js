@@ -51,7 +51,8 @@ export const NavbarStyle = {
         width:"4.563rem",
         fontFamily: "Gilroy-Medium",
         color:colors.whiteFont,
-        backgroundColor: colors.openBotBlue
+        backgroundColor: colors.openBotBlue,
+        cursor:"pointer"
     },
 
     iconMargin: {

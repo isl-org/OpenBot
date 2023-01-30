@@ -7,8 +7,8 @@ export const PlaygroundNavbarStyles = {
         justifyContent: "space-between",
         height: "5rem",
         alignItems: "center",
-        position: "fixed",
-        width: "100%"
+        position:"fixed",
+        width:"100%",
     },
     navbarTitleDiv: {
         marginLeft: "4.25rem",
@@ -24,6 +24,7 @@ export const PlaygroundNavbarStyles = {
     playgroundName: {
         display: "flex",
         alignItems: "center",
+        cursor:"pointer"
     },
 
     mainIcon: {
@@ -57,11 +58,12 @@ export const PlaygroundNavbarStyles = {
         width: "4.563rem",
         fontFamily: "Gilroy-Medium",
         color: colors.whiteFont,
-        backgroundColor: colors.openBotBlue
+        backgroundColor: colors.openBotBlue,
+        cursor:"pointer"
     },
 
     iconMargin: {
-        margin: 10
+        margin: 10,
     },
 
     arrowMargin: {

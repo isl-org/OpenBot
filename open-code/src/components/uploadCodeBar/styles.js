@@ -24,7 +24,8 @@ export const UploadBarStyle={
         width:"13.563rem",
         fontFamily: "Gilroy-Medium",
         background:colors.openBotBlue,
-        color:colors.whiteFont
+        color:colors.whiteFont,
+        cursor:"pointer"
     },
     operationsDiv:{
         display: "flex",
@@ -44,7 +45,8 @@ export const UploadBarStyle={
 
     driveIconStyle:{
         height:"1.5rem",
-        width:"1.5rem"
+        width:"1.5rem",
+        cursor:"pointer"
     },
 
     buttonStyle:{
@@ -54,20 +56,14 @@ export const UploadBarStyle={
         border:"0.5px solid black",
         color: colors.whiteFont,
         fontFamily: "Gilroy-Medium",
+        cursor:"pointer"
     },
+
     undoButtonStyle:{
         borderRadius: "0.375rem 0 0 0.375rem",
         border:"0.3px solid black"
     },
 
-    redoStyle:{
-        borderRadius:"0 0.375rem 0.375rem 0",
-        width:"4.188rem",
-        height:"3.313rem",
-        background: "#0071c5",
-        opacity: "0.7",
-        border:"0.3px solid black"
-    },
     commandSize:{
         width:"1.4rem",
         height:"1.2rem",
@@ -87,12 +83,17 @@ export const UploadBarStyle={
     },
 
     iconMargin: {
-        margin: 10
+        margin: 10,
     },
 
     driveStyle:{
         border:"none",
         background:"none"
+    },
+
+    buttonColor:{
+        background: "#0071c5",
+        opacity: "0.8",
     }
 
 
