@@ -1,8 +1,8 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import {Carousel} from 'react-responsive-carousel';
-import BlocklyCode from "../../assets/Profile/BlocklyCodeImage.png";
-import QRCode from "../../assets/Profile/QRCode.png";
-import OpenBoat from "../../assets/Profile/OpenBoatImage.png";
+import BlocklyCode from "../../../assets/Profile/BlocklyCodeImage.png";
+import QRCode from "../../../assets/Profile/QRCode.png";
+import OpenBoat from "../../../assets/Profile/OpenBoatImage.png";
 import React from "react";
 import styles from "./carousel.module.css";
 

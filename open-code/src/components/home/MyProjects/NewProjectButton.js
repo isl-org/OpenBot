@@ -31,7 +31,6 @@ function NewProjectButton(props) {
                 onClose={handleClose}
                 className={"model"}
             >
-                {/*<Box style={NewProjectStyles.model}>*/}
                     <div style={NewProjectStyles.model} >
                     <div style={NewProjectStyles.ModelHeading}>
                         <div>Create a New Project</div>
@@ -45,7 +44,6 @@ function NewProjectButton(props) {
 
                     <div style={NewProjectStyles.SaveBtn} onClick={OpenNewProjectHandle}>Create</div>
                     </div>
-                {/*</Box>*/}
             </Modal>
         </>
 

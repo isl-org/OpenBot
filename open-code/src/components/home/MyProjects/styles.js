@@ -20,6 +20,7 @@ export const NewProjectStyles = {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        flexWrap: "wrap",
     },
     Content: {
         marginTop: "22px",
