@@ -1,0 +1,84 @@
+.ImageDrag {
+    width: 271px !important;
+    height: 322px;
+}
+
+.ImageSave {
+    width: 477px !important;
+    height: 374px;
+}
+
+.Content {
+    justify-content: space-between;
+    display: flex;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-right: 106px;
+    align-items: center;
+}
+
+.HeadingContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    margin-left: 104px;
+}
+
+.DragAndDropHeading {
+    font-family: 'Gilroy-SemiBold', serif;
+    font-size: 22px;
+    line-height: 26px;
+    color: #000000;
+
+}
+
+.DragAndDropContent {
+    font-family: 'Gilroy-Regular', serif;
+    font-size: 18px;
+    line-height: 27px;
+    color: #000000;
+    text-align: left;
+    width: 761px;
+}
+
+.SaveAndDownloadContent {
+    font-family: 'Gilroy-Regular', serif;
+    font-size: 18px;
+    line-height: 27px;
+    color: #000000;
+    text-align: left;
+    width: 619px;
+}
+
+[class~=control-dots ] {
+    background-color: #f8f9fb;
+    bottom: -10px !important;
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+}
+
+[class~=dot ] {
+    width: 10px !important;
+    height: 10px !important;
+    background-color: #0071C5 !important;
+    box-shadow: none !important;
+}
+
+
+
+[class~=thumbs-wrapper ] {
+    display: none;
+}
+
+[class~=control-arrow ] {
+    display: none;
+}
+
+[class~=carousel-status ] {
+    display: none;
+}
+
+

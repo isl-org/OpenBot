@@ -8,6 +8,7 @@ export default ({children}) => {
     const [workspaceWidth,setWorkspaceWidth] = useState(100);
 
     const store = {
+
         projectName, setProjectName,
         drawer,setDrawer,
         workspaceWidth,setWorkspaceWidth
