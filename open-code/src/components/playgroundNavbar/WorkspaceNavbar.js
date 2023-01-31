@@ -39,7 +39,8 @@ export const WorkspaceNavbar = () => {
 
     return (
         <>
-            {!deleteProject ? <div style={PlaygroundNavbarStyles.navbarDiv}>
+            { deleteProject && <DeleteModel setDeleteProject={setDeleteProject}/>}
+            <div style={PlaygroundNavbarStyles.navbarDiv}>
                 <div style={PlaygroundNavbarStyles.navbarTitleDiv}>
                     <img style={{...PlaygroundNavbarStyles.mainIcon, ...PlaygroundNavbarStyles.iconMargin}} src={icon}
                          onClick={() => {
@@ -95,7 +96,7 @@ export const WorkspaceNavbar = () => {
                     <button style={{...PlaygroundNavbarStyles.buttonIcon, ...PlaygroundNavbarStyles.iconMargin}}><span>Sign in</span>
                     </button>
                 </div>
-            </div> : <DeleteModel setDeleteProject={setDeleteProject}/>}
+            </div> }
         </>
     );
 }
