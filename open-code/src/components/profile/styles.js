@@ -12,8 +12,6 @@ export const LeftSectionStyles = {
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        // background: "#BEE3FF",
-        // opacity: "0.34",
     },
     Items: {
         display: "flex",

@@ -23,6 +23,7 @@ export const Content = [
 
     },
 
+
 ]
 
 export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
