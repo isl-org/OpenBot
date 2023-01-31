@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React, {createContext, useState} from 'react'
 
-export const StoreContext = React.createContext(null)
+export const StoreContext = createContext(null)
 
 export default ({children}) => {
     const [projectName, setProjectName] = useState("Project1");

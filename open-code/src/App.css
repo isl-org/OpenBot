@@ -1,6 +1,15 @@
 *{
   margin: 0;
 }
+
+#dark{
+  background-color: #000000;
+  color: #ffffff !important;
+}
+#light{
+  background-color: #ffffff;
+}
+
 @font-face {
   font-family: 'Gilroy';
   src: url('assets/font/Gilroy/Gilroy-Black.ttf') format('truetype');
