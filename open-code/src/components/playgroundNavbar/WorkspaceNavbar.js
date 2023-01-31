@@ -12,7 +12,7 @@ import trash from "../../assets/images/trash.png";
 import styles from "./workSpace.module.css";
 import {Popper} from "@mui/material";
 import {StoreContext} from "../../context/Context"
-import {QrDrawer} from "../drower/drower";
+import DeleteModel from "../../pages/profile/DeleteModel";
 
 export const WorkspaceNavbar = () => {
     const openHomepage = () => {
@@ -22,6 +22,7 @@ export const WorkspaceNavbar = () => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const {projectName, setProjectName} = useContext(StoreContext)
+    const [deleteProject, setDeleteProject] = useState(false)
     const handleClick = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
     };
@@ -30,14 +31,15 @@ export const WorkspaceNavbar = () => {
     const id = open ? 'simple-popper' : undefined;
 
     let navigate = useNavigate();
-    const handleDeleteProject = () => {
-        let path = `/`;
-        navigate(path);
+
+    const handleDelete = () => {
+        setDeleteProject(true)
     }
+
 
     return (
         <>
-            <div style={PlaygroundNavbarStyles.navbarDiv}>
+            {!deleteProject ? <div style={PlaygroundNavbarStyles.navbarDiv}>
                 <div style={PlaygroundNavbarStyles.navbarTitleDiv}>
                     <img style={{...PlaygroundNavbarStyles.mainIcon, ...PlaygroundNavbarStyles.iconMargin}} src={icon}
                          onClick={() => {
@@ -75,7 +77,7 @@ export const WorkspaceNavbar = () => {
                                     <img alt="Icon" className={styles.icon} src={Edit}/>
                                     <div>Rename</div>
                                 </div>
-                                <div className={styles.item} onClick={handleDeleteProject}>
+                                <div className={styles.item} onClick={handleDelete}>
                                     <img alt="Icon" className={styles.icon} src={trash}/>
                                     <div> Delete File</div>
                                 </div>
@@ -93,8 +95,7 @@ export const WorkspaceNavbar = () => {
                     <button style={{...PlaygroundNavbarStyles.buttonIcon, ...PlaygroundNavbarStyles.iconMargin}}><span>Sign in</span>
                     </button>
                 </div>
-            </div>
-            <QrDrawer/>
+            </div> : <DeleteModel setDeleteProject={setDeleteProject}/>}
         </>
     );
 }

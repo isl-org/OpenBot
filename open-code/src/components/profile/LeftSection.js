@@ -5,13 +5,13 @@ import {ThemeContext} from "../../App";
 
 
 function LeftSection(props) {
-    const {content, setTab, tab, setLogOut, logOut} = props
+    const { setTab, tab, setLogOut, logOut} = props
     const {theme} = useContext(ThemeContext)
     return (
         <div className={Styles.Main + " " + (theme === "dark" ? Styles.MainDark : Styles.MainLight)}>
             <div className={Styles.IconContent}>
                 {
-                    content.map((data) => (
+                    Content.map((data) => (
                         <div
                             className={(theme==="dark") ? (data.title === tab) ? Styles.ItemsSelectedDark : Styles.Items : (data.title === tab) ? Styles.ItemsSelected : Styles.Items}
                             onClick={() => {

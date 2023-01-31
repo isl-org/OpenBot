@@ -3,7 +3,6 @@ import Moon from "../assets/Profile/moon.png";
 import Help from "../assets/Profile/help-circle.png";
 import Logout from "../assets/Profile/log-out.png";
 
-
 export const Content = [
     {
         Icon: User,
@@ -20,7 +19,6 @@ export const Content = [
     {
         Icon: Logout,
         title: "Logout",
-
     },
 
 

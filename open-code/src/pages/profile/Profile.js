@@ -21,7 +21,7 @@ function Profile(props) {
         <div>
             <Navbar/>
                 <div style={ProfileStyles.Main}>
-                    <LeftSection content={Content} tab={tab} setTab={setTab} setLogOut={setLogOut}/>
+                    <LeftSection  tab={tab} setTab={setTab} setLogOut={setLogOut}/>
                     <RightSection tab={tab} setLogOut={setLogOut} logOut={logOut}/>
                 </div>
             <Footer/>

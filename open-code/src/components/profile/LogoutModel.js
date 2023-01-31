@@ -5,7 +5,6 @@ import {LogoutStyles} from "./styles";
 function LogoutModel(props) {
     const{setLogOut}=props
     const [open, setOpen] = useState(true);
-    console.log(props)
     const handleClose = () => {
         setLogOut(false)
         return setOpen(false)
