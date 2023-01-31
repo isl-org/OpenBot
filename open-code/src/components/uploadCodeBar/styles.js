@@ -35,12 +35,14 @@ export const UploadBarStyle={
 
     iconDiv:{
         height:"1.5rem",
-        width:"1.5rem"
+        width:"1.5rem",
+        pointerEvents:"none"
     },
     leftButton:{
         display:"flex",
         alignItems:"center",
-        fontSize: "1.2em"
+        fontSize: "1.2em",
+        pointerEvents: "none"
     },
 
     driveIconStyle:{
@@ -56,7 +58,8 @@ export const UploadBarStyle={
         border:"0.5px solid black",
         color: colors.whiteFont,
         fontFamily: "Gilroy-Medium",
-        cursor:"pointer"
+        cursor:"pointer",
+
     },
 
     undoButtonStyle:{
@@ -67,6 +70,7 @@ export const UploadBarStyle={
     commandSize:{
         width:"1.4rem",
         height:"1.2rem",
+        pointerEvents:"none"
     },
 
     minusStyle:{
@@ -78,8 +82,9 @@ export const UploadBarStyle={
     },
     operationSize:{
         fontSize : "40px",
-        fontWeight:"2em",
-        color: colors.whiteFont
+        color: colors.whiteFont,
+        pointerEvents:"none",
+        fontWeight:"100"
     },
 
     iconMargin: {

@@ -34,6 +34,7 @@ export const UploadCode = () => {
         setButtonActive((current) => !current);
     };
 
+
     return (
 
         <div style={UploadBarStyle.barDiv}>
@@ -41,10 +42,10 @@ export const UploadCode = () => {
             <div style={UploadBarStyle.iconMargin} onClick={generateCode}>
                 <button style={{
                     ...UploadBarStyle.uploadCodeButton,
-                    opacity: buttonSelected === "first" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
-                }} name={"first"} onClick={clickedButton}>
-                    <span onClick={clickedButton} style={{...UploadBarStyle.leftButton, ...UploadBarStyle.iconMargin}}>Upload Code</span>
-                    <img onClick={clickedButton} alt={""}
+                    opacity: buttonSelected === "uploadCode" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
+                }} name={"uploadCode"} onClick={clickedButton}>
+                    <span style={{...UploadBarStyle.leftButton, ...UploadBarStyle.iconMargin}}>Upload Code</span>
+                    <img  alt={""}
                          style={{...UploadBarStyle.iconDiv, ...UploadBarStyle.iconMargin}} src={uploadIcon}/>
                 </button>
             </div>
@@ -57,16 +58,16 @@ export const UploadCode = () => {
                     <button onClick={clickedButton}
                             style={{
                                 ...UploadBarStyle.buttonStyle, ...UploadBarStyle.undoButtonStyle,
-                                opacity: buttonSelected === "second" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
-                            }} name={"second"}>
-                        <img onClick={clickedButton} alt={""} style={UploadBarStyle.commandSize} src={undoIcon}/>
+                                opacity: buttonSelected === "undo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
+                            }} name={"undo"}>
+                        <img alt={""} style={UploadBarStyle.commandSize} src={undoIcon}/>
                     </button>
                     <button onClick={clickedButton} style={{
                         ...UploadBarStyle.buttonStyle, ...UploadBarStyle.plusStyle,
-                        opacity: buttonSelected === "third" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
+                        opacity: buttonSelected === "redo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
                     }}
-                            name={"third"}>
-                        <img onClick={clickedButton} alt={""} style={UploadBarStyle.commandSize} src={redoIcon}/>
+                            name={"redo"}>
+                        <img alt={""} style={UploadBarStyle.commandSize} src={redoIcon}/>
                     </button>
                 </div>
 
@@ -75,16 +76,16 @@ export const UploadCode = () => {
                     <button onClick={clickedButton}
                             style={{
                                 ...UploadBarStyle.buttonStyle, ...UploadBarStyle.minusStyle,
-                                opacity: buttonSelected === "fourth" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
-                            }} name={"fourth"}>
-                        <span onClick={clickedButton} style={UploadBarStyle.operationSize}>-</span>
+                                opacity: buttonSelected === "minus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
+                            }} name={"minus"}>
+                        <span style={UploadBarStyle.operationSize}>-</span>
                     </button>
                     <button onClick={clickedButton} style={{
                         ...UploadBarStyle.buttonStyle, ...UploadBarStyle.plusStyle,
-                        opacity: buttonSelected === "fifth" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
+                        opacity: buttonSelected === "add" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
                     }}
-                            name={"fifth"}>
-                        <span onClick={clickedButton} style={UploadBarStyle.operationSize}>+</span>
+                            name={"add"}>
+                        <span style={UploadBarStyle.operationSize}>+</span>
                     </button>
                 </div>
             </div>
