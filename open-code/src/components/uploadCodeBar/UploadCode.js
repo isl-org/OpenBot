@@ -9,21 +9,24 @@ import {useRef, useContext} from "react";
 import {StoreContext} from "../../context/Context";
 import {colors} from "../../utils/color";
 
-export const UploadCode = () => {
-    const {drawer, setDrawer} = useContext(StoreContext);
-    const {workspaceWidth, setWorkspaceWidth} = useContext(StoreContext)
+
+export const UploadCode = ()=>{
+    const {drawer,setDrawer} = useContext(StoreContext);
+    const {setWorkspaceWidth} = useContext(StoreContext);
+    const {setCode } = useContext(StoreContext);
+    const {generate,setGenerateCode} = useContext(StoreContext);
 
     let primaryWorkspace = useRef();
-    const generateCode = () => {
-        const code = javascriptGenerator.workspaceToCode(
-            primaryWorkspace.current
-        );
-        console.log(code);
-        const changeWorkspaceWidth = drawer ? setWorkspaceWidth(100) : setWorkspaceWidth(80)
-        const openDrawer = drawer ? setDrawer(false) : setDrawer(true);
-    }
-
-
+        const generateCode = () => {
+            const code = javascriptGenerator.workspaceToCode(
+                primaryWorkspace.current
+            );
+            console.log(code);
+            setGenerateCode(!generate);
+            setCode(code)
+            setWorkspaceWidth(80)
+            setDrawer(true);
+        }
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
 

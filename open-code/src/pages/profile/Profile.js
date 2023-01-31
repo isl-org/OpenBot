@@ -31,7 +31,10 @@ function Profile(props) {
 
 export default Profile;
 
+
 export function handleTabBaseRendering(tab ,theme) {
+
+
 
     switch (tab) {
         case Content[0].title:
