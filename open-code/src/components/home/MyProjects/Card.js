@@ -2,6 +2,7 @@ import React from 'react';
 import {SavedProjectsStyles} from "./styles";
 
 function Card(props) {
+
     return (
         <div style={SavedProjectsStyles.Content}>
             <div style={SavedProjectsStyles.Card}>

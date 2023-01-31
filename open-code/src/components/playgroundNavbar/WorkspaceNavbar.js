@@ -1,6 +1,6 @@
 import {PlaygroundNavbarStyles} from "./Styles";
 import React, {useContext, useState} from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import icon from "../../assets/images/ICON.png";
 import info from "../../assets/images/info.png";
 import moon from "../../assets/images/moon.png";
@@ -14,10 +14,14 @@ import {Popper} from "@mui/material";
 import {StoreContext} from "../../context/Context"
 import {QrDrawer} from "../drower/drower";
 
-
 export const WorkspaceNavbar = () => {
+    const openHomepage = () => {
+        let path = `/`;
+        navigate(path);
+    }
+
     const [anchorEl, setAnchorEl] = useState(null);
-    const {projectName,setProjectName} = useContext(StoreContext)
+    const {projectName, setProjectName} = useContext(StoreContext)
     const handleClick = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
     };
@@ -26,7 +30,7 @@ export const WorkspaceNavbar = () => {
     const id = open ? 'simple-popper' : undefined;
 
     let navigate = useNavigate();
-    const handleDeleteProject = () =>{
+    const handleDeleteProject = () => {
         let path = `/`;
         navigate(path);
     }
@@ -36,6 +40,10 @@ export const WorkspaceNavbar = () => {
             <div style={PlaygroundNavbarStyles.navbarDiv}>
                 <div style={PlaygroundNavbarStyles.navbarTitleDiv}>
                     <img style={{...PlaygroundNavbarStyles.mainIcon, ...PlaygroundNavbarStyles.iconMargin}} src={icon}
+                         onClick={() => {
+                             openHomepage()
+                         }}
+
                          alt={icon}/>
                     <span
                         style={{...PlaygroundNavbarStyles.mainTitle, ...PlaygroundNavbarStyles.iconMargin}}>OpenCode</span>
@@ -63,11 +71,11 @@ export const WorkspaceNavbar = () => {
                         </div>
                         <Popper id={id} open={open} anchorEl={anchorEl}>
                             <div className={styles.option}>
-                                <div className={styles.item}  onClick={handleClick} >
+                                <div className={styles.item} onClick={handleClick}>
                                     <img alt="Icon" className={styles.icon} src={Edit}/>
-                                    <div >Rename</div>
+                                    <div>Rename</div>
                                 </div>
-                                <div className={styles.item} onClick={handleDeleteProject} >
+                                <div className={styles.item} onClick={handleDeleteProject}>
                                     <img alt="Icon" className={styles.icon} src={trash}/>
                                     <div> Delete File</div>
                                 </div>

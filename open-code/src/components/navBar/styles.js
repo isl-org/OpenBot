@@ -22,7 +22,8 @@ export const NavbarStyle = {
 
     mainIcon:{
         height: "2.031rem",
-        width:"2.031rem"
+        width:"2.031rem",
+        cursor: "pointer"
     },
 
     mainTitle:{
@@ -30,13 +31,17 @@ export const NavbarStyle = {
         fontFamily: "Gilroy-Medium",
         color:colors.whiteFont
     },
+
     infoIcon:{
         height:"1.5rem",
-        width: "1.5rem"
+        width: "1.5rem",
+        cursor: "pointer"
     },
+
     moonIcon:{
         height:"1.5rem",
-        width: "1.5rem"
+        width: "1.5rem",
+        cursor: "pointer"
     },
 
     lineIcon:{
