@@ -31,17 +31,17 @@ function Profile(props) {
 
 export default Profile;
 
-export function handleTabBaseRendering(tab) {
+export function handleTabBaseRendering(tab ,theme) {
 
     switch (tab) {
         case Content[0].title:
             return (
-                <EditProfile/>
+                <EditProfile theme={theme}/>
             )
 
         case Content[2].title:
             return (
-                <HowToUpload/>
+                <HowToUpload theme={theme}/>
             )
 
     }
