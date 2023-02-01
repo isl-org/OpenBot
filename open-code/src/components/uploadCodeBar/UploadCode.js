@@ -8,29 +8,28 @@ import {javascriptGenerator} from 'blockly/javascript';
 import {useRef, useContext} from "react";
 import {StoreContext} from "../../context/Context";
 import {colors} from "../../utils/color";
+import driveIconClicked from "../../assets/images/drive-clicked.png"
 
-
-export const UploadCode = ()=>{
-    const {drawer,setDrawer} = useContext(StoreContext);
+export const UploadCode = () => {
+    const {drawer, setDrawer} = useContext(StoreContext);
     const {setWorkspaceWidth} = useContext(StoreContext);
-    const {setCode } = useContext(StoreContext);
-    const {generate,setGenerateCode} = useContext(StoreContext);
+    const {setCode} = useContext(StoreContext);
+    const {generate, setGenerateCode} = useContext(StoreContext);
 
     let primaryWorkspace = useRef();
-        const generateCode = () => {
-            const code = javascriptGenerator.workspaceToCode(
-                primaryWorkspace.current
-            );
-            console.log(code);
-            setGenerateCode(!generate);
-            setCode(code)
-            setWorkspaceWidth(80)
-            setDrawer(true);
-        }
+    const generateCode = () => {
+        const code = javascriptGenerator.workspaceToCode(
+            primaryWorkspace.current
+        );
+        console.log(code);
+        setGenerateCode(!generate);
+        setCode(code)
+        setWorkspaceWidth(80)
+        setDrawer(true);
+    }
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
-
-
+    const [driveButtonActive,setDriveButtonActive]=useState(false);
     const clickedButton = (e) => {
         const {name} = e.target;
         setButtonSelected(name);
@@ -39,6 +38,13 @@ export const UploadCode = ()=>{
             setButtonActive(false);
         }, 200);
     };
+
+    const handleDriveButton = () => {
+        setDriveButtonActive(true);
+        setTimeout(() => {
+            setDriveButtonActive(false);
+        }, 200);
+    }
 
 
     return (
@@ -51,14 +57,16 @@ export const UploadCode = ()=>{
                     opacity: buttonSelected === "uploadCode" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
                 }} name={"uploadCode"} onClick={clickedButton}>
                     <span style={{...UploadBarStyle.leftButton, ...UploadBarStyle.iconMargin}}>Upload Code</span>
-                    <img  alt={""}
+                    <img alt={""}
                          style={{...UploadBarStyle.iconDiv, ...UploadBarStyle.iconMargin}} src={uploadIcon}/>
                 </button>
             </div>
 
             <div style={UploadBarStyle.operationsDiv}>
-                <button style={{...UploadBarStyle.iconMargin, ...UploadBarStyle.driveStyle}}>
-                    <img alt={""} style={UploadBarStyle.driveIconStyle} src={driveIcon}/>
+                <button style={{...UploadBarStyle.iconMargin, ...UploadBarStyle.driveStyle}}
+                        onClick={handleDriveButton}>
+                    <img alt={""} style={UploadBarStyle.driveIconStyle}
+                         src={driveButtonActive ? driveIcon : driveIconClicked}/>
                 </button>
                 <div style={UploadBarStyle.iconMargin}>
                     <button onClick={clickedButton}

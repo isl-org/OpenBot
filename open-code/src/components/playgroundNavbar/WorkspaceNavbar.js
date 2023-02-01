@@ -13,6 +13,7 @@ import styles from "./workSpace.module.css";
 import {Popper} from "@mui/material";
 import {StoreContext} from "../../context/Context"
 import DeleteModel from "../../pages/profile/DeleteModel";
+import {QrDrawer} from "../drower/drower";
 
 export const WorkspaceNavbar = () => {
     const openHomepage = () => {
@@ -95,6 +96,7 @@ export const WorkspaceNavbar = () => {
                          alt={icon}/>
                     <button style={{...PlaygroundNavbarStyles.buttonIcon, ...PlaygroundNavbarStyles.iconMargin}}><span>Sign in</span>
                     </button>
+                    <QrDrawer/>
                 </div>
             </div> }
         </>
