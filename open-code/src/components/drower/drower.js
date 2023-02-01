@@ -27,7 +27,8 @@ export default function PersistentDrawerRight() {
                     '& .MuiDrawer-paper': {
                         width: '22%',
                         height: '79.5vh',
-                        marginTop: '5.5%'
+                        marginTop: '5.5%',
+                        borderLeft : '1px solid rgba(0, 0, 0, 0.2)'
                     },
                 }}
                 variant="persistent"
@@ -39,8 +40,8 @@ export default function PersistentDrawerRight() {
                     <div style={{display : 'flex'}}>
                         <RightSlider/>
                         <div><DrawerBody/></div>
-                    </div>
 
+                    </div>
                 </paper>
             </Drawer>
 

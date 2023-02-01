@@ -17,16 +17,18 @@ export const UploadCode = () => {
     const {generate, setGenerateCode} = useContext(StoreContext);
 
     let primaryWorkspace = useRef();
-    const generateCode = () => {
-        const code = javascriptGenerator.workspaceToCode(
-            primaryWorkspace.current
-        );
-        console.log(code);
-        setGenerateCode(!generate);
-        setCode(code)
-        setWorkspaceWidth(80)
-        setDrawer(true);
-    }
+
+
+        const generateCode = () => {
+            const code = javascriptGenerator.workspaceToCode(
+                primaryWorkspace.current
+            );
+            console.log(code);
+            setGenerateCode(!generate);
+            setCode(code)
+            setWorkspaceWidth(77.79)
+            setDrawer(true);
+        }
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
     const [driveButtonActive,setDriveButtonActive]=useState(false);

@@ -25,7 +25,7 @@ export const qrStyles = {
         borderRadius : ' 0 15px 15px 0',
         display: 'flex',
         justifyContent : 'center',
-        alignItems : 'center'
+        alignItems : 'center',
     },
     rightSliderIcon : {
         height: '1rem',
