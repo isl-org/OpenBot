@@ -42,11 +42,11 @@
     width: 761px;
 }
 
-.MainDark{
+.MainDark {
     color: #FFFFFF;
 }
 
-.MainLight{
+.MainLight {
     color: #000000;
 }
 
@@ -59,14 +59,14 @@
 }
 
 [class~=control-dots ] {
-    background-color: #f8f9fb;
+    background-color: transparent;
     bottom: -10px !important;
     display: flex;
     height: 50px;
+    margin: -39px 0 !important;
     align-items: center;
     justify-content: center;
 }
-
 
 [class~=dot ] {
     width: 10px !important;
@@ -74,8 +74,6 @@
     background-color: #0071C5 !important;
     box-shadow: none !important;
 }
-
-
 
 [class~=thumbs-wrapper ] {
     display: none;
@@ -89,4 +87,7 @@
     display: none;
 }
 
+[class~=carousel-slider] {
+    overflow: inherit !important;
+}
 

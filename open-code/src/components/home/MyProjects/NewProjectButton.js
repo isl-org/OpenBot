@@ -23,7 +23,7 @@ function NewProjectButton(props) {
     return (
         <>
             <div className={styles.Content+" "+(theme === "dark" ? styles.MainDark : styles.MainLight)} onClick={handleOpen}>
-                <div className={styles.Button+" "+(theme === "dark" ? styles.MainDark : styles.MainLight)}>
+                <div className={styles.Button+" "+(theme === "dark" ? styles.ButtonDark : styles.ButtonLight)}>
                     <div className={styles.AddIconImage}>
                         <div className={styles.plus}>+</div>
                     </div>
