@@ -4,7 +4,7 @@ import Style from "./cookies.module.css";
 import CookiesIcon from "../../../assets/images/Union.png";
 import CookieImage from "../../../assets/images/cookies.png";
 
-function Cookies(props) {
+function CookiesComponent(props) {
     return (
         <CookieConsent
             containerClasses={Style.main}
@@ -24,17 +24,17 @@ function Cookies(props) {
             declineButtonClasses={Style.declineButton}
             buttonWrapperClasses={Style.buttonWrapper}
 
-            onAccept={(acceptedByScrolling) => {
-                if (acceptedByScrolling) {
-                    alert("Accept was triggered by user scrolling");
-                } else {
-                    alert("Accept was triggered by clicking the Accept button");
-                }
-            }}
+            // onAccept={(acceptedByScrolling) => {
+            //     if (acceptedByScrolling) {
+            //         alert("Accept was triggered by user scrolling");
+            //     } else {
+            //         alert("Accept was triggered by clicking the Accept button");
+            //     }
+            // }}
             enableDeclineButton
-            onDecline={() => {
-                alert("nay!");
-            }}
+            // onDecline={() => {
+            //     alert("nay!");
+            // }}
         >
 
             <img className={Style.cookieImage} src={CookieImage} alt=""/>
@@ -47,4 +47,4 @@ function Cookies(props) {
     );
 }
 
-export default Cookies;
+export default CookiesComponent;

@@ -2,7 +2,7 @@ import {Navbar} from "../../components/navBar/Navbar";
 import React from "react";
 import {HomeCarousel} from "../../components/home/carousel/carousel";
 import {NewProject} from "../../components/home/MyProjects/NewProject";
-import {Cookies} from "react-cookie-consent";
+import CookiesComponent from "../../components/home/Cookies/Cookies";
 
 function Home() {
     return (
@@ -10,7 +10,7 @@ function Home() {
             <Navbar/>
             <HomeCarousel/>
             <NewProject/>
-            <Cookies/>
+            <CookiesComponent/>
         </div>
     )
 }
