@@ -1,7 +1,7 @@
 import './App.css';
 import {RouterComponent} from "./components/router/router";
-import StoreProvider from './context/context';
-import {createContext, useEffect, useState} from "react";
+import StoreProvider from './context/Context';
+import {createContext, useState} from "react";
 
 export const ThemeContext = createContext(null);
 

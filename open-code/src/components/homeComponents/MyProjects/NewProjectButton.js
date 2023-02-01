@@ -1,9 +1,8 @@
 import React, {useContext, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-// import {NewProjectStyles} from "./styles";
-import cross from "../../../assets/Model/Cross.png";
+import cross from "../../../assets/images/icon/cross-icon.png";
 import {Modal} from "@mui/material";
-import {StoreContext} from "../../../context/context";
+import {StoreContext} from "../../../context/Context";
 import styles from "./newProject.module.css"
 import {ThemeContext} from "../../../App";
 function NewProjectButton(props) {

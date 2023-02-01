@@ -1,9 +1,9 @@
 import React, {useContext, useState} from 'react';
-import info from "../../assets/images/info.png"
-import moon from "../../assets/images/moon.png"
-import line from "../../assets/images/Line.png"
-import icon from "../../assets/images/ICON.png"
-import profileImage from "../../assets/Profile/profileImage.png"
+import info from "../../assets/images/icon/info.png"
+import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png"
+import line from "../../assets/images/line.png"
+import icon from "../../assets/images/icon/open-bot-logo.png"
+import profileImage from "../../assets/images/icon/profile-image.png"
 import {NavbarStyle} from "./styles";
 import {useNavigate} from "react-router-dom";
 import {ThemeContext} from "../../App"

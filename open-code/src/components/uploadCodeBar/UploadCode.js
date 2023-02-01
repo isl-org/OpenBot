@@ -1,14 +1,14 @@
 import React, {useState} from "react";
-import uploadIcon from "../../assets/images/upload-cloud.png"
+import uploadIcon from "../../assets/images/icon/upload-cloud.png"
 import {UploadBarStyle} from "./styles";
-import undoIcon from "../../assets/images/undo.png";
-import redoIcon from "../../assets/images/redo.png";
-import driveIcon from "../../assets/images/drive.png";
+import undoIcon from "../../assets/images/icon/undo.png";
+import redoIcon from "../../assets/images/icon/redo.png";
+import driveIcon from "../../assets/images/icon/drive.png";
 import {javascriptGenerator} from 'blockly/javascript';
 import {useRef, useContext} from "react";
-import {StoreContext} from "../../context/context";
+import {StoreContext} from "../../context/Context";
 import {colors} from "../../utils/color";
-import driveIconClicked from "../../assets/images/drive-clicked.png"
+import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 
 export const UploadCode = () => {
     const {drawer, setDrawer} = useContext(StoreContext);

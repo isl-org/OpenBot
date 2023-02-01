@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
-import ProfileImage from "../../assets/Profile/profileImage.png";
-import EditIcon from "../../assets/Profile/EditProfileIcon.png";
-import {handleTabBaseRendering} from "../../pages/profile/profile";
-import LogoutModel from "./logoutModel";
-import Styles from "./rightSection.module.css"
+import ProfileImage from "../../assets/images/icon/profile-image.png";
+import EditIcon from "../../assets/images/icon/edit-profile-icon.png";
+import {handleTabBaseRendering} from "../../pages/profile/Profile";
+import LogoutModel from "./LogoutModel";
+import Styles from "./RightSection.module.css"
 import {ThemeContext} from "../../App";
 
 function RightSection(props) {

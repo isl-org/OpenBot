@@ -1,8 +1,8 @@
 import React from 'react';
 import {HowToUploadStyles} from "./styles";
-import BlocklyCode from "../../assets/Profile/BlocklyCodeImage.png";
-import QRCode from "../../assets/Profile/QRCode.png";
-import OpenBoat from "../../assets/Profile/OpenBoatImage.png";
+import BlocklyCode from "../../assets/images/blockly-code-image.png";
+import QRCode from "../../assets/images/qr-image.png";
+import OpenBoat from "../../assets/images/open-boat-image.png";
 function HowToUpload(props) {
     return (
         <div>

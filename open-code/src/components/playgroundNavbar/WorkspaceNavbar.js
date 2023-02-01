@@ -1,18 +1,18 @@
-import {PlaygroundNavbarStyles} from "./styles";
+import {PlaygroundNavbarStyles} from "./Styles";
 import React, {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import icon from "../../assets/images/ICON.png";
-import info from "../../assets/images/info.png";
-import moon from "../../assets/images/moon.png";
-import line from "../../assets/images/Line.png";
-import downArrow from "../../assets/images/down-arrow.png";
-import UpArrow from "../../assets/images/DownArrow.png";
-import Edit from "../../assets/images/edit.png";
-import trash from "../../assets/images/trash.png";
+import icon from "../../assets/images/icon/open-bot-logo.png";
+import info from "../../assets/images/icon/info.png";
+import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
+import line from "../../assets/images/line.png";
+import downArrow from "../../assets/images/icon/down-arrow.png";
+import UpArrow from "../../assets/images/icon/up-arrow.png";
+import Edit from "../../assets/images/icon/edit.png";
+import trash from "../../assets/images/icon/trash.png";
 import styles from "./workSpace.module.css";
 import {Popper} from "@mui/material";
-import {StoreContext} from "../../context/context"
-import DeleteModel from "../../pages/profile/deleteModel";
+import {StoreContext} from "../../context/Context"
+import DeleteModel from "../../pages/profile/DeleteModel";
 import {QrDrawer} from "../drower/drower";
 
 export const WorkspaceNavbar = () => {

@@ -1,7 +1,7 @@
-import User from "../assets/Profile/user.png";
-import Moon from "../assets/Profile/moon.png";
-import Help from "../assets/Profile/help-circle.png";
-import Logout from "../assets/Profile/log-out.png";
+import User from "../assets/images/icon/user.png";
+import Moon from "../assets/images/icon/darkMode/dark-mode-icon.png";
+import Help from "../assets/images/icon/help-circle.png";
+import Logout from "../assets/images/icon/log-out.png";
 
 export const Content = [
     {

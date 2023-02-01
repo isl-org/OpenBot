@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 // import {NewProjectStyles} from "./styles";
-import Triangle from "../../../assets/images/Triangle.png";
-import DarkTriangle from "../../../assets/images/dark-triangle.png"
+import Triangle from "../../../assets/images/icon/triangle.png";
+import DarkTriangle from "../../../assets/images/icon/dark-triangle.png";
 import NewProjectButton from "./NewProjectButton";
 import {ThemeContext} from "../../../App";
-import styles from "./newProject.module.css"
+import styles from "./newProject.module.css";
 
 export const NewProject = (props) => {
     const {theme} = useContext(ThemeContext)

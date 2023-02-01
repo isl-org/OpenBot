@@ -1,8 +1,8 @@
 import React from 'react';
 import CookieConsent from "react-cookie-consent";
 import Style from "./cookies.module.css";
-import CookiesIcon from "../../../assets/images/Union.png";
-import CookieImage from "../../../assets/images/cookies.png";
+import CookiesIcon from "../../../assets/images/icon/union.png";
+import CookieImage from "../../../assets/images/icon/cookies.png";
 
 function CookiesComponent(props) {
     return (

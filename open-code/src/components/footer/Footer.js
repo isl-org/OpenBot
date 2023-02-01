@@ -1,10 +1,9 @@
 import React from 'react';
 import {FooterStyle} from "./styles";
-import youtube from "../../assets/images/Youtube.png"
-import web from "../../assets/images/Web.png"
-import playStore from "../../assets/images/Google play.png"
-import appStore from "../../assets/images/App Store.png"
-
+import youtube from "../../assets/images/icon/youtube-logo.png"
+import web from "../../assets/images/icon/web-logo.png"
+import playStore from "../../assets/images/icon/play-store-logo.png"
+import appStore from "../../assets/images/icon/app-store-logo.png"
 function Footer() {
 
     return (

@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Home from "../../pages/home/home";
-import Profile from "../../pages/profile/profile";
-import Playground from "../../pages/playground/playground";
+import Profile from "../../pages/profile/Profile";
+import Playground from "../../pages/playground/Playground";
 export const RouterComponent = ()=>{
     return(
         <Router>

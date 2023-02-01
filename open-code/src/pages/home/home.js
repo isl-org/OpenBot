@@ -1,4 +1,4 @@
-import {Navbar} from "../../components/navBar/navbar";
+import {Navbar} from "../../components/navBar/Navbar";
 import React from "react";
 import {HomeCarousel} from "../../components/homeComponents/carousel/carousel";
 import {NewProject} from "../../components/homeComponents/MyProjects/NewProject";

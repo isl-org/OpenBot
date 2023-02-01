@@ -1,19 +1,12 @@
 import React, {useState} from 'react';
 import {ProfileStyles} from "./styles";
-import LeftSection from "../../components/profile/leftSection";
-import RightSection, {EditProfile} from "../../components/profile/rightSection";
+import LeftSection from "../../components/profile/LeftSection";
+import RightSection, {EditProfile} from "../../components/profile/RightSection";
 import {Content} from "../../utils/constants";
-import HowToUpload from "../../components/howToUpLoad/howToUpload";
-import Footer from "../../components/footer/footer";
-import {Navbar} from "../../components/navBar/navbar";
+import HowToUpload from "../../components/howToUpLoad/HowToUpload";
+import Footer from "../../components/footer/Footer";
+import {Navbar} from "../../components/navBar/Navbar";
 
-
-/**
- *
- * @param props
- * @returns {JSX.Element}
- * @constructor
- */
 function Profile(props) {
     const [tab, setTab] = useState(Content[0].title);
     const [logOut, setLogOut] = useState(false);
