@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 // import {NewProjectStyles} from "./styles";
 import cross from "../../../assets/Model/Cross.png";
 import {Modal} from "@mui/material";
-import {StoreContext} from "../../../context/Context";
+import {StoreContext} from "../../../context/context";
 import styles from "./newProject.module.css"
 import {ThemeContext} from "../../../App";
 function NewProjectButton(props) {
