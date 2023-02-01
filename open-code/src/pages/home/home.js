@@ -1,8 +1,8 @@
 import {Navbar} from "../../components/navBar/Navbar";
 import React from "react";
-import {HomeCarousel} from "../../components/Home/carousel/carousel";
-import {NewProject} from "../../components/Home/MyProjects/NewProject";
-import CookiesComponent from "../../components/Home/Cookies/Cookies";
+import {HomeCarousel} from "../../components/homeComponents/carousel/carousel";
+import {NewProject} from "../../components/homeComponents/MyProjects/NewProject";
+import CookiesComponent from "../../components/homeComponents/Cookies/Cookies";
 
 function Home() {
     return (

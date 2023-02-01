@@ -1,32 +1,49 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import info from "../../assets/images/info.png"
 import moon from "../../assets/images/moon.png"
 import line from "../../assets/images/Line.png"
 import icon from "../../assets/images/ICON.png"
+import profileImage from "../../assets/Profile/profileImage.png"
 import {NavbarStyle} from "./styles";
 import {useNavigate} from "react-router-dom";
 import {ThemeContext} from "../../App"
-export function Navbar(){
+import WhiteText from "../fonts/WhiteText";
+
+export function Navbar() {
     let navigate = useNavigate();
-    const {theme,toggleTheme} = useContext(ThemeContext)
-    const openHomepage = ()=>{
+    const {theme, toggleTheme} = useContext(ThemeContext)
+    const [isSigIn, setIsSigIn] = useState(false);
+    const openHomepage = () => {
         let path = `/`;
         navigate(path);
     }
 
-        return (
-            <div style={NavbarStyle.navbarDiv}>
-                <div style={NavbarStyle.navbarTitleDiv}>
-                    <img alt="" style={{...NavbarStyle.mainIcon,...NavbarStyle.iconMargin}} src={icon} onClick={()=>{openHomepage()}} />
-                    <span style={{...NavbarStyle.mainTitle,...NavbarStyle.iconMargin}}>OpenCode</span>
-                </div>
+    return (
+        <div style={NavbarStyle.navbarDiv}>
+            <div style={NavbarStyle.navbarTitleDiv}>
+                <img alt="" style={{...NavbarStyle.mainIcon, ...NavbarStyle.iconMargin}} src={icon} onClick={() => {
+                    openHomepage()
+                }}/>
+                <span style={{...NavbarStyle.mainTitle, ...NavbarStyle.iconMargin}}>OpenCode</span>
+            </div>
             <div style={NavbarStyle.navbarIconDiv}>
-                <img alt="" src={info} style={{...NavbarStyle.infoIcon,...NavbarStyle.iconMargin}}/>
-                <img alt="" onClick={() => toggleTheme(!theme)} src={moon} style={{...NavbarStyle.moonIcon,...NavbarStyle.iconMargin}}/>
-                <img alt="" src={line} style={{...NavbarStyle.lineIcon,...NavbarStyle.iconMargin}}/>
-                <button style={{...NavbarStyle.buttonIcon,...NavbarStyle.iconMargin}}><span >Sign in</span></button>
+                <img alt="" src={info} style={{...NavbarStyle.infoIcon, ...NavbarStyle.iconMargin}}/>
+                <img alt="" onClick={() => toggleTheme(!theme)} src={moon}
+                     style={{...NavbarStyle.moonIcon, ...NavbarStyle.iconMargin}}/>
+                <img alt="" src={line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
+                {
+                    isSigIn ?
+                        <div>
+                            <img alt="Profile Icon" src={profileImage} style={{height: 28,width: 28}}/>
+                            <WhiteText text = "sanjeev"/>
+                        </div> :
+                        <button onClick={() => setIsSigIn(true)}
+                                style={{...NavbarStyle.buttonIcon, ...NavbarStyle.iconMargin}}><span>Sign in</span>
+                        </button>
+                }
+
             </div>
-            </div>
-        );
-    }
+        </div>
+    );
+}
 
