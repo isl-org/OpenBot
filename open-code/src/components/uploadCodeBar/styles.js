@@ -25,7 +25,8 @@ export const UploadBarStyle={
         fontFamily: "Gilroy-Medium",
         background:colors.openBotBlue,
         color:colors.whiteFont,
-        cursor:"pointer"
+        cursor:"pointer",
+
     },
     operationsDiv:{
         display: "flex",

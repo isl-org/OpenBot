@@ -34,7 +34,10 @@ export const UploadCode = ()=>{
     const clickedButton = (e) => {
         const {name} = e.target;
         setButtonSelected(name);
-        setButtonActive((current) => !current);
+        setButtonActive(true);
+        setTimeout(() => {
+            setButtonActive(false);
+        }, 200);
     };
 
 
