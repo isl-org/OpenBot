@@ -63,5 +63,14 @@ export const NavbarStyle = {
     iconMargin: {
         margin: 10
     },
+    arrowMargin:{
+        margin: 2
+    },
+    playgroundName: {
+        display: "flex",
+        alignItems: "center",
+        cursor:"pointer"
+    },
+
 
 };

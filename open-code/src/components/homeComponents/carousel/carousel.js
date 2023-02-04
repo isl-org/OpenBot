@@ -12,7 +12,7 @@ export const HomeCarousel = () => {
     const {theme}=useContext(ThemeContext)
 
     return (
-        <Carousel axis={'horizontal'} infiniteLoop={true} interval={2000} autoPlay={true}>
+        <Carousel axis={'horizontal'} infiniteLoop={true} interval={2000} autoPlay={false}>
             <div className={styles.Content}>
                 <div className={styles.HeadingContent}>
                     <div className={styles.DragAndDropHeading + " "+ (theme === "dark" ? styles.MainDark : styles.MainLight )}>Drag and Drop</div>

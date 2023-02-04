@@ -8,13 +8,13 @@ export const FooterStyle = {
     },
 
     footerTextDiv: {
-        marginLeft: "4.25rem",
+        marginLeft: "4.2rem",
     },
 
     footerIconDiv: {
         display: "flex",
         alignItems: "center",
-        marginRight: "4.25rem",
+        marginRight: "4.2rem",
     },
 
     youtubePic: {
@@ -41,7 +41,7 @@ export const FooterStyle = {
     },
 
     textFont: {
-        fontSize: "1.1em",
+        fontSize: "1.2rem",
         fontFamily: "Gilroy-Medium"
     },
 

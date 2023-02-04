@@ -2,11 +2,11 @@ import React from 'react';
 import BlocklyComponent from "../../components/blockly";
 import {Toolbox} from "../../components/blockly/toolbox/Toolbox";
 import {UploadCode} from "../../components/uploadCodeBar/uploadCode";
-import {WorkspaceNavbar} from "../../components/playgroundNavbar/workspaceNavbar";
+import {Navbar} from "../../components/navBar/navbar";
 function Playground (){
         return (
             <div>
-                <WorkspaceNavbar/>
+                <Navbar/>
             <header>
                 <BlocklyComponent readOnly={false}
                                   move={{
