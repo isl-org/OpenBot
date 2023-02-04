@@ -104,28 +104,40 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #FFFFFF;
+
     box-shadow: rgb(0 0 0 / 25%) 0px 4px 15px;
     border-radius: 6px;
     outline: none;
 }
+.modelDark{
+    background: #303030;
+}
 
+.modelLight{
+    background: #FFFFFF;
+}
 .ModelHeading{
     height: 93px;
     width: 100%;
     border-width: 1px;
-    border-color: #CCCCCC;
     border-style: none none solid;
     font-family: Gilroy-SemiBold,sans-serif;
     font-size: 22px;
     line-height: 26px;
-    color: #000000;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 346px;
 }
 
+.ModelHeadingDark{
+    color: #FFFFFF;
+    border-color: #4d4c4c;
+}
+.ModelHeadingLight {
+    color: #000000;
+    border-color: #CCCCCC;
+}
 .CrossIcon{
     width: 24px;
     height: 24px;

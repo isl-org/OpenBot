@@ -1,9 +1,7 @@
 .main {
-    background-color: #FFFFFF !important;
     width: 88% !important;
     height: 164px !important;
     border-radius: 20px !important;
-    border: 1px solid #D9DBE9;
     box-shadow: 0px 14px 42px rgba(8, 15, 52, 0.06);
     left: 87px !important;
     bottom: 37px !important;
@@ -12,17 +10,35 @@
     gap: 100px;
 }
 
+.mainDark {
+    background-color: #303030 !important;
+    border: none;
+}
+
+.mainLight {
+    background-color: #FFFFFF !important;
+    border: 1px solid #D9DBE9;
+}
+
 .ContentAndImage {
     font-family: 'Gilroy-Regular', serif;
     font-size: 18px;
     line-height: 30px;
-    color: #6F6C90;
     margin: 0px !important;
     display: flex;
     flex: 0 1 auto !important;
     padding-left: 48px;
     gap: 22px;
 }
+
+.ContentAndImageLight {
+    color: #6F6C90;
+}
+
+.ContentAndImageDark {
+    color: #FFFFFF;
+}
+
 .cookieImage {
     width: 68px;
     height: 68px;
@@ -50,8 +66,6 @@
 .declineButton {
     width: 107px;
     height: 54px;
-    background: #FFFFFF !important;
-    box-shadow: 0px 3px 12px rgba(74, 58, 255, 0.18) !important;
     border-radius: 7px !important;
     display: flex;
     align-items: center;
@@ -61,12 +75,31 @@
     margin: 10px !important;
 }
 
+.declineButtonDark {
+    background: #303030 !important;
+    border: 1px solid #EFF0F7 !important;
+
+}
+
+.declineButtonLight {
+    background: #FFFFFF !important;
+    box-shadow: 0px 3px 12px rgba(74, 58, 255, 0.18) !important;
+}
+
 .btnDeclineText {
     font-family: 'Gilroy-Medium', serif;
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
     line-height: 18px;
+
+}
+
+.btnDeclineTextDark {
+    color: #FFFFFF;
+}
+
+.btnDeclineTextLight {
     color: #0071C5;
 }
 
