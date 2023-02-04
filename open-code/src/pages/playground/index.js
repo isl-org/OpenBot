@@ -23,11 +23,11 @@ function Playground (){
                 </BlocklyComponent>
             </header>
 
-                <UploadCode/>
-            </div>
+            <UploadCode/>
+        </div>
 
 
-        );
+    );
 
 }
 

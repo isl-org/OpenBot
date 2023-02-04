@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import Blockly from "blockly/core";
 import uploadIcon from "../../assets/images/icon/upload-cloud.png"
 import {UploadBarStyle} from "./styles";
 import undoIcon from "../../assets/images/icon/undo.png";
@@ -19,22 +20,31 @@ export const UploadCode = () => {
     let primaryWorkspace = useRef();
 
 
-        const generateCode = () => {
-            const code = javascriptGenerator.workspaceToCode(
-                primaryWorkspace.current
-            );
-            console.log(code);
-            setGenerateCode(!generate);
-            setCode(code)
-            setWorkspaceWidth(77.79)
-            setDrawer(true);
-        }
+    const generateCode = () => {
+        const code = javascriptGenerator.workspaceToCode(
+            primaryWorkspace.current
+        );
+        console.log(code);
+        setGenerateCode(!generate);
+        setCode(code)
+        setWorkspaceWidth(77.79)
+        setDrawer(true);
+    }
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
-    const [driveButtonActive,setDriveButtonActive]=useState(false);
+    const [driveButtonActive, setDriveButtonActive] = useState(false);
     const clickedButton = (e) => {
         const {name} = e.target;
         setButtonSelected(name);
+        if (name ==="redo"){
+            Blockly.mainWorkspace.undo(true);
+        }else if (name ==="undo"){
+            Blockly.mainWorkspace.undo(false);
+        }else if (name==="minus"){
+            Blockly.mainWorkspace.zoom(0.9);
+        }else if (name==="plus"){
+            Blockly.mainWorkspace.zoom(1.1);
+        }
         setButtonActive(true);
         setTimeout(() => {
             setButtonActive(false);
@@ -70,12 +80,13 @@ export const UploadCode = () => {
                     <img alt={""} style={UploadBarStyle.driveIconStyle}
                          src={driveButtonActive ? driveIcon : driveIconClicked}/>
                 </button>
-                <div style={{...UploadBarStyle.iconMargin,...UploadBarStyle.buttonMargin}}>
-                    <button onClick={clickedButton}
-                            style={{
-                                ...UploadBarStyle.buttonStyle, ...UploadBarStyle.undoButtonStyle,...UploadBarStyle.borderStyle,
-                                opacity: buttonSelected === "undo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
-                            }} name={"undo"}>
+                <div style={{...UploadBarStyle.iconMargin, ...UploadBarStyle.buttonMargin}}>
+                    <button
+                        onClick={clickedButton}
+                        style={{
+                            ...UploadBarStyle.buttonStyle, ...UploadBarStyle.undoButtonStyle, ...UploadBarStyle.borderStyle,
+                            opacity: buttonSelected === "undo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
+                        }} name={"undo"}>
                         <img alt={""} style={UploadBarStyle.commandSize} src={undoIcon}/>
                     </button>
                     <button onClick={clickedButton} style={{
@@ -91,7 +102,7 @@ export const UploadCode = () => {
 
                     <button onClick={clickedButton}
                             style={{
-                                ...UploadBarStyle.buttonStyle, ...UploadBarStyle.minusStyle,...UploadBarStyle.borderStyle,
+                                ...UploadBarStyle.buttonStyle, ...UploadBarStyle.minusStyle, ...UploadBarStyle.borderStyle,
                                 opacity: buttonSelected === "minus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
                             }} name={"minus"}>
                         <span style={UploadBarStyle.operationSize}>-</span>
