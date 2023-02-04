@@ -1,10 +1,13 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {FooterStyle} from "./styles";
 import youtube from "../../assets/images/icon/youtube-logo.png"
 import web from "../../assets/images/icon/web-logo.png"
 import playStore from "../../assets/images/icon/play-store-logo.png"
 import appStore from "../../assets/images/icon/app-store-logo.png"
+import {ThemeContext} from "../../App";
 function Footer() {
+
+    const {theme}=useContext(ThemeContext)
 
     return (
         <div style={FooterStyle.footerDiv}>
@@ -14,10 +17,11 @@ function Footer() {
                 <span style={{...FooterStyle.iconMargin, ...FooterStyle.textFont}}>Privacy Policy</span>
             </div>
             <div style={FooterStyle.footerIconDiv}>
-                <img style={{...FooterStyle.youtubePic, ...FooterStyle.iconMargin}} src={youtube}/>
-                <img style={{...FooterStyle.webPic, ...FooterStyle.iconMargin}} src={web}/>
-                <img style={{...FooterStyle.playStorePic, ...FooterStyle.iconMargin}} src={playStore}/>
-                <img style={{...FooterStyle.appStorePic, ...FooterStyle.iconMargin}} src={appStore}/>
+
+                <img alt="" style={{...FooterStyle.youtubePic,...FooterStyle.iconMargin}} src={youtube}/>
+                <img alt="" style={{...FooterStyle.webPic,...FooterStyle.iconMargin}} src={web}/>
+                <img alt="" style={{...FooterStyle.playStorePic,...FooterStyle.iconMargin}} src={playStore}/>
+                <img alt="" style={{...FooterStyle.appStorePic,...FooterStyle.iconMargin}} src={appStore}/>
 
             </div>
         </div>

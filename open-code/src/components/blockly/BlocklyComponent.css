@@ -1,8 +1,8 @@
 #blocklyDiv {
-  height: 77%;
+  height: 79%;
   width: 100%;
   position:fixed;
-  bottom: 90px;
+  margin-top:4.2%;
   color: #000000;
   background-color: white;
 }

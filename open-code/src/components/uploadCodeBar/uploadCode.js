@@ -70,10 +70,10 @@ export const UploadCode = () => {
                     <img alt={""} style={UploadBarStyle.driveIconStyle}
                          src={driveButtonActive ? driveIcon : driveIconClicked}/>
                 </button>
-                <div style={UploadBarStyle.iconMargin}>
+                <div style={{...UploadBarStyle.iconMargin,...UploadBarStyle.buttonMargin}}>
                     <button onClick={clickedButton}
                             style={{
-                                ...UploadBarStyle.buttonStyle, ...UploadBarStyle.undoButtonStyle,
+                                ...UploadBarStyle.buttonStyle, ...UploadBarStyle.undoButtonStyle,...UploadBarStyle.borderStyle,
                                 opacity: buttonSelected === "undo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
                             }} name={"undo"}>
                         <img alt={""} style={UploadBarStyle.commandSize} src={undoIcon}/>
@@ -91,7 +91,7 @@ export const UploadCode = () => {
 
                     <button onClick={clickedButton}
                             style={{
-                                ...UploadBarStyle.buttonStyle, ...UploadBarStyle.minusStyle,
+                                ...UploadBarStyle.buttonStyle, ...UploadBarStyle.minusStyle,...UploadBarStyle.borderStyle,
                                 opacity: buttonSelected === "minus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
                             }} name={"minus"}>
                         <span style={UploadBarStyle.operationSize}>-</span>
