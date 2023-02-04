@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Content} from "../../utils/constants";
-import Styles from "./LeftSection.module.css"
+import Styles from "./leftSection.module.css"
 import {ThemeContext} from "../../App";
 
 

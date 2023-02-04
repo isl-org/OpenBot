@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from "react";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import {StoreContext} from "../../context/Context";
+import {StoreContext} from "../../context/context";
 import QrCode from "../qrcode/qrcode";
 import {qrStyles} from "../qrcode/styles";
 import rightSlider from "../../assets/images/icon/right-slider.png"

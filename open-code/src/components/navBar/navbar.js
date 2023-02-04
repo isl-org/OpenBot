@@ -7,7 +7,7 @@ import profileImage from "../../assets/images/icon/profile-image.png"
 import {NavbarStyle} from "./styles";
 import {useNavigate} from "react-router-dom";
 import {ThemeContext} from "../../App"
-import WhiteText from "../fonts/WhiteText";
+import WhiteText from "../fonts/whiteText";
 
 export function Navbar() {
     let navigate = useNavigate();

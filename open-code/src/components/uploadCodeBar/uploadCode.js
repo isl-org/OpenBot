@@ -6,7 +6,7 @@ import redoIcon from "../../assets/images/icon/redo.png";
 import driveIcon from "../../assets/images/icon/drive.png";
 import {javascriptGenerator} from 'blockly/javascript';
 import {useRef, useContext} from "react";
-import {StoreContext} from "../../context/Context";
+import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 

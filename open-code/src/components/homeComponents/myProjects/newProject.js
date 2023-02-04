@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 // import {NewProjectStyles} from "./styles";
 import Triangle from "../../../assets/images/icon/triangle.png";
 import DarkTriangle from "../../../assets/images/icon/dark-triangle.png";
-import NewProjectButton from "./NewProjectButton";
+import NewProjectButton from "./newProjectButton";
 import {ThemeContext} from "../../../App";
 import styles from "./newProject.module.css";
 

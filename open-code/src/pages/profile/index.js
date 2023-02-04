@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {ProfileStyles} from "./styles";
-import LeftSection from "../../components/profile/LeftSection";
-import RightSection, {EditProfile} from "../../components/profile/RightSection";
+import LeftSection from "../../components/profile/leftSection";
+import RightSection, {EditProfile} from "../../components/profile/rightSection";
 import {Content} from "../../utils/constants";
-import HowToUpload from "../../components/howToUpLoad/HowToUpload";
-import Footer from "../../components/footer/Footer";
-import {Navbar} from "../../components/navBar/Navbar";
+import HowToUpload from "../../components/howToUpLoad/howToUpload";
+import Footer from "../../components/footer/footer";
+import {Navbar} from "../../components/navBar/navbar";
 
 function Profile(props) {
     const [tab, setTab] = useState(Content[0].title);

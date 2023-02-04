@@ -1,7 +1,7 @@
 import React from 'react';
 import {SavedProjectsStyles} from "./styles";
-import Card from "./Card";
-import NewProjectButton from "./NewProjectButton";
+import Card from "./card";
+import NewProjectButton from "./newProjectButton";
 
 function SavedProjects(props) {
     return (
