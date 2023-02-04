@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import icon from "../../assets/images/icon/open-bot-logo.png";
 import info from "../../assets/images/icon/info.png";
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
-import line from "../../assets/images/Line.png";
+import line from "../../assets/images/line.png";
 import downArrow from "../../assets/images/icon/down-arrow.png";
 import UpArrow from "../../assets/images/icon/up-arrow.png";
 import Edit from "../../assets/images/icon/edit.png";

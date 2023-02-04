@@ -1,0 +1,32 @@
+.profileDiv{
+    display: flex;
+    align-items: center;
+}
+.extraStyles{
+    margin: 10px;
+}
+
+.modalStyle{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 180px;
+    width: 260px;
+    padding-left: 20px;
+    background-color: white;
+    position: absolute;
+    right: 4%;
+    top: 65px;
+}
+.listStyle{
+    display: flex;
+    margin: 10px;
+}
+.modalIcon{
+    height: 24px;
+    width: 24px;
+    margin-right: 15px;
+}
+.modalText{
+    font-size: 20px;
+}
