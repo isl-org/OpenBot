@@ -6,7 +6,7 @@ import {Modal} from "@mui/material";
 import {StoreContext} from "../../../context/context";
 import styles from "./newProject.module.css"
 import {ThemeContext} from "../../../App";
-function NewProjectButton(props) {
+function NewProjectButton() {
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const {projectName,setProjectName} = useContext(StoreContext)

@@ -1,12 +1,11 @@
 import React, {useContext} from 'react';
-// import {NewProjectStyles} from "./styles";
 import Triangle from "../../../assets/images/icon/triangle.png";
 import DarkTriangle from "../../../assets/images/icon/dark-triangle.png";
 import NewProjectButton from "./newProjectButton";
 import {ThemeContext} from "../../../App";
 import styles from "./newProject.module.css";
 
-export const NewProject = (props) => {
+export const NewProject = () => {
     const {theme} = useContext(ThemeContext)
     return (
         <div className={styles.Main + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>

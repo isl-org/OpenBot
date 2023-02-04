@@ -1,28 +1,18 @@
-.ImageDrag {
-    width: 271px !important;
-    height: 322px;
-}
-
-.ImageSave {
-    width: 477px !important;
-    height: 374px;
-}
-
 .Content {
     justify-content: space-between;
     display: flex;
-    padding-top: 25px;
+    height: 100%;
+    width: 100%;
     padding-bottom: 25px;
-    padding-right: 106px;
+    padding-right: 7.4%;
     align-items: center;
 }
-
 .HeadingContent {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 40px;
-    margin-left: 104px;
+    margin-left: 7.8%;
 }
 
 .DragAndDropHeading {
@@ -31,15 +21,22 @@
     line-height: 26px;
     color: #000000;
 }
-
-
 .DragAndDropContent {
     font-family: 'Gilroy-Regular', serif;
     font-size: 18px;
     line-height: 27px;
     color: #000000;
     text-align: left;
-    width: 761px;
+    width: 88%;
+}
+
+.ImageDrag {
+    width: 20.3% !important;
+}
+
+.ImageSave {
+    width: 35.5% !important;
+    height: 374px;
 }
 
 .MainDark {
@@ -55,7 +52,7 @@
     font-size: 18px;
     line-height: 27px;
     text-align: left;
-    width: 619px;
+    width: 82%;
 }
 
 [class~=control-dots ] {
@@ -79,6 +76,9 @@
     display: none;
 }
 
+[class~=carousel-slider]{
+    height: 45.3vh;
+}
 [class~=control-arrow ] {
     display: none;
 }
