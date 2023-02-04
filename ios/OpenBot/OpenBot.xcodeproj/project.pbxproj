@@ -67,6 +67,7 @@
 		727D39499A8CF8EE76345872 /* AutopilotFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */; };
 		727D3A805DDE14D8AD205D31 /* VehicleControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */; };
 		727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */; };
+		727D3AB00A8DC1BC201DD809 /* openCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D36CD6B6092BF93DF9F03 /* openCodeController.swift */; };
 		727D3AEFE62BB8644729D602 /* popupWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3281CA65425580EDD4A4 /* popupWindowView.swift */; };
 		727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3189735FC4F7A4E4A6C1 /* Browser.swift */; };
 		727D3B90FC0EB50ACC220F11 /* RobotInfoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */; };
@@ -167,6 +168,7 @@
 		727D35819C2D0A82BB4E5A7D /* expandedAutoPilot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = expandedAutoPilot.swift; path = Autopilot/expandedAutoPilot.swift; sourceTree = "<group>"; };
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		727D36CD6B6092BF93DF9F03 /* openCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = openCodeController.swift; path = "open-code/openCodeController.swift"; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
 		727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RobotInfoFrame.swift; path = RobotInfo/RobotInfoFrame.swift; sourceTree = "<group>"; };
 		727D3879029901392BD7F608 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameViewController.swift; path = GameView/GameViewController.swift; sourceTree = "<group>"; };
@@ -457,6 +459,7 @@
 				727D3CE316DD4B67FB82F0BB /* CameraController.swift */,
 				727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */,
 				727D3F8E752887E2A76CC901 /* CheckBox.swift */,
+				727D36CD6B6092BF93DF9F03 /* openCodeController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -819,6 +822,7 @@
 				4FEF46257887327B74C4900E /* JSON.swift in Sources */,
 				727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */,
 				4FEF43D0E4F94DBBD4DB0614 /* Date.swift in Sources */,
+				727D3AB00A8DC1BC201DD809 /* openCodeController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
