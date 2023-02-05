@@ -851,7 +851,8 @@ public abstract class CameraActivity extends AppCompatActivity
   protected int getCameraUserSelection() {
     // during initialisation there is no cameraToggle so we assume default
     if (this.cameraSwitchCompat == null) {
-      this.cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
+      // use default from preferences
+      this.cameraSelection = new SharedPreferencesManager(getContext()).getCameraFacing();
     } else {
       this.cameraSelection = this.cameraSwitchCompat.isChecked() ? 0 : 1;
     }

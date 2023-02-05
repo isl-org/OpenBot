@@ -35,6 +35,14 @@
             app:title="Microphone" />
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/camera">
+
+        <SwitchPreferenceCompat
+            app:key="camera_lens_facing"
+            app:title="Use camera facing front" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="Video Streaming">
 
         <ListPreference

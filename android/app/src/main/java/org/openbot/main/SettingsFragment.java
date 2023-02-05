@@ -16,11 +16,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.camera.core.CameraSelector;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 import org.openbot.R;
+import org.openbot.env.SharedPreferencesManager;
 import org.openbot.utils.Constants;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Vehicle;
@@ -34,6 +36,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
   private SwitchPreferenceCompat storage;
   private SwitchPreferenceCompat location;
   private SwitchPreferenceCompat mic;
+  private SwitchPreferenceCompat cameralensfacing;
 
   private final ActivityResultLauncher<String[]> requestPermissionLauncher =
       registerForActivityResult(
@@ -187,6 +190,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
               } else requestPermissionLauncher.launch(new String[] {Constants.PERMISSION_AUDIO});
             }
             return false;
+          });
+    }
+
+    // Default camera to use (Back or Front camera)
+    cameralensfacing = findPreference(SharedPreferencesManager.CAMERA_FACING);
+    if (cameralensfacing != null) {
+      cameralensfacing.setOnPreferenceClickListener(
+          preference -> {
+            if (cameralensfacing.isChecked())
+              new SharedPreferencesManager(getContext())
+                  .setCameraFacing(CameraSelector.LENS_FACING_FRONT);
+            else
+              new SharedPreferencesManager(getContext())
+                  .setCameraFacing(CameraSelector.LENS_FACING_BACK);
+            return true;
           });
     }
 

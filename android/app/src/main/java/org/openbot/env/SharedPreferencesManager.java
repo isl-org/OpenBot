@@ -2,6 +2,7 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import androidx.camera.core.CameraSelector;
 import org.openbot.tflite.Network;
 import org.openbot.utils.Enums;
 
@@ -32,6 +33,7 @@ public class SharedPreferencesManager {
   private static final int DEFAULT_NUM_THREAD = 4;
   private static final String NUM_THREAD = "NUM_THREAD";
   private static final String CAMERA_SWITCH = "CAMERA_SWITCH";
+  public static final String CAMERA_FACING = "camera_lens_facing";
   private static final String SHEET_EXPANDED = "SHEET_EXPANDED";
   private static final String DELAY = "DELAY";
 
@@ -72,8 +74,14 @@ public class SharedPreferencesManager {
     return preferences.getInt(NUM_THREAD, DEFAULT_NUM_THREAD);
   }
 
+  /**
+   * Used in bottom sheet manual camera toggle, depends on shared preference for camera lens facing
+   *
+   * @return true for front camera otherwise false
+   */
   public boolean getCameraSwitch() {
-    return preferences.getBoolean(CAMERA_SWITCH, false);
+    return getCameraFacing() == CameraSelector.LENS_FACING_FRONT;
+    // return preferences.getBoolean(CAMERA_SWITCH, false);
   }
 
   public boolean getSheetExpanded() {
@@ -150,6 +158,28 @@ public class SharedPreferencesManager {
 
   public void setCameraSwitch(boolean isChecked) {
     preferences.edit().putBoolean(CAMERA_SWITCH, isChecked).apply();
+  }
+
+  /**
+   * Set/remember default camera facing
+   *
+   * @param cameraFacing int CameraSelector.LENS_FACING_BACK=1 or LENS_FACING_FRONT=0
+   */
+  public void setCameraFacing(int cameraFacing) {
+    if (cameraFacing == CameraSelector.LENS_FACING_FRONT)
+      preferences.edit().putBoolean(CAMERA_FACING, true).apply();
+    else preferences.edit().putBoolean(CAMERA_FACING, false).apply();
+  }
+
+  /**
+   * Get default camera facing. If not set default is LENS_FACING_BACK
+   *
+   * @return CameraSelector.LENS_FACING_BACK or LENS_FACING_FRONT
+   */
+  public int getCameraFacing() {
+    boolean facingswitch = preferences.getBoolean(CAMERA_FACING, false);
+    if (facingswitch) return CameraSelector.LENS_FACING_FRONT;
+    else return CameraSelector.LENS_FACING_BACK;
   }
 
   public void setSheetExpanded(boolean expanded) {

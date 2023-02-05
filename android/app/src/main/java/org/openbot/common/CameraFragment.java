@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.openbot.R;
 import org.openbot.env.ImageUtils;
+import org.openbot.env.SharedPreferencesManager;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
@@ -38,7 +39,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private ExecutorService cameraExecutor;
   private PreviewView previewView;
   private Preview preview;
-  protected static int lensFacing = CameraSelector.LENS_FACING_BACK;
+  protected int lensFacing = CameraSelector.LENS_FACING_BACK; // altered by shared preferences
   private ProcessCameraProvider cameraProvider;
   private Size analyserResolution = Enums.Preview.HD.getValue();
   private YuvToRgbConverter converter;
@@ -79,6 +80,9 @@ public abstract class CameraFragment extends ControlsFragment {
 
   @SuppressLint("RestrictedApi")
   private void setupCamera() {
+    // get default camera facing to use from preferences
+    lensFacing = new SharedPreferencesManager(getContext()).getCameraFacing();
+
     ListenableFuture<ProcessCameraProvider> cameraProviderFuture =
         ProcessCameraProvider.getInstance(requireContext());
 
