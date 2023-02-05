@@ -1,19 +1,22 @@
 .profileDiv{
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 .extraStyles{
     margin: 10px;
 }
 
-.modalStyle{
+.profileOptionModalStyle{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    outline: none;
     height: 180px;
     width: 260px;
     padding-left: 20px;
     background-color: white;
+    border-radius: 5px;
     position: absolute;
     right: 4%;
     top: 65px;
@@ -21,6 +24,7 @@
 .listStyle{
     display: flex;
     margin: 10px;
+    cursor: pointer;
 }
 .modalIcon{
     height: 24px;
@@ -73,4 +77,15 @@
 .icon {
     width: 24px;
     height: 24px;
+}
+
+.editProfileModal{
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 60%;
+    width: 70%;
+    background-color: white;
+    border-radius: 10px;
 }

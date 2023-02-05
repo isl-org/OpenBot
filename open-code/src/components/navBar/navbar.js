@@ -14,12 +14,14 @@ import {Box, Modal, Popper} from "@mui/material";
 import BlueText from "../fonts/blueText";
 import {Images} from "../../utils/images";
 import {StoreContext} from "../../context/context";
-import { useLocation } from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import UpArrow from "../../assets/images/icon/up-arrow.png";
 import Edit from "../../assets/images/icon/edit.png";
 import trash from "../../assets/images/icon/trash.png";
 import {QrDrawer} from "../drower/drower";
 import DeleteModel from "../../pages/profile/deleteModel";
+import SimpleInputComponent from "../inputComponent/simpleInputComponent";
+
 export function Navbar() {
     const {theme, toggleTheme} = useContext(ThemeContext)
     const [isSigIn, setIsSigIn] = useState(false);
@@ -29,26 +31,24 @@ export function Navbar() {
     const handleClick = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
     };
-
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popper' : undefined;
-
     let navigate = useNavigate();
-
+    const [isProfileModal, setIsProfileModal] = useState(false)
+    const [isEditProfileModal, setIsEditProfileModal] = useState(false)
     const openHomepage = () => {
         let path = `/`;
         navigate(path);
     }
-
     const location = useLocation();
     const handleDelete = () => {
         setDeleteProject(true)
     }
 
     return (
-        <>
-            { deleteProject && <DeleteModel setDeleteProject={setDeleteProject}/>}
-           <div style={NavbarStyle.navbarDiv}>
+        <div>
+            {deleteProject && <DeleteModel setDeleteProject={setDeleteProject}/>}
+            <div style={NavbarStyle.navbarDiv}>
                 <div style={NavbarStyle.navbarTitleDiv}>
                     <img alt="" style={{...NavbarStyle.mainIcon, ...NavbarStyle.iconMargin}} src={icon} onClick={() => {
                         openHomepage()
@@ -56,41 +56,41 @@ export function Navbar() {
                     <span style={{...NavbarStyle.mainTitle, ...NavbarStyle.iconMargin}}>OpenCode</span>
                 </div>
 
-               {location.pathname==="/playground" ? !anchorEl ?
-                   <div style={NavbarStyle.playgroundName} onClick={handleClick}>
+                {location.pathname === "/playground" ? !anchorEl ?
+                        <div style={NavbarStyle.playgroundName} onClick={handleClick}>
                     <span
                         style={{...NavbarStyle.mainTitle, ...NavbarStyle.arrowMargin}}>{projectName}</span>
-                       <img src={downArrow}
-                            style={{...NavbarStyle.infoIcon, ...NavbarStyle.arrowMargin}}
-                            alt={icon}/>
-                   </div>
-                   :
-                   <>
-                       <div style={NavbarStyle.playgroundName}>
-                           <input type="text" className={styles.Edit}
-                                  id="userEdit"
-                                  onChange={(e) => setProjectName(e.target.value)}
-                                  style={{width: `${projectName.length}ch`}}
-                                  value={projectName}
-                           />
-                           <img src={UpArrow}
-                                style={{...NavbarStyle.infoIcon, ...NavbarStyle.arrowMargin}}
-                                onClick={handleClick} alt={icon}/>
-                       </div>
-                       <Popper id={id} open={open} anchorEl={anchorEl}>
-                           <div className={styles.option}>
-                               <div className={styles.item} onClick={handleClick}>
-                                   <img alt="Icon" className={styles.icon} src={Edit}/>
-                                   <div>Rename</div>
-                               </div>
-                               <div className={styles.item} onClick={handleDelete}>
-                                   <img alt="Icon" className={styles.icon} src={trash}/>
-                                   <div> Delete File</div>
-                               </div>
-                           </div>
-                       </Popper>
-                   </>
-               :""}
+                            <img src={downArrow}
+                                 style={{...NavbarStyle.infoIcon, ...NavbarStyle.arrowMargin}}
+                                 alt={icon}/>
+                        </div>
+                        :
+                        <>
+                            <div style={NavbarStyle.playgroundName}>
+                                <input type="text" className={styles.Edit}
+                                       id="userEdit"
+                                       onChange={(e) => setProjectName(e.target.value)}
+                                       style={{width: `${projectName.length}ch`}}
+                                       value={projectName}
+                                />
+                                <img src={UpArrow}
+                                     style={{...NavbarStyle.infoIcon, ...NavbarStyle.arrowMargin}}
+                                     onClick={handleClick} alt={icon}/>
+                            </div>
+                            <Popper id={id} open={open} anchorEl={anchorEl}>
+                                <div className={styles.option}>
+                                    <div className={styles.item} onClick={handleClick}>
+                                        <img alt="Icon" className={styles.icon} src={Edit}/>
+                                        <div>Rename</div>
+                                    </div>
+                                    <div className={styles.item} onClick={handleDelete}>
+                                        <img alt="Icon" className={styles.icon} src={trash}/>
+                                        <div> Delete File</div>
+                                    </div>
+                                </div>
+                            </Popper>
+                        </>
+                    : ""}
                 <div style={NavbarStyle.navbarIconDiv}>
                     <img alt="" src={info} style={{...NavbarStyle.infoIcon, ...NavbarStyle.iconMargin}}/>
                     <img alt="" onClick={() => toggleTheme(!theme)} src={moon}
@@ -98,42 +98,78 @@ export function Navbar() {
                     <img alt="" src={line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
                     {
                         isSigIn ?
-                            <div className={styles.profileDiv}>
+                            <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
                                 <img alt="Profile Icon" src={profileImage} style={{height: 28, width: 28}}/>
                                 <WhiteText extraStyle={styles.extraStyles} text="sanjeev"/>
-                                <img onClick={() => ProfileOption(true)} alt="arrow button" src={downArrow}
-                                     style={{height: 20, width: 20}}/>
-                                <ProfileOption/>
+                                <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
                             </div> :
                             <button onClick={() => setIsSigIn(true)}
                                     style={{...NavbarStyle.buttonIcon, ...NavbarStyle.iconMargin}}><span>Sign in</span>
                             </button>
                     }
-                    {location.pathname==="/playground" ? <QrDrawer/>:""}
+                    {
+                        isProfileModal && <ProfileOptionModal isProfileModal={isProfileModal}
+                                                              setIsProfileModal={setIsProfileModal}
+                                                              setIsEditProfileModal={setIsEditProfileModal}/>
+                    }
+                    {
+                        isEditProfileModal && <EditProfileModal isEditProfileModal={isEditProfileModal}
+                                                                setIsEditProfileModal={setIsEditProfileModal}/>
+                    }
+                    {location.pathname === "/playground" ? <QrDrawer/> : ""}
                 </div>
             </div>
-        </>
-    );
+        </div>
+    )
+        ;
 }
 
-export function ProfileOption(props){
-    // const {open} = props
-    return(
+export function ProfileOptionModal(props) {
+    const {isProfileModal, setIsProfileModal, setIsEditProfileModal} = props
+    const handleClose = () => {
+        setIsProfileModal(false)
+    }
+    return (
         <Modal
-            open={props}>
-            <Box className={styles.modalStyle}>
-                <div className={styles.listStyle}>
+            open={isProfileModal}
+            onClose={handleClose}>
+            <Box className={styles.profileOptionModalStyle}>
+                <div onClick={() => {
+                    setIsEditProfileModal(true)
+                    handleClose()
+                }} className={styles.listStyle}>
                     <img alt="icon" src={Images.userIcon} className={styles.modalIcon}/>
                     <BlueText extraStyle={styles.modalText} styles text={"Edit Profile"}/>
                 </div>
-                <div className={styles.listStyle}>
+                <div onClick={() => {
+                    handleClose()
+                }} className={styles.listStyle}>
                     <img alt="icon" src={Images.helpIcon} className={styles.modalIcon}/>
                     <BlueText extraStyle={styles.modalText} text={"Help Center"}/>
                 </div>
-                <div className={styles.listStyle}>
+                <div onClick={() => {
+                    handleClose()
+                }} className={styles.listStyle}>
                     <img alt="icon" src={Images.logoutIcon} className={styles.modalIcon}/>
                     <BlueText extraStyle={styles.modalText} text={"Logout"}/>
                 </div>
+            </Box>
+        </Modal>
+    )
+}
+
+export function EditProfileModal(props) {
+    const {isEditProfileModal, setIsEditProfileModal} = props
+    const handleClose = () => {
+        setIsEditProfileModal(false)
+    }
+    return (
+        <Modal
+            open={isEditProfileModal}
+            style={{display: "flex", alignItems: "center", justifyContent: "center"}}
+            onClose={handleClose}>
+            <Box className={styles.editProfileModal}>
+                <SimpleInputComponent/>
             </Box>
         </Modal>
     )
