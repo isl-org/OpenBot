@@ -1,0 +1,119 @@
+.barDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: 9%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.barDivLight{
+    background-color: white;
+}
+.barDivDark {
+    background-color: #202020;
+}
+
+.iconMargin {
+    margin: 10px;
+}
+
+.uploadCodeButton {
+    margin-left: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 0.5rem;
+    height: 3.1rem;
+    width: 95%;
+    background: rgb(0, 113, 197);
+    cursor: pointer;
+}
+
+.leftButton {
+    display: flex;
+    font-family: Gilroy-medium;
+    align-items: center;
+    font-size: 1.2rem;
+    color: rgb(248, 249, 251);
+    pointer-events: none;
+}
+
+.iconDiv {
+    height: 1.5rem;
+    width: 1.5rem;
+    pointer-events: none;
+}
+
+.operationsDiv {
+    display: flex;
+    align-items: center;
+    margin-right: 4rem;
+}
+
+.driveIconStyle {
+    height: 1.5rem;
+    width: 1.5rem;
+    cursor: pointer;
+}
+
+.buttonStyle {
+    width: 4.2rem;
+    height: 3.1rem;
+    border: none;
+    background: rgb(0, 113, 197);
+    color: rgb(248, 249, 251);
+    font-family: Gilroy-Medium;
+    cursor: pointer;
+}
+
+.undoButtonStyle {
+    border-radius: 0.4rem 0px 0px 0.4rem;
+    border: none;
+}
+
+.borderStyle {
+    border-right: 1px solid black
+}
+
+
+.commandSize {
+    width: 1.4rem;
+    height: 1.2rem;
+    pointer-events: none;
+}
+
+.minusStyle {
+    border-radius: 0.4rem 0 0 0.4rem;
+}
+
+.plusStyle {
+    border-radius: 0 0.4rem 0.4rem 0
+}
+
+.operationSize {
+    font-size: 2.4rem;
+    color: white;
+    pointer-events: none;
+    font-weight: 100
+}
+
+.iconMargin {
+    margin: 10px;
+}
+
+.driveStyle {
+    border: none;
+    background: none;
+}
+
+.buttonColor {
+    background: #0071c5;
+    opacity: 0.8;
+}
+
+.buttonMargin {
+    margin-right: 1px;
+}
