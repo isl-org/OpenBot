@@ -37,13 +37,13 @@ export const UploadCode = () => {
         const {name} = e.target;
         setButtonSelected(name);
         if (name ==="redo"){
-            Blockly.mainWorkspace.undo(true);
+            Blockly.getMainWorkspace().undo(true);
         }else if (name ==="undo"){
-            Blockly.mainWorkspace.undo(false);
+            Blockly.getMainWorkspace().undo(false);
         }else if (name==="minus"){
-            Blockly.mainWorkspace.zoom(0.9);
+            Blockly.getMainWorkspace().zoom(1, 2, -1.5)
         }else if (name==="plus"){
-            Blockly.mainWorkspace.zoom(1.1);
+            Blockly.getMainWorkspace().zoom(1, 2, 1.5)
         }
         setButtonActive(true);
         setTimeout(() => {
@@ -109,9 +109,9 @@ export const UploadCode = () => {
                     </button>
                     <button onClick={clickedButton} style={{
                         ...UploadBarStyle.buttonStyle, ...UploadBarStyle.plusStyle,
-                        opacity: buttonSelected === "add" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
+                        opacity: buttonSelected === "plus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
                     }}
-                            name={"add"}>
+                            name={"plus"}>
                         <span style={UploadBarStyle.operationSize}>+</span>
                     </button>
                 </div>
