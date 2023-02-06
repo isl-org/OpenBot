@@ -1,5 +1,24 @@
-.abc{
-    /*background-color: #2e8fd6;*/
-    width: 500px;
-    height: 200px;
+.mainDiv{
+    margin: 20px;
+}
+
+.inputSection{
+    font-family: Gilroy-Regular, sans-serif;
+    font-size: 20px;
+    height: 96%;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    padding-left: 10px;
+}
+
+.inputBorder{
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    border: 1px solid rgba(0, 113, 197, 0.4);
+    border-radius: 6px;
 }

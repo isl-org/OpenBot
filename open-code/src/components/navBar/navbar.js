@@ -1,5 +1,4 @@
-import React, {useContext, useState} from 'react';
-import info from "../../assets/images/icon/info.png"
+import React, {useContext, useState, useRef} from 'react';
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import line from "../../assets/images/line.png";
 import icon from "../../assets/images/icon/open-bot-logo.png"
@@ -92,7 +91,6 @@ export function Navbar() {
                         </>
                     : ""}
                 <div style={NavbarStyle.navbarIconDiv}>
-                    <img alt="" src={info} style={{...NavbarStyle.infoIcon, ...NavbarStyle.iconMargin}}/>
                     <img alt="" onClick={() => toggleTheme(!theme)} src={moon}
                          style={{...NavbarStyle.moonIcon, ...NavbarStyle.iconMargin}}/>
                     <img alt="" src={line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
@@ -126,6 +124,7 @@ export function Navbar() {
 
 export function ProfileOptionModal(props) {
     const {isProfileModal, setIsProfileModal, setIsEditProfileModal} = props
+    const location = useLocation();
     const handleClose = () => {
         setIsProfileModal(false)
     }
@@ -141,12 +140,15 @@ export function ProfileOptionModal(props) {
                     <img alt="icon" src={Images.userIcon} className={styles.modalIcon}/>
                     <BlueText extraStyle={styles.modalText} styles text={"Edit Profile"}/>
                 </div>
-                <div onClick={() => {
-                    handleClose()
-                }} className={styles.listStyle}>
-                    <img alt="icon" src={Images.helpIcon} className={styles.modalIcon}/>
-                    <BlueText extraStyle={styles.modalText} text={"Help Center"}/>
-                </div>
+                {
+                    location.pathname === "/playground" &&
+                    <div onClick={() => {
+                        handleClose()
+                    }} className={styles.listStyle}>
+                        <img alt="icon" src={Images.helpIcon} className={styles.modalIcon}/>
+                        <BlueText extraStyle={styles.modalText} text={"Help Center"}/>
+                    </div>
+                }
                 <div onClick={() => {
                     handleClose()
                 }} className={styles.listStyle}>
@@ -160,16 +162,35 @@ export function ProfileOptionModal(props) {
 
 export function EditProfileModal(props) {
     const {isEditProfileModal, setIsEditProfileModal} = props
+    const [file, setFile] = useState(null);
+    const inputRef = useRef();
     const handleClose = () => {
         setIsEditProfileModal(false)
     }
+
+    function handleChange(e) {
+        console.log(e.target.files[0].name.replace(/HEIC/g, 'jpg'));
+        setFile(URL.createObjectURL(e.target.files[0]));
+    }
+
     return (
         <Modal
             open={isEditProfileModal}
-            style={{display: "flex", alignItems: "center", justifyContent: "center"}}
-            onClose={handleClose}>
+            style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
             <Box className={styles.editProfileModal}>
-                <SimpleInputComponent/>
+                <div onClick={handleClose} className={styles.crossIconDiv}>
+                    <img alt={"cross icon"} style={{height: 20, width: 20}} src={Images.crossIcon}/>
+                </div>
+                <div style={{backgroundImage: `url(${file})`}} className={styles.profileImg}>
+                    <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
+                    <img onClick={() => inputRef.current.click()} alt={"edit profile icon"}
+                         className={styles.editProfileIcon} src={Images.editProfileIcon}/>
+                </div>
+                <div style={{display: "flex"}}>
+                    <SimpleInputComponent extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"}/>
+                    <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle} inputTitle={"Date Of Birth"}/>
+                </div>
+                <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle} inputTitle={"Email address"}/>
             </Box>
         </Modal>
     )
