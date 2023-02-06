@@ -108,25 +108,56 @@
     background-position: center;
 }
 
-.editProfileIcon{
+.editProfileIcon {
     height: 30px;
     width: 30px;
 }
 
 .inputExtraStyle {
-    height: 45%;
     width: 25%;
 }
 
 .emailInputExtraStyle {
-    height: 10%;
     width: 54%;
 }
 
-.crossIconDiv{
+.crossIconDiv {
     display: flex;
     justify-content: flex-end;
     margin: 20px 20px 0 0;
     cursor: pointer;
+}
+
+.logoutModal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logoutModalBox {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    height: 180px;
+    width: 400px;
+    border-radius: 6px;
+}
+
+.logoutButtonsExtraStyle {
+    height: 40px !important;
+    width: 100px !important;
+    font-size: 18px;
+}
+
+.logoutButtonsDiv {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    height: 80%;
+}
+
+.logoutMessageModal {
+    color: rgba(0, 0, 0, 0.5);
 }
 

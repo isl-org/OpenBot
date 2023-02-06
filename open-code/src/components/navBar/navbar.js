@@ -20,6 +20,8 @@ import trash from "../../assets/images/icon/trash.png";
 import {QrDrawer} from "../drower/drower";
 import DeleteModel from "../../pages/profile/deleteModel";
 import SimpleInputComponent from "../inputComponent/simpleInputComponent";
+import BlueButton from "../buttonComponent/blueButtonComponent";
+import BlackText from "../fonts/blackText";
 
 export function Navbar() {
     const {theme, toggleTheme} = useContext(ThemeContext)
@@ -35,6 +37,7 @@ export function Navbar() {
     let navigate = useNavigate();
     const [isProfileModal, setIsProfileModal] = useState(false)
     const [isEditProfileModal, setIsEditProfileModal] = useState(false)
+    const [isLogoutModal, setIsLogoutModal] = useState(false)
     const openHomepage = () => {
         let path = `/`;
         navigate(path);
@@ -108,11 +111,16 @@ export function Navbar() {
                     {
                         isProfileModal && <ProfileOptionModal isProfileModal={isProfileModal}
                                                               setIsProfileModal={setIsProfileModal}
-                                                              setIsEditProfileModal={setIsEditProfileModal}/>
+                                                              setIsEditProfileModal={setIsEditProfileModal}
+                                                              setIsLogoutModal={setIsLogoutModal}/>
                     }
                     {
                         isEditProfileModal && <EditProfileModal isEditProfileModal={isEditProfileModal}
                                                                 setIsEditProfileModal={setIsEditProfileModal}/>
+                    }
+                    {
+                        isLogoutModal && <LogoutModal isLogoutModal={isLogoutModal}
+                                                      setIsLogoutModal={setIsLogoutModal}/>
                     }
                     {location.pathname === "/playground" ? <QrDrawer/> : ""}
                 </div>
@@ -123,7 +131,7 @@ export function Navbar() {
 }
 
 export function ProfileOptionModal(props) {
-    const {isProfileModal, setIsProfileModal, setIsEditProfileModal} = props
+    const {isProfileModal, setIsProfileModal, setIsEditProfileModal, setIsLogoutModal} = props
     const location = useLocation();
     const handleClose = () => {
         setIsProfileModal(false)
@@ -150,6 +158,7 @@ export function ProfileOptionModal(props) {
                     </div>
                 }
                 <div onClick={() => {
+                    setIsLogoutModal(true)
                     handleClose()
                 }} className={styles.listStyle}>
                     <img alt="icon" src={Images.logoutIcon} className={styles.modalIcon}/>
@@ -162,7 +171,7 @@ export function ProfileOptionModal(props) {
 
 export function EditProfileModal(props) {
     const {isEditProfileModal, setIsEditProfileModal} = props
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState(Images.profileImage);
     const inputRef = useRef();
     const handleClose = () => {
         setIsEditProfileModal(false)
@@ -188,9 +197,41 @@ export function EditProfileModal(props) {
                 </div>
                 <div style={{display: "flex"}}>
                     <SimpleInputComponent extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"}/>
-                    <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle} inputTitle={"Date Of Birth"}/>
+                    <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
+                                          inputTitle={"Date Of Birth"}/>
                 </div>
-                <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle} inputTitle={"Email address"}/>
+                <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle}
+                                      inputTitle={"Email address"}/>
+
+                <div style={{display: "flex"}}>
+                    <BlueButton buttonType={"contained"} buttonName={"Save"}/>
+                    <BlueButton buttonName={"Cancel"}/>
+                </div>
+            </Box>
+        </Modal>
+    )
+}
+
+export function LogoutModal(props) {
+    const {setIsLogoutModal, isLogoutModal} = props
+    const handleClose = () => {
+        setIsLogoutModal(false)
+    }
+    return (
+        <Modal
+            className={styles.logoutModal}
+            open={isLogoutModal}
+            onClose={() => handleClose()}>
+            <Box className={styles.logoutModalBox}>
+                <BlackText text={"Confirm Logout"}/>
+                <div style={{marginTop: 20}}>
+                    <BlackText extraStyle={styles.logoutMessageModal} text={"Are you sure you want to logout?"}/>
+                </div>
+                <div className={styles.logoutButtonsDiv}>
+                    <BlueButton onClick={handleClose} buttonName={"Cancel"}
+                                extraStyle={styles.logoutButtonsExtraStyle}/>
+                    <BlueButton buttonType={"contained"} buttonName={"Ok"} extraStyle={styles.logoutButtonsExtraStyle}/>
+                </div>
             </Box>
         </Modal>
     )

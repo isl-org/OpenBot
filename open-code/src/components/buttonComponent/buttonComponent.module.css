@@ -1,0 +1,29 @@
+.containedButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 150px;
+    border-radius: 6px;
+    font-family: Gilroy-SemiBold, serif;
+    color: #ffffff;
+    font-size: 22px;
+    background: #0071C5;
+    margin: 20px;
+    cursor: pointer;
+}
+
+.normalButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 150px;
+    border: 1px solid #0071C5;
+    border-radius: 6px;
+    font-family: Gilroy-SemiBold, serif;
+    color: #0071C5;
+    font-size: 22px;
+    margin: 20px;
+    cursor: pointer;
+}

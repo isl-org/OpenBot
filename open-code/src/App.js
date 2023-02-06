@@ -6,7 +6,9 @@ import {createContext, useState} from "react";
 export const ThemeContext = createContext(null);
 
 function App() {
-
+    if(localStorage.getItem("theme")  == null){
+        localStorage.setItem("theme", "light");
+    }
     let onPageLoad = localStorage.getItem("theme") || "";
     const [theme, setTheme] = useState(onPageLoad);
     const toggleTheme = () => {
