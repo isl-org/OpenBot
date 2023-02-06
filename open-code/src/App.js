@@ -6,13 +6,19 @@ import {createContext, useState} from "react";
 export const ThemeContext = createContext(null);
 
 function App() {
-    const [theme, setTheme] = useState("light");
 
-
+    let onPageLoad = localStorage.getItem("theme") || "";
+    const [theme, setTheme] = useState(onPageLoad);
     const toggleTheme = () => {
-        setTheme((curr) => (curr === "light" ? "dark" : "light"));
+        let theme = localStorage.getItem("theme");
+        if (theme === "light") {
+            setTheme("dark")
+            localStorage.setItem("theme", "dark")
+        } else if (theme === "dark") {
+            setTheme("light")
+            localStorage.setItem("theme", "light")
+        }
     }
-
 
 
     return (
