@@ -5,28 +5,42 @@
 import Foundation
 import UIKit
 import JavaScriptCore
-class openCodeController : UIViewController {
+
+class openCodeController: UIViewController {
     var jsContext: JSContext!
+
     override func viewDidLoad() {
         super.viewDidLoad();
         initializeJS();
-        let script = "function secondFunction() { return 'i am Second Function'; } function getString(arg) { return 'Hello ' + arg + '! ' + secondFunction(); }"
+        let script = "function secondFunction() { return 'i am Second Function'; } function getString(arg) { return 'Hello ' + arg + '! ' + secondFunction() ;}"
         jsContext?.evaluateScript(script)
         jsContext?.evaluateScript(script)
         evaluateJavaScript()
 
     }
+
     func initializeJS() {
         jsContext = JSContext()
     }
 
-    func evaluateJavaScript(){
-
-        if let function = jsContext?.objectForKeyedSubscript("getString") {
-            let stringResult = function.call(withArguments: ["javscript inside swift"]).toString()
-            print("Result: \(stringResult)")
-        }
+    func swiftFunction() -> Void {
+        print("calling swift from js")
     }
 
 
+    func evaluateJavaScript() {
+        if let context = JSContext() {
+            let callSwiftFunction: @convention(block) () -> Void = { () in
+                return self.swiftFunction()
+            }
+            context.setObject(callSwiftFunction,
+                    forKeyedSubscript: "swiftFunction" as NSString)
+            context.evaluateScript("""
+                                   for(let i = 0;i<10;i++)
+                                   {swiftFunction()
+                                   }
+                                   """)
+        }
+
+    }
 }
