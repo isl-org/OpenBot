@@ -1,7 +1,7 @@
 import React, {useContext, useState, useRef} from 'react';
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import icon from "../../assets/images/icon/open-bot-logo.png"
-import line from "../../assets/images/line.png";
+import line from "../../assets/images/Line.png";
 import profileImage from "../../assets/images/icon/profile-image.png"
 import downArrow from "../../assets/images/icon/down-arrow.png"
 import {NavbarStyle} from "./styles";
