@@ -186,11 +186,6 @@ export const Toolbox = (props) => {
                 <Block type="lists_sort"/>
                 <Block type="lists_split"/>
             </Category>
-
-            <Category name="Math">
-
-            </Category>
-
             <Category colour="#C26F87" name="Events">
                 <Block type="test_react_field"/>,
                 <Block type="test_react_date_field"/>,
