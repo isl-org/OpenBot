@@ -21,7 +21,6 @@ import DeleteModel from "../../pages/profile/deleteModel";
 import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
-
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
     const [isSigIn, setIsSigIn] = useState(false);
@@ -203,8 +202,10 @@ export function EditProfileModal(props) {
                                       inputTitle={"Email address"}/>
 
                 <div style={{display: "flex"}}>
-                    <BlueButton onClick={handleClose} buttonType={"contained"} buttonName={"Save"}/>
-                    <BlueButton onClick={handleClose} buttonName={"Cancel"}/>
+                    <BlueButton onClick = {()=>{
+                        console.log("hello from save")
+                    }} buttonType={"contained"} buttonName={"Save"}/>
+                    <BlueButton onClick = {handleClose()} buttonName={"Cancel"}/>
                 </div>
             </Box>
         </Modal>
