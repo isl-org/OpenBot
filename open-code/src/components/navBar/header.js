@@ -1,7 +1,6 @@
 import React, {useContext, useState, useRef} from 'react';
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import icon from "../../assets/images/icon/open-bot-logo.png"
-import line from "../../assets/images/Line.png";
 import profileImage from "../../assets/images/icon/profile-image.png"
 import downArrow from "../../assets/images/icon/down-arrow.png"
 import {NavbarStyle} from "./styles";
@@ -23,7 +22,7 @@ import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 
-export function Navbar() {
+export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
     const [isSigIn, setIsSigIn] = useState(false);
     const {projectName, setProjectName} = useContext(StoreContext);
@@ -96,7 +95,7 @@ export function Navbar() {
                 <div style={NavbarStyle.navbarIconDiv}>
                     <img alt="" onClick={() => toggleTheme(!theme)} src={moon}
                          style={{...NavbarStyle.moonIcon, ...NavbarStyle.iconMargin}}/>
-                    <img alt="" src={line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
+                    <img alt="" src={Images.line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
                     {
                         isSigIn ?
                             <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
@@ -187,8 +186,8 @@ export function EditProfileModal(props) {
             open={isEditProfileModal}
             style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
             <Box className={styles.editProfileModal}>
-                <div onClick={handleClose} className={styles.crossIconDiv}>
-                    <img alt={"cross icon"} style={{height: 20, width: 20}} src={Images.crossIcon}/>
+                <div className={styles.crossIconDiv}>
+                    <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon} src={Images.crossIcon}/>
                 </div>
                 <div style={{backgroundImage: `url(${file})`}} className={styles.profileImg}>
                     <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
@@ -204,8 +203,8 @@ export function EditProfileModal(props) {
                                       inputTitle={"Email address"}/>
 
                 <div style={{display: "flex"}}>
-                    <BlueButton buttonType={"contained"} buttonName={"Save"}/>
-                    <BlueButton buttonName={"Cancel"}/>
+                    <BlueButton onClick={handleClose} buttonType={"contained"} buttonName={"Save"}/>
+                    <BlueButton onClick={handleClose} buttonName={"Cancel"}/>
                 </div>
             </Box>
         </Modal>

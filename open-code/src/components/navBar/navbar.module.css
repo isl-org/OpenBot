@@ -87,8 +87,7 @@
     outline: none;
     display: flex;
     flex-direction: column;
-    /*justify-content: center;*/
-    height: 60%;
+    height: 63%;
     width: 70%;
     background-color: white;
     border-radius: 12px;
@@ -125,6 +124,11 @@
     display: flex;
     justify-content: flex-end;
     margin: 20px 20px 0 0;
+}
+
+.crossIcon{
+    height: 20px;
+    width: 20px;
     cursor: pointer;
 }
 

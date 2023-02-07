@@ -5,14 +5,14 @@ import RightSection, {EditProfile} from "../../components/profile/rightSection";
 import {Content} from "../../utils/constants";
 import HowToUpload from "../../components/howToUpLoad/howToUpload";
 import Footer from "../../components/footer/footer";
-import {Navbar} from "../../components/navBar/navbar";
+import {Header} from "../../components/navBar/header";
 
 function Profile(props) {
     const [tab, setTab] = useState(Content[0].title);
     const [logOut, setLogOut] = useState(false);
     return (
         <div>
-            <Navbar/>
+            <Header/>
                 <div style={ProfileStyles.Main}>
                     <LeftSection  tab={tab} setTab={setTab} setLogOut={setLogOut}/>
                     <RightSection tab={tab} setLogOut={setLogOut} logOut={logOut}/>
