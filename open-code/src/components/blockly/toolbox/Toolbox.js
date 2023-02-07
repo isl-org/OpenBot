@@ -2,35 +2,11 @@ import React from 'react';
 import {Block, Category, Field, Shadow, Value} from "../index";
 import {controlsBlocks, loopBlocks} from "../blocks/generalBlocks";
 import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
-import * as Blockly from "blockly/core";
+import '../generator/generator'
+import '../blocks/customblocks'
 
 let x = [""];
 export const Toolbox = (props) => {
-    Blockly.Blocks['logic_or'] = {
-        init: function () {
-            this.jsonInit({
-                "type": "logic_or",
-                "message0": "%1 %2",
-                "args0": [
-                    {
-                        "type": "input_value",
-                        "name": "A",
-                        "check": "Boolean"
-                    },
-                    {
-                        "type": "input_value",
-                        "name": "B",
-                        "check": "Boolean"
-                    }
-                ],
-                "previousStatement": "Boolean",
-                "nextStatement": "Boolean",
-                "colour": 230,
-                "tooltip": "",
-                "helpUrl": ""
-            });
-        }
-    };
     return (
         <>
             <Category name="Control" colour="#567AE4">
@@ -84,27 +60,14 @@ export const Toolbox = (props) => {
             </Category>
 
             <Category colour="#8156C9" name="Variables">
-                <Block type="test_react_field"/>,
-                <Block type="test_react_date_field"/>,
-                <Block type="text_charAt">
-                    <Value name="VALUE">
-                        <Block type="variables_get">
-                            <Field name="VAR">text</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="Add"/>
-                <Block type="math_number">
-                    <Field name="NUM">0</Field>
-                </Block>
-                <Block type="area_of_circle">
-                    <Value name="Area">
-                        <Block type="math_number">
-                            <Field name="NUM">9</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="print"/>
+
+                <Block type="variables_set"/>
+                <Block type="variables_get"/>
+                <Block type="math_change"/>
+                <Block type="logic_boolean"/>
+                <Block type="logic_null"/>
+                <Block type="math_number"/>,
+                <Block type="text"/>
             </Category>
 
             <Category name="Text" colour="#D030BA">
@@ -344,7 +307,6 @@ export const Toolbox = (props) => {
                 <Block type="print"/>
             </Category>
             <Category colour="#717171" name="Detection">
-                <Block type="logic_or"/>
                 <Block type='print'/>
             </Category>
         </>
