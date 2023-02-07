@@ -391,9 +391,9 @@ public class Vehicle {
   }
 
   private void sendStringToDevice(String message) {
-    if (getConnectionType().equals("USB") && usbConnection.isOpen()) {
+    if (getConnectionType().equals("USB") && usbConnection != null && usbConnection.isOpen()) {
       usbConnection.send(message);
-    } else if (getConnectionType().equals("Bluetooth") && bluetoothManager.isBleConnected()) {
+    } else if (getConnectionType().equals("Bluetooth") && bluetoothManager != null && bluetoothManager.isBleConnected()) {
       sendStringToBle(message);
     }
   }
@@ -532,7 +532,9 @@ public class Vehicle {
 
   private String getConnectionPreferences(String name, String defaultValue) {
     try {
-      return sharedPreferences.getString(name, defaultValue);
+      if(sharedPreferences != null) {
+        return sharedPreferences.getString(name, defaultValue);
+      }else return defaultValue;
     } catch (ClassCastException e) {
       return defaultValue;
     }
