@@ -1,4 +1,4 @@
-import * as Blockly from 'blockly/core';
+import * as Blockly from "blockly/core";
 
 import '../fields/BlocklyReactField';
 import '../fields/DateField';

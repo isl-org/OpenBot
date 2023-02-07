@@ -1,7 +1,7 @@
 import {Block, Field, Shadow, Value} from "../index";
 import React from "react";
 import shadows from "@mui/material/styles/shadows";
-
+import './customblocks'
 export const controlsBlocks = (type)=>{
     return <Block type = {type}/>
 

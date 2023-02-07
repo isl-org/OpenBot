@@ -21,8 +21,7 @@
  * @author samelh@google.com (Sam El-Husseini)
  */
 
-// More on generating code:
-// https://developers.google.com/blockly/guides/create-custom-blocks/generating-code
+
 
 import {javascriptGenerator} from 'blockly/javascript';
 
