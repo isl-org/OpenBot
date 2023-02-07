@@ -203,9 +203,8 @@ export function EditProfileModal(props) {
 
                 <div style={{display: "flex"}}>
                     <BlueButton onClick = {()=>{
-                        console.log("hello from save")
                     }} buttonType={"contained"} buttonName={"Save"}/>
-                    <BlueButton onClick = {handleClose()} buttonName={"Cancel"}/>
+                    <BlueButton onClick = {()=>{handleClose()}} buttonName={"Cancel"}/>
                 </div>
             </Box>
         </Modal>

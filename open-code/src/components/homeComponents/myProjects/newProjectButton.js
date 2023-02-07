@@ -45,8 +45,7 @@ function NewProjectButton() {
                         <input className={styles.InputArea} type="text" value={projectName}
                                onChange={(e) => setProjectName(e.target.value)}/>
                     </div>
-
-                    <div className={styles.SaveBtn} onClick={OpenNewProjectHandle}>Create</div>
+                    <div className={styles.SaveBtn} onClick={()=>{OpenNewProjectHandle();console.log("hello from create")}}>Create</div>
                     </div>
             </Modal>
         </>
