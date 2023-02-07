@@ -165,3 +165,98 @@ Blockly.Blocks['print'] = {
     }
 };
 
+Blockly.Blocks["timer"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "timer %1 %2",
+            "args0": [
+                {
+                    "type": "field_number",
+                    "name": "NAME",
+                    "value": 0
+                },
+                {
+                    "type": "input_value",
+                    "name": "timer",
+                    "check": "Number"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["soundType"] = {
+    init: function () {
+        this.jsonInit({
+
+            "type": "block_type",
+            "message0": "sound on %1 %2",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "booleanType",
+                    "options": [
+                        [
+                            "true",
+                            "trueOption"
+                        ],
+                        [
+                            "false",
+                            "falseOption"
+                        ]
+                    ]
+                },
+                {
+                    "type": "input_value",
+                    "name": "NAME",
+                    "check": "Boolean"
+                }
+            ],
+            "colour": 345,
+            "tooltip": "",
+            "helpUrl": ""
+
+        });
+    }
+};
+
+Blockly.Blocks["soundSpeed"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "sound speed %1 %2",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "speed type",
+                    "options": [
+                        [
+                            "fast",
+                            "option 1"
+                        ],
+                        [
+                            "medium",
+                            "option 2"
+                        ]
+                    ]
+                },
+                {
+                    "type": "input_value",
+                    "name": "NAME",
+                    "check": "String"
+                }
+            ],
+            "colour": 345,
+            "tooltip": "",
+            "helpUrl": ""
+
+        });
+    }
+};
+

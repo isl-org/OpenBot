@@ -96,4 +96,27 @@ javascriptGenerator['print'] = function(block) {
     return code;
 };
 
+javascriptGenerator['timer'] = function(block) {
+    let number_name = block.getFieldValue('NAME');
+    let value_num = javascriptGenerator.valueToCode(block, 'num', javascriptGenerator.ORDER_ATOMIC);
+    let code = '';
+    code +=  'wait : ' + number_name;
+    return code;
+};
 
+javascriptGenerator['block_type'] = function(block) {
+    let dropdown_booleanType = block.getFieldValue('booleanType');
+    let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
+
+    function soundType(){
+        if(dropdown_booleanType===true){
+            return true;
+        }
+        else if(dropdown_booleanType===false){
+            return false;
+        }
+    }
+    let code = '';
+    code += "noise : "+soundType();
+    return code;
+};

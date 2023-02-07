@@ -68,6 +68,7 @@ export const Toolbox = (props) => {
                 <Block type="logic_null"/>
                 <Block type="math_number"/>,
                 <Block type="text"/>
+                <Block type="timer"/>
             </Category>
 
             <Category name="Text" colour="#D030BA">
@@ -186,51 +187,11 @@ export const Toolbox = (props) => {
                 <Block type="lists_sort"/>
                 <Block type="lists_split"/>
             </Category>
-            <Category colour="#C26F87" name="Events">
-                <Block type="test_react_field"/>,
-                <Block type="test_react_date_field"/>,
-                <Block type="text_charAt">
-                    <Value name="VALUE">
-                        <Block type="variables_get">
-                            <Field name="VAR">text</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="Add"/>
-                <Block type="math_number">
-                    <Field name="NUM">0</Field>
-                </Block>
-                <Block type="area_of_circle">
-                    <Value name="Area">
-                        <Block type="math_number">
-                            <Field name="NUM">9</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="print"/>
-            </Category>
             <Category colour="#5BBC73" name="Sound">
-                <Block type="test_react_field"/>,
-                <Block type="test_react_date_field"/>,
-                <Block type="text_charAt">
-                    <Value name="VALUE">
-                        <Block type="variables_get">
-                            <Field name="VAR">text</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="Add"/>
-                <Block type="math_number">
-                    <Field name="NUM">0</Field>
-                </Block>
-                <Block type="area_of_circle">
-                    <Value name="Area">
-                        <Block type="math_number">
-                            <Field name="NUM">9</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="print"/>
+                <Block type="soundType"/>,
+                <Block type="soundSpeed"/>,
+                {/*<Block type="mediumSpeed"/>,*/}
+                {/*<Block type="dualDrive"/>*/},
             </Category>
             <Category colour="#61A8EC" name="Sensing">
                 <Block type="test_react_field"/>,
