@@ -169,17 +169,12 @@ Blockly.Blocks["timer"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "timer %1 %2",
+            "message0": "timer %1",
             "args0": [
                 {
                     "type": "field_number",
                     "name": "NAME",
                     "value": 0
-                },
-                {
-                    "type": "input_value",
-                    "name": "timer",
-                    "check": "Number"
                 }
             ],
             "previousStatement": null,
@@ -196,7 +191,7 @@ Blockly.Blocks["soundIs"] = {
         this.jsonInit({
 
             "type": "block_type",
-            "message0": "sound on %1 %2",
+            "message0": "sound on %1",
             "args0": [
                 {
                     "type": "field_dropdown",
@@ -212,11 +207,6 @@ Blockly.Blocks["soundIs"] = {
                         ]
                     ]
                 },
-                {
-                    "type": "input_value",
-                    "name": "NAME",
-                    "check": "Boolean"
-                }
             ],
             "previousStatement": null,
             "nextStatement": null,
@@ -232,33 +222,27 @@ Blockly.Blocks["soundType"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "sound speed %1 %2",
+            "message0": "sound speed %1",
             "args0": [
-            {
-                "type": "field_dropdown",
-                "name": "type",
-                "options": [
-                    [
-                        "slow",
-                        "OPTION1"
-                    ],
-                    [
-                        "medium",
-                        "OPTION2"
-                    ],
-                    [
-                        "fast",
-                        "OPTION3"
+                {
+                    "type": "field_dropdown",
+                    "name": "type",
+                    "options": [
+                        [
+                            "slow",
+                            "OPTION1"
+                        ],
+                        [
+                            "medium",
+                            "OPTION2"
+                        ],
+                        [
+                            "fast",
+                            "OPTION3"
+                        ]
                     ]
-                ]
-            },
-            {
-                "type": "input_value",
-                "name": "NAME",
-                "check": "Boolean",
-                "align": "CENTRE"
-            }
-        ],
+                },
+            ],
             "previousStatement": null,
             "nextStatement": null,
             "colour": 345,
@@ -272,7 +256,7 @@ Blockly.Blocks["soundMode"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "sound mode %1 %2",
+            "message0": "sound mode %1",
             "args0": [
                 {
                     "type": "field_dropdown",
@@ -292,11 +276,6 @@ Blockly.Blocks["soundMode"] = {
                         ]
                     ]
                 },
-                {
-                    "type": "input_value",
-                    "name": "NAME",
-                    "check": "Boolean"
-                }
             ],
             "previousStatement": null,
             "nextStatement": null,
@@ -307,3 +286,89 @@ Blockly.Blocks["soundMode"] = {
     }
 };
 
+
+Blockly.Blocks["movementDirection"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "move %1 by %2",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "direction_type",
+                    "options": [
+                        [
+                            "forward",
+                            "move_forward"
+                        ],
+                        [
+                            "backward",
+                            "move_backward"
+                        ],
+                        [
+                            "left",
+                            "move_left"
+                        ],
+                        [
+                            "right",
+                            "move_right"
+                        ]
+                    ]
+                },
+                {
+                    "type": "field_number",
+                    "name": "specified_amount",
+                    "value": 0,
+                    "min": -255,
+                    "max": 255
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 195,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+
+Blockly.Blocks["movementDistance"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "move %1 %2 %3 %4",
+            "args0": [
+                {
+                    "type": "field_label_serializable",
+                    "name": "left_name",
+                    "text": "left"
+                },
+                {
+                    "type": "field_number",
+                    "name": "left_distance",
+                    "value": 0,
+                    "min": -255,
+                    "max": 255
+                },
+                {
+                    "type": "field_label_serializable",
+                    "name": "right_name",
+                    "text": "right"
+                },
+                {
+                    "type": "field_number",
+                    "name": "right_distance",
+                    "value": 0,
+                    "min": -255,
+                    "max": 255
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 195,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};

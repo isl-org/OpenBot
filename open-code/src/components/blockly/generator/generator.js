@@ -108,7 +108,6 @@ javascriptGenerator['timer'] = function (block) {
 javascriptGenerator['soundIs'] = function (block) {
     let dropdown_booleanType = block.getFieldValue('DROPDOWN');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
-
     function sound() {
         if (dropdown_booleanType === "OPTION1") {
             return true;
@@ -116,7 +115,6 @@ javascriptGenerator['soundIs'] = function (block) {
             return false;
         }
     }
-
     let code = '';
     code += "playSound(" + sound() + ");\n" + value_name;
     return code;
@@ -125,7 +123,6 @@ javascriptGenerator['soundIs'] = function (block) {
 javascriptGenerator['soundType'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
-
     function selectSound() {
         // eslint-disable-next-line default-case
         switch (dropdown_type) {
@@ -143,7 +140,6 @@ javascriptGenerator['soundType'] = function (block) {
             }
         }
     }
-
     let code = '';
     code += "playSoundSpeed(" + selectSound() + ");\n" + value_name;
     return code;
@@ -152,7 +148,6 @@ javascriptGenerator['soundType'] = function (block) {
 javascriptGenerator['soundMode'] = function (block) {
     let dropdown_mode_type = block.getFieldValue('mode_type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
-
     function soundMode() {
         // eslint-disable-next-line default-case
         switch (dropdown_mode_type) {
@@ -170,8 +165,46 @@ javascriptGenerator['soundMode'] = function (block) {
             }
         }
     }
-
     let code = '';
     code += "playSoundMode(" + soundMode() + ");\n" + value_name;
+    return code;
+};
+
+
+javascriptGenerator['movementDirection'] = function(block) {
+    let dropdown_direction_type = block.getFieldValue('direction_type');
+    let number_specified_amount = block.getFieldValue('specified_amount');
+    function selectMovement() {
+        // eslint-disable-next-line default-case
+        switch (dropdown_direction_type) {
+            case "move_forward" : {
+                return "moveForward";
+                break;
+            }
+            case "move_backward" : {
+                return "moveBackward";
+                break;
+            }
+            case "move_left" : {
+                return "moveLeft";
+                break;
+            }
+            case "move_right":{
+                return "moveRight";
+                break;
+            }
+        }
+    }
+    var code = '';
+    code +=  selectMovement() +"("+number_specified_amount +");\n";
+    return code;
+};
+
+javascriptGenerator['movementDistance'] = function(block) {
+    let number_left_distance = block.getFieldValue('left_distance');
+    let number_right_distance = block.getFieldValue('right_distance');
+
+    let code = '';
+    code+="move("+number_left_distance+","+number_right_distance+");\n";
     return code;
 };

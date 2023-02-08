@@ -190,7 +190,8 @@ export const Toolbox = (props) => {
             <Category colour="#5BBC73" name="Sound">
                 <Block type="soundIs"/>,
                 <Block type="soundType"/>,
-                <Block type="soundMode"/>,
+                <Block type="soundMode">
+                </Block>,
             </Category>
             <Category colour="#61A8EC" name="Sensing">
                 <Block type="test_react_field"/>,
@@ -239,27 +240,10 @@ export const Toolbox = (props) => {
                 <Block type="print"/>
             </Category>
             <Category colour="#9B61E2" name="Movement">
-                <Block type="test_react_field"/>,
-                <Block type="test_react_date_field"/>,
-                <Block type="text_charAt">
-                    <Value name="VALUE">
-                        <Block type="variables_get">
-                            <Field name="VAR">text</Field>
-                        </Block>
-                    </Value>
+                <Block type="movementDirection"/>,
+                <Block type="movementDistance">
+                    <Shadow type="text"/>
                 </Block>
-                <Block type="Add"/>
-                <Block type="math_number">
-                    <Field name="NUM">0</Field>
-                </Block>
-                <Block type="area_of_circle">
-                    <Value name="Area">
-                        <Block type="math_number">
-                            <Field name="NUM">9</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="print"/>
             </Category>
             <Category colour="#717171" name="Detection">
                 <Block type='print'/>
