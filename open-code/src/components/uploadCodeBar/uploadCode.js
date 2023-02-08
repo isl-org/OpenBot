@@ -60,14 +60,14 @@ export const UploadCode = () => {
         setButtonActive(true);
         setTimeout(() => {
             setButtonActive(false);
-        }, 200);
+        }, 100);
     };
 
     const handleDriveButton = () => {
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);
-        }, 200);
+        }, 100);
     }
 
 

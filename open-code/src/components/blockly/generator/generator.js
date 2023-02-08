@@ -118,41 +118,59 @@ javascriptGenerator['soundIs'] = function (block) {
     }
 
     let code = '';
-    code += "playSound("+ sound() + ");\n" + value_name;
+    code += "playSound(" + sound() + ");\n" + value_name;
     return code;
 };
 
-javascriptGenerator['soundType'] = function(block) {
+javascriptGenerator['soundType'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
 
     function selectSound() {
-        if (dropdown_type === "OPTION1") {
-            return "slow";
-        } else if (dropdown_type === "OPTION2") {
-            return "medium";
-        } else if(dropdown_type==="OPTION3"){
-            return "fast";
+        // eslint-disable-next-line default-case
+        switch (dropdown_type) {
+            case "OPTION1" : {
+                return "slow";
+                break;
+            }
+            case "OPTION2" : {
+                return "medium";
+                break;
+            }
+            case "OPTION3" : {
+                return "fast";
+                break;
+            }
         }
     }
+
     let code = '';
     code += "playSoundSpeed(" + selectSound() + ");\n" + value_name;
     return code;
 };
 
-javascriptGenerator['soundMode'] = function(block) {
+javascriptGenerator['soundMode'] = function (block) {
     let dropdown_mode_type = block.getFieldValue('mode_type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
 
     function soundMode() {
-        if (dropdown_mode_type === "OPTION1") {
-            return "dual drive";
-        } else if (dropdown_mode_type === "OPTION2") {
-            return "joystick control";
-        } else if(dropdown_mode_type==="OPTION3"){
-            return "gamepad";
+        // eslint-disable-next-line default-case
+        switch (dropdown_mode_type) {
+            case "OPTION1" : {
+                return "dual drive";
+                break;
+            }
+            case "OPTION2" : {
+                return "joystick control";
+                break;
+            }
+            case "OPTION3" : {
+                return "gamepad";
+                break;
+            }
         }
     }
+
     let code = '';
     code += "playSoundMode(" + soundMode() + ");\n" + value_name;
     return code;
