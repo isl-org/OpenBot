@@ -188,10 +188,9 @@ export const Toolbox = (props) => {
                 <Block type="lists_split"/>
             </Category>
             <Category colour="#5BBC73" name="Sound">
+                <Block type="soundIs"/>,
                 <Block type="soundType"/>,
-                <Block type="soundSpeed"/>,
-                {/*<Block type="mediumSpeed"/>,*/}
-                {/*<Block type="dualDrive"/>*/},
+                <Block type="soundMode"/>,
             </Category>
             <Category colour="#61A8EC" name="Sensing">
                 <Block type="test_react_field"/>,

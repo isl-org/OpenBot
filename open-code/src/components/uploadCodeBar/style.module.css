@@ -65,7 +65,7 @@
     border: none;
     background: rgb(0, 113, 197);
     color: rgb(248, 249, 251);
-    font-family: Gilroy-Medium;
+    font-family: Gilroy-Medium,sans-serif;
     cursor: pointer;
 }
 
