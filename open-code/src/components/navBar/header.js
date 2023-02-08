@@ -28,6 +28,7 @@ export function Header() {
     const {projectName, setProjectName} = useContext(StoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [deleteProject, setDeleteProject] = useState(false);
+    const [isHelpCenterModal, setIsHelpCenterModal] = useState(false)
     const handleClick = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
     };
@@ -124,7 +125,8 @@ export function Header() {
                         isProfileModal && <ProfileOptionModal isProfileModal={isProfileModal}
                                                               setIsProfileModal={setIsProfileModal}
                                                               setIsEditProfileModal={setIsEditProfileModal}
-                                                              setIsLogoutModal={setIsLogoutModal}/>
+                                                              setIsLogoutModal={setIsLogoutModal}
+                                                              setIsHelpCenterModal={setIsHelpCenterModal}/>
                     }
                     {
                         isEditProfileModal && <EditProfileModal isEditProfileModal={isEditProfileModal}
@@ -133,6 +135,9 @@ export function Header() {
                     {
                         isLogoutModal && <LogoutModal isLogoutModal={isLogoutModal}
                                                       setIsLogoutModal={setIsLogoutModal}/>
+                    }
+                    {
+                        isHelpCenterModal && <HelpCenterModal/>
                     }
                     {location.pathname === "/playground" ? <QrDrawer/> : ""}
                 </div>
@@ -143,7 +148,7 @@ export function Header() {
 }
 
 export function ProfileOptionModal(props) {
-    const {isProfileModal, setIsProfileModal, setIsEditProfileModal, setIsLogoutModal} = props
+    const {isProfileModal, setIsProfileModal, setIsEditProfileModal, setIsLogoutModal, setIsHelpCenterModal} = props
     const location = useLocation();
     const handleClose = () => {
         setIsProfileModal(false)
@@ -163,6 +168,7 @@ export function ProfileOptionModal(props) {
                 {
                     location.pathname === "/playground" &&
                     <div onClick={() => {
+                        setIsHelpCenterModal(true)
                         handleClose()
                     }} className={styles.listStyle}>
                         <img alt="icon" src={Images.helpIcon} className={styles.modalIcon}/>
@@ -245,6 +251,18 @@ export function LogoutModal(props) {
                                 extraStyle={styles.logoutButtonsExtraStyle}/>
                     <BlueButton buttonType={"contained"} buttonName={"Ok"} extraStyle={styles.logoutButtonsExtraStyle}/>
                 </div>
+            </Box>
+        </Modal>
+    )
+}
+
+export function HelpCenterModal(props) {
+    return(
+        <Modal
+            style={{display: "flex", alignItems: "center", justifyContent: "center"}}
+            open={true}>
+            <Box className={styles.helpCenterModalBox}>
+
             </Box>
         </Modal>
     )

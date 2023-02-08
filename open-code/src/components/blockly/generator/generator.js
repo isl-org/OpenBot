@@ -22,8 +22,8 @@
  */
 
 
-
 import {javascriptGenerator} from 'blockly/javascript';
+import {OPTIONS} from "react-cookie-consent";
 
 javascriptGenerator['test_react_field'] = function (block) {
     return 'console.log(\'custom block\');\n';
@@ -74,26 +74,86 @@ javascriptGenerator['Add'] = function (block) {
     return code;
 };
 
-javascriptGenerator['area_of_circle'] = function(block) {
+javascriptGenerator['area_of_circle'] = function (block) {
     let radius = javascriptGenerator.valueToCode(block, 'Area', javascriptGenerator.ORDER_ATOMIC);
-    let pi = 3.14159265358979323846;
+    let pi = 3.14;
     let code = '';
+
     function findArea(r) {
         return (pi * r * r);
     }
+
     let Area = findArea(radius);
 
-    code+=''+Area+''
+    code += '' + Area + ''
     return code;
 };
 
-javascriptGenerator['print'] = function(block) {
+javascriptGenerator['print'] = function (block) {
     let value = javascriptGenerator.valueToCode(block, 'print', javascriptGenerator.ORDER_ATOMIC);
-    // TODO: Assemble JavaScript into code variable.
     let code = '';
-    code+= 'console.log(' + value + ')\n';
+    code += 'console.log(' + value + ')\n';
 
     return code;
 };
 
+javascriptGenerator['timer'] = function (block) {
+    let number_name = block.getFieldValue('NAME');
+    let value_num = javascriptGenerator.valueToCode(block, 'num', javascriptGenerator.ORDER_ATOMIC);
+    let code = '';
+    code += 'wait(' + number_name + ");\n" + value_num;
+    return code;
+};
 
+javascriptGenerator['soundIs'] = function (block) {
+    let dropdown_booleanType = block.getFieldValue('DROPDOWN');
+    let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
+
+    function sound() {
+        if (dropdown_booleanType === "OPTION1") {
+            return true;
+        } else if (dropdown_booleanType === "OPTION2") {
+            return false;
+        }
+    }
+
+    let code = '';
+    code += "playSound("+ sound() + ");\n" + value_name;
+    return code;
+};
+
+javascriptGenerator['soundType'] = function(block) {
+    let dropdown_type = block.getFieldValue('type');
+    let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
+
+    function selectSound() {
+        if (dropdown_type === "OPTION1") {
+            return "slow";
+        } else if (dropdown_type === "OPTION2") {
+            return "medium";
+        } else if(dropdown_type==="OPTION3"){
+            return "fast";
+        }
+    }
+    let code = '';
+    code += "playSoundSpeed(" + selectSound() + ");\n" + value_name;
+    return code;
+};
+
+javascriptGenerator['soundMode'] = function(block) {
+    let dropdown_mode_type = block.getFieldValue('mode_type');
+    let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
+
+    function soundMode() {
+        if (dropdown_mode_type === "OPTION1") {
+            return "dual drive";
+        } else if (dropdown_mode_type === "OPTION2") {
+            return "joystick control";
+        } else if(dropdown_mode_type==="OPTION3"){
+            return "gamepad";
+        }
+    }
+    let code = '';
+    code += "playSoundMode(" + soundMode() + ");\n" + value_name;
+    return code;
+};

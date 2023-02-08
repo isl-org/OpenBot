@@ -165,3 +165,14 @@
     color: rgba(0, 0, 0, 0.5);
 }
 
+.helpCenterModalBox{
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    height: 63%;
+    width: 70%;
+    background-color: white;
+    border-radius: 12px;
+    padding-left: 5%;
+}
+

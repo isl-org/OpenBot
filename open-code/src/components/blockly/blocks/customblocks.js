@@ -165,3 +165,145 @@ Blockly.Blocks['print'] = {
     }
 };
 
+Blockly.Blocks["timer"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "timer %1 %2",
+            "args0": [
+                {
+                    "type": "field_number",
+                    "name": "NAME",
+                    "value": 0
+                },
+                {
+                    "type": "input_value",
+                    "name": "timer",
+                    "check": "Number"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["soundIs"] = {
+    init: function () {
+        this.jsonInit({
+
+            "type": "block_type",
+            "message0": "sound on %1 %2",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "DROPDOWN",
+                    "options": [
+                        [
+                            "true",
+                            "OPTION1"
+                        ],
+                        [
+                            "false",
+                            "OPTION2"
+                        ]
+                    ]
+                },
+                {
+                    "type": "input_value",
+                    "name": "NAME",
+                    "check": "Boolean"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 345,
+            "tooltip": "",
+            "helpUrl": "",
+
+        });
+    }
+};
+
+Blockly.Blocks["soundType"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "sound speed %1 %2",
+            "args0": [
+            {
+                "type": "field_dropdown",
+                "name": "type",
+                "options": [
+                    [
+                        "slow",
+                        "OPTION1"
+                    ],
+                    [
+                        "medium",
+                        "OPTION2"
+                    ],
+                    [
+                        "fast",
+                        "OPTION3"
+                    ]
+                ]
+            },
+            {
+                "type": "input_value",
+                "name": "NAME",
+                "check": "Boolean",
+                "align": "CENTRE"
+            }
+        ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 345,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["soundMode"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "sound mode %1 %2",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "mode_type",
+                    "options": [
+                        [
+                            "dual drive",
+                            "OPTION1"
+                        ],
+                        [
+                            "joystick control",
+                            "OPTION2"
+                        ],
+                        [
+                            "gamepad",
+                            "OPTION3"
+                        ]
+                    ]
+                },
+                {
+                    "type": "input_value",
+                    "name": "NAME",
+                    "check": "Boolean"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 345,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
