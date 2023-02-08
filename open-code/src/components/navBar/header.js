@@ -40,6 +40,7 @@ export function Header() {
     const [isLogoutModal, setIsLogoutModal] = useState(false)
     const [userName,setUserName] = useState('');
     const [profileIcon,setProfileIcon] = useState(profileImage)
+    const [user,setUser] = useState(null);
     const openHomepage = () => {
         let path = `/`;
         navigate(path);
@@ -113,6 +114,12 @@ export function Header() {
                                     const userName = response.user.displayName.split(" ");
                                     setUserName(userName[0]);
                                     setProfileIcon(response.user.photoURL)
+                                    // response.user.
+                                    setUser({
+                                        photoURL : response.user.photoURL,
+                                        displayName : response.user.displayName,
+                                        email : response.user.email
+                                    });
                                 }).catch((error)=>{
                                     console.log(error)
                                 })
@@ -130,7 +137,7 @@ export function Header() {
                     }
                     {
                         isEditProfileModal && <EditProfileModal isEditProfileModal={isEditProfileModal}
-                                                                setIsEditProfileModal={setIsEditProfileModal}/>
+                                                                setIsEditProfileModal={setIsEditProfileModal} user = {user} />
                     }
                     {
                         isLogoutModal && <LogoutModal isLogoutModal={isLogoutModal}
@@ -189,7 +196,7 @@ export function ProfileOptionModal(props) {
 
 export function EditProfileModal(props) {
     const {isEditProfileModal, setIsEditProfileModal} = props
-    const [file, setFile] = useState(Images.profileImage);
+    const [file, setFile] = useState(props.user?.photoURL ? props.user.photoURL : Images.profileImage);
     const inputRef = useRef();
     const handleClose = () => {
         setIsEditProfileModal(false)
@@ -214,12 +221,12 @@ export function EditProfileModal(props) {
                          className={styles.editProfileIcon} src={Images.editProfileIcon}/>
                 </div>
                 <div style={{display: "flex"}}>
-                    <SimpleInputComponent extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"}/>
+                    <SimpleInputComponent extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"} value = {props.user?.displayName && props.user.displayName} />
                     <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
                                           inputTitle={"Date Of Birth"}/>
                 </div>
                 <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle}
-                                      inputTitle={"Email address"}/>
+                                      inputTitle={"Email address"} value = {props.user?.email && props.user.email}/>
 
                 <div style={{display: "flex"}}>
                     <BlueButton onClick = {()=>{
