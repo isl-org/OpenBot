@@ -1,7 +1,7 @@
+import firebase from "firebase/compat/app";
+import 'firebase/compat/auth';
+import {useEffect, useState} from "react";
 
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "@firebase/firestore"
 const firebaseConfig = {
     apiKey: "AIzaSyBPZm6JnvHwLinjR6Dm45X6wX5BXuUzYqM",
     authDomain: "openbot-opencode.firebaseapp.com",
@@ -13,6 +13,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-export const firestore = getFirestore(app)
+firebase.initializeApp(firebaseConfig);
+export const auth = firebase.auth();
+export const provider = new firebase.auth.GoogleAuthProvider();
+provider.setCustomParameters({prompt: 'select_account'});
+export const signInWithGoogle = () => auth.signInWithPopup(provider);
+export default firebase;

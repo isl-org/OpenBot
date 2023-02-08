@@ -1,7 +1,10 @@
 import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
-import {createContext, useState} from "react";
+import {createContext, useEffect, useState} from "react";
+import Mainpage from "./components/firebaseComponents/main";
+import Login from "./components/firebaseComponents/login";
+import firebase from "./firebase_setup/firebase";
 
 export const ThemeContext = createContext(null);
 
@@ -22,12 +25,22 @@ function App() {
         }
     }
 
+    const [user, setUser] = useState(null);
 
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(user => {
+            setUser(user);
+        })
+    }, [])
+
+    console.log(user);
     return (
+
         <ThemeContext.Provider value={{theme, toggleTheme}}>
             <StoreProvider>
                 <div id={theme}>
                     <RouterComponent/>
+                   {/*<Login/>*/}
                 </div>
             </StoreProvider>
         </ThemeContext.Provider>

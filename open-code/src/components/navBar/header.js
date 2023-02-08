@@ -21,6 +21,7 @@ import DeleteModel from "../../pages/profile/deleteModel";
 import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
+import {auth, provider, signInWithGoogle} from "../../firebase_setup/firebase";
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
     const [isSigIn, setIsSigIn] = useState(false);
@@ -36,6 +37,8 @@ export function Header() {
     const [isProfileModal, setIsProfileModal] = useState(false)
     const [isEditProfileModal, setIsEditProfileModal] = useState(false)
     const [isLogoutModal, setIsLogoutModal] = useState(false)
+    const [userName,setUserName] = useState('');
+    const [profileIcon,setProfileIcon] = useState(profileImage)
     const openHomepage = () => {
         let path = `/`;
         navigate(path);
@@ -98,11 +101,22 @@ export function Header() {
                     {
                         isSigIn ?
                             <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
-                                <img alt="Profile Icon" src={profileImage} style={{height: 28, width: 28}}/>
-                                <WhiteText extraStyle={styles.extraStyles} text="sanjeev"/>
+                                <img alt="Profile Icon" src={profileIcon} style={{height: 28, width: 28}}/>
+                                <WhiteText extraStyle={styles.extraStyles} text={userName}/>
                                 <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
                             </div> :
-                            <button onClick={() => setIsSigIn(true)}
+                            <button onClick={() => {
+                                console.log("clicked")
+                                auth.signInWithPopup(provider).then((response)=>{
+                                    setIsSigIn(true);
+                                    const userName = response.user.displayName.split(" ");
+                                    setUserName(userName[0]);
+                                    setProfileIcon(response.user.photoURL)
+                                }).catch((error)=>{
+                                    console.log(error)
+                                })
+
+                            }}
                                     style={{...NavbarStyle.buttonIcon, ...NavbarStyle.iconMargin}}><span>Sign in</span>
                             </button>
                     }
