@@ -53,7 +53,6 @@ function NewProjectButton() {
                     </div>
                     <div className={styles.SaveBtn} onClick={() => {
                         OpenNewProjectHandle();
-                        console.log("hello from create")
                     }}>Create
                     </div>
                 </div>

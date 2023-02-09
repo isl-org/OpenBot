@@ -17,3 +17,4 @@ export const Images = {
     line: line,
     laptop: laptop,
 }
+

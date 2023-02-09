@@ -9,13 +9,15 @@ export default ({children}) => {
     const [logOut, setLogOut] = useState(false);
     const [code,setCode] = useState("");
     const [generate,setGenerateCode] = useState(false);
+    const [userData,setUserData] = useState(null);
     const store = {
         projectName, setProjectName,
         drawer,setDrawer,
         workspaceWidth,setWorkspaceWidth,
         logOut,setLogOut,
         code,setCode,
-        generate, setGenerateCode
+        generate, setGenerateCode,
+        userData,setUserData
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

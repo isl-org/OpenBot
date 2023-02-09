@@ -2,14 +2,12 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useEffect, useState} from "react";
-import Mainpage from "./components/firebaseComponents/main";
-import Login from "./components/firebaseComponents/login";
 import firebase from "./firebase_setup/firebase";
 
 export const ThemeContext = createContext(null);
 
 function App() {
-    if(localStorage.getItem("theme")  == null){
+    if (localStorage.getItem("theme") == null) {
         localStorage.setItem("theme", "light");
     }
     let onPageLoad = localStorage.getItem("theme") || "";
@@ -30,7 +28,6 @@ function App() {
             <StoreProvider>
                 <div id={theme}>
                     <RouterComponent/>
-                   {/*<Login/>*/}
                 </div>
             </StoreProvider>
         </ThemeContext.Provider>

@@ -7,8 +7,8 @@ import {qrStyles} from "./styles";
 import {StoreContext} from "../../context/context";
 const QrCode = () => {
     const [blockCode, setBlockCode] = useState("");
-    const {code,setCode } = useContext(StoreContext);
-    const {generate,setGenerateCode} = useContext(StoreContext);
+    const {code } = useContext(StoreContext);
+    const {generate} = useContext(StoreContext);
     useEffect(() => {
 
             qrCodeEncoder();

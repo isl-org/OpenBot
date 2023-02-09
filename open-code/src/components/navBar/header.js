@@ -1,4 +1,4 @@
-import React, {useContext, useState, useRef} from 'react';
+import React, {useContext, useState, useRef, useEffect} from 'react';
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import icon from "../../assets/images/icon/open-bot-logo.png"
 import profileImage from "../../assets/images/icon/profile-image.png"
@@ -21,8 +21,9 @@ import DeleteModel from "../../pages/profile/deleteModel";
 import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
-import {auth, provider, signInWithGoogle} from "../../firebase_setup/firebase";
 import {HelpCenterText} from "../../utils/constants";
+import firebase, {auth, provider, signInWithGoogle, storageRef, userInformation} from "../../firebase_setup/firebase";
+import axios from "axios";
 
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
@@ -43,6 +44,7 @@ export function Header() {
     const [userName, setUserName] = useState('');
     const [profileIcon, setProfileIcon] = useState(profileImage)
     const [user, setUser] = useState(null);
+    const {setUserData} = useContext(StoreContext);
     const openHomepage = () => {
         let path = `/`;
         navigate(path);
@@ -105,27 +107,26 @@ export function Header() {
                     {
                         isSigIn ?
                             <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
-                                <img alt="Profile Icon" src={profileIcon} style={{height: 28, width: 28}}/>
+                                <img alt="Profile Icon" src={profileIcon} style={{height: 28, width: 28, borderRadius: 90}}/>
                                 <WhiteText extraStyle={styles.extraStyles} text={userName}/>
                                 <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
                             </div> :
                             <button onClick={() => {
-                                auth.signInWithPopup(provider).then((response)=>{
+                                signInWithGoogle().then((response) => {
                                     setIsSigIn(true);
                                     const userName = response.user.displayName.split(" ");
+                                    setUserData(response.user);
                                     setUserName(userName[0]);
-                                    setProfileIcon(response.user.photoURL)
-                                    // response.user.
+                                    setProfileIcon(response.user.photoURL);
                                     setUser({
-                                        photoURL : response.user.photoURL,
-                                        displayName : response.user.displayName,
-                                        email : response.user.email
+                                        photoURL: response.user.photoURL,
+                                        displayName: response.user.displayName,
+                                        email: response.user.email
                                     });
-                                }).catch((error)=>{
-                                    console.log(error)
                                 })
+                            }
+                            }
 
-                            }}
                                     style={{...NavbarStyle.buttonIcon, ...NavbarStyle.iconMargin}}><span>Sign in</span>
                             </button>
                     }
@@ -200,7 +201,14 @@ export function ProfileOptionModal(props) {
 export function EditProfileModal(props) {
     const {isEditProfileModal, setIsEditProfileModal} = props
     const [file, setFile] = useState(props.user?.photoURL ? props.user.photoURL : Images.profileImage);
+    const {userData} = useContext(StoreContext);
     const inputRef = useRef();
+    const [fullName,setFullName] = useState(userData?.displayName ? userData.displayName : '' );
+    const [userDetails,setUserDetail] = useState({
+        displayName : userData?.displayName ? userData.displayName : '' ,
+        email : userData?.email ? userData.email : '',
+        photoUrl : userData?.photoURL ? props.user.photoURL : Images.profileImage
+    })
     const handleClose = () => {
         setIsEditProfileModal(false)
     }
@@ -208,6 +216,20 @@ export function EditProfileModal(props) {
     function handleChange(e) {
         console.log(e.target.files[0].name.replace(/HEIC/g, 'jpg'));
         setFile(URL.createObjectURL(e.target.files[0]));
+        setUserDetail({
+            ...userDetails,
+          photoUrl: file
+
+        })
+    }
+
+    function handleNameChange(name){
+        setFullName(name)
+        setUserDetail({
+            ...userDetails,
+            displayName: name,
+
+        })
     }
 
     return (
@@ -225,7 +247,7 @@ export function EditProfileModal(props) {
                 </div>
                 <div style={{display: "flex"}}>
                     <SimpleInputComponent extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"}
-                                          value={props.user?.displayName && props.user.displayName}/>
+                                          value={fullName} onDataChange = {handleNameChange}/>
                     <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
                                           inputTitle={"Date Of Birth"}/>
                 </div>
@@ -233,7 +255,12 @@ export function EditProfileModal(props) {
                                       inputTitle={"Email address"} value={props.user?.email && props.user.email}/>
 
                 <div style={{display: "flex"}}>
-                    <BlueButton onClick={() => {
+                    <BlueButton onClick={async () => {
+                       await userData.updateProfile({
+                            displayName: userDetails.displayName,
+                            photoURL: userDetails.photoUrl
+                        });
+                       handleClose()
                     }} buttonType={"contained"} buttonName={"Save"}/>
                     <BlueButton onClick={() => {
                         handleClose()
@@ -270,6 +297,7 @@ export function LogoutModal(props) {
 }
 
 export function HelpCenterModal(props) {
+
     const {isHelpCenterModal, setIsHelpCenterModal} = props
     const handleClose = () => {
         setIsHelpCenterModal(false)
