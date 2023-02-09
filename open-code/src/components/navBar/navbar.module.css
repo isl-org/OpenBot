@@ -130,6 +130,7 @@
     height: 20px;
     width: 20px;
     cursor: pointer;
+    padding: 5px;
 }
 
 .logoutModal {
@@ -168,11 +169,47 @@
 .helpCenterModalBox{
     outline: none;
     display: flex;
-    flex-direction: column;
     height: 63%;
     width: 70%;
     background-color: white;
     border-radius: 12px;
+}
+
+.dragAndDropDiv{
+    border-right: 1px solid #D9D9D9;
+    width: 35%;
+    height: 100%;
+    padding-left: 5%;
+}
+
+.integerNumber{
+    position: absolute;
+    opacity: 0.05;
+    font-family: Gilroy;
+    font-size: 100px;
+    line-height: 70px;
+}
+
+.helpCenterPara{
+    font-size: 14px;
+}
+
+.helpCenterCrossIconDiv{
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
+
+.saveAndDownloadDiv{
+    width: 95%;
+    height: 50%;
+    padding-left: 5%;
+    border-bottom: 1px solid #D9D9D9;
+}
+
+.connectAndDriveDiv{
+    width: 95%;
+    height: 50%;
     padding-left: 5%;
 }
 

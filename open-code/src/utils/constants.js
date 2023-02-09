@@ -30,7 +30,7 @@ export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "contro
 /**
  * Dark theme.
  */
-export  const DarkTheme = Blockly.Theme.defineTheme('dark', {
+export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     'base': Blockly.Themes.Classic,
     'componentStyles': {
         'workspaceBackgroundColour': '#1e1e1e',
@@ -47,3 +47,14 @@ export  const DarkTheme = Blockly.Theme.defineTheme('dark', {
         'blackBackground': '#333',
     },
 });
+
+export const HelpCenterText = {
+    dragAndDropFirstLine: "Drag and drop the selected block of code into the input field.",
+    dragAndDropSecondLine: "Repeat the steps of selecting and placing all required code blocks, and then connecting them together to create a sequence of actions.",
+
+    saveAndDownloadFirstLine: "Check for errors by compiling the code and, upon successful compilation, generate the QR code.",
+    saveAndDownloadSecondLine: "Use the OpenBot android application to scan the QR code and successfully save the block code on your device.",
+
+    connectAndDriveFirstLine: "Pair your smartphone with the OpenBot car and run the code that you have downloaded.",
+    connectAndDriveSecondLine: "Carry out desired actions such as activating indicator lights, detecting objects, and more on your robot car.",
+}

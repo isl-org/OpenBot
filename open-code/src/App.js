@@ -24,16 +24,6 @@ function App() {
             localStorage.setItem("theme", "light")
         }
     }
-
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged(user => {
-            setUser(user);
-        })
-    }, [])
-
-    console.log(user);
     return (
 
         <ThemeContext.Provider value={{theme, toggleTheme}}>

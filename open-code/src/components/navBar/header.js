@@ -22,6 +22,8 @@ import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 import {auth, provider, signInWithGoogle} from "../../firebase_setup/firebase";
+import {HelpCenterText} from "../../utils/constants";
+
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
     const [isSigIn, setIsSigIn] = useState(false);
@@ -38,9 +40,9 @@ export function Header() {
     const [isProfileModal, setIsProfileModal] = useState(false)
     const [isEditProfileModal, setIsEditProfileModal] = useState(false)
     const [isLogoutModal, setIsLogoutModal] = useState(false)
-    const [userName,setUserName] = useState('');
-    const [profileIcon,setProfileIcon] = useState(profileImage)
-    const [user,setUser] = useState(null);
+    const [userName, setUserName] = useState('');
+    const [profileIcon, setProfileIcon] = useState(profileImage)
+    const [user, setUser] = useState(null);
     const openHomepage = () => {
         let path = `/`;
         navigate(path);
@@ -108,7 +110,6 @@ export function Header() {
                                 <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
                             </div> :
                             <button onClick={() => {
-                                console.log("clicked")
                                 auth.signInWithPopup(provider).then((response)=>{
                                     setIsSigIn(true);
                                     const userName = response.user.displayName.split(" ");
@@ -137,14 +138,16 @@ export function Header() {
                     }
                     {
                         isEditProfileModal && <EditProfileModal isEditProfileModal={isEditProfileModal}
-                                                                setIsEditProfileModal={setIsEditProfileModal} user = {user} />
+                                                                setIsEditProfileModal={setIsEditProfileModal}
+                                                                user={user}/>
                     }
                     {
                         isLogoutModal && <LogoutModal isLogoutModal={isLogoutModal}
                                                       setIsLogoutModal={setIsLogoutModal}/>
                     }
                     {
-                        isHelpCenterModal && <HelpCenterModal/>
+                        isHelpCenterModal && <HelpCenterModal isHelpCenterModal={isHelpCenterModal}
+                                                              setIsHelpCenterModal={setIsHelpCenterModal}/>
                     }
                     {location.pathname === "/playground" ? <QrDrawer/> : ""}
                 </div>
@@ -221,17 +224,20 @@ export function EditProfileModal(props) {
                          className={styles.editProfileIcon} src={Images.editProfileIcon}/>
                 </div>
                 <div style={{display: "flex"}}>
-                    <SimpleInputComponent extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"} value = {props.user?.displayName && props.user.displayName} />
+                    <SimpleInputComponent extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"}
+                                          value={props.user?.displayName && props.user.displayName}/>
                     <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
                                           inputTitle={"Date Of Birth"}/>
                 </div>
                 <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle}
-                                      inputTitle={"Email address"} value = {props.user?.email && props.user.email}/>
+                                      inputTitle={"Email address"} value={props.user?.email && props.user.email}/>
 
                 <div style={{display: "flex"}}>
-                    <BlueButton onClick = {()=>{
+                    <BlueButton onClick={() => {
                     }} buttonType={"contained"} buttonName={"Save"}/>
-                    <BlueButton onClick = {()=>{handleClose()}} buttonName={"Cancel"}/>
+                    <BlueButton onClick={() => {
+                        handleClose()
+                    }} buttonName={"Cancel"}/>
                 </div>
             </Box>
         </Modal>
@@ -264,12 +270,59 @@ export function LogoutModal(props) {
 }
 
 export function HelpCenterModal(props) {
-    return(
+    const {isHelpCenterModal, setIsHelpCenterModal} = props
+    const handleClose = () => {
+        setIsHelpCenterModal(false)
+    }
+    return (
         <Modal
             style={{display: "flex", alignItems: "center", justifyContent: "center"}}
-            open={true}>
+            open={isHelpCenterModal}>
             <Box className={styles.helpCenterModalBox}>
-
+                <div className={styles.dragAndDropDiv}>
+                    <img alt={"screen display"} src={Images.laptop} style={{width: "80%", marginTop: "15%"}}/>
+                    <div style={{width: "80%", marginTop: "15%"}}>
+                        <BlackText extraStyle={styles.integerNumber} text={1}/>
+                        <div style={{marginLeft: "10%", paddingTop: "10%"}}>
+                            <BlackText divStyle={{marginBottom: "8%"}} text={"Drag and Drop"}/>
+                            <BlackText extraStyle={styles.helpCenterPara} text={HelpCenterText.dragAndDropFirstLine}/>
+                            <BlackText extraStyle={styles.helpCenterPara} text={HelpCenterText.dragAndDropSecondLine}/>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div className={styles.saveAndDownloadDiv}>
+                        <div className={styles.helpCenterCrossIconDiv}>
+                            <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
+                                 src={Images.crossIcon}/>
+                        </div>
+                        <div>
+                            <BlackText text={2} extraStyle={styles.integerNumber}/>
+                        </div>
+                        <div style={{width: "70%", paddingLeft: "5%"}}>
+                            <BlackText divStyle={{marginTop: "10%", marginBottom: "8%"}} text={"Save and Download"}/>
+                            <BlackText extraStyle={styles.helpCenterPara}
+                                       text={HelpCenterText.saveAndDownloadFirstLine}/>
+                            <BlackText extraStyle={styles.helpCenterPara}
+                                       text={HelpCenterText.saveAndDownloadSecondLine}/>
+                        </div>
+                    </div>
+                    <div className={styles.connectAndDriveDiv}>
+                        <div>
+                            <BlackText text={3} extraStyle={styles.integerNumber}/>
+                        </div>
+                        <div style={{width: "70%", paddingLeft: "5%"}}>
+                            <div style={{marginTop: "10%"}}>
+                                <BlackText divStyle={{paddingTop: "5%", marginBottom: "8%"}}
+                                           text={"Connect and Drive"}/>
+                                <BlackText extraStyle={styles.helpCenterPara}
+                                           text={HelpCenterText.connectAndDriveFirstLine}/>
+                                <BlackText extraStyle={styles.helpCenterPara}
+                                           text={HelpCenterText.connectAndDriveSecondLine}/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </Box>
         </Modal>
     )
