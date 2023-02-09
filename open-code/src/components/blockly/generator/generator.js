@@ -34,7 +34,7 @@ javascriptGenerator['test_react_date_field'] = function (block) {
 };
 
 javascriptGenerator['sensebox_display_clearDisplay'] = function () {
-    var code = "display.clearDisplay();\n";
+    let code = "display.clearDisplay();\n";
     return code;
 };
 javascriptGenerator['controls_repeat_ext'] = function (Block) {
@@ -74,20 +74,6 @@ javascriptGenerator['Add'] = function (block) {
     return code;
 };
 
-javascriptGenerator['area_of_circle'] = function (block) {
-    let radius = javascriptGenerator.valueToCode(block, 'Area', javascriptGenerator.ORDER_ATOMIC);
-    let pi = 3.14;
-    let code = '';
-
-    function findArea(r) {
-        return (pi * r * r);
-    }
-
-    let Area = findArea(radius);
-
-    code += '' + Area + ''
-    return code;
-};
 
 javascriptGenerator['print'] = function (block) {
     let value = javascriptGenerator.valueToCode(block, 'print', javascriptGenerator.ORDER_ATOMIC);
@@ -108,13 +94,15 @@ javascriptGenerator['timer'] = function (block) {
 javascriptGenerator['soundIs'] = function (block) {
     let dropdown_booleanType = block.getFieldValue('DROPDOWN');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
+
     function sound() {
-        if (dropdown_booleanType === "OPTION1") {
+        if (dropdown_booleanType === "sound_on") {
             return true;
-        } else if (dropdown_booleanType === "OPTION2") {
+        } else if (dropdown_booleanType === "sound_off") {
             return false;
         }
     }
+
     let code = '';
     code += "playSound(" + sound() + ");\n" + value_name;
     return code;
@@ -123,23 +111,25 @@ javascriptGenerator['soundIs'] = function (block) {
 javascriptGenerator['soundType'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
+
     function selectSound() {
         // eslint-disable-next-line default-case
         switch (dropdown_type) {
-            case "OPTION1" : {
+            case "slow_mode" : {
                 return "slow";
                 break;
             }
-            case "OPTION2" : {
+            case "medium_mode" : {
                 return "medium";
                 break;
             }
-            case "OPTION3" : {
+            case "fast_mode" : {
                 return "fast";
                 break;
             }
         }
     }
+
     let code = '';
     code += "playSoundSpeed(" + selectSound() + ");\n" + value_name;
     return code;
@@ -148,6 +138,7 @@ javascriptGenerator['soundType'] = function (block) {
 javascriptGenerator['soundMode'] = function (block) {
     let dropdown_mode_type = block.getFieldValue('mode_type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
+
     function soundMode() {
         // eslint-disable-next-line default-case
         switch (dropdown_mode_type) {
@@ -165,15 +156,17 @@ javascriptGenerator['soundMode'] = function (block) {
             }
         }
     }
+
     let code = '';
     code += "playSoundMode(" + soundMode() + ");\n" + value_name;
     return code;
 };
 
 
-javascriptGenerator['movementDirection'] = function(block) {
+javascriptGenerator['movementDirection'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
     let number_specified_amount = block.getFieldValue('specified_amount');
+
     function selectMovement() {
         // eslint-disable-next-line default-case
         switch (dropdown_direction_type) {
@@ -189,22 +182,107 @@ javascriptGenerator['movementDirection'] = function(block) {
                 return "moveLeft";
                 break;
             }
-            case "move_right":{
+            case "move_right": {
                 return "moveRight";
                 break;
             }
         }
     }
-    var code = '';
-    code +=  selectMovement() +"("+number_specified_amount +");\n";
+
+    let code = '';
+    code += selectMovement() + "(" + number_specified_amount + ");\n";
     return code;
 };
 
-javascriptGenerator['movementDistance'] = function(block) {
+javascriptGenerator['movementDistance'] = function (block) {
     let number_left_distance = block.getFieldValue('left_distance');
     let number_right_distance = block.getFieldValue('right_distance');
 
     let code = '';
-    code+="move("+number_left_distance+","+number_right_distance+");\n";
+    code += "move(" + number_left_distance + "," + number_right_distance + ");\n";
+    return code;
+};
+
+javascriptGenerator['movementCircular'] = function (block) {
+    let number_radius = block.getFieldValue('radius');
+    let code = '';
+    code += "moveCircular(" + number_radius + ");\n";
+    return code;
+};
+
+javascriptGenerator['movementStop'] = function (block) {
+    let code = '';
+    code += "stop();\n"
+    return code;
+};
+
+javascriptGenerator['sonarReading'] = function (block) {
+    let code = '';
+    code += "sonarReading();\n";
+    return code;
+};
+
+javascriptGenerator['batteryReading'] = function (block) {
+    let code = '';
+    code += "batteryReading();\n";
+    return code;
+};
+
+javascriptGenerator['speedReading'] = function (block) {
+    let code = '';
+    code += "speedReading();\n";
+    return code;
+};
+
+javascriptGenerator['wheelOdometerSensors'] = function (block) {
+    let dropdown_wheel_sensors = block.getFieldValue('wheel_sensors');
+    let code = '';
+
+    function selectWheelSensor() {
+        // eslint-disable-next-line default-case
+        switch (dropdown_wheel_sensors) {
+            case "front_sensor": {
+                return "frontWheelReading";
+                break;
+            }
+            case "back_sensor": {
+                return "backWheelReading";
+                break;
+            }
+        }
+    }
+
+    code += selectWheelSensor() + "();\n";
+    return code;
+};
+
+
+javascriptGenerator['indicatorLedSensor'] = function (block) {
+    let code = '';
+    code += "indicatorReading();\n";
+    return code;
+};
+
+javascriptGenerator['frontLedSensor'] = function (block) {
+    let code = '';
+    code += "frontLedReading();\n";
+    return code;
+};
+
+javascriptGenerator['backLedSensor'] = function (block) {
+    let code = '';
+    code += "backLedReading();\n";
+    return code;
+};
+
+javascriptGenerator['ledStatusSensor'] = function (block) {
+    let code = '';
+    code += "ledStatus();\n";
+    return code;
+};
+
+javascriptGenerator['voltageDividerReading'] = function (block) {
+    let code = '';
+    code += "voltageDividerReading();\n";
     return code;
 };

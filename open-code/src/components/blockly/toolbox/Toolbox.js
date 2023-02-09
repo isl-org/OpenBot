@@ -37,13 +37,6 @@ export const Toolbox = (props) => {
                             <Field name="NUM">1</Field>
                         </Shadow>
                     </Value>
-                </Block>,
-                <Block type="controls_repeat_ext">
-                    <Value name="TIMES">
-                        <Shadow type="math_number">
-                            <Field name="NUM">10</Field>
-                        </Shadow>
-                    </Value>
                 </Block>
             </Category>
 
@@ -194,56 +187,22 @@ export const Toolbox = (props) => {
                 </Block>,
             </Category>
             <Category colour="#61A8EC" name="Sensing">
-                <Block type="test_react_field"/>,
-                <Block type="test_react_date_field"/>,
-                <Block type="text_charAt">
-                    <Value name="VALUE">
-                        <Block type="variables_get">
-                            <Field name="VAR">text</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="Add"/>
-                <Block type="math_number">
-                    <Field name="NUM">0</Field>
-                </Block>
-                <Block type="area_of_circle">
-                    <Value name="Area">
-                        <Block type="math_number">
-                            <Field name="NUM">9</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="print"/>
-            </Category>
-            <Category colour="#DA4B5D" name="Bumper">
-                <Block type="test_react_field"/>,
-                <Block type="test_react_date_field"/>,
-                <Block type="text_charAt">
-                    <Value name="VALUE">
-                        <Block type="variables_get">
-                            <Field name="VAR">text</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="Add"/>
-                <Block type="math_number">
-                    <Field name="NUM">0</Field>
-                </Block>
-                <Block type="area_of_circle">
-                    <Value name="Area">
-                        <Block type="math_number">
-                            <Field name="NUM">9</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="print"/>
+                <Block type="sonarReading"/>
+                <Block type="batteryReading"/>
+                <Block type="speedReading"/>
+                <Block type="voltageDividerReading"/>
+                <Block type="wheelOdometerSensors"/>
+                <Block type="indicatorLedSensor"/>
+                <Block type="frontLedSensor"/>
+                <Block type="backLedSensor"/>
+                <Block type="ledStatusSensor"/>
             </Category>
             <Category colour="#9B61E2" name="Movement">
                 <Block type="movementDirection"/>,
-                <Block type="movementDistance">
-                    <Shadow type="text"/>
+                <Block type="movementDistance"/>
+                <Block type="movementCircular">
                 </Block>
+                <Block type="movementStop"/>
             </Category>
             <Category colour="#717171" name="Detection">
                 <Block type='print'/>
