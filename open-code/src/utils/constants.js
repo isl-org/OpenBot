@@ -3,6 +3,7 @@ import Moon from "../assets/images/icon/darkMode/dark-mode-icon.png";
 import Help from "../assets/images/icon/help-circle.png";
 import Logout from "../assets/images/icon/log-out.png";
 import Blockly from "blockly/core";
+import {colors} from "./color";
 
 export const Content = [
     {
@@ -45,6 +46,25 @@ export const DarkTheme = Blockly.Theme.defineTheme('dark', {
         'scrollbarOpacity': 0.4,
         'cursorColour': '#d0d0d0',
         'blackBackground': '#333',
+    },
+});
+
+export const LightTheme=Blockly.Theme.defineTheme('light', {
+    'base': Blockly.Themes.Classic,
+    'componentStyles': {
+        'workspaceBackgroundColour': 'whiteBackground',
+        'toolboxBackgroundColour': 'whiteBackground',
+        'toolboxForegroundColour': colors.blackFont,
+        'flyoutBackgroundColour': 'lightgray',
+        'flyoutForegroundColour': 'red',
+        'flyoutOpacity': 1,
+        'scrollbarColour': 'gray',
+        'insertionMarkerColour': '#fff',
+        'insertionMarkerOpacity': 0.3,
+        'scrollbarOpacity': 0.4,
+        'cursorColour': '#d0d0d0',
+        'whiteBackground': '#FFFFFF',
+
     },
 });
 

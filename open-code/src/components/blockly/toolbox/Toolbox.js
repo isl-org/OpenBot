@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Block, Category, Field, Shadow, Value} from "../index";
 import {controlsBlocks, loopBlocks} from "../blocks/generalBlocks";
 import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
@@ -7,15 +7,22 @@ import '../blocks/customblocks'
 
 let x = [""];
 export const Toolbox = (props) => {
-    return (
+
+        const [opacity, setOpacity] = useState(1);
+
+        const handleClick = () => {
+            setOpacity(0.5);
+        };
+
+        return (
         <>
-            <Category name="Control" colour="#567AE4">
+            <Category name="Control" colour="#567AE4" style={{ opacity }} onClick={handleClick}>
                 {controlBlocksType.map((type) => {
                     return controlsBlocks(type)
                 })}
             </Category>
 
-            <Category name="Loops" colour="#C54E30">
+            <Category name="Loops" colour="#C54E30" >
 
                 {loopBlocksType.map((type) => {
                     return loopBlocks(type)
@@ -40,7 +47,7 @@ export const Toolbox = (props) => {
                 </Block>
             </Category>
 
-            <Category name="Operators" colour="#C54E30">
+            <Category name="Operators" colour="#8156C9" >
                 <Block type="math_arithmetic"/>,
                 <Block type="math_number"/>,
                 <Block type="math_modulo"/>,
@@ -52,7 +59,7 @@ export const Toolbox = (props) => {
                 <Block type="math_random_int"/>,
             </Category>
 
-            <Category colour="#8156C9" name="Variables">
+            <Category colour="#D030BA" name="Variables" >
 
                 <Block type="variables_set"/>
                 <Block type="variables_get"/>
@@ -64,7 +71,7 @@ export const Toolbox = (props) => {
                 <Block type="timer"/>
             </Category>
 
-            <Category name="Text" colour="#D030BA">
+            <Category name="Text" colour="#506481" >
                 <Block type="text"/>
                 <Block type="text_multiline"/>
                 <Block type="text_join"/>
@@ -167,7 +174,7 @@ export const Toolbox = (props) => {
                 </Block>
             </Category>
 
-            <Category colour="#506481" name="List">
+            <Category colour="#C26F87" name="List" >
                 <Block type="lists_create_with"/>,
                 <Block type="lists_create_empty"/>,
                 <Block type="lists_repeat"/>,
@@ -180,13 +187,13 @@ export const Toolbox = (props) => {
                 <Block type="lists_sort"/>
                 <Block type="lists_split"/>
             </Category>
-            <Category colour="#5BBC73" name="Sound">
+            <Category colour="#5BBC73" name="Sound" >
                 <Block type="soundIs"/>,
                 <Block type="soundType"/>,
                 <Block type="soundMode">
                 </Block>,
             </Category>
-            <Category colour="#61A8EC" name="Sensing">
+            <Category colour="#61A8EC" name="Sensing" >
                 <Block type="sonarReading"/>
                 <Block type="batteryReading"/>
                 <Block type="speedReading"/>
@@ -197,14 +204,16 @@ export const Toolbox = (props) => {
                 <Block type="backLedSensor"/>
                 <Block type="ledStatusSensor"/>
             </Category>
-            <Category colour="#9B61E2" name="Movement">
+            <Category colour="#DA4B5D" name="Bumper" >
+            </Category>
+            <Category colour="#9B61E2" name="Movement" >
                 <Block type="movementDirection"/>,
                 <Block type="movementDistance"/>
                 <Block type="movementCircular">
                 </Block>
                 <Block type="movementStop"/>
             </Category>
-            <Category colour="#717171" name="Detection">
+            <Category colour="#717171" name="Detection" >
                 <Block type='print'/>
             </Category>
         </>

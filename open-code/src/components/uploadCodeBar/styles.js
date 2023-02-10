@@ -8,7 +8,6 @@ export const UploadBarStyle = {
         alignItems: "center",
         position: "fixed",
         bottom: 0,
-        width: "100%",
 
     },
     uploadCodeButton: {
