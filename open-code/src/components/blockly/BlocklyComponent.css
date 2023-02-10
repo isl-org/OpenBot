@@ -1,7 +1,121 @@
 #blocklyDiv {
-  height: 79%;
-  width: 100%;
   position:fixed;
   color: #000000;
   background-color: white;
+
 }
+
+.blocklyTreeLabel {
+}
+/* Adds padding around the group of categories and separators. */
+.blocklyToolboxContents {
+  padding-top: 3rem ;
+  padding-right: 0.5rem;
+  border-right: 0.5px solid black;
+  height: 100%;
+  position: relative;
+  left: 0;
+  bottom: 10px;
+}
+/* Adds space between the categories, rounds the corners and adds space around the label. */
+.blocklyTreeRow {
+  margin-bottom: 0;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
+
+.blocklyTreeSelected{
+  opacity: 0.3;
+}
+
+#blockly-b{
+  border-left:16px solid #567AE4 !important;
+
+}
+
+#blockly-c{
+  border-left:16px solid #C54E30 !important;
+}
+
+#blockly-d{
+  border-left:16px solid #8156C9 !important;
+}
+
+#blockly-e{
+  border-left:16px solid #D030BA !important;
+}
+#blockly-f{
+  border-left:16px solid #506481 !important;
+}
+
+#blockly-g{
+  border-left:16px solid #C26F87 !important;
+}
+
+#blockly-h{
+  border-left:16px solid #5BBC73 !important;
+}
+
+#blockly-i{
+  border-left:16px solid #61A8EC !important;
+}
+
+#blockly-j{
+  border-left:16px solid #DA4B5D !important;
+}
+
+#blockly-k{
+  border-left:16px solid #9B61E2 !important;
+}
+
+#blockly-l{
+  border-left:16px solid #717171 !important;
+}
+
+#blockly-m{
+  border-left:16px solid #567AE4 !important;
+}
+
+#blockly-n{
+  border-left:16px solid #C54E30 !important;
+}
+
+#blockly-o{
+  border-left:16px solid #8156C9 !important;
+}
+
+#blockly-p{
+  border-left:16px solid #D030BA !important;
+}
+
+#blockly-q{
+  border-left:16px solid #506481 !important;
+}
+
+#blockly-r{
+  border-left:16px solid #C26F87 !important;
+}
+
+#blockly-s{
+  border-left:16px solid #5BBC73 !important;
+}
+
+#blockly-t{
+  border-left:16px solid #61A8EC !important;
+}
+
+#blockly-u{
+  border-left:16px solid #DA4B5D !important;
+}
+
+#blockly-v{
+  border-left:16px solid #9B61E2 !important;
+}
+
+#blockly-w{
+  border-left:16px solid #717171 !important;
+}
+
+
+
+

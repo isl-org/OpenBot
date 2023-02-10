@@ -6,7 +6,7 @@ import locale from 'blockly/msg/en';
 import 'blockly/blocks';
 import {StoreContext} from "../../context/context";
 import {ThemeContext} from "../../App";
-import {DarkTheme} from "../../utils/constants";
+import {DarkTheme, LightTheme} from "../../utils/constants";
 Blockly.setLocale(locale);
 
 
@@ -22,7 +22,7 @@ function BlocklyComponent(props) {
         primaryWorkspace.current = Blockly.inject(
             blocklyDiv.current,
             {
-                theme: (theme === "dark" ? DarkTheme : ""),
+                theme: (theme === "dark" ? DarkTheme : LightTheme),
                 toolbox: toolbox.current,
                 ...rest
             },
