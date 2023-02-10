@@ -1,4 +1,4 @@
-import React, {useContext, useState, useRef, useEffect} from 'react';
+import React, {useContext, useState, useRef, useEffect, useReducer} from 'react';
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import icon from "../../assets/images/icon/open-bot-logo.png"
 import profileImage from "../../assets/images/icon/profile-image.png"
@@ -23,7 +23,8 @@ import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 import {HelpCenterText} from "../../utils/constants";
 import firebase, {auth, provider, signInWithGoogle, storageRef, userInformation} from "../../firebase_setup/firebase";
-import axios from "axios";
+import jwt from 'jsonwebtoken';
+
 
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
@@ -44,7 +45,7 @@ export function Header() {
     const [userName, setUserName] = useState('')
     const [profileIcon, setProfileIcon] = useState(profileImage)
     const [user, setUser] = useState(null);
-    const {setUserData} = useContext(StoreContext);
+    const {userData,setUserData} = useContext(StoreContext);
 
     const openHomepage = () => {
 
@@ -54,6 +55,19 @@ export function Header() {
     const location = useLocation();
     const handleDelete = () => {
         setDeleteProject(true)
+    }
+
+    async function storeIdTokenInCookie(user) {
+        console.log("i am here")
+        if (!auth.currentUser) {
+            console.error('No user is signed in');
+            return;
+        }
+        const idToken = await user.getIdToken();
+        const jwtToken = jwt.sign(idToken, 'open-code', { expiresIn: '3d' });
+        const now = new Date();
+        const expiration = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 3);
+        document.cookie = `jwt=${jwtToken}; expires=${expiration.toUTCString()}; path=/;`;
     }
 
     return (
@@ -127,6 +141,7 @@ export function Header() {
                                         displayName: response.user.displayName,
                                         email: response.user.email
                                     });
+                                    storeIdTokenInCookie(response.user).then(r => console.log(r));
                                 }).catch((error) => {
                                     console.log(error)
                                 })
