@@ -33,19 +33,21 @@ export function Header() {
     const [deleteProject, setDeleteProject] = useState(false);
     const [isHelpCenterModal, setIsHelpCenterModal] = useState(false)
     const handleClick = (event) => {
-        setAnchorEl(anchorEl ? null : event.currentTarget);
+        setAnchorEl(anchorEl ? null : event.currentTarget)
     };
     const open = Boolean(anchorEl);
-    const id = open ? 'simple-popper' : undefined;
-    let navigate = useNavigate();
+    const id = open ? 'simple-popper' : undefined
+    let navigate = useNavigate()
     const [isProfileModal, setIsProfileModal] = useState(false)
     const [isEditProfileModal, setIsEditProfileModal] = useState(false)
     const [isLogoutModal, setIsLogoutModal] = useState(false)
-    const [userName, setUserName] = useState('');
+    const [userName, setUserName] = useState('')
     const [profileIcon, setProfileIcon] = useState(profileImage)
     const [user, setUser] = useState(null);
     const {setUserData} = useContext(StoreContext);
+
     const openHomepage = () => {
+
         let path = `/`;
         navigate(path);
     }
@@ -71,7 +73,7 @@ export function Header() {
                         style={{...NavbarStyle.mainTitle, ...NavbarStyle.arrowMargin}}>{projectName}</span>
                             <img src={downArrow}
                                  style={{...NavbarStyle.infoIcon, ...NavbarStyle.arrowMargin}}
-                                 alt={icon}/>
+                                 alt={"arrow"}/>
                         </div>
                         :
                         <>
@@ -84,7 +86,7 @@ export function Header() {
                                 />
                                 <img src={UpArrow}
                                      style={{...NavbarStyle.infoIcon, ...NavbarStyle.arrowMargin}}
-                                     onClick={handleClick} alt={icon}/>
+                                     onClick={handleClick} alt={"arrow"}/>
                             </div>
                             <Popper id={id} open={open} anchorEl={anchorEl}>
                                 <div className={styles.option}>
@@ -101,6 +103,8 @@ export function Header() {
                         </>
                     : ""}
                 <div style={NavbarStyle.navbarIconDiv}>
+                    {(location.pathname === "/playground" && !isSigIn) &&
+                    <img alt={"helpCenter"} src={Images.helpIcon} style={{height:24}}/>}
                     <img alt="" onClick={() => toggleTheme(!theme)} src={moon}
                          style={{...NavbarStyle.moonIcon, ...NavbarStyle.iconMargin}}/>
                     <img alt="" src={Images.line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
@@ -123,6 +127,8 @@ export function Header() {
                                         displayName: response.user.displayName,
                                         email: response.user.email
                                     });
+                                }).catch((error) => {
+                                    console.log(error)
                                 })
                             }
                             }
@@ -135,7 +141,8 @@ export function Header() {
                                                               setIsProfileModal={setIsProfileModal}
                                                               setIsEditProfileModal={setIsEditProfileModal}
                                                               setIsLogoutModal={setIsLogoutModal}
-                                                              setIsHelpCenterModal={setIsHelpCenterModal}/>
+                                                              setIsHelpCenterModal={setIsHelpCenterModal}
+                                                              isSigIn={isSigIn}/>
                     }
                     {
                         isEditProfileModal && <EditProfileModal isEditProfileModal={isEditProfileModal}
@@ -159,7 +166,7 @@ export function Header() {
 }
 
 export function ProfileOptionModal(props) {
-    const {isProfileModal, setIsProfileModal, setIsEditProfileModal, setIsLogoutModal, setIsHelpCenterModal} = props
+    const {isProfileModal, setIsProfileModal, setIsEditProfileModal, setIsLogoutModal, setIsHelpCenterModal, isSigIn} = props
     const location = useLocation();
     const handleClose = () => {
         setIsProfileModal(false)
@@ -177,7 +184,7 @@ export function ProfileOptionModal(props) {
                     <BlueText extraStyle={styles.modalText} styles text={"Edit Profile"}/>
                 </div>
                 {
-                    location.pathname === "/playground" &&
+                    (location.pathname === "/playground" && isSigIn) &&
                     <div onClick={() => {
                         setIsHelpCenterModal(true)
                         handleClose()
@@ -209,6 +216,7 @@ export function EditProfileModal(props) {
         email : userData?.email ? userData.email : '',
         photoUrl : userData?.photoURL ? props.user.photoURL : Images.profileImage
     })
+    const {theme} = useContext(ThemeContext)
     const handleClose = () => {
         setIsEditProfileModal(false)
     }
@@ -236,9 +244,15 @@ export function EditProfileModal(props) {
         <Modal
             open={isEditProfileModal}
             style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <Box className={styles.editProfileModal}>
+            <Box className={styles.editProfileModal + " " + (theme === "dark" && styles.darkEditProfileModal)}>
                 <div className={styles.crossIconDiv}>
-                    <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon} src={Images.crossIcon}/>
+                    {
+                        theme === "dark" ?
+                            <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
+                                 src={Images.blueCrossIcon}/> :
+                            <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
+                                 src={Images.crossIcon}/>
+                    }
                 </div>
                 <div style={{backgroundImage: `url(${file})`}} className={styles.profileImg}>
                     <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
@@ -273,6 +287,7 @@ export function EditProfileModal(props) {
 
 export function LogoutModal(props) {
     const {setIsLogoutModal, isLogoutModal} = props
+    const {theme} = useContext(ThemeContext)
     const handleClose = () => {
         setIsLogoutModal(false)
     }
@@ -281,10 +296,13 @@ export function LogoutModal(props) {
             className={styles.logoutModal}
             open={isLogoutModal}
             onClose={() => handleClose()}>
-            <Box className={styles.logoutModalBox}>
+            <Box
+                className={styles.logoutModalBox + " " + (theme === "dark" ? styles.darkLogoutModalBox : styles.lightLogoutModalBox)}>
                 <BlackText text={"Confirm Logout"}/>
                 <div style={{marginTop: 20}}>
-                    <BlackText extraStyle={styles.logoutMessageModal} text={"Are you sure you want to logout?"}/>
+                    <BlackText
+                        extraStyle={(theme === "dark" ? styles.darkLogoutMessageModal : styles.lightLogoutMessageModal)}
+                        text={"Are you sure you want to logout?"}/>
                 </div>
                 <div className={styles.logoutButtonsDiv}>
                     <BlueButton onClick={handleClose} buttonName={"Cancel"}
@@ -299,6 +317,8 @@ export function LogoutModal(props) {
 export function HelpCenterModal(props) {
 
     const {isHelpCenterModal, setIsHelpCenterModal} = props
+    const theme = useContext(ThemeContext)
+    // console.log(theme.theme === "dark", " theme:::::", theme)
     const handleClose = () => {
         setIsHelpCenterModal(false)
     }
@@ -306,29 +326,36 @@ export function HelpCenterModal(props) {
         <Modal
             style={{display: "flex", alignItems: "center", justifyContent: "center"}}
             open={isHelpCenterModal}>
-            <Box className={styles.helpCenterModalBox}>
-                <div className={styles.dragAndDropDiv}>
+            <Box
+                className={styles.helpCenterModalBox + " " + (theme.theme === "dark" ? styles.darkHelpCenterModal : styles.lightHelpCenterModal)}>
+                <div className={styles.dragAndDropDiv + " " + (theme.theme === "dark" && styles.darkModeRightBorder)}>
                     <img alt={"screen display"} src={Images.laptop} style={{width: "80%", marginTop: "15%"}}/>
                     <div style={{width: "80%", marginTop: "15%"}}>
                         <BlackText extraStyle={styles.integerNumber} text={1}/>
-                        <div style={{marginLeft: "10%", paddingTop: "10%"}}>
-                            <BlackText divStyle={{marginBottom: "8%"}} text={"Drag and Drop"}/>
+                        <div style={{marginLeft: "10%", paddingTop: "8%"}}>
+                            <BlackText divStyle={{marginBottom: "12%"}} text={"Drag and Drop"}/>
                             <BlackText extraStyle={styles.helpCenterPara} text={HelpCenterText.dragAndDropFirstLine}/>
                             <BlackText extraStyle={styles.helpCenterPara} text={HelpCenterText.dragAndDropSecondLine}/>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div className={styles.saveAndDownloadDiv}>
+                    <div
+                        className={styles.saveAndDownloadDiv + " " + (theme.theme === "dark" && styles.darkModeBottomBorder)}>
                         <div className={styles.helpCenterCrossIconDiv}>
-                            <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
-                                 src={Images.crossIcon}/>
+                            {
+                                theme.theme === "dark" ?
+                                    <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
+                                         src={Images.blueCrossIcon}/> :
+                                    <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
+                                         src={Images.crossIcon}/>
+                            }
                         </div>
                         <div>
                             <BlackText text={2} extraStyle={styles.integerNumber}/>
                         </div>
                         <div style={{width: "70%", paddingLeft: "5%"}}>
-                            <BlackText divStyle={{marginTop: "10%", marginBottom: "8%"}} text={"Save and Download"}/>
+                            <BlackText divStyle={{marginTop: "7%", marginBottom: "8%"}} text={"Save and Download"}/>
                             <BlackText extraStyle={styles.helpCenterPara}
                                        text={HelpCenterText.saveAndDownloadFirstLine}/>
                             <BlackText extraStyle={styles.helpCenterPara}
