@@ -4,7 +4,6 @@ import LeftSection from "../../components/profile/leftSection";
 import RightSection, {EditProfile} from "../../components/profile/rightSection";
 import {Content} from "../../utils/constants";
 import HowToUpload from "../../components/howToUpLoad/howToUpload";
-import Footer from "../../components/footer/footer";
 import {Header} from "../../components/navBar/header";
 
 function Profile(props) {
@@ -17,7 +16,6 @@ function Profile(props) {
                     <LeftSection  tab={tab} setTab={setTab} setLogOut={setLogOut}/>
                     <RightSection tab={tab} setLogOut={setLogOut} logOut={logOut}/>
                 </div>
-            <Footer/>
         </div>
     );
 }
