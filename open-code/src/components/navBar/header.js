@@ -64,10 +64,13 @@ export function Header() {
             return;
         }
         const idToken = await user.getIdToken();
-        const jwtToken = jwt.sign(idToken, 'open-code', { expiresIn: '3d' });
-        const now = new Date();
-        const expiration = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 3);
-        document.cookie = `jwt=${jwtToken}; expires=${expiration.toUTCString()}; path=/;`;
+        let token = {
+            userToken: idToken
+        }
+        // const jwtToken = await jwt.sign(token, 'open-code', { expiresIn: '3d' });
+        // const now = new Date();
+        // const expiration = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 3);
+        // document.cookie = `jwt=${jwtToken}; expires=${expiration.toUTCString()}; path=/;`;
     }
 
     return (
