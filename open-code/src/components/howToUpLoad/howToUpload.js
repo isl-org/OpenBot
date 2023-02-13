@@ -25,10 +25,10 @@ function HowToUpload(props) {
                         connecting them together to create a sequence of actions.
                     </div>
                 </div>
-                <img src={BlocklyCode} style={HowToUploadStyles.ImageDrag}/>
+                <img alt="blocklyCodePicture"src={BlocklyCode} style={HowToUploadStyles.ImageDrag}/>
             </div>
             <div style={HowToUploadStyles.SaveAndDownloadImage}>
-                <img src={QRCode} style={HowToUploadStyles.ImageSave}/>
+                <img alt="qrCodePicture" src={QRCode} style={HowToUploadStyles.ImageSave}/>
                 <div style={HowToUploadStyles.DragAndDrop}>
                     <div style={HowToUploadStyles.NumberTwo}>2</div>
                     <div style={HowToUploadStyles.SaveAndDownloadHeading}>Save and Download </div>
@@ -48,7 +48,7 @@ function HowToUpload(props) {
                         Carry out desired actions such as activating indicator lights, detecting objects, and more on your robot car.
                     </div>
                 </div>
-                <img src={OpenBoat} style={HowToUploadStyles.ImageSave}/>
+                <img alt="openBotPicture"src={OpenBoat} style={HowToUploadStyles.ImageSave}/>
             </div>
 
         </div>

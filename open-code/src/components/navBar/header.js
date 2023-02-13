@@ -1,4 +1,4 @@
-import React, {useContext, useState, useRef, useEffect, useReducer} from 'react';
+import React, {useContext, useState, useRef} from 'react';
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import icon from "../../assets/images/icon/open-bot-logo.png"
 import profileImage from "../../assets/images/icon/profile-image.png"
@@ -21,7 +21,7 @@ import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 import {HelpCenterText} from "../../utils/constants";
-import  {auth, provider, signInWithGoogle, } from "../../firebase_setup/firebase";
+import  {auth, signInWithGoogle, } from "../../firebase_setup/firebase";
 
 
 export function Header() {
@@ -43,7 +43,7 @@ export function Header() {
     const [userName, setUserName] = useState('')
     const [profileIcon, setProfileIcon] = useState(profileImage)
     const [user, setUser] = useState(null);
-    const {userData,setUserData} = useContext(StoreContext);
+    const {setUserData} = useContext(StoreContext);
 
     const openHomepage = () => {
 

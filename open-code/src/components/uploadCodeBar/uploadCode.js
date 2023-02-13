@@ -54,6 +54,9 @@ export const UploadCode = () => {
                 Blockly.getMainWorkspace().zoom(1, 2, 1.5);
                 break;
             }
+            default:{
+                break;
+            }
         }
         setButtonActive(true);
         setTimeout(() => {
@@ -71,7 +74,7 @@ export const UploadCode = () => {
 
     return (
 
-        <div className={styles.barDiv}  className={styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
+        <div  className={styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
 
             <div className={styles.iconMargin} onClick={generateCode}>
                 <button className={styles.uploadCodeButton}

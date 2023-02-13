@@ -6,7 +6,6 @@ import {Modal} from "@mui/material";
 import {StoreContext} from "../../../context/context";
 import styles from "./newProject.module.css"
 import {ThemeContext} from "../../../App";
-import { addDoc, collection } from "@firebase/firestore"
 function NewProjectButton() {
 
 

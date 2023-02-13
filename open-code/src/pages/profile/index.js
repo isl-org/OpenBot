@@ -37,6 +37,7 @@ export function handleTabBaseRendering(tab ,theme) {
             return (
                 <HowToUpload theme={theme}/>
             )
+        default:
 
     }
 }

@@ -4,7 +4,6 @@ import React,{useEffect, useRef,useContext} from 'react';
 import Blockly from 'blockly/core';
 import locale from 'blockly/msg/en';
 import 'blockly/blocks';
-import {StoreContext} from "../../context/context";
 import {ThemeContext} from "../../App";
 import {DarkTheme, LightTheme} from "../../utils/constants";
 Blockly.setLocale(locale);
@@ -31,7 +30,7 @@ function BlocklyComponent(props) {
         return () => {
             primaryWorkspace.current.dispose();
         }
-    }, [primaryWorkspace, toolbox, blocklyDiv, props]);
+    }, [theme,primaryWorkspace, toolbox, blocklyDiv, props]);
 
     return (
         <React.Fragment>

@@ -1,8 +1,7 @@
 import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
-import {createContext, useEffect, useState} from "react";
-import firebase from "./firebase_setup/firebase";
+import {createContext, useState} from "react";
 
 export const ThemeContext = createContext(null);
 

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext} from "react";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import {StoreContext} from "../../context/context";
@@ -61,7 +61,7 @@ export const RightSlider = ()=>{
     }
     return(
         <div style={qrStyles.rightSlider} onClick={closeDrawer}>
-            <img src={theme==="dark"?rightSliderDark:rightSlider} style={qrStyles.rightSliderIcon}/>
+            <img alt="slider" src={theme==="dark"?rightSliderDark:rightSlider} style={qrStyles.rightSliderIcon}/>
         </div>
     )
 }
