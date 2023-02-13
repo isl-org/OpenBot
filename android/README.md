@@ -41,6 +41,9 @@ The first button is for selecting the **control mode**. There are two different 
 - **Phone**:  The robot can be controlled via another smartphone with the controller app installed or though a Python script running on a computer connected to the same network.
 
 The second button is for selecting the **drive mode**. There are three different drive modes when using a game controller (e.g. PS4):
+- [Android Studio Electric Eel | 2022.1.1 or later](https://developer.android.com/studio/index.html) for building and installing the apks.
+- Android device and Android development environment with minimum API 21.
+- Currently, we use API 33 as compile SDK and API 32 as target SDK. It should get installed automatically, but if not you can install the SDK manually. Go to Android Studio -> Preferences -> Appearance & Behaviour -> System Settings -> Android SDK. Make sure API 33 is checked and click apply.
 
 - **Game**: Use the right and left shoulder triggers (R2, L2) for forward and reverse throttle and either joystick for steering. This mode imitates the control mode of car racing video games.
 - **Joystick**: Use either one of the joysticks to control the robot.
@@ -371,3 +374,8 @@ On successful connection the Connect button will change to Disconnect. You can n
 <p align="left">
 <img src="../../docs/images/ble_6.jpeg" alt="Disconnect button" width="25%"/>
 </p>
+### Troubleshooting
+
+#### Versions
+
+If you get a message like `The project is using an incompatible version (AGP 7.4.0) of the Android Gradle plugin. Latest supported version is AGP 7.3.0` you need to upgrade Android Studio or downgrade your gradle plugin. You can read more about the version compatablility between Android Studio and the gradle plugin [here](https://developer.android.com/studio/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility).
