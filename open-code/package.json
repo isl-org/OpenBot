@@ -16,6 +16,7 @@
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^3.1.9-1",
     "firebase": "^9.17.1",
+    "firebase-admin": "^11.5.0",
     "firebaseui": "^6.0.2",
     "jsonwebtoken": "^9.0.0",
     "qrcode.react": "^3.1.0",
@@ -26,7 +27,7 @@
     "react-firebase-hooks": "^5.1.1",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.8.1",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.1",
     "url": "^0.11.0"
   },
   "scripts": {
@@ -37,8 +38,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {

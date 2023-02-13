@@ -22,8 +22,7 @@ import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 import {HelpCenterText} from "../../utils/constants";
-import firebase, {auth, provider, signInWithGoogle, storageRef, userInformation} from "../../firebase_setup/firebase";
-import jwt from 'jsonwebtoken';
+import  {auth, provider, signInWithGoogle, } from "../../firebase_setup/firebase";
 
 
 export function Header() {
@@ -58,20 +57,24 @@ export function Header() {
     }
 
     async function storeIdTokenInCookie(user) {
-        console.log("i am here")
         if (!auth.currentUser) {
             console.error('No user is signed in');
             return;
         }
         const idToken = await user.getIdToken();
-        let token = {
-            userToken: idToken
-        }
-        // const jwtToken = await jwt.sign(token, 'open-code', { expiresIn: '3d' });
-        // const now = new Date();
-        // const expiration = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 3);
-        // document.cookie = `jwt=${jwtToken}; expires=${expiration.toUTCString()}; path=/;`;
+        const now = new Date();
+        const expiration = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7);
+        document.cookie = `userToken=${idToken}; expires=${expiration.toUTCString()}; path=/;`;
     }
+
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+            return parts.pop().split(";").shift();
+        }
+    };
+
 
     return (
         <div>
@@ -133,6 +136,8 @@ export function Header() {
                                 <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
                             </div> :
                             <button onClick={() => {
+                                const userToken = getCookie("userToken");
+                                console.log("userToken is :",userToken)
                                 signInWithGoogle().then((response) => {
                                     setIsSigIn(true);
                                     const userName = response.user.displayName.split(" ");
@@ -144,7 +149,7 @@ export function Header() {
                                         displayName: response.user.displayName,
                                         email: response.user.email
                                     });
-                                    storeIdTokenInCookie(response.user).then(r => console.log(r));
+                                    storeIdTokenInCookie(response.user);
                                 }).catch((error) => {
                                     console.log(error)
                                 })
