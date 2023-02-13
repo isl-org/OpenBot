@@ -50,7 +50,6 @@ class dataloader:
 
                 if os.path.isfile(labels_file):
                     with open(labels_file) as f_input:
-
                         # discard header
                         header = f_input.readline()
                         data = f_input.read()
