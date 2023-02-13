@@ -5,12 +5,9 @@
 
 }
 
-.blocklyTreeLabel {
-}
 /* Adds padding around the group of categories and separators. */
 .blocklyToolboxContents {
   padding-top: 3rem ;
-  padding-right: 0.5rem;
   border-right: 0.5px solid black;
   height: 100%;
   position: relative;
@@ -25,12 +22,15 @@
 }
 
 .blocklyTreeSelected{
-  opacity: 0.3;
+  /*opacity: 0.3;*/
+}
+
+.blocklyTreeSelected .blocklyTreeLabel{
+  color: black;
 }
 
 #blockly-b{
   border-left:16px solid #567AE4 !important;
-
 }
 
 #blockly-c{

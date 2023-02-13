@@ -15,7 +15,6 @@ function BlocklyComponent(props) {
     const {theme} = useContext(ThemeContext)
     const toolbox = useRef();
     let primaryWorkspace = useRef();
-    const {workspaceWidth,setWorkspaceWidth} = useContext(StoreContext)
     useEffect(() => {
 
         const {initialXml, children, ...rest} = props;
@@ -36,7 +35,7 @@ function BlocklyComponent(props) {
 
     return (
         <React.Fragment>
-            <div ref={blocklyDiv} id="blocklyDiv" style={{width : workspaceWidth + "%", height: "81.4%"}}/>
+            <div ref={blocklyDiv} id="blocklyDiv" style={{width : 100 + "%", height: "81.4%"}}/>
             <div style={{display: 'none'}} ref={toolbox}>
                 {props.children}
             </div>

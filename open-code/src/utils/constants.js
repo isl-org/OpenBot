@@ -36,7 +36,7 @@ export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     'componentStyles': {
         'workspaceBackgroundColour': '#1e1e1e',
         'toolboxBackgroundColour': 'blackBackground',
-        'toolboxForegroundColour': '#fff',
+        'toolboxForegroundColour': colors.whiteFont,
         'flyoutBackgroundColour': '#252526',
         'flyoutForegroundColour': '#ccc',
         'flyoutOpacity': 1,
@@ -51,6 +51,42 @@ export const DarkTheme = Blockly.Theme.defineTheme('dark', {
 
 export const LightTheme=Blockly.Theme.defineTheme('light', {
     'base': Blockly.Themes.Classic,
+    "categoryStyles":{
+        "control_category":{
+            "colour":"#bdcbf5",
+        },
+        "loops_category":{
+            "colour":"#f0cbc1",
+        },
+        "operators_category":{
+            "colour":"#d3c5ed",
+        },
+        "variables_category":{
+            "colour":"#f1c1ea",
+        },
+        "text_category":{
+            "colour":"#d0d7e2",
+        },
+        "list_category":{
+            "colour":"#e8c9d2",
+        },
+        "sound_category":{
+            "colour":"#c9e9d1",
+        },
+        "sensing_category":{
+            "colour":"#bbdaf7",
+        },
+        "bumper_category":{
+            "colour":"#f2c0c6",
+        },
+        "movement_category":{
+            "colour":"#d6bef3",
+        },
+        "detection_category":{
+            "colour":"#d9d9d9",
+        }
+
+    },
     'componentStyles': {
         'workspaceBackgroundColour': 'whiteBackground',
         'toolboxBackgroundColour': 'whiteBackground',

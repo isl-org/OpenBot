@@ -16,7 +16,6 @@ import {useLocation} from 'react-router-dom';
 import UpArrow from "../../assets/images/icon/up-arrow.png";
 import Edit from "../../assets/images/icon/edit.png";
 import trash from "../../assets/images/icon/trash.png";
-import {QrDrawer} from "../drower/drower";
 import DeleteModel from "../../pages/profile/deleteModel";
 import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
@@ -180,7 +179,6 @@ export function Header() {
                         isHelpCenterModal && <HelpCenterModal isHelpCenterModal={isHelpCenterModal}
                                                               setIsHelpCenterModal={setIsHelpCenterModal}/>
                     }
-                    {location.pathname === "/playground" ? <QrDrawer/> : ""}
                 </div>
             </div>
         </div>

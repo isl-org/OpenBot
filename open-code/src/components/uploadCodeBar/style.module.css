@@ -34,7 +34,7 @@
 
 .leftButton {
     display: flex;
-    font-family: Gilroy-medium;
+    font-family: Gilroy-medium,sans-serif;
     align-items: center;
     font-size: 1.2rem;
     color: rgb(248, 249, 251);

@@ -1,3 +1,5 @@
+import {colors} from "../../utils/color";
+
 export const qrStyles = {
     main: {
         marginTop: '100px',
@@ -15,7 +17,7 @@ export const qrStyles = {
         fontSize: "0.8em",
         marginTop : "1.5rem",
         marginLeft: '2rem',
-        flexDirection : 'row'
+        flexDirection : 'row',
     },
     rightSlider :{
         width : '22px',
@@ -30,5 +32,13 @@ export const qrStyles = {
     rightSliderIcon : {
         height: '1rem',
         width: '1rem'
+    },
+    drawerLight:{
+        color:colors.blackFont,
+    },
+    drawerDark:{
+        color:colors.whiteFont,
     }
+
+
 }

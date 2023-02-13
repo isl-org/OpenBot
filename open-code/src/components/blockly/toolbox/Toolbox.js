@@ -4,25 +4,18 @@ import {controlsBlocks, loopBlocks} from "../blocks/generalBlocks";
 import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
 import '../generator/generator'
 import '../blocks/customblocks'
-
 let x = [""];
 export const Toolbox = (props) => {
 
-        const [opacity, setOpacity] = useState(1);
-
-        const handleClick = () => {
-            setOpacity(0.5);
-        };
-
         return (
         <>
-            <Category name="Control" colour="#567AE4" style={{ opacity }} onClick={handleClick}>
+            <Category name="Control" color="#567AE4"  categorystyle="control_category">
                 {controlBlocksType.map((type) => {
                     return controlsBlocks(type)
                 })}
             </Category>
 
-            <Category name="Loops" colour="#C54E30" >
+            <Category name="Loops" colour="#C54E30" categorystyle="loops_category" >
 
                 {loopBlocksType.map((type) => {
                     return loopBlocks(type)
@@ -47,7 +40,7 @@ export const Toolbox = (props) => {
                 </Block>
             </Category>
 
-            <Category name="Operators" colour="#8156C9" >
+            <Category name="Operators" colour="#8156C9" categorystyle="operators_category">
                 <Block type="math_arithmetic"/>,
                 <Block type="math_number"/>,
                 <Block type="math_modulo"/>,
@@ -59,7 +52,7 @@ export const Toolbox = (props) => {
                 <Block type="math_random_int"/>,
             </Category>
 
-            <Category colour="#D030BA" name="Variables" >
+            <Category colour="#D030BA" name="Variables" categorystyle="variables_category">
 
                 <Block type="variables_set"/>
                 <Block type="variables_get"/>
@@ -71,7 +64,7 @@ export const Toolbox = (props) => {
                 <Block type="timer"/>
             </Category>
 
-            <Category name="Text" colour="#506481" >
+            <Category name="Text" colour="#506481" categorystyle="text_category">
                 <Block type="text"/>
                 <Block type="text_multiline"/>
                 <Block type="text_join"/>
@@ -174,7 +167,7 @@ export const Toolbox = (props) => {
                 </Block>
             </Category>
 
-            <Category colour="#C26F87" name="List" >
+            <Category colour="#C26F87" name="List" categorystyle="list_category">
                 <Block type="lists_create_with"/>,
                 <Block type="lists_create_empty"/>,
                 <Block type="lists_repeat"/>,
@@ -187,13 +180,13 @@ export const Toolbox = (props) => {
                 <Block type="lists_sort"/>
                 <Block type="lists_split"/>
             </Category>
-            <Category colour="#5BBC73" name="Sound" >
+            <Category colour="#5BBC73" name="Sound" categorystyle="sound_category">
                 <Block type="soundIs"/>,
                 <Block type="soundType"/>,
                 <Block type="soundMode">
                 </Block>,
             </Category>
-            <Category colour="#61A8EC" name="Sensing" >
+            <Category colour="#61A8EC" name="Sensing" categorystyle="sensing_category">
                 <Block type="sonarReading"/>
                 <Block type="batteryReading"/>
                 <Block type="speedReading"/>
@@ -204,16 +197,16 @@ export const Toolbox = (props) => {
                 <Block type="backLedSensor"/>
                 <Block type="ledStatusSensor"/>
             </Category>
-            <Category colour="#DA4B5D" name="Bumper" >
+            <Category colour="#DA4B5D" name="Bumper" categorystyle="bumper_category">
             </Category>
-            <Category colour="#9B61E2" name="Movement" >
+            <Category colour="#9B61E2" name="Movement" categorystyle="movement_category">
                 <Block type="movementDirection"/>,
                 <Block type="movementDistance"/>
                 <Block type="movementCircular">
                 </Block>
                 <Block type="movementStop"/>
             </Category>
-            <Category colour="#717171" name="Detection" >
+            <Category colour="#717171" name="Detection" categorystyle="detection_category">
                 <Block type='print'/>
             </Category>
         </>

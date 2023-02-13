@@ -14,9 +14,8 @@ import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
 
 export const UploadCode = () => {
-    const {drawer, setDrawer} = useContext(StoreContext);
+    const {setDrawer} = useContext(StoreContext);
     const {theme} = useContext(ThemeContext)
-    const {setWorkspaceWidth} = useContext(StoreContext);
     const {setCode} = useContext(StoreContext);
     const {generate, setGenerateCode} = useContext(StoreContext);
 
@@ -30,7 +29,6 @@ export const UploadCode = () => {
         console.log(code);
         setGenerateCode(!generate);
         setCode(code)
-        setWorkspaceWidth(77.79)
         setDrawer(true);
     }
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});

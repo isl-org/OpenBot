@@ -5,7 +5,9 @@ import {StoreContext} from "../../context/context";
 import QrCode from "../qrcode/qrcode";
 import {qrStyles} from "../qrcode/styles";
 import rightSlider from "../../assets/images/icon/right-slider.png"
-
+import {ThemeContext} from "../../App"
+import {colors} from "../../utils/color";
+import rightSliderDark from "../../assets/images/icon/right-slider-dark.png"
 export function QrDrawer() {
 
     return (
@@ -16,28 +18,30 @@ export function QrDrawer() {
 }
 
 export default function PersistentDrawerRight() {
-    const {drawer, setDrawer} = useContext(StoreContext)
+    const {theme}=useContext(ThemeContext)
+    const {drawer} = useContext(StoreContext)
     return (
-        <Box sx={{display: 'flex', height: '100px'}}>
+        <Box sx={{display: 'flex',width : 0}} >
             <Drawer
                 sx={{
                     width: 0,
-                    height: "200px",
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
-                        width: '22%',
-                        height: '79.5vh',
-                        marginTop: '5.5%',
-                        borderLeft : '1px solid rgba(0, 0, 0, 0.2)'
+                        width: '23%',
+                        height: '81.3%',
+                        marginTop: '5rem',
+                        borderLeft : theme==="dark"?"0.5px solid gray":'1px solid rgba(0, 0, 0, 0.2)',
+                        backgroundColor : theme==="dark"?colors.blackBackground:colors.whiteBackground,
+                        color:theme==="dark"?colors.whiteFont:colors.blackFont,
                     },
                 }}
                 variant="persistent"
                 anchor="right"
                 open={drawer}
             >
-                <paper>
+                <paper >
                     <QrCode/>
-                    <div style={{display : 'flex'}}>
+                    <div style={{display : 'flex'}} >
                         <RightSlider/>
                         <div><DrawerBody/></div>
 
@@ -50,32 +54,33 @@ export default function PersistentDrawerRight() {
 }
 
 export const RightSlider = ()=>{
-    const {drawer, setDrawer} = useContext(StoreContext)
-    const {setWorkspaceWidth} = useContext(StoreContext);
+    const {setDrawer} = useContext(StoreContext)
+    const {theme}=useContext(ThemeContext)
     const closeDrawer = ()=>{
         setDrawer(false);
-        setWorkspaceWidth(100);
     }
     return(
         <div style={qrStyles.rightSlider} onClick={closeDrawer}>
-            <img src={rightSlider} style={qrStyles.rightSliderIcon}/>
+            <img src={theme==="dark"?rightSliderDark:rightSlider} style={qrStyles.rightSliderIcon}/>
         </div>
     )
 }
 
 export const DrawerBody = (props) => {
+
     const qrScanSteps = ["Open OpenBot App on your phone","Tap ScanQR Icon on homepage","Point your phone to this screen to capture the code"]
+
     return (
         <>
             <div>
-                <h1 style={qrStyles.heading}>Scan and upload your code:</h1>
+                <h1  style={qrStyles.heading}>Scan and upload your code:</h1>
                 {qrScanSteps.map((step,key)=>{
                     return(
                         <div style={qrStyles.list}>
-                            <div>
+                            <div >
                                 <span style={{marginRight : '.7rem'}}>{key + 1}. </span>
                             </div>
-                            <div>{step}</div>
+                            <div >{step}</div>
 
                         </div>
                     )
