@@ -9,17 +9,17 @@ export const Toolbox = (props) => {
         return (
         <>
             <Category name="Control"  categorystyle="control_category">
-                {controlBlocksType.map((type) => {
-                    return controlsBlocks(type)
+                {controlBlocksType.map((type,index) => {
+                    return controlsBlocks(type,index)
                 })}
             </Category>
 
             <Category name="Loops" categorystyle="loops_category" >
 
-                {loopBlocksType.map((type) => {
-                    return loopBlocks(type)
+                {loopBlocksType.map((type,index) => {
+                    return loopBlocks(type,index)
                 })}
-
+xx
                 <Block type="controls_for">
                     <Value name="FROM">
                         <Shadow type="math_number">

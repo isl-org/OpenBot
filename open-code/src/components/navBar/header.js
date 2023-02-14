@@ -108,7 +108,8 @@ export function Header() {
                                      onClick={handleClick} alt={"arrow"}/>
                             </div>
                             <Popper id={id} open={open} anchorEl={anchorEl}>
-                                <div className={styles.option+" "+(theme==="dark"?styles.darkTitleModel:styles.lightTitleModel)}>
+                                <div
+                                    className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel)}>
                                     <div className={styles.item} onClick={handleClick}>
                                         <img alt="Icon" className={styles.icon} src={Edit}/>
                                         <div>Rename</div>

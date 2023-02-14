@@ -116,14 +116,17 @@ javascriptGenerator['soundType'] = function (block) {
         switch (dropdown_type) {
             case "slow_mode" : {
                 return "slow";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "medium_mode" : {
                 return "medium";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "fast_mode" : {
                 return "fast";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
         }
@@ -143,14 +146,17 @@ javascriptGenerator['soundMode'] = function (block) {
         switch (dropdown_mode_type) {
             case "OPTION1" : {
                 return "dual drive";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "OPTION2" : {
                 return "joystick control";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "OPTION3" : {
                 return "gamepad";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
         }
@@ -171,18 +177,22 @@ javascriptGenerator['movementDirection'] = function (block) {
         switch (dropdown_direction_type) {
             case "move_forward" : {
                 return "moveForward";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "move_backward" : {
                 return "moveBackward";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "move_left" : {
                 return "moveLeft";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "move_right": {
                 return "moveRight";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
         }
@@ -242,10 +252,12 @@ javascriptGenerator['wheelOdometerSensors'] = function (block) {
         switch (dropdown_wheel_sensors) {
             case "front_sensor": {
                 return "frontWheelReading";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "back_sensor": {
                 return "backWheelReading";
+                // eslint-disable-next-line no-unreachable
                 break;
             }
         }

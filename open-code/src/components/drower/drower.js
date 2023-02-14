@@ -39,14 +39,14 @@ export default function PersistentDrawerRight() {
                 anchor="right"
                 open={drawer}
             >
-                <paper >
+
                     <QrCode/>
                     <div style={{display : 'flex'}} >
                         <RightSlider/>
                         <div><DrawerBody/></div>
 
                     </div>
-                </paper>
+
             </Drawer>
 
         </Box>
@@ -76,7 +76,7 @@ export const DrawerBody = (props) => {
                 <h1  style={qrStyles.heading}>Scan and upload your code:</h1>
                 {qrScanSteps.map((step,key)=>{
                     return(
-                        <div style={qrStyles.list}>
+                        <div key={key} style={qrStyles.list}>
                             <div >
                                 <span style={{marginRight : '.7rem'}}>{key + 1}. </span>
                             </div>

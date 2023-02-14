@@ -9,15 +9,16 @@ const QrCode = () => {
     const [blockCode, setBlockCode] = useState("");
     const {code } = useContext(StoreContext);
     const {generate} = useContext(StoreContext);
-    useEffect(() => {
 
+    useEffect(() => {
+        const qrCodeEncoder = () => {
+            setBlockCode(code);
+        };
             qrCodeEncoder();
 
-    }, [generate]);
+    }, [code,generate]);
 
-    const qrCodeEncoder = () => {
-        setBlockCode(code);
-    };
+
 
     const qrcode = (
         <QRCodeCanvas

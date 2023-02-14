@@ -33,7 +33,7 @@
 
 .btnGroup {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
     gap: 16px;
     margin-top: 67px;

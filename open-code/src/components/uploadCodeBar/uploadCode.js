@@ -20,8 +20,6 @@ export const UploadCode = () => {
     const {generate, setGenerateCode} = useContext(StoreContext);
 
     let primaryWorkspace = useRef();
-
-
     const generateCode = () => {
         const code = javascriptGenerator.workspaceToCode(
             primaryWorkspace.current
@@ -54,7 +52,7 @@ export const UploadCode = () => {
                 Blockly.getMainWorkspace().zoom(1, 2, 1.5);
                 break;
             }
-            default:{
+            default: {
                 break;
             }
         }
@@ -71,10 +69,9 @@ export const UploadCode = () => {
         }, 100);
     }
 
-
     return (
 
-        <div  className={styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
+        <div className={styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
 
             <div className={styles.iconMargin} onClick={generateCode}>
                 <button className={styles.uploadCodeButton}
@@ -86,13 +83,13 @@ export const UploadCode = () => {
                 </button>
             </div>
 
-            <div  className={styles.operationsDiv}>
+            <div className={styles.operationsDiv}>
                 <button className={styles.driveStyle + " " + styles.iconMargin}
                         onClick={handleDriveButton}>
                     <img alt={""} className={styles.driveIconStyle}
                          src={driveButtonActive ? driveIcon : driveIconClicked}/>
                 </button>
-                <div  className={styles.buttonMargin + " " + styles.iconMargin}>
+                <div className={styles.buttonMargin + " " + styles.iconMargin}>
                     <button
                         onClick={clickedButton}
                         style={{
@@ -112,13 +109,14 @@ export const UploadCode = () => {
 
                 <div className={styles.iconMargin}>
 
-                    <button onClick={clickedButton} className={styles.buttonStyle + " " + styles.minusStyle +" "+ styles.borderStyle}
+                    <button onClick={clickedButton}
+                            className={styles.buttonStyle + " " + styles.minusStyle + " " + styles.borderStyle}
                             style={{
                                 opacity: buttonSelected === "minus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
                             }} name={"minus"}>
                         <span className={styles.operationSize}>-</span>
                     </button>
-                    <button onClick={clickedButton} className={styles.plusStyle + " "+ styles.buttonStyle} style={{
+                    <button onClick={clickedButton} className={styles.plusStyle + " " + styles.buttonStyle} style={{
                         opacity: buttonSelected === "plus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
                     }}
                             name={"plus"}>

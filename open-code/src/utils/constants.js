@@ -38,7 +38,7 @@ export const DarkTheme = Blockly.Theme.defineTheme('dark', {
             "colour":"#bdcbf5",
         },
         "loops_category":{
-            "colour":"#f0cbc1",
+            "colour":"#faeeea",
         },
         "operators_category":{
             "colour":"#d3c5ed",

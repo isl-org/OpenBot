@@ -1,13 +1,13 @@
 import {Block, Field, Shadow, Value} from "../index";
 import React from "react";
 import './customblocks'
-export const controlsBlocks = (type)=>{
-    return <Block type = {type}/>
+export const controlsBlocks = (type,index)=>{
+    return <Block key={index} type = {type}/>
 
 }
 
-export const loopBlocks = (type)=>{
-    return  <Block type = {type}/>
+export const loopBlocks = (type,index)=>{
+    return  <Block key={index} type = {type}/>
 }
 
 export const conditionalLoops = (loopProperty) =>{
