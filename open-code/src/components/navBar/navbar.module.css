@@ -59,16 +59,15 @@
     position: absolute;
     top: 65px;
     left: 35em;
-    background: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.15);
     box-shadow: 0 4px 22px rgba(0, 0, 0, 0.08);
     border-radius: 6px;
     padding-top: 29px;
     padding-left: 35px;
+    font-family: Gilroy-Regular, sans-serif;
 }
 
 .item {
-    color: #0071C5;
     font-size: 20px;
     display: flex;
     justify-content: flex-start;
@@ -242,5 +241,14 @@
     width: 95%;
     height: 50%;
     padding-left: 5%;
+}
+
+.darkTitleModel{
+    background-color: #303030;
+    color: #F2F2F2;
+}
+.lightTitleModel{
+    background-color: #ffffff;
+    color: #0071C5;
 }
 

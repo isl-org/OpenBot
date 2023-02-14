@@ -6,6 +6,7 @@ import {Modal} from "@mui/material";
 import {StoreContext} from "../../../context/context";
 import styles from "./newProject.module.css"
 import {ThemeContext} from "../../../App";
+import {colors} from "../../../utils/color";
 function NewProjectButton() {
 
 
@@ -45,8 +46,8 @@ function NewProjectButton() {
                             <img alt="" src={cross} className={styles.CrossIcon} onClick={handleClose}/> :
                             <img alt="" src={crossDark} className={styles.CrossIcon} onClick={handleClose}/>)}
                     </div>
-                    <div className={styles.Input}>
-                        <label className={styles.label}> Give your project a name. </label>
+                    <div className={styles.Input+" "}>
+                        <label className={styles.label} style={{color:theme==="dark"?colors.whiteFont:colors.blackFont}}> Give your project a name. </label>
                         <input className={styles.InputArea} type="text" value={projectName}
                                onChange={(e) => setProjectName(e.target.value)}/>
                     </div>

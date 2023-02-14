@@ -14,7 +14,7 @@ export const DeleteStyles = {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        background: '#FFFFFF',
+        // background: '#FFFFFF',
         boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.25)",
         borderRadius: "6px",
         outline : 'none'
@@ -73,4 +73,5 @@ export const DeleteStyles = {
         cursor: "pointer",
 
     },
+
 }

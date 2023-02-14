@@ -21,7 +21,7 @@ import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 import {HelpCenterText} from "../../utils/constants";
-import  {auth, signInWithGoogle, } from "../../firebase_setup/firebase";
+import {auth, signInWithGoogle,} from "../../firebase_setup/firebase";
 
 
 export function Header() {
@@ -108,7 +108,7 @@ export function Header() {
                                      onClick={handleClick} alt={"arrow"}/>
                             </div>
                             <Popper id={id} open={open} anchorEl={anchorEl}>
-                                <div className={styles.option}>
+                                <div className={styles.option+" "+(theme==="dark"?styles.darkTitleModel:styles.lightTitleModel)}>
                                     <div className={styles.item} onClick={handleClick}>
                                         <img alt="Icon" className={styles.icon} src={Edit}/>
                                         <div>Rename</div>
@@ -123,20 +123,21 @@ export function Header() {
                     : ""}
                 <div style={NavbarStyle.navbarIconDiv}>
                     {(location.pathname === "/playground" && !isSigIn) &&
-                    <img alt={"helpCenter"} src={Images.helpIcon} style={{height:24}}/>}
+                        <img alt={"helpCenter"} src={Images.helpIcon} style={{height: 24}}/>}
                     <img alt="" onClick={() => toggleTheme(!theme)} src={moon}
                          style={{...NavbarStyle.moonIcon, ...NavbarStyle.iconMargin}}/>
                     <img alt="" src={Images.line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
                     {
                         isSigIn ?
                             <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
-                                <img alt="Profile Icon" src={profileIcon} style={{height: 28, width: 28, borderRadius: 90}}/>
+                                <img alt="Profile Icon" src={profileIcon}
+                                     style={{height: 28, width: 28, borderRadius: 90}}/>
                                 <WhiteText extraStyle={styles.extraStyles} text={userName}/>
                                 <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
                             </div> :
                             <button onClick={() => {
                                 const userToken = getCookie("userToken");
-                                console.log("userToken is :",userToken)
+                                console.log("userToken is :", userToken)
                                 signInWithGoogle().then((response) => {
                                     setIsSigIn(true);
                                     const userName = response.user.displayName.split(" ");
@@ -187,7 +188,14 @@ export function Header() {
 }
 
 export function ProfileOptionModal(props) {
-    const {isProfileModal, setIsProfileModal, setIsEditProfileModal, setIsLogoutModal, setIsHelpCenterModal, isSigIn} = props
+    const {
+        isProfileModal,
+        setIsProfileModal,
+        setIsEditProfileModal,
+        setIsLogoutModal,
+        setIsHelpCenterModal,
+        isSigIn
+    } = props
     const location = useLocation();
     const handleClose = () => {
         setIsProfileModal(false)
@@ -231,11 +239,11 @@ export function EditProfileModal(props) {
     const [file, setFile] = useState(props.user?.photoURL ? props.user.photoURL : Images.profileImage);
     const {userData} = useContext(StoreContext);
     const inputRef = useRef();
-    const [fullName,setFullName] = useState(userData?.displayName ? userData.displayName : '' );
-    const [userDetails,setUserDetail] = useState({
-        displayName : userData?.displayName ? userData.displayName : '' ,
-        email : userData?.email ? userData.email : '',
-        photoUrl : userData?.photoURL ? props.user.photoURL : Images.profileImage
+    const [fullName, setFullName] = useState(userData?.displayName ? userData.displayName : '');
+    const [userDetails, setUserDetail] = useState({
+        displayName: userData?.displayName ? userData.displayName : '',
+        email: userData?.email ? userData.email : '',
+        photoUrl: userData?.photoURL ? props.user.photoURL : Images.profileImage
     })
     const {theme} = useContext(ThemeContext)
     const handleClose = () => {
@@ -247,12 +255,12 @@ export function EditProfileModal(props) {
         setFile(URL.createObjectURL(e.target.files[0]));
         setUserDetail({
             ...userDetails,
-          photoUrl: file
+            photoUrl: file
 
         })
     }
 
-    function handleNameChange(name){
+    function handleNameChange(name) {
         setFullName(name)
         setUserDetail({
             ...userDetails,
@@ -282,7 +290,7 @@ export function EditProfileModal(props) {
                 </div>
                 <div style={{display: "flex"}}>
                     <SimpleInputComponent extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"}
-                                          value={fullName} onDataChange = {handleNameChange}/>
+                                          value={fullName} onDataChange={handleNameChange}/>
                     <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
                                           inputTitle={"Date Of Birth"}/>
                 </div>
@@ -291,11 +299,11 @@ export function EditProfileModal(props) {
 
                 <div style={{display: "flex"}}>
                     <BlueButton onClick={async () => {
-                       await userData.updateProfile({
+                        await userData.updateProfile({
                             displayName: userDetails.displayName,
                             photoURL: userDetails.photoUrl
                         });
-                       handleClose()
+                        handleClose()
                     }} buttonType={"contained"} buttonName={"Save"}/>
                     <BlueButton onClick={() => {
                         handleClose()

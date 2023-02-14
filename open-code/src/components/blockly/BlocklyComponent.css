@@ -116,6 +116,7 @@
   border-left:16px solid #717171 !important;
 }
 
-
-
+.blocklyTreeLabel.blocklyTreeLabelControl {
+  background-color: red;
+}
 

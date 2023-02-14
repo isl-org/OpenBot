@@ -103,8 +103,8 @@
 }
 
 .model {
-    width: 48%;
-    height: 42%;
+    width: 694px;
+    height: 343px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -124,16 +124,15 @@
 
 .ModelHeading {
     height: 27%;
-    width: 100%;
+    width: 85%;
     border-width: 1px;
     border-style: none none solid;
     font-family: Gilroy-SemiBold, sans-serif;
-    font-size: 22px;
-    line-height: 26px;
+    font-size: 1.4rem;
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 55%;
+    margin-left: 4.2rem;
+    justify-content: space-between;
 }
 
 .ModelHeadingDark {

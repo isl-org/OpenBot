@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ProfileStyles} from "./styles";
+import ProfileStyles from "./deleteModel.module.css";
 import LeftSection from "../../components/profile/leftSection";
 import RightSection, {EditProfile} from "../../components/profile/rightSection";
 import {Content} from "../../utils/constants";
@@ -12,7 +12,7 @@ function Profile(props) {
     return (
         <div>
             <Header/>
-                <div style={ProfileStyles.Main}>
+                <div className={ProfileStyles.Main}>
                     <LeftSection  tab={tab} setTab={setTab} setLogOut={setLogOut}/>
                     <RightSection tab={tab} setLogOut={setLogOut} logOut={logOut}/>
                 </div>
