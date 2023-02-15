@@ -14,6 +14,7 @@ class ObjectTrackingFragment: CameraController {
     var detector: Detector?
     var models: [Model] = [];
     var autoMode: Bool = false;
+    let gameController = GameController.shared
     var vehicleControl: Control = Control();
     let bluetooth = bluetoothDataController.shared;
     var currentModel: ModelItem!
@@ -53,6 +54,7 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateSelectedObject), name: .updateObject, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
         setupNavigationBarItem()
+        gameController.resetControl = false
         calculateFrame()
         super.viewDidLoad()
     }

@@ -24,6 +24,7 @@ class GameController: GCPhysicalInputProfile {
     var controlData: String = ""
     var indicatorData: String = ""
     var indicator = "i0,0\n";
+    var resetControl: Bool = true
     
     override init() {
         super.init()
@@ -247,8 +248,13 @@ class GameController: GCPhysicalInputProfile {
         // let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
         // print("Battery level: \(batteryLevel)");
         controller?.extendedGamepad?.valueChangedHandler = { [self] gamepad, element in
-            let control = processJoystickInput(mode: selectedDriveMode, gamepad: gamepad);
-            sendControl(control: control);
+            if resetControl == true {
+                sendControl(control: Control());
+            } else {
+                let control = processJoystickInput(mode: selectedDriveMode, gamepad: gamepad);
+                sendControl(control: control);
+            }
+            
             let keyCommand = processControllerKeyData(element: element);
             sendKeyUpdates(keyCommand: keyCommand);
         }
@@ -293,11 +299,6 @@ class GameController: GCPhysicalInputProfile {
             break;
         case IndicatorEvent.STOP:
             setIndicator(keyCommand: keyCommand as! IndicatorEvent);
-            break;
-        case ControlEvent.STOP:
-            sendControl(control: Control());
-            break;
-        case ControlEvent.FORWARD:
             break;
         case CMD_Events.TOGGLE_LOGS:
             NotificationCenter.default.post(name: .logData, object: nil)

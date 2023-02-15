@@ -49,6 +49,8 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateLogData), name: .logData, object: nil)
+        
+        gameController.resetControl = false
 
     }
 

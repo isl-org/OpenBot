@@ -97,10 +97,6 @@ enum IndicatorEvent: Int {
     case STOP = 0
 }
 
-enum ControlEvent {
-    case STOP, FORWARD, BACKWARD, LEFT, RIGHT
-}
-
 enum Keymap: String {
     case KEYCODE_BUTTON_Y = "Triangle Button"
     case KEYCODE_BUTTON_X = "Square Button"

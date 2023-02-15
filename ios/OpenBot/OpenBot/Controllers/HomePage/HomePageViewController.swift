@@ -53,7 +53,7 @@ class HomePageViewController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
-
+        gameController.resetControl = true
 
     }
 
@@ -93,6 +93,7 @@ class HomePageViewController: CameraController {
         } else {
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
+        gameController.resetControl = true
 
     }
 
