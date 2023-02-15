@@ -165,7 +165,7 @@ Simple UI for tracking objects of 80 different classes. A short description of t
   The distance is estimated from the size of the tracking box on the tracking screen (works best in landscape orientation).
   This option can be activated in the Settings screen.
 <p align="left">
-<img src="../../docs/images/screen_settings_dynamicspeed.png" alt="Dynamic speed setting" width="49%" />
+<img src="../../docs/images/screen_settings_dynamicspeed.png" alt="Dynamic speed setting" width="25%" />
 </p>
 
 ### Point Goal Navigation
