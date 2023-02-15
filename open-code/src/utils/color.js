@@ -3,7 +3,8 @@ export const colors = {
     whiteFont: "#F8F9FB",
     blackFont: "#000000",
     blackBackground: '#1e1e1e',
-    whiteBackground: '#FFFFFF'
+    whiteBackground: '#FFFFFF',
+    blackPopupBackground:"#303030"
 }
 
 export const buttonColor={

@@ -22,7 +22,9 @@ import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 import {HelpCenterText} from "../../utils/constants";
 import {auth, signInWithGoogle,} from "../../firebase_setup/firebase";
-
+import renameIcon from "../../assets/images/icon/rename-icon.png";
+import deleteIcon from "../../assets/images/icon/delete-icon.png";
+import {colors} from "../../utils/color";
 
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
@@ -111,11 +113,12 @@ export function Header() {
                                 <div
                                     className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel)}>
                                     <div className={styles.item} onClick={handleClick}>
-                                        <img alt="Icon" className={styles.icon} src={Edit}/>
+                                        <img alt="Icon" className={styles.icon} src={theme === "dark" ? renameIcon : Edit}/>
                                         <div>Rename</div>
                                     </div>
                                     <div className={styles.item} onClick={handleDelete}>
-                                        <img alt="Icon" className={styles.icon} src={trash}/>
+                                        <img alt="Icon" className={styles.icon}
+                                             src={theme === "dark" ? deleteIcon : trash}/>
                                         <div> Delete File</div>
                                     </div>
                                 </div>
@@ -123,8 +126,10 @@ export function Header() {
                         </>
                     : ""}
                 <div style={NavbarStyle.navbarIconDiv}>
-                    {(location.pathname === "/playground" && !isSigIn) &&
-                        <img alt={"helpCenter"} src={Images.helpIcon} style={{height: 24}}/>}
+                    {location.pathname === "/playground"?
+                    <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon} onClick={() => {
+                        setIsHelpCenterModal(true)
+                    }} style={{height: 24}}/>:""}
                     <img alt="" onClick={() => toggleTheme(!theme)} src={moon}
                          style={{...NavbarStyle.moonIcon, ...NavbarStyle.iconMargin}}/>
                     <img alt="" src={Images.line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
@@ -189,15 +194,13 @@ export function Header() {
 }
 
 export function ProfileOptionModal(props) {
+    const theme = useContext(ThemeContext);
     const {
         isProfileModal,
         setIsProfileModal,
         setIsEditProfileModal,
         setIsLogoutModal,
-        setIsHelpCenterModal,
-        isSigIn
     } = props
-    const location = useLocation();
     const handleClose = () => {
         setIsProfileModal(false)
     }
@@ -205,30 +208,28 @@ export function ProfileOptionModal(props) {
         <Modal
             open={isProfileModal}
             onClose={handleClose}>
-            <Box className={styles.profileOptionModalStyle}>
+            <Box className={styles.profileOptionModalStyle}
+                 style={{backgroundColor: theme.theme === "dark" ? colors.blackPopupBackground : colors.whiteBackground}}>
                 <div onClick={() => {
                     setIsEditProfileModal(true)
                     handleClose()
                 }} className={styles.listStyle}>
-                    <img alt="icon" src={Images.userIcon} className={styles.modalIcon}/>
-                    <BlueText extraStyle={styles.modalText} styles text={"Edit Profile"}/>
+                    <img alt="icon" src={theme.theme === "dark" ?Images.darkUserIcon:Images.userIcon} className={styles.modalIcon}/>
+                    {theme.theme === "dark" ?
+                        <WhiteText extraStyle={styles.modalText} styles text={"Edit Profile"}/> :
+                        <BlueText extraStyle={styles.modalText} styles text={"Edit Profile"}/>
+                    }
                 </div>
-                {
-                    (location.pathname === "/playground" && isSigIn) &&
-                    <div onClick={() => {
-                        setIsHelpCenterModal(true)
-                        handleClose()
-                    }} className={styles.listStyle}>
-                        <img alt="icon" src={Images.helpIcon} className={styles.modalIcon}/>
-                        <BlueText extraStyle={styles.modalText} text={"Help Center"}/>
-                    </div>
-                }
+
                 <div onClick={() => {
                     setIsLogoutModal(true)
                     handleClose()
                 }} className={styles.listStyle}>
-                    <img alt="icon" src={Images.logoutIcon} className={styles.modalIcon}/>
-                    <BlueText extraStyle={styles.modalText} text={"Logout"}/>
+                    <img alt="icon" src={theme.theme === "dark" ?Images.darkLogoutIcon:Images.logoutIcon} className={styles.modalIcon}/>
+                    {theme.theme === "dark" ?
+                        <WhiteText extraStyle={styles.modalText} text={"Logout"}/> :
+                        <BlueText extraStyle={styles.modalText} text={"Logout"}/>
+                    }
                 </div>
             </Box>
         </Modal>
@@ -412,4 +413,6 @@ export function HelpCenterModal(props) {
         </Modal>
     )
 }
+
+
 

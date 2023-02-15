@@ -7,7 +7,8 @@ import profileImage from "../assets/images/icon/profile-image.png"
 import line from "../assets/images/line.png"
 import laptop from "../assets/images/laptop.png"
 import blueCrossIcon from "../assets/images/icon/dark-cross.png"
-
+import darkUserIcon from "../../src/assets/images/icon/darkUser-icon.png"
+import darkLogoutIcon from "../../src/assets/images/icon/darklogout-icon.png"
 export const Images = {
     helpIcon: helpIcon,
     logoutIcon: logoutIcon,
@@ -18,4 +19,6 @@ export const Images = {
     line: line,
     laptop: laptop,
     blueCrossIcon: blueCrossIcon,
+    darkUserIcon: darkUserIcon,
+    darkLogoutIcon:darkLogoutIcon
 }
