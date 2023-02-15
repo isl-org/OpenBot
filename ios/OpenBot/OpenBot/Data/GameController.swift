@@ -193,7 +193,7 @@ class GameController: GCPhysicalInputProfile {
             }
         case Keymap.KEYCODE_BUTTON_Y.rawValue:
             if (connectedController?.extendedGamepad?.buttonY.isPressed == false) {
-                return ControlEvent.STOP;
+                return IndicatorEvent.STOP;
             }
         case Keymap.KEYCODE_BUTTON_B.rawValue:
             if (connectedController?.extendedGamepad?.buttonB.isPressed == false) {
