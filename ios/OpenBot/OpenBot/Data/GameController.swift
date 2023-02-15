@@ -74,16 +74,9 @@ class GameController: GCPhysicalInputProfile {
         case .DUAL:
             return convertDualToControl(leftStick: getCenteredAxis(gamepad.leftThumbstick.yAxis.value), rightStick: getCenteredAxis(gamepad.rightThumbstick.yAxis.value));
         case .GAME:
-            var rightTrigger: Float = getCenteredAxis(gamepad.rightShoulder.value);
-            if (rightTrigger == 0) {
-                rightTrigger = getCenteredAxis(gamepad.rightTrigger.value);
-            }
-
-            var leftTrigger: Float = getCenteredAxis(gamepad.leftShoulder.value);
-            if (leftTrigger == 0) {
-                leftTrigger = getCenteredAxis(gamepad.leftTrigger.value);
-            }
-
+            let rightTrigger = getCenteredAxis(gamepad.rightTrigger.value);
+            let leftTrigger = getCenteredAxis(gamepad.leftTrigger.value);
+            
             var steeringOffset: Float = getCenteredAxis(gamepad.leftThumbstick.xAxis.value);
             if (steeringOffset == 0) {
                 steeringOffset = getCenteredAxis(gamepad.dpad.yAxis.value);
@@ -209,7 +202,7 @@ class GameController: GCPhysicalInputProfile {
             }
         case Keymap.KEYCODE_BUTTON_L1.rawValue:
             if (connectedController?.extendedGamepad?.leftShoulder.isPressed == false) {
-                return DriveMode.JOYSTICK;
+                return CMD_Events.CMD_DRIVE_MODE
             }
         case Keymap.KEYCODE_BUTTON_R1.rawValue:
             if (connectedController?.extendedGamepad?.rightShoulder.isPressed == false) {
@@ -309,10 +302,10 @@ class GameController: GCPhysicalInputProfile {
         case ControlEvent.FORWARD:
             break;
         case CMD_Events.TOGGLE_LOGS:
-            toggleLogging()
+            NotificationCenter.default.post(name: .logData, object: nil)
             break;
         case CMD_Events.TOGGLE_NETWORK:
-            toggleNetwork()
+            NotificationCenter.default.post(name: .toggleNetworks, object: nil)
             break;
         case CMD_Events.CMD_SPEED_UP:
             NotificationCenter.default.post(name: .increaseSpeedMode, object: nil);
@@ -320,8 +313,8 @@ class GameController: GCPhysicalInputProfile {
         case CMD_Events.CMD_SPEED_DOWN:
             NotificationCenter.default.post(name: .decreaseSpeedMode, object: nil);
             break;
-        case DriveMode.JOYSTICK:
-            updateDriveMode()
+        case CMD_Events.CMD_DRIVE_MODE:
+            NotificationCenter.default.post(name: .updateDriveMode, object: nil)
         default:
             break;
         }
@@ -335,18 +328,6 @@ class GameController: GCPhysicalInputProfile {
             bluetooth.sendData(payload: indicatorValues);
             indicator = indicatorValues;
         }
-    }
-
-    func toggleLogging() {
-        NotificationCenter.default.post(name: .logData, object: nil)
-    }
-
-    func toggleNetwork() {
-        NotificationCenter.default.post(name: .toggleNetworks, object: nil)
-    }
-
-    func updateDriveMode() {
-        NotificationCenter.default.post(name: .updateDriveMode, object: nil)
     }
 }
 

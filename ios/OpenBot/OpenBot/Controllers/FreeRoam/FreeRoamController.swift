@@ -364,7 +364,6 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         let dual = createMode(x: 245, y: 145, width: Int(width / 4), label: Strings.dual, icon: "dual", action: #selector(dualMode(_:)))
         if selectedControlMode == ControlMode.PHONE {
             selectedDriveMode = DriveMode.DUAL
-            gameController.selectedDriveMode = DriveMode.DUAL
             dual.backgroundColor = Colors.titleDeactivated
         } else {
             if selectedDriveMode == DriveMode.JOYSTICK {
@@ -375,6 +374,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
                 dual.backgroundColor = Colors.title
             }
         }
+        gameController.selectedDriveMode = selectedDriveMode
         secondView.addSubview(joystick)
         secondView.addSubview(game)
         secondView.addSubview(dual)
@@ -586,11 +586,11 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             case .JOYSTICK:
                 selectedDriveMode = .GAME
                 break;
-            case .DUAL:
-                selectedDriveMode = .JOYSTICK;
-                break;
             case .GAME:
                 selectedDriveMode = .DUAL
+                break;
+            case .DUAL:
+                selectedDriveMode = .JOYSTICK;
                 break;
             }
         }
