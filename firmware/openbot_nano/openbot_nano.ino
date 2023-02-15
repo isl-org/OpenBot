@@ -22,7 +22,7 @@
 //  - December 2021: RC truck support by Usman Fiaz
 //  - March 2022: OpenBot-Lite support by William Tan
 //  - May 2022: MTV support by Quentin Leboutet
-//  - JAN 2023: BLUETOOTH support by iTinker
+//  - JAN 2023: HAS_BLUETOOTH support by iTinker
 // ---------------------------------------------------------------------------
 
 // By Matthias Mueller, Embodied AI Lab, 2022
@@ -46,7 +46,7 @@
 //------------------------------------------------------//
 
 // Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520, DIY_ESP32)
-#define OPENBOT DIY_ESP32
+#define OPENBOT RTR_520
 
 //------------------------------------------------------//
 // SETTINGS - Global settings
@@ -64,8 +64,8 @@
 #define DEBUG 0
 
 //Enable/Disable bluetooth connectivity (1,0)
-//NOTE: BLUETOOTH will only work with the ESP32 board (RTR_520, MTV, DIY_ESP32).
-#define BLUETOOTH 1
+//NOTE: HAS_BLUETOOTH will only work with the ESP32 board (RTR_520, MTV, DIY_ESP32).
+#define HAS_BLUETOOTH 1
 
 // Enable/Disable coast mode (1,0)
 // When no control is applied, the robot will either coast (1) or actively stop (0)
@@ -102,7 +102,7 @@ boolean coast_mode = 1;
 // PIN_LED_LF, PIN_LED_RF               Control left and right front LEDs (illumination)
 // PIN_LED_Y, PIN_LED_G, PIN_LED_B      Control yellow, green and blue status LEDs
 
-#if (BLUETOOTH)
+#if (HAS_BLUETOOTH)
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
@@ -112,9 +112,9 @@ BLEServer *bleServer = NULL;
 BLECharacteristic *bleTxCharacteristic;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
-#define SERVICE_UUID           "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" // UART service UUID
-#define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
-#define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+const char* SERVICE_UUID           = "61653dc3-4021-4d1e-ba83-8b4eec61d613"; // UART service UUID
+const char* CHARACTERISTIC_UUID_RX = "06386c14-86ea-4d71-811c-48f97c58f8c9";
+const char* CHARACTERISTIC_UUID_TX = "9bf1103b-834c-47cf-b149-c9e4bcf778a7";
 #endif
 
 //-------------------------DIY--------------------------//
@@ -446,7 +446,7 @@ const char MAX_MSG_SZ = 32;
 char msg_buf[MAX_MSG_SZ];
 int msg_idx = 0;
 
-#if(BLUETOOTH)
+#if(HAS_BLUETOOTH)
 void on_ble_rx(char inChar) {
   if (inChar != endChar) {
     switch (msgPart) {
@@ -467,10 +467,12 @@ void on_ble_rx(char inChar) {
 class MyServerCallbacks : public BLEServerCallbacks {
     void onConnect(BLEServer *bleServer) {
       deviceConnected = true;
+      Serial.println("BT Connected");
     };
 
     void onDisconnect(BLEServer *bleServer) {
       deviceConnected = false;
+      Serial.println("BT Disconnected");
     }
 };
 
@@ -790,22 +792,19 @@ void setup() {
   // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
   // SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
   // Serial.setTimeout(10);
-#if (BLUETOOTH)
+#if (HAS_BLUETOOTH)
   BLEDevice::init("Openbot BLE");
   bleServer = BLEDevice::createServer();
   bleServer->setCallbacks(new MyServerCallbacks());
-  BLEService *pService = bleServer->createService(SERVICE_UUID);
-  bleTxCharacteristic = pService->createCharacteristic(
-                          CHARACTERISTIC_UUID_TX,
-                          BLECharacteristic::PROPERTY_NOTIFY
-                        );
+  BLEService *pService = bleServer->createService(BLEUUID(SERVICE_UUID));
+  bleTxCharacteristic = pService->createCharacteristic(BLEUUID(CHARACTERISTIC_UUID_TX), BLECharacteristic::PROPERTY_NOTIFY);
   bleTxCharacteristic->addDescriptor(new BLE2902());
-  BLECharacteristic *pRxCharacteristic = pService->createCharacteristic(
-      CHARACTERISTIC_UUID_RX,
-      BLECharacteristic::PROPERTY_WRITE
-                                         );
+  BLECharacteristic *pRxCharacteristic = pService->createCharacteristic(BLEUUID(CHARACTERISTIC_UUID_RX), BLECharacteristic::PROPERTY_WRITE);
   pRxCharacteristic->setCallbacks(new MyCallbacks());
   pService->start();
+  // Start advertising
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(BLEUUID(SERVICE_UUID));
   bleServer->getAdvertising()->start();
   Serial.println("Waiting a client connection to notify...");
 #endif
@@ -816,7 +815,7 @@ void setup() {
 //------------------------------------------------------//
 void loop() {
 
-#if (BLUETOOTH)
+#if (HAS_BLUETOOTH)
   // disconnecting
   if (!deviceConnected && oldDeviceConnected) {
     delay(500); // give the bluetooth stack the chance to get things ready
@@ -1437,7 +1436,6 @@ void process_feature_msg() {
   msg += "ls:";
 #endif
   Serial.println(msg);
-  Serial.println("SPARSH JAIN");
 }
 
 void on_serial_rx() {
@@ -1842,7 +1840,7 @@ void update_speed_rm()
 #endif
 
 void sendDataToBLE(String dataToSend) {
-#if (BLUETOOTH)
+#if (HAS_BLUETOOTH)
   if (deviceConnected) {
     char outData[50] = "";
     for (int i = 0; i < dataToSend.length(); i++) {

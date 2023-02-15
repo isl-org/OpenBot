@@ -26,9 +26,10 @@ class Common {
     }
 
     static func loadAllModelItems() -> [ModelItem] {
-        if loadAllModelFromDocumentDirectory().count > 0 {
-            return loadAllModelFromDocumentDirectory()
-        }
+        // let models = loadAllModelFromDocumentDirectory()
+        // if models.count > 0 {
+        //     return models
+        // }
         return loadAllModelItemsFromBundle()
     }
 

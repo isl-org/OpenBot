@@ -23,6 +23,7 @@ class BluetoothTable: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        bluetooth.startScan()
     }
 
     override func viewWillDisappear(_ animated: Bool) {

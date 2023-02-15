@@ -97,6 +97,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
+                print("Characteristic UUID: \(characteristic.uuid)")
                 if (characteristic.properties == .write) {
                     writeCharacteristics = characteristic;
                 } else if (characteristic.properties == .notify) {
@@ -184,7 +185,13 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     func startScan() {
         let options: [String: Any] = [CBCentralManagerScanOptionAllowDuplicatesKey: true]
-        centralManager?.scanForPeripherals(withServices: [CBUUID(string: Constants.openbotService)], options: options);
+        switch centralManager?.state {
+        case .poweredOn:
+            centralManager?.scanForPeripherals(withServices: [CBUUID(string: Constants.openbotService), CBUUID(string: Constants.openbotService_RX), CBUUID(string: Constants.openbotService_TX)], options: options);
+        default:
+            break
+        }
+        
     }
 
     @objc func startNotification() {
