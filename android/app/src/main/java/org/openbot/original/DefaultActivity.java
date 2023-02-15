@@ -100,6 +100,7 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
     borderedText.setTypeface(Typeface.MONOSPACE);
 
     tracker = new MultiBoxTracker(this);
+    tracker.setDynamicSpeed(preferencesManager.getDynamicSpeed());
 
     previewWidth = size.getWidth();
     previewHeight = size.getHeight();

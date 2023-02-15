@@ -160,6 +160,14 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 <img src="../../docs/images/screen_object_tracking_2.jpg" alt="Alt text" width="49%" />
 </p>
 
+#### Options
+- **Dynamic Speed**: reduces robots speed in "Auto Mode" if it gets closer to the tracked object.
+  The distance is estimated from the size of the tracking box on the tracking screen (works best in landscape orientation).
+  This option can be activated in the Settings screen.
+<p align="left">
+<img src="../../docs/images/screen_settings_dynamicspeed.png" alt="Dynamic speed setting" width="49%" />
+</p>
+
 ### Point Goal Navigation
 
 Note that this fragment requires ARCore and camera permission. If your device does not support ARCore and you continue anyways, the app will crash. In this screen you can specify a goal via a 2D vector with respect to the current position and orientation of the robot. The 2D vector contains the distance to the front and left of the robot in meters. Both values can also be negative and correspond to back and right of the robot in that case. After specifying the goal and pressing `Start` the robot will exectue an AI policy that attempts to reach the goal while avoiding obstacles.

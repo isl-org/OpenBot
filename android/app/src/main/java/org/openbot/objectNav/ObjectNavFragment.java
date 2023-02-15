@@ -222,6 +222,7 @@ public class ObjectNavFragment extends CameraFragment {
     borderedText.setTypeface(Typeface.MONOSPACE);
 
     tracker = new MultiBoxTracker(requireContext());
+    tracker.setDynamicSpeed(preferencesManager.getDynamicSpeed());
 
     Timber.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 

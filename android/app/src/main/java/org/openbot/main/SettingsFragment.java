@@ -21,6 +21,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 import org.openbot.R;
+import org.openbot.env.SharedPreferencesManager;
 import org.openbot.utils.Constants;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Vehicle;
@@ -34,6 +35,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
   private SwitchPreferenceCompat storage;
   private SwitchPreferenceCompat location;
   private SwitchPreferenceCompat mic;
+  private SwitchPreferenceCompat dynamicspeed;
 
   private final ActivityResultLauncher<String[]> requestPermissionLauncher =
       registerForActivityResult(
@@ -210,6 +212,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             dialog.show();
             return false;
           });
+
+    dynamicspeed = findPreference(SharedPreferencesManager.OBJECT_NAV_DYNAMIC_SPEED);
+    if (dynamicspeed != null) {
+      dynamicspeed.setOnPreferenceClickListener(
+          preference -> {
+            // bot fragments read preferences via SharedPreferencesManager (file
+            // openbot_settings.xml) make sure setting is available
+            new SharedPreferencesManager(getContext()).setDynamicSpeed(dynamicspeed.isChecked());
+            return true;
+          });
+    }
   }
 
   private void restartApp() {

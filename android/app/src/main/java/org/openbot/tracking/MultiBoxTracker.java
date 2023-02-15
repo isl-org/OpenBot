@@ -73,6 +73,7 @@ public class MultiBoxTracker {
   private int sensorOrientation;
   private float leftControl;
   private float rightControl;
+  private boolean useDynamicSpeed = false; // flag to calculate speed by estimated object distance
 
   public MultiBoxTracker(final Context context) {
     for (final int color : COLORS) {
@@ -172,11 +173,16 @@ public class MultiBoxTracker {
       // assuming, lage box means close to tracked object, if below a threshold stop robot.
       // calculate ratio of object tracking box of screen area to estimate a relative distance
       // if phone is in landscape (rotated = false) as not working so well in portrait
-      float distancefactor = 1 - (trackboxArea / (frameWidth * frameHeight));
-      if (distancefactor < 0.2f) distancefactor = 0.0f; // tracked object very near, stop robot
-      else if (rotated || distancefactor > 0.8f) // if landscape (rotated=true) leave as is.
-      distancefactor = 1.0f; // tracked object far, use predefined follow speed
-
+      float distancefactor;
+      if (useDynamicSpeed) {
+        distancefactor = 1 - (trackboxArea / (frameWidth * frameHeight));
+        if (distancefactor < 0.2f) distancefactor = 0.0f; // tracked object very near, stop robot
+        else if (distancefactor > 0.8f)
+          distancefactor = 1.0f; // tracked object far, use predefined follow speed
+      } else {
+        // default behavior w/o dynamic speed, use preset speed
+        distancefactor = 1.0f;
+      }
       if (x_pos_scaled < 0) {
         leftControl = distancefactor;
         rightControl = distancefactor + x_pos_scaled;
@@ -278,6 +284,15 @@ public class MultiBoxTracker {
         break;
       }
     }
+  }
+
+  /**
+   * Set use of dynamic speed on or off (used in updateTarget())
+   *
+   * @param on
+   */
+  public void setDynamicSpeed(boolean on) {
+    useDynamicSpeed = on;
   }
 
   private static class TrackedRecognition {

@@ -47,4 +47,12 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Object Tracking (auto mode option)">
+        <SwitchPreferenceCompat
+            app:key="object_nav_dynamicspeed"
+            app:title="Dynamic Speed"
+            app:summary="calc from object distance" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
