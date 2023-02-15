@@ -1,4 +1,4 @@
-// Required App Version: 0.5
+// Required App Version: 0.6.1
 // ---------------------------------------------------------------------------
 // This Arduino Nano sketch accompanies the OpenBot Android application.
 //
@@ -792,6 +792,8 @@ void setup() {
   // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
   // SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
   // Serial.setTimeout(10);
+  Serial.println('r');
+  
 #if (HAS_BLUETOOTH)
   BLEDevice::init("Openbot BLE");
   bleServer = BLEDevice::createServer();
@@ -1436,6 +1438,7 @@ void process_feature_msg() {
   msg += "ls:";
 #endif
   Serial.println(msg);
+  sendDataToBLE(msg);
 }
 
 void on_serial_rx() {

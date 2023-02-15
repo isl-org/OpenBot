@@ -24,28 +24,28 @@ class GameController: GCPhysicalInputProfile {
     var controlData: String = ""
     var indicatorData: String = ""
     var indicator = "i0,0\n";
-
+    
     override init() {
         super.init()
         NotificationCenter.default.addObserver(self,
-                selector: #selector(didConnectController),
-                name: NSNotification.Name.GCControllerDidConnect,
-                object: nil)
+                                               selector: #selector(didConnectController),
+                                               name: NSNotification.Name.GCControllerDidConnect,
+                                               object: nil)
         NotificationCenter.default.addObserver(self,
-                selector: #selector(didDisconnectController),
-                name: NSNotification.Name.GCControllerDidDisconnect,
-                object: nil)
-
+                                               selector: #selector(didDisconnectController),
+                                               name: NSNotification.Name.GCControllerDidDisconnect,
+                                               object: nil)
+        
         GCController.startWirelessControllerDiscovery {
         }
     }
-
+    
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.GCControllerDidConnect, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.GCControllerDidDisconnect, object: nil)
         GCController.stopWirelessControllerDiscovery()
     }
-
+    
     @objc func didConnectController(_ notification: Notification) {
         guard controllers.count < maximumControllerCount else {
             return
@@ -56,17 +56,16 @@ class GameController: GCPhysicalInputProfile {
         let nc = NotificationCenter.default;
         nc.post(name: Notification.Name(rawValue: Strings.controllerConnected), object: self)
     }
-
+    
     @objc func didDisconnectController(_ notification: Notification) {
         let controller = notification.object as! GCController
         controllers.remove(controller)
     }
-
+    
     /**
-
      - Parameters:
-       - mode:
-       - gamepad:
+     - mode:
+     - gamepad:
      - Returns:
      */
     public func processJoystickInput(mode: DriveMode, gamepad: GCExtendedGamepad) -> Control {
@@ -84,18 +83,18 @@ class GameController: GCPhysicalInputProfile {
             if (steeringOffset == 0) {
                 steeringOffset = getCenteredAxis(gamepad.rightThumbstick.xAxis.value);
             }
-
+            
             return convertGameToControl(leftTrigger: leftTrigger, rightTrigger: rightTrigger, steeringOffset: steeringOffset);
         case .JOYSTICK:
             var yAxis: Float = getCenteredAxis(gamepad.leftThumbstick.yAxis.value);
             if (yAxis == 0) {
                 yAxis = getCenteredAxis(gamepad.dpad.yAxis.value);
             }
-
+            
             if (yAxis == 0) {
                 yAxis = getCenteredAxis(gamepad.rightThumbstick.yAxis.value);
             }
-
+            
             var xAxis: Float = getCenteredAxis(gamepad.leftThumbstick.xAxis.value);
             if (xAxis == 0) {
                 xAxis = getCenteredAxis(gamepad.dpad.xAxis.value);
@@ -106,33 +105,33 @@ class GameController: GCPhysicalInputProfile {
             return convertJoystickToControl(xAxis: xAxis, yAxis: yAxis);
         }
     }
-
+    
     private func getCenteredAxis(_ value: Float) -> Float {
         roundf(value)
     }
-
+    
     /**
      function to return dual mode control values to openbot device movement values.
      - Parameters:
-       - leftStick: left joystick yAxis values.
-       - rightStick: right joystick yAxis values.
+     - leftStick: left joystick yAxis values.
+     - rightStick: right joystick yAxis values.
      - Returns: return control object with left and right values.
      */
     public func convertDualToControl(leftStick: Float, rightStick: Float) -> Control {
         Control(left: leftStick, right: rightStick);
     }
-
+    
     /**
      function to convert controller input for joystick mode to values to return to openbot device to control the navigation.
      - Parameters:
-       - xAxis: xAxis position of the joystick
-       - yAxis: yAxis position of the joystick
+     - xAxis: xAxis position of the joystick
+     - yAxis: yAxis position of the joystick
      - Returns: returns control object with left and right values.
      */
     public func convertJoystickToControl(xAxis: Float, yAxis: Float) -> Control {
         var left = yAxis;
         var right = yAxis;
-
+        
         if (left >= 0) {
             left += xAxis;
         } else {
@@ -145,19 +144,19 @@ class GameController: GCPhysicalInputProfile {
         }
         return Control(left: left, right: right);
     }
-
+    
     /**
      function to convert controller input for game mode to the values to return to openbot device to control the device movement.
      - Parameters:
-       - leftTrigger: left control of device.
-       - rightTrigger: right control of device.
-       - steeringOffset: offset in left and right directions.
+     - leftTrigger: left control of device.
+     - rightTrigger: right control of device.
+     - steeringOffset: offset in left and right directions.
      - Returns: Returns Control object with left and right values.
      */
     public func convertGameToControl(leftTrigger: Float, rightTrigger: Float, steeringOffset: Float) -> Control {
         var left = rightTrigger - leftTrigger;
         var right = rightTrigger - leftTrigger;
-
+        
         if (left >= 0) {
             left += steeringOffset;
         } else {
@@ -170,15 +169,15 @@ class GameController: GCPhysicalInputProfile {
         }
         return Control(left: left, right: right);
     }
-
+    
     /**
      function to process the controller keys and create events out of them.
      - Parameters:
-       - element: takes controllerElement as input and using localized_names of controller and map it to Keymap[enum].
+     - element: takes controllerElement as input and using localized_names of controller and map it to Keymap[enum].
      - Returns: Events
      */
     public func processControllerKeyData(element: GCControllerElement) -> Any {
-
+        
         switch (element.localizedName) {
         case Keymap.KEYCODE_BUTTON_X.rawValue:
             if (connectedController?.extendedGamepad?.buttonX.isPressed == false) {
@@ -223,7 +222,7 @@ class GameController: GCPhysicalInputProfile {
         }
         return "";
     }
-
+    
     /**
      function to get the values to return to openbot for update in indicator.
      - Parameter event: [IndicatorEvent] enum
@@ -239,15 +238,14 @@ class GameController: GCPhysicalInputProfile {
         }
         return "i1,1\n";
     }
-
+    
     func updateControllerValues() {
         if (connectedController == nil) {
             return
         }
-        print(Strings.controllerConnected)
         let controller = connectedController;
-        let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
-        print(batteryLevel);
+        // let batteryLevel = String(format: "%.2f", controller!.battery.unsafelyUnwrapped.batteryLevel * 100);
+        // print("Battery level: \(batteryLevel)");
         controller?.extendedGamepad?.valueChangedHandler = { [self] gamepad, element in
             let control = processJoystickInput(mode: selectedDriveMode, gamepad: gamepad);
             sendControl(control: control);
@@ -255,7 +253,7 @@ class GameController: GCPhysicalInputProfile {
             sendKeyUpdates(keyCommand: keyCommand);
         }
     }
-
+    
     func sendControl(control: Control) {
         if selectedControlMode == ControlMode.PHONE {
             return
@@ -264,27 +262,27 @@ class GameController: GCPhysicalInputProfile {
             let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             let right = (control.getRight() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             vehicleControl = control;
-            print("c" + String(left) + "," + String(right) + "\n");
+            // print("c" + String(left) + "," + String(right) + "\n");
             dataLogger.setControlLogs(left: (String(left)), right: String(right))
             controlData = String(left) + " " + String(right)
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
         }
     }
-
+    
     func sendControlFromPhoneController(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             let right = (control.getRight() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero);
             vehicleControl = control;
-            print("c" + String(left) + "," + String(right) + "\n");
+            // print("c" + String(left) + "," + String(right) + "\n");
             dataLogger.setControlLogs(left: (String(left)), right: String(right))
             controlData = String(left) + " " + String(right)
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
         }
     }
-
+    
     @objc func sendKeyUpdates(keyCommand: Any) {
         switch (keyCommand) {
         case IndicatorEvent.RIGHT:
@@ -319,7 +317,7 @@ class GameController: GCPhysicalInputProfile {
             break;
         }
     }
-
+    
     func setIndicator(keyCommand: IndicatorEvent) {
         let indicatorValues: String = getIndicatorEventValue(event: keyCommand);
         if (indicator != indicatorValues) {
