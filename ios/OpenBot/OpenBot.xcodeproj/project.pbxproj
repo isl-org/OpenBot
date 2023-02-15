@@ -544,7 +544,7 @@
 						DevelopmentTeam = 45P94DZS6G;
 					};
 					4FEF4A2489AA3ABCE29B9356 = {
-						DevelopmentTeam = 45P94DZS6G;
+						DevelopmentTeam = 88W2U97SJQ;
 						ProvisioningStyle = Automatic;
 					};
 					4FEF4C57C33D71B6DD56207E = {
@@ -873,9 +873,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 45P94DZS6G;
+				DEVELOPMENT_TEAM = 88W2U97SJQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Allow Camera for Free Roam Mode";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow local Network for controller";
@@ -912,9 +913,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 45P94DZS6G;
+				DEVELOPMENT_TEAM = 88W2U97SJQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Allow Camera for Free Roam Mode";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow local Network for controller";

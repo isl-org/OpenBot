@@ -113,6 +113,7 @@ enum Keymap: String {
     case KEYCODE_BUTTON_THUMBL = "L3 Button"
     case KEYCODE_BUTTON_THUMBR = "R3 Button"
     case KEYCODE_BUTTON_START = "OPTIONS Button"
+    case KEYCODE_BUTTON_SELECT = "SELECT Button"
     case KEY_Share = "SHARE Button"
     case CMD_INDICATOR_STOP = "INDICATOR_STOP";
 }
