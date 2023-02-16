@@ -1082,7 +1082,8 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void startLogging() {
     logFolder =
-        Environment.getExternalStorageDirectory().getAbsolutePath()
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                .getAbsolutePath()
             + File.separator
             + getString(R.string.app_name)
             + File.separator

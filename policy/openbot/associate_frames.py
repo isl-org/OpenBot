@@ -130,7 +130,6 @@ def match_frame_ctrl_input(
 def match_frame_session(
     session_dir, max_offset, redo_matching=False, remove_zeros=True, policy="autopilot"
 ):
-
     if policy == "autopilot":
         matched_frames_file_name = "matched_frame_ctrl_cmd.txt"
         processed_frames_file_name = "matched_frame_ctrl_cmd_processed.txt"

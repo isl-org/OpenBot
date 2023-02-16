@@ -175,7 +175,6 @@ class VideoPlayer:
 
         running = True
         while running:
-
             # read one frame and check if there was no problem
             ret, img = cap.read()
             if not ret:
@@ -273,7 +272,6 @@ def handle_status(data):
 
 
 class Screen:
-
     screen = None
     font = None
     y_pos = 0
@@ -318,7 +316,6 @@ screen = Screen()
 
 
 def run(args):
-
     os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
 
     print("Waiting for connection...\r\n")
