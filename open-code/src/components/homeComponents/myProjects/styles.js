@@ -124,6 +124,7 @@ export const NewProjectStyles = {
         color: "#000000",
         marginBottom: "25px",
     },
+
     InputArea: {
         height: "30px",
         width: "542px",

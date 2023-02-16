@@ -85,7 +85,9 @@ export function Header() {
                     <img alt="" style={{...NavbarStyle.mainIcon, ...NavbarStyle.iconMargin}} src={icon} onClick={() => {
                         openHomepage()
                     }}/>
-                    <span style={{...NavbarStyle.mainTitle, ...NavbarStyle.iconMargin}}>OpenCode</span>
+                    <span onClick={() => {
+                        openHomepage()
+                    }} style={{...NavbarStyle.mainTitle, ...NavbarStyle.iconMargin}}>OpenCode</span>
                 </div>
 
                 {location.pathname === "/playground" ? !anchorEl ?
@@ -217,7 +219,8 @@ export function ProfileOptionModal(props) {
                 <div onClick={() => {
                     setIsEditProfileModal(true)
                     handleClose()
-                }} className={`${styles.item} ${styles.editProfileMargin}  ${(theme.theme === "dark" ? styles.darkItem : styles.lightItem)}`}>
+                }}
+                     className={`${styles.item} ${styles.editProfileMargin}  ${(theme.theme === "dark" ? styles.darkItem : styles.lightItem)}`}>
                     <img alt="icon" src={theme.theme === "dark" ? Images.darkUserIcon : Images.userIcon}
                          className={styles.modalIcon}/>
                     {theme.theme === "dark" ?
@@ -229,7 +232,8 @@ export function ProfileOptionModal(props) {
                 <div onClick={() => {
                     setIsLogoutModal(true)
                     handleClose()
-                }} className={`${styles.item} ${styles.logOutMargin} ${(theme.theme === "dark" ? styles.darkItem : styles.lightItem)}`}>
+                }}
+                     className={`${styles.item} ${styles.logOutMargin} ${(theme.theme === "dark" ? styles.darkItem : styles.lightItem)}`}>
                     <img alt="icon" src={theme.theme === "dark" ? Images.darkLogoutIcon : Images.logoutIcon}
                          className={styles.modalIcon}/>
                     {theme.theme === "dark" ?
@@ -297,7 +301,7 @@ export function EditProfileModal(props) {
                          className={styles.editProfileIcon} src={Images.editProfileIcon}/>
                 </div>
                 <div style={{display: "flex"}}>
-                    <SimpleInputComponent extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"}
+                    <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"}
                                           value={fullName} onDataChange={handleNameChange}/>
                     <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
                                           inputTitle={"Date Of Birth"}/>

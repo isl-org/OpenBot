@@ -154,8 +154,8 @@
 .Input {
     display: flex;
     flex-direction: column;
-    padding-top: 5.4%;
-    padding-left: 10%;
+    padding-top: 2%;
+    padding-left: 7%;
     margin-bottom: 6%;
 }
 
@@ -195,7 +195,7 @@
     align-items: center;
     text-decoration: none;
     cursor: pointer;
-    margin-left: 72%;
+    margin-left: 73%;
 }
 
 .MainDark {
@@ -216,5 +216,15 @@
 .MessageLight {
     background-color: #FFFFFF;
     color: #292929;
-
 }
+
+.inputExtraStyle {
+    width: 90%;
+    height: 75px;
+}
+
+.inputBoxMargin{
+    margin-top: 30px;
+}
+
+

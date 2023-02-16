@@ -3,6 +3,7 @@
 }
 
 .inputSection {
+    background-color: transparent;
     font-family: Gilroy-Regular, sans-serif;
     font-size: 20px;
     height: 96%;
@@ -22,3 +23,4 @@
     border: 1px solid rgba(0, 113, 197, 0.4);
     border-radius: 6px;
 }
+

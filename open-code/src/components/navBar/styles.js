@@ -29,7 +29,8 @@ export const NavbarStyle = {
     mainTitle:{
         fontSize: "1.3rem",
         fontFamily: "Gilroy-Medium",
-        color:colors.whiteFont
+        color:colors.whiteFont,
+        cursor:"pointer"
     },
 
     infoIcon:{

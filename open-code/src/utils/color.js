@@ -1,6 +1,6 @@
 export const colors = {
     openBotBlue: "#0071C5",
-    whiteFont: "#F8F9FB",
+    whiteFont: "#FFFFFF",
     blackFont: "#000000",
     blackBackground: '#1e1e1e',
     whiteBackground: '#FFFFFF',

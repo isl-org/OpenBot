@@ -4,8 +4,8 @@ import {Modal} from "@mui/material";
 import {StoreContext} from "../../../context/context";
 import styles from "./newProject.module.css"
 import {ThemeContext} from "../../../App";
-import {colors} from "../../../utils/color";
 import {Images} from "../../../utils/images";
+import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 function NewProjectButton() {
 
 
@@ -20,7 +20,9 @@ function NewProjectButton() {
         handleOpen();
     }
     const {theme} = useContext(ThemeContext)
-
+    function handleProjectNameChange(name){
+        setProjectName(name);
+    }
 
     return (
         <>
@@ -45,10 +47,9 @@ function NewProjectButton() {
                             <img alt="" src={Images.crossIcon} className={styles.CrossIcon} onClick={handleClose}/> :
                             <img alt="" src={Images.darkCrossIcon} className={styles.CrossIcon} onClick={handleClose}/>)}
                     </div>
-                    <div className={styles.Input+" "}>
-                        <label className={styles.label} style={{color:theme==="dark"?colors.whiteFont:colors.blackFont}}> Give your project a name. </label>
-                        <input className={styles.InputArea} type="text" value={projectName}
-                               onChange={(e) => setProjectName(e.target.value)}/>
+                    <div className={styles.Input}>
+                        <SimpleInputComponent inputType={"text"} extraStyle={`${styles.inputExtraStyle}`} inputTitle={"Give your project a name"}
+                                              value={projectName} extraMargin={styles.inputBoxMargin} onDataChange={handleProjectNameChange}/>
                     </div>
                     <div className={styles.SaveBtn} onClick={() => {
                         OpenNewProjectHandle();
