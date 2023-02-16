@@ -13,6 +13,7 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.widget.Toast;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.felhr.usbserial.UsbSerialDevice;
@@ -50,8 +51,14 @@ public class UsbConnection {
     this.baudRate = baudRate;
     localBroadcastManager = LocalBroadcastManager.getInstance(this.context);
     usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
-    usbPermissionIntent =
-        PendingIntent.getBroadcast(this.context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      usbPermissionIntent =
+          PendingIntent.getBroadcast(
+              this.context, 0, new Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      usbPermissionIntent =
+          PendingIntent.getBroadcast(this.context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+    }
   }
 
   private final UsbSerialInterface.UsbReadCallback callback =

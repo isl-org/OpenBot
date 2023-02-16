@@ -50,7 +50,6 @@ def prepare_for_training(
 
 
 def show_batch(dataset, policy="autopilot", model=None, fig_num=1):
-
     (image_batch, cmd_batch), label_batch = next(iter(dataset))
     NUM_SAMPLES = min(image_batch.numpy().shape[0], 15)
 
