@@ -19,30 +19,67 @@ You first need to setup your training environment.
 We recommend to create a conda environment for OpenBot (if not already done). Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). You can create a new environment with the following command:
 
 ```bash
-conda create -n openbot pip
+conda create -n openbot pip python=3.9
 ```
 
-If you do not want install the dependencies globally, activate your conda environment first:
+Next, you need to activate your conda environment:
 
 ```bash
 conda activate openbot
 ```
 
-Make sure you are in the folder `policy` within your local OpenBot repository. Now, you can install all the dependencies for training with the following command:
+If this does not work (e.g. on Windows), you may need to activate the environment with `activate openbot` instead.
+
+Once the environment is active, we need to install tensorflow. Note that training will be very slow on a laptop. So if you have access to a computer with dedicated GPU, we highly recommend to use it by installing the neccessary libraries; make sure you have recent GPU drivers installed. Below are the commands to install tensorflow for different operating systems.
+
+### Mac OS
+```
+conda install -c apple tensorflow-deps
+pip install tensorflow-macos~=2.9.0
+```
+GPU support
+```
+pip install tensorflow-metal~=0.5.0
+```
+[Troubleshooting](https://developer.apple.com/metal/tensorflow-plugin/)
+
+### Linux
+```
+pip install tensorflow~=2.9.0
+```
+GPU support
+```
+conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/
+```
+[Troubleshooting](https://www.tensorflow.org/install/pip#linux)
+
+### Windows
+```
+pip install tensorflow~=2.9.0
+```
+GPU support
+```
+conda install cudatoolkit=11.3 cudnn=8.2
+```
+
+### Additional requirements
+
+Make sure you are in the folder `policy` within your local OpenBot repository. Now, you can install all the remaining dependencies with the following command:
 
 ```bash
-pip install -r requirements_train.txt
+pip install -r requirements.txt
 ```
 
 You can also install pydot (`pip install pydot`) and graphviz ([see instructions](https://graphviz.gitlab.io/download/)) if you want to visualize the the network architecture.
-
-Note that training will be very slow on a laptop. So if you have access to a computer with dedicated GPU, we highly recommend to use it.
 
 If you want to use the [WebApp](#web-app) for data collection and training, you need to install the following dependencies in addition.
 
 ```bash
 pip install -r requirements_web.txt
 ```
+
+### Manual setup
 
 If you prefer to setup the environment manually, here is a list of the dependencies:
 
@@ -59,7 +96,7 @@ If you want to use the web interface you also need:
 - [aiozeroconf](https://pypi.org/project/aiozeroconf/)
 - [imageio](https://pypi.org/project/imageio/)
 
-NOTES:
+### Notes
 
 - Remember to activate the environment before running commands in the terminal: `conda activate openbot`
 - If your tensorflow import does not work, try installing via `pip install tensorflow --user`. (See this [issue](https://github.com/intel-isl/OpenBot/issues/98).)
