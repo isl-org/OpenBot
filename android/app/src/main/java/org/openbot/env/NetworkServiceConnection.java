@@ -10,9 +10,6 @@ import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.util.Log;
-
-import org.openbot.utils.ConnectionUtils;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -23,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-
+import org.openbot.utils.ConnectionUtils;
 import timber.log.Timber;
 
 public class NetworkServiceConnection implements ILocalConnection {
