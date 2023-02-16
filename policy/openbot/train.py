@@ -42,6 +42,7 @@ if tf.test.gpu_device_name():
 else:
     print("Please install GPU version of TF if you have one.")
 
+
 @dataclass
 class Hyperparameters:
     MODEL: str = "pilot_net"
