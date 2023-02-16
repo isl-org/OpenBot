@@ -1,12 +1,11 @@
 import React, {useContext, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import cross from "../../../assets/images/icon/cross-icon.png";
-import crossDark from "../../../assets/images/icon/dark-cross.png";
 import {Modal} from "@mui/material";
 import {StoreContext} from "../../../context/context";
 import styles from "./newProject.module.css"
 import {ThemeContext} from "../../../App";
 import {colors} from "../../../utils/color";
+import {Images} from "../../../utils/images";
 function NewProjectButton() {
 
 
@@ -43,8 +42,8 @@ function NewProjectButton() {
                         className={styles.ModelHeading + " " + (theme === "dark" ? styles.ModelHeadingDark : styles.ModelHeadingLight)}>
                         <div>Create a New Project</div>
                         {(theme === "light" ?
-                            <img alt="" src={cross} className={styles.CrossIcon} onClick={handleClose}/> :
-                            <img alt="" src={crossDark} className={styles.CrossIcon} onClick={handleClose}/>)}
+                            <img alt="" src={Images.crossIcon} className={styles.CrossIcon} onClick={handleClose}/> :
+                            <img alt="" src={Images.darkCrossIcon} className={styles.CrossIcon} onClick={handleClose}/>)}
                     </div>
                     <div className={styles.Input+" "}>
                         <label className={styles.label} style={{color:theme==="dark"?colors.whiteFont:colors.blackFont}}> Give your project a name. </label>

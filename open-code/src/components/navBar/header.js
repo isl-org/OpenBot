@@ -112,11 +112,15 @@ export function Header() {
                             <Popper id={id} open={open} anchorEl={anchorEl}>
                                 <div
                                     className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel)}>
-                                    <div className={styles.item} onClick={handleClick}>
+                                    <div
+                                        className={`${styles.item} ${styles.renameDivMargin}  ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
+                                        onClick={handleClick}>
                                         <img alt="Icon" className={styles.icon} src={theme === "dark" ? renameIcon : Edit}/>
                                         <div>Rename</div>
                                     </div>
-                                    <div className={styles.item} onClick={handleDelete}>
+                                    <div
+                                        className={`${styles.item} ${styles.deleteDivMargin} ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
+                                        onClick={handleDelete}>
                                         <img alt="Icon" className={styles.icon}
                                              src={theme === "dark" ? deleteIcon : trash}/>
                                         <div> Delete File</div>
@@ -126,10 +130,10 @@ export function Header() {
                         </>
                     : ""}
                 <div style={NavbarStyle.navbarIconDiv}>
-                    {location.pathname === "/playground"?
-                    <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon} onClick={() => {
-                        setIsHelpCenterModal(true)
-                    }} style={{height: 24}}/>:""}
+                    {location.pathname === "/playground" ?
+                        <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon} onClick={() => {
+                            setIsHelpCenterModal(true)
+                        }} style={{height: 24}}/> : ""}
                     <img alt="" onClick={() => toggleTheme(!theme)} src={moon}
                          style={{...NavbarStyle.moonIcon, ...NavbarStyle.iconMargin}}/>
                     <img alt="" src={Images.line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
@@ -213,8 +217,9 @@ export function ProfileOptionModal(props) {
                 <div onClick={() => {
                     setIsEditProfileModal(true)
                     handleClose()
-                }} className={styles.listStyle}>
-                    <img alt="icon" src={theme.theme === "dark" ?Images.darkUserIcon:Images.userIcon} className={styles.modalIcon}/>
+                }} className={`${styles.item} ${styles.editProfileMargin}  ${(theme.theme === "dark" ? styles.darkItem : styles.lightItem)}`}>
+                    <img alt="icon" src={theme.theme === "dark" ? Images.darkUserIcon : Images.userIcon}
+                         className={styles.modalIcon}/>
                     {theme.theme === "dark" ?
                         <WhiteText extraStyle={styles.modalText} styles text={"Edit Profile"}/> :
                         <BlueText extraStyle={styles.modalText} styles text={"Edit Profile"}/>
@@ -224,8 +229,9 @@ export function ProfileOptionModal(props) {
                 <div onClick={() => {
                     setIsLogoutModal(true)
                     handleClose()
-                }} className={styles.listStyle}>
-                    <img alt="icon" src={theme.theme === "dark" ?Images.darkLogoutIcon:Images.logoutIcon} className={styles.modalIcon}/>
+                }} className={`${styles.item} ${styles.logOutMargin} ${(theme.theme === "dark" ? styles.darkItem : styles.lightItem)}`}>
+                    <img alt="icon" src={theme.theme === "dark" ? Images.darkLogoutIcon : Images.logoutIcon}
+                         className={styles.modalIcon}/>
                     {theme.theme === "dark" ?
                         <WhiteText extraStyle={styles.modalText} text={"Logout"}/> :
                         <BlueText extraStyle={styles.modalText} text={"Logout"}/>
@@ -280,9 +286,9 @@ export function EditProfileModal(props) {
                     {
                         theme === "dark" ?
                             <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
-                                 src={Images.blueCrossIcon}/> :
+                                 src={Images.darkCrossIcon}/> :
                             <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
-                                 src={Images.crossIcon}/>
+                                 src={Images.lightCrossIcon}/>
                     }
                 </div>
                 <div style={{backgroundImage: `url(${file})`}} className={styles.profileImg}>
@@ -377,7 +383,7 @@ export function HelpCenterModal(props) {
                             {
                                 theme.theme === "dark" ?
                                     <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
-                                         src={Images.blueCrossIcon}/> :
+                                         src={Images.darkCrossIcon}/> :
                                     <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
                                          src={Images.crossIcon}/>
                             }

@@ -3,9 +3,8 @@ import {Content} from "../../utils/constants";
 import Styles from "./leftSection.module.css"
 import {ThemeContext} from "../../App";
 
-
 function LeftSection(props) {
-    const { setTab, tab, setLogOut, logOut} = props
+    const {setTab, tab, setLogOut, logOut} = props
     const {theme} = useContext(ThemeContext)
     return (
         <div className={Styles.Main + " " + (theme === "dark" ? Styles.MainDark : Styles.MainLight)}>
@@ -13,7 +12,7 @@ function LeftSection(props) {
                 {
                     Content.map((data) => (
                         <div
-                            className={(theme==="dark") ? (data.title === tab) ? Styles.ItemsSelectedDark : Styles.Items : (data.title === tab) ? Styles.ItemsSelected : Styles.Items}
+                            className={(theme === "dark") ? (data.title === tab) ? Styles.ItemsSelectedDark : Styles.Items : (data.title === tab) ? Styles.ItemsSelected : Styles.Items}
                             onClick={() => {
                                 (data.title === Content[3].title) ? setLogOut(!logOut) : setTab(data.title)
                             }}>

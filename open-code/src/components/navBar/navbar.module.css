@@ -9,19 +9,15 @@
 }
 
 .profileOptionModalStyle {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    outline: none;
     height: 125px;
     width: 260px;
-    padding-left: 20px;
-    /*background-color: white;*/
-    border-radius: 6px;
     position: absolute;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
     right: 4%;
     top: 65px;
 }
+
 
 .listStyle {
     display: flex;
@@ -32,7 +28,6 @@
 .modalIcon {
     height: 24px;
     width: 24px;
-    margin-right: 15px;
 }
 
 .modalText {
@@ -54,28 +49,67 @@
 }
 
 .option {
-    width: 226px;
-    height: 96px;
+    height: 125px;
+    width: 260px;
     position: absolute;
     top: 65px;
-    left: 35em;
+    left: 39vw;
     border: 1px solid rgba(0, 0, 0, 0.15);
     box-shadow: 0 4px 22px rgba(0, 0, 0, 0.08);
     border-radius: 6px;
-    padding-top: 29px;
-    padding-left: 35px;
     font-family: Gilroy-Regular, sans-serif;
 }
-
 .item {
     font-size: 20px;
     display: flex;
-    justify-content: flex-start;
     align-content: center;
-    margin-bottom: 19px;
-    gap: 20px;
+    justify-content: space-between;
     cursor: pointer;
+    padding-top: 0.5rem;
+    padding-left: 2rem;
+    padding-bottom: 0.5rem;
+    border-style: none none none solid;
 }
+.renameDivMargin{
+    padding-right: 6.5rem;
+    margin-top: 1.4rem;
+}
+.deleteDivMargin{
+    padding-right: 5.2rem;
+}
+
+.editProfileMargin{
+    padding-right: 5.5rem;
+    margin-top: 1.4rem;
+}
+
+.logOutMargin{
+    padding-right: 7.3rem;
+}
+
+.darkItem{
+    border-color: #303030;
+    border-width: 4.38px;
+}
+
+.lightItem{
+    border-color: #FFFFFF;
+    border-width: 4.38px;
+}
+.lightItem:hover{
+    border-width: 4.38px;
+    background: rgb(232, 246, 254);
+    border-color: rgb(0, 113, 197);
+    border-style: none none none solid;
+}
+
+.darkItem:hover{
+    border-width: 4.38px;
+    background:#57626c;
+    border-color: rgb(0, 113, 197);
+    border-style: none none none solid;
+}
+
 
 .icon {
     width: 24px;
