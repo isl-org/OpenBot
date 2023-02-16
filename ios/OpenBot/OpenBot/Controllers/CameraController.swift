@@ -169,11 +169,11 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         let resolution = notification?.object as! Resolutions
         switch resolution {
         case .low:
-            captureSession.sessionPreset = .low
+            captureSession?.sessionPreset = .low
         case .medium:
-            captureSession.sessionPreset = .medium
+            captureSession?.sessionPreset = .medium
         case .high:
-            captureSession.sessionPreset = .high
+            captureSession?.sessionPreset = .high
         }
     }
 
