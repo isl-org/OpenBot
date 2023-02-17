@@ -119,7 +119,7 @@ enum CMD_Events {
 }
 
 enum Resolutions {
-    case low, medium, high
+    case LOW, MEDIUM, HIGH
 }
 
 enum RuntimeDevice: String {
@@ -164,5 +164,5 @@ struct FileName {
     static let sonarLog: String = "sonarLog.txt";
     static let voltageLog: String = "voltageLog.txt";
     static let wheelsLog: String = "wheelsLog.txt"
-    
+    static let rgbFrames: String = "rgbFrames.txt"
 }

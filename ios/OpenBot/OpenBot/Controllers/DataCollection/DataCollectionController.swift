@@ -24,24 +24,14 @@ class DataCollectionController: CameraController {
     var count: Int = 0;
     private let imageCaptureQueue = DispatchQueue(label: "openbot.datacollection.imagecapturequeue")
     private var isImageCaptureQueueBusy = false
-    var imagePath: String = ""
-    var sensorPath: String = ""
+    var saveZipFilesName = [URL]()
+    var paths: [String] = [""]
     
-    var imagePixelBuffers: [(CVPixelBuffer, Bool, Bool)] = []
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory: String = paths.first ?? ""
-        let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
-        dataLogger.createOpenBotFolder(openBotPath: openBotPath)
-        dataLogger.createImageFolder(openBotPath: openBotPath)
-        dataLogger.createSensorData(openBotPath: openBotPath)
-        self.imagePath = openBotPath + Strings.images
-        self.sensorPath = openBotPath + Strings.sensor
-        
+        dataLogger.reset()
     }
     
     override func viewDidLoad() {
@@ -60,7 +50,7 @@ class DataCollectionController: CameraController {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(switchLogging), name: .logData, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(toggleLogging), name: .logData, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
@@ -87,6 +77,37 @@ class DataCollectionController: CameraController {
         refreshConstraints()
     }
     
+    func saveFolder() {
+        _ = DataLogger.shared.getDirectoryInfo()
+        let activityManager = UIActivityViewController(activityItems: DataLogger.shared.allDirectories, applicationActivities: nil)
+        present(activityManager, animated: true)
+        _ = navigationController?.popViewController(animated: true)
+    }
+    
+    func createZip(path: URL) {
+        for t in DataLogger.shared.baseDirList {
+            let baseDirectoryName = t + ".zip";
+            let fm = FileManager.default
+            let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + t)
+            var error: NSError?
+            let coordinator = NSFileCoordinator()
+            coordinator.coordinate(readingItemAt: baseDirectoryUrl, options: [.forUploading], error: &error) { (zipUrl) in
+                let tmpUrl = try! fm.url(
+                    for: .itemReplacementDirectory,
+                    in: .userDomainMask,
+                    appropriateFor: zipUrl,
+                    create: true
+                ).appendingPathComponent(baseDirectoryName)
+                try! fm.moveItem(at: zipUrl, to: tmpUrl)
+                saveZipFilesName.append(tmpUrl)
+            }
+        }
+        let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
+        present(avc, animated: true)
+        avc.completionWithItemsHandler = { activity, success, items, error in
+            DataLogger.shared.deleteFiles(fileNameToDelete: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
+        }
+    }
     
     func refreshConstraints() {
         if UIDevice.current.orientation == .portrait {
@@ -111,7 +132,6 @@ class DataCollectionController: CameraController {
     
     @objc func switchCamera() {
         switchCameraView();
-        
     }
     
     @objc func openBluetoothSettings() {
@@ -124,52 +144,80 @@ class DataCollectionController: CameraController {
         
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-
+        
         guard let imagePixelBuffer = pixelBuffer else {
             debugPrint("unable to get image from sample buffer")
             return
         }
-
+        
+        if webRTCClient != nil {
+            imageCaptureQueue.async {
+                webRTCClient.captureCurrentFrame(sampleBuffer: sampleBuffer);
+                self.isImageCaptureQueueBusy = false
+            }
+        }
+        
         guard !isImageCaptureQueueBusy else {
             return
         }
         
         imageCaptureQueue.async {
             if self.loggingEnabled {
-                
+            
                 self.isImageCaptureQueueBusy = true
+                
+                let startTime = Date().millisecondsSince1970
+                
                 // Record image index and timestep
-                self.rgbFrames = self.rgbFrames + String(returnCurrentTimestamp()) + Strings.comma + String(self.count) + Strings.newLine
+                self.dataLogger.recordImageLogs(index: self.count)
                 
-                // add the pixel buffer to the array
-                self.imagePixelBuffers.append((imagePixelBuffer, self.isPreviewSelected, self.isTrainingSelected))
+                // Record preview image
+                if self.isPreviewSelected {
+                    let imageName = String(self.count) + Strings.underscore + "preview.jpeg"
+                    let ciImage = CIImage(cvPixelBuffer: imagePixelBuffer)
+                    let image = UIImage(ciImage: ciImage)
+                    self.dataLogger.saveImages(image: image, name: imageName);
+                }
                 
-                // update the index and timestamp record
-                self.dataLogger.setImageLogs(count: String(self.count))
+                // Record cropped image
+                if self.isTrainingSelected {
+                    let imageName = String(self.count) + Strings.underscore + Strings.crop
+                    let scaledSize = CGSize(width: CGFloat(self.widthOfTrainingImage), height: CGFloat(self.heightOfTrainingImage))
+                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize) else {
+                        debugPrint("unable to resize/crop sample buffer")
+                        return
+                    }
+                    let ciCroppedImage = CIImage(cvPixelBuffer: scaledPixelBuffer)
+                    let croppedImage = UIImage(ciImage: ciCroppedImage)
+                    self.dataLogger.saveImages(image: croppedImage, name: imageName);
+                }
                 
-                
-                // update index
-                print(self.imagePixelBuffers.count)
                 self.count += 1
-                print(self.count)
+                
+                let endTime = Date().millisecondsSince1970
+                
+                print(1000 / (endTime - startTime))
+                
                 self.isImageCaptureQueueBusy = false
-                print(self.loggingEnabled)
+                
             } else {
                 self.count = 0
             }
         }
-        
-        print("---")
     }
     
-    @objc func switchLogging() {
+    @objc func toggleLogging() {
         
-        self.loggingEnabled = !self.loggingEnabled;
-        self.isLoggedButtonPressed = true;
+        loggingEnabled = !loggingEnabled;
+        isLoggedButtonPressed = true;
         
         if (loggingEnabled) {
             expandSettingView.logData.isOn = true
-            dataLogger.setupFilesForLogging();
+            
+            // Create the folders that will contain the data
+            dataLogger.createOpenBotFolders()
+            
+            // Sample the robot sensors at a desired rate
             Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
                 if !loggingEnabled {
                     timer.invalidate()
@@ -179,56 +227,17 @@ class DataCollectionController: CameraController {
             }
         } else {
             expandSettingView.logData.isOn = false
-            baseDirectory = dataLogger.getBaseDirectoryName()
-            dataLogger.allDirectoriesName.append(baseDirectory)
-            dataLogger.createSensorData(openBotPath: Strings.forwardSlash + baseDirectory);
-            processAndSaveImages();
-            dataLogger.setupFilesForLogging()
+            
+            // Save the collected sensor data
+            dataLogger.saveSensorData()
+            
+            // Reset data logger
+            dataLogger.reset()
         }
-    }
-    
-    @objc func processAndSaveImages() {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory: String = paths.first ?? ""
-        let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
-        dataLogger.createOpenBotFolder(openBotPath: openBotPath)
-        dataLogger.createImageFolder(openBotPath: openBotPath)
-        dataLogger.createSensorData(openBotPath: openBotPath)
-        let imagePath = openBotPath + Strings.images
-        let sensorPath = openBotPath + Strings.sensor
-        var count: Int = 0;
-        if self.imagePixelBuffers.count > 0 {
-            print(self.imagePixelBuffers.count)
-            for pixelBuffer in self.imagePixelBuffers {
-                if pixelBuffer.1 {
-                    let imageName = String(count) + Strings.underscore + "preview.jpeg"
-                    let ciImage = CIImage(cvPixelBuffer: pixelBuffer.0)
-                    let image = UIImage(ciImage: ciImage)
-                    dataLogger.saveImages(path: imagePath, image: image, name: imageName);
-                    print(imageName)
-                }
-                if pixelBuffer.2 {
-                    let imageName = String(count) + Strings.underscore + Strings.crop
-                    let scaledSize = CGSize(width: CGFloat(self.widthOfTrainingImage), height: CGFloat(self.heightOfTrainingImage))
-                    guard let scaledPixelBuffer = pixelBuffer.0.resized(to: scaledSize) else {
-                        debugPrint("unable to resize/crop sample buffer")
-                        return
-                    }
-                    let ciCroppedImage = CIImage(cvPixelBuffer: scaledPixelBuffer)
-                    let croppedImage = UIImage(ciImage: ciCroppedImage)
-                    dataLogger.saveImages(path: imagePath, image: croppedImage, name: imageName);
-                    print(imageName)
-                }
-                count = count + 1
-            }
-        }
-        self.imagePixelBuffers.removeAll()
-        dataLogger.saveFramesFile(path: sensorPath, data: rgbFrames);
     }
     
     @objc func updateControllerValues() {
         gameController.updateControllerValues()
-        
     }
     
     @objc func updateControlMode(_ notification: Notification?) {
@@ -268,13 +277,10 @@ class DataCollectionController: CameraController {
     }
     
     @objc func back(sender: UIBarButtonItem) {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory: String = paths.first ?? ""
-        let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
         if isLoggedButtonPressed && loggingEnabled {
-            switchLogging()
+            toggleLogging()
         }
-        if let url = URL(string: openBotPath) {
+        if let url = URL(string: dataLogger.openbotPath) {
             if isLoggedButtonPressed {
                 createZip(path: url)
             }

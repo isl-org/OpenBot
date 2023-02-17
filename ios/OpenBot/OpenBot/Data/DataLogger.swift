@@ -12,14 +12,14 @@ class DataLogger {
     var enabled: Bool = false;
     let sensorData = sensorDataRetrieve.shared
     let bluetooth = bluetoothDataController.shared;
-    var carSensorsData: String = ""
+    var vehicleSensorsData: String = ""
     var acceleration: String = ""
     var gyroscope: String = ""
     var magnetometer: String = ""
     var locationCoordinates: String = ""
     var gps: String = ""
     var baseDirectory: String = ""
-    var allDirectoriesName = [String]()
+    var baseDirList = [String]()
     var bumper: String = ""
     var ctrlLog: String = ""
     var indicatorLog: String = ""
@@ -36,9 +36,43 @@ class DataLogger {
     var isGpsLogSelected: Bool = true
     var isMagneticLogSelected: Bool = true
     var isGyroscopeLogSelected: Bool = true
+    var openbotPath: String = ""
+    var imagePath: String = ""
+    var sensorDataPath: String = ""
     
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateLogger), name: .updateSensorsForLog, object: nil)
+    }
+    
+    func reset() {
+        
+        // Set a new base directory name for the current recording session
+        baseDirectory = getBaseDirectoryName()
+        
+        // Populate the base directory witht sensor data and image directories
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = paths.first ?? ""
+        openbotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
+        imagePath = openbotPath + Strings.forwardSlash + Strings.images
+        sensorDataPath = openbotPath + Strings.forwardSlash + Strings.sensor
+        
+        // Reset the different file entries
+        vehicleSensorsData = "";
+        acceleration = Strings.accelerationHeader
+        locationCoordinates = Strings.locationCoordinatesHeader
+        gyroscope = Strings.gyroscopeHeader
+        magnetometer = Strings.magnetometerHeader
+        gps = Strings.gpsHeader
+        bumper = Strings.bumperHeader
+        ctrlLog = Strings.ctrlHeader
+        indicatorLog = Strings.indicatorHeader
+        inferenceTime = Strings.inferenceTimeHeader
+        light = Strings.lightHeader
+        sonar = Strings.sonarHeader
+        voltage = Strings.voltageHeader
+        wheels = Strings.wheelsHeader
+        motion = Strings.motionHeader
+        rgbFrames = Strings.timestamp
     }
     
     func getDirectoryInfo() -> URL {
@@ -55,36 +89,38 @@ class DataLogger {
         return documentsURL
     }
     
-    func createOpenBotFolder(openBotPath: String) {
-        createFolder(path: openBotPath)
+    func createOpenBotFolders() {
+        
+        // Keep track of the name of the newly created base directory
+        baseDirList.append(baseDirectory)
+        
+        // Create the main experiment folder
+        createFolder(path: self.openbotPath)
+        
+        // Create image folder
+        createFolder(path: self.imagePath)
+        
+        // Create sensor folder
+        createFolder(path: self.sensorDataPath)
     }
     
-    func createImageFolder(openBotPath: String) {
-        let imagePath = openBotPath + "/images"
-        createFolder(path: imagePath)
-        
-    }
-    
-    
-    func createSensorData(openBotPath: String) {
-        let sensorDataPath = openBotPath + "/sensor_data"
-        
-        createFolder(path: sensorDataPath)
-        if URL(string: openBotPath) != nil {
-            if isAccelerationLogSelected {saveSensorFiles(path: sensorDataPath, data: acceleration, fileName: FileName.accelerator)}
-            if isMagneticLogSelected {saveSensorFiles(path: sensorDataPath, data: magnetometer, fileName: FileName.magnetic)}
-            if isGyroscopeLogSelected {saveSensorFiles(path: sensorDataPath, data: gyroscope, fileName: FileName.gyroscopeLog)}
-            if isGpsLogSelected {saveSensorFiles(path: sensorDataPath, data: gps, fileName: FileName.gpsLog)}
+    func saveSensorData() {
+        if URL(string: self.openbotPath) != nil {
+            saveSensorFiles(data: rgbFrames, fileName: FileName.rgbFrames)
+            if isAccelerationLogSelected {saveSensorFiles(data: acceleration, fileName: FileName.accelerator)}
+            if isMagneticLogSelected {saveSensorFiles(data: magnetometer, fileName: FileName.magnetic)}
+            if isGyroscopeLogSelected {saveSensorFiles(data: gyroscope, fileName: FileName.gyroscopeLog)}
+            if isGpsLogSelected {saveSensorFiles(data: gps, fileName: FileName.gpsLog)}
             if isVehicleLogSelected {
-                saveSensorFiles(path: sensorDataPath, data: bumper, fileName: FileName.bumperLog)
-                saveSensorFiles(path: sensorDataPath, data: ctrlLog, fileName: FileName.ctrlLog)
-                saveSensorFiles(path: sensorDataPath, data: indicatorLog, fileName: FileName.indicatorLog)
-                saveSensorFiles(path: sensorDataPath, data: inferenceTime, fileName: FileName.inferenceLog)
-                saveSensorFiles(path: sensorDataPath, data: light, fileName: FileName.lightLog)
-                saveSensorFiles(path: sensorDataPath, data: motion, fileName: FileName.motionLog)
-                saveSensorFiles(path: sensorDataPath, data: sonar, fileName: FileName.sonarLog)
-                saveSensorFiles(path: sensorDataPath, data: voltage, fileName: FileName.voltageLog)
-                saveSensorFiles(path: sensorDataPath, data: wheels, fileName: FileName.wheelsLog)
+                saveSensorFiles(data: bumper, fileName: FileName.bumperLog)
+                saveSensorFiles(data: ctrlLog, fileName: FileName.ctrlLog)
+                saveSensorFiles(data: indicatorLog, fileName: FileName.indicatorLog)
+                saveSensorFiles(data: inferenceTime, fileName: FileName.inferenceLog)
+                saveSensorFiles(data: light, fileName: FileName.lightLog)
+                saveSensorFiles(data: motion, fileName: FileName.motionLog)
+                saveSensorFiles(data: sonar, fileName: FileName.sonarLog)
+                saveSensorFiles(data: voltage, fileName: FileName.voltageLog)
+                saveSensorFiles(data: wheels, fileName: FileName.wheelsLog)
             }
         }
     }
@@ -94,18 +130,6 @@ class DataLogger {
             try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
         }
         
-    }
-    
-    func saveImages(path: String, image: UIImage, name: String) {
-        
-        let imagePath = URL(string: path)
-        let imageName = imagePath?.appendingPathComponent(name);
-        let ima = imageName?.absoluteString
-        let image = image
-        let fileManager = FileManager.default
-        if let ima = ima {
-            fileManager.createFile(atPath: ima, contents: image.pngData())
-        }
     }
     
     func deleteFiles(fileNameToDelete: String) {
@@ -165,20 +189,22 @@ class DataLogger {
         }
     }
     
-    func saveSensorFiles(path: String, data: String, fileName: String) {
+    func saveImages(image: UIImage, name: String) {
+        let imagePath = URL(string: self.imagePath)
+        let imageName = imagePath?.appendingPathComponent(name);
+        let ima = imageName?.absoluteString
+        let image = image
         let fileManager = FileManager.default
-        let sensorPath = URL(string: path)
-        let sensorFileName = sensorPath?.appendingPathComponent(fileName)
-        let sen = sensorFileName?.absoluteString
-        let str = data
-        fileManager.createFile(atPath: sen ?? "", contents: str.data(using: String.Encoding.utf8))
+        if let ima = ima {
+            fileManager.createFile(atPath: ima, contents: image.jpegData(compressionQuality: 1.0))
+        }
     }
     
-    func saveAccelerationFile(path: String, data: String) {
+    func saveSensorFiles(data: String, fileName: String) {
         let fileManager = FileManager.default
-        let sensorPath = URL(string: path)
-        let sensor = sensorPath?.appendingPathComponent("acceleration.txt")
-        let sen = sensor?.absoluteString
+        let sensorPath = URL(string: self.sensorDataPath)
+        let sensorFileName = sensorPath?.appendingPathComponent(fileName)
+        let sen = sensorFileName?.absoluteString
         let str = data
         fileManager.createFile(atPath: sen ?? "", contents: str.data(using: String.Encoding.utf8))
     }
@@ -189,17 +215,6 @@ class DataLogger {
         dateFormatter.dateFormat = format
         let dateOrTime = dateFormatter.string(from: date)
         return dateOrTime
-    }
-    
-    func saveFramesFile(path: String, data: String) {
-        let fileManager = FileManager.default
-        let sensorPath = URL(string: path)
-        let frame = sensorPath?.appendingPathComponent("rgbFrames.txt")
-        let f = frame?.absoluteString
-        let str = data
-        if let f = f {
-            fileManager.createFile(atPath: f, contents: str.data(using: String.Encoding.utf8))
-        }
     }
     
     func getBaseDirectoryName() -> String {
@@ -222,9 +237,12 @@ class DataLogger {
     }
     
     func recordLogs() {
+        // Get the current timestamp
         let timestamp = returnCurrentTimestamp()
+        
+        // Fill files with the selected sensor readings
         if isVehicleLogSelected {
-            carSensorsData = carSensorsData + bluetoothData + Strings.newLine
+            vehicleSensorsData = vehicleSensorsData + bluetoothData + Strings.newLine
         }
         if isGpsLogSelected {
             if (sensorData.location != nil) {
@@ -259,28 +277,13 @@ class DataLogger {
         
     }
     
-    func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
-        String(XValue) + " " + String(YValue) + " " + String(ZValue);
+    func recordImageLogs(index: Int) {
+        let timestamp = returnCurrentTimestamp()
+        rgbFrames = rgbFrames + String(timestamp) + Strings.comma + String(index) + Strings.newLine
     }
     
-    func setupFilesForLogging() {
-        carSensorsData = "";
-        acceleration = Strings.acceleration
-        locationCoordinates = Strings.locationCoordinates
-        gyroscope = Strings.gyroscopeHeader
-        magnetometer = Strings.magnetometer
-        gps = Strings.gpsHeader
-        baseDirectory = ""
-        bumper = Strings.bumper
-        ctrlLog = Strings.ctrlLog
-        indicatorLog = Strings.indicator
-        inferenceTime = Strings.inferenceTime
-        light = Strings.light
-        sonar = Strings.sonar
-        voltage = Strings.voltageHeader
-        wheels = Strings.wheels
-        motion = Strings.motion
-        rgbFrames = Strings.timestamp
+    func convertToString(XValue: Double, YValue: Double, ZValue: Double) -> String {
+        String(XValue) + " " + String(YValue) + " " + String(ZValue);
     }
     
     @objc func updateLogger(_ notification: Notification?) {
@@ -307,10 +310,5 @@ class DataLogger {
     func setIndicatorLogs(indicator: String) {
         self.indicatorLog = self.indicatorLog + String(returnCurrentTimestamp()) + " " + indicator + Strings.newLine;
     }
-    
-    func setImageLogs(count: String) {
-        self.rgbFrames = self.rgbFrames + String(returnCurrentTimestamp()) + Strings.comma + String(count) + Strings.newLine
-    }
-    
     
 }

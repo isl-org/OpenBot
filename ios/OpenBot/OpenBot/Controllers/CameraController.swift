@@ -14,18 +14,13 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     let cameraView: UIView = UIView()
     var heightConstraint: NSLayoutConstraint! = nil
     var widthConstraint: NSLayoutConstraint! = nil
-    var rgbFrames = ""
-    var baseDirectory = ""
     var isTrainingSelected: Bool = true
     var isPreviewSelected: Bool = false
     var widthOfTrainingImage: Float = 256
     var heightOfTrainingImage: Float = 96
-    var saveZipFilesName = [URL]()
     var pixelBuffer: CVPixelBuffer?;
     var originalHeight = 0.0;
     var originalWidth = 0.0;
-    var images: [(UIImage, Bool, Bool)] = []
-    var photoOutput = AVCapturePhotoOutput()
     private var isInferenceQueueBusy = false
     private let inferenceQueue = DispatchQueue(label: "openbot.cameraController.inferencequeue")
 
@@ -114,17 +109,13 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         if shouldStartCamera() {
             videoOutput = AVCaptureVideoDataOutput()
             captureSession = AVCaptureSession()
-            if captureSession.canAddOutput(photoOutput) {
-                captureSession.addOutput(photoOutput)
-            }
             captureSession.sessionPreset = .medium
             guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
             else {
                 print("Unable to access back camera!")
                 return
             }
-
-
+            
             do {
                 try backCamera.lockForConfiguration()
                 if backCamera.isFocusPointOfInterestSupported {
@@ -168,12 +159,12 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     @objc func updateCameraPreview(_ notification: Notification?) {
         let resolution = notification?.object as! Resolutions
         switch resolution {
-        case .low:
+        case .LOW:
             captureSession?.sessionPreset = .low
-        case .medium:
+        case .MEDIUM:
+            captureSession?.sessionPreset = .vga640x480
+        case .HIGH:
             captureSession?.sessionPreset = .medium
-        case .high:
-            captureSession?.sessionPreset = .high
         }
     }
 
@@ -318,57 +309,6 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         return nil
     }
 
-    /**
-     This function calls automatically whenever any image click function is called.
-     - Parameters:
-     - output:
-     - photo:
-     - error:
-     */
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        guard let imageData = photo.fileDataRepresentation()
-        else {
-            return
-        }
-        if !isTrainingSelected && !isPreviewSelected {
-            return
-        }
-        if var image: UIImage = UIImage(data: imageData) {
-            switch (currentOrientation) {
-            case .landscapeLeft:
-                let newOrientation = UIImage.Orientation.up
-                image = UIImage(cgImage: image.cgImage!, scale: image.scale, orientation: newOrientation)
-                break;
-            case .landscapeRight:
-                let newOrientation = UIImage.Orientation.down
-                image = UIImage(cgImage: image.cgImage!, scale: image.scale, orientation: newOrientation)
-                break;
-            case .portrait:
-                let currentCameraInput: AVCaptureDeviceInput = captureSession.inputs[0] as! AVCaptureDeviceInput;
-                if (currentCameraInput.device.position == .front) {
-                    image = image.flipHorizontally()
-                }
-            default:
-                break;
-            }
-            originalHeight = image.size.height;
-            originalWidth = image.size.width;
-            images.append((image, isPreviewSelected, isTrainingSelected))
-        }
-
-    }
-
-    /**
-     To crop the image into the required format.
-     - Parameters:
-     - image:
-     - width:
-     - height:
-     - Returns:
-     */
-    func cropImage(image: UIImage, height: CGFloat, width: CGFloat) -> UIImage {
-        image.resized(to: CGSize(width: width, height: height))
-    }
 
     /**
      To create a rectangle on the image to crop it.
@@ -381,81 +321,6 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
      */
     func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
         CGRect(x: x, y: y, width: width, height: height)
-    }
-
-    /**
-     This function saves the output of the camera as image.
-     */
-    func captureImage() {
-        let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
-        photoOutput.capturePhoto(with: settings, delegate: self)
-    }
-
-    func saveImages() {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory: String = paths.first ?? ""
-        let openBotPath = documentsDirectory + Strings.forwardSlash + baseDirectory
-        DataLogger.shared.createOpenBotFolder(openBotPath: openBotPath)
-        DataLogger.shared.createImageFolder(openBotPath: openBotPath)
-        DataLogger.shared.createSensorData(openBotPath: openBotPath)
-        let imagePath = openBotPath + Strings.images
-        let sensorPath = openBotPath + Strings.sensor
-        let header = Strings.timestamp
-        rgbFrames = header;
-        var count: Int = 0;
-        if images.count > 0 {
-            for img in images {
-                rgbFrames = rgbFrames + String(returnCurrentTimestamp()) + Strings.comma + String(count) + Strings.newLine
-                if img.1 {
-                    let imageName = String(count) + Strings.underscore + "preview.jpeg"
-                    DataLogger.shared.saveImages(path: imagePath, image: img.0, name: imageName);
-                }
-                if img.2 {
-                    let imageName = String(count) + Strings.underscore + Strings.crop
-                    let croppedImage = cropImage(image: img.0, height: CGFloat(heightOfTrainingImage), width: CGFloat(widthOfTrainingImage))
-                    DataLogger.shared.saveImages(path: imagePath, image: croppedImage, name: imageName);
-                }
-                count = count + 1
-            }
-        }
-        setupImages()
-        DataLogger.shared.saveFramesFile(path: sensorPath, data: rgbFrames);
-    }
-
-    func saveFolder() {
-        _ = DataLogger.shared.getDirectoryInfo()
-        let activityManager = UIActivityViewController(activityItems: DataLogger.shared.allDirectories, applicationActivities: nil)
-        present(activityManager, animated: true)
-        _ = navigationController?.popViewController(animated: true)
-    }
-
-    func createZip(path: URL) {
-        for t in DataLogger.shared.allDirectoriesName {
-            let baseDirectoryName = t + ".zip";
-            let fm = FileManager.default
-            let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + t)
-            var error: NSError?
-            let coordinator = NSFileCoordinator()
-            coordinator.coordinate(readingItemAt: baseDirectoryUrl, options: [.forUploading], error: &error) { (zipUrl) in
-                let tmpUrl = try! fm.url(
-                        for: .itemReplacementDirectory,
-                        in: .userDomainMask,
-                        appropriateFor: zipUrl,
-                        create: true
-                ).appendingPathComponent(baseDirectoryName)
-                try! fm.moveItem(at: zipUrl, to: tmpUrl)
-                saveZipFilesName.append(tmpUrl)
-            }
-        }
-        let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
-        present(avc, animated: true)
-        avc.completionWithItemsHandler = { activity, success, items, error in
-            DataLogger.shared.deleteFiles(fileNameToDelete: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
-        }
-    }
-
-    func setupImages() {
-        images.removeAll()
     }
 
     func stopSession() {

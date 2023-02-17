@@ -61,25 +61,25 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     
     func sampleAccelerometer() {
         if let data = motionManager.accelerometerData {
-            accelerationX = data.acceleration.x
-            accelerationY = data.acceleration.y
-            accelerationZ = data.acceleration.z
+            accelerationX = data.acceleration.x * 9.81 // in m/s^2
+            accelerationY = data.acceleration.y * 9.81 // in m/s^2
+            accelerationZ = data.acceleration.z * 9.81 // in m/s^2
         }
     }
     
     func sampleGyroscope() {
         if let data = motionManager.gyroData {
-            angularRateX = data.rotationRate.x
-            angularRateY = data.rotationRate.y
-            angularRateZ = data.rotationRate.z
+            angularRateX = data.rotationRate.x // in rad/s
+            angularRateY = data.rotationRate.y // in rad/s
+            angularRateZ = data.rotationRate.z // in rad/s
         }
     }
     
     func sampleMagnetometer() {
         if let data = motionManager.magnetometerData {
-            magneticFieldX = data.magneticField.x
-            magneticFieldY = data.magneticField.y
-            magneticFieldZ = data.magneticField.z
+            magneticFieldX = data.magneticField.x // in microteslas
+            magneticFieldY = data.magneticField.y // in microteslas
+            magneticFieldZ = data.magneticField.z // in microteslas
         }
     }
     
