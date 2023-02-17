@@ -12,9 +12,9 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     var accelerationX: Double = 0
     var accelerationY: Double = 0
     var accelerationZ: Double = 0
-    var gyroX: Double = 0
-    var gyroY: Double = 0
-    var gyroZ: Double = 0
+    var angularRateX: Double = 0
+    var angularRateY: Double = 0
+    var angularRateZ: Double = 0
     var magneticFieldX: Double = 0
     var magneticFieldY: Double = 0
     var magneticFieldZ: Double = 0
@@ -24,72 +24,65 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     let motionManager = CMMotionManager()
     let locationManager = CLLocationManager()
     let altitudeManager = CMAltimeter()
-    var interval: Double = 0.03
+    var updateInterval: Double = 0.03
     var sensorData: String = ""
     var location: CLLocation!
-
+    
     override init() {
         super.init()
         motionManager.startAccelerometerUpdates()
-        motionManager.accelerometerUpdateInterval = interval
+        motionManager.accelerometerUpdateInterval = updateInterval
         motionManager.startGyroUpdates()
-        motionManager.gyroUpdateInterval = interval
-        startSensorsUpdates()
+        motionManager.gyroUpdateInterval = updateInterval
+        sampleSensors()
         motionManager.startMagnetometerUpdates()
-        motionManager.magnetometerUpdateInterval = interval
-        startLocationUpdates()
+        motionManager.magnetometerUpdateInterval = updateInterval
+        sampleLocation()
     }
-
+    
     required init?(coder: NSCoder) {
         super.init()
         fatalError("init(coder:) has not been implemented")
     }
-
-    func startLocationUpdates() {
+    
+    func sampleLocation() {
         locationManager.requestAlwaysAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.startMonitoringSignificantLocationChanges()
         }
     }
-
-    func startSensorsUpdates() {
-        accelerometer()
-        gyroscope()
-        magnetometer()
+    
+    func sampleSensors() {
+        sampleAccelerometer()
+        sampleGyroscope()
+        sampleMagnetometer()
     }
-
-    func accelerometer() {
+    
+    func sampleAccelerometer() {
         if let data = motionManager.accelerometerData {
-            if motionManager.isAccelerometerAvailable {
-                accelerationX = data.acceleration.x
-                accelerationY = data.acceleration.y
-                accelerationZ = data.acceleration.z
-
-            }
-        } else {
-            print("acceleration is not available")
+            accelerationX = data.acceleration.x
+            accelerationY = data.acceleration.y
+            accelerationZ = data.acceleration.z
         }
     }
-
-    func gyroscope() {
+    
+    func sampleGyroscope() {
         if let data = motionManager.gyroData {
-            gyroX = data.rotationRate.x
-            gyroY = data.rotationRate.y
-            gyroZ = data.rotationRate.z
+            angularRateX = data.rotationRate.x
+            angularRateY = data.rotationRate.y
+            angularRateZ = data.rotationRate.z
         }
     }
-
-    func magnetometer() {
+    
+    func sampleMagnetometer() {
         if let data = motionManager.magnetometerData {
             magneticFieldX = data.magneticField.x
             magneticFieldY = data.magneticField.y
             magneticFieldZ = data.magneticField.z
-            sensorData = sensorData + String(data.magneticField.z) + "\n"
-
         }
     }
-
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.first else {
             return
@@ -103,6 +96,4 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
             }
         }
     }
-
-
 }

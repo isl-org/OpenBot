@@ -108,7 +108,7 @@ class GameController: GCPhysicalInputProfile {
     }
     
     private func getCenteredAxis(_ value: Float) -> Float {
-        value
+        roundf(value)
     }
     
     /**
