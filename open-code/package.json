@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@blockly/field-date": "^6.0.4",
+    "@blockly/plugin-modal": "^4.0.8",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@firebase/firestore": "^3.8.3",

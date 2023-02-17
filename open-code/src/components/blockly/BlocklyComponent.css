@@ -29,6 +29,9 @@
   color: black;
 }
 
+.borderStyle{
+  border-left:16px solid #567AE4 !important;
+}
 #blockly-b{
   border-left:16px solid #567AE4 !important;
 }

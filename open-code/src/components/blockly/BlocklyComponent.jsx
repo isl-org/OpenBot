@@ -1,4 +1,3 @@
-
 import './BlocklyComponent.css';
 import React,{useEffect, useRef,useContext} from 'react';
 import Blockly from 'blockly/core';
@@ -6,6 +5,7 @@ import locale from 'blockly/msg/en';
 import 'blockly/blocks';
 import {ThemeContext} from "../../App";
 import {DarkTheme, LightTheme} from "../../utils/constants";
+import {Modal} from "@blockly/plugin-modal";
 Blockly.setLocale(locale);
 
 
@@ -21,14 +21,26 @@ function BlocklyComponent(props) {
             blocklyDiv.current,
             {
                 theme: (theme === "dark" ? DarkTheme : LightTheme),
+                renderer: 'zelos',
                 toolbox: toolbox.current,
                 ...rest
             },
         );
+        const model=new Modal(primaryWorkspace.current);
+        model.init();
+        model.render({
+            shouldCloseOnOverlayClick:true,
+            shouldCloseOnEsc:true
+
+        })
         Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), primaryWorkspace.current);
 
+
         return () => {
+
             primaryWorkspace.current.dispose();
+
+
         }
     }, [theme,primaryWorkspace, toolbox, blocklyDiv, props]);
 

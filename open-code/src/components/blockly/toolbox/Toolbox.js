@@ -2,13 +2,15 @@ import React from 'react';
 import {Block, Category, Field, Shadow, Value} from "../index";
 import {controlsBlocks, loopBlocks} from "../blocks/generalBlocks";
 import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
-import '../generator/generator'
-import '../blocks/customblocks'
+import '../generator/generator';
+import '../blocks/customblocks';
+// import styles from "../BlocklyComponent.css"
 export const Toolbox = (props) => {
 
         return (
         <>
-            <Category name="Control"  categorystyle="control_category">
+
+            <Category style={{borderLeft:"16px solid red"}} name="Control"  categorystyle="control_category">
                 {controlBlocksType.map((type,index) => {
                     return controlsBlocks(type,index)
                 })}
