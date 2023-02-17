@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/openCodeCompilerFragment"
-        android:name="org.openbot.convertJStoJAVA.convertJStoJAVAfragment"
+        android:name="org.openbot.convertJStoJAVA.convertJStoJAVAFragment"
         android:label="convertJStoJAVAfragment"
         tools:layout="@layout/fragment_convert_js_to_java" />
     <fragment
