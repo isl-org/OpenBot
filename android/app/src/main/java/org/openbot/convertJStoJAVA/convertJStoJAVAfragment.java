@@ -1,6 +1,5 @@
 package org.openbot.convertJStoJAVA;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,12 +28,20 @@ public class convertJStoJAVAFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button button = getView().findViewById(R.id.getResult);
-        WebView myWebView = (WebView) getView().findViewById(R.id.webview);
+        WebView myWebView = new WebView(getContext());
         myWebView.getSettings().setJavaScriptEnabled(true);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String code = "function openCode() { var loopV = 0; while (loopV <= 9){ Android.blinkLeft(); loopV = loopV + 1; console.log(loopV);}}openCode()";
+                String code = "function openCode() { var loopV = 0; while (loopV <= 8){ blinkLeft(loopV); loopV = loopV + 1; console.log(loopV);}}openCode()";
+                String[] botFunctionArray = {"blinkLeft", "blinkRight"};
+                for (String fun : botFunctionArray) {
+                    if (code.contains(fun)) {
+                        code = code.replace(fun, "Android." + fun);
+                    }
+                }
+                System.out.println("code is :" + code);
+
                 myWebView.addJavascriptInterface(new BotFunction(), "Android");
                 myWebView.evaluateJavascript(code, null);
             }
