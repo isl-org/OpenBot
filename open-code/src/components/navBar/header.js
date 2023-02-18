@@ -47,6 +47,11 @@ export function Header() {
     const [user, setUser] = useState(null);
     const {setUserData} = useContext(StoreContext);
 
+    const anchorRef = React.useRef();
+    React.useEffect(() => {
+        setTimeout(() => setAnchorEl(anchorRef?.current), 1)
+    },  [anchorRef])
+
     const openHomepage = () => {
 
         let path = `/`;
@@ -80,8 +85,8 @@ export function Header() {
     return (
         <div>
             {deleteProject && <DeleteModel setDeleteProject={setDeleteProject}/>}
-            <div style={NavbarStyle.navbarDiv}>
-                <div style={NavbarStyle.navbarTitleDiv}>
+            <div style={NavbarStyle.navbarDiv} >
+                <div style={NavbarStyle.navbarTitleDiv} >
                     <img alt="" style={{...NavbarStyle.mainIcon, ...NavbarStyle.iconMargin}} src={icon} onClick={() => {
                         openHomepage()
                     }}/>
@@ -91,7 +96,7 @@ export function Header() {
                 </div>
 
                 {location.pathname === "/playground" ? !anchorEl ?
-                        <div style={NavbarStyle.playgroundName} onClick={handleClick}>
+                        <div style={NavbarStyle.playgroundName} onClick={handleClick} >
                     <span
                         style={{...NavbarStyle.mainTitle, ...NavbarStyle.arrowMargin}}>{projectName}</span>
                             <img src={downArrow}
@@ -111,7 +116,7 @@ export function Header() {
                                      style={{...NavbarStyle.infoIcon, ...NavbarStyle.arrowMargin}}
                                      onClick={handleClick} alt={"arrow"}/>
                             </div>
-                            <Popper id={id} open={open} anchorEl={anchorEl}>
+                            <Popper  key={id} open={open} anchorEl={anchorEl}>
                                 <div
                                     className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel)}>
                                     <div

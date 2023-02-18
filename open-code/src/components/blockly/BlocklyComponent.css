@@ -25,99 +25,15 @@
   /*opacity: 0.3;*/
 }
 
-.blocklyTreeSelected .blocklyTreeLabel{
-  color: black;
+.blocklyFlyoutBackground {
+  fill: #7f8c8d !important;
+  fill-opacity: .9 !important;
 }
+/*.blocklyTreeSelected .blocklyTreeLabel{*/
+/*  color: white;*/
+/*}*/
 
-.borderStyle{
-  border-left:16px solid #567AE4 !important;
-}
-#blockly-b{
-  border-left:16px solid #567AE4 !important;
-}
 
-#blockly-c{
-  border-left:16px solid #C54E30 !important;
-}
-
-#blockly-d{
-  border-left:16px solid #8156C9 !important;
-}
-
-#blockly-e{
-  border-left:16px solid #D030BA !important;
-}
-#blockly-f{
-  border-left:16px solid #506481 !important;
-}
-
-#blockly-g{
-  border-left:16px solid #C26F87 !important;
-}
-
-#blockly-h{
-  border-left:16px solid #5BBC73 !important;
-}
-
-#blockly-i{
-  border-left:16px solid #61A8EC !important;
-}
-
-#blockly-j{
-  border-left:16px solid #DA4B5D !important;
-}
-
-#blockly-k{
-  border-left:16px solid #9B61E2 !important;
-}
-
-#blockly-l{
-  border-left:16px solid #717171 !important;
-}
-
-#blockly-m{
-  border-left:16px solid #567AE4 !important;
-}
-
-#blockly-n{
-  border-left:16px solid #C54E30 !important;
-}
-
-#blockly-o{
-  border-left:16px solid #8156C9 !important;
-}
-
-#blockly-p{
-  border-left:16px solid #D030BA !important;
-}
-
-#blockly-q{
-  border-left:16px solid #506481 !important;
-}
-
-#blockly-r{
-  border-left:16px solid #C26F87 !important;
-}
-
-#blockly-s{
-  border-left:16px solid #5BBC73 !important;
-}
-
-#blockly-t{
-  border-left:16px solid #61A8EC !important;
-}
-
-#blockly-u{
-  border-left:16px solid #DA4B5D !important;
-}
-
-#blockly-v{
-  border-left:16px solid #9B61E2 !important;
-}
-
-#blockly-w{
-  border-left:16px solid #717171 !important;
-}
 
 .blocklyTreeLabel.blocklyTreeLabelControl {
   background-color: red;

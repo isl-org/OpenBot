@@ -10,7 +10,7 @@ export const Toolbox = (props) => {
         return (
         <>
 
-            <Category style={{borderLeft:"16px solid red"}} name="Control"  categorystyle="control_category">
+            <Category name="Control"  categorystyle="control_category">
                 {controlBlocksType.map((type,index) => {
                     return controlsBlocks(type,index)
                 })}

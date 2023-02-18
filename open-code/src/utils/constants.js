@@ -35,37 +35,37 @@ export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     'base': Blockly.Themes.Classic,
     "categoryStyles":{
         "control_category":{
-            "colour":"#bdcbf5",
+            "colour":"#567AE4",
         },
         "loops_category":{
-            "colour":"#faeeea",
+            "colour":"#C54E30",
         },
         "operators_category":{
-            "colour":"#d3c5ed",
+            "colour":"#8156C9",
         },
         "variables_category":{
-            "colour":"#f1c1ea",
+            "colour":"#D030BA",
         },
         "text_category":{
-            "colour":"#d0d7e2",
+            "colour":"#506481",
         },
         "list_category":{
-            "colour":"#e8c9d2",
+            "colour":"#C26F87",
         },
         "sound_category":{
-            "colour":"#c9e9d1",
+            "colour":"#5BBC73",
         },
         "sensing_category":{
-            "colour":"#bbdaf7",
+            "colour":"#61A8EC",
         },
         "bumper_category":{
-            "colour":"#f2c0c6",
+            "colour":"#DA4B5D",
         },
         "movement_category":{
-            "colour":"#d6bef3",
+            "colour":"#9B61E2",
         },
         "detection_category":{
-            "colour":"#d9d9d9",
+            "colour":"#717171",
         }
 
     },
@@ -73,7 +73,7 @@ export const DarkTheme = Blockly.Theme.defineTheme('dark', {
         'workspaceBackgroundColour': '#1e1e1e',
         'toolboxBackgroundColour': 'blackBackground',
         'toolboxForegroundColour': colors.whiteFont,
-        'flyoutBackgroundColour': '#252526',
+        'flyoutBackgroundColour': '#7f8c8d',
         'flyoutForegroundColour': '#ccc',
         'flyoutOpacity': 1,
         'scrollbarColour': '#797979',
@@ -89,37 +89,37 @@ export const LightTheme=Blockly.Theme.defineTheme('light', {
     'base': Blockly.Themes.Classic,
     "categoryStyles":{
         "control_category":{
-            "colour":"#bdcbf5",
+            "colour":"#567AE4",
         },
         "loops_category":{
-            "colour":"#f0cbc1",
+            "colour":"#C54E30",
         },
         "operators_category":{
-            "colour":"#d3c5ed",
+            "colour":"#8156C9",
         },
         "variables_category":{
-            "colour":"#f1c1ea",
+            "colour":"#D030BA",
         },
         "text_category":{
-            "colour":"#d0d7e2",
+            "colour":"#506481",
         },
         "list_category":{
-            "colour":"#e8c9d2",
+            "colour":"#C26F87",
         },
         "sound_category":{
-            "colour":"#c9e9d1",
+            "colour":"#5BBC73",
         },
         "sensing_category":{
-            "colour":"#bbdaf7",
+            "colour":"#61A8EC",
         },
         "bumper_category":{
-            "colour":"#f2c0c6",
+            "colour":"#DA4B5D",
         },
         "movement_category":{
-            "colour":"#d6bef3",
+            "colour":"#9B61E2",
         },
         "detection_category":{
-            "colour":"#d9d9d9",
+            "colour":"#717171",
         }
 
     },

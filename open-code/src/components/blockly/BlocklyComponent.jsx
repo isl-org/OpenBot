@@ -46,7 +46,7 @@ function BlocklyComponent(props) {
 
     return (
         <React.Fragment>
-            <div ref={blocklyDiv} id="blocklyDiv" style={{width : 100 + "%", height: "81.4%"}}/>
+            <div ref={blocklyDiv} id="blocklyDiv" style={{width : 100 + "%", height: "81.6%"}}/>
             <div style={{display: 'none'}} ref={toolbox}>
                 {props.children}
             </div>
