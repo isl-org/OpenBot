@@ -11,9 +11,29 @@ export const Toolbox = (props) => {
         <>
 
             <Category name="Control"  categorystyle="control_category">
+                <Block type="controls_if" gap="8">
+                    <mutation else="1"></mutation>
+                    <Value name="IF0">
+                        <Shadow type="logic_boolean">
+                            <Field name="BOOL">TRUE</Field>
+                        </Shadow>
+                    </Value>
+                </Block>
                 {controlBlocksType.map((type,index) => {
                     return controlsBlocks(type,index)
                 })}
+                <Block type="logic_compare" gap="8">
+                    <Value name="A">
+                        <Shadow type="math_number">
+                            <Field name="NUM">0</Field>
+                        </Shadow>
+                    </Value>
+                    <Value name="B">
+                        <Shadow type="math_number">
+                            <Field name="NUM">0</Field>
+                        </Shadow>
+                    </Value>
+                </Block>
             </Category>
 
             <Category name="Loops" categorystyle="loops_category" >
@@ -63,6 +83,24 @@ xx
                 <Block type="math_number"/>,
                 <Block type="text"/>
                 <Block type="timer"/>
+                <Block type="variables_set" gap="8">
+                    <Field name="VAR" ></Field>
+                    <Value name="VALUE">
+                        <Block type="lists_create_with">
+                            <mutation items="2"></mutation>
+                            <Value name="ADD0">
+                                <Shadow type="math_number">
+                                    <Field name="NUM">0</Field>
+                                </Shadow>
+                            </Value>
+                            <Value name="ADD1">
+                                <Shadow type="math_number">
+                                    <Field name="NUM">1</Field>
+                                </Shadow>
+                            </Value>
+                        </Block>
+                    </Value>
+                </Block>
             </Category>
 
             <Category name="Text" categorystyle="text_category">
@@ -209,6 +247,8 @@ xx
             </Category>
             <Category name="Detection" categorystyle="detection_category">
                 <Block type='print'/>
+
+
             </Category>
         </>
     );

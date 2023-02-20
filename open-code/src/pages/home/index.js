@@ -6,7 +6,7 @@ import CookiesComponent from "../../components/homeComponents/cookies/cookies";
 
 function Home() {
     return (
-        <div>
+        <div style={{height : '100vh'}}>
             <Header/>
             <HomeCarousel/>
             <NewProject/>
