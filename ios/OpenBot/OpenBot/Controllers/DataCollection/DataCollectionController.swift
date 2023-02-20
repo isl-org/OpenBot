@@ -162,7 +162,6 @@ class DataCollectionController: CameraController {
 
                 self.isImageCaptureQueueBusy = true
 
-                let startTime = Date().millisecondsSince1970
                 // Record image index and timestep
                 self.dataLogger.recordImageLogs(index: self.count)
                 // Record preview image
@@ -172,7 +171,6 @@ class DataCollectionController: CameraController {
                     let image = UIImage(ciImage: ciImage)
                     self.dataLogger.saveImages(image: image, name: imageName);
                 }
-
                 // Record cropped image
                 if self.isTrainingSelected {
                     let imageName = String(self.count) + Strings.underscore + Strings.crop
@@ -185,13 +183,7 @@ class DataCollectionController: CameraController {
                     let croppedImage = UIImage(ciImage: ciCroppedImage)
                     self.dataLogger.saveImages(image: croppedImage, name: imageName);
                 }
-
                 self.count += 1
-
-                let endTime = Date().millisecondsSince1970
-
-                print(1000 / (endTime - startTime))
-
                 self.isImageCaptureQueueBusy = false
 
             } else {
