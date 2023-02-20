@@ -8,7 +8,16 @@
     margin: 10px;
 }
 
+.emptyProfile {
+    width: 10px;
+    height: 10px;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #4c4d4c;
+}
+
 .profileOptionModalStyle {
+    outline: none;
     height: 125px;
     width: 260px;
     position: absolute;
@@ -59,6 +68,7 @@
     border-radius: 6px;
     font-family: Gilroy-Regular, sans-serif;
 }
+
 .item {
     font-size: 20px;
     display: flex;
@@ -70,42 +80,45 @@
     padding-bottom: 0.5rem;
     border-style: none none none solid;
 }
-.renameDivMargin{
+
+.renameDivMargin {
     padding-right: 6.5rem;
     margin-top: 1.4rem;
 }
-.deleteDivMargin{
+
+.deleteDivMargin {
     padding-right: 5.2rem;
 }
 
-.editProfileMargin{
+.editProfileMargin {
     padding-right: 5.5rem;
     margin-top: 1.4rem;
 }
 
-.logOutMargin{
+.logOutMargin {
     padding-right: 7.3rem;
 }
 
-.darkItem{
+.darkItem {
     border-color: #303030;
     border-width: 4.38px;
 }
 
-.lightItem{
+.lightItem {
     border-color: #FFFFFF;
     border-width: 4.38px;
 }
-.lightItem:hover{
+
+.lightItem:hover {
     border-width: 4.38px;
     background: rgb(232, 246, 254);
     border-color: rgb(0, 113, 197);
     border-style: none none none solid;
 }
 
-.darkItem:hover{
+.darkItem:hover {
     border-width: 4.38px;
-    background:#57626c;
+    background: #57626c;
     border-color: rgb(0, 113, 197);
     border-style: none none none solid;
 }
@@ -163,7 +176,7 @@
     margin: 20px 20px 0 0;
 }
 
-.crossIcon{
+.crossIcon {
     height: 20px;
     width: 20px;
     cursor: pointer;
@@ -186,11 +199,11 @@
     border-radius: 6px;
 }
 
-.darkLogoutModalBox{
+.darkLogoutModalBox {
     background-color: #303030;
 }
 
-.lightLogoutModalBox{
+.lightLogoutModalBox {
     background-color: #ffffff;
 }
 
@@ -215,7 +228,7 @@
     color: rgba(0, 0, 0, 0.5);
 }
 
-.helpCenterModalBox{
+.helpCenterModalBox {
     outline: none;
     display: flex;
     height: 63%;
@@ -223,26 +236,26 @@
     border-radius: 12px;
 }
 
-.darkHelpCenterModal{
+.darkHelpCenterModal {
     background-color: #303030;
 }
 
-.lightHelpCenterModal{
+.lightHelpCenterModal {
     background-color: white;
 }
 
-.dragAndDropDiv{
+.dragAndDropDiv {
     border-right: 1px solid #D9D9D9;
     width: 35%;
     height: 100%;
     padding-left: 5%;
 }
 
-.darkModeRightBorder{
+.darkModeRightBorder {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.integerNumber{
+.integerNumber {
     position: absolute;
     opacity: 0.05;
     font-family: Gilroy, serif;
@@ -250,38 +263,39 @@
     line-height: 50px;
 }
 
-.helpCenterPara{
+.helpCenterPara {
     font-size: 14px;
 }
 
-.helpCenterCrossIconDiv{
+.helpCenterCrossIconDiv {
     display: flex;
     justify-content: flex-end;
     padding: 10px;
 }
 
-.saveAndDownloadDiv{
+.saveAndDownloadDiv {
     width: 95%;
     height: 50%;
     padding-left: 5%;
     border-bottom: 1px solid #D9D9D9;
 }
 
-.darkModeBottomBorder{
+.darkModeBottomBorder {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.connectAndDriveDiv{
+.connectAndDriveDiv {
     width: 95%;
     height: 50%;
     padding-left: 5%;
 }
 
-.darkTitleModel{
+.darkTitleModel {
     background-color: #303030;
     color: #F2F2F2;
 }
-.lightTitleModel{
+
+.lightTitleModel {
     background-color: #ffffff;
     color: #0071C5;
 }

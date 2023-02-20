@@ -1,7 +1,6 @@
-import React, {useContext, useState, useRef} from 'react';
+import React, {useContext, useState, useRef, useEffect} from 'react';
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import icon from "../../assets/images/icon/open-bot-logo.png"
-import profileImage from "../../assets/images/icon/profile-image.png"
 import downArrow from "../../assets/images/icon/down-arrow.png"
 import {NavbarStyle} from "./styles";
 import {useNavigate} from "react-router-dom";
@@ -21,14 +20,13 @@ import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 import {HelpCenterText} from "../../utils/constants";
-import {auth, signInWithGoogle,} from "../../firebase_setup/firebase";
+import {auth, signInWithGoogle, uploadProfilePic} from "../../firebase_setup/firebase";
 import renameIcon from "../../assets/images/icon/rename-icon.png";
 import deleteIcon from "../../assets/images/icon/delete-icon.png";
 import {colors} from "../../utils/color";
 
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
-    const [isSigIn, setIsSigIn] = useState(false);
     const {projectName, setProjectName} = useContext(StoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [deleteProject, setDeleteProject] = useState(false);
@@ -42,15 +40,37 @@ export function Header() {
     const [isProfileModal, setIsProfileModal] = useState(false)
     const [isEditProfileModal, setIsEditProfileModal] = useState(false)
     const [isLogoutModal, setIsLogoutModal] = useState(false)
-    const [userName, setUserName] = useState('')
-    const [profileIcon, setProfileIcon] = useState(profileImage)
     const [user, setUser] = useState(null);
-    const {setUserData} = useContext(StoreContext);
+
 
     const anchorRef = React.useRef();
-    React.useEffect(() => {
+    useEffect(() => {
         setTimeout(() => setAnchorEl(anchorRef?.current), 1)
-    },  [anchorRef])
+    }, [anchorRef])
+
+    useEffect(() => {
+        console.log("inside useeffect")
+        auth.onAuthStateChanged(function (currentUser) {
+            // const userName = currentUser.displayName.split(" ");
+            // setUserName(userName[0]);
+            // setProfileIcon(currentUser.photoURL);
+            setUser({
+                photoURL: currentUser.photoURL,
+                displayName: currentUser.displayName,
+                email: currentUser.email,
+            });
+            currentUser.getIdToken().then((currentToken) => {
+                if (getCookie("userToken") === currentToken) {
+                    localStorage.setItem("isSigIn", "true")
+                } else {
+                    localStorage.setItem("isSigIn", "false")
+                }
+            }).catch((e) => {
+                console.log(e);
+            })
+        })
+
+    }, [])
 
     const openHomepage = () => {
 
@@ -85,8 +105,8 @@ export function Header() {
     return (
         <div>
             {deleteProject && <DeleteModel setDeleteProject={setDeleteProject}/>}
-            <div style={NavbarStyle.navbarDiv} >
-                <div style={NavbarStyle.navbarTitleDiv} >
+            <div style={NavbarStyle.navbarDiv}>
+                <div style={NavbarStyle.navbarTitleDiv}>
                     <img alt="" style={{...NavbarStyle.mainIcon, ...NavbarStyle.iconMargin}} src={icon} onClick={() => {
                         openHomepage()
                     }}/>
@@ -96,7 +116,7 @@ export function Header() {
                 </div>
 
                 {location.pathname === "/playground" ? !anchorEl ?
-                        <div style={NavbarStyle.playgroundName} onClick={handleClick} >
+                        <div style={NavbarStyle.playgroundName} onClick={handleClick}>
                     <span
                         style={{...NavbarStyle.mainTitle, ...NavbarStyle.arrowMargin}}>{projectName}</span>
                             <img src={downArrow}
@@ -116,7 +136,7 @@ export function Header() {
                                      style={{...NavbarStyle.infoIcon, ...NavbarStyle.arrowMargin}}
                                      onClick={handleClick} alt={"arrow"}/>
                             </div>
-                            <Popper  key={id} open={open} anchorEl={anchorEl}>
+                            <Popper key={id} open={open} anchorEl={anchorEl}>
                                 <div
                                     className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel)}>
                                     <div
@@ -145,28 +165,25 @@ export function Header() {
                          style={{...NavbarStyle.moonIcon, ...NavbarStyle.iconMargin}}/>
                     <img alt="" src={Images.line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
                     {
-                        isSigIn ?
+                        localStorage.getItem("isSigIn") === "true" ?
                             <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
-                                <img alt="Profile Icon" src={profileIcon}
-                                     style={{height: 28, width: 28, borderRadius: 90}}/>
-                                <WhiteText extraStyle={styles.extraStyles} text={userName}/>
+                                {user?.photoURL && <img alt="Profile Icon" src={user.photoURL}
+                                                        style={{height: 28, width: 28, borderRadius: 90}}/>}
+                                <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>
                                 <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
                             </div> :
                             <button onClick={() => {
                                 const userToken = getCookie("userToken");
                                 console.log("userToken is :", userToken)
                                 signInWithGoogle().then((response) => {
-                                    setIsSigIn(true);
-                                    const userName = response.user.displayName.split(" ");
-                                    setUserData(response.user);
-                                    setUserName(userName[0]);
-                                    setProfileIcon(response.user.photoURL);
+                                    localStorage.setItem("isSigIn", "true")
                                     setUser({
                                         photoURL: response.user.photoURL,
                                         displayName: response.user.displayName,
                                         email: response.user.email
                                     });
-                                    storeIdTokenInCookie(response.user);
+                                    storeIdTokenInCookie(response.user).then(() => {
+                                    });
                                 }).catch((error) => {
                                     console.log(error)
                                 })
@@ -181,8 +198,7 @@ export function Header() {
                                                               setIsProfileModal={setIsProfileModal}
                                                               setIsEditProfileModal={setIsEditProfileModal}
                                                               setIsLogoutModal={setIsLogoutModal}
-                                                              setIsHelpCenterModal={setIsHelpCenterModal}
-                                                              isSigIn={isSigIn}/>
+                                                              setIsHelpCenterModal={setIsHelpCenterModal}/>
                     }
                     {
                         isEditProfileModal && <EditProfileModal isEditProfileModal={isEditProfileModal}
@@ -252,15 +268,14 @@ export function ProfileOptionModal(props) {
 }
 
 export function EditProfileModal(props) {
-    const {isEditProfileModal, setIsEditProfileModal} = props
-    const [file, setFile] = useState(props.user?.photoURL ? props.user.photoURL : Images.profileImage);
-    const {userData} = useContext(StoreContext);
+    const {isEditProfileModal, setIsEditProfileModal, user} = props
+    const [file, setFile] = useState(user?.photoURL ? user.photoURL : Images.profileImage);
     const inputRef = useRef();
-    const [fullName, setFullName] = useState(userData?.displayName ? userData.displayName : '');
+    const [fullName, setFullName] = useState(user?.displayName);
     const [userDetails, setUserDetail] = useState({
-        displayName: userData?.displayName ? userData.displayName : '',
-        email: userData?.email ? userData.email : '',
-        photoUrl: userData?.photoURL ? props.user.photoURL : Images.profileImage
+        displayName: user?.displayName,
+        email: user?.email,
+        photoUrl: user?.photoURL
     })
     const {theme} = useContext(ThemeContext)
     const handleClose = () => {
@@ -269,11 +284,11 @@ export function EditProfileModal(props) {
 
     function handleChange(e) {
         console.log(e.target.files[0].name.replace(/HEIC/g, 'jpg'));
-        setFile(URL.createObjectURL(e.target.files[0]));
+        // setFile(URL.createObjectURL(e.target.files[0]));
+        setFile(e.target.files[0])
         setUserDetail({
             ...userDetails,
-            photoUrl: file
-
+            photoUrl: URL.createObjectURL(e.target.files[0])
         })
     }
 
@@ -282,7 +297,6 @@ export function EditProfileModal(props) {
         setUserDetail({
             ...userDetails,
             displayName: name,
-
         })
     }
 
@@ -300,27 +314,29 @@ export function EditProfileModal(props) {
                                  src={Images.lightCrossIcon}/>
                     }
                 </div>
-                <div style={{backgroundImage: `url(${file})`}} className={styles.profileImg}>
+                <div style={{backgroundImage: `url(${userDetails.photoUrl})`}} className={styles.profileImg}>
                     <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
                     <img onClick={() => inputRef.current.click()} alt={"edit profile icon"}
                          className={styles.editProfileIcon} src={Images.editProfileIcon}/>
                 </div>
                 <div style={{display: "flex"}}>
-                    <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle} inputTitle={"Full Name"}
+                    <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
+                                          inputTitle={"Full Name"}
                                           value={fullName} onDataChange={handleNameChange}/>
                     <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
                                           inputTitle={"Date Of Birth"}/>
                 </div>
                 <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle}
-                                      inputTitle={"Email address"} value={props.user?.email && props.user.email}/>
+                                      inputTitle={"Email address"} value={user?.email}/>
 
                 <div style={{display: "flex"}}>
                     <BlueButton onClick={async () => {
-                        await userData.updateProfile({
-                            displayName: userDetails.displayName,
-                            photoURL: userDetails.photoUrl
-                        });
-                        handleClose()
+                        await uploadProfilePic(file, file.name).then((photoURL) => {
+                            auth.currentUser.updateProfile({
+                                displayName: userDetails.displayName,
+                                photoURL: photoURL
+                            }).then(() => handleClose())
+                        })
                     }} buttonType={"contained"} buttonName={"Save"}/>
                     <BlueButton onClick={() => {
                         handleClose()
@@ -364,7 +380,6 @@ export function HelpCenterModal(props) {
 
     const {isHelpCenterModal, setIsHelpCenterModal} = props
     const theme = useContext(ThemeContext)
-    // console.log(theme.theme === "dark", " theme:::::", theme)
     const handleClose = () => {
         setIsHelpCenterModal(false)
     }
