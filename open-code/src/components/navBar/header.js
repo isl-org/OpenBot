@@ -24,6 +24,7 @@ import {auth, signInWithGoogle, uploadProfilePic} from "../../firebase_setup/fir
 import renameIcon from "../../assets/images/icon/rename-icon.png";
 import deleteIcon from "../../assets/images/icon/delete-icon.png";
 import {colors} from "../../utils/color";
+// import {loadingWorkspace} from "../../firebase_setup/workspace";
 
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
@@ -49,7 +50,6 @@ export function Header() {
     }, [anchorRef])
 
     useEffect(() => {
-        console.log("inside useeffect")
         auth.onAuthStateChanged(function (currentUser) {
             // const userName = currentUser.displayName.split(" ");
             // setUserName(userName[0]);
@@ -82,6 +82,7 @@ export function Header() {
         setDeleteProject(true)
     }
 
+
     async function storeIdTokenInCookie(user) {
         if (!auth.currentUser) {
             console.error('No user is signed in');
@@ -100,7 +101,6 @@ export function Header() {
             return parts.pop().split(";").shift();
         }
     };
-
 
     return (
         <div>
@@ -183,8 +183,10 @@ export function Header() {
                                         email: response.user.email
                                     });
                                     storeIdTokenInCookie(response.user).then(() => {
+                                        // return loadingWorkspace();
                                     });
-                                }).catch((error) => {
+                                }
+                                ).catch((error) => {
                                     console.log(error)
                                 })
                             }

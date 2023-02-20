@@ -12,7 +12,6 @@ export const Toolbox = (props) => {
 
             <Category name="Control"  categorystyle="control_category">
                 <Block type="controls_if" gap="8">
-                    <mutation else="1"></mutation>
                     <Value name="IF0">
                         <Shadow type="logic_boolean">
                             <Field name="BOOL">TRUE</Field>
@@ -87,7 +86,6 @@ xx
                     <Field name="VAR" ></Field>
                     <Value name="VALUE">
                         <Block type="lists_create_with">
-                            <mutation items="2"></mutation>
                             <Value name="ADD0">
                                 <Shadow type="math_number">
                                     <Field name="NUM">0</Field>

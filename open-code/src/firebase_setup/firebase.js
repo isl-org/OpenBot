@@ -1,6 +1,7 @@
 import firebase from "firebase/compat/app";
 import 'firebase/compat/auth';
 import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
+import 'firebase/compat/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBPZm6JnvHwLinjR6Dm45X6wX5BXuUzYqM",
@@ -23,6 +24,8 @@ provider.addScope('https://www.googleapis.com/auth/user.birthday.read')
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
 export const FirebaseStorage = getStorage()
 
+export const storageRef = firebase.storage
+
 export async function uploadProfilePic(file, fileName) {
     const fileRef = ref(FirebaseStorage, auth.currentUser.uid + fileName)
     const snapShot = await uploadBytes(fileRef, file)
@@ -30,4 +33,5 @@ export async function uploadProfilePic(file, fileName) {
     return photoURL
 }
 
+export const db=firebase.firestore();
 export default firebase;

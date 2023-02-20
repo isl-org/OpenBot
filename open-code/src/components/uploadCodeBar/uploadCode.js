@@ -12,6 +12,8 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
+import {savingWorkspace} from "../../firebase_setup/workspace";
+
 
 export const UploadCode = () => {
     const {setDrawer} = useContext(StoreContext);
@@ -28,7 +30,12 @@ export const UploadCode = () => {
         setGenerateCode(!generate);
         setCode(code)
         setDrawer(true);
-    }
+
+        savingWorkspace()
+            .then(()=>console.log("workspace saved"))
+            .catch(err=>console.log(err))
+    };
+
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
     const [driveButtonActive, setDriveButtonActive] = useState(false);
@@ -68,6 +75,8 @@ export const UploadCode = () => {
             setDriveButtonActive(false);
         }, 100);
     }
+
+
 
     return (
 
