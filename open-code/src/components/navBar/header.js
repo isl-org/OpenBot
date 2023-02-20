@@ -1,4 +1,4 @@
-import React, {useContext, useState, useRef, useEffect} from 'react';
+import React, {useContext, useState, useRef, useEffect, forwardRef} from 'react';
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import icon from "../../assets/images/icon/open-bot-logo.png"
 import downArrow from "../../assets/images/icon/down-arrow.png"
@@ -24,7 +24,7 @@ import {auth, signInWithGoogle, uploadProfilePic} from "../../firebase_setup/fir
 import renameIcon from "../../assets/images/icon/rename-icon.png";
 import deleteIcon from "../../assets/images/icon/delete-icon.png";
 import {colors} from "../../utils/color";
-// import {loadingWorkspace} from "../../firebase_setup/workspace";
+import LoaderComponent from "../loader/loaderComponent";
 
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
@@ -51,9 +51,6 @@ export function Header() {
 
     useEffect(() => {
         auth.onAuthStateChanged(function (currentUser) {
-            // const userName = currentUser.displayName.split(" ");
-            // setUserName(userName[0]);
-            // setProfileIcon(currentUser.photoURL);
             setUser({
                 photoURL: currentUser.photoURL,
                 displayName: currentUser.displayName,
@@ -69,7 +66,6 @@ export function Header() {
                 console.log(e);
             })
         })
-
     }, [])
 
     const openHomepage = () => {
@@ -167,14 +163,15 @@ export function Header() {
                     {
                         localStorage.getItem("isSigIn") === "true" ?
                             <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
-                                {user?.photoURL && <img alt="Profile Icon" src={user.photoURL}
-                                                        style={{height: 28, width: 28, borderRadius: 90}}/>}
+                                {user?.photoURL ? <img alt="Profile Icon" src={user.photoURL}
+                                                       style={{height: 28, width: 28, borderRadius: 90}}/> :
+                                    <LoaderComponent color="white"/>
+                                }
                                 <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>
                                 <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
                             </div> :
                             <button onClick={() => {
                                 const userToken = getCookie("userToken");
-                                console.log("userToken is :", userToken)
                                 signInWithGoogle().then((response) => {
                                     localStorage.setItem("isSigIn", "true")
                                     setUser({
@@ -218,8 +215,7 @@ export function Header() {
                 </div>
             </div>
         </div>
-    )
-        ;
+    );
 }
 
 export function ProfileOptionModal(props) {
@@ -274,6 +270,8 @@ export function EditProfileModal(props) {
     const [file, setFile] = useState(user?.photoURL ? user.photoURL : Images.profileImage);
     const inputRef = useRef();
     const [fullName, setFullName] = useState(user?.displayName);
+    const [isAlertSuccess, setIsAlertSuccess] = useState(false)
+    const [isAlertError, setIsAlertError] = useState(false)
     const [userDetails, setUserDetail] = useState({
         displayName: user?.displayName,
         email: user?.email,
@@ -286,7 +284,6 @@ export function EditProfileModal(props) {
 
     function handleChange(e) {
         console.log(e.target.files[0].name.replace(/HEIC/g, 'jpg'));
-        // setFile(URL.createObjectURL(e.target.files[0]));
         setFile(e.target.files[0])
         setUserDetail({
             ...userDetails,
@@ -301,6 +298,24 @@ export function EditProfileModal(props) {
             displayName: name,
         })
     }
+
+    const Alert = forwardRef(function Alert(props, ref) {
+        return (
+            props.message === "Profile updated successfully!" ?
+                <div className={styles.successAlertBox}>
+                    <img alt={"emoji icon"}
+                         style={{height: 20, marginRight: 10}}
+                         src={Images.successfulEmojiIcon}/>
+                    {props.message}
+                </div> :
+                <div className={styles.errorAlertBox}>
+                    <img alt={"emoji icon"}
+                         style={{height: 20, marginRight: 10}}
+                         src={Images.errorEmojiIcon}/>
+                    {props.message}
+                </div>
+        )
+    })
 
     return (
         <Modal
@@ -337,13 +352,31 @@ export function EditProfileModal(props) {
                             auth.currentUser.updateProfile({
                                 displayName: userDetails.displayName,
                                 photoURL: photoURL
-                            }).then(() => handleClose())
+                            }).then(() => {
+                                setIsAlertSuccess(true)
+                                setTimeout(
+                                    function() {
+                                        handleClose()
+                                        setIsAlertSuccess(false)
+                                    }.bind(this), 3000);
+                            }).catch((error) => {
+                                console.log(error)
+                                setIsAlertError(true)
+                            })
                         })
                     }} buttonType={"contained"} buttonName={"Save"}/>
                     <BlueButton onClick={() => {
                         handleClose()
                     }} buttonName={"Cancel"}/>
                 </div>
+                {
+                    isAlertSuccess && <Alert message={"Profile updated successfully!"}/>
+                }
+                {
+                    isAlertError && <Alert message={"Oops! There was an error."}/>
+
+                }
+
             </Box>
         </Modal>
     )

@@ -10,6 +10,10 @@ import darkUserIcon from "../../src/assets/images/icon/darkUser-icon.png"
 import darkLogoutIcon from "../../src/assets/images/icon/darklogout-icon.png"
 import darkCrossIcon from "../../src/assets/images/icon/blue-cross.png"
 import lightCrossIcon from "../../src/assets/images/icon/black-cross.png"
+import successfulEmojiIcon from "../../src/assets/images/icon/successful-emoji.png"
+import errorEmojiIcon from "../../src/assets/images/icon/error-emozi-icon.png"
+
+
 export const Images = {
     helpIcon: helpIcon,
     logoutIcon: logoutIcon,
@@ -20,7 +24,9 @@ export const Images = {
     line: line,
     laptop: laptop,
     darkUserIcon: darkUserIcon,
-    darkLogoutIcon:darkLogoutIcon,
-    darkCrossIcon:darkCrossIcon,
-    lightCrossIcon:lightCrossIcon
+    darkLogoutIcon: darkLogoutIcon,
+    darkCrossIcon: darkCrossIcon,
+    lightCrossIcon: lightCrossIcon,
+    successfulEmojiIcon: successfulEmojiIcon,
+    errorEmojiIcon: errorEmojiIcon,
 }
