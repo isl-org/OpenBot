@@ -20,7 +20,7 @@ import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 import {HelpCenterText} from "../../utils/constants";
-import {auth, signInWithGoogle, uploadProfilePic} from "../../firebase_setup/firebase";
+import {auth, googleSigIn, uploadProfilePic} from "../../firebase_setup/firebase";
 import renameIcon from "../../assets/images/icon/rename-icon.png";
 import deleteIcon from "../../assets/images/icon/delete-icon.png";
 import {colors} from "../../utils/color";
@@ -43,12 +43,6 @@ export function Header() {
     const [isLogoutModal, setIsLogoutModal] = useState(false)
     const [user, setUser] = useState(null);
 
-
-    const anchorRef = React.useRef();
-    useEffect(() => {
-        setTimeout(() => setAnchorEl(anchorRef?.current), 1)
-    }, [anchorRef])
-
     useEffect(() => {
         auth.onAuthStateChanged(function (currentUser) {
             setUser({
@@ -56,20 +50,10 @@ export function Header() {
                 displayName: currentUser.displayName,
                 email: currentUser.email,
             });
-            currentUser.getIdToken().then((currentToken) => {
-                if (getCookie("userToken") === currentToken) {
-                    localStorage.setItem("isSigIn", "true")
-                } else {
-                    localStorage.setItem("isSigIn", "false")
-                }
-            }).catch((e) => {
-                console.log(e);
-            })
         })
     }, [])
 
     const openHomepage = () => {
-
         let path = `/`;
         navigate(path);
     }
@@ -77,26 +61,6 @@ export function Header() {
     const handleDelete = () => {
         setDeleteProject(true)
     }
-
-
-    async function storeIdTokenInCookie(user) {
-        if (!auth.currentUser) {
-            console.error('No user is signed in');
-            return;
-        }
-        const idToken = await user.getIdToken();
-        const now = new Date();
-        const expiration = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7);
-        document.cookie = `userToken=${idToken}; expires=${expiration.toUTCString()}; path=/;`;
-    }
-
-    const getCookie = (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) {
-            return parts.pop().split(";").shift();
-        }
-    };
 
     return (
         <div>
@@ -171,25 +135,16 @@ export function Header() {
                                 <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
                             </div> :
                             <button onClick={() => {
-                                const userToken = getCookie("userToken");
-                                signInWithGoogle().then((response) => {
-                                    localStorage.setItem("isSigIn", "true")
+                                googleSigIn().then(response => {
                                     setUser({
                                         photoURL: response.user.photoURL,
                                         displayName: response.user.displayName,
                                         email: response.user.email
                                     });
-                                    storeIdTokenInCookie(response.user).then(() => {
-                                        // return loadingWorkspace();
-                                    });
-                                }
-                                ).catch((error) => {
-                                    console.log(error)
-                                })
-                            }
-                            }
-
-                                    style={{...NavbarStyle.buttonIcon, ...NavbarStyle.iconMargin}}><span>Sign in</span>
+                                }).catch((error) => {
+                                    console.log("sigin error = ", error)
+                                });
+                            }} style={{...NavbarStyle.buttonIcon, ...NavbarStyle.iconMargin}}><span>Sign in</span>
                             </button>
                     }
                     {
@@ -281,6 +236,12 @@ export function EditProfileModal(props) {
     const handleClose = () => {
         setIsEditProfileModal(false)
     }
+    useEffect(() => {
+        setUserDetail({
+            displayName: auth?.currentUser.displayName,
+            photoUrl: auth?.currentUser.photoURL,
+        })
+    }, [])
 
     function handleChange(e) {
         console.log(e.target.files[0].name.replace(/HEIC/g, 'jpg'));
@@ -355,7 +316,7 @@ export function EditProfileModal(props) {
                             }).then(() => {
                                 setIsAlertSuccess(true)
                                 setTimeout(
-                                    function() {
+                                    function () {
                                         handleClose()
                                         setIsAlertSuccess(false)
                                     }.bind(this), 3000);

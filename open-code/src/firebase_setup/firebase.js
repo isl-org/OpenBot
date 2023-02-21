@@ -2,29 +2,28 @@ import firebase from "firebase/compat/app";
 import 'firebase/compat/auth';
 import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
 import 'firebase/compat/firestore';
+import { getFirestore,  collection, addDoc, getDocs} from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBPZm6JnvHwLinjR6Dm45X6wX5BXuUzYqM",
-    authDomain: "openbot-opencode.firebaseapp.com",
-    projectId: "openbot-opencode",
-    storageBucket: "openbot-opencode.appspot.com",
-    messagingSenderId: "938751030511",
-    appId: "1:938751030511:web:1a9b7d8f0c87b167b2171a",
-    measurementId: "G-Q677HCC9QX"
+    apiKey: "AIzaSyCITlkh63TnSnJQBlzqbJwwtBDr_w3e1Pg",
+    authDomain: "opencode-openbot.firebaseapp.com",
+    projectId: "opencode-openbot",
+    storageBucket: "opencode-openbot.appspot.com",
+    messagingSenderId: "955078484078",
+    appId: "1:955078484078:web:64774c120f9d3a0f65867f",
+    measurementId: "G-SZJL3F5QXF"
 };
 
-export let userInformation;
-
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
+
 export const auth = firebase.auth();
 export const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({prompt: 'select_account'});
 provider.addScope('https://www.googleapis.com/auth/user.birthday.read')
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
 export const FirebaseStorage = getStorage()
-
-export const storageRef = firebase.storage
+export const db = getFirestore(app)
+export default firebase;
 
 export async function uploadProfilePic(file, fileName) {
     const fileRef = ref(FirebaseStorage, auth.currentUser.uid + fileName)
@@ -33,5 +32,37 @@ export async function uploadProfilePic(file, fileName) {
     return photoURL
 }
 
-export const db=firebase.firestore();
-export default firebase;
+export async function googleSigIn() {
+    const siginIn = await auth.signInWithPopup(provider)
+    return siginIn
+}
+
+if(auth){
+    localStorage.setItem("isSigIn", "true")
+}else{
+    localStorage.setItem("isSigIn", "false")
+}
+
+const myData  = {
+    firstName: "sanjeev",
+    lastName: "yadav",
+    dob: 1998
+}
+// const dbRef = collection(db, "users");
+
+// if(auth){
+//     try {
+//         const docRef = addDoc(collection(db, auth.currentUser.uid), myData).then((res) => {
+//             console.log("Document written with ID: ", res);
+//         });
+//         const querySnapshot = getDocs(collection(db, "users")).then((responseDoc ) => {
+//             console.log(responseDoc)
+//             responseDoc.forEach((doc) => {
+//                 console.log(`${doc.id} => ${doc.data()}`);
+//                 console.log(doc.data())
+//             });
+//         });
+//     } catch (e){
+//         console.error("Error adding document: ", e);
+//     }
+// }
