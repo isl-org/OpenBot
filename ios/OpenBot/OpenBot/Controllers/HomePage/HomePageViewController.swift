@@ -1,8 +1,5 @@
 //
-//  HomePageViewController.swift
-//  OpenBot
-//
-//  Created by Nitish Yadav on 17/08/22.
+// Created by Nitish Yadav on 17/08/22.
 //
 
 import UIKit
@@ -24,6 +21,7 @@ class HomePageViewController: CameraController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet var modesCollectionView: UICollectionView!;
 
+    /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
         bluetoothDataController.shared.startScan()
@@ -78,10 +76,12 @@ class HomePageViewController: CameraController {
         }
     }
 
+    /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
 
+    /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -122,6 +122,7 @@ class HomePageViewController: CameraController {
         }
     }
 
+    /// Main control update function
     @objc func updateControllerValues() {
         gameController.updateControllerValues()
     }

@@ -29,6 +29,7 @@ class ObjectTrackingFragment: CameraController {
     private var bufferWidth = 0;
     private let edgeOffset: CGFloat = 2.0
 
+    /// Called after the view fragment has loaded.
     override func viewDidLoad() {
         let modelItems = Common.loadAllModelItemsFromBundle()
         if (modelItems.count > 0) {
@@ -59,6 +60,7 @@ class ObjectTrackingFragment: CameraController {
         super.viewDidLoad()
     }
 
+    /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         calculateFrame()
@@ -79,6 +81,7 @@ class ObjectTrackingFragment: CameraController {
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
+    /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         switch objectTrackingSettings?.autoModeButton.isOn {
@@ -146,6 +149,7 @@ class ObjectTrackingFragment: CameraController {
         detector?.setSelectedClass(newClass: notification.object as! String)
     }
 
+    /// Called after the view was dismissed, covered or otherwise hidden.
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if autoMode {

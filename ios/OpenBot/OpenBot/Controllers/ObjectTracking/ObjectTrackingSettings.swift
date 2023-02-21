@@ -24,8 +24,16 @@ class ObjectTrackingSettings: UIView {
     var modelDropDown = DropDown()
     var objectDropDown = DropDown();
     var objectDropDownView = UIView()
-
+    
+    /// Initialization routine.
+    ///
+    /// - Parameters:
+    ///     - frame:
+    ///     - detector:
+    ///     - model:
     init(frame: CGRect, detector: Detector?, model: ModelItem) {
+        
+        // Setup UI
         self.detector = detector;
         selectedModel = model
         super.init(frame: frame);
@@ -56,6 +64,8 @@ class ObjectTrackingSettings: UIView {
         setupThreads();
         setupVehicleControls();
         createLeftSpeed()
+        
+        // Setup callbacks
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateObject), name: .updateObject, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
@@ -65,14 +75,12 @@ class ObjectTrackingSettings: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleNetwork), name: .toggleNetworks, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeed), name: .updateObjectTrackingFps, object: nil);
-
-
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
+    
     func createSwitchButton() {
         autoModeButton.isOn = false
         autoModeButton.setOn(false, animated: true)
@@ -84,7 +92,7 @@ class ObjectTrackingSettings: UIView {
         autoModeButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 120).isActive = true
         autoModeButton.topAnchor.constraint(equalTo: topAnchor, constant: 25).isActive = true
     }
-
+    
     func createLabel(text: String, leadingAnchor: Int, topAnchor: Int) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -93,7 +101,7 @@ class ObjectTrackingSettings: UIView {
         label.frame.size = resized(size: CGSize(width: text.count * 10, height: 40), basedOn: .height)
         return label
     }
-
+    
     @objc func switchButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .autoModeObjectTracking, object: nil)
         if sender.isOn {
@@ -106,7 +114,7 @@ class ObjectTrackingSettings: UIView {
             speedLabel.text = "xxx fps"
         }
     }
-
+    
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
@@ -131,7 +139,7 @@ class ObjectTrackingSettings: UIView {
             }
         }
     }
-
+    
     func createBar() {
         let bar = UIView()
         bar.backgroundColor = Colors.title
@@ -143,8 +151,8 @@ class ObjectTrackingSettings: UIView {
         bar.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
         bar.layer.cornerRadius = 2
     }
-
-
+    
+    
     func createBluetoothIcon() {
         if (isBluetoothConnected) {
             bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
@@ -152,22 +160,21 @@ class ObjectTrackingSettings: UIView {
             bluetoothIcon = createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         }
     }
-
+    
     func createCameraIcon() {
         if let image = Images.frontCamera {
             _ = createIcons(iconImg: image, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
         }
     }
-
+    
     @objc func ble(_ sender: UIView) {
         NotificationCenter.default.post(name: .ble, object: nil)
     }
-
+    
     @objc func switchCamera(_ sender: UIView) {
         NotificationCenter.default.post(name: .switchCamera, object: nil)
     }
-
-
+    
     func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) -> UIImageView {
         let iconImage = UIImageView(frame: CGRect(x: x, y: y, width: size.width, height: size.height))
         iconImage.image = iconImg
@@ -181,18 +188,18 @@ class ObjectTrackingSettings: UIView {
         iconImage.addGestureRecognizer(tapGesture)
         return iconImage
     }
-
+    
     func setupInput() {
         imageInputLabel.frame = CGRect(x: width - 80, y: adapted(dimensionSize: 90, to: .height), width: 100, height: 40)
         imageInputLabel.text = selectedModel?.inputSize
         addSubview(imageInputLabel)
     }
-
+    
     func setupSpeed() {
         speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: Int(adapted(dimensionSize: 90, to: .height)))
         addSubview(speedLabel)
     }
-
+    
     func setupObjectDropDown() {
         objectDropDown.backgroundColor = Colors.freeRoamButtonsColor;
         objectDropDown.textColor = Colors.bdColor ?? .black
@@ -230,10 +237,11 @@ class ObjectTrackingSettings: UIView {
         objectDropDownView.translatesAutoresizingMaskIntoConstraints = false
         objectDropDownView.topAnchor.constraint(equalTo: topAnchor, constant: -150).isActive = true
         objectDropDownView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 91).isActive = true
-
     }
-
+    
+    /// Set the detection minium confidence level
     func setupConfidence() {
+        // Setting plus
         let plusImageView = UIView();
         plusImageView.frame.size = CGSize(width: 30, height: 30);
         plusImageView.frame.origin = CGPoint(x: width - 40, y: adapted(dimensionSize: 120, to: .height));
@@ -248,7 +256,8 @@ class ObjectTrackingSettings: UIView {
         plusImage.translatesAutoresizingMaskIntoConstraints = false
         plusImage.leadingAnchor.constraint(equalTo: plusImageView.leadingAnchor, constant: 5.5).isActive = true
         plusImage.topAnchor.constraint(equalTo: plusImageView.topAnchor, constant: 10).isActive = true
-        //setting minus
+        
+        // Setting minus
         let minusImageView = UIView()
         minusImageView.frame.size = CGSize(width: 30, height: 30);
         minusImageView.frame.origin = CGPoint(x: width - 100, y: adapted(dimensionSize: 120, to: .height))
@@ -263,7 +272,8 @@ class ObjectTrackingSettings: UIView {
         minusImage.translatesAutoresizingMaskIntoConstraints = false
         minusImage.leadingAnchor.constraint(equalTo: minusImageView.leadingAnchor, constant: 5.5).isActive = true
         minusImage.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 10).isActive = true
-        //thread Label
+        
+        // Thread Label
         confidenceLabel.frame.size = CGSize(width: 10, height: 40);
         addSubview(confidenceLabel);
         confidenceLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -273,9 +283,10 @@ class ObjectTrackingSettings: UIView {
         confidenceLabel.leadingAnchor.constraint(equalTo: minusImageView.trailingAnchor, constant: 0).isActive = true
         confidenceLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 8).isActive = true
     }
-
+    
+    /// Set the number of threads
     func setupThreads() {
-        //setting plus
+        // Setting plus
         let plusImageView = UIView();
         plusImageView.frame.size = CGSize(width: 30, height: 30);
         plusImageView.frame.origin = CGPoint(x: width - 40, y: adapted(dimensionSize: 150, to: .height));
@@ -290,7 +301,8 @@ class ObjectTrackingSettings: UIView {
         plusImage.translatesAutoresizingMaskIntoConstraints = false
         plusImage.leadingAnchor.constraint(equalTo: plusImageView.leadingAnchor, constant: 5.5).isActive = true
         plusImage.topAnchor.constraint(equalTo: plusImageView.topAnchor, constant: 10).isActive = true
-        //setting minus
+        
+        // Setting minus
         let minusImageView = UIView()
         minusImageView.frame.size = CGSize(width: 30, height: 30);
         minusImageView.frame.origin = CGPoint(x: width - 100, y: adapted(dimensionSize: 150, to: .height))
@@ -305,7 +317,8 @@ class ObjectTrackingSettings: UIView {
         minusImage.translatesAutoresizingMaskIntoConstraints = false
         minusImage.leadingAnchor.constraint(equalTo: minusImageView.leadingAnchor, constant: 5.5).isActive = true
         minusImage.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 10).isActive = true
-        //thread Label
+        
+        // Thread Label
         threadLabel.frame.size = CGSize(width: 10, height: 40);
         addSubview(threadLabel);
         threadLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -315,7 +328,7 @@ class ObjectTrackingSettings: UIView {
         threadLabel.leadingAnchor.constraint(equalTo: minusImageView.trailingAnchor, constant: 8).isActive = true
         threadLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 8).isActive = true
     }
-
+    
     @objc func increaseConfidence(_ sender: UIImage) {
         if confidenceLabel.text == "100%" {
             return
@@ -325,7 +338,7 @@ class ObjectTrackingSettings: UIView {
         confidenceLabel.text = String(value!) + "%"
         NotificationCenter.default.post(name: .updateConfidence, object: value)
     }
-
+    
     @objc func decreaseConfidence(_ sender: UIImage) {
         if confidenceLabel.text == "0%" {
             return
@@ -335,7 +348,7 @@ class ObjectTrackingSettings: UIView {
         confidenceLabel.text = String(value!) + "%"
         NotificationCenter.default.post(name: .updateConfidence, object: value)
     }
-
+    
     @objc func increaseThreads(_ sender: UIImage) {
         if threadLabel.text == "9" || threadLabel.text == "N/A" {
             return
@@ -345,7 +358,7 @@ class ObjectTrackingSettings: UIView {
         threadLabel.text = String(value!)
         NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
     }
-
+    
     @objc func decreaseThreads(_ sender: UIImage) {
         if threadLabel.text == "1" || threadLabel.text == "N/A" {
             return
@@ -355,17 +368,7 @@ class ObjectTrackingSettings: UIView {
         threadLabel.text = String(value!)
         NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
     }
-
-    @objc func updateDevice(_ notification: Notification) {
-        let selectedDevice = notification.object as! String
-        deviceDropDownLabel.text = selectedDevice
-    }
-
-    @objc func updateThreadLabel(_ notification: Notification) {
-        threadLabel.text = (notification.object as! String)
-
-    }
-
+    
     func setupVehicleControls() {
         let vehicleControls = VehicleControl();
         addSubview(vehicleControls)
@@ -373,8 +376,8 @@ class ObjectTrackingSettings: UIView {
         vehicleControls.topAnchor.constraint(equalTo: threadLabel.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 20, to: .height)).isActive = true;
         vehicleControls.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 7).isActive = true
     }
-
-
+    
+    /// UI function
     func createDeviceDropDown() {
         deviceDropDown.backgroundColor = Colors.freeRoamButtonsColor
         deviceDropDown.textColor = Colors.bdColor ?? .black
@@ -410,16 +413,8 @@ class ObjectTrackingSettings: UIView {
         deviceDropDownLabel.frame = CGRect(x: 10, y: 0, width: 60, height: 40)
         dd.addSubview(deviceDropDownLabel)
     }
-
-    @objc func showDeviceDropdown(_ sender: UIButton) {
-        deviceDropDown.show()
-    }
-
-    @objc func showObjectDropdown(_ sender: UIButton) {
-        objectDropDown.show()
-    }
-
-
+    
+    /// UI function
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.objectTrackingMode);
         modelDropDown.backgroundColor = Colors.freeRoamButtonsColor;
@@ -455,7 +450,8 @@ class ObjectTrackingSettings: UIView {
         modelDropdownLabel.frame = CGRect(x: 0, y: 0, width: 210, height: 40)
         dd.addSubview(modelDropdownLabel)
     }
-
+    
+    /// Display speed on the UI
     func createLeftSpeed() {
         leftSpeedLabel.frame.size = CGSize(width: 100, height: 40);
         leftSpeedLabel.frame.origin = CGPoint(x: 20, y: adapted(dimensionSize: 200, to: .height))
@@ -463,11 +459,34 @@ class ObjectTrackingSettings: UIView {
         addSubview(leftSpeedLabel)
         leftSpeedLabel.font = leftSpeedLabel.font.withSize(13.5)
     }
-
+    
+    /// UI callback function
     @objc func showModelDropdown(_ sender: UIButton) {
         modelDropDown.show()
     }
-
+    
+    /// UI callback function
+    @objc func showDeviceDropdown(_ sender: UIButton) {
+        deviceDropDown.show()
+    }
+    
+    /// UI callback function
+    @objc func showObjectDropdown(_ sender: UIButton) {
+        objectDropDown.show()
+    }
+    
+    /// Callback function to update device (CPU, GPU, ...)
+    @objc func updateDevice(_ notification: Notification) {
+        let selectedDevice = notification.object as! String
+        deviceDropDownLabel.text = selectedDevice
+    }
+    
+    /// Callback function to update the number of threads
+    @objc func updateThreadLabel(_ notification: Notification) {
+        threadLabel.text = (notification.object as! String)
+    }
+    
+    /// Callback function to update the detector
     @objc func updateModel(_ notification: Notification) {
         let selectedModel = notification.object as! String
         modelDropdownLabel.text = selectedModel
@@ -475,12 +494,14 @@ class ObjectTrackingSettings: UIView {
         self.selectedModel = model
         imageInputLabel.text = model.inputSize
     }
-
+    
+    /// Callback function to update the UI
     @objc func updateObject(_ notification: Notification) {
         let selectedObject = notification.object as! String
         objectDropDownLabel.text = selectedObject
     }
-
+    
+    /// Callback function to update the BLE connection status
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
             bluetoothIcon.image = Images.bluetoothConnected
@@ -488,19 +509,20 @@ class ObjectTrackingSettings: UIView {
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
     }
-
+    
+    /// Callback function to update the speed label
     @objc func updateSpeedLabel(_ notification: Notification) {
         leftSpeedLabel.text = notification.object as? String
     }
-
+    
+    /// Callback function to switch network on or off
     @objc func toggleNetwork(_ notification: Notification) {
         autoModeButton.isOn = !autoModeButton.isOn
         NotificationCenter.default.post(name: .autoModeObjectTracking, object: nil)
     }
-
+    
+    /// Callback function to update the speed label
     @objc func updateSpeed(_ notification: Notification) {
         speedLabel.text = String(notification.object as! Double);
     }
-
-
 }

@@ -7,8 +7,7 @@ import UIKit
 
 class DeviceCurrentOrientation {
     static let shared: DeviceCurrentOrientation = DeviceCurrentOrientation()
-
-
+    
     func findDeviceOrientation() {
         let isPortrait = UIDevice.current.orientation.isPortrait
         let isLandscape = UIDevice.current.orientation.isLandscape

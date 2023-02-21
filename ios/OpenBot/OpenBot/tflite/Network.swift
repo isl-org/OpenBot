@@ -8,26 +8,31 @@ import Accelerate
 import CoreImage
 
 class Network {
-
-    /// Dimensions of inputs.
+    
+    // Dimensions of inputs.
     private let DIM_BATCH_SIZE: Int = 1;
     private let DIM_PIXEL_SIZE: Int = 3;
-
+    
     var imageSize: CGSize;
-
-    /// Preallocated buffers for storing image data in.
+    
+    // Preallocated buffers for storing image data in.
     var intValues: [Int];
-
-    /// Options for configuring the Interpreter.
+    
+    // Options for configuring the Interpreter.
     var tfliteOptions: Interpreter.Options = Interpreter.Options();
-
-    /// Optional GPU delegate for accleration.
+    
+    // Optional GPU delegate for accleration.
     var gpuDelegate: MetalDelegate? = nil;
-
-    /// An instance of the driver class to run model inference with Tensorflow Lite.
+    
+    // An instance of the driver class to run model inference with Tensorflow Lite.
     var tflite: Interpreter?;
-
+    
     /// Initializes a Network.
+    ///
+    /// - Parameters:
+    ///     - model: the model considered in the inference process
+    ///     - device: CPU, GPU or XNNPACK (neural engine)
+    ///     - numThreads: number of threads used tin the inference process
     init(model: Model, device: RuntimeDevice, numThreads: Int) throws {
         do {
             var delegates: [Delegate] = [];
@@ -81,23 +86,7 @@ class Network {
             intValues = [Int(imageSize.width) * Int(imageSize.height)];
         }
     }
-
-    /// Get the image size along the x axis.
-    ///
-    /// - Returns: number of pixels
-    ///
-    func getImageSizeX() -> Int {
-        Int(imageSize.width);
-    }
-
-    /// Get the image size along the y axis.
-    ///
-    /// - Returns: number of pixels
-    ///
-    func getImageSizeY() -> Int {
-        Int(imageSize.height);
-    }
-
+    
     /// Returns the RGB data representation of the given image buffer with the specified `byteCount`.
     ///
     /// - Parameters
@@ -107,17 +96,17 @@ class Network {
     /// - Returns: The RGB data representation of the image buffer or `nil` if the buffer could not be
     ///     converted.
     func rgbDataFromBuffer(
-            _ buffer: CVPixelBuffer,
-            isModelQuantized: Bool
+        _ buffer: CVPixelBuffer,
+        isModelQuantized: Bool
     ) -> Data? {
-
-        /// Lock the CVPixelBuffer to get access to its memory.
+        
+        // Lock the CVPixelBuffer to get access to its memory.
         CVPixelBufferLockBaseAddress(buffer, .readOnly)
         defer {
             CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
         }
-
-        /// Get the base address and the bytes per row of the CVPixelBuffer.
+        
+        // Get the base address and the bytes per row of the CVPixelBuffer.
         guard let sourceData = CVPixelBufferGetBaseAddress(buffer) else {
             return nil
         }
@@ -126,86 +115,98 @@ class Network {
         let sourceBytesPerRow = CVPixelBufferGetBytesPerRow(buffer)
         let destinationChannelCount = 3
         let destinationBytesPerRow = destinationChannelCount * sourceWidth
-
-        /// Allocate a vImage buffer for source RGBA data.
+        
+        // Allocate a vImage buffer for source RGBA data.
         var sourceBuffer = vImage_Buffer(data: sourceData,
-                height: vImagePixelCount(sourceHeight),
-                width: vImagePixelCount(sourceWidth),
-                rowBytes: sourceBytesPerRow)
-
+                                         height: vImagePixelCount(sourceHeight),
+                                         width: vImagePixelCount(sourceWidth),
+                                         rowBytes: sourceBytesPerRow)
+        
         guard let destinationData = malloc(sourceHeight * destinationBytesPerRow) else {
             return nil
         }
         defer {
             free(destinationData)
         }
-
+        
         var destinationBuffer = vImage_Buffer(data: destinationData,
-                height: vImagePixelCount(sourceHeight),
-                width: vImagePixelCount(sourceWidth),
-                rowBytes: destinationBytesPerRow)
-
-        /// Remove the A channel
+                                              height: vImagePixelCount(sourceHeight),
+                                              width: vImagePixelCount(sourceWidth),
+                                              rowBytes: destinationBytesPerRow)
+        
+        // Remove the A channel
         if (CVPixelBufferGetPixelFormatType(buffer) == kCVPixelFormatType_32BGRA) {
             vImageConvert_BGRA8888toRGB888(&sourceBuffer, &destinationBuffer, UInt32(kvImageNoFlags))
         } else if (CVPixelBufferGetPixelFormatType(buffer) == kCVPixelFormatType_32ARGB) {
             vImageConvert_ARGB8888toRGB888(&sourceBuffer, &destinationBuffer, UInt32(kvImageNoFlags))
         }
-
-        /// Store the transformed image buffer in a Data() container
+        
+        // Store the transformed image buffer in a Data() container
         let byteData = Data(bytes: destinationBuffer.data, count: destinationBuffer.rowBytes * sourceHeight)
-
+        
         if isModelQuantized {
             return byteData
         } else {
-            /// Set up the destination buffer for the float values
+            // Set up the destination buffer for the float values
             var floatBuffer = [Float](repeating: 0.0, count: byteData.count)
-
-            /// Convert the image buffer to float values
+            
+            // Convert the image buffer to float values
             let stride = vDSP_Stride(1)
             vDSP_vfltu8(destinationBuffer.data, stride, &floatBuffer, stride, vDSP_Length(byteData.count))
-
-            /// Remove the mean and apply normalization factor
+            
+            // Remove the mean and apply normalization factor
             let length = vDSP_Length(floatBuffer.count)
             var normalizationFactor: Float = 1.0 / getImageStd()
             vDSP_vsbsm(floatBuffer, stride, [Float](repeating: getImageMean(), count: byteData.count), stride, &normalizationFactor, &floatBuffer, stride, length)
-
-            /// Create a Data object from the float buffer
+            
+            // Create a Data object from the float buffer
             return Data(bytes: floatBuffer, count: byteData.count * MemoryLayout<Float>.size)
         }
-
+        
     }
-
+    
+    /// Get the image size along the x axis.
+    ///
+    /// - Returns: number of pixels
+    ///
+    func getImageSizeX() -> Int {
+        Int(imageSize.width);
+    }
+    
+    /// Get the image size along the y axis.
+    ///
+    /// - Returns: number of pixels
+    ///
+    func getImageSizeY() -> Int {
+        Int(imageSize.height);
+    }
+    
+    /// Getter function
+    ///
+    /// - Returns: image normalization mean value
     func getImageMean() -> Float32 {
         0.0;
     }
-
+    
+    /// Getter function
+    ///
+    /// - Returns: image normalization std value
     func getImageStd() -> Float32 {
         255.0;
     }
-
+    
     /// Get the number of bytes that is used to store a single color channel value.
     ///
     /// - Returns: The number of bytes used to store a single color channel value.
-    ///
     func getNumBytesPerChannel() -> Int {
         return 0
     }
-
+    
     /// Get boolean that determines if aspect ratio should be preserved when rescaling.
     ///
     /// - Returns: true if aspect ratio should be preserved when rescaling.
-    ///
     func getMaintainAspect() -> Bool {
         return false
-    }
-
-    /// Get a rect that determines a percentage to be cropped from left, top, right, bottom.
-    ///
-    /// - Returns: The corresponding CGRect.
-    ///
-    func getCropRect() -> CGRect {
-        return CGRect(x: 0, y: 0, width: 0, height: 0);
     }
 }
 

@@ -55,7 +55,6 @@ class popupWindowView: UIView {
         createButton(label: Strings.done, leadingAnchor: width / 2 - 50, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 200, action: #selector(onDoneBtnTap(_:)));
     }
 
-
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -226,7 +225,6 @@ class popupWindowView: UIView {
         upwardImage.translatesAutoresizingMaskIntoConstraints = false
         upwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -10).isActive = true
         upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
-
     }
 
     func createBox(isFirst: Bool) -> UIView {
@@ -267,7 +265,6 @@ class popupWindowView: UIView {
         input.leadingAnchor.constraint(equalTo: secondBox.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
         input.topAnchor.constraint(equalTo: secondBox.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
     }
-
 
     func createButton(label: String, leadingAnchor: CGFloat, backgroundColor: UIColor, buttonWidth: CGFloat, action: Selector?) {
         let button = UIButton()
@@ -311,7 +308,6 @@ class popupWindowView: UIView {
         heightOfModel = textField.text ?? ModelItem.getHeightOfInput(model.inputSize);
     }
 
-
     @objc func onCancelBtnTap(_ sender: UIButton) {
         NotificationCenter.default.post(name: .removeBlankScreen, object: nil);
         removeFromSuperview();
@@ -350,7 +346,6 @@ class popupWindowView: UIView {
         }
     }
 
-
     func modifyModels() -> [ModelItem] {
         var allModels: [ModelItem] = [];
         let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
@@ -382,6 +377,3 @@ class popupWindowView: UIView {
         return allModels
     }
 }
-
-
-

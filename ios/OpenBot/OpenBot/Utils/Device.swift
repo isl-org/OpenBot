@@ -4,6 +4,7 @@
 
 import UIKit
 
+/// The type of devices considered in the app
 enum Device {
     case iPhoneSE
     case iPhone7
@@ -22,9 +23,10 @@ enum Device {
     static let baseScreenSize: Device = .iPhoneSE
 }
 
+/// Device identification
 extension Device: RawRepresentable {
     typealias RawValue = CGSize
-
+    
     init?(rawValue: CGSize) {
         switch rawValue {
         case CGSize(width: 320, height: 568):
@@ -57,7 +59,7 @@ extension Device: RawRepresentable {
             return nil
         }
     }
-
+    
     var rawValue: CGSize {
         switch self {
         case .iPhoneSE:

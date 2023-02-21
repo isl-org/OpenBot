@@ -47,6 +47,7 @@ class RobotInfoFrame: UIViewController {
     var robotInfo: String = "";
     var lightSlider: UISlider!
     
+    /// Called after the view InfoFrame has loaded.
     override func viewDidLoad() {
         super.viewDidLoad();
         setupNavigationBarItem();
@@ -61,11 +62,13 @@ class RobotInfoFrame: UIViewController {
         updateRobotInfo();
     }
     
+    /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         updateConstraints();
     }
     
+    /// Notifies the view controller that its view is about to be added to a view hierarchy.
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getRobotInfo();
@@ -127,7 +130,6 @@ class RobotInfoFrame: UIViewController {
     func createSensorHeading() {
         sensorHeading = createHeadings(text: "Sensors");
     }
-    
     
     func createLogoIcon() -> UIImageView {
         let icon = UIImageView();
@@ -238,7 +240,6 @@ class RobotInfoFrame: UIViewController {
         return label;
     }
     
-    
     func createCheckbox(leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> Checkbox {
         let checkbox = Checkbox(frame: CGRect(x: leadingAnchor, y: topAnchor, width: 25, height: 25));
         checkbox.checkedBorderColor = Colors.bdColor;
@@ -250,7 +251,6 @@ class RobotInfoFrame: UIViewController {
         checkbox.addTarget(self, action: action!, for: .valueChanged)
         return checkbox
     }
-    
     
     func createButton(width: Double, height: Double, title: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector) -> UIButton {
         let button = UIButton();
@@ -365,7 +365,6 @@ class RobotInfoFrame: UIViewController {
             //            bluetoothIcon.image = UIImage(named: "bluetoothConnected");
             bluetooth.sendData(payload: "f\n");
             robotInfo = bluetooth.robotInfo;
-            
         } else {
             //            bluetoothIcon.image = UIImage(named: "bluetoothDisconnected");
         }
@@ -393,8 +392,6 @@ class RobotInfoFrame: UIViewController {
     
     func updateLogo(robotName: String) {
         var asset: NSDataAsset? = nil
-        //        let data = asset?.data
-        //        icon.image = UIImage.gifImageWithData(data!)
         
         switch robotName {
         case "N/A":
@@ -423,7 +420,6 @@ class RobotInfoFrame: UIViewController {
             openBotIcon.image = UIImage.gifImageWithData(data)
         }
     }
-    
     
     func getRobotName() -> String {
         let firstIndex = robotInfo.index(after: robotInfo.firstIndex(of: "f")!);
@@ -498,12 +494,9 @@ class RobotInfoFrame: UIViewController {
         lightSlider.isHidden = isHidden;
     }
     
-    @objc func updateSonarCheckBox(_ sender: UIButton) {
-        
-    }
+    @objc func updateSonarCheckBox(_ sender: UIButton) {}
     
-    @objc func updateBumperCheckBox(_ sender: UIButton) {
-    }
+    @objc func updateBumperCheckBox(_ sender: UIButton) {}
     
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {

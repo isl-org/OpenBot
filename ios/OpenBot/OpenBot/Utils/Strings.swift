@@ -69,7 +69,6 @@ struct Strings {
     static let videoStreaming: String = "Video Streaming"
     static let bluetooth: String = "Bluetooth"
     
-    
     // Notifications
     static let controllerConnected: String = "connectedWithControllerSuccessfully";
     static let clickSetting: String = "clickSetting"
@@ -84,7 +83,6 @@ struct Strings {
     static let updatePreview: String = "updatePreview"
     static let updateTraining: String = "updateTraining"
     static let updateSensorsForLog: String = "updateSensorsForLog"
-    
     
     // Screen Identifiers
     static let ScreenFreeRoam: String = "freeRoam";

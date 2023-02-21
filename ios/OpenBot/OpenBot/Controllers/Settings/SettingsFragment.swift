@@ -18,7 +18,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
     var switchButtonTrailingAnchor = width - 80;
     let locationManager = CLLocationManager()
 
-
+    /// Called after the view fragment has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
         createScrollView()
@@ -36,6 +36,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         updateSwitchPosition()
     }
 
+    /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         setupSwitchPositions()
@@ -43,6 +44,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         updateSwitchPosition()
     }
 
+    /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         toggleSwitchButtons()

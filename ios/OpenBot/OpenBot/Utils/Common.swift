@@ -4,12 +4,32 @@
 
 import Foundation
 
+/// The Common class contains a set of useful routines to load neural networks into the code
 class Common {
     
-    /**
-     - Returns:
-     All modelItems
-     */
+    /// Try to load the different policy models described in the "config.json" parameter file
+    ///
+    /// - Returns: list of ModelItem objects built from the JSON parameter file
+    static func loadAllModelItems() -> [ModelItem] {
+        let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
+        var isFoundConfigFile: Bool = false;
+        for url in documentDirectoryURls {
+            if url.absoluteString.contains("config.json") {
+                isFoundConfigFile = true
+                break;
+            }
+        }
+        switch isFoundConfigFile {
+        case true:
+            return loadAllModelFromDocumentDirectory()
+        case false:
+            return loadAllModelItemsFromBundle()
+        }
+    }
+    
+    /// Parse the config.json parameter file
+    ///
+    /// - Returns: list of ModelItem objects built from the JSON parameter file
     static func loadAllModelItemsFromBundle() -> [ModelItem] {
         if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
             do {
@@ -24,14 +44,9 @@ class Common {
         return [];
     }
     
-    static func loadAllModelItems() -> [ModelItem] {
-        // let models = loadAllModelFromDocumentDirectory()
-        // if models.count > 0 {
-        //     return models
-        // }
-        return loadAllModelItemsFromBundle()
-    }
-    
+    /// Parse the config.json parameter file provided in the document directory
+    ///
+    /// - Returns: list of ModelItem objects built from the JSON parameter file
     static func loadAllModelFromDocumentDirectory() -> [ModelItem] {
         let fileName = "config.json"
         var filePath = ""
@@ -53,12 +68,10 @@ class Common {
         return []
     }
     
-    
-    /**
-     Takes modes as argument
-     - Returns:
-     array of all models of that type which are downloaded
-     */
+    /// Load the modelItems of a specific mode.
+    ///
+    /// - Parameters: mode (e.g. "AUTOPILOT" or "DETECTOR")
+    /// - Returns: array of all models of that type which are downloaded
     static func loadSelectedModels(mode: String) -> [String] {
         var selectedModels: [String] = []
         let allModels = loadAllModelItems()
@@ -84,12 +97,14 @@ class Common {
                 if isModelItemAvailableInDocument(modelName: String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!))) {
                     selectedModels.append(String(model.name.prefix(upTo: model.name.firstIndex(of: ".")!)))
                 }
-                
             }
         }
         return selectedModels
     }
     
+    /// Load the names of the different models
+    ///
+    /// - Returns: list of names of the loaded models
     static func loadAllModelsName() -> [String] {
         var models: [String] = []
         let allModels = loadAllModelItems()
@@ -101,34 +116,30 @@ class Common {
                 } else {
                     models.append(String(model.name.prefix(upTo: index!)))
                 }
-                
             }
         }
         return models
     }
     
+    /// Get a modelItem from its name
+    ///
+    /// - Parameters: name of the model
+    /// - Returns: the loaded modelItem
     static func returnModelItem(modelName: String) -> ModelItem {
         let allModels = loadAllModelItems()
         for item in allModels {
-            if item.name != nil {
-                
-                if item.name.contains(modelName) {
-                    return item;
-                }
-                
+            if item.name.contains(modelName) {
+                return item;
             }
         }
         let model: ModelItem = ModelItem.init(id: allModels.count + 1, class: allModels[0].class, type: allModels[0].type, name: modelName, pathType: allModels[allModels.count - 1].pathType, path: "", inputSize: allModels[0].inputSize)
         return model;
     }
     
-    /**
-     
-     - Parameter mode:
-     - Returns:
-     List of all model of type mode which are defined in config.json
-     */
-    
+    /// Get all the names of all the modelItems associated to a specific mode
+    ///
+    /// - Parameters: mode (e.g. "AUTOPILOT" or "DETECTOR")
+    /// - Returns: List the names of all the models of a given mode
     static func returnAllModelItemsName(mode: String) -> [String] {
         var selectedModels: [String] = []
         let allModels = loadAllModelItems()
@@ -140,42 +151,50 @@ class Common {
         return selectedModels
     }
     
+    /// Informs whether the desired modelItem associated to a given bundle
+    ///
+    /// - Parameters: name of the model
+    /// - Returns: true if the corresponding modelItem is available
     static func isModelItemAvailableInBundle(modelName: String) -> Bool {
         let allModels = loadAllModelItemsFromBundle()
         for model in allModels {
             let split = model.path.split(separator: "/");
             let index = split.count - 1;
             let fileName = String(split[index]);
-            if model.name.prefix(upTo: model.name.index(of: ".")!) == modelName {
+            if model.name.prefix(upTo: model.name.firstIndex(of: ".")!) == modelName {
                 let bundle = Bundle.main
                 let path = bundle.path(forResource: fileName, ofType: "")
                 if path != nil {
                     return true;
                 }
             }
-            
-            
         }
         return false
     }
     
+    /// Informs whether the desired modelItem associated to a given document
+    ///
+    /// - Parameters: name of the model
+    /// - Returns: true if the corresponding modelItem is available
     static func isModelItemAvailableInDocument(modelName: String) -> Bool {
-        
         for url in DataLogger.shared.getDocumentDirectoryInformation() {
             let model = returnModelItem(modelName: modelName)
             if url.lastPathComponent == model.name {
                 return true
             }
         }
-        
         return false
     }
     
+    /// Get the name of the file pointed by a given url
+    ///
+    /// - Parameters: url
+    /// - Returns: name of the file pointed by the url
     static func returnNameOfFile(url: URL) -> String {
         let filepath = url.absoluteString
         let index = filepath.lastIndex(of: "/")
         if let index {
-            return filepath.substring(from: index)
+            return String(filepath[index...])
         }
         return "unnamed"
     }

@@ -1,8 +1,5 @@
 //
-//  GameViewController.swift
-//  OpenBot
-//
-//  Created by Sparsh Jain on 20/08/22.
+// Created by Sparsh Jain on 20/08/22.
 //
 
 import UIKit
@@ -42,10 +39,12 @@ class GameViewController: UIViewController {
     
     var restrictRotation: UIInterfaceOrientationMask = .portrait
     
+    /// Notifies the view controller that its view is about to be added to a view hierarchy.
     override func viewWillAppear(_ animated: Bool) {
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.portrait, andRotateTo: UIInterfaceOrientation.portrait)
     }
     
+    /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
         dateFormatter.dateFormat = "HH:mm:ss.SSSS"
@@ -54,6 +53,7 @@ class GameViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didConnectController), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
     }
     
+    /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         didConnectController();
@@ -64,6 +64,7 @@ class GameViewController: UIViewController {
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.all)
     }
     
+    /// Called after the view was dismissed, covered or otherwise hidden.
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()

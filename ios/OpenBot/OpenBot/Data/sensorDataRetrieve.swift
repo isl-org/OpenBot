@@ -7,6 +7,7 @@ import CoreMotion
 import CoreLocation
 import CoreLocationUI
 
+/// This class provices an interface to the IMU and GPS data 
 class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     static let shared: sensorDataRetrieve = sensorDataRetrieve()
     var accelerationX: Double = 0
@@ -28,16 +29,17 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     var sensorData: String = ""
     var location: CLLocation!
     
+    /// Initialization routine
     override init() {
         super.init()
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = updateInterval
         motionManager.startGyroUpdates()
         motionManager.gyroUpdateInterval = updateInterval
-        sampleSensors()
+        sampleIMU()
         motionManager.startMagnetometerUpdates()
         motionManager.magnetometerUpdateInterval = updateInterval
-        sampleLocation()
+        sampleGPS()
     }
     
     required init?(coder: NSCoder) {
@@ -45,44 +47,22 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func sampleLocation() {
+    // Sample GPS sensor
+    func sampleGPS() {
         locationManager.requestAlwaysAuthorization()
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.startMonitoringSignificantLocationChanges()
+        DispatchQueue.global().async {
+              if CLLocationManager.locationServicesEnabled() {
+                  self.locationManager.delegate = self
+                  self.locationManager.startMonitoringSignificantLocationChanges()
+              }
         }
     }
     
-    func sampleSensors() {
-        sampleAccelerometer()
-        sampleGyroscope()
-        sampleMagnetometer()
-    }
-    
-    func sampleAccelerometer() {
-        if let data = motionManager.accelerometerData {
-            accelerationX = data.acceleration.x * 9.81 // in m/s^2
-            accelerationY = data.acceleration.y * 9.81 // in m/s^2
-            accelerationZ = data.acceleration.z * 9.81 // in m/s^2
-        }
-    }
-    
-    func sampleGyroscope() {
-        if let data = motionManager.gyroData {
-            angularRateX = data.rotationRate.x // in rad/s
-            angularRateY = data.rotationRate.y // in rad/s
-            angularRateZ = data.rotationRate.z // in rad/s
-        }
-    }
-    
-    func sampleMagnetometer() {
-        if let data = motionManager.magnetometerData {
-            magneticFieldX = data.magneticField.x // in microteslas
-            magneticFieldY = data.magneticField.y // in microteslas
-            magneticFieldZ = data.magneticField.z // in microteslas
-        }
-    }
-    
+    /// Sample the GPS
+    ///
+    /// - Parameters:
+    ///     - manager:
+    ///     - didUpdateLocations:
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.first else {
             return
@@ -94,6 +74,46 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
             if let location = currentLocPlacemark.location {
                 self.location = location
             }
+        }
+    }
+    
+    // Sample the IMU sensor
+    func sampleIMU() {
+        sampleAccelerometer()
+        sampleGyroscope()
+        sampleMagnetometer()
+    }
+    
+    /// Sample the acceleration sensor
+    ///
+    /// - Returns: a 3D xyz acceleration vector in m/s^2 expressed in the sensor frame
+    func sampleAccelerometer() {
+        if let data = motionManager.accelerometerData {
+            accelerationX = data.acceleration.x * 9.81 // in m/s^2
+            accelerationY = data.acceleration.y * 9.81 // in m/s^2
+            accelerationZ = data.acceleration.z * 9.81 // in m/s^2
+        }
+    }
+    
+    /// Sample the gyroscope sensor
+    ///
+    /// - Returns: a 3D xyz angular rate vector in rad/s expressed in the sensor frame
+    func sampleGyroscope() {
+        if let data = motionManager.gyroData {
+            angularRateX = data.rotationRate.x // in rad/s
+            angularRateY = data.rotationRate.y // in rad/s
+            angularRateZ = data.rotationRate.z // in rad/s
+        }
+    }
+    
+    /// Sample the magnetometer
+    ///
+    /// - Returns: a 3D xyz magnetic field vector in uT expressed in the sensor frame
+    func sampleMagnetometer() {
+        if let data = motionManager.magnetometerData {
+            magneticFieldX = data.magneticField.x // in microteslas
+            magneticFieldY = data.magneticField.y // in microteslas
+            magneticFieldZ = data.magneticField.z // in microteslas
         }
     }
 }

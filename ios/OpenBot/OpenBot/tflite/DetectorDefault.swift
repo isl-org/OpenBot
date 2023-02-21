@@ -28,27 +28,39 @@ class DetectorDefault: Detector {
     private var numDetectionsIdx: Int = -1;
 
     /// Initializes a DetectorDefault.
+    ///
+    /// - Parameters:
+    ///     - model: the model considered in the inference process
+    ///     - device: CPU, GPU or XNNPACK (neural engine)
+    ///     - numThreads: number of threads used tin the inference process
     override init(model: Model, device: RuntimeDevice, numThreads: Int) throws {
         try super.init(model: model, device: device, numThreads: numThreads)
     }
 
+    /// Get boolean that determines if aspect ratio should be preserved when rescaling.
+    ///
+    /// - Returns: true if aspect ratio should be preserved when rescaling.
     override func getMaintainAspect() -> Bool {
         return false;
     }
 
-    override func getCropRect() -> CGRect {
-        return CGRect(x: 0, y: 0, width: 0, height: 0);
-    }
-
+    /// Getter function
+    ///
+    /// - Returns: path of the file containing the diferent labels
     override func getLabelPath() -> String {
         return "labelmap.txt";
     }
 
+    /// Get the number of bytes that is used to store a single color channel value.
+    ///
+    /// - Returns: The number of bytes used to store a single color channel value.
     override func getNumBytesPerChannel() -> Int {
-        /// the quantized model uses a single byte only
-        return 1;
+        return 1; // the quantized model only uses a single byte
     }
 
+    /// Getter function
+    ///
+    /// - Returns: number of detections of a given class
     override func getNumDetections() -> Int {
         NUM_DETECTIONS;
     }
@@ -66,6 +78,11 @@ class DetectorDefault: Detector {
         NUM_DETECTIONS = try! tflite?.output(at: outputLocationsIdx).shape.dimensions[1] ?? 0;
     }
 
+    /// Index  allocation to browse the tflite object
+    ///
+    /// - Parameters:
+    ///     - tensor: a tensor structure from a tflite object
+    ///     - index: the index to be assigned to the tensor
     func assignIndex(tensor: Tensor?, index: Int) {
         switch (tensor?.name) {
         case "TFLite_Detection_PostProcess":
@@ -97,6 +114,7 @@ class DetectorDefault: Detector {
         }
     }
 
+    /// Copy data to the input of the neural network
     override func feedData() throws {
         do {
 
@@ -106,23 +124,19 @@ class DetectorDefault: Detector {
             let numDetectionsTensor = try tflite?.output(at: numDetectionsIdx);
 
             let outputSize = outputLocationsTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            outputLocations =
-                    UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
+            outputLocations = UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
             outputLocationsTensor?.data.copyBytes(to: outputLocations!);
 
             let outputClassesTensorSize = outputClassesTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            outputClasses =
-                    UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputClassesTensorSize)
+            outputClasses = UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputClassesTensorSize)
             outputClassesTensor?.data.copyBytes(to: outputClasses!);
 
             let outputScoresTensorSize = outputScoresTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            outputScores =
-                    UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputScoresTensorSize)
+            outputScores = UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputScoresTensorSize)
             outputScoresTensor?.data.copyBytes(to: outputScores!);
 
             let numDetectionsTensorSize = numDetectionsTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
-            numDetections =
-                    UnsafeMutableBufferPointer<Float32>.allocate(capacity: numDetectionsTensorSize)
+            numDetections = UnsafeMutableBufferPointer<Float32>.allocate(capacity: numDetectionsTensorSize)
             numDetectionsTensor?.data.copyBytes(to: numDetections!);
 
         } catch {
@@ -130,9 +144,14 @@ class DetectorDefault: Detector {
         }
     }
 
+    /// Show the best detections, after scaling them back to the input size.
+    ///
+    /// - Parameters:
+    ///     - className:
+    ///     - width:
+    ///     - height:
+    /// - Returns: an array of "Recognition" objects containing
     override func getRecognitions(className: String, width: Int, height: Int) -> [Recognition] {
-        /// Show the best detections.
-        /// after scaling them back to the input size.
         var recognitions: [Recognition] = [];
         for i in 0..<getNumDetections() {
             let xPos = CGFloat(outputLocations![(4 * i) + 1]) * CGFloat(getImageSizeX());

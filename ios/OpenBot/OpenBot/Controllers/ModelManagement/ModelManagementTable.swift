@@ -26,6 +26,7 @@ class ModelManagementTable: UITableViewController {
     var dropDown = UIView()
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
 
+    /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
         view.frame.origin.y = 250;
@@ -36,6 +37,7 @@ class ModelManagementTable: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
     }
 
+    /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateModelItemList(type: "All")
@@ -57,6 +59,7 @@ class ModelManagementTable: UITableViewController {
         50
     }
 
+    /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
@@ -79,6 +82,7 @@ class ModelManagementTable: UITableViewController {
         }
     }
 
+    /// Notifies the view controller that its view is about to be added to a view hierarchy.
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateModelItemList(type: "All")

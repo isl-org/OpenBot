@@ -6,6 +6,7 @@ import Foundation
 import CoreBluetooth
 import CoreMotion
 
+/// This class provides a BLE communication interface with the OpenBot vehicle
 class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPeripheralDelegate {
     static let shared: bluetoothDataController = bluetoothDataController()
     var centralManager: CBCentralManager?
@@ -26,17 +27,12 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         fatalError("init(coder:) has not been implemented")
     }
     
+    /// Initialization routine
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(startNotification),
-                                               name: Notification.Name("updateLabel"),
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(startNotification),
-                                               name: Notification.Name("updateSerialMonitor"),
-                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(startNotification), name: Notification.Name("updateLabel"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(startNotification), name: Notification.Name("updateSerialMonitor"), object: nil)
     }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -66,14 +62,12 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         print("connection was failed")
-        
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("disconnected from :", peripheral)
         isBluetoothConnected = false
         NotificationCenter.default.post(name: .bluetoothDisconnected, object: nil)
-        
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -125,16 +119,13 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        
         // Deal with errors (if any)
         if let error = error {
             print("Error discovering characteristics: %s", error.localizedDescription)
             return
         }
         
-        guard let characteristicData = characteristic.value,
-              let stringFromData = String(data: characteristicData, encoding: .utf8) else { return }
-        
+        guard let characteristicData = characteristic.value, let stringFromData = String(data: characteristicData, encoding: .utf8) else { return }
         let header = stringFromData.prefix(1)
         bluetoothData = stringFromData
         NotificationCenter.default.post(name: .updateSerialMonitor, object: nil)

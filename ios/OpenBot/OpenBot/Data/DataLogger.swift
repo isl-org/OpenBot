@@ -193,10 +193,9 @@ class DataLogger {
         let imagePath = URL(string: self.imagePath)
         let imageName = imagePath?.appendingPathComponent(name);
         let ima = imageName?.absoluteString
-        let image = image
         let fileManager = FileManager.default
         if let ima = ima {
-            fileManager.createFile(atPath: ima, contents: image.jpegData(compressionQuality: 1.0))
+            fileManager.createFile(atPath: ima, contents: image.jpegData(compressionQuality: 0.99))
         }
     }
     
@@ -226,7 +225,7 @@ class DataLogger {
         var fileURLs: [URL] = []
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        //        documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
+        // documentsURL = documentsURL.appendingPathComponent(Strings.forwardSlash +  Global.shared.baseDirectory)
         do {
             fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             return fileURLs
@@ -274,7 +273,6 @@ class DataLogger {
                 bumper = bumper + String(timestamp) + " " + String(bluetooth.bumperData[index...]) + Strings.newLine;
             }
         }
-        
     }
     
     func recordImageLogs(index: Int) {
@@ -310,5 +308,4 @@ class DataLogger {
     func setIndicatorLogs(indicator: String) {
         self.indicatorLog = self.indicatorLog + String(returnCurrentTimestamp()) + " " + indicator + Strings.newLine;
     }
-    
 }

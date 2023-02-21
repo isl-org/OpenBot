@@ -1,7 +1,4 @@
 //
-//  AutopilotFragment.swift
-//  OpenBot
-//
 //  Created by Sparsh Jain on 29/09/22.
 //
 
@@ -28,6 +25,7 @@ class AutopilotFragment: CameraController {
     
     var autopilotEnabled = false
     
+    /// Called after the view fragment has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -61,6 +59,7 @@ class AutopilotFragment: CameraController {
         calculateFrame()
     }
     
+    /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         calculateFrame()
@@ -129,6 +128,7 @@ class AutopilotFragment: CameraController {
         }
     }
     
+    /// Called after the view was dismissed, covered or otherwise hidden.
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if autoPilotMode {

@@ -6,10 +6,11 @@ import Foundation
 import UIKit
 
 extension UIImage {
+    
+    /// This function flips the image horizontally.
     func flipHorizontally() -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         let context = UIGraphicsGetCurrentContext()!
-
         context.translateBy(x: size.width / 2, y: size.height / 2)
         context.scaleBy(x: -1.0, y: 1.0)
         context.translateBy(x: -size.width / 2, y: -size.height / 2)
@@ -22,6 +23,7 @@ extension UIImage {
         return newImage
     }
 
+    /// This function resizes the image to a specified size with a specified scale.
     func resized(to newSize: CGSize, scale: CGFloat = 1) -> UIImage {
         let format = UIGraphicsImageRendererFormat.default()
         format.scale = scale

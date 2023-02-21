@@ -403,8 +403,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
         updateResolution()
         previewResolution.text = Strings.previewResolutionLow
-        
-        
     }
     
     @objc func applyMediumResolution(_ sender: UIView) {
@@ -412,8 +410,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
         updateResolution()
         previewResolution.text = Strings.previewResolutionMedium
-        
-        
     }
     
     @objc func applyHighResolution(_ sender: UIView) {
@@ -421,8 +417,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
         updateResolution()
         previewResolution.text = Strings.previewResolutionHigh
-        
-        
     }
     
     @objc func serverHandler(_ sender: UIView) {
