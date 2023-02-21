@@ -201,7 +201,7 @@ class DataCollectionController: CameraController {
                     let croppedImage = UIImage(ciImage: ciCroppedImage)
                     self.dataLogger.saveImages(image: croppedImage, name: imageName);
                 }
-                
+
                 // Record training image
                 if self.isTrainingSelected {
                     let imageName = String(self.count) + Strings.underscore + Strings.crop
