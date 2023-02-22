@@ -20,7 +20,7 @@ import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 import {HelpCenterText} from "../../utils/constants";
-import {auth, googleSigIn, uploadProfilePic} from "../../firebase_setup/firebase";
+import {auth, googleSigIn, googleSignOut, uploadProfilePic} from "../../firebase_setup/firebase";
 import renameIcon from "../../assets/images/icon/rename-icon.png";
 import deleteIcon from "../../assets/images/icon/delete-icon.png";
 import {colors} from "../../utils/color";
@@ -41,17 +41,17 @@ export function Header() {
     const [isProfileModal, setIsProfileModal] = useState(false)
     const [isEditProfileModal, setIsEditProfileModal] = useState(false)
     const [isLogoutModal, setIsLogoutModal] = useState(false)
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState();
 
     useEffect(() => {
         auth.onAuthStateChanged(function (currentUser) {
             setUser({
-                photoURL: currentUser.photoURL,
-                displayName: currentUser.displayName,
-                email: currentUser.email,
+                photoURL: currentUser?.photoURL,
+                displayName: currentUser?.displayName,
+                email: currentUser?.email,
             });
         })
-    }, [])
+    }, [isEditProfileModal])
 
     const openHomepage = () => {
         let path = `/`;
@@ -128,7 +128,7 @@ export function Header() {
                         localStorage.getItem("isSigIn") === "true" ?
                             <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
                                 {user?.photoURL ? <img alt="Profile Icon" src={user.photoURL}
-                                                       style={{height: 28, width: 28, borderRadius: 90}}/> :
+                                                       style={{height: 28, width: 28, borderRadius: 90,}}/> :
                                     <LoaderComponent color="white"/>
                                 }
                                 <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>
@@ -223,16 +223,18 @@ export function ProfileOptionModal(props) {
 
 export function EditProfileModal(props) {
     const {isEditProfileModal, setIsEditProfileModal, user} = props
-    const [file, setFile] = useState(user?.photoURL ? user.photoURL : Images.profileImage);
+    const [file, setFile] = useState(user?.photoURL && user.photoURL);
     const inputRef = useRef();
     const [fullName, setFullName] = useState(user?.displayName);
     const [isAlertSuccess, setIsAlertSuccess] = useState(false)
     const [isAlertError, setIsAlertError] = useState(false)
+    const [isLoader, setIsLoader] = useState(false)
     const [userDetails, setUserDetail] = useState({
         displayName: user?.displayName,
         email: user?.email,
         photoUrl: user?.photoURL
     })
+
     const {theme} = useContext(ThemeContext)
     const handleClose = () => {
         setIsEditProfileModal(false)
@@ -283,63 +285,69 @@ export function EditProfileModal(props) {
         <Modal
             open={isEditProfileModal}
             style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <Box className={styles.editProfileModal + " " + (theme === "dark" && styles.darkEditProfileModal)}>
-                <div className={styles.crossIconDiv}>
-                    {
-                        theme === "dark" ?
-                            <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
-                                 src={Images.darkCrossIcon}/> :
-                            <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
-                                 src={Images.lightCrossIcon}/>
-                    }
-                </div>
-                <div style={{backgroundImage: `url(${userDetails.photoUrl})`}} className={styles.profileImg}>
-                    <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
-                    <img onClick={() => inputRef.current.click()} alt={"edit profile icon"}
-                         className={styles.editProfileIcon} src={Images.editProfileIcon}/>
-                </div>
-                <div style={{display: "flex"}}>
-                    <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
-                                          inputTitle={"Full Name"}
-                                          value={fullName} onDataChange={handleNameChange}/>
-                    <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
-                                          inputTitle={"Date Of Birth"}/>
-                </div>
-                <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle}
-                                      inputTitle={"Email address"} value={user?.email}/>
+            {
+                isLoader ?
+                    <LoaderComponent color="blue"/> :
+                    <Box className={styles.editProfileModal + " " + (theme === "dark" && styles.darkEditProfileModal)}>
+                        <div className={styles.crossIconDiv}>
+                            {
+                                theme === "dark" ?
+                                    <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
+                                         src={Images.darkCrossIcon}/> :
+                                    <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
+                                         src={Images.lightCrossIcon}/>
+                            }
+                        </div>
+                        <div style={{backgroundImage: `url(${userDetails.photoUrl})`}} className={styles.profileImg}>
+                            <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
+                            <img onClick={() => inputRef.current.click()} alt={"edit profile icon"}
+                                 className={styles.editProfileIcon} src={Images.editProfileIcon}/>
+                        </div>
+                        <div style={{display: "flex"}}>
+                            <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
+                                                  inputTitle={"Full Name"}
+                                                  value={fullName} onDataChange={handleNameChange}/>
+                            <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
+                                                  inputTitle={"Date Of Birth"}/>
+                        </div>
+                        <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle}
+                                              inputTitle={"Email address"} value={user?.email}/>
 
-                <div style={{display: "flex"}}>
-                    <BlueButton onClick={async () => {
-                        await uploadProfilePic(file, file.name).then((photoURL) => {
-                            auth.currentUser.updateProfile({
-                                displayName: userDetails.displayName,
-                                photoURL: photoURL
-                            }).then(() => {
-                                setIsAlertSuccess(true)
-                                setTimeout(
-                                    function () {
-                                        handleClose()
-                                        setIsAlertSuccess(false)
-                                    }.bind(this), 3000);
-                            }).catch((error) => {
-                                console.log(error)
-                                setIsAlertError(true)
-                            })
-                        })
-                    }} buttonType={"contained"} buttonName={"Save"}/>
-                    <BlueButton onClick={() => {
-                        handleClose()
-                    }} buttonName={"Cancel"}/>
-                </div>
-                {
-                    isAlertSuccess && <Alert message={"Profile updated successfully!"}/>
-                }
-                {
-                    isAlertError && <Alert message={"Oops! There was an error."}/>
+                        <div style={{display: "flex"}}>
+                            <BlueButton onClick={async () => {
+                                setIsLoader(true);
+                                await uploadProfilePic(file, file.name).then((photoURL) => {
+                                    auth.currentUser.updateProfile({
+                                        photoURL: photoURL,
+                                        displayName: userDetails.displayName,
+                                    }).then(() => {
+                                        setIsAlertSuccess(true)
+                                        setTimeout(
+                                            function () {
+                                                handleClose()
+                                                setIsAlertSuccess(false)
+                                            }.bind(this), 3000);
+                                    }).catch((error) => {
+                                        console.log(error)
+                                        setIsAlertError(true)
+                                    })
+                                    setIsLoader(false)
+                                })
+                            }} buttonType={"contained"} buttonName={"Save"}/>
+                            <BlueButton onClick={() => {
+                                handleClose()
+                            }} buttonName={"Cancel"}/>
+                        </div>
+                        {
+                            isAlertSuccess && <Alert message={"Profile updated successfully!"}/>
+                        }
+                        {
+                            isAlertError && <Alert message={"Oops! There was an error."}/>
 
-                }
+                        }
 
-            </Box>
+                    </Box>
+            }
         </Modal>
     )
 }
@@ -366,7 +374,12 @@ export function LogoutModal(props) {
                 <div className={styles.logoutButtonsDiv}>
                     <BlueButton onClick={handleClose} buttonName={"Cancel"}
                                 extraStyle={styles.logoutButtonsExtraStyle}/>
-                    <BlueButton buttonType={"contained"} buttonName={"Ok"} extraStyle={styles.logoutButtonsExtraStyle}/>
+                    <BlueButton onClick={() => {
+                        googleSignOut().then(() => {
+                            handleClose()
+                        })
+                    }} buttonType={"contained"} buttonName={"Ok"}
+                                extraStyle={styles.logoutButtonsExtraStyle}/>
                 </div>
             </Box>
         </Modal>

@@ -3,6 +3,8 @@ import 'firebase/compat/auth';
 import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
 import 'firebase/compat/firestore';
 import { getFirestore,  collection, addDoc, getDocs} from "firebase/firestore";
+import { getAuth, signOut } from "firebase/auth";
+
 const firebaseConfig = {
     apiKey: "AIzaSyCITlkh63TnSnJQBlzqbJwwtBDr_w3e1Pg",
     authDomain: "opencode-openbot.firebaseapp.com",
@@ -35,12 +37,18 @@ export async function uploadProfilePic(file, fileName) {
 
 export async function googleSigIn() {
     const siginIn = await auth.signInWithPopup(provider)
-        console.log("i am here")
         localStorage.setItem("isSigIn", "true")
     return siginIn
 }
 
-
+export async function googleSignOut(){
+    const auth = getAuth();
+    signOut(auth).then(() => {
+        localStorage.setItem("isSigIn", "false")
+    }).catch((error) => {
+        console.log("Sign-out error ", error)
+    });
+}
 
 const myData  = {
     firstName: "sanjeev",
