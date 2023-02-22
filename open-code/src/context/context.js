@@ -20,3 +20,4 @@ export default ({children}) => {
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }
+

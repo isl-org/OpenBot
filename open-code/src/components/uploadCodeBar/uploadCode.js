@@ -20,6 +20,8 @@ export const UploadCode = () => {
     const {theme} = useContext(ThemeContext)
     const {setCode} = useContext(StoreContext);
     const {generate, setGenerateCode} = useContext(StoreContext);
+    const {projectName} =  useContext(StoreContext);
+
 
     let primaryWorkspace = useRef();
     const generateCode = () => {
@@ -31,7 +33,7 @@ export const UploadCode = () => {
         setCode(code)
         setDrawer(true);
 
-        savingWorkspace()
+        savingWorkspace(projectName)
             .then(()=>console.log("workspace saved"))
             .catch(err=>console.log(err))
     };

@@ -3,7 +3,6 @@ import 'firebase/compat/auth';
 import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
 import 'firebase/compat/firestore';
 import { getFirestore,  collection, addDoc, getDocs} from "firebase/firestore";
-
 const firebaseConfig = {
     apiKey: "AIzaSyCITlkh63TnSnJQBlzqbJwwtBDr_w3e1Pg",
     authDomain: "opencode-openbot.firebaseapp.com",
@@ -17,7 +16,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 
+
 export const auth = firebase.auth();
+
 export const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({prompt: 'select_account'});
 provider.addScope('https://www.googleapis.com/auth/user.birthday.read')
@@ -34,14 +35,12 @@ export async function uploadProfilePic(file, fileName) {
 
 export async function googleSigIn() {
     const siginIn = await auth.signInWithPopup(provider)
+        console.log("i am here")
+        localStorage.setItem("isSigIn", "true")
     return siginIn
 }
 
-if(auth){
-    localStorage.setItem("isSigIn", "true")
-}else{
-    localStorage.setItem("isSigIn", "false")
-}
+
 
 const myData  = {
     firstName: "sanjeev",

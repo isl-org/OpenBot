@@ -141,7 +141,8 @@ export function Header() {
                                         displayName: response.user.displayName,
                                         email: response.user.email
                                     });
-                                }).catch((error) => {
+                                }
+                                ).catch((error) => {
                                     console.log("sigin error = ", error)
                                 });
                             }} style={{...NavbarStyle.buttonIcon, ...NavbarStyle.iconMargin}}><span>Sign in</span>
