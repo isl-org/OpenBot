@@ -129,7 +129,6 @@ class DataLogger {
         if !FileManager.default.fileExists(atPath: path) {
             try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
         }
-        
     }
     
     func deleteFiles(fileNameToDelete: String) {

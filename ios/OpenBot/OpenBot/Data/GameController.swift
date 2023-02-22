@@ -93,7 +93,7 @@ class GameController: GCPhysicalInputProfile {
         }
     }
     
-    /// Rounding routine
+    /// Rounding routine to avoid jamming the BLE connection
     ///
     /// - Parameters: Input value
     /// - Returns: Rounded value
