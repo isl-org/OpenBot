@@ -4,11 +4,12 @@
 
 import Foundation
 import Accelerate
+import CoreImage
 
 extension CVPixelBuffer {
     
     /// Resizes a pixel buffer to a specific size. Finds the biggest square in the pixel buffer and advances rows based on it.
-    /// 
+    ///
     /// - Parameter size: The size to resize the pixel buffer to.
     /// - Returns: A resized pixel buffer or nil if the resize operation failed.
     func resized(to size: CGSize) -> CVPixelBuffer? {
@@ -74,5 +75,26 @@ extension CVPixelBuffer {
             return nil
         }
         return scaledPixelBuffer
+    }
+    
+    /// Resizes a pixel buffer to a specific size. Finds the biggest square in the pixel buffer and advances rows based on it.
+    ///
+    /// - Parameter size: The size to resize the pixel buffer to.
+    /// - Returns: A resized pixel buffer or nil if the resize operation failed.
+    func resizedv2(to size: CGSize) -> CVPixelBuffer? {
+        let ciImage = CIImage(cvPixelBuffer: self)
+        let scale = size.width / CGFloat(CVPixelBufferGetWidth(self))
+        let scaledImage = ciImage.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
+        let cropRect = CGRect(origin: .zero, size: size)
+        let croppedImage = scaledImage.cropped(to: cropRect)
+        
+        var newPixelBuffer: CVPixelBuffer?
+        CVPixelBufferCreate(nil, Int(size.width), Int(size.height), CVPixelBufferGetPixelFormatType(self), nil, &newPixelBuffer)
+        if let newPixelBuffer = newPixelBuffer {
+            CIContext().render(croppedImage, to: newPixelBuffer)
+            return newPixelBuffer
+        }
+        
+        return nil
     }
 }
