@@ -158,16 +158,16 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         previewResolution = notification?.object as! Resolutions
         switch previewResolution {
         case .LOW:
-            if captureSession != nil && captureSession.canSetSessionPreset(.hd1280x720) {
-                captureSession?.sessionPreset = .hd1280x720
+            if captureSession != nil && captureSession.canSetSessionPreset(.hd1920x1080) {
+                captureSession?.sessionPreset = .hd1920x1080
             }
         case .MEDIUM:
-            if captureSession != nil && captureSession.canSetSessionPreset(.hd1280x720) {
-                captureSession?.sessionPreset = .hd1280x720
+            if captureSession != nil && captureSession.canSetSessionPreset(.hd4K3840x2160) {
+                captureSession?.sessionPreset = .hd4K3840x2160
             }
         case .HIGH:
-            if captureSession != nil && captureSession.canSetSessionPreset(.hd1280x720) {
-                captureSession?.sessionPreset = .hd1280x720
+            if captureSession != nil && captureSession.canSetSessionPreset(.hd4K3840x2160) {
+                captureSession?.sessionPreset = .hd4K3840x2160
             }
         }
     }

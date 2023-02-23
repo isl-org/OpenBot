@@ -1,5 +1,5 @@
 //
-// Created by Sparsh Jain on 18/11/22.
+// Created by Sparsh Jain and Quentin Leboutet on 18/11/22.
 //
 
 import Foundation
@@ -17,6 +17,7 @@ extension CVPixelBuffer {
         // Get the size and pixel format of the input pixel buffer.
         let imageWidth = CVPixelBufferGetWidth(self)
         let imageHeight = CVPixelBufferGetHeight(self)
+        let aspectRatio = CGFloat(imageWidth)/CGFloat(imageHeight)
         let pixelBufferType = CVPixelBufferGetPixelFormatType(self)
         
         // Check that the pixel format is supported.
@@ -37,17 +38,46 @@ extension CVPixelBuffer {
         // Create a vImage buffer from the input pixel buffer.
         var inputVImageBuffer = vImage_Buffer(data: inputBaseAddress, height: UInt(imageHeight), width: UInt(imageWidth), rowBytes: inputImageRowBytes)
         
-        // Calculate the number of bytes per row and total bytes of the scaled image.
-        let scaledImageRowBytes = Int(size.width) * imageChannels
-        guard let scaledImageBytes = malloc(Int(size.height) * scaledImageRowBytes) else {
-            return nil
-        }
+        // Get the distance between the crop mask and the input image
         
-        // Create a vImage buffer for the scaled image.
-        var scaledVImageBuffer = vImage_Buffer(data: scaledImageBytes, height: UInt(size.height), width: UInt(size.width), rowBytes: scaledImageRowBytes)
+        let scaleX = size.width / CGFloat(imageWidth)
+        let scaleY = size.height / CGFloat(imageHeight)
+        
+        var scaledVImageBuffer: vImage_Buffer
+        if (scaleY<=scaleX) { // scaling operation should bring the vertical borders of the scaled image in contact with the vertical borders of the crop mask
+            let scaledImageRowBytes = Int(size.width) * imageChannels
+            guard let scaledImageBytes = malloc(Int(size.width/aspectRatio) * scaledImageRowBytes) else {
+                return nil
+            }
+            // Create a vImage buffer for the scaled image.
+            scaledVImageBuffer = vImage_Buffer(data: scaledImageBytes, height: UInt(size.width/aspectRatio), width: UInt(size.width), rowBytes: scaledImageRowBytes)
+        } else { // scaling operation should bring the horizontal borders of the scaled image in contact with the horizontal borders of the crop mask
+            let scaledImageRowBytes = Int(size.height*aspectRatio) * imageChannels
+            guard let scaledImageBytes = malloc(Int(size.height) * scaledImageRowBytes) else {
+                return nil
+            }
+            // Create a vImage buffer for the scaled image.
+            scaledVImageBuffer = vImage_Buffer(data: scaledImageBytes, height: UInt(size.height), width: UInt(size.height*aspectRatio), rowBytes: scaledImageRowBytes)
+        }
         
         // Perform the scale operation on the input vImage buffer and store the result in the scaled vImage buffer.
         let scaleError = vImageScale_ARGB8888(&inputVImageBuffer, &scaledVImageBuffer, nil, vImage_Flags(0))
+        
+        // Get the cropping rectangle coordinates in the original buffer
+        let cropX = Int((CGFloat(scaledVImageBuffer.width) - size.width) / 2)
+        let cropY = Int((CGFloat(scaledVImageBuffer.height) - size.height) / 2)
+        
+        // Make sure the cropping rectangle is entirely within the original buffer
+        guard cropX >= 0 && cropY >= 0 && cropX + Int(size.width) <= scaledVImageBuffer.width && cropY + Int(size.height) <= scaledVImageBuffer.height else {
+            print("ERROR !!")
+            return nil
+        }
+        
+        // Initialize a new vImage_Buffer for the cropped region
+        let croppedVImageBuffer = vImage_Buffer(data: scaledVImageBuffer.data.advanced(by: cropY * scaledVImageBuffer.rowBytes + cropX * imageChannels),
+                                                height: vImagePixelCount(size.height),
+                                                width: vImagePixelCount(size.width),
+                                                rowBytes: scaledVImageBuffer.rowBytes)
         
         // Unlock the base address of the input pixel buffer.
         CVPixelBufferUnlockBaseAddress(self, CVPixelBufferLockFlags(rawValue: 0))
@@ -58,43 +88,15 @@ extension CVPixelBuffer {
         }
         
         // Create a CVPixelBuffer from the scaled vImage buffer.
-        let releaseCallBack: CVPixelBufferReleaseBytesCallback = { mutablePointer, pointer in
-            
-            if let pointer = pointer {
-                free(UnsafeMutableRawPointer(mutating: pointer))
-            }
-        }
-        var scaledPixelBuffer: CVPixelBuffer?
+        var croppedPixelBuffer: CVPixelBuffer?
         
         // Converts the scaled vImage buffer to CVPixelBuffer
-        let conversionStatus = CVPixelBufferCreateWithBytes(nil, Int(size.width), Int(size.height), pixelBufferType, scaledImageBytes, scaledImageRowBytes, releaseCallBack, nil, nil, &scaledPixelBuffer)
+        let conversionStatus = CVPixelBufferCreateWithBytes(nil, Int(size.width), Int(size.height), pixelBufferType, croppedVImageBuffer.data, croppedVImageBuffer.rowBytes, nil, nil, nil, &croppedPixelBuffer)
         
         // Check that the CVPixelBuffer creation succeeded.
         guard conversionStatus == kCVReturnSuccess else {
-            free(scaledImageBytes)
             return nil
         }
-        return scaledPixelBuffer
-    }
-    
-    /// Resizes a pixel buffer to a specific size. Finds the biggest square in the pixel buffer and advances rows based on it.
-    ///
-    /// - Parameter size: The size to resize the pixel buffer to.
-    /// - Returns: A resized pixel buffer or nil if the resize operation failed.
-    func resizedv2(to size: CGSize) -> CVPixelBuffer? {
-        let ciImage = CIImage(cvPixelBuffer: self)
-        let scale = size.width / CGFloat(CVPixelBufferGetWidth(self))
-        let scaledImage = ciImage.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
-        let cropRect = CGRect(origin: .zero, size: size)
-        let croppedImage = scaledImage.cropped(to: cropRect)
-        
-        var newPixelBuffer: CVPixelBuffer?
-        CVPixelBufferCreate(nil, Int(size.width), Int(size.height), CVPixelBufferGetPixelFormatType(self), nil, &newPixelBuffer)
-        if let newPixelBuffer = newPixelBuffer {
-            CIContext().render(croppedImage, to: newPixelBuffer)
-            return newPixelBuffer
-        }
-        
-        return nil
+        return croppedPixelBuffer
     }
 }

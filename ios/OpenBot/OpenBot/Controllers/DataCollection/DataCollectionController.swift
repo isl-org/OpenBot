@@ -193,12 +193,12 @@ class DataCollectionController: CameraController {
                     case .HIGH:
                         scaledSize = CGSize(width: CGFloat(1920.0), height: CGFloat(1080.0))
                     }
-                    guard let scaledPixelBuffer = imagePixelBuffer.resizedv2(to: scaledSize) else {
+                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize) else {
                         debugPrint("unable to resize/crop sample buffer")
                         return
                     }
                     let ciCroppedImage = CIImage(cvPixelBuffer: scaledPixelBuffer)
-                    let croppedImage = UIImage(ciImage: ciCroppedImage)
+                    let croppedImage = UIImage(ciImage: ciCroppedImage, scale: UIScreen.main.scale, orientation: UIImage.Orientation.up)
                     self.dataLogger.saveImages(image: croppedImage, name: imageName);
                 }
 
@@ -206,12 +206,12 @@ class DataCollectionController: CameraController {
                 if self.isTrainingSelected {
                     let imageName = String(self.count) + Strings.underscore + Strings.crop
                     let scaledSize = CGSize(width: CGFloat(self.widthOfTrainingImage), height: CGFloat(self.heightOfTrainingImage))
-                    guard let scaledPixelBuffer = imagePixelBuffer.resizedv2(to: scaledSize) else {
+                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize) else {
                         debugPrint("unable to resize/crop sample buffer")
                         return
                     }
                     let ciCroppedImage = CIImage(cvPixelBuffer: scaledPixelBuffer)
-                    let croppedImage = UIImage(ciImage: ciCroppedImage)
+                    let croppedImage = UIImage(ciImage: ciCroppedImage, scale: UIScreen.main.scale, orientation: UIImage.Orientation.up)
                     self.dataLogger.saveImages(image: croppedImage, name: imageName);
                 }
                 self.count += 1

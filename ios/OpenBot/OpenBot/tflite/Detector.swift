@@ -70,11 +70,11 @@ class Detector: Network {
             self.classId = classId;
         }
 
-        ///
+        /// Compare two Recognition objects in terms of detection confidence
         ///
         /// - Parameters:
-        ///     - lhs:
-        ///     - rhs:
+        ///     - lhs: first Recognition object
+        ///     - rhs: second Recognition object
         static func >(lhs: Recognition, rhs: Recognition) -> Bool {
             lhs.confidence > rhs.confidence
         }
