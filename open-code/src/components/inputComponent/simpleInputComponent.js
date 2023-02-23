@@ -23,6 +23,7 @@ export default function SimpleInputComponent(props) {
                 inputType === "text" ?
                     <div className={styles.inputBorder + " " + extraMargin}>
                         <input type={"text"}
+                               placeholder={"untitled"}
                                className={styles.inputSection}
                                value={name} onChange={handleChange}
                                style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}

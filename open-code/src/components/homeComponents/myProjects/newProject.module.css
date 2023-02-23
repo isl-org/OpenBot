@@ -29,7 +29,6 @@
     width: 19%;
     align-items: center;
     cursor: pointer;
-    margin-right: 42px;
 }
 
 .Button {
@@ -224,7 +223,7 @@
     height: 75px;
 }
 
-.inputBoxMargin{
+.inputBoxMargin {
     margin-top: 30px;
 }
 
@@ -234,7 +233,7 @@
     align-items: center;
 }
 
-.Card{
+.Card {
     width: 260px;
     height: 162px;
     background-color: transparent;
@@ -243,37 +242,37 @@
     margin-right: 42px;
 }
 
-.lightBoxShadow{
+.lightBoxShadow {
     box-shadow: rgb(0 0 0 / 13%) 0px 2px 7px;
 }
 
-.darkBoxShadow{
+.darkBoxShadow {
     box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
 }
 
-.CardHeadingIcon{
+.CardHeadingIcon {
     display: flex;
     margin-left: 31px;
     margin-top: 33px;
     align-items: center;
 }
 
-.CardHeading{
-    font-family: Gilroy-SemiBold,sans-serif;
+.CardHeading {
+    font-family: Gilroy-SemiBold, sans-serif;
     font-weight: 600;
     font-size: 25px;
 }
 
-.PencilIcon{
+.PencilIcon {
     width: 18px;
     height: 18px;
     margin-left: 14px;
 }
 
-.Date{
+.Date {
     padding-left: 31px;
     padding-top: 5px;
-    font-family: Gilroy-Regular,sans-serif;
+    font-family: Gilroy-Regular, sans-serif;
     font-weight: 400;
     font-size: 14px;
     line-height: 17px;

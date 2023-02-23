@@ -38,11 +38,12 @@ export const NewProject = () => {
                 Projects
             </div>
             <div className={styles.ButtonsMessage}>
-                <NewProjectButton/>
+                <NewProjectButton isProject={allProject.length}  />
                 {allProject.length > 0 ? allProject?.map((project,value) => (
                         <Card key={value}
                               projectTitle={project.id}
                               projectDate={project.Date}
+                              openProject={project.xmlText}
                         />
                     )) :
                     <div className={styles.MessageIcon}>

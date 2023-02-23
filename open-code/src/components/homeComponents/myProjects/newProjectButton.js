@@ -6,8 +6,9 @@ import styles from "./newProject.module.css";
 import {ThemeContext} from "../../../App";
 import {Images} from "../../../utils/images";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
-function NewProjectButton() {
 
+function NewProjectButton(props) {
+    const {isProject} = props
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const {projectName, setProjectName} = useContext(StoreContext)
@@ -19,13 +20,15 @@ function NewProjectButton() {
         handleOpen();
     }
     const {theme} = useContext(ThemeContext)
-    function handleProjectNameChange(name){
+
+    function handleProjectNameChange(name) {
         setProjectName(name);
     }
 
     return (
         <>
             <div className={styles.Content + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}
+                 style={isProject > 0 ? {marginRight: "42px"} : {marginRight: 0}}
                  onClick={handleOpen}>
                 <div className={styles.Button + " " + (theme === "dark" ? styles.ButtonDark : styles.ButtonLight)}>
                     <div className={styles.AddIconImage}>
@@ -44,11 +47,14 @@ function NewProjectButton() {
                         <div>Create a New Project</div>
                         {(theme === "light" ?
                             <img alt="" src={Images.crossIcon} className={styles.CrossIcon} onClick={handleClose}/> :
-                            <img alt="" src={Images.darkCrossIcon} className={styles.CrossIcon} onClick={handleClose}/>)}
+                            <img alt="" src={Images.darkCrossIcon} className={styles.CrossIcon}
+                                 onClick={handleClose}/>)}
                     </div>
                     <div className={styles.Input}>
-                        <SimpleInputComponent inputType={"text"} extraStyle={`${styles.inputExtraStyle}`} inputTitle={"Give your project a name"}
-                                              value={projectName} extraMargin={styles.inputBoxMargin} onDataChange={handleProjectNameChange}/>
+                        <SimpleInputComponent inputType={"text"} extraStyle={`${styles.inputExtraStyle}`}
+                                              inputTitle={"Give your project a name"}
+                                              value={projectName} extraMargin={styles.inputBoxMargin}
+                                              onDataChange={handleProjectNameChange}/>
                     </div>
                     <div className={styles.SaveBtn} onClick={() => {
                         OpenNewProjectHandle();

@@ -141,7 +141,6 @@ export function Header() {
                                         displayName: response.user.displayName,
                                         email: response.user.email
                                     });
-                                    return loadingWorkspace(projectName);
                                 }).catch((error) => {
                                     console.log("sigin error = ", error)
                                 });
