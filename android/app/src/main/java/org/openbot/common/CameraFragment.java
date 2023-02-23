@@ -38,7 +38,7 @@ public abstract class CameraFragment extends ControlsFragment {
   private ExecutorService cameraExecutor;
   private PreviewView previewView;
   private Preview preview;
-  protected static int lensFacing = CameraSelector.LENS_FACING_BACK;
+  protected int lensFacing;
   private ProcessCameraProvider cameraProvider;
   private Size analyserResolution = Enums.Preview.HD.getValue();
   private YuvToRgbConverter converter;
@@ -57,7 +57,11 @@ public abstract class CameraFragment extends ControlsFragment {
   private View addCamera(View view, LayoutInflater inflater, ViewGroup container) {
     View cameraView = inflater.inflate(R.layout.fragment_camera, container, false);
     ViewGroup rootView = (ViewGroup) cameraView.getRootView();
-
+    // set lensFacing from user preferences (last used setting)
+    lensFacing =
+        preferencesManager.getCameraSwitch()
+            ? CameraSelector.LENS_FACING_FRONT
+            : CameraSelector.LENS_FACING_BACK;
     previewView = cameraView.findViewById(R.id.viewFinder);
     rootView.addView(view);
 
@@ -175,6 +179,7 @@ public abstract class CameraFragment extends ControlsFragment {
         CameraSelector.LENS_FACING_FRONT == lensFacing
             ? CameraSelector.LENS_FACING_BACK
             : CameraSelector.LENS_FACING_FRONT;
+    preferencesManager.setCameraSwitch(!preferencesManager.getCameraSwitch());
     bindCameraUseCases();
   }
 
