@@ -79,7 +79,7 @@ class DataCollectionController: CameraController {
         refreshConstraints()
     }
     
-    // 
+    ///
     func saveFolder() {
         _ = DataLogger.shared.getDirectoryInfo()
         let activityManager = UIActivityViewController(activityItems: DataLogger.shared.allDirectories, applicationActivities: nil)
@@ -215,8 +215,8 @@ class DataCollectionController: CameraController {
                     self.dataLogger.saveImages(image: croppedImage, name: imageName);
                 }
                 self.count += 1
-                let endTime = Date().millisecondsSince1970
-                print(1000 / (endTime - startTime))
+                // let endTime = Date().millisecondsSince1970
+                // print(1000 / (endTime - startTime))
                 self.isImageCaptureQueueBusy = false
             } else {
                 self.count = 0
@@ -237,7 +237,8 @@ class DataCollectionController: CameraController {
             dataLogger.createOpenBotFolders()
             
             // Sample the robot sensors at a desired rate
-            Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [self] timer in
+            var startTime = Date().millisecondsSince1970
+            Timer.scheduledTimer(withTimeInterval: expandSettingView.samplingPeriod, repeats: true) { [self] timer in
                 if !loggingEnabled {
                     timer.invalidate()
                 }
@@ -245,6 +246,9 @@ class DataCollectionController: CameraController {
                 // Sample IMU sensor data
                 sensorData.sampleIMU()
                 dataLogger.recordLogs();
+                let endTime = Date().millisecondsSince1970
+                print(1000 / (endTime - startTime))
+                startTime = Date().millisecondsSince1970
             }
         } else {
             expandSettingView.logData.isOn = false

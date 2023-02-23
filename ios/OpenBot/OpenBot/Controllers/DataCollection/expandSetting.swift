@@ -40,6 +40,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var resolution = [String]()
     var models: [Model] = [];
     var leftSpeedLabel = UILabel()
+    var samplingPeriod: Double = 0.2
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -457,8 +458,14 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         sender.layer.borderColor = (sender.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
     }
     
+    /// Called when the "Delay (ms)" field in the Data collection fragment changes.
     @objc func delayFieldDidChange(_ sender: UITextField) {
-        print(sender.text as Any)
+        if sender.text == "" {
+            samplingPeriod = 0.2
+        } else {
+            samplingPeriod = Double(sender.text!)!/1000.0
+        }
+        print("samplingPeriod: ", samplingPeriod)
     }
     
     @objc func showDropdown(_ sender: UIButton) {

@@ -197,27 +197,23 @@ class ObjectTrackingFragment: CameraController {
             let detection = item.getLocation();
             let dx = width / CGFloat(bufferWidth);
             let dy = height / CGFloat(bufferHeight);
-            let transform = CGAffineTransform.identity
-                    .scaledBy(x: dx, y: dy);
-            let revertTransform = transform.concatenating(__CGAffineTransformMake(-1.0, 0.0, 0.0, 1.0, CGFloat(width), 0.0));
-            convertedRect = detection.applying(revertTransform)
+            let transform = CGAffineTransform.identity.scaledBy(x: dx, y: dy);
+            //let revertTransform = transform.concatenating(__CGAffineTransformMake(-1.0, 0.0, 0.0, 1.0, CGFloat(width), 0.0));
+            convertedRect = detection.applying(transform)
         } else if currentOrientation != .portrait && (captureSession.inputs[0] as! AVCaptureDeviceInput).device.position == .front {
             let screenWidth = height
             let screenHeight = width
             let detection = item.getLocation();
             let dx = screenWidth / CGFloat(bufferWidth);
             let dy = screenHeight / CGFloat(bufferHeight);
-            let transform = CGAffineTransform.identity
-                    .scaledBy(x: dx, y: dy);
-            let revertTransform = transform.concatenating(__CGAffineTransformMake(-1.0, 0.0, 0.0, 1.0, height, 0.0));
-            convertedRect = detection.applying(revertTransform);
-            convertedRect.origin.y = convertedRect.origin.y - convertedRect.origin.y * 0.2 //lifting the rect up by 20%
+            let transform = CGAffineTransform.identity.scaledBy(x: dx, y: dy);
+            //let revertTransform = transform.concatenating(__CGAffineTransformMake(-1.0, 0.0, 0.0, 1.0, height, 0.0));
+            convertedRect = detection.applying(transform);
         } else if currentOrientation == .portrait && (captureSession.inputs[0] as! AVCaptureDeviceInput).device.position == .back {
             let detection = item.getLocation();
             let dx = width / CGFloat(bufferWidth);
             let dy = height / CGFloat(bufferHeight);
-            let transform = CGAffineTransform.identity
-                    .scaledBy(x: dx, y: dy);
+            let transform = CGAffineTransform.identity.scaledBy(x: dx, y: dy);
            // let revertTransform = transform.concatenating(__CGAffineTransformMake(-1.0, 0.0, 0.0, 1.0, CGFloat(width), 0.0));
             convertedRect = detection.applying(transform)
         }
@@ -227,10 +223,8 @@ class ObjectTrackingFragment: CameraController {
             let detection = item.getLocation();
             let dx = screenWidth / CGFloat(bufferWidth);
             let dy = screenHeight / CGFloat(bufferHeight);
-            let transform = CGAffineTransform.identity
-                    .scaledBy(x: dx, y: dy);
+            let transform = CGAffineTransform.identity.scaledBy(x: dx, y: dy);
             convertedRect = detection.applying(transform);
-            convertedRect.origin.y = convertedRect.origin.y - convertedRect.origin.y * 0.2 //lifting the rect up by 20%
         }
         if convertedRect.origin.x < 0 {
             convertedRect.origin.x = edgeOffset
