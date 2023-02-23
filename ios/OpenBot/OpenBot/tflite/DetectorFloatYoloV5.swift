@@ -92,12 +92,7 @@ class DetectorFloatYoloV5: Detector {
     
     /// Copy data to the input of the neural network
     override func feedData() throws {
-        
-        do {
-            _ = try! tflite?.output(at: 0).data.copyBytes(to: outData!);
-        } catch {
-            print("error:\(error)")
-        }
+        _ = try! tflite?.output(at: 0).data.copyBytes(to: outData!);
     }
     
     /// Query the output of the neural network and perform post-processing actions
@@ -157,6 +152,7 @@ class DetectorFloatYoloV5: Detector {
                 }
             }
         }
+        // Execute non-maximum suppression 
         return nms(recognitions: recognitions);
     }
 }

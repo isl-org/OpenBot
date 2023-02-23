@@ -113,7 +113,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         addSubview(bluetoothIcon)
         bluetoothIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         bluetoothIcon.leadingAnchor.constraint(equalTo: logData.trailingAnchor, constant: 20).isActive = true
-        
     }
     
     func createCameraIcon() {
@@ -177,7 +176,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     
     func createServer() {
         server = createButton(borderColor: "red", buttonName: Strings.server, leadingAnchor: 10, topAnchor: 230, action: #selector(serverHandler(_:)))
-        
     }
     
     func createSecondView() {
@@ -202,13 +200,10 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         topConstraint.identifier = Strings.expendSetting
         widthConstraint.identifier = Strings.expendSetting
         heightConstraint.identifier = Strings.expendSetting
-        NSLayoutConstraint.activate([
-            leadingConstraint, topConstraint, widthConstraint, heightConstraint
-        ])
+        NSLayoutConstraint.activate([leadingConstraint, topConstraint, widthConstraint, heightConstraint])
     }
     
     func refreshConstraints() {
-        
         if currentOrientation == .portrait {
             frame.size.width = width
             leadingConstraint.constant = 0
@@ -223,10 +218,8 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             widthConstraint.constant = height / 2
             heightConstraint.constant = width;
             dropdownTopAnchor.constant = 150;
-            
         }
     }
-    
     
     func createImagesButton() {
         preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 120, action: #selector(applyPreview(_:)), borderColor: Colors.freeRoamButtonsColor!.cgColor)
@@ -255,7 +248,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
     
     func createDelayField() {
-        
         let delayTextField = UITextField(frame: CGRect(x: 310, y: 177, width: 50, height: 40))
         delayTextField.placeholder = "200"
         delayTextField.font = UIFont.systemFont(ofSize: 15)
@@ -420,7 +412,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
     
     @objc func serverHandler(_ sender: UIView) {
-        //        print("hello server")
+        // print("hello server")
     }
     
     @objc func updateResolution() {
@@ -439,7 +431,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             medium.backgroundColor = Colors.freeRoamButtonsColor
             high.backgroundColor = Colors.title
         }
-        
     }
     
     @objc func applyPreview(_ sender: UIView) {
@@ -452,12 +443,9 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         NotificationCenter.default.post(name: .updateTraining, object: nil)
         let borderColor = (training.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
         sender.layer.borderColor = borderColor
-        
     }
     
-    func setupImageMode() {
-        
-    }
+    func setupImageMode() {}
     
     
     @objc func updateSensor(_ sender: UIButton) {
@@ -487,7 +475,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     
     @objc func ble(_ sender: UIView) {
         NotificationCenter.default.post(name: .ble, object: nil)
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -524,10 +511,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
     
     @objc func updateSpeedLabel(_ notification: Notification) {
-        leftSpeedLabel.text = notification.object as! String
+        leftSpeedLabel.text = notification.object as? String
     }
-    
 }
-
-
-

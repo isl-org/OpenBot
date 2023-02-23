@@ -339,7 +339,7 @@ class Detector: Network {
 
     ///
     @objc func updateObject(_ notification: Notification) {
-        selectedClass = notification.object as! String
+        selectedClass = notification.object as? String
     }
 
     /// Setter function

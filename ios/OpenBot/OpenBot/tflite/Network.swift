@@ -168,7 +168,6 @@ class Network {
     /// Get the image size along the x axis.
     ///
     /// - Returns: number of pixels
-    ///
     func getImageSizeX() -> Int {
         Int(imageSize.width);
     }
@@ -176,7 +175,6 @@ class Network {
     /// Get the image size along the y axis.
     ///
     /// - Returns: number of pixels
-    ///
     func getImageSizeY() -> Int {
         Int(imageSize.height);
     }

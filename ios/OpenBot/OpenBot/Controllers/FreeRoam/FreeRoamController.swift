@@ -505,7 +505,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     
     var statusBarOrientation: UIInterfaceOrientation? {
         get {
-            guard let orientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation else {
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let orientation = windowScene.interfaceOrientation as UIInterfaceOrientation? else {
 #if DEBUG
                 fatalError("Could not obtain UIInterfaceOrientation from a valid windowScene")
 #else

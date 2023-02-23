@@ -8,20 +8,20 @@ import TensorFlowLite
 /// This TensorFlow Lite detector works with the quantized MobileNet and EfficientDet model.
 class DetectorDefault: Detector {
 
-    /// outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
-    /// contains the location of detected boxes
+    // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
+    // contains the location of detected boxes
     private var outputLocations: UnsafeMutableBufferPointer<Float32>?;
-    /// outputClasses: array of shape [Batchsize, NUM_DETECTIONS]
-    /// contains the classes of detected boxes
+    // outputClasses: array of shape [Batchsize, NUM_DETECTIONS]
+    // contains the classes of detected boxes
     private var outputClasses: UnsafeMutableBufferPointer<Float32>?;
-    /// outputScores: array of shape [Batchsize, NUM_DETECTIONS]
-    /// contains the scores of detected boxes
+    // outputScores: array of shape [Batchsize, NUM_DETECTIONS]
+    // contains the scores of detected boxes
     private var outputScores: UnsafeMutableBufferPointer<Float32>?;
-    /// outputScores: array of shape [Batchsize, NUM_DETECTIONS]
-    /// contains the scores of detected boxes
+    // outputScores: array of shape [Batchsize, NUM_DETECTIONS]
+    // contains the scores of detected boxes
     private var numDetections: UnsafeMutableBufferPointer<Float32>?;
 
-    /// indices in tflite model
+    // indices in tflite model
     private var outputLocationsIdx: Int = -1;
     private var outputClassesIdx: Int = -1;
     private var outputScoresIdx: Int = -1;
@@ -125,19 +125,19 @@ class DetectorDefault: Detector {
 
             let outputSize = outputLocationsTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
             outputLocations = UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputSize)
-            outputLocationsTensor?.data.copyBytes(to: outputLocations!);
+            _ = outputLocationsTensor?.data.copyBytes(to: outputLocations!);
 
             let outputClassesTensorSize = outputClassesTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
             outputClasses = UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputClassesTensorSize)
-            outputClassesTensor?.data.copyBytes(to: outputClasses!);
+            _ = outputClassesTensor?.data.copyBytes(to: outputClasses!);
 
             let outputScoresTensorSize = outputScoresTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
             outputScores = UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputScoresTensorSize)
-            outputScoresTensor?.data.copyBytes(to: outputScores!);
+            _ = outputScoresTensor?.data.copyBytes(to: outputScores!);
 
             let numDetectionsTensorSize = numDetectionsTensor?.shape.dimensions.reduce(1, { x, y in x * y }) ?? 0
             numDetections = UnsafeMutableBufferPointer<Float32>.allocate(capacity: numDetectionsTensorSize)
-            numDetectionsTensor?.data.copyBytes(to: numDetections!);
+            _ = numDetectionsTensor?.data.copyBytes(to: numDetections!);
 
         } catch {
             print("error:\(error)")
@@ -159,15 +159,16 @@ class DetectorDefault: Detector {
             let w = CGFloat(outputLocations![(4 * i) + 3]) * CGFloat(getImageSizeX()) - xPos;
             let h = CGFloat(outputLocations![(4 * i) + 2]) * CGFloat(getImageSizeY()) - yPos;
             let detection = CGRect(x: xPos, y: yPos, width: w, height: h).applying(CGAffineTransform(scaleX: CGFloat(width) / CGFloat(getImageSizeX()), y: CGFloat(height) / CGFloat(getImageSizeY())));
-            /// SSD Mobilenet V1 Model assumes class 0 is background class
-            /// in label file and class labels start from 1 to number_of_classes+1,
-            /// while outputClasses correspond to class index from 0 to number_of_classes
+            // SSD Mobilenet V1 Model assumes class 0 is background class
+            // in label file and class labels start from 1 to number_of_classes+1,
+            // while outputClasses correspond to class index from 0 to number_of_classes
             let classId: Int = Int(outputClasses![i]);
             let labelId: Int = classId + 1;
             if (className == labels[labelId]) {
                 recognitions.append(Recognition(id: String(i), title: labels[labelId], confidence: outputScores![i], location: detection, classId: classId));
             }
         }
+        // Execute non-maximum suppression 
         return nms(recognitions: recognitions);
     }
 }

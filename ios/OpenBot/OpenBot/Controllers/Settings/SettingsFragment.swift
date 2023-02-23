@@ -17,7 +17,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
     let bluetoothSwitch = UISwitch()
     var switchButtonTrailingAnchor = width - 80;
     let locationManager = CLLocationManager()
-
+    
     /// Called after the view fragment has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +35,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         createBluetoothSwitch()
         updateSwitchPosition()
     }
-
+    
     /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -43,21 +43,22 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         updateScrollView()
         updateSwitchPosition()
     }
-
+    
     /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         toggleSwitchButtons()
-
+        
     }
-
-
+    
+    /// Creates a new scroll view with dimensions equal to the main screen size.
     func createScrollView() {
         scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height));
         scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
         view.addSubview(scrollView)
     }
-
+    
+    /// Updates the dimensions of the scroll view based on the current orientation of the device.
     func updateScrollView() {
         if currentOrientation == .portrait {
             scrollView.frame.size.width = width
@@ -67,14 +68,15 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
             scrollView.frame.size.height = width
         }
     }
-
+    
+    ///
     func createPermissionLabel() {
         let permission = createLabel(text: Strings.permission, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 10, to: .height));
         permission.font = UIFont.systemFont(ofSize: 17.0)
         scrollView.addSubview(permission);
     }
-
-
+    
+    /// Creates a new label with the given text, leading anchor, and top anchor.
     func createLabel(text: String, leadingAnchor: CGFloat, topAnchor: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = text;
@@ -83,46 +85,49 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         label.frame.origin = CGPoint(x: leadingAnchor, y: topAnchor)
         label.frame.size = resized(size: CGSize(width: text.count * 12, height: 40), basedOn: .height)
         return label;
-
+        
     }
-
+    
+    /// Creates a new switch button.
     func createSwitchButton() -> UISwitch {
         let switchButton = UISwitch()
         return switchButton;
     }
-
+    
+    /// Creates a new switch button for the camera and adds it to the scroll
     func createCameraSwitch() {
         cameraSwitch.onTintColor = Colors.title
         scrollView.addSubview(cameraSwitch)
         cameraSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 50, to: .height))
         cameraSwitch.addTarget(self, action: #selector(toggleCamera(_:)), for: .valueChanged)
-
-
     }
-
+    
+    ///
     func createLocationSwitch() {
         locationSwitch.onTintColor = Colors.title
         scrollView.addSubview(locationSwitch)
         locationSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 100, to: .height))
         locationSwitch.addTarget(self, action: #selector(toggleLocation(_:)), for: .valueChanged)
     }
-
+    
+    ///
     func createMicrophoneSwitch() {
         microphoneSwitch.onTintColor = Colors.title
         scrollView.addSubview(microphoneSwitch)
         microphoneSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 150, to: .height))
         microphoneSwitch.addTarget(self, action: #selector(toggleMicrophone(_:)), for: .valueChanged)
     }
-
+    
+    ///
     func createBluetoothSwitch() {
         bluetoothSwitch.onTintColor = Colors.title
         scrollView.addSubview(bluetoothSwitch)
         bluetoothSwitch.frame.origin = CGPoint(x: width - 80, y: adapted(dimensionSize: 200, to: .height))
         bluetoothSwitch.addTarget(self, action: #selector(toggleBluetooth(_:)), for: .valueChanged)
     }
-
+    
+    ///
     func setupSwitchPositions() {
-
         switch (currentOrientation) {
         case .unknown:
             switchButtonTrailingAnchor = width - 80;
@@ -138,30 +143,36 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
             switchButtonTrailingAnchor = width - 80;
         }
     }
-
+    
+    ///
     func updateSwitchPosition() {
         cameraSwitch.frame.origin.x = switchButtonTrailingAnchor
         locationSwitch.frame.origin.x = switchButtonTrailingAnchor
         microphoneSwitch.frame.origin.x = switchButtonTrailingAnchor
         bluetoothSwitch.frame.origin.x = switchButtonTrailingAnchor
     }
-
+    
+    /// Toggles the camera switch button.
     @objc func toggleCamera(_ sender: UISwitch) {
         checkCamera()
     }
-
+    
+    /// Toggles the location switch button.
     @objc func toggleLocation(_ sender: UISwitch) {
         checkLocation()
     }
-
+    
+    /// Toggles the location switch button.
     @objc func toggleMicrophone(_ sender: UISwitch) {
         checkMicrophone()
     }
-
+    
+    /// Toggles the Bluetooth switch button.
     @objc func toggleBluetooth(_ sender: UISwitch) {
         checkBluetooth()
     }
-
+    
+    ///
     func checkCamera() {
         let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         switch authStatus {
@@ -175,69 +186,79 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
             alertToEncourageCameraAccessInitially()
         }
     }
-
+    
+    ///
     func checkLocation() {
         createAllowAlert(alertFor: "Location")
     }
-
+    
+    ///
     func checkMicrophone() {
         createAllowAlert(alertFor: "Microphone")
     }
-
+    
+    ///
     func checkBluetooth() {
         createAllowAlert(alertFor: "Bluetooth")
     }
-
-
+    
+    ///
     func alertToEncourageCameraAccessInitially() {
         let alert = UIAlertController(
-                title: "IMPORTANT",
-                message: "Camera access required for OpenBot",
-                preferredStyle: UIAlertController.Style.alert
+            title: "IMPORTANT",
+            message: "Camera access required for OpenBot",
+            preferredStyle: UIAlertController.Style.alert
         )
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action in print(action) }))
         alert.addAction(UIAlertAction(title: "Allow Camera", style: .cancel, handler: { (alert) -> Void in
-            UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
+            guard let url = URL(string: UIApplication.openSettingsURLString), !url.absoluteString.isEmpty else {
+                return
+            }
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }))
         present(alert, animated: true, completion: nil)
-
+        
     }
-
-
+    
+    ///
     func createPromptForCameraAccess() {
-        if AVCaptureDevice.devices(for: AVMediaType.video).count > 0 {
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .unspecified)
+        if discoverySession.devices.count > 0 {
             AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
                 DispatchQueue.main.async {
-//                        self.checkCamera()
+                    // self.checkCamera()
                 }
             }
         }
     }
-
-    func createPromptLocationAccess() {
-
-    }
-
+    
+    ///
+    func createPromptLocationAccess() {}
+    
+    ///
     func createAllowAlert(alertFor: String) {
         let alert = UIAlertController(
-                title: "IMPORTANT",
-                message: "Please allow " + alertFor + " access for OpenBot",
-                preferredStyle: UIAlertController.Style.alert
+            title: "IMPORTANT",
+            message: "Please allow " + alertFor + " access for OpenBot",
+            preferredStyle: UIAlertController.Style.alert
         )
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action in self.toggleSwitchButtons() }))
         alert.addAction(UIAlertAction(title: "Allow " + alertFor, style: .cancel, handler: { (alert) -> Void in
-            UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
+            guard let url = URL(string: UIApplication.openSettingsURLString), !url.absoluteString.isEmpty else {
+                return
+            }
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }))
         present(alert, animated: true, completion: nil)
     }
-
-    func createDeniedAlert() {
-
-    }
-
+    
+    ///
+    func createDeniedAlert() {}
+    
+    ///
     func toggleSwitchButtons() {
-
-        //camera
+        
+        // Camera
         let cameraAuthStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         switch cameraAuthStatus {
         case .authorized:
@@ -249,9 +270,15 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         default:
             cameraSwitch.isOn = false
         }
-
-        //location
-        let locationAuthStatus = CLLocationManager.authorizationStatus()
+        
+        // Location
+        let locationManager = CLLocationManager()
+        var locationAuthStatus: CLAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            locationAuthStatus = locationManager.authorizationStatus
+        } else {
+            locationAuthStatus = CLLocationManager.authorizationStatus()
+        }
         switch locationAuthStatus {
         case .notDetermined:
             locationSwitch.isOn = false
@@ -266,10 +293,10 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         @unknown default:
             locationSwitch.isOn = false
         }
-
-        //microphone
+        
+        // Microphone
         switch AVAudioSession.sharedInstance().recordPermission {
-
+            
         case .granted:
             microphoneSwitch.isOn = true
         case .denied:
@@ -283,8 +310,8 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         @unknown default:
             microphoneSwitch.isOn = false
         }
-
-        //bluetooth
+        
+        // Bluetooth
         switch CBCentralManager.authorization {
         case .notDetermined:
             bluetoothSwitch.isOn = false
@@ -298,6 +325,4 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
             bluetoothSwitch.isOn = false
         }
     }
-
-
 }
