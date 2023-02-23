@@ -200,7 +200,6 @@ public abstract class CameraActivity extends AppCompatActivity
     vehicle = OpenBotApplication.vehicle;
 
     phoneController = PhoneController.getInstance(this);
-    // needs to be created befor .setFragment() to prevent npe (in .getCameraUserSelection())
     preferencesManager = new SharedPreferencesManager(this);
 
     setContentView(R.layout.activity_camera);
