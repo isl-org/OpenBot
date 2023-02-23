@@ -53,11 +53,11 @@ export async function googleSignOut(){
     });
 }
 
-const myData  = {
-    firstName: "sanjeev",
-    lastName: "yadav",
-    dob: 1998
-}
+// const myData  = {
+//     firstName: "sanjeev",
+//     lastName: "yadav",
+//     dob: 1998
+// }
 // const dbRef = collection(db, "users");
 
 // if(auth){

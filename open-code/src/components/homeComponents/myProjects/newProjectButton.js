@@ -2,12 +2,11 @@ import React, {useContext, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Modal} from "@mui/material";
 import {StoreContext} from "../../../context/context";
-import styles from "./newProject.module.css"
+import styles from "./newProject.module.css";
 import {ThemeContext} from "../../../App";
 import {Images} from "../../../utils/images";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 function NewProjectButton() {
-
 
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);

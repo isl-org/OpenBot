@@ -215,5 +215,4 @@ export const SavedProjectsStyles = {
         color: "#000000",
     },
 
-
 };

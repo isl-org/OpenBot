@@ -24,6 +24,7 @@ import renameIcon from "../../assets/images/icon/rename-icon.png";
 import deleteIcon from "../../assets/images/icon/delete-icon.png";
 import {colors} from "../../utils/color";
 import LoaderComponent from "../loader/loaderComponent";
+import {loadingWorkspace} from "../../firebase_setup/workspace";
 
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
@@ -135,13 +136,13 @@ export function Header() {
                             </div> :
                             <button onClick={() => {
                                 googleSigIn().then(response => {
-                                        setUser({
-                                            photoURL: response.user.photoURL,
-                                            displayName: response.user.displayName,
-                                            email: response.user.email
-                                        });
-                                    }
-                                ).catch((error) => {
+                                    setUser({
+                                        photoURL: response.user.photoURL,
+                                        displayName: response.user.displayName,
+                                        email: response.user.email
+                                    });
+                                    return loadingWorkspace(projectName);
+                                }).catch((error) => {
                                     console.log("sigin error = ", error)
                                 });
                             }} style={{...NavbarStyle.buttonIcon, ...NavbarStyle.iconMargin}}><span>Sign in</span>
