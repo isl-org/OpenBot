@@ -69,7 +69,7 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // needs to be created befor .inflateFragment() to prevent npe (in .addCamera())
+    // create before inflateFragment() to prevent npe when calling addCamera()
     preferencesManager = new SharedPreferencesManager(requireContext());
   }
 
