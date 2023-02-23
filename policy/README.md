@@ -22,6 +22,16 @@ We recommend to create a conda environment for OpenBot. Instructions on installi
 - **Windows**: `conda env create -f environment_win.yml`
 - **Linux**: `conda env create -f environment_linux.yml`
 
+For GPU support, make sure you also have the appropriate drivers installed. On Mac and Windows, everything should work out of the box. On Linux, you can install the drivers with the following command:
+```
+sudo apt-get install nvidia-driver-510
+```
+On Linux, you will probably also need to run the following to add cuda and cudnn to your path:
+```
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/' >> ~/.bashrc
+source ~/.bashrc
+```
+
 Done! You are ready to train your own models. If this doesn't work for you, below are instructions for setting up such an environment manually. 
 
 ### Manual environment setup
@@ -59,8 +69,10 @@ pip install tensorflow~=2.9.0
 ```
 GPU support
 ```
+sudo apt-get install nvidia-driver-510
 conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1 -y
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/' >> ~/.bashrc
+source ~/.bashrc
 ```
 [Troubleshooting](https://www.tensorflow.org/install/pip#linux)
 
