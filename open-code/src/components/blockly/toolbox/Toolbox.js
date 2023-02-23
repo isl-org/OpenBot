@@ -10,7 +10,7 @@ export const Toolbox = (props) => {
         return (
         <>
 
-            <Category name="Control"  categorystyle="control_category">
+            <Category name="Control"  colour={"#567AE4"}>
                 <Block type="controls_if" gap="8">
                     <Value name="IF0">
                         <Shadow type="logic_boolean">
@@ -35,7 +35,7 @@ export const Toolbox = (props) => {
                 </Block>
             </Category>
 
-            <Category name="Loops" categorystyle="loops_category" >
+            <Category name="Loops" colour={"#C54E30"} >
 
                 {loopBlocksType.map((type,index) => {
                     return loopBlocks(type,index)
@@ -60,7 +60,7 @@ xx
                 </Block>
             </Category>
 
-            <Category name="Operators" categorystyle="operators_category">
+            <Category name="Operators" colour={"#8156C9"}>
                 <Block type="math_arithmetic"/>,
                 <Block type="math_number"/>,
                 <Block type="math_modulo"/>,
@@ -72,7 +72,7 @@ xx
                 <Block type="math_random_int"/>,
             </Category>
 
-            <Category name="Variables" categorystyle="variables_category">
+            <Category name="Variables" colour={"#D030BA"}>
 
                 <Block type="variables_set"/>
                 <Block type="variables_get"/>
@@ -101,7 +101,7 @@ xx
                 </Block>
             </Category>
 
-            <Category name="Text" categorystyle="text_category">
+            <Category name="Text" colour={"#506481"}>
                 <Block type="text"/>
                 <Block type="text_multiline"/>
                 <Block type="text_join"/>
@@ -204,7 +204,7 @@ xx
                 </Block>
             </Category>
 
-            <Category name="List" categorystyle="list_category">
+            <Category name="List" colour={"#C26F87"}>
                 <Block type="lists_create_with"/>,
                 <Block type="lists_create_empty"/>,
                 <Block type="lists_repeat"/>,
@@ -217,13 +217,13 @@ xx
                 <Block type="lists_sort"/>
                 <Block type="lists_split"/>
             </Category>
-            <Category name="Sound" categorystyle="sound_category">
+            <Category name="Sound" colour={"#5BBC73"}>
                 <Block type="soundIs"/>,
                 <Block type="soundType"/>,
                 <Block type="soundMode">
                 </Block>,
             </Category>
-            <Category name="Sensing" categorystyle="sensing_category">
+            <Category name="Sensing" colour={"#61A8EC"}>
                 <Block type="sonarReading"/>
                 <Block type="batteryReading"/>
                 <Block type="speedReading"/>
@@ -234,19 +234,17 @@ xx
                 <Block type="backLedSensor"/>
                 <Block type="ledStatusSensor"/>
             </Category>
-            <Category name="Bumper" categorystyle="bumper_category">
+            <Category name="Bumper" colour={"#DA4B5D"}>
             </Category>
-            <Category name="Movement" categorystyle="movement_category">
+            <Category name="Movement" colour={"#9B61E2"}>
                 <Block type="movementDirection"/>,
                 <Block type="movementDistance"/>
                 <Block type="movementCircular">
                 </Block>
                 <Block type="movementStop"/>
             </Category>
-            <Category name="Detection" categorystyle="detection_category">
+            <Category name="Detection"  colour={"#717171"}>
                 <Block type='print'/>
-
-
             </Category>
         </>
     );

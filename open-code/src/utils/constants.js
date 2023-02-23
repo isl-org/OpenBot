@@ -1,28 +1,5 @@
-import User from "../assets/images/icon/user.png";
-import Moon from "../assets/images/icon/darkMode/dark-mode-icon.png";
-import Help from "../assets/images/icon/help-circle.png";
-import Logout from "../assets/images/icon/log-out.png";
 import Blockly from "blockly/core";
 import {colors} from "./color";
-
-export const Content = [
-    {
-        Icon: User,
-        title: "My profile",
-    },
-    {
-        Icon: Moon,
-        title: "Change Theme",
-    },
-    {
-        Icon: Help,
-        title: "How To Upload",
-    },
-    {
-        Icon: Logout,
-        title: "Logout",
-    },
-]
 
 export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
 export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_forEach", "controls_flow_statements"];
@@ -31,117 +8,24 @@ export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "contro
 /**
  * Dark theme.
  */
+
 export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     'base': Blockly.Themes.Classic,
-    "categoryStyles":{
-        "control_category":{
-            "colour":"#567AE4",
-        },
-        "loops_category":{
-            "colour":"#C54E30",
-        },
-        "operators_category":{
-            "colour":"#8156C9",
-        },
-        "variables_category":{
-            "colour":"#D030BA",
-        },
-        "text_category":{
-            "colour":"#506481",
-        },
-        "list_category":{
-            "colour":"#C26F87",
-        },
-        "sound_category":{
-            "colour":"#5BBC73",
-        },
-        "sensing_category":{
-            "colour":"#61A8EC",
-        },
-        "bumper_category":{
-            "colour":"#DA4B5D",
-        },
-        "movement_category":{
-            "colour":"#9B61E2",
-        },
-        "detection_category":{
-            "colour":"#717171",
-        }
-
-    },
     'componentStyles': {
-        'workspaceBackgroundColour': '#1e1e1e',
-        'toolboxBackgroundColour': 'blackBackground',
+        'workspaceBackgroundColour': colors.blocklyBackground,
+        'toolboxBackgroundColour': colors.blocklyBackground,
         'toolboxForegroundColour': colors.whiteFont,
-        'flyoutBackgroundColour': '#7f8c8d',
-        'flyoutForegroundColour': '#ccc',
-        'flyoutOpacity': 1,
-        'scrollbarColour': '#797979',
-        'insertionMarkerColour': '#fff',
-        'insertionMarkerOpacity': 0.3,
-        'scrollbarOpacity': 0.4,
-        'cursorColour': '#d0d0d0',
-        'blackBackground': '#333',
+        'flyoutBackgroundColour': 'rgba(211, 211, 211, 0.8)',
     },
 });
 
-export const LightTheme=Blockly.Theme.defineTheme('light', {
+export const LightTheme = Blockly.Theme.defineTheme('light', {
     'base': Blockly.Themes.Classic,
-    "categoryStyles":{
-        "control_category":{
-            "colour":"#567AE4",
-        },
-        "loops_category":{
-            "colour":"#C54E30",
-        },
-        "operators_category":{
-            "colour":"#8156C9",
-        },
-        "variables_category":{
-            "colour":"#D030BA",
-        },
-        "text_category":{
-            "colour":"#506481",
-        },
-        "list_category":{
-            "colour":"#C26F87",
-        },
-        "sound_category":{
-            "colour":"#5BBC73",
-        },
-        "sensing_category":{
-            "colour":"#61A8EC",
-        },
-        "bumper_category":{
-            "colour":"#DA4B5D",
-        },
-        "movement_category":{
-            "colour":"#9B61E2",
-        },
-        "detection_category":{
-            "colour":"#717171",
-        }
-
-    },
-    'blockStyles':{
-        "control_category":{
-            'flyoutBackgroundColour': "red",
-        },
-    },
     'componentStyles': {
-        'workspaceBackgroundColour': 'whiteBackground',
-        'toolboxBackgroundColour': 'whiteBackground',
+        'workspaceBackgroundColour': colors.whiteBackground,
+        'toolboxBackgroundColour': colors.whiteBackground,
         'toolboxForegroundColour': colors.blackFont,
-        'flyoutBackgroundColour': 'lightgray',
-        'flyoutForegroundColour': 'red',
-        'flyoutOpacity': 1,
-        'scrollbarColour': 'gray',
-        'insertionMarkerColour': '#fff',
-        'insertionMarkerOpacity': 0.3,
-        'scrollbarOpacity': 0.4,
-        'cursorColour': '#d0d0d0',
-        'whiteBackground': '#FFFFFF',
-
+        'flyoutBackgroundColour': 'rgba(211, 211, 211, 0.8)',
     },
 });
 

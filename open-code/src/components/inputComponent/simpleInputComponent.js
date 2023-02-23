@@ -5,7 +5,7 @@ import {ThemeContext} from "../../App";
 import {colors} from "../../utils/color";
 
 export default function SimpleInputComponent(props) {
-    const {inputTitle, extraStyle, inputType, onDataChange,extraMargin} = props
+    const {inputTitle, extraStyle, inputType, onDataChange, extraMargin} = props
     const date = new Date()
     const theme = useContext(ThemeContext);
     let currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
@@ -20,32 +20,32 @@ export default function SimpleInputComponent(props) {
         <div className={styles.mainDiv + " " + extraStyle}>
             <BlackText text={inputTitle}/>
             {
-                inputType ==="text"?
-                    <div className={styles.inputBorder+" "+extraMargin}>
+                inputType === "text" ?
+                    <div className={styles.inputBorder + " " + extraMargin}>
                         <input type={"text"}
                                className={styles.inputSection}
                                value={name} onChange={handleChange}
                                style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}
                         />
                     </div> :
-                inputType === "date" ?
-                    <div className={styles.inputBorder}>
-                        <input type="date" name="date"
-                               min="1920-01-01"
-                               max={currentDate}
-                               defaultValue={currentDate}
-                               className={styles.inputSection}
-                               style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}
+                    inputType === "date" ?
+                        <div className={styles.inputBorder}>
+                            <input type="date" name="date"
+                                   min="1920-01-01"
+                                   max={currentDate}
+                                   defaultValue={currentDate}
+                                   className={styles.inputSection}
+                                   style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}
 
-                        />
-                    </div> :
-                    inputType === "email" ?
-                        <div className={styles.inputBorder}>
-                            <input disabled={true} className={styles.inputSection} value={props.value}/>
+                            />
                         </div> :
-                        <div className={styles.inputBorder}>
-                            <input className={styles.inputSection} />
-                        </div>
+                        inputType === "email" ?
+                            <div className={styles.inputBorder}>
+                                <input disabled={true} className={styles.inputSection} value={props.value}/>
+                            </div> :
+                            <div className={styles.inputBorder}>
+                                <input className={styles.inputSection}/>
+                            </div>
             }
         </div>
 

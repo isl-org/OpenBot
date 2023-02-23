@@ -11,12 +11,12 @@ function App() {
     }
     let onPageLoad = localStorage.getItem("theme") || "";
     const [theme, setTheme] = useState(onPageLoad);
+
     const toggleTheme = () => {
-        let theme = localStorage.getItem("theme");
         if (theme === "light") {
             setTheme("dark")
             localStorage.setItem("theme", "dark")
-        } else if (theme === "dark") {
+        } else {
             setTheme("light")
             localStorage.setItem("theme", "light")
         }

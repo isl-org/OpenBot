@@ -29,6 +29,9 @@ export const db = getFirestore(app)
 export default firebase;
 
 export async function uploadProfilePic(file, fileName) {
+    if(fileName === undefined){
+        return
+    }
     const fileRef = ref(FirebaseStorage, auth.currentUser.uid + fileName)
     const snapShot = await uploadBytes(fileRef, file)
     const photoURL = getDownloadURL(fileRef)

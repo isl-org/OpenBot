@@ -15,7 +15,6 @@ import {useLocation} from 'react-router-dom';
 import UpArrow from "../../assets/images/icon/up-arrow.png";
 import Edit from "../../assets/images/icon/edit.png";
 import trash from "../../assets/images/icon/trash.png";
-import DeleteModel from "../../pages/profile/deleteModel";
 import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
@@ -136,12 +135,12 @@ export function Header() {
                             </div> :
                             <button onClick={() => {
                                 googleSigIn().then(response => {
-                                    setUser({
-                                        photoURL: response.user.photoURL,
-                                        displayName: response.user.displayName,
-                                        email: response.user.email
-                                    });
-                                }
+                                        setUser({
+                                            photoURL: response.user.photoURL,
+                                            displayName: response.user.displayName,
+                                            email: response.user.email
+                                        });
+                                    }
                                 ).catch((error) => {
                                     console.log("sigin error = ", error)
                                 });
@@ -170,6 +169,68 @@ export function Header() {
                     }
                 </div>
             </div>
+        </div>
+    );
+}
+
+// import React, {useContext, useState} from 'react';
+// import {Box, Modal} from "@mui/material";
+// import {useNavigate} from "react-router-dom";
+// import {ThemeContext} from "../../App";
+export function DeleteModel(props) {
+    const {theme} = useContext(ThemeContext)
+    let navigate = useNavigate();
+    const {setDeleteProject} = props
+    const [open, setOpen] = useState(true);
+    const handleClose = () => {
+        setDeleteProject(false);
+        return setOpen(false);
+    };
+    const handleDeleteProject = () => {
+        let path = `/`;
+        navigate(path);
+    }
+
+    return (
+        <div>
+            {/*<Modal*/}
+            {/*    open={open}*/}
+            {/*    onClose={handleClose}*/}
+            {/*>*/}
+            {/*    <Box className={styles.model+" "+(theme.theme==="dark"? styles.darkDeleteModel : styles.lightDeleteModel)}>*/}
+            {/*        <div className={styles.ModelHeading }> Delete this file? </div>*/}
+            {/*        <div className={styles.Input+" "+(theme.theme==="dark"? styles.darkInputModel : styles.lightInputModel)}>You cannot restore this file later.</div>*/}
+            {/*        <div className={styles.btnGroup}>*/}
+            {/*            <div className={styles.CancelBtn}  onClick={handleClose}>Cancel</div>*/}
+            {/*            <div onClick={handleDeleteProject} className={styles.DeleteBtn}>Delete</div>*/}
+            {/*        </div>*/}
+            {/*    </Box>*/}
+
+            {/*</Modal>*/}
+
+
+            <Modal
+                className={styles.logoutModal}
+                open={open}
+                onClose={() => handleClose()}>
+                <Box
+                    className={styles.logoutModalBox + " " + (theme === "dark" ? styles.darkLogoutModalBox : styles.lightLogoutModalBox)}>
+                    <BlackText text={"Delete this file?"}/>
+                    <div style={{marginTop: 20}}>
+                        <BlackText
+                            extraStyle={(theme === "dark" ? styles.darkLogoutMessageModal : styles.lightLogoutMessageModal)}
+                            text={"You cannot restore this file later."}/>
+                    </div>
+                    <div className={styles.logoutButtonsDiv}>
+                        <BlueButton onClick={handleClose} buttonName={"Cancel"}
+                                    extraStyle={styles.logoutButtonsExtraStyle}/>
+                        <BlueButton onClick={() => {
+                            handleDeleteProject()
+                        }} buttonType={"contained"} buttonName={"Delete"}
+                                    extraStyle={styles.logoutButtonsExtraStyle}/>
+                    </div>
+                </Box>
+            </Modal>
         </div>
     );
 }
@@ -315,8 +376,14 @@ export function EditProfileModal(props) {
 
                         <div style={{display: "flex"}}>
                             <BlueButton onClick={async () => {
+                                if (user.photoURL === file && user.displayName === userDetails.displayName) {
+                                    return
+                                }
                                 setIsLoader(true);
                                 await uploadProfilePic(file, file.name).then((photoURL) => {
+                                    if (user.photoURL === file) {
+                                        photoURL = file;
+                                    }
                                     auth.currentUser.updateProfile({
                                         photoURL: photoURL,
                                         displayName: userDetails.displayName,
