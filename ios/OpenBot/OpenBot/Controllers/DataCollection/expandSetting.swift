@@ -75,20 +75,20 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil);
-        
+
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         addGestureRecognizer(tap)
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
-    
+
+
     func createLogDataButton() {
         _ = createLabels(value: Strings.logData, leadingAnchor: 10, topAnchor: 13, labelWidth: 100, labelHeight: 40)
         logData.isOn = false
@@ -100,7 +100,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         logData.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 90).isActive = true
         logData.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
     }
-    
+
     func createBluetoothIcon() {
         bluetoothIcon.frame.size = CGSize(width: 30, height: 30)
         bluetoothIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -116,7 +116,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         bluetoothIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         bluetoothIcon.leadingAnchor.constraint(equalTo: logData.trailingAnchor, constant: 20).isActive = true
     }
-    
+
     func createCameraIcon() {
         cameraIcon.frame.size = CGSize(width: 30, height: 30)
         cameraIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -128,25 +128,25 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         cameraIcon.leadingAnchor.constraint(equalTo: bluetoothIcon.trailingAnchor, constant: 20).isActive = true
         cameraIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
     }
-    
+
     func resolutionTitle() {
         previewResolution = createLabels(value: Strings.previewResolutionMedium, leadingAnchor: 10, topAnchor: 50, labelWidth: 240, labelHeight: 30)
         previewResolution.font = UIFont.boldSystemFont(ofSize: 16.0)
     }
-    
-    
+
+
     func createResolutions() {
         low = createButton(borderColor: "red", buttonName: Strings.low, leadingAnchor: 10, topAnchor: 80, action: #selector(applyLowResolution(_:)))
         medium = createButton(borderColor: "red", buttonName: Strings.medium, leadingAnchor: 100, topAnchor: 80, action: #selector(applyMediumResolution(_:)))
         high = createButton(borderColor: "red", buttonName: Strings.high, leadingAnchor: 190, topAnchor: 80, action: #selector(applyHighResolution(_:)))
         updateResolution()
     }
-    
+
     func createModelResolutionTitle() {
         modelResolution = createLabels(value: Strings.modelResolution + "256x96", leadingAnchor: 10, topAnchor: 130, labelWidth: 240, labelHeight: 30)
         modelResolution.font = UIFont.boldSystemFont(ofSize: 16.0);
     }
-    
+
     func createDropdown() {
         modelsName = Common.loadAllModelsName()
         dropDown.backgroundColor = Colors.freeRoamButtonsColor
@@ -175,11 +175,11 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dropdownTopAnchor.isActive = true
         dropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
     }
-    
+
     func createServer() {
         server = createButton(borderColor: "red", buttonName: Strings.server, leadingAnchor: 10, topAnchor: 230, action: #selector(serverHandler(_:)))
     }
-    
+
     func createSecondView() {
         secondView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(secondView)
@@ -204,7 +204,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         heightConstraint.identifier = Strings.expendSetting
         NSLayoutConstraint.activate([leadingConstraint, topConstraint, widthConstraint, heightConstraint])
     }
-    
+
     func refreshConstraints() {
         if currentOrientation == .portrait {
             frame.size.width = width
@@ -222,7 +222,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             dropdownTopAnchor.constant = 150;
         }
     }
-    
+
     func createImagesButton() {
         preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 120, action: #selector(applyPreview(_:)), borderColor: Colors.freeRoamButtonsColor!.cgColor)
         preview.tag = 0
@@ -230,7 +230,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         training.tag = 1
         setupImageMode()
     }
-    
+
     func createSensorButtons() {
         vehicle = createSecondViewButton(buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         vehicle.tag = 1;
@@ -248,7 +248,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         gyroscope.tag = 5
         sensorButtons.append(gyroscope)
     }
-    
+
     func createDelayField() {
         let delayTextField = UITextField(frame: CGRect(x: 310, y: 177, width: 50, height: 40))
         delayTextField.placeholder = "200"
@@ -268,7 +268,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         delayTextField.layer.addSublayer(bottomLine)
         secondView.addSubview(delayTextField)
     }
-    
+
     func createButton(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIButton {
         let btn = UIButton()
         btn.layer.cornerRadius = 10
@@ -289,7 +289,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         btn.addSubview(text)
         return btn
     }
-    
+
     func createDropdownView(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIView {
         let dd = UIView()
         dd.layer.cornerRadius = 10
@@ -308,7 +308,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dd.addSubview(dropdownLabel)
         return dd
     }
-    
+
     func createLabels(value: String, leadingAnchor: CGFloat, topAnchor: CGFloat, labelWidth: CGFloat, labelHeight: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = value
@@ -322,7 +322,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         label.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: leadingAnchor).isActive = true
         return label
     }
-    
+
     func createSecondViewLabel(value: String, leadingAnchor: CGFloat, topAnchor: CGFloat, labelWidth: CGFloat, labelHeight: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = value
@@ -336,7 +336,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         label.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
         return label
     }
-    
+
     func createSecondViewButton(buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, buttonWidth: CGFloat, action: Selector?, borderColor: CGColor) -> UIButton {
         let btn = UIButton()
         btn.layer.cornerRadius = 10
@@ -359,7 +359,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         btn.addSubview(text)
         return btn
     }
-    
+
     func createLeftSpeed() {
         leftSpeedLabel.frame.size = CGSize(width: 100, height: 40);
         leftSpeedLabel.frame.origin = CGPoint(x: 10, y: 240)
@@ -367,18 +367,18 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         secondView.addSubview(leftSpeedLabel)
         leftSpeedLabel.font = leftSpeedLabel.font.withSize(13.5)
     }
-    
+
     @objc func reverseCamera(_ sender: UITapGestureRecognizer? = nil) {
         NotificationCenter.default.post(name: .switchCamera, object: nil)
     }
-    
+
     func applyBlurEffect() {
         let blurEffectView = UIView(frame: bounds);
         blurEffectView.backgroundColor = UIColor(named: "darkBg");
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(blurEffectView)
     }
-    
+
     @objc func switchLogButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .logData, object: logData.isOn);
         if sender.isOn {
@@ -391,34 +391,34 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             }
         }
     }
-    
+
     @objc func applyLowResolution(_ sender: UIView) {
         selectedResolution = Resolutions.LOW
         NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
         updateResolution()
         previewResolution.text = Strings.previewResolutionLow
     }
-    
+
     @objc func applyMediumResolution(_ sender: UIView) {
         selectedResolution = Resolutions.MEDIUM
         NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
         updateResolution()
         previewResolution.text = Strings.previewResolutionMedium
     }
-    
+
     @objc func applyHighResolution(_ sender: UIView) {
         selectedResolution = Resolutions.HIGH
         NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
         updateResolution()
         previewResolution.text = Strings.previewResolutionHigh
     }
-    
+
     @objc func serverHandler(_ sender: UIView) {
         // print("hello server")
     }
-    
+
     @objc func updateResolution() {
-        
+
         switch (selectedResolution) {
         case .LOW:
             low.backgroundColor = Colors.title
@@ -434,62 +434,63 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             high.backgroundColor = Colors.title
         }
     }
-    
+
     @objc func applyPreview(_ sender: UIView) {
         NotificationCenter.default.post(name: .updatePreview, object: nil)
         let borderColor = (sender.layer.borderColor == Colors.title?.cgColor) ? Colors.freeRoamButtonsColor?.cgColor : Colors.title?.cgColor
         sender.layer.borderColor = borderColor
     }
-    
+
     @objc func applyTraining(_ sender: UIView) {
         NotificationCenter.default.post(name: .updateTraining, object: nil)
         let borderColor = (training.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
         sender.layer.borderColor = borderColor
     }
-    
-    func setupImageMode() {}
-    
-    
+
+    func setupImageMode() {
+    }
+
+
     @objc func updateSensor(_ sender: UIButton) {
         NotificationCenter.default.post(name: .updateSensorsForLog, object: sender)
         updateBorderColor(sender: sender);
     }
-    
+
     func updateBorderColor(sender: UIButton) {
         sender.layer.borderColor = (sender.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
     }
-    
+
     /// Called when the "Delay (ms)" field in the Data collection fragment changes.
     @objc func delayFieldDidChange(_ sender: UITextField) {
         if sender.text == "" {
             samplingPeriod = 0.2
         } else {
-            samplingPeriod = Double(sender.text!)!/1000.0
+            samplingPeriod = Double(sender.text!)! / 1000.0
         }
         print("samplingPeriod: ", samplingPeriod)
     }
-    
+
     @objc func showDropdown(_ sender: UIButton) {
         dropDown.show()
     }
-    
+
     func loadModelsNameAndResolution() {
         modelsName = Common.loadAllModelsName();
         for model in Common.loadAllModelItems() {
             resolution.append(model.inputSize);
         }
     }
-    
-    
+
+
     @objc func ble(_ sender: UIView) {
         NotificationCenter.default.post(name: .ble, object: nil)
     }
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         delayTextField.resignFirstResponder()  //if desired
         return true
     }
-    
+
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
             bluetoothIcon.image = Images.bluetoothConnected
@@ -497,11 +498,11 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
     }
-    
+
     @objc func dismissKeyboard(_ sender: UIButton) {
         endEditing(true);
     }
-    
+
     @objc func keyboardWillShow(_ notification: Notification) {
         if currentOrientation == .portrait {
             topConstraint.constant = 260
@@ -509,7 +510,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             topConstraint.constant = 10
         }
     }
-    
+
     @objc func keyboardWillHide(_ notification: Notification) {
         if currentOrientation == .portrait {
             topConstraint.constant = 290
@@ -517,7 +518,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
             topConstraint.constant = 30
         }
     }
-    
+
     @objc func updateSpeedLabel(_ notification: Notification) {
         leftSpeedLabel.text = notification.object as? String
     }

@@ -8,8 +8,8 @@ import Network
 let browser = Browser()
 var netService: NetService?
 
-class Browser {
 
+class Browser {
     var browser: NWBrowser
 
     init() {

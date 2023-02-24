@@ -214,10 +214,9 @@ class ObjectTrackingFragment: CameraController {
             let dx = width / CGFloat(bufferWidth);
             let dy = height / CGFloat(bufferHeight);
             let transform = CGAffineTransform.identity.scaledBy(x: dx, y: dy);
-           // let revertTransform = transform.concatenating(__CGAffineTransformMake(-1.0, 0.0, 0.0, 1.0, CGFloat(width), 0.0));
+            // let revertTransform = transform.concatenating(__CGAffineTransformMake(-1.0, 0.0, 0.0, 1.0, CGFloat(width), 0.0));
             convertedRect = detection.applying(transform)
-        }
-        else{
+        } else {
             let screenWidth = height
             let screenHeight = width
             let detection = item.getLocation();

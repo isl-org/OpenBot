@@ -16,7 +16,7 @@ struct ModelItem: Codable {
     var pathType: String;
     var path: String;
     var inputSize: String;
-    
+
     /// Write the characteristics of a given model as a JSON file
     ///
     /// - Parameters: a list of model items
@@ -24,20 +24,20 @@ struct ModelItem: Codable {
         var result: [Any] = []
         for item in models {
             let jsonObject: Any =
-            [
-                "id": item.id,
-                "class": item.class,
-                "type": item.type,
-                "name": item.name,
-                "pathType": item.pathType,
-                "path": item.path,
-                "inputSize": item.inputSize
-            ];
+                    [
+                        "id": item.id,
+                        "class": item.class,
+                        "type": item.type,
+                        "name": item.name,
+                        "pathType": item.pathType,
+                        "path": item.path,
+                        "inputSize": item.inputSize
+                    ];
             result.append(jsonObject)
         }
         return result;
     }
-    
+
     /// Extract the width of a model input from a JSON string in the format "WxH"
     ///
     /// - Returns: width of the model input
@@ -48,7 +48,7 @@ struct ModelItem: Codable {
         }
         return ""
     }
-    
+
     /// Extract the height of a model input from a JSON string in the format "WxH"
     ///
     /// - Returns: height of the model input
@@ -60,19 +60,19 @@ struct ModelItem: Codable {
         }
         return ""
     }
-    
+
 }
 
 /// The Model class encapsulates the main properties of a neural network in the context of an OpenBot application.
 class Model {
     var id: Int;
-    var classType: CLASS;       // AUTOPILOT_F, MOBILENET, YOLOV4, YOLOV5, EFFICIENTDET or NAVIGATION
-    var type: TYPE;             // AUTOPILOT, DETECTOR or NAVIGATION
+    var classType: CLASS; // AUTOPILOT_F, MOBILENET, YOLOV4, YOLOV5, EFFICIENTDET or NAVIGATION
+    var type: TYPE; // AUTOPILOT, DETECTOR or NAVIGATION
     var name: String;
-    var pathType: PATH_TYPE;    // URL, FILE or ASSET
+    var pathType: PATH_TYPE; // URL, FILE or ASSET
     var path: String;
     var inputSize: String;
-    
+
     /// Initialization routine
     ///
     /// - Parameters:
@@ -93,56 +93,56 @@ class Model {
         self.path = path;
         self.inputSize = inputSize;
     }
-    
+
     /// Getter method to return name
     ///
     /// - Returns: name of the model
     func getName() -> String {
         name;
     }
-    
+
     /// Getter method to return the input size of a model
     ///
     /// - Returns: input size of the model
     func getInputSize() -> CGSize {
         CGSize.parseSize(inputSize);
     }
-    
+
     /// Setter method to set path
     ///
     /// - Parameters: path of the model
     func setPath(path: String) {
         self.path = path;
     }
-    
+
     /// Setter method to set path type
     ///
     /// - Parameters: whether the path of the policy is of type URL, FILE or ASSET
     func setPathType(pathType: PATH_TYPE) {
         self.pathType = pathType;
     }
-    
+
     /// Setter method to set input size of the model
     ///
     /// - Parameters: input size of the model
     func setInputSize(inputSize: String) {
         self.inputSize = inputSize;
     }
-    
+
     /// Setter method to set the name of the model
     ///
     /// - Parameters: name of the model
     func setName(name: String) {
         self.name = name;
     }
-    
+
     /// Setter method to set the model class
     ///
     /// - Parameters: type enum (e.g. AUTOPILOT_F, MOBILENET, YOLOV4, YOLOV5, EFFICIENTDET or NAVIGATION )
     func setClassType(classType: CLASS) {
         self.classType = classType;
     }
-    
+
     /// Setter method to set the type of the model
     ///
     /// - Parameters: type enum (e.g. AUTOPILOT, DETECTOR or NAVIGATION )
@@ -153,7 +153,7 @@ class Model {
 
 /// Extension of the CGSize class
 extension CGSize {
-    
+
     /// Converts an input string into CGSize object
     ///
     /// - Parameters: input size of the model, as a string in the format "WxH"
@@ -168,7 +168,7 @@ extension CGSize {
 
 /// Extension of the Model class
 extension Model {
-    
+
     /// Converts an array of ModelItem objects to an array of Model objects.
     ///
     /// - Parameter list: The list of ModelItem objects to be converted.
@@ -177,6 +177,24 @@ extension Model {
         var models: [Model] = [];
         for item in list {
             let model: Model = Model(
+                    id: item.id,
+                    classType: CLASS(rawValue: item.class) ?? CLASS.AUTOPILOT_F,
+                    type: TYPE(rawValue: item.type) ?? TYPE.AUTOPILOT,
+                    name: item.name,
+                    pathType: PATH_TYPE(rawValue: item.pathType) ?? PATH_TYPE.ASSET,
+                    path: item.path,
+                    inputSize: item.inputSize);
+            models.append(model);
+        }
+        return models;
+    }
+
+    /// Converts a single ModelItem object to a Model object.
+    ///
+    ///- Parameter item: The ModelItem object to be converted.
+    ///- Returns: A Model object.
+    static func fromModelItem(item: ModelItem) -> Model {
+        let model: Model = Model(
                 id: item.id,
                 classType: CLASS(rawValue: item.class) ?? CLASS.AUTOPILOT_F,
                 type: TYPE(rawValue: item.type) ?? TYPE.AUTOPILOT,
@@ -184,24 +202,6 @@ extension Model {
                 pathType: PATH_TYPE(rawValue: item.pathType) ?? PATH_TYPE.ASSET,
                 path: item.path,
                 inputSize: item.inputSize);
-            models.append(model);
-        }
-        return models;
-    }
-    
-    /// Converts a single ModelItem object to a Model object.
-    ///
-    ///- Parameter item: The ModelItem object to be converted.
-    ///- Returns: A Model object.
-    static func fromModelItem(item: ModelItem) -> Model {
-        let model: Model = Model(
-            id: item.id,
-            classType: CLASS(rawValue: item.class) ?? CLASS.AUTOPILOT_F,
-            type: TYPE(rawValue: item.type) ?? TYPE.AUTOPILOT,
-            name: item.name,
-            pathType: PATH_TYPE(rawValue: item.pathType) ?? PATH_TYPE.ASSET,
-            path: item.path,
-            inputSize: item.inputSize);
         return model;
     }
 }

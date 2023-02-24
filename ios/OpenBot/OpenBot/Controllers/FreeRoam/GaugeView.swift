@@ -20,7 +20,7 @@ class GaugeView: UIView {
         number * .pi / 180
     }
 
-    
+
     /// Draw the jauge
     ///
     /// - Parameters: the jauge frame as a CGRect instance
@@ -35,7 +35,7 @@ class GaugeView: UIView {
         drawSegments(in: rect, context: ctx, value: abs(segmentValue))
     }
 
-    
+
     ///
     func drawSegments(in rect: CGRect, context ctx: CGContext, value: Int) {
         ctx.saveGState()

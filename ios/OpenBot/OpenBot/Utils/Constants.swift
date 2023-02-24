@@ -52,12 +52,12 @@ struct Colors {
 
 /// Set of constants used in the code
 struct Constants {
-    
+
     // BLE UUIDs
     static let openbotService = "61653dc3-4021-4d1e-ba83-8b4eec61d613";
     static let openbotService_RX = "06386c14-86ea-4d71-811c-48f97c58f8c9";
     static let openbotService_TX = "9bf1103b-834c-47cf-b149-c9e4bcf778a7";
-    
+
     // Game Data
     static let gameModes: [ModeItem] = [
         ModeItem(label: Strings.freeRoam, icon: Images.freeRoam!, identifier: Strings.ScreenFreeRoam),
@@ -174,5 +174,5 @@ struct FileName {
 enum PATH_TYPE: String {
     case URL = "URL",
          ASSET = "ASSET",
-         FILE = "FILE"     
+         FILE = "FILE"
 }

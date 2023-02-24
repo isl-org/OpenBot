@@ -21,12 +21,12 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     var bumperData: String = ""
     var writeCharacteristics: CBCharacteristic?
     var robotInfo: String = ""
-    
+
     required init?(coder: NSCoder) {
         super.init()
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     /// Initialization routine
     override init() {
         super.init()
@@ -70,7 +70,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         isBluetoothConnected = true;
         NotificationCenter.default.post(name: .bluetoothConnected, object: nil);
         peripheral.discoverServices(nil)
-        
+
     }
 
     /// callback function when ble connection is failed with a device
@@ -148,11 +148,11 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             return
         }
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         //print("Data sent to :", peripheral.name as Any);
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
         _ = descriptor.value
     }
@@ -164,13 +164,15 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             print("Error discovering characteristics: %s", error.localizedDescription)
             return
         }
-        
-        guard let characteristicData = characteristic.value, let stringFromData = String(data: characteristicData, encoding: .utf8) else { return }
+
+        guard let characteristicData = characteristic.value, let stringFromData = String(data: characteristicData, encoding: .utf8) else {
+            return
+        }
         let header = stringFromData.prefix(1)
         bluetoothData = stringFromData
         NotificationCenter.default.post(name: .updateSerialMonitor, object: nil)
         NotificationCenter.default.post(name: .updateLabel, object: nil)
-        
+
         switch (header) {
         case "r":
             vehicleReady = true
@@ -194,7 +196,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             break
         }
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
         print(invalidatedServices)
     }
@@ -240,9 +242,9 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         default:
             break
         }
-        
+
     }
-    
+
     @objc func startNotification() {
         //        tempCentralManager = CBCentralManager(delegate: self, queue: nil)
     }

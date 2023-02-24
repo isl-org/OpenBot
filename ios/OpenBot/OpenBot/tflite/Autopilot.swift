@@ -28,14 +28,14 @@ class Autopilot: Network {
             print("error:\(error)")
         }
     }
-    
+
     /// Getter function
     ///
     /// - Returns: image normalization mean value
     override func getImageMean() -> Float {
         IMAGE_MEAN;
     }
-    
+
     /// Getter function
     ///
     /// - Returns: image normalization std value

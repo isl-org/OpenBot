@@ -85,7 +85,7 @@ class Detector: Network {
         public func getId() -> String {
             id;
         }
-        
+
         /// Getter function.
         ///
         /// - Returns: class Id
@@ -305,7 +305,8 @@ class Detector: Network {
 
     /// Feeds the data.
     /// This additional method is necessary, because we can have different number of detections
-    func feedData() throws {}
+    func feedData() throws {
+    }
 
     /// Get the total number of labels.
     func getNumLabels() -> Int {
@@ -330,7 +331,8 @@ class Detector: Network {
     }
 
     /// Get specs from tflite file.
-    func parseTFlite() {}
+    func parseTFlite() {
+    }
 
     /// Get the recognitions.
     func getRecognitions(className: String, width: Int, height: Int) -> [Recognition] {

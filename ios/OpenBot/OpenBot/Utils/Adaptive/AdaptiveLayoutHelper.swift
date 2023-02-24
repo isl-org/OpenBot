@@ -13,7 +13,7 @@ var dimension: Dimension {
 ///
 /// - Parameters:
 ///     - size: height and width of an object to finetune
-///     - dimension: reference screen dimension used to adjust the size
+///     - dimension: reference screen dimension used to adjust the sized
 func resized(size: CGSize, basedOn dimension: Dimension) -> CGSize {
     let uiScreenWidth = UIScreen.main.bounds.size.width // Width of the user interface screen
     let uiScreenHeight = UIScreen.main.bounds.size.height // Height of the user interface screen
@@ -23,7 +23,7 @@ func resized(size: CGSize, basedOn dimension: Dimension) -> CGSize {
     var ratio: CGFloat = 0.0
     var width: CGFloat = 0.0
     var height: CGFloat = 0.0
-    
+
     switch dimension {
     case .width:
         ratio = size.height / size.width
@@ -48,7 +48,7 @@ func adapted(dimensionSize: CGFloat, to dimension: Dimension) -> CGFloat {
     let screenHeight = height
     var ratio: CGFloat = 0.0
     var resultDimensionSize: CGFloat = 0.0
-    
+
     switch dimension {
     case .width:
         ratio = dimensionSize / Device.baseScreenSize.rawValue.width
