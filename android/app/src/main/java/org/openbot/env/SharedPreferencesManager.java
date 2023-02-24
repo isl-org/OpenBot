@@ -72,6 +72,11 @@ public class SharedPreferencesManager {
     return preferences.getInt(NUM_THREAD, DEFAULT_NUM_THREAD);
   }
 
+  /**
+   * Get selected camera lens facing
+   *
+   * @return true for LENS_FACING_FRONT, false for LENS_FACING_BACK
+   */
   public boolean getCameraSwitch() {
     return preferences.getBoolean(CAMERA_SWITCH, false);
   }
