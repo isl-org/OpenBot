@@ -28,14 +28,14 @@ class DataCollectionController: CameraController {
     private var isImageCaptureQueueBusy = false
     var saveZipFilesName = [URL]()
     var paths: [String] = [""]
-    
+
     /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         dataLogger.reset()
     }
-    
+
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,18 +59,18 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateLogData), name: .logData, object: nil)
         gameController.resetControl = false
     }
-    
+
     /// Notifies the view controller that its view is about to be added to a view hierarchy.
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
-    
+
     /// Called after the view was dismissed, covered or otherwise hidden.
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
     }
-    
+
     /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -78,7 +78,7 @@ class DataCollectionController: CameraController {
         expandSettingView.refreshConstraints()
         refreshConstraints()
     }
-    
+
     ///
     func saveFolder() {
         _ = DataLogger.shared.getDirectoryInfo()
@@ -86,7 +86,7 @@ class DataCollectionController: CameraController {
         present(activityManager, animated: true)
         _ = navigationController?.popViewController(animated: true)
     }
-    
+
     /// Create a ZIP file from the recorded experiment data
     ///
     /// - Parameters: path of the folder to compress
@@ -99,10 +99,10 @@ class DataCollectionController: CameraController {
             let coordinator = NSFileCoordinator()
             coordinator.coordinate(readingItemAt: baseDirectoryUrl, options: [.forUploading], error: &error) { (zipUrl) in
                 let tmpUrl = try! fm.url(
-                    for: .itemReplacementDirectory,
-                    in: .userDomainMask,
-                    appropriateFor: zipUrl,
-                    create: true
+                        for: .itemReplacementDirectory,
+                        in: .userDomainMask,
+                        appropriateFor: zipUrl,
+                        create: true
                 ).appendingPathComponent(baseDirectoryName)
                 try! fm.moveItem(at: zipUrl, to: tmpUrl)
                 saveZipFilesName.append(tmpUrl)
@@ -114,7 +114,7 @@ class DataCollectionController: CameraController {
             DataLogger.shared.deleteFiles(fileNameToDelete: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
         }
     }
-    
+
     ///
     func refreshConstraints() {
         if UIDevice.current.orientation == .portrait {
@@ -134,26 +134,26 @@ class DataCollectionController: CameraController {
                 }
             }
         }
-        
+
     }
-    
+
     /// Switch between the front and rear camera
     @objc func switchCamera() {
         switchCameraView();
     }
-    
+
     @objc func openBluetoothSettings() {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: "bluetoothScreen"))
         navigationController?.pushViewController(nextViewController!, animated: true)
         stopSession()
     }
-    
+
     /// Camera delegate, called at every new frame
     ///
     /// - Parameters:
     ///     - output:
-    ///     - didOutput:
-    ///     - from:
+    ///     - sampleBuffer:
+    ///     - connection:
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
@@ -161,26 +161,26 @@ class DataCollectionController: CameraController {
             debugPrint("unable to get image from sample buffer")
             return
         }
-        
+
         if webRTCClient != nil {
             imageCaptureQueue.async {
                 webRTCClient.captureCurrentFrame(sampleBuffer: sampleBuffer);
                 self.isImageCaptureQueueBusy = false
             }
         }
-        
+
         guard !isImageCaptureQueueBusy else {
             return
         }
-        
+
         imageCaptureQueue.async {
             if self.loggingEnabled && (self.isTrainingSelected || self.isPreviewSelected) {
                 self.isImageCaptureQueueBusy = true
                 let startTime = Date().millisecondsSince1970
-                
+
                 // Record image index and timestep
                 self.dataLogger.recordImageLogs(index: self.count)
-                
+
                 // Record preview image
                 if self.isPreviewSelected {
                     let imageName = String(self.count) + Strings.underscore + "preview.jpeg"
@@ -223,45 +223,45 @@ class DataCollectionController: CameraController {
             }
         }
     }
-    
+
     /// Activate/deactivate logging
     @objc func toggleLogging() {
-        
+
         loggingEnabled = !loggingEnabled;
         isLoggedButtonPressed = true;
-        
+
         if (loggingEnabled) {
             expandSettingView.logData.isOn = true
-            
+
             // Create the folders that will contain the data
             dataLogger.createOpenBotFolders()
-            
+
             // Sample the robot sensors at a desired rate
             Timer.scheduledTimer(withTimeInterval: expandSettingView.samplingPeriod, repeats: true) { [self] timer in
                 if !loggingEnabled {
                     timer.invalidate()
                 }
-                
+
                 // Sample IMU sensor data
                 sensorData.sampleIMU()
                 dataLogger.recordLogs();
             }
         } else {
             expandSettingView.logData.isOn = false
-            
+
             // Save the collected sensor data
             dataLogger.saveSensorData()
-            
+
             // Reset data logger
             dataLogger.reset()
         }
     }
-    
+
     /// Main control update function
     @objc func updateControllerValues() {
         gameController.updateControllerValues()
     }
-    
+
     @objc func updateControlMode(_ notification: Notification?) {
         if let controlMode = notification?.userInfo?["mode"] as? ControlMode {
             selectedControlMode = controlMode;
@@ -274,30 +274,30 @@ class DataCollectionController: CameraController {
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
         }
     }
-    
+
     @objc func updateDriveMode(_ notification: Notification) {
         if let driveMode = notification.userInfo?["drive"] as? DriveMode {
             selectedDriveMode = driveMode;
             gameController.selectedDriveMode = selectedDriveMode
         }
     }
-    
+
     @objc func updateSpeedMode(_ notification: Notification) {
         if let speedMode = notification.userInfo?["speed"] as? SpeedMode {
             selectedSpeedMode = speedMode;
             gameController.selectedSpeedMode = selectedSpeedMode
         }
-        
+
     }
-    
+
     @objc func updatePreview(_ notification: Notification) {
         isPreviewSelected = !isPreviewSelected
     }
-    
+
     @objc func updateTraining(_ notification: Notification) {
         isTrainingSelected = !isTrainingSelected
     }
-    
+
     @objc func back(sender: UIBarButtonItem) {
         if isLoggedButtonPressed && loggingEnabled {
             toggleLogging()
@@ -309,7 +309,7 @@ class DataCollectionController: CameraController {
         }
         _ = navigationController?.popViewController(animated: true)
     }
-    
+
     @objc func updateDataFromControllerApp(_ notification: Notification) {
         if gameController.selectedControlMode == ControlMode.GAMEPAD {
             return
@@ -321,7 +321,7 @@ class DataCollectionController: CameraController {
             gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
         }
     }
-    
+
     @objc func updateLogData(_ notification: Notification) {
         if notification.object != nil {
             let logData = notification.object as! Bool

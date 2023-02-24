@@ -10,10 +10,11 @@ class Control {
     // PWM signal sent to the motors of the robot's left and right wheels.
     private var left: Float = 0;
     private var right: Float = 0;
-    
+
     /// Initialization routine
-    init() {}
-    
+    init() {
+    }
+
     /// Initialization routine
     init(left: Float, right: Float) {
         self.left = max(-1.0, min(1.0, left));

@@ -21,12 +21,12 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     var bumperData: String = ""
     var writeCharacteristics: CBCharacteristic?
     var robotInfo: String = ""
-    
+
     required init?(coder: NSCoder) {
         super.init()
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     /// Initialization routine
     override init() {
         super.init()
@@ -34,7 +34,8 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         NotificationCenter.default.addObserver(self, selector: #selector(startNotification), name: Notification.Name("updateLabel"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(startNotification), name: Notification.Name("updateSerialMonitor"), object: nil)
     }
-    
+
+    /// callback function when ble state is changed [CBManagerState]
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if (central.state == .poweredOn) {
             let options: [String: Any] = [CBCentralManagerScanOptionAllowDuplicatesKey: true]
@@ -43,7 +44,14 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             print("bluetooth is off ")
         }
     }
-    
+
+    /// callback function when ble searches for the available devices and list them.
+    ///
+    /// - Parameters:
+    ///   - central: ble manager
+    ///   - peripheral: discovered device
+    ///   - advertisementData: device data
+    ///   - RSSI: device unique id
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         if peripheral.name != nil {
             if !peripherals.contains(peripheral) {
@@ -51,25 +59,47 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             }
         }
     }
-    
+
+    /// callback function when ble is connected to a device
+    ///
+    /// - Parameters:
+    ///   - central: ble manager
+    ///   - peripheral: connected device
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("connected to", peripheral)
         isBluetoothConnected = true;
         NotificationCenter.default.post(name: .bluetoothConnected, object: nil);
         peripheral.discoverServices(nil)
-        
+
     }
-    
+
+    /// callback function when ble connection is failed with a device
+    ///
+    /// - Parameters:
+    ///   - central: ble manager
+    ///   - peripheral: device connection
+    ///   - error: error that occurred
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         print("connection was failed")
     }
-    
+
+    /// callback function when device disconnects from a device
+    ///
+    /// - Parameters:
+    ///   - central: ble manager
+    ///   - peripheral: disconnected device
+    ///   - error:  error if any
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("disconnected from :", peripheral)
         isBluetoothConnected = false
         NotificationCenter.default.post(name: .bluetoothDisconnected, object: nil)
     }
-    
+
+    /// callback function when ble start searching for the ble services
+    ///
+    /// - Parameters:
+    ///   - peripheral: searched device
+    ///   - error: error if any.
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let services = peripheral.services {
             for service in services {
@@ -77,7 +107,13 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             }
         }
     }
-    
+
+    /// callback function for reading descriptors
+    ///
+    /// - Parameters:
+    ///   - peripheral: searched peripherals
+    ///   - characteristic:
+    ///   - error: errors if any
     func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?) {
         if let des = characteristic.descriptors {
             for d in des {
@@ -85,7 +121,8 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             }
         }
     }
-    
+
+    /// callback for reading characteristics
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
@@ -99,38 +136,43 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             }
         }
     }
-    
+
+    /// callback function to subscribe for notifications
     func subscribeToNotifications(peripheral: CBPeripheral, characteristic: CBCharacteristic) {
         peripheral.setNotifyValue(true, for: characteristic)
     }
-    
+
+    /// callback function for updating notification state
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         if error != nil {
             return
         }
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         //print("Data sent to :", peripheral.name as Any);
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
         _ = descriptor.value
     }
-    
+
+    /// callback function for reading values from the connected device
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         // Deal with errors (if any)
         if let error = error {
             print("Error discovering characteristics: %s", error.localizedDescription)
             return
         }
-        
-        guard let characteristicData = characteristic.value, let stringFromData = String(data: characteristicData, encoding: .utf8) else { return }
+
+        guard let characteristicData = characteristic.value, let stringFromData = String(data: characteristicData, encoding: .utf8) else {
+            return
+        }
         let header = stringFromData.prefix(1)
         bluetoothData = stringFromData
         NotificationCenter.default.post(name: .updateSerialMonitor, object: nil)
         NotificationCenter.default.post(name: .updateLabel, object: nil)
-        
+
         switch (header) {
         case "r":
             vehicleReady = true
@@ -154,15 +196,19 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             break
         }
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
         print(invalidatedServices)
     }
-    
+
+    /// function to read the value from characteristic
     func readValue(characteristic: CBCharacteristic) {
         tempPeripheral?.readValue(for: characteristic)
     }
-    
+
+    /// function to send data to the connected device
+    ///
+    /// - Parameter payload: string that should be sent to the connected device
     func sendData(payload: String) {
         let dataToSend: Data? = payload.data(using: String.Encoding.utf8)
         if (dataToSend != nil && tempPeripheral != nil) {
@@ -171,20 +217,23 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
             }
         }
     }
-    
+
+    /// function to disconnect the connected device
     func disconnect() {
         centralManager?.cancelPeripheralConnection(tempPeripheral)
         startScan()
         peri = nil
     }
-    
+
+    ///function to connect the selected device
     func connect() {
         tempPeripheral = peri
         tempPeripheral.delegate = self
         centralManager?.connect(tempPeripheral)
         centralManager?.stopScan()
     }
-    
+
+    /// function to start scanning the available device
     func startScan() {
         let options: [String: Any] = [CBCentralManagerScanOptionAllowDuplicatesKey: true]
         switch centralManager?.state {
@@ -193,9 +242,9 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         default:
             break
         }
-        
+
     }
-    
+
     @objc func startNotification() {
         //        tempCentralManager = CBCentralManager(delegate: self, queue: nil)
     }

@@ -41,21 +41,21 @@ class DetectorDefault: Detector {
     ///
     /// - Returns: true if aspect ratio should be preserved when rescaling.
     override func getMaintainAspect() -> Bool {
-        return false;
+        false;
     }
 
     /// Getter function
     ///
     /// - Returns: path of the file containing the diferent labels
     override func getLabelPath() -> String {
-        return "labelmap.txt";
+        "labelmap.txt";
     }
 
     /// Get the number of bytes that is used to store a single color channel value.
     ///
     /// - Returns: The number of bytes used to store a single color channel value.
     override func getNumBytesPerChannel() -> Int {
-        return 1; // the quantized model only uses a single byte
+        1; // the quantized model only uses a single byte
     }
 
     /// Getter function

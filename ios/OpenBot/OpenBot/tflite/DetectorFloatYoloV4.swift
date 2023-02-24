@@ -6,22 +6,22 @@ import Foundation
 import TensorFlowLite
 
 class DetectorFloatYoloV4: Detector {
-    
+
     // Additional normalization of the used input.
     let IMAGE_MEAN: Float = 0.0;
     let IMAGE_STD: Float = 255.0;
-    
+
     // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
     // contains the location of detected boxes
     private var outputLocations: UnsafeMutableBufferPointer<Float32>?;
     // outputScores: array of shape [Batchsize, NUM_DETECTIONS]
     // contains the scores of detected boxes
     private var outputScores: UnsafeMutableBufferPointer<Float32>?;
-    
+
     // Indices in tflite model
     private var outputLocationsIdx: Int = -1;
     private var outputScoresIdx: Int = -1;
-    
+
     /// Initialization of a DetectorYoloV4.
     ///
     /// - Parameters:
@@ -31,49 +31,49 @@ class DetectorFloatYoloV4: Detector {
     override init(model: Model, device: RuntimeDevice, numThreads: Int) throws {
         try super.init(model: model, device: device, numThreads: numThreads)
     }
-    
+
     /// Get boolean that determines if aspect ratio should be preserved when rescaling.
     ///
     /// - Returns: true if aspect ratio should be preserved when rescaling.
     override func getMaintainAspect() -> Bool {
-        return false;
+        false;
     }
-    
+
     /// Getter function
     ///
     /// - Returns: path of the file containing the diferent labels
     override func getLabelPath() -> String {
         "coco.txt";
     }
-    
+
     /// Get the number of bytes that is used to store a single color channel value.
     ///
     /// - Returns: The number of bytes used to store a single color channel value.
     override func getNumBytesPerChannel() -> Int {
-        return 4;
+        4;
     }
-    
+
     /// Getter function
     ///
     /// - Returns: number of detections of a given class
     override func getNumDetections() -> Int {
         NUM_DETECTIONS;
     }
-    
+
     /// Getter function
     ///
     /// - Returns: image normalization mean value
     override func getImageMean() -> Float {
         IMAGE_MEAN;
     }
-    
+
     /// Getter function
     ///
     /// - Returns: image normalization std value
     override func getImageStd() -> Float {
         IMAGE_STD;
     }
-    
+
     /// This function will parse a .tflite neural model and
     override func parseTFlite() {
         let index0 = try! tflite?.output(at: 0);
@@ -86,7 +86,7 @@ class DetectorFloatYoloV4: Detector {
         let outputScoresTensorSize = try! tflite?.output(at: outputScoresIdx).data.count ?? 0
         outputScores = UnsafeMutableBufferPointer<Float32>.allocate(capacity: outputScoresTensorSize)
     }
-    
+
     /// Index  allocation to browse the tflite object
     ///
     /// - Parameters:
@@ -104,13 +104,13 @@ class DetectorFloatYoloV4: Detector {
             break;
         }
     }
-    
+
     /// Copy data to the input of the neural network
     override func feedData() throws {
         _ = try! tflite?.output(at: outputLocationsIdx).data.copyBytes(to: outputLocations!);
         _ = try! tflite?.output(at: outputScoresIdx).data.copyBytes(to: outputScores!);
     }
-    
+
     /// Query the output of the neural network and perform post-processing actions
     ///
     /// - Parameters:
@@ -126,20 +126,20 @@ class DetectorFloatYoloV4: Detector {
                 outputScores2D[a][b] = outputScores![a * labels.count + b];
             }
         }
-        
+
         if (NUM_DETECTIONS > 0) {
             for i in 0..<NUM_DETECTIONS {
                 var maxClass: Float = 0;
                 var classId = -1;
                 let classes = outputScores2D[i];
-                
+
                 for c in 0..<classes.count {
                     if (classes[c] > maxClass) {
                         classId = c;
                         maxClass = classes[c];
                     }
                 }
-                
+
                 if (classId > -1 && className == labels[classId]) {
                     let xPos = outputLocations![4 * i];
                     let yPos = outputLocations![4 * i + 1];

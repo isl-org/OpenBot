@@ -85,7 +85,7 @@ class Detector: Network {
         public func getId() -> String {
             id;
         }
-        
+
         /// Getter function.
         ///
         /// - Returns: class Id
@@ -211,7 +211,7 @@ class Detector: Network {
 
     func getObjThresh() -> Float {
         // TODO: return ObjectTrackingFragment.MINIMUM_CONFIDENCE_TF_OD_API
-        return 0.5;
+        0.5;
     }
 
     /// Non maximum suppression
@@ -300,16 +300,17 @@ class Detector: Network {
 
     /// Get the name of the label file stored in Assets.
     func getLabelPath() -> String {
-        return "";
+        "";
     }
 
     /// Feeds the data.
     /// This additional method is necessary, because we can have different number of detections
-    func feedData() throws {}
+    func feedData() throws {
+    }
 
     /// Get the total number of labels.
     func getNumLabels() -> Int {
-        return labels.count
+        labels.count
     }
 
     /// Get the list of all the labels
@@ -326,15 +327,16 @@ class Detector: Network {
 
     /// Get the number of detections.
     func getNumDetections() -> Int {
-        return NUM_DETECTIONS;
+        NUM_DETECTIONS;
     }
 
     /// Get specs from tflite file.
-    func parseTFlite() {}
+    func parseTFlite() {
+    }
 
     /// Get the recognitions.
     func getRecognitions(className: String, width: Int, height: Int) -> [Recognition] {
-        return [];
+        [];
     }
 
     ///

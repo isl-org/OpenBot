@@ -6,7 +6,7 @@ import Foundation
 import UIKit
 
 extension UIImage {
-    
+
     /// This function flips the image horizontally.
     func flipHorizontally() -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, scale)

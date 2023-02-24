@@ -96,7 +96,7 @@ class Network {
                 kCVPixelBufferMetalCompatibilityKey: true,
                 kCVPixelBufferIOSurfacePropertiesKey: [:]
             ] as CFDictionary
-
+            
             var pixelBufferPool: CVPixelBufferPool?
             let status = CVPixelBufferPoolCreate(kCFAllocatorDefault, nil, allocationOptions, &pixelBufferPool)
             if status != kCVReturnSuccess {
@@ -216,14 +216,14 @@ class Network {
     ///
     /// - Returns: The number of bytes used to store a single color channel value.
     func getNumBytesPerChannel() -> Int {
-        return 0
+        0
     }
     
     /// Get boolean that determines if aspect ratio should be preserved when rescaling.
     ///
     /// - Returns: true if aspect ratio should be preserved when rescaling.
     func getMaintainAspect() -> Bool {
-        return false
+        false
     }
 }
 

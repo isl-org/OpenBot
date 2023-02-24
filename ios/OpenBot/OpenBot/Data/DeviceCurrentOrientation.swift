@@ -5,9 +5,11 @@
 import Foundation
 import UIKit
 
+/// To recognise and store the orientation of the device.
 class DeviceCurrentOrientation {
     static let shared: DeviceCurrentOrientation = DeviceCurrentOrientation()
-    
+
+    /// function to find the current orientation of the device and store it in currentOrientation variable.
     func findDeviceOrientation() {
         let isPortrait = UIDevice.current.orientation.isPortrait
         let isLandscape = UIDevice.current.orientation.isLandscape

@@ -10,7 +10,7 @@ extension UIView {
         let adaptedConstraints = constraints.filter { (constraint) -> Bool in
             constraint is AdaptedConstraint
         } as! [AdaptedConstraint]
-        
+
         for constraint in adaptedConstraints {
             constraint.resetConstant()
             constraint.awakeFromNib()
@@ -20,7 +20,7 @@ extension UIView {
 
 /// This extension adds computed properties to UIView to get/set the top, bottom, right, and left edges of the view's frame.
 extension UIView {
-    
+
     var top: CGFloat {
         get {
             self.frame.origin.y
@@ -31,7 +31,7 @@ extension UIView {
             self.frame = frame
         }
     }
-    
+
     var bottom: CGFloat {
         get {
             frame.origin.y + frame.size.height
@@ -42,7 +42,7 @@ extension UIView {
             self.frame = frame
         }
     }
-    
+
     var right: CGFloat {
         get {
             self.frame.origin.x + self.frame.size.width
@@ -53,7 +53,7 @@ extension UIView {
             self.frame = frame
         }
     }
-    
+
     var left: CGFloat {
         get {
             self.frame.origin.x

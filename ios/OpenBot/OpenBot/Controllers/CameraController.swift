@@ -79,7 +79,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             kCVPixelBufferMetalCompatibilityKey: true,
             kCVPixelBufferIOSurfacePropertiesKey: [:]
         ] as CFDictionary
-
+        
         var pixelBufferPool: CVPixelBufferPool?
         let status = CVPixelBufferPoolCreate(kCFAllocatorDefault, nil, allocationOptions, &pixelBufferPool)
         if status != kCVReturnSuccess {

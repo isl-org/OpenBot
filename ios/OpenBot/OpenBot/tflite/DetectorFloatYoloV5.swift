@@ -6,7 +6,7 @@ import Foundation
 import TensorFlowLite
 
 class DetectorFloatYoloV5: Detector {
-    
+
     // Additional normalization of the used input.
     let IMAGE_MEAN: Float = 0.0;
     let IMAGE_STD: Float = 255.0;
@@ -19,7 +19,7 @@ class DetectorFloatYoloV5: Detector {
     private var outputScale: Float = 0
     private var outputZeroPoint: Int = -1
     private var outData: UnsafeMutableBufferPointer<UInt8>?;
-    
+
     /// Initialization of a DetectorYoloV5.
     ///
     /// - Parameters:
@@ -34,21 +34,21 @@ class DetectorFloatYoloV5: Detector {
         let tmp_2: Float = pow((Float(inputSize) / 8), 2) * 3
         output_box = Int(tmp_0 + tmp_1 + tmp_2)
     }
-    
+
     /// Get boolean that determines if aspect ratio should be preserved when rescaling.
     ///
     /// - Returns: true if aspect ratio should be preserved when rescaling.
     override func getMaintainAspect() -> Bool {
-        return false;
+        false;
     }
-    
+
     /// Getter function
     ///
     /// - Returns: path of the file containing the diferent labels
     override func getLabelPath() -> String {
         "coco.txt";
     }
-    
+
     /// Get the number of bytes that is used to store a single color channel value.
     ///
     /// - Returns: The number of bytes used to store a single color channel value.
@@ -56,28 +56,28 @@ class DetectorFloatYoloV5: Detector {
         parseTFlite();
         return isModelQuantized ? 1 : 4;
     }
-    
+
     /// Getter function
     ///
     /// - Returns: number of detections of a given class
     override func getNumDetections() -> Int {
         NUM_DETECTIONS;
     }
-    
+
     /// Getter function
     ///
     /// - Returns: image normalization mean value
     override func getImageMean() -> Float {
         IMAGE_MEAN;
     }
-    
+
     /// Getter function
     ///
     /// - Returns: image normalization std value
     override func getImageStd() -> Float {
         IMAGE_STD;
     }
-    
+
     override func parseTFlite() {
         inputScale = try! tflite?.input(at: 0).quantizationParameters?.scale ?? 0
         inputZeroPoint = try! tflite?.input(at: 0).quantizationParameters?.zeroPoint ?? 0
@@ -89,12 +89,12 @@ class DetectorFloatYoloV5: Detector {
         let outputSize = try! tflite?.output(at: 0).data.count ?? 0
         outData = UnsafeMutableBufferPointer<UInt8>.allocate(capacity: outputSize)
     }
-    
+
     /// Copy data to the input of the neural network
     override func feedData() throws {
         _ = try! tflite?.output(at: 0).data.copyBytes(to: outData!);
     }
-    
+
     /// Query the output of the neural network and perform post-processing actions
     ///
     /// - Parameters:
@@ -103,12 +103,12 @@ class DetectorFloatYoloV5: Detector {
     ///     - height: height of he
     /// - Returns: an array of "Recognition" structures, containing the pixel coordinates, bounding boxes and classes of the different network detections
     override func getRecognitions(className: String, width: Int, height: Int) -> [Recognition] {
-        
+
         var out = Array(repeating: Array<Float32>(repeating: 0, count: numClass + 5), count: output_box);
         var recognitions: [Recognition] = [];
         var classes = Array<Float32>(repeating: 0, count: numClass);
         let output_channels: Int = numClass + 5
-        
+
         for i in (0..<output_box) {
             for j in (0..<numClass + 5) {
                 if (isModelQuantized) {
@@ -117,29 +117,29 @@ class DetectorFloatYoloV5: Detector {
                     out[i][j] = Float(outData![i * output_channels + j])
                 }
             }
-            
+
             // Denormalize xywh
             for j in (0..<4) {
                 out[i][j] *= Float(inputSize)
             }
         }
-        
+
         for i in (0..<output_box) {
             let confidence: Float = out[i][4]
             var classId = -1;
             var maxClass: Float = 0;
-            
+
             for c in (0..<labels.count) {
                 classes[c] = out[i][5 + c]
             }
-            
+
             for c in (0..<labels.count) {
                 if (classes[c] > maxClass) {
                     classId = c;
                     maxClass = classes[c];
                 }
             }
-            
+
             let score: Float = maxClass * confidence
             if (score > getObjThresh()) {
                 if (classId > -1 && className == labels[classId]) {
