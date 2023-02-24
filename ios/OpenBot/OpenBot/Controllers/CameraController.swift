@@ -25,6 +25,9 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     private let inferenceQueue = DispatchQueue(label: "openbot.cameraController.inferencequeue")
     var previewResolution: Resolutions = .MEDIUM
     
+    // Image processing memory pool
+    var preAllocatedMemoryPool: CVPixelBufferPool?
+    
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +70,22 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             checkCameraPermission()
         }
         initializeCamera()
+        
+        // Create the pixel buffer pool using the desired format, size, and allocation options
+        let allocationOptions = [
+            kCVPixelBufferWidthKey: 1920,
+            kCVPixelBufferHeightKey: 1920,
+            kCVPixelBufferPixelFormatTypeKey: kCVPixelFormatType_32BGRA,
+            kCVPixelBufferMetalCompatibilityKey: true,
+            kCVPixelBufferIOSurfacePropertiesKey: [:]
+        ] as CFDictionary
+
+        var pixelBufferPool: CVPixelBufferPool?
+        let status = CVPixelBufferPoolCreate(kCFAllocatorDefault, nil, allocationOptions, &pixelBufferPool)
+        if status != kCVReturnSuccess {
+            print("Error: could not allocate memory pool!")
+        }
+        self.preAllocatedMemoryPool = pixelBufferPool
     }
     
     /// Function that checks whether camera permission is given to OpenBot or not

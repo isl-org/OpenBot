@@ -27,6 +27,9 @@ class Network {
     // An instance of the driver class to run model inference with Tensorflow Lite.
     var tflite: Interpreter?;
     
+    // Image processing memory pool
+    var preAllocatedMemoryPool: CVPixelBufferPool?
+    
     /// Initializes a Network.
     ///
     /// - Parameters:
@@ -84,6 +87,22 @@ class Network {
             }
             imageSize = model.getInputSize();
             intValues = [Int(imageSize.width) * Int(imageSize.height)];
+            
+            // Create the pixel buffer pool using the desired format, size, and allocation options
+            let allocationOptions = [
+                kCVPixelBufferWidthKey: 1920,
+                kCVPixelBufferHeightKey: 1920,
+                kCVPixelBufferPixelFormatTypeKey: kCVPixelFormatType_32BGRA,
+                kCVPixelBufferMetalCompatibilityKey: true,
+                kCVPixelBufferIOSurfacePropertiesKey: [:]
+            ] as CFDictionary
+
+            var pixelBufferPool: CVPixelBufferPool?
+            let status = CVPixelBufferPoolCreate(kCFAllocatorDefault, nil, allocationOptions, &pixelBufferPool)
+            if status != kCVReturnSuccess {
+                print("Error: could not allocate memory pool!")
+            }
+            self.preAllocatedMemoryPool = pixelBufferPool
         }
     }
     

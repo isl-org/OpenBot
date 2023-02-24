@@ -193,7 +193,7 @@ class DataCollectionController: CameraController {
                     case .HIGH:
                         scaledSize = CGSize(width: CGFloat(1920.0), height: CGFloat(1080.0))
                     }
-                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize) else {
+                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize, with: self.preAllocatedMemoryPool!) else {
                         debugPrint("unable to resize/crop sample buffer")
                         return
                     }
@@ -206,7 +206,7 @@ class DataCollectionController: CameraController {
                 if self.isTrainingSelected {
                     let imageName = String(self.count) + Strings.underscore + Strings.crop
                     let scaledSize = CGSize(width: CGFloat(self.widthOfTrainingImage), height: CGFloat(self.heightOfTrainingImage))
-                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize) else {
+                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize, with: self.preAllocatedMemoryPool!) else {
                         debugPrint("unable to resize/crop sample buffer")
                         return
                     }
@@ -215,8 +215,8 @@ class DataCollectionController: CameraController {
                     self.dataLogger.saveImages(image: croppedImage, name: imageName);
                 }
                 self.count += 1
-                // let endTime = Date().millisecondsSince1970
-                // print(1000 / (endTime - startTime))
+                let endTime = Date().millisecondsSince1970
+                print(1000 / (endTime - startTime))
                 self.isImageCaptureQueueBusy = false
             } else {
                 self.count = 0
@@ -237,7 +237,6 @@ class DataCollectionController: CameraController {
             dataLogger.createOpenBotFolders()
             
             // Sample the robot sensors at a desired rate
-            var startTime = Date().millisecondsSince1970
             Timer.scheduledTimer(withTimeInterval: expandSettingView.samplingPeriod, repeats: true) { [self] timer in
                 if !loggingEnabled {
                     timer.invalidate()
@@ -246,9 +245,6 @@ class DataCollectionController: CameraController {
                 // Sample IMU sensor data
                 sensorData.sampleIMU()
                 dataLogger.recordLogs();
-                let endTime = Date().millisecondsSince1970
-                print(1000 / (endTime - startTime))
-                startTime = Date().millisecondsSince1970
             }
         } else {
             expandSettingView.logData.isOn = false

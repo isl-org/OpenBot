@@ -158,7 +158,13 @@ class DetectorDefault: Detector {
             let yPos = CGFloat(outputLocations![(4 * i)]) * CGFloat(getImageSizeY());
             let w = CGFloat(outputLocations![(4 * i) + 3]) * CGFloat(getImageSizeX()) - xPos;
             let h = CGFloat(outputLocations![(4 * i) + 2]) * CGFloat(getImageSizeY()) - yPos;
-            let detection = CGRect(x: xPos, y: yPos, width: w, height: h).applying(CGAffineTransform(scaleX: CGFloat(width) / CGFloat(getImageSizeX()), y: CGFloat(height) / CGFloat(getImageSizeY())));
+            let scaleX = CGFloat(width) / CGFloat(getImageSizeX())
+            let scaleY = CGFloat(height) / CGFloat(getImageSizeY())
+            let scale = min(scaleX, scaleY)
+            let dx = (CGFloat(width) - scale*CGFloat(getImageSizeX()))/2
+            let dy = (CGFloat(height) - scale*CGFloat(getImageSizeY()))/2
+            let transform = CGAffineTransform.identity.translatedBy(x: dx, y: dy).scaledBy(x: scale, y: scale)
+            let detection = CGRect(x: xPos, y: yPos, width: w, height: h).applying(transform);
             // SSD Mobilenet V1 Model assumes class 0 is background class
             // in label file and class labels start from 1 to number_of_classes+1,
             // while outputClasses correspond to class index from 0 to number_of_classes

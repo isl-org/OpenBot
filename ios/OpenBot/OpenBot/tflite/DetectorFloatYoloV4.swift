@@ -145,7 +145,13 @@ class DetectorFloatYoloV4: Detector {
                     let yPos = outputLocations![4 * i + 1];
                     let w = outputLocations![4 * i + 2];
                     let h = outputLocations![4 * i + 3];
-                    let detection: CGRect = CGRect(x: CGFloat(max(0, xPos - w / 2)), y: CGFloat(max(0, yPos - h / 2)), width: CGFloat(w), height: CGFloat(h)).applying(CGAffineTransform(scaleX: CGFloat(width) / CGFloat(getImageSizeX()), y: CGFloat(height) / CGFloat(getImageSizeY())));
+                    let scaleX = CGFloat(width) / CGFloat(getImageSizeX())
+                    let scaleY = CGFloat(height) / CGFloat(getImageSizeY())
+                    let scale = min(scaleX, scaleY)
+                    let dx = (CGFloat(width) - scale*CGFloat(getImageSizeX()))/2
+                    let dy = (CGFloat(height) - scale*CGFloat(getImageSizeY()))/2
+                    let transform = CGAffineTransform.identity.translatedBy(x: dx, y: dy).scaledBy(x: scale, y: scale)
+                    let detection = CGRect(x: CGFloat(max(0, xPos - w / 2)), y: CGFloat(max(0, yPos - h / 2)), width: CGFloat(w), height: CGFloat(h)).applying(transform);
                     recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: maxClass, location: detection, classId: classId));
                 }
             }

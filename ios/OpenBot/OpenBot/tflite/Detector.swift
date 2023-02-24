@@ -177,7 +177,7 @@ class Detector: Network {
 
         // Crops the image to the biggest square in the center and scales it down to model dimensions.
         let scaledSize = CGSize(width: getImageSizeX(), height: getImageSizeY())
-        guard let scaledPixelBuffer = pixelBuffer.resized(to: scaledSize) else {
+        guard let scaledPixelBuffer = pixelBuffer.resized(to: scaledSize, with: self.preAllocatedMemoryPool!) else {
             return []
         }
 
