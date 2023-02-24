@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.5.20'
+    ext.kotlin_version = '1.6.21'
     ext.webrtc_version = '1.0.32006'
     ext.location_version = '19.0.1'
     ext.nearby_version = '18.0.2'
@@ -10,7 +10,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.4.0'
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
         classpath 'de.undercouch:gradle-download-task:4.1.1'
@@ -34,12 +34,40 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task checkStyle(type:Exec) {
+task checkStyle(type:JavaExec) {
+    workingDir = "utils"
+    classpath = files("utils/google-java-format-1.7-all-deps.jar")
+    FileTree tree = fileTree('app/src/main/java') {
+        include '**/*.java'
+    }
+    args(["-n","--set-exit-if-changed"]) // -n prints filename if using wrong style
+    tree.each {args += it}
+    //color codes: "\u001B[33m" - yellow, "\u001B[32m" - green, "\u001B[0m" - reset (Unix)
+    doFirst {
+        println("You can fix the style of the files below (if any) with "
+                + "\u001B[33m" + "./gradlew applyStyle" + "\u001B[0m")
+    }
+    doLast { // will only execute on success (exitcode=0)
+        println ("\u001B[32m" + " -> All java files follow the correct style." + "\u001B[0m")
+    }
+}
+
+task checkStyleUnix(type:Exec) {
     workingDir 'utils'
     commandLine './checkStyle.sh'
 }
 
-task applyStyle(type:Exec) {
+task applyStyle(type:JavaExec) {
+    workingDir = "utils"
+    classpath = files("utils/google-java-format-1.7-all-deps.jar")
+    FileTree tree = fileTree('app/src/main/java') {
+        include '**/*.java'
+    }
+    args("-r") // replace cmd, means write changes back to source file
+    tree.each {args += it}
+}
+
+task applyStyleUnix(type:Exec) {
     workingDir 'utils'
     commandLine './applyStyle.sh'
 }

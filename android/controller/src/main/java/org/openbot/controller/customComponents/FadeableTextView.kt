@@ -48,7 +48,7 @@ class FadeableTextView @JvmOverloads constructor(
         val fadeOut = ObjectAnimator.ofFloat(this, "alpha", 1f, 0f)
         fadeOut.duration = 500
         fadeOut.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 hide()
             }
         })

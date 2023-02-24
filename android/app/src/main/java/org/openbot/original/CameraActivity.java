@@ -49,7 +49,6 @@ import android.os.SystemClock;
 import android.os.Trace;
 import android.util.Log;
 import android.util.Size;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -201,6 +200,7 @@ public abstract class CameraActivity extends AppCompatActivity
     vehicle = OpenBotApplication.vehicle;
 
     phoneController = PhoneController.getInstance(this);
+    preferencesManager = new SharedPreferencesManager(this);
 
     setContentView(R.layout.activity_camera);
     Toolbar toolbar = findViewById(R.id.toolbar);
@@ -212,8 +212,6 @@ public abstract class CameraActivity extends AppCompatActivity
     } else {
       PermissionUtils.requestCameraPermission(this);
     }
-
-    preferencesManager = new SharedPreferencesManager(this);
 
     connectionSwitchCompat = findViewById(R.id.connection_switch);
     threadsTextView = findViewById(R.id.threads);
@@ -238,8 +236,10 @@ public abstract class CameraActivity extends AppCompatActivity
     List<String> models =
         masterList.stream()
             .filter(f -> f.pathType != Model.PATH_TYPE.URL)
+            .filter(f -> f.type != Model.TYPE.GOALNAV)
             .map(f -> FileUtils.nameWithoutExtension(f.name))
             .collect(Collectors.toList());
+
     masterList.stream()
         .filter(f -> f.name.contains(preferencesManager.getDefaultModel()))
         .findFirst()
@@ -634,8 +634,8 @@ public abstract class CameraActivity extends AppCompatActivity
     Model item =
         new Model(
             masterList.size() + 1,
-            Model.CLASS.AUTOPILOT_F,
-            Model.TYPE.AUTOPILOT,
+            Model.CLASS.AUTOPILOT,
+            Model.TYPE.CMDNAV,
             model,
             Model.PATH_TYPE.FILE,
             getFilesDir() + File.separator + model,
@@ -851,25 +851,19 @@ public abstract class CameraActivity extends AppCompatActivity
     }
   }
 
-  protected int getScreenOrientation() {
-    switch (getWindowManager().getDefaultDisplay().getRotation()) {
-      case Surface.ROTATION_270:
-        return 270;
-      case Surface.ROTATION_180:
-        return 180;
-      case Surface.ROTATION_90:
-        return 90;
-      default:
-        return 0;
-    }
-  }
-
   protected int getCameraUserSelection() {
     // during initialisation there is no cameraToggle so we assume default
     if (this.cameraSwitchCompat == null) {
-      this.cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
+      // set from user preferences (last used selection)
+      this.cameraSelection =
+          preferencesManager.getCameraSwitch()
+              ? CameraCharacteristics.LENS_FACING_FRONT
+              : CameraCharacteristics.LENS_FACING_BACK;
     } else {
-      this.cameraSelection = this.cameraSwitchCompat.isChecked() ? 0 : 1;
+      this.cameraSelection =
+          this.cameraSwitchCompat.isChecked()
+              ? CameraCharacteristics.LENS_FACING_FRONT
+              : CameraCharacteristics.LENS_FACING_BACK;
     }
     return this.cameraSelection;
   }
@@ -1098,7 +1092,8 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void startLogging() {
     logFolder =
-        Environment.getExternalStorageDirectory().getAbsolutePath()
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                .getAbsolutePath()
             + File.separator
             + getString(R.string.app_name)
             + File.separator

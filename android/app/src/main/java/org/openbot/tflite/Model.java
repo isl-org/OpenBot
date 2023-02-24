@@ -24,17 +24,18 @@ public class Model {
   }
 
   public enum CLASS {
-    AUTOPILOT_F,
-    MOBILENETV1_1_0_Q,
-    MOBILENETV3_S_Q,
+    AUTOPILOT,
+    MOBILENET,
+    EFFICIENTDET,
     YOLOV4,
+    YOLOV5,
     NAVIGATION
   }
 
   public enum TYPE {
-    AUTOPILOT,
+    CMDNAV,
     DETECTOR,
-    NAVIGATION
+    GOALNAV
   }
 
   public enum PATH_TYPE {

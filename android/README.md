@@ -41,9 +41,9 @@ Alternatively, you can download the apks from the assets of any [release](https:
 
 ### Prerequisites
 
-- [Android Studio 3.2 or later](https://developer.android.com/studio/index.html) for building and installing the apks.
+- [Android Studio Electric Eel | 2022.1.1 or later](https://developer.android.com/studio/index.html) for building and installing the apks.
 - Android device and Android development environment with minimum API 21.
-- Currently, we use API 30 as compile SDK and API 29 as target SDK. It should get installed automatically, but if not you can install the SDK manually. Go to Android Studio -> Preferences -> Appearance & Behaviour -> System Settings -> Android SDK. Make sure API 30 is checked and click apply.
+- Currently, we use API 33 as compile SDK and API 32 as target SDK. It should get installed automatically, but if not you can install the SDK manually. Go to Android Studio -> Preferences -> Appearance & Behaviour -> System Settings -> Android SDK. Make sure API 33 is checked and click apply.
 
 ![Android SDK](../docs/images/android_studio_sdk.jpg)
 
@@ -58,4 +58,10 @@ Alternatively, you can download the apks from the assets of any [release](https:
 5. Click the Run button (the green arrow) or select Run > Run 'android' from the top menu. You may need to rebuild the project using Build > Rebuild Project.
   ![Run](../docs/images/android_studio_bar_run.jpg)
 6. If it asks you to use Instant Run, click *Proceed Without Instant Run*.
+
+### Troubleshooting
+
+#### Versions
+
+If you get a message like `The project is using an incompatible version (AGP 7.4.0) of the Android Gradle plugin. Latest supported version is AGP 7.3.0` you need to upgrade Android Studio or downgrade your gradle plugin. You can read more about the version compatablility between Android Studio and the gradle plugin [here](https://developer.android.com/studio/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility).
 

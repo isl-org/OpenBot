@@ -16,35 +16,96 @@ You first need to setup your training environment.
 
 ## Dependencies
 
-We recommend to create a conda environment for OpenBot (if not already done). Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). You can create a new environment with the following command:
+We recommend to create a conda environment for OpenBot. Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). The easiest way to create a new environment with all dependencies is to use one of the provided environment files. Make sure you are in the folder `policy` within your local OpenBot repository. Based on your operating system, run the corresponding command:
 
-```bash
-conda create -n openbot pip
+- **MacOS**: `conda env create -f environment_mac.yml`
+- **Windows**: `conda env create -f environment_win.yml`
+- **Linux**: `conda env create -f environment_linux.yml`
+
+For GPU support, make sure you also have the appropriate drivers installed. On Mac and Windows, everything should work out of the box. On Linux, you can install the drivers with the following command:
+```
+sudo apt-get install nvidia-driver-510
+```
+On Linux, you will probably also need to run the following to add cuda and cudnn to your path:
+```
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/' >> ~/.bashrc
+source ~/.bashrc
 ```
 
-If you do not want install the dependencies globally, activate your conda environment first:
+Done! You are ready to train your own models. If this doesn't work for you, below are instructions for setting up such an environment manually. 
+
+### Manual environment setup
+
+First create a new conda environment with the following command:
+
+```bash
+conda create -n openbot pip python=3.9 -y
+```
+
+Next, you need to activate your conda environment:
 
 ```bash
 conda activate openbot
 ```
 
-Make sure you are in the folder `policy` within your local OpenBot repository. Now, you can install all the dependencies for training with the following command:
+If this does not work (e.g. on Windows), you may need to activate the environment with `activate openbot` instead.
+
+Once the environment is active, you need to install tensorflow. Note that training will be very slow on a laptop. So if you have access to a computer with dedicated GPU, we highly recommend to use it by installing the neccessary libraries; make sure you have recent GPU drivers installed. Below are the commands to install tensorflow for different operating systems.
+
+#### **Mac OS**
+```
+conda install -c apple tensorflow-deps -y
+pip install tensorflow-macos~=2.9.0
+```
+GPU support
+```
+pip install tensorflow-metal~=0.5.0
+```
+[Troubleshooting](https://developer.apple.com/metal/tensorflow-plugin/)
+
+#### **Linux**
+```
+pip install tensorflow~=2.9.0
+```
+GPU support
+```
+sudo apt-get install nvidia-driver-510
+conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1 -y
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/' >> ~/.bashrc
+source ~/.bashrc
+```
+[Troubleshooting](https://www.tensorflow.org/install/pip#linux)
+
+#### **Windows**
+```
+pip install tensorflow~=2.9.0
+```
+GPU support
+```
+conda install cudatoolkit=11.3 cudnn=8.2 -y
+```
+
+#### **Additional requirements**
+
+Make sure you are in the folder `policy` within your local OpenBot repository. Now, you can install all the remaining dependencies with the following command:
 
 ```bash
-pip install -r requirements_train.txt
+pip install -r requirements.txt
 ```
 
 You can also install pydot (`pip install pydot`) and graphviz ([see instructions](https://graphviz.gitlab.io/download/)) if you want to visualize the the network architecture.
 
-Note that training will be very slow on a laptop. So if you have access to a computer with dedicated GPU, we highly recommend to use it.
-
-If you want to use the [WebApp](#web-app) for data collection and training, you need to install the following dependencies in addition.
+If you want to use the [WebApp](#web-app) for data collection and training, you need to install the following dependencies in addition. (On Mac, the `brotlipy` package is currently broken on pip, so you need to install it first using conda: `conda install brotlipy=0.7`)
 
 ```bash
 pip install -r requirements_web.txt
 ```
 
-If you prefer to setup the environment manually, here is a list of the dependencies:
+### Essential packages
+
+For reference and troubleshooting, below is a list of the essential packages.
+
+Training:
 
 - [tensorflow](https://pypi.org/project/tensorflow/)
 - [jupyter notebook](https://pypi.org/project/notebook/)
@@ -53,13 +114,13 @@ If you prefer to setup the environment manually, here is a list of the dependenc
 - [PIL](https://pypi.org/project/Pillow/)
 - [black[jupyter]](https://pypi.org/project/black/)
 
-If you want to use the web interface you also need:
+Web interface:
 
 - [aiohttp](https://pypi.org/project/aiohttp/)
 - [aiozeroconf](https://pypi.org/project/aiozeroconf/)
 - [imageio](https://pypi.org/project/imageio/)
 
-NOTES:
+### Notes
 
 - Remember to activate the environment before running commands in the terminal: `conda activate openbot`
 - If your tensorflow import does not work, try installing via `pip install tensorflow --user`. (See this [issue](https://github.com/intel-isl/OpenBot/issues/98).)
@@ -71,10 +132,10 @@ NOTES:
 In order to train an autonomous driving policy, you will first need to collect a dataset. The more data you collect, the better the resulting driving policy. For the experiments in our paper, we collected about 30 minutes worth of data. Note that the network will imitate your driving behaviour. The better and more consistent you drive, the better the network will learn to drive.
 
 1. Connect a bluetooth game controller to the phone (e.g. PS4 controller: to enter pairing mode press the PS and share buttons until the LED flashes quickly).
-2. Select the `CIL-Mobile` model in the app.
+2. Select the `CIL-Mobile-Cmd` model in the app.
 3. Now drive drive the car via a game controller and record a dataset. On the PS4 controller logging can be toggled with the **X** button.
 
-You will now find a folder called *Openbot* on the internal storage of your smartphone. For each recording, there will be zip file. The name of the zip file will be in the format *yyyymmdd_hhmmss.zip* corresponding to the timestamp of when the recording was started.
+You will now find a folder called *Documents/OpenBot* in the internal storage of your smartphone. For each recording, there will be zip file. The name of the zip file will be in the format *yyyymmdd_hhmmss.zip* corresponding to the timestamp of when the recording was started.
 
 The Jupyter notebook expects a folder called `dataset` in the same folder. In this folder, there should be two subfolders, `train_data` and `test_data`. The training data is used to learn the driving policy. The test data is used to validate the learned driving policy on unseen data during the training process. This provides some indication how well this policy will work on the robot. Even though the robot may drive along the same route as seen during training, the exact images observed will be slightly different in every run. The common split is 80% training data and 20% test data. Inside the `train_data` and `test_data` folders, you need to make a folder for each recording session and give it a name such as `my_openbot_1`, `my_openbot_2`, etc. The idea here is that each recording session may have different lighting conditions, a different robot, a different route. In the Jupyter notebook, you can then train only on a subset of these datasets or on all of them. Inside each recording session folder, you drop all the recordings from that recording session. Each recording corresponds to an extracted zip file that you have transferred from the *Openbot* folder on your phone. Your dataset folder should look like this:
 
@@ -218,7 +279,7 @@ When you run the server you should see something like:
 Skip address 127.0.0.1 @ interface lo
 Found address 192.168.x.x @ interface wlp2s0
 Registration of a service, press Ctrl-C to exit...
-Running frontend: 0.1.0
+Running frontend: 0.7.0
 Frontend path: /home/USERNAME/miniconda3/envs/openbot/lib/python3.7/site-packages/openbot_frontend
 ======== Running on http://0.0.0.0:8000 ========
 (Press CTRL+C to quit)

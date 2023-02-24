@@ -13,7 +13,7 @@ care is neccessary when using automated control (e.g. person following or drivin
 The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon at the top right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/screen_main.jpg" alt="Main Menu" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/screen_main.gif" alt="Main Menu" width="25%"/>
 <img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="25%"/>
 </p>
 
@@ -95,7 +95,7 @@ If a model is active, the inference speed in [ms] will be displayed next to the 
 Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
 
 <p align="left">
-<img src="../../docs/images/screen_free_roam.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_free_roam.jpg" alt="Free Roam" width="50%" />
 </p>
 
 - **Battery**: The battery icon shows realtime battery levels of the connected robot.
@@ -119,7 +119,7 @@ Free Roam offers simple robot control with real time updates and information abo
 Simple UI for collection of data sets.
 
 <p align="left">
-<img src="../../docs/images/screen_data_collection.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_data_collection.jpg" alt="Data Collection" width="50%" />
 </p>
 
 - **Preview Resolution**: Used to switch between resolutions of camera preview. There are 3 settings:
@@ -140,7 +140,15 @@ Simple UI for collection of data sets.
 Simple UI to check the button and joystick mapping of a connected BT controller.
 
 <p align="left">
-<img src="../../docs/images/screen_controller_mapping.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_controller_mapping.jpg" alt="Controller Mapping" width="50%" />
+</p>
+
+### Robot Info
+
+Simple UI to get robot info and test basic functionality. The **Robot Type** as configured in the firmware is displayed as text and animation. The checkmarks in the sections **Sensors**, **Wheel Odometry** and **LEDs** show which features are supported by the connected robot. The section **Readings** provides the most important sensor measurements. In the section **Send Commands**, users can send basic motor commands by pressing the corresponding buttons and control the front and rear LEDs with a slider. 
+
+<p align="left">
+<img src="../../docs/images/screen_robot_info.gif" alt="Robot Info" width="50%" />
 </p>
 
 ### Autopilot
@@ -148,7 +156,7 @@ Simple UI to check the button and joystick mapping of a connected BT controller.
 Simple UI for running autopilot models.
 
 <p align="left">
-<img src="../../docs/images/screen_autopilot.jpg" alt="Alt text" width="50%" />
+<img src="../../docs/images/screen_autopilot.jpg" alt="Autopilot" width="50%" />
 </p>
 
 ### Object Tracking
@@ -178,10 +186,10 @@ Note that this fragment requires ARCore and camera permission. If your device do
 
 ### Model Management
 
-All models are quantized for better performance on embedded devices. Please refer to section below for a short description of the available models and benchmarking results. The [mean Average Precision (mAP)](https://kharshit.github.io/blog/2019/09/20/evaluation-metrics-for-object-detection-and-segmentation) is computed on the validation set of the [COCO Detection 2017](https://cocodataset.org/#detection-2017) dataset. The runtime is averaged across 100 frames and reported in frames per second (fps).
+All models are quantized for better performance on embedded devices. Please refer to section below for a short description of the available models and benchmarking results. The [mean Average Precision (mAP)](https://kharshit.github.io/blog/2019/09/20/evaluation-metrics-for-object-detection-and-segmentation) is computed on the validation set of the [COCO Detection 2017](https://cocodataset.org/#detection-2017) dataset. Each model is run for about 1 minute; the inference time is averaged across the last 100 frames and reported in frames per second (fps). Note that models with larger input resolution might be better for smaller objects despite lower mAP.
 
 <p align="left">
-<img src="../../docs/images/screen_model_management.jpg" alt="Alt text" width="25%" />
+<img src="../../docs/images/screen_model_management.gif" alt="Model Management" width="25%" />
 </p>
 
 ### Benchmark
@@ -194,11 +202,12 @@ All models are quantized for better performance on embedded devices. Please refe
 | Samsung S20FE 5G | Snapdragon 865 |  6GB | 12 |
 | Huawei P30 Pro   | Kirin 980      |  8GB | 10 |
 | Google Pixel 6XL | Google Tensor  | 12GB | 12 |
-| Xiaomi Mi9       | Snapdragon 855 |  6GB |  9 |
+| Xiaomi Mi9       | Snapdragon 855 |  6GB | 10 |
+| Google Pixel 4XL | Snapdragon 855 |  6GB | 13 |
 
 #### MobileNetV1-300 (pre-installed) - mAP: 18%
 
-SSD object detector with MobileNet V1 backbone and input resolution of 300x300.
+SSD object detector with [MobileNet V1](https://tfhub.dev/tensorflow/lite-model/ssd_mobilenet_v1/1/metadata/2) backbone and input resolution of 300x300.
 
 |phone/device (fps)| CPU | GPU | NNAPI |
 |------------------|-----|-----|-------|
@@ -207,6 +216,7 @@ SSD object detector with MobileNet V1 backbone and input resolution of 300x300.
 | Huawei P30 Pro   |  36 |  25 |   10  |
 | Google Pixel 6XL |  35 |  42 |   53  |
 | Xiaomi Mi9       |  22 |  41 |   33  |
+| Google Pixel 4XL |  37 |  36 |   45  |
 
 #### MobileNetV3-320 - mAP: 16%
 
@@ -219,20 +229,9 @@ SSD object detector with MobileNet V3 backbone and input resolution of 320x320.
 | Huawei P30 Pro   |  32 |  27 |   23  |
 | Google Pixel 6XL |  33 |  43 |   27  |
 | Xiaomi Mi9       |  20 |  45 |   10  |
+| Google Pixel 4XL |  32 |  38 |   21  |
 
-#### YoloV4-224 - mAP: 40.40%
-
-State-of-the-art object detector [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution of 224x224.
-
-|phone/device (fps)| CPU | GPU | NNAPI |
-|------------------|-----|-----|-------|
-| Samsung S22 Ultra| 3.7 | 5.6 |  3.5  |
-| Samsung S20FE 5G | 3.1 | 7.1 |  4.2  |
-| Huawei P30 Pro   | 2.4 | 6.2 |  0.7  |
-| Google Pixel 6XL | 2.7 |  11 |  0.9  |
-| Xiaomi Mi9       | 2.1 | 6.4 |  1.7  |
-
-#### YoloV4-tiny-224 - mAP: 22.05%
+#### YoloV4-tiny-224 - mAP: 22%
 
 Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution of 224x224.
 
@@ -243,8 +242,9 @@ Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution
 | Huawei P30 Pro   |  27 |  17 |   22  |
 | Google Pixel 6XL |  29 |  24 |   19  |
 | Xiaomi Mi9       |  16 |  14 |  9.3  |
+| Google Pixel 4XL |  22 |  19 |   14  |
 
-#### YoloV4-tiny-416 - mAP: 29.42%
+#### YoloV4-tiny-416 - mAP: 29%
 
 Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution of 416x416.
 
@@ -255,6 +255,90 @@ Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution
 | Huawei P30 Pro   | 8.4 | 7.6 |  6.9  |
 | Google Pixel 6XL |  10 | 9.6 |  7.2  |
 | Xiaomi Mi9       | 9.0 | 7.3 |  5.0  |
+| Google Pixel 4XL | 7.2 | 7.4 |  6.2  |
+
+#### YoloV4-224 - mAP: 40%
+
+[YoloV4](https://arxiv.org/abs/2004.10934) with input resolution of 224x224.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra| 3.7 | 5.6 |  3.5  |
+| Samsung S20FE 5G | 3.1 | 7.1 |  4.2  |
+| Huawei P30 Pro   | 2.4 | 6.2 |  0.7  |
+| Google Pixel 6XL | 2.7 |  11 |  0.9  |
+| Xiaomi Mi9       | 2.1 | 6.4 |  1.7  |
+| Google Pixel 4XL | 1.8 | 5.0 |  3.7  |
+
+#### YoloV5s-320 - mAP: 28%
+
+[YoloV5](https://github.com/ultralytics/yolov5) with input resolution of 320x320.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra|  21 |  10 |   21  |
+| Xiaomi Mi9       |  13 |  15 |  0.8  |
+| Google Pixel 4XL |  12 |  17 |   18  |
+
+#### YoloV5s-640 - mAP: 34%
+
+[YoloV5](https://github.com/ultralytics/yolov5) with input resolution of 640x640.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra| 5.5 | 4.9 |  5.0  |
+| Xiaomi Mi9       | 4.1 | 4.6 |   -   |
+| Google Pixel 4XL | 3.7 | 4.6 |  4.6  |
+
+#### YoloV5m-320 - mAP: 35%
+
+[YoloV5](https://github.com/ultralytics/yolov5) with input resolution of 320x320.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra|  13 | 8.2 |   11  |
+| Xiaomi Mi9       | 9.7 | 9.9 |   -   |
+| Google Pixel 4XL | 7.9 | 9.2 |   15  |
+
+#### YoloV5l-320 - mAP: 38%
+
+[YoloV5](https://github.com/ultralytics/yolov5) with input resolution of 320x320.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra| 7.6 | 3.4 |  7.6  |
+| Xiaomi Mi9       | 5.5 | 5.0 |   -   |
+| Google Pixel 4XL | 5.3 | 4.0 |  5.3  |
+
+#### EfficientDet-L0-320 - mAP: 26%
+
+[EfficientDet-L0](https://tfhub.dev/tensorflow/lite-model/efficientdet/lite0/detection/metadata/1) with input resolution of 320x320. Note: Model performance deteriorates in landscape mode; the confidence threshold might need to be adjusted.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra|  18 |  10 |   16  |
+| Xiaomi Mi9       |  16 |  20 |  1.2  |
+| Google Pixel 4XL |  17 |  17 |   16  |
+
+#### EfficientDet-L1-384 - mAP: 31%
+
+[EfficientDet-L1](https://tfhub.dev/tensorflow/lite-model/efficientdet/lite1/detection/metadata/1) with input resolution of 384x384. Note: Model performance deteriorates in landscape mode; the confidence threshold might need to be adjusted.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra|  12 | 9.2 |   10  |
+| Xiaomi Mi9       |  10 |  13 |    -  |
+| Google Pixel 4XL |  11 |  11 |   10  |
+
+#### EfficientDet-L2-448 - mAP: 34%
+
+[EfficientDet-L2](https://tfhub.dev/tensorflow/lite-model/efficientdet/lite2/detection/metadata/1) with input resolution of 448x448. Note: Model performance deteriorates in landscape mode; the confidence threshold might need to be adjusted.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra| 9.8 | 8.4 |  8.2  |
+| Xiaomi Mi9       | 6.4 | 9.4 |   -   |
+| Google Pixel 4XL | 7.7 | 8.3 |  7.6  |
 
 ## Add your own fragment
 

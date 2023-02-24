@@ -67,6 +67,13 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
   private Spinner serverSpinner;
 
   @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // create before inflateFragment() to prevent npe when calling addCamera()
+    preferencesManager = new SharedPreferencesManager(requireContext());
+  }
+
+  @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     requireActivity()
@@ -75,7 +82,6 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
 
     phoneController = PhoneController.getInstance(requireContext());
 
-    preferencesManager = new SharedPreferencesManager(requireContext());
     audioPlayer = new AudioPlayer(requireContext());
     masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
     serverCommunication = new ServerCommunication(requireContext(), this);
@@ -415,8 +421,8 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
     Model item =
         new Model(
             masterList.size() + 1,
-            Model.CLASS.AUTOPILOT_F,
-            Model.TYPE.AUTOPILOT,
+            Model.CLASS.AUTOPILOT,
+            Model.TYPE.CMDNAV,
             model,
             Model.PATH_TYPE.FILE,
             requireActivity().getFilesDir() + File.separator + model,

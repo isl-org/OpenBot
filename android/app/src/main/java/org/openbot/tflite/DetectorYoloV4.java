@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetectorFloatYoloV4 extends Detector {
+public class DetectorYoloV4 extends Detector {
 
   /** Additional normalization of the used input. */
   private static final float IMAGE_MEAN = 0.0f;
@@ -25,11 +25,11 @@ public class DetectorFloatYoloV4 extends Detector {
   private int outputScoresIdx;
 
   /**
-   * Initializes a {@code ClassifierQuantizedMobileNet}.
+   * Initializes a {@code DetectorYoloV4}.
    *
    * @param activity
    */
-  public DetectorFloatYoloV4(Activity activity, Model model, Device device, int numThreads)
+  public DetectorYoloV4(Activity activity, Model model, Device device, int numThreads)
       throws IOException {
     super(activity, model, device, numThreads);
   }
