@@ -20,8 +20,7 @@ The app starts with a menu screen that shows all available screens. The Bluetoot
 
 #### Bluetooth Connection
 
-Unlike the Android app which connects to the microcontroller using USB, iOS app only uses Bluetooth. On Opening bluetooth screen, you can see a list of all the available devices to connect over bluetooth. You can choose your OpenBot microcontroller and connect to it. The default baud rate is 115200, and you should not need to change this unless you mess with the microcontroller firmware. The app will attempt to connect automatically, but in case you encounter issues, you can use this switch to manually disconnect / connect.
-
+Unlike the Android app, which allows connecting the smartphone to the low-level control board of an OpenBot via a USB cable, the iOS app relies solely on a Bluetooth Low-Energy (BLE) wireless connection. When opening the Bluetooth connection screen in the iOS application (by clicking on the bluetooth logo from the main screen or from any fragment), a list of all compatible devices is displayed. Compatibility is here enforced by using a range of specific UUIDs assigned to an OpenBot vehicle at both the [app](https://github.com/3dwesupport/OpenBot/blob/090dcb28206195a7ee45a13b8ded968a8d365abe/ios/OpenBot/OpenBot/Utils/Constants.swift#L57) and [firmware](https://github.com/3dwesupport/OpenBot/blob/090dcb28206195a7ee45a13b8ded968a8d365abe/firmware/openbot_nano/openbot_nano.ino#L115) levels. You must ensure that these UUIDs match. Pairing an iOS device to an OpenBot vehicle then simply requires to select that vehicle from the list and press the "Connect" button. The default baud rate for the connection is set to 115200 and can be changed at the app and firmware level.
 
 ### Free Roam
 
