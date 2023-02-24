@@ -158,7 +158,7 @@ class ObjectTrackingSettings: UIView {
         bar.layer.cornerRadius = 2
     }
 
-
+    /// function to create the bluetooth button
     func createBluetoothIcon() {
         if (isBluetoothConnected) {
             bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
@@ -167,6 +167,7 @@ class ObjectTrackingSettings: UIView {
         }
     }
 
+    /// function to create the camera button
     func createCameraIcon() {
         if let image = Images.frontCamera {
             _ = createIcons(iconImg: image, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
@@ -177,10 +178,12 @@ class ObjectTrackingSettings: UIView {
         NotificationCenter.default.post(name: .ble, object: nil)
     }
 
+    /// function to trigger the switch camera.
     @objc func switchCamera(_ sender: UIView) {
         NotificationCenter.default.post(name: .switchCamera, object: nil)
     }
 
+    /// function to create the icons UI
     func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) -> UIImageView {
         let iconImage = UIImageView(frame: CGRect(x: x, y: y, width: size.width, height: size.height))
         iconImage.image = iconImg
@@ -195,17 +198,20 @@ class ObjectTrackingSettings: UIView {
         return iconImage
     }
 
+    /// function to setup image size.
     func setupInput() {
         imageInputLabel.frame = CGRect(x: width - 80, y: adapted(dimensionSize: 90, to: .height), width: 100, height: 40)
         imageInputLabel.text = selectedModel?.inputSize
         addSubview(imageInputLabel)
     }
 
+    /// function to create speed label to display fps
     func setupSpeed() {
         speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: Int(adapted(dimensionSize: 90, to: .height)))
         addSubview(speedLabel)
     }
 
+    /// function to crete the dropdown for objects
     func setupObjectDropDown() {
         objectDropDown.backgroundColor = Colors.freeRoamButtonsColor;
         objectDropDown.textColor = Colors.bdColor ?? .black
@@ -245,7 +251,7 @@ class ObjectTrackingSettings: UIView {
         objectDropDownView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 91).isActive = true
     }
 
-    /// Set the detection minium confidence level
+    /// Set the detection minimum confidence level
     func setupConfidence() {
         // Setting plus
         let plusImageView = UIView();
@@ -335,6 +341,7 @@ class ObjectTrackingSettings: UIView {
         threadLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 8).isActive = true
     }
 
+    /// function to increase the confidence
     @objc func increaseConfidence(_ sender: UIImage) {
         if confidenceLabel.text == "100%" {
             return
@@ -344,7 +351,7 @@ class ObjectTrackingSettings: UIView {
         confidenceLabel.text = String(value!) + "%"
         NotificationCenter.default.post(name: .updateConfidence, object: value)
     }
-
+    /// function to decrease the confidence
     @objc func decreaseConfidence(_ sender: UIImage) {
         if confidenceLabel.text == "0%" {
             return
@@ -355,6 +362,7 @@ class ObjectTrackingSettings: UIView {
         NotificationCenter.default.post(name: .updateConfidence, object: value)
     }
 
+    /// function to increase the threads
     @objc func increaseThreads(_ sender: UIImage) {
         if threadLabel.text == "9" || threadLabel.text == "N/A" {
             return
@@ -364,7 +372,7 @@ class ObjectTrackingSettings: UIView {
         threadLabel.text = String(value!)
         NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
     }
-
+    /// function to decrease the threads
     @objc func decreaseThreads(_ sender: UIImage) {
         if threadLabel.text == "1" || threadLabel.text == "N/A" {
             return
@@ -375,6 +383,7 @@ class ObjectTrackingSettings: UIView {
         NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
     }
 
+    /// function to setup the controls of the vehicle
     func setupVehicleControls() {
         let vehicleControls = VehicleControl();
         addSubview(vehicleControls)

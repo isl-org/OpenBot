@@ -105,7 +105,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         }
     }
     
-    ///
+    /// function to trigger the popup when camera permissions are not allowed.
     func createAllowAlert(alertFor: String) {
         let alert = UIAlertController(
             title: "IMPORTANT",
@@ -174,7 +174,8 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             }
         }
     }
-    
+
+    /// function to update the camera resolutions for previews.
     @objc func updateCameraPreview(_ notification: Notification?) {
         previewResolution = notification?.object as! Resolutions
         switch previewResolution {
@@ -192,7 +193,8 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             }
         }
     }
-    
+
+    /// function to update the selected model image size.
     @objc func updateModelResolution(_ notification: Notification?) {
         if notification != nil {
             let dimensionOfImage = notification?.object as? String
@@ -206,7 +208,8 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             }
         }
     }
-    
+
+    /// function to update the image mode
     @objc func updateImageMode(_ notification: Notification?) {
         let value = notification?.object as! NSArray
         if value[0] as! Int == 1 {
@@ -320,11 +323,13 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         }
         return nil
     }
-    
+
+    /// function to create rectangle made
     func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
         CGRect(x: x, y: y, width: width, height: height)
     }
-    
+
+    /// function to stop the camera sessions.
     func stopSession() {
         captureSession.stopRunning()
     }

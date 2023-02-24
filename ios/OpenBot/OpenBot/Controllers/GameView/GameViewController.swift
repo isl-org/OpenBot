@@ -69,6 +69,7 @@ class GameViewController: UIViewController {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
 
+    /// function to connect with the controller and trigger all the callback functions
     @objc func didConnectController() {
         if (connectedController == nil) {
             return
@@ -141,10 +142,12 @@ class GameViewController: UIViewController {
         }
     }
 
-    func getTimestamp() -> String {
-        dateFormatter.string(from: Date())
-    }
-
+    /// function to handle the change when tapped on a button
+    ///
+    /// - Parameters:
+    ///   - button: button name
+    ///   - pressed: is Pressed?
+    ///   - overlay: overlay View to display on screen.
     func buttonChangedHandler(_ button: String, _ pressed: Bool, _ overlay: UIView) {
         if pressed {
             controlImage.addSubview(overlay)
@@ -154,6 +157,12 @@ class GameViewController: UIViewController {
         }
     }
 
+    /// function to change the change in L2 R2 buttons
+    ///
+    /// - Parameters:
+    ///   - button: button name
+    ///   - value: value
+    ///   - pressed: is Pressed?
     func triggerChangedHandler(_ button: String, _ value: Float, _ pressed: Bool) {
         if pressed {
             _ = String(format: "%.2f", value)
@@ -161,6 +170,12 @@ class GameViewController: UIViewController {
         }
     }
 
+    /// function to handle the left thumbstick changes
+    ///
+    /// - Parameters:
+    ///   - button: button
+    ///   - xvalue: x axis value
+    ///   - yvalue:  y axis value
     func thumbstickChangedHandlerLeft(_ button: String, _ xvalue: Float, _ yvalue: Float) {
         if (xvalue == 0 && yvalue == 0) {
             overlayLeftThumb_var.removeFromSuperview()
@@ -171,6 +186,12 @@ class GameViewController: UIViewController {
         }
     }
 
+    /// function to handle the right thumbstick changes
+    ///
+    /// - Parameters:
+    ///   - button: button
+    ///   - xvalue: x axis value
+    ///   - yvalue:  y axis value
     func thumbstickChangedHandlerRight(_ button: String, _ xvalue: Float, _ yvalue: Float) {
         if (xvalue == 0 && yvalue == 0) {
             overlayRightThumb_var.removeFromSuperview()

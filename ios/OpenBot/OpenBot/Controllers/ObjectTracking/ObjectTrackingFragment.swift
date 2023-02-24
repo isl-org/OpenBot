@@ -100,29 +100,34 @@ class ObjectTrackingFragment: CameraController {
     @objc func switchCamera() {
         switchCameraView()
     }
-    
+
+    /// function to update the detector model when change in device[CPU, GPU, NNAPI] is triggered.
     @objc func updateDevice(_ notification: Notification) throws {
         currentDevice = RuntimeDevice(rawValue: notification.object as! String) ?? RuntimeDevice.CPU
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
         currentDevice.rawValue == RuntimeDevice.GPU.rawValue ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
         detector?.tfliteOptions.threadCount = numberOfThreads
     }
-    
+
+    /// function to update the number of threads.
     @objc func updateThread(_ notification: Notification) {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 4
         detector?.tfliteOptions.threadCount = numberOfThreads
     }
-    
+
+    /// function to update the confidence of the model
     @objc func updateConfidence(_ notification: Notification) {
         let confidence = notification.object as! Int
         MINIMUM_CONFIDENCE_TF_OD_API = Float(confidence) / 100.0
     }
-    
+
+    /// function to toggle the auto mode
     @objc func toggleAutoMode() {
         autoMode = !autoMode
     }
-    
+
+    /// function to send the controls to the device.
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = control.getLeft() * gameController.selectedSpeedMode.rawValue
@@ -134,7 +139,8 @@ class ObjectTrackingFragment: CameraController {
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
         }
     }
-    
+
+    /// function to update the model
     @objc func updateModel(_ notification: Notification) throws {
         let selectedModelName = notification.object as! String
         currentModel = Common.returnModelItem(modelName: selectedModelName)
@@ -143,7 +149,8 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.post(name: .updateObject, object: currentObject)
         
     }
-    
+
+    /// function to update the selected object.
     @objc func updateSelectedObject(_ notification: Notification) throws {
         currentObject = notification.object as! String
         detector?.setSelectedClass(newClass: notification.object as! String)
@@ -189,7 +196,8 @@ class ObjectTrackingFragment: CameraController {
         }
         return Control(left: left, right: right)
     }
-    
+
+    /// function to create the frame on the screen for detection on based of image device(front/back) or orientation (portrait/landscape).
     func addFrame(item: Detector.Recognition, color: UIColor) -> UIView {
         let frame = UIView()
         var convertedRect: CGRect = item.getLocation()
@@ -249,7 +257,8 @@ class ObjectTrackingFragment: CameraController {
         frame.addSubview(nameString)
         return frame
     }
-    
+
+    /// callback function when any image is clicked on object tracking fragment.
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
         // extract the image buffer from the sample buffer
@@ -320,7 +329,8 @@ class ObjectTrackingFragment: CameraController {
             self.isInferenceQueueBusy = false
         }
     }
-    
+
+    /// function to update the data from the controller.
     @objc func updateDataFromControllerApp(_ notification: Notification) {
         if gameController.selectedControlMode == ControlMode.GAMEPAD {
             return

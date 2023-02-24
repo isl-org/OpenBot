@@ -163,6 +163,7 @@ extension UIViewController: UICollectionViewDelegate {
     }
 }
 
+/// to configure the grid displayed on the homepage.
 extension UIViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         Constants.gameModes.count;
@@ -183,7 +184,6 @@ extension UIViewController: UICollectionViewDataSource {
 
     }
 }
-
 
 extension UIBarButtonItem {
     convenience init(image: UIImage, title: String, target: Any?, action: Selector?, titleColor: UIColor) {

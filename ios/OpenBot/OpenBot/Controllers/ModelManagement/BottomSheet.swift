@@ -154,6 +154,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
 
     }
 
+    /// function to open bottom sheet to pick tflite models.
     func openDocumentPicker() {
         let tfliteFile = UTType("com.openbot.tflite")!
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [tfliteFile])
@@ -163,6 +164,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
         present(documentPicker, animated: true)
     }
 
+    /// function to pick documents from the file explorer.
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
         guard url.startAccessingSecurityScopedResource() else {
             return
