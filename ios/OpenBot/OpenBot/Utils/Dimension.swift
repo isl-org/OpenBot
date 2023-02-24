@@ -4,7 +4,7 @@
 
 import Foundation
 
-/// A structure used to finetune the app behavior according to the phone orientation
+/// A structure used to fine tune the app behavior according to the phone orientation
 enum Dimension {
     case width
     case height

@@ -15,7 +15,7 @@ fileprivate func <<T: Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 extension UIImage {
-
+    /// To create the gifs with Image Data
     public class func gifImageWithData(_ data: Data) -> UIImage? {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else {
             print("image doesn't exist")
@@ -25,6 +25,10 @@ extension UIImage {
         return UIImage.animatedImageWithSource(source)
     }
 
+    /// To create gifs with url
+    ///
+    /// - Parameter gifUrl: url of the image
+    /// - Returns: image
     public class func gifImageWithURL(_ gifUrl: String) -> UIImage? {
         guard let bundleURL: URL = URL(string: gifUrl)
         else {
@@ -39,6 +43,10 @@ extension UIImage {
         return gifImageWithData(imageData)
     }
 
+    /// To find the gif in project bundle with name
+    ///
+    /// - Parameter name: name of the gif file
+    /// - Returns: image
     public class func gifImageWithName(_ name: String) -> UIImage? {
         guard let bundleURL = Bundle.main
                 .url(forResource: name, withExtension: "gif")
@@ -54,6 +62,7 @@ extension UIImage {
         return gifImageWithData(imageData)
     }
 
+    /// To create delay in image for a particular index to give gif effect.
     class func delayForImageAtIndex(_ index: Int, source: CGImageSource!) -> Double {
         var delay = 0.1
 
@@ -81,6 +90,7 @@ extension UIImage {
         return delay
     }
 
+    /// function to get the gcd pair for GIF
     class func gcdForPair(_ a: Int?, _ b: Int?) -> Int {
         var a = a
         var b = b
@@ -113,6 +123,7 @@ extension UIImage {
         }
     }
 
+    /// function to create gcd array for GIF
     class func gcdForArray(_ array: Array<Int>) -> Int {
         if array.isEmpty {
             return 1
@@ -127,6 +138,7 @@ extension UIImage {
         return gcd
     }
 
+    /// animate image for gif
     class func animatedImageWithSource(_ source: CGImageSource) -> UIImage? {
         let count = CGImageSourceGetCount(source)
         var images = [CGImage]()
