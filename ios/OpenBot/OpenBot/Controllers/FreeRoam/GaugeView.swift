@@ -21,9 +21,9 @@ class GaugeView: UIView {
     }
 
 
-    /// Draw the jauge
+    /// Draw the gauge
     ///
-    /// - Parameters: the jauge frame as a CGRect instance
+    /// - Parameters: the gauge frame as a CGRect instance
     override func draw(_ rect: CGRect) {
         guard let ctx = UIGraphicsGetCurrentContext() else {
             print("no ctx found")
@@ -36,7 +36,12 @@ class GaugeView: UIView {
     }
 
 
+    ///function to draw the segments of the gauge
     ///
+    /// - Parameters:
+    ///   - rect: react to get the size of the segment.
+    ///   - ctx:
+    ///   - value:
     func drawSegments(in rect: CGRect, context ctx: CGContext, value: Int) {
         ctx.saveGState()
         ctx.translateBy(x: 180.5, y: rect.midY + 40)
@@ -58,6 +63,7 @@ class GaugeView: UIView {
         ctx.restoreGState()
     }
 
+    /// function to setup the gauge view
     func setUp() {
         valueLabel.font = valueFont
         valueLabel.textColor = UIColor(named: "bdColor")

@@ -262,6 +262,7 @@ class DataCollectionController: CameraController {
         gameController.updateControllerValues()
     }
 
+    /// update control mode
     @objc func updateControlMode(_ notification: Notification?) {
         if let controlMode = notification?.userInfo?["mode"] as? ControlMode {
             selectedControlMode = controlMode;
@@ -275,6 +276,7 @@ class DataCollectionController: CameraController {
         }
     }
 
+    /// update drive mode
     @objc func updateDriveMode(_ notification: Notification) {
         if let driveMode = notification.userInfo?["drive"] as? DriveMode {
             selectedDriveMode = driveMode;
@@ -282,6 +284,7 @@ class DataCollectionController: CameraController {
         }
     }
 
+    /// update speed mode
     @objc func updateSpeedMode(_ notification: Notification) {
         if let speedMode = notification.userInfo?["speed"] as? SpeedMode {
             selectedSpeedMode = speedMode;
@@ -290,14 +293,17 @@ class DataCollectionController: CameraController {
 
     }
 
+    /// update is preview selected
     @objc func updatePreview(_ notification: Notification) {
         isPreviewSelected = !isPreviewSelected
     }
 
+    /// update is training selected
     @objc func updateTraining(_ notification: Notification) {
         isTrainingSelected = !isTrainingSelected
     }
 
+    /// on tap back
     @objc func back(sender: UIBarButtonItem) {
         if isLoggedButtonPressed && loggingEnabled {
             toggleLogging()
@@ -310,6 +316,7 @@ class DataCollectionController: CameraController {
         _ = navigationController?.popViewController(animated: true)
     }
 
+    /// function to update the data from device.
     @objc func updateDataFromControllerApp(_ notification: Notification) {
         if gameController.selectedControlMode == ControlMode.GAMEPAD {
             return
@@ -322,6 +329,7 @@ class DataCollectionController: CameraController {
         }
     }
 
+    /// update the logs data
     @objc func updateLogData(_ notification: Notification) {
         if notification.object != nil {
             let logData = notification.object as! Bool

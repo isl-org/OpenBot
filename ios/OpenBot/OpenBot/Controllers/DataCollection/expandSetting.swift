@@ -89,6 +89,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
 
+    /// UI Function to create button for logs
     func createLogDataButton() {
         _ = createLabels(value: Strings.logData, leadingAnchor: 10, topAnchor: 13, labelWidth: 100, labelHeight: 40)
         logData.isOn = false
@@ -101,6 +102,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         logData.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
     }
 
+    /// UI Function to create button for ble
     func createBluetoothIcon() {
         bluetoothIcon.frame.size = CGSize(width: 30, height: 30)
         bluetoothIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -117,6 +119,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         bluetoothIcon.leadingAnchor.constraint(equalTo: logData.trailingAnchor, constant: 20).isActive = true
     }
 
+    /// UI Function to create button for camera
     func createCameraIcon() {
         cameraIcon.frame.size = CGSize(width: 30, height: 30)
         cameraIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -129,12 +132,13 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         cameraIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
     }
 
+    /// UI Function to create headings
     func resolutionTitle() {
         previewResolution = createLabels(value: Strings.previewResolutionMedium, leadingAnchor: 10, topAnchor: 50, labelWidth: 240, labelHeight: 30)
         previewResolution.font = UIFont.boldSystemFont(ofSize: 16.0)
     }
 
-
+    /// UI Function to create button for resolutions
     func createResolutions() {
         low = createButton(borderColor: "red", buttonName: Strings.low, leadingAnchor: 10, topAnchor: 80, action: #selector(applyLowResolution(_:)))
         medium = createButton(borderColor: "red", buttonName: Strings.medium, leadingAnchor: 100, topAnchor: 80, action: #selector(applyMediumResolution(_:)))
@@ -142,11 +146,13 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         updateResolution()
     }
 
+    /// UI Function to create label for model resolution
     func createModelResolutionTitle() {
         modelResolution = createLabels(value: Strings.modelResolution + "256x96", leadingAnchor: 10, topAnchor: 130, labelWidth: 240, labelHeight: 30)
         modelResolution.font = UIFont.boldSystemFont(ofSize: 16.0);
     }
 
+    /// UI Function to create dropdowns
     func createDropdown() {
         modelsName = Common.loadAllModelsName()
         dropDown.backgroundColor = Colors.freeRoamButtonsColor
@@ -176,10 +182,12 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
     }
 
+    /// UI Function to create server label
     func createServer() {
         server = createButton(borderColor: "red", buttonName: Strings.server, leadingAnchor: 10, topAnchor: 230, action: #selector(serverHandler(_:)))
     }
 
+    /// UI Function to create subview on based of orientation
     func createSecondView() {
         secondView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(secondView)
@@ -205,6 +213,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         NSLayoutConstraint.activate([leadingConstraint, topConstraint, widthConstraint, heightConstraint])
     }
 
+    /// UI Function to to update the constraints
     func refreshConstraints() {
         if currentOrientation == .portrait {
             frame.size.width = width
@@ -223,6 +232,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         }
     }
 
+    /// UI Function to create button for images
     func createImagesButton() {
         preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 120, action: #selector(applyPreview(_:)), borderColor: Colors.freeRoamButtonsColor!.cgColor)
         preview.tag = 0
@@ -231,6 +241,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         setupImageMode()
     }
 
+    /// UI Function to create button for sensors
     func createSensorButtons() {
         vehicle = createSecondViewButton(buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         vehicle.tag = 1;
@@ -249,6 +260,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         sensorButtons.append(gyroscope)
     }
 
+    /// UI Function to create text field for delay
     func createDelayField() {
         let delayTextField = UITextField(frame: CGRect(x: 310, y: 177, width: 50, height: 40))
         delayTextField.placeholder = "200"
@@ -269,6 +281,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         secondView.addSubview(delayTextField)
     }
 
+    /// UI Function to create Button View
     func createButton(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIButton {
         let btn = UIButton()
         btn.layer.cornerRadius = 10
@@ -290,6 +303,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         return btn
     }
 
+    /// UI Function to create Dropdown View
     func createDropdownView(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIView {
         let dd = UIView()
         dd.layer.cornerRadius = 10
@@ -309,6 +323,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         return dd
     }
 
+    /// UI Function to create Label View
     func createLabels(value: String, leadingAnchor: CGFloat, topAnchor: CGFloat, labelWidth: CGFloat, labelHeight: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = value
@@ -323,6 +338,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         return label
     }
 
+    /// UI Function to create labels
     func createSecondViewLabel(value: String, leadingAnchor: CGFloat, topAnchor: CGFloat, labelWidth: CGFloat, labelHeight: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = value
@@ -337,6 +353,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         return label
     }
 
+    /// UI Function to create buttons
     func createSecondViewButton(buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, buttonWidth: CGFloat, action: Selector?, borderColor: CGColor) -> UIButton {
         let btn = UIButton()
         btn.layer.cornerRadius = 10
@@ -360,6 +377,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         return btn
     }
 
+    /// UI Function to create speed rpm labels
     func createLeftSpeed() {
         leftSpeedLabel.frame.size = CGSize(width: 100, height: 40);
         leftSpeedLabel.frame.origin = CGPoint(x: 10, y: 240)
@@ -368,10 +386,12 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         leftSpeedLabel.font = leftSpeedLabel.font.withSize(13.5)
     }
 
+    /// function to switch camera
     @objc func reverseCamera(_ sender: UITapGestureRecognizer? = nil) {
         NotificationCenter.default.post(name: .switchCamera, object: nil)
     }
 
+    /// UI Function to create blur effect on view
     func applyBlurEffect() {
         let blurEffectView = UIView(frame: bounds);
         blurEffectView.backgroundColor = UIColor(named: "darkBg");
@@ -379,6 +399,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         addSubview(blurEffectView)
     }
 
+    /// function to switch log button
     @objc func switchLogButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .logData, object: logData.isOn);
         if sender.isOn {
@@ -392,6 +413,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         }
     }
 
+    /// Function to apply low resolution
     @objc func applyLowResolution(_ sender: UIView) {
         selectedResolution = Resolutions.LOW
         NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
@@ -399,6 +421,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         previewResolution.text = Strings.previewResolutionLow
     }
 
+    /// Function to apply medium resolution
     @objc func applyMediumResolution(_ sender: UIView) {
         selectedResolution = Resolutions.MEDIUM
         NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
@@ -406,6 +429,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         previewResolution.text = Strings.previewResolutionMedium
     }
 
+    /// Function to apply high resolution
     @objc func applyHighResolution(_ sender: UIView) {
         selectedResolution = Resolutions.HIGH
         NotificationCenter.default.post(name: .updateResolution, object: selectedResolution)
@@ -417,6 +441,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         // print("hello server")
     }
 
+    /// Function to update resolutions
     @objc func updateResolution() {
 
         switch (selectedResolution) {
@@ -435,12 +460,13 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         }
     }
 
+    /// function to turn on previews images
     @objc func applyPreview(_ sender: UIView) {
         NotificationCenter.default.post(name: .updatePreview, object: nil)
         let borderColor = (sender.layer.borderColor == Colors.title?.cgColor) ? Colors.freeRoamButtonsColor?.cgColor : Colors.title?.cgColor
         sender.layer.borderColor = borderColor
     }
-
+    /// function to turn on training images
     @objc func applyTraining(_ sender: UIView) {
         NotificationCenter.default.post(name: .updateTraining, object: nil)
         let borderColor = (training.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
@@ -450,12 +476,13 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     func setupImageMode() {
     }
 
-
+    /// function to update the sensor settings
     @objc func updateSensor(_ sender: UIButton) {
         NotificationCenter.default.post(name: .updateSensorsForLog, object: sender)
         updateBorderColor(sender: sender);
     }
 
+    /// function to update the border colors
     func updateBorderColor(sender: UIButton) {
         sender.layer.borderColor = (sender.layer.borderColor == Colors.freeRoamButtonsColor?.cgColor) ? Colors.title?.cgColor : Colors.freeRoamButtonsColor?.cgColor
     }
@@ -467,20 +494,20 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         } else {
             samplingPeriod = Double(sender.text!)! / 1000.0
         }
-        print("samplingPeriod: ", samplingPeriod)
     }
 
+    /// function to show the dropdown
     @objc func showDropdown(_ sender: UIButton) {
         dropDown.show()
     }
 
+    ///function to load the model names and their resolutions
     func loadModelsNameAndResolution() {
         modelsName = Common.loadAllModelsName();
         for model in Common.loadAllModelItems() {
             resolution.append(model.inputSize);
         }
     }
-
 
     @objc func ble(_ sender: UIView) {
         NotificationCenter.default.post(name: .ble, object: nil)
