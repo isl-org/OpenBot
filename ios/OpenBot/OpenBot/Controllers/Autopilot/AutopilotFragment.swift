@@ -65,6 +65,7 @@ class AutopilotFragment: CameraController {
         calculateFrame()
     }
 
+    /// calculating whether  device orientation is portrait or landscape
     func calculateFrame() {
         if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
             trailingAnchorConstraint.constant = 0;
@@ -73,6 +74,7 @@ class AutopilotFragment: CameraController {
         }
     }
 
+    ///Creating back navigation button, this method creates default navigation button
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -81,19 +83,23 @@ class AutopilotFragment: CameraController {
         }
     }
 
+    ///function that remove viewController from navigation
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
 
+    ///function to switch camera from front to back and vice versa, called when camera icon is pressed
     @objc func switchCamera() {
         switchCameraView();
     }
 
+    ///function to open bluetooth screen, called when Bluetooth icon is pressed
     @objc func openBluetoothSettings() {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
+    ///function to device from CPU to GPU, called after selection of device from device dropdown
     @objc func updateDevice(_ notification: Notification) {
         currentDevice = RuntimeDevice(rawValue: notification.object as! String) ?? RuntimeDevice.CPU
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
@@ -101,22 +107,28 @@ class AutopilotFragment: CameraController {
         autopilot?.tfliteOptions.threadCount = numberOfThreads
     }
 
+    ///function to change the autopilot models, called after model from models dropdown is selected.
     @objc func updateModel(_ notification: Notification) {
         let selectedModelName = notification.object as! String
         currentModel = Common.returnModelItem(modelName: selectedModelName)
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
     }
 
+    ///function to turn on and off autopilot
     @objc func toggleAutoMode() {
         autoPilotMode = !autoPilotMode;
     }
 
+    ///function to change number of threads,being called ofter plus and minus icon is pressed
     @objc func updateThread(_ notification: Notification) {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 1
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
     }
 
+    ///function to send output controls to openBot
+    ///
+    /// - Parameter control:
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = control.getLeft() * gameController.selectedSpeedMode.rawValue;
@@ -141,6 +153,12 @@ class AutopilotFragment: CameraController {
         print("memory is low");
     }
 
+    ///
+    /// called after camera capture each frame.
+    /// - Parameters:
+    ///   - output:
+    ///   - sampleBuffer:
+    ///   - connection:
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
 
         // extract the image buffer from the sample buffer
@@ -184,6 +202,7 @@ class AutopilotFragment: CameraController {
         }
     }
 
+    /// update the openBot from game controller.
     @objc func updateDataFromControllerApp(_ notification: Notification) {
         if gameController.selectedControlMode == ControlMode.GAMEPAD {
             return
