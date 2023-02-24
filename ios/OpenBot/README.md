@@ -171,7 +171,7 @@ Simple UI for collection of data sets.
 Simple UI to check the button and joystick mapping of a connected BT controller.
 
 <p align="left">
-<img src="../../docs/images/ios_controller_mapping.jpeg" alt="Controller mapping" width="50%" />
+<img src="../../docs/images/ios_controller_mapping.jpeg" alt="Controller mapping" width="30%" />
 </p>
 
 ### Autopilot
