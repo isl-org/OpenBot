@@ -15,14 +15,14 @@ class VehicleControl: UIView {
     let gameController = GameController.shared
     var downSwipe: Bool = false
 
+    /// initializing function
     override init(frame: CGRect) {
         super.init(frame: frame)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         setupVehicleControl();
-        createControllerMode()
-        createDriveMode()
-        createSpeedMode()
-//        createLeftSpeed()
+        updateControlMode(self)
+        updateDriveMode(self)
+        updateSpeedMode(self)
         createRpm()
         createLabel(text: Strings.controller, bottomAnchor: 0, leadingAnchor: width / 2 - 100, isBoldNeeded: true)
         createLabel(text: Strings.driveMode, bottomAnchor: 0, leadingAnchor: width / 2 - 30, isBoldNeeded: true)
@@ -39,23 +39,20 @@ class VehicleControl: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    /// UI function to set the constraint
     func setupVehicleControl() {
         widthAnchor.constraint(equalToConstant: width).isActive = true;
         heightAnchor.constraint(equalToConstant: 80).isActive = true;
     }
 
-    func createControllerMode() {
-        updateControlMode(self);
-    }
-
-    func createDriveMode() {
-        updateDriveMode(self)
-    }
-
-    func createSpeedMode() {
-        updateSpeedMode(self)
-    }
-
+    /// UI function to create a button with following
+    ///
+    /// - Parameters:
+    ///   - iconName: name of the image icon
+    ///   - leadingAnchor: space from the left.
+    ///   - topAnchor: space from top
+    ///   - action: on click action
+    ///   - activated: is button active
     func createAndUpdateButton(iconName: UIImage, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?, activated: Bool) {
         let btn = UIButton()
         btn.layer.cornerRadius = 3
@@ -78,6 +75,7 @@ class VehicleControl: UIView {
         btn.addSubview(modeIcon)
     }
 
+    /// function to update the control mode of the game
     @objc func updateControlMode(_ sender: UIView) {
         if (isButtonEnable) {
             if (controlMode == ControlMode.GAMEPAD) {
@@ -104,6 +102,7 @@ class VehicleControl: UIView {
         }
     }
 
+    /// function to update the drive mode
     @objc func updateDriveMode(_ sender: UIView) {
         if (controlMode == .GAMEPAD && isButtonEnable) {
             switch (driveMode) {
@@ -124,6 +123,7 @@ class VehicleControl: UIView {
         }
     }
 
+    /// function to update the speed mode
     @objc func updateSpeedMode(_ sender: UIView) {
         if isButtonEnable {
             switch (speedMode) {
@@ -145,6 +145,13 @@ class VehicleControl: UIView {
         }
     }
 
+    /// function to create the label for display with following
+    ///
+    /// - Parameters:
+    ///   - text: Message to display
+    ///   - bottomAnchor: space from bottom
+    ///   - leadingAnchor: space from left.
+    ///   - isBoldNeeded: is bold?
     func createLabel(text: String, bottomAnchor: CGFloat, leadingAnchor: CGFloat, isBoldNeeded: Bool) {
         let label = UILabel()
         label.frame.size = CGSize(width: 100, height: 40);
@@ -159,6 +166,7 @@ class VehicleControl: UIView {
         label.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: bottomAnchor).isActive = true
     }
 
+    /// function to create the RPM message to display.
     func createRpm() {
         speedInRpm.frame.size = CGSize(width: 100, height: 40);
         speedInRpm.text = "---,--- rpm"
@@ -169,14 +177,17 @@ class VehicleControl: UIView {
         speedInRpm.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -40).isActive = true
     }
 
+    /// function to toggle the auto mode.
     @objc func toggleAutoMode(_ notification: Notification) {
         isButtonEnable = !isButtonEnable
     }
 
+    /// function to update the RPM speed
     @objc func updateRpmLabel(_ notification: Notification) {
         speedInRpm.text = (notification.object as! String)
     }
 
+    ///function to update the setting to display or not
     @objc func swipeDown(_ notification: Notification) {
         switch notification.object as! Bool {
         case true:
@@ -186,6 +197,7 @@ class VehicleControl: UIView {
         }
     }
 
+    /// function to decrease the speed modes
     @objc func decreaseSpeedMode(_ notification: Notification) {
         switch speedMode {
         case .SLOW:
@@ -200,6 +212,7 @@ class VehicleControl: UIView {
         updateSpeedMode(self);
     }
 
+    ///function to increase the speed modes.
     @objc func increaseSpeedMode(_ notification: Notification) {
         switch speedMode {
         case .SLOW:
@@ -212,6 +225,7 @@ class VehicleControl: UIView {
         }
     }
 
+    /// function to update the drive modes.
     @objc func updateDrive(_ notification: Notification) {
         updateDriveMode(self)
     }

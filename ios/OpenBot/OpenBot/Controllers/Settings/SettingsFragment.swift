@@ -69,7 +69,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         }
     }
 
-    ///
+    /// Creates a label for permissions Heading.
     func createPermissionLabel() {
         let permission = createLabel(text: Strings.permission, leadingAnchor: 40, topAnchor: adapted(dimensionSize: 10, to: .height));
         permission.font = UIFont.systemFont(ofSize: 17.0)
@@ -102,7 +102,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         cameraSwitch.addTarget(self, action: #selector(toggleCamera(_:)), for: .valueChanged)
     }
 
-    ///
+    /// creates a switch for switching location setting
     func createLocationSwitch() {
         locationSwitch.onTintColor = Colors.title
         scrollView.addSubview(locationSwitch)
@@ -110,7 +110,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         locationSwitch.addTarget(self, action: #selector(toggleLocation(_:)), for: .valueChanged)
     }
 
-    ///
+    /// creates a switch for switching microphone setting
     func createMicrophoneSwitch() {
         microphoneSwitch.onTintColor = Colors.title
         scrollView.addSubview(microphoneSwitch)
@@ -118,7 +118,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         microphoneSwitch.addTarget(self, action: #selector(toggleMicrophone(_:)), for: .valueChanged)
     }
 
-    ///
+    /// creates a switch for switching bluetooth setting
     func createBluetoothSwitch() {
         bluetoothSwitch.onTintColor = Colors.title
         scrollView.addSubview(bluetoothSwitch)
@@ -126,7 +126,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         bluetoothSwitch.addTarget(self, action: #selector(toggleBluetooth(_:)), for: .valueChanged)
     }
 
-    ///
+    /// function to set the positions of the buttons.
     func setupSwitchPositions() {
         switch (currentOrientation) {
         case .unknown:
@@ -144,7 +144,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         }
     }
 
-    ///
+    /// function to update the positions of the switches
     func updateSwitchPosition() {
         cameraSwitch.frame.origin.x = switchButtonTrailingAnchor
         locationSwitch.frame.origin.x = switchButtonTrailingAnchor
@@ -172,7 +172,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         checkBluetooth()
     }
 
-    ///
+    /// function to check whether the camera is authorized or not.
     func checkCamera() {
         let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         switch authStatus {
@@ -187,22 +187,22 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         }
     }
 
-    ///
+    /// function to check whether location is allowed or not.
     func checkLocation() {
         createAllowAlert(alertFor: "Location")
     }
 
-    ///
+    /// function to check whether microphone is allowed or not
     func checkMicrophone() {
         createAllowAlert(alertFor: "Microphone")
     }
 
-    ///
+    ///function to check whether bluetooth is allowed or not
     func checkBluetooth() {
         createAllowAlert(alertFor: "Bluetooth")
     }
 
-    ///
+    /// function to show the camera alert on the screen.
     func alertToEncourageCameraAccessInitially() {
         let alert = UIAlertController(
                 title: "IMPORTANT",
@@ -220,23 +220,18 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
 
     }
 
-    ///
+    /// function to prompt camera popup
     func createPromptForCameraAccess() {
         let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .unspecified)
         if discoverySession.devices.count > 0 {
             AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
                 DispatchQueue.main.async {
-                    // self.checkCamera()
                 }
             }
         }
     }
 
-    ///
-    func createPromptLocationAccess() {
-    }
-
-    ///
+    /// function to create prompts for settings
     func createAllowAlert(alertFor: String) {
         let alert = UIAlertController(
                 title: "IMPORTANT",
@@ -253,11 +248,7 @@ class SettingsFragment: UIViewController, CLLocationManagerDelegate {
         present(alert, animated: true, completion: nil)
     }
 
-    ///
-    func createDeniedAlert() {
-    }
-
-    ///
+    /// function to change the status of the switch buttons after checking the status of different settings.
     func toggleSwitchButtons() {
 
         // Camera

@@ -83,6 +83,7 @@ class RobotInfoFrame: UIViewController {
 
     }
 
+    /// function to create the UI for the robot info
     func createUI() {
         crateRobotTypeHeading()
         robotName = createLabels(text: "N/A", topAnchor: topPadding + adapted(dimensionSize: 30, to: .height), leadingAnchor: width / 2)
@@ -103,11 +104,13 @@ class RobotInfoFrame: UIViewController {
         showLight(isHidden: true)
     }
 
+    /// creates heading label
     func crateRobotTypeHeading() {
         robotType = createHeadings(text: "Robot Type")
         robotType.frame.origin = CGPoint(x: 10, y: topPadding + adapted(dimensionSize: 30, to: .height))
     }
 
+    /// creates refresh button
     func createRefreshIcon() {
         if let image = UIImage(named: "refresh")?.withRenderingMode(.alwaysTemplate) {
             refreshIcon = createIcons(iconImage: image, leadingAnchor: width - 100, topAnchor: topPadding + adapted(dimensionSize: 30, to: .height))
@@ -118,6 +121,7 @@ class RobotInfoFrame: UIViewController {
         refreshIcon.addGestureRecognizer(tapGesture)
     }
 
+    /// creates bluetooth icon
     func createBluetoothIcon() -> UIButton {
         let bleButton = UIButton()
         if isBluetoothConnected {
@@ -131,10 +135,12 @@ class RobotInfoFrame: UIViewController {
         return bleButton
     }
 
+    /// creates sensors heading
     func createSensorHeading() {
         sensorHeading = createHeadings(text: "Sensors")
     }
 
+    /// creates logo icon for openbot images
     func createLogoIcon() -> UIImageView {
         let icon = UIImageView()
         icon.image = Images.openBotLogo
@@ -148,6 +154,7 @@ class RobotInfoFrame: UIViewController {
         return icon
     }
 
+    /// creates checkboxes for sensors
     func createSensorCheckBoxes() {
         voltageDividerCheckBox = createCheckbox(leadingAnchor: 20, topAnchor: 300, action: #selector(updateSonarCheckBox(_:)))
         voltageDividerLabel = createLabels(text: Strings.voltageDivider, topAnchor: 292, leadingAnchor: 55)
@@ -157,10 +164,12 @@ class RobotInfoFrame: UIViewController {
         bumperLabel = createLabels(text: Strings.bumperText, topAnchor: 292, leadingAnchor: 310)
     }
 
+    /// creates heading for wheel odometer
     func createWheelOdometerHeading() {
         wheelOdometerHeadingHeading = createHeadings(text: Strings.wheelOdometer)
     }
 
+    /// creates checkboxes for odometer
     func createWheelOdometerCheckBoxes() {
         frontCheckBox = createCheckbox(leadingAnchor: 20, topAnchor: 375, action: #selector(updateSonarCheckBox(_:)))
         frontCheckBoxLabel = createLabels(text: Strings.front, topAnchor: 365, leadingAnchor: 65)
@@ -168,10 +177,12 @@ class RobotInfoFrame: UIViewController {
         backLabel = createLabels(text: Strings.back, topAnchor: 365, leadingAnchor: 165)
     }
 
+    /// creates heading for LED
     func createLedHeading() {
         ledHeading = createHeadings(text: Strings.led)
     }
 
+    /// creates checkboxes for LEDs
     func createLedCheckBoxes() {
         indicatorCheckbox = createCheckbox(leadingAnchor: 20, topAnchor: 470, action: #selector(updateSonarCheckBox(_:)))
         indicatorLabel = createLabels(text: Strings.indicatorText, topAnchor: 460, leadingAnchor: 55)
@@ -183,10 +194,12 @@ class RobotInfoFrame: UIViewController {
         statusLabel = createLabels(text: Strings.status, topAnchor: 460, leadingAnchor: 320)
     }
 
+    /// creates heading for readings
     func createReadingHeading() {
         readingHeading = createHeadings(text: Strings.readings)
     }
 
+    /// creates labels for readings
     func createReadings() {
         battery = createLabels(text: Strings.battery, topAnchor: 530, leadingAnchor: 20)
         speed = createLabels(text: Strings.speedText, topAnchor: 530, leadingAnchor: 110)
@@ -194,10 +207,12 @@ class RobotInfoFrame: UIViewController {
         sonar = createLabels(text: Strings.sonarLabel, topAnchor: 530, leadingAnchor: 255)
     }
 
+    /// creates commands heading
     func createSendCommandHeading() {
         sendCommandsHeading = createHeadings(text: Strings.sendCommand)
     }
 
+    /// creates send command buttons.
     func createSendCommand() {
         motorLabel = createLabels(text: Strings.motors, topAnchor: 610, leadingAnchor: 20)
         forwardButton = createButton(width: 100, height: 45, title: Strings.forward, leadingAnchor: 70, topAnchor: 610, action: #selector(forwardButton(_:)))
@@ -205,11 +220,19 @@ class RobotInfoFrame: UIViewController {
         stopButton = createButton(width: 70, height: 45, title: Strings.stop, leadingAnchor: 290, topAnchor: 610, action: #selector(stopButton(_:)))
     }
 
+/// creates heading and slider for lights
     func createLight() {
         lightLabel = createLabels(text: Strings.lightLabel, topAnchor: 610, leadingAnchor: 10)
         lightSlider = createSlider()
     }
 
+    /// creates icons with following
+    ///
+    /// - Parameters:
+    ///   - iconImage: image of the icon
+    ///   - leadingAnchor: space from left.
+    ///   - topAnchor: space from top.
+    /// - Returns: returns image view
     func createIcons(iconImage: UIImage, leadingAnchor: CGFloat, topAnchor: CGFloat) -> UIImageView {
         let icon = UIImageView()
         icon.image = iconImage
@@ -220,6 +243,10 @@ class RobotInfoFrame: UIViewController {
         return icon
     }
 
+    /// function to create the headings with text.
+    ///
+    /// - Parameter text: heading
+    /// - Returns: UILabel
     func createHeadings(text: String) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -231,6 +258,7 @@ class RobotInfoFrame: UIViewController {
         return label
     }
 
+    /// function to create the labels UI
     func createLabels(text: String, topAnchor: CGFloat, leadingAnchor: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -244,6 +272,7 @@ class RobotInfoFrame: UIViewController {
         return label
     }
 
+///function to create the checkbox UI
     func createCheckbox(leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> Checkbox {
         let checkbox = Checkbox(frame: CGRect(x: leadingAnchor, y: topAnchor, width: 25, height: 25))
         checkbox.checkedBorderColor = Colors.bdColor
@@ -256,6 +285,7 @@ class RobotInfoFrame: UIViewController {
         return checkbox
     }
 
+    ///function to create the buttons UI
     func createButton(width: Double, height: Double, title: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector) -> UIButton {
         let button = UIButton()
         button.frame.size = CGSize(width: width, height: height)
@@ -269,6 +299,7 @@ class RobotInfoFrame: UIViewController {
         return button
     }
 
+    /// function to create the slider UI
     func createSlider() -> UISlider {
         let slider = UISlider()
         slider.frame = CGRect(x: 100, y: 610, width: 200, height: 50)
@@ -279,6 +310,7 @@ class RobotInfoFrame: UIViewController {
         return slider
     }
 
+    /// function to create the constrains of the buttons,labels,headings and images.
     func updateConstraints() {
         if currentOrientation == .portrait {
             robotType.frame.origin.y = topPadding + adapted(dimensionSize: 20, to: .height)
@@ -364,6 +396,7 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    /// function to get the info from the robot
     func getRobotInfo() {
         if isBluetoothConnected {
             //            bluetoothIcon.image = UIImage(named: "bluetoothConnected")
@@ -374,6 +407,7 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    /// function to update the robot status
     func updateRobotInfo() {
         robotInfo = bluetooth.robotInfo
         if robotInfo != "" {
@@ -394,6 +428,7 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    /// function to update the image of the robot on basis of the robot name
     func updateLogo(robotName: String) {
         var asset: NSDataAsset? = nil
 
@@ -425,71 +460,83 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    /// function to get the robot name from robot info.
     func getRobotName() -> String {
         let firstIndex = robotInfo.index(after: robotInfo.firstIndex(of: "f")!)
         let lastIndex = robotInfo.firstIndex(of: ":")!
         return String(robotInfo[firstIndex..<lastIndex])
     }
 
+    /// function to update the robot name.
     func setRobotName() {
         robotName.text = getRobotName()
         robotName.frame.size.width = CGFloat(getRobotName().count * 10)
     }
 
+    /// function to check whether voltage is available on the robot.
     func setVoltageCheck() {
         if robotInfo.contains(":v") {
             voltageDividerCheckBox.isChecked = true
         }
     }
 
+    /// function to check whether sonar is available on the robot.
     func setSonarCheck() {
         if robotInfo.contains(":s") {
             sonarCheckBox.isChecked = true
         }
     }
 
+    /// function to check whether bumper is available on the robot.
     func setBumperCheck() {
         if robotInfo.contains(":b") {
             bumperCheckBox.isChecked = true
         }
     }
 
+    /// function to check whether front wheel odometer is available on the robot.
     func setFrontWheelOdometryCheck() {
         if robotInfo.contains(":wf") {
             frontCheckBox.isChecked = true
         }
     }
 
+    /// function to check whether back wheel odometer is available on the robot.
     func setBackWheelOdometryCheck() {
         if robotInfo.contains(":wb") {
             backCheckBox.isChecked = true
         }
     }
 
+    /// function to check whether indicator is available on the robot.
     func setIndicatorCheck() {
         if robotInfo.contains("i:") {
             indicatorCheckbox.isChecked = true
         }
     }
 
+    /// function to check whether front leds is available on the robot.
     func setFrontLedCheck() {
         if robotInfo.contains("lf:") {
             frontLedCheckbox.isChecked = true
         }
     }
 
+    /// function to check whether back leds is available on the robot.
     func setBackLedCheck() {
         if robotInfo.contains("lb:") {
             backLedCheckbox.isChecked = true
         }
     }
 
+    /// function to check whether led status is available on the robot.
     func setStatusLedCheck() {
         if robotInfo.contains("ls:") {
             statusCheckbox.isChecked = true
         }
     }
 
+    /// function to check whether should show lights
     func showLight(isHidden: Bool) {
         lightLabel.isHidden = isHidden
         lightSlider.isHidden = isHidden
@@ -501,6 +548,7 @@ class RobotInfoFrame: UIViewController {
     @objc func updateBumperCheckBox(_ sender: UIButton) {
     }
 
+    /// function to update the status after connecting with the robot.
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
             blueToothIconButton.setImage(Images.bluetoothConnected, for: .normal)
@@ -511,24 +559,29 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    /// moving robot in forward direction after pressing forward button,
     @objc func forwardButton(_ sender: UIButton) {
         bluetooth.sendData(payload: "c" + String(192) + "," + String(192) + "\n")
     }
 
+    /// moving robot in backward direction after pressing forward button,
     @objc func backwardButton(_ sender: UIButton) {
         bluetooth.sendData(payload: "c" + String(-192) + "," + String(-192) + "\n")
     }
 
+    /// stopping robot movement
     @objc func stopButton(_ sender: UIButton) {
         bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
     }
 
+    /// updating the screen.
     @objc func updateScreen() {
         updateSonar()
         updateVoltage()
         updateSpeedometer()
     }
 
+    /// updating sonar values from ble data
     func updateSonar() {
         let sonarData = bluetooth.sonarData
         if sonarData != "" {
@@ -538,6 +591,7 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    /// updating voltage values from ble data
     func updateVoltage() {
         let voltageData = bluetooth.voltageDivider
         if voltageData != "" {
@@ -546,6 +600,7 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    /// updating speed values from ble data
     func updateSpeedometer() {
         let speedometer = bluetooth.speedometer
         if speedometer != "" {
@@ -558,6 +613,7 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    /// updating screen after disconnection
     func updateScreenOnBluetoothDisconnection() {
         robotName.text = "N/A"
         sonarCheckBox.isChecked = false
@@ -573,11 +629,13 @@ class RobotInfoFrame: UIViewController {
         updateLogo(robotName: "N/A")
     }
 
+    /// open ble settings
     @objc func openBluetoothSettings(_ sender: UIButton) {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
+    /// refresh button redirect calls.
     @objc func refresh(tapGestureRecognizer: UITapGestureRecognizer) {
         if isBluetoothConnected {
             bluetooth.sendData(payload: "f\n")
@@ -587,12 +645,14 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    /// updating light values on the robot
     @objc func lightValueChange(_ sender: UISlider) {
         let front = round((sender.value * 255) * 100) / 100
         let back = round((sender.value * 255) * 100) / 100
         bluetooth.sendData(payload: "l" + String(front) + "," + String(back) + "\n")
     }
 
+    /// creating back button
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -601,6 +661,7 @@ class RobotInfoFrame: UIViewController {
         }
     }
 
+    /// on tap back button.
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }

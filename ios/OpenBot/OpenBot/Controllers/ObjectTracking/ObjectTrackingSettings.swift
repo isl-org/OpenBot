@@ -6,6 +6,7 @@ import Foundation
 import UIKit
 import DropDown
 
+/// Implementation of Object tracking settings.
 class ObjectTrackingSettings: UIView {
     let autoModeButton = UISwitch()
     var speedLabel = UILabel()
@@ -81,6 +82,7 @@ class ObjectTrackingSettings: UIView {
         super.init(coder: aDecoder)
     }
 
+    /// function to create switch buttons.
     func createSwitchButton() {
         autoModeButton.isOn = false
         autoModeButton.setOn(false, animated: true)
@@ -93,6 +95,7 @@ class ObjectTrackingSettings: UIView {
         autoModeButton.topAnchor.constraint(equalTo: topAnchor, constant: 25).isActive = true
     }
 
+    /// function to create labels.
     func createLabel(text: String, leadingAnchor: Int, topAnchor: Int) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -102,6 +105,7 @@ class ObjectTrackingSettings: UIView {
         return label
     }
 
+    /// function to handle the updating of auto mode.
     @objc func switchButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .autoModeObjectTracking, object: nil)
         if sender.isOn {
@@ -115,6 +119,7 @@ class ObjectTrackingSettings: UIView {
         }
     }
 
+    /// function to handle the swipe gesture to hide or display the settings.
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
@@ -140,6 +145,7 @@ class ObjectTrackingSettings: UIView {
         }
     }
 
+    /// function to create bars for the object tracking.
     func createBar() {
         let bar = UIView()
         bar.backgroundColor = Colors.title

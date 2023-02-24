@@ -26,6 +26,7 @@ class popupWindowView: UIView {
     var heightOfModel: String!
     var modelAddress: String = ""
 
+    /// Initializing function
     init(frame: CGRect, _ modelName: String, _ modelAddress: String, _ pathType: String) {
         super.init(frame: frame)
         self.modelName = modelName
@@ -59,6 +60,8 @@ class popupWindowView: UIView {
         super.init(coder: aDecoder)
     }
 
+
+    /// creating portrait and landscape views.
     override func layoutSubviews() {
         super.layoutSubviews()
         if currentOrientation == .portrait {
@@ -78,6 +81,7 @@ class popupWindowView: UIView {
         }
     }
 
+    /// function to setup models list.
     func setupModelItem() {
         model = Common.returnModelItem(modelName: modelName)
         widthOfModel = ModelItem.getWidthOfInput(model.inputSize);
@@ -89,6 +93,7 @@ class popupWindowView: UIView {
         }
     }
 
+    /// function to create headings
     func createHeading() {
         let heading = UILabel();
         heading.text = Strings.modelDetails;
@@ -103,6 +108,7 @@ class popupWindowView: UIView {
         headingLeadingAnchor.isActive = true;
     }
 
+    /// function to create labels.
     func createLabel(text: String, leadingAnchor: CGFloat, topAnchor: CGFloat) -> UILabel {
         let label = UILabel();
         label.text = text;
@@ -115,6 +121,7 @@ class popupWindowView: UIView {
         return label;
     }
 
+    /// function to create text fields.
     func createTextField(text: String, trailingAnchor: CGFloat, topAnchor: CGFloat) -> UITextField {
         let textField = UITextField();
         textField.text = text
@@ -129,6 +136,7 @@ class popupWindowView: UIView {
         return textField;
     }
 
+    /// function to create edit icons
     func createEditIcon() {
         let editIcon = UIImageView();
         editIcon.image = Images.edit;
@@ -140,6 +148,7 @@ class popupWindowView: UIView {
         editIcon.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 75).isActive = true
     }
 
+    /// function to create tflite label.
     func createtfliteLabel() {
         let label = UILabel();
         label.text = Strings.tflite;
@@ -151,6 +160,7 @@ class popupWindowView: UIView {
         label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 60).isActive = true
     }
 
+    /// function to create type drop down.
     func createTypeDropDown() {
         typeDropdown.backgroundColor = Colors.freeRoamButtonsColor
         typeDropdown.textColor = Colors.border ?? .black
@@ -189,6 +199,7 @@ class popupWindowView: UIView {
         upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
     }
 
+    /// function to create class drop down
     func createClassDropdown() {
         classDropdown.backgroundColor = Colors.freeRoamButtonsColor
         classDropdown.textColor = Colors.border ?? .black
@@ -227,6 +238,7 @@ class popupWindowView: UIView {
         upwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
     }
 
+    /// function to create box
     func createBox(isFirst: Bool) -> UIView {
         let box = UIView();
         box.layer.borderColor = Colors.border?.cgColor;
@@ -235,6 +247,7 @@ class popupWindowView: UIView {
         return box
     }
 
+    /// function to create first input text field for number.
     func createFirstInputTextField() {
         let input = UITextField();
         input.keyboardType = .numberPad;
@@ -249,7 +262,7 @@ class popupWindowView: UIView {
         input.leadingAnchor.constraint(equalTo: firstBox.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
         input.topAnchor.constraint(equalTo: firstBox.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
     }
-
+    /// function to create second input text field for number.
     func createSecondInputField() {
         let input = UITextField();
         input.keyboardType = .numberPad;
@@ -266,6 +279,7 @@ class popupWindowView: UIView {
         input.topAnchor.constraint(equalTo: secondBox.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
     }
 
+    /// function to create buttons
     func createButton(label: String, leadingAnchor: CGFloat, backgroundColor: UIColor, buttonWidth: CGFloat, action: Selector?) {
         let button = UIButton()
         button.setTitle(label, for: .normal);
@@ -293,6 +307,7 @@ class popupWindowView: UIView {
         classDropdown.show()
     }
 
+    /// handler when name is changed in text field.
     @objc func nameDidChange(_ textField: UITextField) {
         model.name = textField.text ?? model.name
         if !model.name.contains(Strings.tflite) {
@@ -300,19 +315,23 @@ class popupWindowView: UIView {
         }
     }
 
+    /// handler when width of model is updated
     @objc func wDidChange(_ textField: UITextField) {
         widthOfModel = textField.text ?? ModelItem.getWidthOfInput(model.inputSize);
     }
 
+    /// handler when height of model is updated
     @objc func hDidChange(_ textField: UITextField) {
         heightOfModel = textField.text ?? ModelItem.getHeightOfInput(model.inputSize);
     }
 
+    /// handler when tapped on the cancel button, removed the popup from the window.
     @objc func onCancelBtnTap(_ sender: UIButton) {
         NotificationCenter.default.post(name: .removeBlankScreen, object: nil);
         removeFromSuperview();
     }
 
+    /// handler when tapped on the save/done button.
     @objc func onDoneBtnTap(_ sender: UIButton) throws {
 
         try saveConfigFileToDocument(modelItems: modifyModels());
@@ -322,10 +341,12 @@ class popupWindowView: UIView {
         removeFromSuperview();
     }
 
+    /// to dismiss keyboard from the view.
     @objc func dismissKeyboard(_ sender: UIButton) {
         endEditing(true);
     }
 
+    /// to save the file configs into document directory.
     func saveConfigFileToDocument(modelItems: [ModelItem]) throws {
         let fileManager = FileManager.default
         do {
@@ -346,6 +367,7 @@ class popupWindowView: UIView {
         }
     }
 
+    /// function to let user modify the model, and store them into documents directory.
     func modifyModels() -> [ModelItem] {
         var allModels: [ModelItem] = [];
         let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();

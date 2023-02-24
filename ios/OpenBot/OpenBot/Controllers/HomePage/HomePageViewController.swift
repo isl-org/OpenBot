@@ -61,6 +61,12 @@ class HomePageViewController: CameraController {
         }
     }
 
+    /// override function when image is captured.
+    ///
+    /// - Parameters:
+    ///   - output:
+    ///   - sampleBuffer: image buffer.
+    ///   - connection:
     override func captureOutput(_ output: AVFoundation.AVCaptureOutput, didOutput sampleBuffer: CoreMedia.CMSampleBuffer, from connection: AVFoundation.AVCaptureConnection) {
         if isClientConnected {
             super.captureOutput(output, didOutput: sampleBuffer, from: connection)
