@@ -12,30 +12,30 @@ class GameViewController: UIViewController {
     var gameController = GameController.shared
     weak var delegate: InputManagerDelegate?
     let controllerImage: UIImageView! = nil
+    @IBOutlet weak var controlImage: UIImageView!
+    let overlayLeft = DrawRect(frame: CGRect(origin: CGPoint(x: 65, y: 166.5), size: CGSize(width: 25, height: 20)))
+    let overlayRight = DrawRect(frame: CGRect(origin: CGPoint(x: 105, y: 166.5), size: CGSize(width: 25, height: 20)))
+    let overlayUp = DrawRect(frame: CGRect(origin: CGPoint(x: 86.5, y: 144), size: CGSize(width: 20, height: 25)))
+    let overlayDown = DrawRect(frame: CGRect(origin: CGPoint(x: 86.5, y: 185), size: CGSize(width: 20, height: 25)))
 
-    let overlayLeft = DrawRect(frame: CGRect(origin: CGPoint(x: 27, y: 295), size: CGSize(width: 25, height: 20)))
-    let overlayRight = DrawRect(frame: CGRect(origin: CGPoint(x: 71, y: 295), size: CGSize(width: 25, height: 20)))
-    let overlayUp = DrawRect(frame: CGRect(origin: CGPoint(x: 51, y: 271), size: CGSize(width: 20, height: 25)))
-    let overlayDown = DrawRect(frame: CGRect(origin: CGPoint(x: 51, y: 314), size: CGSize(width: 20, height: 25)))
+    let overlayA = DrawCircle(frame: CGRect(origin: CGPoint(x: 332, y: 193.5), size: CGSize(width: 28, height: 28)))
+    let overlayB = DrawCircle(frame: CGRect(origin: CGPoint(x: 360.5, y: 161.5), size: CGSize(width: 28, height: 28)))
+    let overlayX = DrawCircle(frame: CGRect(origin: CGPoint(x: 303.5, y: 161.5), size: CGSize(width: 28, height: 28)))
+    let overlayY = DrawCircle(frame: CGRect(origin: CGPoint(x: 332, y: 135), size: CGSize(width: 28, height: 28)))
 
-    let overlayA = DrawCircle(frame: CGRect(origin: CGPoint(x: 297, y: 322), size: CGSize(width: 28, height: 28)))
-    let overlayB = DrawCircle(frame: CGRect(origin: CGPoint(x: 326, y: 293), size: CGSize(width: 28, height: 28)))
-    let overlayX = DrawCircle(frame: CGRect(origin: CGPoint(x: 268, y: 293), size: CGSize(width: 28, height: 28)))
-    let overlayY = DrawCircle(frame: CGRect(origin: CGPoint(x: 297, y: 264), size: CGSize(width: 28, height: 28)))
+    let overlayOptions = DrawRect(frame: CGRect(origin: CGPoint(x: 156, y: 161.5), size: CGSize(width: 20, height: 12)))
+    let overlayMenu = DrawRect(frame: CGRect(origin: CGPoint(x: 265, y: 161.5), size: CGSize(width: 20, height: 12)))
 
-    let overlayOptions = DrawRect(frame: CGRect(origin: CGPoint(x: 141, y: 299), size: CGSize(width: 20, height: 12)))
-    let overlayMenu = DrawRect(frame: CGRect(origin: CGPoint(x: 210, y: 299), size: CGSize(width: 20, height: 12)))
+    let overlayL1Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 69, y: 58.5), size: CGSize(width: 56, height: 25)))
+    let overlayL2Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 69, y: 24.5), size: CGSize(width: 56, height: 25)))
+    let overlayR1Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 314.5, y: 58.5), size: CGSize(width: 56, height: 25)))
+    let overlayR2Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 314.5, y: 24.5), size: CGSize(width: 56, height: 25)))
 
-    let overlayL1Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 34, y: 188), size: CGSize(width: 56, height: 25)))
-    let overlayL2Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 34, y: 153), size: CGSize(width: 56, height: 25)))
-    let overlayR1Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 280, y: 188), size: CGSize(width: 56, height: 25)))
-    let overlayR2Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 280, y: 153), size: CGSize(width: 56, height: 25)))
+    let overlayLeftThumb = DrawCircle(frame: CGRect(origin: CGPoint(x: 134.5, y: 210), size: CGSize(width: 46, height: 46)))
+    let overlayRightThumb = DrawCircle(frame: CGRect(origin: CGPoint(x: 259.5, y: 210), size: CGSize(width: 46, height: 46)))
 
-    let overlayLeftThumb = DrawCircle(frame: CGRect(origin: CGPoint(x: 100, y: 338), size: CGSize(width: 46, height: 46)))
-    let overlayRightThumb = DrawCircle(frame: CGRect(origin: CGPoint(x: 225, y: 338), size: CGSize(width: 46, height: 46)))
-
-    var overlayLeftThumb_var = DrawCircle(frame: CGRect(origin: CGPoint(x: 100, y: 338), size: CGSize(width: 46, height: 46)))
-    var overlayRightThumb_var = DrawCircle(frame: CGRect(origin: CGPoint(x: 225, y: 338), size: CGSize(width: 46, height: 46)))
+    var overlayLeftThumb_var = DrawCircle(frame: CGRect(origin: CGPoint(x: 140.5, y: 210), size: CGSize(width: 46, height: 46)))
+    var overlayRightThumb_var = DrawCircle(frame: CGRect(origin: CGPoint(x: 264.5, y: 210), size: CGSize(width: 46, height: 46)))
 
     var restrictRotation: UIInterfaceOrientationMask = .portrait
 
@@ -49,7 +49,6 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         dateFormatter.dateFormat = "HH:mm:ss.SSSS"
         gameController.resetControl = true
-
         NotificationCenter.default.addObserver(self, selector: #selector(didConnectController), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
     }
 
@@ -148,8 +147,7 @@ class GameViewController: UIViewController {
 
     func buttonChangedHandler(_ button: String, _ pressed: Bool, _ overlay: UIView) {
         if pressed {
-
-            view.addSubview(overlay)
+            controlImage.addSubview(overlay)
         } else {
 
             overlay.removeFromSuperview()
@@ -168,8 +166,8 @@ class GameViewController: UIViewController {
             overlayLeftThumb_var.removeFromSuperview()
         } else {
             overlayLeftThumb_var.removeFromSuperview()
-            overlayLeftThumb_var = DrawCircle(frame: CGRect(origin: CGPoint(x: 100 + Int(xvalue * 12), y: 338 - Int(yvalue * 12)), size: CGSize(width: 46, height: 46)))
-            view.addSubview(overlayLeftThumb_var)
+            overlayLeftThumb_var = DrawCircle(frame: CGRect(origin: CGPoint(x: Int(140.5) + Int(xvalue * 12), y: 210 - Int(yvalue * 12)), size: CGSize(width: 46, height: 46)))
+            controlImage.addSubview(overlayLeftThumb_var)
         }
     }
 
@@ -178,8 +176,8 @@ class GameViewController: UIViewController {
             overlayRightThumb_var.removeFromSuperview()
         } else {
             overlayRightThumb_var.removeFromSuperview()
-            overlayRightThumb_var = DrawCircle(frame: CGRect(origin: CGPoint(x: 225 + Int(xvalue * 12), y: 338 - Int(yvalue * 12)), size: CGSize(width: 46, height: 46)))
-            view.addSubview(overlayRightThumb_var)
+            overlayRightThumb_var = DrawCircle(frame: CGRect(origin: CGPoint(x: Int(264.5) + Int(xvalue * 12), y: 210 - Int(yvalue * 12)), size: CGSize(width: 46, height: 46)))
+            controlImage.addSubview(overlayRightThumb_var)
         }
     }
 }
