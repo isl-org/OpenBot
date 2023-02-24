@@ -76,12 +76,14 @@ class Model {
     /// Initialization routine
     ///
     /// - Parameters:
-    ///     - Model class: e.g. AUTOPILOT_F, YOLOV4, YOLOV5...
-    ///     - Model type: AUTOPILOT, DETECTOR or NAVIGATION
-    ///     - Model name: the name of the model
-    ///     - Model path type: URL, FILE or ASSET
-    ///     - Model path: relative to ...
-    ///     - Model input size: the model input dimensionality
+    ///     - id: id of the model
+    ///     - classType: AUTOPILOT_F, MOBILENET, YOLOV4, YOLOV5, EFFICIENTDET or NAVIGATION
+    ///     - type: AUTOPILOT, DETECTOR or NAVIGATION
+    ///     - name: the name of the model
+    ///     - pathType: URL, FILE or ASSET
+    ///     - path: relative to ...
+    ///     - inputSize: the model input dimensionality
+    ///     - id:
     init(id: Int, classType: CLASS, type: TYPE, name: String, pathType: PATH_TYPE, path: String, inputSize: String) {
         self.id = id;
         self.classType = classType;

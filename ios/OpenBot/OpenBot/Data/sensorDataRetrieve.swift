@@ -7,7 +7,7 @@ import CoreMotion
 import CoreLocation
 import CoreLocationUI
 
-/// This class provices an interface to the IMU and GPS data 
+/// This class provides an interface to the IMU and GPS data
 class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
     static let shared: sensorDataRetrieve = sensorDataRetrieve()
     var accelerationX: Double = 0
@@ -47,7 +47,7 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // Sample GPS sensor
+    /// Sample GPS sensor
     func sampleGPS() {
         locationManager.requestAlwaysAuthorization()
         DispatchQueue.global().async {
@@ -77,7 +77,7 @@ class sensorDataRetrieve: CMDeviceMotion, CLLocationManagerDelegate {
         }
     }
     
-    // Sample the IMU sensor
+    /// Sample the IMU sensor
     func sampleIMU() {
         sampleAccelerometer()
         sampleGyroscope()

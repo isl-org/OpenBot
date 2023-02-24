@@ -152,8 +152,8 @@ class DataCollectionController: CameraController {
     ///
     /// - Parameters:
     ///     - output:
-    ///     - didOutput:
-    ///     - from:
+    ///     - sampleBuffer:
+    ///     - connection:
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)

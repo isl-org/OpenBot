@@ -39,7 +39,7 @@ class DetectorFloatYoloV5: Detector {
     ///
     /// - Returns: true if aspect ratio should be preserved when rescaling.
     override func getMaintainAspect() -> Bool {
-        return false;
+        false;
     }
     
     /// Getter function

@@ -53,9 +53,9 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
         channels.audio = audioTrack
         channels.datachannel = dataChannel
         self.customFrameCapturer = customFrameCapturer
-        
-        var videoEncoderFactory = RTCDefaultVideoEncoderFactory()
-        var videoDecoderFactory = RTCDefaultVideoDecoderFactory()
+
+        let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
+        let videoDecoderFactory = RTCDefaultVideoDecoderFactory()
         peerConnectionFactory = RTCPeerConnectionFactory(encoderFactory: videoEncoderFactory, decoderFactory: videoDecoderFactory)
         setupLocalTracks()
     }
@@ -210,7 +210,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
             if let answerSDP = answerSessionDescription {
                 self.peerConnection!.setLocalDescription(answerSDP, completionHandler: { (err) in
                     if let error = err {
-                        print("failed to set local ansewr SDP")
+                        print("failed to set local answer SDP")
                         print(error)
                         return
                     }
@@ -241,7 +241,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     }
 }
 
-// MARK: - PeerConnection Delegeates
+// MARK: - PeerConnection Delegates
 extension WebRTCClient {
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
         print("signaling state changed: ", stateChanged)
@@ -267,12 +267,12 @@ extension WebRTCClient {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
         remoteStream = stream
-        if let track = stream.videoTracks.first {
-            print("video track faund")
+        if stream.videoTracks.first != nil {
+            print("video track found")
         }
         
         if let audioTrack = stream.audioTracks.first {
-            print("audio track faund")
+            print("audio track found")
             audioTrack.source.volume = 8
         }
     }

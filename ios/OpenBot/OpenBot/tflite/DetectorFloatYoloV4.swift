@@ -36,7 +36,7 @@ class DetectorFloatYoloV4: Detector {
     ///
     /// - Returns: true if aspect ratio should be preserved when rescaling.
     override func getMaintainAspect() -> Bool {
-        return false;
+        false;
     }
     
     /// Getter function
@@ -50,7 +50,7 @@ class DetectorFloatYoloV4: Detector {
     ///
     /// - Returns: The number of bytes used to store a single color channel value.
     override func getNumBytesPerChannel() -> Int {
-        return 4;
+        4;
     }
     
     /// Getter function

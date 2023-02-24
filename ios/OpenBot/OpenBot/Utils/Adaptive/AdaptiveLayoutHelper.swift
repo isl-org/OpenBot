@@ -13,7 +13,7 @@ var dimension: Dimension {
 ///
 /// - Parameters:
 ///     - size: height and width of an object to finetune
-///     - basedOn: reference screen dimension used to adjust the size
+///     - dimension: reference screen dimension used to adjust the size
 func resized(size: CGSize, basedOn dimension: Dimension) -> CGSize {
     let uiScreenWidth = UIScreen.main.bounds.size.width // Width of the user interface screen
     let uiScreenHeight = UIScreen.main.bounds.size.height // Height of the user interface screen

@@ -6,6 +6,7 @@ import Foundation
 import UIKit
 import DropDown
 
+/// Implementation of all the settings for Data Collection
 class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     let logData = UISwitch()
     let bluetoothIcon = UIImageView()
@@ -41,7 +42,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var models: [Model] = [];
     var leftSpeedLabel = UILabel()
     var samplingPeriod: Double = 0.2
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
