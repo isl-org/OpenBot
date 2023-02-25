@@ -206,6 +206,12 @@ public class ObjectNavFragment extends CameraFragment {
                     Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()))));
 
     binding.autoSwitch.setOnClickListener(v -> setNetworkEnabled(binding.autoSwitch.isChecked()));
+    binding.dynamicSpeed.setChecked(preferencesManager.getDynamicSpeed());
+    binding.dynamicSpeed.setEnabled(binding.autoSwitch.isChecked());
+    binding.dynamicSpeed.setOnClickListener(
+        v -> {
+          preferencesManager.setDynamicSpeed(binding.dynamicSpeed.isChecked());
+        });
   }
 
   private void updateCropImageInfo() {
@@ -379,6 +385,8 @@ public class ObjectNavFragment extends CameraFragment {
 
   private void setNetworkEnabled(boolean b) {
     binding.autoSwitch.setChecked(b);
+    binding.dynamicSpeed.setEnabled(b); // only enable in Auto Mode
+
     binding.controllerContainer.controlMode.setEnabled(!b);
     binding.controllerContainer.driveMode.setEnabled(!b);
     binding.controllerContainer.speedInfo.setEnabled(!b);

@@ -171,9 +171,9 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 #### Options
 - **Dynamic Speed**: reduces robots speed in "Auto Mode" if it gets closer to the tracked object.
   The distance is estimated from the size of the tracking box on the tracking screen (works best in landscape orientation).
-  This option can be activated in the Settings screen.
+  This option can be activated in the bottom sheet.
 <p align="left">
-<img src="../../docs/images/screen_settings_dynamicspeed.png" alt="Dynamic speed setting" width="25%" />
+<img src="../../docs/images/screen_object_tracking_bottomsheet_dynamicspeed.png" alt="Dynamic speed setting" width="20%" />
 </p>
 
 ### Point Goal Navigation
