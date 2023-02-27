@@ -22,7 +22,6 @@ function Card(props) {
                 Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, Blockly.getMainWorkspace());
                 props.openProject(projectData);
                 // Blockly.Xml.domToWorkspace(xml, Blockly.getMainWorkspace());
-                console.log("workspace loaded")
             }
         } catch (error) {
             console.error(error);

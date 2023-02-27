@@ -5,17 +5,17 @@ import {ThemeContext} from "../../App";
 import {colors} from "../../utils/color";
 
 export default function SimpleInputComponent(props) {
-    const {inputTitle, extraStyle, inputType, onDataChange, extraMargin} = props
+    const {inputTitle, extraStyle, inputType, onDataChange, extraMargin, placeHolder, value} = props
     const date = new Date()
     const theme = useContext(ThemeContext);
     let currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
 
     function handleChange(e) {
-        setName(e.target.value)
+        setInputValue(e.target.value)
         onDataChange(e.target.value);
     }
 
-    const [name, setName] = useState(props?.value ? props.value : '');
+    const [inputValue, setInputValue] = useState(value ? value : '');
     return (
         <div className={styles.mainDiv + " " + extraStyle}>
             <BlackText text={inputTitle}/>
@@ -23,9 +23,10 @@ export default function SimpleInputComponent(props) {
                 inputType === "text" ?
                     <div className={styles.inputBorder + " " + extraMargin}>
                         <input type={"text"}
-                               placeholder={"untitled"}
+                               name={"inputBox"}
+                               placeholder={placeHolder}
                                className={styles.inputSection}
-                               value={name} onChange={handleChange}
+                               value={inputValue} onChange={handleChange}
                                style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}
                         />
                     </div> :
@@ -49,7 +50,5 @@ export default function SimpleInputComponent(props) {
                             </div>
             }
         </div>
-
-
     )
 }

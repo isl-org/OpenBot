@@ -11,13 +11,22 @@ function NewProjectButton(props) {
     const {isProject} = props
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
+    const [isInputError, setIsInputError] = useState(true)
     const {projectName, setProjectName} = useContext(StoreContext)
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => {
+        localStorage.setItem("CurrentProject", "");
+        setOpen(true);
+    }
     const handleClose = () => setOpen(false);
     const OpenNewProjectHandle = () => {
-        let path = `playground`;
-        navigate(path);
-        handleOpen();
+        if (!projectName || projectName <= 0) {
+            setIsInputError(true)
+        } else {
+            setIsInputError(false)
+            let path = `playground`;
+            navigate(path);
+            handleClose();
+        }
     }
     const {theme} = useContext(ThemeContext)
 
@@ -53,9 +62,11 @@ function NewProjectButton(props) {
                     <div className={styles.Input}>
                         <SimpleInputComponent inputType={"text"} extraStyle={`${styles.inputExtraStyle}`}
                                               inputTitle={"Give your project a name"}
+                                              placeHolder={"Project Name"}
                                               value={projectName} extraMargin={styles.inputBoxMargin}
                                               onDataChange={handleProjectNameChange}/>
                     </div>
+
                     <div className={styles.SaveBtn} onClick={() => {
                         OpenNewProjectHandle();
                     }}>Create

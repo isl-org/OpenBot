@@ -2,7 +2,7 @@ import {auth, db} from "./firebase";
 import Blockly from "blockly/core";
 import {collection, doc, setDoc} from "firebase/firestore";
 
-async function savingWorkspace(projectName) {
+export async function savingWorkspace(projectName) {
     try {
         const date = new Date();
         const options = {day: 'numeric', month: 'long', year: 'numeric'};
@@ -14,11 +14,29 @@ async function savingWorkspace(projectName) {
         }
         doc(collection(db, auth.currentUser.uid));
         await setDoc(doc(db, auth.currentUser.uid, projectName), data);
-
     } catch (err) {
         console.log(err);
     }
 }
 
+export function saveCurrentProject(projectName, code){
+    const project = {
+        [projectName]: code,
+    }
+    localStorage.setItem("CurrentProject", JSON.stringify(project))
+}
 
-export {savingWorkspace};
+export function saveXmlInLocal(projectName, code) {
+    const project = {
+        [projectName]: code,
+    }
+    localStorage.setItem("Projects", JSON.stringify(project))
+}
+
+export function getCurrentProject() {
+    try {
+        const getProject = localStorage.getItem("CurrentProject")
+        return JSON.parse(getProject)
+    } catch (e) {
+    }
+}

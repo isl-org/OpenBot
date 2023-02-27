@@ -13,6 +13,7 @@ function App() {
     const [theme, setTheme] = useState(onPageLoad);
 
     const toggleTheme = () => {
+        window.location.reload()
         if (theme === "light") {
             setTheme("dark")
             localStorage.setItem("theme", "dark")

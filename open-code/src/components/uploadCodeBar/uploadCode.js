@@ -13,14 +13,15 @@ import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
 import {savingWorkspace} from "../../services/workspace";
 
-
 export const UploadCode = () => {
+    const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
+    const [buttonActive, setButtonActive] = useState(false);
+    const [driveButtonActive, setDriveButtonActive] = useState(false);
     const {setDrawer} = useContext(StoreContext);
     const {theme} = useContext(ThemeContext)
     const {setCode} = useContext(StoreContext);
     const {generate, setGenerateCode} = useContext(StoreContext);
     const {projectName} = useContext(StoreContext);
-
 
     let primaryWorkspace = useRef();
     const generateCode = () => {
@@ -37,9 +38,6 @@ export const UploadCode = () => {
             .catch(err => console.log(err))
     };
 
-    const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
-    const [buttonActive, setButtonActive] = useState(false);
-    const [driveButtonActive, setDriveButtonActive] = useState(false);
     const clickedButton = (e) => {
         const {name} = e.target;
         setButtonSelected(name);
@@ -77,9 +75,7 @@ export const UploadCode = () => {
         }, 100);
     }
 
-
     return (
-
         <div className={styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
 
             <div className={styles.iconMargin} onClick={generateCode}>

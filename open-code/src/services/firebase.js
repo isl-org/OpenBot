@@ -33,9 +33,8 @@ export async function uploadProfilePic(file, fileName) {
         return
     }
     const fileRef = ref(FirebaseStorage, auth.currentUser.uid + fileName)
-    const snapShot = await uploadBytes(fileRef, file)
-    const photoURL = getDownloadURL(fileRef)
-    return photoURL
+    await uploadBytes(fileRef, file);
+    return getDownloadURL(fileRef)
 }
 
 export async function googleSigIn() {
@@ -52,27 +51,3 @@ export async function googleSignOut() {
         console.log("Sign-out error ", error)
     });
 }
-
-// const myData  = {
-//     firstName: "sanjeev",
-//     lastName: "yadav",
-//     dob: 1998
-// }
-// const dbRef = collection(db, "users");
-
-// if(auth){
-//     try {
-//         const docRef = addDoc(collection(db, auth.currentUser.uid), myData).then((res) => {
-//             console.log("Document written with ID: ", res);
-//         });
-//         const querySnapshot = getDocs(collection(db, "users")).then((responseDoc ) => {
-//             console.log(responseDoc)
-//             responseDoc.forEach((doc) => {
-//                 console.log(`${doc.id} => ${doc.data()}`);
-//                 console.log(doc.data())
-//             });
-//         });
-//     } catch (e){
-//         console.error("Error adding document: ", e);
-//     }
-// }

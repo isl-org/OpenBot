@@ -27,7 +27,6 @@ export const NewProject = () => {
     useEffect(() => {
         auth.onAuthStateChanged(function () {
             loadingAllWorkspaces().catch(err => {
-                console.log("error while loading all project workspaces", err)
             })
         })
     }, [])
