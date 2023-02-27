@@ -200,6 +200,7 @@ public abstract class CameraActivity extends AppCompatActivity
     vehicle = OpenBotApplication.vehicle;
 
     phoneController = PhoneController.getInstance(this);
+    preferencesManager = new SharedPreferencesManager(this);
 
     setContentView(R.layout.activity_camera);
     Toolbar toolbar = findViewById(R.id.toolbar);
@@ -211,8 +212,6 @@ public abstract class CameraActivity extends AppCompatActivity
     } else {
       PermissionUtils.requestCameraPermission(this);
     }
-
-    preferencesManager = new SharedPreferencesManager(this);
 
     connectionSwitchCompat = findViewById(R.id.connection_switch);
     threadsTextView = findViewById(R.id.threads);
@@ -851,9 +850,16 @@ public abstract class CameraActivity extends AppCompatActivity
   protected int getCameraUserSelection() {
     // during initialisation there is no cameraToggle so we assume default
     if (this.cameraSwitchCompat == null) {
-      this.cameraSelection = CameraCharacteristics.LENS_FACING_BACK;
+      // set from user preferences (last used selection)
+      this.cameraSelection =
+          preferencesManager.getCameraSwitch()
+              ? CameraCharacteristics.LENS_FACING_FRONT
+              : CameraCharacteristics.LENS_FACING_BACK;
     } else {
-      this.cameraSelection = this.cameraSwitchCompat.isChecked() ? 0 : 1;
+      this.cameraSelection =
+          this.cameraSwitchCompat.isChecked()
+              ? CameraCharacteristics.LENS_FACING_FRONT
+              : CameraCharacteristics.LENS_FACING_BACK;
     }
     return this.cameraSelection;
   }
@@ -1082,7 +1088,8 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private void startLogging() {
     logFolder =
-        Environment.getExternalStorageDirectory().getAbsolutePath()
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                .getAbsolutePath()
             + File.separator
             + getString(R.string.app_name)
             + File.separator

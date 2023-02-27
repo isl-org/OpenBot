@@ -6,6 +6,7 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
+import absl.logging
 
 from . import (
     associate_frames,
@@ -22,6 +23,8 @@ from . import (
     utils,
 )
 
+absl.logging.set_verbosity(absl.logging.ERROR)
+
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 # 0 = all messages are logged (default behavior)
 # 1 = INFO messages are not printed
@@ -33,6 +36,11 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
+
+if tf.test.gpu_device_name():
+    print("Default GPU Device:{}".format(tf.test.gpu_device_name()))
+else:
+    print("Please install GPU version of TF if you have one.")
 
 
 @dataclass
