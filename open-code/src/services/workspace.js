@@ -1,10 +1,11 @@
 import {auth, db} from "./firebase";
 import Blockly from "blockly/core";
-import {doc, setDoc, collection} from "firebase/firestore";
+import {collection, doc, setDoc} from "firebase/firestore";
+
 async function savingWorkspace(projectName) {
     try {
         const date = new Date();
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        const options = {day: 'numeric', month: 'long', year: 'numeric'};
         const xml = Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace());
         const xmlText = Blockly.Xml.domToText(xml);
         const data = {

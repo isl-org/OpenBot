@@ -4,15 +4,16 @@ import DarkTriangle from "../../../assets/images/icon/dark-triangle.png";
 import NewProjectButton from "./newProjectButton";
 import {ThemeContext} from "../../../App";
 import styles from "./newProject.module.css";
-import {collection, getDocs, Timestamp} from "firebase/firestore";
-import {auth, db} from "../../../firebase_setup/firebase";
+import {collection, getDocs} from "firebase/firestore";
+import {auth, db} from "../../../services/firebase";
 import Card from "./card";
 
 export const NewProject = () => {
-    const [allProject,setAllProject]=useState([]);
+    const [allProject, setAllProject] = useState([]);
+
     async function loadingAllWorkspaces() {
         try {
-            const allProjects=[];
+            const allProjects = [];
             const projects = await getDocs(collection(db, auth.currentUser?.uid));
             projects.forEach((doc) => {
                 allProjects.push({id: doc.id, ...doc.data()});
@@ -26,7 +27,7 @@ export const NewProject = () => {
     useEffect(() => {
         auth.onAuthStateChanged(function () {
             loadingAllWorkspaces().catch(err => {
-                console.log("error while loading all project workspaces",err)
+                console.log("error while loading all project workspaces", err)
             })
         })
     }, [])
@@ -38,8 +39,8 @@ export const NewProject = () => {
                 Projects
             </div>
             <div className={styles.ButtonsMessage}>
-                <NewProjectButton isProject={allProject.length}  />
-                {allProject.length > 0 ? allProject?.map((project,value) => (
+                <NewProjectButton isProject={allProject.length}/>
+                {allProject.length > 0 ? allProject?.map((project, value) => (
                         <Card key={value}
                               projectTitle={project.id}
                               projectDate={project.Date}

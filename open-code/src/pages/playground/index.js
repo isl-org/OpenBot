@@ -5,12 +5,13 @@ import {UploadCode} from "../../components/uploadCodeBar/uploadCode";
 import {Header} from "../../components/navBar/header";
 import {QrDrawer} from "../../components/drower/drower";
 import {useLocation} from 'react-router-dom';
-function Playground (){
+
+function Playground() {
     const location = useLocation();
-        return (
-            <div>
-                <Header/>
-                {location.pathname === "/playground" ? <QrDrawer/> : ""}
+    return (
+        <div>
+            <Header/>
+            {location.pathname === "/playground" ? <QrDrawer/> : ""}
             <header>
                 <BlocklyComponent readOnly={false}
                                   move={{

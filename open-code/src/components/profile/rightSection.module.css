@@ -1,31 +1,37 @@
-.Main{
+.Main {
     width: 78.6%;
     padding-left: 90px;
     padding-bottom: 104px;
     padding-top: 69px;
 }
-.Header{
+
+.Header {
     font-family: Gilroy-SemiBold, sans-serif;
     font-weight: 600;
     font-size: 20px;
     line-height: 24px;
     margin-bottom: 25px;
 }
-.TextDark{
+
+.TextDark {
     color: #FFFFFF;
 }
-.TextLight{
+
+.TextLight {
     color: rgb(0, 0, 0);
 }
-.ProfileImage{
+
+.ProfileImage {
     margin-bottom: 60px;
 }
-.Image{
+
+.Image {
     width: 120px;
     height: 120px;
     border-radius: 50%;
 }
-.EditIcon{
+
+.EditIcon {
     width: 40px;
     height: 40px;
     position: relative;
@@ -34,25 +40,27 @@
     cursor: pointer;
 }
 
-.Edit{
+.Edit {
     width: 682px;
     display: flex;
     flex-wrap: wrap;
     gap: 38px 60px;
     margin-bottom: 60px;
 }
-.Input{
+
+.Input {
     display: flex;
     flex-direction: column;
 }
-.label{
+
+.label {
     font-family: Gilroy-Medium, sans-serif;
     font-size: 18px;
     line-height: 27px;
     margin-bottom: 7px;
 }
 
-.InputArea{
+.InputArea {
     height: 28px;
     width: 269px;
     font-family: Gilroy-Regular, sans-serif;
@@ -64,29 +72,32 @@
     border-radius: 6px;
 }
 
-.InputAreaDark{
+.InputAreaDark {
     border-color: #2e5676;
     background-color: #333233;
     color: #FFFFFF;
     outline: none;
 }
-.InputAreaLight{
+
+.InputAreaLight {
     border-color: rgb(0, 113, 197);
     background-color: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
 }
 
-.InputEmail{
+.InputEmail {
     width: 100%;
 }
-.lableEmail{
+
+.lableEmail {
     font-family: Gilroy-Medium, sans-serif;
     font-size: 18px;
     line-height: 27px;
     color: #CCCCCC;
     margin-bottom: 7px;
 }
-.InputAreaEmail{
+
+.InputAreaEmail {
     height: 28px;
     width: 100%;
     font-family: Gilroy-Regular, sans-serif;
@@ -99,11 +110,13 @@
     margin-top: 7px;
     cursor: no-drop;
 }
-.btn{
+
+.btn {
     display: flex;
     gap: 0px 25px;
 }
-.SaveBtn{
+
+.SaveBtn {
     width: 51px;
     height: 26px;
     border-radius: 6px;
@@ -115,7 +128,8 @@
     text-decoration: none;
     cursor: pointer;
 }
-.CancelBtn{
+
+.CancelBtn {
     width: 71px;
     height: 24px;
     border: 1px solid rgb(0, 113, 197);
@@ -128,9 +142,10 @@
     cursor: pointer;
 }
 
-.CancelBtnDark{
+.CancelBtnDark {
     background: #202020;
 }
-.CancelBtnLight{
+
+.CancelBtnLight {
     background: rgb(255, 255, 255);
 }

@@ -2,8 +2,8 @@ import firebase from "firebase/compat/app";
 import 'firebase/compat/auth';
 import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
 import 'firebase/compat/firestore';
-import { getFirestore,  collection, addDoc, getDocs} from "firebase/firestore";
-import { getAuth, signOut } from "firebase/auth";
+import {getFirestore} from "firebase/firestore";
+import {getAuth, signOut} from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCITlkh63TnSnJQBlzqbJwwtBDr_w3e1Pg",
@@ -29,7 +29,7 @@ export const db = getFirestore(app)
 export default firebase;
 
 export async function uploadProfilePic(file, fileName) {
-    if(fileName === undefined){
+    if (fileName === undefined) {
         return
     }
     const fileRef = ref(FirebaseStorage, auth.currentUser.uid + fileName)
@@ -40,11 +40,11 @@ export async function uploadProfilePic(file, fileName) {
 
 export async function googleSigIn() {
     const siginIn = await auth.signInWithPopup(provider)
-        localStorage.setItem("isSigIn", "true")
+    localStorage.setItem("isSigIn", "true")
     return siginIn
 }
 
-export async function googleSignOut(){
+export async function googleSignOut() {
     const auth = getAuth();
     signOut(auth).then(() => {
         localStorage.setItem("isSigIn", "false")

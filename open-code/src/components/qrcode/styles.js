@@ -11,33 +11,33 @@ export const qrStyles = {
         marginLeft: '2rem',
         marginTop: "3rem"
     },
-    list :{
-        display : 'flex',
+    list: {
+        display: 'flex',
         fontFamily: 'Gilroy-Medium',
         fontSize: "0.8em",
-        marginTop : "1.5rem",
+        marginTop: "1.5rem",
         marginLeft: '2rem',
-        flexDirection : 'row',
+        flexDirection: 'row',
     },
-    rightSlider :{
-        width : '22px',
-        height : '149px',
-        backgroundColor : 'rgba(76, 156, 214, 0.15)',
-        border : '1px solid #4C9CD626',
-        borderRadius : ' 0 15px 15px 0',
+    rightSlider: {
+        width: '22px',
+        height: '149px',
+        backgroundColor: 'rgba(76, 156, 214, 0.15)',
+        border: '1px solid #4C9CD626',
+        borderRadius: ' 0 15px 15px 0',
         display: 'flex',
-        justifyContent : 'center',
-        alignItems : 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    rightSliderIcon : {
+    rightSliderIcon: {
         height: '1rem',
         width: '1rem'
     },
-    drawerLight:{
-        color:colors.blackFont,
+    drawerLight: {
+        color: colors.blackFont,
     },
-    drawerDark:{
-        color:colors.whiteFont,
+    drawerDark: {
+        color: colors.whiteFont,
     }
 
 

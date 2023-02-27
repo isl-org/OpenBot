@@ -1,9 +1,9 @@
-import React, {useContext, useState, useRef, useEffect, forwardRef} from 'react';
+import React, {forwardRef, useContext, useEffect, useRef, useState} from 'react';
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import icon from "../../assets/images/icon/open-bot-logo.png"
 import downArrow from "../../assets/images/icon/down-arrow.png"
 import {NavbarStyle} from "./styles";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {ThemeContext} from "../../App"
 import WhiteText from "../fonts/whiteText";
 import styles from "./navbar.module.css"
@@ -11,7 +11,6 @@ import {Box, Modal, Popper} from "@mui/material";
 import BlueText from "../fonts/blueText";
 import {Images} from "../../utils/images";
 import {StoreContext} from "../../context/context";
-import {useLocation} from 'react-router-dom';
 import UpArrow from "../../assets/images/icon/up-arrow.png";
 import Edit from "../../assets/images/icon/edit.png";
 import trash from "../../assets/images/icon/trash.png";
@@ -19,12 +18,11 @@ import SimpleInputComponent from "../inputComponent/simpleInputComponent";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import BlackText from "../fonts/blackText";
 import {HelpCenterText} from "../../utils/constants";
-import {auth, googleSigIn, googleSignOut, uploadProfilePic} from "../../firebase_setup/firebase";
+import {auth, googleSigIn, googleSignOut, uploadProfilePic} from "../../services/firebase";
 import renameIcon from "../../assets/images/icon/rename-icon.png";
 import deleteIcon from "../../assets/images/icon/delete-icon.png";
 import {colors} from "../../utils/color";
 import LoaderComponent from "../loader/loaderComponent";
-import {loadingWorkspace} from "../../firebase_setup/workspace";
 
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)

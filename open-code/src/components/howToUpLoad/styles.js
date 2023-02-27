@@ -27,7 +27,7 @@ export const HowToUploadStyles = {
         paddingLeft: "41px",
         display: "flex",
         gap: "260px",
-        marginBottom:"187px"
+        marginBottom: "187px"
     },
     NumberOne: {
         position: "absolute",
@@ -42,7 +42,7 @@ export const HowToUploadStyles = {
         fontFamily: 'Gilroy',
         opacity: "0.05",
         lineHeight: "140px",
-        right:"26rem",
+        right: "26rem",
     },
     NumberThree: {
         position: "absolute",
@@ -92,19 +92,19 @@ export const HowToUploadStyles = {
         width: "271px",
         height: "322px",
     },
-    SaveAndDownloadImage:{
+    SaveAndDownloadImage: {
         paddingLeft: "37px",
         display: "flex",
         gap: "148px",
-        marginBottom:"211px"
+        marginBottom: "211px"
     },
-    ConnectAndDriveImage:{
+    ConnectAndDriveImage: {
         paddingLeft: "37px",
         display: "flex",
         gap: "132px",
-        marginBottom:"210px"
+        marginBottom: "210px"
     },
-    ImageSave:{
+    ImageSave: {
         width: "477px",
         height: "374px",
     },

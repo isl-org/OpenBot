@@ -1,23 +1,23 @@
 #blocklyDiv {
-  position:fixed;
-  color: #000000;
-  background-color: white;
+    position: fixed;
+    color: #000000;
+    background-color: white;
 }
 
 /* Adds padding around the group of categories and separators. */
 .blocklyToolboxContents {
-  padding-top: 3rem ;
-  border-right: 0.5px solid black;
-  height: 100%;
-  position: relative;
-  left: 0;
-  bottom: 10px;
+    padding-top: 3rem;
+    border-right: 0.5px solid black;
+    height: 100%;
+    position: relative;
+    left: 0;
+    bottom: 10px;
 }
 
 /* Adds space between the categories, rounds the corners and adds space around the label. */
 .blocklyTreeRow {
-  margin-bottom: 0;
-  height: 2.5rem;
-  line-height: 2.5rem;
+    margin-bottom: 0;
+    height: 2.5rem;
+    line-height: 2.5rem;
 }
 

@@ -1,23 +1,23 @@
 
-.whiteFont{
+.whiteFont {
     color: #f2f2f2;
     font-family: 'Gilroy-Regular', serif;
 }
 
-.blackFont{
+.blackFont {
     font-size: 18px;
     font-family: 'Gilroy-Regular', serif;
 }
 
-.BlackTextDarkFont{
+.BlackTextDarkFont {
     color: #FFFFFF
 }
 
-.BlackTextLightFont{
+.BlackTextLightFont {
     color: #000000;
 }
 
-.blueFont{
+.blueFont {
     color: #0071C5;
     font-family: 'Gilroy-Regular', serif;
 }

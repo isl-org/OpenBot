@@ -57,7 +57,7 @@
     outline: none;
 }
 
-.successAlertBox{
+.successAlertBox {
     margin-left: 20px;
     padding-left: 10px;
     display: flex;
@@ -69,7 +69,7 @@
     color: #5BBC73;
 }
 
-.errorAlertBox{
+.errorAlertBox {
     margin-left: 20px;
     padding-left: 10px;
     display: flex;

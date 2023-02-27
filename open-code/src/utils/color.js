@@ -4,11 +4,11 @@ export const colors = {
     blackFont: "#000000",
     blackBackground: '#1e1e1e',
     whiteBackground: '#FFFFFF',
-    blackPopupBackground:"#303030",
+    blackPopupBackground: "#303030",
     blocklyBackground: "#202020",
 }
 
-export const buttonColor={
+export const buttonColor = {
     background: "#61A8EC",
     opacity: "0.3",
 }

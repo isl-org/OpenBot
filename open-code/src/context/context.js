@@ -5,18 +5,18 @@ export const StoreContext = createContext(null)
 // eslint-disable-next-line import/no-anonymous-default-export
 export default ({children}) => {
     const [projectName, setProjectName] = useState("");
-    const [drawer,setDrawer] = useState(false);
+    const [drawer, setDrawer] = useState(false);
     const [logOut, setLogOut] = useState(false);
-    const [code,setCode] = useState("");
-    const [generate,setGenerateCode] = useState(false);
-    const [userData,setUserData] = useState(null);
+    const [code, setCode] = useState("");
+    const [generate, setGenerateCode] = useState(false);
+    const [userData, setUserData] = useState(null);
     const store = {
         projectName, setProjectName,
-        drawer,setDrawer,
-        logOut,setLogOut,
-        code,setCode,
+        drawer, setDrawer,
+        logOut, setLogOut,
+        code, setCode,
         generate, setGenerateCode,
-        userData,setUserData
+        userData, setUserData
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

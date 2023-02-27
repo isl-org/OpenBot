@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import Blockly from "blockly/core";
 import uploadIcon from "../../assets/images/icon/upload-cloud.png"
 import {UploadBarStyle} from "./styles";
@@ -7,12 +7,11 @@ import undoIcon from "../../assets/images/icon/undo.png";
 import redoIcon from "../../assets/images/icon/redo.png";
 import driveIcon from "../../assets/images/icon/drive.png";
 import {javascriptGenerator} from 'blockly/javascript';
-import {useRef, useContext} from "react";
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
-import {savingWorkspace} from "../../firebase_setup/workspace";
+import {savingWorkspace} from "../../services/workspace";
 
 
 export const UploadCode = () => {
@@ -20,7 +19,7 @@ export const UploadCode = () => {
     const {theme} = useContext(ThemeContext)
     const {setCode} = useContext(StoreContext);
     const {generate, setGenerateCode} = useContext(StoreContext);
-    const {projectName} =  useContext(StoreContext);
+    const {projectName} = useContext(StoreContext);
 
 
     let primaryWorkspace = useRef();
@@ -34,8 +33,8 @@ export const UploadCode = () => {
         setDrawer(true);
 
         savingWorkspace(projectName)
-            .then(()=>console.log("workspace saved"))
-            .catch(err=>console.log(err))
+            .then(() => console.log("workspace saved"))
+            .catch(err => console.log(err))
     };
 
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
@@ -77,7 +76,6 @@ export const UploadCode = () => {
             setDriveButtonActive(false);
         }, 100);
     }
-
 
 
     return (

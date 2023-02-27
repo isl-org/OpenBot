@@ -8,69 +8,69 @@ export const NavbarStyle = {
         height: "5rem",
         alignItems: "center",
     },
-    navbarTitleDiv:{
+    navbarTitleDiv: {
         marginLeft: "4rem",
-        display:"flex",
-        alignItems:"center"
+        display: "flex",
+        alignItems: "center"
     },
 
-    navbarIconDiv:{
+    navbarIconDiv: {
         display: "flex",
         alignItems: "center",
         marginRight: "4rem",
     },
 
-    mainIcon:{
+    mainIcon: {
         height: "2rem",
-        width:"2rem",
+        width: "2rem",
         cursor: "pointer"
     },
 
-    mainTitle:{
+    mainTitle: {
         fontSize: "1.3rem",
         fontFamily: "Gilroy-Medium",
-        color:colors.whiteFont,
-        cursor:"pointer"
+        color: colors.whiteFont,
+        cursor: "pointer"
     },
 
-    infoIcon:{
-        height:"1.5rem",
+    infoIcon: {
+        height: "1.5rem",
         width: "1.5rem",
         cursor: "pointer"
     },
 
-    moonIcon:{
-        height:"1.3rem",
+    moonIcon: {
+        height: "1.3rem",
         width: "1.3rem",
         cursor: "pointer"
     },
 
-    lineIcon:{
-        width:"0.5%"
+    lineIcon: {
+        width: "0.5%"
     },
 
-    buttonIcon:{
+    buttonIcon: {
         border: "1px solid #FFFEFE",
-        borderRadius:"0.5rem",
+        borderRadius: "0.5rem",
         fontSize: "1rem",
-        height:"2rem",
-        width:"5rem",
+        height: "2rem",
+        width: "5rem",
         fontFamily: "Gilroy-Medium",
-        color:colors.whiteFont,
+        color: colors.whiteFont,
         backgroundColor: colors.openBotBlue,
-        cursor:"pointer"
+        cursor: "pointer"
     },
 
     iconMargin: {
         margin: 10
     },
-    arrowMargin:{
+    arrowMargin: {
         margin: 2
     },
     playgroundName: {
         display: "flex",
         alignItems: "center",
-        cursor:"pointer"
+        cursor: "pointer"
     },
 
 

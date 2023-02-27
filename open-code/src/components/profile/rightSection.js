@@ -40,13 +40,17 @@ export function EditProfile(theme) {
                             type="text"/>
                     </div>
                     <div className={Styles.Input}>
-                        <label  className={Styles.lable + " " + (theme.theme === "dark" ? Styles.TextDark : Styles.TextLight)}> Last Name </label>
+                        <label
+                            className={Styles.lable + " " + (theme.theme === "dark" ? Styles.TextDark : Styles.TextLight)}> Last
+                            Name </label>
                         <input
                             className={Styles.InputArea + " " + (theme.theme === "dark" ? Styles.InputAreaDark : Styles.InputAreaLight)}
                             type="text"/>
                     </div>
                     <div className={Styles.Input}>
-                        <label  className={Styles.lable + " " + (theme.theme === "dark" ? Styles.TextDark : Styles.TextLight)}> Date Of Birth </label>
+                        <label
+                            className={Styles.lable + " " + (theme.theme === "dark" ? Styles.TextDark : Styles.TextLight)}> Date
+                            Of Birth </label>
                         <input
                             className={Styles.InputArea + " " + (theme.theme === "dark" ? Styles.InputAreaDark : Styles.InputAreaLight)}
                             type="date"

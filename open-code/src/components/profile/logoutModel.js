@@ -3,7 +3,7 @@ import {Box, Modal} from "@mui/material";
 import {LogoutStyles} from "./styles";
 
 function LogoutModel(props) {
-    const{setLogOut}=props
+    const {setLogOut} = props
     const [open, setOpen] = useState(true);
     const handleClose = () => {
         setLogOut(false)

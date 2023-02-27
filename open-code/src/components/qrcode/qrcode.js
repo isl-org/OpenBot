@@ -1,23 +1,22 @@
-
-import {useContext, useState,useEffect} from "react";
-import { QRCodeCanvas } from "qrcode.react";
+import {useContext, useEffect, useState} from "react";
+import {QRCodeCanvas} from "qrcode.react";
 import {colors} from "../../utils/color";
 import icon from "../../assets/images/icon/open-bot-logo.png"
 import {qrStyles} from "./styles";
 import {StoreContext} from "../../context/context";
+
 const QrCode = () => {
     const [blockCode, setBlockCode] = useState("");
-    const {code } = useContext(StoreContext);
+    const {code} = useContext(StoreContext);
     const {generate} = useContext(StoreContext);
 
     useEffect(() => {
         const qrCodeEncoder = () => {
             setBlockCode(code);
         };
-            qrCodeEncoder();
+        qrCodeEncoder();
 
-    }, [code,generate]);
-
+    }, [code, generate]);
 
 
     const qrcode = (

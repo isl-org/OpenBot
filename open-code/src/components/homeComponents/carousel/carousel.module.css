@@ -6,6 +6,7 @@
     padding-right: 7.4%;
     align-items: center;
 }
+
 .HeadingContent {
     display: flex;
     flex-direction: column;
@@ -20,6 +21,7 @@
     line-height: 26px;
     color: #000000;
 }
+
 .DragAndDropContent {
     font-family: 'Gilroy-Regular', serif;
     font-size: 18px;
@@ -74,6 +76,7 @@
 [class~=thumbs-wrapper ] {
     display: none;
 }
+
 [class~=control-arrow ] {
     display: none;
 }

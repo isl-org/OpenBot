@@ -7,10 +7,10 @@ import '../blocks/customblocks';
 // import styles from "../BlocklyComponent.css"
 export const Toolbox = (props) => {
 
-        return (
+    return (
         <>
 
-            <Category name="Control"  colour={"#567AE4"}>
+            <Category name="Control" colour={"#567AE4"}>
                 <Block type="controls_if" gap="8">
                     <Value name="IF0">
                         <Shadow type="logic_boolean">
@@ -18,8 +18,8 @@ export const Toolbox = (props) => {
                         </Shadow>
                     </Value>
                 </Block>
-                {controlBlocksType.map((type,index) => {
-                    return controlsBlocks(type,index)
+                {controlBlocksType.map((type, index) => {
+                    return controlsBlocks(type, index)
                 })}
                 <Block type="logic_compare" gap="8">
                     <Value name="A">
@@ -35,12 +35,12 @@ export const Toolbox = (props) => {
                 </Block>
             </Category>
 
-            <Category name="Loops" colour={"#C54E30"} >
+            <Category name="Loops" colour={"#C54E30"}>
 
-                {loopBlocksType.map((type,index) => {
-                    return loopBlocks(type,index)
+                {loopBlocksType.map((type, index) => {
+                    return loopBlocks(type, index)
                 })}
-xx
+                xx
                 <Block type="controls_for">
                     <Value name="FROM">
                         <Shadow type="math_number">
@@ -83,7 +83,7 @@ xx
                 <Block type="text"/>
                 <Block type="timer"/>
                 <Block type="variables_set" gap="8">
-                    <Field name="VAR" ></Field>
+                    <Field name="VAR"></Field>
                     <Value name="VALUE">
                         <Block type="lists_create_with">
                             <Value name="ADD0">
@@ -243,7 +243,7 @@ xx
                 </Block>
                 <Block type="movementStop"/>
             </Category>
-            <Category name="Detection"  colour={"#717171"}>
+            <Category name="Detection" colour={"#717171"}>
                 <Block type='print'/>
             </Category>
         </>

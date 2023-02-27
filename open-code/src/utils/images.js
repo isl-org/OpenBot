@@ -14,6 +14,7 @@ import successfulEmojiIcon from "../../src/assets/images/icon/successful-emoji.p
 import errorEmojiIcon from "../../src/assets/images/icon/error-emozi-icon.png"
 import pencilIcon from "../../src/assets/images/icon/pencil-icon.png"
 import darkPencilIcon from "../../src/assets/images/icon/dark-pencil-icon.png"
+
 export const Images = {
     helpIcon: helpIcon,
     logoutIcon: logoutIcon,
@@ -29,6 +30,6 @@ export const Images = {
     lightCrossIcon: lightCrossIcon,
     successfulEmojiIcon: successfulEmojiIcon,
     errorEmojiIcon: errorEmojiIcon,
-    pencilIcon:pencilIcon,
-    darkPencilIcon:darkPencilIcon
+    pencilIcon: pencilIcon,
+    darkPencilIcon: darkPencilIcon
 }
