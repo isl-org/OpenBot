@@ -1,6 +1,6 @@
 {
-  "short_name": "open-code",
-  "name": "Create React App Sample",
+  "short_name": "OpenBot",
+  "name": "OpenBot Playground",
   "icons": [
     {
       "src": "favicon.ico",
