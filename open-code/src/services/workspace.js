@@ -37,3 +37,4 @@ export function getCurrentProject() {
     } catch (e) {
     }
 }
+

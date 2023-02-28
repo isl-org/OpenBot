@@ -6,22 +6,30 @@ import BlackText from "../../fonts/blackText";
 import WhiteText from "../../fonts/whiteText";
 import {doc, getDoc} from "firebase/firestore";
 import {auth, db} from "../../../services/firebase";
-import Blockly from "blockly/core";
+import {StoreContext} from "../../../context/context";
+import {useNavigate} from "react-router-dom";
 
 function Card(props) {
-    const {theme} = useContext(ThemeContext)
+    const {theme} = useContext(ThemeContext);
+    const {setCurrentProjectXml} = useContext(StoreContext);
+    const {setProjectName}=useContext(StoreContext);
 
+    let navigate = useNavigate();
+    const openExistingProject = () => {
+        let path = `playground`;
+        navigate(path);
+    }
+
+    //fetching blocks xml of selected project on home page
     const handleOpenProject = async (projectId) => {
         try {
             const blockSnap = doc(db, auth.currentUser.uid, projectId);
             const workspaceRef = await getDoc(blockSnap);
             if (workspaceRef.exists()) {
                 const projectData = workspaceRef.data().xmlText;
-
-                const xml = Blockly.Xml.textToDom(projectData);
-                Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, Blockly.getMainWorkspace());
-                props.openProject(projectData);
-                // Blockly.Xml.domToWorkspace(xml, Blockly.getMainWorkspace());
+                setCurrentProjectXml(projectData);
+                setProjectName(projectId);
+                openExistingProject();
             }
         } catch (error) {
             console.error(error);
@@ -30,8 +38,11 @@ function Card(props) {
 
     return (
         <div className={styles.cardContent}>
-            <div onClick={handleOpenProject}
-                 className={` ${styles.Card} ${theme === "dark" ? styles.darkBoxShadow : styles.lightBoxShadow}`}>
+            <div onClick={() => {
+                handleOpenProject(props.projectTitle).catch((err) => {
+                    console.log("error on fetching blocks: ", err);
+                })
+            }} className={` ${styles.Card} ${theme === "dark" ? styles.darkBoxShadow : styles.lightBoxShadow}`}>
                 <div className={styles.CardHeadingIcon}>
                     {theme === "dark" ? <WhiteText extraStyle={styles.CardHeading} text={props.projectTitle}/> :
                         <BlackText extraStyle={styles.CardHeading} text={props.projectTitle}/>}

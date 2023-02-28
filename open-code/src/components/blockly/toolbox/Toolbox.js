@@ -33,6 +33,8 @@ export const Toolbox = (props) => {
                         </Shadow>
                     </Value>
                 </Block>
+                <Block type="start" />
+                <Block type="forever"/>
             </Category>
 
             <Category name="Loops" colour={"#C54E30"}>
@@ -233,6 +235,13 @@ export const Toolbox = (props) => {
                 <Block type="frontLedSensor"/>
                 <Block type="backLedSensor"/>
                 <Block type="ledStatusSensor"/>
+                <Block type="eclipse_block"/>
+                <Block type="car_output"/>
+                <Block type="value"/>
+                <Block type="display">
+                    <Value name="input1">
+                    </Value>
+                </Block>
             </Category>
             <Category name="Bumper" colour={"#DA4B5D"}>
             </Category>

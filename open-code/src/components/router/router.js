@@ -8,6 +8,7 @@ export const RouterComponent = () => {
             <Routes>
                 <Route exact path="/" element={<Home/>}/>
                 <Route exact path="/playground" element={<Playground/>}/>
+                )}/>
             </Routes>
         </Router>
     )

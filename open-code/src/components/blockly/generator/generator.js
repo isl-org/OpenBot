@@ -297,3 +297,17 @@ javascriptGenerator['voltageDividerReading'] = function (block) {
     code += "voltageDividerReading();\n";
     return code;
 };
+
+javascriptGenerator['start'] = function(block) {
+    const statements_start_blocks = javascriptGenerator.statementToCode(block, 'start_blocks');
+    let code = "";
+    code+="start(\n"+statements_start_blocks+");";
+    return code;
+};
+
+javascriptGenerator['forever'] = function(block) {
+    const statements_start_blocks = javascriptGenerator.statementToCode(block, 'forever_loop_blocks');
+    let code = "";
+    code+="forever(\n"+statements_start_blocks+");";
+    return code;
+};

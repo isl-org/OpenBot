@@ -17,8 +17,10 @@ function BlocklyComponent(props) {
     const {theme} = useContext(ThemeContext);
     const toolbox = useRef();
     const primaryWorkspace = useRef();
-    const {projectName} = useContext(StoreContext);
 
+    const {projectName, setProjectName} = useContext(StoreContext);
+    const {currentProjectXml} = useContext(StoreContext);
+    const {logOut} = useContext(StoreContext);
     //save code in local to restore on reload page
     const handleWorkspaceChange = useCallback(() => {
         if (projectName !== undefined) {
@@ -45,10 +47,15 @@ function BlocklyComponent(props) {
 
         primaryWorkspace.current.addChangeListener(handleWorkspaceChange);
 
-        if (savedXml) {
+        //blocks fetching from firebase in card.js
+        if (logOut!==true && currentProjectXml) {
+            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(currentProjectXml), primaryWorkspace.current);
+        }
+        else if(savedXml ){
             const getXmlValue = Object.values(savedXml).toString()
             Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(getXmlValue), primaryWorkspace.current);
-        } else {
+        }
+        else {
             Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), primaryWorkspace.current);
         }
 

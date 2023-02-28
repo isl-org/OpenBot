@@ -608,3 +608,108 @@ Blockly.Blocks["ledStatusSensor"] = {
         });
     }
 };
+
+Blockly.Blocks["start"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "%1 %2",
+            "args0": [
+                {
+                    "type": "field_label_serializable",
+                    "name": "start",
+                    "text": "start"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "start_blocks"
+                }
+            ],
+            "colour": 210,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["forever"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "%1 %2",
+            "args0": [
+                {
+                    "type": "field_label_serializable",
+                    "name": "forever",
+                    "text": "forever"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "forever_loop_blocks"
+                }
+            ],
+            "colour": 210,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+
+Blockly.Blocks["eclipse_block"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "eclipse_block",
+            "message0": "speed of car",
+            "output": null,
+            "colour": 15
+        });
+    }
+};
+
+Blockly.Blocks["value"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "eclipse_block",
+            "message0": "20 Km/hr",
+            "output": null,
+            "colour": 15
+        });
+    }
+};
+
+Blockly.Blocks["car_output"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "eclipse_block",
+            "message0": "slow down the car",
+            "output": null,
+            "colour": 180
+        });
+    }
+};
+
+Blockly.Blocks["display"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "%1 %2",
+            "args0": [
+                {
+                    "type": "field_label_serializable",
+                    "name": "NAME",
+                    "text": "display"
+                },
+                {
+                    "type": "input_value",
+                    "name": "NAME"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 300,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};

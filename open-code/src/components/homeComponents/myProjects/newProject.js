@@ -18,7 +18,7 @@ export const NewProject = () => {
             projects.forEach((doc) => {
                 allProjects.push({id: doc.id, ...doc.data()});
             })
-            setAllProject(allProjects)
+            setAllProject(allProjects);
         } catch (error) {
             console.error(error);
         }
@@ -30,7 +30,6 @@ export const NewProject = () => {
             })
         })
     }, [])
-
     const {theme} = useContext(ThemeContext)
     return (
         <div className={styles.Main + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
@@ -43,7 +42,6 @@ export const NewProject = () => {
                         <Card key={value}
                               projectTitle={project.id}
                               projectDate={project.Date}
-                              openProject={project.xmlText}
                         />
                     )) :
                     <div className={styles.MessageIcon}>

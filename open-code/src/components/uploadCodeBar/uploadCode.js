@@ -23,6 +23,7 @@ export const UploadCode = () => {
     const {generate, setGenerateCode} = useContext(StoreContext);
     const {projectName} = useContext(StoreContext);
 
+
     let primaryWorkspace = useRef();
     const generateCode = () => {
         const code = javascriptGenerator.workspaceToCode(
@@ -30,12 +31,12 @@ export const UploadCode = () => {
         );
         console.log(code);
         setGenerateCode(!generate);
-        setCode(code)
+        setCode(code);
         setDrawer(true);
 
         savingWorkspace(projectName)
             .then(() => console.log("workspace saved"))
-            .catch(err => console.log(err))
+            .catch(err => console.log("error while saving workspace: ",err))
     };
 
     const clickedButton = (e) => {
@@ -74,6 +75,7 @@ export const UploadCode = () => {
         setTimeout(() => {
             setDriveButtonActive(false);
         }, 100);
+
     }
 
     //save projects in Local or Drive

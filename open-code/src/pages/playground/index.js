@@ -20,8 +20,8 @@ function Playground() {
                                       wheel: true
                                   }}
                                   initialXml={`<xml xmlns="http://www.w3.org/1999/xhtml">
-                                       <block type="controls_ifelse" x="0" y="100"></block>
-                                       <xml xmlns="https://developers.google.com/blockly/xml"></xml>
+                                       <Block type="start" x="0" y="100"/>
+                                       <Block type="forever" x="250" y="100"/>
                                       </xml>`}
                 >
                     <Toolbox/>
