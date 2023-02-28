@@ -28,6 +28,17 @@ export function saveCurrentProject(projectName, code) {
 
 export function saveXmlInLocal(currentProject) {
     console.log(currentProject)
+    const objectCurrentProject = JSON.parse(currentProject)
+    const getAllProjects = localStorage.getItem("Projects")
+    const objectGetAllProjects = JSON.parse(getAllProjects)
+
+    let ProjectsArray = objectGetAllProjects
+    if(ProjectsArray){
+        ProjectsArray.push(objectCurrentProject)
+    } else {
+        ProjectsArray = [objectCurrentProject]
+    }
+    localStorage.setItem("Projects", JSON.stringify(ProjectsArray))
 }
 
 export function getCurrentProject() {

@@ -78,7 +78,9 @@ export const UploadCode = () => {
 
     }
 
-    //save projects in Local or Drive
+    /**
+     * save projects in Local or Drive
+     */
     function saveProject(){
         if(localStorage.getItem("isSigIn") === "true"){
             //save project on drive
