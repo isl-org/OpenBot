@@ -30,7 +30,7 @@ export const NewProject = () => {
             })
         })
     }, [])
-    const {theme} = useContext(ThemeContext)
+    const {theme} = useContext(ThemeContext);
     return (
         <div className={styles.Main + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
             <div className={styles.Heading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>My

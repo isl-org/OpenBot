@@ -24,15 +24,15 @@
 }
 
 .Content {
-    margin-top: 1.7%;
+    margin-top: 22px;
     display: flex;
-    width: 19%;
+    width: 260px;
     align-items: center;
     cursor: pointer;
 }
 
 .Button {
-    width: 100%;
+    width: 260px;
     height: 160px;
     background-color: #ffffff;
     border: 1.3px dashed #0071C5;
