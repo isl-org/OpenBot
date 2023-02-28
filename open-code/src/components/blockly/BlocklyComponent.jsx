@@ -17,14 +17,15 @@ function BlocklyComponent(props) {
     const {theme} = useContext(ThemeContext);
     const toolbox = useRef();
     const primaryWorkspace = useRef();
-    const {projectName, setProjectName} = useContext(StoreContext);
+    const {projectName} = useContext(StoreContext);
 
     //save code in local to restore on reload page
     const handleWorkspaceChange = useCallback(() => {
+        console.log("project name :->", projectName);
         if (projectName !== undefined) {
             saveCurrentProject(projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
         }
-    }, [onWorkspaceChange, projectName]);
+    }, []);
 
     useEffect(() => {
         primaryWorkspace.current = Blockly.inject(blocklyDiv.current, {
@@ -36,7 +37,6 @@ function BlocklyComponent(props) {
 
         const savedXml = getCurrentProject()
 
-
         const model = new Modal(primaryWorkspace.current);
         model.init();
         model.render({
@@ -47,7 +47,6 @@ function BlocklyComponent(props) {
         primaryWorkspace.current.addChangeListener(handleWorkspaceChange);
 
         if (savedXml) {
-            setProjectName(Object.keys(savedXml).toString())
             const getXmlValue = Object.values(savedXml).toString()
             Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(getXmlValue), primaryWorkspace.current);
         } else {
