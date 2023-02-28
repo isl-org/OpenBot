@@ -19,18 +19,15 @@ export async function savingWorkspace(projectName) {
     }
 }
 
-export function saveCurrentProject(projectName, code){
+export function saveCurrentProject(projectName, code) {
     const project = {
         [projectName]: code,
     }
     localStorage.setItem("CurrentProject", JSON.stringify(project))
 }
 
-export function saveXmlInLocal(projectName, code) {
-    const project = {
-        [projectName]: code,
-    }
-    localStorage.setItem("Projects", JSON.stringify(project))
+export function saveXmlInLocal(currentProject) {
+    console.log(currentProject)
 }
 
 export function getCurrentProject() {

@@ -15,6 +15,7 @@ function NewProjectButton(props) {
     const {projectName, setProjectName} = useContext(StoreContext)
     const handleOpen = () => {
         localStorage.setItem("CurrentProject", "");
+        setProjectName();
         setOpen(true);
     }
     const handleClose = () => setOpen(false);

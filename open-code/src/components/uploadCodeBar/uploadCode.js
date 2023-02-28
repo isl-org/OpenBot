@@ -11,7 +11,7 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
-import {savingWorkspace} from "../../services/workspace";
+import {saveXmlInLocal, savingWorkspace} from "../../services/workspace";
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
@@ -69,10 +69,21 @@ export const UploadCode = () => {
     };
 
     const handleDriveButton = () => {
+        saveProject()
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);
         }, 100);
+    }
+
+    //save projects in Local or Drive
+    function saveProject(){
+        if(localStorage.getItem("isSigIn") === "true"){
+            //save project on drive
+        } else {
+            const getCurrentProject = localStorage.getItem("CurrentProject")
+            saveXmlInLocal(getCurrentProject)
+        }
     }
 
     return (

@@ -21,7 +21,6 @@ function BlocklyComponent(props) {
 
     //save code in local to restore on reload page
     const handleWorkspaceChange = useCallback(() => {
-        console.log("project name :->", projectName);
         if (projectName !== undefined) {
             saveCurrentProject(projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
         }
