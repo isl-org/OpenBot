@@ -46,6 +46,7 @@ export async function googleSigIn() {
 export async function googleSignOut() {
     const auth = getAuth();
     signOut(auth).then(() => {
+        window.location.reload()
         localStorage.setItem("isSigIn", "false")
     }).catch((error) => {
         console.log("Sign-out error ", error)

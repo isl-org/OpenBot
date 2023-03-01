@@ -67,7 +67,7 @@ export const UploadCode = () => {
     };
 
     const handleDriveButton = () => {
-        saveProject()
+        updateProject()
 
         setDriveButtonActive(true);
         setTimeout(() => {
@@ -79,7 +79,7 @@ export const UploadCode = () => {
     /**
      * save projects in Local or Drive
      */
-    function saveProject() {
+    function updateProject() {
         if (localStorage.getItem("isSigIn") === "true") {
             //save project on drive
             savingWorkspace(projectName)

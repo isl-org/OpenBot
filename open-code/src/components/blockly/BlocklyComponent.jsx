@@ -21,7 +21,11 @@ function BlocklyComponent(props) {
     const {projectName, setProjectName} = useContext(StoreContext);
     const {currentProjectXml} = useContext(StoreContext);
     const {logOut} = useContext(StoreContext);
-    //save code in local to restore on reload page
+
+    /**
+     * save code in local to restore on reload page
+     * @type {(function(): void)|*}
+     */
     const handleWorkspaceChange = useCallback(() => {
         if (projectName !== undefined) {
             saveCurrentProject(projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));

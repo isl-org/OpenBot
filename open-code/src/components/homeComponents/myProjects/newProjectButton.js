@@ -12,9 +12,10 @@ function NewProjectButton(props) {
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [isInputError, setIsInputError] = useState(true)
-    const {projectName, setProjectName} = useContext(StoreContext)
+    const {projectName, setProjectName, setCurrentProjectXml} = useContext(StoreContext)
     const handleOpen = () => {
         localStorage.setItem("CurrentProject", "");
+        setCurrentProjectXml("")
         setProjectName();
         setOpen(true);
     }
