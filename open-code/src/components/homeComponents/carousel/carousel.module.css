@@ -7,6 +7,13 @@
     align-items: center;
 }
 
+.darkBg {
+    background-color: #202020;
+}
+.lightBg {
+    background-color: #f8f9fb;
+}
+
 .HeadingContent {
     display: flex;
     flex-direction: column;
@@ -32,7 +39,7 @@
 }
 
 .ImageDrag {
-    width: 20.3% !important;
+    padding-top: 100px;
 }
 
 .ImageSave {
@@ -88,4 +95,3 @@
 [class~=carousel-slider] {
     overflow: inherit !important;
 }
-

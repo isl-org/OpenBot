@@ -1,6 +1,7 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import {Carousel} from 'react-responsive-carousel';
-import BlocklyCode from "../../../assets/images/blockly-code-image.png";
+import dragDropWhite from "../../../assets/images/drag_drop_white.mp4";
+import dragDropDark from "../../../assets/images/drag_drop_dark.mp4";
 import QRCode from "../../../assets/images/qr-image.png";
 import OpenBoat from "../../../assets/images/open-boat-image.png";
 import React, {useContext} from "react";
@@ -12,8 +13,8 @@ export const HomeCarousel = () => {
     const {theme} = useContext(ThemeContext)
 
     return (
-        <Carousel axis={'horizontal'} infiniteLoop={true} interval={2000} autoPlay={true}>
-            <div className={styles.Content}>
+        <Carousel axis={'horizontal'} infiniteLoop={true} interval={4000} autoPlay={true}>
+            <div className={styles.Content + " " + (theme === "dark" ? styles.darkBg : styles.lightBg)}>
                 <div className={styles.HeadingContent}>
                     <div
                         className={styles.DragAndDropHeading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>Drag
@@ -26,9 +27,10 @@ export const HomeCarousel = () => {
                         connecting them together to create a sequence of actions.
                     </div>
                 </div>
-                <img src={BlocklyCode} className={styles.ImageDrag} alt={'BlocklyCodeImg'}/>
+                <video src={theme === "dark" ? dragDropDark : dragDropWhite} className={styles.ImageDrag}
+                       autoPlay={true} loop={true}/>
             </div>
-            <div className={styles.Content}>
+            <div className={styles.Content + " " + (theme === "dark" ? styles.darkBg : styles.lightBg)}>
                 <div className={styles.HeadingContent}>
                     <div
                         className={styles.DragAndDropHeading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>Save
@@ -46,7 +48,7 @@ export const HomeCarousel = () => {
                 <img src={QRCode} className={styles.ImageSave} alt={'QRCode'}/>
 
             </div>
-            <div className={styles.Content}>
+            <div className={styles.Content + " " + (theme === "dark" ? styles.darkBg : styles.lightBg)}>
                 <div className={styles.HeadingContent}>
                     <div
                         className={styles.DragAndDropHeading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>Connect
