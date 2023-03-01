@@ -20,7 +20,11 @@ function Card(props) {
         navigate(path);
     }
 
-    //fetching blocks xml of selected project on home page
+    /**
+     * fetching blocks xml of selected project on home page
+     * @param projectId
+     * @returns {Promise<void>}
+     */
     const handleOpenProject = async (projectId) => {
         try {
             const blockSnap = doc(db, auth.currentUser.uid, projectId);

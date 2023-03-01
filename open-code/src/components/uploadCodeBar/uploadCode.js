@@ -34,9 +34,6 @@ export const UploadCode = () => {
         setCode(code);
         setDrawer(true);
 
-        savingWorkspace(projectName)
-            .then(() => console.log("workspace saved"))
-            .catch(err => console.log("error while saving workspace: ",err))
     };
 
     const clickedButton = (e) => {
@@ -71,6 +68,7 @@ export const UploadCode = () => {
 
     const handleDriveButton = () => {
         saveProject()
+
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);
@@ -81,9 +79,12 @@ export const UploadCode = () => {
     /**
      * save projects in Local or Drive
      */
-    function saveProject(){
-        if(localStorage.getItem("isSigIn") === "true"){
+    function saveProject() {
+        if (localStorage.getItem("isSigIn") === "true") {
             //save project on drive
+            savingWorkspace(projectName)
+                .then(() => console.log("workspace saved"))
+                .catch(err => console.log("error while saving workspace: ", err))
         } else {
             const getCurrentProject = localStorage.getItem("CurrentProject")
             saveXmlInLocal(getCurrentProject)

@@ -33,7 +33,7 @@ export function saveXmlInLocal(currentProject) {
     const objectGetAllProjects = JSON.parse(getAllProjects)
 
     let ProjectsArray = objectGetAllProjects
-    if(ProjectsArray){
+    if (ProjectsArray) {
         ProjectsArray.push(objectCurrentProject)
     } else {
         ProjectsArray = [objectCurrentProject]
