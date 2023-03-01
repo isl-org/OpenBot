@@ -32,7 +32,7 @@ export const NewProject = () => {
         })
     }, [])
     const {theme} = useContext(ThemeContext)
-    const localStorageProjectsLength = localStorageProjects?.size ? localStorageProjects?.size : 0
+    const localStorageProjectsLength = localStorageProjects?.length ? localStorageProjects?.length : 0
     return (
         <div className={styles.Main + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
             <div className={styles.Heading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>My

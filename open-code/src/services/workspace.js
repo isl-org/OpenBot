@@ -61,7 +61,6 @@ export function saveXmlInLocal(currentProject) {
 export function getAllLocalProjects() {
     try {
         const projects = localStorage.getItem("Projects")
-        console.log("all projects = > ", JSON.parse(localStorage.getItem("Projects")).length)
         return JSON.parse(projects)
     } catch (error) {
 

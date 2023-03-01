@@ -8,16 +8,16 @@ import {doc, getDoc} from "firebase/firestore";
 import {auth, db} from "../../../services/firebase";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
+import {getAllLocalProjects} from "../../../services/workspace";
 
 function Card(props) {
     const {theme} = useContext(ThemeContext);
     const {setCurrentProjectXml} = useContext(StoreContext);
-    const {setProjectName}=useContext(StoreContext);
+    const {setProjectName} = useContext(StoreContext);
 
     let navigate = useNavigate();
     const openExistingProject = () => {
-        let path = `playground`;
-        navigate(path);
+        navigate(`playground`);
     }
 
     /**
@@ -26,11 +26,19 @@ function Card(props) {
      * @returns {Promise<void>}
      */
     const handleOpenProject = async (projectId) => {
+        const localProject = getAllLocalProjects()
+        for (let i = 0; i < localProject.length; i++) {
+            if (localProject[i][projectId]) {
+                setCurrentProjectXml(localProject[i][projectId]);
+                setProjectName(projectId);
+                openExistingProject();
+            }
+        }
         try {
             const blockSnap = doc(db, auth.currentUser.uid, projectId);
             const workspaceRef = await getDoc(blockSnap);
             if (workspaceRef.exists()) {
-                const projectData = workspaceRef.data().xmlText;
+                const projectData = workspaceRef?.data().xmlText;
                 setCurrentProjectXml(projectData);
                 setProjectName(projectId);
                 openExistingProject();
