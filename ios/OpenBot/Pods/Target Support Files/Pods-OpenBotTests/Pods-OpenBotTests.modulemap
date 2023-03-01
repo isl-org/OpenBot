@@ -1,6 +1,0 @@
-framework module Pods_OpenBotTests {
-  umbrella header "Pods-OpenBotTests-umbrella.h"
-
-  export *
-  module * { export * }
-}
