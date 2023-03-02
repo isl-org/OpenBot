@@ -7,12 +7,15 @@ import {Themes} from "./utils/constants";
 export const ThemeContext = createContext(null);
 
 function App() {
-    if (localStorage.getItem("theme") == null) {
-        localStorage.setItem("theme", Themes.light);
+
+    //check if user prefer theme is saved or not if not then saved it to system theme
+    if (!localStorage.getItem("theme")) {
+        const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)"); //check system theme
+        //set system prefer theme in localstorage
+        localStorage.setItem("theme", darkThemeMq.matches ? Themes.dark : Themes.light);
     }
 
-    const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
-    let onPageLoad = localStorage.getItem("theme") || darkThemeMq.matches ? Themes.dark : Themes.light;
+    let onPageLoad = localStorage.getItem("theme") || ""
     const [theme, setTheme] = useState(onPageLoad);
 
     const toggleTheme = () => {

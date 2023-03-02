@@ -7,6 +7,7 @@ import {ThemeContext} from "../../../App";
 import {Images} from "../../../utils/images";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 import {createWorkspace} from "../../../services/workspace";
+import {Themes} from "../../../utils/constants";
 
 function NewProjectButton(props) {
     const {isProject} = props
@@ -64,7 +65,7 @@ function NewProjectButton(props) {
                     <div
                         className={styles.ModelHeading + " " + (theme === "dark" ? styles.ModelHeadingDark : styles.ModelHeadingLight)}>
                         <div>Create a New Project</div>
-                        {(theme === "light" ?
+                        {(theme === Themes.light ?
                             <img alt="" src={Images.crossIcon} className={styles.CrossIcon} onClick={handleClose}/> :
                             <img alt="" src={Images.darkCrossIcon} className={styles.CrossIcon}
                                  onClick={handleClose}/>)}
