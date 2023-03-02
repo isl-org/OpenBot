@@ -2,24 +2,27 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useState} from "react";
+import {Themes} from "./utils/constants";
 
 export const ThemeContext = createContext(null);
 
 function App() {
     if (localStorage.getItem("theme") == null) {
-        localStorage.setItem("theme", "light");
+        localStorage.setItem("theme", Themes.light);
     }
-    let onPageLoad = localStorage.getItem("theme") || "";
+
+    const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+    let onPageLoad = localStorage.getItem("theme") || darkThemeMq.matches ? Themes.dark : Themes.light;
     const [theme, setTheme] = useState(onPageLoad);
 
     const toggleTheme = () => {
         window.location.reload()
-        if (theme === "light") {
-            setTheme("dark")
-            localStorage.setItem("theme", "dark")
+        if (theme === Themes.light) {
+            setTheme(Themes.dark)
+            localStorage.setItem("theme", Themes.dark)
         } else {
-            setTheme("light")
-            localStorage.setItem("theme", "light")
+            setTheme(Themes.light)
+            localStorage.setItem("theme", Themes.light)
         }
     }
     return (

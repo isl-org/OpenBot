@@ -9,7 +9,6 @@ import styles from "./carousel.module.css";
 import {ThemeContext} from "../../../App";
 
 export const HomeCarousel = () => {
-
     const {theme} = useContext(ThemeContext)
 
     return (
@@ -63,7 +62,6 @@ export const HomeCarousel = () => {
                     </div>
                 </div>
                 <img src={OpenBoat} className={styles.ImageSave} alt={'OpenBoat'}/>
-
             </div>
         </Carousel>
     )

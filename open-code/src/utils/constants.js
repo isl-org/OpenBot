@@ -39,3 +39,8 @@ export const HelpCenterText = {
     connectAndDriveFirstLine: "Pair your smartphone with the OpenBot car and run the code that you have downloaded.",
     connectAndDriveSecondLine: "Carry out desired actions such as activating indicator lights, detecting objects, and more on your robot car.",
 }
+
+export const Themes = {
+    "light": "light",
+    "dark": "dark",
+}
