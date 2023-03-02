@@ -11,7 +11,7 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
-import {saveXmlInLocal, savingWorkspace} from "../../services/workspace";
+import {savingWorkspace, createWorkspace, getCurrentProject} from "../../services/workspace";
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
@@ -80,15 +80,23 @@ export const UploadCode = () => {
      * save projects in Local or Drive
      */
     function updateProject() {
-        if (localStorage.getItem("isSigIn") === "true") {
-            //save project on drive
-            savingWorkspace(projectName,currentProjectId)
-                .then(() => console.log("workspace saved"))
-                .catch(err => console.log("error while saving workspace: ", err))
-        } else {
-            const getCurrentProject = localStorage.getItem("CurrentProject")
-            saveXmlInLocal(getCurrentProject)
+        const data = {
+            date: getCurrentProject().date,
+            projectTitle: Object.keys(getCurrentProject())[1],
+            xmlText: getCurrentProject()[projectName],
         }
+        const uniqueId = getCurrentProject().id
+        createWorkspace(data, uniqueId).then(() =>{
+            console.log("save on fireStore")
+        })
+        // if (localStorage.getItem("isSigIn") === "true") {
+        //     //save project on drive
+        //     savingWorkspace(projectName,currentProjectId)
+        //         .then(() => {})
+        //         .catch(err => console.log("error while saving workspace: ", err))
+        // } else {
+        //     const getCurrentProject = localStorage.getItem("CurrentProject")
+        // }
     }
 
     return (

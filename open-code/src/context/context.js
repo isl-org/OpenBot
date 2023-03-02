@@ -21,7 +21,7 @@ export default ({children}) => {
         code, setCode,
         generate, setGenerateCode,
         currentProjectXml, setCurrentProjectXml,
-        currentProjectId,setCurrentProjectId
+        currentProjectId,setCurrentProjectId,
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

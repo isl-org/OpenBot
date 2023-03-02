@@ -45,6 +45,7 @@ export const NewProject = () => {
                         <Card key={key}
                               projectTitle={Object.keys(localProjects)[1]}
                               projectDate={localProjects.date}
+                              projectId={localProjects.id}
                         />
                     ))
                 }

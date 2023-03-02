@@ -2,27 +2,17 @@ import {auth, db} from "./firebase";
 import Blockly from "blockly/core";
 import {collection, doc, setDoc, updateDoc, deleteDoc} from "firebase/firestore";
 
-export async function createWorkspace(projectName, currentProjectId, setCurrentProjectId) {
-    const date = new Date();
-    const options = {day: 'numeric', month: 'long', year: 'numeric'};
-    const currentDate = date.toLocaleDateString('en-US', options);
-    const data = {
-        date: currentDate,
-        projectTitle: projectName,
-        xmlText: "",
-    }
-    const uniqueId = generatePath(projectName);
-    setCurrentProjectId(uniqueId);
+export async function createWorkspace(data, uniqueId) {
+
     if (localStorage.getItem("isSigIn") === "true") {
         try {
             const workspaceRef = doc(collection(db, auth.currentUser.uid), uniqueId);
             await setDoc(workspaceRef, data);
-            console.log("workspace created = ", workspaceRef)
         } catch (err) {
             console.log(err);
         }
     } else {
-        //create in local storage
+        //alert for login first
     }
 }
 
@@ -67,22 +57,22 @@ export function generatePath(projectName) {
     return projectNameWithoutSpace + "_" + finalDate + "_" + timestamp + ":" + milliseconds;
 }
 
-export function saveCurrentProject(projectName, code) {
+export function saveCurrentProject(uniqueId, projectName, code) {
     const date = new Date();
     const options = {day: 'numeric', month: 'long', year: 'numeric'};
     const currentDate = date.toLocaleDateString('en-US', options)
-    let uniqueId
-    try {
-        uniqueId = JSON.parse(localStorage.getItem("Projects")).length
-    } catch (error) {
-        uniqueId = 0
-    }
     const project = {
         id: uniqueId,
         [projectName]: code,
         date: currentDate,
     }
     localStorage.setItem("CurrentProject", JSON.stringify(project))
+    const found = JSON.parse(localStorage?.getItem("Projects"))?.find((project) => {
+        return project.id === getCurrentProject().id
+    })
+    if (!found) {
+        saveXmlInLocal(localStorage.getItem("CurrentProject"))
+    }
 }
 
 export function getCurrentProject() {

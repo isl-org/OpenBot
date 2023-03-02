@@ -12,11 +12,12 @@ import {getAllLocalProjects} from "../../../services/workspace";
 
 function Card(props) {
     const {theme} = useContext(ThemeContext);
-    const{ setCurrentProjectXml, setProjectName, setCurrentProjectId}=useContext(StoreContext);
+    const{ setCurrentProjectXml, setProjectName, setCurrentProjectId, }=useContext(StoreContext);
     let navigate = useNavigate();
     const openExistingProject = () => {
         navigate(`playground`);
     }
+
     /**
      * fetching blocks xml of selected project on home page
      * @param projectId
@@ -24,10 +25,12 @@ function Card(props) {
      */
     const handleOpenProject = async (projectId) => {
         const localProject = getAllLocalProjects()
+        setCurrentProjectId(projectId)
         for (let i = 0; i < localProject?.length; i++) {
-            if (localProject[i][projectId]) {
-                setCurrentProjectXml(localProject[i][projectId]);
-                setProjectName(projectId);
+            if (localProject[i].id === projectId) {
+                const projectName = Object.keys(localProject[i])[1]
+                setCurrentProjectXml(localProject[i][projectName]);
+                setProjectName(projectName);
                 openExistingProject();
             }
         }

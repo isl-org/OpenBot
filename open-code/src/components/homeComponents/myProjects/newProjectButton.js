@@ -6,8 +6,8 @@ import styles from "./newProject.module.css";
 import {ThemeContext} from "../../../App";
 import {Images} from "../../../utils/images";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
-import {createWorkspace} from "../../../services/workspace";
 import {Themes} from "../../../utils/constants";
+
 
 function NewProjectButton(props) {
     const {isProject} = props
@@ -18,14 +18,14 @@ function NewProjectButton(props) {
         projectName,
         setProjectName,
         setCurrentProjectXml,
-        currentProjectId,
-        setCurrentProjectId
+        setCurrentProjectId,
     } = useContext(StoreContext)
 
     const handleOpen = () => {
         localStorage.setItem("CurrentProject", "");
         setCurrentProjectXml("")
         setProjectName();
+        setCurrentProjectId();
         setOpen(true);
     }
     const handleClose = () => setOpen(false);
@@ -79,11 +79,6 @@ function NewProjectButton(props) {
                     </div>
 
                     <div className={styles.SaveBtn} onClick={() => {
-                        createWorkspace(projectName, currentProjectId, setCurrentProjectId).then(() => {
-                        })
-                            .catch((err) => {
-                                console.log("error while creating workspace: ", err);
-                            })
                         OpenNewProjectHandle();
                     }}>Create
                     </div>
