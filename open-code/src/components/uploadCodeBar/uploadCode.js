@@ -18,11 +18,11 @@ export const UploadCode = () => {
     const [buttonActive, setButtonActive] = useState(false);
     const [driveButtonActive, setDriveButtonActive] = useState(false);
     const {setDrawer} = useContext(StoreContext);
-    const {theme} = useContext(ThemeContext)
+    const {theme} = useContext(ThemeContext);
     const {setCode} = useContext(StoreContext);
     const {generate, setGenerateCode} = useContext(StoreContext);
     const {projectName} = useContext(StoreContext);
-
+    const{currentProjectId}=useContext(StoreContext);
 
     let primaryWorkspace = useRef();
     const generateCode = () => {
@@ -82,7 +82,7 @@ export const UploadCode = () => {
     function updateProject() {
         if (localStorage.getItem("isSigIn") === "true") {
             //save project on drive
-            savingWorkspace(projectName)
+            savingWorkspace(projectName,currentProjectId)
                 .then(() => console.log("workspace saved"))
                 .catch(err => console.log("error while saving workspace: ", err))
         } else {

@@ -13,6 +13,7 @@ export default ({children}) => {
     const [code, setCode] = useState("");
     const [generate, setGenerateCode] = useState(false);
     const [currentProjectXml, setCurrentProjectXml] = useState(null);
+    const[currentProjectId,setCurrentProjectId]=useState(null);
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,
@@ -20,6 +21,7 @@ export default ({children}) => {
         code, setCode,
         generate, setGenerateCode,
         currentProjectXml, setCurrentProjectXml,
+        currentProjectId,setCurrentProjectId
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

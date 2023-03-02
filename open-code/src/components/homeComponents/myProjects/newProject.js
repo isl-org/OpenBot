@@ -50,8 +50,9 @@ export const NewProject = () => {
                 }
                 {driveProjects.length > 0 || localStorageProjectsLength > 0 ? driveProjects?.map((driveProject, key) => (
                         <Card key={key}
-                              projectTitle={driveProject.id}
+                              projectTitle={driveProject.projectTitle}
                               projectDate={driveProject.date}
+                              projectId={driveProject.id}
                         />
                     ))
                     :

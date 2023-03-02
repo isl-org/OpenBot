@@ -1,27 +1,66 @@
 import {auth, db} from "./firebase";
 import Blockly from "blockly/core";
-import {collection, doc, setDoc} from "firebase/firestore";
+import {collection, doc, setDoc, updateDoc} from "firebase/firestore";
 
-const date = new Date();
-const options = {day: 'numeric', month: 'long', year: 'numeric'};
-const currentDate = date.toLocaleDateString('en-US', options)
-
-export async function savingWorkspace(projectName) {
+export async function savingWorkspace(projectName, currentProjectId) {
+    const date = new Date();
+    const options = {day: 'numeric', month: 'long', year: 'numeric'};
+    const currentDate = date.toLocaleDateString('en-US', options)
+    const xmlValue = Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace());
+    const xmlText = Blockly.Xml.domToText(xmlValue);
+    const workspaceRef = doc(collection(db, auth.currentUser.uid), currentProjectId);
     try {
-        const xml = Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace());
-        const xmlText = Blockly.Xml.domToText(xml);
-        const data = {
-            xmlText: xmlText,
-            date: currentDate,
-        }
-        doc(collection(db, auth.currentUser.uid));
-        await setDoc(doc(db, auth.currentUser.uid, projectName), data);
+        await updateDoc(workspaceRef,{
+            date:currentDate,
+            xmlText:xmlText
+        })
     } catch (err) {
         console.log(err);
     }
 }
 
+export async function createWorkspace(projectName, currentProjectId, setCurrentProjectId) {
+    const date = new Date();
+    const options = {day: 'numeric', month: 'long', year: 'numeric'};
+    const currentDate = date.toLocaleDateString('en-US', options)
+    const data = {
+        date: currentDate,
+        projectTitle: projectName,
+        xmlText: "",
+    }
+    const uniqueId = generatePath(projectName);
+    setCurrentProjectId(uniqueId);
+    if (localStorage.getItem("isSigIn") === "true") {
+        try {
+            const workspaceRef = doc(collection(db, auth.currentUser.uid), uniqueId);
+            await setDoc(workspaceRef, data);
+            console.log("workspace created = ", workspaceRef)
+        } catch (err) {
+            console.log(err);
+        }
+    } else {
+        //create in local storage
+    }
+}
+
+export function generatePath(projectName) {
+    const date = new Date();
+    const options = {day: 'numeric', month: 'numeric', year: 'numeric'};
+    const customDate = date.toLocaleDateString('en-US', options).replace(/\//g, '-');
+    const finalDate = customDate.replace(/\s+/g, '-');
+    let projectNameWithoutSpace = projectName.replace(/\s+/g, '-');
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const milliseconds = date.getMilliseconds();
+    const timestamp = hours + ":" + minutes + ":" + seconds;
+    return projectNameWithoutSpace + "_" + finalDate + "_" + timestamp + ":" + milliseconds;
+}
+
 export function saveCurrentProject(projectName, code) {
+    const date = new Date();
+    const options = {day: 'numeric', month: 'long', year: 'numeric'};
+    const currentDate = date.toLocaleDateString('en-US', options)
     let uniqueId
     try {
         uniqueId = JSON.parse(localStorage.getItem("Projects")).length
@@ -35,6 +74,7 @@ export function saveCurrentProject(projectName, code) {
     }
     localStorage.setItem("CurrentProject", JSON.stringify(project))
 }
+
 export function getCurrentProject() {
     try {
         const getProject = localStorage.getItem("CurrentProject")

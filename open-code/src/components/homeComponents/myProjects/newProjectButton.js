@@ -6,13 +6,21 @@ import styles from "./newProject.module.css";
 import {ThemeContext} from "../../../App";
 import {Images} from "../../../utils/images";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
+import {createWorkspace} from "../../../services/workspace";
 
 function NewProjectButton(props) {
     const {isProject} = props
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [isInputError, setIsInputError] = useState(true)
-    const {projectName, setProjectName, setCurrentProjectXml} = useContext(StoreContext)
+    const {
+        projectName,
+        setProjectName,
+        setCurrentProjectXml,
+        currentProjectId,
+        setCurrentProjectId
+    } = useContext(StoreContext)
+
     const handleOpen = () => {
         localStorage.setItem("CurrentProject", "");
         setCurrentProjectXml("")
@@ -70,6 +78,11 @@ function NewProjectButton(props) {
                     </div>
 
                     <div className={styles.SaveBtn} onClick={() => {
+                        createWorkspace(projectName, currentProjectId, setCurrentProjectId).then(() => {
+                        })
+                            .catch((err) => {
+                                console.log("error while creating workspace: ", err);
+                            })
                         OpenNewProjectHandle();
                     }}>Create
                     </div>

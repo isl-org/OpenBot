@@ -12,14 +12,11 @@ import {getAllLocalProjects} from "../../../services/workspace";
 
 function Card(props) {
     const {theme} = useContext(ThemeContext);
-    const {setCurrentProjectXml} = useContext(StoreContext);
-    const {setProjectName} = useContext(StoreContext);
-
+    const{ setCurrentProjectXml, setProjectName, setCurrentProjectId}=useContext(StoreContext);
     let navigate = useNavigate();
     const openExistingProject = () => {
         navigate(`playground`);
     }
-
     /**
      * fetching blocks xml of selected project on home page
      * @param projectId
@@ -27,7 +24,7 @@ function Card(props) {
      */
     const handleOpenProject = async (projectId) => {
         const localProject = getAllLocalProjects()
-        for (let i = 0; i < localProject.length; i++) {
+        for (let i = 0; i < localProject?.length; i++) {
             if (localProject[i][projectId]) {
                 setCurrentProjectXml(localProject[i][projectId]);
                 setProjectName(projectId);
@@ -38,9 +35,12 @@ function Card(props) {
             const blockSnap = doc(db, auth.currentUser.uid, projectId);
             const workspaceRef = await getDoc(blockSnap);
             if (workspaceRef.exists()) {
-                const projectData = workspaceRef?.data().xmlText;
-                setCurrentProjectXml(projectData);
-                setProjectName(projectId);
+                const projectId=workspaceRef.id;
+                setCurrentProjectId(projectId);
+                const projectXmlData = workspaceRef.data().xmlText;
+                const projectTitleData = workspaceRef.data().projectTitle;
+                setCurrentProjectXml(projectXmlData);
+                setProjectName(projectTitleData);
                 openExistingProject();
             }
         } catch (error) {
@@ -51,7 +51,7 @@ function Card(props) {
     return (
         <div className={styles.cardContent}>
             <div onClick={() => {
-                handleOpenProject(props.projectTitle).catch((err) => {
+                handleOpenProject(props.projectId).catch((err) => {
                     console.log("error on fetching blocks: ", err);
                 })
             }} className={` ${styles.Card} ${theme === "dark" ? styles.darkBoxShadow : styles.lightBoxShadow}`}>
