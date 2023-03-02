@@ -324,3 +324,77 @@
     color: #0071C5;
 }
 
+.navbarDiv{
+    display: flex;
+    background-color: rgb(0, 113, 197);
+    justify-content: space-between;
+    height: 5rem;
+    align-items: center;
+}
+
+.navbarTitleDiv{
+    margin-left: 4rem;
+    display: flex;
+    align-items: center;
+}
+
+.navbarIconDiv{
+    display: flex;
+    align-items: center;
+    margin-right: 4rem;
+}
+
+.mainIcon{
+    height: 2rem;
+    width: 2rem;
+    cursor: pointer;
+}
+
+.mainTitle{
+    font-size: 1.3rem;
+    font-family: Gilroy-Medium,sans-serif;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.infoIcon{
+    height: 1.5rem;
+    width: 1.5rem;
+    cursor: pointer;
+}
+
+.moonIcon {
+    height: 1.3rem;
+    width: 1.3rem;
+    cursor: pointer;
+}
+
+.lineIcon{
+    width: 0.5%;
+}
+
+.buttonIcon{
+    border: 1px solid rgb(255, 254, 254);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    height: 2rem;
+    width: 5rem;
+    font-family: Gilroy-Medium,sans-serif;
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 113, 197);
+    cursor: pointer;
+}
+
+.iconMargin{
+    margin: 10px;
+}
+
+.arrowMargin{
+    margin: 2px;
+}
+
+.playgroundName{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}

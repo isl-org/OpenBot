@@ -2,11 +2,10 @@ import React, {forwardRef, useContext, useEffect, useRef, useState} from 'react'
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import icon from "../../assets/images/icon/open-bot-logo.png"
 import downArrow from "../../assets/images/icon/down-arrow.png"
-import {NavbarStyle} from "./styles";
 import {useLocation, useNavigate} from "react-router-dom";
 import {ThemeContext} from "../../App"
 import WhiteText from "../fonts/whiteText";
-import styles from "./navbar.module.css"
+import styles from "./navbar.module.css";
 import {Box, Modal, Popper} from "@mui/material";
 import BlueText from "../fonts/blueText";
 import {Images} from "../../utils/images";
@@ -23,6 +22,7 @@ import renameIcon from "../../assets/images/icon/rename-icon.png";
 import deleteIcon from "../../assets/images/icon/delete-icon.png";
 import {colors} from "../../utils/color";
 import LoaderComponent from "../loader/loaderComponent";
+import {deletingWorkspace} from "../../services/workspace";
 
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext)
@@ -63,27 +63,27 @@ export function Header() {
     return (
         <div>
             {deleteProject && <DeleteModel setDeleteProject={setDeleteProject}/>}
-            <div style={NavbarStyle.navbarDiv}>
-                <div style={NavbarStyle.navbarTitleDiv}>
-                    <img alt="" style={{...NavbarStyle.mainIcon, ...NavbarStyle.iconMargin}} src={icon} onClick={() => {
+            <div className={styles.navbarDiv}>
+                <div className={styles.navbarTitleDiv}>
+                    <img alt="" className={`${styles.mainIcon} ${styles.iconMargin}`} src={icon} onClick={() => {
                         openHomepage()
                     }}/>
                     <span onClick={() => {
                         openHomepage()
-                    }} style={{...NavbarStyle.mainTitle, ...NavbarStyle.iconMargin}}>OpenCode</span>
+                    }} className={`${styles.mainTitle} ${styles.iconMargin}`}>OpenCode</span>
                 </div>
 
                 {location.pathname === "/playground" ? !anchorEl ?
-                        <div style={NavbarStyle.playgroundName} onClick={handleClick}>
+                        <div className={styles.playgroundName} onClick={handleClick}>
                     <span
-                        style={{...NavbarStyle.mainTitle, ...NavbarStyle.arrowMargin}}>{projectName}</span>
+                        className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName}</span>
                             <img src={downArrow}
-                                 style={{...NavbarStyle.infoIcon, ...NavbarStyle.arrowMargin}}
+                                 className={`${styles.infoIcon} ${styles.arrowMargin}`}
                                  alt={"arrow"}/>
                         </div>
                         :
                         <>
-                            <div style={NavbarStyle.playgroundName}>
+                            <div className={styles.playgroundName}>
                                 <input type="text" className={styles.Edit}
                                        id="userEdit"
                                        onChange={(e) => setProjectName(e.target.value)}
@@ -91,7 +91,7 @@ export function Header() {
                                        value={projectName}
                                 />
                                 <img src={UpArrow}
-                                     style={{...NavbarStyle.infoIcon, ...NavbarStyle.arrowMargin}}
+                                     className={`${styles.infoIcon} ${styles.arrowMargin}`}
                                      onClick={handleClick} alt={"arrow"}/>
                             </div>
                             <Popper key={id} open={open} anchorEl={anchorEl}>
@@ -114,14 +114,14 @@ export function Header() {
                             </Popper>
                         </>
                     : ""}
-                <div style={NavbarStyle.navbarIconDiv}>
+                <div className={styles.navbarIconDiv}>
                     {location.pathname === "/playground" ?
                         <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon} onClick={() => {
                             setIsHelpCenterModal(true)
                         }} style={{height: 24}}/> : ""}
                     <img alt="" onClick={() => toggleTheme(!theme)} src={moon}
-                         style={{...NavbarStyle.moonIcon, ...NavbarStyle.iconMargin}}/>
-                    <img alt="" src={Images.line} style={{...NavbarStyle.lineIcon, ...NavbarStyle.iconMargin}}/>
+                         className={`${styles.moonIcon} ${styles.iconMargin}`}/>
+                    <img alt="" src={Images.line} className={`${styles.lineIcon} ${styles.iconMargin}`}/>
                     {
                         localStorage.getItem("isSigIn") === "true" ?
                             <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
@@ -142,7 +142,7 @@ export function Header() {
                                 }).catch((error) => {
                                     console.log("sigin error = ", error)
                                 });
-                            }} style={{...NavbarStyle.buttonIcon, ...NavbarStyle.iconMargin}}><span>Sign in</span>
+                            }} className={`${styles.buttonIcon} ${styles.iconMargin}`}><span>Sign in</span>
                             </button>
                     }
                     {
@@ -178,35 +178,21 @@ export function Header() {
 export function DeleteModel(props) {
     const {theme} = useContext(ThemeContext)
     let navigate = useNavigate();
-    const {setDeleteProject} = props
+    const {setDeleteProject} = props;
     const [open, setOpen] = useState(true);
+    const {currentProjectId} = useContext(StoreContext);
     const handleClose = () => {
         setDeleteProject(false);
         return setOpen(false);
     };
     const handleDeleteProject = () => {
+        deletingWorkspace(currentProjectId);
         let path = `/`;
         navigate(path);
     }
 
     return (
         <div>
-            {/*<Modal*/}
-            {/*    open={open}*/}
-            {/*    onClose={handleClose}*/}
-            {/*>*/}
-            {/*    <Box className={styles.model+" "+(theme.theme==="dark"? styles.darkDeleteModel : styles.lightDeleteModel)}>*/}
-            {/*        <div className={styles.ModelHeading }> Delete this file? </div>*/}
-            {/*        <div className={styles.Input+" "+(theme.theme==="dark"? styles.darkInputModel : styles.lightInputModel)}>You cannot restore this file later.</div>*/}
-            {/*        <div className={styles.btnGroup}>*/}
-            {/*            <div className={styles.CancelBtn}  onClick={handleClose}>Cancel</div>*/}
-            {/*            <div onClick={handleDeleteProject} className={styles.DeleteBtn}>Delete</div>*/}
-            {/*        </div>*/}
-            {/*    </Box>*/}
-
-            {/*</Modal>*/}
-
-
             <Modal
                 className={styles.logoutModal}
                 open={open}

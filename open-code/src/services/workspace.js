@@ -1,28 +1,11 @@
 import {auth, db} from "./firebase";
 import Blockly from "blockly/core";
-import {collection, doc, setDoc, updateDoc} from "firebase/firestore";
-
-export async function savingWorkspace(projectName, currentProjectId) {
-    const date = new Date();
-    const options = {day: 'numeric', month: 'long', year: 'numeric'};
-    const currentDate = date.toLocaleDateString('en-US', options)
-    const xmlValue = Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace());
-    const xmlText = Blockly.Xml.domToText(xmlValue);
-    const workspaceRef = doc(collection(db, auth.currentUser.uid), currentProjectId);
-    try {
-        await updateDoc(workspaceRef,{
-            date:currentDate,
-            xmlText:xmlText
-        })
-    } catch (err) {
-        console.log(err);
-    }
-}
+import {collection, doc, setDoc, updateDoc, deleteDoc} from "firebase/firestore";
 
 export async function createWorkspace(projectName, currentProjectId, setCurrentProjectId) {
     const date = new Date();
     const options = {day: 'numeric', month: 'long', year: 'numeric'};
-    const currentDate = date.toLocaleDateString('en-US', options)
+    const currentDate = date.toLocaleDateString('en-US', options);
     const data = {
         date: currentDate,
         projectTitle: projectName,
@@ -40,6 +23,33 @@ export async function createWorkspace(projectName, currentProjectId, setCurrentP
         }
     } else {
         //create in local storage
+    }
+}
+
+export async function savingWorkspace(projectName, currentProjectId) {
+    const date = new Date();
+    const options = {day: 'numeric', month: 'long', year: 'numeric'};
+    const currentDate = date.toLocaleDateString('en-US', options);
+    const xmlValue = Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace());
+    const xmlText = Blockly.Xml.domToText(xmlValue);
+    const workspaceRef = doc(collection(db, auth.currentUser.uid), currentProjectId);
+    try {
+        await updateDoc(workspaceRef, {
+            date: currentDate,
+            xmlText: xmlText
+        })
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export async function deletingWorkspace(currentProjectId) {
+    try {
+        await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId)).then(() => {
+            console.log("project deleted successfully");
+        })
+    } catch (err) {
+        console.log(err);
     }
 }
 

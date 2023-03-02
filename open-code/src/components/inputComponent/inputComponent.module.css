@@ -11,6 +11,7 @@
     border: none;
     border-radius: 6px;
     padding: 0 10px;
+    outline: none;
 }
 
 .inputBorder {
