@@ -1,6 +1,7 @@
 import {auth, db} from "./firebase";
 import Blockly from "blockly/core";
-import {collection, doc, setDoc, updateDoc, deleteDoc} from "firebase/firestore";
+import {collection, deleteDoc, doc, setDoc, updateDoc} from "firebase/firestore";
+import {nanoid} from 'nanoid';
 
 export async function createWorkspace(data, uniqueId) {
 
@@ -41,20 +42,6 @@ export async function deletingWorkspace(currentProjectId) {
     } catch (err) {
         console.log(err);
     }
-}
-
-export function generatePath(projectName) {
-    const date = new Date();
-    const options = {day: 'numeric', month: 'numeric', year: 'numeric'};
-    const customDate = date.toLocaleDateString('en-US', options).replace(/\//g, '-');
-    const finalDate = customDate.replace(/\s+/g, '-');
-    let projectNameWithoutSpace = projectName.replace(/\s+/g, '-');
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-    const milliseconds = date.getMilliseconds();
-    const timestamp = hours + ":" + minutes + ":" + seconds;
-    return projectNameWithoutSpace + "_" + finalDate + "_" + timestamp + ":" + milliseconds;
 }
 
 export function saveCurrentProject(uniqueId, projectName, code) {

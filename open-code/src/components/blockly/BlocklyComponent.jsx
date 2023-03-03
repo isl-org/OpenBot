@@ -7,7 +7,8 @@ import {ThemeContext} from "../../App";
 import {DarkTheme, LightTheme} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
-import {generatePath, getCurrentProject, saveCurrentProject} from "../../services/workspace";
+import {getCurrentProject, saveCurrentProject} from "../../services/workspace";
+import {nanoid} from "nanoid";
 
 Blockly.setLocale(locale);
 
@@ -21,7 +22,7 @@ function BlocklyComponent(props) {
     const {projectName, setProjectName, currentProjectXml, currentProjectId} = useContext(StoreContext);
     const {logOut} = useContext(StoreContext);
 
-    const uniqueId = currentProjectId ? currentProjectId : generatePath(projectName)
+    const uniqueId = currentProjectId ? currentProjectId : nanoid()
 
     /**
      * save code in local to restore on reload page

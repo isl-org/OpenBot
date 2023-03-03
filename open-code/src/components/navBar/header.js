@@ -25,7 +25,7 @@ import LoaderComponent from "../loader/loaderComponent";
 import {deletingWorkspace} from "../../services/workspace";
 
 export function Header() {
-    const {theme, toggleTheme} = useContext(ThemeContext)
+    const {theme, toggleTheme} = useContext(ThemeContext);
     const {projectName, setProjectName} = useContext(StoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [deleteProject, setDeleteProject] = useState(false);
@@ -35,10 +35,10 @@ export function Header() {
     };
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popper' : undefined
-    let navigate = useNavigate()
-    const [isProfileModal, setIsProfileModal] = useState(false)
-    const [isEditProfileModal, setIsEditProfileModal] = useState(false)
-    const [isLogoutModal, setIsLogoutModal] = useState(false)
+    let navigate = useNavigate();
+    const [isProfileModal, setIsProfileModal] = useState(false);
+    const [isEditProfileModal, setIsEditProfileModal] = useState(false);
+    const [isLogoutModal, setIsLogoutModal] = useState(false);
     const [user, setUser] = useState();
 
     useEffect(() => {
