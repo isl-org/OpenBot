@@ -1,11 +1,13 @@
 import React, {createContext, useState} from 'react'
+import {getCurrentProject} from "../services/workspace";
 export const StoreContext = createContext(null)
 
 export default ({children}) => {
-
     let savedProjectName = null
+    let savedProjectId = null
     if (localStorage.getItem("CurrentProject")) {
-        savedProjectName = Object.keys(JSON.parse(localStorage.getItem("CurrentProject"))).toString()
+        savedProjectName = Object.keys(getCurrentProject())[1]
+        savedProjectId = getCurrentProject().id
     }
     const [projectName, setProjectName] = useState(savedProjectName ? savedProjectName : undefined);
     const [drawer, setDrawer] = useState(false);
@@ -13,7 +15,7 @@ export default ({children}) => {
     const [code, setCode] = useState("");
     const [generate, setGenerateCode] = useState(false);
     const [currentProjectXml, setCurrentProjectXml] = useState(null);
-    const[currentProjectId,setCurrentProjectId]=useState(null);
+    const[currentProjectId,setCurrentProjectId]=useState(savedProjectId);
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,

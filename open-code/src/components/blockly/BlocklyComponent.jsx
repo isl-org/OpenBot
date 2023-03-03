@@ -18,10 +18,7 @@ function BlocklyComponent(props) {
     const {theme} = useContext(ThemeContext);
     const toolbox = useRef();
     const primaryWorkspace = useRef();
-
-    const {projectName, setProjectName, currentProjectXml, currentProjectId} = useContext(StoreContext);
-    const {logOut} = useContext(StoreContext);
-
+    const {projectName, setProjectName, currentProjectId} = useContext(StoreContext);
     const uniqueId = currentProjectId ? currentProjectId : nanoid()
 
     /**
@@ -42,7 +39,10 @@ function BlocklyComponent(props) {
             ...rest,
         });
 
-        const savedXml = getCurrentProject()
+        let savedXml
+        if (getCurrentProject()) {
+            savedXml = getCurrentProject()[projectName]
+        }
 
         const model = new Modal(primaryWorkspace.current);
         model.init();
@@ -54,11 +54,8 @@ function BlocklyComponent(props) {
         primaryWorkspace.current.addChangeListener(handleWorkspaceChange);
 
         //blocks fetching from firebase in card.js
-        if (logOut !== true && currentProjectXml) {
-            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(currentProjectXml), primaryWorkspace.current);
-        } else if (savedXml) {
-            const getXmlValue = Object.values(savedXml).toString()
-            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(getXmlValue), primaryWorkspace.current);
+        if (savedXml) {
+            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(savedXml), primaryWorkspace.current);
         } else {
             Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), primaryWorkspace.current);
         }
