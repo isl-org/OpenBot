@@ -11,7 +11,7 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
-import {savingWorkspace, createWorkspace, getCurrentProject} from "../../services/workspace";
+import {updatingWorkspace, createWorkspace, getCurrentProject} from "../../services/workspace";
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
@@ -67,7 +67,7 @@ export const UploadCode = () => {
     };
 
     const handleDriveButton = () => {
-        updateProject()
+        uploadProjectOnDrive()
 
         setDriveButtonActive(true);
         setTimeout(() => {
@@ -79,13 +79,13 @@ export const UploadCode = () => {
     /**
      * save projects in Local or Drive
      */
-    function updateProject() {
+    function uploadProjectOnDrive() {
         const data = {
             date: getCurrentProject().date,
             projectTitle: Object.keys(getCurrentProject())[1],
             xmlText: getCurrentProject()[projectName],
         }
-        const uniqueId = getCurrentProject().id
+        const uniqueId = getCurrentProject().id;
         createWorkspace(data, uniqueId).then(() =>{
             console.log("save on fireStore")
         })

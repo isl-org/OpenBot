@@ -17,7 +17,7 @@ export async function createWorkspace(data, uniqueId) {
     }
 }
 
-export async function savingWorkspace(projectName, currentProjectId) {
+export async function updatingWorkspace(projectName, currentProjectId) {
     const date = new Date();
     const options = {day: 'numeric', month: 'long', year: 'numeric'};
     const currentDate = date.toLocaleDateString('en-US', options);
@@ -34,11 +34,26 @@ export async function savingWorkspace(projectName, currentProjectId) {
     }
 }
 
-export async function deletingWorkspace(currentProjectId) {
+export async function deletingCurrentProject(currentProjectId) {
     try {
-        await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId)).then(() => {
-            console.log("project deleted successfully");
-        })
+
+        if (localStorage.getItem("isSigIn") === "true") {
+                await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId))
+
+            JSON.parse(localStorage?.getItem("Projects"))?.find((project) => {
+                if (project.id === currentProjectId) {
+                    const restObject = getAllLocalProjects().filter((res) => (res.id !== project.id));
+                    localStorage.setItem("Projects", JSON.stringify(restObject))
+                }
+            })
+        } else {
+            JSON.parse(localStorage?.getItem("Projects"))?.find((project) => {
+                if (project.id === currentProjectId) {
+                    const restObject = getAllLocalProjects().filter((res) => (res.id !== project.id));
+                    localStorage.setItem("Projects", JSON.stringify(restObject))
+                }
+            })
+        }
     } catch (err) {
         console.log(err);
     }
