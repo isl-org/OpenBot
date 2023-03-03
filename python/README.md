@@ -115,10 +115,10 @@ If the code is executed on Ubuntu, the Xbox One controller USB Wireless Dongle r
 ## Tensorflow for Inference
 If TensorFlow is used for inference, please add the Python `policy` module to `PYTHONPATH` via `export PYTHONPATH=$PYTHONPATH:/path/to/OpenBot/policy`. This workaround avoids having to install openbot as module and to find `openbot.utils.load_model()`, which is required to load the tensorflow model. Further details, see `get_tf_interpreter()` in `infer.py` and the test code `tests/test_infer.py`.
 
-## Support for non-linux distributions (MacOs, Windows)
+## Support for non-linux distributions (MacOS, Windows)
 
 Please note that the code is intended to run on Linux-based computers, e.g., Up Core Plus. Some python modules may not be available for MacOs or Windows.
 
-We have tested running the code on MacOs:
+The code can run on MacOS for debugging purposes with the following changes:
 - Use `pyrealsense2-macosx` instead of `pyrealsense2` in requirements.txt
 - For tflite follow [these instructions](https://github.com/milinddeore/TfLite-Standalone-build-Linux-MacOS)
