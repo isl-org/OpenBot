@@ -14,6 +14,7 @@ import successfulEmojiIcon from "../../src/assets/images/icon/successful-emoji.p
 import errorEmojiIcon from "../../src/assets/images/icon/error-emozi-icon.png"
 import pencilIcon from "../../src/assets/images/icon/pencil-icon.png"
 import darkPencilIcon from "../../src/assets/images/icon/dark-pencil-icon.png"
+import logo from "../../src/assets/images/icon/open-bot-logo.png"
 
 export const Images = {
     helpIcon: helpIcon,
@@ -31,5 +32,6 @@ export const Images = {
     successfulEmojiIcon: successfulEmojiIcon,
     errorEmojiIcon: errorEmojiIcon,
     pencilIcon: pencilIcon,
-    darkPencilIcon: darkPencilIcon
+    darkPencilIcon: darkPencilIcon,
+    logo:logo,
 }

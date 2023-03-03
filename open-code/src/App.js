@@ -1,12 +1,23 @@
 import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
-import {createContext, useState} from "react";
-import {Themes} from "./utils/constants";
-
+import {createContext, useEffect, useState} from "react";
+import {LoadingTime, Themes} from "./utils/constants";
+import {useLocation} from "react-router-dom";
+import styles from "./components/homeComponents/carousel/carousel.module.css";
+import {Images} from "./utils/images";
 export const ThemeContext = createContext(null);
 
 function App() {
+    const location = useLocation();
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, LoadingTime);
+    }, [location]);
 
     //check if user prefer theme is saved or not if not then saved it to system theme
     if (!localStorage.getItem("theme")) {
@@ -33,7 +44,10 @@ function App() {
         <ThemeContext.Provider value={{theme, toggleTheme}}>
             <StoreProvider>
                 <div id={theme}>
-                    <RouterComponent/>
+                    {isLoading ?
+                        <LoadingComponent/> :
+                        <RouterComponent/>
+                    }
                 </div>
             </StoreProvider>
         </ThemeContext.Provider>
@@ -41,3 +55,11 @@ function App() {
 }
 
 export default App;
+
+function LoadingComponent() {
+    return (
+        <div className={styles.loading}>
+            <img alt="loadingIcon" className={styles.spin} src={Images.logo}/>
+        </div>
+    )
+}

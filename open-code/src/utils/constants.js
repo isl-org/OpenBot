@@ -44,3 +44,4 @@ export const Themes = {
     "light": "light",
     "dark": "dark",
 }
+export const LoadingTime = 300;

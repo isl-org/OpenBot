@@ -10,6 +10,7 @@
 .darkBg {
     background-color: #202020;
 }
+
 .lightBg {
     background-color: #f8f9fb;
 }
@@ -49,6 +50,20 @@
 
 .MainDark {
     color: #FFFFFF;
+}
+
+.loading {
+    width: 100%;
+    margin-top: 27%;
+    display: flex;
+    justify-content: center;
+}
+
+.spin {
+    animation: spin 1ms 1;
+    margin-top: 15px;
+    padding-right: 2px;
+    color: #333e48;
 }
 
 .MainLight {
