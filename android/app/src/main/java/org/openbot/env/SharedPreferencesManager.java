@@ -138,8 +138,8 @@ public class SharedPreferencesManager {
     preferences.edit().putInt(DRIVE_MODE, mode).apply();
   }
 
-  public void setDynamicSpeed(boolean on) {
-    preferences.edit().putBoolean(OBJECT_NAV_DYNAMIC_SPEED, on).apply();
+  public void setDynamicSpeed(boolean isEnabled) {
+    preferences.edit().putBoolean(OBJECT_NAV_DYNAMIC_SPEED, isEnabled).apply();
   }
 
   public boolean getDynamicSpeed() {
