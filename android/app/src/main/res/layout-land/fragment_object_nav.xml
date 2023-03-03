@@ -64,16 +64,16 @@
             android:src="@drawable/ic_cameraswitch"
             android:text="@string/camera_facing_back"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/autoswitchcontainer"
+            app:layout_constraintTop_toTopOf="@+id/autoLinearLayout"
             app:tint="@color/openBotBlue" />
 
         <LinearLayout
-            android:id="@+id/autoswitchcontainer"
+            android:id="@+id/autoLinearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="16dp"
-            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view">
@@ -82,14 +82,16 @@
                 android:id="@+id/auto_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
                 android:text="@string/auto_mode" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/dynamic_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
                 android:text="@string/dynamic_speed" />
 
         </LinearLayout>
