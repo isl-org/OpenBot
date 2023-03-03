@@ -22,7 +22,7 @@ import renameIcon from "../../assets/images/icon/rename-icon.png";
 import deleteIcon from "../../assets/images/icon/delete-icon.png";
 import {colors} from "../../utils/color";
 import LoaderComponent from "../loader/loaderComponent";
-import {deletingWorkspace} from "../../services/workspace";
+import {deletingCurrentProject} from "../../services/workspace";
 
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext);
@@ -186,7 +186,7 @@ export function DeleteModel(props) {
         return setOpen(false);
     };
     const handleDeleteProject = () => {
-        deletingWorkspace(currentProjectId);
+        deletingCurrentProject(currentProjectId);
         let path = `/`;
         navigate(path);
     }
