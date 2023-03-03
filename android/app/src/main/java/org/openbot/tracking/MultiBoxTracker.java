@@ -180,7 +180,7 @@ public class MultiBoxTracker {
       // adjust speed depending on size of detected object bounding box
       if (useDynamicSpeed) {
         float scaleFactor = 1.0f - boxArea / (frameWidth * frameHeight);
-        scaleFactor = scaleFactor > 0.75f ? 1.0f : scaleFactor; //tracked object far, full speed
+        scaleFactor = scaleFactor > 0.75f ? 1.0f : scaleFactor; // tracked object far, full speed
         // apply scale factor if tracked object is not too near, otherwise stop
         if (scaleFactor > 0.25f) {
           leftControl *= scaleFactor;
@@ -190,7 +190,6 @@ public class MultiBoxTracker {
           rightControl = 0.0f;
         }
       }
-
 
     } else {
       leftControl = 0.0f;
