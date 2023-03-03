@@ -1,4 +1,8 @@
-# Usage
+## Usage
+This module is an embedded Linux alternative to the smartphone control of an OpenBot vehicle. Written in Python, the OpenBot can be controlled using a linux-based computer and a camera for sensing.
+
+The robot can be controlled in two ways: through inference of a Neural Network policy or via joystick.
+
 ```
 ├── __init__.py
 ├── README.md
@@ -33,22 +37,13 @@ To operate the robot, run the `run.py`, which is the main Python script. The rob
 
 The run.py script accepts six arguments (further details, see `run.py`):
 ```
-parser = argparse.ArgumentParser(
-        description='Running the OpenBot Intel version via Python script')
-parser.add_argument('--policy_path', '-p', default=POLICY_PATH,
-                    help="Path to policy file.")
-parser.add_argument('--dataset_path', '-d', default=DATASET_PATH,
-                    help="Path to dataset. Only used for debug mode")
-parser.add_argument('--log_path', '-l', default=None,
-                    help="Path to log folder, where runs are saved.")
-parser.add_argument('--inference_backend', '-i', default="openvino",
-                    help="Backend to use. Consider exporting all models as openvino model for maximum performance. Options: tf, tflite, openvino")
-parser.add_argument('--mode', '-m', default="joystick",
-                    help="Running mode. Options: debug, inference, joystick")
-parser.add_argument('--control_mode', '-c', default="dual",
-                    help="Control mode during joystick mode. Options: dual, joystick.")
+--policy_path: Path to policy file.
+--dataset_path: Path to dataset. Only used for debug mode.
+--log_path: Path to log folder, where runs are saved.
+--inference_backend: Backend to use. Consider exporting all models as openvino model for maximum performance. Options: tf, tflite, openvino.
+--mode: Running mode. Options: debug, inference, joystick.
+--control_mode: Control mode during joystick mode. Options: dual, joystick.
 ```
-
 ## Generating Training Data
 The script `generate_data_for_training.py` generates a log data folder that is required for training a policy via the `OpenBot/policy/openbot/train.py` script. The log data folder contains an `images` and a `sensor_data` folder in the format required by `train.py`.
 
@@ -100,7 +95,7 @@ conda create --name openbot python==3.9
 
 First, install the requirements of OpenBot.policy via
 ```
-pip install -r requirements_train.txt.txt
+../policy && pip install -r requirements.txt
 ```
 
 Then, install the required modules via
@@ -115,8 +110,15 @@ In particular,
 - `openvino-dev[tensorflow2,extras]` is used for boosted performance on supported Intel hardware. For further details on optimised AI inference on Intel hardware, please see [OpenVino](https://docs.openvino.ai/latest/home.html). OpenVino is the recommended inference backend. Tensorflow and Tflite are also supported (see Tests). For running PyTorch modules, please consider converting PyTorch to an OpenVino backend (see [this Tutorial](https://docs.openvino.ai/latest/openvino_docs_MO_DG_prepare_model_convert_model_Convert_Model_From_PyTorch.html)).
 
 ## Drivers
-If the code is run Ubuntu, the Xbox One controller USB Wireless Dongle requires a driver, which can be found at [this link](https://github.com/medusalix/xone).
+If the code is executed on Ubuntu, the Xbox One controller USB Wireless Dongle requires a driver, which can be found at [this link](https://github.com/medusalix/xone).
 
 ## Tensorflow for Inference
 If TensorFlow is used for inference, please add the Python `policy` module to `PYTHONPATH` via `export PYTHONPATH=$PYTHONPATH:/path/to/OpenBot/policy`. This workaround avoids having to install openbot as module and to find `openbot.utils.load_model()`, which is required to load the tensorflow model. Further details, see `get_tf_interpreter()` in `infer.py` and the test code `tests/test_infer.py`.
 
+## Support for non-linux distributions (MacOs, Windows)
+
+Please note that the code is intended to run on Linux-based computers, e.g., Up Core Plus. Some python modules may not be available for MacOs or Windows.
+
+We have tested running the code on MacOs:
+- Use `pyrealsense2-macosx` instead of `pyrealsense2` in requirements.txt
+- For tflite follow [these instructions](https://github.com/milinddeore/TfLite-Standalone-build-Linux-MacOS)
