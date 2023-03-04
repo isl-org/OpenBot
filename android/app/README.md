@@ -169,12 +169,14 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 </p>
 
 #### Options
-- **Dynamic Speed**: reduces robots speed in "Auto Mode" if it gets closer to the tracked object.
-  The distance is estimated from the size of the tracking box on the tracking screen (works best in landscape orientation).
-  This option can be activated in the bottom sheet.
-<p align="left">
-<img src="../../docs/images/screen_object_tracking_bottomsheet_dynamicspeed.png" alt="Dynamic speed setting" width="20%" />
-</p>
+- **Dynamic Speed**: reduces the robot speed in "Auto Mode" if it gets closer to the tracked object.
+  The speed is scaled based on the area of the bouding box (works best in landscape orientation).
+- **Model**: choose an object detector based on your phone performance (see below for [benchmarking results](#benchmark)).
+- **Object**: pick the object you want to track. The models can detect the 80 COCO [object classes](https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/).
+- **Confidence**: confidence threshold to determine if detections are accepted. Increase if you get false detections, decrease if the object of interest it not detected.
+- **Device**: use CPU, GPU or NNAPI for inference (more details [here](#device)).
+- **Threads**: number of threads to use (only makes a difference when CPU is selected as device).
+
 
 ### Point Goal Navigation
 
