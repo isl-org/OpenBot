@@ -11,7 +11,7 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
-import {updatingWorkspace, createWorkspace, getCurrentProject} from "../../services/workspace";
+import {createWorkspace, getCurrentProject} from "../../services/workspace";
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
@@ -22,7 +22,7 @@ export const UploadCode = () => {
     const {setCode} = useContext(StoreContext);
     const {generate, setGenerateCode} = useContext(StoreContext);
     const {projectName} = useContext(StoreContext);
-    const{currentProjectId}=useContext(StoreContext);
+    const {currentProjectId} = useContext(StoreContext);
 
     let primaryWorkspace = useRef();
     const generateCode = () => {
@@ -86,7 +86,7 @@ export const UploadCode = () => {
             xmlText: getCurrentProject()[projectName],
         }
         const uniqueId = getCurrentProject().id;
-        createWorkspace(data, uniqueId).then(() =>{
+        createWorkspace(data, uniqueId).then(() => {
             console.log("save on fireStore")
         })
         // if (localStorage.getItem("isSigIn") === "true") {

@@ -1,7 +1,6 @@
 import {auth, db} from "./firebase";
 import Blockly from "blockly/core";
 import {collection, deleteDoc, doc, setDoc, updateDoc} from "firebase/firestore";
-import {nanoid} from 'nanoid';
 
 export async function createWorkspace(data, uniqueId) {
 
@@ -38,7 +37,7 @@ export async function deletingCurrentProject(currentProjectId) {
     try {
 
         if (localStorage.getItem("isSigIn") === "true") {
-                await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId))
+            await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId))
 
             JSON.parse(localStorage?.getItem("Projects"))?.find((project) => {
                 if (project.id === currentProjectId) {

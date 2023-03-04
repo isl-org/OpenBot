@@ -324,7 +324,7 @@
     color: #0071C5;
 }
 
-.navbarDiv{
+.navbarDiv {
     display: flex;
     background-color: rgb(0, 113, 197);
     justify-content: space-between;
@@ -332,32 +332,32 @@
     align-items: center;
 }
 
-.navbarTitleDiv{
+.navbarTitleDiv {
     margin-left: 4rem;
     display: flex;
     align-items: center;
 }
 
-.navbarIconDiv{
+.navbarIconDiv {
     display: flex;
     align-items: center;
     margin-right: 4rem;
 }
 
-.mainIcon{
+.mainIcon {
     height: 2rem;
     width: 2rem;
     cursor: pointer;
 }
 
-.mainTitle{
+.mainTitle {
     font-size: 1.3rem;
-    font-family: Gilroy-Medium,sans-serif;
+    font-family: Gilroy-Medium, sans-serif;
     color: rgb(255, 255, 255);
     cursor: pointer;
 }
 
-.infoIcon{
+.infoIcon {
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;
@@ -369,31 +369,31 @@
     cursor: pointer;
 }
 
-.lineIcon{
+.lineIcon {
     width: 0.5%;
 }
 
-.buttonIcon{
+.buttonIcon {
     border: 1px solid rgb(255, 254, 254);
     border-radius: 0.5rem;
     font-size: 1rem;
     height: 2rem;
     width: 5rem;
-    font-family: Gilroy-Medium,sans-serif;
+    font-family: Gilroy-Medium, sans-serif;
     color: rgb(255, 255, 255);
     background-color: rgb(0, 113, 197);
     cursor: pointer;
 }
 
-.iconMargin{
+.iconMargin {
     margin: 10px;
 }
 
-.arrowMargin{
+.arrowMargin {
     margin: 2px;
 }
 
-.playgroundName{
+.playgroundName {
     display: flex;
     align-items: center;
     cursor: pointer;

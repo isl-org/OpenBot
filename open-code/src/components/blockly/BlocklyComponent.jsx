@@ -1,5 +1,5 @@
 import './BlocklyComponent.css';
-import React, {useEffect, useRef, useContext, useCallback} from 'react';
+import React, {useCallback, useContext, useEffect, useRef} from 'react';
 import Blockly from 'blockly/core';
 import locale from 'blockly/msg/en';
 import 'blockly/blocks';

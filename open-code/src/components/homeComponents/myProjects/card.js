@@ -12,7 +12,7 @@ import {getAllLocalProjects} from "../../../services/workspace";
 
 function Card(props) {
     const {theme} = useContext(ThemeContext);
-    const{ setCurrentProjectXml, setProjectName, setCurrentProjectId, }=useContext(StoreContext);
+    const {setCurrentProjectXml, setProjectName, setCurrentProjectId,} = useContext(StoreContext);
     let navigate = useNavigate();
     const openExistingProject = () => {
         navigate(`playground`);
@@ -38,7 +38,7 @@ function Card(props) {
             const blockSnap = doc(db, auth.currentUser.uid, projectId);
             const workspaceRef = await getDoc(blockSnap);
             if (workspaceRef.exists()) {
-                const projectId=workspaceRef.id;
+                const projectId = workspaceRef.id;
                 setCurrentProjectId(projectId);
                 const projectXmlData = workspaceRef.data().xmlText;
                 const projectTitleData = workspaceRef.data().projectTitle;

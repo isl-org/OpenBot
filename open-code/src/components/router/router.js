@@ -3,6 +3,11 @@ import Home from "../../pages/home";
 import Playground from "../../pages/playground";
 
 
+/**
+ * Router to maintain different paths of the application
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const RouterComponent = () => {
     return (
         <Routes>

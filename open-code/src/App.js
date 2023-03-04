@@ -6,8 +6,14 @@ import {LoadingTime, Themes} from "./utils/constants";
 import {useLocation} from "react-router-dom";
 import styles from "./components/homeComponents/carousel/carousel.module.css";
 import {Images} from "./utils/images";
+
 export const ThemeContext = createContext(null);
 
+/**
+ * Main function where the application Code is started
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function App() {
     const location = useLocation();
     const [isLoading, setIsLoading] = useState(false);
@@ -56,6 +62,11 @@ function App() {
 
 export default App;
 
+/**
+ * component to display the loading icon on the screen
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function LoadingComponent() {
     return (
         <div className={styles.loading}>

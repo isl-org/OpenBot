@@ -33,5 +33,5 @@ export const Images = {
     errorEmojiIcon: errorEmojiIcon,
     pencilIcon: pencilIcon,
     darkPencilIcon: darkPencilIcon,
-    logo:logo,
+    logo: logo,
 }

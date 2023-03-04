@@ -1,5 +1,6 @@
 import React, {createContext, useState} from 'react'
 import {getCurrentProject} from "../services/workspace";
+
 export const StoreContext = createContext(null)
 
 export default ({children}) => {
@@ -15,7 +16,7 @@ export default ({children}) => {
     const [code, setCode] = useState("");
     const [generate, setGenerateCode] = useState(false);
     const [currentProjectXml, setCurrentProjectXml] = useState(null);
-    const[currentProjectId,setCurrentProjectId]=useState(savedProjectId);
+    const [currentProjectId, setCurrentProjectId] = useState(savedProjectId);
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,
@@ -23,7 +24,7 @@ export default ({children}) => {
         code, setCode,
         generate, setGenerateCode,
         currentProjectXml, setCurrentProjectXml,
-        currentProjectId,setCurrentProjectId,
+        currentProjectId, setCurrentProjectId,
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

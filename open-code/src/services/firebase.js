@@ -28,6 +28,12 @@ export const FirebaseStorage = getStorage()
 export const db = getFirestore(app)
 export default firebase;
 
+/**
+ * function to upload the profile picture of the user on firebase.
+ * @param file file path of the profile picture
+ * @param fileName name of the picture
+ * @returns {Promise<string>} returns the downloadable url of the picture.
+ */
 export async function uploadProfilePic(file, fileName) {
     if (fileName === undefined) {
         return
@@ -37,12 +43,20 @@ export async function uploadProfilePic(file, fileName) {
     return getDownloadURL(fileRef)
 }
 
+/**
+ * function to log in user with Google credentials provided by the user.
+ * @returns {Promise<firebase.auth.UserCredential>}
+ */
 export async function googleSigIn() {
-    const siginIn = await auth.signInWithPopup(provider)
+    const signIn = await auth.signInWithPopup(provider)
     localStorage.setItem("isSigIn", "true")
-    return siginIn
+    return signIn
 }
 
+/**
+ * function to log out user from Google account
+ * @returns {Promise<void>}
+ */
 export async function googleSignOut() {
     const auth = getAuth();
     signOut(auth).then(() => {

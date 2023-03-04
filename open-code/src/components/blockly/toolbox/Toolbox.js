@@ -33,7 +33,7 @@ export const Toolbox = (props) => {
                         </Shadow>
                     </Value>
                 </Block>
-                <Block type="start" />
+                <Block type="start"/>
                 <Block type="forever"/>
             </Category>
 
