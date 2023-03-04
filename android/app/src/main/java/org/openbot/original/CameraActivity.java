@@ -181,7 +181,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
   private Intent intentSensorService;
   private ServerCommunication serverCommunication;
-  private SharedPreferencesManager preferencesManager;
+  protected SharedPreferencesManager preferencesManager;
   protected final GameController gameController = new GameController(driveMode);
   private PhoneController phoneController;
   protected final ControllerHandler controllerHandler = new ControllerHandler();
@@ -452,6 +452,10 @@ public abstract class CameraActivity extends AppCompatActivity
     vehicle.requestVehicleConfig();
   }
 
+  /**
+   * Initalize bottom sheet views/fields with shared preference values (@see
+   * SharedPreferenceManager)
+   */
   @SuppressLint("SetTextI18n")
   private void setInitialValues() {
     cameraSwitchCompat.setChecked(preferencesManager.getCameraSwitch());
