@@ -9,6 +9,7 @@ import {auth, db} from "../../../services/firebase";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
 import {getAllLocalProjects} from "../../../services/workspace";
+import {localStorageKeys} from "../../../utils/constants";
 
 function Card(props) {
     const {theme} = useContext(ThemeContext);
@@ -24,16 +25,12 @@ function Card(props) {
      * @returns {Promise<void>}
      */
     const handleOpenProject = async (projectId) => {
-        const localProject = getAllLocalProjects()
+        localStorage.setItem(localStorageKeys.currentProject, "")
         setCurrentProjectId(projectId)
-        for (let i = 0; i < localProject?.length; i++) {
-            if (localProject[i].id === projectId) {
-                const projectName = Object.keys(localProject[i])[1]
-                setCurrentProjectXml(localProject[i][projectName]);
-                setProjectName(projectName);
-                openExistingProject();
-            }
-        }
+        const findCurrentProject = getAllLocalProjects().find(currentProject => currentProject.id === projectId)
+        setCurrentProjectXml(findCurrentProject.xmlValue);
+        setProjectName(findCurrentProject.projectName);
+        openExistingProject();
         try {
             const blockSnap = doc(db, auth.currentUser.uid, projectId);
             const workspaceRef = await getDoc(blockSnap);

@@ -6,7 +6,7 @@ import styles from "./newProject.module.css";
 import {ThemeContext} from "../../../App";
 import {Images} from "../../../utils/images";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
-import {Themes} from "../../../utils/constants";
+import {localStorageKeys, Themes} from "../../../utils/constants";
 
 
 function NewProjectButton(props) {
@@ -22,7 +22,7 @@ function NewProjectButton(props) {
     } = useContext(StoreContext)
 
     const handleOpen = () => {
-        localStorage.setItem("CurrentProject", "");
+        localStorage.setItem(localStorageKeys.currentProject, "");
         setCurrentProjectXml("")
         setProjectName();
         setCurrentProjectId();

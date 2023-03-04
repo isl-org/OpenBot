@@ -43,7 +43,7 @@ export const NewProject = () => {
                 {
                     localStorageProjects?.map((localProjects, key) => (
                         <Card key={key}
-                              projectTitle={Object.keys(localProjects)[1]}
+                              projectTitle={localProjects.projectName}
                               projectDate={localProjects.date}
                               projectId={localProjects.id}
                         />

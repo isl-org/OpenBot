@@ -45,3 +45,8 @@ export const Themes = {
     "dark": "dark",
 }
 export const LoadingTime = 800;
+
+export const localStorageKeys = {
+    allProjects: "projects",
+    currentProject: "currentProject"
+}

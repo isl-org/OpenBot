@@ -82,8 +82,8 @@ export const UploadCode = () => {
     function uploadProjectOnDrive() {
         const data = {
             date: getCurrentProject().date,
-            projectTitle: Object.keys(getCurrentProject())[1],
-            xmlText: getCurrentProject()[projectName],
+            projectTitle: getCurrentProject().projectName,
+            xmlText: getCurrentProject().xmlValue,
         }
         const uniqueId = getCurrentProject().id;
         createWorkspace(data, uniqueId).then(() => {
@@ -95,7 +95,7 @@ export const UploadCode = () => {
         //         .then(() => {})
         //         .catch(err => console.log("error while saving workspace: ", err))
         // } else {
-        //     const getCurrentProject = localStorage.getItem("CurrentProject")
+        //     const getCurrentProject = localStorage.getItem(localStorageKeys.currentProject)
         // }
     }
 

@@ -1,13 +1,14 @@
 import React, {createContext, useState} from 'react'
 import {getCurrentProject} from "../services/workspace";
+import {localStorageKeys} from "../utils/constants";
 
 export const StoreContext = createContext(null)
 
 export default ({children}) => {
     let savedProjectName = null
     let savedProjectId = null
-    if (localStorage.getItem("CurrentProject")) {
-        savedProjectName = Object.keys(getCurrentProject())[1]
+    if (localStorage.getItem(localStorageKeys.currentProject)) {
+        savedProjectName = getCurrentProject().projectName
         savedProjectId = getCurrentProject().id
     }
     const [projectName, setProjectName] = useState(savedProjectName ? savedProjectName : undefined);

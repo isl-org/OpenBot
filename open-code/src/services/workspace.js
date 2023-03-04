@@ -1,6 +1,8 @@
 import {auth, db} from "./firebase";
 import Blockly from "blockly/core";
 import {collection, deleteDoc, doc, setDoc, updateDoc} from "firebase/firestore";
+import {nanoid} from 'nanoid';
+import {localStorageKeys} from "../utils/constants";
 
 export async function createWorkspace(data, uniqueId) {
 
@@ -39,17 +41,17 @@ export async function deletingCurrentProject(currentProjectId) {
         if (localStorage.getItem("isSigIn") === "true") {
             await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId))
 
-            JSON.parse(localStorage?.getItem("Projects"))?.find((project) => {
+            JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
                 if (project.id === currentProjectId) {
                     const restObject = getAllLocalProjects().filter((res) => (res.id !== project.id));
-                    localStorage.setItem("Projects", JSON.stringify(restObject))
+                    localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restObject))
                 }
             })
         } else {
-            JSON.parse(localStorage?.getItem("Projects"))?.find((project) => {
+            JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
                 if (project.id === currentProjectId) {
                     const restObject = getAllLocalProjects().filter((res) => (res.id !== project.id));
-                    localStorage.setItem("Projects", JSON.stringify(restObject))
+                    localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restObject))
                 }
             })
         }
@@ -64,36 +66,41 @@ export function saveCurrentProject(uniqueId, projectName, code) {
     const currentDate = date.toLocaleDateString('en-US', options)
     const project = {
         id: uniqueId,
-        [projectName]: code,
+        projectName: projectName,
+        xmlValue: code,
         date: currentDate,
     }
-    localStorage.setItem("CurrentProject", JSON.stringify(project))
-    const found = JSON.parse(localStorage?.getItem("Projects"))?.find((project) => {
+    localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
+    const found = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
         return project.id === getCurrentProject().id
     })
     if (!found) {
-        saveXmlInLocal(localStorage.getItem("CurrentProject"))
+        saveXmlInLocal(localStorage.getItem(localStorageKeys.currentProject))
     }
 }
 
 export function getCurrentProject() {
     try {
-        const getProject = localStorage.getItem("CurrentProject")
+        const getProject = localStorage.getItem(localStorageKeys.currentProject)
         return JSON.parse(getProject)
     } catch (e) {
     }
 }
 
+/**
+ * save new project in local storage
+ * @param currentProject
+ */
 export function saveXmlInLocal(currentProject) {
     const objectCurrentProject = JSON.parse(currentProject)
-    const getAllProjects = localStorage.getItem("Projects")
+    const getAllProjects = localStorage.getItem(localStorageKeys.allProjects)
     let ProjectsArray = JSON.parse(getAllProjects)
     if (ProjectsArray) {
         ProjectsArray.push(objectCurrentProject)
     } else {
         ProjectsArray = [objectCurrentProject]
     }
-    localStorage.setItem("Projects", JSON.stringify(ProjectsArray))
+    localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(ProjectsArray))
 }
 
 /**
@@ -101,7 +108,7 @@ export function saveXmlInLocal(currentProject) {
  */
 export function getAllLocalProjects() {
     try {
-        const projects = localStorage.getItem("Projects")
+        const projects = localStorage.getItem(localStorageKeys.allProjects)
         return JSON.parse(projects)
     } catch (error) {
 

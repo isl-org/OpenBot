@@ -41,7 +41,7 @@ function BlocklyComponent(props) {
 
         let savedXml
         if (getCurrentProject()) {
-            savedXml = getCurrentProject()[projectName]
+            savedXml = getCurrentProject().xmlValue
         }
 
         const model = new Modal(primaryWorkspace.current);
