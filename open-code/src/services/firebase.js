@@ -6,13 +6,13 @@ import {getFirestore} from "firebase/firestore";
 import {getAuth, signOut} from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCITlkh63TnSnJQBlzqbJwwtBDr_w3e1Pg",
-    authDomain: "opencode-openbot.firebaseapp.com",
-    projectId: "opencode-openbot",
-    storageBucket: "opencode-openbot.appspot.com",
-    messagingSenderId: "955078484078",
-    appId: "1:955078484078:web:64774c120f9d3a0f65867f",
-    measurementId: "G-SZJL3F5QXF"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_APP_ID,
+    measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
