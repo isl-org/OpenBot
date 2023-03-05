@@ -34,7 +34,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
   private SwitchPreferenceCompat storage;
   private SwitchPreferenceCompat location;
   private SwitchPreferenceCompat mic;
-
   private final ActivityResultLauncher<String[]> requestPermissionLauncher =
       registerForActivityResult(
           new ActivityResultContracts.RequestMultiplePermissions(),
