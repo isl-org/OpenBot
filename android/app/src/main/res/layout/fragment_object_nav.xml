@@ -32,18 +32,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/auto_switch"
+        <LinearLayout
+            android:id="@+id/autoLinearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="Auto Mode"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view" />
+            app:layout_constraintTop_toBottomOf="@+id/view">
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/auto_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/auto_mode" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/dynamic_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/dynamic_speed" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -305,14 +321,13 @@
             android:id="@+id/camera_toggle"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_margin="16dp"
+            android:layout_marginRight="16dp"
             android:background="@android:color/transparent"
             android:scaleType="center"
             android:src="@drawable/ic_cameraswitch"
             android:text="@string/camera_facing_back"
-            app:layout_constraintBottom_toBottomOf="@+id/auto_switch"
+            app:layout_constraintTop_toTopOf="@+id/autoLinearLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/auto_switch"
             app:tint="@color/openBotBlue" />
 
 
