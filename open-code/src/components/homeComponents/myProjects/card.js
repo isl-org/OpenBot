@@ -37,10 +37,10 @@ function Card(props) {
             if (workspaceRef.exists()) {
                 const projectId = workspaceRef.id;
                 setCurrentProjectId(projectId);
-                const projectXmlData = workspaceRef.data().xmlText;
-                const projectTitleData = workspaceRef.data().projectTitle;
+                const projectXmlData = workspaceRef.data().xmlValue;
+                const projectName = workspaceRef.data().projectName;
                 setCurrentProjectXml(projectXmlData);
-                setProjectName(projectTitleData);
+                setProjectName(projectName);
                 openExistingProject();
             }
         } catch (error) {
@@ -56,8 +56,8 @@ function Card(props) {
                 })
             }} className={` ${styles.Card} ${theme === "dark" ? styles.darkBoxShadow : styles.lightBoxShadow}`}>
                 <div className={styles.CardHeadingIcon}>
-                    {theme === "dark" ? <WhiteText extraStyle={styles.CardHeading} text={props.projectTitle}/> :
-                        <BlackText extraStyle={styles.CardHeading} text={props.projectTitle}/>}
+                    {theme === "dark" ? <WhiteText extraStyle={styles.CardHeading} text={props.projectName}/> :
+                        <BlackText extraStyle={styles.CardHeading} text={props.projectName}/>}
                     <img alt="pencil-icon" src={theme === "dark" ? Images.darkPencilIcon : Images.pencilIcon}
                          className={styles.PencilIcon}/>
                 </div>

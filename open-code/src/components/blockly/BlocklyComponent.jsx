@@ -7,7 +7,7 @@ import {ThemeContext} from "../../App";
 import {DarkTheme, LightTheme} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
-import {getCurrentProject, saveCurrentProject} from "../../services/workspace";
+import {updateCurrentProject} from "../../services/workspace";
 import {nanoid} from "nanoid";
 
 Blockly.setLocale(locale);
@@ -18,7 +18,7 @@ function BlocklyComponent(props) {
     const {theme} = useContext(ThemeContext);
     const toolbox = useRef();
     const primaryWorkspace = useRef();
-    const {projectName, setProjectName, currentProjectId} = useContext(StoreContext);
+    const {projectName, setProjectName, currentProjectId, currentProjectXml} = useContext(StoreContext);
     const uniqueId = currentProjectId ? currentProjectId : nanoid()
 
     /**
@@ -27,7 +27,7 @@ function BlocklyComponent(props) {
      */
     const handleWorkspaceChange = useCallback(() => {
         if (projectName !== undefined) {
-            saveCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
+            updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
         }
     }, []);
 
@@ -39,11 +39,6 @@ function BlocklyComponent(props) {
             ...rest,
         });
 
-        let savedXml
-        if (getCurrentProject()) {
-            savedXml = getCurrentProject().xmlValue
-        }
-
         const model = new Modal(primaryWorkspace.current);
         model.init();
         model.render({
@@ -54,8 +49,8 @@ function BlocklyComponent(props) {
         primaryWorkspace.current.addChangeListener(handleWorkspaceChange);
 
         //blocks fetching from firebase in card.js
-        if (savedXml) {
-            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(savedXml), primaryWorkspace.current);
+        if (currentProjectXml) {
+            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(currentProjectXml), primaryWorkspace.current);
         } else {
             Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), primaryWorkspace.current);
         }

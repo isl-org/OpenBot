@@ -11,7 +11,7 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
-import {createWorkspace, getCurrentProject} from "../../services/workspace";
+import {uploadOnDrive, getCurrentProject} from "../../services/workspace";
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
@@ -66,37 +66,24 @@ export const UploadCode = () => {
         }, 100);
     };
 
+    /**
+     * save projects on Google Drive
+     */
     const handleDriveButton = () => {
-        uploadProjectOnDrive()
+        const data = {
+            projectName: getCurrentProject().projectName,
+            xmlValue: getCurrentProject().xmlValue,
+            date: getCurrentProject().date,
+        }
+        const uniqueId = getCurrentProject().id;
+        uploadOnDrive(data, uniqueId).then(() => {
+            console.log("save on fireStore")
+        })
 
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);
         }, 100);
-
-    }
-
-    /**
-     * save projects in Local or Drive
-     */
-    function uploadProjectOnDrive() {
-        const data = {
-            date: getCurrentProject().date,
-            projectTitle: getCurrentProject().projectName,
-            xmlText: getCurrentProject().xmlValue,
-        }
-        const uniqueId = getCurrentProject().id;
-        createWorkspace(data, uniqueId).then(() => {
-            console.log("save on fireStore")
-        })
-        // if (localStorage.getItem("isSigIn") === "true") {
-        //     //save project on drive
-        //     savingWorkspace(projectName,currentProjectId)
-        //         .then(() => {})
-        //         .catch(err => console.log("error while saving workspace: ", err))
-        // } else {
-        //     const getCurrentProject = localStorage.getItem(localStorageKeys.currentProject)
-        // }
     }
 
     return (
