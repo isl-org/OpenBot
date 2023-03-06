@@ -7,7 +7,7 @@ import {Carousel} from "react-responsive-carousel";
 import {Images} from "../../../utils/images";
 
 export const HomeCarousel = () => {
-    const {theme} = useContext(ThemeContext)
+
     return (
         <Carousel axis={'horizontal'} infiniteLoop={true} interval={4000} autoPlay={true}>
             {Carousal.map((slide) => (
@@ -26,16 +26,17 @@ export const HomeCarousel = () => {
  */
 function CarousalComponent(params) {
     const {slide} = params
+    console.log("slide::::::", slide)
     const {theme} = useContext(ThemeContext)
     return (
         <div className={styles.Content + " " + (theme === "dark" ? styles.darkBg : styles.lightBg)}>
             <div className={styles.HeadingContent}>
                 <div
-                    className={styles.DragAndDropHeading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>{slide.header}
+                    className={styles.DragAndDropHeading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>{slide.carousalHeader}
                 </div>
                 <div
                     className={styles.DragAndDropContent + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
-                    {slide.line1}<br/>{slide.line2}
+                    {slide.carousalLine1}<br/>{slide.carousalLine2}
                 </div>
             </div>
             {slide.image ??

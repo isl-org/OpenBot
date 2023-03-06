@@ -96,7 +96,7 @@ export function EditProfileModal(props) {
 
                     <div style={{backgroundImage: `url(${userDetails.photoUrl})`}} className={styles.profileImg}>
                         <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
-                        <img onClick={() => inputRef.current.click()} alt={"edit profile icon"}
+                        <img onClick={() => inputRef.current?.click()} alt={"edit profile icon"}
                              className={styles.editProfileIcon} src={Images.editProfileIcon}/>
                     </div>
 

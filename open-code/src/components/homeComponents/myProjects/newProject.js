@@ -12,6 +12,14 @@ import {getAllLocalProjects} from "../../../services/workspace";
 export const NewProject = () => {
     const [driveProjects, setDriveProjects] = useState([]);
     const localStorageProjects = getAllLocalProjects()
+    const {theme} = useContext(ThemeContext)
+    const localStorageProjectsLength = localStorageProjects?.length ? localStorageProjects?.length : 0
+
+    useEffect(() => {
+        auth.onAuthStateChanged(async function () {
+            await loadingAllWorkspaces()
+        })
+    }, [])
 
     async function loadingAllWorkspaces() {
         try {
@@ -26,13 +34,6 @@ export const NewProject = () => {
         }
     }
 
-    useEffect(() => {
-        auth.onAuthStateChanged(async function () {
-            await loadingAllWorkspaces()
-        })
-    }, [])
-    const {theme} = useContext(ThemeContext)
-    const localStorageProjectsLength = localStorageProjects?.length ? localStorageProjects?.length : 0
     return (
         <div className={styles.Main + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
             <div className={styles.Heading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>My
@@ -40,15 +41,13 @@ export const NewProject = () => {
             </div>
             <div className={styles.ButtonsMessage}>
                 <NewProjectButton isProject={driveProjects.length + localStorageProjectsLength}/>
-                {
-                    localStorageProjects?.map((localProjects, key) => (
-                        <Card key={key}
-                              projectName={localProjects.projectName}
-                              projectDate={localProjects.date}
-                              projectId={localProjects.id}
-                        />
-                    ))
-                }
+                {localStorageProjects?.map((localProjects, key) => (
+                    <Card key={key}
+                          projectName={localProjects.projectName}
+                          projectDate={localProjects.date}
+                          projectId={localProjects.id}
+                    />
+                ))}
                 {driveProjects.length > 0 || localStorageProjectsLength > 0 ? driveProjects?.map((driveProject, key) => (
                         <Card key={key}
                               projectName={driveProject.projectName}
