@@ -11,17 +11,7 @@ export const HomeCarousel = () => {
     return (
         <Carousel axis={'horizontal'} infiniteLoop={true} interval={4000} autoPlay={true}>
             {Carousal.map((slide) => (
-                <CarousalComponent
-                    key={slide}
-                    header={slide.carousalHeader}
-                    line1={slide.carousalLine1}
-                    line2={slide.carousalLine2}
-                    children={slide.image ??
-                        <video src={theme === "dark" ? Images.dragDropDark : Images.dragDropWhite}
-                               className={styles.ImageDrag}
-                               autoPlay={true} loop={true}/>
-                    }
-                />
+                <CarousalComponent key={slide} slide={slide}/>
             ))}
         </Carousel>
     )
@@ -35,20 +25,24 @@ export const HomeCarousel = () => {
  * @constructor
  */
 function CarousalComponent(params) {
-    const {header, line2, line1, children} = params
+    const {slide} = params
     const {theme} = useContext(ThemeContext)
     return (
         <div className={styles.Content + " " + (theme === "dark" ? styles.darkBg : styles.lightBg)}>
             <div className={styles.HeadingContent}>
                 <div
-                    className={styles.DragAndDropHeading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>{header}
+                    className={styles.DragAndDropHeading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>{slide.header}
                 </div>
                 <div
                     className={styles.DragAndDropContent + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
-                    {line1}<br/>{line2}
+                    {slide.line1}<br/>{slide.line2}
                 </div>
             </div>
-            {children}
+            {slide.image ??
+                <video src={theme === "dark" ? Images.dragDropDark : Images.dragDropWhite}
+                       className={styles.ImageDrag}
+                       autoPlay={true} loop={true}/>
+            }
         </div>
     )
 }
