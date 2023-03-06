@@ -23,7 +23,8 @@ export const auth = firebase.auth();
 
 export const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({prompt: 'select_account'});
-provider.addScope('https://www.googleapis.com/auth/user.birthday.read')
+provider.addScope("https://www.googleapis.com/auth/user.birthday.read")
+provider.addScope("https://www.googleapis.com/auth/drive.file")
 export const FirebaseStorage = getStorage()
 export const db = getFirestore(app)
 export default firebase;

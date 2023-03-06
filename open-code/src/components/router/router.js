@@ -3,7 +3,6 @@ import Home from "../../pages/home";
 import Playground from "../../pages/playground";
 import {PathName} from "../../utils/constants";
 
-
 /**
  * Router to maintain different paths of the application
  * @returns {JSX.Element}

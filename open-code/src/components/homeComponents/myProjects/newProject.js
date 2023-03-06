@@ -16,7 +16,7 @@ export const NewProject = () => {
     async function loadingAllWorkspaces() {
         try {
             const allProjects = [];
-            const projects = await getDocs(collection(db, auth.currentUser?.uid));
+            const projects = await (getDocs(collection(db, auth.currentUser?.uid)));
             projects.forEach((doc) => {
                 allProjects.push({id: doc.id, ...doc.data()});
             })

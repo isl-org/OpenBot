@@ -12,6 +12,8 @@ import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
 import {uploadOnDrive, getCurrentProject} from "../../services/workspace";
+import {uploadToGoogleDrive} from "../../services/googleDrive";
+
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
@@ -21,8 +23,7 @@ export const UploadCode = () => {
     const {theme} = useContext(ThemeContext);
     const {setCode} = useContext(StoreContext);
     const {generate, setGenerateCode} = useContext(StoreContext);
-    const {projectName} = useContext(StoreContext);
-    const {currentProjectId} = useContext(StoreContext);
+
 
     let primaryWorkspace = useRef();
     const generateCode = () => {
@@ -76,14 +77,29 @@ export const UploadCode = () => {
             date: getCurrentProject().date,
         }
         const uniqueId = getCurrentProject().id;
+        //TODO
+        // upload on firestore
         uploadOnDrive(data, uniqueId).then(() => {
             console.log("save on fireStore")
         })
-
+        //upload on google drive
+        uploadToGoogleDrive(data, uniqueId).then();
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);
         }, 100);
+    }
+
+    /**
+     * save projects in Local or Drive
+     */
+    function uploadProjectOnDrive() {
+        const data = {
+            date: getCurrentProject().date,
+            projectTitle: getCurrentProject().projectName,
+            xmlText: getCurrentProject().xmlValue,
+        }
+        const uniqueId = getCurrentProject().id;
     }
 
     return (
