@@ -70,13 +70,6 @@
 }
 
 .errorAlertBox {
-    margin-left: 20px;
-    padding-left: 10px;
-    display: flex;
-    align-items: center;
-    border-radius: 6px;
-    height: 40px;
-    width: 30%;
     background-color: rgba(197, 78, 48, 0.1);
     color: #C54E30;
 }

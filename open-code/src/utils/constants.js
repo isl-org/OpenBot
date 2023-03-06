@@ -44,9 +44,19 @@ export const Themes = {
     "light": "light",
     "dark": "dark",
 }
-export const LoadingTime = 800;
+
 
 export const localStorageKeys = {
     allProjects: "projects",
     currentProject: "currentProject"
+}
+
+export const Constants = {
+    "LoadingTime": 800,
+    "ProfileSuccessMsg": "Profile updated successfully!",
+}
+
+export const PathName = {
+    "home": "/",
+    "playGround": "/playground",
 }

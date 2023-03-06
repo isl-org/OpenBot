@@ -2,7 +2,7 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useEffect, useState} from "react";
-import {LoadingTime, Themes} from "./utils/constants";
+import {Constants, Themes} from "./utils/constants";
 import {useLocation} from "react-router-dom";
 import styles from "./components/homeComponents/carousel/carousel.module.css";
 import {Images} from "./utils/images";
@@ -22,7 +22,7 @@ function App() {
         setIsLoading(true);
         setTimeout(() => {
             setIsLoading(false);
-        }, LoadingTime);
+        }, Constants.LoadingTime);
     }, [location]);
 
     //check if user prefer theme is saved or not if not then saved it to system theme
