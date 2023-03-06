@@ -1,5 +1,11 @@
 import Blockly from "blockly/core";
 import {colors} from "./color";
+import dragDropDark from "../assets/images/drag_drop_dark.mp4";
+import dragDropWhite from "../assets/images/drag_drop_white.mp4";
+import styles from "../components/homeComponents/carousel/carousel.module.css";
+import React, {useContext} from "react";
+import QRCode from "../assets/images/qr-image.png";
+import OpenBoat from "../assets/images/open-boat-image.png";
 
 export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
 export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_forEach", "controls_flow_statements"];
@@ -60,3 +66,23 @@ export const PathName = {
     "home": "/",
     "playGround": "/playground",
 }
+
+export const Carousal = [
+    {
+        carousalHeader: "Drag and Drop",
+        carousalLine1: "Drag and drop the selected block of code into the input field.",
+        carousalLine2: "Repeat the steps of selecting and placing all required code blocks, and then connecting them together to create a sequence of actions.",
+    },
+    {
+        carousalHeader: "Save and Download",
+        carousalLine1: "Check for errors by compiling the code and, upon successful compilation, generate the QR code.",
+        carousalLine2: "Use the OpenBot android application to scan the QR code and successfully save the block code on your device.",
+        image: <img src={QRCode} className={styles.ImageSave} alt={'QRCode'}/>,
+    },
+    {
+        carousalHeader: "Connect and Drive",
+        carousalLine1: "Pair your smartphone with the OpenBot car and run the code that you have downloaded.",
+        carousalLine2: "Carry out desired actions such as activating indicator lights, detecting objects, and more on your robot car.",
+        image: <img src={OpenBoat} className={styles.ImageSave} alt={'OpenBoat'}/>,
+    }
+]

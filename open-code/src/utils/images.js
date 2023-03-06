@@ -15,6 +15,8 @@ import errorEmojiIcon from "../../src/assets/images/icon/error-emozi-icon.png"
 import pencilIcon from "../../src/assets/images/icon/pencil-icon.png"
 import darkPencilIcon from "../../src/assets/images/icon/dark-pencil-icon.png"
 import logo from "../../src/assets/images/icon/open-bot-logo.png"
+import dragDropWhite from "../../src/assets/images/drag_drop_white.mp4";
+import dragDropDark from "../../src/assets/images/drag_drop_dark.mp4";
 
 export const Images = {
     helpIcon: helpIcon,
@@ -34,4 +36,6 @@ export const Images = {
     pencilIcon: pencilIcon,
     darkPencilIcon: darkPencilIcon,
     logo: logo,
+    dragDropDark: dragDropDark,
+    dragDropWhite: dragDropWhite,
 }
