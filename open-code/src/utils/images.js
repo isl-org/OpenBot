@@ -17,6 +17,10 @@ import darkPencilIcon from "../../src/assets/images/icon/dark-pencil-icon.png"
 import logo from "../../src/assets/images/icon/open-bot-logo.png"
 import dragDropWhite from "../../src/assets/images/drag_drop_white.mp4";
 import dragDropDark from "../../src/assets/images/drag_drop_dark.mp4";
+import Carousal2 from "../../src/assets/images/qr_light.mp4";
+import Carousal2Dark from "../../src/assets/images/qr_dark.mp4";
+import Carousal3 from "../../src/assets/images/mobile_white.mp4";
+import Carousal3Dark from "../../src/assets/images/mobile_dark.mp4";
 
 export const Images = {
     helpIcon: helpIcon,
@@ -38,4 +42,10 @@ export const Images = {
     logo: logo,
     dragDropDark: dragDropDark,
     dragDropWhite: dragDropWhite,
+    Carousal2: Carousal2,
+    Carousal2Dark: Carousal2Dark,
+    Carousal3:Carousal3,
+    Carousal3Dark:Carousal3Dark,
+
+
 }

@@ -56,17 +56,30 @@ export const NewProject = () => {
                         />
                     ))
                     :
-                    <div className={styles.MessageIcon}>
-                        <img alt="Triangle" className={styles.TriangleIcon}
-                             src={(theme === "dark" ? DarkTriangle : Triangle)}/>
-                        <div
-                            className={styles.Message + " " + (theme === "dark" ? styles.MessageDark : styles.MessageLight)}>
-                            Click to create a new project.
-                        </div>
-                    </div>
+                    <CreateNewProject/>
                 }
             </div>
         </div>
     );
+}
+
+
+/**
+ * Create New Project
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function CreateNewProject() {
+    const {theme} = useContext(ThemeContext)
+    return (
+        <div className={styles.MessageIcon}>
+            <img alt="Triangle" className={styles.TriangleIcon}
+                 src={(theme === "dark" ? DarkTriangle : Triangle)}/>
+            <div
+                className={styles.Message + " " + (theme === "dark" ? styles.MessageDark : styles.MessageLight)}>
+                Click to create a new project.
+            </div>
+        </div>
+    )
 }
 

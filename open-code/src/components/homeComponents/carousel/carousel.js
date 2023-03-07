@@ -38,11 +38,9 @@ function CarousalComponent(params) {
                     {slide.carousalLine1}<br/>{slide.carousalLine2}
                 </div>
             </div>
-            {slide.image ??
-                <video src={theme === "dark" ? Images.dragDropDark : Images.dragDropWhite}
-                       className={styles.ImageDrag}
-                       autoPlay={true} loop={true}/>
-            }
+            <video src={theme === "dark" ? slide.videoDark : slide.videoLight}
+                   className={styles.ImageDrag}
+                   autoPlay={true} loop={true}/>
         </div>
     )
 }
