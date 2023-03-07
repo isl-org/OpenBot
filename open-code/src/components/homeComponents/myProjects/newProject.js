@@ -11,7 +11,6 @@ import {getFilterProjects} from "../../../services/workspace";
 export const NewProject = () => {
     const [projects, setProjects] = useState([]);
     const {theme} = useContext(ThemeContext)
-
     useEffect(() => {
         auth.onAuthStateChanged(async function () {
             getFilterProjects().then((filterProject) => {
@@ -31,9 +30,7 @@ export const NewProject = () => {
                 {projects.length > 0 ?
                     projects?.map((project, key) => (
                         <Card key={key}
-                              projectName={project.projectName}
-                              projectDate={project.date}
-                              projectId={project.id}
+                              projectData={project}
                         />
                     ))
                     :
