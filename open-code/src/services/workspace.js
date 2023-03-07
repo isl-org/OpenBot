@@ -28,12 +28,11 @@ export async function uploadOnDrive(data, uniqueId) {
  * @returns {Promise<void>}
  */
 export async function getDriveProjects(driveProjects) {
-    // let driveProjects = []
     if (localStorage.getItem("isSigIn") === "true") {
         try {
             const projects = await getDocs(collection(db, auth.currentUser?.uid));
             projects.forEach((doc) => {
-                driveProjects?.push({id: doc.id, ...doc.data()});
+                driveProjects?.push({storage: "drive", id: doc.id, ...doc.data()});
             })
         } catch (error) {
             console.error(error);
@@ -93,6 +92,7 @@ export function updateCurrentProject(uniqueId, projectName, code) {
     const options = {day: 'numeric', month: 'long', year: 'numeric'};
     const currentDate = date.toLocaleDateString('en-US', options)
     const project = {
+        storage: "local",
         id: uniqueId,
         projectName: projectName,
         xmlValue: code,
@@ -167,10 +167,32 @@ export function updateLocalProjects() {
 /**
  * remove duplicate project get from drive and also save in local.
  */
-export async function filterProjects() {
-    let driveProjects = [];
+export async function getFilterProjects() {
+    let allProjects
+    let filterProjects
+    let allDriveProjects = [];
     let allLocalProjects = getAllLocalProjects()
-    await getDriveProjects(driveProjects)
-    let allProjects = allLocalProjects?.concat(driveProjects)
-    console.log(allProjects)
+    await getDriveProjects(allDriveProjects).then(() => {
+        allProjects = allLocalProjects?.concat(allDriveProjects)
+
+        const uniqueIds = {}; // object to keep track of unique id values
+
+        filterProjects = allProjects.filter(project => {
+            // check if id value has already been seen
+            if (uniqueIds[project.id]) {
+                return false;
+            }
+
+            // mark id value as seen
+            uniqueIds[project.id] = true;
+
+            // check if storage value is 'drive'
+            if (project.storage === 'drive') {
+                // check if id value is unique
+                return allProjects.filter(o => o.id === project.id).length === 1;
+            }
+            return true;
+        });
+    })
+    return filterProjects;
 }

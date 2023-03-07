@@ -4,35 +4,21 @@ import DarkTriangle from "../../../assets/images/icon/dark-triangle.png";
 import NewProjectButton from "./newProjectButton";
 import {ThemeContext} from "../../../App";
 import styles from "./newProject.module.css";
-import {collection, getDocs} from "firebase/firestore";
-import {auth, db} from "../../../services/firebase";
+import {auth} from "../../../services/firebase";
 import Card from "./card";
-import {getAllLocalProjects} from "../../../services/workspace";
+import {getFilterProjects} from "../../../services/workspace";
 
 export const NewProject = () => {
-    const [driveProjects, setDriveProjects] = useState([]);
-    const localStorageProjects = getAllLocalProjects()
+    const [projects, setProjects] = useState([]);
     const {theme} = useContext(ThemeContext)
-    const localStorageProjectsLength = localStorageProjects?.length ? localStorageProjects?.length : 0
 
     useEffect(() => {
         auth.onAuthStateChanged(async function () {
-            await loadingAllWorkspaces()
+            getFilterProjects().then((filterProject) => {
+                setProjects(filterProject)
+            })
         })
     }, [])
-
-    async function loadingAllWorkspaces() {
-        try {
-            const allProjects = [];
-            const projects = await (getDocs(collection(db, auth.currentUser?.uid)));
-            projects.forEach((doc) => {
-                allProjects.push({id: doc.id, ...doc.data()});
-            })
-            setDriveProjects(allProjects);
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     return (
         <div className={styles.Main + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
@@ -40,19 +26,14 @@ export const NewProject = () => {
                 Projects
             </div>
             <div className={styles.ButtonsMessage}>
-                <NewProjectButton isProject={driveProjects.length + localStorageProjectsLength}/>
-                {localStorageProjects?.map((localProjects, key) => (
-                    <Card key={key}
-                          projectName={localProjects.projectName}
-                          projectDate={localProjects.date}
-                          projectId={localProjects.id}
-                    />
-                ))}
-                {driveProjects.length > 0 || localStorageProjectsLength > 0 ? driveProjects?.map((driveProject, key) => (
+                <NewProjectButton isProject={projects.length}/>
+
+                {projects.length > 0 ?
+                    projects?.map((project, key) => (
                         <Card key={key}
-                              projectName={driveProject.projectName}
-                              projectDate={driveProject.date}
-                              projectId={driveProject.id}
+                              projectName={project.projectName}
+                              projectDate={project.date}
+                              projectId={project.id}
                         />
                     ))
                     :
