@@ -26,7 +26,6 @@ export const HomeCarousel = () => {
  */
 function CarousalComponent(params) {
     const {slide} = params
-    console.log("slide::::::", slide)
     const {theme} = useContext(ThemeContext)
     return (
         <div className={styles.Content + " " + (theme === "dark" ? styles.darkBg : styles.lightBg)}>

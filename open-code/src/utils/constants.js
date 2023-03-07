@@ -60,6 +60,7 @@ export const localStorageKeys = {
 export const Constants = {
     "LoadingTime": 800,
     "ProfileSuccessMsg": "Profile updated successfully!",
+    "CookieMsg":"Our website use cookies. By continuing navigating, we assume your permission to deploy cookies as detailed in our Privacy Policy.",
 }
 
 export const PathName = {

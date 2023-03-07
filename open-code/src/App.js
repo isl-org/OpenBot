@@ -17,6 +17,8 @@ export const ThemeContext = createContext(null);
 function App() {
     const location = useLocation();
     const [isLoading, setIsLoading] = useState(false);
+    let onPageLoad = localStorage.getItem("theme") || ""
+    const [theme, setTheme] = useState(onPageLoad);
 
     useEffect(() => {
         setIsLoading(true);
@@ -31,9 +33,6 @@ function App() {
         //set system prefer theme in localstorage
         localStorage.setItem("theme", darkThemeMq.matches ? Themes.dark : Themes.light);
     }
-
-    let onPageLoad = localStorage.getItem("theme") || ""
-    const [theme, setTheme] = useState(onPageLoad);
 
     const toggleTheme = () => {
         window.location.reload()

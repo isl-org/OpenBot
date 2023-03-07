@@ -28,7 +28,6 @@ function Playground() {
                     <Toolbox/>
                 </BlocklyComponent>
             </header>
-
             <UploadCode/>
         </div>
 
