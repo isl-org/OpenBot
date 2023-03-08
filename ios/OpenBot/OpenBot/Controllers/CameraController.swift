@@ -153,10 +153,11 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             
             do {
                 // Set the pixel format to receive
-                videoOutput.videoSettings = [String(kCVPixelBufferPixelFormatTypeKey): kCMPixelFormat_32BGRA]//[(kCVPixelBufferPixelFormatTypeKey as NSString): NSNumber(value: kCVPixelFormatType_32BGRA)] as [String: Any]
+                videoOutput.videoSettings = [String(kCVPixelBufferPixelFormatTypeKey): kCMPixelFormat_32BGRA]
                 
                 // Avoid building up a frame backlog by setting alwaysDiscardLateVideoFrames to true
                 videoOutput.alwaysDiscardsLateVideoFrames = true
+                
                 // Tell videoOutput to send the camera feed image to our ViewController instance on a serial background thread
                 videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "image_processing_queue"))
                 

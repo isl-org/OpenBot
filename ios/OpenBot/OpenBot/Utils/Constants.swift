@@ -6,16 +6,16 @@ import UIKit
 
 /// References to the images used in the user interface
 struct Images {
-    static let freeRoam = UIImage(named: "freeRoam");
-    static let dataCollection = UIImage(named: "dataCollection");
-    static let controllerMapping = UIImage(named: "controllerMapping");
-    static let autopilotIcon = UIImage(named: "autopilot");
-    static let objectTrackingIcon = UIImage(named: "objectTracking");
+    static let freeRoam = UIImage(named: "freeRoam")
+    static let dataCollection = UIImage(named: "dataCollection")
+    static let controllerMapping = UIImage(named: "controllerMapping")
+    static let autopilotIcon = UIImage(named: "autopilot")
+    static let objectTrackingIcon = UIImage(named: "objectTracking")
     static let modelManagementIcon = UIImage(named: "modelManagement")
     static let robotInfoIcon = UIImage(named: "robotInfo")
-    static let bluetoothConnected = UIImage(named: "bluetoothConnected");
-    static let bluetoothDisconnected = UIImage(named: "bluetoothDisconnected");
-    static let frontCamera = UIImage(named: "frontCamera");
+    static let bluetoothConnected = UIImage(named: "bluetoothConnected")
+    static let bluetoothDisconnected = UIImage(named: "bluetoothDisconnected")
+    static let frontCamera = UIImage(named: "frontCamera")
     static let ble = UIImage(named: "ble")
     static let settings = UIImage(named: "settings")
     static let closeIcon = UIImage(named: "closeIcon")
@@ -29,18 +29,19 @@ struct Images {
     static let driveIcon = UIImage(named: "drive")
     static let gameDriveIcon = UIImage(named: "game")
     static let downArrow = UIImage(systemName: "arrowtriangle.down.fill")
-    static let minus = UIImage(systemName: "minus");
-    static let plus = UIImage(systemName: "plus");
+    static let minus = UIImage(systemName: "minus")
+    static let plus = UIImage(systemName: "plus")
     static let edit = UIImage(named: "edit")
     static let upwardArrow = UIImage(named: "upward-arrow")
-    static let openBotLogo = UIImage(named: "openBotLogo");
+    static let openBotLogo = UIImage(named: "openBotLogo")
+    static let gmapMarker = UIImage(named: "gmap_marker")
 }
 
 /// Colors of the user inerface
 struct Colors {
-    static let gridShadowColor = UIColor(named: "gridItemShadowColor");
-    static let title = UIColor(named: "HomePageTitleColor");
-    static let titleDeactivated = UIColor(named: "HomePageTitleColorDeactivated");
+    static let gridShadowColor = UIColor(named: "gridItemShadowColor")
+    static let title = UIColor(named: "HomePageTitleColor")
+    static let titleDeactivated = UIColor(named: "HomePageTitleColorDeactivated")
     static let sonar = UIColor(named: "sonar")
     static let voltageDividerColor = UIColor(named: "voltageDivider")
     static let freeRoamButtonsColor = UIColor(named: "gamepad")
@@ -54,9 +55,9 @@ struct Colors {
 struct Constants {
 
     // BLE UUIDs
-    static let openbotService = "61653dc3-4021-4d1e-ba83-8b4eec61d613";
-    static let openbotService_RX = "06386c14-86ea-4d71-811c-48f97c58f8c9";
-    static let openbotService_TX = "9bf1103b-834c-47cf-b149-c9e4bcf778a7";
+    static let openbotService = "61653dc3-4021-4d1e-ba83-8b4eec61d613"
+    static let openbotService_RX = "06386c14-86ea-4d71-811c-48f97c58f8c9"
+    static let openbotService_TX = "9bf1103b-834c-47cf-b149-c9e4bcf778a7"
 
     // Game Data
     static let gameModes: [ModeItem] = [
@@ -67,11 +68,12 @@ struct Constants {
         ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment),
         ModeItem(label: Strings.modelManagement, icon: Images.modelManagementIcon!, identifier: Strings.ScreenModelManagement),
         ModeItem(label: Strings.robotInfo, icon: Images.robotInfoIcon!, identifier: Strings.ScreenRobotInfo),
-    ];
-    static let frameColors: [UIColor] = [UIColor.red, UIColor.orange, UIColor.blue, UIColor.green, UIColor.brown];
-    static let autopilotMode = "AUTOPILOT";
-    static let objectTrackingMode = "DETECTOR";
-    static let types: [String] = ["AUTOPILOT", "DETECTOR", "NAVIGATION"];
+        ModeItem(label: Strings.navigation, icon: Images.objectTrackingIcon!, identifier: Strings.ScreenNavigation),
+    ]
+    static let frameColors: [UIColor] = [UIColor.red, UIColor.orange, UIColor.blue, UIColor.green, UIColor.brown]
+    static let autopilotMode = "AUTOPILOT"
+    static let objectTrackingMode = "DETECTOR"
+    static let types: [String] = ["AUTOPILOT", "DETECTOR", "NAVIGATION"]
     static let classes: [String] = ["AUTOPILOT_F", "MOBILENET", "YOLOV4", "YOLOV5", "EFFICIENTDET", "NAVIGATION"]
     static let devices: [String] = ["CPU", "XNNPACK"]
 }
@@ -115,7 +117,7 @@ enum Keymap: String {
     case KEYCODE_BUTTON_START = "OPTIONS Button"
     case KEYCODE_BUTTON_SELECT = "SELECT Button"
     case KEY_Share = "SHARE Button"
-    case CMD_INDICATOR_STOP = "INDICATOR_STOP";
+    case CMD_INDICATOR_STOP = "INDICATOR_STOP"
 }
 
 /// Control events of an OpenBot
@@ -154,18 +156,18 @@ enum TYPE: String {
 
 /// Names of the sensor log files
 struct FileName {
-    static let accelerator: String = "accelerometerLog.txt";
-    static let magnetic: String = "magneticLog.txt";
-    static let gyroscopeLog: String = "gyroscopeLog.txt";
-    static let gpsLog: String = "gpsLog.txt";
-    static let bumperLog: String = "bumperLog.txt";
-    static let ctrlLog: String = "ctrlLog.txt";
-    static let indicatorLog: String = "indicatorLog.txt";
+    static let accelerator: String = "accelerometerLog.txt"
+    static let magnetic: String = "magneticLog.txt"
+    static let gyroscopeLog: String = "gyroscopeLog.txt"
+    static let gpsLog: String = "gpsLog.txt"
+    static let bumperLog: String = "bumperLog.txt"
+    static let ctrlLog: String = "ctrlLog.txt"
+    static let indicatorLog: String = "indicatorLog.txt"
     static let inferenceLog: String = "inferenceLog.txt"
-    static let lightLog: String = "lightLog.txt";
-    static let motionLog: String = "motionLog.txt";
-    static let sonarLog: String = "sonarLog.txt";
-    static let voltageLog: String = "voltageLog.txt";
+    static let lightLog: String = "lightLog.txt"
+    static let motionLog: String = "motionLog.txt"
+    static let sonarLog: String = "sonarLog.txt"
+    static let voltageLog: String = "voltageLog.txt"
     static let wheelsLog: String = "wheelsLog.txt"
     static let rgbFrames: String = "rgbFrames.txt"
 }

@@ -22,7 +22,6 @@ class AutopilotFragment: CameraController {
     private let inferenceQueue = DispatchQueue(label: "openbot.autopilot.inferencequeue")
     private var isInferenceQueueBusy = false
     private var result: Control?
-
     var autopilotEnabled = false
 
     /// Called after the view fragment has loaded.
@@ -74,7 +73,7 @@ class AutopilotFragment: CameraController {
         }
     }
 
-    ///Creating back navigation button, this method creates default navigation button
+    /// Creating back navigation button, this method creates default navigation button
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -83,23 +82,23 @@ class AutopilotFragment: CameraController {
         }
     }
 
-    ///function that remove viewController from navigation
+    /// function that remove viewController from navigation
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
 
-    ///function to switch camera from front to back and vice versa, called when camera icon is pressed
+    /// function to switch camera from front to back and vice versa, called when camera icon is pressed
     @objc func switchCamera() {
         switchCameraView();
     }
 
-    ///function to open bluetooth screen, called when Bluetooth icon is pressed
+    /// function to open bluetooth screen, called when Bluetooth icon is pressed
     @objc func openBluetoothSettings() {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
-    ///function to device from CPU to GPU, called after selection of device from device dropdown
+    /// function to device from CPU to GPU, called after selection of device from device dropdown
     @objc func updateDevice(_ notification: Notification) {
         currentDevice = RuntimeDevice(rawValue: notification.object as! String) ?? RuntimeDevice.CPU
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
@@ -114,12 +113,12 @@ class AutopilotFragment: CameraController {
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
     }
 
-    ///function to turn on and off autopilot
+    /// function to turn on and off autopilot
     @objc func toggleAutoMode() {
         autoPilotMode = !autoPilotMode;
     }
 
-    ///function to change number of threads,being called ofter plus and minus icon is pressed
+    /// function to change number of threads,being called ofter plus and minus icon is pressed
     @objc func updateThread(_ notification: Notification) {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 1
@@ -153,8 +152,8 @@ class AutopilotFragment: CameraController {
         print("memory is low");
     }
 
-    ///
     /// called after camera capture each frame.
+    ///
     /// - Parameters:
     ///   - output:
     ///   - sampleBuffer:

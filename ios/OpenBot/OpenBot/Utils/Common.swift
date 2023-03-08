@@ -6,7 +6,7 @@ import Foundation
 
 /// The Common class contains a set of useful routines to load neural networks into the code
 class Common {
-
+    
     /// Try to load the different policy models described in the "config.json" parameter file
     ///
     /// - Returns: list of ModelItem objects built from the JSON parameter file
@@ -26,7 +26,7 @@ class Common {
             return loadAllModelItemsFromBundle()
         }
     }
-
+    
     /// Parse the config.json parameter file
     ///
     /// - Returns: list of ModelItem objects built from the JSON parameter file
@@ -43,7 +43,7 @@ class Common {
         }
         return [];
     }
-
+    
     /// Parse the config.json parameter file provided in the document directory
     ///
     /// - Returns: list of ModelItem objects built from the JSON parameter file
@@ -67,7 +67,7 @@ class Common {
         }
         return []
     }
-
+    
     /// Load the modelItems of a specific mode.
     ///
     /// - Parameters: mode (e.g. "AUTOPILOT" or "DETECTOR")
@@ -76,7 +76,7 @@ class Common {
         var selectedModels: [String] = []
         let allModels = loadAllModelItems()
         for model in allModels {
-
+            
             if model.type == mode && model.pathType == "ASSET" {
                 if isModelItemAvailableInDocument(modelName: model.name + Strings.tflite) {
                     selectedModels.append(model.name)
@@ -101,7 +101,7 @@ class Common {
         }
         return selectedModels
     }
-
+    
     /// Load the names of the different models
     ///
     /// - Returns: list of names of the loaded models
@@ -120,7 +120,7 @@ class Common {
         }
         return models
     }
-
+    
     /// Get a modelItem from its name
     ///
     /// - Parameters: name of the model
@@ -135,7 +135,7 @@ class Common {
         let model: ModelItem = ModelItem.init(id: allModels.count + 1, class: allModels[0].class, type: allModels[0].type, name: modelName, pathType: allModels[allModels.count - 1].pathType, path: "", inputSize: allModels[0].inputSize)
         return model;
     }
-
+    
     /// Get all the names of all the modelItems associated to a specific mode
     ///
     /// - Parameters: mode (e.g. "AUTOPILOT" or "DETECTOR")
@@ -150,7 +150,7 @@ class Common {
         }
         return selectedModels
     }
-
+    
     /// Informs whether the desired modelItem associated to a given bundle
     ///
     /// - Parameters: name of the model
@@ -171,7 +171,7 @@ class Common {
         }
         return false
     }
-
+    
     /// Informs whether the desired modelItem associated to a given document
     ///
     /// - Parameters: name of the model
@@ -185,7 +185,7 @@ class Common {
         }
         return false
     }
-
+    
     /// Get the name of the file pointed by a given url
     ///
     /// - Parameters: url
@@ -197,5 +197,12 @@ class Common {
             return String(filepath[index...])
         }
         return "unnamed"
+    }
+    
+    /// Returns the point-goal navigation ModelItem
+    ///
+    /// - Returns: the point-goal navigation modelItem
+    static func returnNavigationModel() -> ModelItem{
+        returnModelItem(modelName: "PilotNet-Goal")
     }
 }

@@ -4,15 +4,16 @@
 
 struct Strings {
     // Screens
-    static let OpenBot: String = "OpenBot";
-    static let freeRoam: String = "Free Roam";
-    static let dataCollection: String = "Data Collection";
-    static let controllerMapping: String = "Controller Mapping";
+    static let OpenBot: String = "OpenBot"
+    static let freeRoam: String = "Free Roam"
+    static let dataCollection: String = "Data Collection"
+    static let controllerMapping: String = "Controller Mapping"
     static let autoPilot: String = "Auto Pilot"
     static let objectTracking: String = "Object Tracking"
     static let modelManagement: String = "Model Management"
     static let robotInfo: String = "Robot Info"
-
+    static let navigation : String = "Navigation"
+    
     // Misc
     static let controller: String = "Controller"
     static let speed: String = "Speed"
@@ -60,7 +61,7 @@ struct Strings {
     static let threads: String = "Threads"
     static let object: String = "Object"
     static let confidence: String = "Confidence"
-
+    
     // Settings
     static let camera: String = "Camera"
     static let microphone: String = "Microphone"
@@ -68,9 +69,9 @@ struct Strings {
     static let permission: String = "Permissions"
     static let videoStreaming: String = "Video Streaming"
     static let bluetooth: String = "Bluetooth"
-
+    
     // Notifications
-    static let controllerConnected: String = "connectedWithControllerSuccessfully";
+    static let controllerConnected: String = "connectedWithControllerSuccessfully"
     static let clickSetting: String = "clickSetting"
     static let cancelButton: String = "cancelButton"
     static let switchCamera: String = "switchCamera"
@@ -83,21 +84,22 @@ struct Strings {
     static let updatePreview: String = "updatePreview"
     static let updateTraining: String = "updateTraining"
     static let updateSensorsForLog: String = "updateSensorsForLog"
-
+    
     // Screen Identifiers
-    static let ScreenFreeRoam: String = "freeRoam";
-    static let ScreenDataCollection: String = "dataCollection";
-    static let ScreenControllerMapping: String = "controllerMapping";
-    static let AutopilotFragment: String = "AutopilotFragment";
-    static let ObjectTrackingFragment: String = "ObjectTrackingFragment";
+    static let ScreenFreeRoam: String = "freeRoam"
+    static let ScreenDataCollection: String = "dataCollection"
+    static let ScreenControllerMapping: String = "controllerMapping"
+    static let AutopilotFragment: String = "AutopilotFragment"
+    static let ObjectTrackingFragment: String = "ObjectTrackingFragment"
     static let ScreenModelManagement: String = "ScreenModelManagement"
     static let ScreenBottomSheet: String = "ScreenBottomSheet"
-    static let ScreenRobotInfo: String = "ScreenRobotInfo";
-
+    static let ScreenRobotInfo: String = "ScreenRobotInfo"
+    static let ScreenNavigation : String = "ScreenNavigation"
+    
     // UIVIew Identifiers
     static let secondView: String = "secondView"
     static let bluetoothScreen: String = "bluetoothScreen"
-
+    
     // Logging Headers
     static let accelerationHeader: String = "TimeStamp[ns] x[m/s^2], y[m/s^2], z[m/s^2]\n"
     static let locationCoordinatesHeader: String = "TimeStamp latitude, longitude\n"
@@ -113,29 +115,29 @@ struct Strings {
     static let voltageHeader: String = "timestamp[ns], batteryVoltage\n"
     static let wheelsHeader: String = "timestamp[ns], leftWheel, rightWheel\n"
     static let motionHeader: String = "timestamp[ns]"
-
+    
     // Bluetooth Status
     static let connect: String = "Connect"
     static let disconnect: String = "Disconnect"
     static let connecting: String = "Connecting"
     static let disconnecting: String = "Disconnecting"
-
+    
     // Model management
     static let modelDetails: String = "Model Details"
-    static let name: String = "Name";
-    static let type: String = "Type";
-    static let `class`: String = "Class";
+    static let name: String = "Name"
+    static let type: String = "Type"
+    static let `class`: String = "Class"
     static let inputOfModel: String = "Input(w x h)"
-    static let tflite: String = ".tflite";
+    static let tflite: String = ".tflite"
     static let cancel: String = "Cancel"
-    static let done: String = "Done";
-    static let file: String = "File";
+    static let done: String = "Done"
+    static let file: String = "File"
     static let url: String = "URL"
     static let addNewModel: String = "Add New Model"
-
+    
     // Robot Info
     static let voltageDivider: String = "Voltage Divider"
-    static let sonarText: String = "Sonar";
+    static let sonarText: String = "Sonar"
     static let bumperText: String = "Bumpers"
     static let wheelOdometer: String = "Wheel Odometry"
     static let front: String = "Front"
@@ -144,13 +146,23 @@ struct Strings {
     static let indicatorText: String = "Indicators"
     static let status: String = "Status"
     static let motors: String = "Motors"
-    static let forward: String = "Forward";
-    static let backward: String = "Backward";
-    static let stop: String = "Stop";
-    static let readings: String = "Readings";
-    static let battery: String = "Battery **.* V";
+    static let forward: String = "Forward"
+    static let backward: String = "Backward"
+    static let stop: String = "Stop"
+    static let readings: String = "Readings"
+    static let battery: String = "Battery **.* V"
     static let speedText: String = "Speed (l,r) ***,*** rpm"
-    static let sonarLabel: String = "Sonar *** cm";
+    static let sonarLabel: String = "Sonar *** cm"
     static let sendCommand: String = "Send Commands"
     static let lightLabel: String = "Lights"
+    
+    //Navigation
+    static let setGoal : String = "Set Goal"
+    static let setGoalText : String = "Mount the phone on the robot and \n specify a goal. The robot will try to\n react the goal after pressing start."
+    static let left : String = "Left"
+    static let meter : String = "[m]"
+    static let start : String = "START"
+    static let canceled : String = "CANCEL"
+    static let info : String = "Info"
+    static let restart : String = "Restart"
 }

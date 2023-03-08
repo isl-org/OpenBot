@@ -437,9 +437,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         previewResolution.text = Strings.previewResolutionHigh
     }
 
-    @objc func serverHandler(_ sender: UIView) {
-        // print("hello server")
-    }
+    @objc func serverHandler(_ sender: UIView) {}
 
     /// Function to update resolutions
     @objc func updateResolution() {

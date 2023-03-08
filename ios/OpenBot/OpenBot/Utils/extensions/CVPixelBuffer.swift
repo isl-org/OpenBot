@@ -22,7 +22,9 @@ extension CVPixelBuffer {
         let imageChannels = 4
         
         // Check that the pixel format is supported.
-        assert(pixelBufferType == kCVPixelFormatType_32BGRA || pixelBufferType == kCVPixelFormatType_32ARGB)
+       // assert(pixelBufferType == kCVPixelFormatType_32ARGB ||
+       //        pixelBufferType == kCVPixelFormatType_32BGRA ||
+        //       pixelBufferType == kCVPixelFormatType_32RGBA)
         
         // Create a pixel buffer adapter to handle the conversion and scaling
         var pixelBufferAdapter: CVBuffer?

@@ -61,12 +61,12 @@ class Autopilot: Network {
         }
     }
 
-    /// Propagate an image through a neural network to recognize objects of a predefined class.
+    /// Propagate an image and high-level command through a neural network to generate suitable control output.
     ///
     /// - Parameters
     ///   - pixelBuffer: The buffer containing the image.
     ///   - indicator: A high-level scalar command (such that: -1: left, 0: forward, +1: right) to be sent as an input to the driving policy
-    /// - Returns: A list of the recognized objects for a given label
+    /// - Returns: A control reference to be sent to the robot
     func recognizeImage(pixelBuffer: CVPixelBuffer, indicator: Float) -> Control {
 
         // Crops the image to the biggest square in the center and scales it down to model dimensions.
@@ -76,11 +76,11 @@ class Autopilot: Network {
         }
 
         do {
-            // Get indicator data
+            // Get indicator data.
             var indicatorData: Data = Data()
             indicatorData.append(contentsOf: indicator.bytes)
 
-            // Pre-proccess input image (orientation, scaling, cropping...).
+            // Pre-proccess input image.
             let inputTensor = try tflite!.input(at: imgIndex)
             guard let rgbData = rgbDataFromBuffer(scaledPixelBuffer, isModelQuantized: inputTensor.dataType == .uInt8) else {
                 return Control(left: 0, right: 0)
