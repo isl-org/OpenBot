@@ -7,7 +7,7 @@ import {ThemeContext} from "../../App";
 import {DarkTheme, LightTheme} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
-import {updateCurrentProject} from "../../services/workspace";
+import {updateCurrentProject, updateProjectOnDrive} from "../../services/workspace";
 import {nanoid} from "nanoid";
 
 Blockly.setLocale(locale);
@@ -28,6 +28,11 @@ function BlocklyComponent(props) {
     const handleWorkspaceChange = useCallback(() => {
         if (projectName !== undefined) {
             updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
+        }
+        if (localStorage.getItem("isSigIn") === "true") {
+            updateProjectOnDrive().then((res) => {
+                console.log("sanjeev res === ", res)
+            })
         }
     }, []);
 

@@ -4,7 +4,6 @@ import DarkTriangle from "../../../assets/images/icon/dark-triangle.png";
 import NewProjectButton from "./newProjectButton";
 import {ThemeContext} from "../../../App";
 import styles from "./newProject.module.css";
-import {auth} from "../../../services/firebase";
 import Card from "./card";
 import {getFilterProjects} from "../../../services/workspace";
 
@@ -12,13 +11,10 @@ export const NewProject = () => {
     const [projects, setProjects] = useState([]);
     const {theme} = useContext(ThemeContext)
     useEffect(() => {
-        auth.onAuthStateChanged(async function () {
-            getFilterProjects().then((filterProject) => {
-                setProjects(filterProject)
-            })
+        getFilterProjects().then((filterProject) => {
+            setProjects(filterProject)
         })
     }, [])
-
     return (
         <div className={styles.Main + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
             <div className={styles.Heading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>My

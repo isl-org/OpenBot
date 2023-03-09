@@ -40,16 +40,15 @@ export async function getDriveProjects(driveProjects) {
     }
 }
 
-export async function updatingWorkspace(projectName, currentProjectId) {
-    const date = new Date();
-    const options = {day: 'numeric', month: 'long', year: 'numeric'};
-    const currentDate = date.toLocaleDateString('en-US', options);
-    const xmlData = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace()));
-    const workspaceRef = doc(collection(db, auth.currentUser.uid), currentProjectId);
+export async function updateProjectOnDrive() {
+    // const date = new Date();
+    // const options = {day: 'numeric', month: 'long', year: 'numeric'};
+    // const currentDate = date.toLocaleDateString('en-US', options);
+    const workspaceRef = doc(collection(db, auth.currentUser.uid), getCurrentProject().id);
     try {
         await updateDoc(workspaceRef, {
-            date: currentDate,
-            xmlValue: xmlData
+            // date: currentDate,
+            xmlValue: getCurrentProject().xmlValue
         })
     } catch (err) {
         console.log(err);
@@ -104,6 +103,14 @@ export function updateCurrentProject(uniqueId, projectName, code) {
     })
     if (!found) {
         saveProjectInLocal(localStorage.getItem(localStorageKeys.currentProject))
+        if (localStorage.getItem("isSigIn") === "true") {
+            const data = {
+                projectName: getCurrentProject().projectName,
+                xmlValue: getCurrentProject().xmlValue,
+                date: getCurrentProject().date,
+            }
+            uploadOnDrive(data, getCurrentProject().id).then()
+        }
     }
 }
 
@@ -173,10 +180,8 @@ export async function getFilterProjects() {
     let allDriveProjects = [];
     let allLocalProjects = getAllLocalProjects()
     await getDriveProjects(allDriveProjects).then(() => {
-        allProjects = allLocalProjects?.concat(allDriveProjects)
-
+        allProjects = allLocalProjects?.concat(allDriveProjects) || allDriveProjects
         const uniqueIds = {}; // object to keep track of unique id values
-
         filterProjects = allProjects.filter(project => {
             // check if id value has already been seen
             if (uniqueIds[project.id]) {
