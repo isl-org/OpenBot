@@ -78,23 +78,11 @@ export const UploadCode = () => {
         }
         const uniqueId = getCurrentProject().id;
         //upload on google drive
-        uploadToGoogleDrive(data, uniqueId).then();
+        uploadToGoogleDrive(data);
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);
         }, 100);
-    }
-
-    /**
-     * save projects in Local or Drive
-     */
-    function uploadProjectOnDrive() {
-        const data = {
-            date: getCurrentProject().date,
-            projectTitle: getCurrentProject().projectName,
-            xmlText: getCurrentProject().xmlValue,
-
-        }
     }
 
     return (

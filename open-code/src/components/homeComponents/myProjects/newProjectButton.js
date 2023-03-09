@@ -10,10 +10,10 @@ import {localStorageKeys, Themes} from "../../../utils/constants";
 
 
 function NewProjectButton(props) {
-    const {isProject} = props
+    const {isProject} = props;
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const [isInputError, setIsInputError] = useState(true)
+    const [isInputError, setIsInputError] = useState(true);
     const {
         projectName,
         setProjectName,

@@ -4,6 +4,7 @@ import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
 import 'firebase/compat/firestore';
 import {getFirestore} from "firebase/firestore";
 import {getAuth, signOut} from "firebase/auth";
+import {localStorageKeys} from "../utils/constants";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -50,7 +51,9 @@ export async function uploadProfilePic(file, fileName) {
  */
 export async function googleSigIn() {
     const signIn = await auth.signInWithPopup(provider)
-    localStorage.setItem("isSigIn", "true")
+    console.log("signIn:::::::::", signIn)
+    localStorage.setItem("isSigIn", "true");
+    localStorage.setItem(localStorageKeys.accessToken, signIn?.credential?.accessToken);
     return signIn
 }
 
@@ -63,6 +66,7 @@ export async function googleSignOut() {
     signOut(auth).then(() => {
         window.location.reload()
         localStorage.setItem("isSigIn", "false")
+        localStorage.setItem(localStorageKeys.accessToken, " ");
     }).catch((error) => {
         console.log("Sign-out error ", error)
     });

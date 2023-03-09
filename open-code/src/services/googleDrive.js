@@ -1,52 +1,37 @@
-const CLIENT_ID = '265415454186-bpdnqdqfn4k4vfa9pfvn2khs31sjgq9n.apps.googleusercontent.com';
-const CLIENT_SECRET = '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';
-const REFRESH_TOKEN = '1//04QKMVxkXLvJsCgYIARAAGAQSNwF-L9IrLt8_INLScl9Gy-zcJWdySTySfTT0s6NzJNdJqgQn1KlQHPVz8zwUk0YHKpb-GtDVpMU';
-const url = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
-
+import {localStorageKeys} from "../utils/constants";
 
 /**
- * function that saves blocks data on google drive
+ * function that upload project data on Google Drive
  * @param data
  * @param uniqueId
  * @returns {Promise<void>}
  */
+export const uploadToGoogleDrive = (data) => {
+    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
 
-export async function uploadToGoogleDrive(data, uniqueId) {
+    const fileMetadata = {
+        name: data.projectName,
+        mimeType: "text/xml",
+        date: data.date,
+        content_type: "application/json; charset=UTF-8"
+    };
 
-    await fetch('https://oauth2.googleapis.com/token', {
+    const boundary = "foo_bar_baz";
+    const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": `multipart/related; boundary=${boundary}`,
+    };
+    const metadataPart = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(fileMetadata)}\r\n`;
+    const mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${data.xmlValue}\r\n`;
+    const requestBody = `${metadataPart}${mediaPart}--${boundary}--\r\n`;
+    headers["Content-Length"]=requestBody.length
+    fetch("https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart", {
         method: "POST",
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-            grant_type: "refresh_token",
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET,
-            refresh_token: REFRESH_TOKEN,
-        })
-    })
-        .then(res => res.json())
-        .then(response => {
-            const accessToken = response.access_token;
-            const fileMetadata = {
-                name: data.projectTitle,
-                id: uniqueId,
-                mimeType: "text/xml",
-                date: data.date
-            };
-
-            const blockXml = new Blob([data.xmlText], { type: "text/xml" });
-            const BlockData = new FormData();
-            BlockData.append("metadata", new Blob([JSON.stringify(fileMetadata)], {type: "application/json"}));
-            BlockData.append("file", blockXml,data.projectTitle + ".xml");
-
-            fetch(url, {
-                method: 'POST',
-                headers: {"Authorization": `Bearer ${accessToken}`, 'Content-Type': "application/json"},
-                body: BlockData,
-            })
-                .then(response => response.json())
-                .then(data => console.log(data))
-                .catch(error => console.error(error));
-        })
-}
+        headers: headers,
+        body: requestBody
+    }).then((response) => {
+        console.log("res::::::::", response);
+    }).catch((error) => {
+        console.log(error);
+    });
+};
