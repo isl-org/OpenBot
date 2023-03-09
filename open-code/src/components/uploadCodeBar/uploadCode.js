@@ -11,7 +11,7 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
-import {uploadOnDrive, getCurrentProject} from "../../services/workspace";
+import {getCurrentProject} from "../../services/workspace";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 
 
@@ -74,14 +74,9 @@ export const UploadCode = () => {
         const data = {
             projectName: getCurrentProject().projectName,
             xmlValue: getCurrentProject().xmlValue,
-            date: getCurrentProject().date,
+            date: getCurrentProject().createdDate,
         }
         const uniqueId = getCurrentProject().id;
-        //TODO
-        // upload on firestore
-        uploadOnDrive(data, uniqueId).then(() => {
-            console.log("save on fireStore")
-        })
         //upload on google drive
         uploadToGoogleDrive(data, uniqueId).then();
         setDriveButtonActive(true);

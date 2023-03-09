@@ -65,7 +65,8 @@ function Card(props) {
                     <img alt="pencil-icon" src={theme === "dark" ? Images.darkPencilIcon : Images.pencilIcon}
                          className={styles.PencilIcon}/>
                 </div>
-                <BlackText extraStyle={styles.Date} text={props.projectData.date}/>
+                <BlackText divStyle={{marginTop: 5, marginBottom: 5}} extraStyle={styles.Date} text={props.projectData.updatedDate}/>
+                <BlackText extraStyle={styles.Date} text={props.projectData.time}/>
             </div>
         </div>
     );

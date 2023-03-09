@@ -7,7 +7,7 @@ import BlueButton from "../../buttonComponent/blueButtonComponent";
 import {googleSignOut} from "../../../services/firebase";
 import {useNavigate} from "react-router-dom";
 import {StoreContext} from "../../../context/context";
-import {deletingCurrentProject} from "../../../services/workspace";
+import {deleteProject} from "../../../services/workspace";
 
 export function LogOutModal(props) {
     const {setIsLogoutModal, isLogoutModal} = props
@@ -56,7 +56,7 @@ export function DeleteModel(props) {
         return setOpen(false);
     };
     const handleDeleteProject = () => {
-        deletingCurrentProject(currentProjectId);
+        deleteProject(currentProjectId);
         let path = `/`;
         navigate(path);
     }

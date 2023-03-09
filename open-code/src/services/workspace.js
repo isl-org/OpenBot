@@ -1,5 +1,4 @@
 import {auth, db} from "./firebase";
-import Blockly from "blockly/core";
 import {collection, deleteDoc, doc, getDocs, setDoc, updateDoc} from "firebase/firestore";
 import {localStorageKeys} from "../utils/constants";
 
@@ -40,24 +39,35 @@ export async function getDriveProjects(driveProjects) {
     }
 }
 
+/**
+ * update project on drive when change on blockly workspace
+ * @returns {Promise<void>}
+ */
 export async function updateProjectOnDrive() {
-    // const date = new Date();
-    // const options = {day: 'numeric', month: 'long', year: 'numeric'};
-    // const currentDate = date.toLocaleDateString('en-US', options);
+    const date = new Date();
+    const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
+    const currentDate = date.toLocaleDateString('en-US', dateOptions);
+    const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
+    const currentTime = date.toLocaleTimeString('en-US', timeOptions);
     const workspaceRef = doc(collection(db, auth.currentUser.uid), getCurrentProject().id);
     try {
         await updateDoc(workspaceRef, {
-            // date: currentDate,
-            xmlValue: getCurrentProject().xmlValue
+            updatedDate: currentDate,
+            xmlValue: getCurrentProject().xmlValue,
+            time: currentTime,
         })
     } catch (err) {
         console.log(err);
     }
 }
 
-export async function deletingCurrentProject(currentProjectId) {
+/**
+ * delete project from local and drive also if you are signedIn.
+ * @param currentProjectId
+ * @returns {Promise<void>}
+ */
+export async function deleteProject(currentProjectId) {
     try {
-
         if (localStorage.getItem("isSigIn") === "true") {
             await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId))
 
@@ -88,26 +98,32 @@ export async function deletingCurrentProject(currentProjectId) {
  */
 export function updateCurrentProject(uniqueId, projectName, code) {
     const date = new Date();
-    const options = {day: 'numeric', month: 'long', year: 'numeric'};
-    const currentDate = date.toLocaleDateString('en-US', options)
+    const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
+    const currentDate = date.toLocaleDateString('en-US', dateOptions)
+    const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
+    const currentTime = date.toLocaleTimeString('en-US', timeOptions);
+    console.log("time == ", currentTime)
     const project = {
         storage: "local",
         id: uniqueId,
         projectName: projectName,
         xmlValue: code,
-        date: currentDate,
+        updatedDate: currentDate,
+        time: currentTime,
     }
     localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
     const found = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
         return project.id === getCurrentProject().id
     })
     if (!found) {
-        saveProjectInLocal(localStorage.getItem(localStorageKeys.currentProject))
+        createProjectInLocal(localStorage.getItem(localStorageKeys.currentProject))
         if (localStorage.getItem("isSigIn") === "true") {
             const data = {
                 projectName: getCurrentProject().projectName,
                 xmlValue: getCurrentProject().xmlValue,
-                date: getCurrentProject().date,
+                createdDate: currentDate,
+                updatedDate: currentDate,
+                time: currentTime,
             }
             uploadOnDrive(data, getCurrentProject().id).then()
         }
@@ -127,19 +143,22 @@ export function getCurrentProject() {
 }
 
 /**
- * save new project in local storage
+ * create new project in local storage
  * @param currentProject
  */
-export function saveProjectInLocal(currentProject) {
+export function createProjectInLocal(currentProject) {
+    const date = new Date();
+    const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
+    const currentDate = date.toLocaleDateString('en-US', dateOptions)
     const objectCurrentProject = JSON.parse(currentProject)
     const getAllProjects = localStorage.getItem(localStorageKeys.allProjects)
-    let ProjectsArray = JSON.parse(getAllProjects)
-    if (ProjectsArray) {
-        ProjectsArray.push(objectCurrentProject)
+    let projectsArray = JSON.parse(getAllProjects)
+    if (projectsArray) {
+        projectsArray.push({createdDate: currentDate, ...objectCurrentProject})
     } else {
-        ProjectsArray = [objectCurrentProject]
+        projectsArray = [{createdDate: currentDate, ...objectCurrentProject}]
     }
-    localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(ProjectsArray))
+    localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(projectsArray))
 }
 
 /**

@@ -6,6 +6,7 @@ import {ThemeContext} from "../../../App";
 import styles from "./newProject.module.css";
 import Card from "./card";
 import {getFilterProjects} from "../../../services/workspace";
+import moment from 'moment';
 
 export const NewProject = () => {
     const [projects, setProjects] = useState([]);
@@ -24,7 +25,9 @@ export const NewProject = () => {
                 <NewProjectButton isProject={projects.length}/>
 
                 {projects.length > 0 ?
-                    projects?.map((project, key) => (
+                    projects?.sort((z, a) => moment(`${a.updatedDate} ${a.time}`, 'MMMM D, YYYY h:mm')
+                        .valueOf() - moment(`${z.updatedDate} ${z.time}`, 'MMMM D, YYYY h:mm')
+                        .valueOf()).map((project, key) => (
                         <Card key={key}
                               projectData={project}
                         />
