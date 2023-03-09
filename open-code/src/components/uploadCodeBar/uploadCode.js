@@ -83,23 +83,11 @@ export const UploadCode = () => {
             console.log("save on fireStore")
         })
         //upload on google drive
-        uploadToGoogleDrive(data, uniqueId);
+        uploadToGoogleDrive(data);
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);
         }, 100);
-    }
-
-    /**
-     * save projects in Local or Drive
-     */
-    function uploadProjectOnDrive() {
-        const data = {
-            date: getCurrentProject().date,
-            projectTitle: getCurrentProject().projectName,
-            xmlText: getCurrentProject().xmlValue,
-
-        }
     }
 
     return (
