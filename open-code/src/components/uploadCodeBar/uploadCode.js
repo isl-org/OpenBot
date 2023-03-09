@@ -83,7 +83,7 @@ export const UploadCode = () => {
             console.log("save on fireStore")
         })
         //upload on google drive
-        uploadToGoogleDrive(data, uniqueId).then();
+        uploadToGoogleDrive(data, uniqueId);
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);

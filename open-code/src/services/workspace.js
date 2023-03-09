@@ -55,6 +55,11 @@ export async function updateProjectOnDrive() {
     }
 }
 
+/**
+ * delete projects from local and firestore
+ * @param currentProjectId
+ * @returns {Promise<void>}
+ */
 export async function deletingCurrentProject(currentProjectId) {
     try {
 

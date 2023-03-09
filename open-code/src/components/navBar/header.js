@@ -5,14 +5,13 @@ import {useLocation, useNavigate} from "react-router-dom";
 import styles from "./navbar.module.css";
 import {Images} from "../../utils/images";
 import {StoreContext} from "../../context/context";
-import {auth} from "../../services/firebase";
+import {auth, getRefreshToken} from "../../services/firebase";
 import {HelpCenterModal} from "../homeComponents/header/helpCenterModal";
 import {EditProfileModal} from "../homeComponents/header/editProfileModal";
 import {DeleteModel, LogOutModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
-import {PathName} from "../../utils/constants";
+import {localStorageKeys, PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
-
 
 /**
  * Open-code's header which contains logo, project name on playground screen and help button, profile signIn
@@ -127,7 +126,7 @@ function RightSection(params) {
 
 
 /**
- * when screen is playgrond will show prject name on center of the header
+ * when screen is playground will show project name on center of the header
  * @param params
  * @returns {JSX.Element|string}
  * @constructor

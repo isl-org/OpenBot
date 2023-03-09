@@ -54,7 +54,8 @@ export const Themes = {
 
 export const localStorageKeys = {
     allProjects: "projects",
-    currentProject: "currentProject"
+    currentProject: "currentProject",
+    accessToken: "accessToken"
 }
 
 export const Constants = {
