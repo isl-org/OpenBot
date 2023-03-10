@@ -27,7 +27,7 @@ export async function uploadOnDrive(data, uniqueId) {
  * @returns {Promise<void>}
  */
 export async function getDriveProjects(driveProjects) {
-    if (localStorage.getItem("isSigIn") === "true") {
+    if (auth.currentUser?.uid) {
         try {
             const projects = await getDocs(collection(db, auth.currentUser?.uid));
             projects.forEach((doc) => {
@@ -102,7 +102,6 @@ export function updateCurrentProject(uniqueId, projectName, code) {
     const currentDate = date.toLocaleDateString('en-US', dateOptions)
     const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
     const currentTime = date.toLocaleTimeString('en-US', timeOptions);
-    console.log("time == ", currentTime)
     const project = {
         storage: "local",
         id: uniqueId,
@@ -220,3 +219,4 @@ export async function getFilterProjects() {
     })
     return filterProjects;
 }
+

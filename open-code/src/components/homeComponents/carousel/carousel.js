@@ -9,7 +9,7 @@ import {Images} from "../../../utils/images";
 export const HomeCarousel = () => {
 
     return (
-        <Carousel axis={'horizontal'} infiniteLoop={true} interval={4000} autoPlay={true}>
+        <Carousel axis={'horizontal'} infiniteLoop={true} interval={4000} autoPlay={true} showThumbs={false}>
             {Carousal.map((slide) => (
                 <CarousalComponent key={slide} slide={slide}/>
             ))}

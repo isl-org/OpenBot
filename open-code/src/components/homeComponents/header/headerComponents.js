@@ -138,7 +138,7 @@ export function ProfileSignIn(params) {
                         email: response?.user.email
                     });
                 }).catch((error) => {
-                    console.log("signIn error = ", error)
+                    console.log("signIn error: ", error)
                 });
             }} className={`${styles.buttonIcon} ${styles.iconMargin}`}><span>Sign in</span>
             </button>

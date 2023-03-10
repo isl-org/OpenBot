@@ -75,8 +75,8 @@ export const UploadCode = () => {
             projectName: getCurrentProject().projectName,
             xmlValue: getCurrentProject().xmlValue,
             date: getCurrentProject().createdDate,
+            time: getCurrentProject().time,
         }
-        const uniqueId = getCurrentProject().id;
         //upload on google drive
         uploadToGoogleDrive(data);
         setDriveButtonActive(true);

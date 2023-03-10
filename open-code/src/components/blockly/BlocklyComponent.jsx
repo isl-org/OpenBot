@@ -31,7 +31,6 @@ function BlocklyComponent(props) {
         }
         if (localStorage.getItem("isSigIn") === "true") {
             updateProjectOnDrive().then((res) => {
-                console.log("sanjeev res === ", res)
             })
         }
     }, []);
