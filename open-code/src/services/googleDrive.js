@@ -7,38 +7,30 @@ import {localStorageKeys} from "../utils/constants";
  * @returns {Promise<void>}
  */
 
-let folderId=null;
-export const uploadToGoogleDrive = (data) => {
+export const uploadToGoogleDrive = async (data) => {
     const accessToken = localStorage.getItem(localStorageKeys.accessToken);
-
-    if (!folderId) {
-        const folderMetadata = {
-            name: "openCode-openBot",
-            mimeType: "application/vnd.google-apps.folder"
-        };
-
-        fetch("https://www.googleapis.com/drive/v3/files", {
-            method: "POST",
+    //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
+    let folderId = getFolderId();
+    if (folderId) {
+        await fetch(`https://www.googleapis.com/drive/v3/files/${folderId}?access_token=${accessToken}`, {
+            method: 'GET',
             headers: {
-                Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(folderMetadata)
-        })
-            .then(response => response.json())
-            .then(folder => {
-                console.log(`Folder '${folder.name}' created with ID '${folder.id}'`);
-                folderId = folder.id;
-
-                uploadFileToFolder(accessToken, data, folderId);
-            })
-            .catch(error => {
-                console.error(error);
-            });
+                'Content-Type': 'application/json'
+            }
+        }).then((res) => {
+                if (!(res.ok)) {
+                    folderId = CreateFolder(accessToken);
+                    console.log("folderId", folderId)
+                }
+            }
+        );
     } else {
-        uploadFileToFolder(accessToken, data, folderId);
+        folderId = CreateFolder(accessToken);
     }
+    console.log("folderId::::::", folderId)
+    uploadFileToFolder(accessToken, data, folderId);
 };
+
 
 const uploadFileToFolder = (accessToken, data, folderId) => {
     const fileMetadata = {
@@ -48,7 +40,7 @@ const uploadFileToFolder = (accessToken, data, folderId) => {
         date: data.date,
         content_type: "application/json; charset=UTF-8",
         projectId: data.id,
-        time:data.time
+        time: data.time
     };
 
     const boundary = "foo_bar_baz";
@@ -76,8 +68,7 @@ const uploadFileToFolder = (accessToken, data, folderId) => {
 };
 
 
-export function getFromGoogleDrive()
-{
+export function getFromGoogleDrive() {
     const accessToken = localStorage.getItem(localStorageKeys.accessToken);
     const fileId = "your-file-id-here";
     const headers = {
@@ -94,4 +85,45 @@ export function getFromGoogleDrive()
         .catch((error) => {
             console.log(error);
         });
+}
+
+
+/**
+ * Create folder
+ * @constructor
+ * @param accessToken
+ */
+function CreateFolder(accessToken) {
+    let folderId;
+    const folderMetadata = {
+        name: "openCode-openBot",
+        mimeType: "application/vnd.google-apps.folder"
+    };
+    //data require to create folder
+    const data = {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(folderMetadata)
+    }
+    //call api to create folder
+    fetch("https://www.googleapis.com/drive/v3/files", data)
+        .then(response => response.json())
+        .then(folder => {
+            console.log(`Folder '${folder.name}' created with ID '${folder.id}'`);
+            folderId = folder.id;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    return folderId;
+}
+
+/**
+ * get folder id from firebase
+ */
+function getFolderId() {
+
 }
