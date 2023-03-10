@@ -56,7 +56,7 @@ export function DeleteModel(props) {
         return setOpen(false);
     };
     const handleDeleteProject = () => {
-        deleteProject(currentProjectId);
+        deleteProject(currentProjectId).then();
         let path = `/`;
         navigate(path);
     }
@@ -69,7 +69,7 @@ export function DeleteModel(props) {
                 onClose={() => handleClose()}>
                 <Box
                     className={styles.logoutModalBox + " " + (theme === "dark" ? styles.darkLogoutModalBox : styles.lightLogoutModalBox)}>
-                    <BlackText text={"Delete this file?"}/>
+                    <BlackText extraStyle={styles.headerStyle} text={"Delete this file?"}/>
                     <div style={{marginTop: 20}}>
                         <BlackText
                             extraStyle={(theme === "dark" ? styles.darkLogoutMessageModal : styles.lightLogoutMessageModal)}

@@ -11,7 +11,7 @@ import trash from "../../../assets/images/icon/trash.png";
 import LoaderComponent from "../../loader/loaderComponent";
 import WhiteText from "../../fonts/whiteText";
 import {googleSigIn} from "../../../services/firebase";
-import React from "react";
+import React, {useState} from "react";
 
 /**
  * Display logo with openCode text (Header's Left side)
@@ -67,6 +67,7 @@ export function ProjectName(params) {
 export function ProjectNamePopUp(params) {
     const {anchorEl, setDeleteProject, theme, handleClick, setProjectName, projectName} = params
     const open = Boolean(anchorEl);
+    const [rename, setRename] = useState(false);
     const id = open ? 'simple-popper' : undefined
 
     const handleDelete = () => {
@@ -77,12 +78,12 @@ export function ProjectNamePopUp(params) {
         <>
             {/*project name with edit field and arrow*/}
             <div className={styles.playgroundName}>
-                <input type="text" className={styles.Edit}
-                       id="userEdit"
-                       onChange={(e) => setProjectName(e.target.value)}
-                       style={{width: `${projectName?.length}ch`}}
-                       value={projectName}
-                />
+                {rename ? <input type="text" className={styles.Edit}
+                                 id="userEdit"
+                                 onChange={(e) => setProjectName(e.target.value)}
+                                 style={{width: `${projectName?.length}ch`}}
+                                 value={projectName}
+                /> : <span className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName}</span>}
                 <img src={UpArrow}
                      className={`${styles.infoIcon} ${styles.arrowMargin}`}
                      onClick={handleClick} alt={"arrow"}/>
@@ -94,7 +95,9 @@ export function ProjectNamePopUp(params) {
                     className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel)}>
                     <div
                         className={`${styles.item} ${styles.renameDivMargin}  ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
-                        onClick={handleClick}>
+                        onClick={() => {
+                            setRename(true);
+                        }}>
                         <img alt="Icon" className={styles.icon} src={theme === "dark" ? renameIcon : Edit}/>
                         <div>Rename</div>
                     </div>

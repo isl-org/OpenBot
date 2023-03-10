@@ -1,12 +1,7 @@
 import Blockly from "blockly/core";
 import {colors} from "./color";
-
-import styles from "../components/homeComponents/carousel/carousel.module.css";
-import React, {useContext} from "react";
-import QRCode from "../assets/images/qr-image.png";
-import OpenBoat from "../assets/images/open-boat-image.png";
+import React from "react";
 import {Images} from "./images";
-
 export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
 export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_forEach", "controls_flow_statements"];
 
@@ -14,7 +9,6 @@ export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "contro
 /**
  * Dark theme.
  */
-
 export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     'base': Blockly.Themes.Classic,
     'componentStyles': {
@@ -76,7 +70,6 @@ export const Carousal = [
         carousalLine2: "Repeat the steps of selecting and placing all required code blocks, and then connecting them together to create a sequence of actions.",
         videoLight: Images.dragDropWhite,
         videoDark: Images.dragDropDark,
-
     },
     {
         carousalHeader: "Save and Download",
