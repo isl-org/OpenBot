@@ -92,6 +92,8 @@
   <string name="tracking_lost">Tracking lost.</string>
   <string name="no_initial_ar_core_pose">No initial AR Core pose.</string>
   <string name="ar_core_session_paused">AR Core session paused.</string>
+  <string name="auto_mode">Auto Mode</string>
+  <string name="dynamic_speed">Dynamic Speed</string>
 
   <string name="bumpers">Bumpers</string>
   <string name="n_a">N/A</string>
