@@ -390,7 +390,7 @@ public class Vehicle {
   }
 
   private void sendStringToDevice(String message) {
-    if (getConnectionType().equals("USB") && usbConnection != null && usbConnection.isOpen()) {
+    if (getConnectionType().equals("USB") && usbConnection != null) {
       usbConnection.send(message);
     } else if (getConnectionType().equals("Bluetooth")
         && bluetoothManager != null
@@ -428,27 +428,19 @@ public class Vehicle {
   }
 
   protected void sendHeartbeat(int timeout_ms) {
-    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      sendStringToDevice(String.format(Locale.getDefault(), "h%d\n", timeout_ms));
-    }
+    sendStringToDevice(String.format(Locale.getDefault(), "h%d\n", timeout_ms));
   }
 
   protected void setSonarFrequency(int interval_ms) {
-    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      sendStringToDevice(String.format(Locale.getDefault(), "s%d\n", interval_ms));
-    }
+    sendStringToDevice(String.format(Locale.getDefault(), "s%d\n", interval_ms));
   }
 
   protected void setVoltageFrequency(int interval_ms) {
-    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      sendStringToDevice(String.format(Locale.getDefault(), "v%d\n", interval_ms));
-    }
+    sendStringToDevice(String.format(Locale.getDefault(), "v%d\n", interval_ms));
   }
 
   protected void setWheelOdometryFrequency(int interval_ms) {
-    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      sendStringToDevice(String.format(Locale.getDefault(), "w%d\n", interval_ms));
-    }
+    sendStringToDevice(String.format(Locale.getDefault(), "w%d\n", interval_ms));
   }
 
   private class HeartBeatTask extends TimerTask {
