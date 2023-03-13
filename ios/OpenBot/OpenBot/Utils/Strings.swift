@@ -158,7 +158,7 @@ struct Strings {
     
     //Navigation
     static let setGoal : String = "Set Goal"
-    static let setGoalText : String = "Mount the phone on the robot and \n specify a goal. The robot will try to\n react the goal after pressing start."
+    static let setGoalText : String = "Mount the phone on the robot and \n specify a goal. The robot will try to\n reach the goal after pressing start."
     static let left : String = "Left"
     static let meter : String = "[m]"
     static let start : String = "START"
