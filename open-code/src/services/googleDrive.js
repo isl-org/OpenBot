@@ -42,7 +42,7 @@ export const uploadToGoogleDrive = async (data) => {
 
 
 const uploadFileToFolder = (accessToken, data, folderId) => {
-    const metadataFields = 'appProperties';
+    const metadataFields = 'appProperties,id,name,createdTime';
 
     const fileMetadata = {
         name: data.projectName,
@@ -149,8 +149,9 @@ export const setGoogleFolderId = (data) => {
  * @param fileID
  */
 export const setGoogleFileId = (fileID) => {
-    let fileIds = JSON.parse(localStorage.getItem(localStorageKeys.fileIds)).push(fileID);
-    localStorage.setItem(localStorageKeys.fileIds, fileIds);
+    let fileIds = JSON.parse(localStorage.getItem(localStorageKeys.fileIds)) ?? [];
+    fileIds.push(fileID);
+    localStorage.setItem(localStorageKeys.fileIds, JSON.stringify(fileIds));
 }
 
 /**
