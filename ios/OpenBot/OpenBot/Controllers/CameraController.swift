@@ -168,7 +168,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
                     captureSession.addInput(input)
                     captureSession.addOutput(videoOutput)
                     videoOutput.connection(with: .video)?.videoOrientation = .portrait
-                    setupLivePreview()
+                    //setupLivePreview()
                 }
             } catch let error {
                 print("Error Unable to initialize back camera:  \(error.localizedDescription)")

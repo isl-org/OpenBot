@@ -1,13 +1,14 @@
 //
 // Created by Nitish Yadav on 13/02/23.
 //
+
 import Foundation
 import UIKit
 import SceneKit
 import ARKit
 import simd
 
-class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
+class PointGoalFragment: ARSCNViewDelegate, UITextFieldDelegate {
     var sceneView: ARSCNView!
     private var startingPoint = SCNNode()
     private var endingPoint: SCNNode!
@@ -33,12 +34,7 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
     private let navQueue = DispatchQueue(label: "openbot.navigation.navqueue")
     private var result: Control?
     let bluetooth = bluetoothDataController.shared
-    var tempPixelBuffer : CVPixelBuffer!
-    
-    private var goalDist: Float = 0.0
-    private var goalSin: Float = 0.0
-    private var goalCos: Float = 0.0
-    var navigationMode: Bool =  false
+    var tempPixelBuffer: CVPixelBuffer!
     
     /// function called after view of point goal navigation is called
     override func viewDidLoad() {
@@ -57,6 +53,22 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
         navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
+    }
+    
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        let image = CIImage(cvPixelBuffer: frame.capturedImage)
+        let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)
+        let features = detector!.features(in: image)
+
+        for feature in features as! [CIQRCodeFeature] {
+            if !discoveredQRCodes.contains(feature.messageString!) {
+                discoveredQRCodes.append(feature.messageString!)
+                let url = URL(string: feature.messageString!)
+                let position = SCNVector3(frame.camera.transform.columns.3.x,
+                                          frame.camera.transform.columns.3.y,
+                                          frame.camera.transform.columns.3.z)
+            }
+         }
     }
 
     /// function will called after point goal navigation will disappear. This method will stop the ARkit
@@ -244,7 +256,6 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
         startingPoint.position = sceneView.pointOfView?.position ?? camera.position
         endingPoint = marker
         calculateRoute()
-        self.navigationMode = true
     }
 
     /// function called after tapping on STOP button.This function will remove the point goal navigation view and return back to homepage
@@ -292,50 +303,6 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
             tempPixelBuffer = pixelBuffer
         }
     }
-    
-    /// called after camera capture each frame.
-    ///
-    /// - Parameters:
-    ///   - output:
-    ///   - sampleBuffer:
-    ///   - connection:
-    override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-
-        // extract the image buffer from the sample buffer
-        let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-
-        guard let imagePixelBuffer = pixelBuffer else {
-            debugPrint("unable to get image from sample buffer")
-            return
-        }
-        
-        guard !isInferenceQueueBusy else {
-            return
-        }
-
-        inferenceQueue.async {
-            if self.navigationMode {
-                self.isInferenceQueueBusy = true
-                //let startTime = Date().millisecondsSince1970
-                self.result = self.navigation?.recognizeImage(pixelBuffer: imagePixelBuffer, goalDistance: self.goalDist, goalSin: self.goalSin, goalCos: self.goalCos)
-                self.isInferenceQueueBusy = false
-
-                guard let controlResult = self.result else {
-                    return
-                }
-                //let endTime = Date().millisecondsSince1970
-                DispatchQueue.main.async {
-                    print("controlResult: ", controlResult.getLeft()," ", controlResult.getRight())
-                    self.sendControl(control: controlResult)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.sendControl(control: Control())
-                }
-            }
-            self.isInferenceQueueBusy = false
-        }
-    }
 
     /// function to process the buffer and send buffer to navigation.tflite to give result
     ///
@@ -356,11 +323,9 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
             let endPose = Pose(tx: endingPoint.position.x, ty: endingPoint.position.y, tz: endingPoint.position.z, qx: endingPoint.orientation.x, qy: endingPoint.orientation.y, qz: endingPoint.orientation.z, qw: endingPoint.orientation.w)
             let yaw = computeDeltaYaw(pose: startPose, goalPose: endPose)
             
-            self.goalDist = distance
-            self.goalSin = sin(yaw)
-            self.goalCos = cos(yaw)
+            self.result = self.navigation?.recognizeImage(pixelBuffer: imagePixelBuffer, goalDistance: distance, goalSin: sin(yaw), goalCos: cos(yaw))
             
-            print("self.goalDist: ", self.goalDist)
+            self.sendControl(control: controlResult)
             
             isNavQueueBusy = false
         }
@@ -392,7 +357,6 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
                     self.view.addSubview(self.infoMessageRect)
                     self.isReached = true
                     self.marker.removeFromParentNode()
-                    self.navigationMode = false
                 }
             }
         }
