@@ -1,6 +1,7 @@
 import {auth, db} from "./firebase";
 import {collection, deleteDoc, doc, getDocs, setDoc, updateDoc} from "firebase/firestore";
 import {localStorageKeys} from "../utils/constants";
+import {getFolderId} from "./googleDrive";
 
 /**
  * project upload on drive when user signedIn.
@@ -109,6 +110,8 @@ export function updateCurrentProject(uniqueId, projectName, code) {
         xmlValue: code,
         updatedDate: currentDate,
         time: currentTime,
+        folderId: getFolderId(),
+
     }
     localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
     const found = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
@@ -123,6 +126,7 @@ export function updateCurrentProject(uniqueId, projectName, code) {
                 createdDate: currentDate,
                 updatedDate: currentDate,
                 time: currentTime,
+                folderId: getFolderId(),
             }
             uploadOnDrive(data, getCurrentProject().id).then()
         }

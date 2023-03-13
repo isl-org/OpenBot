@@ -9,8 +9,7 @@ import {localStorageKeys} from "../utils/constants";
 export const uploadToGoogleDrive = async (data) => {
     const accessToken = localStorage.getItem(localStorageKeys.accessToken);
     //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
-    let folderId = getFolderId();
-    console.log("getFolderId:::::", folderId);
+    const folderId = getFolderId();
     if (folderId) {
         await fetch(`https://www.googleapis.com/drive/v3/files/${folderId}?access_token=${accessToken}`, {
             method: 'GET',
@@ -18,15 +17,16 @@ export const uploadToGoogleDrive = async (data) => {
                 'Content-Type': 'application/json'
             }
         }).then(async (res) => {
-            console.log("res::::",res)
+
                 if (!(res.ok)) {
                     await CreateFolder(accessToken, folderId).then((folderId) => {
                             uploadFileToFolder(accessToken, data, folderId)
                         }
                     );
                 } else {
-                    uploadFileToFolder(accessToken, data, folderId);
                     //TODO update file in folder;
+                    uploadFileToFolder(accessToken, data, folderId);
+
                 }
             }
         );
@@ -43,7 +43,7 @@ export const uploadToGoogleDrive = async (data) => {
 
 const uploadFileToFolder = (accessToken, data, folderId) => {
     const metadataFields = 'appProperties';
-    console.log("dat::::::::", data, folderId);
+
     const fileMetadata = {
         name: data.projectName,
         parents: [folderId],
@@ -54,7 +54,7 @@ const uploadFileToFolder = (accessToken, data, folderId) => {
             id: data.id,
         },
     };
-    console.log("fileMetaDTA::::", fileMetadata)
+
     const boundary = "foo_bar_baz";
     const metadataPart = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(fileMetadata)}\r\n`;
     const mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${data.xmlValue}\r\n`;
@@ -64,7 +64,7 @@ const uploadFileToFolder = (accessToken, data, folderId) => {
         "Content-Type": `multipart/related; boundary=${boundary}`,
         "Content-Length": requestBody?.length,
     };
-    console.log("headers ,request body", headers, requestBody)
+
     fetch(`https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart&fields=${metadataFields}`, {
         method: "POST",
         headers: headers,
@@ -74,7 +74,7 @@ const uploadFileToFolder = (accessToken, data, folderId) => {
         .then(file => {
             console.log("response data", file)
             console.log(`File '${file.name}' uploaded to folder '${folderId}' with ID '${file.id}'`);
-            setGoogleParamsInLocal(folderId);
+            setGoogleFileId(file.id)
         })
         .catch(error => {
             console.error(error);
@@ -127,13 +127,7 @@ async function CreateFolder(accessToken, folderId) {
         .then(response => response.json())
         .then(folder => {
             console.log(`Folder '${folder.name}' created with ID '${folder.id}'`);
-            folderId = folder.id;
-            console.log("  console.log(\"folderId\", folderId)", folderId)
-            const data = {
-                folderId: folderId,
-            }
-            //set folderId:::: in local
-            setGoogleParamsInLocal(folderId);
+            setGoogleFolderId(folder.id);
             return folderId;
         })
         .catch(error => {
@@ -142,35 +136,34 @@ async function CreateFolder(accessToken, folderId) {
 
 }
 
-export const setGoogleParamsInLocal = (data) => {
-    console.log("data::::", data)
+/**
+ * set params in local
+ * @param data
+ */
+export const setGoogleFolderId = (data) => {
     localStorage.setItem(localStorageKeys.folderId, data);
+}
+
+/**
+ * set google files id in array
+ * @param fileID
+ */
+export const setGoogleFileId = (fileID) => {
+    let fileIds = JSON.parse(localStorage.getItem(localStorageKeys.fileIds)).push(fileID);
+    localStorage.setItem(localStorageKeys.fileIds, fileIds);
 }
 
 /**
  * get folder id from firebase
  */
-function getFolderId() {
-    console.log("Folder id", localStorage.getItem(localStorageKeys.folderId));
+export function getFolderId() {
     return localStorage.getItem(localStorageKeys.folderId);
 }
 
-// export function getFromGoogleDrive()
-// {
-//     const accessToken = localStorage.getItem(localStorageKeys.accessToken);
-//     const headers = {
-//         Authorization: `Bearer ${accessToken}`,
-//     };
-//     fetch(`https://www.googleapis.com/drive/v3/files/${folderID}/${fileID}?alt=media`, {
-//         method: "GET",
-//         headers: headers,
-//     })
-//         .then((response) => response.text())
-//         .then((data) => {
-//             console.log(data);
-//         })
-//         .catch((error) => {
-//             console.log(error);
-//         });
-// }
-
+/**
+ * get files id
+ * @returns {string}
+ */
+export function getFilesId() {
+    return localStorage.getItem(localStorageKeys.fileIds);
+}
