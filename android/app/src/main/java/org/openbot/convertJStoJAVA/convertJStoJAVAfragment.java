@@ -33,14 +33,14 @@ public class convertJStoJAVAFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String code = "function openCode() { var loopV = 0; while (loopV <= 8){ blinkLeft(loopV); loopV = loopV + 1; console.log(loopV);}}openCode()";
-                String[] botFunctionArray = {"blinkLeft", "blinkRight"};
+                String code = "function start(){for(var count = 0; count < 20; count++){moveForward(10);}}function forever(){moveCircular(20);}start();forever();";
+                String[] botFunctionArray = {"blinkLeft", "blinkRight", "moveCircular", "moveForward"};
                 for (String fun : botFunctionArray) {
                     if (code.contains(fun)) {
                         code = code.replace(fun, "Android." + fun);
                     }
                 }
-                System.out.println("code is :" + code);
+//                System.out.println("code is :" + code);
 
                 myWebView.addJavascriptInterface(new BotFunction(), "Android");
                 myWebView.evaluateJavascript(code, null);
