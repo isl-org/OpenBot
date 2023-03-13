@@ -66,7 +66,6 @@ struct Constants {
         ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment),
         ModeItem(label: Strings.modelManagement, icon: Images.modelManagementIcon!, identifier: Strings.ScreenModelManagement),
         ModeItem(label: Strings.robotInfo, icon: Images.robotInfoIcon!, identifier: Strings.ScreenRobotInfo),
-        ModeItem(label: "open-code", icon: Images.robotInfoIcon!, identifier: "open-code")
     ];
     static let frameColors: [UIColor] = [UIColor.red, UIColor.orange, UIColor.blue, UIColor.green, UIColor.brown];
     static let autopilotMode = "AUTOPILOT";
