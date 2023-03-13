@@ -13,9 +13,9 @@
 The app starts with a menu screen that shows all available screens. The Bluetooth connection screen can be opened by clicking on the Bluetooth icon on top right hand side. The settings screen can be opened with a click on the settings icon right next to it. By clicking on the other icons, the user can access various screens whose functionalities are explained in subsequent sections.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.jpeg" alt="Main Menu" width="25%"/>
-<img style="padding-right: 2%;" src="../../docs/images/ios_bluetooth_screen.jpeg" alt="Bluetooth" width="25%"/>
-<img style="padding-right: 2%;" src="../../docs/images/ios_settings_screen.jpeg" alt="Settings" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.jpg" alt="Main Menu" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_bluetooth_screen.jpg" alt="Bluetooth" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_settings_screen.jpg" alt="Settings" width="25%"/>
 </p>
 
 #### Bluetooth Connection
@@ -31,7 +31,7 @@ Unlike the Android app, which allows connecting the smartphone to the low-level 
 Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces. It also offers controls related to controller, drive mode and speed.
 
 <p align="left">
-<img src="../../docs/images/ios_free_roam_screen.jpeg" alt="Alt text" width="50%" />
+<img src="../../docs/images/ios_free_roam_screen.jpg" alt="Alt text" width="50%" />
 </p>
 
 - **Battery**: The battery icon shows realtime battery levels of the connected robot.
@@ -169,7 +169,7 @@ Simple UI for collection of data sets.
 Simple UI to check the button and joystick mapping of a connected BT controller.
 
 <p align="left">
-<img src="../../docs/images/ios_controller_mapping.jpeg" alt="Controller mapping" width="30%" />
+<img src="../../docs/images/ios_controller_mapping.jpg" alt="Controller mapping" width="30%" />
 </p>
 
 ### Robot Info
@@ -188,7 +188,7 @@ Simple UI for running autopilot models.
 
 <p align="left">
 
-<img src="../../docs/images/ios_autopilot_screen.jpeg" alt="Autopilot" width="50%" />
+<img src="../../docs/images/ios_autopilot_screen.jpg" alt="Autopilot" width="50%" />
 
 </p>
 
@@ -200,7 +200,7 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 
 
 <p align="left">
-<img src="../../docs/images/ios_object_tracking_screen.jpeg" alt="Object Tracking" width="50%" />
+<img src="../../docs/images/ios_object_tracking_screen.jpg" alt="Object Tracking" width="50%" />
 </p>
 
 
