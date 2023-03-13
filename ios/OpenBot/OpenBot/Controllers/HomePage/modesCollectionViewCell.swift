@@ -1,8 +1,5 @@
 //
-//  modesCollectionViewCell.swift
-//  OpenBot
-//
-//  Created by Sparsh Jain on 18/08/22.
+// Created by Sparsh Jain on 18/08/22.
 //
 
 import UIKit
@@ -24,5 +21,4 @@ class modesCollectionViewCell: UICollectionViewCell {
     static func nib() -> UINib {
         UINib(nibName: "modesCollectionViewCell", bundle: nil);
     }
-
 }

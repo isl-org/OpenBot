@@ -1,15 +1,12 @@
 //
-//  FreeRoamController.swift
-//  OpenBot
-//
 //  Created by Nitish Yadav on 23/08/22.
 //
 
 import UIKit
 import AVFoundation
 
+/// Implementation of the FreeRoamController
 class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
-
     var sonarLabel = UILabel()
     var voltageLabel = UILabel()
     var outerSonar: UIView!
@@ -27,6 +24,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var isClientConnected: Bool = false
     private let mainView = UIView()
 
+    /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBarItem()
@@ -60,9 +58,10 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
+        gameController.resetControl = false
     }
 
-
+    /// Called after the view was dismissed, covered or otherwise hidden.
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated);
     }
@@ -78,6 +77,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         }
     }
 
+    /// function to apply the margins and constraints
     func apply() {
         let margins = view.layoutMarginsGuide
         NSLayoutConstraint.activate([
@@ -88,7 +88,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         ])
     }
 
-
+    /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         switch currentOrientation {
@@ -107,6 +107,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     }
 
+    /// Notifies the view controller that its view is about to be added to a view hierarchy.
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
@@ -115,6 +116,12 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         super.captureOutput(output, didOutput: sampleBuffer, from: connection)
     }
 
+    /// Initialization routine
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+
+    /// function to apply the portrait constraints on objects
     func ApplyPortraitConstraint() {
         removeConstraints()
         let leading = secondView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0)
@@ -130,6 +137,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         ])
     }
 
+    /// function to apply the landscape constraints on objects
     func applyLandScapeConstraint() {
         removeConstraints()
         let leading = secondView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: height / 2 - 12)
@@ -145,6 +153,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         ])
     }
 
+    /// function to remove all the constraints
     func removeConstraints() {
         for constraint in view.constraints {
             if constraint.identifier == Strings.secondView {
@@ -153,10 +162,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         }
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
+    /// function to create the first view
     func createFirstView() {
         firstView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height / 2)
         mainView.addSubview(firstView)
@@ -164,8 +170,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     }
 
+    /// function to create the second view
     func createSecondView() {
-//        secondView.frame = CGRect(x: 0, y: height / 2 - 30, width: view.frame.width, height: view.frame.height / 2)
         let h = view.frame.height / 2
         let width = view.frame.width
         let size = CGSize(width: width, height: h)
@@ -175,6 +181,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         secondView.translatesAutoresizingMaskIntoConstraints = false
     }
 
+    /// function to create the speedometer
     func createSpeedometer() {
         let speedometer = GaugeView(frame: CGRect(x: 0, y: -10, width: width, height: 256))
         speedometer.backgroundColor = .clear
@@ -183,10 +190,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         firstView.addSubview(speedometer)
     }
 
-    func deg2rad(_ number: CGFloat) -> CGFloat {
-        number * .pi / 180
-    }
-
+    /// function to create the ticks
     func drawTicks(count: Int, radius: Int) {
         var rotationInDegrees: CGFloat = 0
         let pointOfBreak1: Int = count / 4 - 1;
@@ -204,12 +208,14 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         }
     }
 
+    /// function to create a single tick
     func createTick() -> UIView {
         let tick = UIView(frame: CGRect(x: 0, y: 0, width: 2.0, height: 1.0))
         tick.backgroundColor = UIColor(red: 0.00, green: 0.44, blue: 0.77, alpha: 1.00)
         return tick
     }
 
+    /// function to draw the ticks
     func drawTick() {
         let ticks = 40
         var radius = 120
@@ -252,6 +258,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         firstView.addSubview(dIcon)
     }
 
+    /// function to create the button for drive mode
     func createDriveIcon() {
         let driveIconRect = createRectangle(x: 160, y: 230, width: 40, height: 40, borderColor: "bdColor", isBorderRequire: true)
         driveIconRect.layer.borderColor = UIColor(named: "bdColor")?.cgColor
@@ -261,6 +268,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         driveIconRect.addSubview(driveIcon)
     }
 
+    /// function to create the button for bluetooth
     func createBluetoothIcon() {
         let blueToothIconRect = createRectangle(x: 220, y: 230, width: 40, height: 40, borderColor: "bdColor", isBorderRequire: true)
         blueToothIconRect.layer.borderColor = UIColor(named: "bdColor")?.cgColor
@@ -279,11 +287,11 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         blueToothIconRect.addSubview(bluetoothIcon)
     }
 
+    /// function to create the label for the voltage
     func createVoltageController(h: Double) {
         let outerVoltage = createRectangle(x: 30, y: 190, width: 50, height: 110, borderColor: "bdColor", isBorderRequire: true)
         outerVoltage.layer.borderColor = UIColor(named: "bdColor")?.cgColor;
         let relativeHeight = Double(h * 9.16)
-//        let innerVoltage = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
         let innerVoltage = createRectangle(x: 0, y: 110 - Int(relativeHeight), width: 49, height: Int(relativeHeight) - 1, borderColor: "noColor", isBorderRequire: false)
         innerVoltage.layer.cornerRadius = 5;
         innerVoltage.backgroundColor = Colors.voltageDividerColor
@@ -291,6 +299,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         firstView.addSubview(outerVoltage)
     }
 
+    /// function to create the label for the sonar
     func createSonarController(h: Double) {
         if outerSonar != nil {
             outerSonar.subviews[0].removeFromSuperview()
@@ -299,13 +308,13 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         outerSonar = createRectangle(x: Int(width) - 100, y: 190, width: 50, height: 110, borderColor: "borderColor", isBorderRequire: true);
         firstView.addSubview(outerSonar)
         outerSonar.layer.borderColor = UIColor(named: "bdColor")?.cgColor
-//        let innerSonar = UIView(frame: CGRect(x: 0, y: 110 - relativeHeight, width: 49, height: relativeHeight - 1))
         let innerSonar = createRectangle(x: 0, y: 110 - Int(relativeHeight), width: 49, height: Int(relativeHeight) - 1, borderColor: "noColor", isBorderRequire: false)
         innerSonar.layer.cornerRadius = 5;
         innerSonar.backgroundColor = Colors.sonar
         outerSonar.addSubview(innerSonar)
     }
 
+    /// function to create the label for the buttons
     func createLabel(value: String, x: Int, y: Int, width: Int, height: Int) {
         let label = UILabel()
         label.text = value
@@ -317,6 +326,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     }
 
+    /// function to create the rectangle for the button
     func createRectangle(x: Int, y: Int, width: Int, height: Int, borderColor: String, isBorderRequire: Bool) -> UIView {
         let rectangleView = UIView();
         let origin = CGPoint(x: x, y: y)
@@ -332,7 +342,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     }
 
-
+    /// function to create the control type mode and update values
     func updateControlMode() {
         let gamePadController = createMode(x: 35, y: 55, width: Int(width / 3), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
         let phoneController = createMode(x: Int(width / 3) + 48, y: 55, width: Int(width / 3), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
@@ -357,14 +367,13 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         secondView.addSubview(phoneController)
     }
 
-
+    /// function to create the game controller mode and update values
     func updateGameControllerModeType() {
         let joystick = createMode(x: 35, y: 145, width: Int(width / 4), label: Strings.joystick, icon: "joystick", action: #selector(joystick(_:)))
         let game = createMode(x: 140, y: 145, width: Int(width / 4), label: Strings.game, icon: "game", action: #selector(gameMode(_:)))
         let dual = createMode(x: 245, y: 145, width: Int(width / 4), label: Strings.dual, icon: "dual", action: #selector(dualMode(_:)))
         if selectedControlMode == ControlMode.PHONE {
             selectedDriveMode = DriveMode.DUAL
-            gameController.selectedDriveMode = DriveMode.DUAL
             dual.backgroundColor = Colors.titleDeactivated
         } else {
             if selectedDriveMode == DriveMode.JOYSTICK {
@@ -375,6 +384,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
                 dual.backgroundColor = Colors.title
             }
         }
+        gameController.selectedDriveMode = selectedDriveMode
         secondView.addSubview(joystick)
         secondView.addSubview(game)
         secondView.addSubview(dual)
@@ -398,6 +408,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         updateGameControllerModeType()
     }
 
+    /// function to update the speed modes value and create UI
     func updateSpeedModes() {
         let slowMode = createMode(x: 35, y: 242, width: Int(width / 4), label: Strings.slow, icon: "slow", action: #selector(slow(_:)))
         let mediumMode = createMode(x: 140, y: 242, width: Int(width / 4), label: Strings.medium, icon: "medium", action: #selector(medium(_:)))
@@ -443,6 +454,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         updateSpeedModes()
     }
 
+    /// UI function to create the mode
     func createMode(x: Int, y: Int, width: Int, label: String, icon: String, action: Selector?) -> UIView {
         let modeRectangle = createRectangle(x: x, y: y, width: width, height: 55, borderColor: "noColor", isBorderRequire: false)
         modeRectangle.backgroundColor = Colors.freeRoamButtonsColor
@@ -461,12 +473,14 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         return modeRectangle
     }
 
+    /// update the screen values
     @objc func updateScreen() {
         updateSonar()
         updateVoltage()
         updateSpeedometer()
     }
 
+    /// update the sonar values
     func updateSonar() {
         let sonar = bluetooth.sonarData
         if sonar != "" {
@@ -477,6 +491,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         }
     }
 
+    /// update the voltage value
     func updateVoltage() {
         let voltage = bluetooth.voltageDivider
         voltageLabel.frame.origin.x = 35;
@@ -487,6 +502,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         }
     }
 
+    /// update the speedometer value
     func updateSpeedometer() {
         let oldTag = view.viewWithTag(100)
         oldTag?.removeFromSuperview()
@@ -506,13 +522,17 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         }
     }
 
+    /// Main control update function
     @objc func updateControllerValues() {
         gameController.updateControllerValues()
     }
 
+    /// check the status bar orientation.
     var statusBarOrientation: UIInterfaceOrientation? {
         get {
-            guard let orientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation else {
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let orientation = windowScene.interfaceOrientation as UIInterfaceOrientation?
+            else {
                 #if DEBUG
                 fatalError("Could not obtain UIInterfaceOrientation from a valid windowScene")
                 #else
@@ -532,15 +552,16 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     }
 
     @objc func back(sender: UIBarButtonItem) {
-
         _ = navigationController?.popViewController(animated: true)
     }
 
+    /// open the bluetooth settings screen
     @objc func openBluetoothSettings(tapGestureRecognizer: UITapGestureRecognizer) {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
 
+    /// update when decrease mode
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
             bluetoothIcon.image = Images.bluetoothConnected
@@ -549,6 +570,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         }
     }
 
+    /// update when decrease mode
     @objc func decreaseSpeedMode(_ notification: Notification) {
         switch selectedSpeedMode {
         case .SLOW:
@@ -563,6 +585,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         updateSpeedModes()
     }
 
+    /// update when increase speed mode
     @objc func increaseSpeedMode(_ notification: Notification) {
         switch selectedSpeedMode {
         case .SLOW:
@@ -577,26 +600,27 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         updateSpeedModes()
     }
 
+    /// update drive mode
     @objc func updateDriveMode(_ notification: Notification) {
         if selectedControlMode == .PHONE {
             selectedDriveMode = .DUAL
-        }
-        else {
+        } else {
             switch selectedDriveMode {
             case .JOYSTICK:
                 selectedDriveMode = .GAME
                 break;
-            case .DUAL:
-                selectedDriveMode = .JOYSTICK;
-                break;
             case .GAME:
                 selectedDriveMode = .DUAL
+                break;
+            case .DUAL:
+                selectedDriveMode = .JOYSTICK;
                 break;
             }
         }
         updateGameControllerModeType()
     }
 
+    /// update screen data coming from application
     @objc func updateDataFromControllerApp(_ notification: Notification) {
         if gameController.selectedControlMode == ControlMode.GAMEPAD {
             return
@@ -609,17 +633,19 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         }
     }
 
+    /// update when client connects
     @objc func clientConnected(_ notification: Notification) {
         isClientConnected = true;
         initializeCamera()
     }
 
+    /// update when client disconnects
     @objc func clientDisconnected(_ notification: Notification) {
         isClientConnected = false
         stopSession()
     }
 
-
+    /// update speed mode
     func setupSpeedMode() {
         gameController.selectedSpeedMode = SpeedMode.NORMAL;
         gameController.selectedDriveMode = DriveMode.JOYSTICK;

@@ -1,8 +1,5 @@
 //
-//  HomePageViewController.swift
-//  OpenBot
-//
-//  Created by Nitish Yadav on 17/08/22.
+// Created by Nitish Yadav on 17/08/22.
 //
 
 import UIKit
@@ -24,6 +21,7 @@ class HomePageViewController: CameraController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet var modesCollectionView: UICollectionView!;
 
+    /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
         bluetoothDataController.shared.startScan()
@@ -53,7 +51,7 @@ class HomePageViewController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
-
+        gameController.resetControl = true
 
     }
 
@@ -63,6 +61,12 @@ class HomePageViewController: CameraController {
         }
     }
 
+    /// override function when image is captured.
+    ///
+    /// - Parameters:
+    ///   - output:
+    ///   - sampleBuffer: image buffer.
+    ///   - connection:
     override func captureOutput(_ output: AVFoundation.AVCaptureOutput, didOutput sampleBuffer: CoreMedia.CMSampleBuffer, from connection: AVFoundation.AVCaptureConnection) {
         if isClientConnected {
             super.captureOutput(output, didOutput: sampleBuffer, from: connection)
@@ -78,10 +82,12 @@ class HomePageViewController: CameraController {
         }
     }
 
+    /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         DeviceCurrentOrientation.shared.findDeviceOrientation()
     }
 
+    /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
         DeviceCurrentOrientation.shared.findDeviceOrientation()
@@ -93,6 +99,7 @@ class HomePageViewController: CameraController {
         } else {
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
+        gameController.resetControl = true
 
     }
 
@@ -121,6 +128,7 @@ class HomePageViewController: CameraController {
         }
     }
 
+    /// Main control update function
     @objc func updateControllerValues() {
         gameController.updateControllerValues()
     }
@@ -155,6 +163,7 @@ extension UIViewController: UICollectionViewDelegate {
     }
 }
 
+/// to configure the grid displayed on the homepage.
 extension UIViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         Constants.gameModes.count;
@@ -175,7 +184,6 @@ extension UIViewController: UICollectionViewDataSource {
 
     }
 }
-
 
 extension UIBarButtonItem {
     convenience init(image: UIImage, title: String, target: Any?, action: Selector?, titleColor: UIColor) {
@@ -199,18 +207,12 @@ extension UIButton {
             forContentPadding contentPadding: UIEdgeInsets,
             imageTitlePadding: CGFloat
     ) {
-        contentEdgeInsets = UIEdgeInsets(
-                top: contentPadding.top,
-                left: contentPadding.left,
-                bottom: contentPadding.bottom,
-                right: contentPadding.right + imageTitlePadding
-        )
-        titleEdgeInsets = UIEdgeInsets(
-                top: 0,
-                left: imageTitlePadding,
-                bottom: 0,
-                right: -imageTitlePadding
-        )
-    }
+        var config = UIButton.Configuration.filled()
+        config.contentInsets = NSDirectionalEdgeInsets(top: contentPadding.top, leading: contentPadding.left, bottom: contentPadding.bottom, trailing: contentPadding.right + imageTitlePadding)
+        config.titlePadding = imageTitlePadding
 
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 50))
+        button.configuration = config
+        button.setTitle("Button Title", for: .normal)
+    }
 }

@@ -1,8 +1,8 @@
-// App Version: 0.6.1
+// Required App Version: 0.6.1
 // ---------------------------------------------------------------------------
 // This Arduino Nano sketch accompanies the OpenBot Android application.
 //
-// The sketch has the following functinonalities:
+// The sketch has the following functionalities:
 //  - receive control commands and sensor config from Android application (USB serial)
 //  - produce low-level controls (PWM) for the vehicle
 //  - toggle left and right indicator signals
@@ -22,6 +22,7 @@
 //  - December 2021: RC truck support by Usman Fiaz
 //  - March 2022: OpenBot-Lite support by William Tan
 //  - May 2022: MTV support by Quentin Leboutet
+//  - JAN 2023: HAS_BLUETOOTH support by iTinker
 // ---------------------------------------------------------------------------
 
 // By Matthias Mueller, Embodied AI Lab, 2022
@@ -30,22 +31,21 @@
 //------------------------------------------------------//
 // DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
-
-
-#define DIY 0     // DIY without PCB
-#define PCB_V1 1  // DIY with PCB V1
-#define PCB_V2 2  // DIY with PCB V2
-#define RTR_TT 3  // Ready-to-Run with TT-motors
-#define RC_CAR 4  // RC truck prototypes
-#define LITE 5    // Smaller DIY version for education
-#define RTR_520 6 // Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
-#define MTV 7     // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
+#define DIY 0             // DIY without PCB
+#define PCB_V1 1         // DIY with PCB V1
+#define PCB_V2 2        // DIY with PCB V2
+#define RTR_TT 3       // Ready-to-Run with TT-motors
+#define RC_CAR 4      // RC truck prototypes
+#define LITE 5       // Smaller DIY version for education
+#define RTR_520 6   // Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
+#define MTV 7      // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
+#define DIY_ESP32 8   // DIY without PCB  --> select ESP32 Dev Module as board!
 
 //------------------------------------------------------//
 // SETUP - Choose your body
 //------------------------------------------------------//
 
-// Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520)
+// Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520, DIY_ESP32)
 #define OPENBOT RTR_520
 
 //------------------------------------------------------//
@@ -62,6 +62,10 @@
 
 // Enable/Disable debug print (1,0)
 #define DEBUG 0
+
+//Enable/Disable bluetooth connectivity (1,0)
+//NOTE: HAS_BLUETOOTH will only work with the ESP32 board (RTR_520, MTV, DIY_ESP32).
+#define HAS_BLUETOOTH 1
 
 // Enable/Disable coast mode (1,0)
 // When no control is applied, the robot will either coast (1) or actively stop (0)
@@ -98,6 +102,21 @@ boolean coast_mode = 1;
 // PIN_LED_LF, PIN_LED_RF               Control left and right front LEDs (illumination)
 // PIN_LED_Y, PIN_LED_G, PIN_LED_B      Control yellow, green and blue status LEDs
 
+#if (HAS_BLUETOOTH)
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
+
+BLEServer *bleServer = NULL;
+BLECharacteristic *bleTxCharacteristic;
+bool deviceConnected = false;
+bool oldDeviceConnected = false;
+const char* SERVICE_UUID           = "61653dc3-4021-4d1e-ba83-8b4eec61d613"; // UART service UUID
+const char* CHARACTERISTIC_UUID_RX = "06386c14-86ea-4d71-811c-48f97c58f8c9";
+const char* CHARACTERISTIC_UUID_TX = "9bf1103b-834c-47cf-b149-c9e4bcf778a7";
+#endif
+
 //-------------------------DIY--------------------------//
 #if (OPENBOT == DIY)
 const String robot_type = "DIY";
@@ -118,7 +137,7 @@ const int PIN_PWM_R1 = 9;
 const int PIN_PWM_R2 = 10;
 const int PIN_SPEED_LF = 2;
 const int PIN_SPEED_RF = 3;
-//const int PIN_VIN = A7;
+const int PIN_VIN = A7;
 const int PIN_TRIGGER = 12;
 const int PIN_ECHO = 11;
 const int PIN_LED_LI = 4;
@@ -370,8 +389,107 @@ const int FREQ = 5000;
 const int RES = 8;
 const int LHS_PWM_OUT = 0;
 const int RHS_PWM_OUT = 1;
+//-------------------------DIY_ESP32----------------------//
+#elif (OPENBOT == DIY_ESP32)
+
+#include <esp_wifi.h>
+
+#define analogWrite ledcWrite
+#define attachPinChangeInterrupt attachInterrupt
+#define detachPinChangeInterrupt detachInterrupt
+#define digitalPinToPinChangeInterrupt digitalPinToInterrupt
+#define PIN_PWM_L1 CH_PWM_L1
+#define PIN_PWM_L2 CH_PWM_L2
+#define PIN_PWM_R1 CH_PWM_R1
+#define PIN_PWM_R2 CH_PWM_R2
+const String robot_type = "DIY_ESP32";
+#define HAS_VOLTAGE_DIVIDER 1
+const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
+const float VOLTAGE_MIN = 6.0f;
+const float VOLTAGE_LOW = 9.0f;
+const float VOLTAGE_MAX = 12.6f;
+const float ADC_FACTOR = 3.3 / 4095;
+#define HAS_INDICATORS 1
+#define HAS_SONAR 1
+#define SONAR_MEDIAN 0
+#define HAS_SPEED_SENSORS_FRONT 1
+//PWM properties
+const int FREQ = 5000;
+const int RES = 8;
+const int CH_PWM_L1 = 0;
+const int CH_PWM_L2 = 1;
+const int CH_PWM_R1 = 2;
+const int CH_PWM_R2 = 3;
+const int PIN_PWM_LF1 = 13;
+const int PIN_PWM_LF2 = 12;
+const int PIN_PWM_RF1 = 27;
+const int PIN_PWM_RF2 = 33;
+const int PIN_SPEED_LF = 5;
+const int PIN_SPEED_RF = 18;
+const int PIN_VIN = 39;
+const int PIN_TRIGGER = 25;
+const int PIN_ECHO = 26;
+const int PIN_LED_LI = 22;
+const int PIN_LED_RI = 16;
 #endif
 //------------------------------------------------------//
+
+
+enum msgParts {
+  HEADER,
+  BODY
+};
+msgParts msgPart = HEADER;
+char header;
+char endChar = '\n';
+const char MAX_MSG_SZ = 32;
+char msg_buf[MAX_MSG_SZ];
+int msg_idx = 0;
+
+#if(HAS_BLUETOOTH)
+void on_ble_rx(char inChar) {
+  if (inChar != endChar) {
+    switch (msgPart) {
+      case HEADER:
+        process_header(inChar);
+        return;
+      case BODY:
+        process_body(inChar);
+        return;
+    }
+  } else {
+    msg_buf[msg_idx] = '\0'; // end of message
+    parse_msg();
+  }
+}
+
+//Initialization of classes for bluetooth
+class MyServerCallbacks : public BLEServerCallbacks {
+    void onConnect(BLEServer *bleServer) {
+      deviceConnected = true;
+      Serial.println("BT Connected");
+    };
+
+    void onDisconnect(BLEServer *bleServer) {
+      deviceConnected = false;
+      Serial.println("BT Disconnected");
+    }
+};
+
+class MyCallbacks : public BLECharacteristicCallbacks {
+    void onWrite(BLECharacteristic *pCharacteristic) {
+      std::string bleReceiver = pCharacteristic->getValue();
+      if (bleReceiver.length() > 0) {
+        for (int i = 0; i < bleReceiver.length(); i++) {
+          on_ble_rx(bleReceiver[i]);
+        }
+      }
+    }
+};
+#endif
+
+
+
 
 //------------------------------------------------------//
 // INITIALIZATION
@@ -386,7 +504,7 @@ int ctrl_min = (int) 255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
 #if HAS_SONAR
-#if ((OPENBOT != RTR_520) and (OPENBOT != MTV))
+#if ((OPENBOT != RTR_520) and (OPENBOT != MTV) and (OPENBOT != DIY_ESP32))
 #include "PinChangeInterrupt.h"
 #endif
 // Sonar sensor
@@ -456,6 +574,9 @@ const unsigned int TICKS_PER_REV = 209;
 // 178rpm motor - reduction ratio 56, ticks per motor rotation 11
 // One revolution = 616 ticks
 const unsigned int TICKS_PER_REV = 616;
+#elif (OPENBOT == DIY_ESP32)
+//Speed Sensor
+const unsigned int TICKS_PER_REV = 20;
 #else
 #include "PinChangeInterrupt.h"
 const unsigned int TICKS_PER_REV = 20;
@@ -516,8 +637,7 @@ unsigned long display_time = 0;
 //------------------------------------------------------//
 // SETUP
 //------------------------------------------------------//
-void setup()
-{
+void setup() {
 #if (OPENBOT == LITE)
   coast_mode = !coast_mode;
 #endif
@@ -528,7 +648,7 @@ void setup()
   // Attach the ESC and SERVO
   ESC.attach(PIN_PWM_T, 1000, 2000);   // (pin, min pulse width, max pulse width in microseconds)
   SERVO.attach(PIN_PWM_S, 1000, 2000); // (pin, min pulse width, max pulse width in microseconds)
-#elif ((OPENBOT != RTR_520) and (OPENBOT != MTV))
+#elif ((OPENBOT != RTR_520) and (OPENBOT != MTV) and (OPENBOT != DIY_ESP32))
   pinMode(PIN_PWM_L1, OUTPUT);
   pinMode(PIN_PWM_L2, OUTPUT);
   pinMode(PIN_PWM_R1, OUTPUT);
@@ -640,30 +760,78 @@ void setup()
   // PWM signal configuration using the ESP32 API
   ledcSetup(LHS_PWM_OUT, FREQ, RES);
   ledcSetup(RHS_PWM_OUT, FREQ, RES);
-  
+
   // Attach the channel to the GPIO to be controlled
   ledcAttachPin(PIN_PWM_L, LHS_PWM_OUT);
   ledcAttachPin(PIN_PWM_R, RHS_PWM_OUT);
-  
+
   pinMode(PIN_DIR_L, OUTPUT);
   pinMode(PIN_DIR_R, OUTPUT);
   pinMode(PIN_DIR_L, LOW);
   pinMode(PIN_DIR_R, LOW);
 #endif
 
+#if (OPENBOT == DIY_ESP32)
+  esp_wifi_deinit();
+
+  // PWMs
+  // Configure PWM functionalitites
+  ledcSetup(CH_PWM_L1, FREQ, RES);
+  ledcSetup(CH_PWM_L2, FREQ, RES);
+  ledcSetup(CH_PWM_R1, FREQ, RES);
+  ledcSetup(CH_PWM_R2, FREQ, RES);
+
+  // Attach the channel to the GPIO to be controlled
+  ledcAttachPin(PIN_PWM_LF1, CH_PWM_L1);
+  ledcAttachPin(PIN_PWM_LF2, CH_PWM_L2);
+  ledcAttachPin(PIN_PWM_RF1, CH_PWM_R1);
+  ledcAttachPin(PIN_PWM_RF2, CH_PWM_R2);
+#endif
   Serial.begin(115200, SERIAL_8N1);
   // SERIAL_8E1 - 8 data bits, even parity, 1 stop bit
   // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
   // SERIAL_8N1 - 8 data bits, no parity, 1 stop bit
   // Serial.setTimeout(10);
   Serial.println('r');
+  
+#if (HAS_BLUETOOTH)
+  BLEDevice::init("Openbot BLE");
+  bleServer = BLEDevice::createServer();
+  bleServer->setCallbacks(new MyServerCallbacks());
+  BLEService *pService = bleServer->createService(BLEUUID(SERVICE_UUID));
+  bleTxCharacteristic = pService->createCharacteristic(BLEUUID(CHARACTERISTIC_UUID_TX), BLECharacteristic::PROPERTY_NOTIFY);
+  bleTxCharacteristic->addDescriptor(new BLE2902());
+  BLECharacteristic *pRxCharacteristic = pService->createCharacteristic(BLEUUID(CHARACTERISTIC_UUID_RX), BLECharacteristic::PROPERTY_WRITE);
+  pRxCharacteristic->setCallbacks(new MyCallbacks());
+  pService->start();
+  // Start advertising
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(BLEUUID(SERVICE_UUID));
+  bleServer->getAdvertising()->start();
+  Serial.println("Waiting a client connection to notify...");
+#endif
 }
 
 //------------------------------------------------------//
 //LOOP
 //------------------------------------------------------//
-void loop()
-{
+void loop() {
+
+#if (HAS_BLUETOOTH)
+  // disconnecting
+  if (!deviceConnected && oldDeviceConnected) {
+    delay(500); // give the bluetooth stack the chance to get things ready
+    bleServer->startAdvertising(); // restart advertising
+    Serial.println("Waiting a client connection to notify...");
+    oldDeviceConnected = deviceConnected;
+  }
+  // connecting
+  if (deviceConnected && !oldDeviceConnected) {
+    // do stuff here on connecting
+    oldDeviceConnected = deviceConnected;
+  }
+#endif
+
 #if (NO_PHONE_MODE)
   if ((millis() - turn_direction_time) >= turn_direction_interval)
   {
@@ -713,17 +881,14 @@ void loop()
   ctrl_left = ctrl_left > 0 ? max(ctrl_min, min(ctrl_left, ctrl_max)) : min(-ctrl_min, max(ctrl_left, -ctrl_max));
   ctrl_right = ctrl_right > 0 ? max(ctrl_min, min(ctrl_right, ctrl_max)) : min(-ctrl_min, max(ctrl_right, -ctrl_max));
 #else // Check for messages from the phone
-  if (Serial.available() > 0)
-  {
+  if (Serial.available() > 0) {
     on_serial_rx();
   }
-  if (distance_estimate <= STOP_DISTANCE && ctrl_left > 0 && ctrl_right > 0)
-  {
+  if (distance_estimate <= STOP_DISTANCE && ctrl_left > 0 && ctrl_right > 0) {
     ctrl_left = 0;
     ctrl_right = 0;
   }
-  if ((millis() - heartbeat_time) >= heartbeat_interval)
-  {
+  if ((millis() - heartbeat_time) >= heartbeat_interval) {
     ctrl_left = 0;
     ctrl_right = 0;
   }
@@ -763,18 +928,15 @@ void loop()
 
 #if HAS_SONAR
   // Check for successful sonar reading
-  if (!sonar_sent && ping_success)
-  {
+  if (!sonar_sent && ping_success) {
     distance = echo_time * US_TO_CM;
     update_distance_estimate();
     send_sonar_reading();
     sonar_sent = true;
   }
   // Measure distance every sonar_interval
-  if ((millis() - sonar_time) >= max(sonar_interval, MAX_SONAR_TIME))
-  {
-    if (!sonar_sent && !ping_success)
-    { // Send max val if last ping was not returned
+  if ((millis() - sonar_time) >= max(sonar_interval, MAX_SONAR_TIME)) {
+    if (!sonar_sent && !ping_success) { // Send max val if last ping was not returned
       distance = MAX_SONAR_DISTANCE;
       update_distance_estimate();
       send_sonar_reading();
@@ -788,8 +950,7 @@ void loop()
 
 #if HAS_INDICATORS
   // Check indicator signal every indicator_interval
-  if ((millis() - indicator_time) >= indicator_interval)
-  {
+  if ((millis() - indicator_time) >= indicator_interval) {
     update_indicator();
     indicator_time = millis();
   }
@@ -805,24 +966,21 @@ void loop()
 #endif
 #if HAS_VOLTAGE_DIVIDER
   // Send voltage reading via serial
-  if ((millis() - voltage_time) >= voltage_interval)
-  {
+  if ((millis() - voltage_time) >= voltage_interval) {
     send_voltage_reading();
     voltage_time = millis();
   }
 #endif
 #if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
   // Send wheel odometry reading via serial
-  if ((millis() - wheel_time) >= wheel_interval)
-  {
+  if ((millis() - wheel_time) >= wheel_interval) {
     send_wheel_reading(millis() - wheel_time);
     wheel_time = millis();
   }
 #endif
 #if (HAS_OLED || DEBUG)
   // Display vehicle measurments for via serial every display_interval
-  if ((millis() - display_time) >= display_interval)
-  {
+  if ((millis() - display_time) >= display_interval) {
     display_vehicle_data();
     display_time = millis();
   }
@@ -833,20 +991,19 @@ void loop()
 // FUNCTIONS
 //------------------------------------------------------//
 #if HAS_VOLTAGE_DIVIDER
-float get_voltage()
-{
+
+float get_voltage() {
   unsigned long array_sum = 0;
   unsigned int array_size = min(vin_array_sz, vin_counter);
-  for (unsigned int index = 0; index < array_size; index++)
-  {
+  for (unsigned int index = 0; index < array_size; index++) {
     array_sum += vin_array[index];
   }
   return float(array_sum) / array_size * ADC_FACTOR * VOLTAGE_DIVIDER_FACTOR;
 }
+
 #endif
 
-void update_vehicle()
-{
+void update_vehicle() {
 #if (OPENBOT == RC_CAR)
   update_throttle();
   update_steering();
@@ -955,20 +1112,14 @@ void coast_right_motors_mtv()
 
 #else
 
-void update_left_motors()
-{
-  if (ctrl_left < 0)
-  {
+void update_left_motors() {
+  if (ctrl_left < 0) {
     analogWrite(PIN_PWM_L1, -ctrl_left);
     analogWrite(PIN_PWM_L2, 0);
-  }
-  else if (ctrl_left > 0)
-  {
+  } else if (ctrl_left > 0) {
     analogWrite(PIN_PWM_L1, 0);
     analogWrite(PIN_PWM_L2, ctrl_left);
-  }
-  else
-  {
+  } else {
     if (coast_mode)
       coast_left_motors();
     else
@@ -976,32 +1127,24 @@ void update_left_motors()
   }
 }
 
-void stop_left_motors()
-{
+void stop_left_motors() {
   analogWrite(PIN_PWM_L1, 255);
   analogWrite(PIN_PWM_L2, 255);
 }
 
-void coast_left_motors()
-{
+void coast_left_motors() {
   analogWrite(PIN_PWM_L1, 0);
   analogWrite(PIN_PWM_L2, 0);
 }
 
-void update_right_motors()
-{
-  if (ctrl_right < 0)
-  {
+void update_right_motors() {
+  if (ctrl_right < 0) {
     analogWrite(PIN_PWM_R1, -ctrl_right);
     analogWrite(PIN_PWM_R2, 0);
-  }
-  else if (ctrl_right > 0)
-  {
+  } else if (ctrl_right > 0) {
     analogWrite(PIN_PWM_R1, 0);
     analogWrite(PIN_PWM_R2, ctrl_right);
-  }
-  else
-  {
+  } else {
     if (coast_mode)
       coast_right_motors();
     else
@@ -1009,17 +1152,16 @@ void update_right_motors()
   }
 }
 
-void stop_right_motors()
-{
+void stop_right_motors() {
   analogWrite(PIN_PWM_R1, 255);
   analogWrite(PIN_PWM_R2, 255);
 }
 
-void coast_right_motors()
-{
+void coast_right_motors() {
   analogWrite(PIN_PWM_R1, 0);
   analogWrite(PIN_PWM_R2, 0);
 }
+
 #endif
 
 boolean almost_equal(int a, int b, int eps) {
@@ -1141,23 +1283,11 @@ void send_bumper_reading(char bumper_id[])
 {
   Serial.print("b");
   Serial.println(bumper_id);
+  sendDataToBLE("b" + String(bumper_id));
 }
 #endif
 
-enum msgParts
-{
-  HEADER,
-  BODY
-};
-msgParts msgPart = HEADER;
-char header;
-char endChar = '\n';
-const char MAX_MSG_SZ = 32;
-char msg_buf[MAX_MSG_SZ];
-int msg_idx = 0;
-
-void process_ctrl_msg()
-{
+void process_ctrl_msg() {
   char *tmp;                   // this is used by strtok() as an index
   tmp = strtok(msg_buf, ",:"); // replace delimiter with \0
   ctrl_left = atoi(tmp);       // convert to int
@@ -1189,8 +1319,7 @@ void process_light_msg()
 }
 #endif
 
-void process_heartbeat_msg()
-{
+void process_heartbeat_msg() {
   heartbeat_interval = atol(msg_buf); // convert to long
   heartbeat_time = millis();
 #if DEBUG
@@ -1200,8 +1329,8 @@ void process_heartbeat_msg()
 }
 
 #if HAS_INDICATORS
-void process_indicator_msg()
-{
+
+void process_indicator_msg() {
   char *tmp;                   // this is used by strtok() as an index
   tmp = strtok(msg_buf, ",:"); // replace delimiter with \0
   indicator_left = atoi(tmp);  // convert to int
@@ -1214,6 +1343,7 @@ void process_indicator_msg()
   Serial.println(indicator_right);
 #endif
 }
+
 #endif
 
 #if HAS_LEDS_STATUS
@@ -1251,14 +1381,14 @@ void process_bumper_msg()
 }
 #endif
 #if HAS_SONAR
-void process_sonar_msg()
-{
+
+void process_sonar_msg() {
   sonar_interval = atol(msg_buf); // convert to long
 }
+
 #endif
 
-void process_voltage_msg()
-{
+void process_voltage_msg() {
 #if HAS_VOLTAGE_DIVIDER
   voltage_interval = atol(msg_buf); // convert to long
 #endif
@@ -1268,14 +1398,14 @@ void process_voltage_msg()
 }
 
 #if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-void process_wheel_msg()
-{
+
+void process_wheel_msg() {
   wheel_interval = atol(msg_buf); // convert to long
 }
+
 #endif
 
-void process_feature_msg()
-{
+void process_feature_msg() {
   String msg = "f" + robot_type + ":";
 #if HAS_VOLTAGE_DIVIDER
   msg += "v:";
@@ -1308,15 +1438,13 @@ void process_feature_msg()
   msg += "ls:";
 #endif
   Serial.println(msg);
+  sendDataToBLE(msg);
 }
 
-void on_serial_rx()
-{
+void on_serial_rx() {
   char inChar = Serial.read();
-  if (inChar != endChar)
-  {
-    switch (msgPart)
-    {
+  if (inChar != endChar) {
+    switch (msgPart) {
       case HEADER:
         process_header(inChar);
         return;
@@ -1324,31 +1452,25 @@ void on_serial_rx()
         process_body(inChar);
         return;
     }
-  }
-  else
-  {
+  } else {
     msg_buf[msg_idx] = '\0'; // end of message
     parse_msg();
   }
 }
 
-void process_header(char inChar)
-{
+void process_header(char inChar) {
   header = inChar;
   msgPart = BODY;
 }
 
-void process_body(char inChar)
-{
+void process_body(char inChar) {
   // Add the incoming byte to the buffer
   msg_buf[msg_idx] = inChar;
   msg_idx++;
 }
 
-void parse_msg()
-{
-  switch (header)
-  {
+void parse_msg() {
+  switch (header) {
 #if HAS_BUMPER
     case 'b':
       process_bumper_msg();
@@ -1426,8 +1548,8 @@ void drawString(String line1, String line2, String line3, String line4)
 #endif
 
 #if (HAS_OLED || DEBUG)
-void display_vehicle_data()
-{
+
+void display_vehicle_data() {
 #if HAS_VOLTAGE_DIVIDER
   float voltage_value = get_voltage();
   String voltage_str = String("Voltage:    ") + String(voltage_value, 2);
@@ -1463,19 +1585,22 @@ void display_vehicle_data()
     distance_str);
 #endif
 }
+
 #endif
 
 #if (HAS_VOLTAGE_DIVIDER)
-void send_voltage_reading()
-{
+
+void send_voltage_reading() {
   Serial.print("v");
   Serial.println(String(get_voltage(), 2));
+  sendDataToBLE("v" + String(get_voltage(), 2));
 }
+
 #endif
 
 #if (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-void send_wheel_reading(long duration)
-{
+
+void send_wheel_reading(long duration) {
   float rpm_factor = 60.0 * 1000.0 / duration / TICKS_PER_REV;
   rpm_left = (counter_lf + counter_lb + counter_lm) * rpm_factor;
   rpm_right = (counter_rf + counter_rb + counter_rm) * rpm_factor;
@@ -1490,31 +1615,32 @@ void send_wheel_reading(long duration)
   Serial.print(rpm_left / 3, 0);
   Serial.print(",");
   Serial.print(rpm_right / 3, 0);
+  sendDataToBLE("w" + String(rpm_left / 3) + "," + String(rpm_right / 3));
 #elif ((HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_BACK) or (HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_MIDDLE) or (HAS_SPEED_SENSORS_MIDDLE and HAS_SPEED_SENSORS_BACK))
   Serial.print(rpm_left / 2, 0);
   Serial.print(",");
   Serial.print(rpm_right / 2, 0);
+  sendDataToBLE("w" + String(rpm_left / 2) + "," + String(rpm_right / 2));
 #elif (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
   Serial.print(rpm_left, 0);
   Serial.print(",");
   Serial.print(rpm_right, 0);
+  sendDataToBLE("w" + String(rpm_left) + "," + String(rpm_right));
 #endif
   Serial.println();
 }
+
 #endif
 
 #if (HAS_INDICATORS)
-void update_indicator()
-{
-  if (indicator_left > 0)
-  {
+
+void update_indicator() {
+  if (indicator_left > 0) {
 #if (OPENBOT == RTR_520 && PIN_LED_LI == PIN_LED_LB)
     ledcDetachPin(PIN_LED_LB);
 #endif
     digitalWrite(PIN_LED_LI, !digitalRead(PIN_LED_LI));
-  }
-  else
-  {
+  } else {
 #if (HAS_LEDS_BACK)
     digitalWrite(PIN_LED_LI, PIN_LED_LI == PIN_LED_LB ? light_back : LOW);
 #else
@@ -1524,15 +1650,12 @@ void update_indicator()
     ledcAttachPin(PIN_LED_LB, CH_LED_LB);
 #endif
   }
-  if (indicator_right > 0)
-  {
+  if (indicator_right > 0) {
 #if (OPENBOT == RTR_520 && PIN_LED_RI == PIN_LED_RB)
     ledcDetachPin(PIN_LED_RB);
 #endif
     digitalWrite(PIN_LED_RI, !digitalRead(PIN_LED_RI));
-  }
-  else
-  {
+  } else {
 #if (HAS_LEDS_BACK)
     digitalWrite(PIN_LED_RI, PIN_LED_RI == PIN_LED_RB ? light_back : LOW);
 #else
@@ -1543,6 +1666,7 @@ void update_indicator()
 #endif
   }
 }
+
 #endif
 
 #if (HAS_LEDS_FRONT || HAS_LEDS_BACK)
@@ -1570,15 +1694,11 @@ void update_light()
 }
 #endif
 
-int get_median(int a[], int sz)
-{
+int get_median(int a[], int sz) {
   //bubble sort
-  for (int i = 0; i < (sz - 1); i++)
-  {
-    for (int j = 0; j < (sz - (i + 1)); j++)
-    {
-      if (a[j] > a[j + 1])
-      {
+  for (int i = 0; i < (sz - 1); i++) {
+    for (int j = 0; j < (sz - (i + 1)); j++) {
+      if (a[j] > a[j + 1]) {
         int t = a[j];
         a[j] = a[j + 1];
         a[j + 1] = t;
@@ -1589,15 +1709,15 @@ int get_median(int a[], int sz)
 }
 
 #if HAS_SONAR
-void send_sonar_reading()
-{
+
+void send_sonar_reading() {
   Serial.print("s");
   Serial.println(distance_estimate);
+  sendDataToBLE("s" + String(distance_estimate));
 }
 
 // Send pulse by toggling trigger pin
-void send_ping()
-{
+void send_ping() {
   echo_time = 0;
   ping_success = false;
   if (PIN_TRIGGER == PIN_ECHO)
@@ -1612,8 +1732,7 @@ void send_ping()
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), start_timer, RISING);
 }
 
-void update_distance_estimate()
-{
+void update_distance_estimate() {
 #if SONAR_MEDIAN
   distance_array[distance_counter % distance_array_sz] = distance;
   distance_counter++;
@@ -1622,53 +1741,49 @@ void update_distance_estimate()
   distance_estimate = distance;
 #endif
 }
+
 #endif
 
 //------------------------------------------------------//
 // INTERRUPT SERVICE ROUTINES (ISR)
 //------------------------------------------------------//
 #if HAS_SONAR
+
 // ISR: Start timer to measure the time it takes for the pulse to return
-void start_timer()
-{
+void start_timer() {
   start_time = micros();
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO), stop_timer, FALLING);
 }
+
 // ISR: Stop timer and record the time
-void stop_timer()
-{
+void stop_timer() {
   echo_time = micros() - start_time;
   detachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_ECHO));
   ping_success = true;
 }
+
 #endif
 
 #if (HAS_SPEED_SENSORS_FRONT)
+
 // ISR: Increment speed sensor counter (left front)
-void update_speed_lf()
-{
-  if (ctrl_left < 0)
-  {
+void update_speed_lf() {
+  if (ctrl_left < 0) {
     counter_lf--;
-  }
-  else if (ctrl_left > 0)
-  {
+  } else if (ctrl_left > 0) {
     counter_lf++;
   }
 }
 
 // ISR: Increment speed sensor counter (right front)
-void update_speed_rf()
-{
-  if (ctrl_right < 0)
-  {
+void update_speed_rf() {
+  if (ctrl_right < 0) {
     counter_rf--;
-  }
-  else if (ctrl_right > 0)
-  {
+  } else if (ctrl_right > 0) {
     counter_rf++;
   }
 }
+
 #endif
 
 #if (HAS_SPEED_SENSORS_BACK)
@@ -1726,3 +1841,16 @@ void update_speed_rm()
   }
 }
 #endif
+
+void sendDataToBLE(String dataToSend) {
+#if (HAS_BLUETOOTH)
+  if (deviceConnected) {
+    char outData[50] = "";
+    for (int i = 0; i < dataToSend.length(); i++) {
+      outData[i] = dataToSend[i];
+    }
+    bleTxCharacteristic->setValue(outData);
+    bleTxCharacteristic->notify();
+  }
+#endif
+}

@@ -3,7 +3,7 @@
 //
 
 struct Strings {
-    //screens
+    // Screens
     static let OpenBot: String = "OpenBot";
     static let freeRoam: String = "Free Roam";
     static let dataCollection: String = "Data Collection";
@@ -13,7 +13,7 @@ struct Strings {
     static let modelManagement: String = "Model Management"
     static let robotInfo: String = "Robot Info"
 
-
+    // Misc
     static let controller: String = "Controller"
     static let speed: String = "Speed"
     static let driveMode: String = "Drive Mode"
@@ -43,8 +43,8 @@ struct Strings {
     static let magnetic: String = "Magnetic"
     static let gyroscope: String = "Gyroscope"
     static let delay: String = "Delay (ms)"
-    static let images: String = "/images"
-    static let sensor: String = "/sensor_data"
+    static let images: String = "images"
+    static let sensor: String = "sensor_data"
     static let timestamp: String = "timestamp[ns],frame\n"
     static let crop: String = "crop.jpeg"
     static let underscore: String = "_"
@@ -61,7 +61,7 @@ struct Strings {
     static let object: String = "Object"
     static let confidence: String = "Confidence"
 
-    //settings
+    // Settings
     static let camera: String = "Camera"
     static let microphone: String = "Microphone"
     static let location: String = "Location"
@@ -69,8 +69,7 @@ struct Strings {
     static let videoStreaming: String = "Video Streaming"
     static let bluetooth: String = "Bluetooth"
 
-
-// Notifications
+    // Notifications
     static let controllerConnected: String = "connectedWithControllerSuccessfully";
     static let clickSetting: String = "clickSetting"
     static let cancelButton: String = "cancelButton"
@@ -85,8 +84,7 @@ struct Strings {
     static let updateTraining: String = "updateTraining"
     static let updateSensorsForLog: String = "updateSensorsForLog"
 
-
-// Screen Identifiers
+    // Screen Identifiers
     static let ScreenFreeRoam: String = "freeRoam";
     static let ScreenDataCollection: String = "dataCollection";
     static let ScreenControllerMapping: String = "controllerMapping";
@@ -96,35 +94,33 @@ struct Strings {
     static let ScreenBottomSheet: String = "ScreenBottomSheet"
     static let ScreenRobotInfo: String = "ScreenRobotInfo";
 
-
-// UIVIew Identifiers
+    // UIVIew Identifiers
     static let secondView: String = "secondView"
     static let bluetoothScreen: String = "bluetoothScreen"
 
-// Logging Headers
-    static let acceleration: String = "TimeStamp[ns] x[m/s^2], y[m/s^2], z[m/s^2]\n"
-    static let locationCoordinates: String = "TimeStamp latitude, longitude\n"
+    // Logging Headers
+    static let accelerationHeader: String = "TimeStamp[ns] x[m/s^2], y[m/s^2], z[m/s^2]\n"
+    static let locationCoordinatesHeader: String = "TimeStamp latitude, longitude\n"
     static let gyroscopeHeader: String = "TimeStamp[ns], x[rad/s], yx[rad/s], zx[rad/s]\n"
-
-    static let magnetometer: String = "TimeStamp[ns] x[uT], y[uT], z[uT]\n"
+    static let magnetometerHeader: String = "TimeStamp[ns] x[uT], y[uT], z[uT]\n"
     static let gpsHeader: String = "TimeStamp latitude, longitude, altitude[m], speed[m/s]\n"
-    static let bumper: String = "timestamp[ns], bumper\n"
-    static let ctrlLog: String = "timestamp[ns], leftCtrl, rightCtrl\n"
-    static let indicator: String = "timestamp[ns], signal\n"
-    static let inferenceTime: String = "frame, inferenceTime [ns]\n"
-    static let light: String = "timestamp[ns], light[lux]\n"
-    static let sonar: String = "timestamp[ns], distance[cm]\n"
+    static let bumperHeader: String = "timestamp[ns], bumper\n"
+    static let ctrlHeader: String = "timestamp[ns], leftCtrl, rightCtrl\n"
+    static let indicatorHeader: String = "timestamp[ns], signal\n"
+    static let inferenceTimeHeader: String = "frame, inferenceTime [ns]\n"
+    static let lightHeader: String = "timestamp[ns], light[lux]\n"
+    static let sonarHeader: String = "timestamp[ns], distance[cm]\n"
     static let voltageHeader: String = "timestamp[ns], batteryVoltage\n"
-    static let wheels: String = "timestamp[ns], leftWheel, rightWheel\n"
-    static let motion: String = "timestamp[ns]"
+    static let wheelsHeader: String = "timestamp[ns], leftWheel, rightWheel\n"
+    static let motionHeader: String = "timestamp[ns]"
 
-    //bluetooth Status
+    // Bluetooth Status
     static let connect: String = "Connect"
     static let disconnect: String = "Disconnect"
     static let connecting: String = "Connecting"
     static let disconnecting: String = "Disconnecting"
 
-    //model management
+    // Model management
     static let modelDetails: String = "Model Details"
     static let name: String = "Name";
     static let type: String = "Type";
@@ -137,7 +133,7 @@ struct Strings {
     static let url: String = "URL"
     static let addNewModel: String = "Add New Model"
 
-    //Robot Info
+    // Robot Info
     static let voltageDivider: String = "Voltage Divider"
     static let sonarText: String = "Sonar";
     static let bumperText: String = "Bumpers"
@@ -157,5 +153,4 @@ struct Strings {
     static let sonarLabel: String = "Sonar *** cm";
     static let sendCommand: String = "Send Commands"
     static let lightLabel: String = "Lights"
-
 }

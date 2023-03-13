@@ -8,16 +8,10 @@ import UIKit
 /// Wrapper for frozen detection models trained using the Tensorflow Object Detection API:
 /// github.com/tensorflow/models/tree/master/research/object_detection
 class Detector: Network {
-
-    /// Labels corresponding to the output of the vision model.
-    var labels: [String] = [];
-
-    /// Number of output detections
-    var NUM_DETECTIONS: Int = 0;
-
+    var labels: [String] = []; // Labels corresponding to the output of the vision model.
+    var NUM_DETECTIONS: Int = 0; // Number of output detections
     var selectedClass: String?;
     let ciContext = CIContext()
-
     let imageSizeX: Int = -1;
     let imageSizeY: Int = -1;
 
@@ -45,21 +39,29 @@ class Detector: Network {
     /// An immutable result returned by a Classifier/Detector describing what was recognized.
     class Recognition {
 
-        /// A unique identifier for what has been recognized. Specific to the class, not the instance of the object.
+        // A unique identifier for what has been recognized. Specific to the class, not the instance of the object.
         private var id: String;
 
-        /// Display name for the recognition.
+        // Display name for the recognition.
         private var title: String;
 
-        /// A sortable score for how good the recognition is relative to others. Higher should be better.
+        // A sortable score for how good the recognition is relative to others. Higher should be better.
         private var confidence: Float;
 
-        /// Location within the source image for the location of the recognized object.
+        // Location within the source image for the location of the recognized object.
         private var location: CGRect;
 
-        /// Detected class of the recognized object.
+        // Detected class of the recognized object.
         private var classId: Int;
 
+        /// Initialization routine
+        ///
+        /// - Parameters:
+        ///     - id:
+        ///     - title:
+        ///     - confidence:
+        ///     - location:
+        ///     - classId:
         init(id: String, title: String, confidence: Float, location: CGRect, classId: Int) {
             self.id = id;
             self.title = title;
@@ -68,36 +70,64 @@ class Detector: Network {
             self.classId = classId;
         }
 
+        /// Compare two Recognition objects in terms of detection confidence
+        ///
+        /// - Parameters:
+        ///     - lhs: first Recognition object
+        ///     - rhs: second Recognition object
         static func >(lhs: Recognition, rhs: Recognition) -> Bool {
             lhs.confidence > rhs.confidence
         }
 
+        /// Getter function.
+        ///
+        /// - Returns: id of the recognition
         public func getId() -> String {
             id;
         }
 
+        /// Getter function.
+        ///
+        /// - Returns: class Id
+        public func getClassId() -> Int {
+            classId;
+        }
+
+        /// Getter function.
+        ///
+        /// - Returns: name of the recognition
         public func getTitle() -> String {
             title;
         }
 
+        /// Getter function.
+        ///
+        /// - Returns: confidence of the recognition
         public func getConfidence() -> Float {
             confidence;
         }
 
+        /// Getter function.
+        ///
+        /// - Returns: bounding box of the recognition
         public func getLocation() -> CGRect {
             location;
         }
 
+        /// Setter function.
+        ///
+        /// - Parameters: bounding box of the recognition
         public func setLocation(location: CGRect) {
             self.location = location;
-        }
-
-        public func getClassId() -> Int {
-            classId;
         }
     }
 
     /// Initializes a Detector.
+    ///
+    /// - Parameters:
+    ///     - model: the model considered in the inference process
+    ///     - device: CPU, GPU or XNNPACK (neural engine)
+    ///     - numThreads: number of threads used tin the inference process
     override init(model: Model, device: RuntimeDevice, numThreads: Int) throws {
         try super.init(model: model, device: device, numThreads: numThreads);
         NotificationCenter.default.addObserver(self, selector: #selector(updateObject), name: .updateObject, object: nil)
@@ -109,6 +139,9 @@ class Detector: Network {
     }
 
     /// Reads label list from Assets.
+    ///
+    /// - Parameters: path of the text file containig the labels.
+    /// - Returns: list of labels contained in the file.
     func loadLabelList(filePath: String) -> [String] {
         var result: [String] = []
         if let filepath = Bundle.main.path(forResource: filePath, ofType: "") {
@@ -131,10 +164,8 @@ class Detector: Network {
 
     /// Propagate an image through a neural network to recognize objects of a predefined class.
     ///
-    /// - Parameters
-    ///   - pixelBuffer: The buffer containing the image.
+    /// - Parameters: The buffer containing the image.
     /// - Returns: A list of the recognized objects for a given label
-    ///
     func recognizeImage(pixelBuffer: CVPixelBuffer) -> [Recognition] {
 
         let imageWidth = CVPixelBufferGetWidth(pixelBuffer)
@@ -144,28 +175,28 @@ class Detector: Network {
                 sourcePixelFormat == kCVPixelFormatType_32BGRA ||
                 sourcePixelFormat == kCVPixelFormatType_32RGBA)
 
-        /// Crops the image to the biggest square in the center and scales it down to model dimensions.
+        // Crops the image to the biggest square in the center and scales it down to model dimensions.
         let scaledSize = CGSize(width: getImageSizeX(), height: getImageSizeY())
-        guard let scaledPixelBuffer = pixelBuffer.resized(to: scaledSize) else {
+        guard let scaledPixelBuffer = pixelBuffer.resized(to: scaledSize, with: self.preAllocatedMemoryPool!) else {
             return []
         }
 
         do {
 
-            /// Pre-proccess input image (orientation, scaling, cropping...).
+            // Pre-proccess input image (orientation, scaling, cropping...).
             let inputTensor = try tflite!.input(at: 0);
             guard let rgbData = rgbDataFromBuffer(scaledPixelBuffer, isModelQuantized: inputTensor.dataType == .uInt8) else {
                 return []
             }
 
-            /// Copy the input data into TensorFlow.
+            // Copy the input data into TensorFlow.
             try tflite?.copy(rgbData, toInputAt: 0);
             try feedData();
 
-            /// Run the inference call.
+            // Run the inference call.
             try tflite?.invoke();
 
-            /// Post-Processing.
+            // Post-Processing.
             return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
 
         } catch {
@@ -180,14 +211,16 @@ class Detector: Network {
 
     func getObjThresh() -> Float {
         // TODO: return ObjectTrackingFragment.MINIMUM_CONFIDENCE_TF_OD_API
-        return 0.5;
+        0.5;
     }
 
     /// Non maximum suppression
+    ///
+    /// - Parameters: An array of "Recognition" objects, built from the output of the neural detector.
+    /// - Returns: Filtered array of "Recognition" objects.
     func nms(recognitions: [Recognition]) -> [Recognition] {
 
         var nmsList: [Recognition] = [];
-
         var pq = recognitions;
         pq.sort(by: >);
         while (pq.count > 0) {
@@ -210,10 +243,22 @@ class Detector: Network {
         return nmsList;
     }
 
+    /// Intersection over union.
+    ///
+    /// - Parameters:
+    ///     - a: first bounding box.
+    ///     - b: second bounding box.
+    /// - Returns: IoU of bounding boxes a and b.
     func box_iou(a: CGRect, b: CGRect) -> Float {
         box_intersection(a: a, b: b) / box_union(a: a, b: b);
     }
 
+    /// Intersection.
+    ///
+    /// - Parameters:
+    ///     - a: first bounding box.
+    ///     - b: second bounding box.
+    /// - Returns: Intersection surface of bounding boxes a and b.
     func box_intersection(a: CGRect, b: CGRect) -> Float {
         let w = overlap(x1: Float(a.midX), w1: Float(a.width), x2: Float(b.midX), w2: Float(b.width));
         let h = overlap(x1: Float(a.midY), w1: Float(a.height), x2: Float(b.midY), w2: Float(b.height));
@@ -223,12 +268,26 @@ class Detector: Network {
         return w * h;
     }
 
+    /// Union.
+    ///
+    /// - Parameters:
+    ///     - a: first bounding box.
+    ///     - b: second bounding box.
+    /// - Returns: Union surface of bounding boxes a and b.
     func box_union(a: CGRect, b: CGRect) -> Float {
         let i = box_intersection(a: a, b: b);
         let u = Float(a.width * a.height) + Float(b.width * b.height) - i;
         return u;
     }
 
+    /// Segment overlap computation.
+    ///
+    /// - Parameters:
+    ///     - x1: origin of the first segment.
+    ///     - w1: length of the first segment.
+    ///     - x2: origin of the second segment.
+    ///     - w2: length of the second segment.
+    /// - Returns: Overlap of the two segments.
     func overlap(x1: Float, w1: Float, x2: Float, w2: Float) -> Float {
         let l1: Float = x1 - w1 / 2;
         let l2: Float = x2 - w2 / 2;
@@ -241,17 +300,17 @@ class Detector: Network {
 
     /// Get the name of the label file stored in Assets.
     func getLabelPath() -> String {
-        return "";
+        "";
     }
 
-    /// Feeds the data
+    /// Feeds the data.
     /// This additional method is necessary, because we can have different number of detections
     func feedData() throws {
     }
 
     /// Get the total number of labels.
     func getNumLabels() -> Int {
-        return labels.count
+        labels.count
     }
 
     /// Get the list of all the labels
@@ -268,7 +327,7 @@ class Detector: Network {
 
     /// Get the number of detections.
     func getNumDetections() -> Int {
-        return NUM_DETECTIONS;
+        NUM_DETECTIONS;
     }
 
     /// Get specs from tflite file.
@@ -277,13 +336,15 @@ class Detector: Network {
 
     /// Get the recognitions.
     func getRecognitions(className: String, width: Int, height: Int) -> [Recognition] {
-        return [];
+        [];
     }
 
+    ///
     @objc func updateObject(_ notification: Notification) {
-        selectedClass = notification.object as! String
+        selectedClass = notification.object as? String
     }
 
+    /// Setter function
     public func setSelectedClass(newClass: String) {
         selectedClass = newClass;
     }

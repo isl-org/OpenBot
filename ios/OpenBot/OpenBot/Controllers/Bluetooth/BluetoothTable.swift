@@ -1,8 +1,5 @@
 //
-//  Bluetoothtable.swift
-//  OpenBot
-//
-//  Created by Nitish Yadav on 18/10/22.
+// Created by Nitish Yadav on 18/10/22.
 //
 
 import UIKit
@@ -13,16 +10,18 @@ class BluetoothTable: UITableViewController {
     var centralManager: CBCentralManager?
     var isconnected: Bool = false
 
+    /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = false
-//        }
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
     }
 
+    /// Notifies the view controller that its view is about to be added to a view hierarchy.
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        bluetooth.startScan()
     }
 
     override func viewWillDisappear(_ animated: Bool) {

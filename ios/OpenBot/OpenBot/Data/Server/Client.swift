@@ -9,6 +9,7 @@ var client = Client()
 class Client {
     let browser = Browser()
 
+    ///function to start the browser to create the client.
     func start() {
         browser.start { result in
             print("client.handler result: \(result)")
@@ -16,6 +17,7 @@ class Client {
         }
     }
 
+    /// function to send the values to the connection.
     func send(message: String) {
         sharedConnection?.send(message + "\n");
     }

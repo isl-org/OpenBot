@@ -9,26 +9,31 @@ import WebRTC
 
 var webRTCClient: WebRTCClient!
 
+/// function to create webRTC Delegate
 class WebRTCDelegates: WebRTCClientDelegate {
 
     var useCustomCapturer: Bool = true
 
+    /// callback to check the generate candidate and send to the controller
     func didGenerateCandidate(iceCandidate: RTCIceCandidate) {
         sendCandidate(iceCandidate: iceCandidate)
     }
 
+    /// callback to check whether the ice connection is changed.
     func didIceConnectionStateChanged(iceConnectionState: RTCIceConnectionState) {
         print("ice connection state is : ", iceConnectionState);
     }
 
+    /// callback function to open data channel
     func didOpenDataChannel() {
         print("did open data channel")
     }
 
+    /// callback function to check data is available
     func didReceiveData(data: Data) {
         print(data);
     }
-
+    /// callback function message string received
     func didReceiveMessage(message: String) {
         print("message is : ", message);
 
@@ -42,7 +47,7 @@ class WebRTCDelegates: WebRTCClientDelegate {
         print("didDisconnectWebRTC")
     }
 
-
+    /// initializing function
     init() {
         #if targetEnvironment(simulator)
         useCustomCapturer = true
@@ -61,12 +66,16 @@ class WebRTCDelegates: WebRTCClientDelegate {
         }
     }
 
+    /// function to send ICE candidate object to the controller
+    ///
+    /// - Parameter iceCandidate:
     func sendCandidate(iceCandidate: RTCIceCandidate) {
         let candidate = Candidate(candidate: iceCandidate.sdp, label: iceCandidate.sdpMLineIndex, id: iceCandidate.sdpMid!, type: "candidate");
         let signalingMessage = JSON.toString(CandidateEvent(status: .init(WEB_RTC_EVENT: candidate)));
         client.send(message: signalingMessage);
     }
 
+    /// function to read the message from the controller connection
     @objc func websocketDidReceiveMessage(_ notification: Notification) {
         let text: Data = notification.object as! Data;
         do {
@@ -86,6 +95,7 @@ class WebRTCDelegates: WebRTCClientDelegate {
 
     }
 
+    ///function to send the offer/answer SDP to the controller
     private func sendSDP(sessionDescription: RTCSessionDescription) {
         var type = ""
         if sessionDescription.type == .offer {
@@ -96,5 +106,4 @@ class WebRTCDelegates: WebRTCClientDelegate {
         let signalingMessage = JSON.toString(OfferEvent(status: .init(WEB_RTC_EVENT: .init(type: type, sdp: sessionDescription.sdp))));
         client.send(message: signalingMessage);
     }
-
 }

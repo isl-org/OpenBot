@@ -18,6 +18,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
     let label = UILabel();
     let urlInputBox = UITextField()
 
+    /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTable()
@@ -104,6 +105,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
 
     }
 
+    /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
@@ -119,7 +121,6 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
 
         }
     }
-
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         50
@@ -153,6 +154,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
 
     }
 
+    /// function to open bottom sheet to pick tflite models.
     func openDocumentPicker() {
         let tfliteFile = UTType("com.openbot.tflite")!
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [tfliteFile])
@@ -162,6 +164,7 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
         present(documentPicker, animated: true)
     }
 
+    /// function to pick documents from the file explorer.
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
         guard url.startAccessingSecurityScopedResource() else {
             return

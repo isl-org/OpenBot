@@ -4,6 +4,7 @@
 
 import UIKit
 
+/// This extension adds a method to UIView to update any "adapted constraints" on the view.
 extension UIView {
     func updateAdaptedConstraints() {
         let adaptedConstraints = constraints.filter { (constraint) -> Bool in
@@ -17,6 +18,7 @@ extension UIView {
     }
 }
 
+/// This extension adds computed properties to UIView to get/set the top, bottom, right, and left edges of the view's frame.
 extension UIView {
 
     var top: CGFloat {

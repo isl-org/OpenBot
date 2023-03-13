@@ -21,14 +21,13 @@ def create_cnn(
     mlp_dropout=0.2,
     bn=False,
 ):
-
     # define input shape, channel dimension (tf convention: channels last) and img input
     inputShape = (height, width, depth)
     channelDim = -1
     inputs = tf.keras.Input(shape=inputShape, name="img_input")
 
     # build the cnn layer by layer
-    for (i, f) in enumerate(cnn_filters):
+    for i, f in enumerate(cnn_filters):
         # set the input if it is the first layer
         if i == 0:
             x = inputs
@@ -49,7 +48,7 @@ def create_cnn(
     # flatten output of the cnn and build the mlp
     x = tf.keras.layers.Flatten()(x)
     # build the mlp layer by layer
-    for (i, f) in enumerate(mlp_filters):
+    for i, f in enumerate(mlp_filters):
         x = tf.keras.layers.Dense(f, activation=activation)(x)
         if bn:
             x = tf.keras.layers.BatchNormalization(axis=channelDim)(x)
@@ -77,7 +76,6 @@ def create_mlp(in_dim, hidden_dim, out_dim, activation="relu", dropout=0.2, name
 
 
 def pilot_net(img_width, img_height, bn=False, policy="autopilot"):
-
     if policy == "autopilot":
         mlp = create_mlp(1, 1, 1, dropout=0, name="cmd")
     elif policy == "point_goal_nav":
@@ -116,7 +114,6 @@ def pilot_net(img_width, img_height, bn=False, policy="autopilot"):
 
 
 def cil_mobile(img_width, img_height, bn=True, policy="autopilot"):
-
     if policy == "autopilot":
         mlp = create_mlp(1, 16, 16, dropout=0.5, name="cmd")
     elif policy == "point_goal_nav":
@@ -159,7 +156,6 @@ def cil_mobile(img_width, img_height, bn=True, policy="autopilot"):
 
 
 def cil_mobile_fast(img_width, img_height, bn=True, policy="autopilot"):
-
     if policy == "autopilot":
         mlp = create_mlp(1, 16, 16, name="cmd")
     elif policy == "point_goal_nav":
@@ -201,7 +197,6 @@ def cil_mobile_fast(img_width, img_height, bn=True, policy="autopilot"):
 
 
 def cil(img_width, img_height, bn=True, policy="autopilot"):
-
     if policy == "autopilot":
         mlp = create_mlp(1, 64, 64, dropout=0.5, name="cmd")
     elif policy == "point_goal_nav":

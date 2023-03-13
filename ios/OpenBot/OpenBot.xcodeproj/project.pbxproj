@@ -46,7 +46,6 @@
 		525632FAD7D5CA948A20F6B9 /* Pods_OpenBot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADB8D624A9E1D1494E9F87D /* Pods_OpenBot.framework */; };
 		66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */; };
 		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
-		727D3096D68C8091820BF737 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E0C80EA698A6B6B38AC /* UIColorExtension.swift */; };
 		727D319EA6CD65DE80FF750C /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */; };
 		727D332F054456A4182DD7DF /* expandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3327FAD14CEC3DE54D95 /* expandSetting.swift */; };
 		727D3344CC8742EB020E2992 /* ModelManagementTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31518A6A6FE099F41F49 /* ModelManagementTable.swift */; };
@@ -63,11 +62,9 @@
 		727D378DB2E32C26828E73A9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3879029901392BD7F608 /* GameViewController.swift */; };
 		727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F5FE3F054BE4FA52191 /* timestamp.swift */; };
 		727D37EF7FFD794AAD19F1F6 /* modesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3421CB0D9D6B68ADB5B7 /* modesCollectionViewCell.swift */; };
-		727D392FE397D97428ECA290 /* ScreenSizeUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D34C4952446BF8CED903D /* ScreenSizeUtil.swift */; };
 		727D39499A8CF8EE76345872 /* AutopilotFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */; };
 		727D3A805DDE14D8AD205D31 /* VehicleControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3ABD8F9F9D0485B435C2 /* VehicleControl.swift */; };
 		727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */; };
-		727D3AB00A8DC1BC201DD809 /* openCodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D36CD6B6092BF93DF9F03 /* openCodeController.swift */; };
 		727D3AEFE62BB8644729D602 /* popupWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3281CA65425580EDD4A4 /* popupWindowView.swift */; };
 		727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3189735FC4F7A4E4A6C1 /* Browser.swift */; };
 		727D3B90FC0EB50ACC220F11 /* RobotInfoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */; };
@@ -164,11 +161,9 @@
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
 		727D34184A3A56D707CE0A17 /* AutopilotFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutopilotFragment.swift; path = Autopilot/AutopilotFragment.swift; sourceTree = "<group>"; };
 		727D3421CB0D9D6B68ADB5B7 /* modesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = modesCollectionViewCell.swift; path = HomePage/modesCollectionViewCell.swift; sourceTree = "<group>"; };
-		727D34C4952446BF8CED903D /* ScreenSizeUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenSizeUtil.swift; sourceTree = "<group>"; };
 		727D35819C2D0A82BB4E5A7D /* expandedAutoPilot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = expandedAutoPilot.swift; path = Autopilot/expandedAutoPilot.swift; sourceTree = "<group>"; };
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
-		727D36CD6B6092BF93DF9F03 /* openCodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = openCodeController.swift; path = "open-code/openCodeController.swift"; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
 		727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RobotInfoFrame.swift; path = RobotInfo/RobotInfoFrame.swift; sourceTree = "<group>"; };
 		727D3879029901392BD7F608 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameViewController.swift; path = GameView/GameViewController.swift; sourceTree = "<group>"; };
@@ -186,7 +181,6 @@
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		727D3D387AA7A27F2FCE9603 /* BottomSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BottomSheet.swift; path = ModelManagement/BottomSheet.swift; sourceTree = "<group>"; };
 		727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRTCClient.swift; path = WebRTC/WebRTCClient.swift; sourceTree = "<group>"; };
-		727D3E0C80EA698A6B6B38AC /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIColorExtension.swift; path = extensions/UIColorExtension.swift; sourceTree = "<group>"; };
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIDeviceExtension.swift; path = extensions/UIDeviceExtension.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
@@ -291,9 +285,7 @@
 				4FEF47C56474B6324A408225 /* UIViewExtension.swift */,
 				4FEF4F7AB94F76161A467A24 /* Notifications.swift */,
 				727D3A51A7A6155C22E62412 /* GifLoader.swift */,
-				727D3E0C80EA698A6B6B38AC /* UIColorExtension.swift */,
 				727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */,
-				727D34C4952446BF8CED903D /* ScreenSizeUtil.swift */,
 				4FEF482EC43FA3B64007EBD2 /* JSON.swift */,
 				4FEF4A37AE5E709273A2ED40 /* Date.swift */,
 			);
@@ -459,7 +451,6 @@
 				727D3CE316DD4B67FB82F0BB /* CameraController.swift */,
 				727D3858E1A6D70852356D18 /* RobotInfoFrame.swift */,
 				727D3F8E752887E2A76CC901 /* CheckBox.swift */,
-				727D36CD6B6092BF93DF9F03 /* openCodeController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -547,7 +538,7 @@
 						DevelopmentTeam = 45P94DZS6G;
 					};
 					4FEF4A2489AA3ABCE29B9356 = {
-						DevelopmentTeam = 45P94DZS6G;
+						DevelopmentTeam = 88W2U97SJQ;
 						ProvisioningStyle = Automatic;
 					};
 					4FEF4C57C33D71B6DD56207E = {
@@ -814,15 +805,12 @@
 				727D3FC61322D948A9F1F31C /* CheckBox.swift in Sources */,
 				727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */,
 				727D3D7ED38D147ECD48C9BA /* SignalingMessage.swift in Sources */,
-				727D3096D68C8091820BF737 /* UIColorExtension.swift in Sources */,
 				727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */,
-				727D392FE397D97428ECA290 /* ScreenSizeUtil.swift in Sources */,
 				727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */,
 				727D34E3CC491BD7758C572F /* WebRTCClient.swift in Sources */,
 				4FEF46257887327B74C4900E /* JSON.swift in Sources */,
 				727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */,
 				4FEF43D0E4F94DBBD4DB0614 /* Date.swift in Sources */,
-				727D3AB00A8DC1BC201DD809 /* openCodeController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -877,9 +865,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 45P94DZS6G;
+				DEVELOPMENT_TEAM = 88W2U97SJQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Allow Camera for Free Roam Mode";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow local Network for controller";
@@ -916,9 +905,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 45P94DZS6G;
+				DEVELOPMENT_TEAM = 88W2U97SJQ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "allow bluetooth for OpenBot";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Allow Camera for Free Roam Mode";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow local Network for controller";

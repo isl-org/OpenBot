@@ -4,12 +4,14 @@
 
 import Foundation
 
+/// struct used to decode the signalling message
 struct decodingSignalingMessage: Decodable {
     let type: String
     let sdp: String
     let candidate: Candidate?
 }
 
+/// Used to send the signal message to the WEBRTC connected controller device
 struct SignalingMessage: Codable {
     let type: String
     let sdp: String
@@ -17,6 +19,7 @@ struct SignalingMessage: Codable {
 
 }
 
+/// Used to create an WEBRTC event for answering the request.
 struct AnswerEvent: Decodable {
     var webrtc_event: Answer
 

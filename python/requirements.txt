@@ -1,0 +1,7 @@
+pyserial
+pyrealsense2
+pygame
+opencv-python
+openvino-dev[tensorflow2]
+pytest
+tflite-runtime

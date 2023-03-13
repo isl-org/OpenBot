@@ -4,6 +4,7 @@
 
 import UIKit
 
+/// Select fonts used in the app
 enum HelveticaNeue {
     static func regular(size: CGFloat) -> UIFont {
         UIFont(name: "HelveticaNeue", size: size.adaptedFontSize)!

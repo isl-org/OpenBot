@@ -4,11 +4,18 @@
 
 import Foundation
 
+/// The FileDownloader class allows downloading files from a given URL either asynchronously or synchronously.
 class FileDownloader {
 
+    /// This method downloads the file synchronously and saves it to the document directory.
+    /// If the file already exists, it will return the path of the file. If the file is downloaded and saved successfully, it will return the path of the saved file.
+    ///
+    /// - Parameters:
+    ///     - url: the url of the file to be downloaded
+    ///     - fileName: name of the file to be downloaded
+    ///     - completion: closure of the asynchronous function
     static func loadFileSync(url: URL, fileName: String, completion: @escaping (String?, Error?) -> Void) {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-
         let destinationUrl = documentsUrl.appendingPathComponent(fileName)
 
         if FileManager().fileExists(atPath: destinationUrl.path) {
@@ -18,7 +25,6 @@ class FileDownloader {
             if dataFromURL.write(to: destinationUrl, atomically: true) {
                 print("file saved [\(destinationUrl.path)]")
                 completion(destinationUrl.path, nil)
-
             } else {
                 print("error saving file")
                 let error = NSError(domain: "Error saving file", code: 1001, userInfo: nil)
@@ -30,9 +36,15 @@ class FileDownloader {
         }
     }
 
+    /// This method downloads the file asynchronously using URLSession and saves it to the document directory.
+    /// If the file already exists, it will return the path of the file. If the file is downloaded and saved successfully, it will return the path of the saved file.
+    ///
+    /// - Parameters:
+    ///     - url: the url of the file to be downloaded
+    ///     - fileName: name of the file to be downloaded
+    ///     - completion: closure of the asynchronous function
     static func loadFileAsync(url: URL, completion: @escaping (String?, Error?) -> Void, fileName: String?) {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-
         let destinationUrl = documentsUrl.appendingPathComponent(fileName ?? url.lastPathComponent)
 
         if FileManager().fileExists(atPath: destinationUrl.path) {

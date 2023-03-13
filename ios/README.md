@@ -29,6 +29,6 @@ Currently, the only way to run the iOS apps on your phones is via the developer 
 1. Open XCODE and select *open a project or file*.
 2. To install the [OpenBot app](OpenBot/README.md) make sure to select the *OpenBot* configuration.
    <img alt="iOS App" width="100%" src="../docs/images/ios_openbot_configuration.png" />
-3. Select your device from the list of available devices -
+3. Select your device from the list of available devices.
    <img alt="iOS App" width="100%" src="../docs/images/ios_device_selection.png" />
 4. Run the app on device by clicking on the ▶️ icon on top left of Xcode screen.

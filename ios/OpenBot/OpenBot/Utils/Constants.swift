@@ -4,8 +4,8 @@
 
 import UIKit
 
+/// References to the images used in the user interface
 struct Images {
-    //Images
     static let freeRoam = UIImage(named: "freeRoam");
     static let dataCollection = UIImage(named: "dataCollection");
     static let controllerMapping = UIImage(named: "controllerMapping");
@@ -34,11 +34,10 @@ struct Images {
     static let edit = UIImage(named: "edit")
     static let upwardArrow = UIImage(named: "upward-arrow")
     static let openBotLogo = UIImage(named: "openBotLogo");
-
 }
 
+/// Colors of the user inerface
 struct Colors {
-    //Colors
     static let gridShadowColor = UIColor(named: "gridItemShadowColor");
     static let title = UIColor(named: "HomePageTitleColor");
     static let titleDeactivated = UIColor(named: "HomePageTitleColorDeactivated");
@@ -49,15 +48,17 @@ struct Colors {
     static let bdColor = UIColor(named: "bdColor")
     static let navigationColor = UIColor(named: "navigationColor")
     static let modelDetail = UIColor(named: "modelDetailPopup")
-
 }
 
+/// Set of constants used in the code
 struct Constants {
 
-    //BLE
-    static let openbotService = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
+    // BLE UUIDs
+    static let openbotService = "61653dc3-4021-4d1e-ba83-8b4eec61d613";
+    static let openbotService_RX = "06386c14-86ea-4d71-811c-48f97c58f8c9";
+    static let openbotService_TX = "9bf1103b-834c-47cf-b149-c9e4bcf778a7";
 
-// Game Data
+    // Game Data
     static let gameModes: [ModeItem] = [
         ModeItem(label: Strings.freeRoam, icon: Images.freeRoam!, identifier: Strings.ScreenFreeRoam),
         ModeItem(label: Strings.dataCollection, icon: Images.dataCollection!, identifier: Strings.ScreenDataCollection),
@@ -75,30 +76,31 @@ struct Constants {
     static let devices: [String] = ["CPU", "XNNPACK"]
 }
 
+/// The different speed modes of the OpenBot
 enum SpeedMode: Float {
     case SLOW = 128
     case NORMAL = 192
     case FAST = 255
 }
 
+/// The different control interfaces of an OpenBot (either by gamepad or using another phone/computer)
 enum ControlMode {
     case PHONE, GAMEPAD
 }
 
+/// The different speed modes of an OpenBot
 enum DriveMode {
     case JOYSTICK, GAME, DUAL
 }
 
+/// High level commands used to guide the policy at intersections
 enum IndicatorEvent: Int {
     case LEFT = -1
     case RIGHT = 1
     case STOP = 0
 }
 
-enum ControlEvent {
-    case STOP, FORWARD, BACKWARD, LEFT, RIGHT
-}
-
+/// The different inputs of a gamepad, used to control an OpenBot
 enum Keymap: String {
     case KEYCODE_BUTTON_Y = "Triangle Button"
     case KEYCODE_BUTTON_X = "Square Button"
@@ -111,25 +113,29 @@ enum Keymap: String {
     case KEYCODE_BUTTON_THUMBL = "L3 Button"
     case KEYCODE_BUTTON_THUMBR = "R3 Button"
     case KEYCODE_BUTTON_START = "OPTIONS Button"
+    case KEYCODE_BUTTON_SELECT = "SELECT Button"
     case KEY_Share = "SHARE Button"
     case CMD_INDICATOR_STOP = "INDICATOR_STOP";
 }
 
+/// Control events of an OpenBot
 enum CMD_Events {
     case TOGGLE_LOGS, TOGGLE_NOISE, TOGGLE_CAMERA, TOGGLE_NETWORK, CMD_SPEED_UP, CMD_SPEED_DOWN, CMD_DRIVE_MODE
 }
 
+/// Resolution of the preview images in the data collection mode
 enum Resolutions {
-    case low, medium, high
+    case LOW, MEDIUM, HIGH
 }
 
+/// Whether inference is executed on the CPU, GPU or Neural engine
 enum RuntimeDevice: String {
     case CPU = "CPU",
          GPU = "GPU",
          XNNPACK = "XNNPACK"
 }
 
-
+/// The different types of neural networks available on the robot
 enum CLASS: String {
     case AUTOPILOT_F = "AUTOPILOT_F",
          MOBILENET = "MOBILENET",
@@ -139,18 +145,14 @@ enum CLASS: String {
          NAVIGATION = "NAVIGATION"
 }
 
+/// The different classes of neural networks available on the robot
 enum TYPE: String {
     case AUTOPILOT = "AUTOPILOT",
          DETECTOR = "DETECTOR",
          NAVIGATION = "NAVIGATION"
 }
 
-enum PATH_TYPE: String {
-    case URL = "URL",
-         ASSET = "ASSET",
-         FILE = "FILE"
-}
-
+/// Names of the sensor log files
 struct FileName {
     static let accelerator: String = "accelerometerLog.txt";
     static let magnetic: String = "magneticLog.txt";
@@ -165,5 +167,12 @@ struct FileName {
     static let sonarLog: String = "sonarLog.txt";
     static let voltageLog: String = "voltageLog.txt";
     static let wheelsLog: String = "wheelsLog.txt"
+    static let rgbFrames: String = "rgbFrames.txt"
+}
 
+/// Enumeration of the different types of paths a neural network can have in the app.
+enum PATH_TYPE: String {
+    case URL = "URL",
+         ASSET = "ASSET",
+         FILE = "FILE"
 }

@@ -4,6 +4,7 @@
 
 import Foundation
 
+/// Collection of the different notification signals involved in the OpenBot app
 extension Notification.Name {
     static let updateLabel = Notification.Name("updateLabel");
     static let updateSerialMonitor = Notification.Name("updateSerialMonitor");

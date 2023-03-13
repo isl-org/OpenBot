@@ -13,22 +13,25 @@
 The app starts with a menu screen that shows all available screens. The Bluetooth connection screen can be opened by clicking on the Bluetooth icon on top right hand side. The settings screen can be opened with a click on the settings icon right next to it. By clicking on the other icons, the user can access various screens whose functionalities are explained in subsequent sections.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.jpeg" alt="Main Menu" width="30%"/>
-<img style="padding-right: 2%;" src="../../docs/images/ios_bluetooth_screen.jpeg" alt="Bluetooth" width="30%"/>
-<img style="padding-right: 2%;" src="../../docs/images/ios_settings_screen.jpeg" alt="Settings" width="30%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.jpg" alt="Main Menu" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_bluetooth_screen.jpg" alt="Bluetooth" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_settings_screen.jpg" alt="Settings" width="25%"/>
 </p>
 
 #### Bluetooth Connection
 
-Unlike the Android app which connects to the microcontroller using USB, iOS app only uses Bluetooth. On Opening bluetooth screen, you can see a list of all the available devices to connect over bluetooth. You can choose your OpenBot microcontroller and connect to it. The default baud rate is 115200, and you should not need to change this unless you mess with the microcontroller firmware. The app will attempt to connect automatically, but in case you encounter issues, you can use this switch to manually disconnect / connect.
+Unlike the Android app, which allows connecting the smartphone to the low-level control board of an OpenBot via a USB cable, the iOS app relies solely on a Bluetooth Low-Energy (BLE) wireless connection. When opening the Bluetooth connection screen in the iOS application (by clicking on the bluetooth logo from the main screen or from any fragment), a list of all compatible devices is displayed. Compatibility is here enforced by using a range of specific UUIDs assigned to an OpenBot vehicle at both the [app](https://github.com/3dwesupport/OpenBot/blob/090dcb28206195a7ee45a13b8ded968a8d365abe/ios/OpenBot/OpenBot/Utils/Constants.swift#L57) and [firmware](https://github.com/3dwesupport/OpenBot/blob/090dcb28206195a7ee45a13b8ded968a8d365abe/firmware/openbot_nano/openbot_nano.ino#L115) levels. You must ensure that these UUIDs match. Pairing an iOS device to an OpenBot vehicle then simply requires to select that vehicle from the list and press the "Connect" button. The default baud rate for the connection is set to 115200 and can be changed at the app and firmware level.
 
+<p align="left">
+<img src="../../docs/images/ios_ble.gif" alt="BLE connection" width="25%" />
+</p>
 
 ### Free Roam
 
 Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces. It also offers controls related to controller, drive mode and speed.
 
 <p align="left">
-<img src="../../docs/images/ios_free_roam_screen.jpeg" alt="Alt text" width="100%" />
+<img src="../../docs/images/ios_free_roam_screen.jpg" alt="Alt text" width="50%" />
 </p>
 
 - **Battery**: The battery icon shows realtime battery levels of the connected robot.
@@ -129,10 +132,9 @@ Running at higher speeds will reduce the lifetime of the motors but is more fun.
 
 Simple UI for collection of data sets.
 
-
 <p align="left">
 
-<img src="../../docs/images/ios_data_collection_screen.jpg" alt="Data Collection" width="100%" />
+<img src="../../docs/images/ios_data_collection_screen.jpg" alt="Data Collection" width="50%" />
 
 </p>
 
@@ -148,7 +150,6 @@ Simple UI for collection of data sets.
 
 - **Model Resolution**: Used to switch between resolutions of images saved for training different models.
 
-
 - **Log Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may:
 
     - press the **A button** to **start** the data collection process
@@ -159,20 +160,24 @@ Simple UI for collection of data sets.
 
     - remember to use the controller mapping fragment to ensure you are using the correct buttons.
 
-
 - **Vehicle Status**: The field **Battery** displays the battery voltage as measured by the microcontroller via the voltage divider. The field **Speed (l,r)** reports the left and right speed of the (front) wheels in rpm. It is measured by the microcontroller via the optical wheel speed sensors. The field **Sonar** shows the free space in front of the car in centimeters. It is measured by the microcontroller via the ultrasonic sensor. Note, you will only receive values a few seconds after the USB connections has been established.
 
-
 - **Sensors**: Reports measurements from vehicle sensors. Currently, we record readings from following sensors: camera, gyroscope, accelerometer, magnetometer, ambient light sensor, and barometer. Using the iOS API, we are able to obtain the following sensor readings: RGB images, angular speed, linear acceleration, gravity, magnetic field strength, light intensity, atmospheric pressure, latitude, longitude, altitude, bearing, and speed. In addition to the phone sensors, we record body sensor readings (wheel odometry, obstacle distance and battery voltage), which are transmitted via the serial link. We also record and timestamp control signals received from a connected controller, if present. Lastly, we integrate several neural networks for person following and autonomous navigation.
-
-
 
 ### Controller Mapping
 
 Simple UI to check the button and joystick mapping of a connected BT controller.
 
 <p align="left">
-<img src="../../docs/images/ios_controller_mapping.jpeg" alt="Controller mapping" width="50%" />
+<img src="../../docs/images/ios_controller_mapping.jpg" alt="Controller mapping" width="30%" />
+</p>
+
+### Robot Info
+
+Simple UI to get robot info and test basic functionality. The **Robot Type** as configured in the firmware is displayed as text and animation. The checkmarks in the sections **Sensors**, **Wheel Odometry** and **LEDs** show which features are supported by the connected robot. The section **Readings** provides the most important sensor measurements. In the section **Send Commands**, users can send basic motor commands by pressing the corresponding buttons and control the front and rear LEDs with a slider. 
+
+<p align="left">
+<img src="../../docs/images/ios_screen_robot_info.gif" alt="Robot Info" width="50%" />
 </p>
 
 ### Autopilot
@@ -183,7 +188,7 @@ Simple UI for running autopilot models.
 
 <p align="left">
 
-<img src="../../docs/images/ios_autopilot_screen.jpeg" alt="Autopilot" width="100%" />
+<img src="../../docs/images/ios_autopilot_screen.jpg" alt="Autopilot" width="50%" />
 
 </p>
 
@@ -195,144 +200,24 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 
 
 <p align="left">
-<img src="../../docs/images/ios_object_tracking_screen.jpeg" alt="Object Tracking" width="100%" />
+<img src="../../docs/images/ios_object_tracking_screen.jpg" alt="Object Tracking" width="50%" />
 </p>
 
-[//]: # ()
-[//]: # (### Point Goal Navigation)
 
-[//]: # ()
-[//]: # (Note that this fragment requires ARCore and camera permission. If your device does not support ARCore and you continue anyways, the app will crash. In this screen you can specify a goal via a 2D vector with respect to the current position and orientation of the robot. The 2D vector contains the distance to the front and left of the robot in meters. Both values can also be negative and correspond to back and right of the robot in that case. After specifying the goal and pressing `Start` the robot will exectue an AI policy that attempts to reach the goal while avoiding obstacles.)
+### Model Management
 
-[//]: # ()
-[//]: # (<p align="left">)
+All models are quantized for better performance on embedded devices. Note that models with larger input resolution might be better for smaller objects despite lower mAP.
 
-[//]: # (<img src="../../../docs/images/screen_point_goal_nav.gif" alt="Alt text" width="50%" />)
+<p align="left">
+<img src="../../docs/images/ios_screen_model_management.gif" alt="Model Management" width="25%" />
+</p>
 
-[//]: # (</p>)
 
-[//]: # ()
-[//]: # (### Model Management)
 
-[//]: # ()
-[//]: # (All models are quantized for better performance on embedded devices. Please refer to the tables below for a short description of the available models and benchmarking results. The [mean Average Precision &#40;mAP&#41;]&#40;https://kharshit.github.io/blog/2019/09/20/evaluation-metrics-for-object-detection-and-segmentation&#41; is computed on the validation set of the [COCO Detection 2017]&#40;https://cocodataset.org/#detection-2017&#41; dataset. The runtime is averaged across 100 frames and reported in frames per second &#40;fps&#41;.)
+## Code Structure
 
-[//]: # ()
-[//]: # (<p align="left">)
+The [TensorFlow Lite Object Detection iOS Demo](https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/ios) was used as starting point to integrate TFLite models and obtain the camera feed. The [tflite](OpenBot/tflite) folder contains the model definitions for the [Autopilot](OpenBot/tflite/Autopilot.swift) and [Detector](OpenBot/tflite/Detector.swift) networks.
 
-[//]: # (<img src="../../../docs/images/screen_model_management.jpg" alt="Alt text" width="25%" />)
+## Next (optional)
 
-[//]: # (</p>)
-
-[//]: # ()
-[//]: # (#### MobileNetV1-300 &#40;pre-installed&#41; - mAP: 18%)
-
-[//]: # ()
-[//]: # (SSD object detector with MobileNet V3 backbone and input resolution of 300x300.)
-
-[//]: # ()
-[//]: # (|phone/device &#40;fps&#41;| CPU | GPU | NNAPI |)
-
-[//]: # (|------------------|-----|-----|-------|)
-
-[//]: # (| Samsung S20FE    |  34 |  57 |   87  |)
-
-[//]: # (| Huawei P30 Pro   |  36 |  25 |   10  |)
-
-[//]: # (| Google Pixel 6XL |  35 |  42 |   53  |)
-
-[//]: # (| Xiaomi Mi9       |  22 |  41 |   33  |)
-
-[//]: # ()
-[//]: # (#### MobileNetV3-320 - mAP: 16%)
-
-[//]: # ()
-[//]: # (SSD object detector with MobileNet V3 backbone and input resolution of 320x320.)
-
-[//]: # ()
-[//]: # (|phone/device &#40;fps&#41;| CPU | GPU | NNAPI |)
-
-[//]: # (|------------------|-----|-----|-------|)
-
-[//]: # (| Samsung S20FE    |  34 |  42 |   28  |)
-
-[//]: # (| Huawei P30 Pro   |  32 |  27 |   23  |)
-
-[//]: # (| Google Pixel 6XL |  33 |  43 |   27  |)
-
-[//]: # (| Xiaomi Mi9       |  20 |  45 |   10  |)
-
-[//]: # ()
-[//]: # (#### YoloV4-224 - mAP: mAP: 40.40%)
-
-[//]: # ()
-[//]: # (State-of-the-art object detector [YoloV4]&#40;https://arxiv.org/abs/2004.10934&#41; with input resolution of 224x224.)
-
-[//]: # ()
-[//]: # (|phone/device &#40;fps&#41;| CPU | GPU | NNAPI |)
-
-[//]: # (|------------------|-----|-----|-------|)
-
-[//]: # (| Samsung S20FE    | 3.1 | 7.1 |  4.2  |)
-
-[//]: # (| Huawei P30 Pro   | 2.4 | 6.2 |  0.7  |)
-
-[//]: # (| Google Pixel 6XL | 2.7 |  11 |  0.9  |)
-
-[//]: # (| Xiaomi Mi9       | 2.1 | 6.4 |  1.7  |)
-
-[//]: # ()
-[//]: # (#### YoloV4-tiny-224 - mAP: 22.05%)
-
-[//]: # ()
-[//]: # (Tiny version of YoloV4 with input resolution of 224x224.)
-
-[//]: # ()
-[//]: # (|phone/device &#40;fps&#41;| CPU | GPU | NNAPI |)
-
-[//]: # (|------------------|-----|-----|-------|)
-
-[//]: # (| Samsung S20FE    |  30 |  21 |   14  |)
-
-[//]: # (| Huawei P30 Pro   |  27 |  17 |   22  |)
-
-[//]: # (| Google Pixel 6XL |  29 |  24 |   19  |)
-
-[//]: # (| Xiaomi Mi9       |  16 |  14 |  9.3  |)
-
-[//]: # ()
-[//]: # (#### YoloV4-tiny-416 - mAP: 29.42%)
-
-[//]: # ()
-[//]: # (Tiny version of YoloV4 with input resolution of 416x416.)
-
-[//]: # ()
-[//]: # (|phone/device &#40;fps&#41;| CPU | GPU | NNAPI |)
-
-[//]: # (|------------------|-----|-----|-------|)
-
-[//]: # (| Samsung S20FE    |  12 | 9.4 |  7.7  |)
-
-[//]: # (| Huawei P30 Pro   | 8.4 | 7.6 |  6.9  |)
-
-[//]: # (| Google Pixel 6XL |  10 | 9.6 |  7.2  |)
-
-[//]: # (| Xiaomi Mi9       | 9.0 | 7.3 |  5.0  |)
-
-[//]: # ()
-[//]: # (## Add your own fragment)
-
-[//]: # ()
-[//]: # (Please refer to the [ContributionGuide]&#40;ContributionGuide.md&#41; to learn how to add your own fragments to the OpenBot app.)
-
-[//]: # ()
-[//]: # (## Code Structure)
-
-[//]: # ()
-[//]: # (The [TensorFlow Lite Object Detection Android Demo]&#40;https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android&#41; was used as starting point to integrate TFLite models and obtain the camera feed. The [DefaultActivity]&#40;src/main/java/org/openbot/robot/DefaultActivity.java&#41; runs the main thread and inherits from the [CameraActivity]&#40;src/main/java/org/openbot/robot/CameraActivity.java&#41; to manage the camera and UI. The [SensorService]&#40;src/main/java/org/openbot/robot/SensorService.java&#41; reads all other phone sensors and logs them. The [ServerService]&#40;src/main/java/org/openbot/robot/ServerService.java&#41; and [NsdService]&#40;src/main/java/org/openbot/robot/NsdService.java&#41; establish a connection to a local [Python server]&#40;../../policy/README.md#web-app&#41; with a React frontend. If you collect data it can be uploaded automatically for visualization, training ML models and downloading trained models to the robot. The [env]&#40;src/main/java/org/openbot/env&#41; folder contains utility classes such as the [Vehicle]&#40;src/main/java/org/openbot/env/Vehicle.java&#41; interface, [GameController]&#40;src/main/java/org/openbot/env/GameController.java&#41; interface, [PhoneController]&#40;src/main/java/org/openbot/env/PhoneController.java&#41; interface and an [AudioPlayer]&#40;src/main/java/org/openbot/env/AudioPlayer.java&#41; for the audible feedback. The [tflite]&#40;src/main/java/org/openbot/tflite&#41; folder contains the model definitions for the [Autopilot]&#40;src/main/java/org/openbot/tflite/Autopilot.java&#41; and [Detector]&#40;src/main/java/org/openbot/tflite/Detector.java&#41; networks.)
-
-[//]: # ()
-[//]: # (## Next &#40;optional&#41;)
-
-[//]: # ()
-[//]: # (Train your own [Driving Policy]&#40;../../policy/README.md&#41;)
+Train your own [Driving Policy](../../policy/README.md)

@@ -7,6 +7,7 @@ import UIKit
 
 public extension UIDevice {
 
+    /// function to recognize device model name
     static let modelName: String = {
         var systemInfo = utsname()
         uname(&systemInfo)

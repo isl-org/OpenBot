@@ -22,6 +22,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
     weak var msgDelegate: sendInitialMessageDelegate?
     weak var startStreamDelegate: startStreamDelegate?
 
+    /// initializing function; endpoint
     init(endpoint: NWEndpoint) {
         print("PeerConnection outgoing endpoint: \(endpoint)")
         let tcpOptions = NWProtocolTCP.Options()
@@ -35,12 +36,13 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         startStreamDelegate = self
     }
 
-    // incoming connection
+    /// initializing function; incoming connection
     init(connection: NWConnection) {
         self.connection = connection
         start()
     }
 
+    /// function to start the connection
     func start() {
         connection.stateUpdateHandler = { newState in
             print("connection.stateUpdateHandler \(newState)")
@@ -58,12 +60,14 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         connection.start(queue: .main)
     }
 
+    /// function to send data in utf8 format.
     func send(_ message: String) {
         connection.send(content: message.data(using: .utf8), contentContext: .defaultMessage, isComplete: true, completion: .contentProcessed({ error in
             print("Connection send error: \(String(describing: error))")
         }))
     }
 
+    /// function to hold the connection to receive incoming messages; parse them based on the commands and generate notifications resp;
     func receiveMessage() {
         connection.receive(minimumIncompleteLength: 1, maximumLength: 100000) { data, _, _, error in
             if error != nil {
@@ -89,6 +93,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         }
     }
 
+    /// function to parse the message for the connection and send it.
     func sendMessage() {
         var msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
         client.send(message: msg);
@@ -102,6 +107,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         client.send(message: msg)
     }
 
+    /// function to start the video streams
     func startVideoStream() {
         WebRTCDelegates();
     }

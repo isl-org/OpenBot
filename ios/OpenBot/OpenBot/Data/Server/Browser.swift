@@ -8,10 +8,11 @@ import Network
 let browser = Browser()
 var netService: NetService?
 
-class Browser {
 
+class Browser {
     var browser: NWBrowser
 
+    /// initializing function. (creating Service with the name "_openbot._tcp.").
     init() {
         let parameters = NWParameters()
         parameters.includePeerToPeer = true
@@ -19,6 +20,7 @@ class Browser {
         browser = NWBrowser(for: .bonjour(type: "_openbot._tcp.", domain: nil), using: parameters)
     }
 
+    /// function to start the service and listen for the state changes into the connection.
     func start(handler: @escaping (NWBrowser.Result) -> Void) {
         browser.stateUpdateHandler = { newState in
             switch newState {
@@ -75,6 +77,7 @@ class Browser {
         browser.start(queue: .main)
     }
 
+    ///To reset the connection.
     func reset() {
         browser.cancel()
         netService?.stop()

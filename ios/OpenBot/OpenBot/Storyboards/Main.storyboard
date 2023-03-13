@@ -239,18 +239,21 @@
                                 <rect key="frame" x="-16.5" y="128.5" width="447" height="375"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="374" id="Xqu-ir-4R0"/>
+                                    <constraint firstAttribute="width" constant="446" id="sHQ-Hq-I5V"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="cVs-ib-gs6"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="HYS-00-IDW" firstAttribute="leading" secondItem="VcJ-Kq-j9A" secondAttribute="leadingMargin" constant="-36" id="J5h-D0-noP"/>
+                            <constraint firstItem="HYS-00-IDW" firstAttribute="centerX" secondItem="VcJ-Kq-j9A" secondAttribute="centerX" id="gKn-54-PQd"/>
                             <constraint firstItem="HYS-00-IDW" firstAttribute="top" secondItem="VcJ-Kq-j9A" secondAttribute="top" constant="129" id="oZ9-1C-nJL"/>
-                            <constraint firstItem="HYS-00-IDW" firstAttribute="centerX" secondItem="VcJ-Kq-j9A" secondAttribute="centerX" id="uD9-9H-LYn"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="3hd-BS-i2M"/>
+                    <connections>
+                        <outlet property="controlImage" destination="HYS-00-IDW" id="JUp-63-NTT"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d4V-wJ-6BY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -318,7 +321,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="321" y="0.0" width="88" height="34"/>
+                                            <rect key="frame" x="323.33333333333331" y="0.0" width="85.666666666666686" height="34"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">
@@ -412,7 +415,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.69803921568627447" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

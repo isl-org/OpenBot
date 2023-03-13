@@ -26,6 +26,7 @@ class ModelManagementTable: UITableViewController {
     var dropDown = UIView()
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
 
+    /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
         view.frame.origin.y = 250;
@@ -36,6 +37,7 @@ class ModelManagementTable: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
     }
 
+    /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateModelItemList(type: "All")
@@ -57,6 +59,7 @@ class ModelManagementTable: UITableViewController {
         50
     }
 
+    /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
@@ -71,6 +74,7 @@ class ModelManagementTable: UITableViewController {
         createModelSelectorDropDown()
     }
 
+    /// setting up back button
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -79,12 +83,14 @@ class ModelManagementTable: UITableViewController {
         }
     }
 
+    /// Notifies the view controller that its view is about to be added to a view hierarchy.
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateModelItemList(type: "All")
     }
 
 
+    /// creating labels.
     func createLabel(text: String) -> UILabel {
         let label = UILabel()
         label.text = text;
@@ -93,6 +99,7 @@ class ModelManagementTable: UITableViewController {
 
     }
 
+    /// creating dropdowns.
     func createDropDown() -> UIView {
         let ddView = UIView();
         ddView.frame = CGRect(x: Int(width) / 2, y: 0, width: Int(width) / 2, height: 50);
@@ -112,6 +119,7 @@ class ModelManagementTable: UITableViewController {
         return ddView
     }
 
+    /// creating select model dropdown.
     func createModelSelectorDropDown() {
         modelDropdown.backgroundColor = Colors.freeRoamButtonsColor;
         modelDropdown.textColor = UIColor(named: "bdColor") ?? .white
@@ -127,6 +135,7 @@ class ModelManagementTable: UITableViewController {
         }
     }
 
+    /// function called when model list type item is updated.
     func updateModelItemList(type: String) {
         switch type {
         case "All":
@@ -153,6 +162,7 @@ class ModelManagementTable: UITableViewController {
     }
 
 
+    /// function to create the black screen.
     func createBlankScreen() {
         view.addSubview(blankScreen);
         blankScreen.backgroundColor = Colors.freeRoamButtonsColor;
@@ -196,6 +206,7 @@ class ModelManagementTable: UITableViewController {
         return createImageOnCell(cell: cell, index: indexPath.row);
     }
 
+    /// function to create the add button.
     func createAddModelButton() {
         let addModel = UIButton();
         view.addSubview(addModel);
@@ -210,6 +221,7 @@ class ModelManagementTable: UITableViewController {
         addModel.addTarget(self, action: #selector(addModels(_:)), for: .touchUpInside);
     }
 
+    /// function to add models
     @objc func addModels(_ sender: UIButton) {
         if let vc = storyboard?.instantiateViewController(withIdentifier: "ScreenBottomSheet") as? UIViewController {
             if let sheet = vc.sheetPresentationController {
@@ -218,7 +230,6 @@ class ModelManagementTable: UITableViewController {
             navigationController?.present(vc, animated: true)
         }
     }
-
 
     func createImageOnCell(cell: modelManagementCell, index: Int) -> modelManagementCell {
         cell.downloadIconView.isHidden = false
@@ -243,6 +254,7 @@ class ModelManagementTable: UITableViewController {
 
     }
 
+    /// download function to download the model from URL
     @objc func download(_ sender: UITapGestureRecognizer) {
         let indexOfSelectedModel = sender.view?.tag ?? 0
         selectedIndex = IndexPath(row: indexOfSelectedModel, section: 0);
@@ -257,6 +269,7 @@ class ModelManagementTable: UITableViewController {
         }
     }
 
+    /// function to show alert(prompt) on the screen
     func createOverlayAlert() {
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
         loadingIndicator.startAnimating();
@@ -278,6 +291,7 @@ class ModelManagementTable: UITableViewController {
         createPopupWindow()
     }
 
+    /// function to download the model from internet and save it in local storage.
     func downloadModel(modelName: String) {
         let model = Common.returnModelItem(modelName: modelName)
         if model.path != "" {
@@ -292,6 +306,7 @@ class ModelManagementTable: UITableViewController {
         tableView.reloadRows(at: [selectedIndex], with: .bottom)
     }
 
+    /// function to create the prompt(popup) window
     func createPopupWindow() {
         view.addSubview(popupWindow)
         popupWindow.translatesAutoresizingMaskIntoConstraints = false
@@ -313,6 +328,7 @@ class ModelManagementTable: UITableViewController {
         popupWindow.backgroundColor = Colors.modelDetail;
     }
 
+    /// function to delete the model from local storage.
     func deleteModel(modelName: String) {
         let filesPath = DataLogger.shared.getDocumentDirectoryInformation()
         for url in filesPath {
@@ -344,6 +360,7 @@ class ModelManagementTable: UITableViewController {
         tableView.reloadRows(at: [selectedIndex], with: .bottom)
     }
 
+    /// function to remove the black screen and display screen with ALL items.
     @objc func removeBlankScreen(_ notification: Notification) {
         if notification.object == nil {
             blankScreen.removeFromSuperview();

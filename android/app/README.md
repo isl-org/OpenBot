@@ -168,6 +168,16 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 <img src="../../docs/images/screen_object_tracking_2.jpg" alt="Alt text" width="49%" />
 </p>
 
+#### Options
+- **Dynamic Speed**: reduces the robot speed in "Auto Mode" if it gets closer to the tracked object.
+  The speed is scaled based on the area of the bouding box (works best in landscape orientation).
+- **Model**: choose an object detector based on your phone performance (see below for [benchmarking results](#benchmark)).
+- **Object**: pick the object you want to track. The models can detect the 80 COCO [object classes](https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/).
+- **Confidence**: confidence threshold to determine if detections are accepted. Increase if you get false detections, decrease if the object of interest it not detected.
+- **Device**: use CPU, GPU or NNAPI for inference (more details [here](#device)).
+- **Threads**: number of threads to use (only makes a difference when CPU is selected as device).
+
+
 ### Point Goal Navigation
 
 Note that this fragment requires ARCore and camera permission. If your device does not support ARCore and you continue anyways, the app will crash. In this screen you can specify a goal via a 2D vector with respect to the current position and orientation of the robot. The 2D vector contains the distance to the front and left of the robot in meters. Both values can also be negative and correspond to back and right of the robot in that case. After specifying the goal and pressing `Start` the robot will exectue an AI policy that attempts to reach the goal while avoiding obstacles.

@@ -26,6 +26,9 @@ class expandedAutoPilot: UIView {
     var serverDropDownView = UIView()
     var bluetoothIcon = UIImageView()
 
+    ///overriding the init function of UIView
+    ///
+    /// - Parameter frame: frame of View
     override init(frame: CGRect) {
         super.init(frame: frame)
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
@@ -64,12 +67,16 @@ class expandedAutoPilot: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateFps), name: .updateAutoPilotFps, object: nil)
     }
 
-
+///
+///
+/// - Parameter aDecoder:
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-
+///
+/// method called when we touch up or down of UIView. It will change the origin of UIView
+/// - Parameter gesture:
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
@@ -95,6 +102,8 @@ class expandedAutoPilot: UIView {
         }
     }
 
+    ///
+    /// creating a blue color horizontal line inside view
     func createBar() {
         let bar = UIView()
         bar.backgroundColor = Colors.title
@@ -107,6 +116,8 @@ class expandedAutoPilot: UIView {
         bar.layer.cornerRadius = 2
     }
 
+    ///
+    /// creating  bluetooth icon to load bluetooth screen
     func createBluetoothIcon() {
         if (isBluetoothConnected) {
             bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
@@ -115,14 +126,21 @@ class expandedAutoPilot: UIView {
         }
     }
 
+    ///
+    /// creating camera icon to switch camera
     func createCameraIcon() {
         if let image = Images.frontCamera {
-            createIcons(iconImg: image, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
+            _ = createIcons(iconImg: image, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
         }
-
     }
 
-
+///
+/// function to create text
+/// - Parameters:
+///   - text: String
+///   - leadingAnchor: margin from left
+///   - topAnchor: margin from top
+/// - Returns:
     func createLabel(text: String, leadingAnchor: Int, topAnchor: Int) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -132,6 +150,18 @@ class expandedAutoPilot: UIView {
         return label
     }
 
+    ///
+    /// function to  create icons
+    /// - Parameters:
+    ///   - iconImg: image
+    ///   - topAnchor: margin top
+    ///   - trailingAnchor: margin Bottonm
+    ///   - x: x ordinate of icon
+    ///   - y: y ordinate of icon
+    ///   - size: size of image
+    ///   - backgroundColor:
+    ///   - action: method that will called after tapping
+    /// - Returns:
     func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) -> UIImageView {
         let iconImage = UIImageView(frame: CGRect(x: x, y: y, width: size.width, height: size.height))
         iconImage.image = iconImg
@@ -146,6 +176,8 @@ class expandedAutoPilot: UIView {
         return iconImage
     }
 
+    ///
+    /// function to create toggle button
     func createSwitchButton() {
         autoModeButton.isOn = false
         autoModeButton.setOn(false, animated: true)
@@ -158,6 +190,8 @@ class expandedAutoPilot: UIView {
         autoModeButton.topAnchor.constraint(equalTo: topAnchor, constant: 25).isActive = true
     }
 
+    ///
+    /// function to create server dropdown
     func createServerDropDown() {
         serverDropDown.backgroundColor = Colors.freeRoamButtonsColor
         serverDropDown.textColor = UIColor(named: "bdColor") ?? .black
@@ -188,6 +222,8 @@ class expandedAutoPilot: UIView {
         ddView.addSubview(serverDropDownLabel)
     }
 
+    ///
+    /// function to create autopilot dropdown
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.autopilotMode);
         modelDropDown.backgroundColor = Colors.freeRoamButtonsColor
@@ -220,17 +256,24 @@ class expandedAutoPilot: UIView {
         modelDropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 180).isActive = true;
     }
 
+    ///
+    /// function to create input label frame of model
     func setupInput() {
         imageInputLabel.frame = CGRect(x: width - 80, y: adapted(dimensionSize: 120, to: .height), width: 100, height: 40)
         imageInputLabel.text = "256x96";
         addSubview(imageInputLabel)
     }
 
+    ///
+    /// function to create the ui of speed
+
     func setupSpeed() {
         speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: Int(adapted(dimensionSize: 120, to: .height)))
         addSubview(speedLabel)
     }
 
+    ///
+    /// function to create
     func createDeviceDropDown() {
         deviceDropDown.backgroundColor = Colors.freeRoamButtonsColor
         deviceDropDown.textColor = Colors.bdColor ?? .black
@@ -261,6 +304,15 @@ class expandedAutoPilot: UIView {
         deviceDropDownView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 91).isActive = true
     }
 
+   ///
+    /// function to create dropdown
+    /// - Parameters:
+    ///   - borderColor:
+    ///   - buttonName:
+    ///   - leadingAnchor:
+    ///   - topAnchor:
+    ///   - action:
+    /// - Returns:
     func createDropdownView(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIView {
         let dd = UIView()
         dd.layer.cornerRadius = 10
@@ -277,6 +329,8 @@ class expandedAutoPilot: UIView {
         return dd
     }
 
+    ///
+    /// function to create thread view
     func setupThreads() {
         //setting plus
         let plusImageView = UIView();
@@ -319,6 +373,8 @@ class expandedAutoPilot: UIView {
         threadLabel.topAnchor.constraint(equalTo: minusImageView.topAnchor, constant: 8).isActive = true
     }
 
+    ///
+    /// function to create game control mode and speed view using vehicleControl class
     func setupVehicleControls() {
         let vehicleControls = VehicleControl();
         addSubview(vehicleControls)
@@ -326,7 +382,8 @@ class expandedAutoPilot: UIView {
         vehicleControls.topAnchor.constraint(equalTo: threadLabel.safeAreaLayoutGuide.bottomAnchor, constant: adapted(dimensionSize: 10, to: .height)).isActive = true;
         vehicleControls.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 7).isActive = true
     }
-
+    ///
+    ///function to create speed text
     func createLeftSpeed() {
         leftSpeedLabel.frame.size = CGSize(width: 100, height: 40);
         leftSpeedLabel.frame.origin = CGPoint(x: 20, y: adapted(dimensionSize: 200, to: .height))
@@ -335,31 +392,50 @@ class expandedAutoPilot: UIView {
         leftSpeedLabel.font = leftSpeedLabel.font.withSize(13.5)
     }
 
-
+    ///
+    /// function called after get connected or disconnected from bluetooth
+    /// - Parameter sender:
     @objc func ble(_ sender: UIView) {
         NotificationCenter.default.post(name: .ble, object: nil)
     }
 
+    ///
+    /// function to switch camera from front to  back and from back to front
+    /// - Parameter sender:
     @objc func switchCamera(_ sender: UIView) {
         NotificationCenter.default.post(name: .switchCamera, object: nil)
     }
-
+    ///
+    /// functon to on off auto pilot
+    /// - Parameter sender:
     @objc func switchButton(_ sender: UISwitch) {
         NotificationCenter.default.post(name: .autoMode, object: nil)
     }
 
+    ///
+    /// function to show server dropdown
+    /// - Parameter sender:
     @objc func showServerDropdown(_ sender: UIButton) {
         serverDropDown.show()
     }
 
+    ///
+    /// function called after touching model to show model dropdown
+    /// - Parameter sender:
     @objc func showModelDropdown(_ sender: UIButton) {
         modelDropDown.show()
     }
 
+    ///
+    /// fuction called after touching device menu to show device dropdown
+    /// - Parameter sender:
     @objc func showDeviceDropdown(_ sender: UIButton) {
         deviceDropDown.show()
     }
 
+    ///
+    /// function to increase number of threads
+    /// - Parameter sender:
     @objc func increaseThreads(_ sender: UIImage) {
         if threadLabel.text == "9" || threadLabel.text == "N/A" {
             return
@@ -370,6 +446,9 @@ class expandedAutoPilot: UIView {
         NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
     }
 
+    ///
+    /// function to decrease number of threads
+    /// - Parameter sender:
     @objc func decreaseThreads(_ sender: UIImage) {
         if threadLabel.text == "1" || threadLabel.text == "N/A" {
             return
@@ -380,6 +459,9 @@ class expandedAutoPilot: UIView {
         NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
     }
 
+    ///
+    /// function to loads all models from Bundle
+    /// - Returns:
     func loadModels() -> [ModelItem] {
         if let url = Bundle.main.url(forResource: "config", withExtension: "json") {
             do {
@@ -394,6 +476,9 @@ class expandedAutoPilot: UIView {
         return [];
     }
 
+    ///
+    /// function returns all models of autopilot
+    /// - Returns: all models of autopilot
     func loadAllAutoPilotModels() -> [ModelItem] {
         var autoPilot: [ModelItem] = []
         let allModels = loadModels()
@@ -405,6 +490,9 @@ class expandedAutoPilot: UIView {
         return autoPilot
     }
 
+    ///
+    /// function called after selecting model from model dropdown
+    /// - Parameter notification:
     @objc func updateModel(_ notification: Notification) {
         let selectedModel = notification.object as! String
         modelDropdownLabel.text = selectedModel
@@ -420,16 +508,25 @@ class expandedAutoPilot: UIView {
         }
     }
 
+    ///
+    /// function called after selecting device from device dropdown to change device from CPU to xnnpack and vice versa
+    /// - Parameter notification:
     @objc func updateDevice(_ notification: Notification) {
         let selectedDevice = notification.object as! String
         deviceDropDownLabel.text = selectedDevice
     }
 
+    ///
+    /// function to update the thread count on screen
+    /// - Parameter notification:
     @objc func updateThreadLabel(_ notification: Notification) {
         threadLabel.text = (notification.object as! String)
 
     }
 
+    /// function to change the icon of bluetooth when bluetooth is connected or disconnected
+    /// function
+    /// - Parameter notification:
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
             bluetoothIcon.image = Images.bluetoothConnected
@@ -438,15 +535,24 @@ class expandedAutoPilot: UIView {
         }
     }
 
+    ///
+    /// function to change the speed on screen
+    /// - Parameter notification:
     @objc func updateSpeedLabel(_ notification: Notification) {
         leftSpeedLabel.text = (notification.object as! String)
     }
-
+    ///
+    /// function to turn on off autopilot
+    /// - Parameter notification:
     @objc func toggleNetwork(_ notification: Notification) {
         autoModeButton.isOn = !autoModeButton.isOn
         NotificationCenter.default.post(name: .autoMode, object: nil)
     }
 
+
+    ///
+    /// function that show current fps
+    /// - Parameter notification:
     @objc func updateFps(_ notification: Notification) {
         speedLabel.text = String(notification.object as! Double)
     }

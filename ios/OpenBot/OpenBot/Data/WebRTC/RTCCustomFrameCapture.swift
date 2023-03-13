@@ -5,15 +5,20 @@
 import Foundation
 import WebRTC
 
+/// Implementation of capturer to capture the video feed from the device to send to WEBRTC
 class RTCCustomFrameCapturer: RTCVideoCapturer {
 
     let kNanosecondsPerSecond: Float64 = 1000000000
     var nanoseconds: Float64 = 0
 
+    /// initialization routine
     override init(delegate: RTCVideoCapturerDelegate) {
         super.init(delegate: delegate)
     }
 
+    /// routine to capture the image/video feed from the device camera
+    ///
+    /// - Parameter sampleBuffer: image buffer
     public func capture(_ sampleBuffer: CMSampleBuffer) {
         let _pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
         if let pixelBuffer = _pixelBuffer {
@@ -42,6 +47,9 @@ class RTCCustomFrameCapturer: RTCVideoCapturer {
         }
     }
 
+    /// function to call the frame function into the library
+    ///
+    /// - Parameter pixelBuffer: image pixel buffer
     public func capture(_ pixelBuffer: CVPixelBuffer) {
         let rtcPixelBuffer = RTCCVPixelBuffer(pixelBuffer: pixelBuffer)
         let timeStampNs = nanoseconds * kNanosecondsPerSecond

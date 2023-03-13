@@ -1,7 +1,6 @@
 //
 // Created by Nitish Yadav on 22/12/22.
 //
-//
 
 import Foundation
 import UIKit
@@ -288,5 +287,4 @@ public class Checkbox: UIControl {
         let hitFrame = relativeFrame.inset(by: hitTestEdgeInsets)
         return hitFrame.contains(point)
     }
-
 }
