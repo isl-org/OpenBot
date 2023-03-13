@@ -7,7 +7,7 @@ import styles from "./newProject.module.css";
 import Card from "./card";
 import {getFilterProjects} from "../../../services/workspace";
 import moment from 'moment';
-import {auth} from "../../../services/firebase";
+
 
 export const NewProject = () => {
     const [projects, setProjects] = useState([]);

@@ -74,8 +74,9 @@ export const UploadCode = () => {
         const data = {
             projectName: getCurrentProject().projectName,
             xmlValue: getCurrentProject().xmlValue,
-            date: getCurrentProject().createdDate,
             time: getCurrentProject().time,
+            id: getCurrentProject().id,
+            createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
         }
         //upload on google drive
         uploadToGoogleDrive(data);

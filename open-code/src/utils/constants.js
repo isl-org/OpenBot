@@ -49,7 +49,8 @@ export const Themes = {
 export const localStorageKeys = {
     allProjects: "projects",
     currentProject: "currentProject",
-    accessToken: "accessToken"
+    accessToken: "accessToken",
+    folderId:"folderId",
 }
 
 export const Constants = {
