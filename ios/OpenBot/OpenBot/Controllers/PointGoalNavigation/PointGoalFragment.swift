@@ -43,8 +43,7 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
     /// function called after view of point goal navigation is called
     override func viewDidLoad() {
         super.viewDidLoad()
-        sceneView = ARSCNView(frame: view
-                .bounds)
+        sceneView = ARSCNView(frame: view.bounds)
         sceneView.debugOptions = []
         view.addSubview(sceneView)
         let scene = SCNScene()
@@ -72,6 +71,7 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
     func createSetGoalRect() {
         setGoalRect.frame = CGRect(x: 30, y: height / 2 - 200, width: width - 60, height: 300)
         setGoalRect.backgroundColor = traitCollection.userInterfaceStyle == .dark ? Colors.bdColor : .white
+        setGoalRect.layer.cornerRadius = 10
         view.addSubview(setGoalRect)
         createSetGoalHeading()
         createSetGoalText()
@@ -84,12 +84,12 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
     func createReachMessage() {
         infoMessageRect.frame = CGRect(x: 30, y: height / 2 - 100, width: width - 60, height: 200)
         infoMessageRect.backgroundColor = traitCollection.userInterfaceStyle == .dark ? Colors.bdColor : .white
-        let infoText = createLabel(text: Strings.info, fontSize: 18, textColor: Colors.bdColor!)
+        let infoText = createLabel(text: Strings.info, fontSize: 18, textColor: Colors.textColor!)
         infoMessageRect.addSubview(infoText)
         infoText.translatesAutoresizingMaskIntoConstraints = false
         infoText.leadingAnchor.constraint(equalTo: infoMessageRect.leadingAnchor, constant: 30).isActive = true
         infoText.topAnchor.constraint(equalTo: infoMessageRect.topAnchor, constant: 30).isActive = true
-        let goalReachedText = createLabel(text: "Goal reached", fontSize: 16, textColor: Colors.bdColor!)
+        let goalReachedText = createLabel(text: "Goal reached", fontSize: 16, textColor: Colors.textColor!)
         infoMessageRect.addSubview(goalReachedText)
         goalReachedText.translatesAutoresizingMaskIntoConstraints = false
         goalReachedText.leadingAnchor.constraint(equalTo: infoText.leadingAnchor, constant: 0).isActive = true
@@ -110,7 +110,7 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
 
     /// function to create text inside the previous rect
     func createSetGoalText() {
-        setGoalText = createLabel(text: Strings.setGoalText, fontSize: 16, textColor: Colors.bdColor!)
+        setGoalText = createLabel(text: Strings.setGoalText, fontSize: 16, textColor: Colors.textColor!)
         setGoalRect.addSubview(setGoalText)
         setGoalText.numberOfLines = 0
         setGoalText.translatesAutoresizingMaskIntoConstraints = false
@@ -120,7 +120,7 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
 
     /// function to create Set Goal heading
     func createSetGoalHeading() {
-        setGoalHeading = createLabel(text: Strings.setGoal, fontSize: 18, textColor: Colors.bdColor!)
+        setGoalHeading = createLabel(text: Strings.setGoal, fontSize: 18, textColor: Colors.textColor!)
         setGoalRect.addSubview(setGoalHeading)
         setGoalHeading.translatesAutoresizingMaskIntoConstraints = false
         setGoalHeading.leadingAnchor.constraint(equalTo: setGoalRect.leadingAnchor, constant: 30).isActive = true
@@ -129,12 +129,12 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
 
     /// function to create forward and left text on Set goal rect
     func createForwardLeftLabels() {
-        forwardLabel = createLabel(text: Strings.forward + Strings.meter, fontSize: 14, textColor: Colors.bdColor!)
+        forwardLabel = createLabel(text: Strings.forward + Strings.meter, fontSize: 14, textColor: Colors.textColor!)
         setGoalRect.addSubview(forwardLabel)
         forwardLabel.translatesAutoresizingMaskIntoConstraints = false
         forwardLabel.leadingAnchor.constraint(equalTo: setGoalRect.leadingAnchor, constant: width / 2 - 100).isActive = true
         forwardLabel.topAnchor.constraint(equalTo: setGoalText.bottomAnchor, constant: 20).isActive = true
-        leftLabel = createLabel(text: Strings.left + Strings.meter, fontSize: 14, textColor: Colors.bdColor!)
+        leftLabel = createLabel(text: Strings.left + Strings.meter, fontSize: 14, textColor: Colors.textColor!)
         setGoalRect.addSubview(leftLabel)
         leftLabel.translatesAutoresizingMaskIntoConstraints = false
         leftLabel.leadingAnchor.constraint(equalTo: setGoalRect.leadingAnchor, constant: width / 2).isActive = true
@@ -199,7 +199,7 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
     /// - Returns: UIButton
     func createLabelButtons(title: String, selector: Selector) -> UIButton {
         let button = UIButton()
-        button.setTitleColor(.blue, for: .normal)
+        button.setTitleColor(Colors.title, for: .normal)
         button.frame.size = CGSize(width: 100, height: 40)
         button.setTitle(title, for: .normal)
         button.addTarget(self, action: selector, for: .touchUpInside)
@@ -216,6 +216,7 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
         textField.layer.cornerRadius = 8
         textField.layer.masksToBounds = true
         textField.keyboardType = .numbersAndPunctuation
+        textField.backgroundColor = traitCollection.userInterfaceStyle == .dark ? Colors.bdColor : .white
         return textField
     }
 
@@ -362,8 +363,6 @@ class PointGoalFragment: CameraController, ARSCNViewDelegate, UITextFieldDelegat
             print("self.goalDist: ", self.goalDist)
             
             isNavQueueBusy = false
-            
-
         }
     }
 

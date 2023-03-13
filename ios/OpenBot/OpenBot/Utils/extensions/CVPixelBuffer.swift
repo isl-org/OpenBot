@@ -10,7 +10,9 @@ extension CVPixelBuffer {
     
     /// Resizes a pixel buffer to a specific size. Finds the biggest square in the pixel buffer and advances rows based on it.
     ///
-    /// - Parameter size: The size to resize the pixel buffer to.
+    /// - Parameters:
+    ///     - size: The size to resize the pixel buffer to.
+    ///     - with: pool of CVPixelBuffer to avoid memory allocation 
     /// - Returns: A resized pixel buffer or nil if the resize operation failed.
     func resized(to size: CGSize, with pool: CVPixelBufferPool) -> CVPixelBuffer? {
         
@@ -126,7 +128,10 @@ extension CVPixelBuffer {
     
     /// Resizes a pixel buffer to a specific size and then crop a desired number of top pixels.
     ///
-    /// - Parameter size: The size to resize the pixel buffer to.
+    /// - Parameters
+    ///     - size: The size to resize the pixel buffer to.
+    ///     - top: Number of pixels to crop on top of the resized picture
+    ///     - with: pool of CVPixelBuffer to avoid memory allocation
     /// - Returns: A resized pixel buffer or nil if the resize operation failed.
     func resizeAndCropTop(to size: CGSize, top: Int, with pool: CVPixelBufferPool) -> CVPixelBuffer? {
         
