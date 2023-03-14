@@ -163,4 +163,8 @@ dependencies {
     implementation 'com.github.Ficat:EasyBle:v2.0.2'
     implementation 'com.github.Ficat:EasyPermissions:v2.1.0'
 
+    //Scan QR
+    implementation 'com.google.android.gms:play-services-vision:20.1.3'
+
+
 }

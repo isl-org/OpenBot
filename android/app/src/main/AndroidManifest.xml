@@ -100,6 +100,10 @@
 
         <meta-data android:name="com.google.ar.core" android:value="optional" />
 
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode" />
+
     </application>
 
 </manifest>
