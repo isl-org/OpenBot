@@ -442,18 +442,6 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
             NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
     }
-
-    /// function to send commands to openBot via bluetooth
-    ///
-    /// - Parameters:
-    ///   - left: left speed range -1 to 1
-    ///   - right: right speed range -1 to 1
-    //func sendControl(left : Float, right : Float){
-      //  let leftCommand = (left * 128).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-       // let rightCommand = (right * 128).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-        //bluetooth.sendData(payload: "c" + String(leftCommand) + "," + String(rightCommand) + "\n")
-        // print(leftCommand , "  ",rightCommand)
-    //}
 }
 
 extension SCNVector3 {
