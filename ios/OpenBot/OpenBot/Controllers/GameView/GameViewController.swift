@@ -17,26 +17,20 @@ class GameViewController: UIViewController {
     let overlayRight = DrawRect(frame: CGRect(origin: CGPoint(x: 105, y: 166.5), size: CGSize(width: 25, height: 20)))
     let overlayUp = DrawRect(frame: CGRect(origin: CGPoint(x: 86.5, y: 144), size: CGSize(width: 20, height: 25)))
     let overlayDown = DrawRect(frame: CGRect(origin: CGPoint(x: 86.5, y: 185), size: CGSize(width: 20, height: 25)))
-
     let overlayA = DrawCircle(frame: CGRect(origin: CGPoint(x: 332, y: 193.5), size: CGSize(width: 28, height: 28)))
     let overlayB = DrawCircle(frame: CGRect(origin: CGPoint(x: 360.5, y: 161.5), size: CGSize(width: 28, height: 28)))
     let overlayX = DrawCircle(frame: CGRect(origin: CGPoint(x: 303.5, y: 161.5), size: CGSize(width: 28, height: 28)))
     let overlayY = DrawCircle(frame: CGRect(origin: CGPoint(x: 332, y: 135), size: CGSize(width: 28, height: 28)))
-
     let overlayOptions = DrawRect(frame: CGRect(origin: CGPoint(x: 156, y: 161.5), size: CGSize(width: 20, height: 12)))
     let overlayMenu = DrawRect(frame: CGRect(origin: CGPoint(x: 265, y: 161.5), size: CGSize(width: 20, height: 12)))
-
     let overlayL1Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 69, y: 58.5), size: CGSize(width: 56, height: 25)))
     let overlayL2Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 69, y: 24.5), size: CGSize(width: 56, height: 25)))
     let overlayR1Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 314.5, y: 58.5), size: CGSize(width: 56, height: 25)))
     let overlayR2Shoulder = DrawRect(frame: CGRect(origin: CGPoint(x: 314.5, y: 24.5), size: CGSize(width: 56, height: 25)))
-
     let overlayLeftThumb = DrawCircle(frame: CGRect(origin: CGPoint(x: 134.5, y: 210), size: CGSize(width: 46, height: 46)))
     let overlayRightThumb = DrawCircle(frame: CGRect(origin: CGPoint(x: 259.5, y: 210), size: CGSize(width: 46, height: 46)))
-
     var overlayLeftThumb_var = DrawCircle(frame: CGRect(origin: CGPoint(x: 140.5, y: 210), size: CGSize(width: 46, height: 46)))
     var overlayRightThumb_var = DrawCircle(frame: CGRect(origin: CGPoint(x: 264.5, y: 210), size: CGSize(width: 46, height: 46)))
-
     var restrictRotation: UIInterfaceOrientationMask = .portrait
 
     /// Notifies the view controller that its view is about to be added to a view hierarchy.

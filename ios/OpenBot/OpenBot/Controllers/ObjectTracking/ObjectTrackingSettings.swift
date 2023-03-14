@@ -214,7 +214,7 @@ class ObjectTrackingSettings: UIView {
     /// function to crete the dropdown for objects
     func setupObjectDropDown() {
         objectDropDown.backgroundColor = Colors.freeRoamButtonsColor;
-        objectDropDown.textColor = Colors.bdColor ?? .black
+        objectDropDown.textColor = Colors.textColor ?? .black
         objectDropDown.anchorView = objectDropDownView;
         objectDropDown.dataSource = detector?.getLabels() ?? [" "];
         objectDropDown.width = 150;

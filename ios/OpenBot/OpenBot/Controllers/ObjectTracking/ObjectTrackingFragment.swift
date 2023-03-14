@@ -147,7 +147,6 @@ class ObjectTrackingFragment: CameraController {
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
         NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels())
         NotificationCenter.default.post(name: .updateObject, object: currentObject)
-        
     }
 
     /// function to update the selected object.
