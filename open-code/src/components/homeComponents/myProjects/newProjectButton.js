@@ -19,6 +19,7 @@ function NewProjectButton(props) {
         setProjectName,
         setCurrentProjectXml,
         setCurrentProjectId,
+        setFileId,
     } = useContext(StoreContext)
 
     const handleOpen = () => {
@@ -27,6 +28,7 @@ function NewProjectButton(props) {
         setProjectName();
         setCurrentProjectId();
         setOpen(true);
+        setFileId("")
     }
     const handleClose = () => setOpen(false);
     const OpenNewProjectHandle = () => {

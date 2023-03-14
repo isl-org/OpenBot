@@ -7,7 +7,7 @@ import {ThemeContext} from "../../App";
 import {DarkTheme, LightTheme} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
-import {updateCurrentProject, updateProjectOnDrive} from "../../services/workspace";
+import {getCurrentProject, updateCurrentProject, updateProjectOnDrive} from "../../services/workspace";
 import {nanoid} from "nanoid";
 
 Blockly.setLocale(locale);
@@ -18,7 +18,7 @@ function BlocklyComponent(props) {
     const {theme} = useContext(ThemeContext);
     const toolbox = useRef();
     const primaryWorkspace = useRef();
-    const {projectName, setProjectName, currentProjectId, currentProjectXml} = useContext(StoreContext);
+    const {projectName, setProjectName, currentProjectId, currentProjectXml, fileId} = useContext(StoreContext);
     const uniqueId = currentProjectId ? currentProjectId : nanoid()
 
     /**
@@ -27,7 +27,8 @@ function BlocklyComponent(props) {
      */
     const handleWorkspaceChange = useCallback(() => {
         if (projectName !== undefined) {
-            updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
+            console.log("fileID:::::: blockly me",fileId)
+            updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId);
         }
         if (localStorage.getItem("isSigIn") === "true") {
             updateProjectOnDrive().then((res) => {

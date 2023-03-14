@@ -19,10 +19,8 @@ export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
     const [driveButtonActive, setDriveButtonActive] = useState(false);
-    const {setDrawer} = useContext(StoreContext);
     const {theme} = useContext(ThemeContext);
-    const {setCode} = useContext(StoreContext);
-    const {generate, setGenerateCode} = useContext(StoreContext);
+    const {generate, setGenerateCode,setCode,setDrawer,setFileId} = useContext(StoreContext);
     let primaryWorkspace = useRef();
 
     const generateCode = () => {
@@ -76,10 +74,11 @@ export const UploadCode = () => {
             xmlValue: getCurrentProject().xmlValue,
             time: getCurrentProject().time,
             id: getCurrentProject().id,
+            fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
             createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
         }
         //upload on google drive
-        uploadToGoogleDrive(data);
+        uploadToGoogleDrive(data,setFileId).then();
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);

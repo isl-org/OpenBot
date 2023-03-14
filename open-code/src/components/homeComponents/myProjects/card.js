@@ -13,7 +13,7 @@ import {localStorageKeys} from "../../../utils/constants";
 
 function Card(props) {
     const {theme} = useContext(ThemeContext);
-    const {setCurrentProjectXml, setProjectName, setCurrentProjectId,} = useContext(StoreContext);
+    const {setCurrentProjectXml, setProjectName, setCurrentProjectId, setFileId} = useContext(StoreContext);
     let navigate = useNavigate();
     const openExistingProject = () => {
         navigate(`playground`);
@@ -25,6 +25,7 @@ function Card(props) {
      * @returns {Promise<void>}
      */
     const handleOpenProject = async (projectData) => {
+        console.log("projrctdatadatat ===== ", projectData)
         localStorage.setItem(localStorageKeys.currentProject, "")
         setCurrentProjectId(projectData.id)
         try {
@@ -38,14 +39,17 @@ function Card(props) {
                     const projectName = workspaceRef.data().projectName;
                     setCurrentProjectXml(projectXmlData);
                     setProjectName(projectName);
+                    setFileId(projectData?.fileId && projectData?.fileId);
                     openExistingProject();
                 }
             } else {
                 const findCurrentProject = getAllLocalProjects().find(currentProject => currentProject.id === projectData.id)
                 setCurrentProjectXml(findCurrentProject.xmlValue);
                 setProjectName(findCurrentProject.projectName);
+                setFileId(findCurrentProject.fileId);
                 openExistingProject();
             }
+
         } catch (error) {
             console.error(error);
         }
@@ -65,7 +69,8 @@ function Card(props) {
                     <img alt="pencil-icon" src={theme === "dark" ? Images.darkPencilIcon : Images.pencilIcon}
                          className={styles.PencilIcon}/>
                 </div>
-                <BlackText divStyle={{marginTop: 5, marginBottom: 5}} extraStyle={styles.Date} text={props.projectData.updatedDate}/>
+                <BlackText divStyle={{marginTop: 5, marginBottom: 5}} extraStyle={styles.Date}
+                           text={props.projectData.updatedDate}/>
                 <BlackText extraStyle={styles.Date} text={props.projectData.time}/>
             </div>
         </div>

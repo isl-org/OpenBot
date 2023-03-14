@@ -97,26 +97,43 @@ export async function deleteProject(currentProjectId) {
  * @param projectName
  * @param code
  */
-export function updateCurrentProject(uniqueId, projectName, code) {
+export function updateCurrentProject(uniqueId, projectName, code, fileId) {
+
     const date = new Date();
     const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
     const currentDate = date.toLocaleDateString('en-US', dateOptions)
     const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
     const currentTime = date.toLocaleTimeString('en-US', timeOptions);
-    const project = {
-        storage: "local",
-        id: uniqueId,
-        projectName: projectName,
-        xmlValue: code,
-        updatedDate: currentDate,
-        time: currentTime,
-        folderId: getFolderId(),
 
+
+    if (getCurrentProject()?.fileId || fileId) {
+        const project = {
+            storage: "local",
+            id: uniqueId,
+            projectName: projectName,
+            xmlValue: code,
+            updatedDate: currentDate,
+            time: currentTime,
+            fileId: getCurrentProject()?.fileId ?? fileId,
+        }
+        // if(getCurrentProject()?.fileId)
+        localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
+    } else {
+        const project = {
+            storage: "local",
+            id: uniqueId,
+            projectName: projectName,
+            xmlValue: code,
+            updatedDate: currentDate,
+            time: currentTime,
+        }
+        localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
     }
-    localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
+
     const found = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
         return project.id === getCurrentProject().id
     })
+
     if (!found) {
         createProjectInLocal(localStorage.getItem(localStorageKeys.currentProject))
         if (localStorage.getItem("isSigIn") === "true") {
@@ -127,6 +144,7 @@ export function updateCurrentProject(uniqueId, projectName, code) {
                 updatedDate: currentDate,
                 time: currentTime,
                 folderId: getFolderId(),
+                fileId: getCurrentProject().fileId,
             }
             uploadOnDrive(data, getCurrentProject().id).then()
         }
@@ -189,7 +207,7 @@ export function updateLocalProjects() {
             }
         })
         localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(allProjects));
-        localStorage.setItem(localStorageKeys.currentProject, "")
+        // localStorage.setItem(localStorageKeys.currentProject, "")
     }
 }
 
@@ -205,6 +223,7 @@ export async function getFilterProjects() {
         allProjects = allLocalProjects?.concat(allDriveProjects) || allDriveProjects
         const uniqueIds = {}; // object to keep track of unique id values
         filterProjects = allProjects.filter(project => {
+
             // check if id value has already been seen
             if (uniqueIds[project.id]) {
                 return false;
@@ -218,6 +237,7 @@ export async function getFilterProjects() {
                 // check if id value is unique
                 return allProjects.filter(o => o.id === project.id).length === 1;
             }
+
             return true;
         });
     })
