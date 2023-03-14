@@ -68,13 +68,9 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     /// function to create the UI of point goal navigation. This function will called all the method that create different UI
     func createSetGoalRect() {
         if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
-            //objectTrackingSettings?.frame.origin.x = 0
-            //objectTrackingSettings?.frame.origin.y = height - 375
             setGoalRect.frame = CGRect(x: 30, y: height / 2 - 200, width: width - 60, height: 300)
         } else {
-            //objectTrackingSettings?.frame.origin.x = height - 375
-            //objectTrackingSettings?.frame.origin.y = 30
-            setGoalRect.frame = CGRect(x: 30, y: height / 2 - 200, width: width - 60, height: 300)
+            setGoalRect.frame = CGRect(x: width / 2 - 10, y: height / 2 - 300, width: width - 60, height: 300)
         }
         
         setGoalRect.backgroundColor = traitCollection.userInterfaceStyle == .dark ? Colors.bdColor : .white
