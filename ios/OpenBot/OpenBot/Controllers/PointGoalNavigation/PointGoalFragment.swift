@@ -8,7 +8,7 @@ import SceneKit
 import ARKit
 import simd
 
-class PointGoalFragment: ARSCNViewDelegate, UITextFieldDelegate {
+class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegate {
     var sceneView: ARSCNView!
     private var startingPoint = SCNNode()
     private var endingPoint: SCNNode!
@@ -35,6 +35,7 @@ class PointGoalFragment: ARSCNViewDelegate, UITextFieldDelegate {
     private var result: Control?
     let bluetooth = bluetoothDataController.shared
     var tempPixelBuffer: CVPixelBuffer!
+    let blueDress = try! YCbCrImageBufferConverter()
     
     /// function called after view of point goal navigation is called
     override func viewDidLoad() {
@@ -44,31 +45,16 @@ class PointGoalFragment: ARSCNViewDelegate, UITextFieldDelegate {
         view.addSubview(sceneView)
         let scene = SCNScene()
         sceneView.scene = scene
+        sceneView.delegate = self
+        sceneView.showsStatistics = true
+        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         let configuration = ARWorldTrackingConfiguration()
         sceneView.session.run(configuration)
-        sceneView.delegate = self
-        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
         createSetGoalRect()
         createReachMessage()
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
         navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
-    }
-    
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        let image = CIImage(cvPixelBuffer: frame.capturedImage)
-        let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)
-        let features = detector!.features(in: image)
-
-        for feature in features as! [CIQRCodeFeature] {
-            if !discoveredQRCodes.contains(feature.messageString!) {
-                discoveredQRCodes.append(feature.messageString!)
-                let url = URL(string: feature.messageString!)
-                let position = SCNVector3(frame.camera.transform.columns.3.x,
-                                          frame.camera.transform.columns.3.y,
-                                          frame.camera.transform.columns.3.z)
-            }
-         }
     }
 
     /// function will called after point goal navigation will disappear. This method will stop the ARkit
@@ -323,8 +309,23 @@ class PointGoalFragment: ARSCNViewDelegate, UITextFieldDelegate {
             let endPose = Pose(tx: endingPoint.position.x, ty: endingPoint.position.y, tz: endingPoint.position.z, qx: endingPoint.orientation.x, qy: endingPoint.orientation.y, qz: endingPoint.orientation.z, qw: endingPoint.orientation.w)
             let yaw = computeDeltaYaw(pose: startPose, goalPose: endPose)
             
-            self.result = self.navigation?.recognizeImage(pixelBuffer: imagePixelBuffer, goalDistance: distance, goalSin: sin(yaw), goalCos: cos(yaw))
+            let converted = try! blueDress.convertToBGRA(imageBuffer: pixelBuffer)
             
+            let refCon = NSMutableData()
+            var timingInfo: CMSampleTimingInfo = .invalid
+            var formatDescription: CMVideoFormatDescription? = nil
+            CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, formatDescriptionOut: &formatDescription)
+            
+            var output: CMSampleBuffer? = nil
+            let status = CMSampleBufferCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, dataReady: true, makeDataReadyCallback: nil, refcon: refCon.mutableBytes, formatDescription: formatDescription!, sampleTiming: &timingInfo, sampleBufferOut: &output)
+            
+            // extract the image buffer from the sample buffer
+            let pixelBufferBGRA: CVPixelBuffer? = CMSampleBufferGetImageBuffer(output!)
+            
+            self.result = self.navigation?.recognizeImage(pixelBuffer: pixelBufferBGRA!, goalDistance: distance, goalSin: sin(yaw), goalCos: cos(yaw))
+            guard let controlResult = self.result else {
+                return
+            }
             self.sendControl(control: controlResult)
             
             isNavQueueBusy = false
@@ -498,4 +499,5 @@ class Pose {
         ]
     }
 }
+
 
