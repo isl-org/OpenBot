@@ -58,8 +58,8 @@ class Navigation: Network {
     func recognizeImage(pixelBuffer: CVPixelBuffer, goalDistance: Float, goalSin: Float, goalCos: Float) -> Control {
         
         // Crops the image to the biggest square in the center and scales it down to model dimensions.
-        let scaledSize = CGSize(width: 160, height: 90)
-        guard let scaledPixelBuffer = pixelBuffer.resizeAndCropTop(to: scaledSize, top: 30,with: self.preAllocatedMemoryPool!) else {
+        let scaledSize = CGSize(width: 160, height: 120)
+        guard let scaledPixelBuffer = pixelBuffer.resizeAndCropTop(to: scaledSize, top: 30, with: self.preAllocatedMemoryPool!) else {
             return Control(left: 0, right: 0)
         }
         

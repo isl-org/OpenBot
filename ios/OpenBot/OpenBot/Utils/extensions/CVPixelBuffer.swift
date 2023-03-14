@@ -203,17 +203,17 @@ extension CVPixelBuffer {
         
         // Get the cropping rectangle coordinates in the original buffer
         let cropX = Int((CGFloat(scaledVImageBuffer.width) - size.width) / 2)
-        let cropY = Int((CGFloat(scaledVImageBuffer.height) - size.height) / 2)
+        let cropY = Int((CGFloat(scaledVImageBuffer.height) - size.height) / 2) + top
         
         // Make sure the cropping rectangle is entirely within the original buffer
-        guard cropX >= 0 && cropY >= 0 && cropX + Int(size.width) <= scaledVImageBuffer.width && cropY + Int(size.height) <= scaledVImageBuffer.height else {
-            print("ERROR !!")
-            return nil
-        }
+        //guard cropX >= 0 && cropY >= 0 && cropX + Int(size.width) <= scaledVImageBuffer.width && cropY + Int(size.height) - top <= scaledVImageBuffer.height else {
+        //    print("ERROR !!")
+        //    return nil
+        //}
         
         // Initialize a new vImage_Buffer for the cropped region
         let croppedVImageBuffer = vImage_Buffer(data: scaledVImageBuffer.data.advanced(by: cropY * scaledVImageBuffer.rowBytes + cropX * imageChannels),
-                                                height: vImagePixelCount(size.height),
+                                                height: vImagePixelCount(size.height - CGFloat(top)),
                                                 width: vImagePixelCount(size.width),
                                                 rowBytes: scaledVImageBuffer.rowBytes)
         
@@ -236,7 +236,7 @@ extension CVPixelBuffer {
         var croppedPixelBuffer: CVPixelBuffer?
         
         // Converts the scaled vImage buffer to CVPixelBuffer
-        let conversionStatus = CVPixelBufferCreateWithBytes(nil, Int(size.width), Int(size.height), pixelBufferType, croppedVImageBuffer.data, croppedVImageBuffer.rowBytes, nil, nil, nil, &croppedPixelBuffer)
+        let conversionStatus = CVPixelBufferCreateWithBytes(nil, Int(size.width), Int(size.height) - top, pixelBufferType, croppedVImageBuffer.data, croppedVImageBuffer.rowBytes, nil, nil, nil, &croppedPixelBuffer)
         
         // Check that the CVPixelBuffer creation succeeded.
         guard conversionStatus == kCVReturnSuccess else {
