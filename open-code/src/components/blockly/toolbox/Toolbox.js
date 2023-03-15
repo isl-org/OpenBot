@@ -83,6 +83,7 @@ export const Toolbox = (props) => {
                 <Block type="logic_null"/>
                 <Block type="math_number"/>,
                 <Block type="text"/>
+                <Block type="wait"/>
                 <Block type="timer"/>
                 <Block type="variables_set" gap="8">
                     <Field name="VAR"></Field>
@@ -243,17 +244,19 @@ export const Toolbox = (props) => {
                     </Value>
                 </Block>
             </Category>
-            <Category name="Bumper" colour={"#DA4B5D"}>
-            </Category>
-            <Category name="Movement" colour={"#9B61E2"}>
-                <Block type="movementDirection"/>,
-                <Block type="movementDistance"/>
-                <Block type="movementCircular">
-                </Block>
+            <Category name="Movement" colour={"#DA4B5D"}>
+                <Block type="forward&BackwardAtSpeed"/>
+                <Block type="forward&BackwardAtSpeedForTime"/>
+                <Block type="left&RightAtSpeed"/>
+                <Block type="left&RightAtSpeedForTime"/>
+                <Block type="straightAtSpeed"/>
+                <Block type="straightAtSpeedForTime"/>
+                <Block type="moveLeft&Right"/>
+                <Block type="moveLeft&RightForTime"/>
+                <Block type="movementCircular"/>
+                <Block type="circularAtSpeed"/>
+                <Block type="circularAtSpeedForTime"/>
                 <Block type="movementStop"/>
-            </Category>
-            <Category name="Detection" colour={"#717171"}>
-                <Block type='print'/>
             </Category>
         </>
     );

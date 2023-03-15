@@ -2,7 +2,7 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useEffect, useState} from "react";
-import {Constants, Themes} from "./utils/constants";
+import {Constants, localStorageKeys, Themes} from "./utils/constants";
 import {useLocation} from "react-router-dom";
 import styles from "./components/homeComponents/carousel/carousel.module.css";
 import {Images} from "./utils/images";
@@ -20,10 +20,6 @@ function App() {
     let onPageLoad = localStorage.getItem("theme") || ""
     const [theme, setTheme] = useState(onPageLoad);
 
-    const time=new Date().getTime();
-     // useEffect(()=>{
-     //     checkAccessTokenValidity(time)
-     // },[time])
     useEffect(() => {
         setIsLoading(true);
         setTimeout(() => {

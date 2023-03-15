@@ -165,6 +165,33 @@ Blockly.Blocks["timer"] = {
     }
 };
 
+Blockly.Blocks["wait"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "%1 %2 ms",
+            "args0": [
+                {
+                    "type": "field_label_serializable",
+                    "name": "wait",
+                    "text": "wait for"
+                },
+                {
+                    "type": "field_number",
+                    "name": "time",
+                    "value": 30,
+                    "min": 0
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
 Blockly.Blocks["soundIs"] = {
     init: function () {
         this.jsonInit({
@@ -266,11 +293,11 @@ Blockly.Blocks["soundMode"] = {
 };
 
 
-Blockly.Blocks["movementDirection"] = {
+Blockly.Blocks["forward&BackwardAtSpeed"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "move %1 by %2",
+            "message0": "move %1 at speed %2",
             "args0": [
                 {
                     "type": "field_dropdown",
@@ -284,20 +311,12 @@ Blockly.Blocks["movementDirection"] = {
                             "backward",
                             "move_backward"
                         ],
-                        [
-                            "left",
-                            "move_left"
-                        ],
-                        [
-                            "right",
-                            "move_right"
-                        ]
                     ]
                 },
                 {
                     "type": "field_number",
                     "name": "specified_amount",
-                    "value": 0,
+                    "value": 30,
                     "min": -255,
                     "max": 255
                 }
@@ -311,8 +330,179 @@ Blockly.Blocks["movementDirection"] = {
     }
 };
 
+Blockly.Blocks["forward&BackwardAtSpeedForTime"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "move %1 at speed %2 for %3 ms",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "select_direction",
+                    "options": [
+                        [
+                            "Forward",
+                            "Forward_direction"
+                        ],
+                        [
+                            "Backward",
+                            "Backward_direction"
+                        ]
+                    ]
+                },
+                {
+                    "type": "field_number",
+                    "name": "speed_value",
+                    "value": 30,
+                    "min": -255,
+                    "max": 255
+                },
+                {
+                    "type": "field_number",
+                    "name": "time",
+                    "value": 400
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
 
-Blockly.Blocks["movementDistance"] = {
+Blockly.Blocks["left&RightAtSpeed"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "move %1 at speed %2",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "direction_type",
+                    "options": [
+                        [
+                            "left",
+                            "move_left"
+                        ],
+                        [
+                            "right",
+                            "move_right"
+                        ],
+                    ]
+                },
+                {
+                    "type": "field_number",
+                    "name": "specified_amount",
+                    "value": 30,
+                    "min": -255,
+                    "max": 255
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 195,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["left&RightAtSpeedForTime"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "move %1 at speed %2 for %3 ms",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "select_direction",
+                    "options": [
+                        [
+                            "left",
+                            "left_direction"
+                        ],
+                        [
+                            "right",
+                            "right_direction"
+                        ]
+                    ]
+                },
+                {
+                    "type": "field_number",
+                    "name": "speed_value",
+                    "value": 30,
+                    "min": -255,
+                    "max": 255
+                },
+                {
+                    "type": "field_number",
+                    "name": "time",
+                    "value": 400
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["straightAtSpeed"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "go straight at speed %1",
+            "args0": [
+                {
+                    "type": "field_number",
+                    "name": "speed_value",
+                    "value": 30,
+                    "min": -255,
+                    "max": 255
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["straightAtSpeedForTime"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "go straight at speed %1 for %2 ms",
+            "args0": [
+                {
+                    "type": "field_number",
+                    "name": "speed_value",
+                    "value": 30,
+                    "min": -255,
+                    "max": 255
+                },
+                {
+                    "type": "field_number",
+                    "name": "time_value",
+                    "value": 300
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["moveLeft&Right"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
@@ -321,24 +511,24 @@ Blockly.Blocks["movementDistance"] = {
                 {
                     "type": "field_label_serializable",
                     "name": "left_name",
-                    "text": "left"
+                    "text": "left at"
                 },
                 {
                     "type": "field_number",
                     "name": "left_distance",
-                    "value": 0,
+                    "value": 30,
                     "min": -255,
                     "max": 255
                 },
                 {
                     "type": "field_label_serializable",
                     "name": "right_name",
-                    "text": "right"
+                    "text": "and right at"
                 },
                 {
                     "type": "field_number",
                     "name": "right_distance",
-                    "value": 0,
+                    "value": 30,
                     "min": -255,
                     "max": 255
                 }
@@ -352,19 +542,41 @@ Blockly.Blocks["movementDistance"] = {
     }
 };
 
-
-Blockly.Blocks["movementCircular"] = {
+Blockly.Blocks["moveLeft&RightForTime"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "move circular %1",
+            "message0": "move %1 %2 %3 %4 for %5 ms",
             "args0": [
                 {
+                    "type": "field_label_serializable",
+                    "name": "left_name",
+                    "text": "left at"
+                },
+                {
                     "type": "field_number",
-                    "name": "radius",
-                    "value": 0,
-                    "min": 0,
+                    "name": "left_distance",
+                    "value": 30,
+                    "min": -255,
                     "max": 255
+                },
+                {
+                    "type": "field_label_serializable",
+                    "name": "right_name",
+                    "text": "and right at"
+                },
+                {
+                    "type": "field_number",
+                    "name": "right_distance",
+                    "value": 30,
+                    "min": -255,
+                    "max": 255
+                },
+                {
+                    "type": "field_number",
+                    "name": "time",
+                    "value": 300,
+                    "min": 0
                 }
             ],
             "previousStatement": null,
@@ -376,6 +588,91 @@ Blockly.Blocks["movementCircular"] = {
     }
 };
 
+Blockly.Blocks["movementCircular"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "move in circle of radius %1 m",
+            "args0": [
+                {
+                    "type": "field_number",
+                    "name": "radius_value",
+                    "value": 5,
+                    "min": 0
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["circularAtSpeed"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "move in circle of radius %1 m with speed %2",
+            "args0": [
+                {
+                    "type": "field_number",
+                    "name": "radius_value",
+                    "value": 5,
+                    "min": 0
+                },
+                {
+                    "type": "field_number",
+                    "name": "speed_value",
+                    "value": 50,
+                    "min": -255,
+                    "max": 255
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["circularAtSpeedForTime"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "move in circle of radius %1 m with speed %2 for %3 ms",
+            "args0": [
+                {
+                    "type": "field_number",
+                    "name": "radius_value",
+                    "value": 5,
+                    "min": 0
+                },
+                {
+                    "type": "field_number",
+                    "name": "speed_value",
+                    "value": 50,
+                    "min": -255,
+                    "max": 255
+                },
+                {
+                    "type": "field_number",
+                    "name": "time",
+                    "value": 300,
+                    "min": 0
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
 
 Blockly.Blocks["movementStop"] = {
     init: function () {
@@ -386,7 +683,7 @@ Blockly.Blocks["movementStop"] = {
                 {
                     "type": "field_label_serializable",
                     "name": "movement_stop",
-                    "text": "stop"
+                    "text": "stop car immediately"
                 }
             ],
 

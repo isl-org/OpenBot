@@ -90,6 +90,13 @@ javascriptGenerator['timer'] = function (block) {
     return code;
 };
 
+javascriptGenerator['wait'] = function(block) {
+    let number_time = block.getFieldValue('time');
+    let code = '';
+    code+="wait("+number_time+");\n"
+    return code;
+};
+
 javascriptGenerator['soundIs'] = function (block) {
     let dropdown_booleanType = block.getFieldValue('DROPDOWN');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
@@ -112,21 +119,17 @@ javascriptGenerator['soundType'] = function (block) {
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
 
     function selectSound() {
-        // eslint-disable-next-line default-case
         switch (dropdown_type) {
             case "slow_mode" : {
                 return "slow";
-                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "medium_mode" : {
                 return "medium";
-                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "fast_mode" : {
                 return "fast";
-                // eslint-disable-next-line no-unreachable
                 break;
             }
         }
@@ -142,21 +145,17 @@ javascriptGenerator['soundMode'] = function (block) {
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
 
     function soundMode() {
-        // eslint-disable-next-line default-case
         switch (dropdown_mode_type) {
             case "OPTION1" : {
                 return "dual drive";
-                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "OPTION2" : {
                 return "joystick control";
-                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "OPTION3" : {
                 return "gamepad";
-                // eslint-disable-next-line no-unreachable
                 break;
             }
         }
@@ -168,31 +167,18 @@ javascriptGenerator['soundMode'] = function (block) {
 };
 
 
-javascriptGenerator['movementDirection'] = function (block) {
+javascriptGenerator['forward&BackwardAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
     let number_specified_amount = block.getFieldValue('specified_amount');
 
     function selectMovement() {
-        // eslint-disable-next-line default-case
         switch (dropdown_direction_type) {
             case "move_forward" : {
                 return "moveForward";
-                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "move_backward" : {
                 return "moveBackward";
-                // eslint-disable-next-line no-unreachable
-                break;
-            }
-            case "move_left" : {
-                return "moveLeft";
-                // eslint-disable-next-line no-unreachable
-                break;
-            }
-            case "move_right": {
-                return "moveRight";
-                // eslint-disable-next-line no-unreachable
                 break;
             }
         }
@@ -203,7 +189,89 @@ javascriptGenerator['movementDirection'] = function (block) {
     return code;
 };
 
-javascriptGenerator['movementDistance'] = function (block) {
+javascriptGenerator['forward&BackwardAtSpeedForTime'] = function(block) {
+    let dropdown_select_direction = block.getFieldValue('select_direction');
+    let number_speed_value = block.getFieldValue('speed_value');
+    let number_time = block.getFieldValue('time');
+
+    function selectMovement() {
+        switch (dropdown_select_direction) {
+            case "Forward_direction" : {
+                return "moveForward";
+                break;
+            }
+            case "Backward_direction" : {
+                return "moveBackward";
+                break;
+            }
+        }
+    }
+    let code="";
+    code+= selectMovement()+"("+number_speed_value+");\n"+"wait("+number_time+");\n";
+    return code;
+};
+
+
+javascriptGenerator['left&RightAtSpeed'] = function (block) {
+    let dropdown_direction_type = block.getFieldValue('direction_type');
+    let number_specified_amount = block.getFieldValue('specified_amount');
+
+    function selectMovement() {
+        switch (dropdown_direction_type) {
+            case "move_left" : {
+                return "moveLeft";
+                break;
+            }
+            case "move_right": {
+                return "moveRight";
+                break;
+            }
+        }
+    }
+
+    let code = '';
+    code += selectMovement() + "(" + number_specified_amount + ");\n";
+    return code;
+};
+
+javascriptGenerator['left&RightAtSpeedForTime'] = function (block) {
+    let dropdown_select_direction = block.getFieldValue('select_direction');
+    let number_speed_value = block.getFieldValue('speed_value');
+    let number_time = block.getFieldValue('time');
+
+    function selectMovement() {
+        switch (dropdown_select_direction) {
+            case "left_direction" : {
+                return "moveLeft";
+                break;
+            }
+            case "right_direction" : {
+                return "moveRight";
+                break;
+            }
+        }
+    }
+    let code="";
+    code+= selectMovement()+"("+number_speed_value+");\n"+"wait("+number_time+");\n";
+    return code;
+};
+
+javascriptGenerator['straightAtSpeed'] = function(block) {
+    let number_speed_value = block.getFieldValue('speed_value');
+    let code = '';
+    code+="moveStraight("+number_speed_value+");\n"
+    return code;
+};
+
+javascriptGenerator['straightAtSpeedForTime'] = function(block) {
+    let number_speed_value = block.getFieldValue('speed_value');
+    let number_time_value = block.getFieldValue('time_value');
+    let code = '';
+    code+="moveStraight("+number_speed_value+");\n"+"wait("+number_time_value+");\n";
+    return code;
+};
+
+javascriptGenerator['moveLeft&Right'] = function (block) {
     let number_left_distance = block.getFieldValue('left_distance');
     let number_right_distance = block.getFieldValue('right_distance');
 
@@ -212,10 +280,37 @@ javascriptGenerator['movementDistance'] = function (block) {
     return code;
 };
 
-javascriptGenerator['movementCircular'] = function (block) {
-    let number_radius = block.getFieldValue('radius');
+javascriptGenerator['moveLeft&RightForTime'] = function (block) {
+    let number_left_distance = block.getFieldValue('left_distance');
+    let number_right_distance = block.getFieldValue('right_distance');
+    let number_time = block.getFieldValue('time');
+
     let code = '';
-    code += "moveCircular(" + number_radius + ");\n";
+    code += "move(" + number_left_distance + "," + number_right_distance + ");\n"+"wait("+number_time+");\n";;
+    return code;
+};
+
+javascriptGenerator['movementCircular'] = function (block) {
+    let number_radius_value = block.getFieldValue('radius_value');
+    let code = '';
+    code += "moveCircular(" + number_radius_value + ");\n";
+    return code;
+};
+
+javascriptGenerator['circularAtSpeed'] = function(block) {
+    let number_radius_value = block.getFieldValue('radius_value');
+    let number_speed_value = block.getFieldValue('speed_value');
+    let code = '';
+    code += "moveCircular(" + number_radius_value +","+number_speed_value +");\n";
+    return code;
+};
+
+javascriptGenerator['circularAtSpeedForTime'] = function(block) {
+    let number_radius_value = block.getFieldValue('radius_value');
+    let number_speed_value = block.getFieldValue('speed_value');
+    let number_time = block.getFieldValue('time');
+    let code = '';
+    code += "moveCircular(" + number_radius_value +","+number_speed_value +");\n"+"wait("+number_time+");\n";
     return code;
 };
 
@@ -248,16 +343,13 @@ javascriptGenerator['wheelOdometerSensors'] = function (block) {
     let code = '';
 
     function selectWheelSensor() {
-        // eslint-disable-next-line default-case
         switch (dropdown_wheel_sensors) {
             case "front_sensor": {
                 return "frontWheelReading";
-                // eslint-disable-next-line no-unreachable
                 break;
             }
             case "back_sensor": {
                 return "backWheelReading";
-                // eslint-disable-next-line no-unreachable
                 break;
             }
         }

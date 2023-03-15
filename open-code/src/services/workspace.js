@@ -62,23 +62,23 @@ export async function getDriveProjects(driveProjects) {
  * update project on drive when change on blockly workspace
  * @returns {Promise<void>}
  */
-export async function updateProjectOnDrive() {
-    const date = new Date();
-    const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
-    const currentDate = date.toLocaleDateString('en-US', dateOptions);
-    const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
-    const currentTime = date.toLocaleTimeString('en-US', timeOptions);
-    const workspaceRef = doc(collection(db, auth.currentUser.uid), getCurrentProject().id);
-    try {
-        await updateDoc(workspaceRef, {
-            updatedDate: currentDate,
-            xmlValue: getCurrentProject().xmlValue,
-            time: currentTime,
-        })
-    } catch (err) {
-        console.log(err);
-    }
-}
+// export async function updateProjectOnDrive() {
+//     const date = new Date();
+//     const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
+//     const currentDate = date.toLocaleDateString('en-US', dateOptions);
+//     const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
+//     const currentTime = date.toLocaleTimeString('en-US', timeOptions);
+//     const workspaceRef = doc(collection(db, auth.currentUser.uid), getCurrentProject().id);
+//     try {
+//         await updateDoc(workspaceRef, {
+//             updatedDate: currentDate,
+//             xmlValue: getCurrentProject().xmlValue,
+//             time: currentTime,
+//         })
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
 
 /**
  * delete project from local and drive also if you are signedIn.
@@ -275,10 +275,10 @@ export async function getFilterProjects() {
                 // check if id value is unique
                 return allProjects.filter(o => o.id === project.id).length === 1;
             }
-
             return true;
         });
     })
+    console.log("Filter projects::::::",filterProjects)
     return filterProjects;
 }
 

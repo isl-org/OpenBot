@@ -28,10 +28,11 @@ function BlocklyComponent(props) {
     const handleWorkspaceChange = useCallback(() => {
         if (projectName !== undefined) {
             updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId,folderId);
+            // console.log("fileID:::::: blockly me",fileId)
         }
         if (localStorage.getItem("isSigIn") === "true") {
-            updateProjectOnDrive().then((res) => {
-            })
+            // updateProjectOnDrive().then((res) => {
+            // })
         }
     }, []);
 

@@ -1,7 +1,5 @@
 import {localStorageKeys} from "../utils/constants";
 import {getCurrentProject, updateLocalProjects} from "./workspace";
-
-
 /**
  * function that upload project data on Google Drive
  * @param data
@@ -194,6 +192,7 @@ function UpdateFile(response, requestBody, data, metadataFields) {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/xml',
     }
+
     return response.json().then(file => {
         // Make a PATCH request to update the file content
         fetch(`https://www.googleapis.com/upload/drive/v3/files/${data.fileId}?uploadType=media&fields=${metadataFields}`, {
@@ -277,18 +276,4 @@ export function deleteFileFromGoogleDrive(fileId) {
         })
 }
 
-
-/**
- * checking the validity of the accessToken
- */
-export function checkAccessTokenValidity() {
-    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
-    const decodedToken = JSON.parse(atob(accessToken.split('.')[1])); // Decode the token and parse the JSON string
-    const expirationTime = new Date(decodedToken.exp * 1000); // Convert the UNIX timestamp to a Date object
-    if (expirationTime < new Date()) {
-        console.log('Access token has expired');
-    } else {
-        console.log('Access token is still valid');
-    }
-}
 
