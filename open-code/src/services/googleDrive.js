@@ -161,7 +161,7 @@ export const SetGoogleFileId = (fileID, setFileId, key) => {
  * get folder id from firebase
  */
 export function getFolderId() {
-    return getCurrentProject().folderId;
+    return getCurrentProject()?.folderId;
 }
 
 
