@@ -1,7 +1,8 @@
 import {auth, db} from "./firebase";
 import {collection, deleteDoc, doc, getDocs, setDoc, updateDoc} from "firebase/firestore";
 import {localStorageKeys} from "../utils/constants";
-import {getFolderId} from "./googleDrive";
+import {deleteFileFromGoogleDrive, getFolderId} from "./googleDrive";
+import {getAllFilesFromGoogleDrive} from "./googleDrive";
 
 /**
  * project upload on drive when user signedIn.
@@ -30,10 +31,26 @@ export async function uploadOnDrive(data, uniqueId) {
 export async function getDriveProjects(driveProjects) {
     if (auth.currentUser?.uid) {
         try {
-            const projects = await getDocs(collection(db, auth.currentUser?.uid));
-            projects.forEach((doc) => {
-                driveProjects?.push({storage: "drive", id: doc.id, ...doc.data()});
+            //getting allDocs from Google Drive
+            let allFilesFromGoogleDrive = await getAllFilesFromGoogleDrive();
+            allFilesFromGoogleDrive.length > 0 && allFilesFromGoogleDrive.forEach((doc) => {
+                if (!doc?.trashed)
+                    driveProjects?.push({
+                        storage: "drive",
+                        id: doc.appProperties.id,
+                        projectName: doc.name,
+                        updatedDate: doc.appProperties.date,
+                        time:doc.appProperties.time,
+                        fileId:doc.id,
+                        folderId:getFolderId()
+                    });
             })
+            return driveProjects
+            //getting all docs from firebase
+            // const projects = await getDocs(collection(db, auth.currentUser?.uid));
+            // projects.forEach((doc) => {
+            //     driveProjects?.push({storage: "drive", id: doc.id, ...doc.data()});
+            // })
         } catch (error) {
             console.error(error);
         }
@@ -70,8 +87,14 @@ export async function updateProjectOnDrive() {
 export async function deleteProject(currentProjectId) {
     try {
         if (localStorage.getItem("isSigIn") === "true") {
-            await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId))
+            //deleting file from firebase
+            // await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId))
 
+            //deleting file from Google Drive
+            const allProject = []
+            await getDriveProjects(allProject);
+            const findCurrentProject = allProject.find(currentProject => currentProject.id === currentProjectId);
+            deleteFileFromGoogleDrive(findCurrentProject.fileId)
             JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
                 if (project.id === currentProjectId) {
                     const restObject = getAllLocalProjects().filter((res) => (res.id !== project.id));
@@ -240,6 +263,7 @@ export async function getFilterProjects() {
 
             return true;
         });
+        console.log("filterProjects::::", filterProjects);
     })
     return filterProjects;
 }

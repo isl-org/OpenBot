@@ -27,9 +27,9 @@ export const UploadCode = () => {
         const code = javascriptGenerator.workspaceToCode(
             primaryWorkspace.current
         );
-        console.log(code);
+        console.log(code+"\nstart()\n"+"forever()\n");
         setGenerateCode(!generate);
-        setCode(code);
+        setCode(code+"\nstart()\n"+"forever()\n");
         setDrawer(true);
 
     };

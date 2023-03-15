@@ -20,6 +20,10 @@ function App() {
     let onPageLoad = localStorage.getItem("theme") || ""
     const [theme, setTheme] = useState(onPageLoad);
 
+    const time=new Date().getTime();
+     // useEffect(()=>{
+     //     checkAccessTokenValidity(time)
+     // },[time])
     useEffect(() => {
         setIsLoading(true);
         setTimeout(() => {

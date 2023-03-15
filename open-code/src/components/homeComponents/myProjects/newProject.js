@@ -10,6 +10,7 @@ import moment from 'moment';
 
 
 export const NewProject = () => {
+
     const [projects, setProjects] = useState([]);
     const {theme} = useContext(ThemeContext)
     useEffect(() => {

@@ -5,7 +5,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import styles from "./navbar.module.css";
 import {Images} from "../../utils/images";
 import {StoreContext} from "../../context/context";
-import {auth, getRefreshToken} from "../../services/firebase";
+import {auth} from "../../services/firebase";
 import {HelpCenterModal} from "../homeComponents/header/helpCenterModal";
 import {EditProfileModal} from "../homeComponents/header/editProfileModal";
 import {DeleteModel, LogOutModal} from "../homeComponents/header/logOutAndDeleteModal";

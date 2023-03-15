@@ -8,8 +8,9 @@ import {doc, getDoc} from "firebase/firestore";
 import {auth, db} from "../../../services/firebase";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
-import {getAllLocalProjects} from "../../../services/workspace";
+import {getAllLocalProjects, getDriveProjects} from "../../../services/workspace";
 import {localStorageKeys} from "../../../utils/constants";
+import {getSelectedProjectFromGoogleDrive} from "../../../services/googleDrive";
 
 function Card(props) {
     const {theme} = useContext(ThemeContext);
@@ -25,23 +26,31 @@ function Card(props) {
      * @returns {Promise<void>}
      */
     const handleOpenProject = async (projectData) => {
-        console.log("projrctdatadatat ===== ", projectData)
-        localStorage.setItem(localStorageKeys.currentProject, "")
-        setCurrentProjectId(projectData.id)
+        localStorage.setItem(localStorageKeys.currentProject, "");
+        setCurrentProjectId(projectData.id);
         try {
             if (projectData.storage === "drive") {
-                const blockSnap = doc(db, auth.currentUser.uid, projectData.id);
-                const workspaceRef = await getDoc(blockSnap);
-                if (workspaceRef.exists()) {
-                    const projectId = workspaceRef.id;
-                    setCurrentProjectId(projectId);
-                    const projectXmlData = workspaceRef.data().xmlValue;
-                    const projectName = workspaceRef.data().projectName;
-                    setCurrentProjectXml(projectXmlData);
-                    setProjectName(projectName);
-                    setFileId(projectData?.fileId && projectData?.fileId);
-                    openExistingProject();
-                }
+                //selected project from Google Drive
+                const allProject = []
+                await getDriveProjects(allProject);
+                const findCurrentProject = allProject.find(currentProject => currentProject.id === projectData.id);
+                const projectXmlData = await getSelectedProjectFromGoogleDrive(findCurrentProject.fileId);
+                setCurrentProjectXml(projectXmlData);
+                setProjectName(findCurrentProject.projectName);
+                openExistingProject();
+
+                // selected project from firebase
+                // const blockSnap = doc(db, auth.currentUser.uid, projectData.id);
+                // const workspaceRef = await getDoc(blockSnap);
+                // if (workspaceRef.exists()) {
+                //     const projectId = workspaceRef.id;
+                //     setCurrentProjectId(projectId);
+                //     const projectXmlData = workspaceRef.data().xmlValue;
+                //     const projectName = workspaceRef.data().projectName;
+                //     setCurrentProjectXml(projectXmlData);
+                //     setProjectName(projectName);
+                //     openExistingProject();
+                // }
             } else {
                 const findCurrentProject = getAllLocalProjects().find(currentProject => currentProject.id === projectData.id)
                 setCurrentProjectXml(findCurrentProject.xmlValue);
@@ -59,6 +68,7 @@ function Card(props) {
         <div className={styles.cardContent}>
             <div onClick={() => {
                 handleOpenProject(props.projectData).catch((err) => {
+                    console.log(props.projectData)
                     console.log("error on fetching blocks: ", err);
                 })
             }} className={` ${styles.Card} ${theme === "dark" ? styles.darkBoxShadow : styles.lightBoxShadow}`}>

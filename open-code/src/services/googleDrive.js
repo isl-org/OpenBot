@@ -1,7 +1,5 @@
 import {localStorageKeys} from "../utils/constants";
 import {updateLocalProjects} from "./workspace";
-import {useContext} from "react";
-import {StoreContext} from "../context/context";
 
 /**
  * function that upload project data on Google Drive
@@ -23,6 +21,7 @@ export const uploadToGoogleDrive = async (data, setFileId) => {
             }
         }).then(async (res) => {
                 console.log("res::")
+
                 if (!(res.ok)) {
                     await CreateFolder(accessToken, folderId).then((folderId) => {
                             uploadFileToFolder(accessToken, data, folderId, setFileId)
@@ -43,8 +42,12 @@ export const uploadToGoogleDrive = async (data, setFileId) => {
 
 
 };
-
-
+/**
+ * uploading file to folder
+ * @param accessToken
+ * @param data
+ * @param folderId
+ */
 const uploadFileToFolder = (accessToken, data, folderId, setFileId) => {
     const metadataFields = 'appProperties,id,name,createdTime';
     console.log("fileId::::", data)
@@ -56,6 +59,8 @@ const uploadFileToFolder = (accessToken, data, folderId, setFileId) => {
         appProperties: {
             date: data.createdDate,
             id: data.id,
+            storage: "drive",
+            time: data.time,
         },
     };
 
@@ -106,28 +111,6 @@ const uploadFileToFolder = (accessToken, data, folderId, setFileId) => {
 
 };
 
-
-export function getFromGoogleDrive() {
-    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
-    const fileId = "your-file-id-here";
-    const headers = {
-        Authorization: `Bearer ${accessToken}`,
-    }
-
-    fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-        method: "GET",
-        headers: headers,
-    })
-        .then((response) => response.text())
-        .then((data) => {
-            console.log(data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
-
-
 /**
  * Create folder
  * @constructor
@@ -160,8 +143,8 @@ async function CreateFolder(accessToken, folderId) {
         .catch(error => {
             console.error(error);
         });
-
 }
+
 
 /**
  * set params in local
@@ -219,10 +202,11 @@ function UpdateFile(response, headers, requestBody, data,metadataFields) {
     return response.json().then(file => {
         console.log("file:::", requestBody)
         // Make a PATCH request to update the file content
-        fetch(`https://www.googleapis.com/upload/drive/v3/files/${data.fileId` , {
+        fetch(`https://www.googleapis.com/upload/drive/v3/files/${data.fileId}` , {
             method: 'PATCH',
             headers: headers,
             body: requestBody,
+
         }).then(response => {
             console.log('File updated successfully',response);
         }).catch(error => {
@@ -230,3 +214,86 @@ function UpdateFile(response, headers, requestBody, data,metadataFields) {
         });
     });
 }
+
+/**
+ * get all projects from Google Drive
+ */
+export async function getAllFilesFromGoogleDrive() {
+    const folderId = getFolderId();
+    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
+    if (folderId) {
+        return await fetch(`https://www.googleapis.com/drive/v3/files?q='${folderId}' in parents&fields=*`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                return data.files;
+
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+}
+
+/**
+ * get selected project data on clicking
+ */
+export async function getSelectedProjectFromGoogleDrive(fileId) {
+    const folderId = getFolderId()
+    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
+    const headers = {
+        Authorization: `Bearer ${accessToken}`,
+    };
+    return await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?parents=${folderId}&alt=media`, {
+        method: "GET",
+        headers: headers,
+    })
+        .then((response) => response.text())
+        .then((data) => {
+            return data;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
+/**
+ * deleting file
+ * @param fileId
+ */
+export function deleteFileFromGoogleDrive(fileId) {
+    const folderId = getFolderId()
+    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
+    const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+    }
+    fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?supportsAllDrives=true&parents=${folderId}`, {
+        method: "DELETE",
+        headers: headers
+    })
+        .then(() => {
+            console.log("File has been deleted successfully")
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+/**
+ * checking the validity of the accessToken
+ */
+export function checkAccessTokenValidity(){
+    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
+    const decodedToken = JSON.parse(atob(accessToken.split('.')[1])); // Decode the token and parse the JSON string
+    const expirationTime = new Date(decodedToken.exp * 1000); // Convert the UNIX timestamp to a Date object
+    if (expirationTime < new Date()) {
+        console.log('Access token has expired');
+    } else {
+        console.log('Access token is still valid');
+    }
+}
+
