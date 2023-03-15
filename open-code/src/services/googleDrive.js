@@ -1,5 +1,6 @@
 import {localStorageKeys} from "../utils/constants";
-import {updateLocalProjects} from "./workspace";
+import {getCurrentProject, updateLocalProjects} from "./workspace";
+
 
 /**
  * function that upload project data on Google Drive
@@ -7,40 +8,39 @@ import {updateLocalProjects} from "./workspace";
  * @param uniqueId
  * @returns {Promise<void>}
  */
-export const uploadToGoogleDrive = async (data, setFileId) => {
+export const uploadToGoogleDrive = async (data, setFileId, setFolderId) => {
     const accessToken = localStorage.getItem(localStorageKeys.accessToken);
     //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
     const folderId = getFolderId();
-
     if (folderId) {
-
         await fetch(`https://www.googleapis.com/drive/v3/files/${folderId}?access_token=${accessToken}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then(async (res) => {
-                console.log("res::")
+                console.log("res check folder exists or not ::", res)
+                if (res.status === 200) {
+                    // const data = await res.json();
+                    // console.log("data if folder exist::::",res?.trashed)
+                    uploadFileToFolder(accessToken, data, folderId, setFileId);
 
-                if (!(res.ok)) {
-                    await CreateFolder(accessToken, folderId).then((folderId) => {
+                } else {
+                    await CreateFolder(accessToken, folderId, setFolderId).then((folderId) => {
+                            console.log("folderId,", folderId)
                             uploadFileToFolder(accessToken, data, folderId, setFileId)
                         }
                     );
-                } else {
-                    uploadFileToFolder(accessToken, data, folderId, setFileId);
-
                 }
             }
         );
     } else {
-        await CreateFolder(accessToken, folderId).then((folderId) => {
+        console.log("when folder is not exist")
+        await CreateFolder(accessToken, folderId, setFolderId).then((folderId) => {
                 uploadFileToFolder(accessToken, data, folderId, setFileId)
             }
         );
     }
-
-
 };
 /**
  * uploading file to folder
@@ -73,26 +73,26 @@ const uploadFileToFolder = (accessToken, data, folderId, setFileId) => {
         "Content-Type": `multipart/related; boundary=${boundary}`,
         "Content-Length": requestBody?.length,
     };
-    console.log("data.fileID", data.fileId)
+
     if (data.fileId) {
         // Check if a file with the specified fileId exists
+        //TODO folderID me jake check karo
         fetch(`https://www.googleapis.com/drive/v3/files/${data.fileId}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
-                'Content-Encoding': 'identity'
             }
         }).then(response => {
-            console.log("response::::", response)
+            console.log("response if file exist or not ::::", response)
             if (response.status === 200) {
-                // If a file with the specified fileId exists, update the existing file
-                // You can use the Files.update method to update the existing file
                 console.log('File exists');
-                UpdateFile(response, headers, requestBody, data,metadataFields,);
+                console.log("data.fileID file exist", data.fileId)
+                // If a file with the specified fileId exists, update the existing file
+                UpdateFile(response, requestBody, data, metadataFields,);
             } else if (response.status === 404) {
+                console.log('File  does not exists');
                 // If a file with the specified fileId doesn't exist, create a new file
-                // You can use the Files.create method to create a new file
                 CreateFile(data, folderId, metadataFields, headers, requestBody, setFileId).then();
 
             } else {
@@ -107,8 +107,6 @@ const uploadFileToFolder = (accessToken, data, folderId, setFileId) => {
         console.log("createFIle")
         CreateFile(data, folderId, metadataFields, headers, requestBody, setFileId).then();
     }
-
-
 };
 
 /**
@@ -117,7 +115,7 @@ const uploadFileToFolder = (accessToken, data, folderId, setFileId) => {
  * @param accessToken
  * @param folderId
  */
-async function CreateFolder(accessToken, folderId) {
+async function CreateFolder(accessToken, folderId, setFolderId) {
 
     const folderMetadata = {
         name: "openCode-openBot",
@@ -136,9 +134,10 @@ async function CreateFolder(accessToken, folderId) {
     return await fetch("https://www.googleapis.com/drive/v3/files", data)
         .then(response => response.json())
         .then(folder => {
+            console.log("folder:::::::", folder)
             console.log(`Folder '${folder.name}' created with ID '${folder.id}'`);
-            setGoogleFolderId(folder.id);
-            return folderId;
+            SetGoogleFileId(folder.id, setFolderId, "folderId");
+            return folder.id;
         })
         .catch(error => {
             console.error(error);
@@ -147,37 +146,28 @@ async function CreateFolder(accessToken, folderId) {
 
 
 /**
- * set params in local
- * @param data
- */
-export const setGoogleFolderId = (data) => {
-    localStorage.setItem(localStorageKeys.folderId, data);
-}
-
-/**
- * set google files id in array
+ * function to set folder or file id in current project
  * @param fileID
  */
-export const SetGoogleFileId = (fileID, setFileId) => {
-
+export const SetGoogleFileId = (fileID, setFileId, key) => {
     let currentProject = JSON.parse(localStorage.getItem(localStorageKeys.currentProject));
-    currentProject.fileId = fileID;
-    console.log("currentProject::::", currentProject,)
+    currentProject[key] = fileID;
     localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(currentProject));
     setFileId(fileID);
-    updateLocalProjects()
+    updateLocalProjects();
 }
 
 /**
  * get folder id from firebase
  */
 export function getFolderId() {
-    return localStorage.getItem(localStorageKeys.folderId);
+    return getCurrentProject().folderId;
 }
 
 
 //create file in google drive openBot folder
 async function CreateFile(data, folderId, metadataFields, headers, requestBody, setFileId) {
+    console.log("CreateFile variables::::::::", data, folderId, metadataFields, headers, requestBody,)
     await fetch(`https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart&fields=${metadataFields}`, {
         method: "POST",
         headers: headers,
@@ -188,7 +178,7 @@ async function CreateFile(data, folderId, metadataFields, headers, requestBody, 
             console.log("response data", file)
             console.log(`File '${file.name}' uploaded to folder '${folderId}' with ID '${file.id}'`);
             console.log("data.fileId", data.fileId)
-            SetGoogleFileId(file.id, setFileId)
+            SetGoogleFileId(file.id, setFileId, "fileId")
         })
         .catch(error => {
             console.error(error);
@@ -197,18 +187,22 @@ async function CreateFile(data, folderId, metadataFields, headers, requestBody, 
 
 
 //upload file in google drive openBot folder
-function UpdateFile(response, headers, requestBody, data,metadataFields) {
-    console.log("data.fileID::::::",data.fileId,headers)
+function UpdateFile(response, requestBody, data, metadataFields) {
+
+    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
+    let headers = {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/xml',
+    }
     return response.json().then(file => {
-        console.log("file:::", requestBody)
         // Make a PATCH request to update the file content
-        fetch(`https://www.googleapis.com/upload/drive/v3/files/${data.fileId}` , {
+        fetch(`https://www.googleapis.com/upload/drive/v3/files/${data.fileId}?uploadType=media&fields=${metadataFields}`, {
             method: 'PATCH',
             headers: headers,
             body: requestBody,
 
         }).then(response => {
-            console.log('File updated successfully',response);
+            console.log('response after trying to update:::', response);
         }).catch(error => {
             console.log('Error updating file:', error);
         });
@@ -283,10 +277,11 @@ export function deleteFileFromGoogleDrive(fileId) {
         })
 }
 
+
 /**
  * checking the validity of the accessToken
  */
-export function checkAccessTokenValidity(){
+export function checkAccessTokenValidity() {
     const accessToken = localStorage.getItem(localStorageKeys.accessToken);
     const decodedToken = JSON.parse(atob(accessToken.split('.')[1])); // Decode the token and parse the JSON string
     const expirationTime = new Date(decodedToken.exp * 1000); // Convert the UNIX timestamp to a Date object

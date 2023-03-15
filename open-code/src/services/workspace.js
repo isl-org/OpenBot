@@ -1,5 +1,5 @@
 import {auth, db} from "./firebase";
-import {collection, deleteDoc, doc, getDocs, setDoc, updateDoc} from "firebase/firestore";
+import {collection,  doc,  setDoc, updateDoc} from "firebase/firestore";
 import {localStorageKeys} from "../utils/constants";
 import {deleteFileFromGoogleDrive, getFolderId} from "./googleDrive";
 import {getAllFilesFromGoogleDrive} from "./googleDrive";
@@ -40,9 +40,9 @@ export async function getDriveProjects(driveProjects) {
                         id: doc.appProperties.id,
                         projectName: doc.name,
                         updatedDate: doc.appProperties.date,
-                        time:doc.appProperties.time,
-                        fileId:doc.id,
-                        folderId:getFolderId()
+                        time: doc.appProperties.time,
+                        fileId: doc.id,
+                        folderId: getFolderId()
                     });
             })
             return driveProjects
@@ -120,7 +120,7 @@ export async function deleteProject(currentProjectId) {
  * @param projectName
  * @param code
  */
-export function updateCurrentProject(uniqueId, projectName, code, fileId) {
+export function updateCurrentProject(uniqueId, projectName, code, fileId,folderId) {
 
     const date = new Date();
     const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
@@ -137,6 +137,7 @@ export function updateCurrentProject(uniqueId, projectName, code, fileId) {
             xmlValue: code,
             updatedDate: currentDate,
             time: currentTime,
+            folderId: getCurrentProject()?.folderId ?? folderId,
             fileId: getCurrentProject()?.fileId ?? fileId,
         }
         // if(getCurrentProject()?.fileId)
@@ -148,6 +149,7 @@ export function updateCurrentProject(uniqueId, projectName, code, fileId) {
             projectName: projectName,
             xmlValue: code,
             updatedDate: currentDate,
+            folderId: getCurrentProject()?.folderId ?? folderId,
             time: currentTime,
         }
         localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
@@ -160,14 +162,26 @@ export function updateCurrentProject(uniqueId, projectName, code, fileId) {
     if (!found) {
         createProjectInLocal(localStorage.getItem(localStorageKeys.currentProject))
         if (localStorage.getItem("isSigIn") === "true") {
-            const data = {
-                projectName: getCurrentProject().projectName,
-                xmlValue: getCurrentProject().xmlValue,
-                createdDate: currentDate,
-                updatedDate: currentDate,
-                time: currentTime,
-                folderId: getFolderId(),
-                fileId: getCurrentProject().fileId,
+            let data;
+            if (getCurrentProject()?.fileId || fileId) {
+                data = {
+                    projectName: getCurrentProject().projectName,
+                    xmlValue: getCurrentProject().xmlValue,
+                    createdDate: currentDate,
+                    updatedDate: currentDate,
+                    time: currentTime,
+                    folderId: getFolderId(),
+                    fileId: getCurrentProject().fileId,
+                }
+            } else {
+                data = {
+                    projectName: getCurrentProject().projectName,
+                    xmlValue: getCurrentProject().xmlValue,
+                    createdDate: currentDate,
+                    updatedDate: currentDate,
+                    time: currentTime,
+                    folderId: getFolderId(),
+                }
             }
             uploadOnDrive(data, getCurrentProject().id).then()
         }
@@ -263,7 +277,6 @@ export async function getFilterProjects() {
 
             return true;
         });
-        console.log("filterProjects::::", filterProjects);
     })
     return filterProjects;
 }

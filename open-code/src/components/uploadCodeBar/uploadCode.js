@@ -20,7 +20,7 @@ export const UploadCode = () => {
     const [buttonActive, setButtonActive] = useState(false);
     const [driveButtonActive, setDriveButtonActive] = useState(false);
     const {theme} = useContext(ThemeContext);
-    const {generate, setGenerateCode,setCode,setDrawer,setFileId} = useContext(StoreContext);
+    const {generate, setGenerateCode,setCode,setDrawer,setFileId,setFolderId} = useContext(StoreContext);
     let primaryWorkspace = useRef();
 
     const generateCode = () => {
@@ -78,7 +78,7 @@ export const UploadCode = () => {
             createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
         }
         //upload on google drive
-        uploadToGoogleDrive(data,setFileId).then();
+        uploadToGoogleDrive(data,setFileId,setFolderId).then();
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);

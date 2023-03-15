@@ -9,12 +9,14 @@ export default ({children}) => {
     let savedProjectId = null
     let savedProjectXml = null
     let savedFileId = null
+    let savedFolderId = null
 
     if (localStorage.getItem(localStorageKeys.currentProject)) {
         savedProjectName = getCurrentProject().projectName
         savedProjectId = getCurrentProject().id
         savedProjectXml = getCurrentProject().xmlValue
         savedFileId = getCurrentProject()?.fileId
+        savedFolderId = getCurrentProject().folderId
     }
 
     const [projectName, setProjectName] = useState(savedProjectName ? savedProjectName : undefined);
@@ -25,7 +27,8 @@ export default ({children}) => {
     const [currentProjectXml, setCurrentProjectXml] = useState(savedProjectXml);
     const [currentProjectId, setCurrentProjectId] = useState(savedProjectId);
     const [fileId, setFileId] = useState(savedFileId);
-    console.log("fileID::::::::::context :::::::", fileId, getCurrentProject()?.fileId)
+    const [folderId, setFolderId] = useState(savedFolderId);
+
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,
@@ -35,6 +38,7 @@ export default ({children}) => {
         currentProjectXml, setCurrentProjectXml,
         currentProjectId, setCurrentProjectId,
         fileId, setFileId,
+        folderId, setFolderId
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }
