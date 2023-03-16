@@ -100,4 +100,24 @@
       android:name="org.openbot.pointGoalNavigation.PointGoalNavigationFragment"
       android:label="fragment_point_goal_navigation"
       tools:layout="@layout/fragment_point_goal_navigation" />
+
+    <fragment
+        android:id="@+id/barCodeScannerFragment"
+        android:name="org.openbot.convertJStoJAVA.BarCodeScannerFragment"
+        android:label="@string/bluetooth" />
+
+    <action
+        android:id="@+id/open_bar_code_scanner_fragment"
+        app:destination="@id/barCodeScannerFragment"
+        />
+
+    <fragment
+        android:id="@+id/convertCodeJStoJAVAFragment"
+        android:name="org.openbot.convertJStoJAVA.convertJStoJAVAFragment"
+        android:label="@string/bluetooth" />
+
+    <action
+        android:id="@+id/open_convert_code_js_to_java_fragment"
+        app:destination="@id/convertCodeJStoJAVAFragment"
+        />
 </navigation>
