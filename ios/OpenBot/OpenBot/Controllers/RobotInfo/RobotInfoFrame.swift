@@ -203,7 +203,7 @@ class RobotInfoFrame: UIViewController {
     func createReadings() {
         battery = createLabels(text: Strings.battery, topAnchor: 530, leadingAnchor: 20)
         speed = createLabels(text: Strings.speedText, topAnchor: 530, leadingAnchor: 110)
-        speed.font = speed.font.withSize(14)
+        speed.font = speed.font.withSize(12)
         sonar = createLabels(text: Strings.sonarLabel, topAnchor: 530, leadingAnchor: 255)
     }
 
@@ -250,11 +250,11 @@ class RobotInfoFrame: UIViewController {
     func createHeadings(text: String) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.textColor = Colors.bdColor
+        label.textColor = Colors.border
         label.frame.size.width = CGFloat(text.count * 15)
         label.frame.size.height = 40
         view.addSubview(label)
-        label.font = HelveticaNeue.bold(size: 12)
+        label.font = HelveticaNeue.bold(size: 10)
         return label
     }
 
@@ -262,9 +262,9 @@ class RobotInfoFrame: UIViewController {
     func createLabels(text: String, topAnchor: CGFloat, leadingAnchor: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.textColor = Colors.bdColor
+        label.textColor = Colors.border
         label.frame.size.width = CGFloat(text.count * 10)
-        label.font = label.font.withSize(15)
+        label.font = label.font.withSize(12)
         label.frame.size.height = 40
         view.addSubview(label)
         label.frame.origin.x = leadingAnchor
@@ -275,10 +275,11 @@ class RobotInfoFrame: UIViewController {
 ///function to create the checkbox UI
     func createCheckbox(leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> Checkbox {
         let checkbox = Checkbox(frame: CGRect(x: leadingAnchor, y: topAnchor, width: 25, height: 25))
-        checkbox.checkedBorderColor = Colors.bdColor
-        checkbox.uncheckedBorderColor = Colors.bdColor
+        checkbox.checkedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.uncheckedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.checkmarkColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.checkedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
         checkbox.checkmarkStyle = .tick
-        checkbox.checkmarkColor = Colors.bdColor
         checkbox.isEnabled = false
         view.addSubview(checkbox)
         checkbox.addTarget(self, action: action!, for: .valueChanged)
@@ -290,7 +291,7 @@ class RobotInfoFrame: UIViewController {
         let button = UIButton()
         button.frame.size = CGSize(width: width, height: height)
         button.setTitle(title, for: .normal)
-        button.setTitleColor(Colors.bdColor, for: .normal)
+        button.setTitleColor(Colors.border, for: .normal)
         button.frame.origin = CGPoint(x: leadingAnchor, y: topAnchor)
         button.backgroundColor = Colors.title
         button.layer.cornerRadius = 5
@@ -587,7 +588,7 @@ class RobotInfoFrame: UIViewController {
         if sonarData != "" {
             let index = sonarData.index(after: sonarData.startIndex)
             let actualSonarValue = min(Int(String(sonarData[index...])) ?? 0, 300)
-            sonar.text = "Sonar " + String(actualSonarValue) + " CM"
+            sonar.text = "Sonar " + String(actualSonarValue) + " cm"
         }
     }
 
@@ -608,8 +609,8 @@ class RobotInfoFrame: UIViewController {
             let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
             let index_2 = speedometer.index(before: indexOfComma)
             let leftFront = Float(speedometer[index_1...index_2])
-            let rightFont = Float(speedometer[speedometer.index(after: indexOfComma)...])
-            speed.text = Strings.speed + " (l,r) " + String(leftFront!) + " " + String(rightFont!) + " rpm"
+            let rightFront = Float(speedometer[speedometer.index(after: indexOfComma)...])
+            speed.text = Strings.speed + " (l,r) " + String(leftFront!) + " " + String(rightFront!) + " rpm"
         }
     }
 
