@@ -34,24 +34,23 @@ export async function getDriveProjects(driveProjects) {
         try {
             //getting allDocs from Google Drive
             let allFilesFromGoogleDrive = await getAllFilesFromGoogleDrive();
-            allFilesFromGoogleDrive?.length > 0 && allFilesFromGoogleDrive.forEach((doc) => {
-                if (!doc?.trashed)
+            //check if there is any project or not if then in driveProject push only required data.
+            allFilesFromGoogleDrive.length > 0 && allFilesFromGoogleDrive.forEach((doc) => {
+                //check project is not deleted
+                console.log("doc::::",doc)
+                if (!doc?.trashed) {
                     driveProjects?.push({
                         storage: "drive",
+                        xmlValue: doc.xmlValue,
                         id: doc.appProperties.id,
                         projectName: doc.name,
                         updatedDate: doc.appProperties.date,
                         time: doc.appProperties.time,
-                        fileId: doc.id,
-                        folderId: getFolderId()
                     });
+                }
             })
+            console.log("driveProjects:::",driveProjects)
             return driveProjects
-            //getting all docs from firebase
-            // const projects = await getDocs(collection(db, auth.currentUser?.uid));
-            // projects.forEach((doc) => {
-            //     driveProjects?.push({storage: "drive", id: doc.id, ...doc.data()});
-            // })
         } catch (error) {
             console.error(error);
         }
@@ -282,3 +281,22 @@ export async function getFilterProjects() {
     return filterProjects;
 }
 
+//
+// /**
+//  * get project from firebase when user signedIn
+//  * @param driveProjects
+//  * @returns {Promise<void>}
+//  */
+// async function getFirBaseProject(driveProjects) {
+//     if (auth.currentUser?.uid) {
+//         try {
+//             // getting all docs from firebase
+//             const projects = await getDocs(collection(db, auth.currentUser?.uid));
+//             projects.forEach((doc) => {
+//                 driveProjects?.push({storage: "drive", id: doc.id, ...doc.data()});
+//             })
+//         } catch (error) {
+//             console.error(error);
+//         }
+//     }
+// }

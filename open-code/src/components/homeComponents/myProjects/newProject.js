@@ -8,16 +8,21 @@ import Card from "./card";
 import {getFilterProjects} from "../../../services/workspace";
 import moment from 'moment';
 
-
+/**
+ *  show all projects with create new project option
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const NewProject = () => {
-
     const [projects, setProjects] = useState([]);
     const {theme} = useContext(ThemeContext)
+
     useEffect(() => {
         getFilterProjects().then((filterProject) => {
             setProjects(filterProject)
         })
     }, [])
+
     return (
         <div className={styles.Main + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
             <div className={styles.Heading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>My

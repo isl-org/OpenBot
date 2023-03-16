@@ -34,8 +34,7 @@ function Card(props) {
                 const allProject = []
                 await getDriveProjects(allProject);
                 const findCurrentProject = allProject.find(currentProject => currentProject.id === projectData.id);
-                const projectXmlData = await getSelectedProjectFromGoogleDrive(findCurrentProject.fileId);
-                setCurrentProjectXml(projectXmlData);
+                setCurrentProjectXml(findCurrentProject.xmlValue);
                 setProjectName(findCurrentProject.projectName);
                 openExistingProject();
 

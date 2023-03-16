@@ -2,6 +2,7 @@ import Blockly from "blockly/core";
 import {colors} from "./color";
 import React from "react";
 import {Images} from "./images";
+
 export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
 export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_forEach", "controls_flow_statements"];
 
@@ -50,14 +51,16 @@ export const localStorageKeys = {
     allProjects: "projects",
     currentProject: "currentProject",
     accessToken: "accessToken",
-    folderId:"folderId",
-    fileIds:"fileIds"
+    folderId: "folderId",
+    fileIds: "fileIds"
 }
 
 export const Constants = {
-    "LoadingTime": 800,
-    "ProfileSuccessMsg": "Profile updated successfully!",
-    "CookieMsg": "Our website use cookies. By continuing navigating, we assume your permission to deploy cookies as detailed in our Privacy Policy.",
+    LoadingTime: 800,
+    ProfileSuccessMsg: "Profile updated successfully!",
+    CookieMsg: "Our website use cookies. By continuing navigating, we assume your permission to deploy cookies as detailed in our Privacy Policy.",
+    FolderName: "openCode-openBot",
+    baseUrl: "https://www.googleapis.com/drive/v3",
 }
 
 export const PathName = {

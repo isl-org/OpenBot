@@ -123,27 +123,39 @@ export function ProjectNamePopUp(params) {
  */
 export function ProfileSignIn(params) {
     const {setIsProfileModal, user, setUser} = params
+
+    const handleSignIn = () => {
+        googleSigIn().then(response => {
+            setUser({
+                photoURL: response?.user.photoURL,
+                displayName: response?.user.displayName,
+                email: response?.user.email
+            });
+            //TODO get projects from drive and store in local storage
+        }).catch((error) => {
+            console.log("signIn error: ", error)
+        });
+    }
+
     return (
         localStorage.getItem("isSigIn") === "true" ?
             <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
-                {user?.photoURL ? <img alt="Profile Icon" src={user.photoURL}
-                                       style={{height: 28, width: 28, borderRadius: 90,}}/> :
+                {/*image display*/}
+                {user?.photoURL ?
+                    <img alt="Profile Icon" src={user.photoURL}
+                         style={{height: 28, width: 28, borderRadius: 90,}}/>
+                    :
                     <LoaderComponent color="white"/>
                 }
+                {/*name*/}
                 <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>
+                {/*dropdown arrow*/}
                 <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
-            </div> :
-            <button onClick={() => {
-                googleSigIn().then(response => {
-                    setUser({
-                        photoURL: response?.user.photoURL,
-                        displayName: response?.user.displayName,
-                        email: response?.user.email
-                    });
-                }).catch((error) => {
-                    console.log("signIn error: ", error)
-                });
-            }} className={`${styles.buttonIcon} ${styles.iconMargin}`}><span>Sign in</span>
+            </div>
+            :
+            //signIn button
+            <button onClick={() => handleSignIn()} className={`${styles.buttonIcon} ${styles.iconMargin}`}>
+                <span>Sign in</span>
             </button>
     )
 }

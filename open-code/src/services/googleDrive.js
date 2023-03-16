@@ -1,5 +1,10 @@
-import {localStorageKeys} from "../utils/constants";
+import {Constants, localStorageKeys} from "../utils/constants";
 import {getCurrentProject, updateLocalProjects} from "./workspace";
+import {getDocs} from "@firebase/firestore";
+import {collection} from "firebase/firestore";
+import {auth, db} from "./firebase";
+import axios from "axios";
+
 /**
  * function that upload project data on Google Drive
  * @param data
@@ -11,7 +16,7 @@ export const uploadToGoogleDrive = async (data, setFileId, setFolderId) => {
     //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
     const folderId = getFolderId();
     if (folderId) {
-        await fetch(`https://www.googleapis.com/drive/v3/files/${folderId}?access_token=${accessToken}`, {
+        await fetch(`${Constants.baseUrl}/files/${folderId}?access_token=${accessToken}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -75,7 +80,7 @@ const uploadFileToFolder = (accessToken, data, folderId, setFileId) => {
     if (data.fileId) {
         // Check if a file with the specified fileId exists
         //TODO folderID me jake check karo
-        fetch(`https://www.googleapis.com/drive/v3/files/${data.fileId}`, {
+        fetch(`${Constants.baseUrl}/files/${data.fileId}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -129,7 +134,7 @@ async function CreateFolder(accessToken, folderId, setFolderId) {
         body: JSON.stringify(folderMetadata)
     }
     //call api to create folder
-    return await fetch("https://www.googleapis.com/drive/v3/files", data)
+    return await fetch(`${Constants.baseUrl}/files/`, data)
         .then(response => response.json())
         .then(folder => {
             console.log("folder:::::::", folder)
@@ -159,7 +164,14 @@ export const SetGoogleFileId = (fileID, setFileId, key) => {
  * get folder id from firebase
  */
 export function getFolderId() {
-    return getCurrentProject()?.folderId;
+    return getCurrentProject()?.folderId ?? getFromFirBase();
+}
+
+async function getFromFirBase() {
+
+    // getting all docs from firebase
+    const projects = await getDocs(collection(db, auth.currentUser?.uid));
+    return projects[0]?.folderId;
 }
 
 
@@ -208,39 +220,41 @@ function UpdateFile(response, requestBody, data, metadataFields) {
     });
 }
 
+
 /**
  * get all projects from Google Drive
  */
 export async function getAllFilesFromGoogleDrive() {
-    const folderId = getFolderId();
+    // Authenticate the user and obtain an access token for the Google Drive API
     const accessToken = localStorage.getItem(localStorageKeys.accessToken);
-    if (folderId) {
-        return await fetch(`https://www.googleapis.com/drive/v3/files?q='${folderId}' in parents&fields=*`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                return data.files;
 
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    }
+    // Step 1: Get the ID of the folder with the specified name
+    const searchResponse = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(Constants.FolderName)}'+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false&access_token=${accessToken}`);
+    const searchResult = await searchResponse.json();
+    const folderId = searchResult?.files[0]?.id;
+
+    // Step 2: Retrieve all files in the folder with their metadata
+    const filesResponse = await fetch(`${Constants.baseUrl}/files?q=mimeType != 'application/vnd.google-apps.folder' and trashed = false and parents in '${folderId}'&fields=files(id,name,createdTime,modifiedTime,appProperties,mimeType)&access_token=${accessToken}`);
+    const filesResult = await filesResponse.json();
+
+    // Step 3: get xmlValue and append to each file.
+    await filesResult.files.map(async (file) => {
+        let xmlData = await getSelectedProjectFromGoogleDrive(folderId, file.id, accessToken);
+        file.xmlValue = xmlData;
+    })
+    return filesResult.files;
 }
+
 
 /**
  * get selected project data on clicking
  */
-export async function getSelectedProjectFromGoogleDrive(fileId) {
-    const folderId = getFolderId()
-    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
+export async function getSelectedProjectFromGoogleDrive(folderId, fileId, accessToken) {
     const headers = {
         Authorization: `Bearer ${accessToken}`,
     };
-    return await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?parents=${folderId}&alt=media`, {
+
+    return await fetch(`${Constants.baseUrl}/files/${fileId}?parents=${folderId}&alt=media`, {
         method: "GET",
         headers: headers,
     })
@@ -253,6 +267,7 @@ export async function getSelectedProjectFromGoogleDrive(fileId) {
         });
 }
 
+
 /**
  * deleting file
  * @param fileId
@@ -264,7 +279,7 @@ export function deleteFileFromGoogleDrive(fileId) {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
     }
-    fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?supportsAllDrives=true&parents=${folderId}`, {
+    fetch(`${Constants.baseUrl}/files/${fileId}?supportsAllDrives=true&parents=${folderId}`, {
         method: "DELETE",
         headers: headers
     })
