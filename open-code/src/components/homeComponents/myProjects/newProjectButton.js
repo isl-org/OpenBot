@@ -31,10 +31,18 @@ function NewProjectButton(props) {
         setFileId("")
     }
     const handleClose = () => setOpen(false);
+
     const OpenNewProjectHandle = () => {
         if (!projectName || projectName <= 0) {
             setIsInputError(true)
         } else {
+            let updatedProjectName = projectName;
+            const getAllProjects = localStorage.getItem(localStorageKeys.allProjects);
+            let projectsArray = JSON.parse(getAllProjects);
+            if (projectsArray) {
+                updatedProjectName = handleUniqueName(projectsArray, updatedProjectName, projectName);
+                setProjectName(updatedProjectName);
+            }
             setIsInputError(false)
             let path = `playground`;
             navigate(path);
@@ -92,3 +100,26 @@ function NewProjectButton(props) {
 }
 
 export default NewProjectButton;
+
+function handleUniqueName(projectsArray, updatedProjectName, projectName) {
+    const findProject = projectsArray.find(project => project.projectName === updatedProjectName)
+    if (findProject) {
+        const projectTitle = findProject.projectName
+        const lastCharacter = projectTitle.charAt(projectTitle.length - 1)
+        if (!isNaN(parseInt(lastCharacter))) {
+            updatedProjectName = projectTitle.replace(/.$/, parseInt(lastCharacter) + 1);
+        } else {
+            updatedProjectName = projectTitle + "1";
+        }
+        let checkProject = projectsArray.find(project => project.projectName === updatedProjectName);
+        if (checkProject) {
+            return handleUniqueName(projectsArray, updatedProjectName, projectName)
+        } else {
+            return updatedProjectName;
+        }
+
+    } else {
+       return projectName;
+
+    }
+}

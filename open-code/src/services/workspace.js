@@ -1,5 +1,5 @@
 import {auth, db} from "./firebase";
-import {collection,  doc,  setDoc, updateDoc} from "firebase/firestore";
+import {collection, doc, setDoc, updateDoc} from "firebase/firestore";
 import {localStorageKeys} from "../utils/constants";
 import {deleteFileFromGoogleDrive, getFolderId} from "./googleDrive";
 import {getAllFilesFromGoogleDrive} from "./googleDrive";
@@ -34,7 +34,7 @@ export async function getDriveProjects(driveProjects) {
         try {
             //getting allDocs from Google Drive
             let allFilesFromGoogleDrive = await getAllFilesFromGoogleDrive();
-            allFilesFromGoogleDrive.length > 0 && allFilesFromGoogleDrive.forEach((doc) => {
+            allFilesFromGoogleDrive?.length > 0 && allFilesFromGoogleDrive.forEach((doc) => {
                 if (!doc?.trashed)
                     driveProjects?.push({
                         storage: "drive",
@@ -95,7 +95,7 @@ export async function deleteProject(currentProjectId) {
             const allProject = []
             await getDriveProjects(allProject);
             const findCurrentProject = allProject.find(currentProject => currentProject.id === currentProjectId);
-            deleteFileFromGoogleDrive(findCurrentProject.fileId)
+            findCurrentProject.fileId && deleteFileFromGoogleDrive(findCurrentProject.fileId)
             JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
                 if (project.id === currentProjectId) {
                     const restObject = getAllLocalProjects().filter((res) => (res.id !== project.id));
@@ -121,7 +121,7 @@ export async function deleteProject(currentProjectId) {
  * @param projectName
  * @param code
  */
-export function updateCurrentProject(uniqueId, projectName, code, fileId,folderId) {
+export function updateCurrentProject(uniqueId, projectName, code, fileId, folderId) {
 
     const date = new Date();
     const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
@@ -201,6 +201,7 @@ export function getCurrentProject() {
     }
 }
 
+
 /**
  * create new project in local storage
  * @param currentProject
@@ -228,7 +229,6 @@ export function getAllLocalProjects() {
         const projects = localStorage.getItem(localStorageKeys.allProjects)
         return JSON.parse(projects)
     } catch (error) {
-
     }
 }
 
@@ -278,7 +278,7 @@ export async function getFilterProjects() {
             return true;
         });
     })
-    console.log("Filter projects::::::",filterProjects)
+    console.log("Filter projects::::::", filterProjects)
     return filterProjects;
 }
 
