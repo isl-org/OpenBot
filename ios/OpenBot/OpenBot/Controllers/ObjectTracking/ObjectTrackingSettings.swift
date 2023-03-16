@@ -397,7 +397,7 @@ class ObjectTrackingSettings: UIView {
     /// UI function
     func createDeviceDropDown() {
         deviceDropDown.backgroundColor = Colors.freeRoamButtonsColor
-        deviceDropDown.textColor = Colors.bdColor ?? .black
+        deviceDropDown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
         deviceDropDown.dataSource = Constants.devices
         deviceDropDown.width = 90
         let dd = UIView()
