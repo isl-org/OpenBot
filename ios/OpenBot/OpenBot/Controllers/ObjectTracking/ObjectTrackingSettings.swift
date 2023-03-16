@@ -351,6 +351,7 @@ class ObjectTrackingSettings: UIView {
         confidenceLabel.text = String(value!) + "%"
         NotificationCenter.default.post(name: .updateConfidence, object: value)
     }
+
     /// function to decrease the confidence
     @objc func decreaseConfidence(_ sender: UIImage) {
         if confidenceLabel.text == "0%" {
@@ -372,6 +373,7 @@ class ObjectTrackingSettings: UIView {
         threadLabel.text = String(value!)
         NotificationCenter.default.post(name: .updateThread, object: threadLabel.text)
     }
+
     /// function to decrease the threads
     @objc func decreaseThreads(_ sender: UIImage) {
         if threadLabel.text == "1" || threadLabel.text == "N/A" {
@@ -433,7 +435,7 @@ class ObjectTrackingSettings: UIView {
     func createModelDropDown() {
         let selectedModels = Common.loadSelectedModels(mode: Constants.objectTrackingMode);
         modelDropDown.backgroundColor = Colors.freeRoamButtonsColor;
-        modelDropDown.textColor = UIColor(named: "bdColor") ?? .black
+        modelDropDown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
         let dd = UIView()
         let modelDropDownAnchor = UIView(frame: CGRect(x: 180, y: adapted(dimensionSize: 60, to: .height), width: 100, height: 200));
         modelDropDown.anchorView = modelDropDownAnchor;

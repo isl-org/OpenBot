@@ -234,7 +234,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     func createVoltageLabel() {
         voltageLabel.frame = CGRect(x: 43, y: 300, width: 50, height: 40)
         voltageLabel.text = "0V"
-        voltageLabel.textColor = .white
+        voltageLabel.textColor = Colors.textColor;
         voltageLabel.font = voltageLabel.font.withSize(15)
         firstView.addSubview(voltageLabel)
     }
@@ -242,7 +242,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     func createSonalLabel() {
         sonarLabel.frame = CGRect(x: Int(width) - 96, y: 300, width: 60, height: 40)
         sonarLabel.text = "0CM"
-        sonarLabel.textColor = .white
+        sonarLabel.textColor = Colors.textColor;
         sonarLabel.font = sonarLabel.font.withSize(15)
         firstView.addSubview(sonarLabel)
     }
@@ -251,8 +251,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         let dIcon = UIButton()
         dIcon.setTitle("D", for: .normal)
         dIcon.layer.borderWidth = 1
-        dIcon.layer.borderColor = UIColor(named: "bdColor")?.cgColor
-        dIcon.setTitleColor(UIColor(named: "bdColor"), for: .normal)
+        dIcon.layer.borderColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white.cgColor : UIColor.black.cgColor;
+        dIcon.setTitleColor(traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, for: .normal)
         dIcon.frame = CGRect(x: 100, y: 230, width: 40, height: 40)
         dIcon.layer.cornerRadius = 5
         firstView.addSubview(dIcon)
@@ -261,7 +261,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     /// function to create the button for drive mode
     func createDriveIcon() {
         let driveIconRect = createRectangle(x: 160, y: 230, width: 40, height: 40, borderColor: "bdColor", isBorderRequire: true)
-        driveIconRect.layer.borderColor = UIColor(named: "bdColor")?.cgColor
+        driveIconRect.layer.borderColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white.cgColor : UIColor.black.cgColor;
         let driveIcon = UIImageView(frame: CGRect(x: driveIconRect.frame.size.width / 4, y: driveIconRect.frame.size.height / 4, width: 20, height: 20))
         driveIcon.image = UIImage(named: "drive")
         firstView.addSubview(driveIconRect)
@@ -271,7 +271,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     /// function to create the button for bluetooth
     func createBluetoothIcon() {
         let blueToothIconRect = createRectangle(x: 220, y: 230, width: 40, height: 40, borderColor: "bdColor", isBorderRequire: true)
-        blueToothIconRect.layer.borderColor = UIColor(named: "bdColor")?.cgColor
+        blueToothIconRect.layer.borderColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white.cgColor : UIColor.black.cgColor;
         bluetoothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 4 - 10, y: blueToothIconRect.frame.size.height / 4, width: 20, height: 20))
         if isBluetoothConnected {
             bluetoothIcon.image = Images.bluetoothConnected
@@ -290,7 +290,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     /// function to create the label for the voltage
     func createVoltageController(h: Double) {
         let outerVoltage = createRectangle(x: 30, y: 190, width: 50, height: 110, borderColor: "bdColor", isBorderRequire: true)
-        outerVoltage.layer.borderColor = UIColor(named: "bdColor")?.cgColor;
+        outerVoltage.layer.borderColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white.cgColor : UIColor.black.cgColor;
         let relativeHeight = Double(h * 9.16)
         let innerVoltage = createRectangle(x: 0, y: 110 - Int(relativeHeight), width: 49, height: Int(relativeHeight) - 1, borderColor: "noColor", isBorderRequire: false)
         innerVoltage.layer.cornerRadius = 5;
@@ -307,7 +307,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         let relativeHeight = Double(h * 0.3667)
         outerSonar = createRectangle(x: Int(width) - 100, y: 190, width: 50, height: 110, borderColor: "borderColor", isBorderRequire: true);
         firstView.addSubview(outerSonar)
-        outerSonar.layer.borderColor = UIColor(named: "bdColor")?.cgColor
+        outerSonar.layer.borderColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white.cgColor : UIColor.black.cgColor;
         let innerSonar = createRectangle(x: 0, y: 110 - Int(relativeHeight), width: 49, height: Int(relativeHeight) - 1, borderColor: "noColor", isBorderRequire: false)
         innerSonar.layer.cornerRadius = 5;
         innerSonar.backgroundColor = Colors.sonar
@@ -320,7 +320,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         label.text = value
         label.font = UIFont(name: "medium", size: adapted(dimensionSize: 30, to: .width))
         label.frame = CGRect(x: x, y: y, width: width, height: height)
-        label.textColor = Colors.border
+        label.textColor = Colors.textColor;
         label.font = label.font.withSize(15)
         secondView.addSubview(label)
 
@@ -335,7 +335,6 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         rectangleView.layer.cornerRadius = 5;
         if isBorderRequire {
             rectangleView.layer.borderWidth = 1;
-            rectangleView.layer.borderColor = UIColor(named: "borderColor")?.cgColor;
             return rectangleView;
         }
         return rectangleView;

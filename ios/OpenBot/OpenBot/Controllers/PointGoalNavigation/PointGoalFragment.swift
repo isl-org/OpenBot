@@ -109,12 +109,12 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
             infoMessageRect.frame = CGRect(x: height / 2 - width / 2 + 30, y: width / 2 - 100, width: width - 60, height: 200);
         }
         infoMessageRect.backgroundColor = traitCollection.userInterfaceStyle == .dark ? Colors.bdColor : .white
-        let infoText = createLabel(text: Strings.info, fontSize: 18, textColor: Colors.textColor!)
+        let infoText = createLabel(text: Strings.info, fontSize: 18)
         infoMessageRect.addSubview(infoText)
         infoText.translatesAutoresizingMaskIntoConstraints = false
         infoText.leadingAnchor.constraint(equalTo: infoMessageRect.leadingAnchor, constant: 30).isActive = true
         infoText.topAnchor.constraint(equalTo: infoMessageRect.topAnchor, constant: 30).isActive = true
-        let goalReachedText = createLabel(text: "Goal reached", fontSize: 16, textColor: Colors.textColor!)
+        let goalReachedText = createLabel(text: "Goal reached", fontSize: 16)
         infoMessageRect.addSubview(goalReachedText)
         goalReachedText.translatesAutoresizingMaskIntoConstraints = false
         goalReachedText.leadingAnchor.constraint(equalTo: infoText.leadingAnchor, constant: 0).isActive = true
@@ -135,7 +135,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
 
     /// function to create text inside the previous rect
     func createSetGoalText() {
-        setGoalText = createLabel(text: Strings.setGoalText, fontSize: 16, textColor: Colors.textColor!)
+        setGoalText = createLabel(text: Strings.setGoalText, fontSize: 16)
         setGoalRect.addSubview(setGoalText)
         setGoalText.numberOfLines = 0
         setGoalText.translatesAutoresizingMaskIntoConstraints = false
@@ -145,7 +145,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
 
     /// function to create Set Goal heading
     func createSetGoalHeading() {
-        setGoalHeading = createLabel(text: Strings.setGoal, fontSize: 18, textColor: Colors.textColor!)
+        setGoalHeading = createLabel(text: Strings.setGoal, fontSize: 18)
         setGoalRect.addSubview(setGoalHeading)
         setGoalHeading.translatesAutoresizingMaskIntoConstraints = false
         setGoalHeading.leadingAnchor.constraint(equalTo: setGoalRect.leadingAnchor, constant: 30).isActive = true
@@ -154,12 +154,12 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
 
     /// function to create forward and left text on Set goal rect
     func createForwardLeftLabels() {
-        forwardLabel = createLabel(text: Strings.forward + Strings.meter, fontSize: 14, textColor: Colors.textColor!)
+        forwardLabel = createLabel(text: Strings.forward + Strings.meter, fontSize: 14)
         setGoalRect.addSubview(forwardLabel)
         forwardLabel.translatesAutoresizingMaskIntoConstraints = false
         forwardLabel.leadingAnchor.constraint(equalTo: setGoalRect.leadingAnchor, constant: width / 2 - 100).isActive = true
         forwardLabel.topAnchor.constraint(equalTo: setGoalText.bottomAnchor, constant: 20).isActive = true
-        leftLabel = createLabel(text: Strings.left + Strings.meter, fontSize: 14, textColor: Colors.textColor!)
+        leftLabel = createLabel(text: Strings.left + Strings.meter, fontSize: 14)
         setGoalRect.addSubview(leftLabel)
         leftLabel.translatesAutoresizingMaskIntoConstraints = false
         leftLabel.leadingAnchor.constraint(equalTo: setGoalRect.leadingAnchor, constant: width / 2).isActive = true
@@ -208,10 +208,10 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     ///   - fontSize: font size of text
     ///   - textColor: font color of text
     /// - Returns: UILabel
-    func createLabel(text: String, fontSize: CGFloat, textColor: UIColor) -> UILabel {
+    func createLabel(text: String, fontSize: CGFloat) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.textColor = textColor
+        label.textColor = Colors.textColor
         label.font = label.font.withSize(fontSize)
         return label
     }

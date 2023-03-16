@@ -156,7 +156,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     func createDropdown() {
         modelsName = Common.loadAllModelsName()
         dropDown.backgroundColor = Colors.freeRoamButtonsColor
-        dropDown.textColor = Colors.bdColor ?? .black
+        dropDown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
         dropDown.anchorView = dropDownView
         dropDown.dataSource = modelsName
         ddView = createDropdownView(borderColor: "", buttonName: "CLI-Mobile", leadingAnchor: 10, topAnchor: 155, action: #selector(showDropdown(_:)))
@@ -437,7 +437,8 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         previewResolution.text = Strings.previewResolutionHigh
     }
 
-    @objc func serverHandler(_ sender: UIView) {}
+    @objc func serverHandler(_ sender: UIView) {
+    }
 
     /// Function to update resolutions
     @objc func updateResolution() {
@@ -464,6 +465,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         let borderColor = (sender.layer.borderColor == Colors.title?.cgColor) ? Colors.freeRoamButtonsColor?.cgColor : Colors.title?.cgColor
         sender.layer.borderColor = borderColor
     }
+
     /// function to turn on training images
     @objc func applyTraining(_ sender: UIView) {
         NotificationCenter.default.post(name: .updateTraining, object: nil)

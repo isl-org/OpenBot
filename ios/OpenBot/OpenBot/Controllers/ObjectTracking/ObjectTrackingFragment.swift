@@ -28,7 +28,7 @@ class ObjectTrackingFragment: CameraController {
     private var bufferHeight = 0
     private var bufferWidth = 0
     private let edgeOffset: CGFloat = 2.0
-    
+
     /// Called after the view fragment has loaded.
     override func viewDidLoad() {
         let modelItems = Common.loadAllModelItemsFromBundle()
@@ -37,7 +37,7 @@ class ObjectTrackingFragment: CameraController {
             currentModel = model
             detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector
         }
-        
+
         objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector, model: currentModel)
         objectTrackingSettings!.backgroundColor = Colors.freeRoamButtonsColor
         objectTrackingSettings!.layer.cornerRadius = 5
@@ -59,13 +59,13 @@ class ObjectTrackingFragment: CameraController {
         calculateFrame()
         super.viewDidLoad()
     }
-    
+
     /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         calculateFrame()
     }
-    
+
     func calculateFrame() {
         if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
             objectTrackingSettings?.frame.origin.x = 0
@@ -75,12 +75,12 @@ class ObjectTrackingFragment: CameraController {
             objectTrackingSettings?.frame.origin.y = 30
         }
     }
-    
+
     @objc func openBluetoothSettings() {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
-    
+
     /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -96,7 +96,7 @@ class ObjectTrackingFragment: CameraController {
             autoMode = false
         }
     }
-    
+
     @objc func switchCamera() {
         switchCameraView()
     }
@@ -154,7 +154,7 @@ class ObjectTrackingFragment: CameraController {
         currentObject = notification.object as! String
         detector?.setSelectedClass(newClass: notification.object as! String)
     }
-    
+
     /// Called after the view was dismissed, covered or otherwise hidden.
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -162,7 +162,7 @@ class ObjectTrackingFragment: CameraController {
             autoMode = false
         }
     }
-    
+
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -170,11 +170,11 @@ class ObjectTrackingFragment: CameraController {
             navigationItem.leftBarButtonItem = newBackButton
         }
     }
-    
+
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
-    
+
     func updateTarget(_ detection: CGRect) -> Control {
         let screenWidth = UIScreen.main.bounds.size.width
         let screenHeight = UIScreen.main.bounds.size.height
@@ -220,8 +220,7 @@ class ObjectTrackingFragment: CameraController {
             let scaleY = height / CGFloat(bufferHeight)
             let transform = CGAffineTransform.identity.scaledBy(x: scaleX, y: scaleY)
             convertedRect = detection.applying(transform)
-        }
-        else{
+        } else {
             let detection = item.getLocation()
             let scaleX = height / CGFloat(bufferWidth)
             let scaleY = width / CGFloat(bufferHeight)
@@ -231,15 +230,15 @@ class ObjectTrackingFragment: CameraController {
         if convertedRect.origin.x < 0 {
             convertedRect.origin.x = edgeOffset
         }
-        
+
         if convertedRect.origin.y < 0 {
             convertedRect.origin.y = edgeOffset
         }
-        
+
         if convertedRect.maxY > UIScreen.main.bounds.maxY {
             convertedRect.size.height = UIScreen.main.bounds.maxY - convertedRect.origin.y - edgeOffset
         }
-        
+
         if convertedRect.maxX > UIScreen.main.bounds.maxX {
             convertedRect.size.width = UIScreen.main.bounds.maxX - convertedRect.origin.x - edgeOffset
         }
@@ -259,13 +258,13 @@ class ObjectTrackingFragment: CameraController {
 
     /// callback function when any image is clicked on object tracking fragment.
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
+
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-        
+
         bufferWidth = CVPixelBufferGetWidth(pixelBuffer!)
         bufferHeight = CVPixelBufferGetHeight(pixelBuffer!)
-        
+
         guard let imagePixelBuffer = pixelBuffer else {
             debugPrint("unable to get image from sample buffer")
             return
@@ -279,7 +278,7 @@ class ObjectTrackingFragment: CameraController {
         guard !isInferenceQueueBusy else {
             return
         }
-        
+
         inferenceQueue.async {
             if self.autoMode {
                 self.isInferenceQueueBusy = true
@@ -294,9 +293,9 @@ class ObjectTrackingFragment: CameraController {
                 guard let controlResult = self.result else {
                     return
                 }
-                
+
                 DispatchQueue.main.async {
-                    
+
                     if (self.frames.count > 0) {
                         for frame in self.frames {
                             frame.removeFromSuperview()
@@ -314,7 +313,7 @@ class ObjectTrackingFragment: CameraController {
                             }
                         }
                     }
-                    
+
                     if (endTime - startTime) != 0 {
                         NotificationCenter.default.post(name: .updateObjectTrackingFps, object: 1000 / (endTime - startTime))
                     }
