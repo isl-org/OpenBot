@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "data_collection.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +11,10 @@
           "value" : "dark"
         }
       ],
-      "filename" : "dataCollection 2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "data_collection 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,7 +25,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "dataCollection 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

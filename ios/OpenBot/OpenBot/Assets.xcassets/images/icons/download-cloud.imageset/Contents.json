@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "download_icon 5.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,7 +11,6 @@
           "value" : "light"
         }
       ],
-      "filename" : "download_icon.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -23,12 +21,10 @@
           "value" : "dark"
         }
       ],
-      "filename" : "download_dark.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "download_icon 4.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -39,7 +35,6 @@
           "value" : "light"
         }
       ],
-      "filename" : "download_icon 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -50,7 +45,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "download_dark 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },

@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "gamepad_white.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -23,12 +22,10 @@
           "value" : "dark"
         }
       ],
-      "filename" : "cil_gamepad.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "gamepad_white 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -49,7 +46,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "cil_gamepad 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },

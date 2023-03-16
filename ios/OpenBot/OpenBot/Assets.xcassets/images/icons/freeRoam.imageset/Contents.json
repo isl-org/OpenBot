@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "free_roam.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +11,10 @@
           "value" : "dark"
         }
       ],
-      "filename" : "freeRoam 3.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "free_roam 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,7 +25,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "freeRoam 2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

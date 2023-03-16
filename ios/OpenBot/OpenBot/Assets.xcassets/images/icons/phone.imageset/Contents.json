@@ -22,7 +22,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "phone.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -47,7 +46,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "phone 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },

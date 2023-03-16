@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "autopilot_lite.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +11,10 @@
           "value" : "dark"
         }
       ],
-      "filename" : "autopilot_dark.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "autopilot_lite 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,7 +25,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "autopilot_dark 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

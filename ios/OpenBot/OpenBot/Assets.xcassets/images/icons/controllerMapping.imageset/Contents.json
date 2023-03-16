@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "controller_mapping_lite.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -22,12 +21,10 @@
           "value" : "dark"
         }
       ],
-      "filename" : "controllerMapping-2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "controller_mapping_lite 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -48,7 +45,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "controllerMapping-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

@@ -1,12 +1,10 @@
 {
   "images" : [
     {
-      "filename" : "remoteController.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "remoteController 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
