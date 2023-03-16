@@ -36,7 +36,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     let bluetooth = bluetoothDataController.shared
     var tempPixelBuffer: CVPixelBuffer!
     let blueDress = try! YCbCrImageBufferConverter()
-    
+
     /// function called after view of point goal navigation is called
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,14 +65,32 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
         sceneView.session.pause()
     }
 
+    /***
+     Function will call when we change the orientation of our phone
+     - Parameters:
+       - size:
+       - coordinator:
+     */
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        if currentOrientation == .portrait {
+            sceneView.frame.size = CGSize(width: width, height: height);
+            setGoalRect.frame.origin = CGPoint(x: 30, y: height / 2 - 200);
+            infoMessageRect.frame.origin = CGPoint(x: 30, y: height / 2 - 100);
+        } else {
+            sceneView.frame.size = CGSize(width: height, height: width);
+            setGoalRect.frame.origin = CGPoint(x: height / 2 - setGoalRect.frame.height / 2, y: width / 2 - setGoalRect.frame.width / 2)
+            infoMessageRect.frame.origin = CGPoint(x: height / 2 - width / 2 + 30, y: width / 2 - 100);
+        }
+    }
+
     /// function to create the UI of point goal navigation. This function will called all the method that create different UI
     func createSetGoalRect() {
-        if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
-            setGoalRect.frame = CGRect(x: 30, y: height / 2 - 200, width: width - 60, height: 300)
+        if currentOrientation == .portrait {
+            setGoalRect.frame = CGRect(x: 30, y: height / 2 - 200, width: width - 60, height: 300);
         } else {
-            setGoalRect.frame = CGRect(x: width / 2 - 10, y: height / 2 - 300, width: width - 60, height: 300)
+            setGoalRect.frame = CGRect(x: height / 2 - width / 2 + 30, y: width / 2 - 150, width: width - 60, height: 300);
         }
-        
         setGoalRect.backgroundColor = traitCollection.userInterfaceStyle == .dark ? Colors.bdColor : .white
         setGoalRect.layer.cornerRadius = 10
         view.addSubview(setGoalRect)
@@ -85,7 +103,11 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
 
     /// function to create message rect of point goal navigation
     func createReachMessage() {
-        infoMessageRect.frame = CGRect(x: 30, y: height / 2 - 100, width: width - 60, height: 200)
+        if currentOrientation == .portrait {
+            infoMessageRect.frame = CGRect(x: 30, y: height / 2 - 100, width: width - 60, height: 200);
+        } else {
+            infoMessageRect.frame = CGRect(x: height / 2 - width / 2 + 30, y: width / 2 - 100, width: width - 60, height: 200);
+        }
         infoMessageRect.backgroundColor = traitCollection.userInterfaceStyle == .dark ? Colors.bdColor : .white
         let infoText = createLabel(text: Strings.info, fontSize: 18, textColor: Colors.textColor!)
         infoMessageRect.addSubview(infoText)
@@ -237,7 +259,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
         let LeftDistance = (leftInput.text == nil ? 0 : Float(leftInput.text ?? "0")) ?? 0
         let cameraRightOrientation = SCNVector3(-cameraTransform.m11, -cameraTransform.m12, -cameraTransform.m13)
         let leftPosition = SCNVector3(camera.position.x + cameraRightOrientation.x * LeftDistance, camera.position.y + cameraRightOrientation.y * LeftDistance, camera.position.z + cameraRightOrientation.z * LeftDistance) // Calculate the marker position based on the right orientation of the camera and the distance
-        marker =  SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
+        marker = SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
         let resultantVector = addVectors(leftPosition, forwardPosition)
         marker.position = resultantVector
         let imageMaterial = SCNMaterial()
@@ -300,7 +322,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     /// - Parameters:
     ///   - pixelBuffer: pixelBuffer from camera
     ///   - position: position of camera
-    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer, _ currentPosition: SCNNode ) {
+    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer, _ currentPosition: SCNNode) {
 
         guard !isNavQueueBusy else {
             return
@@ -313,26 +335,26 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
             let startPose = Pose(tx: currentPosition.position.x, ty: currentPosition.position.y, tz: currentPosition.position.z, qx: currentPosition.orientation.x, qy: currentPosition.orientation.y, qz: currentPosition.orientation.z, qw: currentPosition.orientation.w)
             let endPose = Pose(tx: endingPoint.position.x, ty: endingPoint.position.y, tz: endingPoint.position.z, qx: endingPoint.orientation.x, qy: endingPoint.orientation.y, qz: endingPoint.orientation.z, qw: endingPoint.orientation.w)
             let yaw = computeDeltaYaw(pose: startPose, goalPose: endPose)
-            
+
             let converted = try! blueDress.convertToBGRA(imageBuffer: pixelBuffer)
-            
+
             let refCon = NSMutableData()
             var timingInfo: CMSampleTimingInfo = .invalid
             var formatDescription: CMVideoFormatDescription? = nil
             CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, formatDescriptionOut: &formatDescription)
-            
+
             var output: CMSampleBuffer? = nil
             let status = CMSampleBufferCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, dataReady: true, makeDataReadyCallback: nil, refcon: refCon.mutableBytes, formatDescription: formatDescription!, sampleTiming: &timingInfo, sampleBufferOut: &output)
-            
+
             // extract the image buffer from the sample buffer
             let pixelBufferBGRA: CVPixelBuffer? = CMSampleBufferGetImageBuffer(output!)
-            
+
             self.result = self.navigation?.recognizeImage(pixelBuffer: pixelBufferBGRA!, goalDistance: distance, goalSin: sin(yaw), goalCos: cos(yaw))
             guard let controlResult = self.result else {
                 return
             }
             self.sendControl(control: controlResult)
-            
+
             isNavQueueBusy = false
         }
     }
@@ -351,7 +373,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
 
     // Define a distance threshold for triggering the event
     let distanceThreshold: Float = 0.15 // adjust this value as needed
-    
+
     /// function to check openBot is reached at point or not
     ///
     /// - Parameter position: position of camera
@@ -424,7 +446,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
 
     /// Utility functions for dot and cross products
     func SCNVector3DotProduct(_ a: SCNVector3, _ b: SCNVector3) -> Float {
-         a.x * b.x + a.y * b.y + a.z * b.z
+        a.x * b.x + a.y * b.y + a.z * b.z
     }
 
     /// function to do cross product between two vectors
@@ -434,24 +456,24 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     ///   - b: second vector
     /// - Returns: cross product of a and b ie. a*b
     func SCNVector3CrossProduct(_ a: SCNVector3, _ b: SCNVector3) -> SCNVector3 {
-         SCNVector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x)
+        SCNVector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x)
     }
-    
+
     ///function to send output controls to openBot
     ///
     /// - Parameter control:
     func sendControl(control: Control) {
-            let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+        let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
         let right = (control.getRight() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-            NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
-            NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
-            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+        NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
+        NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
+        bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
     }
 }
 
 extension SCNVector3 {
     var simdVector: simd_float3 {
-         simd_float3(x, y, z)
+        simd_float3(x, y, z)
     }
 }
 
