@@ -12,6 +12,7 @@ import LoaderComponent from "../../loader/loaderComponent";
 import WhiteText from "../../fonts/whiteText";
 import {googleSigIn} from "../../../services/firebase";
 import React, {useState} from "react";
+import {getFilterProjects} from "../../../services/workspace";
 
 /**
  * Display logo with openCode text (Header's Left side)
@@ -124,6 +125,7 @@ export function ProjectNamePopUp(params) {
 export function ProfileSignIn(params) {
     const {setIsProfileModal, user, setUser} = params
 
+
     const handleSignIn = () => {
         googleSigIn().then(response => {
             setUser({
@@ -131,7 +133,6 @@ export function ProfileSignIn(params) {
                 displayName: response?.user.displayName,
                 email: response?.user.email
             });
-            //TODO get projects from drive and store in local storage
         }).catch((error) => {
             console.log("signIn error: ", error)
         });

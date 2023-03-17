@@ -17,6 +17,7 @@ export const NewProject = () => {
     const [projects, setProjects] = useState([]);
     const {theme} = useContext(ThemeContext)
 
+    //TODO get projects from drive and store in local storage when signIn
     useEffect(() => {
         getFilterProjects().then((filterProject) => {
             setProjects(filterProject)

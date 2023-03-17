@@ -5,6 +5,8 @@ import 'firebase/compat/firestore';
 import {getFirestore} from "firebase/firestore";
 import {getAuth, signOut} from "firebase/auth";
 import {localStorageKeys} from "../utils/constants";
+import {deleteFileFromGoogleDrive} from "./googleDrive";
+import {getAllLocalProjects, getDriveProjects} from "./workspace";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -70,3 +72,90 @@ export async function googleSignOut() {
         console.log("Sign-out error ", error)
     });
 }
+
+
+//
+// /**
+//  * get project from firebase when user signedIn
+//  * @param driveProjects
+//  * @returns {Promise<void>}
+//  */
+// async function getFirBaseProject(driveProjects) {
+//     if (auth.currentUser?.uid) {
+//         try {
+//             // getting all docs from firebase
+//             const projects = await getDocs(collection(db, auth.currentUser?.uid));
+//             projects.forEach((doc) => {
+//                 driveProjects?.push({storage: "drive", id: doc.id, ...doc.data()});
+//             })
+//         } catch (error) {
+//             console.error(error);
+//         }
+//     }
+// }
+
+/**
+ * update project on drive when change on blockly workspace
+ * @returns {Promise<void>}
+ */
+// export async function updateProjectOnDrive() {
+//     const date = new Date();
+//     const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
+//     const currentDate = date.toLocaleDateString('en-US', dateOptions);
+//     const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
+//     const currentTime = date.toLocaleTimeString('en-US', timeOptions);
+//     const workspaceRef = doc(collection(db, auth.currentUser.uid), getCurrentProject().id);
+//     try {
+//         await updateDoc(workspaceRef, {
+//             updatedDate: currentDate,
+//             xmlValue: getCurrentProject().xmlValue,
+//             time: currentTime,
+//         })
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
+
+//
+// /**
+//  * project upload on drive when user signedIn.
+//  * @param data
+//  * @param uniqueId
+//  * @returns {Promise<void>}
+//  */
+// export async function uploadOnDrive(data, uniqueId) {
+//     if (localStorage.getItem("isSigIn") === "true") {
+//         try {
+//             const workspaceRef = doc(collection(db, auth.currentUser.uid), uniqueId);
+//             await setDoc(workspaceRef, data);
+//         } catch (err) {
+//             console.log(err);
+//         }
+//     } else {
+//         //alert for login first
+//     }
+// }
+//
+// /**
+//  * delete project from local and drive also if you are signedIn.
+//  * @param currentProjectId
+//  * @returns {Promise<void>}
+//  */
+// export async function deleteProject(currentProjectId) {
+//     try {
+//         if (localStorage.getItem("isSigIn") === "true") {
+//             //deleting file from firebase
+//             await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId))
+//
+//         } else {
+//             JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
+//                 if (project.id === currentProjectId) {
+//                     const restObject = getAllLocalProjects().filter((res) => (res.id !== project.id));
+//                     localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restObject))
+//                 }
+//             })
+//         }
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }

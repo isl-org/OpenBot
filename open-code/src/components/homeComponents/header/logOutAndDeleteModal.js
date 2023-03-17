@@ -50,13 +50,13 @@ export function DeleteModel(props) {
     let navigate = useNavigate();
     const {setDeleteProject} = props;
     const [open, setOpen] = useState(true);
-    const {currentProjectId} = useContext(StoreContext);
+    const {projectName} = useContext(StoreContext);
     const handleClose = () => {
         setDeleteProject(false);
         return setOpen(false);
     };
     const handleDeleteProject = () => {
-        deleteProject(currentProjectId).then();
+        deleteProject(projectName).then();
         let path = `/`;
         navigate(path);
     }

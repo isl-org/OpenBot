@@ -1,28 +1,8 @@
-import {auth, db} from "./firebase";
-import {collection, doc, setDoc, updateDoc} from "firebase/firestore";
+import {auth} from "./firebase";
 import {localStorageKeys} from "../utils/constants";
-import {deleteFileFromGoogleDrive, getFolderId} from "./googleDrive";
+import {checkFileExistsInFolder, deleteFileFromGoogleDrive, getFolderId, uploadToGoogleDrive} from "./googleDrive";
 import {getAllFilesFromGoogleDrive} from "./googleDrive";
 
-
-/**
- * project upload on drive when user signedIn.
- * @param data
- * @param uniqueId
- * @returns {Promise<void>}
- */
-export async function uploadOnDrive(data, uniqueId) {
-    if (localStorage.getItem("isSigIn") === "true") {
-        try {
-            const workspaceRef = doc(collection(db, auth.currentUser.uid), uniqueId);
-            await setDoc(workspaceRef, data);
-        } catch (err) {
-            console.log(err);
-        }
-    } else {
-        //alert for login first
-    }
-}
 
 /**
  * get project from drive when user signedIn
@@ -35,9 +15,9 @@ export async function getDriveProjects(driveProjects) {
             //getting allDocs from Google Drive
             let allFilesFromGoogleDrive = await getAllFilesFromGoogleDrive();
             //check if there is any project or not if then in driveProject push only required data.
+            console.log("allFilesFromGoogleDrive", allFilesFromGoogleDrive)
             allFilesFromGoogleDrive.length > 0 && allFilesFromGoogleDrive.forEach((doc) => {
                 //check project is not deleted
-                console.log("doc::::",doc)
                 if (!doc?.trashed) {
                     driveProjects?.push({
                         storage: "drive",
@@ -49,7 +29,6 @@ export async function getDriveProjects(driveProjects) {
                     });
                 }
             })
-            console.log("driveProjects:::",driveProjects)
             return driveProjects
         } catch (error) {
             console.error(error);
@@ -57,54 +36,33 @@ export async function getDriveProjects(driveProjects) {
     }
 }
 
-/**
- * update project on drive when change on blockly workspace
- * @returns {Promise<void>}
- */
-// export async function updateProjectOnDrive() {
-//     const date = new Date();
-//     const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
-//     const currentDate = date.toLocaleDateString('en-US', dateOptions);
-//     const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
-//     const currentTime = date.toLocaleTimeString('en-US', timeOptions);
-//     const workspaceRef = doc(collection(db, auth.currentUser.uid), getCurrentProject().id);
-//     try {
-//         await updateDoc(workspaceRef, {
-//             updatedDate: currentDate,
-//             xmlValue: getCurrentProject().xmlValue,
-//             time: currentTime,
-//         })
-//     } catch (err) {
-//         console.log(err);
-//     }
-// }
 
 /**
  * delete project from local and drive also if you are signedIn.
- * @param currentProjectId
  * @returns {Promise<void>}
+ * @param projectName
  */
-export async function deleteProject(currentProjectId) {
+export async function deleteProject(projectName) {
+
     try {
         if (localStorage.getItem("isSigIn") === "true") {
-            //deleting file from firebase
-            // await deleteDoc(doc(db, auth.currentUser.uid, currentProjectId))
-
             //deleting file from Google Drive
             const allProject = []
             await getDriveProjects(allProject);
-            const findCurrentProject = allProject.find(currentProject => currentProject.id === currentProjectId);
-            findCurrentProject.fileId && deleteFileFromGoogleDrive(findCurrentProject.fileId)
+            const findCurrentProject = allProject.find(currentProject => currentProject.projectName === projectName);
+            let response = await checkFileExistsInFolder(await getFolderId(), findCurrentProject.projectName)
+            await deleteFileFromGoogleDrive(response.fileId)
             JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
-                if (project.id === currentProjectId) {
-                    const restObject = getAllLocalProjects().filter((res) => (res.id !== project.id));
+                if (project.projectName === projectName) {
+                    const restObject = getAllLocalProjects().filter((res) => (res.projectName !== project.projectName));
                     localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restObject))
                 }
             })
         } else {
+            //delete file from localProject
             JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
-                if (project.id === currentProjectId) {
-                    const restObject = getAllLocalProjects().filter((res) => (res.id !== project.id));
+                if (project.projectName === projectName) {
+                    const restObject = getAllLocalProjects().filter((res) => (res.projectName !== project.projectName));
                     localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restObject))
                 }
             })
@@ -114,13 +72,14 @@ export async function deleteProject(currentProjectId) {
     }
 }
 
+
 /**
  * create new project in current local storage and changes in current project save in allProjects local storage
  * @param uniqueId
  * @param projectName
  * @param code
  */
-export function updateCurrentProject(uniqueId, projectName, code, fileId, folderId) {
+export function updateCurrentProject(uniqueId, projectName, code) {
 
     const date = new Date();
     const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
@@ -128,65 +87,40 @@ export function updateCurrentProject(uniqueId, projectName, code, fileId, folder
     const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
     const currentTime = date.toLocaleTimeString('en-US', timeOptions);
 
-
-    if (getCurrentProject()?.fileId || fileId) {
-        const project = {
-            storage: "local",
-            id: uniqueId,
-            projectName: projectName,
-            xmlValue: code,
-            updatedDate: currentDate,
-            time: currentTime,
-            folderId: getCurrentProject()?.folderId ?? folderId,
-            fileId: getCurrentProject()?.fileId ?? fileId,
-        }
-        // if(getCurrentProject()?.fileId)
-        localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
-    } else {
-        const project = {
-            storage: "local",
-            id: uniqueId,
-            projectName: projectName,
-            xmlValue: code,
-            updatedDate: currentDate,
-            folderId: getCurrentProject()?.folderId ?? folderId,
-            time: currentTime,
-        }
-        localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
+    const project = {
+        storage: "local",
+        id: uniqueId,
+        projectName: projectName,
+        xmlValue: code,
+        updatedDate: currentDate,
+        time: currentTime,
     }
+    localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
 
     const found = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
         return project.id === getCurrentProject().id
     })
 
     if (!found) {
+        //add current project in local
         createProjectInLocal(localStorage.getItem(localStorageKeys.currentProject))
+
         if (localStorage.getItem("isSigIn") === "true") {
-            let data;
-            if (getCurrentProject()?.fileId || fileId) {
-                data = {
-                    projectName: getCurrentProject().projectName,
-                    xmlValue: getCurrentProject().xmlValue,
-                    createdDate: currentDate,
-                    updatedDate: currentDate,
-                    time: currentTime,
-                    folderId: getFolderId(),
-                    fileId: getCurrentProject().fileId,
-                }
-            } else {
-                data = {
-                    projectName: getCurrentProject().projectName,
-                    xmlValue: getCurrentProject().xmlValue,
-                    createdDate: currentDate,
-                    updatedDate: currentDate,
-                    time: currentTime,
-                    folderId: getFolderId(),
-                }
+            let data = {
+                id: getCurrentProject().id,
+                projectName: getCurrentProject().projectName,
+                xmlValue: getCurrentProject().xmlValue,
+                createdDate: currentDate,
+                updatedDate: currentDate,
+                time: currentTime,
             }
-            uploadOnDrive(data, getCurrentProject().id).then()
+            //after that add to google Drive
+            uploadToGoogleDrive(data).then();
+            // uploadOnDrive(data, getCurrentProject().id).then() // firebase upload
         }
     }
 }
+
 
 /**
  * get that project which is running currently in work space.
@@ -220,6 +154,7 @@ export function createProjectInLocal(currentProject) {
     localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(projectsArray))
 }
 
+
 /**
  * get all saved projects from local storage.
  */
@@ -230,6 +165,7 @@ export function getAllLocalProjects() {
     } catch (error) {
     }
 }
+
 
 /**
  * current project changes save in local storage.
@@ -248,6 +184,7 @@ export function updateLocalProjects() {
     }
 }
 
+
 /**
  * remove duplicate project get from drive and also save in local.
  */
@@ -257,6 +194,7 @@ export async function getFilterProjects() {
     let allDriveProjects = [];
     let allLocalProjects = getAllLocalProjects()
     await getDriveProjects(allDriveProjects).then(() => {
+        console.log("allDriveProjects", allDriveProjects)
         allProjects = allLocalProjects?.concat(allDriveProjects) || allDriveProjects
         const uniqueIds = {}; // object to keep track of unique id values
         filterProjects = allProjects.filter(project => {
@@ -280,23 +218,3 @@ export async function getFilterProjects() {
     console.log("Filter projects::::::", filterProjects)
     return filterProjects;
 }
-
-//
-// /**
-//  * get project from firebase when user signedIn
-//  * @param driveProjects
-//  * @returns {Promise<void>}
-//  */
-// async function getFirBaseProject(driveProjects) {
-//     if (auth.currentUser?.uid) {
-//         try {
-//             // getting all docs from firebase
-//             const projects = await getDocs(collection(db, auth.currentUser?.uid));
-//             projects.forEach((doc) => {
-//                 driveProjects?.push({storage: "drive", id: doc.id, ...doc.data()});
-//             })
-//         } catch (error) {
-//             console.error(error);
-//         }
-//     }
-// }
