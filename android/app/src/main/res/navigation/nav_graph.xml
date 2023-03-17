@@ -9,10 +9,10 @@
         android:id="@+id/mainFragment"
         android:name="org.openbot.main.MainFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_main" >
+        tools:layout="@layout/fragment_main">
         <action
-            android:id="@+id/action_mainFragment_to_openCodeCompiler"
-            app:destination="@id/openCodeCompilerFragment" />
+            android:id="@+id/action_mainFragment_to_projects"
+            app:destination="@id/projectsFragment" />
         <action
             android:id="@+id/action_mainFragment_to_robotCommunicationFragment"
             app:destination="@id/robotCommunicationFragment" />
@@ -32,17 +32,17 @@
             android:id="@+id/action_mainFragment_to_modelManagementFragment"
             app:destination="@id/modelManagementFragment" />
         <action
-          android:id="@+id/action_mainFragment_to_pointGoalNavigationFragment"
-          app:destination="@id/pointGoalNavigationFragment" />
+            android:id="@+id/action_mainFragment_to_pointGoalNavigationFragment"
+            app:destination="@id/pointGoalNavigationFragment" />
         <action
-          android:id="@+id/action_mainFragment_to_pointGoalNavigationFragment2"
-          app:destination="@id/pointGoalNavigationFragment" />
+            android:id="@+id/action_mainFragment_to_pointGoalNavigationFragment2"
+            app:destination="@id/pointGoalNavigationFragment" />
     </fragment>
     <fragment
-        android:id="@+id/openCodeCompilerFragment"
-        android:name="org.openbot.convertJStoJAVA.convertJStoJAVAFragment"
-        android:label="convertJStoJAVAfragment"
-        tools:layout="@layout/fragment_convert_js_to_java" />
+        android:id="@+id/projectsFragment"
+        android:name="org.openbot.projects.ProjectsFragment"
+        android:label="projectsFragment"
+        tools:layout="@layout/fragment_projects" />
     <fragment
         android:id="@+id/robotCommunicationFragment"
         android:name="org.openbot.robot.FreeRoamFragment"
@@ -56,8 +56,7 @@
 
     <action
         android:id="@+id/open_settings_fragment"
-        app:destination="@id/settingsFragment"
-        />
+        app:destination="@id/settingsFragment" />
 
     <fragment
         android:id="@+id/bluetoothFragment"
@@ -66,8 +65,7 @@
 
     <action
         android:id="@+id/open_bluetooth_fragment"
-        app:destination="@id/bluetoothFragment"
-        />
+        app:destination="@id/bluetoothFragment" />
     <fragment
         android:id="@+id/loggerFragment"
         android:name="org.openbot.logging.LoggerFragment"
@@ -96,28 +94,17 @@
         android:label="fragment_model_management"
         tools:layout="@layout/fragment_model_management" />
     <fragment
-      android:id="@+id/pointGoalNavigationFragment"
-      android:name="org.openbot.pointGoalNavigation.PointGoalNavigationFragment"
-      android:label="fragment_point_goal_navigation"
-      tools:layout="@layout/fragment_point_goal_navigation" />
-
-    <fragment
-        android:id="@+id/barCodeScannerFragment"
-        android:name="org.openbot.convertJStoJAVA.BarCodeScannerFragment"
-        android:label="@string/bluetooth" />
+        android:id="@+id/pointGoalNavigationFragment"
+        android:name="org.openbot.pointGoalNavigation.PointGoalNavigationFragment"
+        android:label="fragment_point_goal_navigation"
+        tools:layout="@layout/fragment_point_goal_navigation" />
 
     <action
         android:id="@+id/open_bar_code_scanner_fragment"
-        app:destination="@id/barCodeScannerFragment"
-        />
-
+        app:destination="@id/barCodeScannerFragment" />
     <fragment
-        android:id="@+id/convertCodeJStoJAVAFragment"
-        android:name="org.openbot.convertJStoJAVA.convertJStoJAVAFragment"
-        android:label="@string/bluetooth" />
-
-    <action
-        android:id="@+id/open_convert_code_js_to_java_fragment"
-        app:destination="@id/convertCodeJStoJAVAFragment"
-        />
+        android:id="@+id/barCodeScannerFragment"
+        android:name="org.openbot.projects.BarCodeScannerFragment"
+        android:label="barCodeScanner"
+        tools:layout="@layout/fragment_bar_code_scanner"/>
 </navigation>

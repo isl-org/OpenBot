@@ -1,23 +1,22 @@
-package org.openbot.convertJStoJAVA;
+package org.openbot.projects;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import org.openbot.R;
-import org.openbot.databinding.FragmentConvertJsToJavaBinding;
+import org.openbot.common.ControlsFragment;
+import org.openbot.databinding.FragmentProjectsBinding;
 
-import timber.log.Timber;
-
-public class convertJStoJAVAFragment extends Fragment {
-    private FragmentConvertJsToJavaBinding binding;
+public class ProjectsFragment extends ControlsFragment {
+    private FragmentProjectsBinding binding;
     private BarCodeScannerFragment barCodeScannerFragment;
     private WebView myWebView;
 
@@ -25,17 +24,17 @@ public class convertJStoJAVAFragment extends Fragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentConvertJsToJavaBinding.inflate(inflater, container, false);
+        binding = FragmentProjectsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button button = getView().findViewById(R.id.btnScan);
+        ImageView imageView = getView().findViewById(R.id.btnScan);
         barCodeScannerFragment = new BarCodeScannerFragment();
-
-        button.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.barCodeScannerFragment));
+        imageView.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.barCodeScannerFragment));
         myWebView = new WebView(getContext());
         myWebView.getSettings().setJavaScriptEnabled(true);
     }
@@ -53,8 +52,7 @@ public class convertJStoJAVAFragment extends Fragment {
             }
         }
 
-        Timber.tag("Qr sanjeev").d(code);
-        myWebView.addJavascriptInterface(new BotFunction(), "Android");
+        myWebView.addJavascriptInterface(new BotFunctions(vehicle), "Android");
         myWebView.evaluateJavascript(code, null);
     }
 
@@ -67,5 +65,12 @@ public class convertJStoJAVAFragment extends Fragment {
         }
     }
 
+    @Override
+    protected void processControllerKeyData(String command) {
+    }
+
+    @Override
+    protected void processUSBData(String data) {
+    }
 
 }

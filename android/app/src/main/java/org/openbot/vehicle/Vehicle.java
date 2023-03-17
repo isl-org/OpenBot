@@ -19,6 +19,8 @@ import org.openbot.main.CommonRecyclerViewAdapter;
 import org.openbot.main.ScanDeviceAdapter;
 import org.openbot.utils.Enums;
 
+import timber.log.Timber;
+
 public class Vehicle {
 
     private final Noise noise = new Noise(1000, 2000, 5000);
@@ -385,10 +387,9 @@ public class Vehicle {
     }
 
     private void sendStringToDevice(String message) {
-        if (getConnectionType().equals("USB") && usbConnection.isOpen()){
+        if (getConnectionType().equals("USB") && usbConnection.isOpen()) {
             usbConnection.send(message);
-        }
-        else if (getConnectionType().equals("Bluetooth") && bluetoothManager.isBleConnected()){
+        } else if (getConnectionType().equals("Bluetooth") && bluetoothManager.isBleConnected()) {
             sendStringToBle(message);
         }
     }
@@ -402,8 +403,10 @@ public class Vehicle {
     }
 
     public void sendControl() {
+
         int left = (int) (getLeftSpeed());
         int right = (int) (getRightSpeed());
+
         if (noiseEnabled && noise.getDirection() < 0)
             left =
                     (int)

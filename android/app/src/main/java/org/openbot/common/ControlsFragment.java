@@ -1,7 +1,6 @@
 package org.openbot.common;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;

@@ -58,7 +58,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
 
       case FeatureList.PROJECTS:
         Navigation.findNavController(requireView())
-                .navigate(R.id.action_mainFragment_to_openCodeCompiler);
+                .navigate(R.id.action_mainFragment_to_projects);
         break;
 
       case FeatureList.FREE_ROAM:
