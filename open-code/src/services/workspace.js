@@ -23,7 +23,7 @@ export async function getDriveProjects(driveProjects) {
                         storage: "drive",
                         xmlValue: doc.xmlValue,
                         id: doc.appProperties.id,
-                        projectName: doc.name,
+                        projectName: doc.name.replace(/\.[^/.]+$/, ""),
                         updatedDate: doc.appProperties.date,
                         time: doc.appProperties.time,
                     });

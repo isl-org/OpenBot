@@ -7,7 +7,7 @@ import {Constants, localStorageKeys} from "../utils/constants";
  * @returns {Promise<void>}
  */
 export const uploadToGoogleDrive = async (data) => {
-    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
+    const accessToken = getAccessToken();
     const folderId = await getFolderId();
     console.log("folderId", folderId)
     //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
@@ -29,7 +29,7 @@ export const uploadToGoogleDrive = async (data) => {
 const uploadFileToFolder = async (accessToken, data, folderId) => {
     const metadataFields = 'appProperties,id,name,createdTime';
     const fileMetadata = {
-        name: data.projectName,
+        name: data.projectName+".xml",
         parents: [folderId],
         mimeType: "text/xml",
         content_type: "application/json; charset=UTF-8",
@@ -70,8 +70,9 @@ const uploadFileToFolder = async (accessToken, data, folderId) => {
  * @returns {Promise<{exists: boolean, fileId}>}
  */
 export async function checkFileExistsInFolder(folderId, fileName) {
-    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
-    const response = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(fileName)}'+and+'${encodeURIComponent(folderId)}'+in+parents+and+trashed=false&access_token=${accessToken}`);
+    const fileNameWithExtension=fileName+".xml";
+    const accessToken = getAccessToken();
+    const response = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(fileNameWithExtension)}'+and+'${encodeURIComponent(folderId)}'+in+parents+and+trashed=false&access_token=${accessToken}`);
     const result = await response.json();
     console.log("result:::", result)
     if (result && result.files.length > 0) {
@@ -108,6 +109,7 @@ async function CreateFolder(accessToken) {
         .then(response => response.json())
         .then(folder => {
             console.log(`Folder '${folder.name}' created with ID '${folder.id}'`);
+            SharingFolderFromGoogleDrive(folder.id)
             return folder.id;
         })
         .catch(error => {
@@ -121,15 +123,18 @@ async function CreateFolder(accessToken) {
  */
 export async function getFolderId() {
     // Authenticate the user and obtain an access token for the Google Drive API
-    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
+    const accessToken = getAccessToken();
     // Step 1: Get the ID of the folder with the specified name
     const searchResponse = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(Constants.FolderName)}'+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false&access_token=${accessToken}`);
     const searchResult = await searchResponse.json();
     const folderId = searchResult?.files[0]?.id || null;
-    console.log(" get folderId:::", folderId)
     return folderId;
 }
 
+
+export function getAccessToken(){
+    return localStorage.getItem(localStorageKeys.accessToken)
+}
 
 //create file in google drive openBot folder
 async function CreateFile(data, folderId, metadataFields, headers, requestBody) {
@@ -140,8 +145,9 @@ async function CreateFile(data, folderId, metadataFields, headers, requestBody) 
     })
         .then(response => response.json())
         .then(file => {
-            console.log("response data", file)
+            console.log("response data", file);
             console.log(`File '${file.name}' uploaded to folder '${folderId}' with ID '${file.id}'`);
+            SharingFileFromGoogleDrive(file.id);
         })
         .catch(error => {
             console.error(error);
@@ -154,7 +160,7 @@ async function CreateFile(data, folderId, metadataFields, headers, requestBody) 
  */
 export async function getAllFilesFromGoogleDrive() {
     // Authenticate the user and obtain an access token for the Google Drive API
-    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
+    const accessToken = getAccessToken();
 
     // Step 1: Get the ID of the folder with the specified name
     const folderId = await getFolderId();
@@ -198,7 +204,7 @@ export async function getSelectedProjectFromGoogleDrive(folderId, fileId, access
  */
 export async function deleteFileFromGoogleDrive(fileId) {
     const folderId = await getFolderId();
-    const accessToken = localStorage.getItem(localStorageKeys.accessToken);
+    const accessToken = getAccessToken();
     const headers = {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
@@ -214,6 +220,91 @@ export async function deleteFileFromGoogleDrive(fileId) {
             console.log(err)
         })
 }
+
+
+/**
+ * permissions for sharing Google Drive files
+ * @param fileId
+ */
+export function SharingFileFromGoogleDrive(fileId) {
+    const accessToken = getAccessToken();
+    const permission = {
+        'type': 'anyone',
+        'role': 'reader'
+    };
+    const params = {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(permission)
+    };
+
+// Share the file
+    fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions?sendNotificationEmail=false&supportsAllDrives=true`, params)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('An error occurred while sharing the file.');
+            }
+            console.log(`The file with ID "${fileId}" has been shared with anyone who has the link with write access.`);
+        })
+        .catch(error => console.error(error));
+}
+
+
+/**
+ * permissions for sharing Google Drive folder
+ * @param folderId
+ * @constructor
+ */
+export function SharingFolderFromGoogleDrive(folderId){
+    const accessToken = getAccessToken();
+    const permission = {
+        'type': 'anyone',
+        'role': 'reader'
+    };
+    const params = {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(permission)
+    };
+
+    fetch(`https://www.googleapis.com/drive/v3/files/${folderId}/permissions?sendNotificationEmail=false&supportsAllDrives=true`, params)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('An error occurred while sharing the folder.');
+            }
+            console.log(`The folder with ID "${folderId}" has been shared with anyone who has the link.`);
+        })
+        .catch(error => console.error(error));
+}
+
+
+// export function getShareableLink(fileId,folderId){
+//     const accessToken = getAccessToken();
+//     const params = {
+//         method: 'GET',
+//         headers: {
+//             'Authorization': 'Bearer ' + accessToken
+//         }
+//     };
+//     fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?parents=${folderId}&fields=webViewLink&supportsAllDrives=true`, params)
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('An error occurred.');
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             const shareableLink = data.webViewLink.replace('/view', '/edit?usp=sharing');
+//             console.log(`The shareable link of the file with ID "${fileId}" is: ${shareableLink}`);
+//         })
+//         .catch(error => console.error(error));
+// }
 
 
 //
@@ -240,4 +331,3 @@ export async function deleteFileFromGoogleDrive(fileId) {
 //         });
 //     });
 // }
-
