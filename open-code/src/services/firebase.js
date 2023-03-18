@@ -5,8 +5,7 @@ import 'firebase/compat/firestore';
 import {getFirestore} from "firebase/firestore";
 import {getAuth, signOut} from "firebase/auth";
 import {localStorageKeys} from "../utils/constants";
-import {deleteFileFromGoogleDrive} from "./googleDrive";
-import {getAllLocalProjects, getDriveProjects} from "./workspace";
+
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,

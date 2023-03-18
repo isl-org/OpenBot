@@ -101,11 +101,20 @@ function NewProjectButton(props) {
 
 export default NewProjectButton;
 
+
+/**
+ * handle project name :: return unique name
+ * @param projectsArray
+ * @param updatedProjectName
+ * @param projectName
+ * @returns {string|*}
+ */
 function handleUniqueName(projectsArray, updatedProjectName, projectName) {
     const findProject = projectsArray.find(project => project.projectName === updatedProjectName)
+
     if (findProject) {
         const projectTitle = findProject.projectName
-        const lastCharacter = projectTitle.charAt(projectTitle.length - 1)
+        const lastCharacter = projectTitle.charAt(projectTitle.length - 1);
         if (!isNaN(parseInt(lastCharacter))) {
             updatedProjectName = projectTitle.replace(/.$/, parseInt(lastCharacter) + 1);
         } else {
@@ -120,6 +129,5 @@ function handleUniqueName(projectsArray, updatedProjectName, projectName) {
 
     } else {
        return projectName;
-
     }
 }

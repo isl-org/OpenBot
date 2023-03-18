@@ -56,9 +56,11 @@ export function DeleteModel(props) {
         return setOpen(false);
     };
     const handleDeleteProject = () => {
-        deleteProject(projectName).then();
-        let path = `/`;
-        navigate(path);
+        deleteProject(projectName).then(()=>{
+            let path = `/`;
+            navigate(path);
+        });
+
     }
 
     return (

@@ -7,8 +7,9 @@ import {ThemeContext} from "../../App";
 import {DarkTheme, LightTheme} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
-import { updateCurrentProject, updateProjectOnDrive} from "../../services/workspace";
+import {FormatDate, getCurrentProject, updateCurrentProject, updateProjectOnDrive} from "../../services/workspace";
 import {nanoid} from "nanoid";
+import {uploadToGoogleDrive} from "../../services/googleDrive";
 
 Blockly.setLocale(locale);
 
@@ -28,12 +29,19 @@ function BlocklyComponent(props) {
     const handleWorkspaceChange = useCallback(() => {
         if (projectName !== undefined) {
             updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId,folderId);
-            // console.log("fileID:::::: blockly me",fileId)
         }
-        if (localStorage.getItem("isSigIn") === "true") {
-            // updateProjectOnDrive().then((res) => {
-            // })
-        }
+        // if (localStorage.getItem("isSigIn") === "true") {
+        //     let data = {
+        //         id: getCurrentProject().id,
+        //         projectName: getCurrentProject().projectName,
+        //         xmlValue: getCurrentProject().xmlValue,
+        //         createdDate: FormatDate().currentDate,
+        //         updatedDate: FormatDate().currentDate,
+        //         time: FormatDate().currentTime,
+        //     }
+        //     //after that add to google Drive
+        //     uploadToGoogleDrive(data).then();
+        // }
     }, []);
 
     useEffect(() => {

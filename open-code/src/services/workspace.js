@@ -10,7 +10,8 @@ import {getAllFilesFromGoogleDrive} from "./googleDrive";
  * @returns {Promise<void>}
  */
 export async function getDriveProjects(driveProjects) {
-    if (auth.currentUser?.uid) {
+
+    if (localStorage.getItem("isSigIn") === "true") {
         try {
             //getting allDocs from Google Drive
             let allFilesFromGoogleDrive = await getAllFilesFromGoogleDrive();
@@ -48,16 +49,20 @@ export async function deleteProject(projectName) {
         if (localStorage.getItem("isSigIn") === "true") {
             //deleting file from Google Drive
             const allProject = []
-            await getDriveProjects(allProject);
-            const findCurrentProject = allProject.find(currentProject => currentProject.projectName === projectName);
-            let response = await checkFileExistsInFolder(await getFolderId(), findCurrentProject.projectName)
-            await deleteFileFromGoogleDrive(response.fileId)
             JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
                 if (project.projectName === projectName) {
                     const restObject = getAllLocalProjects().filter((res) => (res.projectName !== project.projectName));
                     localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restObject))
                 }
             })
+            await getDriveProjects(allProject);
+            const findCurrentProject = allProject.find(currentProject => currentProject?.projectName === projectName);
+            console.log("findCurrentProject", findCurrentProject)
+            findCurrentProject && await checkFileExistsInFolder(await getFolderId(), findCurrentProject?.projectName).then(async (response) => {
+                await deleteFileFromGoogleDrive(response?.fileId)
+            })
+
+
         } else {
             //delete file from localProject
             JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
@@ -81,43 +86,38 @@ export async function deleteProject(projectName) {
  */
 export function updateCurrentProject(uniqueId, projectName, code) {
 
-    const date = new Date();
-    const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
-    const currentDate = date.toLocaleDateString('en-US', dateOptions)
-    const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
-    const currentTime = date.toLocaleTimeString('en-US', timeOptions);
-
     const project = {
         storage: "local",
         id: uniqueId,
         projectName: projectName,
         xmlValue: code,
-        updatedDate: currentDate,
-        time: currentTime,
+        updatedDate: FormatDate().currentDate,
+        time: FormatDate().currentTime,
     }
+    //current project will first get store in current
     localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
-
+    //now will check current project is in all project or not.
     const found = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
         return project.id === getCurrentProject().id
     })
-
+    //current project is not in local so will save it in local
     if (!found) {
         //add current project in local
         createProjectInLocal(localStorage.getItem(localStorageKeys.currentProject))
 
-        if (localStorage.getItem("isSigIn") === "true") {
-            let data = {
-                id: getCurrentProject().id,
-                projectName: getCurrentProject().projectName,
-                xmlValue: getCurrentProject().xmlValue,
-                createdDate: currentDate,
-                updatedDate: currentDate,
-                time: currentTime,
-            }
-            //after that add to google Drive
-            uploadToGoogleDrive(data).then();
-            // uploadOnDrive(data, getCurrentProject().id).then() // firebase upload
-        }
+        // if (localStorage.getItem("isSigIn") === "true") {
+        //     let data = {
+        //         id: getCurrentProject().id,
+        //         projectName: getCurrentProject().projectName,
+        //         xmlValue: getCurrentProject().xmlValue,
+        //         createdDate: FormatDate().currentDate,
+        //         updatedDate: FormatDate().currentDate,
+        //         time: FormatDate().currentTime,
+        //     }
+        //     //after that add to google Drive
+        //     uploadToGoogleDrive(data).then();
+        //     // uploadOnDrive(data, getCurrentProject().id).then() // firebase upload
+        // }
     }
 }
 
@@ -140,17 +140,10 @@ export function getCurrentProject() {
  * @param currentProject
  */
 export function createProjectInLocal(currentProject) {
-    const date = new Date();
-    const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
-    const currentDate = date.toLocaleDateString('en-US', dateOptions)
     const objectCurrentProject = JSON.parse(currentProject)
     const getAllProjects = localStorage.getItem(localStorageKeys.allProjects)
-    let projectsArray = JSON.parse(getAllProjects)
-    if (projectsArray) {
-        projectsArray.push({createdDate: currentDate, ...objectCurrentProject})
-    } else {
-        projectsArray = [{createdDate: currentDate, ...objectCurrentProject}]
-    }
+    let projectsArray = JSON.parse(getAllProjects) || []
+    projectsArray?.push({createdDate: FormatDate().currentDate, ...objectCurrentProject})
     localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(projectsArray))
 }
 
@@ -215,6 +208,14 @@ export async function getFilterProjects() {
             return true;
         });
     })
-    console.log("Filter projects::::::", filterProjects)
     return filterProjects;
+}
+
+export function FormatDate() {
+    const date = new Date();
+    const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
+    const currentDate = date.toLocaleDateString('en-US', dateOptions)
+    const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
+    const currentTime = date.toLocaleTimeString('en-US', timeOptions);
+    return {currentDate: currentDate, currentTime: currentTime}
 }

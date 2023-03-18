@@ -6,6 +6,7 @@ import {Constants, localStorageKeys, Themes} from "./utils/constants";
 import {useLocation} from "react-router-dom";
 import styles from "./components/homeComponents/carousel/carousel.module.css";
 import {Images} from "./utils/images";
+import {auth, googleSignOut} from "./services/firebase";
 
 export const ThemeContext = createContext(null);
 
@@ -19,6 +20,40 @@ function App() {
     const [isLoading, setIsLoading] = useState(false);
     let onPageLoad = localStorage.getItem("theme") || ""
     const [theme, setTheme] = useState(onPageLoad);
+
+    useEffect(() => {
+        let timeoutId;
+
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in.
+                user.getIdTokenResult()
+                    .then((idTokenResult) => {
+                        const expirationTime = idTokenResult?.expirationTime;
+                        const sessionTimeoutMs = new Date(expirationTime).getTime() - Date.now();
+                        console.log("sessionTimeoutMs", sessionTimeoutMs)
+                        timeoutId = setTimeout(() => {
+                            googleSignOut().then(() =>
+                                alert('Your session has expired. You have been signed out.')
+                            );
+                        }, sessionTimeoutMs);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            } else {
+                // User is signed out
+                clearTimeout(timeoutId);
+
+            }
+        });
+
+        return () => {
+            unsubscribe();
+            clearTimeout(timeoutId);
+        }
+    }, []);
+
 
     useEffect(() => {
         setIsLoading(true);

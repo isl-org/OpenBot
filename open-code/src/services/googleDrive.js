@@ -70,11 +70,12 @@ const uploadFileToFolder = async (accessToken, data, folderId) => {
  * @returns {Promise<{exists: boolean, fileId}>}
  */
 export async function checkFileExistsInFolder(folderId, fileName) {
+    console.log("folder",folderId,fileName)
     const fileNameWithExtension=fileName+".xml";
     const accessToken = getAccessToken();
     const response = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(fileNameWithExtension)}'+and+'${encodeURIComponent(folderId)}'+in+parents+and+trashed=false&access_token=${accessToken}`);
     const result = await response.json();
-    console.log("result:::", result)
+    console.log("resu;t::",result)
     if (result && result.files.length > 0) {
         return {exists: true, fileId: result.files[0].id};
     } else {
@@ -125,6 +126,7 @@ export async function getFolderId() {
     // Authenticate the user and obtain an access token for the Google Drive API
     const accessToken = getAccessToken();
     // Step 1: Get the ID of the folder with the specified name
+
     const searchResponse = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(Constants.FolderName)}'+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false&access_token=${accessToken}`);
     const searchResult = await searchResponse.json();
     const folderId = searchResult?.files[0]?.id || null;
@@ -209,6 +211,7 @@ export async function deleteFileFromGoogleDrive(fileId) {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
     }
+    console.log("fileId",fileId,folderId)
     fetch(`${Constants.baseUrl}/files/${fileId}?supportsAllDrives=true&parents=${folderId}`, {
         method: "DELETE",
         headers: headers
