@@ -11,7 +11,6 @@ class RobotInfoFrame: UIViewController {
     var robotName = UILabel()
     var blueToothIconButton: UIButton!
     var refreshIcon: UIImageView!
-    var openBotIcon: UIImageView!
     var sensorHeading = UILabel()
     var voltageDividerCheckBox = Checkbox()
     var sonarCheckBox = Checkbox()
@@ -46,6 +45,9 @@ class RobotInfoFrame: UIViewController {
     let bluetooth = bluetoothDataController.shared
     var robotInfo: String = ""
     var lightSlider: UISlider!
+    @IBOutlet weak var openBotIcon: UIImageView!
+    var topAnchorConstraint: NSLayoutConstraint!;
+    var leadingAnchorConstraint: NSLayoutConstraint!;
 
     /// Called after the view InfoFrame has loaded.
     override func viewDidLoad() {
@@ -58,12 +60,29 @@ class RobotInfoFrame: UIViewController {
             topPadding = 20
         }
         createUI()
+        setupLogo();
         updateConstraints()
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScreen), name: .updateLabel, object: nil)
         robotInfo = bluetooth.robotInfo
         updateRobotInfo()
+    }
+
+    ///
+    ///function to setup openBot icon 
+    func setupLogo() {
+        openBotIcon.translatesAutoresizingMaskIntoConstraints = false;
+        openBotIcon.heightAnchor.constraint(equalToConstant: 148).isActive = true;
+        openBotIcon.widthAnchor.constraint(equalToConstant: 159.6).isActive = true;
+        if currentOrientation == .portrait {
+            leadingConstraint = openBotIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: (width - (openBotIcon.image?.size.width ?? 150)) / 2 - 40)
+            topAnchorConstraint = openBotIcon.topAnchor.constraint(equalTo: robotType.bottomAnchor, constant: 10)
+        } else {
+            leadingConstraint = openBotIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 80)
+            topAnchorConstraint = openBotIcon.topAnchor.constraint(equalTo: robotType.bottomAnchor, constant: 20)
+        }
+        NSLayoutConstraint.activate([leadingConstraint, topAnchorConstraint]);
     }
 
     /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
@@ -89,7 +108,6 @@ class RobotInfoFrame: UIViewController {
         robotName = createLabels(text: "N/A", topAnchor: topPadding + adapted(dimensionSize: 30, to: .height), leadingAnchor: width / 2)
         blueToothIconButton = createBluetoothIcon()
         createRefreshIcon()
-        openBotIcon = createLogoIcon()
         createSensorHeading()
         createSensorCheckBoxes()
         createWheelOdometerHeading()
@@ -138,20 +156,6 @@ class RobotInfoFrame: UIViewController {
     /// creates sensors heading
     func createSensorHeading() {
         sensorHeading = createHeadings(text: "Sensors")
-    }
-
-    /// creates logo icon for openbot images
-    func createLogoIcon() -> UIImageView {
-        let icon = UIImageView()
-        icon.image = Images.openBotLogo
-        let imageSize = Images.openBotLogo!.size
-        let logoWidth = imageSize.width * 0.85
-        let logoHeight = imageSize.height * 0.70
-        icon.frame.size = CGSize(width: logoWidth, height: logoHeight)
-        view.addSubview(icon)
-        icon.frame.origin.x = (width - icon.frame.width) / 2
-        icon.frame.origin.y = robotType.frame.origin.y + adapted(dimensionSize: 25, to: .height)
-        return icon
     }
 
     /// creates checkboxes for sensors
@@ -353,7 +357,6 @@ class RobotInfoFrame: UIViewController {
             stopButton.frame.origin = CGPoint(x: 290, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height))
             lightLabel.frame.origin = CGPoint(x: 10, y: motorLabel.frame.origin.y + 50)
             lightSlider.frame = CGRect(x: 70, y: (motorLabel.frame.origin.y + adapted(dimensionSize: 45, to: .height)), width: width - 90, height: 40)
-
         } else {
             blueToothIconButton.frame.origin = CGPoint(x: width - 100, y: 20)
             robotName.frame.origin.y = 20

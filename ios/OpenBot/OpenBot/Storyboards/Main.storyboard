@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PA5-nf-qH0">
-    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <accessibilityOverrides isEnabled="YES" boldText="YES" buttonShapes="YES" onOffLabels="YES" increaseContrast="YES" reduceTransparency="YES" dynamicTypePreference="2"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -23,7 +23,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PA5-nf-qH0" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="iB7-Za-Tcy">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" systemColor="tertiaryLabelColor"/>
                     </navigationBar>
@@ -76,17 +76,17 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="rkf-18-iZb" customClass="modelManagementCell" customModule="OpenBot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="43.666667938232422"/>
+                                <rect key="frame" x="0.0" y="49" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rkf-18-iZb" id="AHb-Ms-y93">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JlZ-sr-XGp">
-                                            <rect key="frame" x="324" y="5.6666666666666679" width="82" height="32.333333333333329"/>
+                                            <rect key="frame" x="324" y="5.5" width="82" height="32.5"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MJ5-Jm-ZQP">
-                                                    <rect key="frame" x="26" y="-0.3333333333333357" width="30" height="33"/>
+                                                    <rect key="frame" x="26" y="0.0" width="30" height="33"/>
                                                     <color key="tintColor" name="borderColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="30" id="8bU-Sf-vIE"/>
@@ -139,7 +139,7 @@
             </objects>
             <point key="canvasLocation" x="1989" y="1695"/>
         </scene>
-         <!--Point Goal Fragment-->
+        <!--Point Goal Fragment-->
         <scene sceneID="bPa-Ob-uoN">
             <objects>
                 <viewController storyboardIdentifier="ScreenNavigation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="g0U-IV-aTA" customClass="PointGoalFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
@@ -163,7 +163,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OpenBot" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDx-Ys-4aG">
-                                <rect key="frame" x="12" y="88" width="113" height="33"/>
+                                <rect key="frame" x="12" y="92" width="113" height="33"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="33" id="JqA-jr-Vcd"/>
                                 </constraints>
@@ -172,7 +172,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Ce8-ek-lG7">
-                                <rect key="frame" x="0.0" y="140" width="414" height="653"/>
+                                <rect key="frame" x="0.0" y="144" width="414" height="649"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Mxr-ZR-LOu">
                                     <size key="itemSize" width="128" height="128"/>
@@ -192,7 +192,7 @@
                                 </cells>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z72-El-xFG">
-                                <rect key="frame" x="318" y="88" width="38" height="36"/>
+                                <rect key="frame" x="318" y="92" width="38" height="36"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="bluetoothConnected" title="" imagePadding="0.0">
                                     <color key="baseForegroundColor" name="HomePageTitleColor"/>
@@ -202,7 +202,7 @@
                                 </connections>
                             </button>
                             <button autoresizesSubviews="NO" toolTip="Settings" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" buttonType="system" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5c8-Vo-nJ6">
-                                <rect key="frame" x="369" y="95" width="18" height="22"/>
+                                <rect key="frame" x="369" y="99" width="18" height="22"/>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="settings">
@@ -329,14 +329,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk" customClass="BluetoothTableViewCell" customModule="OpenBot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="48.666666030883789" width="414" height="34"/>
+                                <rect key="frame" x="0.0" y="49" width="414" height="34.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="323.33333333333331" y="0.0" width="85.666666666666686" height="34"/>
+                                            <rect key="frame" x="321" y="0.0" width="88" height="34.5"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">
@@ -404,18 +404,28 @@
                     <view key="view" contentMode="scaleToFill" id="kdQ-uK-w8Q">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_openbot" translatesAutoresizingMaskIntoConstraints="NO" id="Ygd-3I-yZT">
+                                <rect key="frame" x="146" y="25.5" width="78" height="72.5"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="nKo-BB-u0F"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <connections>
+                        <outlet property="openBotIcon" destination="Ygd-3I-yZT" id="ds5-TU-QGB"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SIy-qX-S1o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1306" y="333"/>
+            <point key="canvasLocation" x="-1308" y="332.38380809595208"/>
         </scene>
     </scenes>
     <resources>
         <image name="bluetoothConnected" width="14" height="22"/>
         <image name="controller" width="444.66665649414062" height="405.66665649414062"/>
+        <image name="ic_openbot" width="72" height="72"/>
         <image name="settings" width="39" height="39"/>
         <namedColor name="HomePageTitleColor">
             <color red="0.0" green="0.4392156862745098" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
