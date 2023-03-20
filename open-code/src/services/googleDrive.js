@@ -10,6 +10,7 @@ import {getCurrentProject} from "./workspace";
 export const uploadToGoogleDrive = async (data) => {
     const accessToken = getAccessToken();
     const folderId = await getFolderId();
+
     //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
     if (folderId) {
         await uploadFileToFolder(accessToken, data, folderId);
@@ -112,6 +113,7 @@ const uploadJSFileToFolder = async (accessToken, data, folderId) => {
  * @param fileName
  * @returns {Promise<{exists: boolean, fileId}>}
  */
+
 export async function checkFileExistsInFolder(folderId, fileName, fileType) {
     let fileNameWithExtension = fileName;
     if (fileType === 'js') {
@@ -119,6 +121,7 @@ export async function checkFileExistsInFolder(folderId, fileName, fileType) {
     } else if (fileType === 'xml') {
         fileNameWithExtension += '.xml';
     }
+
     const accessToken = getAccessToken();
     const response = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(fileNameWithExtension)}'+and+'${encodeURIComponent(folderId)}'+in+parents+and+trashed=false&access_token=${accessToken}`);
     const result = await response.json();
@@ -221,7 +224,7 @@ export async function getAllFilesFromGoogleDrive() {
     // Step 1: Get the ID of the folder with the specified name
     const folderId = await getFolderId();
     // Step 2: Retrieve all files in the folder with their metadata
-    const filesResponse = await fetch(`${Constants.baseUrl}/files?q=mimeType != 'application/vnd.google-apps.folder' and trashed = false and parents in '${folderId}'&fields=files(id,name,createdTime,modifiedTime,appProperties,mimeType)&access_token=${accessToken}`);
+    const filesResponse = await fetch(`${Constants.baseUrl}/files?q=mimeType='text/xml' and trashed=false and parents='${folderId}'&fields=files(id,name,createdTime,modifiedTime,appProperties,mimeType)&access_token=${accessToken}`);
     const filesResult = await filesResponse.json();
 
     // Step 3: get xmlValue and append to each file.
@@ -265,6 +268,7 @@ export async function deleteFileFromGoogleDrive(fileId) {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
     }
+
     fetch(`${Constants.baseUrl}/files/${fileId}?supportsAllDrives=true&parents=${folderId}`, {
         method: "DELETE",
         headers: headers

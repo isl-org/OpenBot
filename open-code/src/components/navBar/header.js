@@ -10,7 +10,7 @@ import {HelpCenterModal} from "../homeComponents/header/helpCenterModal";
 import {EditProfileModal} from "../homeComponents/header/editProfileModal";
 import {DeleteModel, LogOutModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
-import {localStorageKeys, PathName} from "../../utils/constants";
+import {PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
 
 /**

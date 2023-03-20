@@ -51,8 +51,6 @@ export const localStorageKeys = {
     allProjects: "projects",
     currentProject: "currentProject",
     accessToken: "accessToken",
-    folderId: "folderId",
-    fileIds: "fileIds"
 }
 
 export const Constants = {

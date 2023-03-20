@@ -4,6 +4,12 @@ import styles from "./carousel.module.css";
 import {ThemeContext} from "../../../App";
 import {Carousal} from "../../../utils/constants";
 import {Carousel} from "react-responsive-carousel";
+
+/**
+ *
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const HomeCarousel = () => {
 
     return (
