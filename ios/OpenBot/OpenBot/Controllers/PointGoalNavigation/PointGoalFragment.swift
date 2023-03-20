@@ -36,6 +36,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     let bluetooth = bluetoothDataController.shared
     var tempPixelBuffer: CVPixelBuffer!
     let blueDress = try! YCbCrImageBufferConverter()
+    var vehicleControl = Control()
 
     /// function called after view of point goal navigation is called
     override func viewDidLoad() {
@@ -463,11 +464,14 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     ///
     /// - Parameter control:
     func sendControl(control: Control) {
-        let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-        let right = (control.getRight() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-        NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
-        NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
-        bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
+            let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+            let right = (control.getRight() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+            vehicleControl = control
+            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
+            NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)))
+            NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
+        }
     }
 }
 

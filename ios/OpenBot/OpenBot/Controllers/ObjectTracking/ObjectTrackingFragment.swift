@@ -130,16 +130,15 @@ class ObjectTrackingFragment: CameraController {
     /// function to send the controls to the device.
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = control.getLeft() * gameController.selectedSpeedMode.rawValue
-            let right = control.getRight() * gameController.selectedSpeedMode.rawValue
+            let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+            let right = (control.getRight() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+            vehicleControl = control
+            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)))
             NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
-            vehicleControl = control
-            //print("c" + String(left) + "," + String(right) + "\n")
-            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
         }
     }
-
+    
     /// function to update the model
     @objc func updateModel(_ notification: Notification) throws {
         let selectedModelName = notification.object as! String
