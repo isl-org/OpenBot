@@ -12,7 +12,14 @@ import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
 import {getCurrentProject} from "../../services/workspace";
-import {uploadToGoogleDrive} from "../../services/googleDrive";
+import {
+    checkFileExistsInFolder, CreateFile,
+    getFolderId, getRequestBody,
+    getShareableLink,
+    uploadJSToGoogleDrive,
+    uploadToGoogleDrive
+} from "../../services/googleDrive";
+import {Constants} from "../../utils/constants";
 
 
 export const UploadCode = () => {
@@ -23,15 +30,19 @@ export const UploadCode = () => {
     const {generate, setGenerateCode, setCode, setDrawer, setFileId, setFolderId} = useContext(StoreContext);
     let primaryWorkspace = useRef();
 
-    const generateCode = () => {
+
+    const generateCode = async () => {
         const code = javascriptGenerator.workspaceToCode(
             primaryWorkspace.current
         );
-        console.log(code + "\nstart();\n" + "forever();\n");
         setGenerateCode(!generate);
-        setCode(code + "\nstart();\n" + "forever();\n");
-        setDrawer(true);
-
+        let updatedCode = code + Constants.endCode;
+        console.log(updatedCode);
+        await uploadJSToGoogleDrive(updatedCode).then((res) => {
+                setCode(res);
+                setDrawer(true)
+            }
+        )
     };
 
     const clickedButton = (e) => {

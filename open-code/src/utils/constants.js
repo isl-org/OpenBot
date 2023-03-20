@@ -61,6 +61,7 @@ export const Constants = {
     CookieMsg: "Our website use cookies. By continuing navigating, we assume your permission to deploy cookies as detailed in our Privacy Policy.",
     FolderName: "openCode-openBot",
     baseUrl: "https://www.googleapis.com/drive/v3",
+    endCode: "\nstart();\n" + "forever();\n",
 }
 
 export const PathName = {

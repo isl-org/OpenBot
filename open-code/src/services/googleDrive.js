@@ -1,4 +1,5 @@
 import {Constants, localStorageKeys} from "../utils/constants";
+import {getCurrentProject} from "./workspace";
 
 /**
  * function that upload project data on Google Drive
@@ -9,7 +10,6 @@ import {Constants, localStorageKeys} from "../utils/constants";
 export const uploadToGoogleDrive = async (data) => {
     const accessToken = getAccessToken();
     const folderId = await getFolderId();
-    console.log("folderId", folderId)
     //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
     if (folderId) {
         await uploadFileToFolder(accessToken, data, folderId);
@@ -29,7 +29,7 @@ export const uploadToGoogleDrive = async (data) => {
 const uploadFileToFolder = async (accessToken, data, folderId) => {
     const metadataFields = 'appProperties,id,name,createdTime';
     const fileMetadata = {
-        name: data.projectName+".xml",
+        name: data.projectName + ".xml",
         parents: [folderId],
         mimeType: "text/xml",
         content_type: "application/json; charset=UTF-8",
@@ -51,37 +51,84 @@ const uploadFileToFolder = async (accessToken, data, folderId) => {
     };
 
     // Check if a file with the specified fileId exists
-    let fileExistWithFileID = await checkFileExistsInFolder(folderId, data.projectName)
+    let fileExistWithFileID = await checkFileExistsInFolder(folderId, data.projectName, 'xml')
     if (fileExistWithFileID.exists) {
         //delete file and then create new file
-        await deleteFileFromGoogleDrive(fileExistWithFileID.fileId);
-        CreateFile(data, folderId, metadataFields, headers, requestBody).then();
-
+        await deleteFileFromGoogleDrive(fileExistWithFileID.fileId).then(() => {
+            CreateFile(data, folderId, metadataFields, headers, requestBody).then();
+        });
     } else {
         // If a file with the specified fileId doesn't exist, create a new file
         CreateFile(data, folderId, metadataFields, headers, requestBody).then();
     }
+
+
 };
+
+export const uploadJSToGoogleDrive = async (data) => {
+    const accessToken = getAccessToken();
+    const folderId = await getFolderId();
+    let response;
+    //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
+    if (folderId) {
+        response = await uploadJSFileToFolder(accessToken, data, folderId);
+    } else {
+        await CreateFolder(accessToken).then(async (folderId) => {
+                response = await uploadJSFileToFolder(accessToken, data, folderId);
+            }
+        );
+    }
+    return response;
+}
+
+const uploadJSFileToFolder = async (accessToken, data, folderId) => {
+    const metadataFields = '';
+    let res;
+    const fileMetadata = {
+        name: getCurrentProject().projectName + ".js",
+        parents: [folderId],
+        mimeType: "text/javascript",
+        content_type: "application/json; charset=UTF-8",
+    };
+    let body = getRequestBody(data, fileMetadata, accessToken);
+
+    // Check if a file with the specified fileId exists
+    let fileExistWithFileID = await checkFileExistsInFolder(folderId, getCurrentProject().projectName, 'js')
+    if (fileExistWithFileID.exists) {
+        //delete file and then create new file
+        await deleteFileFromGoogleDrive(fileExistWithFileID.fileId);
+        res = await CreateFile(data, folderId, metadataFields, body.headers, body.requestBody);
+    } else {
+        // If a file with the specified fileId doesn't exist, create a new file
+        res = await CreateFile(data, folderId, metadataFields, body.headers, body.requestBody);
+    }
+    return res;
+};
+
 
 /**
  * check file exist or not
- * @param folderId
+ * @param folderIdx
  * @param fileName
  * @returns {Promise<{exists: boolean, fileId}>}
  */
-export async function checkFileExistsInFolder(folderId, fileName) {
-    console.log("folder",folderId,fileName)
-    const fileNameWithExtension=fileName+".xml";
+export async function checkFileExistsInFolder(folderId, fileName, fileType) {
+    let fileNameWithExtension = fileName;
+    if (fileType === 'js') {
+        fileNameWithExtension += '.js';
+    } else if (fileType === 'xml') {
+        fileNameWithExtension += '.xml';
+    }
     const accessToken = getAccessToken();
     const response = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(fileNameWithExtension)}'+and+'${encodeURIComponent(folderId)}'+in+parents+and+trashed=false&access_token=${accessToken}`);
     const result = await response.json();
-    console.log("resu;t::",result)
     if (result && result.files.length > 0) {
         return {exists: true, fileId: result.files[0].id};
     } else {
         return {exists: false};
     }
 }
+
 
 /**
  * Create folder
@@ -109,8 +156,7 @@ async function CreateFolder(accessToken) {
     return await fetch(`${Constants.baseUrl}/files/`, data)
         .then(response => response.json())
         .then(folder => {
-            console.log(`Folder '${folder.name}' created with ID '${folder.id}'`);
-            SharingFolderFromGoogleDrive(folder.id)
+            // SharingFolderFromGoogleDrive(folder.id)
             return folder.id;
         })
         .catch(error => {
@@ -134,22 +180,30 @@ export async function getFolderId() {
 }
 
 
-export function getAccessToken(){
+export function getAccessToken() {
     return localStorage.getItem(localStorageKeys.accessToken)
 }
 
 //create file in google drive openBot folder
-async function CreateFile(data, folderId, metadataFields, headers, requestBody) {
-    await fetch(`https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart&fields=${metadataFields}`, {
+export function CreateFile(data, folderId, metadataFields, headers, requestBody, afterDelete) {
+
+    let apiEndpoint = 'https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart';
+    if (metadataFields) {
+        apiEndpoint += `&fields=${metadataFields}`;
+    }
+    return fetch(apiEndpoint, {
         method: "POST",
         headers: headers,
         body: requestBody
     })
         .then(response => response.json())
-        .then(file => {
-            console.log("response data", file);
-            console.log(`File '${file.name}' uploaded to folder '${folderId}' with ID '${file.id}'`);
-            SharingFileFromGoogleDrive(file.id);
+        .then(async (file) => {
+            const isJSFile = file.name.endsWith('.js');
+            if (isJSFile) {
+                SharingFileFromGoogleDrive(file.id);
+                let link = await getShareableLink(file.id, folderId);
+                return link;
+            }
         })
         .catch(error => {
             console.error(error);
@@ -211,7 +265,6 @@ export async function deleteFileFromGoogleDrive(fileId) {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
     }
-    console.log("fileId",fileId,folderId)
     fetch(`${Constants.baseUrl}/files/${fileId}?supportsAllDrives=true&parents=${folderId}`, {
         method: "DELETE",
         headers: headers
@@ -250,7 +303,6 @@ export function SharingFileFromGoogleDrive(fileId) {
             if (!response.ok) {
                 throw new Error('An error occurred while sharing the file.');
             }
-            console.log(`The file with ID "${fileId}" has been shared with anyone who has the link with write access.`);
         })
         .catch(error => console.error(error));
 }
@@ -261,7 +313,7 @@ export function SharingFileFromGoogleDrive(fileId) {
  * @param folderId
  * @constructor
  */
-export function SharingFolderFromGoogleDrive(folderId){
+export function SharingFolderFromGoogleDrive(folderId) {
     const accessToken = getAccessToken();
     const permission = {
         'type': 'anyone',
@@ -287,28 +339,41 @@ export function SharingFolderFromGoogleDrive(folderId){
 }
 
 
-// export function getShareableLink(fileId,folderId){
-//     const accessToken = getAccessToken();
-//     const params = {
-//         method: 'GET',
-//         headers: {
-//             'Authorization': 'Bearer ' + accessToken
-//         }
-//     };
-//     fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?parents=${folderId}&fields=webViewLink&supportsAllDrives=true`, params)
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error('An error occurred.');
-//             }
-//             return response.json();
-//         })
-//         .then(data => {
-//             const shareableLink = data.webViewLink.replace('/view', '/edit?usp=sharing');
-//             console.log(`The shareable link of the file with ID "${fileId}" is: ${shareableLink}`);
-//         })
-//         .catch(error => console.error(error));
-// }
+export async function getShareableLink(fileId, folderId) {
+    const accessToken = getAccessToken();
+    const params = {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + accessToken
+        }
+    };
+    return await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?parents=${folderId}&fields=webViewLink&supportsAllDrives=true`, params)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('An error occurred.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const shareableLink = data.webViewLink.replace('/view', '/edit?usp=sharing');
+            return shareableLink;
+        })
+        .catch(error => console.error(error));
+}
 
+export function getRequestBody(data, fileMetadata, accessToken) {
+
+    const boundary = "foo_bar_baz";
+    const metadataPart = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(fileMetadata)}\r\n`;
+    const mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${data}\r\n`;
+    const requestBody = `${metadataPart}${mediaPart}--${boundary}--\r\n`;
+    const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": `multipart/related; boundary=${boundary}`,
+        "Content-Length": requestBody?.length,
+    };
+    return {headers, requestBody}
+}
 
 //
 // //upload file in google drive openBot folder
