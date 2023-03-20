@@ -158,3 +158,18 @@ export async function googleSignOut() {
 //         console.log(err);
 //     }
 // }
+
+
+
+// selected project from firebase
+// const blockSnap = doc(db, auth.currentUser.uid, projectData.id);
+// const workspaceRef = await getDoc(blockSnap);
+// if (workspaceRef.exists()) {
+//     const projectId = workspaceRef.id;
+//     setCurrentProjectId(projectId);
+//     const projectXmlData = workspaceRef.data().xmlValue;
+//     const projectName = workspaceRef.data().projectName;
+//     setCurrentProjectXml(projectXmlData);
+//     setProjectName(projectName);
+//     openExistingProject();
+// }
