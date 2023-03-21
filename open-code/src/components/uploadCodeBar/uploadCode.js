@@ -12,10 +12,7 @@ import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
 import {getCurrentProject} from "../../services/workspace";
-import {
-    uploadJSToGoogleDrive,
-    uploadToGoogleDrive
-} from "../../services/googleDrive";
+import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {Constants} from "../../utils/constants";
 
 
@@ -28,14 +25,14 @@ export const UploadCode = () => {
     let primaryWorkspace = useRef();
 
 
-    const generateCode = async () => {
+    const generateCode = () => {
         const code = javascriptGenerator.workspaceToCode(
             primaryWorkspace.current
         );
         setGenerateCode(!generate);
         let updatedCode = code + Constants.endCode;
         console.log(updatedCode);
-        await uploadJSToGoogleDrive(updatedCode).then((res) => {
+        uploadToGoogleDrive(updatedCode, "js").then((res) => {
                 setCode(res);
                 setDrawer(true);
             }
@@ -86,7 +83,7 @@ export const UploadCode = () => {
             createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
         }
         //upload on google drive
-        uploadToGoogleDrive(data, setFileId, setFolderId).then();
+        uploadToGoogleDrive(data, "xml").then();
         setDriveButtonActive(true);
         setTimeout(() => {
             setDriveButtonActive(false);
