@@ -342,7 +342,12 @@ export function SharingFolderFromGoogleDrive(folderId) {
         .catch(error => console.error(error));
 }
 
-
+/**
+ * shareable link of Google Drive file
+ * @param fileId
+ * @param folderId
+ * @returns {Promise<any>}
+ */
 export async function getShareableLink(fileId, folderId) {
     const accessToken = getAccessToken();
     const params = {

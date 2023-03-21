@@ -58,10 +58,10 @@ export async function deleteProject(projectName) {
             await getDriveProjects(allProject);
             const findCurrentProject = allProject.find(currentProject => currentProject?.projectName === projectName);
             console.log("findCurrentProject", findCurrentProject)
-            findCurrentProject && await checkFileExistsInFolder(await getFolderId(), findCurrentProject?.projectName,"js").then(async (response) => {
+            findCurrentProject && await checkFileExistsInFolder(await getFolderId(), findCurrentProject?.projectName, "js").then(async (response) => {
                 await deleteFileFromGoogleDrive(response?.fileId)
             })
-            findCurrentProject && await checkFileExistsInFolder(await getFolderId(), findCurrentProject?.projectName,"xml").then(async (response) => {
+            findCurrentProject && await checkFileExistsInFolder(await getFolderId(), findCurrentProject?.projectName, "xml").then(async (response) => {
                 await deleteFileFromGoogleDrive(response?.fileId)
             })
 

@@ -13,9 +13,6 @@ import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
 import {getCurrentProject} from "../../services/workspace";
 import {
-    checkFileExistsInFolder, CreateFile,
-    getFolderId, getRequestBody,
-    getShareableLink,
     uploadJSToGoogleDrive,
     uploadToGoogleDrive
 } from "../../services/googleDrive";
@@ -40,7 +37,7 @@ export const UploadCode = () => {
         console.log(updatedCode);
         await uploadJSToGoogleDrive(updatedCode).then((res) => {
                 setCode(res);
-                setDrawer(true)
+                setDrawer(true);
             }
         )
     };
