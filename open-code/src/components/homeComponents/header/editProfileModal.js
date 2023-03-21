@@ -85,7 +85,7 @@ export function EditProfileModal(props) {
             open={isEditProfileModal}
             style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
             {isLoader ?
-                <LoaderComponent color="blue"/>
+                <LoaderComponent color="blue" height="20" width="20"/>
                 :
                 <Box className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>
 

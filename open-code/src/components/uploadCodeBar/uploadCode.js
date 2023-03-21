@@ -14,18 +14,24 @@ import {ThemeContext} from "../../App";
 import {getCurrentProject} from "../../services/workspace";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {Constants} from "../../utils/constants";
+import {CircularProgress, circularProgressClasses} from "@mui/material";
+import WhiteText from "../fonts/whiteText";
+import BlackText from "../fonts/blackText";
 
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
     const [driveButtonActive, setDriveButtonActive] = useState(false);
+    const [isLoader, setIsLoader] = useState(false)
     const {theme} = useContext(ThemeContext);
     const {generate, setGenerateCode, setCode, setDrawer, setFileId, setFolderId} = useContext(StoreContext);
     let primaryWorkspace = useRef();
 
 
     const generateCode = () => {
+        setDrawer(false);
+        setIsLoader(true);
         const code = javascriptGenerator.workspaceToCode(
             primaryWorkspace.current
         );
@@ -34,6 +40,7 @@ export const UploadCode = () => {
         console.log(updatedCode);
         uploadToGoogleDrive(updatedCode, "js").then((res) => {
                 setCode(res);
+                setIsLoader(false);
                 setDrawer(true);
             }
         )
@@ -69,6 +76,35 @@ export const UploadCode = () => {
         }, 100);
     };
 
+    const CompilationLoader = () => {
+        return <div>
+            <CircularProgress
+                variant="determinate"
+                sx={{
+                    color: theme === 'light' ? "#E8E8E8" : "gray",
+                }}
+                size={40}
+                thickness={6.5}
+                value={100}
+                style={{position: "absolute"}}
+            />
+            <CircularProgress
+                variant="indeterminate"
+                disableShrink
+                sx={{
+                    color: theme === 'light' ? 'black' : 'white',
+                    animationDuration: '550ms',
+                    left: 0,
+                    [`& .${circularProgressClasses.circle}`]: {
+                        strokeLinecap: 'round',
+                    },
+                }}
+                size={40}
+                thickness={6.5}
+            />
+        </div>
+    }
+
 
     /**
      * save projects on Google Drive
@@ -91,15 +127,22 @@ export const UploadCode = () => {
     }
 
     return (
-        <div className={styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
-            <UploadCodeButton buttonSelected={buttonSelected} generateCode={generateCode}
-                              buttonActive={buttonActive} clickedButton={clickedButton}/>
-            <div className={styles.operationsDiv}>
-                <UploadInDrive handleDriveButton={handleDriveButton} driveButtonActive={driveButtonActive}/>
-                <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
-                          buttonActive={buttonActive}/>
-                <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
-                           buttonActive={buttonActive}/>
+        <div
+            className={isLoader ? styles.loaderBarDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight) : styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
+            <div className={styles.loaderItem}>{isLoader ?
+                <CompilationLoader/> : ""}</div>
+            {isLoader ? theme === "dark" ? <WhiteText text={"Compiling Code..."} extraStyle={styles.textItem}/> :
+                <BlackText text={"Compiling Code..."} extraStyle={styles.textItem}/> : ""}
+            <div className={styles.buttonsDiv}>
+                <UploadCodeButton buttonSelected={buttonSelected} generateCode={generateCode}
+                                  buttonActive={buttonActive} clickedButton={clickedButton}/>
+                <div className={styles.operationsDiv}>
+                    <UploadInDrive handleDriveButton={handleDriveButton} driveButtonActive={driveButtonActive}/>
+                    <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
+                              buttonActive={buttonActive}/>
+                    <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
+                               buttonActive={buttonActive}/>
+                </div>
             </div>
         </div>
     );
