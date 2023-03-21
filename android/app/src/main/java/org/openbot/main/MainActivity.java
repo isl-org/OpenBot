@@ -15,8 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ActionBarContainer;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
@@ -24,11 +27,16 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import org.openbot.OpenBotApplication;
 import org.openbot.R;
+import org.openbot.projects.ProjectsFragment;
 import org.openbot.utils.Constants;
 import org.openbot.vehicle.UsbConnection;
 import org.openbot.vehicle.Vehicle;
+
 import timber.log.Timber;
 
 // For a library module, uncomment the following line
@@ -40,14 +48,18 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver localBroadcastReceiver;
     private Vehicle vehicle;
     private LocalBroadcastManager localBroadcastManager;
+    private BottomNavigationView bottomNavigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         vehicle = OpenBotApplication.vehicle;
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.home);
+
         //    if (vehicle == null) {
         //      SharedPreferences sharedPreferences =
         // PreferenceManager.getDefaultSharedPreferences(this);
@@ -122,13 +134,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
 
         navController.addOnDestinationChangedListener(
                 (controller, destination, arguments) -> {
                     if (destination.getId() == R.id.mainFragment
-                            || destination.getId() == R.id.settingsFragment)
+                            || destination.getId() == R.id.settingsFragment) {
                         toolbar.setVisibility(View.VISIBLE);
-                    else toolbar.setVisibility(View.GONE);
+                        bottomNavigationView.setVisibility(View.VISIBLE);
+                    } else {
+                        toolbar.setVisibility(View.GONE);
+                        bottomNavigationView.setVisibility(View.GONE);
+                    }
                 });
 
         //    if (savedInstanceState == null) {

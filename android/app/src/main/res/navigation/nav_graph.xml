@@ -11,9 +11,6 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_main">
         <action
-            android:id="@+id/action_mainFragment_to_projects"
-            app:destination="@id/projectsFragment" />
-        <action
             android:id="@+id/action_mainFragment_to_robotCommunicationFragment"
             app:destination="@id/robotCommunicationFragment" />
         <action
@@ -41,8 +38,10 @@
     <fragment
         android:id="@+id/projectsFragment"
         android:name="org.openbot.projects.ProjectsFragment"
-        android:label="projectsFragment"
-        tools:layout="@layout/fragment_projects" />
+        android:label="Projects" />
+    <action
+        android:id="@+id/open_projects_fragment"
+        app:destination="@id/projectsFragment" />
     <fragment
         android:id="@+id/robotCommunicationFragment"
         android:name="org.openbot.robot.FreeRoamFragment"
