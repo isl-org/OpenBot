@@ -1,5 +1,6 @@
 plugins {
     id 'io.github.reactivecircus.app-versioning' version "1.1.2"
+    id 'com.google.gms.google-services'
 }
 
 appVersioning {
@@ -7,7 +8,8 @@ appVersioning {
      * Git root directory used for fetching git tags.
      * Use this to explicitly set the git root directory when the root Gradle project is not the git root directory.
      */
-    gitRootDirectory.set(rootProject.file("../")) // if the .git directory is in the root Gradle project's parent directory.
+    gitRootDirectory.set(rootProject.file("../"))
+    // if the .git directory is in the root Gradle project's parent directory.
 }
 
 apply plugin: 'com.android.application'
@@ -55,12 +57,12 @@ android {
 
 // Download default models
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
-apply from:'download.gradle'
+apply from: 'download.gradle'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation 'com.google.android.material:material:1.4.0'
 
     // Build off of stable TensorFlow Lite
@@ -91,6 +93,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.3.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
 
     def nav_version = "2.3.5"
     // Java language implementation
@@ -143,8 +146,8 @@ dependencies {
     // classpath.
     androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.3.0'
 
-    implementation platform('com.google.firebase:firebase-bom:26.4.0')
-
+    implementation platform('com.google.firebase:firebase-bom:31.2.3')
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
     // Declare the dependencies for the Crashlytics and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-crashlytics'
