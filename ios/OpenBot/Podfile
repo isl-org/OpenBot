@@ -8,7 +8,11 @@ target 'OpenBot' do
   pod 'DropDown'
   pod 'Starscream', '~> 3.0.1'
   pod 'GoogleWebRTC'
-
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'GoogleSignIn'
+  pod 'GoogleSignInSwiftSupport'
+  pod 'GoogleAPIClientForREST/Drive'
   # Pods for OpenBot
 
   target 'OpenBotTests' do

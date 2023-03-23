@@ -4,7 +4,8 @@
 
 import UIKit
 import DropDown
-
+import Firebase
+import GoogleSignIn
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var restrictRotation: UIInterfaceOrientationMask = .all
@@ -31,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.'
         DropDown.startListeningToKeyboard()
+        FirebaseApp.configure();
         return true
     }
     
@@ -46,5 +48,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        return GIDSignIn.sharedInstance.handle(url)
+    }
+
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
+        if let error = error {
+            print("Google Sign-In error: \(error.localizedDescription)")
+            return
+        }
+
+        // The signed-in user is stored in the user property of the GIDSignIn instance.
+        let userIdToken = user.accessToken
+        print("Access Token: \(userIdToken )")
     }
 }

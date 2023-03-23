@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A70CA1229C98E5800E4192B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */; };
 		4FEF40039118AB286DD8CB0C /* DetectorDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47209A4C03D66945462E /* DetectorDefault.swift */; };
 		4FEF403935216C3C68714E27 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47C56474B6324A408225 /* UIViewExtension.swift */; };
 		4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */; };
@@ -73,6 +74,7 @@
 		66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */; };
 		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
 		727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */; };
+		727D341D19B074C289BA78C2 /* OpenCodeFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3FF6960418014E6027A9 /* OpenCodeFragment.swift */; };
 		727D3457F432B9743263C307 /* sensorDataRetrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */; };
 		727D34602C26673639AA0D0B /* Dimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3946DB74E63117B32AF4 /* Dimension.swift */; };
 		727D348793BC7E328164FDB2 /* DataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3157F2B5E5DBB1565EDD /* DataLogger.swift */; };
@@ -117,6 +119,7 @@
 		14FEE4780CE79F3AAB630B6D /* Pods-OpenBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.release.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.release.xcconfig"; sourceTree = "<group>"; };
 		17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot_OpenBotUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
+		3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4FEF4178D0A2805591A6A3A6 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		4FEF41FCA3B501192D417D73 /* CVPixelBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CVPixelBuffer.swift; path = extensions/CVPixelBuffer.swift; sourceTree = "<group>"; };
 		4FEF421BF49FEE835C6DC5CB /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
@@ -203,6 +206,7 @@
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIDeviceExtension.swift; path = extensions/UIDeviceExtension.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
+		727D3FF6960418014E6027A9 /* OpenCodeFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenCodeFragment.swift; path = openCode/OpenCodeFragment.swift; sourceTree = "<group>"; };
 		74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
 		9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBotTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -322,6 +326,7 @@
 		4FEF489C07FD5C967FFDCDE8 /* OpenBot */ = {
 			isa = PBXGroup;
 			children = (
+				3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */,
 				66AC71E129B885410022108A /* Controllers */,
 				BF9BAED628AF94A800EF3E48 /* Frameworks */,
 				4FEF44F0837469F66D5A7156 /* Models */,
@@ -462,6 +467,7 @@
 				66AC71FA29B885410022108A /* Autopilot */,
 				66AC71FD29B885410022108A /* ObjectTracking */,
 				66AC720029B885410022108A /* FreeRoam */,
+				727D3FF6960418014E6027A9 /* OpenCodeFragment.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -653,7 +659,7 @@
 						DevelopmentTeam = 45P94DZS6G;
 					};
 					4FEF4A2489AA3ABCE29B9356 = {
-						DevelopmentTeam = 88W2U97SJQ;
+						DevelopmentTeam = 45P94DZS6G;
 						ProvisioningStyle = Automatic;
 					};
 					4FEF4C57C33D71B6DD56207E = {
@@ -705,6 +711,7 @@
 				4FEF43565A0B8A9578E85B54 /* Launch Screen.storyboard in Resources */,
 				BF812E8828AE2C4200E0B682 /* modesCollectionViewCell.xib in Resources */,
 				4FEF4209E4568C06F71C8E86 /* config.json in Resources */,
+				3A70CA1229C98E5800E4192B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -718,15 +725,41 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
 				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleAPIClientForREST/GoogleAPIClientForREST.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleSignIn/GoogleSignIn.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleSignInSwiftSupport/GoogleSignInSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AppAuth.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreInternal.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMAppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleAPIClientForREST.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignIn.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignInSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -807,15 +840,41 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OpenBot/Pods-OpenBot-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
 				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleAPIClientForREST/GoogleAPIClientForREST.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleSignIn/GoogleSignIn.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleSignInSwiftSupport/GoogleSignInSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AppAuth.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreInternal.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMAppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleAPIClientForREST.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignIn.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignInSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -935,6 +994,7 @@
 				727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */,
 				66AC721429B885410022108A /* ObjectTrackingFragment.swift in Sources */,
 				4FEF43D0E4F94DBBD4DB0614 /* Date.swift in Sources */,
+				727D341D19B074C289BA78C2 /* OpenCodeFragment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -989,7 +1049,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 88W2U97SJQ;
+				DEVELOPMENT_TEAM = 45P94DZS6G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -1029,7 +1089,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 88W2U97SJQ;
+				DEVELOPMENT_TEAM = 45P94DZS6G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
