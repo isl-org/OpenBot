@@ -36,6 +36,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     let bluetooth = bluetoothDataController.shared
     var tempPixelBuffer: CVPixelBuffer!
     let blueDress = try! YCbCrImageBufferConverter()
+    var vehicleControl = Control()
 
     /// function called after view of point goal navigation is called
     override func viewDidLoad() {
@@ -245,23 +246,21 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
         return textField
     }
 
-    /// function run when tapping on DONE button. It will start the point goal navigation
+    /// function executed when tapping on DONE button. It will set a reference position and start the point goal navigation.
     ///
     /// - Parameter sender:
     @objc func doneFun(_ sender: UIView) {
         setGoalRect.removeFromSuperview()
         isReached = false
         let forwardDistance = (forwardInput.text == nil ? 0 : Float(forwardInput.text ?? "0")) ?? 0
+        let LeftDistance = (leftInput.text == nil ? 0 : Float(leftInput.text ?? "0")) ?? 0
         let camera = sceneView.pointOfView!
         let cameraTransform = camera.transform
         _ = SCNVector3(-cameraTransform.m31, -cameraTransform.m32, -cameraTransform.m33)
-        let forwardPosition = SCNVector3(camera.position.x, camera.position.y, camera.position.z - Float(forwardDistance))
-        let LeftDistance = (leftInput.text == nil ? 0 : Float(leftInput.text ?? "0")) ?? 0
-        let cameraRightOrientation = SCNVector3(-cameraTransform.m11, -cameraTransform.m12, -cameraTransform.m13)
-        let leftPosition = SCNVector3(camera.position.x + cameraRightOrientation.x * LeftDistance, camera.position.y + cameraRightOrientation.y * LeftDistance, camera.position.z + cameraRightOrientation.z * LeftDistance) // Calculate the marker position based on the right orientation of the camera and the distance
+        let markerInCameraFrame = SCNVector3(Float(-LeftDistance), 0.0, Float(-forwardDistance))
+        let markerInWorldFrame = markerInCameraFrame.transformed(by: cameraTransform)
         marker = SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
-        let resultantVector = addVectors(leftPosition, forwardPosition)
-        marker.position = resultantVector
+        marker.position = markerInWorldFrame
         let imageMaterial = SCNMaterial()
         imageMaterial.diffuse.contents = Images.gmapMarker
         marker.geometry?.firstMaterial = imageMaterial
@@ -463,11 +462,14 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     ///
     /// - Parameter control:
     func sendControl(control: Control) {
-        let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-        let right = (control.getRight() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-        NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)));
-        NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
-        bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n");
+        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
+            let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+            let right = (control.getRight() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+            vehicleControl = control
+            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
+            NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)))
+            NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
+        }
     }
 }
 
@@ -475,7 +477,16 @@ extension SCNVector3 {
     var simdVector: simd_float3 {
         simd_float3(x, y, z)
     }
+    
+    func transformed(by matrix: SCNMatrix4) -> SCNVector3 {
+        let x = self.x * matrix.m11 + self.y * matrix.m21 + self.z * matrix.m31 + matrix.m41
+        let y = self.x * matrix.m12 + self.y * matrix.m22 + self.z * matrix.m32 + matrix.m42
+        let z = self.x * matrix.m13 + self.y * matrix.m23 + self.z * matrix.m33 + matrix.m43
+        
+        return SCNVector3(x: x, y: y, z: z)
+    }
 }
+
 
 class Pose {
     var tx: Float
