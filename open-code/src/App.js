@@ -23,7 +23,6 @@ function App() {
 
     useEffect(() => {
         let timeoutId;
-
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
                 // User is signed in.
@@ -31,11 +30,12 @@ function App() {
                     .then((idTokenResult) => {
                         const expirationTime = idTokenResult?.expirationTime;
                         const sessionTimeoutMs = new Date(expirationTime).getTime() - Date.now();
-                        console.log("sessionTimeoutMs", sessionTimeoutMs)
+                        if (timeoutId) {
+                            clearTimeout(timeoutId);
+                        }
                         timeoutId = setTimeout(() => {
-                            googleSignOut().then(() =>
-                                alert('Your session has expired. You have been signed out.')
-                            );
+                            alert('Your session has expired. You have been signed out.')
+                            googleSignOut().then();
                         }, sessionTimeoutMs);
                     })
                     .catch((error) => {
@@ -44,7 +44,6 @@ function App() {
             } else {
                 // User is signed out
                 clearTimeout(timeoutId);
-
             }
         });
 

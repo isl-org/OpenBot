@@ -248,13 +248,14 @@
 .helpCenterModalBox {
     outline: none;
     display: flex;
-    height: 63%;
+    height: 69%;
     width: 70%;
     border-radius: 12px;
 }
 
 .darkHelpCenterModal {
     background-color: #303030;
+
 }
 
 .lightHelpCenterModal {
@@ -275,9 +276,10 @@
 .integerNumber {
     position: absolute;
     opacity: 0.05;
-    font-family: Gilroy, serif;
-    font-size: 90px;
-    line-height: 50px;
+    font-family: Gilroy-Bold,Serif  !important;
+    font-size: 90px !important;
+    font-weight: bold!important;
+    line-height:50px;
 }
 
 .helpCenterPara {

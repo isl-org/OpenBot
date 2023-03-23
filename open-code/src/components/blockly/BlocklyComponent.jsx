@@ -31,18 +31,7 @@ function BlocklyComponent(props) {
         if (projectName !== undefined) {
             updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId,folderId);
         }
-        // if (localStorage.getItem("isSigIn") === "true") {
-        //     let data = {
-        //         id: getCurrentProject().id,
-        //         projectName: getCurrentProject().projectName,
-        //         xmlValue: getCurrentProject().xmlValue,
-        //         createdDate: FormatDate().currentDate,
-        //         updatedDate: FormatDate().currentDate,
-        //         time: FormatDate().currentTime,
-        //     }
-        //     //after that add to google Drive
-        //     uploadToGoogleDrive(data).then();
-        // }
+
     }, []);
 
     useEffect(() => {
