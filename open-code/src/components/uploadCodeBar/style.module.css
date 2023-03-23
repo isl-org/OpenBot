@@ -1,7 +1,4 @@
 .barDiv {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -9,16 +6,38 @@
     border-top: 0.5px solid gray;
 }
 
+.loaderBarDiv{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 21%;
+    border-top: 0.5px solid gray;
+}
+
+.buttonsDiv{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.loaderItem{
+    margin-left: 50%;
+    margin-top: 2%;
+}
+
+.textItem{
+    font-family: Gilroy-medium, sans-serif;
+    margin-top: 3px;
+    margin-left: 47%;
+}
 .barDivLight {
     background-color: white;
 }
 
 .barDivDark {
     background-color: #202020;
-}
-
-.iconMargin {
-    margin: 10px;
 }
 
 .uploadCodeButton {
@@ -56,8 +75,12 @@
 }
 
 .driveIconStyle {
-    height: 1.5rem;
-    width: 1.5rem;
+    width: 2.2rem;
+    cursor: pointer;
+}
+
+.shrinkDriveIcon{
+    width: 1.7rem;
     cursor: pointer;
 }
 

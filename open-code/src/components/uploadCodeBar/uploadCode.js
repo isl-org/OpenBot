@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import Blockly from "blockly/core";
 import uploadIcon from "../../assets/images/icon/upload-cloud.png"
 import {UploadBarStyle} from "./styles";
@@ -12,35 +12,46 @@ import {colors} from "../../utils/color";
 import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
 import {getCurrentProject} from "../../services/workspace";
-import {
-    checkFileExistsInFolder, CreateFile,
-    getFolderId, getRequestBody,
-    getShareableLink,
-    uploadJSToGoogleDrive,
-    uploadToGoogleDrive
-} from "../../services/googleDrive";
+import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {Constants} from "../../utils/constants";
-
+import {CircularProgress, circularProgressClasses} from "@mui/material";
+import WhiteText from "../fonts/whiteText";
+import BlackText from "../fonts/blackText";
+import {Images} from "../../utils/images";
+import LoaderComponent from "../loader/loaderComponent";
+import {motion, AnimatePresence} from "framer-motion";
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
     const [driveButtonActive, setDriveButtonActive] = useState(false);
+    const [isLoader, setIsLoader] = useState(false)
     const {theme} = useContext(ThemeContext);
-    const {generate, setGenerateCode, setCode, setDrawer, setFileId, setFolderId} = useContext(StoreContext);
+    const [isDriveLoader, setIsDriveLoader] = useState(false);
+    const {
+        generate,
+        setGenerateCode,
+        setCode,
+        setDrawer,
+        setFileId,
+        setFolderId
+    } = useContext(StoreContext);
     let primaryWorkspace = useRef();
 
 
-    const generateCode = async () => {
+    const generateCode = () => {
+        setDrawer(false);
+        setIsLoader(true);
         const code = javascriptGenerator.workspaceToCode(
             primaryWorkspace.current
         );
         setGenerateCode(!generate);
         let updatedCode = code + Constants.endCode;
         console.log(updatedCode);
-        await uploadJSToGoogleDrive(updatedCode).then((res) => {
+        uploadToGoogleDrive(updatedCode, "js").then((res) => {
                 setCode(res);
-                setDrawer(true)
+                setIsLoader(false);
+                setDrawer(true);
             }
         )
     };
@@ -75,37 +86,58 @@ export const UploadCode = () => {
         }, 100);
     };
 
+    const CompilationLoader = () => {
+        return <div>
+            <CircularProgress
+                variant="determinate"
+                sx={{
+                    color: theme === 'light' ? "#E8E8E8" : "gray",
+                }}
+                size={40}
+                thickness={6.5}
+                value={100}
+                style={{position: "absolute"}}
+            />
+            <CircularProgress
+                variant="indeterminate"
+                disableShrink
+                sx={{
+                    color: theme === 'light' ? 'black' : '#FFFFFF',
+                    animationDuration: '550ms',
+                    left: 0,
+                    [`& .${circularProgressClasses.circle}`]: {
+                        strokeLinecap: 'round',
+                    },
+                }}
+                size={40}
+                thickness={6.5}
+            />
+        </div>
+    }
+
 
     /**
      * save projects on Google Drive
      */
-    const handleDriveButton = () => {
-        const data = {
-            projectName: getCurrentProject().projectName,
-            xmlValue: getCurrentProject().xmlValue,
-            time: getCurrentProject().time,
-            id: getCurrentProject().id,
-            fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
-            createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
-        }
-        //upload on google drive
-        uploadToGoogleDrive(data, setFileId, setFolderId).then();
-        setDriveButtonActive(true);
-        setTimeout(() => {
-            setDriveButtonActive(false);
-        }, 100);
-    }
+
 
     return (
-        <div className={styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
-            <UploadCodeButton buttonSelected={buttonSelected} generateCode={generateCode}
-                              buttonActive={buttonActive} clickedButton={clickedButton}/>
-            <div className={styles.operationsDiv}>
-                <UploadInDrive handleDriveButton={handleDriveButton} driveButtonActive={driveButtonActive}/>
-                <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
-                          buttonActive={buttonActive}/>
-                <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
-                           buttonActive={buttonActive}/>
+        <div
+            className={isLoader ? styles.loaderBarDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight) : styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
+            <div className={styles.loaderItem}>{isLoader ?
+                <CompilationLoader/> : ""}</div>
+            {isLoader ? theme === "dark" ? <WhiteText text={"Compiling Code..."} extraStyle={styles.textItem}/> :
+                <BlackText text={"Compiling Code..."} extraStyle={styles.textItem}/> : ""}
+            <div className={styles.buttonsDiv}>
+                <UploadCodeButton buttonSelected={buttonSelected} generateCode={generateCode}
+                                  buttonActive={buttonActive} clickedButton={clickedButton}/>
+                <div className={styles.operationsDiv}>
+                    <UploadInDrive/>
+                    <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
+                              buttonActive={buttonActive}/>
+                    <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
+                               buttonActive={buttonActive}/>
+                </div>
             </div>
         </div>
     );
@@ -161,14 +193,115 @@ function UndoRedo(params) {
     )
 }
 
-function UploadInDrive(params) {
-    const {handleDriveButton, driveButtonActive} = params
+function UploadInDrive() {
+    const [isDriveLoader, setIsDriveLoader] = useState(false);
+    const [showTick, setShowTick] = useState(false);
+
+    const handleDriveButton = () => {
+        setIsDriveLoader(true);
+        const data = {
+            projectName: getCurrentProject().projectName,
+            xmlValue: getCurrentProject().xmlValue,
+            time: getCurrentProject().time,
+            id: getCurrentProject().id,
+            fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
+            createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
+        }
+        //upload on google drive
+        uploadToGoogleDrive(data, "xml")
+            .then(() => {
+                    setIsDriveLoader(false);
+                    setTimeout(() => {
+                        setShowTick(true);
+                    }, 1000);
+                }
+            )
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }
+    useEffect(() => {
+        if (showTick) {
+            const timeout = setTimeout(() => {
+                setShowTick(false);
+            }, 1000);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [showTick]);
+
+
+    const tickVariants = {
+        hidden: {
+            pathLength: 0,
+            opacity: 0
+        },
+        visible: {
+            pathLength: 1,
+            opacity: 1,
+            transition: {
+                duration: 0.7,
+                ease: "easeInOut"
+            }
+        }
+    };
+    const DriveLoader = () => {
+        return <div>
+            <CircularProgress
+                sx={{
+                    color: "#0071C5",
+                }}
+                size={40}
+                thickness={2.5}
+                value={100}
+            />
+        </div>
+    }
+
+
     return (
-        <button className={styles.driveStyle + " " + styles.iconMargin}
-                onClick={handleDriveButton}>
-            <img alt={""} className={styles.driveIconStyle}
-                 src={driveButtonActive ? driveIcon : driveIconClicked}/>
-        </button>
+        <>
+            <div onClick={() => {
+                handleDriveButton()
+            }} className={styles.iconMargin} style={{display: "flex", alignItems: "center"}}>
+                <img alt="drive" className={isDriveLoader ? styles.shrinkDriveIcon : styles.driveIconStyle}
+                     src={Images.cloud} style={isDriveLoader ? {
+                    position: "absolute",
+                    marginLeft: 6,
+                } : {}}/>
+                <div>{isDriveLoader && <DriveLoader/>}</div>
+                <AnimatePresence>
+                    {showTick && (
+                        <motion.svg
+                            key="tick"
+                            width="30"
+                            height="30"
+                            viewBox="0 0 50 50"
+                            style={{
+                                position: "absolute",
+                                marginLeft: 2.3,
+                            }}
+                            initial={{opacity: 0, scale: 0.2}}
+                            animate={{opacity: 1, scale: 1}}
+                            exit={{opacity: 0, scale: 0.2}}
+                        >
+                            <motion.path
+                                d="M15.63 27.077l6.842 6.84L34.923 20"
+                                fill="transparent"
+                                strokeWidth="5"
+                                stroke="#fff"
+                                variants={tickVariants}
+                                initial="hidden"
+                                animate="visible"
+                            />
+                        </motion.svg>
+                    )}
+                </AnimatePresence>
+            </div>
+
+            {/*// <button className={styles.driveStyle + " " + styles.iconMargin}*/}
+        </>
     )
 }
 

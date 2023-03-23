@@ -146,7 +146,7 @@ export function ProfileSignIn(params) {
                     <img alt="Profile Icon" src={user.photoURL}
                          style={{height: 28, width: 28, borderRadius: 90,}}/>
                     :
-                    <LoaderComponent color="white"/>
+                    <LoaderComponent color="white" height="20" width="20"/>
                 }
                 {/*name*/}
                 <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>

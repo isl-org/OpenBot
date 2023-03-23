@@ -19,7 +19,7 @@ function BlocklyComponent(props) {
     const {theme} = useContext(ThemeContext);
     const toolbox = useRef();
     const primaryWorkspace = useRef();
-    const {projectName, currentProjectId, currentProjectXml, fileId,folderId,setDrawer} = useContext(StoreContext);
+    const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer} = useContext(StoreContext);
     const uniqueId = currentProjectId ? currentProjectId : nanoid()
 
     /**
@@ -29,7 +29,7 @@ function BlocklyComponent(props) {
     const handleWorkspaceChange = useCallback(() => {
         setDrawer(false);
         if (projectName !== undefined) {
-            updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId,folderId);
+            updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
         }
 
     }, []);
@@ -50,6 +50,7 @@ function BlocklyComponent(props) {
         });
 
         primaryWorkspace.current.addChangeListener(handleWorkspaceChange);
+        primaryWorkspace.current.addChangeListener(Blockly.Events.disableOrphans);
 
         //blocks fetching from firebase in card.js
         if (currentProjectXml) {

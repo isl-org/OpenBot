@@ -38,7 +38,7 @@ export default ({children}) => {
         currentProjectXml, setCurrentProjectXml,
         currentProjectId, setCurrentProjectId,
         fileId, setFileId,
-        folderId, setFolderId
+        folderId, setFolderId,
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }
