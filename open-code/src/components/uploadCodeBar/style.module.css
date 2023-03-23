@@ -40,10 +40,6 @@
     background-color: #202020;
 }
 
-.iconMargin {
-    margin: 10px;
-}
-
 .uploadCodeButton {
     margin-left: 4rem;
     display: flex;
@@ -79,8 +75,12 @@
 }
 
 .driveIconStyle {
-    height: 1.5rem;
-    width: 1.5rem;
+    width: 2.2rem;
+    cursor: pointer;
+}
+
+.shrinkDriveIcon{
+    width: 1.7rem;
     cursor: pointer;
 }
 

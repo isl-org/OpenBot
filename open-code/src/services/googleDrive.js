@@ -304,6 +304,12 @@ export function SharingFileFromGoogleDrive(fileId,isJSFile) {
             'type': 'anyone',
             'role': 'reader'
         };}
+    else{
+        permission = {
+            'type': 'domain',
+            'role': 'none'
+        };
+    }
     const params = {
         method: 'POST',
         headers: {

@@ -17,6 +17,7 @@
     "firebase": "^9.17.1",
     "firebase-admin": "^11.5.0",
     "firebaseui": "^6.0.2",
+    "framer-motion": "^10.8.4",
     "js-tokens": "^8.0.1",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
