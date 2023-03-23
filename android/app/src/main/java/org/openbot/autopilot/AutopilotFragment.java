@@ -349,13 +349,19 @@ public class AutopilotFragment extends CameraFragment {
     binding.autoSwitch.setChecked(b);
     binding.controllerContainer.controlMode.setEnabled(!b);
     binding.controllerContainer.driveMode.setEnabled(!b);
-    binding.controllerContainer.speedInfo.setEnabled(!b);
+    binding.controllerContainer.speedMode.setEnabled(!b);
 
     binding.controllerContainer.controlMode.setAlpha(b ? 0.5f : 1f);
     binding.controllerContainer.driveMode.setAlpha(b ? 0.5f : 1f);
     binding.controllerContainer.speedMode.setAlpha(b ? 0.5f : 1f);
 
-    if (!b) handler.postDelayed(() -> vehicle.setControl(0, 0), 500);
+    if (!b) {
+      setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
+      handler.postDelayed(() -> vehicle.setControl(0, 0), 500);
+    } else {
+      binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_high);
+      vehicle.setSpeedMultiplier(Enums.SpeedMode.FAST.getValue());
+    }
   }
 
   private long frameNum = 0;
@@ -459,7 +465,7 @@ public class AutopilotFragment extends CameraFragment {
   }
 
   private void setSpeedMode(Enums.SpeedMode speedMode) {
-    if (speedMode != null) {
+    if (speedMode != null && !binding.autoSwitch.isChecked()) {
       switch (speedMode) {
         case SLOW:
           binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_low);
