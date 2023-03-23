@@ -22,7 +22,7 @@ class GameController: GCPhysicalInputProfile {
     var indicatorData: String = ""
     var indicator = "i0,0\n"
     var resetControl: Bool = true
-
+    
     /// Initialization routine
     override init() {
         super.init()
@@ -65,64 +65,35 @@ class GameController: GCPhysicalInputProfile {
     public func processJoystickInput(mode: DriveMode, gamepad: GCExtendedGamepad) -> Control {
         switch (mode) {
         case .DUAL:
-            return convertDualToControl(leftStick: getCenteredAxis(gamepad.leftThumbstick.yAxis.value), rightStick: getCenteredAxis(gamepad.rightThumbstick.yAxis.value))
+            return convertDualToControl(leftStick: gamepad.leftThumbstick.yAxis.value, rightStick: gamepad.rightThumbstick.yAxis.value)
         case .GAME:
-            let rightTrigger = getCenteredAxis(gamepad.rightTrigger.value)
-            let leftTrigger = getCenteredAxis(gamepad.leftTrigger.value)
-            var steeringOffset: Float = getCenteredAxis(gamepad.leftThumbstick.xAxis.value)
+            let rightTrigger = gamepad.rightTrigger.value
+            let leftTrigger = gamepad.leftTrigger.value
+            var steeringOffset: Float = gamepad.leftThumbstick.xAxis.value
             if (steeringOffset == 0) {
-                steeringOffset = getCenteredAxis(gamepad.dpad.yAxis.value)
+                steeringOffset = gamepad.dpad.yAxis.value
             }
             if (steeringOffset == 0) {
-                steeringOffset = getCenteredAxis(gamepad.rightThumbstick.xAxis.value)
+                steeringOffset = gamepad.rightThumbstick.xAxis.value
             }
             return convertGameToControl(leftTrigger: leftTrigger, rightTrigger: rightTrigger, steeringOffset: steeringOffset)
         case .JOYSTICK:
-            var yAxis: Float = getCenteredAxis(gamepad.leftThumbstick.yAxis.value)
+            var yAxis: Float = gamepad.leftThumbstick.yAxis.value
             if (yAxis == 0) {
-                yAxis = getCenteredAxis(gamepad.dpad.yAxis.value)
+                yAxis = gamepad.dpad.yAxis.value
             }
             if (yAxis == 0) {
-                yAxis = getCenteredAxis(gamepad.rightThumbstick.yAxis.value)
+                yAxis = gamepad.rightThumbstick.yAxis.value
             }
-            var xAxis: Float = getCenteredAxis(gamepad.leftThumbstick.xAxis.value)
+            var xAxis: Float = gamepad.leftThumbstick.xAxis.value
             if (xAxis == 0) {
-                xAxis = getCenteredAxis(gamepad.dpad.xAxis.value)
+                xAxis = gamepad.dpad.xAxis.value
             }
             if (xAxis == 0) {
-                xAxis = getCenteredAxis(gamepad.rightThumbstick.xAxis.value)
+                xAxis = gamepad.rightThumbstick.xAxis.value
             }
             return convertJoystickToControl(xAxis: xAxis, yAxis: yAxis)
         }
-    }
-
-    /// Rounding routine to avoid jamming the BLE connection
-    ///
-    /// - Parameters: Input value
-    /// - Returns: Rounded value
-    private func getCenteredAxis(_ value: Float) -> Float {
-        if (value >= 0 && value <= 0.1) {
-            return 0.1;
-        } else if (value > 0.1 && value <= 0.2) {
-            return 0.2;
-        } else if (value > 0.2 && value <= 0.3) {
-            return 0.3;
-        } else if (value > 0.3 && value <= 0.4) {
-            return 0.4;
-        } else if (value > 0.4 && value <= 0.5) {
-            return 0.5;
-        } else if (value > 0.5 && value <= 0.6) {
-            return 0.6;
-        } else if (value > 0.6 && value <= 0.7) {
-            return 0.7;
-        } else if (value > 0.7 && value <= 0.8) {
-            return 0.8;
-        } else if (value > 0.8 && value <= 0.9) {
-            return 0.9;
-        } else if (value > 0.9 && value <= 1) {
-            return 1;
-        }
-        return 0;
     }
 
     /// Function to return dual mode control values to openbot device movement values.
@@ -132,7 +103,7 @@ class GameController: GCPhysicalInputProfile {
     ///     - rightStick: right joystick yAxis values.
     /// - Returns: return control object with left and right values.
     public func convertDualToControl(leftStick: Float, rightStick: Float) -> Control {
-        Control(left: leftStick, right: rightStick)
+        return Control(left: leftStick, right: rightStick)
     }
 
     /// Function to convert controller input for joystick mode to values to return to openbot device to control the navigation.
@@ -277,8 +248,8 @@ class GameController: GCPhysicalInputProfile {
             return
         }
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-            let right = (control.getRight() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+            let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded()
+            let right = (control.getRight() * selectedSpeedMode.rawValue).rounded()
             vehicleControl = control
             dataLogger.setControlLogs(left: (String(left)), right: String(right))
             controlData = String(left) + " " + String(right)
@@ -293,8 +264,8 @@ class GameController: GCPhysicalInputProfile {
     ///     - control: the control input to be sent to the robot
     func sendControlFromPhoneController(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-            let right = (control.getRight() * selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+            let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded()
+            let right = (control.getRight() * selectedSpeedMode.rawValue).rounded()
             vehicleControl = control
             dataLogger.setControlLogs(left: (String(left)), right: String(right))
             controlData = String(left) + " " + String(right)

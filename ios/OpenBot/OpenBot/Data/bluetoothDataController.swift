@@ -13,7 +13,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     var tempCentralManager: CBCentralManager?
     var peri: CBPeripheral?
     var peripherals = Array<CBPeripheral>()
-    var tempPeripheral: CBPeripheral!
+    var discoveredPeripheral: CBPeripheral!
     var vehicleReady: Bool = false
     var sonarData: String = ""
     var voltageDivider: String = ""
@@ -126,10 +126,10 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
-                if (characteristic.properties == .write) {
+                if (characteristic.properties == .write || characteristic.properties == .writeWithoutResponse) {
                     writeCharacteristics = characteristic;
-                } else if (characteristic.properties == .notify) {
-                    subscribeToNotifications(peripheral: tempPeripheral, characteristic: characteristic)
+                } else if (characteristic.properties == .notify || characteristic.properties == .read) {
+                    subscribeToNotifications(peripheral: discoveredPeripheral, characteristic: characteristic)
                     readValue(characteristic: characteristic)
                     peripheral.discoverDescriptors(for: characteristic)
                 }
@@ -203,7 +203,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     /// function to read the value from characteristic
     func readValue(characteristic: CBCharacteristic) {
-        tempPeripheral?.readValue(for: characteristic)
+        discoveredPeripheral?.readValue(for: characteristic)
     }
 
     /// function to send data to the connected device
@@ -211,25 +211,25 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     /// - Parameter payload: string that should be sent to the connected device
     func sendData(payload: String) {
         let dataToSend: Data? = payload.data(using: String.Encoding.utf8)
-        if (dataToSend != nil && tempPeripheral != nil) {
+        if (dataToSend != nil && discoveredPeripheral != nil && discoveredPeripheral.canSendWriteWithoutResponse) {
             if let writeCharacteristics {
-                tempPeripheral.writeValue(dataToSend!, for: writeCharacteristics, type: CBCharacteristicWriteType.withResponse)
+                discoveredPeripheral.writeValue(dataToSend!, for: writeCharacteristics, type: CBCharacteristicWriteType.withoutResponse)
             }
         }
     }
 
     /// function to disconnect the connected device
     func disconnect() {
-        centralManager?.cancelPeripheralConnection(tempPeripheral)
+        centralManager?.cancelPeripheralConnection(discoveredPeripheral)
         startScan()
         peri = nil
     }
 
     ///function to connect the selected device
     func connect() {
-        tempPeripheral = peri
-        tempPeripheral.delegate = self
-        centralManager?.connect(tempPeripheral)
+        discoveredPeripheral = peri
+        discoveredPeripheral.delegate = self
+        centralManager?.connect(discoveredPeripheral)
         centralManager?.stopScan()
     }
 
