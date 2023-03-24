@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -292,6 +293,17 @@ public class AutopilotFragment extends CameraFragment {
             R.string.speedInfo,
             String.format(
                 Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRpm(), vehicle.getRightWheelRpm())));
+  }
+
+  @Override
+  protected void processKeyEvent(KeyEvent keyCode) {
+    if (binding.autoSwitch.isChecked()
+        && (keyCode.getKeyCode() == KeyEvent.KEYCODE_BUTTON_THUMBL
+            || keyCode.getKeyCode() == KeyEvent.KEYCODE_BUTTON_THUMBR)) {
+      audioPlayer.playFromString("Autopilot active. Cannot change speed mode.");
+    } else {
+      super.processKeyEvent(keyCode);
+    }
   }
 
   @Override
