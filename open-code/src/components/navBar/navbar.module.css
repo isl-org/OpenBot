@@ -276,10 +276,10 @@
 .integerNumber {
     position: absolute;
     opacity: 0.05;
-    font-family: Gilroy-Bold,Serif  !important;
+    font-family: Gilroy-Bold, Serif !important;
     font-size: 90px !important;
-    font-weight: bold!important;
-    line-height:50px;
+    font-weight: bold !important;
+    line-height: 50px;
 }
 
 .helpCenterPara {

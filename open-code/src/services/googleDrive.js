@@ -212,7 +212,7 @@ export function CreateFile(data, folderId, metadataFields, headers, requestBody)
         .then(response => response.json())
         .then(async (file) => {
             const isJSFile = file.name.endsWith('.js');
-            SharingFileFromGoogleDrive(file.id,isJSFile);
+            SharingFileFromGoogleDrive(file.id, isJSFile);
             if (isJSFile) {
                 let link = await getShareableLink(file.id, folderId);
                 return link;
@@ -296,15 +296,15 @@ export async function deleteFileFromGoogleDrive(fileId) {
  * permissions for sharing Google Drive files
  * @param fileId
  */
-export function SharingFileFromGoogleDrive(fileId,isJSFile) {
+export function SharingFileFromGoogleDrive(fileId, isJSFile) {
     const accessToken = getAccessToken();
     let permission;
     if (isJSFile) {
         permission = {
             'type': 'anyone',
             'role': 'reader'
-        };}
-    else{
+        };
+    } else {
         permission = {
             'type': 'domain',
             'role': 'none'

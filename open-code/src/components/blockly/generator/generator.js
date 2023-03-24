@@ -90,10 +90,10 @@ javascriptGenerator['timer'] = function (block) {
     return code;
 };
 
-javascriptGenerator['wait'] = function(block) {
+javascriptGenerator['wait'] = function (block) {
     let number_time = block.getFieldValue('time');
     let code = '';
-    code+="wait("+number_time+");\n"
+    code += "wait(" + number_time + ");\n"
     return code;
 };
 
@@ -189,7 +189,7 @@ javascriptGenerator['forward&BackwardAtSpeed'] = function (block) {
     return code;
 };
 
-javascriptGenerator['forward&BackwardAtSpeedForTime'] = function(block) {
+javascriptGenerator['forward&BackwardAtSpeedForTime'] = function (block) {
     let dropdown_select_direction = block.getFieldValue('select_direction');
     let number_speed_value = block.getFieldValue('speed_value');
     let number_time = block.getFieldValue('time');
@@ -206,8 +206,9 @@ javascriptGenerator['forward&BackwardAtSpeedForTime'] = function(block) {
             }
         }
     }
-    let code="";
-    code+= selectMovement()+"("+number_speed_value+");\n"+"wait("+number_time+");\n";
+
+    let code = "";
+    code += selectMovement() + "(" + number_speed_value + ");\n" + "wait(" + number_time + ");\n";
     return code;
 };
 
@@ -251,23 +252,24 @@ javascriptGenerator['left&RightAtSpeedForTime'] = function (block) {
             }
         }
     }
-    let code="";
-    code+= selectMovement()+"("+number_speed_value+");\n"+"wait("+number_time+");\n";
+
+    let code = "";
+    code += selectMovement() + "(" + number_speed_value + ");\n" + "wait(" + number_time + ");\n";
     return code;
 };
 
-javascriptGenerator['straightAtSpeed'] = function(block) {
+javascriptGenerator['straightAtSpeed'] = function (block) {
     let number_speed_value = block.getFieldValue('speed_value');
     let code = '';
-    code+="moveStraight("+number_speed_value+");\n"
+    code += "moveStraight(" + number_speed_value + ");\n"
     return code;
 };
 
-javascriptGenerator['straightAtSpeedForTime'] = function(block) {
+javascriptGenerator['straightAtSpeedForTime'] = function (block) {
     let number_speed_value = block.getFieldValue('speed_value');
     let number_time_value = block.getFieldValue('time_value');
     let code = '';
-    code+="moveStraight("+number_speed_value+");\n"+"wait("+number_time_value+");\n";
+    code += "moveStraight(" + number_speed_value + ");\n" + "wait(" + number_time_value + ");\n";
     return code;
 };
 
@@ -286,7 +288,8 @@ javascriptGenerator['moveLeft&RightForTime'] = function (block) {
     let number_time = block.getFieldValue('time');
 
     let code = '';
-    code += "move(" + number_left_distance + "," + number_right_distance + ");\n"+"wait("+number_time+");\n";;
+    code += "move(" + number_left_distance + "," + number_right_distance + ");\n" + "wait(" + number_time + ");\n";
+    ;
     return code;
 };
 
@@ -297,20 +300,20 @@ javascriptGenerator['movementCircular'] = function (block) {
     return code;
 };
 
-javascriptGenerator['circularAtSpeed'] = function(block) {
+javascriptGenerator['circularAtSpeed'] = function (block) {
     let number_radius_value = block.getFieldValue('radius_value');
     let number_speed_value = block.getFieldValue('speed_value');
     let code = '';
-    code += "moveCircular(" + number_radius_value +","+number_speed_value +");\n";
+    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ");\n";
     return code;
 };
 
-javascriptGenerator['circularAtSpeedForTime'] = function(block) {
+javascriptGenerator['circularAtSpeedForTime'] = function (block) {
     let number_radius_value = block.getFieldValue('radius_value');
     let number_speed_value = block.getFieldValue('speed_value');
     let number_time = block.getFieldValue('time');
     let code = '';
-    code += "moveCircular(" + number_radius_value +","+number_speed_value +");\n"+"wait("+number_time+");\n";
+    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ");\n" + "wait(" + number_time + ");\n";
     return code;
 };
 

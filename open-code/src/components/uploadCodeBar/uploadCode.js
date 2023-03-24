@@ -5,11 +5,9 @@ import {UploadBarStyle} from "./styles";
 import styles from "./style.module.css"
 import undoIcon from "../../assets/images/icon/undo.png";
 import redoIcon from "../../assets/images/icon/redo.png";
-import driveIcon from "../../assets/images/icon/drive.png";
 import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
-import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
 import {getCurrentProject} from "../../services/workspace";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
@@ -18,23 +16,18 @@ import {CircularProgress, circularProgressClasses} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
-import LoaderComponent from "../loader/loaderComponent";
-import {motion, AnimatePresence} from "framer-motion";
+import {AnimatePresence, motion} from "framer-motion";
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
-    const [driveButtonActive, setDriveButtonActive] = useState(false);
     const [isLoader, setIsLoader] = useState(false)
     const {theme} = useContext(ThemeContext);
-    const [isDriveLoader, setIsDriveLoader] = useState(false);
     const {
         generate,
         setGenerateCode,
         setCode,
-        setDrawer,
-        setFileId,
-        setFolderId
+        setDrawer
     } = useContext(StoreContext);
     let primaryWorkspace = useRef();
 

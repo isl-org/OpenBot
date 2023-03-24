@@ -1,7 +1,10 @@
-import {auth} from "./firebase";
 import {localStorageKeys} from "../utils/constants";
-import {checkFileExistsInFolder, deleteFileFromGoogleDrive, getFolderId, uploadToGoogleDrive} from "./googleDrive";
-import {getAllFilesFromGoogleDrive} from "./googleDrive";
+import {
+    checkFileExistsInFolder,
+    deleteFileFromGoogleDrive,
+    getAllFilesFromGoogleDrive,
+    getFolderId
+} from "./googleDrive";
 
 
 /**

@@ -160,7 +160,6 @@ export async function googleSignOut() {
 // }
 
 
-
 // selected project from firebase
 // const blockSnap = doc(db, auth.currentUser.uid, projectData.id);
 // const workspaceRef = await getDoc(blockSnap);

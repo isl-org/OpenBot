@@ -6,7 +6,7 @@
     border-top: 0.5px solid gray;
 }
 
-.loaderBarDiv{
+.loaderBarDiv {
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -14,7 +14,7 @@
     border-top: 0.5px solid gray;
 }
 
-.buttonsDiv{
+.buttonsDiv {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -22,16 +22,18 @@
     bottom: 0;
     width: 100%;
 }
-.loaderItem{
+
+.loaderItem {
     margin-left: 50%;
     margin-top: 2%;
 }
 
-.textItem{
+.textItem {
     font-family: Gilroy-medium, sans-serif;
     margin-top: 3px;
     margin-left: 47%;
 }
+
 .barDivLight {
     background-color: white;
 }
@@ -79,7 +81,7 @@
     cursor: pointer;
 }
 
-.shrinkDriveIcon{
+.shrinkDriveIcon {
     width: 1.7rem;
     cursor: pointer;
 }

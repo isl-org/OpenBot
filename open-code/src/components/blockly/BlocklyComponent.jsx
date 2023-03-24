@@ -7,9 +7,8 @@ import {ThemeContext} from "../../App";
 import {DarkTheme, LightTheme} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
-import {FormatDate, getCurrentProject, updateCurrentProject, updateProjectOnDrive} from "../../services/workspace";
+import {updateCurrentProject} from "../../services/workspace";
 import {nanoid} from "nanoid";
-import {uploadToGoogleDrive} from "../../services/googleDrive";
 
 Blockly.setLocale(locale);
 
