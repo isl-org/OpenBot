@@ -1,4 +1,4 @@
-// Required App Version: 0.6.1
+// Required App Version: 0.7.0
 // ---------------------------------------------------------------------------
 // This Arduino Nano sketch accompanies the OpenBot Android application.
 //
