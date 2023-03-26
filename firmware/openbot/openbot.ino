@@ -22,22 +22,24 @@
 //  - December 2021: RC truck support by Usman Fiaz
 //  - March 2022: OpenBot-Lite support by William Tan
 //  - May 2022: MTV support by Quentin Leboutet
-//  - JAN 2023: HAS_BLUETOOTH support by iTinker
+//  - Jan 2023: BLE support by iTinker
 // ---------------------------------------------------------------------------
 
-// By Matthias Mueller, Embodied AI Lab, 2022
+// By Matthias Mueller, 2023
 // ---------------------------------------------------------------------------
 
 //------------------------------------------------------//
 // DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
+//Select Arduino Nano as board!
 #define DIY 0        // DIY without PCB
 #define PCB_V1 1     // DIY with PCB V1
 #define PCB_V2 2     // DIY with PCB V2
 #define RTR_TT 3     // Ready-to-Run with TT-motors
 #define RC_CAR 4     // RC truck prototypes
 #define LITE 5       // Smaller DIY version for education
-#define RTR_520 6    // Ready-to-Run with 520-motors --> select ESP32 Dev Module as board!
+//Select ESP32 Dev Module as board!
+#define RTR_520 6    // Ready-to-Run with 520-motors --> 
 #define MTV 7        // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
 #define DIY_ESP32 8  // DIY without PCB  --> select ESP32 Dev Module as board!
 
@@ -63,10 +65,6 @@
 // Enable/Disable debug print (1,0)
 #define DEBUG 0
 
-//Enable/Disable bluetooth connectivity (1,0)
-//NOTE: HAS_BLUETOOTH will only work with the ESP32 board (RTR_520, MTV, DIY_ESP32).
-#define HAS_BLUETOOTH 1
-
 // Enable/Disable coast mode (1,0)
 // When no control is applied, the robot will either coast (1) or actively stop (0)
 boolean coast_mode = 1;
@@ -87,6 +85,8 @@ boolean coast_mode = 1;
 // HAS_LEDS_FRONT                       Enable/Disable front LEDs
 // HAS_LEDS_BACK                        Enable/Disable back LEDs
 // HAS_LEDS_STATUS                      Enable/Disable status LEDs
+// HAS_BLUETOOTH                        Enable/Disable bluetooth connectivity (1,0)
+// NOTE: HAS_BLUETOOTH will only work with the ESP32 board (RTR_520, MTV, DIY_ESP32)
 
 // PIN_TRIGGER                          Arduino pin tied to trigger pin on ultrasonic sensor.
 // PIN_ECHO                             Arduino pin tied to echo pin on ultrasonic sensor.
@@ -101,22 +101,6 @@ boolean coast_mode = 1;
 // PIN_LED_LB, PIN_LED_RB               Control left and right back LEDs (indicator signals, illumination)
 // PIN_LED_LF, PIN_LED_RF               Control left and right front LEDs (illumination)
 // PIN_LED_Y, PIN_LED_G, PIN_LED_B      Control yellow, green and blue status LEDs
-
-#if (HAS_BLUETOOTH)
-#include <BLEDevice.h>
-#include <BLEServer.h>
-#include <BLEUtils.h>
-#include <BLE2902.h>
-
-BLEServer *bleServer = NULL;
-BLECharacteristic *pTxCharacteristic;
-BLECharacteristic *pRxCharacteristic;
-bool deviceConnected = false;
-bool oldDeviceConnected = false;
-const char *SERVICE_UUID = "61653dc3-4021-4d1e-ba83-8b4eec61d613";  // UART service UUID
-const char *CHARACTERISTIC_UUID_RX = "06386c14-86ea-4d71-811c-48f97c58f8c9";
-const char *CHARACTERISTIC_UUID_TX = "9bf1103b-834c-47cf-b149-c9e4bcf778a7";
-#endif
 
 //-------------------------DIY--------------------------//
 #if (OPENBOT == DIY)
@@ -143,6 +127,7 @@ const int PIN_TRIGGER = 12;
 const int PIN_ECHO = 11;
 const int PIN_LED_LI = 4;
 const int PIN_LED_RI = 7;
+
 //-------------------------PCB_V1-----------------------//
 #elif (OPENBOT == PCB_V1)
 const String robot_type = "PCB_V1";
@@ -168,6 +153,7 @@ const int PIN_TRIGGER = 3;
 const int PIN_ECHO = 3;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 8;
+
 //-------------------------PCB_V2-----------------------//
 #elif (OPENBOT == PCB_V2)
 const String robot_type = "PCB_V2";
@@ -193,6 +179,7 @@ const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 4;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 8;
+
 //-------------------------RTR_TT-----------------------//
 #elif (OPENBOT == RTR_TT)
 const String robot_type = "RTR_TT";
@@ -242,6 +229,7 @@ const int BUMPER_RF = 786;
 const int BUMPER_BB = 745;
 const int BUMPER_LB = 607;
 const int BUMPER_RB = 561;
+
 //-------------------------RC_CAR-----------------------//
 #elif (OPENBOT == RC_CAR)
 #include <Servo.h>
@@ -264,6 +252,7 @@ const int PIN_TRIGGER = 4;
 const int PIN_ECHO = 4;
 const int PIN_LED_LI = 7;
 const int PIN_LED_RI = 8;
+
 //-------------------------LITE-------------------------//
 #elif (OPENBOT == LITE)
 const String robot_type = "LITE";
@@ -277,9 +266,11 @@ const int PIN_PWM_R1 = 9;
 const int PIN_PWM_R2 = 10;
 const int PIN_LED_LI = 4;
 const int PIN_LED_RI = 7;
+
 //-------------------------RTR_520----------------------//
 #elif (OPENBOT == RTR_520)
 #include <esp_wifi.h>
+#define HAS_BLUETOOTH 1
 #define analogWrite ledcWrite
 #define attachPinChangeInterrupt attachInterrupt
 #define detachPinChangeInterrupt detachInterrupt
@@ -350,9 +341,11 @@ const int BUMPER_RF = 2930;
 const int BUMPER_BB = 2750;
 const int BUMPER_LB = 2180;
 const int BUMPER_RB = 2000;
+
 //---------------------------MTV------------------------//
 #elif (OPENBOT == MTV)
 #include <esp_wifi.h>
+#define HAS_BLUETOOTH 1
 #define analogWrite ledcWrite
 #define attachPinChangeInterrupt attachInterrupt
 #define detachPinChangeInterrupt detachInterrupt
@@ -390,11 +383,12 @@ const int FREQ = 5000;
 const int RES = 8;
 const int LHS_PWM_OUT = 0;
 const int RHS_PWM_OUT = 1;
+
 //-------------------------DIY_ESP32----------------------//
 #elif (OPENBOT == DIY_ESP32)
 
 #include <esp_wifi.h>
-
+#define HAS_BLUETOOTH 1
 #define analogWrite ledcWrite
 #define attachPinChangeInterrupt attachInterrupt
 #define detachPinChangeInterrupt detachInterrupt
@@ -435,6 +429,21 @@ const int PIN_LED_RI = 16;
 #endif
 //------------------------------------------------------//
 
+#if (HAS_BLUETOOTH)
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
+
+BLEServer *bleServer = NULL;
+BLECharacteristic *pTxCharacteristic;
+BLECharacteristic *pRxCharacteristic;
+bool deviceConnected = false;
+bool oldDeviceConnected = false;
+const char *SERVICE_UUID = "61653dc3-4021-4d1e-ba83-8b4eec61d613";  // UART service UUID
+const char *CHARACTERISTIC_UUID_RX = "06386c14-86ea-4d71-811c-48f97c58f8c9";
+const char *CHARACTERISTIC_UUID_TX = "9bf1103b-834c-47cf-b149-c9e4bcf778a7";
+#endif
 
 enum msgParts {
   HEADER,
@@ -500,8 +509,6 @@ class MyCallbacks : public BLECharacteristicCallbacks {
 #endif
 
 
-
-
 //------------------------------------------------------//
 // INITIALIZATION
 //------------------------------------------------------//
@@ -514,7 +521,7 @@ int ctrl_slow = 96;
 int ctrl_min = (int)255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
-#if HAS_SONAR
+#if (HAS_SONAR)
 #if ((OPENBOT != RTR_520) and (OPENBOT != MTV) and (OPENBOT != DIY_ESP32))
 #include "PinChangeInterrupt.h"
 #endif
