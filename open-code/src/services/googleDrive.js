@@ -1,4 +1,4 @@
-import {Constants, localStorageKeys} from "../utils/constants";
+import {Constants, errorToast, localStorageKeys} from "../utils/constants";
 import {getCurrentProject} from "./workspace";
 
 /**
@@ -10,18 +10,19 @@ import {getCurrentProject} from "./workspace";
 export const uploadToGoogleDrive = async (data, fileType) => {
     const accessToken = getAccessToken();
     const folderId = await getFolderId();
+    let response;
     if (fileType === Constants.xml) {
         //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
         if (folderId) {
-            await uploadFileToFolder(accessToken, data, folderId, "xml");
+            response = await uploadFileToFolder(accessToken, data, folderId, "xml");
         } else {
             await CreateFolder(accessToken).then((folderId) => {
-                    uploadFileToFolder(accessToken, data, folderId, "xml");
+                    response = uploadFileToFolder(accessToken, data, folderId, "xml");
                 }
             );
         }
     } else if (fileType === Constants.js) {
-        let response;
+
         //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
         if (folderId) {
             response = await uploadFileToFolder(accessToken, data, folderId, "js");
@@ -31,8 +32,9 @@ export const uploadToGoogleDrive = async (data, fileType) => {
                 }
             );
         }
-        return response;
     }
+
+    return response;
 
 }
 /**
@@ -81,20 +83,20 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
         "Content-Type": `multipart/related; boundary=${boundary}`,
         "Content-Length": requestBody?.length,
     };
+    let res;
     if (fileType === Constants.xml) {
         // Check if a file with the specified fileId exists
         let fileExistWithFileID = await checkFileExistsInFolder(folderId, data.projectName, 'xml')
         if (fileExistWithFileID.exists) {
             //delete file and then create new file
-            await deleteFileFromGoogleDrive(fileExistWithFileID.fileId).then(() => {
-                CreateFile(data, folderId, metadataFields, headers, requestBody).then();
+            await deleteFileFromGoogleDrive(fileExistWithFileID.fileId).then(async () => {
+                res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
             });
         } else {
             // If a file with the specified fileId doesn't exist, create a new file
-            CreateFile(data, folderId, metadataFields, headers, requestBody).then();
+            res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
         }
     } else if (fileType === Constants.js) {
-        let res;
         // Check if a file with the specified fileId exists
         let fileExistWithFileID = await checkFileExistsInFolder(folderId, getCurrentProject().projectName, 'js')
         if (fileExistWithFileID.exists) {
@@ -105,8 +107,9 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
             // If a file with the specified fileId doesn't exist, create a new file
             res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
         }
-        return res;
     }
+
+    return res;
 
 };
 
@@ -124,7 +127,6 @@ export async function checkFileExistsInFolder(folderId, fileName, fileType) {
     } else if (fileType === Constants.xml) {
         fileNameWithExtension += `.${Constants.xml}`;
     }
-
     const accessToken = getAccessToken();
     const response = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(fileNameWithExtension)}'+and+'${encodeURIComponent(folderId)}'+in+parents+and+trashed=false&access_token=${accessToken}`);
     const result = await response.json();
@@ -162,6 +164,7 @@ async function CreateFolder(accessToken) {
     return await fetch(`${Constants.baseUrl}/files/`, data)
         .then(response => response.json())
         .then(folder => {
+            makeFolderPublic(folder.id, accessToken);
             // SharingFolderFromGoogleDrive(folder.id)
             return folder.id;
         })
@@ -199,7 +202,6 @@ export function getAccessToken() {
  * create file in google drive openBot folder
  */
 export function CreateFile(data, folderId, metadataFields, headers, requestBody) {
-
     let apiEndpoint = 'https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart';
     if (metadataFields) {
         apiEndpoint += `&fields=${metadataFields}`;
@@ -209,18 +211,28 @@ export function CreateFile(data, folderId, metadataFields, headers, requestBody)
         headers: headers,
         body: requestBody
     })
-        .then(response => response.json())
+        .then(response => response.json()).catch(err => errorToast("error in upload"))
         .then(async (file) => {
-            const isJSFile = file.name.endsWith('.js');
-            SharingFileFromGoogleDrive(file.id, isJSFile);
-            if (isJSFile) {
-                let link = await getShareableLink(file.id, folderId);
-                return link;
+            if (file.error) {
+                errorToast(file.error.message);
+            } else {
+                const isJSFile = file?.name.endsWith('.js');
+                // file && SharingFileFromGoogleDrive(file?.id, isJSFile);    //TODO error
+                if (isJSFile) {
+                    let link = await getShareableLink(file.id, folderId);
+                    return link;
+                } else {
+                    return true;
+                }
             }
+
         })
         .catch(error => {
+            errorToast("error in upload")
             console.error(error);
         });
+
+
 }
 
 
@@ -287,6 +299,7 @@ export async function deleteFileFromGoogleDrive(fileId) {
             console.log("File has been deleted successfully")
         })
         .catch((err) => {
+            errorToast("Something went wrong.")
             console.log(err)
         })
 }
@@ -357,6 +370,26 @@ export async function getShareableLink(fileId, folderId) {
         })
         .catch(error => console.error(error));
 }
+
+export const makeFolderPublic = async (folderId, accessToken) => {
+    const url = `${Constants.baseUrl}/files/${folderId}/permissions`;
+    const options = {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            type: 'anyone',
+            role: 'reader',
+        }),
+    };
+
+    await fetch(url, options).catch(() =>
+        errorToast("Something went wrong ")
+    );
+};
+
 
 //
 // //upload file in Google Drive openBot folder

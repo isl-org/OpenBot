@@ -100,7 +100,7 @@ export const Carousal = [
 export const errorToast = (message) => {
     toast.error(message, {
         position: 'top-center',
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: false,
