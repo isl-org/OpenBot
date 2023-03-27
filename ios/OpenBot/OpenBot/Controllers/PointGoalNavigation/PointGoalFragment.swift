@@ -306,9 +306,6 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
         guard let currentFrame = sceneView.session.currentFrame else {
             return
         }
-        if isReached {
-            return
-        }
         let pixelBuffer = currentFrame.capturedImage
         if sceneView.pointOfView?.position != nil {
             processPixelBuffer(pixelBuffer, sceneView.pointOfView!)
@@ -352,7 +349,12 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
             guard let controlResult = self.result else {
                 return
             }
-            self.sendControl(control: controlResult)
+            
+            if self.isReached {
+                self.sendControl(control: Control())
+            } else {
+                self.sendControl(control: controlResult)
+            }
 
             isNavQueueBusy = false
         }
@@ -463,8 +465,8 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     /// - Parameter control:
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-            let right = (control.getRight() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+            let left = control.getLeft() * gameController.selectedSpeedMode.rawValue
+            let right = control.getRight() * gameController.selectedSpeedMode.rawValue
             vehicleControl = control
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)))

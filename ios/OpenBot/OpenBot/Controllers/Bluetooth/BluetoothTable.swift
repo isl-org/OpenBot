@@ -31,15 +31,15 @@ class BluetoothTable: UITableViewController {
 
     func connectToBle(Btn: UIButton, index: Int) {
         bluetooth.peri = bluetooth.peripherals[index]
-        isBluetoothConnected = true
         bluetooth.connect()
         bluetooth.centralManager?.stopScan()
+        isBluetoothConnected = true
     }
 
     func disconnectToBle() {
         bluetooth.disconnect()
-        isBluetoothConnected = false
         tableView.reloadData()
+        isBluetoothConnected = false
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {

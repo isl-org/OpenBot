@@ -95,6 +95,7 @@ class HomePageViewController: CameraController {
         viewControllerName = classNameFrom(self)
         if (isBluetoothConnected) {
             bluetooth.setImage(Images.bluetoothConnected, for: .normal)
+            bluetoothDataController.shared.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
 
         } else {
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
@@ -136,6 +137,7 @@ class HomePageViewController: CameraController {
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
             bluetooth.setImage(Images.bluetoothConnected, for: .normal)
+            bluetoothDataController.shared.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
         } else {
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
