@@ -39,7 +39,7 @@ export const UploadCode = () => {
 
 
     const generateCode = () => {
-        // if (localStorage.getItem("isSigIn") === "true") {
+        if (localStorage.getItem("isSigIn") === "true") {
         setDrawer(false);
         setIsLoader(true);
         const code = javascriptGenerator.workspaceToCode(
@@ -57,9 +57,9 @@ export const UploadCode = () => {
             setIsLoader(false);
             errorToast("Failed to Uplaod")
         })
-        // } else {
-        //     setUploadCodeSignIn(true);
-        // }
+        } else {
+            setUploadCodeSignIn(true);
+        }
     };
 
     const clickedButton = (e) => {
@@ -207,7 +207,7 @@ function UploadInDrive(params) {
 
 
     const handleDriveButton = () => {
-        // if (localStorage.getItem("isSigIn") === "true") {
+        if (localStorage.getItem("isSigIn") === "true") {
             setIsDriveLoader(true);
             const data = {
                 projectName: getCurrentProject().projectName,
@@ -231,9 +231,9 @@ function UploadInDrive(params) {
                     errorToast("Failed to Uplaod");
                     console.log(err)
                 })
-        // } else {
-        //     setSignInPopUp(true);
-        // }
+        } else {
+            setSignInPopUp(true);
+        }
 
     }
     useEffect(() => {

@@ -2,12 +2,13 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useEffect, useState} from "react";
-import {Constants, errorToast,Themes} from "./utils/constants";
+import {Constants, errorToast, Themes} from "./utils/constants";
 import {useLocation} from "react-router-dom";
 import styles from "./components/homeComponents/carousel/carousel.module.css";
 import {Images} from "./utils/images";
 import {auth, googleSignOut} from "./services/firebase";
 import {ToastContainer} from "react-toastify";
+
 export const ThemeContext = createContext(null);
 
 /**
@@ -20,6 +21,13 @@ function App() {
     const [isLoading, setIsLoading] = useState(false);
     let onPageLoad = localStorage.getItem("theme") || ""
     const [theme, setTheme] = useState(onPageLoad);
+
+    useEffect(() => {
+        //to change body theme of the site
+        let darkElement = document.body;
+        theme === Themes.dark ? darkElement.classList.add("dark-mode") : darkElement.classList.remove("dark-mode");
+    }, [theme]);
+
 
     useEffect(() => {
         let timeoutId;
@@ -70,15 +78,17 @@ function App() {
     }
 
     const toggleTheme = () => {
-        window.location.reload()
-        if (theme === Themes.light) {
-            setTheme(Themes.dark)
+        if (theme === "light") {
+            setTheme("dark");
             localStorage.setItem("theme", Themes.dark)
+            document.body.classList.replace("light", "dark");
         } else {
-            setTheme(Themes.light)
+            setTheme("light");
             localStorage.setItem("theme", Themes.light)
+            document.body.classList.replace("dark", "light");
         }
-    }
+    };
+
     return (
 
         <ThemeContext.Provider value={{theme, toggleTheme}}>
