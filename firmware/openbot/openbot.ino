@@ -53,7 +53,7 @@
 //------------------------------------------------------//
 
 // Setup the OpenBot version (DIY, PCB_V1, PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520, DIY_ESP32)
-#define OPENBOT RTR_TT
+#define OPENBOT RTR_520
 
 //------------------------------------------------------//
 // SETTINGS - Global settings
@@ -1714,8 +1714,8 @@ Serial.println();
 #if (HAS_BLUETOOTH)
   if (deviceConnected) {
     char outData[50] = "";
-    for (int i = 0; i < dataToSend.length(); i++) {
-      outData[i] = dataToSend[i];
+    for (int i = 0; i < data.length(); i++) {
+      outData[i] = data[i];
     }
     pTxCharacteristic->setValue(outData);
     pTxCharacteristic->notify();
