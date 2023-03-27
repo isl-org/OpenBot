@@ -2,11 +2,12 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useEffect, useState} from "react";
-import {Constants, localStorageKeys, Themes} from "./utils/constants";
+import {Constants, errorToast, localStorageKeys, Themes} from "./utils/constants";
 import {useLocation} from "react-router-dom";
 import styles from "./components/homeComponents/carousel/carousel.module.css";
 import {Images} from "./utils/images";
 import {auth, googleSignOut} from "./services/firebase";
+import {ToastContainer} from "react-toastify";
 
 export const ThemeContext = createContext(null);
 
@@ -30,11 +31,12 @@ function App() {
                     .then((idTokenResult) => {
                         const expirationTime = idTokenResult?.expirationTime;
                         const sessionTimeoutMs = new Date(expirationTime).getTime() - Date.now();
+                        console.log('sessionTimeOut:::::', sessionTimeoutMs)
                         if (timeoutId) {
                             clearTimeout(timeoutId);
                         }
                         timeoutId = setTimeout(() => {
-                            alert('Your session has expired. You have been signed out.')
+                            errorToast('Your session has expired. You have been signed out.')
                             googleSignOut().then();
                         }, sessionTimeoutMs);
                     })
@@ -88,6 +90,7 @@ function App() {
                         <RouterComponent/>
                     }
                 </div>
+                <ToastContainer autoClose={5000}/>
             </StoreProvider>
         </ThemeContext.Provider>
     );

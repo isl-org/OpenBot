@@ -56,7 +56,7 @@ export function DeleteModel(props) {
         return setOpen(false);
     };
     const handleDeleteProject = () => {
-        deleteProject(projectName).then(()=>{
+        deleteProject(projectName).then(() => {
             let path = `/`;
             navigate(path);
         });
@@ -89,4 +89,34 @@ export function DeleteModel(props) {
             </Modal>
         </div>
     );
+}
+
+export function SignInModal(params) {
+    const {theme} = useContext(ThemeContext);
+    const [open, setOpen] = useState(true);
+    const {headerText, buttonText, containText, handleClose, handleButtonClick} = params
+    return (
+        <div>
+            <Modal
+                className={styles.logoutModal}
+                open={open}
+                onClose={() => handleClose()}>
+                <Box
+                    className={styles.logoutModalBox + " " + (theme === "dark" ? styles.darkLogoutModalBox : styles.lightLogoutModalBox)}>
+                    <BlackText extraStyle={styles.headerStyle} text={headerText}/>
+                    <div style={{marginTop: 20}}>
+                        <BlackText
+                            extraStyle={(theme === "dark" ? styles.darkLogoutMessageModal : styles.lightLogoutMessageModal)}
+                            text={containText}/>
+                    </div>
+                    <div className={styles.logoutButtonsDiv}>
+                        <BlueButton onClick={handleClose} buttonName={"Cancel"}
+                                    extraStyle={styles.logoutButtonsExtraStyle}/>
+                        <BlueButton onClick={handleButtonClick} buttonType={"contained"} buttonName={buttonText}
+                                    extraStyle={styles.logoutButtonsExtraStyle}/>
+                    </div>
+                </Box>
+            </Modal>
+        </div>
+    )
 }

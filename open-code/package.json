@@ -31,7 +31,8 @@
     "react-firebase-hooks": "^5.1.1",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.8.1",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "react-toastify": "^9.1.2",
   },
   "scripts": {
     "start": "react-scripts start",

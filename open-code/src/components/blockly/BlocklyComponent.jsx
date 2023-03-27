@@ -7,11 +7,10 @@ import {ThemeContext} from "../../App";
 import {DarkTheme, LightTheme} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
-import {FormatDate, getCurrentProject, updateCurrentProject, updateProjectOnDrive} from "../../services/workspace";
+import {updateCurrentProject} from "../../services/workspace";
 import {nanoid} from "nanoid";
-import {uploadToGoogleDrive} from "../../services/googleDrive";
-
 Blockly.setLocale(locale);
+
 
 function BlocklyComponent(props) {
     const {initialXml, children, onWorkspaceChange, ...rest} = props;
@@ -22,10 +21,7 @@ function BlocklyComponent(props) {
     const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer} = useContext(StoreContext);
     const uniqueId = currentProjectId ? currentProjectId : nanoid()
 
-    /**
-     * save code in local to restore on reload page
-     * @type {(function(): void)|*}
-     */
+   // save code in local to restore on reload page
     const handleWorkspaceChange = useCallback(() => {
         setDrawer(false);
         if (projectName !== undefined) {

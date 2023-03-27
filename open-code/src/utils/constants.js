@@ -2,6 +2,9 @@ import Blockly from "blockly/core";
 import {colors} from "./color";
 import React from "react";
 import {Images} from "./images";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
 export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_forEach", "controls_flow_statements"];
@@ -92,3 +95,18 @@ export const Carousal = [
         videoDark: Images.Carousal3Dark,
     }
 ]
+
+
+export const errorToast = (message) => {
+    toast.error(message, {
+        position: 'top-center',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+        pauseOnFocusLoss: false,
+    })
+}

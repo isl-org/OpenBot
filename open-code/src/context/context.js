@@ -28,6 +28,7 @@ export default ({children}) => {
     const [currentProjectId, setCurrentProjectId] = useState(savedProjectId);
     const [fileId, setFileId] = useState(savedFileId);
     const [folderId, setFolderId] = useState(savedFolderId);
+    const[user,setUser]=useState();
     // console.log("fileID::::::::::context :::::::", fileId, getCurrentProject()?.fileId)
     const store = {
         projectName, setProjectName,
@@ -39,6 +40,7 @@ export default ({children}) => {
         currentProjectId, setCurrentProjectId,
         fileId, setFileId,
         folderId, setFolderId,
+        user,setUser,
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

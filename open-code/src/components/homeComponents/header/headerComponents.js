@@ -12,7 +12,7 @@ import LoaderComponent from "../../loader/loaderComponent";
 import WhiteText from "../../fonts/whiteText";
 import {googleSigIn} from "../../../services/firebase";
 import React, {useState} from "react";
-import {getFilterProjects} from "../../../services/workspace";
+
 
 /**
  * Display logo with openCode text (Header's Left side)

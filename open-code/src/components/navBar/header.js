@@ -20,14 +20,13 @@ import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../home
  */
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext);
-    const {projectName, setProjectName} = useContext(StoreContext);
+    const {projectName, setProjectName,user,setUser} = useContext(StoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [deleteProject, setDeleteProject] = useState(false);
     const [isHelpCenterModal, setIsHelpCenterModal] = useState(false)
     const [isProfileModal, setIsProfileModal] = useState(false);
     const [isEditProfileModal, setIsEditProfileModal] = useState(false);
     const [isLogoutModal, setIsLogoutModal] = useState(false);
-    const [user, setUser] = useState();
     const location = useLocation();
 
     useEffect(() => {

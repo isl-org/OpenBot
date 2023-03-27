@@ -5,41 +5,40 @@ import {UploadBarStyle} from "./styles";
 import styles from "./style.module.css"
 import undoIcon from "../../assets/images/icon/undo.png";
 import redoIcon from "../../assets/images/icon/redo.png";
-import driveIcon from "../../assets/images/icon/drive.png";
 import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
-import driveIconClicked from "../../assets/images/icon/drive-clicked.png"
 import {ThemeContext} from "../../App";
 import {getCurrentProject} from "../../services/workspace";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
-import {Constants} from "../../utils/constants";
+import {Constants, errorToast,} from "../../utils/constants";
 import {CircularProgress, circularProgressClasses} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
-import LoaderComponent from "../loader/loaderComponent";
 import {motion, AnimatePresence} from "framer-motion";
+import {SignInModal} from "../homeComponents/header/logOutAndDeleteModal";
+import {googleSigIn} from "../../services/firebase";
+
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
-    const [driveButtonActive, setDriveButtonActive] = useState(false);
     const [isLoader, setIsLoader] = useState(false)
     const {theme} = useContext(ThemeContext);
-    const [isDriveLoader, setIsDriveLoader] = useState(false);
+    const [signInPopUp, setSignInPopUp] = useState(false);
+    const [uploadCodeSignIn, setUploadCodeSignIn] = useState(false);
     const {
         generate,
         setGenerateCode,
         setCode,
         setDrawer,
-        setFileId,
-        setFolderId
     } = useContext(StoreContext);
     let primaryWorkspace = useRef();
 
 
     const generateCode = () => {
+        // if (localStorage.getItem("isSigIn") === "true") {
         setDrawer(false);
         setIsLoader(true);
         const code = javascriptGenerator.workspaceToCode(
@@ -53,7 +52,13 @@ export const UploadCode = () => {
                 setIsLoader(false);
                 setDrawer(true);
             }
-        )
+        ).catch((err) => {
+            setIsLoader(false);
+            errorToast("Failed to Uplaod")
+        })
+        // } else {
+        //     setUploadCodeSignIn(true);
+        // }
     };
 
     const clickedButton = (e) => {
@@ -84,6 +89,7 @@ export const UploadCode = () => {
         setTimeout(() => {
             setButtonActive(false);
         }, 100);
+
     };
 
     const CompilationLoader = () => {
@@ -119,8 +125,6 @@ export const UploadCode = () => {
     /**
      * save projects on Google Drive
      */
-
-
     return (
         <div
             className={isLoader ? styles.loaderBarDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight) : styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
@@ -131,8 +135,10 @@ export const UploadCode = () => {
             <div className={styles.buttonsDiv}>
                 <UploadCodeButton buttonSelected={buttonSelected} generateCode={generateCode}
                                   buttonActive={buttonActive} clickedButton={clickedButton}/>
+                {uploadCodeSignIn &&
+                    <SignInPopUp setSignInPopUp={setUploadCodeSignIn} handleDriveButton={generateCode}/>}
                 <div className={styles.operationsDiv}>
-                    <UploadInDrive/>
+                    <UploadInDrive setSignInPopUp={setSignInPopUp} signInPopUp={signInPopUp}/>
                     <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
                               buttonActive={buttonActive}/>
                     <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
@@ -193,32 +199,40 @@ function UndoRedo(params) {
     )
 }
 
-function UploadInDrive() {
+function UploadInDrive(params) {
+    const {setSignInPopUp, signInPopUp} = params
     const [isDriveLoader, setIsDriveLoader] = useState(false);
     const [showTick, setShowTick] = useState(false);
 
+
     const handleDriveButton = () => {
-        setIsDriveLoader(true);
-        const data = {
-            projectName: getCurrentProject().projectName,
-            xmlValue: getCurrentProject().xmlValue,
-            time: getCurrentProject().time,
-            id: getCurrentProject().id,
-            fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
-            createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
-        }
-        //upload on google drive
-        uploadToGoogleDrive(data, "xml")
-            .then(() => {
+        // if (localStorage.getItem("isSigIn") === "true") {
+            setIsDriveLoader(true);
+            const data = {
+                projectName: getCurrentProject().projectName,
+                xmlValue: getCurrentProject().xmlValue,
+                time: getCurrentProject().time,
+                id: getCurrentProject().id,
+                fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
+                createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
+            }
+            //upload on google drive
+            uploadToGoogleDrive(data, "xml")
+                .then(() => {
+                        setIsDriveLoader(false);
+                        setTimeout(() => {
+                            setShowTick(true);
+                        }, 1000);
+                    }
+                )
+                .catch((err) => {
                     setIsDriveLoader(false);
-                    setTimeout(() => {
-                        setShowTick(true);
-                    }, 1000);
-                }
-            )
-            .catch((err) => {
-                console.log(err)
-            })
+                    errorToast("Failed to Uplaod");
+                    console.log(err)
+                })
+        // } else {
+        //     setSignInPopUp(true);
+        // }
 
     }
     useEffect(() => {
@@ -262,6 +276,7 @@ function UploadInDrive() {
 
     return (
         <>
+            {signInPopUp && <SignInPopUp setSignInPopUp={setSignInPopUp} handleDriveButton={handleDriveButton}/>}
             <div onClick={() => {
                 handleDriveButton()
             }} className={styles.iconMargin} style={{display: "flex", alignItems: "center"}}>
@@ -327,3 +342,33 @@ function ZoomInOut(params) {
     )
 }
 
+
+export function SignInPopUp(params) {
+    const {setSignInPopUp, handleDriveButton} = params
+    const {setUser} = useContext(StoreContext);
+
+    const handleSignIn = () => {
+        console.log("signInPop")
+        googleSigIn().then(response => {
+            setUser({
+                photoURL: response?.user.photoURL,
+                displayName: response?.user.displayName,
+                email: response?.user.email
+            });
+            setSignInPopUp(false);
+            handleDriveButton();
+        }).catch((error) => {
+            console.log("signIn error: ", error)
+        });
+    }
+    return (
+        <SignInModal
+            headerText={"Please SignIn"}
+            containText={"To upload code you have to first signIn."}
+            buttonText={"SignIn"}
+            handleButtonClick={handleSignIn}
+            handleClose={() => setSignInPopUp(false)}
+
+        />
+    )
+}
