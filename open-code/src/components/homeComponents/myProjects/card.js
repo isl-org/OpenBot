@@ -4,17 +4,14 @@ import {Images} from "../../../utils/images";
 import {ThemeContext} from "../../../App";
 import BlackText from "../../fonts/blackText";
 import WhiteText from "../../fonts/whiteText";
-import {doc, getDoc} from "firebase/firestore";
-import {auth, db} from "../../../services/firebase";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
 import {getAllLocalProjects, getDriveProjects} from "../../../services/workspace";
 import {localStorageKeys} from "../../../utils/constants";
-import {getSelectedProjectFromGoogleDrive} from "../../../services/googleDrive";
 
 function Card(props) {
     const {theme} = useContext(ThemeContext);
-    const {setCurrentProjectXml, setProjectName, setCurrentProjectId, setFileId,setDrawer} = useContext(StoreContext);
+    const {setCurrentProjectXml, setProjectName, setCurrentProjectId, setFileId, setDrawer} = useContext(StoreContext);
     let navigate = useNavigate();
     const openExistingProject = () => {
         navigate(`playground`);

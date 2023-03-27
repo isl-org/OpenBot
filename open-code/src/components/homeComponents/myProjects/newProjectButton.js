@@ -128,6 +128,6 @@ function handleUniqueName(projectsArray, updatedProjectName, projectName) {
         }
 
     } else {
-       return projectName;
+        return projectName;
     }
 }

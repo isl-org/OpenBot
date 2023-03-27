@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import {ThemeContext} from "../../App"
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import styles from "./navbar.module.css";
 import {Images} from "../../utils/images";
 import {StoreContext} from "../../context/context";

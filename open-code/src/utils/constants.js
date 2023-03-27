@@ -63,8 +63,8 @@ export const Constants = {
     FolderName: "openCode-openBot",
     baseUrl: "https://www.googleapis.com/drive/v3",
     endCode: "\nstart();\n" + "forever();\n",
-    js:"js",
-    xml:"xml"
+    js: "js",
+    xml: "xml"
 }
 
 export const PathName = {

@@ -28,6 +28,7 @@ export const UploadCode = () => {
     const {theme} = useContext(ThemeContext);
     const [signInPopUp, setSignInPopUp] = useState(false);
     const [uploadCodeSignIn, setUploadCodeSignIn] = useState(false);
+
     const {
         generate,
         setGenerateCode,

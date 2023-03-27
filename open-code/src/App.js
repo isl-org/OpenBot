@@ -2,13 +2,12 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useEffect, useState} from "react";
-import {Constants, errorToast, localStorageKeys, Themes} from "./utils/constants";
+import {Constants, errorToast,Themes} from "./utils/constants";
 import {useLocation} from "react-router-dom";
 import styles from "./components/homeComponents/carousel/carousel.module.css";
 import {Images} from "./utils/images";
 import {auth, googleSignOut} from "./services/firebase";
 import {ToastContainer} from "react-toastify";
-
 export const ThemeContext = createContext(null);
 
 /**
