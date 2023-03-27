@@ -31,24 +31,29 @@
 //------------------------------------------------------//
 // DEFINITIONS - DO NOT CHANGE!
 //------------------------------------------------------//
-//Select Arduino Nano as board!
+
+//MCUs
+#define NANO 328 //Atmega328p
+#define ESP32 32 //ESP32
+
+//Robot bodies with Atmega328p as MCU --> Select Arduino Nano as board
 #define DIY 0        // DIY without PCB
 #define PCB_V1 1     // DIY with PCB V1
 #define PCB_V2 2     // DIY with PCB V2
 #define RTR_TT 3     // Ready-to-Run with TT-motors
 #define RC_CAR 4     // RC truck prototypes
 #define LITE 5       // Smaller DIY version for education
-//Select ESP32 Dev Module as board!
-#define RTR_520 6    // Ready-to-Run with 520-motors --> 
-#define MTV 7        // Multi Terrain Vehicle --> select ESP32 Dev Module as board!
-#define DIY_ESP32 8  // DIY without PCB  --> select ESP32 Dev Module as board!
+//Robot bodies with ESP32 as MCU --> Select ESP32 Dev Module as board
+#define RTR_520 6    // Ready-to-Run with 520-motors
+#define MTV 7        // Multi Terrain Vehicle
+#define DIY_ESP32 8  // DIY without PCB
 
 //------------------------------------------------------//
 // SETUP - Choose your body
 //------------------------------------------------------//
 
-// Setup the OpenBot version (DIY,PCB_V1,PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520, DIY_ESP32)
-#define OPENBOT RTR_520
+// Setup the OpenBot version (DIY, PCB_V1, PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520, DIY_ESP32)
+#define OPENBOT RTR_TT
 
 //------------------------------------------------------//
 // SETTINGS - Global settings
@@ -105,6 +110,7 @@ boolean coast_mode = 1;
 //-------------------------DIY--------------------------//
 #if (OPENBOT == DIY)
 const String robot_type = "DIY";
+#define MCU NANO
 #define HAS_VOLTAGE_DIVIDER 0
 const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
 const float VOLTAGE_MIN = 2.5f;
@@ -131,6 +137,7 @@ const int PIN_LED_RI = 7;
 //-------------------------PCB_V1-----------------------//
 #elif (OPENBOT == PCB_V1)
 const String robot_type = "PCB_V1";
+#define MCU NANO
 #define HAS_VOLTAGE_DIVIDER 1
 const float VOLTAGE_DIVIDER_FACTOR = (100 + 33) / 33;
 const float VOLTAGE_MIN = 2.5f;
@@ -157,6 +164,7 @@ const int PIN_LED_RI = 8;
 //-------------------------PCB_V2-----------------------//
 #elif (OPENBOT == PCB_V2)
 const String robot_type = "PCB_V2";
+#define MCU NANO
 #define HAS_VOLTAGE_DIVIDER 1
 const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
 const float VOLTAGE_MIN = 2.5f;
@@ -183,6 +191,7 @@ const int PIN_LED_RI = 8;
 //-------------------------RTR_TT-----------------------//
 #elif (OPENBOT == RTR_TT)
 const String robot_type = "RTR_TT";
+#define MCU NANO
 #define HAS_VOLTAGE_DIVIDER 1
 const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
 const float VOLTAGE_MIN = 2.5f;
@@ -232,10 +241,11 @@ const int BUMPER_RB = 561;
 
 //-------------------------RC_CAR-----------------------//
 #elif (OPENBOT == RC_CAR)
+const String robot_type = "RC_CAR";
+#define MCU NANO
 #include <Servo.h>
 Servo ESC;
 Servo SERVO;
-const String robot_type = "RC_CAR";
 #define HAS_VOLTAGE_DIVIDER 0
 const float VOLTAGE_DIVIDER_FACTOR = (20 + 10) / 10;
 const float VOLTAGE_MIN = 0.0f;
@@ -256,6 +266,7 @@ const int PIN_LED_RI = 8;
 //-------------------------LITE-------------------------//
 #elif (OPENBOT == LITE)
 const String robot_type = "LITE";
+#define MCU NANO
 const float VOLTAGE_MIN = 2.5f;
 const float VOLTAGE_LOW = 4.5f;
 const float VOLTAGE_MAX = 5.0f;
@@ -269,6 +280,8 @@ const int PIN_LED_RI = 7;
 
 //-------------------------RTR_520----------------------//
 #elif (OPENBOT == RTR_520)
+const String robot_type = "RTR_520";
+#define MCU ESP32
 #include <esp_wifi.h>
 #define HAS_BLUETOOTH 1
 #define analogWrite ledcWrite
@@ -279,7 +292,6 @@ const int PIN_LED_RI = 7;
 #define PIN_PWM_L2 CH_PWM_L2
 #define PIN_PWM_R1 CH_PWM_R1
 #define PIN_PWM_R2 CH_PWM_R2
-const String robot_type = "RTR_520";
 #define HAS_VOLTAGE_DIVIDER 1
 const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
 const float VOLTAGE_MIN = 6.0f;
@@ -344,13 +356,14 @@ const int BUMPER_RB = 2000;
 
 //---------------------------MTV------------------------//
 #elif (OPENBOT == MTV)
+const String robot_type = "MTV";
+#define MCU ESP32
 #include <esp_wifi.h>
 #define HAS_BLUETOOTH 1
 #define analogWrite ledcWrite
 #define attachPinChangeInterrupt attachInterrupt
 #define detachPinChangeInterrupt detachInterrupt
 #define digitalPinToPinChangeInterrupt digitalPinToInterrupt
-const String robot_type = "MTV";
 #define HAS_VOLTAGE_DIVIDER 0
 const float VOLTAGE_MIN = 17.0f;
 const float VOLTAGE_LOW = 20.0f;
@@ -386,7 +399,8 @@ const int RHS_PWM_OUT = 1;
 
 //-------------------------DIY_ESP32----------------------//
 #elif (OPENBOT == DIY_ESP32)
-
+const String robot_type = "DIY_ESP32";
+#define MCU ESP32
 #include <esp_wifi.h>
 #define HAS_BLUETOOTH 1
 #define analogWrite ledcWrite
@@ -397,7 +411,6 @@ const int RHS_PWM_OUT = 1;
 #define PIN_PWM_L2 CH_PWM_L2
 #define PIN_PWM_R1 CH_PWM_R1
 #define PIN_PWM_R2 CH_PWM_R2
-const String robot_type = "DIY_ESP32";
 #define HAS_VOLTAGE_DIVIDER 1
 const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
 const float VOLTAGE_MIN = 6.0f;
@@ -415,10 +428,10 @@ const int CH_PWM_L1 = 0;
 const int CH_PWM_L2 = 1;
 const int CH_PWM_R1 = 2;
 const int CH_PWM_R2 = 3;
-const int PIN_PWM_LF1 = 13;
-const int PIN_PWM_LF2 = 12;
-const int PIN_PWM_RF1 = 27;
-const int PIN_PWM_RF2 = 33;
+const int PIN_PWM_L1 = 13;
+const int PIN_PWM_L2 = 12;
+const int PIN_PWM_R1 = 27;
+const int PIN_PWM_R2 = 33;
 const int PIN_SPEED_LF = 5;
 const int PIN_SPEED_RF = 18;
 const int PIN_VIN = 39;
@@ -522,7 +535,7 @@ int ctrl_min = (int)255.0 * VOLTAGE_MIN / VOLTAGE_MAX;
 #endif
 
 #if (HAS_SONAR)
-#if ((OPENBOT != RTR_520) and (OPENBOT != MTV) and (OPENBOT != DIY_ESP32))
+#if (MCU == NANO)
 #include "PinChangeInterrupt.h"
 #endif
 // Sonar sensor
@@ -592,11 +605,9 @@ const unsigned int TICKS_PER_REV = 209;
 // 178rpm motor - reduction ratio 56, ticks per motor rotation 11
 // One revolution = 616 ticks
 const unsigned int TICKS_PER_REV = 616;
-#elif (OPENBOT == DIY_ESP32)
-//Speed Sensor
-const unsigned int TICKS_PER_REV = 20;
 #else
-#include "PinChangeInterrupt.h"
+// Speed Sensor
+// Optical encoder - disk with 20 holes
 const unsigned int TICKS_PER_REV = 20;
 #endif
 // Speed sensor
@@ -610,7 +621,7 @@ volatile int counter_lm = 0;
 volatile int counter_rm = 0;
 float rpm_left = 0;
 float rpm_right = 0;
-unsigned long wheel_interval = 1000;  // Inverval for sending wheel odometry
+unsigned long wheel_interval = 1000;  // Interval for sending wheel odometry
 unsigned long wheel_time = 0;
 #endif
 
@@ -666,14 +677,15 @@ void setup() {
   // Attach the ESC and SERVO
   ESC.attach(PIN_PWM_T, 1000, 2000);    // (pin, min pulse width, max pulse width in microseconds)
   SERVO.attach(PIN_PWM_S, 1000, 2000);  // (pin, min pulse width, max pulse width in microseconds)
-#elif ((OPENBOT != RTR_520) and (OPENBOT != MTV) and (OPENBOT != DIY_ESP32))
+#endif
+#if (MCU == NANO)
   pinMode(PIN_PWM_L1, OUTPUT);
   pinMode(PIN_PWM_L2, OUTPUT);
   pinMode(PIN_PWM_R1, OUTPUT);
   pinMode(PIN_PWM_R2, OUTPUT);
 #endif
   // Initialize with the I2C addr 0x3C
-#if HAS_OLED
+#if (HAS_OLED)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 #endif
 #if (HAS_INDICATORS)
@@ -735,9 +747,11 @@ void setup() {
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(PIN_SPEED_RM), update_speed_rm, RISING);
 #endif
 
-#if (OPENBOT == RTR_520)
+#if (MCU == ESP32)
   esp_wifi_deinit();
+#endif
 
+#if (OPENBOT == RTR_520)
   // PWMs
   // Configure PWM functionalitites
   ledcSetup(CH_PWM_L1, FREQ, RES);
@@ -772,8 +786,6 @@ void setup() {
 #endif
 
 #if (OPENBOT == MTV)
-  esp_wifi_deinit();
-
   // PWMs
   // PWM signal configuration using the ESP32 API
   ledcSetup(LHS_PWM_OUT, FREQ, RES);
@@ -790,8 +802,6 @@ void setup() {
 #endif
 
 #if (OPENBOT == DIY_ESP32)
-  esp_wifi_deinit();
-
   // PWMs
   // Configure PWM functionalitites
   ledcSetup(CH_PWM_L1, FREQ, RES);
@@ -800,11 +810,12 @@ void setup() {
   ledcSetup(CH_PWM_R2, FREQ, RES);
 
   // Attach the channel to the GPIO to be controlled
-  ledcAttachPin(PIN_PWM_LF1, CH_PWM_L1);
-  ledcAttachPin(PIN_PWM_LF2, CH_PWM_L2);
-  ledcAttachPin(PIN_PWM_RF1, CH_PWM_R1);
-  ledcAttachPin(PIN_PWM_RF2, CH_PWM_R2);
+  ledcAttachPin(PIN_PWM_L1, CH_PWM_L1);
+  ledcAttachPin(PIN_PWM_L2, CH_PWM_L2);
+  ledcAttachPin(PIN_PWM_R1, CH_PWM_R1);
+  ledcAttachPin(PIN_PWM_R2, CH_PWM_R2);
 #endif
+
   Serial.begin(115200, SERIAL_8N1);
   // SERIAL_8E1 - 8 data bits, even parity, 1 stop bit
   // SERIAL_8O1 - 8 data bits, odd parity, 1 stop bit
@@ -1257,9 +1268,7 @@ void reset_bumper() {
 }
 
 void send_bumper_reading(char bumper_id[]) {
-  Serial.print("b");
-  Serial.println(bumper_id);
-  sendDataToBLE("b" + String(bumper_id));
+  sendData("b" + String(bumper_id));
 }
 #endif
 
@@ -1409,8 +1418,7 @@ void process_feature_msg() {
 #if HAS_LEDS_STATUS
   msg += "ls:";
 #endif
-  Serial.println(msg);
-  sendDataToBLE(msg);
+  sendData(msg);
 }
 
 void on_serial_rx() {
@@ -1562,9 +1570,7 @@ void display_vehicle_data() {
 #if (HAS_VOLTAGE_DIVIDER)
 
 void send_voltage_reading() {
-  Serial.print("v");
-  Serial.println(String(get_voltage(), 2));
-  sendDataToBLE("v" + String(get_voltage(), 2));
+  sendData("v" + String(get_voltage(), 2));
 }
 
 #endif
@@ -1581,24 +1587,13 @@ void send_wheel_reading(long duration) {
   counter_rb = 0;
   counter_lm = 0;
   counter_rm = 0;
-  Serial.print("w");
 #if (HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_BACK and HAS_SPEED_SENSORS_MIDDLE)
-  Serial.print(rpm_left / 3, 0);
-  Serial.print(",");
-  Serial.print(rpm_right / 3, 0);
-  sendDataToBLE("w" + String(rpm_left / 3) + "," + String(rpm_right / 3));
+  sendData("w" + String(rpm_left / 3) + "," + String(rpm_right / 3));
 #elif ((HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_BACK) or (HAS_SPEED_SENSORS_FRONT and HAS_SPEED_SENSORS_MIDDLE) or (HAS_SPEED_SENSORS_MIDDLE and HAS_SPEED_SENSORS_BACK))
-  Serial.print(rpm_left / 2, 0);
-  Serial.print(",");
-  Serial.print(rpm_right / 2, 0);
-  sendDataToBLE("w" + String(rpm_left / 2) + "," + String(rpm_right / 2));
+  sendData("w" + String(rpm_left / 2) + "," + String(rpm_right / 2));
 #elif (HAS_SPEED_SENSORS_FRONT or HAS_SPEED_SENSORS_BACK or HAS_SPEED_SENSORS_MIDDLE)
-  Serial.print(rpm_left, 0);
-  Serial.print(",");
-  Serial.print(rpm_right, 0);
-  sendDataToBLE("w" + String(rpm_left) + "," + String(rpm_right));
+  sendData("w" + String(rpm_left) + "," + String(rpm_right));
 #endif
-  Serial.println();
 }
 
 #endif
@@ -1681,9 +1676,7 @@ int get_median(int a[], int sz) {
 #if HAS_SONAR
 
 void send_sonar_reading() {
-  Serial.print("s");
-  Serial.println(distance_estimate);
-  sendDataToBLE("s" + String(distance_estimate));
+  sendData("s" + String(distance_estimate));
 }
 
 // Send pulse by toggling trigger pin
@@ -1713,6 +1706,22 @@ void update_distance_estimate() {
 }
 
 #endif
+
+
+void sendData(String data) {
+Serial.print(data);
+Serial.println();
+#if (HAS_BLUETOOTH)
+  if (deviceConnected) {
+    char outData[50] = "";
+    for (int i = 0; i < dataToSend.length(); i++) {
+      outData[i] = dataToSend[i];
+    }
+    pTxCharacteristic->setValue(outData);
+    pTxCharacteristic->notify();
+  }
+#endif
+}
 
 //------------------------------------------------------//
 // INTERRUPT SERVICE ROUTINES (ISR)
@@ -1795,16 +1804,3 @@ void update_speed_rm() {
   }
 }
 #endif
-
-void sendDataToBLE(String dataToSend) {
-#if (HAS_BLUETOOTH)
-  if (deviceConnected) {
-    char outData[50] = "";
-    for (int i = 0; i < dataToSend.length(); i++) {
-      outData[i] = dataToSend[i];
-    }
-    pTxCharacteristic->setValue(outData);
-    pTxCharacteristic->notify();
-  }
-#endif
-}
