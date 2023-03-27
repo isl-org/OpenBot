@@ -172,7 +172,7 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
     handlePhoneControllerEvents();
   }
 
-  private void processKeyEvent(KeyEvent keyCode) {
+  protected void processKeyEvent(KeyEvent keyCode) {
     if (Enums.ControlMode.getByID(preferencesManager.getControlMode())
         == Enums.ControlMode.GAMEPAD) {
       switch (keyCode.getKeyCode()) {
@@ -209,6 +209,7 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
           break;
         case KeyEvent.KEYCODE_BUTTON_THUMBR:
           processControllerKeyData(Constants.CMD_SPEED_UP);
+
           audioPlayer.playSpeedMode(
               voice, Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
           break;
