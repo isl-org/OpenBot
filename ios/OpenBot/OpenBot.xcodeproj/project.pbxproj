@@ -85,6 +85,7 @@
 		727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */; };
 		727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3189735FC4F7A4E4A6C1 /* Browser.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
+		727D3D05C58FC97350145FFD /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D388488E1FFD98E542061 /* Authentication.swift */; };
 		727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B02AB471D9F31B0747 /* Font.swift */; };
 		727D3D7ED38D147ECD48C9BA /* SignalingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D37586F16DE497CEA62CE /* SignalingMessage.swift */; };
 		727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */; };
@@ -195,6 +196,7 @@
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
+		727D388488E1FFD98E542061 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
 		727D39B02AB471D9F31B0747 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		727D3A51A7A6155C22E62412 /* GifLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifLoader.swift; sourceTree = "<group>"; };
@@ -342,6 +344,7 @@
 				4FEF47EAC21A4C2BDD11B72B /* README.md */,
 				4FEF4FB9DCF0D8F0BFCB835B /* tflite */,
 				4FEF421BF49FEE835C6DC5CB /* config.json */,
+				727D3BBE14B8FA7877902A13 /* Authentication */,
 			);
 			path = OpenBot;
 			sourceTree = "<group>";
@@ -574,6 +577,14 @@
 				66AC720229B885410022108A /* FreeRoamController.swift */,
 			);
 			path = FreeRoam;
+			sourceTree = "<group>";
+		};
+		727D3BBE14B8FA7877902A13 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				727D388488E1FFD98E542061 /* Authentication.swift */,
+			);
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 		BF9BAED628AF94A800EF3E48 /* Frameworks */ = {
@@ -995,6 +1006,7 @@
 				66AC721429B885410022108A /* ObjectTrackingFragment.swift in Sources */,
 				4FEF43D0E4F94DBBD4DB0614 /* Date.swift in Sources */,
 				727D341D19B074C289BA78C2 /* OpenCodeFragment.swift in Sources */,
+				727D3D05C58FC97350145FFD /* Authentication.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
