@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -56,7 +57,7 @@ public class BarCodeScannerFragment extends Fragment {
                 .build();
 
         cameraSource = new CameraSource.Builder(getContext(), barcodeDetector)
-                .setRequestedPreviewSize(1920, 1080)
+                .setRequestedPreviewSize(2340, 1080)
                 .setAutoFocusEnabled(true)
                 .build();
 
@@ -96,7 +97,7 @@ public class BarCodeScannerFragment extends Fragment {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if (barcodes.size() != 0) {
                     barCodeValue = barcodes.valueAt(0).displayValue;
-                    requireActivity().getOnBackPressedDispatcher().onBackPressed();
+                    Navigation.findNavController(requireView()).popBackStack();
                 }
             }
         });
