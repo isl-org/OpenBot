@@ -60,6 +60,7 @@ public class ProjectsFragment extends ControlsFragment {
     private GoogleSignInClient mGoogleSignInClient;
     private Button signInButton;
     private Button signOutButton;
+    private Button runOpenBot;
 
     @Override
     public View onCreateView(
@@ -75,6 +76,7 @@ public class ProjectsFragment extends ControlsFragment {
         super.onViewCreated(view, savedInstanceState);
         signInButton = getView().findViewById(R.id.sign_in_button);
         signOutButton = getView().findViewById(R.id.sign_out_button);
+        runOpenBot = getView().findViewById(R.id.openbot_run_command);
         barCodeScannerFragment = new BarCodeScannerFragment();
         myWebView = new WebView(getContext());
         myWebView.getSettings().setJavaScriptEnabled(true);
@@ -91,6 +93,15 @@ public class ProjectsFragment extends ControlsFragment {
             @Override
             public void onClick(View v) {
                 signOut();
+            }
+        });
+
+        runOpenBot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(barCodeScannerFragment.barCodeValue != null){
+                    callToBotFunction(barCodeScannerFragment.barCodeValue);
+                }
             }
         });
 
@@ -284,8 +295,11 @@ public class ProjectsFragment extends ControlsFragment {
     public void onResume() {
         super.onResume();
         if (barCodeScannerFragment.barCodeValue != null) {
-            callToBotFunction(barCodeScannerFragment.barCodeValue);
-            barCodeScannerFragment.barCodeValue = null;
+            runOpenBot.setVisibility(View.VISIBLE);
+//            callToBotFunction(barCodeScannerFragment.barCodeValue);
+//            barCodeScannerFragment.barCodeValue = null;
+        } else {
+            runOpenBot.setVisibility(View.GONE);
         }
     }
 
