@@ -15,25 +15,24 @@
         android:src="@drawable/ic_qr_code_scanner"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <Button
+
+    <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="Google SignIn"
-        android:background="@color/openBotBlue"
-        android:textColor="#ffffff"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/sign_out_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/red"
         android:padding="10dp"
         android:text="Google SignOut"
-        android:background="@color/red"
         android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,13 +43,25 @@
         android:id="@+id/openbot_run_command"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/green"
         android:padding="10dp"
         android:text="Run"
-        android:background="@color/green"
         android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="@id/sign_in_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unknown"
+        android:textColor="@color/semi_transparent"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/openbot_run_command" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -58,9 +59,10 @@ public class ProjectsFragment extends ControlsFragment {
     private BarCodeScannerFragment barCodeScannerFragment;
     private WebView myWebView;
     private GoogleSignInClient mGoogleSignInClient;
-    private Button signInButton;
+    private SignInButton signInButton;
     private Button signOutButton;
     private Button runOpenBot;
+    private TextView textView;
 
     @Override
     public View onCreateView(
@@ -76,6 +78,7 @@ public class ProjectsFragment extends ControlsFragment {
         super.onViewCreated(view, savedInstanceState);
         signInButton = getView().findViewById(R.id.sign_in_button);
         signOutButton = getView().findViewById(R.id.sign_out_button);
+        textView = getView().findViewById(R.id.user_name);
         runOpenBot = getView().findViewById(R.id.openbot_run_command);
         barCodeScannerFragment = new BarCodeScannerFragment();
         myWebView = new WebView(getContext());
@@ -117,11 +120,13 @@ public class ProjectsFragment extends ControlsFragment {
         // Check for existing Google Sign In account, if the user is already signed in
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
         if (account != null) {
-            Timber.tag("firebase").i("Name = %s", account.getDisplayName());
-            Timber.tag("firebase").i("Token = %s", account.getIdToken());
-        } else {
+            textView.setText(account.getDisplayName());
+            signInButton.setVisibility(View.GONE);
+            signOutButton.setVisibility(View.VISIBLE);
+        }else {
             signInButton.setVisibility(View.VISIBLE);
             signOutButton.setVisibility(View.GONE);
+            textView.setText("Unknown");
         }
     }
 
@@ -257,6 +262,8 @@ public class ProjectsFragment extends ControlsFragment {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             signInButton.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
+            TextView textView = getView().findViewById(R.id.user_name);
+            textView.setText(account.getDisplayName());
 
             // Signed in successfully, show authenticated UI.
             Timber.tag("firebase").i("signInResult%s", account);
@@ -274,6 +281,7 @@ public class ProjectsFragment extends ControlsFragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         signInButton.setVisibility(View.VISIBLE);
                         signOutButton.setVisibility(View.GONE);
+                        textView.setText("Unknown");
                         Timber.tag("firebase").i("sign-out%s", task.getResult());
                     }
                 });
