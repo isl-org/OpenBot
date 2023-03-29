@@ -97,7 +97,7 @@
   <string name="tips_connect_fail">connect fail</string>
   <string name="tips_connection_disconnected">connection has disconnected</string>
   <string name="tips_write_operation">please enter a hex string</string>
-  <string-array name="servers">
+    <string-array name="servers">
     <item>No server</item>
   </string-array>
   <string-array name="models">
@@ -158,4 +158,7 @@
     <item>Normal</item>
     <item>Fast</item>
   </string-array>
+  <string name="profile">Profile</string>
+  <string name="projects">Projects</string>
+  <string name="home">Home</string>
 </resources>
