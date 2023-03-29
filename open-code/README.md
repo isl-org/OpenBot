@@ -13,10 +13,25 @@ You can run this application directly from the [Link](http://openbot-playground.
 or you can run it locally via creating a local copy of the project.
 then navigate into the `open-code` folder
 
+## Environment Variables
+
+create a `.env` file inside `open-code` folder.
+To run this project, you will need to add the following environment variables to your .env file.
+
+```
+REACT_APP_FIREBASE_API_KEY=AIzaSyCITlkh63TnSnJQBlzqbJwwtBDr_w3e1Pg
+REACT_APP_AUTH_DOMAIN=opencode-openbot.firebaseapp.com
+REACT_APP_PROJECT_ID=opencode-openbot
+REACT_APP_STORAGE_BUCKET=opencode-openbot.appspot.com
+REACT_APP_MESSAGING_SENDER_ID=955078484078
+REACT_APP_APP_ID=1:955078484078:web:64774c120f9d3a0f65867f
+REACT_APP_MEASUREMENT_ID=G-SZJL3F5QXF 
+```
+
 run
 
 ```bash
-    npm install
+npm install
 ```
 
 if you're using npm or
