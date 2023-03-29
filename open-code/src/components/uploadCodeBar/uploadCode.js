@@ -40,23 +40,24 @@ export const UploadCode = () => {
 
     const generateCode = () => {
         if (localStorage.getItem("isSigIn") === "true") {
-        setDrawer(false);
-        setIsLoader(true);
-        const code = javascriptGenerator.workspaceToCode(
-            primaryWorkspace.current
-        );
-        setGenerateCode(!generate);
-        let updatedCode = code + Constants.endCode;
-        console.log(updatedCode);
-        uploadToGoogleDrive(updatedCode, "js").then((res) => {
-                setCode(res);
+            setDrawer(false);
+            setIsLoader(true);
+            const code = javascriptGenerator.workspaceToCode(
+                primaryWorkspace.current
+            );
+            setGenerateCode(!generate);
+            let updatedCode = code + Constants.endCode;
+            console.log(updatedCode);
+            uploadToGoogleDrive(updatedCode, "js").then((res) => {
+                    console.log("res:::", res)
+                    setCode(res);
+                    setIsLoader(false);
+                    setDrawer(true);
+                }
+            ).catch((err) => {
                 setIsLoader(false);
-                setDrawer(true);
-            }
-        ).catch((err) => {
-            setIsLoader(false);
-            errorToast("Failed to Uplaod")
-        })
+                errorToast("Failed to Uplaod")
+            })
         } else {
             setUploadCodeSignIn(true);
         }
@@ -205,7 +206,6 @@ function UploadInDrive(params) {
     const [isDriveLoader, setIsDriveLoader] = useState(false);
     const [showTick, setShowTick] = useState(false);
 
-
     const handleDriveButton = () => {
         if (localStorage.getItem("isSigIn") === "true") {
             setIsDriveLoader(true);
@@ -219,16 +219,18 @@ function UploadInDrive(params) {
             }
             //upload on google drive
             uploadToGoogleDrive(data, "xml")
-                .then(() => {
+                .then((res) => {
+                    console.log("res:::",res)
                         setIsDriveLoader(false);
-                        setTimeout(() => {
+                        res && setTimeout(() => {
+                            console.log("tick:::",showTick)
                             setShowTick(true);
                         }, 1000);
                     }
                 )
                 .catch((err) => {
                     setIsDriveLoader(false);
-                    errorToast("Failed to Uplaod");
+                    errorToast("Failed to upload");
                     console.log(err)
                 })
         } else {
@@ -241,7 +243,6 @@ function UploadInDrive(params) {
             const timeout = setTimeout(() => {
                 setShowTick(false);
             }, 1000);
-
             return () => clearTimeout(timeout);
         }
     }, [showTick]);

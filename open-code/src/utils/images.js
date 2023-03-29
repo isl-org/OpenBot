@@ -22,6 +22,8 @@ import Carousal2Dark from "../../src/assets/images/qr_dark.mp4";
 import Carousal3 from "../../src/assets/images/mobile_white.mp4";
 import Carousal3Dark from "../../src/assets/images/mobile_dark.mp4";
 import cloud from "../assets/images/icon/cloud.png"
+import lightThemeIcon from "../assets/images/icon/light-theme-icon.png"
+import darkThemeIcon from "../assets/images/icon/whiteMode/white-mode-icon.png"
 
 export const Images = {
     helpIcon: helpIcon,
@@ -48,4 +50,6 @@ export const Images = {
     Carousal3: Carousal3,
     Carousal3Dark: Carousal3Dark,
     cloud: cloud,
+    lightThemeIcon:lightThemeIcon,
+    darkThemeIcon:darkThemeIcon
 }
