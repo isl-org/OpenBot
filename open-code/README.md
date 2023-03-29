@@ -94,7 +94,7 @@ Edit profile opens a popup. Updation of profile image, display name can be done 
 #### Upload Code
 
 The upload code button generates the QR code of blocks inside the workspace. A side window will appear after the successful generation of the QR code. It also uploads a javascript file of the Project on google drive. The file contains the javascript code of generated blocks.
-The generated QR have a public shareable link to a javascript file on the drive and it can be scanned by OpenBot IOS/Android app for and run the car.
+The generated QR have a public shareable link to a javascript file on the drive, annd it can be scanned by OpenBot IOS/Android app for and run the car.
 <p align="left">
 <img style="padding-right: 2%;" src="../docs/images/playground_qrcode.png" alt="Plaground Sign In" width="25%"/>
 </p>
