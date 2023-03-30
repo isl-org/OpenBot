@@ -11,6 +11,7 @@ import {ToastContainer} from "react-toastify";
 
 export const ThemeContext = createContext(null);
 
+
 /**
  * Main function where the application Code is started
  * @returns {JSX.Element}

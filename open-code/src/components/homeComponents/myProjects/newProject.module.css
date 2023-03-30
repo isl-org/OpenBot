@@ -232,6 +232,13 @@
     display: flex;
     align-items: center;
 }
+.optionExtraStyle{
+    height: 125px;
+    width: 260px;
+    position: sticky;
+    top: 65px;
+    left: 39vw;
+}
 
 .Card {
     width: 260px;
@@ -240,6 +247,11 @@
     border-radius: 12px;
     cursor: pointer;
     margin-right: 42px;
+}
+.rowDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .lightBoxShadow {
@@ -255,6 +267,7 @@
     margin-left: 31px;
     margin-top: 33px;
     align-items: center;
+    /* Vector */
 }
 
 .CardHeading {
@@ -263,10 +276,12 @@
     font-size: 25px;
 }
 
+
 .PencilIcon {
+    /*background-color: red;*/
     width: 18px;
     height: 18px;
-    margin-left: 14px;
+    margin: 40px 20px 0 0px;
 }
 
 .Date {

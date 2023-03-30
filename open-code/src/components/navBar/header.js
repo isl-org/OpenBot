@@ -20,13 +20,14 @@ import {renameProject} from "../../services/workspace";
  */
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext);
-    const {projectName, setProjectName,user,setUser} = useContext(StoreContext);
+    const {projectName, setProjectName, user, setUser} = useContext(StoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [deleteProject, setDeleteProject] = useState(false);
     const [isHelpCenterModal, setIsHelpCenterModal] = useState(false)
     const [isProfileModal, setIsProfileModal] = useState(false);
     const [isEditProfileModal, setIsEditProfileModal] = useState(false);
     const [isLogoutModal, setIsLogoutModal] = useState(false);
+    const [open, setOpen] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
@@ -39,9 +40,9 @@ export function Header() {
         })
     }, [isEditProfileModal])
 
-    //on click event on arrow when clicked set project name.
-    const handleClick = async (event) => {
-        setAnchorEl(anchorEl ? null : event.currentTarget)
+    const handleClick = (event) => {
+        setOpen(!open);
+        setAnchorEl(anchorEl ? null : event.currentTarget);
     };
 
     return (
@@ -55,6 +56,7 @@ export function Header() {
 
                 {/*project name on center when screen is playground*/}
                 <ProjectNameSection anchorEl={anchorEl} setProjectName={setProjectName}
+                                    setOpen={setOpen} open={open}
                                     handleClick={handleClick} projectName={projectName}
                                     setDeleteProject={setDeleteProject} theme={theme}/>
 
@@ -135,14 +137,14 @@ function RightSection(params) {
  * @constructor
  */
 function ProjectNameSection(params) {
-    const {anchorEl, handleClick, projectName, setDeleteProject, theme, setProjectName} = params
+    const {anchorEl, handleClick, projectName, open, setOpen, setDeleteProject, theme, setProjectName} = params
     const location = useLocation();
     return (
-        location.pathname === PathName.playGround ? !anchorEl ?
-                <ProjectName handleClick={handleClick} projectName={projectName}/>
+        location.pathname === PathName.playGround ? !open ?
+                <ProjectName handleClick={(e) => handleClick(e)} projectName={projectName} />
                 :
-                <ProjectNamePopUp anchorEl={anchorEl} setProjectName={setProjectName}
-                                  handleClick={handleClick} projectName={projectName}
+                <ProjectNamePopUp anchorEl={anchorEl} setOpen={setOpen} setProjectName={setProjectName}
+                                  handleClick={handleClick} projectName={projectName} open={open}
                                   setDeleteProject={setDeleteProject} theme={theme}/>
             : ""
     )

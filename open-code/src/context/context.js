@@ -29,7 +29,7 @@ export default ({children}) => {
     const [fileId, setFileId] = useState(savedFileId);
     const [folderId, setFolderId] = useState(savedFolderId);
     const[user,setUser]=useState();
-    // console.log("fileID::::::::::context :::::::", fileId, getCurrentProject()?.fileId)
+
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,

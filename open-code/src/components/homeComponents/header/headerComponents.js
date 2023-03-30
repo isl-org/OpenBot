@@ -11,8 +11,8 @@ import trash from "../../../assets/images/icon/trash.png";
 import LoaderComponent from "../../loader/loaderComponent";
 import WhiteText from "../../fonts/whiteText";
 import {googleSigIn} from "../../../services/firebase";
-import React from "react";
-import {renameProject} from "../../../services/workspace";
+import React, {useEffect, useRef, useState} from "react";
+
 
 /**
  * Display logo with openCode text (Header's Left side)
@@ -66,53 +66,107 @@ export function ProjectName(params) {
  * @constructor
  */
 export function ProjectNamePopUp(params) {
-    const {anchorEl, setDeleteProject, theme, handleClick, setProjectName, projectName} = params
-    const open = Boolean(anchorEl);
-
+    const {anchorEl, setDeleteProject, theme, handleClick, setProjectName, projectName, setOpen, open} = params
     const id = open ? 'simple-popper' : undefined
+    const [rename, setRename] = useState(false);
+    const [renameProject, setRenameProject] = useState("")
+
+    useEffect(() => {
+        console.log("projecTNAme::", projectName)
+        setRenameProject(projectName)
+    }, [])
+
 
     const handleDelete = () => {
         setDeleteProject(true)
     }
+
 
     return (
         <>
             {/*project name with edit field and arrow*/}
             <div className={styles.playgroundName}>
                 <input type="text" className={styles.Edit}
-                                 id="userEdit"
-                                 onChange={(e) => setProjectName(e.target.value)}
-                                 style={{width: `${projectName?.length}ch`}}
-                                 value={projectName}
-                />
+                       id="userEdit"
+                       onChange={(e) => setRenameProject(e.target.value)}
+                       onClick={(e) => {
+                           e.stopPropagation()
+                           setOpen(false);
+                       }}
+                       onFocus={(e) => e.target.select()}
+                       onBlur={() => setRename(false)
+                       }
+                       onKeyDown={(e) => {
+                           if (e.keyCode === 13) setRename(false)
+                       }}
+                       style={{width: `${renameProject?.length}ch`}}
+                       value={renameProject}
+                /> : <span className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName}</span>}
                 <img src={UpArrow}
                      className={`${styles.infoIcon} ${styles.arrowMargin}`}
-                     onClick={handleClick} alt={"arrow"}/>
+                     onClick={() => setOpen(!open)} alt={"arrow"}/>
             </div>
-
-            {/*pop up of rename and delete option for project name */}
-            <Popper key={id} open={open} anchorEl={anchorEl}>
-                <div
-                    className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel)}>
-                    <div
-                        className={`${styles.item} ${styles.renameDivMargin}  ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
-                        onClick={async ()=> {await renameProject(projectName).then()}}>
-                        <img alt="Icon" className={styles.icon} src={theme === "dark" ? renameIcon : Edit}/>
-                        <div>Rename</div>
-                    </div>
-                    <div
-                        className={`${styles.item} ${styles.deleteDivMargin} ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
-                        onClick={handleDelete}>
-                        <img alt="Icon" className={styles.icon}
-                             src={theme === "dark" ? deleteIcon : trash}/>
-                        <div> Delete File</div>
-                    </div>
-                </div>
-            </Popper>
+            <EditProjectPopUp open={open} anchorEl={anchorEl}
+                              projectName={renameProject}
+                              setOpen={setOpen}
+                              setRename={setRename}
+                              handleDelete={handleDelete}
+                              theme={theme}
+            />
         </>
     )
 }
 
+export function EditProjectPopUp(params) {
+    const {open, anchorEl, setRename, handleDelete, theme, extraStyle, setOpen, projectName} = params
+    const id = open ? 'simple-popper' : undefined
+    const popUpRef = useRef(null);
+    //{/*pop up of rename and delete option for project name */}
+    // useEffect(() => {
+    //     setOpen(open);
+    // }, [open]);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popUpRef.current && !popUpRef.current.contains(event.target)) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [popUpRef]);
+
+    return (
+        <Popper
+            placement="bottom-start"
+            key={id} open={open} anchorEl={anchorEl}>
+            <div
+                ref={popUpRef}
+                className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel) + " " + extraStyle}>
+                <div
+                    className={`${styles.item} ${styles.renameDivMargin}  ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
+                    onClick={async (event) => {
+                        event.stopPropagation();
+                        setRename(true);
+                        // await renameProject(projectName).then()
+                    }}>
+                    <img alt="Icon" className={styles.icon} src={theme === "dark" ? renameIcon : Edit}/>
+                    <div>Rename</div>
+                </div>
+                <div
+                    className={`${styles.item} ${styles.deleteDivMargin} ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
+                    onClick={handleDelete}>
+                    <img alt="Icon" className={styles.icon}
+                         src={theme === "dark" ? deleteIcon : trash}/>
+                    <div> Delete File</div>
+                </div>
+            </div>
+        </Popper>
+
+    )
+}
 
 /**
  * Profile signin option if not signed in or else show profile icon with name
@@ -122,7 +176,6 @@ export function ProjectNamePopUp(params) {
  */
 export function ProfileSignIn(params) {
     const {setIsProfileModal, user, setUser} = params
-
 
     const handleSignIn = () => {
         googleSigIn().then(response => {

@@ -13,7 +13,6 @@ export const RouterComponent = () => {
         <Routes>
             <Route exact path={PathName.home} element={<Home/>}/>
             <Route exact path={PathName.playGround} element={<Playground/>}/>
-            )}/>
         </Routes>
     )
 }
