@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@blockly/field-date": "^6.0.4",
-    "@blockly/plugin-modal": "^4.0.8",
+    "@blockly/field-date": "^6.0.12",
+    "@blockly/plugin-modal": "^4.0.13",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@firebase/firestore": "^3.8.3",
@@ -12,7 +12,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "blockly": "^9.2.1",
+    "blockly": "^9.3.0",
     "crypto-browserify": "^3.12.0",
     "firebase": "^9.17.1",
     "firebase-admin": "^11.5.0",
@@ -33,6 +33,9 @@
     "react-router-dom": "^6.8.1",
     "react-scripts": "^5.0.1",
     "react-toastify": "^9.1.2"
+  },
+  "devDependencies": {
+    "source-map-loader": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
