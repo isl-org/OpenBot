@@ -21,9 +21,9 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
     var qrResult: String = "";
     private var commands: String = ""
     let bluetooth = bluetoothDataController.shared
-    let timerQueue = DispatchQueue(label: "open-code.timer")
     private var isTimerQueueBusy: Bool = false;
     private var projectFileId: String = "";
+    let tempNumber = UITextView(frame: CGRect(x: width / 2 - 40, y: height / 2 + 100, width: 80, height: 40));
     var userToken: String = ""
     private var userIcon: UIImageView = UIImageView()
     private var userFullName: UILabel = UILabel()
@@ -32,11 +32,13 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
     private var runOpenBot: UIButton = UIButton()
     private var signInButton: GIDSignInButton = GIDSignInButton()
     private var vehicleControl: Control = Control();
+    let semaphore = DispatchSemaphore(value: 0)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         createUI();
         signIn(signIn: GIDSignIn.sharedInstance, didSignInForUser: GIDSignIn.sharedInstance.currentUser, withError: NSError());
+        testWait()
     }
 
     func createUI() {
@@ -74,6 +76,27 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
         runOpenBot.setTitle("Run Car", for: .normal);
         runOpenBot.isHidden = true;
 
+
+        tempNumber.textColor = .black;
+
+        DispatchQueue.main.async {
+
+                let timer = Timer.scheduledTimer(timeInterval: 2.0,
+                        target: self,
+                        selector: #selector(self.eventWith(timer:)),
+                        userInfo: nil,
+                        repeats: true)
+
+
+        }
+
+        view.addSubview(tempNumber);
+
+
+    }
+
+    @objc func eventWith(timer: Timer!) {
+        tempNumber.text = String(Int.random(in: 0...1000))
     }
 
     func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!,
@@ -84,7 +107,10 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
             signInButton.isHidden = true
             showSignOutButton()
         }
-        print(user.fetcherAuthorizer.userEmail)
+        if let user = user {
+            print(user.fetcherAuthorizer.userEmail);
+        }
+
     }
 
     func showSignOutButton() {
@@ -344,125 +370,75 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
 
     }
 
-    func start() {
-        print("inside start");
-    }
-
-    func loop() {
-        print("inside loop")
-    }
-
-    func moveForward(time: Int) {
-            print("inside moveforward")
-            let carControl = Control(left: 128, right: 128)
-            self.sendControl(control: carControl);
-
-    }
-
     func wait() {
-        print("inside wait")
-
-    }
-
-    func moveOpenBot(left: Int, right: Int) {
-            print("inside moove")
-            let carControl = Control(left: Float(left), right: Float(right));
-            self.sendControl(control: carControl);
-    }
-
-    func moveCircular(radius: Float) {
-            print("inside moveCircular")
-            self.bluetooth.sendData(payload: "c" + String(200) + "," + String(200) + "\n");
-    }
-
-
-    func stop() {
-            print("inside stop")
-            self.bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n");
-    }
-
-    func moveBackward(speed: Float) {
-            print("inside moveBackward")
-            let carControl = Control(left: -speed, right: -speed);
-            self.sendControl(control: carControl);
-    }
-
-    func moveLeft(speed: Float) {
-            print("inside moveLeft")
-            let carControl = Control(left: 0, right: speed);
-            self.sendControl(control: carControl);
-
-    }
-
-    func moveRight(speed: Float) {
-            print("inside moveLeft")
-            let carControl = Control(left: 0, right: speed);
-            self.sendControl(control: carControl);
-    }
-
-    func createQRScanner() {
-        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.videoGravity = .resizeAspectFill
-        previewLayer.frame = cameraView.layer.bounds
-        cameraView.layer.addSublayer(previewLayer)
-        captureSession.startRunning()
+        DispatchQueue.global(qos: .background).async {
+            Thread.sleep(forTimeInterval: 10)
+            self.semaphore.signal()
+            let command = Control(left: 0, right: 0);
+            self.sendControl(control: command);
+        }
     }
 
 
     func evaluateJavaScript() {
-        if let context = JSContext() {
-            let moveForward: @convention(block) (Int) -> Void = { (time) in
-                return self.moveForward(time: time)
+        wait()
+        let runOpenBotThreadClass: runOpenBotThread = runOpenBotThread()
+        DispatchQueue.global(qos: .background).async {
+            if let context = JSContext() {
+                let moveForward: @convention(block) (Int) -> Void = { (time) in
+                    return (runOpenBotThreadClass.moveForward(time: time))
+                }
+                let loop: @convention(block) () -> Void = { () in
+                    return (runOpenBotThreadClass.loop());
+                }
+                let start: @convention(block) () -> Void = { () in
+                    runOpenBotThreadClass.startBlock();
+                }
+                let move: @convention(block) (Int, Int) -> Void = { (left, right) in
+                    return (runOpenBotThreadClass.moveOpenBot(left: left, right: right));
+                }
+                let moveCircular: @convention(block) (Float) -> Void = { (radius) in
+                    runOpenBotThreadClass.moveCircular(radius: radius);
+                }
+                let stop: @convention(block) () -> Void = { () in
+                    runOpenBotThreadClass.stop();
+                }
+                let wait: @convention(block) () -> Void = { () in
+                    self.wait()
+                    self.semaphore.wait()
+                }
+                let moveBackward: @convention(block) (Float) -> Void = { (speed) in
+                    runOpenBotThreadClass.moveBackward(speed: speed);
+                }
+                let moveLeft: @convention(block) (Float) -> Void = { (speed) in
+                    runOpenBotThreadClass.moveLeft(speed: speed)
+                }
+                let moveRight: @convention(block) (Float) -> Void = { (speed) in
+                    runOpenBotThreadClass.moveRight(speed: speed)
+                }
+                context.setObject(moveForward,
+                        forKeyedSubscript: "moveForward" as NSString)
+                context.setObject(loop,
+                        forKeyedSubscript: "loop" as NSString)
+                context.setObject(start,
+                        forKeyedSubscript: "start" as NSString)
+                context.setObject(move,
+                        forKeyedSubscript: "move" as NSString)
+                context.setObject(moveCircular,
+                        forKeyedSubscript: "moveCircular" as NSString)
+                context.setObject(stop,
+                        forKeyedSubscript: "stop" as NSString)
+                context.setObject(wait,
+                        forKeyedSubscript: "wait" as NSString)
+                context.setObject(moveBackward,
+                        forKeyedSubscript: "moveBackward" as NSString);
+                context.setObject(moveLeft,
+                        forKeyedSubscript: "moveLeft" as NSString);
+                context.setObject(moveRight,
+                        forKeyedSubscript: "moveRight" as NSString);
+                //evaluateScript should be called below of setObject
+                context.evaluateScript(self.commands);
             }
-            let loop: @convention(block) () -> Void = { () in
-                return self.loop();
-            }
-            let start: @convention(block) () -> Void = { () in
-                self.start();
-            }
-            let move: @convention(block) (Int, Int) -> Void = { (left, right) in
-                return self.moveOpenBot(left: left, right: right);
-            }
-            let moveCircular: @convention(block) (Float) -> Void = { (radius) in
-                self.moveCircular(radius: radius);
-            }
-            let stop: @convention(block) () -> Void = { () in
-                self.stop();
-            }
-            let wait: @convention(block) () -> Void = { () in
-                self.wait();
-            }
-            let moveBackward: @convention(block) (Float) -> Void = { (speed) in
-                self.moveBackward(speed: speed);
-            }
-            let moveLeft: @convention(block) (Float) -> Void = { (speed) in
-                self.moveLeft(speed: speed)
-            }
-            let moveRight: @convention(block) (Float) -> Void = { (speed) in
-                self.moveRight(speed: speed)
-            }
-            context.setObject(moveForward,
-                    forKeyedSubscript: "moveForward" as NSString)
-            context.setObject(loop,
-                    forKeyedSubscript: "loop" as NSString)
-            context.setObject(start,
-                    forKeyedSubscript: "start" as NSString)
-            context.setObject(move,
-                    forKeyedSubscript: "move" as NSString)
-            context.setObject(moveCircular,
-                    forKeyedSubscript: "moveCircular" as NSString)
-            context.setObject(stop,
-                    forKeyedSubscript: "stop" as NSString)
-            context.setObject(wait,
-                    forKeyedSubscript: "wait" as NSString)
-            context.setObject(moveBackward,
-                    forKeyedSubscript: "moveBackward" as NSString);
-            context.setObject(moveLeft,
-                    forKeyedSubscript: "moveLeft" as NSString);
-            context.setObject(moveRight,
-                    forKeyedSubscript: "moveRight" as NSString);
-            //evaluateScript should be called below of setObject
-            context.evaluateScript(commands);
         }
     }
 
@@ -501,6 +477,15 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
     @objc func runCar(_ sender: Any) {
         initializeJS();
         evaluateJavaScript()
+
+    }
+
+    func createQRScanner() {
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        previewLayer.videoGravity = .resizeAspectFill
+        previewLayer.frame = cameraView.layer.bounds
+        cameraView.layer.addSublayer(previewLayer)
+        captureSession.startRunning()
     }
 
     ///function to send output controls to openBot
@@ -514,6 +499,70 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)))
             NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
+        }
+    }
+
+    private class runOpenBotThread: Thread {
+        weak var OpenCodeFragment: OpenCodeFragment?
+
+        override func main() {
+            print("inside main of waitThread")
+            OpenCodeFragment?.semaphore.signal()
+        }
+
+        func startBlock() {
+            print("inside start");
+        }
+
+        func loop() {
+            print("inside loop")
+        }
+
+        func moveForward(time: Int) {
+            print("inside moveforward")
+            let carControl = Control(left: 128, right: 128)
+            OpenCodeFragment?.sendControl(control: carControl);
+
+        }
+
+        func wait() {
+            print("inside wait")
+
+        }
+
+        func moveOpenBot(left: Int, right: Int) {
+            print("inside moove")
+            let carControl = Control(left: Float(left), right: Float(right));
+            OpenCodeFragment?.sendControl(control: carControl);
+        }
+
+        func moveCircular(radius: Float) {
+            print("inside moveCircular")
+            OpenCodeFragment?.bluetooth.sendData(payload: "c" + String(200) + "," + String(200) + "\n");
+        }
+
+
+        func stop() {
+            print("inside stop")
+            OpenCodeFragment?.bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n");
+        }
+
+        func moveBackward(speed: Float) {
+            print("inside moveBackward")
+            let carControl = Control(left: -speed, right: -speed);
+            OpenCodeFragment?.sendControl(control: carControl);
+        }
+
+        func moveLeft(speed: Float) {
+            print("inside moveLeft")
+            let carControl = Control(left: 0, right: speed);
+            OpenCodeFragment?.sendControl(control: carControl);
+        }
+
+        func moveRight(speed: Float) {
+            print("inside Right")
+            let carControl = Control(left: 0, right: speed);
+            OpenCodeFragment?.sendControl(control: carControl);
         }
     }
 
