@@ -3,7 +3,8 @@ import {
     checkFileExistsInFolder,
     deleteFileFromGoogleDrive,
     getAllFilesFromGoogleDrive,
-    getFolderId
+    getFolderId,
+    fileRename,
 } from "./googleDrive";
 
 
@@ -224,4 +225,40 @@ export function FormatDate() {
     const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: false};
     const currentTime = date.toLocaleTimeString('en-US', timeOptions);
     return {currentDate: currentDate, currentTime: currentTime}
+}
+
+
+export async function renameProject(projectName) {
+    if (localStorage.getItem("isSigIn") === "true") {
+        if (projectName !== getCurrentProject().projectName) {
+            const data = {
+                projectName: projectName,
+                xmlValue: getCurrentProject().xmlValue,
+                time: getCurrentProject().time,
+                id: getCurrentProject().id,
+                fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
+                createdDate: FormatDate().currentDate // Todo on create button add newly created date and time
+            }
+            console.log("current project", getCurrentProject().projectName)
+            await fileRename(projectName, getCurrentProject().projectName, "xml").then(() => {
+                    fileRename(projectName, getCurrentProject().projectName, "js").then();
+                    updateCurrentProject(data.id, projectName, data.xmlValue)
+                }
+            )
+
+        } else {
+            //TODO file already exists checker
+        }
+    } else {
+        const data = {
+            projectName: projectName,
+            xmlValue: getCurrentProject().xmlValue,
+            time: getCurrentProject().time,
+            id: getCurrentProject().id,
+            fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
+            createdDate: FormatDate().currentDate // Todo on create button add newly created date and time
+        }
+        updateCurrentProject(data.id, projectName, data.xmlValue)
+        console.log("project with same name in local::::", data)
+    }
 }

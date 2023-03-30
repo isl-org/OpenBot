@@ -206,7 +206,6 @@ function UploadInDrive(params) {
     const [isDriveLoader, setIsDriveLoader] = useState(false);
     const [showTick, setShowTick] = useState(false);
 
-
     const handleDriveButton = () => {
         if (localStorage.getItem("isSigIn") === "true") {
             setIsDriveLoader(true);
@@ -223,6 +222,7 @@ function UploadInDrive(params) {
                 .then((res) => {
                         setIsDriveLoader(false);
                         res && setTimeout(() => {
+
                             setShowTick(true);
                         }, 1000);
                     }
@@ -242,7 +242,6 @@ function UploadInDrive(params) {
             const timeout = setTimeout(() => {
                 setShowTick(false);
             }, 1000);
-
             return () => clearTimeout(timeout);
         }
     }, [showTick]);

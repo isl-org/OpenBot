@@ -388,7 +388,7 @@ public class ObjectNavFragment extends CameraFragment {
 
     binding.controllerContainer.controlMode.setEnabled(!b);
     binding.controllerContainer.driveMode.setEnabled(!b);
-    binding.controllerContainer.speedInfo.setEnabled(!b);
+    binding.controllerContainer.speedMode.setEnabled(!b);
 
     binding.controllerContainer.controlMode.setAlpha(b ? 0.5f : 1f);
     binding.controllerContainer.driveMode.setAlpha(b ? 0.5f : 1f);

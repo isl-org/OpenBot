@@ -84,6 +84,7 @@
 .shrinkDriveIcon {
     width: 1.7rem;
     cursor: pointer;
+    margin-bottom: 0.3rem;
 }
 
 .buttonStyle {

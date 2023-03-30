@@ -12,7 +12,7 @@ export const uploadToGoogleDrive = async (data, fileType) => {
     const folderId = await getFolderId();
     let response;
     if (fileType === Constants.xml) {
-        //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
+        //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
         if (folderId) {
             response = await uploadFileToFolder(accessToken, data, folderId, "xml");
         } else {
@@ -22,7 +22,6 @@ export const uploadToGoogleDrive = async (data, fileType) => {
             );
         }
     } else if (fileType === Constants.js) {
-
         //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
         if (folderId) {
             response = await uploadFileToFolder(accessToken, data, folderId, "js");
@@ -165,7 +164,6 @@ async function CreateFolder(accessToken) {
         .then(response => response.json())
         .then(folder => {
             makeFolderPublic(folder.id, accessToken);
-            // SharingFolderFromGoogleDrive(folder.id)
             return folder.id;
         })
         .catch(error => {
@@ -217,7 +215,7 @@ export function CreateFile(data, folderId, metadataFields, headers, requestBody)
                 errorToast(file.error.message);
             } else {
                 const isJSFile = file?.name.endsWith('.js');
-                // file && SharingFileFromGoogleDrive(file?.id, isJSFile);    //TODO error
+                file && SharingFileFromGoogleDrive(file?.id, isJSFile);
                 if (isJSFile) {
                     let link = await getShareableLink(file.id, folderId);
                     return link;
@@ -312,34 +310,30 @@ export async function deleteFileFromGoogleDrive(fileId) {
 export function SharingFileFromGoogleDrive(fileId, isJSFile) {
     const accessToken = getAccessToken();
     let permission;
-    if (isJSFile) {
+    if (isJSFile === true) {
         permission = {
             'type': 'anyone',
             'role': 'reader'
+        }
+
+        const params = {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(permission)
         };
-    } else {
-        permission = {
-            'type': 'domain',
-            'role': 'none'
-        };
-    }
-    const params = {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(permission)
-    };
 
 // Share the file
-    fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions?sendNotificationEmail=false&supportsAllDrives=true`, params)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('An error occurred while sharing the file.');
-            }
-        })
-        .catch(error => console.error(error));
+        fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions?sendNotificationEmail=false&supportsAllDrives=true`, params)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('An error occurred while sharing the file.');
+                }
+            })
+            .catch(error => console.error(error));
+    }
 }
 
 
@@ -366,10 +360,45 @@ export async function getShareableLink(fileId, folderId) {
         })
         .then(data => {
             const shareableLink = data.webViewLink.replace('/view', '/edit?usp=sharing');
+            const downloadLink = data.webContentLink
+            console.log("download link::::::;", downloadLink);
             return shareableLink;
         })
         .catch(error => console.error(error));
+
 }
+
+export async function fileRename(newFileName, oldName, fileType) {
+    const folderId = await getFolderId();
+    const accessToken = getAccessToken();
+    let body;
+    let fileId;
+    if (fileType === Constants.xml) {
+        fileId = await checkFileExistsInFolder(folderId, oldName, "xml");
+        body = {
+            "name": newFileName + `.${Constants.xml}`
+        }
+    } else {
+        fileId = await checkFileExistsInFolder(folderId, oldName, "js");
+        body = {
+            "name": newFileName + `.${Constants.js}`
+        }
+    }
+    console.log("fileId::::", fileId.fileId)
+    await fetch(`https://www.googleapis.com/drive/v3/files/${fileId.fileId}?parents=${folderId}&fields=name`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+
+    })
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+        .catch(err => console.log(err))
+}
+
 
 export const makeFolderPublic = async (folderId, accessToken) => {
     const url = `${Constants.baseUrl}/files/${folderId}/permissions`;
@@ -414,34 +443,4 @@ export const makeFolderPublic = async (folderId, accessToken) => {
 //             console.log('Error updating file:', error);
 //         });
 //     });
-// }
-
-// /**
-//  * permissions for sharing Google Drive folder
-//  * @param folderId
-//  * @constructor
-//  */
-// export function SharingFolderFromGoogleDrive(folderId) {
-//     const accessToken = getAccessToken();
-//     const permission = {
-//         'type': 'anyone',
-//         'role': 'reader'
-//     };
-//     const params = {
-//         method: 'POST',
-//         headers: {
-//             'Authorization': 'Bearer ' + accessToken,
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(permission)
-//     };
-//
-//     fetch(`https://www.googleapis.com/drive/v3/files/${folderId}/permissions?sendNotificationEmail=false&supportsAllDrives=true`, params)
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error('An error occurred while sharing the folder.');
-//             }
-//             console.log(`The folder with ID "${folderId}" has been shared with anyone who has the link.`);
-//         })
-//         .catch(error => console.error(error));
 // }

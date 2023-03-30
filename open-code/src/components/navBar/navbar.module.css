@@ -358,9 +358,15 @@
     cursor: pointer;
 }
 
-.moonIcon {
+.darkThemeIcon {
     height: 1.3rem;
     width: 1.3rem;
+    cursor: pointer;
+}
+
+.lightThemeIcon{
+    height: 1.5rem;
+    width: 1.5rem;
     cursor: pointer;
 }
 

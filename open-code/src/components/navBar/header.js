@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-import moon from "../../assets/images/icon/whiteMode/white-mode-icon.png";
 import {ThemeContext} from "../../App"
 import {useLocation} from "react-router-dom";
 import styles from "./navbar.module.css";
@@ -12,6 +11,7 @@ import {DeleteModel, LogOutModal} from "../homeComponents/header/logOutAndDelete
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
 import {PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
+import {renameProject} from "../../services/workspace";
 
 /**
  * Open-code's header which contains logo, project name on playground screen and help button, profile signIn
@@ -40,7 +40,7 @@ export function Header() {
     }, [isEditProfileModal])
 
     //on click event on arrow when clicked set project name.
-    const handleClick = (event) => {
+    const handleClick = async (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget)
     };
 
@@ -111,11 +111,15 @@ function RightSection(params) {
             }
 
             {/*change theme icon*/}
-            <img alt="" onClick={() => toggleTheme(!theme)} src={moon}
-                 className={`${styles.moonIcon} ${styles.iconMargin}`}/>
+            {theme === "dark" ? <img alt="icon" onClick={() => toggleTheme(!theme)}
+                                     src={Images.lightThemeIcon}
+                                     className={`${styles.lightThemeIcon} ${styles.iconMargin}`}/> :
+                <img alt="icon" onClick={() => toggleTheme(!theme)}
+                     src={Images.darkThemeIcon}
+                     className={`${styles.darkThemeIcon} ${styles.iconMargin}`}/>}
 
             {/*divider*/}
-            <img alt="" src={Images.line} className={`${styles.lineIcon} ${styles.iconMargin}`}/>
+            <img alt="icon" src={Images.line} className={`${styles.lineIcon} ${styles.iconMargin}`}/>
 
             {/*if signed in then show icon and name or else sign in option*/}
             <ProfileSignIn setIsProfileModal={setIsProfileModal} user={user} setUser={setUser}/>
