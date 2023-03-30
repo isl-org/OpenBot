@@ -36,6 +36,7 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         createUI();
+        signIn(signIn: GIDSignIn.sharedInstance, didSignInForUser: GIDSignIn.sharedInstance.currentUser, withError: NSError());
     }
 
     func createUI() {
@@ -77,11 +78,13 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
 
     func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!,
                 withError error: NSError!) {
+        print("inside signin")
         if error == nil {
             // Show the sign-out button and hide the GIDSignInButton
             signInButton.isHidden = true
             showSignOutButton()
         }
+        print(user.fetcherAuthorizer.userEmail)
     }
 
     func showSignOutButton() {
@@ -194,7 +197,7 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
 // Create Google Sign In configuration object.
         let config = GIDConfiguration(clientID: clientId)
         GIDSignIn.sharedInstance.configuration = config
-
+        print("privios signin", GIDSignIn.sharedInstance.hasPreviousSignIn());
         let scenes = UIApplication.shared.connectedScenes
         let windowScenes = scenes.first as? UIWindowScene
         let window = windowScenes?.windows.first

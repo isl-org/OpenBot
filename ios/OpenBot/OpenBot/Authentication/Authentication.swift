@@ -35,6 +35,10 @@ class Authentication {
     func googleSignInFunc(clientId: String) {
 
 // Create Google Sign In configuration object.
+    if GIDSignIn.sharedInstance.hasPreviousSignIn(){
+        let user = GIDSignIn.sharedInstance.currentUser;
+        print("privious sign-in ",user);
+    }
         let config = GIDConfiguration(clientID: clientId)
         GIDSignIn.sharedInstance.configuration = config
 

@@ -33,6 +33,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.'
         DropDown.startListeningToKeyboard()
         FirebaseApp.configure();
+        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+            if error != nil || user == nil {
+                // The user isn't signed in or there was an error restoring their session.
+                print("user is nil");
+            } else {
+                // The user is signed in and their session has been restored.
+                print("user is ", user?.fetcherAuthorizer.userEmail);
+            }
+        }
         return true
     }
     
