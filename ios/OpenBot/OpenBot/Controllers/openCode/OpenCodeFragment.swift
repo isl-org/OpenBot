@@ -81,7 +81,7 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
 
         DispatchQueue.main.async {
 
-                let timer = Timer.scheduledTimer(timeInterval: 2.0,
+                let timer = Timer.scheduledTimer(timeInterval: 0.5,
                         target: self,
                         selector: #selector(self.eventWith(timer:)),
                         userInfo: nil,
@@ -370,9 +370,9 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
 
     }
 
-    func wait() {
+    func wait(forTime : Double) {
         DispatchQueue.global(qos: .background).async {
-            Thread.sleep(forTimeInterval: 10)
+            Thread.sleep(forTimeInterval: forTime/1000)
             self.semaphore.signal()
             let command = Control(left: 0, right: 0);
             self.sendControl(control: command);
@@ -381,7 +381,6 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
 
 
     func evaluateJavaScript() {
-        wait()
         let runOpenBotThreadClass: runOpenBotThread = runOpenBotThread()
         DispatchQueue.global(qos: .background).async {
             if let context = JSContext() {
@@ -403,8 +402,8 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
                 let stop: @convention(block) () -> Void = { () in
                     runOpenBotThreadClass.stop();
                 }
-                let wait: @convention(block) () -> Void = { () in
-                    self.wait()
+                let wait: @convention(block) (Double) -> Void = { (time) in
+                    self.wait(forTime: time)
                     self.semaphore.wait()
                 }
                 let moveBackward: @convention(block) (Float) -> Void = { (speed) in
