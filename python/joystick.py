@@ -1,13 +1,16 @@
 import pygame
 import threading
 
-THRESHOLD = 0.122 # Manual threshold for idle joystick position. Need to adjust based on joystick
+THRESHOLD = 0.122  # Manual threshold for idle joystick position. Need to adjust based on joystick
+
 
 class Joystick(threading.Thread):
-    def __init__(self, callback,
-                 run_mode="joystick",  # inference or joystick
-                 control_mode="dual"  # dual or joystick
-                 ):
+    def __init__(
+        self,
+        callback,
+        run_mode="joystick",  # inference or joystick
+        control_mode="dual",  # dual or joystick
+    ):
         """Thread for Joystick commands. Currently, the implementation supports
         Xbox controllers. See https://www.pygame.org/docs/ref/joystick.html
         for further implementation details of other controllers.
@@ -35,7 +38,7 @@ class Joystick(threading.Thread):
         self.cmd = 0  # currently always zero. Map to hat input of controller if needed
 
         # Start thread
-        super().__init__(name='joystick-input-thread')
+        super().__init__(name="joystick-input-thread")
         self.start()
 
         print("Joystick thread started. Waiting for inputs")
@@ -47,7 +50,6 @@ class Joystick(threading.Thread):
         while True:
             run_mode = "joystick" if self.joystick_mode else "inference"
             self.callback(self.get_control(), self.cmd, run_mode, self.abort_signal)
-
 
     def get_thresholded_value(self, value):
         """Clips the read axis values. By default, idle axis are non-zero. Thus
@@ -168,12 +170,12 @@ class Joystick(threading.Thread):
         left = -y_axis
         right = -y_axis
 
-        if (left >= 0):
+        if left >= 0:
             left += x_axis
         else:
             left -= x_axis
 
-        if (right >= 0):
+        if right >= 0:
             right -= x_axis
         else:
             right += x_axis
@@ -193,4 +195,3 @@ class Joystick(threading.Thread):
             (float, float): calculated motor commands for left and right wheel.
         """
         return -left, -right
-

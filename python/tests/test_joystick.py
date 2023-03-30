@@ -1,7 +1,7 @@
 import pygame
 
-def test_joystick_connection():
 
+def test_joystick_connection():
     pygame.init()
 
     j = pygame.joystick.Joystick(0)
@@ -9,6 +9,7 @@ def test_joystick_connection():
 
     for _ in range(100):
         events = pygame.event.get()
+
 
 if __name__ == "__main__":
     pygame.init()
