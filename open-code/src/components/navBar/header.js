@@ -141,7 +141,7 @@ function ProjectNameSection(params) {
     const location = useLocation();
     return (
         location.pathname === PathName.playGround ? !open ?
-                <ProjectName handleClick={(e) => handleClick(e)} projectName={projectName} />
+                <ProjectName handleClick={handleClick} projectName={projectName} />
                 :
                 <ProjectNamePopUp anchorEl={anchorEl} setOpen={setOpen} setProjectName={setProjectName}
                                   handleClick={handleClick} projectName={projectName} open={open}

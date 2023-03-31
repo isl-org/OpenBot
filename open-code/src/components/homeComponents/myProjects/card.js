@@ -26,7 +26,7 @@ function Card(props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [reNameProject, setReNameProject] = useState("")
     const [deleteProject, setDeleteProject] = useState(false);
-    const open = Boolean(openPopUp);
+
 
     useEffect(() => {
         setReNameProject(props.projectData.projectName)
@@ -76,7 +76,9 @@ function Card(props) {
         event.stopPropagation();
         setDeleteProject(true)
     }
-
+    const handleClickOutside = () => {
+        setOpenPopUp(false);
+    }
     return (
         <div className={styles.cardContent}>
             {deleteProject && <DeleteModel setDeleteProject={setDeleteProject}/>}
@@ -96,7 +98,7 @@ function Card(props) {
                                              setRename(false)
                                              await renameProject(reNameProject,props.projectData.projectName).then()
                                          }
-                                            }
+                                         }
                                          onChange={(e) => setReNameProject(e.target.value)}
                                          onKeyDown={async (e) => {
                                              if (e.keyCode === 13) {
@@ -119,6 +121,7 @@ function Card(props) {
                     <EditProjectPopUp open={openPopUp} anchorEl={anchorEl}
                                       setOpen={setOpenPopUp}
                                       setRename={setRename}
+                                      clickOutside={handleClickOutside}
                                       projectName={reNameProject}
                                       handleDelete={(e) => handleDelete(e)}
                                       theme={theme}

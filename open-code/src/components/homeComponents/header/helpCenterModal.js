@@ -38,7 +38,7 @@ export function HelpCenterModal(props) {
                                     <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
                                          src={Images.darkCrossIcon}/> :
                                     <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
-                                         src={Images.crossIcon}/>
+                                         src={Images.lightCrossIcon}/>
                             }
                         </div>
                         <div>

@@ -12,6 +12,7 @@ import LoaderComponent from "../../loader/loaderComponent";
 import WhiteText from "../../fonts/whiteText";
 import {googleSigIn} from "../../../services/firebase";
 import React, {useEffect, useRef, useState} from "react";
+import {renameProject} from "../../../services/workspace";
 
 
 /**
@@ -66,13 +67,14 @@ export function ProjectName(params) {
  * @constructor
  */
 export function ProjectNamePopUp(params) {
-    const {anchorEl, setDeleteProject, theme, handleClick, setProjectName, projectName, setOpen, open} = params
-    const id = open ? 'simple-popper' : undefined
+    const {anchorEl, setDeleteProject, theme, projectName, setOpen, open, setProjectName} = params
     const [rename, setRename] = useState(false);
-    const [renameProject, setRenameProject] = useState("")
+    const [reNameProject, setRenameProject] = useState("")
+    const [openPopUp, setOpenPopUp] = useState(true);
+    const inputRef = useRef(null);
+
 
     useEffect(() => {
-        console.log("projecTNAme::", projectName)
         setRenameProject(projectName)
     }, [])
 
@@ -80,56 +82,76 @@ export function ProjectNamePopUp(params) {
     const handleDelete = () => {
         setDeleteProject(true)
     }
+    const handleBlur = async () => {
+        setProjectName(reNameProject)
+        setRename(false)
+        setOpen(false)
+        await renameProject(reNameProject, projectName).then()
+    }
+    const handleClickOutside = () => {
+        setOpenPopUp(false);
+        if (!rename)
+            setOpen(false)
+
+    }
 
 
     return (
-        <>
+        <div className={styles.playgroundName}>
             {/*project name with edit field and arrow*/}
-            <div className={styles.playgroundName}>
+            {rename ?
                 <input type="text" className={styles.Edit}
                        id="userEdit"
-                       onChange={(e) => setRenameProject(e.target.value)}
                        onClick={(e) => {
-                           e.stopPropagation()
-                           setOpen(false);
+                           e.stopPropagation();
                        }}
+                       ref={inputRef} // set the ref to the input element
+                       onChange={(e) => setRenameProject(e.target.value)}
                        onFocus={(e) => e.target.select()}
-                       onBlur={() => setRename(false)
-                       }
-                       onKeyDown={(e) => {
-                           if (e.keyCode === 13) setRename(false)
+                       onBlur={handleBlur}
+                       onKeyDown={async (e) => {
+                           if (e.keyCode === 13) {
+                               setRename(false)
+                               setOpen(false)
+                               setProjectName(reNameProject)
+                               await renameProject(reNameProject, projectName).then()
+                           }
                        }}
-                       style={{width: `${renameProject?.length}ch`}}
-                       value={renameProject}
-                /> : <span className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName}</span>}
-                <img src={UpArrow}
-                     className={`${styles.infoIcon} ${styles.arrowMargin}`}
-                     onClick={() => setOpen(!open)} alt={"arrow"}/>
-            </div>
-            <EditProjectPopUp open={open} anchorEl={anchorEl}
-                              projectName={renameProject}
-                              setOpen={setOpen}
-                              setRename={setRename}
-                              handleDelete={handleDelete}
-                              theme={theme}
-            />
-        </>
+                       style={{width: `${reNameProject?.length}ch`}}
+                       value={reNameProject}
+                />
+                :
+                <span onClick={() => {
+                    setOpen(!open)
+                }} className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName}</span>
+            }
+            <img src={UpArrow}
+                 className={`${styles.infoIcon} ${styles.arrowMargin}`}
+                 alt={"arrow"}/>
+            {openPopUp &&
+                <EditProjectPopUp open={openPopUp}
+                                  inputRef={inputRef}
+                                  anchorEl={anchorEl}
+                                  rename={rename}
+                                  projectName={reNameProject}
+                                  setOpen={setOpenPopUp}
+                                  setRename={setRename}
+                                  clickOutside={handleClickOutside}
+                                  handleDelete={handleDelete}
+                                  theme={theme}/>}
+        </div>
     )
 }
 
 export function EditProjectPopUp(params) {
-    const {open, anchorEl, setRename, handleDelete, theme, extraStyle, setOpen, projectName} = params
+    const {open, anchorEl, setRename, handleDelete, theme, extraStyle, clickOutside, rename, inputRef} = params
     const id = open ? 'simple-popper' : undefined
     const popUpRef = useRef(null);
-    //{/*pop up of rename and delete option for project name */}
-    // useEffect(() => {
-    //     setOpen(open);
-    // }, [open]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (popUpRef.current && !popUpRef.current.contains(event.target)) {
-                setOpen(false);
+                clickOutside()
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
@@ -141,15 +163,18 @@ export function EditProjectPopUp(params) {
     return (
         <Popper
             placement="bottom-start"
+            ref={popUpRef}
             key={id} open={open} anchorEl={anchorEl}>
             <div
-                ref={popUpRef}
                 className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel) + " " + extraStyle}>
                 <div
                     className={`${styles.item} ${styles.renameDivMargin}  ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
                     onClick={async (event) => {
                         event.stopPropagation();
                         setRename(true);
+                        setTimeout(() => {
+                            inputRef.current.focus(); // set focus to the input element when rename is true
+                        }, 0);
                         // await renameProject(projectName).then()
                     }}>
                     <img alt="Icon" className={styles.icon} src={theme === "dark" ? renameIcon : Edit}/>
