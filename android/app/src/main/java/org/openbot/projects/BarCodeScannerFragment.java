@@ -33,6 +33,7 @@ public class BarCodeScannerFragment extends Fragment {
     private SurfaceView surfaceView;
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
+    private boolean barCodeAccess = true;
 
     @Override
     public View onCreateView(
@@ -75,7 +76,6 @@ public class BarCodeScannerFragment extends Fragment {
             }
         });
 
-
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
@@ -84,7 +84,8 @@ public class BarCodeScannerFragment extends Fragment {
             @Override
             public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if (barcodes.size() != 0) {
+                if (barcodes.size() != 0 && barCodeAccess) {
+                    barCodeAccess = false;
                     barCodeValue = barcodes.valueAt(0).displayValue;
                     Navigation.findNavController(requireView()).popBackStack();
                 }
