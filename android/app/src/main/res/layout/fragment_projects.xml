@@ -64,4 +64,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/openbot_run_command" />
 
+    <TextView
+        android:id="@+id/wait_for_cmd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loading ..."
+        android:textColor="@color/semi_transparent"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@id/sign_in_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

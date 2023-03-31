@@ -36,7 +36,8 @@ public class ProjectsFragment extends ControlsFragment {
     private SignInButton signInButton;
     private Button signOutButton;
     private Button runOpenBot;
-    private TextView textView;
+    private TextView userName;
+    private TextView loadingText;
     private GoogleServices googleServices;
 
     @Override
@@ -51,15 +52,16 @@ public class ProjectsFragment extends ControlsFragment {
     @Override
     public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        signInButton = getView().findViewById(R.id.sign_in_button);
-        signOutButton = getView().findViewById(R.id.sign_out_button);
-        textView = getView().findViewById(R.id.user_name);
-        runOpenBot = getView().findViewById(R.id.openbot_run_command);
+        signInButton = requireView().findViewById(R.id.sign_in_button);
+        signOutButton = requireView().findViewById(R.id.sign_out_button);
+        userName = requireView().findViewById(R.id.user_name);
+        loadingText = requireView().findViewById(R.id.wait_for_cmd);
+        runOpenBot = requireView().findViewById(R.id.openbot_run_command);
         barCodeScannerFragment = new BarCodeScannerFragment();
         googleServices = new GoogleServices(requireActivity(), requireContext(), newGoogleServices);
         myWebView = new WebView(getContext());
         myWebView.getSettings().setJavaScriptEnabled(true);
-        getView().findViewById(R.id.btnScan)
+        requireView().findViewById(R.id.btnScan)
                 .setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.barCodeScannerFragment));
         signInButton.setOnClickListener(v -> signIn());
 
@@ -102,6 +104,8 @@ public class ProjectsFragment extends ControlsFragment {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            loadingText.setVisibility(View.GONE);
+                            runOpenBot.setVisibility(View.VISIBLE);
                             myWebView.addJavascriptInterface(new BotFunctions(vehicle), "Android");
                             myWebView.evaluateJavascript(finalCode, null);
                         }
@@ -127,21 +131,21 @@ public class ProjectsFragment extends ControlsFragment {
     private GoogleSignInCallback newGoogleServices = new GoogleSignInCallback() {
         @Override
         public void onSignInSuccess(GoogleSignInAccount account) {
-            textView.setText(account.getDisplayName());
+            userName.setText(account.getDisplayName());
             signInButton.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onSignInFailed(Exception exception) {
-            textView.setText("Unknown");
+            userName.setText("Unknown");
             signInButton.setVisibility(View.VISIBLE);
             signOutButton.setVisibility(View.GONE);
         }
 
         @Override
         public void onSignOutSuccess() {
-            textView.setText("Unknown");
+            userName.setText("Unknown");
             signInButton.setVisibility(View.VISIBLE);
             signOutButton.setVisibility(View.GONE);
         }
@@ -157,6 +161,8 @@ public class ProjectsFragment extends ControlsFragment {
             // Extract the ID from the URL string
             String id = urlLink.substring(urlLink.indexOf("/file/d/") + 8, urlLink.indexOf("/edit"));
             try {
+                loadingText.setVisibility(View.VISIBLE);
+                runOpenBot.setVisibility(View.GONE);
                 readFileFromDrive(id);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -167,6 +173,7 @@ public class ProjectsFragment extends ControlsFragment {
     @Override
     public void onResume() {
         super.onResume();
+        loadingText.setVisibility(View.GONE);
         if (barCodeScannerFragment.barCodeValue != null) {
             runOpenBot.setVisibility(View.VISIBLE);
         } else {
