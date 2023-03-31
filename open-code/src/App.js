@@ -37,15 +37,16 @@ function App() {
                 // User is signed in.
                 user.getIdTokenResult()
                     .then((idTokenResult) => {
+                        console.log("idTokenResult::::::", idTokenResult)
                         const expirationTime = idTokenResult?.expirationTime;
-                        const sessionTimeoutMs = new Date(expirationTime).getTime() - Date.now();
+                        const sessionTimeoutMs = new Date(expirationTime).getTime() - Date.now() ;
                         console.log('sessionTimeOut:::::', sessionTimeoutMs)
                         if (timeoutId) {
                             clearTimeout(timeoutId);
                         }
-                        timeoutId = setTimeout(() => {
-                            errorToast('Your session has expired. You have been signed out.')
-                            googleSignOut().then();
+                        timeoutId = setTimeout(async () => {
+                            alert('Your session has expired. You have been signed out.')
+                            await googleSignOut().then();
                         }, sessionTimeoutMs);
                     })
                     .catch((error) => {
