@@ -1,13 +1,9 @@
 package org.openbot.projects;
 
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.webkit.JavascriptInterface;
 
 import org.openbot.vehicle.Control;
 import org.openbot.vehicle.Vehicle;
-
-import timber.log.Timber;
 
 public class BotFunctions {
     private Vehicle v;
@@ -67,7 +63,7 @@ public class BotFunctions {
     @JavascriptInterface
     public void openBotwait(int ms) {
         try {
-            synchronized(this) {
+            synchronized (this) {
                 wait(ms); // Pauses the thread for 5 seconds
             }
         } catch (InterruptedException e) {

@@ -3,7 +3,6 @@ package org.openbot.projects;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,11 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -23,46 +19,25 @@ import androidx.navigation.Navigation;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
-import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 
 import org.openbot.R;
 import org.openbot.common.ControlsFragment;
 import org.openbot.databinding.FragmentProjectsBinding;
+import org.openbot.googleServices.GoogleServices;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-
-import timber.log.Timber;
 
 public class ProjectsFragment extends ControlsFragment {
     private FragmentProjectsBinding binding;
     private BarCodeScannerFragment barCodeScannerFragment;
     private WebView myWebView;
-    private GoogleSignInClient mGoogleSignInClient;
     private SignInButton signInButton;
     private Button signOutButton;
     private Button runOpenBot;
     private TextView textView;
+    private GoogleServices googleServices;
 
     @Override
     public View onCreateView(
@@ -81,122 +56,20 @@ public class ProjectsFragment extends ControlsFragment {
         textView = getView().findViewById(R.id.user_name);
         runOpenBot = getView().findViewById(R.id.openbot_run_command);
         barCodeScannerFragment = new BarCodeScannerFragment();
+        googleServices = new GoogleServices(requireActivity(), requireContext(), newGoogleServices);
         myWebView = new WebView(getContext());
         myWebView.getSettings().setJavaScriptEnabled(true);
         getView().findViewById(R.id.btnScan)
                 .setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.barCodeScannerFragment));
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
+        signInButton.setOnClickListener(v -> signIn());
+
+        signOutButton.setOnClickListener(v -> googleServices.signOut());
+
+        runOpenBot.setOnClickListener(v -> {
+            if (barCodeScannerFragment.barCodeValue != null) {
+                getFileID(barCodeScannerFragment.barCodeValue);
             }
         });
-
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signOut();
-            }
-        });
-
-        runOpenBot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(barCodeScannerFragment.barCodeValue != null){
-                    callToBotFunction(barCodeScannerFragment.barCodeValue);
-                }
-            }
-        });
-
-        // Configure sign-in to request the user's ID, email address, and basic
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
-        if (account != null) {
-            textView.setText(account.getDisplayName());
-            signInButton.setVisibility(View.GONE);
-            signOutButton.setVisibility(View.VISIBLE);
-        }else {
-            signInButton.setVisibility(View.VISIBLE);
-            signOutButton.setVisibility(View.GONE);
-            textView.setText("Unknown");
-        }
-    }
-
-    private Drive getDriveService() {
-        GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(getContext());
-        if (googleAccount != null) {
-            GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
-                    getContext(), Collections.singletonList(DriveScopes.DRIVE_FILE)
-            );
-            credential.setSelectedAccount(googleAccount.getAccount());
-            return new Drive.Builder(
-                    AndroidHttp.newCompatibleTransport(),
-                    JacksonFactory.getDefaultInstance(),
-                    credential
-            )
-                    .setApplicationName(getString(R.string.app_name))
-                    .build();
-        }
-        return null;
-    }
-
-    private void accessDriveFiles() {
-        Drive googleDriveService = getDriveService();
-        if (googleDriveService != null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    String pageToken = null;
-                    do {
-                        try {
-                            FileList result = googleDriveService.files().list()
-                                    .setSpaces("drive")
-                                    .setFields("nextPageToken, files(id, name)")
-                                    .setPageToken(pageToken)
-                                    .execute();
-                            List<File> files = result.getFiles();
-                            for (File file : files) {
-                                Log.d("Google Drive File", "name=" + file.getName() + " id=" + file.getId());
-
-                            }
-                            pageToken = result.getNextPageToken();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            pageToken = null;
-                        }
-                    } while (pageToken != null);
-                }
-            }).start();
-        }
-    }
-
-    private void downloadFileFromGDrive(String id) {
-
-        Drive googleDriveService = getDriveService();
-        if (googleDriveService != null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        File gDriveFile = googleDriveService.files().get(id).execute();
-
-                        Log.i("Google Drive", String.valueOf(gDriveFile));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        } else {
-            Log.e("Google Drive", "SignIn error - not logged in");
-        }
     }
 
     private void readFileFromDrive(String fileId) throws IOException {
@@ -234,60 +107,52 @@ public class ProjectsFragment extends ControlsFragment {
                         }
                     });
                 }
-
-
             }
         }).execute();
     }
 
     private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        someActivityResultLauncher.launch(signInIntent);
+        Intent signInIntent = googleServices.mGoogleSignInClient.getSignInIntent();
+        googleLogInActivityResultLauncher.launch(signInIntent);
     }
 
-    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+    ActivityResultLauncher<Intent> googleLogInActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    Intent data = result.getData();
-                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                    handleSignInResult(task);
-                }
+            result -> {
+                Intent data = result.getData();
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                googleServices.handleSignInResult(task);
             });
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+    private GoogleSignInCallback newGoogleServices = new GoogleSignInCallback() {
+        @Override
+        public void onSignInSuccess(GoogleSignInAccount account) {
+            textView.setText(account.getDisplayName());
             signInButton.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
-            TextView textView = getView().findViewById(R.id.user_name);
-            textView.setText(account.getDisplayName());
-
-            // Signed in successfully, show authenticated UI.
-            Timber.tag("firebase").i("signInResult%s", account);
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Timber.tag("firebase").w("signInResult:failed code=%s", e.getStatusCode());
         }
-    }
 
-    private void signOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        signInButton.setVisibility(View.VISIBLE);
-                        signOutButton.setVisibility(View.GONE);
-                        textView.setText("Unknown");
-                        Timber.tag("firebase").i("sign-out%s", task.getResult());
-                    }
-                });
-    }
+        @Override
+        public void onSignInFailed(Exception exception) {
+            textView.setText("Unknown");
+            signInButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility(View.GONE);
+        }
 
-    private void callToBotFunction(String urlLink) {
+        @Override
+        public void onSignOutSuccess() {
+            textView.setText("Unknown");
+            signInButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onSignOutFailed(Exception exception) {
+
+        }
+    };
+
+    private void getFileID(String urlLink) {
         if (urlLink.contains("/file/d/")) {
             // Extract the ID from the URL string
             String id = urlLink.substring(urlLink.indexOf("/file/d/") + 8, urlLink.indexOf("/edit"));
@@ -304,8 +169,6 @@ public class ProjectsFragment extends ControlsFragment {
         super.onResume();
         if (barCodeScannerFragment.barCodeValue != null) {
             runOpenBot.setVisibility(View.VISIBLE);
-//            callToBotFunction(barCodeScannerFragment.barCodeValue);
-//            barCodeScannerFragment.barCodeValue = null;
         } else {
             runOpenBot.setVisibility(View.GONE);
         }
