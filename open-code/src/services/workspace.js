@@ -6,6 +6,7 @@ import {
     getFolderId,
     fileRename,
 } from "./googleDrive";
+import {handleUniqueName} from "../components/homeComponents/myProjects/newProjectButton";
 
 
 /**
@@ -227,38 +228,49 @@ export function FormatDate() {
     return {currentDate: currentDate, currentTime: currentTime}
 }
 
-
-export async function renameProject(projectName) {
-    if (localStorage.getItem("isSigIn") === "true") {
-        if (projectName !== getCurrentProject().projectName) {
-            const data = {
-                projectName: projectName,
-                xmlValue: getCurrentProject().xmlValue,
-                time: getCurrentProject().time,
-                id: getCurrentProject().id,
-                fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
-                createdDate: FormatDate().currentDate // Todo on create button add newly created date and time
-            }
-            console.log("current project", getCurrentProject().projectName)
-            await fileRename(projectName, getCurrentProject().projectName, "xml").then(() => {
-                    fileRename(projectName, getCurrentProject().projectName, "js").then();
-                    updateCurrentProject(data.id, projectName, data.xmlValue)
-                }
-            )
-
-        } else {
-            //TODO file already exists checker
-        }
-    } else {
-        const data = {
+/**
+ * project rename functionality
+ * @param projectName
+ * @param oldName
+ * @returns {Promise<void>}
+ */
+export async function renameProject(projectName, oldName) {
+    if (projectName !== oldName) {
+        let updatedProjectName = projectName;
+        let data = {
             projectName: projectName,
             xmlValue: getCurrentProject().xmlValue,
-            time: getCurrentProject().time,
             id: getCurrentProject().id,
-            fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
-            createdDate: FormatDate().currentDate // Todo on create button add newly created date and time
         }
-        updateCurrentProject(data.id, projectName, data.xmlValue)
-        console.log("project with same name in local::::", data)
+        const projectWithSameName = getAllLocalProjects()?.find((project) => project.projectName === projectName)
+        if (projectName === projectWithSameName?.projectName) {
+            let projectsArray = getAllLocalProjects();
+            if (projectsArray) {
+                updatedProjectName = handleUniqueName(projectsArray, updatedProjectName, projectName);
+            }
+        }
+        if (localStorage.getItem("isSigIn") === "true") {
+            data = Object.assign(data, {projectName: updatedProjectName});
+            if (oldName === getCurrentProject().projectName) {
+                updateCurrentProject(data.id, updatedProjectName, data.xmlValue)
+            }
+            const allProjects = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects));
+            let projectsArray = allProjects || []
+            const specificProject = projectsArray.findIndex((project) => project.projectName === oldName);
+            projectsArray[specificProject].projectName = updatedProjectName;
+            localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(projectsArray))
+            const xmlFileExists = await checkFileExistsInFolder(await getFolderId(), oldName, "xml");
+            const jsFileExists = await checkFileExistsInFolder(await getFolderId(), oldName, "js");
+            if (xmlFileExists.exists)
+                await fileRename(updatedProjectName, oldName, "xml")
+            if (jsFileExists.exists)
+                await fileRename(updatedProjectName, oldName, "js")
+            window.location.reload();
+
+        } else {
+            data = Object.assign(data, {projectName: updatedProjectName});
+            console.log("data::::", data)
+            updateCurrentProject(data.id, updatedProjectName, data.xmlValue)
+        }
     }
 }

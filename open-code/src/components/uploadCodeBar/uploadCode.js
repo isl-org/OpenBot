@@ -166,7 +166,7 @@ function UploadCodeButton(params) {
             <button className={styles.uploadCodeButton}
                     style={{opacity: buttonSelected === "uploadCode" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
                     name={"uploadCode"} onClick={clickedButton}>
-                <span className={styles.leftButton + " " + styles.iconMargin}>Upload Code</span>
+                <span className={styles.leftButton + " " + styles.iconMargin}>Generate Code</span>
                 <img alt={""}
                      className={styles.iconDiv + " " + styles.iconMargin} src={uploadIcon}/>
             </button>

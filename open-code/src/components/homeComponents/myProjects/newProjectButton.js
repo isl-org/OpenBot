@@ -109,7 +109,7 @@ export default NewProjectButton;
  * @param projectName
  * @returns {string|*}
  */
-function handleUniqueName(projectsArray, updatedProjectName, projectName) {
+export function handleUniqueName(projectsArray, updatedProjectName, projectName) {
     const findProject = projectsArray.find(project => project.projectName === updatedProjectName)
 
     if (findProject) {

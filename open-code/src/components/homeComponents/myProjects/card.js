@@ -94,14 +94,14 @@ function Card(props) {
                                          onFocus={(e) => e.target.select()}
                                          onBlur={async () => {
                                              setRename(false)
-                                             await renameProject(reNameProject).then()
+                                             await renameProject(reNameProject,props.projectData.projectName).then()
                                          }
                                             }
                                          onChange={(e) => setReNameProject(e.target.value)}
                                          onKeyDown={async (e) => {
                                              if (e.keyCode === 13) {
                                                  setRename(false)
-                                                 await renameProject(reNameProject).then()
+                                                 await renameProject(reNameProject,props.projectData.projectName).then()
                                              }
                                          }}
                                          style={{width: `${props.projectData.projectName?.length}ch`}}

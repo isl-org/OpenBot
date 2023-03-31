@@ -360,8 +360,6 @@ export async function getShareableLink(fileId, folderId) {
         })
         .then(data => {
             const shareableLink = data.webViewLink.replace('/view', '/edit?usp=sharing');
-            const downloadLink = data.webContentLink
-            console.log("download link::::::;", downloadLink);
             return shareableLink;
         })
         .catch(error => console.error(error));
