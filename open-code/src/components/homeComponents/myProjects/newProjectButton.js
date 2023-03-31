@@ -85,7 +85,9 @@ function NewProjectButton(props) {
                                               inputTitle={"Give your project a name"}
                                               placeHolder={"Project Name"}
                                               value={projectName} extraMargin={styles.inputBoxMargin}
-                                              onDataChange={handleProjectNameChange}/>
+                                              onDataChange={handleProjectNameChange}
+                                              OpenNewProjectHandle={OpenNewProjectHandle}
+                        />
                     </div>
 
                     <div className={styles.SaveBtn} onClick={() => {
@@ -111,7 +113,6 @@ export default NewProjectButton;
  */
 export function handleUniqueName(projectsArray, updatedProjectName, projectName) {
     const findProject = projectsArray.find(project => project.projectName === updatedProjectName)
-
     if (findProject) {
         const projectTitle = findProject.projectName
         const lastCharacter = projectTitle.charAt(projectTitle.length - 1);

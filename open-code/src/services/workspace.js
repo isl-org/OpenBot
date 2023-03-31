@@ -1,4 +1,4 @@
-import {localStorageKeys} from "../utils/constants";
+import {localStorageKeys, PathName} from "../utils/constants";
 import {
     checkFileExistsInFolder,
     deleteFileFromGoogleDrive,
@@ -234,43 +234,40 @@ export function FormatDate() {
  * @param oldName
  * @returns {Promise<void>}
  */
-export async function renameProject(projectName, oldName) {
+export async function renameProject(projectName, oldName,screen) {
     if (projectName !== oldName) {
-        let updatedProjectName = projectName;
         let data = {
             projectName: projectName,
-            xmlValue: getCurrentProject().xmlValue,
-            id: getCurrentProject().id,
+            xmlValue: getCurrentProject()?.xmlValue,
+            id: getCurrentProject()?.id,
         }
-        const projectWithSameName = getAllLocalProjects()?.find((project) => project.projectName === projectName)
-        if (projectName === projectWithSameName?.projectName) {
-            let projectsArray = getAllLocalProjects();
-            if (projectsArray) {
-                updatedProjectName = handleUniqueName(projectsArray, updatedProjectName, projectName);
-            }
-        }
+        //update local
+        const allProjects = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects));
+        let projectsArray = allProjects || []
+        const specificProject = projectsArray.findIndex((project) => project.projectName === oldName);
+        projectsArray[specificProject].projectName = projectName;
+        localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(projectsArray))
         if (localStorage.getItem("isSigIn") === "true") {
-            data = Object.assign(data, {projectName: updatedProjectName});
+            data = Object.assign(data, {projectName: projectName});
             if (oldName === getCurrentProject().projectName) {
-                updateCurrentProject(data.id, updatedProjectName, data.xmlValue)
+                updateCurrentProject(data.id, projectName, data.xmlValue)
             }
-            const allProjects = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects));
-            let projectsArray = allProjects || []
-            const specificProject = projectsArray.findIndex((project) => project.projectName === oldName);
-            projectsArray[specificProject].projectName = updatedProjectName;
-            localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(projectsArray))
+
             const xmlFileExists = await checkFileExistsInFolder(await getFolderId(), oldName, "xml");
             const jsFileExists = await checkFileExistsInFolder(await getFolderId(), oldName, "js");
             if (xmlFileExists.exists)
-                await fileRename(updatedProjectName, oldName, "xml")
+                await fileRename(projectName, oldName, "xml")
             if (jsFileExists.exists)
-                await fileRename(updatedProjectName, oldName, "js")
-            window.location.reload();
+                await fileRename(projectName, oldName, "js")
 
         } else {
-            data = Object.assign(data, {projectName: updatedProjectName});
-            console.log("data::::", data)
-            updateCurrentProject(data.id, updatedProjectName, data.xmlValue)
+            if (oldName === getCurrentProject()?.projectName) {
+                data = Object.assign(data, {projectName: projectName});
+                updateCurrentProject(data.id, projectName, data.xmlValue)
+            }
+        }
+        if(screen === PathName.home){
+            window.location.reload();
         }
     }
 }

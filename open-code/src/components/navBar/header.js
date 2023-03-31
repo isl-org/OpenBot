@@ -11,7 +11,7 @@ import {DeleteModel, LogOutModal} from "../homeComponents/header/logOutAndDelete
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
 import {PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
-import {renameProject} from "../../services/workspace";
+
 
 /**
  * Open-code's header which contains logo, project name on playground screen and help button, profile signIn

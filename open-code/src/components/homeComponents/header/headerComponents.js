@@ -13,6 +13,8 @@ import WhiteText from "../../fonts/whiteText";
 import {googleSigIn} from "../../../services/firebase";
 import React, {useEffect, useRef, useState} from "react";
 import {renameProject} from "../../../services/workspace";
+import {PathName} from "../../../utils/constants";
+import {handleRename} from "../myProjects/card";
 
 
 /**
@@ -83,10 +85,9 @@ export function ProjectNamePopUp(params) {
         setDeleteProject(true)
     }
     const handleBlur = async () => {
-        setProjectName(reNameProject)
-        setRename(false)
         setOpen(false)
-        await renameProject(reNameProject, projectName).then()
+        handleClickBlur().then();
+
     }
     const handleClickOutside = () => {
         setOpenPopUp(false);
@@ -94,8 +95,18 @@ export function ProjectNamePopUp(params) {
             setOpen(false)
 
     }
-
-
+    const handleClickBlur = async () => {
+        setRename(false)
+        if (!reNameProject || reNameProject <= 0) {
+            setRenameProject(projectName)
+        }
+        if (reNameProject !== projectName) {
+            await handleRename(reNameProject, projectName, setRenameProject).then(async (updatedProjectName) => {
+                setProjectName(updatedProjectName);
+                await renameProject(updatedProjectName, projectName, PathName.playGround).then()
+            });
+        }
+    }
     return (
         <div className={styles.playgroundName}>
             {/*project name with edit field and arrow*/}
@@ -111,10 +122,7 @@ export function ProjectNamePopUp(params) {
                        onBlur={handleBlur}
                        onKeyDown={async (e) => {
                            if (e.keyCode === 13) {
-                               setRename(false)
-                               setOpen(false)
-                               setProjectName(reNameProject)
-                               await renameProject(reNameProject, projectName).then()
+                               handleBlur().then()
                            }
                        }}
                        style={{width: `${reNameProject?.length}ch`}}
@@ -138,13 +146,26 @@ export function ProjectNamePopUp(params) {
                                   setRename={setRename}
                                   clickOutside={handleClickOutside}
                                   handleDelete={handleDelete}
+                                  handleRename={() => {
+                                  }}
                                   theme={theme}/>}
         </div>
     )
 }
 
 export function EditProjectPopUp(params) {
-    const {open, anchorEl, setRename, handleDelete, theme, extraStyle, clickOutside, rename, inputRef} = params
+    const {
+        open,
+        anchorEl,
+        setRename,
+        handleDelete,
+        theme,
+        extraStyle,
+        clickOutside,
+        rename,
+        inputRef,
+        handleRename
+    } = params
     const id = open ? 'simple-popper' : undefined
     const popUpRef = useRef(null);
 
@@ -175,7 +196,7 @@ export function EditProjectPopUp(params) {
                         setTimeout(() => {
                             inputRef.current.focus(); // set focus to the input element when rename is true
                         }, 0);
-                        // await renameProject(projectName).then()
+                        handleRename();
                     }}>
                     <img alt="Icon" className={styles.icon} src={theme === "dark" ? renameIcon : Edit}/>
                     <div>Rename</div>

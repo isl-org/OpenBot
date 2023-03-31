@@ -8,9 +8,10 @@ import WhiteText from "../../fonts/whiteText";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
 import {getAllLocalProjects, getDriveProjects, renameProject} from "../../../services/workspace";
-import {localStorageKeys, Themes} from "../../../utils/constants";
+import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
 import {EditProjectPopUp} from "../header/headerComponents";
 import {DeleteModel} from "../header/logOutAndDeleteModal";
+import {handleUniqueName} from "./newProjectButton";
 
 function Card(props) {
     const {theme} = useContext(ThemeContext);
@@ -26,7 +27,7 @@ function Card(props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [reNameProject, setReNameProject] = useState("")
     const [deleteProject, setDeleteProject] = useState(false);
-
+    const inputRef = useRef(null);
 
     useEffect(() => {
         setReNameProject(props.projectData.projectName)
@@ -79,6 +80,19 @@ function Card(props) {
     const handleClickOutside = () => {
         setOpenPopUp(false);
     }
+    const handleClickBlur = async () => {
+        if (!reNameProject || reNameProject <= 0) {
+            setReNameProject(props.projectData.projectName)
+        }
+        setRename(false)
+        if (reNameProject !== props.projectData.projectName) {
+            await handleRename(reNameProject, props.projectData.projectName,setReNameProject).then(async (updatedProjectName) => {
+                await renameProject(updatedProjectName, props.projectData.projectName, PathName.home).then()
+            });
+        }
+    }
+
+
     return (
         <div className={styles.cardContent}>
             {deleteProject && <DeleteModel setDeleteProject={setDeleteProject}/>}
@@ -92,18 +106,18 @@ function Card(props) {
                     <div className={styles.CardHeadingIcon}>
                         {rename ? <input type="text" className={style.Edit}
                                          id="userEdit"
+
+                                         ref={inputRef} // set the ref to the input element
                                          onClick={(e) => e.stopPropagation()}
                                          onFocus={(e) => e.target.select()}
                                          onBlur={async () => {
-                                             setRename(false)
-                                             await renameProject(reNameProject,props.projectData.projectName).then()
-                                         }
-                                         }
+                                             console.log("reName::", reNameProject)
+                                             await handleClickBlur()
+                                         }}
                                          onChange={(e) => setReNameProject(e.target.value)}
                                          onKeyDown={async (e) => {
                                              if (e.keyCode === 13) {
-                                                 setRename(false)
-                                                 await renameProject(reNameProject,props.projectData.projectName).then()
+                                                 await handleClickBlur()
                                              }
                                          }}
                                          style={{width: `${props.projectData.projectName?.length}ch`}}
@@ -121,8 +135,12 @@ function Card(props) {
                     <EditProjectPopUp open={openPopUp} anchorEl={anchorEl}
                                       setOpen={setOpenPopUp}
                                       setRename={setRename}
+                                      inputRef={inputRef}
                                       clickOutside={handleClickOutside}
                                       projectName={reNameProject}
+                                      handleRename={() => {
+                                          setOpenPopUp(false)
+                                      }}
                                       handleDelete={(e) => handleDelete(e)}
                                       theme={theme}
                                       extraStyle={styles.optionExtraStyle}
@@ -137,3 +155,20 @@ function Card(props) {
 }
 
 export default Card;
+
+export const handleRename = async (reNameProject, projectName,setReNameProject) => {
+    let updatedProjectName = reNameProject;
+    if (reNameProject !== projectName) {
+        console.log("rename:::", reNameProject)
+        const projectWithSameName = getAllLocalProjects()?.find((project) => project.projectName === reNameProject)
+        console.log("pr:::", projectWithSameName)
+        if (reNameProject === projectWithSameName?.projectName) {
+            let projectsArray = getAllLocalProjects();
+            if (projectsArray) {
+                updatedProjectName = handleUniqueName(projectsArray, updatedProjectName, reNameProject);
+            }
+        }
+        setReNameProject(updatedProjectName)
+    }
+    return updatedProjectName
+}

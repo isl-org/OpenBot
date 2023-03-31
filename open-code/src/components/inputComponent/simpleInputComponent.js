@@ -3,9 +3,19 @@ import styles from "./inputComponent.module.css"
 import BlackText from "../fonts/blackText";
 import {ThemeContext} from "../../App";
 import {colors} from "../../utils/color";
+import {renameProject} from "../../services/workspace";
 
 export default function SimpleInputComponent(props) {
-    const {inputTitle, extraStyle, inputType, onDataChange, extraMargin, placeHolder, value} = props
+    const {
+        inputTitle,
+        extraStyle,
+        inputType,
+        onDataChange,
+        extraMargin,
+        placeHolder,
+        value,
+        OpenNewProjectHandle = ()=>{}
+    } = props
     const [inputValue, setInputValue] = useState(value ? value : '');
     const theme = useContext(ThemeContext);
     const date = new Date()
@@ -24,6 +34,11 @@ export default function SimpleInputComponent(props) {
                     <input type={"text"}
                            name={"inputBox"}
                            placeholder={placeHolder}
+                           onKeyDown={(e) => {
+                               if (e.keyCode === 13) {
+                                   OpenNewProjectHandle()
+                               }
+                           }}
                            className={styles.inputSection}
                            value={inputValue} onChange={handleChange}
                            style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}
