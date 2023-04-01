@@ -11,6 +11,8 @@ import {DeleteModel, LogOutModal} from "../homeComponents/header/logOutAndDelete
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
 import {PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
+import {useTheme} from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 
 /**
@@ -101,28 +103,28 @@ export function Header() {
  */
 function RightSection(params) {
     const {setIsHelpCenterModal, toggleTheme, theme, setIsProfileModal, user, setUser, location} = params
+    const themes = useTheme();
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     return (
         <>
-            {/*help icon if screen is playground*/}
-            {location.pathname === PathName.playGround &&
-                <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon}
-                     onClick={() => {
-                         setIsHelpCenterModal(true)
-                     }}
-                     style={{height: 24}}/>
+
+            {/*help icon if screen is playground and device is not mobile*/}
+            {location.pathname === PathName.playGround && !isMobile &&
+                < img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon}
+                      onClick={() => setIsHelpCenterModal(true)}
+                      style={{height: 24}}/>
             }
-
-            {/*change theme icon*/}
-            {theme === "dark" ? <img alt="icon" onClick={() => toggleTheme(!theme)}
-                                     src={Images.lightThemeIcon}
-                                     className={`${styles.lightThemeIcon} ${styles.iconMargin}`}/> :
-                <img alt="icon" onClick={() => toggleTheme(!theme)}
-                     src={Images.darkThemeIcon}
-                     className={`${styles.darkThemeIcon} ${styles.iconMargin}`}/>}
-
-            {/*divider*/}
-            <img alt="icon" src={Images.line} className={`${styles.lineIcon} ${styles.iconMargin}`}/>
-
+            {/*if screen is playground and it's mobile than do not show change theme icon and divider*/}
+            {!(location.pathname === PathName.playGround && isMobile) &&
+                <>
+                    {/*change theme icon*/}
+                    <img alt="icon" onClick={() => toggleTheme(!theme)}
+                         src={theme === "dark" ? Images.lightThemeIcon : Images.darkThemeIcon}
+                         className={`${theme === "dark" ? styles.lightThemeIcon : styles.darkThemeIcon} ${styles.iconMargin}`}/>
+                    {/*divider*/}
+                    <img alt="icon" src={Images.line} className={`${styles.lineIcon} ${styles.iconMargin}`}/>
+                </>
+            }
             {/*if signed in then show icon and name or else sign in option*/}
             <ProfileSignIn setIsProfileModal={setIsProfileModal} user={user} setUser={setUser}/>
         </>
@@ -133,7 +135,7 @@ function RightSection(params) {
 /**
  * when screen is playground will show project name on center of the header
  * @param params
- * @returns {JSX.Element|string}
+ * @returns {JSX.Element | string}
  * @constructor
  */
 function ProjectNameSection(params) {
@@ -141,7 +143,7 @@ function ProjectNameSection(params) {
     const location = useLocation();
     return (
         location.pathname === PathName.playGround ? !open ?
-                <ProjectName handleClick={handleClick} projectName={projectName} />
+                <ProjectName handleClick={handleClick} projectName={projectName}/>
                 :
                 <ProjectNamePopUp anchorEl={anchorEl} setOpen={setOpen} setProjectName={setProjectName}
                                   handleClick={handleClick} projectName={projectName} open={open}

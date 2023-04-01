@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import {QRCodeCanvas} from "qrcode.react";
 import {colors} from "../../utils/color";
-import icon from "../../assets/images/icon/open-bot-logo.png"
+import icon from "../../assets/images/icon/OBplaygroundLogo.png"
 import {qrStyles} from "./styles";
 import {StoreContext} from "../../context/context";
 

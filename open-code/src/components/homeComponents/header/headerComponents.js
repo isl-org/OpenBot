@@ -1,8 +1,8 @@
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import styles from "../../navBar/navbar.module.css";
-import icon from "../../../assets/images/icon/open-bot-logo.png";
+import icon from "../../../assets/images/icon/OBplaygroundLogo.png";
 import downArrow from "../../../assets/images/icon/down-arrow.png";
-import {Popper} from "@mui/material";
+import {Popper, useTheme} from "@mui/material";
 import UpArrow from "../../../assets/images/icon/up-arrow.png";
 import renameIcon from "../../../assets/images/icon/rename-icon.png";
 import Edit from "../../../assets/images/icon/edit.png";
@@ -15,6 +15,8 @@ import React, {useEffect, useRef, useState} from "react";
 import {renameProject} from "../../../services/workspace";
 import {PathName} from "../../../utils/constants";
 import {handleRename} from "../myProjects/card";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import {Images} from "../../../utils/images";
 
 
 /**
@@ -23,8 +25,7 @@ import {handleRename} from "../myProjects/card";
  * @constructor
  */
 export function LogoSection() {
-    let navigate = useNavigate();
-
+    let navigate = useNavigate()
     //onClickEvent
     const openHomepage = () => {
         let path = `/`;
@@ -35,9 +36,11 @@ export function LogoSection() {
             <img alt="" className={`${styles.mainIcon} ${styles.iconMargin}`} src={icon} onClick={() => {
                 openHomepage()
             }}/>
-            <span onClick={() => {
-                openHomepage()
-            }} className={`${styles.mainTitle} ${styles.iconMargin}`}>OpenCode</span>
+            <div className={styles.navbarHeadDiv} onClick={() => openHomepage()}>
+                <span className={`${styles.mainTitle} `}>OpenBot</span>
+                <span className={`${styles.mainTitle} ${styles.subTitle}`}>PlayGround</span>
+            </div>
+
         </div>
     )
 }
@@ -222,6 +225,9 @@ export function EditProjectPopUp(params) {
  */
 export function ProfileSignIn(params) {
     const {setIsProfileModal, user, setUser} = params
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const location = useLocation();
 
     const handleSignIn = () => {
         googleSigIn().then(response => {
@@ -237,23 +243,40 @@ export function ProfileSignIn(params) {
 
     return (
         localStorage.getItem("isSigIn") === "true" ?
-            <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
-                {/*image display*/}
-                {user?.photoURL ?
+            <ImageWithArrow setIsProfileModal={setIsProfileModal} user={user} isMobile={isMobile} signIn={true}/>
+            :
+            (isMobile && location.pathname === PathName.playGround) ?
+                //user is not signedIn and in playground screen then show avatar
+                <ImageWithArrow setIsProfileModal={setIsProfileModal} user={user} isMobile={isMobile} signIn={false}/>
+                :
+                // signIn button
+                <button onClick={() => handleSignIn()} className={`${styles.buttonIcon} ${styles.iconMargin}`}>
+                    <span>Sign in</span>
+                </button>
+
+    )
+}
+
+function ImageWithArrow(params) {
+    const {setIsProfileModal, user, isMobile, signIn} = params
+    return (
+        <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
+            {/*image display*/}
+            {signIn ? user?.photoURL ?
                     <img alt="Profile Icon" src={user.photoURL}
                          style={{height: 28, width: 28, borderRadius: 90,}}/>
                     :
                     <LoaderComponent color="white" height="20" width="20"/>
-                }
-                {/*name*/}
-                <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>
-                {/*dropdown arrow*/}
-                <img alt="arrow button" src={downArrow} style={{height: 20, width: 20}}/>
-            </div>
-            :
-            //signIn button
-            <button onClick={() => handleSignIn()} className={`${styles.buttonIcon} ${styles.iconMargin}`}>
-                <span>Sign in</span>
-            </button>
+                :
+                //Show avatar when not signIn
+                <img alt="Profile Icon" src={Images.avatar}
+                     style={{height: 28, width: 28, borderRadius: 90,}}/>
+            }
+            {/*name*/}
+            {!isMobile && <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>}
+            {/*dropdown arrow*/}
+            <img alt="arrow button" className={styles.icon} src={downArrow}
+                 style={{height: isMobile ? 25 : 20, width: isMobile ? 25 : 20}}/>
+        </div>
     )
 }

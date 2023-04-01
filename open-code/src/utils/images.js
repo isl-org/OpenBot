@@ -14,7 +14,7 @@ import successfulEmojiIcon from "../../src/assets/images/icon/successful-emoji.p
 import errorEmojiIcon from "../../src/assets/images/icon/error-emozi-icon.png"
 import pencilIcon from "../../src/assets/images/icon/pencil-icon.png"
 import darkPencilIcon from "../../src/assets/images/icon/dark-pencil-icon.png"
-import logo from "../../src/assets/images/icon/open-bot-logo.png"
+import logo from "../../src/assets/images/icon/OBplaygroundLogo.png"
 import dragDropWhite from "../../src/assets/images/drag_drop_white.mp4";
 import dragDropDark from "../../src/assets/images/drag_drop_dark.mp4";
 import Carousal2 from "../../src/assets/images/qr_light.mov";
@@ -26,6 +26,7 @@ import lightThemeIcon from "../assets/images/icon/light-theme-icon.png"
 import darkThemeIcon from "../assets/images/icon/whiteMode/white-mode-icon.png"
 import dots from  "../assets/images/threedots.png";
 import darkDots from "../assets/images/darkdoticon.png";
+import avatar from "../assets/images/icon/Avatars.png";
 
 export const Images = {
     helpIcon: helpIcon,
@@ -56,5 +57,6 @@ export const Images = {
     darkThemeIcon:darkThemeIcon,
     dots:dots,
     darkDots:darkDots,
+    avatar:avatar,
 
 }

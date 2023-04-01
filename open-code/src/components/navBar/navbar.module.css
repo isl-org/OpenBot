@@ -334,6 +334,12 @@
     align-items: center;
 }
 
+.navbarHeadDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
 .navbarIconDiv {
     display: flex;
     align-items: center;
@@ -341,8 +347,8 @@
 }
 
 .mainIcon {
-    height: 2rem;
-    width: 2rem;
+    height: 2.5rem;
+    width: 2.5rem;
     cursor: pointer;
 }
 
@@ -351,6 +357,10 @@
     font-family: Gilroy-Medium, sans-serif;
     color: rgb(255, 255, 255);
     cursor: pointer;
+}
+
+.subTitle {
+    font-family: Gilroy-Regular, sans-serif;
 }
 
 .infoIcon {
@@ -365,7 +375,7 @@
     cursor: pointer;
 }
 
-.lightThemeIcon{
+.lightThemeIcon {
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;
@@ -399,4 +409,34 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .mainTitle {
+        font-size: 1.0rem;
+    }
+    /* CSS styles for screens smaller than 768px */
+    .navbarTitleDiv {
+        margin-left: 1rem;
+    }
+    .iconMargin {
+        margin: 0px 10px 0px -2px;
+    }
+    .changeThemeIcon{
+        margin-left: 20px;
+    }
+    .navbarIconDiv {
+        margin-right: 0.5rem;
+    }
+    .lineIcon {
+        width: 0.7%;
+    }
+    .icon{
+        margin-left: 2px;
+    }
+    .mainIcon {
+        height:2rem;
+        width: 2rem;
+    }
+
 }
