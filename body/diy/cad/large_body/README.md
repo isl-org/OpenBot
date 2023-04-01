@@ -9,7 +9,7 @@ This robot chassis provides some extra height to make it easier to fit in all th
 You will need to print the following STL files:
 
 - `large_body_bottom`([STL](large_body_bottom.stl), [STEP](large_body_bottom.step)): bottom part of the body
-- `large_body_top_lego`([STL](large_body_top_lego.stl), [STEP](large_body_top_lego.step)) or `large_body_top`([STL](large_body_top.stl), [STEP](large_body_top.step)): top part of the body, with or without lego-compatible surface)
+- `large_body_top_lego`([STL](large_body_top_lego.stl), [STEP](large_body_top_lego.step)) or `large_body_top`([STL](large_body_top.stl), [STEP](large_body_top.step)): top part of the body, with or without lego-compatible surface
 
 For the above parts, your build plate needs to be at least 222x150mm.
 
