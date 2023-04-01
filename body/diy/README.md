@@ -5,36 +5,31 @@
   <a href="README_CN.md">简体中文</a>
 </p>
 
-We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware.
-![Assembly](../../docs/images/assembly.gif)
+We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware. You can find instructions for building you own robot below. If you have any further questions or concerns, please feel free to contact us. Happy robot building!
 
 ## Chassis
 
 ### 3D printing
 
-You will need to print the following parts in order to build your OpenBot.
+You will need to print and assemble the following parts in order to build your OpenBot.
 
-1) body_bottom ([STL](cad/regular_body/body_bottom.stl), [STEP](cad/regular_body/body_bottom.step))
-2) body_top ([STL](cad/regular_body/body_top.stl), [STEP](cad/regular_body/body_top.step))
-3) phone_mount_bottom ([STL](../phone_mount/phone_mount_bottom.stl), [STEP](../phone_mount/phone_mount_bottom.step))
-4) phone_mount_top ([STL](../phone_mount/phone_mount_top.stl), [STEP](../phone_mount/phone_mount_top.step))
+#### Robot body
 
-For the above parts, your build plate needs to be at least 240mmx150mm.
+There are several options for the robot body depending on your needs and capabilities of your 3D printer. We encourage you to design and build your own, but here are some options as starting point: 
 
-Since a lot of common 3D printers have a smaller build volume, we have also made a [slim body](cad/slim_body/README.md) which fits on a 220mmx220mm build plate at 45 degrees.
+- [Regular body](cad/regular_body/README.md): This is the standard body we designed; it requires a build plate with least 240mmx150mm.
+- [Slim body](cad/slim_body/README.md): Since a lot of common 3D printers have a smaller build volume, we have also designed a smaller version without bumpers which fits on a 220mmx220mm build plate at 45 degrees.
+- [Glueable body](cad/glue_body/README.md): For printing on 3D printers with even smaller build volumes, there is also a modular body designed by @sloretz with serveral parts that need to be glued together; it fits on a 150mmx140mm build plate.
+- [Large body](cad/large_body/README.md): This body provides extra space inside the shell and a lego-compatible top while maintaining a small footprint that requires only 222mmx150mm for printing.
 
-For printing on 3D printers with even smaller build volumes, there is also a [glueable body](cad/glue_body/README.md) which fits on a 150mmx140mm build plate. Thanks to @sloretz.
+#### Phone mount
 
-On an Ultimaker S5, we achieved good results with the following settings:
+In addition, you will need to print a phone mount to be fixed to robot body.
 
-- layer height: 0.2mm
-- wall thickness: 1.5mm
-- infill density: 20%
-- infill pattern: grid
-- print speed 80 mm/s
-- no support
+- phone_mount_bottom ([STL](../phone_mount/phone_mount_bottom.stl), [STEP](../phone_mount/phone_mount_bottom.step))
+- phone_mount_top ([STL](../phone_mount/phone_mount_top.stl), [STEP](../phone_mount/phone_mount_top.step))
 
-We were able to print the chassis with PLA, ABS and CPE. In our experience the print was not affected very much by the print settings. However, if you have the patience, printing slower and with smaller layer height will improve the print. Also adding a support structure can improve the print, but it will require additional work to remove afterwards.
+#### Cleaning
 
 Before you proceed with the build, you may need to clean the 3D print.
 <p float="left">
