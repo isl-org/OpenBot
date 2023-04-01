@@ -39,6 +39,7 @@ public class ProjectsFragment extends ControlsFragment {
     private TextView userName;
     private TextView loadingText;
     private GoogleServices googleServices;
+    private int previousSpeedMultiplier;
 
     @Override
     public View onCreateView(
@@ -82,19 +83,35 @@ public class ProjectsFragment extends ControlsFragment {
 //                String code = "function start(){moveForward(30); wait(5000); stop(); moveBackward(200); moveLeft(100); moveRight(100);}function forever(){}start();forever();";
                 String code = fileContents;
                 String[] botFunctionArray = {
-                        "moveCircular",
                         "moveForward",
-                        "moveOpenBot",
-                        "stop",
                         "moveBackward",
                         "moveLeft",
                         "moveRight",
-                        "wait",
+                        "moveOpenBot",
+                        //"moveCircular",
+                        "pause",
+                        "stopRobot",
+
+                        "sonarReading",
+                        "speedReading",
+                        "voltageDividerReading",
+                        "frontWheelReading",
+                        "backWheelReading",
+                        "gyroscopeReading",
+                        "accelerationReading",
+                        "magneticReading",
+                        "indicatorReading",
+
+                        "playSound",
+                        "playSoundSpeed",
+                        "rightIndicatorOn",
+                        "leftIndicatorOn",
+                        "IndicatorOff",
                 };
 
                 for (String fun : botFunctionArray) {
                     if (code.contains(fun)) {
-                        code = code.replace(fun, "Android.openBot" + fun);
+                        code = code.replace(fun, "Android" + fun);
                     }
                 }
                 String finalCode = code;
@@ -104,6 +121,8 @@ public class ProjectsFragment extends ControlsFragment {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            previousSpeedMultiplier = vehicle.getSpeedMultiplier();
+                            vehicle.setSpeedMultiplier(255);
                             loadingText.setVisibility(View.GONE);
                             runOpenBot.setVisibility(View.VISIBLE);
                             myWebView.addJavascriptInterface(new BotFunctions(vehicle), "Android");
@@ -179,6 +198,16 @@ public class ProjectsFragment extends ControlsFragment {
         } else {
             runOpenBot.setVisibility(View.GONE);
         }
+        System.out.println(vehicle.getSpeedMultiplier());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (previousSpeedMultiplier != 0) {
+            vehicle.setSpeedMultiplier(previousSpeedMultiplier);
+        }
+        System.out.println("on pause = " + vehicle.getSpeedMultiplier());
     }
 
     @Override
