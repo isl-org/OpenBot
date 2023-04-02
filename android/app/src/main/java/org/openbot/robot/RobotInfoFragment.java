@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-
 import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
 import java.util.Locale;
@@ -46,16 +44,16 @@ public class RobotInfoFragment extends ControlsFragment {
     binding.bleToggle.setChecked(vehicle.bleConnected());
 
     binding.usbToggle.setOnClickListener(
-            v -> {
-              binding.usbToggle.setChecked(vehicle.isUsbConnected());
-              Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
-            });
+        v -> {
+          binding.usbToggle.setChecked(vehicle.isUsbConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+        });
 
     binding.bleToggle.setOnClickListener(
-            v -> {
-              binding.bleToggle.setChecked(vehicle.bleConnected());
-              Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
-            });
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+        });
 
     binding.usbToggle.setOnCheckedChangeListener((buttonView, isChecked) -> refreshGui());
     binding.bleToggle.setOnCheckedChangeListener((buttonView, isChecked) -> refreshGui());
