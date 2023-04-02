@@ -89,14 +89,12 @@ public class AutopilotFragment extends CameraFragment {
     binding.threads.setText(String.valueOf(getNumThreads()));
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    CheckBox bleCb = getView().findViewById(R.id.bleToggle);
-    CheckBox USBCb = getView().findViewById(R.id.usbToggle);
     if (vehicle.getConnectionType().equals("USB")) {
-      USBCb.setVisibility(View.VISIBLE);
-      bleCb.setVisibility(View.INVISIBLE);
+      binding.usbToggle.setVisibility(View.VISIBLE);
+      binding.bleToggle.setVisibility(View.GONE);
     } else if (vehicle.getConnectionType().equals("Bluetooth")) {
-      bleCb.setVisibility(View.VISIBLE);
-      USBCb.setVisibility(View.INVISIBLE);
+      binding.bleToggle.setVisibility(View.VISIBLE);
+      binding.usbToggle.setVisibility(View.GONE);
     }
     List<String> models =
         getModelNames(f -> f.type.equals(Model.TYPE.CMDNAV) && f.pathType != Model.PATH_TYPE.URL);

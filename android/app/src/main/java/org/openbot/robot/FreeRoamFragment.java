@@ -50,14 +50,12 @@ public class FreeRoamFragment extends ControlsFragment {
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
     binding.sonarInfo.setText(getString(R.string.distanceInfo, "---"));
 
-    CheckBox bleCb = getView().findViewById(R.id.bleToggle);
-    CheckBox USBCb = getView().findViewById(R.id.usbToggle);
     if (vehicle.getConnectionType().equals("USB")) {
-      USBCb.setVisibility(View.VISIBLE);
-      bleCb.setVisibility(View.INVISIBLE);
+      binding.usbToggle.setVisibility(View.VISIBLE);
+      binding.bleToggle.setVisibility(View.GONE);
     } else if (vehicle.getConnectionType().equals("Bluetooth")) {
-      bleCb.setVisibility(View.VISIBLE);
-      USBCb.setVisibility(View.INVISIBLE);
+      binding.bleToggle.setVisibility(View.VISIBLE);
+      binding.usbToggle.setVisibility(View.GONE);
     }
 
     setSpeedMode(SpeedMode.getByID(preferencesManager.getSpeedMode()));

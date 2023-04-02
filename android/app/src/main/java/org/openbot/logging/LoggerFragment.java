@@ -86,14 +86,12 @@ public class LoggerFragment extends CameraFragment {
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
 
-    CheckBox bleCb = getView().findViewById(R.id.bleToggle);
-    CheckBox USBCb = getView().findViewById(R.id.usbToggle);
     if (vehicle.getConnectionType().equals("USB")) {
-      USBCb.setVisibility(View.VISIBLE);
-      bleCb.setVisibility(View.INVISIBLE);
+      binding.usbToggle.setVisibility(View.VISIBLE);
+      binding.bleToggle.setVisibility(View.GONE);
     } else if (vehicle.getConnectionType().equals("Bluetooth")) {
-      bleCb.setVisibility(View.VISIBLE);
-      USBCb.setVisibility(View.INVISIBLE);
+      binding.bleToggle.setVisibility(View.VISIBLE);
+      binding.usbToggle.setVisibility(View.GONE);
     }
 
     binding.sensorDataButton.setOnClickListener(
