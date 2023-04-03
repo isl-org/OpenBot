@@ -2,6 +2,8 @@ package org.openbot.projects;
 
 import android.webkit.JavascriptInterface;
 
+import org.openbot.env.AudioPlayer;
+import org.openbot.utils.Enums;
 import org.openbot.vehicle.Control;
 import org.openbot.vehicle.Vehicle;
 
@@ -9,10 +11,12 @@ import timber.log.Timber;
 
 public class BotFunctions {
     private Vehicle v;
+    private AudioPlayer ap;
     private String TAG = "sensor reading";
 
-    public BotFunctions(Vehicle vehicle) {
+    public BotFunctions(Vehicle vehicle, AudioPlayer audioPlayer) {
         v = vehicle;
+        ap = audioPlayer;
     }
 
     /**
@@ -106,7 +110,7 @@ public class BotFunctions {
 
     @JavascriptInterface
     public void gyroscopeReading() {
-//        Timber.tag(TAG).d("Odometer Back - %s", v.);
+
     }
 
     @JavascriptInterface
@@ -128,27 +132,34 @@ public class BotFunctions {
      * service command to robot
      */
     @JavascriptInterface
-    public void playSound(boolean isPlay) {
-
+    public void noiseEnable(boolean playSound) {
+        ap.playNoise("matthew", playSound);
     }
 
     @JavascriptInterface
-    public void playSoundSpeed(String soundType) {
-
+    public void playSoundSpeed(String speedMode) {
+        switch (speedMode) {
+            case "slow":
+                ap.playSpeedMode("matthew", Enums.SpeedMode.SLOW);
+            case "medium":
+                ap.playSpeedMode("matthew", Enums.SpeedMode.NORMAL);
+            case "fast":
+                ap.playSpeedMode("matthew", Enums.SpeedMode.FAST);
+        }
     }
 
     @JavascriptInterface
     public void rightIndicatorOn() {
-
+        v.setIndicator(1);
     }
 
     @JavascriptInterface
     public void leftIndicatorOn() {
-
+        v.setIndicator(-1);
     }
 
     @JavascriptInterface
     public void IndicatorOff() {
-
+        v.setIndicator(0);
     }
 }

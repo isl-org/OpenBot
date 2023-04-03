@@ -79,8 +79,6 @@ public class ProjectsFragment extends ControlsFragment {
         new ReadFileTask(fileId, new ReadFileCallback() {
             @Override
             public void onFileRead(String fileContents) {
-                Log.d("TAG", "sendStringToDevice: %s" + fileContents);
-//                String code = "function start(){moveForward(30); wait(5000); stop(); moveBackward(200); moveLeft(100); moveRight(100);}function forever(){}start();forever();";
                 String code = fileContents;
                 String[] botFunctionArray = {
                         "moveForward",
@@ -102,20 +100,18 @@ public class ProjectsFragment extends ControlsFragment {
                         "magneticReading",
                         "indicatorReading",
 
-                        "playSound",
+                        "noiseEnable",
                         "playSoundSpeed",
                         "rightIndicatorOn",
                         "leftIndicatorOn",
                         "IndicatorOff",
                 };
-
                 for (String fun : botFunctionArray) {
                     if (code.contains(fun)) {
-                        code = code.replace(fun, "Android" + fun);
+                        code = code.replace(fun, "Android." + fun);
                     }
                 }
                 String finalCode = code;
-                System.out.println("final code = " + finalCode);
                 Activity activity = getActivity();
                 if (activity != null) {
                     activity.runOnUiThread(new Runnable() {
@@ -125,7 +121,7 @@ public class ProjectsFragment extends ControlsFragment {
                             vehicle.setSpeedMultiplier(255);
                             loadingText.setVisibility(View.GONE);
                             runOpenBot.setVisibility(View.VISIBLE);
-                            myWebView.addJavascriptInterface(new BotFunctions(vehicle), "Android");
+                            myWebView.addJavascriptInterface(new BotFunctions(vehicle, audioPlayer), "Android");
                             myWebView.evaluateJavascript(finalCode, null);
                         }
                     });
@@ -198,7 +194,6 @@ public class ProjectsFragment extends ControlsFragment {
         } else {
             runOpenBot.setVisibility(View.GONE);
         }
-        System.out.println(vehicle.getSpeedMultiplier());
     }
 
     @Override
@@ -207,7 +202,6 @@ public class ProjectsFragment extends ControlsFragment {
         if (previousSpeedMultiplier != 0) {
             vehicle.setSpeedMultiplier(previousSpeedMultiplier);
         }
-        System.out.println("on pause = " + vehicle.getSpeedMultiplier());
     }
 
     @Override
