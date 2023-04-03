@@ -56,7 +56,7 @@ The [DefaultActivity](src/main/java/org/openbot/original/DefaultActivity.java) i
 
 #### USB Connection
 
-Same as in the [settings menu](#se).
+Same as in the [settings menu](#settings-menu).
 
 #### Vehicle Status
 
