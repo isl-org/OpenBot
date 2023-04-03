@@ -1,9 +1,9 @@
 import * as Blockly from "blockly/core";
-
 import '../fields/BlocklyReactField';
 import '../fields/DateField';
-
 import '@blockly/field-date';
+import {FieldToggle} from "./field_toggle";
+
 
 let reactDateField = {
     "type": "test_react_date_field",
@@ -409,99 +409,6 @@ Blockly.Blocks["left&RightAtSpeed"] = {
     }
 };
 
-Blockly.Blocks["left&RightAtSpeedForTime"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "move %1 at speed %2 for %3 ms",
-            "args0": [
-                {
-                    "type": "field_dropdown",
-                    "name": "select_direction",
-                    "options": [
-                        [
-                            "left",
-                            "left_direction"
-                        ],
-                        [
-                            "right",
-                            "right_direction"
-                        ]
-                    ]
-                },
-                {
-                    "type": "field_number",
-                    "name": "speed_value",
-                    "value": 30,
-                    "min": -255,
-                    "max": 255
-                },
-                {
-                    "type": "field_number",
-                    "name": "time",
-                    "value": 400
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["straightAtSpeed"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "go straight at speed %1",
-            "args0": [
-                {
-                    "type": "field_number",
-                    "name": "speed_value",
-                    "value": 30,
-                    "min": -255,
-                    "max": 255
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["straightAtSpeedForTime"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "go straight at speed %1 for %2 ms",
-            "args0": [
-                {
-                    "type": "field_number",
-                    "name": "speed_value",
-                    "value": 30,
-                    "min": -255,
-                    "max": 255
-                },
-                {
-                    "type": "field_number",
-                    "name": "time_value",
-                    "value": 300
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
 Blockly.Blocks["moveLeft&Right"] = {
     init: function () {
         this.jsonInit({
@@ -710,29 +617,6 @@ Blockly.Blocks["sonarReading"] = {
                 },
             ],
             "inputsInline": false,
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 240,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-
-Blockly.Blocks["batteryReading"] = {
-    init: function () {
-        this.jsonInit({
-
-            "type": "block_type",
-            "message0": "%1",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "battery",
-                    "text": "battery reading"
-                }
-            ],
             "previousStatement": null,
             "nextStatement": null,
             "colour": 240,
@@ -952,61 +836,171 @@ Blockly.Blocks["forever"] = {
     }
 };
 
-
-Blockly.Blocks["eclipse_block"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "eclipse_block",
-            "message0": "speed of car",
-            "output": null,
-            "colour": 15
-        });
-    }
-};
-
-Blockly.Blocks["value"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "eclipse_block",
-            "message0": "20 Km/hr",
-            "output": null,
-            "colour": 15
-        });
-    }
-};
-
-Blockly.Blocks["car_output"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "eclipse_block",
-            "message0": "slow down the car",
-            "output": null,
-            "colour": 180
-        });
-    }
-};
-
-Blockly.Blocks["display"] = {
+Blockly.Blocks["leftIndicator_led"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "%1 %2",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "NAME",
-                    "text": "display"
-                },
-                {
-                    "type": "input_value",
-                    "name": "NAME"
-                }
-            ],
+            "message0": "left indicator ON",
+            "inputsInline": true,
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 300,
+            "colour": 230,
             "tooltip": "",
             "helpUrl": ""
         });
     }
 };
+
+Blockly.Blocks["rightIndicator_led"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "right indicator ON",
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["indicatorStatus"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "Indicator OFF %1",
+            "args0": [
+                {
+                    "type": "field_checkbox",
+                    "name": "NAME",
+                    "checked": true
+                }
+            ],
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["gyroscope_reading"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "gyroscope reading",
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["acceleration_reading"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "acceleration reading",
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["magnetic_reading"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "magnetic reading %1",
+            "args0": [
+                {
+                    "type": "field_toggle",
+                    "name": "TOGGLE_STATE",
+                    "state": true,
+                    "onText": "ON",
+                    "offText": "OFF"
+                }
+            ],
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+
+Blockly.Blocks["speedSlow"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "change speed to slow",
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["speedMedium"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "change speed to medium",
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["speedHigh"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "change speed to high %1",
+            "args0": [
+                {
+                    "type": "field_toggle",
+                    "name": "TOGGLE_STATE",
+                    "state": true,
+                    "onText": "ON",
+                    "offText": "OFF"
+                }
+            ],
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+
+
+
+
+
+
+

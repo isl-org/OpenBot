@@ -120,7 +120,7 @@ function Card(props) {
                                                  await handleClickBlur()
                                              }
                                          }}
-                                         style={{width: `${props.projectData.projectName?.length}ch`}}
+                                         style={{width: `${props.projectData.projectName?.length*1.5}ch`}}
                                          value={reNameProject}
                         /> : theme === "dark" ?
                             <WhiteText extraStyle={styles.CardHeading} text={reNameProject}/> :
