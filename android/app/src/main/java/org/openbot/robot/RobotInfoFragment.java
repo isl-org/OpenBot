@@ -28,13 +28,20 @@ public class RobotInfoFragment extends ControlsFragment {
   public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    if (vehicle.getConnectionType().equals("USB")) {
+      binding.usbToggle.setVisibility(View.VISIBLE);
+      binding.bleToggle.setVisibility(View.GONE);
+    } else if (vehicle.getConnectionType().equals("Bluetooth")) {
+      binding.bleToggle.setVisibility(View.VISIBLE);
+      binding.usbToggle.setVisibility(View.GONE);
+    }
+
     mViewModel
         .getUsbStatus()
         .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
-
-    binding.usbToggle.setOnCheckedChangeListener((buttonView, isChecked) -> refreshGui());
+    binding.bleToggle.setChecked(vehicle.bleConnected());
 
     binding.usbToggle.setOnClickListener(
         v -> {
@@ -42,6 +49,14 @@ public class RobotInfoFragment extends ControlsFragment {
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
 
+    binding.bleToggle.setOnClickListener(
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+        });
+
+    binding.usbToggle.setOnCheckedChangeListener((buttonView, isChecked) -> refreshGui());
+    binding.bleToggle.setOnCheckedChangeListener((buttonView, isChecked) -> refreshGui());
     binding.refreshToggle.setOnClickListener(v -> refreshGui());
 
     binding.lightsSlider.addOnChangeListener(

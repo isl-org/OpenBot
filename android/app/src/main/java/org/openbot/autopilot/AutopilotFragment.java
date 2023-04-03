@@ -10,11 +10,11 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -89,14 +89,12 @@ public class AutopilotFragment extends CameraFragment {
     binding.threads.setText(String.valueOf(getNumThreads()));
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    CheckBox bleCb = getView().findViewById(R.id.bleToggle);
-    CheckBox USBCb = getView().findViewById(R.id.usbToggle);
     if (vehicle.getConnectionType().equals("USB")) {
-      USBCb.setVisibility(View.VISIBLE);
-      bleCb.setVisibility(View.INVISIBLE);
+      binding.usbToggle.setVisibility(View.VISIBLE);
+      binding.bleToggle.setVisibility(View.GONE);
     } else if (vehicle.getConnectionType().equals("Bluetooth")) {
-      bleCb.setVisibility(View.VISIBLE);
-      USBCb.setVisibility(View.INVISIBLE);
+      binding.bleToggle.setVisibility(View.VISIBLE);
+      binding.usbToggle.setVisibility(View.GONE);
     }
     List<String> models =
         getModelNames(f -> f.type.equals(Model.TYPE.CMDNAV) && f.pathType != Model.PATH_TYPE.URL);
@@ -314,6 +312,17 @@ public class AutopilotFragment extends CameraFragment {
   }
 
   @Override
+  protected void processKeyEvent(KeyEvent keyCode) {
+    if (binding.autoSwitch.isChecked()
+        && (keyCode.getKeyCode() == KeyEvent.KEYCODE_BUTTON_THUMBL
+            || keyCode.getKeyCode() == KeyEvent.KEYCODE_BUTTON_THUMBR)) {
+      audioPlayer.playFromString("Autopilot active. Cannot change speed mode.");
+    } else {
+      super.processKeyEvent(keyCode);
+    }
+  }
+
+  @Override
   protected void processControllerKeyData(String commandType) {
     switch (commandType) {
       case Constants.CMD_DRIVE:
@@ -368,13 +377,19 @@ public class AutopilotFragment extends CameraFragment {
     binding.autoSwitch.setChecked(b);
     binding.controllerContainer.controlMode.setEnabled(!b);
     binding.controllerContainer.driveMode.setEnabled(!b);
-    binding.controllerContainer.speedInfo.setEnabled(!b);
+    binding.controllerContainer.speedMode.setEnabled(!b);
 
     binding.controllerContainer.controlMode.setAlpha(b ? 0.5f : 1f);
     binding.controllerContainer.driveMode.setAlpha(b ? 0.5f : 1f);
     binding.controllerContainer.speedMode.setAlpha(b ? 0.5f : 1f);
 
-    if (!b) handler.postDelayed(() -> vehicle.setControl(0, 0), 500);
+    if (!b) {
+      setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
+      handler.postDelayed(() -> vehicle.setControl(0, 0), 500);
+    } else {
+      binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_high);
+      vehicle.setSpeedMultiplier(Enums.SpeedMode.FAST.getValue());
+    }
   }
 
   private long frameNum = 0;
@@ -478,7 +493,7 @@ public class AutopilotFragment extends CameraFragment {
   }
 
   private void setSpeedMode(Enums.SpeedMode speedMode) {
-    if (speedMode != null) {
+    if (speedMode != null && !binding.autoSwitch.isChecked()) {
       switch (speedMode) {
         case SLOW:
           binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_low);

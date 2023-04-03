@@ -2,8 +2,7 @@
 
 ## DISCLAIMERS
 
-1. **Safety:** Always make sure you operate in a safe environment. Keep in mind, that your phone could be damaged in a collision! Special 
-care is neccessary when using automated control (e.g. person following or driving policy). Make sure you always have a game controller connected and are familiar with the key mapping so you can stop the vehicle at any time. Use at your own risk!
+1. **Safety:** Always make sure you operate in a safe environment. Keep in mind, that your phone could be damaged in a collision! Special care is neccessary when using automated control (e.g. person following or driving policy). Make sure you always have a game controller connected and are familiar with the key mapping so you can stop the vehicle at any time. Use at your own risk!
 2. **App under development:** The application is under development and may crash or exhibit unexpected behaviour depending on your phone model and version of the operating system. Make sure to test all functionalities with no wheels connected. Use at your own risk!
 
 ## App Screens
@@ -28,6 +27,34 @@ The [DefaultActivity](src/main/java/org/openbot/original/DefaultActivity.java) i
 #### USB Connection
 
 The drop-down menu is used to set the baud rate. The default is 115200 and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
+
+#### Bluetooth connection
+
+Make sure that your android device has BLE(Bluetooth Low Energy) support.
+
+Select the connection type Bluetooth from the Settings menu.
+<p align="left">
+<img src="../../docs/images/ble_1.jpeg" alt="Settings Menu" width="25%"/>
+<img src="../../docs/images/ble_2.jpeg" alt="Choose connection type" width="25%"/>
+</p>
+
+If your Android version is greater than or equal to 7.0, you need to turn on the location service and allow location permission from setting to search for nearby BLE devices.
+
+If you choose the Bluetooth connection type, you get a Bluetooth icon on the home screen of the app. Tap the icon to start BLE scanning, it takes 4 seconds to scan all nearby BLE devices. Then you will get the list of all available BLE devices.
+<p align="left">
+<img src="../../docs/images/ble_3.jpeg" alt="Home Screen" width="25%"/>
+</p>
+
+After getting the list of BLE devices you can easily connect with your openBot by tapping on Connect button.
+<p align="left">
+<img src="../../docs/images/ble_4.jpeg" alt="BLE devices" width="25%"/>
+<img src="../../docs/images/ble_5.jpeg" alt="Connecting device" width="25%"/>
+</p>
+
+On successful connection the Connect button will change to Disconnect. You can now go back to the Home screen.
+<p align="left">
+<img src="../../docs/images/ble_6.jpeg" alt="Disconnect button" width="25%"/>
+</p>
 
 #### Vehicle Status
 
@@ -63,7 +90,7 @@ There are four different logging modes:
 - **preview_img**: All sensor data and a full-size images are saved. This will require a lot of memory and can be slow. However, it is nice for compiling FPV videos.
 - **all_imgs**: All sensor data and both cropped and full-size images are saved. This will require a lot of memory and can be slow.
 
-The switch on the right is used to toggle logging on and off. On the game controller this switch can be toggled with the X button. 
+The switch on the right is used to toggle logging on and off. On the game controller this switch can be toggled with the X button.
 
 #### Camera
 
@@ -78,13 +105,13 @@ There are two models that come with the app:
 
 Additonal models can be downloaded from the Model Management screen.
 
-The switch on the right is used to turn the network on and off. When the network is running, it produces the controls for the robot and the game controller is disabled. However, you may still use the buttons on the game controller, for example to toggle this switch with the R1 trigger button to regain control of the robot. 
+The switch on the right is used to turn the network on and off. When the network is running, it produces the controls for the robot and the game controller is disabled. However, you may still use the buttons on the game controller, for example to toggle this switch with the R1 trigger button to regain control of the robot.
 
 #### Device
 
 Use the drop-down menu to select the device on which the neural network should be executed. You have the following choices:
 
-- **CPU**: Using the CPU works on most phones and is the default choice. You can adjust the number of threads to optimize performance. 
+- **CPU**: Using the CPU works on most phones and is the default choice. You can adjust the number of threads to optimize performance.
 - **GPU**: Most smartphones have a GPU. Networks with large inputs such as images often run faster on a GPU.
 - **NNAPI**: This will use the [TensorFlow Lite NNAPI delegate](https://www.tensorflow.org/lite/performance/nnapi). Modern smartphones often come with dedicated AI accelerators. The [Neural Network API](https://developer.android.com/ndk/guides/neuralnetworks) (NNAPI) provides acceleration for TensorFlow Lite models on Android devices with Graphics Processing Unit (GPU), Digital Signal Processor (DSP) and Neural Processing Unit (NPU). Note that on some older phones this can be very slow!
 
@@ -102,11 +129,11 @@ Free Roam offers simple robot control with real time updates and information abo
 
 - **Drive Mode**: There are 3 drive modes displayed on the view:
 
-    - D -> Drive, when the robot is driving forward
+  - D -> Drive, when the robot is driving forward
 
-    - N -> Neutral, when the robot is stationary
- 
-    - R -> Reverse, when the robot is moving backwards
+  - N -> Neutral, when the robot is stationary
+
+  - R -> Reverse, when the robot is moving backwards
 
 - **Speed**: The speedometer shows the realtime speed of the robot.
 
@@ -123,17 +150,17 @@ Simple UI for collection of data sets.
 </p>
 
 - **Preview Resolution**: Used to switch between resolutions of camera preview. There are 3 settings:
-    - ***FULL_HD*** (1920x1080p)
-    - ***HD*** (1280x720p)
-    - ***SD*** (640x360)
+  - ***FULL_HD*** (1920x1080p)
+  - ***HD*** (1280x720p)
+  - ***SD*** (640x360)
 
 - **Model Resolution**: Used to switch between resolutions of images saved for training different models.
 
-- **Save/Discard the Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may: 
-    - press the **A button** to **start** the data collection process
-    - press the **A button again** to **stop** data collection and save the collected data in a .zip file
-    - alternatively press the **R1 button** to **stop** data collection **without saving** the collected data (for instance because of an unexpected collision with the environment)
-    - remember to use the controller mapping fragment to ensure you are using the correct buttons.
+- **Save/Discard the Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may:
+  - press the **A button** to **start** the data collection process
+  - press the **A button again** to **stop** data collection and save the collected data in a .zip file
+  - alternatively press the **R1 button** to **stop** data collection **without saving** the collected data (for instance because of an unexpected collision with the environment)
+  - remember to use the controller mapping fragment to ensure you are using the correct buttons.
 
 ### Controller Mapping
 
@@ -145,7 +172,7 @@ Simple UI to check the button and joystick mapping of a connected BT controller.
 
 ### Robot Info
 
-Simple UI to get robot info and test basic functionality. The **Robot Type** as configured in the firmware is displayed as text and animation. The checkmarks in the sections **Sensors**, **Wheel Odometry** and **LEDs** show which features are supported by the connected robot. The section **Readings** provides the most important sensor measurements. In the section **Send Commands**, users can send basic motor commands by pressing the corresponding buttons and control the front and rear LEDs with a slider. 
+Simple UI to get robot info and test basic functionality. The **Robot Type** as configured in the firmware is displayed as text and animation. The checkmarks in the sections **Sensors**, **Wheel Odometry** and **LEDs** show which features are supported by the connected robot. The section **Readings** provides the most important sensor measurements. In the section **Send Commands**, users can send basic motor commands by pressing the corresponding buttons and control the front and rear LEDs with a slider.
 
 <p align="left">
 <img src="../../docs/images/screen_robot_info.gif" alt="Robot Info" width="50%" />
@@ -167,6 +194,16 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 <img src="../../docs/images/screen_object_tracking_1.jpg" alt="Alt text" width="49%" />
 <img src="../../docs/images/screen_object_tracking_2.jpg" alt="Alt text" width="49%" />
 </p>
+
+#### Options
+- **Dynamic Speed**: reduces the robot speed in "Auto Mode" if it gets closer to the tracked object.
+  The speed is scaled based on the area of the bouding box (works best in landscape orientation).
+- **Model**: choose an object detector based on your phone performance (see below for [benchmarking results](#benchmark)).
+- **Object**: pick the object you want to track. The models can detect the 80 COCO [object classes](https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/).
+- **Confidence**: confidence threshold to determine if detections are accepted. Increase if you get false detections, decrease if the object of interest it not detected.
+- **Device**: use CPU, GPU or NNAPI for inference (more details [here](#device)).
+- **Threads**: number of threads to use (only makes a difference when CPU is selected as device).
+
 
 ### Point Goal Navigation
 
