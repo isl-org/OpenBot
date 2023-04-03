@@ -102,17 +102,22 @@ export function EditProfileModal(props) {
 
                     <div style={{display: "flex"}}>
                         <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
-                                              inputTitle={"Full Name"}
+                                              headStyle={styles.headStyle}
+                                              inputTitle={"Full Name"} extraInputStyle={styles.extraInputStyle}
                                               value={fullName} onDataChange={handleNameChange}/>
                         <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
-                                              inputTitle={"Date Of Birth"}/>
+                                              headStyle={styles.headStyle}
+                                              inputTitle={"Date Of Birth"} extraInputStyle={styles.extraInputStyle}/>
                     </div>
                     <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle}
-                                          inputTitle={"Email address"} value={user?.email}/>
+                                          headStyle={styles.headStyle}
+                                          inputTitle={"Email address"} value={user?.email}
+                                          extraInputStyle={styles.extraInputStyle}/>
 
-                    <div style={{display: "flex"}}>
-                        <BlueButton onClick={handleSubmit} buttonType={"contained"} buttonName={"Save"}/>
-                        <BlueButton onClick={handleClose} buttonName={"Cancel"}/>
+                    <div className={styles.buttonSection}>
+                        <BlueButton onClick={handleSubmit} buttonType={"contained"} buttonName={"Save"}
+                                    buttonStyle={styles.buttonText}/>
+                        <BlueButton onClick={handleClose} buttonName={"Cancel"} buttonStyle={styles.buttonText}/>
                     </div>
                     {isAlertSuccess && <Alert message={"Profile updated successfully!"}/>}
                     {isAlertError && <Alert message={"Oops! There was an error."}/>}

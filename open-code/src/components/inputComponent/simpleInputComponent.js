@@ -13,8 +13,11 @@ export default function SimpleInputComponent(props) {
         onDataChange,
         extraMargin,
         placeHolder,
+        headStyle,
         value,
-        OpenNewProjectHandle = ()=>{}
+        extraInputStyle,
+        OpenNewProjectHandle = () => {
+        }
     } = props
     const [inputValue, setInputValue] = useState(value ? value : '');
     const theme = useContext(ThemeContext);
@@ -28,7 +31,7 @@ export default function SimpleInputComponent(props) {
 
     return (
         <div className={styles.mainDiv + " " + extraStyle}>
-            <BlackText text={inputTitle}/>
+            <BlackText text={inputTitle} extraStyle={headStyle}/>
             {inputType === "text" ?
                 <div className={styles.inputBorder + " " + extraMargin}>
                     <input type={"text"}
@@ -39,7 +42,7 @@ export default function SimpleInputComponent(props) {
                                    OpenNewProjectHandle()
                                }
                            }}
-                           className={styles.inputSection}
+                           className={styles.inputSection + " " + extraInputStyle}
                            value={inputValue} onChange={handleChange}
                            style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}
                     />
@@ -51,7 +54,7 @@ export default function SimpleInputComponent(props) {
                                min="1920-01-01"
                                max={currentDate}
                                defaultValue={currentDate}
-                               className={styles.inputSection}
+                               className={styles.inputSection + " " + extraInputStyle}
                                style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}
 
                         />
@@ -59,11 +62,12 @@ export default function SimpleInputComponent(props) {
                     :
                     inputType === "email" ?
                         <div className={styles.inputBorder}>
-                            <input disabled={true} className={styles.inputSection} value={props.value}/>
+                            <input disabled={true} className={styles.inputSection + " " + extraInputStyle}
+                                   value={props.value}/>
                         </div>
                         :
                         <div className={styles.inputBorder}>
-                            <input className={styles.inputSection}/>
+                            <input className={styles.inputSection + " " + extraInputStyle}/>
                         </div>
             }
         </div>

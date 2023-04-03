@@ -27,3 +27,17 @@
     margin: 20px;
     cursor: pointer;
 }
+@media (max-width: 768px) {
+    .containedButton {
+        height: 35px;
+        width: 85px;
+        font-size: 13px;
+        margin: 20px 0px 20px 20px;
+    }
+    .normalButton {
+        height: 35px;
+        width: 85px;
+        font-size: 13px;
+        margin: 20px 0px 20px 20px;
+    }
+}

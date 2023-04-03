@@ -58,5 +58,4 @@ export const Images = {
     dots:dots,
     darkDots:darkDots,
     avatar:avatar,
-
 }

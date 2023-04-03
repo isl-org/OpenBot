@@ -188,7 +188,9 @@
 .emailInputExtraStyle {
     width: 54%;
 }
-
+.buttonSection{
+    display: flex;
+}
 .crossIconDiv {
     display: flex;
     justify-content: flex-end;
@@ -240,7 +242,7 @@
 }
 
 .buttonStyle {
-    margin: 2px;
+    margin: 2px !important;
 }
 
 .logoutButtonsDiv {
@@ -285,6 +287,7 @@
     height: 100%;
     padding-left: 5%;
 }
+
 
 .darkModeRightBorder {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
@@ -509,5 +512,56 @@
         margin-right: 10px !important;
     }
 
+    .editProfileModal {
+        width: 90%;
+        height: 390px;
+        padding-left: 2%;
+    }
+
+    .profileImg {
+        height: 60px;
+        width: 60px;
+        border-radius: 100px;
+        /*aspect-ratio: 1/1;*/
+    }
+
+    .profileImg img {
+        height: 22px;
+        width: 22px;
+    }
+
+    .inputExtraStyle {
+        width: 40%;
+        height: 50%;
+        /*margin: 20px 10px 20px 10px;*/
+    }
+
+    .emailInputExtraStyle {
+        width: 80%  !important;
+    }
+
+    .headStyle {
+        font-size: 12px !important ;
+    }
+
+    .extraInputStyle {
+        font-size: 13px !important;
+    }
+    .buttonSection{
+        display: flex;
+    }
+
+    .buttonText{
+        font-size: 13px;
+    }
+    .successAlertBox {
+        margin-left: 20px;
+        padding-left: 10px;
+        border-radius: 6px;
+        height: 30px;
+        width: 70%;
+        background-color: rgba(91, 188, 115, 0.1);
+        color: #5BBC73;
+    }
 
 }
