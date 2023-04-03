@@ -42,7 +42,7 @@ public class BluetoothFragment extends Fragment {
 
   @Override
   public View onCreateView(
-      @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+          @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     vehicle = OpenBotApplication.vehicle;
     binding = FragmentBluetoothBinding.inflate(inflater, container, false);
@@ -55,23 +55,26 @@ public class BluetoothFragment extends Fragment {
     rv.setLayoutManager(new LinearLayoutManager(getActivity()));
     SparseArray<int[]> res = new SparseArray<>();
     res.put(
-        R.layout.ble_listview_tv,
-        new int[] {R.id.ble_name, R.id.ble_address, R.id.ble_connection_state});
+            R.layout.ble_listview_tv,
+            new int[] {R.id.ble_name, R.id.ble_address, R.id.ble_connection_state});
     vehicle.setBleAdapter(
-        new ScanDeviceAdapter(requireActivity(), vehicle.getDeviceList(), res),
-        (itemView, position) -> {
-          vehicle.stopScan();
-          ProgressBar pb = requireView().findViewById(R.id.progress_bar);
-          TextView tv = requireView().findViewById(R.id.btn_refresh);
-          pb.setVisibility(View.INVISIBLE);
-          tv.setVisibility(View.VISIBLE);
-          BleDevice device = vehicle.getDeviceList().get(position);
-          if (vehicle.getBleDevice() == null
-              || vehicle.getBleDevice().address.equals(device.address)) {
-            vehicle.setBleDevice(device);
-          }
-          vehicle.toggleConnection(position, device);
-        });
+            new ScanDeviceAdapter(getActivity(), vehicle.getDeviceList(), res),
+            new CommonRecyclerViewAdapter.OnItemClickListener() {
+              @Override
+              public void onItemClick(View itemView, int position) {
+                vehicle.stopScan();
+                ProgressBar pb = getView().findViewById(R.id.progress_bar);
+                TextView tv = getView().findViewById(R.id.btn_refresh);
+                pb.setVisibility(View.INVISIBLE);
+                tv.setVisibility(View.VISIBLE);
+                BleDevice device = vehicle.getDeviceList().get(position);
+                if (vehicle.getBleDevice() == null
+                        || vehicle.getBleDevice().address.equals(device.address)) {
+                  vehicle.setBleDevice(device);
+                }
+                vehicle.toggleConnection(position, device);
+              }
+            });
     rv.setAdapter(vehicle.getBleAdapter());
   }
 
@@ -85,60 +88,74 @@ public class BluetoothFragment extends Fragment {
       return;
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      EasyPermissions.with(requireActivity())
-          .request(
-              Manifest.permission.ACCESS_FINE_LOCATION,
-              Manifest.permission.BLUETOOTH_SCAN,
-              Manifest.permission.BLUETOOTH_CONNECT)
-          .autoRetryWhenUserRefuse(true, null)
-          .result(
-              new RequestExecutor.ResultReceiver() {
-                @Override
-                public void onPermissionsRequestResult(boolean grantAll, List<Permission> results) {
-                  checkPermission(grantAll);
-                }
-              });
+      EasyPermissions.with(getActivity())
+              .request(
+                      Manifest.permission.ACCESS_FINE_LOCATION,
+                      Manifest.permission.BLUETOOTH_SCAN,
+                      Manifest.permission.BLUETOOTH_CONNECT)
+              .autoRetryWhenUserRefuse(true, null)
+              .result(
+                      new RequestExecutor.ResultReceiver() {
+                        @Override
+                        public void onPermissionsRequestResult(boolean grantAll, List<Permission> results) {
+                          checkPermission(grantAll);
+                        }
+                      });
     } else {
-      EasyPermissions.with(requireActivity())
-          .request(Manifest.permission.ACCESS_FINE_LOCATION)
-          .autoRetryWhenUserRefuse(true, null)
-          .result((grantAll, results) -> checkPermission(grantAll));
+      EasyPermissions.with(getActivity())
+              .request(Manifest.permission.ACCESS_FINE_LOCATION)
+              .autoRetryWhenUserRefuse(true, null)
+              .result(
+                      new RequestExecutor.ResultReceiver() {
+                        @Override
+                        public void onPermissionsRequestResult(boolean grantAll, List<Permission> results) {
+                          checkPermission(grantAll);
+                        }
+                      });
     }
   }
 
   private void checkPermission(boolean grantAll) {
-    TextView tv = requireView().findViewById(R.id.btn_refresh);
+    TextView tv = getView().findViewById(R.id.btn_refresh);
     if (grantAll) {
       if (!BleManager.isBluetoothOn()) BleManager.toggleBluetooth(true);
-      tv.setOnClickListener(view -> startScan());
+      tv.setOnClickListener(
+              new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                  startScan();
+                }
+              });
       startScan();
     } else {
       Toast.makeText(
-              requireActivity().getApplicationContext(),
-              "Please go to settings to grant location and Near by Devices permission manually",
-              Toast.LENGTH_LONG)
-          .show();
+                      getActivity().getApplicationContext(),
+                      "Please go to settings to grant location and Near by Devices permission manually",
+                      Toast.LENGTH_LONG)
+              .show();
     }
   }
 
   private void startScan() {
-    ProgressBar pb = requireView().findViewById(R.id.progress_bar);
-    TextView tv = requireView().findViewById(R.id.btn_refresh);
+    ProgressBar pb = getView().findViewById(R.id.progress_bar);
+    TextView tv = getView().findViewById(R.id.btn_refresh);
     vehicle.startScan();
     pb.setVisibility(View.VISIBLE);
     tv.setVisibility(View.INVISIBLE);
     new Handler()
-        .postDelayed(
-            () -> {
-              pb.setVisibility(View.INVISIBLE);
-              tv.setVisibility(View.VISIBLE);
-            },
-            4000);
+            .postDelayed(
+                    new Runnable() {
+                      public void run() {
+                        pb.setVisibility(View.INVISIBLE);
+                        tv.setVisibility(View.VISIBLE);
+                      }
+                    },
+                    4000);
   }
 
   private boolean isGpsOn() {
     LocationManager locationManager =
-        (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+            (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
   }
 
