@@ -27,7 +27,7 @@ def load_image(filename):
     return data
 
 
-def get_arduino_serial(device_address='/dev/ttyUSB0',  baudrate=115200):
+def get_arduino_serial(device_address="/dev/ttyUSB0", baudrate=115200):
     """Getting serial objet from a device address.
 
     Args:
@@ -43,8 +43,7 @@ def get_arduino_serial(device_address='/dev/ttyUSB0',  baudrate=115200):
         arduino_serial = serial.Serial(device_address, baudrate=baudrate)
     except Exception as e:
         print(e)
-        print(
-            f"Arduino not found at {device_address} with baudrate {baudrate}")
+        print(f"Arduino not found at {device_address} with baudrate {baudrate}")
         arduino_serial = None
     return arduino_serial
 
@@ -65,22 +64,26 @@ def apply_action_serial(serial_obj, left, right, scale=255):
     Returns:
         (int, int): Scaled left and right motor command sent to serial object.
     """
-    left = np.clip(left, -1., 1)
-    right = np.clip(right, -1., 1)
+    left = np.clip(left, -1.0, 1)
+    right = np.clip(right, -1.0, 1)
 
     command_string = f"c{int(left*scale)},{int(right*scale)}\n"
 
     serial_obj.write(bytes(command_string, encoding="utf-8"))
-    return int(left*scale), int(right*scale)
+    return int(left * scale), int(right * scale)
 
 
-class InferNetwork():
-    def __init__(self, policy_path=None, control_frequency=10,
-                 dataset_path=None,
-                 log_path=None,
-                 run_mode="inference",
-                 control_mode="dual",
-                 inference_backend="openvino"):
+class InferNetwork:
+    def __init__(
+        self,
+        policy_path=None,
+        control_frequency=10,
+        dataset_path=None,
+        log_path=None,
+        run_mode="inference",
+        control_mode="dual",
+        inference_backend="openvino",
+    ):
         """Class for inference of policy, joystick control, and debug mode.
 
         Args:
@@ -109,7 +112,9 @@ class InferNetwork():
 
         self.inference_backend = inference_backend
         if inference_backend != "openvino":
-            print("Openvino backend recommended due to optimised inference on Intel CPU.")
+            print(
+                "Openvino backend recommended due to optimised inference on Intel CPU."
+            )
         self.run_mode = run_mode
         self.dataset_path = dataset_path
         self.log_path = f"{CUR_DIR}/logs/" if log_path is None else log_path
@@ -119,11 +124,17 @@ class InferNetwork():
         self.interpreter = self.get_interpreter()
 
         if run_mode == "debug":
-            self.img_dataset, self.cmd_dataset, self.action_dataset = self.get_reference_dataset()
+            (
+                self.img_dataset,
+                self.cmd_dataset,
+                self.action_dataset,
+            ) = self.get_reference_dataset()
         else:
-            self.joystick = Joystick(callback=self.joystick_callback,
-                                     control_mode=control_mode,
-                                     run_mode=run_mode)
+            self.joystick = Joystick(
+                callback=self.joystick_callback,
+                control_mode=control_mode,
+                run_mode=run_mode,
+            )
             # instantiating without any argument
             self.joystick_action = np.array([[0, 0]])
 
@@ -172,11 +183,13 @@ class InferNetwork():
             np.array, np.array, np.array: Returns images, cmds, and actions as
                 np.array.
         """
-        filename = f"{self.dataset_path}/sensor_data/matched_frame_ctrl_cmd_processed.txt"
+        filename = (
+            f"{self.dataset_path}/sensor_data/matched_frame_ctrl_cmd_processed.txt"
+        )
         df = pd.read_csv(filename)
-        action = df[['left', 'right']].astype(np.float32)
-        cmd = df[['cmd']].astype(np.float32)
-        image = df['frame']
+        action = df[["left", "right"]].astype(np.float32)
+        cmd = df[["cmd"]].astype(np.float32)
+        image = df["frame"]
         return image, cmd, action
 
     def get_interpreter(self):
@@ -207,8 +220,7 @@ class InferNetwork():
         """
         import tflite_runtime.interpreter as tflite
 
-        self.interpreter = tflite.Interpreter(
-            f"{self.policy_path}/best.tflite")
+        self.interpreter = tflite.Interpreter(f"{self.policy_path}/best.tflite")
         self.interpreter.allocate_tensors()
 
         # Get input and output tensors.
@@ -223,6 +235,7 @@ class InferNetwork():
             tf.keras.Model: Returns a keras model.
         """
         import openbot.utils as utils
+
         with open(f"{self.policy_path}/trainer.p", "rb") as f:
             tr = pickle.load(f)
         self.interpreter = utils.load_model(
@@ -240,6 +253,7 @@ class InferNetwork():
             openvino.runtime.Core: Returns compiled openvino model.
         """
         from openvino.runtime import Core
+
         model_xml = f"{self.policy_path}/openvino_model.xml"
         # Load model
         ie = Core()
@@ -264,20 +278,19 @@ class InferNetwork():
             (float, float): Action to be send to motors
         """
         if self.inference_backend == "tf":
-            output = self.interpreter(
-                [img_input[None, ...], cmd_input[None, ...]])
+            output = self.interpreter([img_input[None, ...], cmd_input[None, ...]])
         elif self.inference_backend == "tflite":
-            self.interpreter.set_tensor(self.input_details[0]["index"],
-                                        np.expand_dims(img_input, axis=0))
-            self.interpreter.set_tensor(self.input_details[1]["index"],
-                                        cmd_input)
+            self.interpreter.set_tensor(
+                self.input_details[0]["index"], np.expand_dims(img_input, axis=0)
+            )
+            self.interpreter.set_tensor(self.input_details[1]["index"], cmd_input)
             self.interpreter.invoke()
 
-            output = self.interpreter.get_tensor(
-                self.output_details[0]["index"])
+            output = self.interpreter.get_tensor(self.output_details[0]["index"])
         elif self.inference_backend == "openvino":
             output = self.interpreter([cmd_input, img_input[None, ...]])[
-                self.output_layer]
+                self.output_layer
+            ]
 
         return output
 
@@ -298,28 +311,30 @@ class InferNetwork():
 
     def run_debug(self):
         """Runs the debug mode, i.e., not using real camera images, but loaded
-            from a collected dataset.
+        from a collected dataset.
         """
-        time_steps = {
-            "time_infer": []}
+        time_steps = {"time_infer": []}
         while True:
             if not hasattr(self, "counter"):
                 self.counter = 0
 
             cmd_input = np.array(
-                [self.cmd_dataset.iloc[self.counter]], dtype=np.float32)
+                [self.cmd_dataset.iloc[self.counter]], dtype=np.float32
+            )
             img_input = load_image(self.img_dataset.iloc[self.counter])
 
             if np.max(img_input) > 1.0:
-                img_input = np.array(img_input/255, dtype=np.float32)
+                img_input = np.array(img_input / 255, dtype=np.float32)
 
             time_start = time.time()  # Start stopwatch
-            action = self.predict_model(img_input, cmd_input)*255
+            action = self.predict_model(img_input, cmd_input) * 255
             time_steps["time_infer"].append(time.time() - time_start)
 
             desired_action = self.action_dataset.iloc[self.counter, :]
-            print(f"Action: {action[0,0]:.2f}, {action[0,1]:.2f},"
-                  + f" Desired action: {desired_action[0]:.2f}, {desired_action[1]:.2f}")
+            print(
+                f"Action: {action[0,0]:.2f}, {action[0,1]:.2f},"
+                + f" Desired action: {desired_action[0]:.2f}, {desired_action[1]:.2f}"
+            )
 
             self.counter += 1
             if self.counter >= self.action_dataset.shape[0]:
@@ -331,20 +346,15 @@ class InferNetwork():
         self.apply_action(0, 0)
 
     def run(self):
-        """Run function.
-        """
+        """Run function."""
         if self.run_mode == "debug":
             self.run_debug()
         else:
             self.run_robot()
 
     def run_robot(self):
-        """Runs the robot either in joystick or inference mode.
-        """
-        time_steps = {
-            "time_sleep": [],
-            "control_frequency": [],
-            "time_infer": []}
+        """Runs the robot either in joystick or inference mode."""
+        time_steps = {"time_sleep": [], "control_frequency": [], "time_infer": []}
 
         try:
             print("Waiting 2s for joystick and realsense thread to startup")
@@ -368,17 +378,19 @@ class InferNetwork():
 
                 # Calculating time to sleep to achieve control_frequency
                 time_steps["time_infer"].append(time.time() - time_start)
-                time_per_step = 1/self.control_frequency
+                time_per_step = 1 / self.control_frequency
                 time_sleep = time_per_step - time_steps["time_infer"][-1]
                 time_steps["time_sleep"].append(time_sleep)
 
                 if time_sleep < 0.0:
-                    print(f"Inference time ({time_steps['time_infer'][-1]:.3f}s) "
-                          + f"exceeds control frequency: {time_per_step:.3f}s. ")
+                    print(
+                        f"Inference time ({time_steps['time_infer'][-1]:.3f}s) "
+                        + f"exceeds control frequency: {time_per_step:.3f}s. "
+                    )
                 else:
                     time.sleep(time_sleep)
 
-                time_steps["control_frequency"].append(time.time()-time_start)
+                time_steps["control_frequency"].append(time.time() - time_start)
 
             self.apply_action(0, 0)
         except KeyboardInterrupt:
@@ -386,7 +398,7 @@ class InferNetwork():
 
         infer_time = time_steps["time_infer"]
         control_freq = time_steps["control_frequency"]
-        control_freq = 1/np.mean(np.array(control_freq[1:]))
+        control_freq = 1 / np.mean(np.array(control_freq[1:]))
         print(f"Average infer time: {np.mean(np.array(infer_time[1:])):.4f}")
         print(f"Average control frequency: {control_freq:.4f}")
 
@@ -403,7 +415,10 @@ class InferNetwork():
 
         timestamp = time.time_ns()
 
-        if not self.cmd_history["cmd"] or self.cmd_input[0, 0] != self.cmd_history["cmd"][-1]:
+        if (
+            not self.cmd_history["cmd"]
+            or self.cmd_input[0, 0] != self.cmd_history["cmd"][-1]
+        ):
             # Log change in cmd (for indicatroLog.txt)
             self.cmd_history["timestamp"].append(timestamp)
             self.cmd_history["cmd"].append(self.cmd_input[0, 0])
