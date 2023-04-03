@@ -16,17 +16,19 @@ The app starts with a menu screen that shows all available screens. The settings
 <img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="25%"/>
 </p>
 
-### Default
-
-The [DefaultActivity](src/main/java/org/openbot/original/DefaultActivity.java) includes the most important features of the OpenBot app in a single screen. It displays the connection status to the vehicle and reports measurements from vehicle sensors. The robot can be controlled by standard BT game controllers or another smartphone running the OpenBot [controller app](../controller). We have also implemented a data logger to collect datasets with the robot. Currently, we record readings from following sensors: camera, gyroscope, accelerometer, magnetometer, ambient light sensor, and barometer. Using the Android API, we are able to obtain the following sensor readings: RGB images, angular speed, linear acceleration, gravity, magnetic field strength, light intensity, atmospheric pressure, latitude, longitude, altitude, bearing, and speed. In addition to the phone sensors, we record body sensor readings (wheel odometry, obstacle distance and battery voltage), which are transmitted via the serial link. We also record and timestamp control signals received from a connected controller, if present. Lastly, we integrate several neural networks for person following and autonomous navigation.
-
-<p align="left">
-  <img src="../../docs/images/screen_default.jpg" alt="App GUI" width="50%"/>
-</p>
+### Settings Menu
 
 #### USB Connection
 
 The drop-down menu is used to set the baud rate. The default is 115200 and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
+
+#### Permissions
+
+Here you can check the permissions of the app and adjust them if needed.
+
+#### Video Streaming
+
+You can choose between `WebRTC` and `RTSP` for streaming video to an external device. The phone controller app and node-js server both need this to be set to `WebRTC`. The python controller expects the stream to be set to `RTSP`.
 
 #### Bluetooth connection
 
@@ -43,6 +45,18 @@ Tap the Bluetooth icon to start BLE scanning; it takes 4 seconds to scan and get
 <img src="../../docs/images/ble_device_connecting.jpg" alt="Connecting device" width="25%"/>
 <img src="../../docs/images/ble_device_connected.jpg" alt="Disconnect button" width="25%"/>
 </p>
+
+### Default
+
+The [DefaultActivity](src/main/java/org/openbot/original/DefaultActivity.java) includes the most important features of the OpenBot app in a single screen. It displays the connection status to the vehicle and reports measurements from vehicle sensors. The robot can be controlled by standard BT game controllers or another smartphone running the OpenBot [controller app](../controller). We have also implemented a data logger to collect datasets with the robot. Currently, we record readings from following sensors: camera, gyroscope, accelerometer, magnetometer, ambient light sensor, and barometer. Using the Android API, we are able to obtain the following sensor readings: RGB images, angular speed, linear acceleration, gravity, magnetic field strength, light intensity, atmospheric pressure, latitude, longitude, altitude, bearing, and speed. In addition to the phone sensors, we record body sensor readings (wheel odometry, obstacle distance and battery voltage), which are transmitted via the serial link. We also record and timestamp control signals received from a connected controller, if present. Lastly, we integrate several neural networks for person following and autonomous navigation.
+
+<p align="left">
+  <img src="../../docs/images/screen_default.jpg" alt="App GUI" width="50%"/>
+</p>
+
+#### USB Connection
+
+Same as in the [settings menu](#se).
 
 #### Vehicle Status
 
