@@ -110,9 +110,10 @@
     margin-top: 1rem;
 }
 
-.inRowText{
-    width:70%;
+.inRowText {
+    width: 70%;
 }
+
 .logOutMargin {
     padding-right: 7.3rem;
 }
@@ -210,10 +211,11 @@
 
 .logoutModalBox {
     outline: none;
+    margin: 0 20px 0 20px;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    height: 180px;
+    height: 170px;
     width: 400px;
     border-radius: 6px;
 }
@@ -226,18 +228,31 @@
     background-color: #ffffff;
 }
 
+.cancel {
+    margin-right: 0px !important;
+}
+
 .logoutButtonsExtraStyle {
     height: 40px !important;
     width: 100px !important;
     font-size: 18px;
+    margin: 2px;
+}
+
+.buttonStyle {
+    margin: 2px;
 }
 
 .logoutButtonsDiv {
     display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: flex-end;
-    align-items: flex-end;
-    height: 80%;
+    position: relative;
+    top: 50px;
+    right: 5px;
 }
+
 
 .darkLogoutMessageModal {
     color: rgba(255, 255, 255, 0.5)
@@ -412,56 +427,87 @@
     cursor: pointer;
 }
 
+.cancelExtraStyle {
+    margin-right: 15px !important;
+}
+
 @media (max-width: 768px) {
     .mainTitle {
         font-size: 1.0rem;
     }
+
     /* CSS styles for screens smaller than 768px */
     .navbarTitleDiv {
         margin-left: 1rem;
     }
+
     .iconMargin {
         margin: 0px 10px 0px -2px;
     }
-    .changeThemeIcon{
+
+    .changeThemeIcon {
         margin-left: 20px;
     }
+
     .navbarIconDiv {
         margin-right: 0.5rem;
     }
+
     .lineIcon {
         width: 0.7%;
     }
-    .icon{
+
+    .icon {
         margin-left: 2px;
     }
+
     .mainIcon {
-        height:2rem;
+        height: 2rem;
         width: 2rem;
     }
+
     .profileOptionModalStyle {
         width: 9.75rem;
         height: 5.5rem;
     }
+
     .modalText {
         font-size: 13px;
         padding-bottom: 2px;
     }
-    .modalIcon{
+
+    .modalIcon {
         width: 16px;
         height: 16px;
         margin-top: 5px;
     }
-    .editProfileMargin{
+
+    .editProfileMargin {
         margin-top: 0.2rem;
         margin-right: 2rem;
     }
-    .item{
+
+    .item {
         padding: 0.5rem 1rem 0rem 1rem;
         justify-content: space-between;
         width: 100%;
     }
-    .inRowText{
-        width:82%;
+
+    .inRowText {
+        width: 82%;
     }
+
+    .logoutModalBox {
+        width: 80%;
+    }
+
+    .logoutButtonsExtraStyle {
+        margin: 2px !important;
+    }
+
+    .cancelExtraStyle {
+        margin-right: 10px !important;
+    }
+
+
 }

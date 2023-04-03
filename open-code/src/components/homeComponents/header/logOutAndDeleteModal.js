@@ -30,14 +30,17 @@ export function LogOutModal(props) {
                         text={"Are you sure you want to logout?"}/>
                 </div>
                 <div className={styles.logoutButtonsDiv}>
-                    <BlueButton onClick={handleClose} buttonName={"Cancel"}
-                                extraStyle={styles.logoutButtonsExtraStyle}/>
-                    <BlueButton onClick={() => {
-                        googleSignOut().then(() => {
-                            handleClose()
-                        })
-                    }} buttonType={"contained"} buttonName={"Ok"}
-                                extraStyle={styles.logoutButtonsExtraStyle}/>
+
+                        <BlueButton onClick={handleClose} buttonName={"Cancel"}
+                                    buttonStyle={styles.buttonStyle}
+                                    extraStyle={styles.logoutButtonsExtraStyle + " " + styles.cancelExtraStyle}/>
+                        <BlueButton onClick={() => {
+                            googleSignOut().then(() => {
+                                handleClose()
+                            })
+                        }} buttonType={"contained"} buttonName={"Ok"}
+                                    buttonStyle={styles.buttonStyle}
+                                    extraStyle={styles.logoutButtonsExtraStyle}/>
                 </div>
             </Box>
         </Modal>
@@ -79,10 +82,11 @@ export function DeleteModel(props) {
                     </div>
                     <div className={styles.logoutButtonsDiv}>
                         <BlueButton onClick={handleClose} buttonName={"Cancel"}
-                                    extraStyle={styles.logoutButtonsExtraStyle}/>
+                                    extraStyle={styles.logoutButtonsExtraStyle} buttonStyle={styles.buttonStyle}/>
                         <BlueButton onClick={() => {
                             handleDeleteProject()
                         }} buttonType={"contained"} buttonName={"Delete"}
+                                    buttonStyle={styles.buttonStyle}
                                     extraStyle={styles.logoutButtonsExtraStyle}/>
                     </div>
                 </Box>
