@@ -2,10 +2,12 @@ package org.openbot.main;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,22 +58,19 @@ public class BluetoothFragment extends Fragment {
         R.layout.ble_listview_tv,
         new int[] {R.id.ble_name, R.id.ble_address, R.id.ble_connection_state});
     vehicle.setBleAdapter(
-        new ScanDeviceAdapter(getActivity(), vehicle.getDeviceList(), res),
-        new CommonRecyclerViewAdapter.OnItemClickListener() {
-          @Override
-          public void onItemClick(View itemView, int position) {
-            vehicle.stopScan();
-            ProgressBar pb = getView().findViewById(R.id.progress_bar);
-            TextView tv = getView().findViewById(R.id.btn_refresh);
-            pb.setVisibility(View.INVISIBLE);
-            tv.setVisibility(View.VISIBLE);
-            BleDevice device = vehicle.getDeviceList().get(position);
-            if (vehicle.getBleDevice() == null
-                || vehicle.getBleDevice().address.equals(device.address)) {
-              vehicle.setBleDevice(device);
-            }
-            vehicle.toggleConnection(position, device);
+        new ScanDeviceAdapter(requireActivity(), vehicle.getDeviceList(), res),
+        (itemView, position) -> {
+          vehicle.stopScan();
+          ProgressBar pb = requireView().findViewById(R.id.progress_bar);
+          TextView tv = requireView().findViewById(R.id.btn_refresh);
+          pb.setVisibility(View.INVISIBLE);
+          tv.setVisibility(View.VISIBLE);
+          BleDevice device = vehicle.getDeviceList().get(position);
+          if (vehicle.getBleDevice() == null
+              || vehicle.getBleDevice().address.equals(device.address)) {
+            vehicle.setBleDevice(device);
           }
+          vehicle.toggleConnection(position, device);
         });
     rv.setAdapter(vehicle.getBleAdapter());
   }
@@ -79,62 +78,67 @@ public class BluetoothFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    if (!BleManager.isBluetoothOn()) BleManager.toggleBluetooth(true);
     // for most devices whose version is over Android6,scanning may need GPS permission
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !isGpsOn()) {
+      startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
       Toast.makeText(getActivity(), "Please turn on GPS before scanning", Toast.LENGTH_LONG).show();
       return;
     }
-    EasyPermissions.with(getActivity())
-        .request(Manifest.permission.ACCESS_FINE_LOCATION)
-        .autoRetryWhenUserRefuse(true, null)
-        .result(
-            new RequestExecutor.ResultReceiver() {
-              @Override
-              public void onPermissionsRequestResult(boolean grantAll, List<Permission> results) {
-                TextView tv = getView().findViewById(R.id.btn_refresh);
-
-                if (grantAll) {
-                  tv.setOnClickListener(
-                      new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                          startScan();
-                        }
-                      });
-                  startScan();
-                } else {
-                  Toast.makeText(
-                          getActivity(),
-                          "Please go to settings to grant location permission manually",
-                          Toast.LENGTH_LONG)
-                      .show();
-                  EasyPermissions.goToSettingsActivity(getActivity());
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      EasyPermissions.with(requireActivity())
+          .request(
+              Manifest.permission.ACCESS_FINE_LOCATION,
+              Manifest.permission.BLUETOOTH_SCAN,
+              Manifest.permission.BLUETOOTH_CONNECT)
+          .autoRetryWhenUserRefuse(true, null)
+          .result(
+              new RequestExecutor.ResultReceiver() {
+                @Override
+                public void onPermissionsRequestResult(boolean grantAll, List<Permission> results) {
+                  checkPermission(grantAll);
                 }
-              }
-            });
+              });
+    } else {
+      EasyPermissions.with(requireActivity())
+          .request(Manifest.permission.ACCESS_FINE_LOCATION)
+          .autoRetryWhenUserRefuse(true, null)
+          .result((grantAll, results) -> checkPermission(grantAll));
+    }
+  }
+
+  private void checkPermission(boolean grantAll) {
+    TextView tv = requireView().findViewById(R.id.btn_refresh);
+    if (grantAll) {
+      if (!BleManager.isBluetoothOn()) BleManager.toggleBluetooth(true);
+      tv.setOnClickListener(view -> startScan());
+      startScan();
+    } else {
+      Toast.makeText(
+              requireActivity().getApplicationContext(),
+              "Please go to settings to grant location and Near by Devices permission manually",
+              Toast.LENGTH_LONG)
+          .show();
+    }
   }
 
   private void startScan() {
-    ProgressBar pb = getView().findViewById(R.id.progress_bar);
-    TextView tv = getView().findViewById(R.id.btn_refresh);
+    ProgressBar pb = requireView().findViewById(R.id.progress_bar);
+    TextView tv = requireView().findViewById(R.id.btn_refresh);
     vehicle.startScan();
     pb.setVisibility(View.VISIBLE);
     tv.setVisibility(View.INVISIBLE);
     new Handler()
         .postDelayed(
-            new Runnable() {
-              public void run() {
-                pb.setVisibility(View.INVISIBLE);
-                tv.setVisibility(View.VISIBLE);
-              }
+            () -> {
+              pb.setVisibility(View.INVISIBLE);
+              tv.setVisibility(View.VISIBLE);
             },
             4000);
   }
 
   private boolean isGpsOn() {
     LocationManager locationManager =
-        (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
   }
 
@@ -142,8 +146,5 @@ public class BluetoothFragment extends Fragment {
   public void onDestroy() {
     super.onDestroy();
     vehicle.stopScan();
-    //        if (manager != null) {
-    //            manager.destroy();
-    //        }
   }
 }

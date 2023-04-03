@@ -37,7 +37,7 @@ public class BluetoothManager {
   private int indexValue;
   public String readValue;
   private final LocalBroadcastManager localBroadcastManager;
-  private String serviceUUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
+  private String serviceUUID = "61653dc3-4021-4d1e-ba83-8b4eec61d613";
   UUID[] uuidArray = new UUID[] {UUID.fromString(serviceUUID)};
 
   public BluetoothManager(Context context) {
@@ -51,8 +51,6 @@ public class BluetoothManager {
     if (!BleManager.supportBle(this.context)) {
       return;
     }
-    // open bluetooth without a request dialog
-    BleManager.toggleBluetooth(true);
 
     BleManager.ScanOptions scanOptions =
         BleManager.ScanOptions.newInstance()
