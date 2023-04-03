@@ -342,9 +342,12 @@ public class ObjectNavFragment extends CameraFragment {
 
   @Override
   public synchronized void onResume() {
+    croppedBitmap = null;
+    tracker = null;
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
+    binding.bleToggle.setChecked(vehicle.bleConnected());
     super.onResume();
   }
 
