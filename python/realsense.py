@@ -6,7 +6,7 @@ import threading
 
 
 def get_realsense_pipeline():
-    """ Getting realsense pipeline required for getting Realsense camera images.
+    """Getting realsense pipeline required for getting Realsense camera images.
         For further support of other Intel Realsense cameras, please see
         https://dev.intelrealsense.com/docs/python2
     Returns:
@@ -34,7 +34,7 @@ def get_realsense_pipeline():
 
         found_rgb = False
         for s in device.sensors:
-            if s.get_info(rs.camera_info.name) == 'RGB Camera':
+            if s.get_info(rs.camera_info.name) == "RGB Camera":
                 found_rgb = True
                 break
         if not found_rgb:
@@ -62,7 +62,7 @@ class Realsense(threading.Thread):
         self.img = None
         self.pipeline = get_realsense_pipeline()
 
-        super().__init__(name='realsense-thread')
+        super().__init__(name="realsense-thread")
 
         if self.pipeline:
             self.start()
@@ -71,7 +71,7 @@ class Realsense(threading.Thread):
 
     def run(self):
         """Runs retrieving images in an infinite loop and stores the current image
-            to self.img.
+        to self.img.
         """
         while True:
             self.img = self.get_img()
@@ -99,18 +99,17 @@ class Realsense(threading.Thread):
             # Convert images to numpy arrays
             color_image = np.asanyarray(color_frame.get_data())
         dim = (256, 144)
-        image_resize = cv2.resize(
-            color_image, dim, interpolation=cv2.INTER_AREA)
+        image_resize = cv2.resize(color_image, dim, interpolation=cv2.INTER_AREA)
 
         # crop top 1/3:
-        pixel_to_crop = int(dim[1]/3)
+        pixel_to_crop = int(dim[1] / 3)
         image_crop = image_resize[pixel_to_crop:, ...]
-        image_input = image_crop/255.
+        image_input = image_crop / 255.0
 
         # Show images
         if show:
-            cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
-            cv2.imshow('RealSense', image_crop)
+            cv2.namedWindow("RealSense", cv2.WINDOW_AUTOSIZE)
+            cv2.imshow("RealSense", image_crop)
             cv2.waitKey(1)
         img = np.array(image_input, dtype=np.float32)
         return img
