@@ -1,6 +1,14 @@
 package org.openbot.projects;
 
+import android.app.Service;
+import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.os.IBinder;
 import android.webkit.JavascriptInterface;
+
+import androidx.annotation.Nullable;
 
 import org.openbot.env.AudioPlayer;
 import org.openbot.utils.Enums;
@@ -9,7 +17,7 @@ import org.openbot.vehicle.Vehicle;
 
 import timber.log.Timber;
 
-public class BotFunctions {
+public class BotFunctions implements SensorEventListener {
     private Vehicle v;
     private AudioPlayer ap;
     private String TAG = "sensor reading";
@@ -162,4 +170,49 @@ public class BotFunctions {
     public void IndicatorOff() {
         v.setIndicator(0);
     }
+
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+                // Acceleration including gravity along the X, Y and Z axis
+                // Units are m/s^2
+                Timber.tag(TAG).d("Acceleration Reading - %s", event.timestamp
+                        + ","
+                        + event.values[0]
+                        + ","
+                        + event.values[1]
+                        + ","
+                        + event.values[2]);
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                // Angular speed around the device's local X, Y and Z axis
+                // Units are radians/second
+                // The coordinate system is the same as is used by the acceleration sensor
+                Timber.tag(TAG).d("Gyroscope Reading - %s", event.timestamp
+                        + ","
+                        + event.values[0]
+                        + ","
+                        + event.values[1]
+                        + ","
+                        + event.values[2]);
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                // Ambient magnetic field in the X, Y and Z axis in micro-Tesla (uT).
+                Timber.tag(TAG).d("Magnetic Reading - %s", event.timestamp
+                        + ","
+                        + event.values[0]
+                        + ","
+                        + event.values[1]
+                        + ","
+                        + event.values[2]);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 }
