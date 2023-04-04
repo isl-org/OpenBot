@@ -16,7 +16,7 @@ You first need to setup your training environment.
 
 ## Dependencies
 
-We recommend to create a conda environment for OpenBot. Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). The easiest way to create a new environment with all dependencies is to use one of the provided environment files. Make sure you are in the folder `policy` within your local OpenBot repository. Based on your operating system, run the corresponding command:
+We recommend to create a conda environment for OpenBot. Instructions on installing conda can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/). The easiest way to create a new environment with all dependencies is to use one of the provided environment files. On Windows, you will also need to install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/). Make sure you are in the folder `policy` within your local OpenBot repository. Based on your operating system, run the corresponding command:
 
 - **MacOS**: `conda env create -f environment_mac.yml`
 - **Windows**: `conda env create -f environment_win.yml`

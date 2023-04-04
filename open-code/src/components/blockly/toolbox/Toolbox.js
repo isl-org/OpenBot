@@ -103,122 +103,20 @@ export const Toolbox = (props) => {
                     </Value>
                 </Block>
             </Category>
-
-            <Category name="Text" colour={"#506481"}>
-                <Block type="text"/>
-                <Block type="text_multiline"/>
-                <Block type="text_join"/>
-                <Block type="text_append">
-                    <Value name="TEXT">
-                        <Shadow type="text"></Shadow>
-                    </Value>
-                </Block>
-                <Block type="text_length">
-                    <Value name="VALUE">
-                        <Shadow type="text">
-                            <Field name="TEXT">abc</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type="text_isEmpty">
-                    <Value name="VALUE">
-                        <Shadow type="text">
-                            <Field name="TEXT"></Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type="text_indexOf">
-                    <Value name="VALUE">
-                        <Block type="variables_get">
-                            <Field name="VAR">text</Field>
-                        </Block>
-                    </Value>
-                    <Value name="FIND">
-                        <Shadow type="text">
-                            <Field name="TEXT">abc</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type="text_charAt">
-                    <Value name="VALUE">
-                        <Block type="variables_get">
-                            <Field name="VAR">text</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="text_getSubstring">
-                    <Value name="STRING">
-                        <Block type="variables_get">
-                            <Field name="VAR">text</Field>
-                        </Block>
-                    </Value>
-                </Block>
-                <Block type="text_changeCase">
-                    <Value name="TEXT">
-                        <Shadow type="text">
-                            <Field name="TEXT">abc</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type="text_trim">
-                    <Value name="TEXT">
-                        <Shadow type="text">
-                            <Field name="TEXT">abc</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type="text_count">
-                    <Value name="SUB">
-                        <Shadow type="text"></Shadow>
-                    </Value>
-                    <Value name="TEXT">
-                        <Shadow type="text"></Shadow>
-                    </Value>
-                </Block>
-                <Block type="text_replace">
-                    <Value name="FROM">
-                        <Shadow type="text"></Shadow>
-                    </Value>
-                    <Value name="TO">
-                        <Shadow type="text"></Shadow>
-                    </Value>
-                    <Value name="TEXT">
-                        <Shadow type="text"></Shadow>
-                    </Value>
-                </Block>
-                <Block type="text_reverse">
-                    <Value name="TEXT">
-                        <Shadow type="text"></Shadow>
-                    </Value>
-                </Block>
-                <Block type="text_print">
-                    <Value name="TEXT">
-                        <Shadow type="text">
-                            <Field name="TEXT">abc</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type="text_prompt_ext">
-                    <Value name="TEXT">
-                        <Shadow type="text">
-                            <Field name="TEXT">abc</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
+            <Category name="LED" colour={"#506481"}>
+                <Block type="leftIndicator_led"/>
+                <Block type="rightIndicator_led"/>
+                <Block type="indicatorStatus"/>
+                {/*<Block type="toggle_block"/>*/}
+                {/*<Block type="front_led"/>*/}
+                {/*<Block type="back_led"/>*/}
+                {/*<Block type="status_led"/>*/}
             </Category>
-
-            <Category name="List" colour={"#C26F87"}>
-                <Block type="lists_create_with"/>,
-                <Block type="lists_create_empty"/>,
-                <Block type="lists_repeat"/>,
-                <Block type="lists_length"/>
-                <Block type="lists_isEmpty"/>
-                <Block type="lists_indexOf"/>
-                <Block type="lists_getIndex"/>
-                <Block type="lists_setIndex"/>
-                <Block type="lists_getSublist"/>
-                <Block type="lists_sort"/>
-                <Block type="lists_split"/>
+            <Category name="Phone Sensors" colour={"C26F87"}>
+                <Block type="gyroscope_reading"/>
+                <Block type="acceleration_reading"/>
+                <Block type="magnetic_reading"/>
+                {/*<Block type="toggle_switch"/>*/}
             </Category>
             <Category name="Sound" colour={"#5BBC73"}>
                 <Block type="soundIs"/>,
@@ -226,9 +124,8 @@ export const Toolbox = (props) => {
                 <Block type="soundMode">
                 </Block>,
             </Category>
-            <Category name="Sensing" colour={"#61A8EC"}>
+            <Category name="Sensors" colour={"#61A8EC"}>
                 <Block type="sonarReading"/>
-                <Block type="batteryReading"/>
                 <Block type="speedReading"/>
                 <Block type="voltageDividerReading"/>
                 <Block type="wheelOdometerSensors"/>
@@ -236,21 +133,16 @@ export const Toolbox = (props) => {
                 <Block type="frontLedSensor"/>
                 <Block type="backLedSensor"/>
                 <Block type="ledStatusSensor"/>
-                <Block type="eclipse_block"/>
-                <Block type="car_output"/>
-                <Block type="value"/>
-                <Block type="display">
-                    <Value name="input1">
-                    </Value>
-                </Block>
+            </Category>
+            <Category name="Speed" colour={"#567AE4"}>
+                <Block type="speedSlow"/>
+                <Block type="speedMedium"/>
+                <Block type="speedHigh"/>
             </Category>
             <Category name="Movement" colour={"#DA4B5D"}>
                 <Block type="forward&BackwardAtSpeed"/>
                 <Block type="forward&BackwardAtSpeedForTime"/>
                 <Block type="left&RightAtSpeed"/>
-                <Block type="left&RightAtSpeedForTime"/>
-                <Block type="straightAtSpeed"/>
-                <Block type="straightAtSpeedForTime"/>
                 <Block type="moveLeft&Right"/>
                 <Block type="moveLeft&RightForTime"/>
                 <Block type="movementCircular"/>

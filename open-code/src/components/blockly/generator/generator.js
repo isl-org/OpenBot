@@ -86,14 +86,14 @@ javascriptGenerator['timer'] = function (block) {
     let number_name = block.getFieldValue('NAME');
     let value_num = javascriptGenerator.valueToCode(block, 'num', javascriptGenerator.ORDER_ATOMIC);
     let code = '';
-    code += 'wait(' + number_name + ");\n" + value_num;
+    code += 'pause(' + number_name + ");\n" + value_num;
     return code;
 };
 
-javascriptGenerator['wait'] = function (block) {
+javascriptGenerator['pause'] = function (block) {
     let number_time = block.getFieldValue('time');
     let code = '';
-    code += "wait(" + number_time + ");\n"
+    code += "pause(" + number_time + ");\n"
     return code;
 };
 
@@ -208,7 +208,7 @@ javascriptGenerator['forward&BackwardAtSpeedForTime'] = function (block) {
     }
 
     let code = "";
-    code += selectMovement() + "(" + number_speed_value + ");\n" + "wait(" + number_time + ");\n";
+    code += selectMovement() + "(" + number_speed_value + ");\n" + "pause(" + number_time + ");\n";
     return code;
 };
 
@@ -235,50 +235,12 @@ javascriptGenerator['left&RightAtSpeed'] = function (block) {
     return code;
 };
 
-javascriptGenerator['left&RightAtSpeedForTime'] = function (block) {
-    let dropdown_select_direction = block.getFieldValue('select_direction');
-    let number_speed_value = block.getFieldValue('speed_value');
-    let number_time = block.getFieldValue('time');
-
-    function selectMovement() {
-        switch (dropdown_select_direction) {
-            case "left_direction" : {
-                return "moveLeft";
-                break;
-            }
-            case "right_direction" : {
-                return "moveRight";
-                break;
-            }
-        }
-    }
-
-    let code = "";
-    code += selectMovement() + "(" + number_speed_value + ");\n" + "wait(" + number_time + ");\n";
-    return code;
-};
-
-javascriptGenerator['straightAtSpeed'] = function (block) {
-    let number_speed_value = block.getFieldValue('speed_value');
-    let code = '';
-    code += "moveStraight(" + number_speed_value + ");\n"
-    return code;
-};
-
-javascriptGenerator['straightAtSpeedForTime'] = function (block) {
-    let number_speed_value = block.getFieldValue('speed_value');
-    let number_time_value = block.getFieldValue('time_value');
-    let code = '';
-    code += "moveStraight(" + number_speed_value + ");\n" + "wait(" + number_time_value + ");\n";
-    return code;
-};
-
 javascriptGenerator['moveLeft&Right'] = function (block) {
     let number_left_distance = block.getFieldValue('left_distance');
     let number_right_distance = block.getFieldValue('right_distance');
 
     let code = '';
-    code += "move(" + number_left_distance + "," + number_right_distance + ");\n";
+    code += "moveOpenBot(" + number_left_distance + "," + number_right_distance + ");\n";
     return code;
 };
 
@@ -288,7 +250,7 @@ javascriptGenerator['moveLeft&RightForTime'] = function (block) {
     let number_time = block.getFieldValue('time');
 
     let code = '';
-    code += "move(" + number_left_distance + "," + number_right_distance + ");\n" + "wait(" + number_time + ");\n";
+    code += "moveOpenBot(" + number_left_distance + "," + number_right_distance + ");\n" + "pause(" + number_time + ");\n";
     ;
     return code;
 };
@@ -313,25 +275,19 @@ javascriptGenerator['circularAtSpeedForTime'] = function (block) {
     let number_speed_value = block.getFieldValue('speed_value');
     let number_time = block.getFieldValue('time');
     let code = '';
-    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ");\n" + "wait(" + number_time + ");\n";
+    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ");\n" + "pause(" + number_time + ");\n";
     return code;
 };
 
 javascriptGenerator['movementStop'] = function (block) {
     let code = '';
-    code += "stop();\n"
+    code += "stopRobot();\n"
     return code;
 };
 
 javascriptGenerator['sonarReading'] = function (block) {
     let code = '';
     code += "sonarReading();\n";
-    return code;
-};
-
-javascriptGenerator['batteryReading'] = function (block) {
-    let code = '';
-    code += "batteryReading();\n";
     return code;
 };
 
@@ -404,5 +360,87 @@ javascriptGenerator['forever'] = function (block) {
     const statements_start_blocks = javascriptGenerator.statementToCode(block, 'forever_loop_blocks');
     let code = "";
     code += "function forever(){\n" + statements_start_blocks + "}";
+    return code;
+};
+
+javascriptGenerator['leftIndicator_led'] = function(block) {
+    const toggleState = block.getFieldValue('TOGGLE_STATE');
+    function leftIndicatorStatus(){
+        if(toggleState==="ON"){
+            return "leftIndicatorOn()";
+        }
+        else if(toggleState==="OFF"){
+            return "leftIndicatorOff()";
+        }
+    }
+    let code = "";
+    code+=leftIndicatorStatus()+";\n";
+    return code;
+};
+
+javascriptGenerator['rightIndicator_led'] = function(block) {
+    const toggleState = block.getFieldValue('TOGGLE_STATE');
+
+    function rightIndicatorStatus(){
+        if(toggleState==="ON"){
+            return "rightIndicatorOn()";
+        }
+        else if(toggleState==="OFF"){
+            return "rightIndicatorOff()";
+        }
+    }
+    let code = "";
+    code+=rightIndicatorStatus()+";\n";
+    return code;
+};
+
+javascriptGenerator['indicatorStatus'] = function(block) {
+    const toggleState = block.getFieldValue('TOGGLE_STATE');
+    function indicatorStatus(){
+        if(toggleState==="ON"){
+            return "indicatorOn()";
+        }
+        else if(toggleState==="OFF"){
+            return "indicatorOff()";
+        }
+    }
+    let code = '';
+    code+=indicatorStatus()+";\n";
+    return code;
+};
+
+javascriptGenerator['gyroscope_reading'] = function(block) {
+    let code = "";
+    code+="gyroscopeReading()"+";\n";
+    return code;
+};
+
+javascriptGenerator['acceleration_reading'] = function(block) {
+    let code = "";
+    code+="accelerationReading()"+";\n";
+    return code;
+};
+
+javascriptGenerator['magnetic_reading'] = function(block) {
+    let code = "";
+    code+="magneticReading()"+";\n";
+    return code;
+};
+
+javascriptGenerator['speedSlow'] = function(block) {
+    let code = "";
+    code+="speedSlow()"+";\n";
+    return code;
+};
+
+javascriptGenerator['speedMedium'] = function(block) {
+    let code = "";
+    code+="speedMedium()"+";\n";
+    return code;
+};
+
+javascriptGenerator['speedHigh'] = function(block) {
+    let code = "";
+    code+="speedHigh()"+";\n";
     return code;
 };

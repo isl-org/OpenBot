@@ -9,6 +9,7 @@ import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
 import {updateCurrentProject} from "../../services/workspace";
 import {nanoid} from "nanoid";
+import {FieldToggle} from "./blocks/field_toggle";
 Blockly.setLocale(locale);
 
 
@@ -21,7 +22,7 @@ function BlocklyComponent(props) {
     const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer} = useContext(StoreContext);
     const uniqueId = currentProjectId ? currentProjectId : nanoid()
 
-   // save code in local to restore on reload page
+    // save code in local to restore on reload page
     const handleWorkspaceChange = useCallback(() => {
         setDrawer(false);
         if (projectName !== undefined) {
@@ -29,6 +30,7 @@ function BlocklyComponent(props) {
         }
 
     }, []);
+
 
     useEffect(() => {
         primaryWorkspace.current = Blockly.inject(blocklyDiv.current, {
@@ -50,9 +52,9 @@ function BlocklyComponent(props) {
 
         //blocks fetching from firebase in card.js
         if (currentProjectXml) {
-            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(currentProjectXml), primaryWorkspace.current);
+            Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(currentProjectXml), primaryWorkspace.current);
         } else {
-            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), primaryWorkspace.current);
+            Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(initialXml), primaryWorkspace.current);
         }
 
         return () => {
