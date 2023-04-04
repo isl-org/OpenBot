@@ -116,3 +116,48 @@
     width: 14px;
     height: 14px;
 }
+
+@media (max-width: 768px) {
+    .main {
+       width:92% !important;
+        left: 16px !important;
+        right: 20px !important;
+        height: 180px !important;
+        gap: 10px;
+    }
+
+    .ContentAndImage {
+        font-size: 10px !important;
+        line-height: 20px;
+        padding: 20px 20px 0px 20px;
+        gap: 20px;
+    }
+
+    .cookieImage {
+        width: 35px;
+        height: 35px;
+    }
+
+    .textDiv {
+        margin-bottom: 20px;
+    }
+    .acceptButton{
+        width: 42%;
+        height: 38px;
+    }
+    .btnText {
+        font-size: 12px;
+    }
+    .declineButton{
+        width: 42%;
+        height: 38px;
+    }
+    .btnDeclineText{
+        font-size: 12px;
+    }
+    .buttonWrapper {
+        margin: 0px 10px 10px 0px;
+        padding-right: 20px;
+        width: 100%;
+    }
+}

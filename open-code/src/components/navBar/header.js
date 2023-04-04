@@ -1,18 +1,19 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {ThemeContext} from "../../App"
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import styles from "./navbar.module.css";
 import {Images} from "../../utils/images";
 import {StoreContext} from "../../context/context";
-import {auth} from "../../services/firebase";
+import {auth, googleSignOut} from "../../services/firebase";
 import {HelpCenterModal} from "../homeComponents/header/helpCenterModal";
 import {EditProfileModal} from "../homeComponents/header/editProfileModal";
-import {DeleteModel, LogOutModal} from "../homeComponents/header/logOutAndDeleteModal";
+import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
 import {PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import {deleteProjectFromStorage} from "../../services/workspace";
 
 
 /**
@@ -31,6 +32,7 @@ export function Header() {
     const [isLogoutModal, setIsLogoutModal] = useState(false);
     const [open, setOpen] = useState(false);
     const location = useLocation();
+    let navigate = useNavigate();
 
     useEffect(() => {
         auth.onAuthStateChanged(function (currentUser) {
@@ -46,11 +48,27 @@ export function Header() {
         setOpen(!open);
         setAnchorEl(anchorEl ? null : event.currentTarget);
     };
+    const handleDeleteProject = () => {
+        deleteProjectFromStorage(projectName).then(() => {
+            navigate(PathName.home);
+        });
+    }
+    const handleSignOut = () => {
+        googleSignOut().then(() => {
+            setIsLogoutModal(false);
+        })
+    }
 
     return (
         <div>
             {/*delete project modal*/}
-            {deleteProject && <DeleteModel setDeleteProject={setDeleteProject}/>}
+            {deleteProject &&
+                <PopUpModal setVariable={setDeleteProject}
+                             headerText={"Delete this file?"}
+                             containText={"You cannot restore this file later."}
+                             buttonText={"Delete"}
+                             handleButtonClick={handleDeleteProject}/>
+            }
 
             <div className={styles.navbarDiv}>
                 {/*logo*/}
@@ -84,7 +102,13 @@ export function Header() {
                             user={user}/>
                     }
                     {/*log out pop up*/}
-                    {isLogoutModal && <LogOutModal isLogoutModal={isLogoutModal} setIsLogoutModal={setIsLogoutModal}/>}
+                    {isLogoutModal &&
+                        <PopUpModal setVariable={setIsLogoutModal}
+                                     headerText={"Confirm Logout"}
+                                     containText={"Are you sure you want to logout?"}
+                                     buttonText={"Ok"}
+                                     handleButtonClick={handleSignOut}/>
+                    }
                     {/*help icon pop up*/}
                     {isHelpCenterModal && <HelpCenterModal isHelpCenterModal={isHelpCenterModal}
                                                            setIsHelpCenterModal={setIsHelpCenterModal}/>}

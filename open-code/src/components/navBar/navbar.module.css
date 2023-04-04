@@ -502,6 +502,7 @@
 
     .logoutModalBox {
         width: 80%;
+        padding: 20px 20px 0px 20px;
     }
 
     .logoutButtonsExtraStyle {
@@ -562,6 +563,10 @@
         width: 70%;
         background-color: rgba(91, 188, 115, 0.1);
         color: #5BBC73;
+    }
+    .headerStyle{
+        font-weight: bold;
+        font-size: 16px;
     }
 
 }

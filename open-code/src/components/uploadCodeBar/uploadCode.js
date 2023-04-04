@@ -17,7 +17,7 @@ import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
 import {motion, AnimatePresence} from "framer-motion";
-import {SignInModal} from "../homeComponents/header/logOutAndDeleteModal";
+import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {googleSigIn} from "../../services/firebase";
 
 
@@ -39,6 +39,7 @@ export const UploadCode = () => {
 
 
     const generateCode = () => {
+        console.log("here")
         if (localStorage.getItem("isSigIn") === "true") {
             setDrawer(false);
             setIsLoader(true);
@@ -361,14 +362,14 @@ export function SignInPopUp(params) {
             console.log("signIn error: ", error)
         });
     }
-    return (
-        <SignInModal
-            headerText={"Please SignIn"}
-            containText={"To upload code you have to first signIn."}
-            buttonText={"SignIn"}
-            handleButtonClick={handleSignIn}
-            handleClose={() => setSignInPopUp(false)}
 
+    return (
+        <PopUpModal
+            headerText={"Sign in First"}
+            containText={"Please sign in to upload your files securely."}
+            buttonText={"Sign In"}
+            handleButtonClick={handleSignIn}
+            setVariable={setSignInPopUp}
         />
     )
 }

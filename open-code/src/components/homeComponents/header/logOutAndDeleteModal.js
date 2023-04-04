@@ -4,101 +4,27 @@ import {Box, Modal} from "@mui/material";
 import styles from "../../navBar/navbar.module.css";
 import BlackText from "../../fonts/blackText";
 import BlueButton from "../../buttonComponent/blueButtonComponent";
-import {googleSignOut} from "../../../services/firebase";
-import {useNavigate} from "react-router-dom";
-import {StoreContext} from "../../../context/context";
-import {deleteProject} from "../../../services/workspace";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import {useLocation} from "react-router-dom";
 
-export function LogOutModal(props) {
-    const {setIsLogoutModal, isLogoutModal} = props
+
+/**
+ * Pop up for delete,log out and signIn
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export function PopUpModal(props) {
     const {theme} = useContext(ThemeContext)
-
-    const handleClose = () => {
-        setIsLogoutModal(false)
-    }
-    return (
-        <Modal
-            className={styles.logoutModal}
-            open={isLogoutModal}
-            onClose={() => handleClose()}>
-            <Box
-                className={styles.logoutModalBox + " " + (theme === "dark" ? styles.darkLogoutModalBox : styles.lightLogoutModalBox)}>
-                <BlackText text={"Confirm Logout"}/>
-                <div style={{marginTop: 20}}>
-                    <BlackText
-                        extraStyle={(theme === "dark" ? styles.darkLogoutMessageModal : styles.lightLogoutMessageModal)}
-                        text={"Are you sure you want to logout?"}/>
-                </div>
-                <div className={styles.logoutButtonsDiv}>
-
-                        <BlueButton onClick={handleClose} buttonName={"Cancel"}
-                                    buttonStyle={styles.buttonStyle}
-                                    extraStyle={styles.logoutButtonsExtraStyle + " " + styles.cancelExtraStyle}/>
-                        <BlueButton onClick={() => {
-                            googleSignOut().then(() => {
-                                handleClose()
-                            })
-                        }} buttonType={"contained"} buttonName={"Ok"}
-                                    buttonStyle={styles.buttonStyle}
-                                    extraStyle={styles.logoutButtonsExtraStyle}/>
-                </div>
-            </Box>
-        </Modal>
-    )
-}
-
-
-export function DeleteModel(props) {
-    const {theme} = useContext(ThemeContext)
-    let navigate = useNavigate();
-    const {setDeleteProject} = props;
+    const {setVariable, headerText, buttonText, containText, handleButtonClick,} = props;
     const [open, setOpen] = useState(true);
-    const {projectName} = useContext(StoreContext);
+
+
     const handleClose = () => {
-        setDeleteProject(false);
+        setVariable(false);
         return setOpen(false);
     };
-    const handleDeleteProject = () => {
-        deleteProject(projectName).then(() => {
-            let path = `/`;
-            navigate(path);
-        });
 
-    }
-
-    return (
-        <div>
-            <Modal
-                className={styles.logoutModal}
-                open={open}
-                onClose={() => handleClose()}>
-                <Box
-                    className={styles.logoutModalBox + " " + (theme === "dark" ? styles.darkLogoutModalBox : styles.lightLogoutModalBox)}>
-                    <BlackText extraStyle={styles.headerStyle} text={"Delete this file?"}/>
-                    <div style={{marginTop: 20}}>
-                        <BlackText
-                            extraStyle={(theme === "dark" ? styles.darkLogoutMessageModal : styles.lightLogoutMessageModal)}
-                            text={"You cannot restore this file later."}/>
-                    </div>
-                    <div className={styles.logoutButtonsDiv}>
-                        <BlueButton onClick={handleClose} buttonName={"Cancel"}
-                                    extraStyle={styles.logoutButtonsExtraStyle} buttonStyle={styles.buttonStyle}/>
-                        <BlueButton onClick={() => {
-                            handleDeleteProject()
-                        }} buttonType={"contained"} buttonName={"Delete"}
-                                    buttonStyle={styles.buttonStyle}
-                                    extraStyle={styles.logoutButtonsExtraStyle}/>
-                    </div>
-                </Box>
-            </Modal>
-        </div>
-    );
-}
-
-export function SignInModal(params) {
-    const {theme} = useContext(ThemeContext);
-    const [open, setOpen] = useState(true);
-    const {headerText, buttonText, containText, handleClose, handleButtonClick} = params
     return (
         <div>
             <Modal
@@ -115,12 +41,16 @@ export function SignInModal(params) {
                     </div>
                     <div className={styles.logoutButtonsDiv}>
                         <BlueButton onClick={handleClose} buttonName={"Cancel"}
-                                    extraStyle={styles.logoutButtonsExtraStyle}/>
-                        <BlueButton onClick={handleButtonClick} buttonType={"contained"} buttonName={buttonText}
+                                    buttonStyle={styles.buttonStyle}
+                                    extraStyle={styles.logoutButtonsExtraStyle + " " + styles.cancelExtraStyle}/>
+                        <BlueButton onClick={() => {
+                            handleButtonClick()
+                        }} buttonType={"contained"} buttonName={buttonText}
+                                    buttonStyle={styles.buttonStyle}
                                     extraStyle={styles.logoutButtonsExtraStyle}/>
                     </div>
                 </Box>
             </Modal>
         </div>
-    )
+    );
 }

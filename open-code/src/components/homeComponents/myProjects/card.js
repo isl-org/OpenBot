@@ -7,10 +7,15 @@ import BlackText from "../../fonts/blackText";
 import WhiteText from "../../fonts/whiteText";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
-import {getAllLocalProjects, getDriveProjects, renameProject} from "../../../services/workspace";
+import {
+    deleteProjectFromStorage,
+    getAllLocalProjects,
+    getDriveProjects,
+    renameProject
+} from "../../../services/workspace";
 import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
 import {EditProjectPopUp} from "../header/headerComponents";
-import {DeleteModel} from "../header/logOutAndDeleteModal";
+import {PopUpModal} from "../header/logOutAndDeleteModal";
 import {handleUniqueName} from "./newProjectButton";
 
 function Card(props) {
@@ -86,16 +91,27 @@ function Card(props) {
         }
         setRename(false)
         if (reNameProject !== props.projectData.projectName) {
-            await handleRename(reNameProject, props.projectData.projectName,setReNameProject).then(async (updatedProjectName) => {
+            await handleRename(reNameProject, props.projectData.projectName, setReNameProject).then(async (updatedProjectName) => {
                 await renameProject(updatedProjectName, props.projectData.projectName, PathName.home).then()
             });
         }
     }
 
+    const handleDeleteProject = () => {
+        deleteProjectFromStorage(props.projectData.projectName).then(() => {
+            let path = `/`;
+            navigate(path);
+        });
+    }
 
     return (
         <div className={styles.cardContent}>
-            {deleteProject && <DeleteModel setDeleteProject={setDeleteProject}/>}
+            {deleteProject && <PopUpModal setVariable={setDeleteProject}
+                                           headerText={"Delete this file?"}
+                                           containText={"You cannot restore this file later."}
+                                           buttonText={"Delete"}
+                                           handleButtonClick={handleDeleteProject}/>
+            }
             <div onClick={() => {
                 handleOpenProject(props.projectData).catch((err) => {
                     console.log(props.projectData)
@@ -156,7 +172,7 @@ function Card(props) {
 
 export default Card;
 
-export const handleRename = async (reNameProject, projectName,setReNameProject) => {
+export const handleRename = async (reNameProject, projectName, setReNameProject) => {
     let updatedProjectName = reNameProject;
     if (reNameProject !== projectName) {
         console.log("rename:::", reNameProject)

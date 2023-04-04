@@ -21,3 +21,10 @@
     color: #0071C5;
     font-family: 'Gilroy-Regular', serif;
 }
+
+@media (max-width: 768px) {
+    .blackFont{
+        font-size: 12px;
+    }
+
+}

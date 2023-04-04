@@ -48,7 +48,7 @@ export async function getDriveProjects(driveProjects) {
  * @returns {Promise<void>}
  * @param projectName
  */
-export async function deleteProject(projectName) {
+export async function deleteProjectFromStorage(projectName) {
 
     try {
         if (localStorage.getItem("isSigIn") === "true") {
