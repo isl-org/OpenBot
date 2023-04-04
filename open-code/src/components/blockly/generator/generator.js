@@ -364,28 +364,48 @@ javascriptGenerator['forever'] = function (block) {
 };
 
 javascriptGenerator['leftIndicator_led'] = function(block) {
+    const toggleState = block.getFieldValue('TOGGLE_STATE');
+    function leftIndicatorStatus(){
+        if(toggleState==="ON"){
+            return "leftIndicatorOn()";
+        }
+        else if(toggleState==="OFF"){
+            return "leftIndicatorOff()";
+        }
+    }
     let code = "";
-    code+="leftIndicatorOn()"+";\n";
+    code+=leftIndicatorStatus()+";\n";
     return code;
 };
 
 javascriptGenerator['rightIndicator_led'] = function(block) {
+    const toggleState = block.getFieldValue('TOGGLE_STATE');
+
+    function rightIndicatorStatus(){
+        if(toggleState==="ON"){
+            return "rightIndicatorOn()";
+        }
+        else if(toggleState==="OFF"){
+            return "rightIndicatorOff()";
+        }
+    }
     let code = "";
-    code+="rightIndicatorOn()"+";\n";
+    code+=rightIndicatorStatus()+";\n";
     return code;
 };
 
 javascriptGenerator['indicatorStatus'] = function(block) {
-    let checkbox_name = block.getFieldValue('NAME') === 'TRUE';
-    function checkIndicatorStatus() {
-        if (checkbox_name) {
-            return "indicatorOff()";
-        } else {
+    const toggleState = block.getFieldValue('TOGGLE_STATE');
+    function indicatorStatus(){
+        if(toggleState==="ON"){
             return "indicatorOn()";
+        }
+        else if(toggleState==="OFF"){
+            return "indicatorOff()";
         }
     }
     let code = '';
-    code+=checkIndicatorStatus()+";\n";
+    code+=indicatorStatus()+";\n";
     return code;
 };
 
@@ -423,9 +443,4 @@ javascriptGenerator['speedHigh'] = function(block) {
     let code = "";
     code+="speedHigh()"+";\n";
     return code;
-};
-
-javascriptGenerator['my_toggle_block'] = function(block) {
-    const toggleState = block.getFieldValue('TOGGLE_STATE') === 'ON';
-    return [toggleState ? 'true' : 'false', javascriptGenerator.ORDER_ATOMIC];
 };

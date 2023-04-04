@@ -840,7 +840,16 @@ Blockly.Blocks["leftIndicator_led"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "left indicator ON",
+            "message0": "left indicator %1",
+            "args0": [
+                {
+                    "type": "field_toggle",
+                    "name": "TOGGLE_STATE",
+                    "state": true,
+                    "onText": "ON",
+                    "offText": "OFF"
+                }
+            ],
             "inputsInline": true,
             "previousStatement": null,
             "nextStatement": null,
@@ -855,7 +864,16 @@ Blockly.Blocks["rightIndicator_led"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "right indicator ON",
+            "message0": "right indicator %1",
+            "args0": [
+                {
+                    "type": "field_toggle",
+                    "name": "TOGGLE_STATE",
+                    "state": true,
+                    "onText": "ON",
+                    "offText": "OFF"
+                }
+            ],
             "inputsInline": true,
             "previousStatement": null,
             "nextStatement": null,
@@ -870,12 +888,14 @@ Blockly.Blocks["indicatorStatus"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "Indicator OFF %1",
+            "message0": "Indicator %1",
             "args0": [
                 {
-                    "type": "field_checkbox",
-                    "name": "NAME",
-                    "checked": true
+                    "type": "field_toggle",
+                    "name": "TOGGLE_STATE",
+                    "state": true,
+                    "onText": "ON",
+                    "offText": "OFF"
                 }
             ],
             "inputsInline": true,
@@ -922,16 +942,7 @@ Blockly.Blocks["magnetic_reading"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "magnetic reading %1",
-            "args0": [
-                {
-                    "type": "field_toggle",
-                    "name": "TOGGLE_STATE",
-                    "state": true,
-                    "onText": "ON",
-                    "offText": "OFF"
-                }
-            ],
+            "message0": "magnetic reading",
             "inputsInline": true,
             "previousStatement": null,
             "nextStatement": null,
@@ -977,16 +988,7 @@ Blockly.Blocks["speedHigh"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "change speed to high %1",
-            "args0": [
-                {
-                    "type": "field_toggle",
-                    "name": "TOGGLE_STATE",
-                    "state": true,
-                    "onText": "ON",
-                    "offText": "OFF"
-                }
-            ],
+            "message0": "change speed to high",
             "inputsInline": true,
             "previousStatement": null,
             "nextStatement": null,

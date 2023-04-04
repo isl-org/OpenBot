@@ -49,7 +49,6 @@ export const UploadCode = () => {
             let updatedCode = code + Constants.endCode;
             console.log(updatedCode);
             uploadToGoogleDrive(updatedCode, "js").then((res) => {
-                    console.log("res:::", res)
                     setCode(res);
                     setIsLoader(false);
                     setDrawer(true);
