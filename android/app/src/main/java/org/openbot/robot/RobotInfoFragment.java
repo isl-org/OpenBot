@@ -46,7 +46,7 @@ public class RobotInfoFragment extends ControlsFragment {
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
-          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+          Navigation.findNavController(requireView()).navigate(R.id.open_usb_fragment);
         });
 
     binding.bleToggle.setOnClickListener(

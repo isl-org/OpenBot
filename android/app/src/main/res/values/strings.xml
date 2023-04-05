@@ -126,6 +126,7 @@
   <string name="status_leds">Status LEDs</string>
   <string name="front_leds">Front LEDs</string>
   <string name="bluetooth">Bluetooth</string>
+  <string name="usb">USB</string>
   <string-array name="servers">
     <item>No server</item>
   </string-array>

@@ -80,41 +80,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     vehicle = mViewModel.getVehicle().getValue();
 
     connection = findPreference("connection");
-    if (connection != null) {
-      connection.setTitle("No Device");
-      if (vehicle != null && vehicle.isUsbConnected()) {
-        connection.setChecked(true);
-        connection.setTitle(vehicle.getUsbConnection().getProductName());
-      } else {
-        connection.setTitle("No Device");
-        connection.setChecked(false);
-      }
-      connection.setOnPreferenceClickListener(
-          preference -> {
-            Timber.d(String.valueOf(connection.isChecked()));
-            if (vehicle != null) {
-              if (connection.isChecked()) {
-                vehicle.connectUsb();
-                if (vehicle.isUsbConnected())
-                  connection.setTitle(vehicle.getUsbConnection().getProductName());
-                else {
-                  connection.setTitle("No Device");
-                  connection.setChecked(false);
-                  Toast.makeText(
-                          requireContext().getApplicationContext(),
-                          "Please check the USB connection.",
-                          Toast.LENGTH_SHORT)
-                      .show();
-                }
-              } else {
-                vehicle.disconnectUsb();
-                connection.setTitle("No Device");
-              }
-              mViewModel.setUsbStatus(vehicle.isUsbConnected());
-            }
-            return true;
-          });
-    }
 
     camera = findPreference("camera");
     if (camera != null) {
