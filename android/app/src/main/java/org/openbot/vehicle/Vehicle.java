@@ -392,11 +392,9 @@ public class Vehicle {
   private void sendStringToDevice(String message) {
     if (getConnectionType().equals("USB") && usbConnection != null) {
       usbConnection.send(message);
-      System.out.println("sanjeev usb = " + message);
     } else if (getConnectionType().equals("Bluetooth")
         && bluetoothManager != null
         && bluetoothManager.isBleConnected()) {
-      System.out.println("sanjeev = " + message);
       sendStringToBle(message);
     }
   }

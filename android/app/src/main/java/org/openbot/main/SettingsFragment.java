@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -24,7 +23,6 @@ import org.openbot.R;
 import org.openbot.utils.Constants;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Vehicle;
-import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
   private MainViewModel mViewModel;
