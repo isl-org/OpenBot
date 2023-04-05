@@ -1713,7 +1713,7 @@ Serial.print(data);
 Serial.println();
 #if (HAS_BLUETOOTH)
   if (deviceConnected) {
-    char outData[50] = "";
+    char outData[MAX_MSG_SZ] = "";
     for (int i = 0; i < data.length(); i++) {
       outData[i] = data[i];
     }
