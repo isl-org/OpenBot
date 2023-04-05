@@ -20,7 +20,7 @@ There are several options for the robot body depending on your needs and capabil
 - [Regular body](cad/regular_body/README.md): This is the standard body we designed; it requires a build plate with least 240mmx150mm.
 - [Slim body](cad/slim_body/README.md): Since a lot of common 3D printers have a smaller build volume, we have also designed a smaller version without bumpers which fits on a 220mmx220mm build plate at 45 degrees.
 - [Glueable body](cad/glue_body/README.md): For printing on 3D printers with even smaller build volumes, there is also a modular body designed by @sloretz with serveral parts that need to be glued together; it fits on a 150mmx140mm build plate.
-- [Large body](cad/large_body/README.md): This body designed by @Christos-Ps provides extra space inside the shell and a lego-compatible top while maintaining a small footprint that requires only 222mmx150mm for printing.
+- [Blocky body](cad/block_body/README.md): This body designed by @Christos-Ps provides multiple variants with options for extra space inside the shell and a lego-compatible top while maintaining a small footprint that requires only 221mmx150mm for printing.
 
 #### Phone mount
 
