@@ -113,8 +113,6 @@ public class BluetoothManager {
         BleManager.getInstance().disconnect(bleDevice.address);
         bleDevice = null;
       }
-      //            BleManager.getInstance().connect(device.address, connectCallback);
-      //            bleDevice = device;
     } else {
       BleManager.getInstance().connect(bleDevice.address, connectCallback);
     }
@@ -137,23 +135,14 @@ public class BluetoothManager {
           deviceList.add(indexValue, device);
           adapter.notifyDataSetChanged();
           addDeviceInfoDataAndUpdate();
-          Logger.e("Successfully connected: " + " " + device);
-          bleDevice = device;
-          deviceList.remove(indexValue);
-          deviceList.add(indexValue, device);
-          adapter.notifyDataSetChanged();
-          addDeviceInfoDataAndUpdate();
-          Logger.e("Successfully connected: " + " " + device);
+          Logger.i("Successfully connected: " + " " + device);
         }
 
         @Override
         public void onDisconnected(String info, int status, BleDevice device) {
           bleDevice = null;
           adapter.notifyDataSetChanged();
-          Logger.e("disconnected!");
-          bleDevice = null;
-          adapter.notifyDataSetChanged();
-          Logger.e("disconnected!");
+          Logger.i("disconnected!");
         }
 
         @Override
@@ -212,7 +201,7 @@ public class BluetoothManager {
         @Override
         public void onWriteSuccess(byte[] data, BleDevice device) {
           String value = new String(data, StandardCharsets.UTF_8);
-          Logger.e("write success:" + value);
+          Logger.i("write success:" + value);
         }
 
         @Override
@@ -248,7 +237,7 @@ public class BluetoothManager {
 
   private void onSerialDataReceived(String data) {
     // Add whatever you want here
-    Logger.e("Serial data received from BLE: " + data);
+    Logger.i("Serial data received from BLE: " + data);
     localBroadcastManager.sendBroadcast(
         new Intent(Constants.DEVICE_ACTION_DATA_RECEIVED)
             .putExtra("from", "usb")
