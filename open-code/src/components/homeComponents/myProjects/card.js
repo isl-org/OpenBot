@@ -17,6 +17,8 @@ import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
 import {EditProjectPopUp} from "../header/headerComponents";
 import {PopUpModal} from "../header/logOutAndDeleteModal";
 import {handleUniqueName} from "./newProjectButton";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import {useTheme} from "@mui/material";
 
 function Card(props) {
     const {theme} = useContext(ThemeContext);
@@ -33,6 +35,8 @@ function Card(props) {
     const [reNameProject, setReNameProject] = useState("")
     const [deleteProject, setDeleteProject] = useState(false);
     const inputRef = useRef(null);
+    const themes = useTheme();
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
     useEffect(() => {
         setReNameProject(props.projectData.projectName)
@@ -96,6 +100,7 @@ function Card(props) {
             });
         }
     }
+
 
     const handleDeleteProject = () => {
         deleteProjectFromStorage(props.projectData.projectName).then(() => {
@@ -162,7 +167,7 @@ function Card(props) {
                                       extraStyle={styles.optionExtraStyle}
                     />
                 </div>
-                <BlackText divStyle={{marginTop: 5, marginBottom: 5}} extraStyle={styles.Date}
+                <BlackText divStyle={{marginTop: (!isMobile && 4), marginBottom: (!isMobile && 5)}} extraStyle={styles.Date}
                            text={props.projectData.updatedDate}/>
                 <BlackText extraStyle={styles.Date} text={props.projectData.time}/>
             </div>

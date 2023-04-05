@@ -232,7 +232,8 @@
     display: flex;
     align-items: center;
 }
-.optionExtraStyle{
+
+.optionExtraStyle {
     height: 125px;
     width: 260px;
     position: sticky;
@@ -248,10 +249,12 @@
     cursor: pointer;
     margin-right: 42px;
 }
-.rowDiv{
+
+.rowDiv {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    width: 100%;
 }
 
 .lightBoxShadow {
@@ -294,29 +297,66 @@
 }
 
 @media (max-width: 768px) {
+    .Main {
+        padding-left: 3.8%;
+        padding-top: 12.6%;
+    }
+
     .Heading {
         font-size: 16px;
         font-weight: 500;
+        line-height: 21px;
     }
 
     .Content {
-        width: 45%;
+        width: 50%;
     }
 
-   .MessageIcon {
-        width: 55%;
-       line-height: 12px;
-       margin-left: -1px;
-
-
+    .MessageIcon {
+        width: 50%;
+        line-height: 12px;
+        margin-left: -5%;
+        margin-top: 20px;
     }
+
     .Message {
         font-size: 10px;
         padding: 10px 10px;
     }
+
     .Button {
         width: 100%;
         height: 99.07px;
+    }
+
+    .cardContent {
+        width: 50%;
+        margin-top: 26px;
+    }
+
+    .Card {
+        width: 90%;
+        height: 99.07px;
+        margin-right: 0;
+    }
+
+    .CardHeadingIcon {
+        margin-left: 15%;
+        margin-top: 10%;
+    }
+
+    .CardHeading {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .PencilIcon {
+        margin: 7% 10% 0 0px;
+    }
+    .Date {
+        padding-left: 15%;
+        font-size: 10px !important;
+        font-weight: 200;
     }
 
 }

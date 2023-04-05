@@ -110,3 +110,52 @@
 [class~=carousel-slider] {
     overflow: inherit !important;
 }
+
+.carousel .control-dots .dot{
+    margin: 0 8px;
+}
+
+@media (max-width: 768px) {
+    .Content {
+        padding-right: 3.4%;
+        flex-direction: column;
+        padding-top: 6.5%;
+    }
+
+    .HeadingContent {
+        gap: 17px;
+        margin-left: 3.8%;
+    }
+
+    .DragAndDropHeading {
+        font-size: 1.1rem;
+        line-height: 26px;
+    }
+
+    .DragAndDropContent {
+        font-size: 14px;
+        line-height: 20px;
+        width: 101%;
+    }
+
+    .ImageDrag {
+        padding-top: 0px;
+    }
+
+    .videoStyle {
+        width: 50%;
+        /*height: 40%;*/
+    }
+
+    [class~=dot ] {
+        width: 5px !important;
+        height: 5px !important;
+    }
+
+    /*TODO margin of carousal dots in mobile view*/
+    /*.carousel .control-dots .dot {*/
+    /*    margin: 0 3px !important;*/
+    /*}*/
+
+
+}

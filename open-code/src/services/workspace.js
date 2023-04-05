@@ -64,10 +64,12 @@ export async function deleteProjectFromStorage(projectName) {
             const findCurrentProject = allProject.find(currentProject => currentProject?.projectName === projectName);
             console.log("findCurrentProject", findCurrentProject)
             findCurrentProject && await checkFileExistsInFolder(await getFolderId(), findCurrentProject?.projectName, "js").then(async (response) => {
-                await deleteFileFromGoogleDrive(response?.fileId)
+                if (response.exists)
+                    await deleteFileFromGoogleDrive(response?.fileId)
             })
             findCurrentProject && await checkFileExistsInFolder(await getFolderId(), findCurrentProject?.projectName, "xml").then(async (response) => {
-                await deleteFileFromGoogleDrive(response?.fileId)
+                if (response.exists)
+                    await deleteFileFromGoogleDrive(response?.fileId)
             })
 
 
@@ -234,7 +236,7 @@ export function FormatDate() {
  * @param oldName
  * @returns {Promise<void>}
  */
-export async function renameProject(projectName, oldName,screen) {
+export async function renameProject(projectName, oldName, screen) {
     if (projectName !== oldName) {
         let data = {
             projectName: projectName,
@@ -266,7 +268,7 @@ export async function renameProject(projectName, oldName,screen) {
                 updateCurrentProject(data.id, projectName, data.xmlValue)
             }
         }
-        if(screen === PathName.home){
+        if (screen === PathName.home) {
             window.location.reload();
         }
     }

@@ -13,7 +13,7 @@ import {Carousel} from "react-responsive-carousel";
 export const HomeCarousel = () => {
 
     return (
-        <Carousel axis={'horizontal'} infiniteLoop={true} interval={4000} autoPlay={true} showThumbs={false}>
+        <Carousel axis={'horizontal'} infiniteLoop={true} interval={4000} autoPlay={false} showThumbs={false}>
             {Carousal.map((slide) => (
                 <CarousalComponent key={slide} slide={slide}/>
             ))}
@@ -43,7 +43,7 @@ function CarousalComponent(params) {
                 </div>
             </div>
             <video src={theme === "dark" ? slide.videoDark : slide.videoLight}
-                   className={styles.ImageDrag}
+                   className={`${styles.ImageDrag} ${styles.videoStyle}`}
                    autoPlay={true} loop={true}/>
         </div>
     )

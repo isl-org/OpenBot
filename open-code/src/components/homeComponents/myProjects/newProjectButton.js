@@ -1,12 +1,13 @@
 import React, {useContext, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {Modal} from "@mui/material";
+import {Modal, useTheme} from "@mui/material";
 import {StoreContext} from "../../../context/context";
 import styles from "./newProject.module.css";
 import {ThemeContext} from "../../../App";
 import {Images} from "../../../utils/images";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 import {localStorageKeys, Themes} from "../../../utils/constants";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 
 function NewProjectButton(props) {
@@ -14,6 +15,8 @@ function NewProjectButton(props) {
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [isInputError, setIsInputError] = useState(true);
+    const themes = useTheme();
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const {
         projectName,
         setProjectName,
@@ -58,11 +61,13 @@ function NewProjectButton(props) {
     return (
         <>
             <div className={styles.Content + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}
-                 style={isProject > 0 ? {marginRight: "42px"} : {marginRight: 0}}
+                 style={{marginRight: (isProject> 0 && !isMobile) && 42}}
                  onClick={handleOpen}>
-                <div className={styles.Button + " " + (theme === "dark" ? styles.ButtonDark : styles.ButtonLight)}>
-                    <div className={styles.AddIconImage}>
-                        <div className={styles.plus}>+</div>
+                <div className={styles.Card + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
+                    <div className={styles.Button + " " + (theme === "dark" ? styles.ButtonDark : styles.ButtonLight)}>
+                        <div className={styles.AddIconImage}>
+                            <div className={styles.plus}>+</div>
+                        </div>
                     </div>
                 </div>
             </div>

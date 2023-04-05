@@ -964,7 +964,7 @@ Blockly.Blocks["speedSlow"] = {
             "nextStatement": null,
             "colour": 230,
             "tooltip": "",
-            "helpUrl": ""
+            "helpUrl": "",
         });
     }
 };
