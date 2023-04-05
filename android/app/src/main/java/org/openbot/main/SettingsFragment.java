@@ -9,11 +9,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.ListPreference;
@@ -22,12 +19,9 @@ import androidx.preference.SwitchPreferenceCompat;
 import org.openbot.R;
 import org.openbot.utils.Constants;
 import org.openbot.utils.PermissionUtils;
-import org.openbot.vehicle.Vehicle;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
   private MainViewModel mViewModel;
-  private SwitchPreferenceCompat connection;
-  private Vehicle vehicle;
   private SwitchPreferenceCompat camera;
   private SwitchPreferenceCompat storage;
   private SwitchPreferenceCompat location;
@@ -75,9 +69,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
     mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-    vehicle = mViewModel.getVehicle().getValue();
-
-    connection = findPreference("connection");
 
     camera = findPreference("camera");
     if (camera != null) {
@@ -208,21 +199,5 @@ public class SettingsFragment extends PreferenceFragmentCompat {
               System.exit(0); // System finishes and automatically relaunches us.
             },
             100);
-  }
-
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    mViewModel
-        .getUsbStatus()
-        .observe(
-            getViewLifecycleOwner(),
-            status -> {
-              if (connection != null) {
-                connection.setChecked(status);
-                connection.setTitle(
-                    status ? vehicle.getUsbConnection().getProductName() : "No Device");
-              }
-            });
   }
 }
