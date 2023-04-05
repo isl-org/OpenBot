@@ -146,6 +146,7 @@
 .icon {
     width: 24px;
     height: 24px;
+    margin-left: 2px;
 }
 
 .editProfileModal {
@@ -460,10 +461,6 @@
         width: 0.7%;
     }
 
-    .icon {
-        margin-left: 2px;
-    }
-
     .mainIcon {
         height: 2rem;
         width: 2rem;
@@ -567,6 +564,45 @@
     .headerStyle{
         font-weight: bold;
         font-size: 16px;
+    }
+
+    .option {
+        height: 86px !important;
+        width: 157px !important;
+        margin-top: 10px !important;
+    }
+
+    .option .item{
+        font-size: 0.8rem;
+        padding: 0.1rem 0 0.5rem 0 !important;
+        justify-content: start;
+    }
+
+    .renameDivMargin {
+        margin-top: 1.2rem;
+        padding-right: 1rem !important;
+    }
+
+    .renameText{
+        margin-left: 1rem;
+    }
+
+    .deleteText{
+        margin-left: 1rem;
+    }
+
+    .option .icon{
+        width: 18px;
+        height: 18px;
+        margin-left: 19px;
+    }
+
+    .darkItem {
+        border-width: 0;
+    }
+
+    .lightItem {
+        border-width: 0;
     }
 
 }

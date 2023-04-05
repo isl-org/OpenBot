@@ -202,14 +202,14 @@ export function EditProjectPopUp(params) {
                         handleRename();
                     }}>
                     <img alt="Icon" className={styles.icon} src={theme === "dark" ? renameIcon : Edit}/>
-                    <div>Rename</div>
+                    <div className={styles.renameText}>Rename</div>
                 </div>
                 <div
                     className={`${styles.item} ${styles.deleteDivMargin} ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
                     onClick={handleDelete}>
                     <img alt="Icon" className={styles.icon}
                          src={theme === "dark" ? deleteIcon : trash}/>
-                    <div> Delete File</div>
+                    <div className={styles.deleteText}> Delete File</div>
                 </div>
             </div>
         </Popper>
