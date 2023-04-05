@@ -4,8 +4,6 @@ import {Box, Modal} from "@mui/material";
 import styles from "../../navBar/navbar.module.css";
 import BlackText from "../../fonts/blackText";
 import BlueButton from "../../buttonComponent/blueButtonComponent";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import {useLocation} from "react-router-dom";
 
 
 /**

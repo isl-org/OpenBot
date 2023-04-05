@@ -31,7 +31,6 @@ export const NewProject = () => {
             </div>
             <div className={styles.ButtonsMessage}>
                 <NewProjectButton isProject={projects.length}/>
-
                 {projects.length > 0 ?
                     projects?.sort((z, a) => moment(`${a.updatedDate} ${a.time}`, 'MMMM D, YYYY h:mm')
                         .valueOf() - moment(`${z.updatedDate} ${z.time}`, 'MMMM D, YYYY h:mm')
