@@ -9,7 +9,6 @@ import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
 import {updateCurrentProject} from "../../services/workspace";
 import {nanoid} from "nanoid";
-import {FieldToggle} from "./blocks/field_toggle";
 Blockly.setLocale(locale);
 
 

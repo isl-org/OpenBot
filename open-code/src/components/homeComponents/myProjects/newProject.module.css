@@ -125,8 +125,6 @@
 .ModelHeading {
     height: 27%;
     width: 85%;
-    border-width: 1px;
-    border-style: none none solid;
     font-family: Gilroy-SemiBold, sans-serif;
     font-size: 1.4rem;
     display: flex;
@@ -296,6 +294,15 @@
     line-height: 17px;
 }
 
+.line {
+    border: 0.5px solid;
+    opacity: 0.2;
+    margin: 5px 0px 0 0px;
+}
+.inputTitle{
+    /*margin-left: -10px;*/
+}
+
 @media (max-width: 768px) {
     .Main {
         padding-left: 3.8%;
@@ -357,6 +364,61 @@
         padding-left: 15%;
         font-size: 10px !important;
         font-weight: 200;
+    }
+    .model {
+        width: 80%;
+        height: 11rem;
+        padding: 18px 20px 0px 20px;
+    }
+
+    .ModelHeading {
+        height: 15%;
+        width: 95%;
+        font-size: 14px;
+        margin-left: 0.2rem;
+        padding-bottom: 5px;
+    }
+
+    .CrossIcon {
+        width: 12px;
+        height: 12px;
+        margin-left: 10px;
+    }
+
+    .line {
+        border: 0.5px solid;
+        opacity: 0.2;
+        margin: 5px -20px 0 -20px;
+    }
+
+    .Input {
+        padding-top: 10px;
+        padding-left: 0%;
+        margin: -20px;
+    }
+    .inputTitle{
+        /*margin-left: -10px;*/
+    }
+    .inputExtraStyle {
+        height: 50px;
+        width: 80%;
+    }
+    .extraInputStyle {
+        font-size: 13px !important;
+    }
+
+    .SaveBtn {
+         width: 150px;
+        height:30px;
+        font-size: 14px;
+        margin-left: 62%;
+        font-family: Gilroy-Regular;
+
+    }
+    .creatButton{
+        width: 91%;
+        margin-top: 30px;
+        display: flex;
     }
 
 }

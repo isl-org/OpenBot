@@ -13,6 +13,7 @@ export default function SimpleInputComponent(props) {
         onDataChange,
         extraMargin,
         placeHolder,
+        divStyle,
         headStyle,
         value,
         extraInputStyle,
@@ -31,7 +32,7 @@ export default function SimpleInputComponent(props) {
 
     return (
         <div className={styles.mainDiv + " " + extraStyle}>
-            <BlackText text={inputTitle} extraStyle={headStyle}/>
+            <BlackText text={inputTitle} extraStyle={headStyle} divStyle={divStyle}/>
             {inputType === "text" ?
                 <div className={styles.inputBorder + " " + extraMargin}>
                     <input type={"text"}

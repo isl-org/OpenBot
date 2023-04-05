@@ -26,8 +26,7 @@ export const NewProject = () => {
 
     return (
         <div className={styles.Main + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
-            <div className={styles.Heading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>My
-                Projects
+            <div className={styles.Heading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>My Projects
             </div>
             <div className={styles.ButtonsMessage}>
                 <NewProjectButton isProject={projects.length}/>
