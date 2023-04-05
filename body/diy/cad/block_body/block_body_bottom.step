@@ -9,7 +9,7 @@ FILE_DESCRIPTION(
 /* implementation_level */ '2;1');
 
 FILE_NAME(
-/* name */ 'Openbot_Short_Body_Bottom_F3.step',
+/* name */ 'block_body_bottom.step',
 /* time_stamp */ '2023-04-04T12:14:04+03:00',
 /* author */ (''),
 /* organization */ (''),
