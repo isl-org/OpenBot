@@ -181,9 +181,6 @@ extension UIViewController: UICollectionViewDelegate {
         collectionView.deselectItem(at: indexPath, animated: true)
         let viewController = (storyboard?.instantiateViewController(withIdentifier: Constants.gameModes[indexPath.row].identifier))!
         navigationController?.pushViewController(viewController, animated: true);
-        print(navigationController);
-//        MyNavigationController.shared.pushViewController(viewController, animated: false)
-//        tabBarController?.viewControllers = [MyNavigationController.shared]
     }
 }
 

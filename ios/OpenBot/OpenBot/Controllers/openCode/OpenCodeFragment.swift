@@ -75,8 +75,6 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
         runOpenBot.backgroundColor = UIColor(red: 0.00, green: 0.25, blue: 0.87, alpha: 1.00)
         runOpenBot.setTitle("Run Car", for: .normal);
         runOpenBot.isHidden = true;
-
-
         tempNumber.textColor = .black;
 
         DispatchQueue.main.async {

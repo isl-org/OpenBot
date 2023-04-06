@@ -31,9 +31,10 @@ class projectFragment: UIViewController {
         view.addSubview(signInBtn);
     }
 
-
-
+    @IBAction func scanner(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "openCode", bundle: nil)
+        let viewController = (storyboard.instantiateViewController(withIdentifier: "qrScanner"))
+        navigationController?.pushViewController(viewController, animated: true);
+    }
 }
-extension UILabel{
 
-}

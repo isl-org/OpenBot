@@ -4,6 +4,49 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <scenes/>
+    <scenes>
+        <!--Scanner Fragment-->
+        <scene sceneID="eMD-78-Ccy">
+            <objects>
+                <viewController storyboardIdentifier="qrScanner" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Px-Ta-prs" customClass="scannerFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tL8-Vt-IBR">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R0X-Ve-GNV">
+                                <rect key="frame" x="359" y="76" width="25" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="Mie-9z-EXF"/>
+                                    <constraint firstAttribute="width" constant="25" id="V7P-AQ-vLm"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="cancel"/>
+                                <connections>
+                                    <action selector="removeScanner:" destination="3Px-Ta-prs" eventType="touchUpInside" id="eSj-y7-wnW"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Fkn-4e-SDy"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Fkn-4e-SDy" firstAttribute="trailing" secondItem="R0X-Ve-GNV" secondAttribute="trailing" constant="9" id="TmG-IO-Ivd"/>
+                            <constraint firstItem="R0X-Ve-GNV" firstAttribute="top" secondItem="Fkn-4e-SDy" secondAttribute="top" constant="17" id="iaN-X5-9eO"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wiu-Fv-Q4S" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-439" y="-257"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="cancel" width="25" height="25"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>
