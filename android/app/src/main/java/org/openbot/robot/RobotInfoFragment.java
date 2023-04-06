@@ -179,4 +179,10 @@ public class RobotInfoFragment extends ControlsFragment {
         break;
     }
   }
+
+  @Override
+  public void onResume(){
+    super.onResume();
+    binding.bleToggle.setChecked(vehicle.bleConnected());
+  }
 }
