@@ -38,7 +38,7 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
         super.viewDidLoad()
         createUI();
         signIn(signIn: GIDSignIn.sharedInstance, didSignInForUser: GIDSignIn.sharedInstance.currentUser, withError: NSError());
-        testWait()
+//        testWait()
     }
 
     func createUI() {

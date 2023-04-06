@@ -38,10 +38,11 @@ class Authentication {
     if GIDSignIn.sharedInstance.hasPreviousSignIn(){
         let user = GIDSignIn.sharedInstance.currentUser;
         print("privious sign-in ",user);
+        NotificationCenter.default.post(name: .googleSignIn, object: nil);
+        return
     }
         let config = GIDConfiguration(clientID: clientId)
         GIDSignIn.sharedInstance.configuration = config
-
         let scenes = UIApplication.shared.connectedScenes
         let windowScenes = scenes.first as? UIWindowScene
         let window = windowScenes?.windows.first
@@ -52,6 +53,7 @@ class Authentication {
             guard error == nil else {
                 return
             }
+            NotificationCenter.default.post(name: .googleSignIn, object: nil);
             self.signIn(signIn: self.googleSignIn, didSignInForUser: self.googleSignIn.currentUser, withError: error as NSError?)
             let user = signInResult?.user
 //             If sign in succeeded, display the app's main content View.

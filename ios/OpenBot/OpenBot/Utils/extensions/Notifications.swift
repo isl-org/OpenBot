@@ -46,4 +46,5 @@ extension Notification.Name {
     static let cameraBuffer = Notification.Name("cameraBuffer");
     static let clientConnected = Notification.Name("clientConnected");
     static let clientDisConnected = Notification.Name("clientDisConnected");
+    static let googleSignIn = Notification.Name("googleSignIn");
 }

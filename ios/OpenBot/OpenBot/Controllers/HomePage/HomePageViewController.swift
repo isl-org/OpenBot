@@ -14,7 +14,8 @@ var viewControllerName: String?
 let gameController = GameController.shared
 var leadingConstraint = NSLayoutConstraint()
 var isClientConnected: Bool = false
-
+let bottomSheet = UIView();
+let whiteSheet = UIView(frame: UIScreen.main.bounds)
 class HomePageViewController: CameraController {
     @IBOutlet weak var bluetooth: UIButton!
     @IBOutlet weak var settings: UIButton!
@@ -24,8 +25,11 @@ class HomePageViewController: CameraController {
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
+        createShadowSheet()
         bluetoothDataController.shared.startScan()
         DeviceCurrentOrientation.shared.findDeviceOrientation()
+        print(tabBarController?.viewControllers?.count);
+        print(tabBarController?.viewControllers)
         setUpTitle();
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
@@ -51,6 +55,8 @@ class HomePageViewController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
+
         gameController.resetControl = true
 
     }
@@ -91,6 +97,7 @@ class HomePageViewController: CameraController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
         DeviceCurrentOrientation.shared.findDeviceOrientation()
+        print(tabBarController?.viewControllers)
         DataLogger.shared.deleteZipFileFromDocument()
         viewControllerName = classNameFrom(self)
         if (isBluetoothConnected) {
@@ -118,7 +125,7 @@ class HomePageViewController: CameraController {
     }
 
     func setUpTitle() {
-        titleLabel.text = Strings.OpenBot;
+        titleLabel.text = Strings.OpenBot
         titleLabel.textColor = Colors.title;
     }
 
@@ -132,6 +139,15 @@ class HomePageViewController: CameraController {
     /// Main control update function
     @objc func updateControllerValues() {
         gameController.updateControllerValues()
+    }
+
+    override func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
+        super.beginAppearanceTransition(isAppearing, animated: animated)
+
+    }
+
+    override func endAppearanceTransition() {
+        super.endAppearanceTransition()
     }
 
     @objc func updateConnect(_ notification: Notification) {
@@ -153,15 +169,21 @@ class HomePageViewController: CameraController {
         isClientConnected = false
         stopSession()
     }
+
+      @objc func  googleSignIn(_ notification: Notification){
+          whiteSheet.removeFromSuperview()
+      }
+
 }
 
 extension UIViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let viewController = (storyboard?.instantiateViewController(withIdentifier: Constants.gameModes[indexPath.row].identifier))!
-        guard (navigationController?.pushViewController(viewController, animated: true)) != nil else {
-            fatalError("guard failure handling has not been implemented")
-        }
+        navigationController?.pushViewController(viewController, animated: true);
+        print(navigationController);
+//        MyNavigationController.shared.pushViewController(viewController, animated: false)
+//        tabBarController?.viewControllers = [MyNavigationController.shared]
     }
 }
 
