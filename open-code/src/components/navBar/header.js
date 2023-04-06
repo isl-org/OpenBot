@@ -88,6 +88,7 @@ export function Header() {
                     {/* delete edit profile option popup*/}
                     {isProfileModal &&
                         <ProfileOptionModal
+
                             isProfileModal={isProfileModal}
                             setIsProfileModal={setIsProfileModal}
                             setIsEditProfileModal={setIsEditProfileModal}

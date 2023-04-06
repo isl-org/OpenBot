@@ -9,6 +9,7 @@ import BlueText from "../../fonts/blueText";
 import {PathName, Themes} from "../../../utils/constants";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLocation} from "react-router-dom";
+import {googleSigIn} from "../../../services/firebase";
 
 export function ProfileOptionModal(props) {
     const {
@@ -18,7 +19,7 @@ export function ProfileOptionModal(props) {
         setIsHelpCenterModal,
         setIsLogoutModal,
     } = props
-    const {theme, toggleTheme} = useContext(ThemeContext);
+    const {theme, toggleTheme,setUser} = useContext(ThemeContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const location = useLocation();
@@ -33,6 +34,17 @@ export function ProfileOptionModal(props) {
     const handleOnclick = (setVariable) => {
         handleClose()
         setVariable(true)
+    }
+    const handleSignIn = () => {
+        googleSigIn().then(response => {
+            setUser({
+                photoURL: response?.user.photoURL,
+                displayName: response?.user.displayName,
+                email: response?.user.email
+            });
+        }).catch((error) => {
+            console.log("signIn error: ", error)
+        });
     }
 
     return (
@@ -60,7 +72,7 @@ export function ProfileOptionModal(props) {
                                     icon={theme === Themes.dark ? Images.darkLogoutIcon : Images.logoutIcon}/>
                 }
                 {isMobile && isOnPlaygroundPage && !isSignedIn &&
-                    <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"Sign In"}
+                    <PopUpInRowText onClick={() => handleSignIn()} text={"Sign In"}
                                     icon={theme === Themes.dark ? Images.darkLogoutIcon : Images.login}/>
                 }
             </Box>
@@ -80,7 +92,7 @@ function PopUpInRowText(params) {
     const {onClick, text, icon} = params
     return (
         <div onClick={onClick}
-             className={`${styles.item} ${styles.popUpItem}${styles.editProfileMargin}  ${(theme.theme === Themes.dark ? styles.darkItem : styles.lightItem)}`}>
+             className={`${styles.item} ${styles.popUpItem} ${styles.editProfileMargin}  ${(theme.theme === Themes.dark ? styles.darkItem : styles.lightItem)}`}>
             <img alt="icon" src={icon}
                  className={styles.modalIcon}/>
             <span className={`${styles.inRowText}`}>

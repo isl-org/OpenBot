@@ -12,13 +12,14 @@ import {ThemeContext} from "../../App";
 import {getCurrentProject} from "../../services/workspace";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {Constants, errorToast,} from "../../utils/constants";
-import {CircularProgress, circularProgressClasses} from "@mui/material";
+import {CircularProgress, circularProgressClasses, useTheme} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
 import {motion, AnimatePresence} from "framer-motion";
 import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {googleSigIn} from "../../services/firebase";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 
 export const UploadCode = () => {
@@ -28,6 +29,8 @@ export const UploadCode = () => {
     const {theme} = useContext(ThemeContext);
     const [signInPopUp, setSignInPopUp] = useState(false);
     const [uploadCodeSignIn, setUploadCodeSignIn] = useState(false);
+    const themes = useTheme();
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
     const {
         generate,
@@ -143,8 +146,8 @@ export const UploadCode = () => {
                     <UploadInDrive setSignInPopUp={setSignInPopUp} signInPopUp={signInPopUp}/>
                     <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
                               buttonActive={buttonActive}/>
-                    <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
-                               buttonActive={buttonActive}/>
+                    {!isMobile && <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
+                                buttonActive={buttonActive}/>}
                 </div>
             </div>
         </div>
@@ -160,13 +163,16 @@ export const UploadCode = () => {
  */
 function UploadCodeButton(params) {
     const {generateCode, buttonSelected, clickedButton, buttonActive} = params
+    const themes = useTheme();
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+
     return (
 
         <div className={styles.iconMargin} onClick={generateCode}>
             <button className={styles.uploadCodeButton}
                     style={{opacity: buttonSelected === "uploadCode" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
                     name={"uploadCode"} onClick={clickedButton}>
-                <span className={styles.leftButton + " " + styles.iconMargin}>Generate Code</span>
+                {!isMobile && <span className={styles.leftButton + " " + styles.iconMargin}>Generate Code</span>}
                 <img alt={""}
                      className={styles.iconDiv + " " + styles.iconMargin} src={uploadIcon}/>
             </button>

@@ -145,3 +145,29 @@
 .buttonMargin {
     margin-right: 1px;
 }
+
+@media (max-width: 768px) {
+    .uploadCodeButton {
+        height: 2.5rem;
+        width: 80%;
+        margin-left: 0.5rem;
+        margin-top: 2.5rem;
+    }
+
+    .iconMargin {
+        width: 40%;
+    }
+
+    .loaderBarDiv {
+    }
+
+    .operationsDiv {
+        margin-right: 2rem;
+    }
+
+    .buttonMargin {
+        display: flex;
+        margin-top: 20px;
+
+    }
+}
