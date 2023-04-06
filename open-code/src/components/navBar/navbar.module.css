@@ -18,13 +18,13 @@
 
 .profileOptionModalStyle {
     outline: none;
-    height: 125px;
     width: 260px;
     position: absolute;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 6px;
     right: 4%;
     top: 65px;
+    padding-top: 1.5rem;
 }
 
 
@@ -95,6 +95,9 @@
     padding: 0.5rem 0 0.5rem 2rem;
     border-style: none none none solid;
 }
+.popUpItem{
+    padding: 0 0 0.5rem 2rem;
+}
 
 .renameDivMargin {
     padding-right: 6.5rem;
@@ -107,7 +110,7 @@
 
 .editProfileMargin {
     padding-right: 5.5rem;
-    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .inRowText {
@@ -468,7 +471,7 @@
 
     .profileOptionModalStyle {
         width: 9.75rem;
-        height: 5.5rem;
+        padding-top: 0.5rem;
     }
 
     .modalText {
@@ -483,12 +486,12 @@
     }
 
     .editProfileMargin {
-        margin-top: 0.2rem;
+        margin-bottom: 0.2rem;
         margin-right: 2rem;
     }
 
     .item {
-        padding: 0.5rem 1rem 0rem 1rem;
+        padding: 0rem 1rem 0.5rem 1rem;
         justify-content: space-between;
         width: 100%;
     }

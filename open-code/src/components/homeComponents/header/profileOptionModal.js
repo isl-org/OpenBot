@@ -15,39 +15,54 @@ export function ProfileOptionModal(props) {
         isProfileModal,
         setIsProfileModal,
         setIsEditProfileModal,
+        setIsHelpCenterModal,
         setIsLogoutModal,
     } = props
-    const theme = useContext(ThemeContext);
+    const {theme, toggleTheme} = useContext(ThemeContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const location = useLocation();
+    const isSignedIn = localStorage.getItem("isSigIn") === "true";
+    const isHomePage = location.pathname === PathName.home;
+    const isOnPlaygroundPage = location.pathname === PathName.playGround;
 
     const handleClose = () => {
         setIsProfileModal(false)
     }
-    const handleEditProfile = () => {
-        setIsEditProfileModal(true)
+
+    const handleOnclick = (setVariable) => {
         handleClose()
+        setVariable(true)
     }
-    const handleLogOut = () => {
-        setIsLogoutModal(true)
-        handleClose()
-    }
+
     return (
         <Modal
             open={isProfileModal}
             onClose={handleClose}>
             <Box className={styles.profileOptionModalStyle}
-                 style={{backgroundColor: theme.theme === Themes.dark ? colors.blackPopupBackground : colors.whiteBackground}}>
-                <PopUpInRowText onClick={handleEditProfile} text={"Edit Profile"}
-                              icon={theme.theme === Themes.dark ? Images.darkUserIcon : Images.userIcon}/>
-                <PopUpInRowText onClick={handleLogOut} text={"Logout"}
-                              icon={theme.theme === Themes.dark ? Images.darkLogoutIcon : Images.logoutIcon}/>
-                {/*{isMobile && location.pathname === PathName.playGround &&*/}
-                {/*    <PopUpInRowText onClick={handleLogOut} text={"Logout"}*/}
-                {/*    icon={theme.theme === Themes.dark ? Images.darkLogoutIcon : Images.logoutIcon}/>*/}
-                {/*}*/}
+                 style={{backgroundColor: theme === Themes.dark ? colors.blackPopupBackground : colors.whiteBackground}}>
 
+                {(isHomePage || (isOnPlaygroundPage && isSignedIn)) &&
+                    <PopUpInRowText onClick={() => handleOnclick(setIsEditProfileModal)} text={"Edit Profile"}
+                                    icon={theme === Themes.dark ? Images.darkUserIcon : Images.userIcon}/>
+                }
+                {isOnPlaygroundPage && isMobile &&
+                    <>
+                        <PopUpInRowText onClick={() => toggleTheme(!theme)}
+                                        text={"Change Theme"}
+                                        icon={theme === Themes.dark ? Images.lightThemeIcon : Images.blueTheme}/>
+                        <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"How To Upload"}
+                                        icon={theme === Themes.dark ? Images.helpIcon : Images.infoLight}/>
+                    </>
+                }
+                {((isHomePage) || (isOnPlaygroundPage && isSignedIn)) &&
+                    <PopUpInRowText onClick={() => handleOnclick(setIsLogoutModal)} text={"Logout"}
+                                    icon={theme === Themes.dark ? Images.darkLogoutIcon : Images.logoutIcon}/>
+                }
+                {isMobile && isOnPlaygroundPage && !isSignedIn &&
+                    <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"Sign In"}
+                                    icon={theme === Themes.dark ? Images.darkLogoutIcon : Images.login}/>
+                }
             </Box>
         </Modal>
     )
@@ -65,7 +80,7 @@ function PopUpInRowText(params) {
     const {onClick, text, icon} = params
     return (
         <div onClick={onClick}
-             className={`${styles.item} ${styles.editProfileMargin}  ${(theme.theme === Themes.dark ? styles.darkItem : styles.lightItem)}`}>
+             className={`${styles.item} ${styles.popUpItem}${styles.editProfileMargin}  ${(theme.theme === Themes.dark ? styles.darkItem : styles.lightItem)}`}>
             <img alt="icon" src={icon}
                  className={styles.modalIcon}/>
             <span className={`${styles.inRowText}`}>
@@ -76,3 +91,4 @@ function PopUpInRowText(params) {
         </div>
     )
 }
+

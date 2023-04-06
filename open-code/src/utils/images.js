@@ -27,6 +27,9 @@ import darkThemeIcon from "../assets/images/icon/whiteMode/white-mode-icon.png"
 import dots from  "../assets/images/threedots.png";
 import darkDots from "../assets/images/darkdoticon.png";
 import avatar from "../assets/images/icon/Avatars.png";
+import infoLight from "../assets/images/icon/infoLight.png"
+import blueTheme from "../assets/images/icon/moon.png";
+import login from "../assets/images/icon/login.png"
 
 export const Images = {
     helpIcon: helpIcon,
@@ -58,4 +61,7 @@ export const Images = {
     dots:dots,
     darkDots:darkDots,
     avatar:avatar,
+    infoLight:infoLight,
+    blueTheme:blueTheme,
+    login:login,
 }

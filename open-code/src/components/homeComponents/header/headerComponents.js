@@ -2,7 +2,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import styles from "../../navBar/navbar.module.css";
 import icon from "../../../assets/images/icon/OBplaygroundLogo.png";
 import downArrow from "../../../assets/images/icon/down-arrow.png";
-import {Popper, useTheme} from "@mui/material";
+import {Box, Popper, useTheme} from "@mui/material";
 import UpArrow from "../../../assets/images/icon/up-arrow.png";
 import renameIcon from "../../../assets/images/icon/rename-icon.png";
 import Edit from "../../../assets/images/icon/edit.png";
@@ -13,10 +13,11 @@ import WhiteText from "../../fonts/whiteText";
 import {googleSigIn} from "../../../services/firebase";
 import React, {useEffect, useRef, useState} from "react";
 import {renameProject} from "../../../services/workspace";
-import {PathName} from "../../../utils/constants";
+import {PathName, Themes} from "../../../utils/constants";
 import {handleRename} from "../myProjects/card";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {Images} from "../../../utils/images";
+import {colors} from "../../../utils/color";
 
 
 /**
@@ -165,7 +166,6 @@ export function EditProjectPopUp(params) {
         theme,
         extraStyle,
         clickOutside,
-        rename,
         inputRef,
         handleRename
     } = params
