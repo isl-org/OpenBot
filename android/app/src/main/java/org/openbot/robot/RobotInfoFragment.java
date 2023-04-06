@@ -181,7 +181,7 @@ public class RobotInfoFragment extends ControlsFragment {
   }
 
   @Override
-  public void onResume(){
+  public void onResume() {
     super.onResume();
     binding.bleToggle.setChecked(vehicle.bleConnected());
   }

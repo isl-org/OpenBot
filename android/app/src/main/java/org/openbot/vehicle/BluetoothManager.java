@@ -181,8 +181,8 @@ public class BluetoothManager {
 
   public void read() {
     if (isBleConnected())
-        // Set the MTU size to 32 bytes
-        BleManager.getInstance().setMtu(bleDevice, 32, mtuCallback);
+      // Set the MTU size to 64 bytes
+      BleManager.getInstance().setMtu(bleDevice, 64, mtuCallback);
   }
 
   public void write(String msg) {
@@ -197,18 +197,17 @@ public class BluetoothManager {
     }
   }
 
-  public BleMtuCallback mtuCallback = new BleMtuCallback() {
-      @Override
-      public void onMtuChanged(int mtu, BleDevice device) {
+  public BleMtuCallback mtuCallback =
+      new BleMtuCallback() {
+        @Override
+        public void onMtuChanged(int mtu, BleDevice device) {
           BleManager.getInstance()
-                  .notify(bleDevice, notifyServiceInfo.uuid, notifyCharacteristic.uuid, notifyCallback);
-      }
+              .notify(bleDevice, notifyServiceInfo.uuid, notifyCharacteristic.uuid, notifyCallback);
+        }
 
-      @Override
-      public void onFailure(int failCode, String info, BleDevice device) {
-
-      }
-  };
+        @Override
+        public void onFailure(int failCode, String info, BleDevice device) {}
+      };
 
   public BleWriteCallback writeCallback =
       new BleWriteCallback() {
