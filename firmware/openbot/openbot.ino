@@ -466,8 +466,8 @@ enum msgParts {
 msgParts msgPart = HEADER;
 char header;
 char endChar = '\n';
-const char MAX_MSG_SZ = 32;
-char msg_buf[MAX_MSG_SZ];
+const char MAX_MSG_SZ = 60;
+char msg_buf[MAX_MSG_SZ] = "";
 int msg_idx = 0;
 
 #if (HAS_BLUETOOTH)
@@ -824,7 +824,8 @@ void setup() {
   Serial.println('r');
 
 #if (HAS_BLUETOOTH)
-  BLEDevice::init("Openbot BLE");
+  String ble_name = "OpenBot: " + robot_type;
+  BLEDevice::init(ble_name.c_str());
   bleServer = BLEDevice::createServer();
   bleServer->setCallbacks(new MyServerCallbacks());
   BLEService *pService = bleServer->createService(BLEUUID(SERVICE_UUID));
