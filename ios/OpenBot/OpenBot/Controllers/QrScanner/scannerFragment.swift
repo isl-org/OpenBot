@@ -17,15 +17,22 @@ class scannerFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate 
     let bottomSheet = BottomSheetView(frame: CGRect(x: 0, y: height - 200, width: width, height: 200));
 
     override func viewDidLoad() {
+        print("inside view did load")
         super.viewDidLoad();
         createScanHeading()
         createScanMessage()
         createScannerBorder()
         cameraView.frame = CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230)
+        initializeCamera()
         view.addSubview(cameraView);
-        initializeCamera();
         createQRScanner();
         createShadowSheet()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+
     }
 
     @IBAction func removeScanner(_ sender: Any) {
@@ -71,9 +78,9 @@ class scannerFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate 
                         return;
                     }
                     if let data = data {
-                            self.createSuccessUI();
-                            print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") as Any)
-                            self.commands = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
+                        self.createSuccessUI();
+                        print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") as Any)
+                        self.commands = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
 
 
                     }

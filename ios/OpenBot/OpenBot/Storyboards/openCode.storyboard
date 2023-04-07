@@ -43,10 +43,10 @@
             </objects>
             <point key="canvasLocation" x="-439" y="-257"/>
         </scene>
-        <!--View Controller-->
+        <!--Run Robot-->
         <scene sceneID="a1f-Wu-WLU">
             <objects>
-                <viewController storyboardIdentifier="runOpenBot" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EeT-XN-kSC" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="runOpenBot" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EeT-XN-kSC" customClass="runRobot" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="u64-Zg-Hjz">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

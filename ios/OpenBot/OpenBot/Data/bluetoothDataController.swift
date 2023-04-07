@@ -150,7 +150,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        //print("Data sent to :", peripheral.name as Any);
+        print("Data sent to :", peripheral.name as Any);
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {

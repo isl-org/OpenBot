@@ -4,18 +4,21 @@
 
 import Foundation
 import JavaScriptCore
+
 class jsEvaluator {
-    private var command : String;
+    private var command: String;
     private var vehicleControl: Control = Control();
     let semaphore = DispatchSemaphore(value: 0)
     let bluetooth = bluetoothDataController.shared
     var jsContext: JSContext!
-    init(jsCode : String){
+
+    init(jsCode: String) {
         command = jsCode;
         print(command);
         initializeJS();
         evaluateJavaScript()
     }
+
     func initializeJS() {
         jsContext = JSContext()
     }
@@ -43,7 +46,7 @@ class jsEvaluator {
                     runOpenBotThreadClass.stop();
                 }
                 let wait: @convention(block) (Double) -> Void = { (time) in
-                    wait(forTime: time)
+                    self.wait(forTime: time)
                     self.semaphore.wait()
                 }
                 let moveBackward: @convention(block) (Float) -> Void = { (speed) in
@@ -80,32 +83,36 @@ class jsEvaluator {
             }
         }
 
-        func wait(forTime : Double) {
-            DispatchQueue.global(qos: .background).async {
-                Thread.sleep(forTimeInterval: forTime/1000)
-                self.semaphore.signal()
-                let command = Control(left: 0, right: 0);
-                sendControl(control: command);
-            }
         }
+    func wait(forTime: Double) {
+        DispatchQueue.global(qos: .background).async {
+            let command = Control(left: 0, right: 0);
+            self.sendControl(control: command);
+            Thread.sleep(forTimeInterval: forTime / 1000)
+            self.semaphore.signal()
+        }
+    }
 
-        func sendControl(control: Control) {
+
+    func sendControl(control: Control) {
+            print("inside sendControl")
             if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
                 let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
                 let right = (control.getRight() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-                vehicleControl = control
                 bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
-                NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)))
-                NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
             }
         }
 
-         class runOpenBotThread: Thread {
-            weak var OpenCodeFragment: OpenCodeFragment?
-
+        class runOpenBotThread: Thread {
+            weak var jsEvaluator: jsEvaluator?
+            let bluetooth = bluetoothDataController.shared
+            func sendControl(control: Control) {
+                print("inside sendControl")
+                bluetooth.sendData(payload: "c" + String(control.getLeft()) + "," + String(control.getRight()) + "\n")
+            }
             override func main() {
                 print("inside main of waitThread")
-                OpenCodeFragment?.semaphore.signal()
+                jsEvaluator?.semaphore.signal()
             }
 
             func startBlock() {
@@ -119,50 +126,45 @@ class jsEvaluator {
             func moveForward(time: Int) {
                 print("inside moveforward")
                 let carControl = Control(left: 128, right: 128)
-                OpenCodeFragment?.sendControl(control: carControl);
-
+                sendControl(control: carControl);
             }
 
-            func wait() {
-                print("inside wait")
-
-            }
 
             func moveOpenBot(left: Int, right: Int) {
-                print("inside moove")
+                print("inside move")
                 let carControl = Control(left: Float(left), right: Float(right));
-                OpenCodeFragment?.sendControl(control: carControl);
+                sendControl(control: carControl);
             }
 
             func moveCircular(radius: Float) {
                 print("inside moveCircular")
-                OpenCodeFragment?.bluetooth.sendData(payload: "c" + String(200) + "," + String(200) + "\n");
+                bluetooth.sendData(payload: "c" + String(200) + "," + String(200) + "\n");
             }
 
 
             func stop() {
                 print("inside stop")
-                OpenCodeFragment?.bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n");
+                bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n");
             }
 
             func moveBackward(speed: Float) {
                 print("inside moveBackward")
                 let carControl = Control(left: -speed, right: -speed);
-                OpenCodeFragment?.sendControl(control: carControl);
+                sendControl(control: carControl);
+
             }
 
             func moveLeft(speed: Float) {
                 print("inside moveLeft")
                 let carControl = Control(left: 0, right: speed);
-                OpenCodeFragment?.sendControl(control: carControl);
+                sendControl(control: carControl);
             }
 
             func moveRight(speed: Float) {
                 print("inside Right")
                 let carControl = Control(left: 0, right: speed);
-                OpenCodeFragment?.sendControl(control: carControl);
+                sendControl(control: carControl);
             }
         }
 
     }
-}

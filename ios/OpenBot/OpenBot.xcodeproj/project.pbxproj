@@ -75,6 +75,7 @@
 		66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */; };
 		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
 		727D31480C80A069C9686CC2 /* jsEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D313C9325317487A840E7 /* jsEvaluator.swift */; };
+		727D31FC120BAB5F8CEB0D51 /* runRobot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3EC5C93F255195145384 /* runRobot.swift */; };
 		727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */; };
 		727D339EDE19D22D7B9D16B5 /* GoogleSignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3153BBE7A4D47749E6E8 /* GoogleSignInButton.swift */; };
 		727D33E21291B21856A1393B /* UiLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B76F53D6B069FF2A5C /* UiLabel.swift */; };
@@ -221,6 +222,7 @@
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRTCClient.swift; path = WebRTC/WebRTCClient.swift; sourceTree = "<group>"; };
 		727D3E372C09E1BADA2A03FA /* scannerFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = scannerFragment.swift; sourceTree = "<group>"; };
+		727D3EC5C93F255195145384 /* runRobot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = runRobot.swift; sourceTree = "<group>"; };
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIDeviceExtension.swift; path = extensions/UIDeviceExtension.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
@@ -494,6 +496,7 @@
 				727D3E7CACC6AC0539AC7BC4 /* Profile */,
 				727D3F1F46201738BE703091 /* Project */,
 				727D38A54661B9A54A681AC1 /* QrScanner */,
+				727D356FCD75B6B73D8C5A7C /* runRobot */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -609,6 +612,14 @@
 				727D313C9325317487A840E7 /* jsEvaluator.swift */,
 			);
 			path = JsEvaluator;
+			sourceTree = "<group>";
+		};
+		727D356FCD75B6B73D8C5A7C /* runRobot */ = {
+			isa = PBXGroup;
+			children = (
+				727D3EC5C93F255195145384 /* runRobot.swift */,
+			);
+			path = runRobot;
 			sourceTree = "<group>";
 		};
 		727D38A54661B9A54A681AC1 /* QrScanner */ = {
@@ -1071,6 +1082,7 @@
 				727D3EFB9016C8224990ACE8 /* profileFragment.swift in Sources */,
 				727D3FA70675D0042BFBB89A /* scannerFragment.swift in Sources */,
 				727D31480C80A069C9686CC2 /* jsEvaluator.swift in Sources */,
+				727D31FC120BAB5F8CEB0D51 /* runRobot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
