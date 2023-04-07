@@ -201,12 +201,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             100);
   }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        camera.setChecked(PermissionUtils.hasCameraPermission(requireActivity()));
-        storage.setChecked(PermissionUtils.hasStoragePermission(requireActivity()));
-        location.setChecked(PermissionUtils.hasLocationPermission(requireActivity()));
-        mic.setChecked(PermissionUtils.hasAudioPermission(requireActivity()));
-    }
+  @Override
+  public void onResume() {
+    super.onResume();
+    camera.setChecked(PermissionUtils.hasCameraPermission(requireActivity()));
+    storage.setChecked(PermissionUtils.hasStoragePermission(requireActivity()));
+    location.setChecked(PermissionUtils.hasLocationPermission(requireActivity()));
+    mic.setChecked(PermissionUtils.hasAudioPermission(requireActivity()));
+  }
 }
