@@ -9,12 +9,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.ListPreference;
@@ -23,13 +19,9 @@ import androidx.preference.SwitchPreferenceCompat;
 import org.openbot.R;
 import org.openbot.utils.Constants;
 import org.openbot.utils.PermissionUtils;
-import org.openbot.vehicle.Vehicle;
-import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
   private MainViewModel mViewModel;
-  private SwitchPreferenceCompat connection;
-  private Vehicle vehicle;
   private SwitchPreferenceCompat camera;
   private SwitchPreferenceCompat storage;
   private SwitchPreferenceCompat location;
@@ -77,44 +69,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
     mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-    vehicle = mViewModel.getVehicle().getValue();
-
-    connection = findPreference("connection");
-    if (connection != null) {
-      connection.setTitle("No Device");
-      if (vehicle != null && vehicle.isUsbConnected()) {
-        connection.setChecked(true);
-        connection.setTitle(vehicle.getUsbConnection().getProductName());
-      } else {
-        connection.setTitle("No Device");
-        connection.setChecked(false);
-      }
-      connection.setOnPreferenceClickListener(
-          preference -> {
-            Timber.d(String.valueOf(connection.isChecked()));
-            if (vehicle != null) {
-              if (connection.isChecked()) {
-                vehicle.connectUsb();
-                if (vehicle.isUsbConnected())
-                  connection.setTitle(vehicle.getUsbConnection().getProductName());
-                else {
-                  connection.setTitle("No Device");
-                  connection.setChecked(false);
-                  Toast.makeText(
-                          requireContext().getApplicationContext(),
-                          "Please check the USB connection.",
-                          Toast.LENGTH_SHORT)
-                      .show();
-                }
-              } else {
-                vehicle.disconnectUsb();
-                connection.setTitle("No Device");
-              }
-              mViewModel.setUsbStatus(vehicle.isUsbConnected());
-            }
-            return true;
-          });
-    }
 
     camera = findPreference("camera");
     if (camera != null) {
@@ -209,6 +163,28 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             dialog.show();
             return false;
           });
+
+    ListPreference connectivityMode = findPreference("connection_type");
+
+    if (connectivityMode != null)
+      connectivityMode.setOnPreferenceChangeListener(
+          (preference, newValue) -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder.setTitle(R.string.confirm_title);
+            builder.setMessage(R.string.stream_change_body);
+            builder.setPositiveButton(
+                "Yes",
+                (dialog, id) -> {
+                  connectivityMode.setValue(newValue.toString());
+                  restartApp();
+                });
+            builder.setNegativeButton(
+                "Cancel",
+                (dialog, id) -> connectivityMode.setValue(connectivityMode.getEntry().toString()));
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return false;
+          });
   }
 
   private void restartApp() {
@@ -226,18 +202,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
   }
 
   @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    mViewModel
-        .getUsbStatus()
-        .observe(
-            getViewLifecycleOwner(),
-            status -> {
-              if (connection != null) {
-                connection.setChecked(status);
-                connection.setTitle(
-                    status ? vehicle.getUsbConnection().getProductName() : "No Device");
-              }
-            });
+  public void onResume() {
+    super.onResume();
+    camera.setChecked(PermissionUtils.hasCameraPermission(requireActivity()));
+    storage.setChecked(PermissionUtils.hasStoragePermission(requireActivity()));
+    location.setChecked(PermissionUtils.hasLocationPermission(requireActivity()));
+    mic.setChecked(PermissionUtils.hasAudioPermission(requireActivity()));
   }
 }

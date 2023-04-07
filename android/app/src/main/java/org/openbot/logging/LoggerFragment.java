@@ -85,6 +85,14 @@ public class LoggerFragment extends CameraFragment {
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
 
+    if (vehicle.getConnectionType().equals("USB")) {
+      binding.usbToggle.setVisibility(View.VISIBLE);
+      binding.bleToggle.setVisibility(View.GONE);
+    } else if (vehicle.getConnectionType().equals("Bluetooth")) {
+      binding.bleToggle.setVisibility(View.VISIBLE);
+      binding.usbToggle.setVisibility(View.GONE);
+    }
+
     binding.sensorDataButton.setOnClickListener(
         v -> {
           SensorsDialog sensorsDialog = new SensorsDialog();
@@ -143,11 +151,17 @@ public class LoggerFragment extends CameraFragment {
         .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
+    binding.bleToggle.setChecked(vehicle.bleConnected());
 
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
-          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+          Navigation.findNavController(requireView()).navigate(R.id.open_usb_fragment);
+        });
+    binding.bleToggle.setOnClickListener(
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
         });
   }
 
@@ -182,6 +196,7 @@ public class LoggerFragment extends CameraFragment {
     handlerThread = new HandlerThread("logging");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
+    binding.bleToggle.setChecked(vehicle.bleConnected());
     super.onResume();
   }
 
