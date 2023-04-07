@@ -19,10 +19,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 import java.io.UnsupportedEncodingException;
-import java.util.Locale;
 import java.util.Map;
 import org.openbot.env.Logger;
 import org.openbot.utils.Constants;
+import timber.log.Timber;
 
 public class UsbConnection {
   private static final int USB_VENDOR_ID = 6790; // 0x2341; // 9025
@@ -204,11 +204,7 @@ public class UsbConnection {
       serialDevice.write(msg.getBytes(UTF_8));
       busy = false;
     } else {
-      Toast.makeText(
-              context,
-              String.format(Locale.getDefault(), "USB busy, could not send: %s", msg),
-              Toast.LENGTH_SHORT)
-          .show();
+      Timber.d("USB busy, could not send: %s", msg);
     }
   }
 
