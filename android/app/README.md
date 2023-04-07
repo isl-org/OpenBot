@@ -57,13 +57,10 @@ Free Roam offers simple robot control with real time updates and information abo
 
 - **Battery**: The battery icon shows realtime battery levels of the connected robot.
 - **Drive State**: There are 3 drive states displayed on the view:
-
   - D -> Drive, when the robot is driving forward
   - N -> Neutral, when the robot is stationary
   - R -> Reverse, when the robot is moving backwards
-
   The steering wheel rotates proportionally to the steering angle.
-
 - **Speed**: The speedometer shows the speed of the robot.
 - **Sonar**: The free distance in front of the robot in cm.
 - **Control**: Controller, Drive Mode and Speed are used to control robot settings as described in the [control section](#control).
@@ -77,14 +74,11 @@ Simple UI for collection of data sets.
 </p>
 
 - **Server**: If you have the [web app](../../policy#web-app) for policy training running, you can select it here to automatically upload data.
-
 - **Preview Resolution**: Used to switch between resolutions of camera preview. There are 3 settings:
   - ***FULL_HD*** (1920x1080p)
   - ***HD*** (1280x720p)
   - ***SD*** (640x360)
-
 - **Model Resolution**: Used to switch between resolutions of images saved for training different models.
-
 - **Save/Discard the Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may:
   - Press the **A button** to **start** the data collection process
   - Press the **A button again** to **stop** data collection and save the collected data in a .zip file
