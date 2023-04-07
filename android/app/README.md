@@ -47,79 +47,6 @@ Make sure that your Android device has BLE (Bluetooth Low Energy) support. If yo
 <img src="../../docs/images/ble_device_connected.jpg" alt="Disconnect button" width="25%"/>
 </p>
 
-### Default
-
-The [DefaultActivity](src/main/java/org/openbot/original/DefaultActivity.java) includes the most important features of the OpenBot app in a single screen. It displays the connection status to the vehicle and reports measurements from vehicle sensors. The robot can be controlled by standard BT game controllers or another smartphone running the OpenBot [controller app](../controller). We have also implemented a data logger to collect datasets with the robot. Currently, we record readings from following sensors: camera, gyroscope, accelerometer, magnetometer, ambient light sensor, and barometer. Using the Android API, we are able to obtain the following sensor readings: RGB images, angular speed, linear acceleration, gravity, magnetic field strength, light intensity, atmospheric pressure, latitude, longitude, altitude, bearing, and speed. In addition to the phone sensors, we record body sensor readings (wheel odometry, obstacle distance and battery voltage), which are transmitted via the serial link. We also record and timestamp control signals received from a connected controller, if present. Lastly, we integrate several neural networks for person following and autonomous navigation.
-
-<p align="left">
-  <img src="../../docs/images/screen_default.jpg" alt="App GUI" width="50%"/>
-</p>
-
-#### USB Connection
-
-Same as in the [settings menu](#settings-menu).
-
-#### Vehicle Status
-
-The field **Battery** displays the battery voltage as measured by the Arduino via the voltage divider. The field **Speed (l,r)** reports the left and right speed of the (front) wheels in rpm. It is measured by the Arduino via the optical wheel speed sensors. The field **Sonar** shows the free space in front of the car in centimeters. It is measured by the Arduino via the ultrasonic sensor. Note, you will only receive values a few seconds after the USB connections has been established.
-
-#### Control
-
-The first button is for selecting the **control mode**. There are two different control modes:
-
-- **Gamepad**: The app receives controls from a connected BT controller.
-- **Phone**:  The robot can be controlled via another smartphone with the controller app installed or though a Python script running on a computer connected to the same network.
-
-The second button is for selecting the **drive mode**. There are three different drive modes when using a game controller (e.g. PS4):
-
-- **Game**: Use the right and left shoulder triggers (R2, L2) for forward and reverse throttle and either joystick for steering. This mode imitates the control mode of car racing video games.
-- **Joystick**: Use either one of the joysticks to control the robot.
-- **Dual**: Use the left and right joystick to control the left and right side of the car. This is raw differential steering.
-
-The third button is for selecting the **speed mode**. There are three different speed modes:
-
-- **Slow**: The voltage applied to the motors is limited to 50% of the input voltage (~6V).
-- **Normal**: The voltage applied to the motors is limited to 75% of the input voltage (~9V).
-- **Fast**: There is no limit. The full input voltage will be applied to the motors at full throttle (~12V). *This is the default setting for running the neural networks.*
-
-Running at higher speeds will reduce the lifetime of the motors but is more fun. The controls that are sent to the robot are displayed on the right side. When using the game controller, the speed mode can be increased by pressing down the right joystick (R3) and decrased by pressing down the left joystick (L3).
-
-#### Data Log
-
-There are four different logging modes:
-
-- **only_sensors**: All sensor data but no images are saved.
-- **crop_img**: All sensor data and a cropped images that have the input size of the network are saved. This is the default setting and is what should be used for data collection.
-- **preview_img**: All sensor data and a full-size images are saved. This will require a lot of memory and can be slow. However, it is nice for compiling FPV videos.
-- **all_imgs**: All sensor data and both cropped and full-size images are saved. This will require a lot of memory and can be slow.
-
-The switch on the right is used to toggle logging on and off. On the game controller this switch can be toggled with the X button.
-
-#### Camera
-
-The first item shows the preview resolution. The second item shows the crop resolution. This is the image that is used as input to the neural networks. You will notice that this resolution changes depending on which model you select below. If you train your own autopilot, make sure to select the `AUTOPILOT_F` model. The crop resolution should show `256x96`. The switch on the right is used to toggle between the rear and the front camera.
-
-#### Model
-
-There are two models that come with the app:
-
-- **MobileNetV1-300**: This model is used for person following. It uses a SSD object detector with MobileNet V1 backbone. The model is quantized for better performance on embedded devices. It comes with the app.
-- **CIL-Mobile**: This model is used for autonomous navigation. It will predict controls directly from the camera input. Chances are that it will not work in your environment. You should follow our instructions to train your own [Driving Policy](../../policy) and replace it.
-
-Additonal models can be downloaded from the Model Management screen.
-
-The switch on the right is used to turn the network on and off. When the network is running, it produces the controls for the robot and the game controller is disabled. However, you may still use the buttons on the game controller, for example to toggle this switch with the R1 trigger button to regain control of the robot.
-
-#### Device
-
-Use the drop-down menu to select the device on which the neural network should be executed. You have the following choices:
-
-- **CPU**: Using the CPU works on most phones and is the default choice. You can adjust the number of threads to optimize performance.
-- **GPU**: Most smartphones have a GPU. Networks with large inputs such as images often run faster on a GPU.
-- **NNAPI**: This will use the [TensorFlow Lite NNAPI delegate](https://www.tensorflow.org/lite/performance/nnapi). Modern smartphones often come with dedicated AI accelerators. The [Neural Network API](https://developer.android.com/ndk/guides/neuralnetworks) (NNAPI) provides acceleration for TensorFlow Lite models on Android devices with Graphics Processing Unit (GPU), Digital Signal Processor (DSP) and Neural Processing Unit (NPU). Note that on some older phones this can be very slow!
-
-If a model is active, the inference speed in [ms] will be displayed next to the device which is running the model.
-
 ### Free Roam
 
 Free Roam offers simple robot control with real time updates and information about battery, speed and distance from surfaces.
@@ -129,20 +56,14 @@ Free Roam offers simple robot control with real time updates and information abo
 </p>
 
 - **Battery**: The battery icon shows realtime battery levels of the connected robot.
-
-- **Drive Mode**: There are 3 drive modes displayed on the view:
-
+- **Drive State**: There are 3 drive states displayed on the view:
   - D -> Drive, when the robot is driving forward
-
   - N -> Neutral, when the robot is stationary
-
   - R -> Reverse, when the robot is moving backwards
-
-- **Speed**: The speedometer shows the realtime speed of the robot.
-
-- **Sonar**: The sonar view distance of robot from an oncoming object in cm.
-
-- **Control**: Controller, Drive Mode and Speed are used to control robot settings as described above in the Control section.
+  The steering wheel rotates proportionally to the steering angle.
+- **Speed**: The speedometer shows the speed of the robot.
+- **Sonar**: The free distance in front of the robot in cm.
+- **Control**: Controller, Drive Mode and Speed are used to control robot settings as described in the [control section](#control).
 
 ### Data Collection
 
@@ -152,18 +73,17 @@ Simple UI for collection of data sets.
 <img src="../../docs/images/screen_data_collection.jpg" alt="Data Collection" width="50%" />
 </p>
 
+- **Server**: If you have the [web app](../../policy#web-app) for policy training running, you can select it here to automatically upload data.
 - **Preview Resolution**: Used to switch between resolutions of camera preview. There are 3 settings:
   - ***FULL_HD*** (1920x1080p)
   - ***HD*** (1280x720p)
   - ***SD*** (640x360)
-
 - **Model Resolution**: Used to switch between resolutions of images saved for training different models.
-
 - **Save/Discard the Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may:
-  - press the **A button** to **start** the data collection process
-  - press the **A button again** to **stop** data collection and save the collected data in a .zip file
-  - alternatively press the **R1 button** to **stop** data collection **without saving** the collected data (for instance because of an unexpected collision with the environment)
-  - remember to use the controller mapping fragment to ensure you are using the correct buttons.
+  - Press the **A button** to **start** the data collection process
+  - Press the **A button again** to **stop** data collection and save the collected data in a .zip file
+  - Alternatively press the **R1 button** to **stop** data collection **without saving** the collected data (for instance because of an unexpected collision with the environment)
+  - Remember to use the controller mapping fragment to ensure you are using the correct buttons.
 
 ### Controller Mapping
 
@@ -189,6 +109,12 @@ Simple UI for running autopilot models.
 <img src="../../docs/images/screen_autopilot.jpg" alt="Autopilot" width="50%" />
 </p>
 
+- **Server**: If you have the [web app](../../policy#web-app) for policy training running, you can select it here and send trained autopilot models to the robot.
+- **Model**: Choose a trained model to use for autopilot mode.
+- **Device**: Use CPU, GPU or NNAPI for inference (more details [here](#device)).
+- **Threads**: Number of threads to use (only makes a difference when CPU is selected as device).
+- **Control**: Controller, Drive Mode and Speed are used to control robot settings as described in the [control section](#control).
+
 ### Object Tracking
 
 Simple UI for tracking objects of 80 different classes. A short description of the different AI models for object tracking and performance benchmarks can be found in [Model Management](#model-management).
@@ -198,14 +124,14 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 <img src="../../docs/images/screen_object_tracking_2.jpg" alt="Alt text" width="49%" />
 </p>
 
-#### Options
 - **Dynamic Speed**: reduces the robot speed in "Auto Mode" if it gets closer to the tracked object.
   The speed is scaled based on the area of the bouding box (works best in landscape orientation).
-- **Model**: choose an object detector based on your phone performance (see below for [benchmarking results](#benchmark)).
-- **Object**: pick the object you want to track. The models can detect the 80 COCO [object classes](https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/).
-- **Confidence**: confidence threshold to determine if detections are accepted. Increase if you get false detections, decrease if the object of interest it not detected.
-- **Device**: use CPU, GPU or NNAPI for inference (more details [here](#device)).
-- **Threads**: number of threads to use (only makes a difference when CPU is selected as device).
+- **Model**: Choose an object detector based on your phone performance (see below for [benchmarking results](#benchmark)).
+- **Object**: Pick the object you want to track. The models can detect the 80 COCO [object classes](https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/).
+- **Confidence**: Confidence threshold to determine if detections are accepted. Increase if you get false detections, decrease if the object of interest it not detected.
+- **Device**: Use CPU, GPU or NNAPI for inference (more details [here](#device)).
+- **Threads**: Number of threads to use (only makes a difference when CPU is selected as device).
+- **Control**: Controller, Drive Mode and Speed are used to control robot settings as described in the [control section](#control).
 
 
 ### Point Goal Navigation
@@ -371,6 +297,79 @@ Tiny version of [YoloV4](https://arxiv.org/abs/2004.10934) with input resolution
 | Samsung S22 Ultra| 9.8 | 8.4 |  8.2  |
 | Xiaomi Mi9       | 6.4 | 9.4 |   -   |
 | Google Pixel 4XL | 7.7 | 8.3 |  7.6  |
+
+### Default
+
+The [DefaultActivity](src/main/java/org/openbot/original/DefaultActivity.java) includes the most important features of the OpenBot app in a single screen. It displays the connection status to the vehicle and reports measurements from vehicle sensors. The robot can be controlled by standard BT game controllers or another smartphone running the OpenBot [controller app](../controller). We have also implemented a data logger to collect datasets with the robot. Currently, we record readings from following sensors: camera, gyroscope, accelerometer, magnetometer, ambient light sensor, and barometer. Using the Android API, we are able to obtain the following sensor readings: RGB images, angular speed, linear acceleration, gravity, magnetic field strength, light intensity, atmospheric pressure, latitude, longitude, altitude, bearing, and speed. In addition to the phone sensors, we record body sensor readings (wheel odometry, obstacle distance and battery voltage), which are transmitted via the serial link. We also record and timestamp control signals received from a connected controller, if present. Lastly, we integrate several neural networks for person following and autonomous navigation.
+
+<p align="left">
+  <img src="../../docs/images/screen_default.jpg" alt="App GUI" width="50%"/>
+</p>
+
+#### USB Connection
+
+Same as in the [settings menu](#settings-menu).
+
+#### Vehicle Status
+
+The field **Battery** displays the battery voltage as measured by the Arduino via the voltage divider. The field **Speed (l,r)** reports the left and right speed of the (front) wheels in rpm. It is measured by the Arduino via the optical wheel speed sensors. The field **Sonar** shows the free space in front of the car in centimeters. It is measured by the Arduino via the ultrasonic sensor. Note, you will only receive values a few seconds after the USB connections has been established.
+
+#### Control
+
+The first button is for selecting the **control mode**. There are two different control modes:
+
+- **Gamepad**: The app receives controls from a connected BT controller.
+- **Phone**:  The robot can be controlled via another smartphone with the controller app installed or though a Python script running on a computer connected to the same network.
+
+The second button is for selecting the **drive mode**. There are three different drive modes when using a game controller (e.g. PS4):
+
+- **Game**: Use the right and left shoulder triggers (R2, L2) for forward and reverse throttle and either joystick for steering. This mode imitates the control mode of car racing video games.
+- **Joystick**: Use either one of the joysticks to control the robot.
+- **Dual**: Use the left and right joystick to control the left and right side of the car. This is raw differential steering.
+
+The third button is for selecting the **speed mode**. There are three different speed modes:
+
+- **Slow**: The voltage applied to the motors is limited to 50% of the input voltage (~6V).
+- **Normal**: The voltage applied to the motors is limited to 75% of the input voltage (~9V).
+- **Fast**: There is no limit. The full input voltage will be applied to the motors at full throttle (~12V). *This is the default setting for running the neural networks.*
+
+Running at higher speeds will reduce the lifetime of the motors but is more fun. The controls that are sent to the robot are displayed on the right side. When using the game controller, the speed mode can be increased by pressing down the right joystick (R3) and decrased by pressing down the left joystick (L3).
+
+#### Data Log
+
+There are four different logging modes:
+
+- **only_sensors**: All sensor data but no images are saved.
+- **crop_img**: All sensor data and a cropped images that have the input size of the network are saved. This is the default setting and is what should be used for data collection.
+- **preview_img**: All sensor data and a full-size images are saved. This will require a lot of memory and can be slow. However, it is nice for compiling FPV videos.
+- **all_imgs**: All sensor data and both cropped and full-size images are saved. This will require a lot of memory and can be slow.
+
+The switch on the right is used to toggle logging on and off. On the game controller this switch can be toggled with the X button.
+
+#### Camera
+
+The first item shows the preview resolution. The second item shows the crop resolution. This is the image that is used as input to the neural networks. You will notice that this resolution changes depending on which model you select below. If you train your own autopilot, make sure to select the `AUTOPILOT_F` model. The crop resolution should show `256x96`. The switch on the right is used to toggle between the rear and the front camera.
+
+#### Model
+
+There are two models that come with the app:
+
+- **MobileNetV1-300**: This model is used for person following. It uses a SSD object detector with MobileNet V1 backbone. The model is quantized for better performance on embedded devices. It comes with the app.
+- **CIL-Mobile**: This model is used for autonomous navigation. It will predict controls directly from the camera input. Chances are that it will not work in your environment. You should follow our instructions to train your own [Driving Policy](../../policy) and replace it.
+
+Additonal models can be downloaded from the Model Management screen.
+
+The switch on the right is used to turn the network on and off. When the network is running, it produces the controls for the robot and the game controller is disabled. However, you may still use the buttons on the game controller, for example to toggle this switch with the R1 trigger button to regain control of the robot.
+
+#### Device
+
+Use the drop-down menu to select the device on which the neural network should be executed. You have the following choices:
+
+- **CPU**: Using the CPU works on most phones and is the default choice. You can adjust the number of threads to optimize performance.
+- **GPU**: Most smartphones have a GPU. Networks with large inputs such as images often run faster on a GPU.
+- **NNAPI**: This will use the [TensorFlow Lite NNAPI delegate](https://www.tensorflow.org/lite/performance/nnapi). Modern smartphones often come with dedicated AI accelerators. The [Neural Network API](https://developer.android.com/ndk/guides/neuralnetworks) (NNAPI) provides acceleration for TensorFlow Lite models on Android devices with Graphics Processing Unit (GPU), Digital Signal Processor (DSP) and Neural Processing Unit (NPU). Note that on some older phones this can be very slow!
+
+If a model is active, the inference speed in [ms] will be displayed next to the device which is running the model.
 
 ## Add your own fragment
 
