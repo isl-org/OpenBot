@@ -13,7 +13,9 @@ The app starts with a menu screen that shows all available screens. The settings
 
 <p align="left">
 <img style="padding-right: 2%;" src="../../docs/images/screen_main.gif" alt="Main Menu" width="25%"/>
-<img src="../../docs/images/screen_settings.gif" alt="Settings Menu" width="25%"/>
+<img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="25%"/>
+<img src="../../docs/images/dialog_stream_mode.jpg" alt="Settings Menu" width="25%"/>
+<img src="../../docs/images/dialog_connectivity_mode.jpg" alt="Settings Menu" width="25%"/>
 </p>
 
 ### Settings Menu
