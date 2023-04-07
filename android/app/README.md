@@ -13,14 +13,19 @@ The app starts with a menu screen that shows all available screens. The settings
 
 <p align="left">
 <img style="padding-right: 2%;" src="../../docs/images/screen_main.gif" alt="Main Menu" width="25%"/>
-<img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="25%"/>
+<img src="../../docs/images/screen_settings.gif" alt="Settings Menu" width="25%"/>
 </p>
 
 ### Settings Menu
 
 #### USB Connection
 
-The drop-down menu is used to set the baud rate. The default is 115200 and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
+Tap the USB icon to open the USB options. The drop-down menu is used to set the baud rate. The default is 115200 and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
+
+<p align="left">
+<img src="../../docs/images/usb_disconnected.jpg" alt="Connecting device" width="25%"/>
+<img src="../../docs/images/usb_connected.jpg" alt="Disconnect button" width="25%"/>
+</p>
 
 #### Permissions
 
@@ -32,14 +37,8 @@ You can choose between `WebRTC` and `RTSP` for streaming video to an external de
 
 #### Bluetooth connection
 
-Make sure that your Android device has BLE (Bluetooth Low Energy) support. If your Android version is greater than or equal to 7.0, you also need to turn on the location service and allow the location permission in the settings in order to search for nearby BLE devices. To enable BLE, first change the connectivity mode from USB to Bluetooth in the settings menu. You will then get a Bluetooth icon at the top of the home screen.
-<p align="left">
-<img src="../../docs/images/ble_settings_menu.jpg" alt="Settings Menu" width="25%"/>
-<img src="../../docs/images/ble_connectivity_mode.jpg" alt="Choose connection type" width="25%"/>
-<img src="../../docs/images/ble_icon.jpg" alt="Home Screen" width="25%"/>
-</p>
+Make sure that your Android device has BLE (Bluetooth Low Energy) support. If your Android version is greater than or equal to 7.0, you also need to turn on the location service and allow the location permission in the settings in order to search for nearby BLE devices. To enable BLE, change the connectivity mode from USB to Bluetooth in the settings menu. You will get a Bluetooth icon at the top of the home screen. Tap the Bluetooth icon to start BLE scanning; it takes 4 seconds to scan and get a list of all nearby OpenBot BLE devices. Connect with your OpenBot by tapping on the `Connect` button. After successful connection the `Connect` button will change to `Disconnect`. You can now go back to the Home screen.
 
-Tap the Bluetooth icon to start BLE scanning; it takes 4 seconds to scan and get a list of all nearby OpenBot BLE devices. Connect with your OpenBot by tapping on the `Connect` button. After successful connection the `Connect` button will change to `Disconnect`. You can now go back to the Home screen.
 <p align="left">
 <img src="../../docs/images/ble_devices_list.jpg" alt="BLE devices" width="25%"/>
 <img src="../../docs/images/ble_device_connecting.jpg" alt="Connecting device" width="25%"/>
