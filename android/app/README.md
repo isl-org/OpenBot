@@ -12,10 +12,10 @@
 The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon at the top right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/screen_main.gif" alt="Main Menu" width="25%"/>
-<img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="25%"/>
-<img src="../../docs/images/dialog_stream_mode.jpg" alt="Settings Menu" width="25%"/>
-<img src="../../docs/images/dialog_connectivity_mode.jpg" alt="Settings Menu" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/screen_main.gif" alt="Main Menu" width="24.5%"/>
+<img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="24.5%"/>
+<img src="../../docs/images/dialog_stream_mode.jpg" alt="Settings Menu" width="24.5%"/>
+<img src="../../docs/images/dialog_connectivity_mode.jpg" alt="Settings Menu" width="24.5%"/>
 </p>
 
 ### Settings Menu
