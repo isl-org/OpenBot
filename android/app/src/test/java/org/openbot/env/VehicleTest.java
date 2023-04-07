@@ -23,33 +23,33 @@ public class VehicleTest {
 
   @Test
   public void getRotation() {
-    assertEquals(0, vehicle.getRotation(), 0.0);
+    assertEquals(0, vehicle.getRotation(), 0.01f);
 
-    vehicle.setControl(new Control(0.5f, 1));
-    assertEquals(-60, vehicle.getRotation(), 0.0);
+    vehicle.setControl(new Control(0.5f, 1.0f));
+    assertEquals(-60, vehicle.getRotation(), 0.01f);
 
-    vehicle.setControl(new Control(0f, 1));
-    assertEquals(-180, vehicle.getRotation(), 0.0);
+    vehicle.setControl(new Control(0.0f, 1.0f));
+    assertEquals(-180, vehicle.getRotation(), 0.01f);
   }
 
   @Test
   public void getSpeed() {
-    vehicle.setSpeedMultiplier(Enums.SpeedMode.SLOW.getValue());
-    vehicle.setControl(new Control(-1, -1));
+    vehicle.setSpeedFactor(Enums.SpeedMode.SLOW.getValue());
+    vehicle.setControl(new Control(-1.0f, 1.0f));
 
-    assertEquals(-128, vehicle.getLeftSpeed(), 0.0);
-    assertEquals(-128, vehicle.getRightSpeed(), 0.0);
+    assertEquals(-0.33f, vehicle.getLeftSpeed(), 0.01f);
+    assertEquals(0.33f, vehicle.getRightSpeed(), 0.01f);
 
-    vehicle.setSpeedMultiplier(Enums.SpeedMode.NORMAL.getValue());
-    vehicle.setControl(new Control(-1, -1));
+    vehicle.setSpeedFactor(Enums.SpeedMode.NORMAL.getValue());
+    vehicle.setControl(new Control(1.0f, -1.0f));
 
-    assertEquals(-192, vehicle.getLeftSpeed(), 0.0);
-    assertEquals(-192, vehicle.getRightSpeed(), 0.0);
+    assertEquals(0.5f, vehicle.getLeftSpeed(), 0.01f);
+    assertEquals(-0.5f, vehicle.getRightSpeed(), 0.01f);
 
-    vehicle.setSpeedMultiplier(Enums.SpeedMode.FAST.getValue());
-    vehicle.setControl(new Control(1, 1));
+    vehicle.setSpeedFactor(Enums.SpeedMode.FAST.getValue());
+    vehicle.setControl(new Control(1.0f, 1.0f));
 
-    assertEquals(255, vehicle.getLeftSpeed(), 0.0);
-    assertEquals(255, vehicle.getRightSpeed(), 0.0);
+    assertEquals(1.0f, vehicle.getLeftSpeed(), 0.01f);
+    assertEquals(1.0f, vehicle.getRightSpeed(), 0.01f);
   }
 }

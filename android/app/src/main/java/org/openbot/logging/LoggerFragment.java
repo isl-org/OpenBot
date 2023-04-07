@@ -236,7 +236,7 @@ public class LoggerFragment extends CameraFragment {
       try {
         sensorMessenger.send(
             LogDataUtils.generateControlDataMessage(
-                (int) vehicle.getLeftSpeed(), (int) vehicle.getRightSpeed()));
+                vehicle.getControl().getLeft(), vehicle.getControl().getRight()));
       } catch (RemoteException e) {
         e.printStackTrace();
       }
@@ -442,7 +442,7 @@ public class LoggerFragment extends CameraFragment {
     float left = vehicle.getLeftSpeed();
     float right = vehicle.getRightSpeed();
     binding.controllerContainer.controlInfo.setText(
-        String.format(Locale.US, "%.0f,%.0f", left, right));
+        String.format(Locale.US, "%.2f,%.2f", left, right));
     runInBackground(this::sendControlToSensorService);
   }
 
@@ -462,7 +462,7 @@ public class LoggerFragment extends CameraFragment {
 
       Timber.d("Updating  controlSpeed: %s", speedMode);
       preferencesManager.setSpeedMode(speedMode.getValue());
-      vehicle.setSpeedMultiplier(speedMode.getValue());
+      vehicle.setSpeedFactor(speedMode.getValue());
     }
   }
 
