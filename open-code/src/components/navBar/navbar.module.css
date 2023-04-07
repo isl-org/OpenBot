@@ -192,9 +192,11 @@
 .emailInputExtraStyle {
     width: 54%;
 }
-.buttonSection{
+
+.buttonSection {
     display: flex;
 }
+
 .crossIconDiv {
     display: flex;
     justify-content: flex-end;
@@ -278,7 +280,6 @@
 
 .darkHelpCenterModal {
     background-color: #303030;
-
 }
 
 .lightHelpCenterModal {
@@ -290,6 +291,11 @@
     width: 35%;
     height: 100%;
     padding-left: 5%;
+}
+
+.screenDisplayImage {
+    width: 80%;
+    margin-top: 15%
 }
 
 
@@ -438,6 +444,12 @@
     margin-right: 15px !important;
 }
 
+.helpCentreHeader {
+    font-family: Gilroy-Bold, sans-serif !important;
+    font-weight: 800 !important;
+}
+
+
 @media (max-width: 768px) {
     .mainTitle {
         font-size: 1.0rem;
@@ -538,23 +550,25 @@
     }
 
     .emailInputExtraStyle {
-        width: 80%  !important;
+        width: 80% !important;
     }
 
     .headStyle {
-        font-size: 12px !important ;
+        font-size: 12px !important;
     }
 
     .extraInputStyle {
         font-size: 13px !important;
     }
-    .buttonSection{
+
+    .buttonSection {
         display: flex;
     }
 
-    .buttonText{
+    .buttonText {
         font-size: 13px;
     }
+
     .successAlertBox {
         margin-left: 20px;
         padding-left: 10px;
@@ -564,7 +578,8 @@
         background-color: rgba(91, 188, 115, 0.1);
         color: #5BBC73;
     }
-    .headerStyle{
+
+    .headerStyle {
         font-weight: bold;
         font-size: 16px;
     }
@@ -572,10 +587,9 @@
     .option {
         height: 86px !important;
         width: 157px !important;
-        margin-top: 10px !important;
     }
 
-    .option .item{
+    .option .item {
         font-size: 0.8rem;
         padding: 0.1rem 0 0.5rem 0 !important;
         justify-content: start;
@@ -586,18 +600,18 @@
         padding-right: 1rem !important;
     }
 
-    .renameText{
+    .renameText {
         margin-left: 1rem;
     }
 
-    .deleteText{
+    .deleteText {
         margin-left: 1rem;
     }
 
-    .option .icon{
+    .option .icon {
         width: 18px;
         height: 18px;
-        margin-left: 19px;
+        margin-left: 16px;
     }
 
     .darkItem {
@@ -608,4 +622,62 @@
         border-width: 0;
     }
 
+    .lightItem:hover {
+        border-width: 0;
+        background: #ffffff;
+    }
+
+    .darkItem:hover {
+        border-width: 0;
+        background: #303030;
+    }
+
+    /*    TODO when click on rename a blue color appears */
+    .Edit {
+        font-size: 1rem !important;
+        line-height: 10px;
+    }
+
+    .helpCenterModalBox {
+        height: 69%;
+        width: 90%;
+        border-radius: 5px;
+    }
+
+    .dragAndDropDiv {
+        width: 50%;
+        padding-left: 2%;
+    }
+
+    .screenDisplayImage {
+        width: 96%;
+        height: 19%;
+        margin-top: 37%;
+    }
+
+    .helpCentreRightSide {
+        width: 50%;
+    }
+
+    .integerNumber {
+        font-size: 35px !important;
+        line-height: 30px;
+    }
+
+    .helpCenterPara {
+        font-size: 0.8rem !important;
+    }
+
+    .helpDetailsModelDiv {
+        display: flex;
+        flex-direction: row;
+    }
+
+}
+
+@media (max-width: 400px) {
+    .helpCenterPara {
+        font-size: 12px !important;
+
+    }
 }

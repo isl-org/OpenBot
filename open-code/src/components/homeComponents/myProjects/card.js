@@ -112,10 +112,10 @@ function Card(props) {
     return (
         <div className={styles.cardContent}>
             {deleteProject && <PopUpModal setVariable={setDeleteProject}
-                                           headerText={"Delete this file?"}
-                                           containText={"You cannot restore this file later."}
-                                           buttonText={"Delete"}
-                                           handleButtonClick={handleDeleteProject}/>
+                                          headerText={"Delete this file?"}
+                                          containText={"You cannot restore this file later."}
+                                          buttonText={"Delete"}
+                                          handleButtonClick={handleDeleteProject}/>
             }
             <div onClick={() => {
                 handleOpenProject(props.projectData).catch((err) => {
@@ -127,7 +127,6 @@ function Card(props) {
                     <div className={styles.CardHeadingIcon}>
                         {rename ? <input type="text" className={style.Edit}
                                          id="userEdit"
-
                                          ref={inputRef} // set the ref to the input element
                                          onClick={(e) => e.stopPropagation()}
                                          onFocus={(e) => e.target.select()}
@@ -141,7 +140,7 @@ function Card(props) {
                                                  await handleClickBlur()
                                              }
                                          }}
-                                         style={{width: `${props.projectData.projectName?.length*1.5}ch`}}
+                                         style={{width: `${props.projectData.projectName?.length * 1.5}ch`}}
                                          value={reNameProject}
                         /> : theme === "dark" ?
                             <WhiteText extraStyle={styles.CardHeading} text={reNameProject}/> :
@@ -167,7 +166,8 @@ function Card(props) {
                                       extraStyle={styles.optionExtraStyle}
                     />
                 </div>
-                <BlackText divStyle={{marginTop: (!isMobile && 4), marginBottom: (!isMobile && 5)}} extraStyle={styles.Date}
+                <BlackText divStyle={{marginTop: (!isMobile && 4), marginBottom: (!isMobile && 5)}}
+                           extraStyle={styles.Date}
                            text={props.projectData.updatedDate}/>
                 <BlackText extraStyle={styles.Date} text={props.projectData.time}/>
             </div>

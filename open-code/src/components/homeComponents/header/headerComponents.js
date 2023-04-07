@@ -171,6 +171,7 @@ export function EditProjectPopUp(params) {
     } = params
     const id = open ? 'simple-popper' : undefined
     const popUpRef = useRef(null);
+    const location = useLocation();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -190,7 +191,7 @@ export function EditProjectPopUp(params) {
             ref={popUpRef}
             key={id} open={open} anchorEl={anchorEl}>
             <div
-                className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel) + " " + extraStyle}>
+                className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel) + " " + extraStyle} style={{marginTop:(location.pathname === PathName.home) && 10}}>
                 <div
                     className={`${styles.item} ${styles.renameDivMargin}  ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
                     onClick={async (event) => {
