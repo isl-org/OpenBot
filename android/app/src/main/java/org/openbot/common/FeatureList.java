@@ -71,46 +71,42 @@ public class FeatureList {
     ArrayList<SubCategory> subCategories;
 
     subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(DEFAULT, R.drawable.ic_openbot, "#4B7BFF"));
-    categories.add(new Category(LEGACY, subCategories));
-
-    subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
+    subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FC814A"));
     subCategories.add(new SubCategory(DATA_COLLECTION, R.drawable.ic_storage, "#93C47D"));
     subCategories.add(new SubCategory(CONTROLLER_MAPPING, R.drawable.ic_joystick, "#7268A6"));
     subCategories.add(new SubCategory(ROBOT_INFO, R.drawable.ic_openbot, "#4B7BFF"));
     categories.add(new Category(GENERAL, subCategories));
 
     subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(AUTOPILOT, R.drawable.ic_autopilot, "#4B7BFF"));
-    subCategories.add(new SubCategory(OBJECT_NAV, R.drawable.ic_person_search, "#FFD966"));
+    subCategories.add(new SubCategory(AUTOPILOT, R.drawable.ic_autopilot, "#44525F"));
+    subCategories.add(new SubCategory(OBJECT_NAV, R.drawable.ic_person_search, "#E7CE88"));
     subCategories.add(
         new SubCategory(POINT_GOAL_NAVIGATION, R.drawable.ic_baseline_golf_course, "#1BBFBF"));
-    subCategories.add(new SubCategory(MODEL_MANAGEMENT, R.drawable.ic_list_bulleted_48, "#FFAC6C"));
+    subCategories.add(new SubCategory(MODEL_MANAGEMENT, R.drawable.ic_list_bulleted_48, "#BC7680"));
     categories.add(new Category(AI, subCategories));
 
-    //    subCategories = new ArrayList<>();
-    //    subCategories.add(new SubCategory(CONTROLLER, R.drawable.ic_controller));
-    //    subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
-    //    subCategories.add(new SubCategory(AR_MODE, R.drawable.ic_game, "#B3FF6D00"));
-    //    categories.add(new Category(GAME, subCategories));
+    subCategories = new ArrayList<>();
+    subCategories.add(new SubCategory(DEFAULT, R.drawable.ic_legacy_car, "#F86363"));
+    categories.add(new Category(LEGACY, subCategories));
 
-    //    subCategories = new ArrayList<>();
-    //    subCategories.add(new SubCategory(LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage, "#93C47D"));
-    //        subCategories.add(new SubCategory(EDGE_LOCAL_NETWORK,
-    // R.drawable.ic_network));
-    //        subCategories.add(new SubCategory(CLOUD_FIREBASE,
-    // R.drawable.ic_cloud_upload));
-    //        subCategories.add(new SubCategory(CROWD_SOURCE, R.drawable.openbot_icon));
-    //    categories.add(new Category(DATA_COLLECTION, subCategories));
     /*
         subCategories = new ArrayList<>();
-        subCategories.add(new SubCategory(PERSON_FOLLOWING, R.drawable.ic_person_search));
-        subCategories.add(new SubCategory(OBJECT_NAV, R.drawable.openbot_icon));
         subCategories.add(new SubCategory(SMART_VOICE, R.drawable.ic_voice_over));
-        subCategories.add(new SubCategory(AUTONOMOUS_DRIVING, R.drawable.openbot_icon));
         subCategories.add(new SubCategory(VISUAL_GOALS, R.drawable.openbot_icon));
         categories.add(new Category(AI, subCategories));
+
+        subCategories = new ArrayList<>();
+        subCategories.add(new SubCategory(CONTROLLER, R.drawable.ic_controller));
+        subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
+        subCategories.add(new SubCategory(AR_MODE, R.drawable.ic_game, "#B3FF6D00"));
+        categories.add(new Category(GAME, subCategories));
+
+        subCategories = new ArrayList<>();
+        subCategories.add(new SubCategory(LOCAL_SAVE_ON_PHONE, R.drawable.ic_storage, "#93C47D"));
+        subCategories.add(new SubCategory(EDGE_LOCAL_NETWORK, R.drawable.ic_network));
+        subCategories.add(new SubCategory(CLOUD_FIREBASE, R.drawable.ic_cloud_upload));
+        subCategories.add(new SubCategory(CROWD_SOURCE, R.drawable.openbot_icon));
+        categories.add(new Category(DATA_COLLECTION, subCategories));
 
         subCategories = new ArrayList<>();
         subCategories.add(new SubCategory(WEB_INTERFACE, R.drawable.openbot_icon));
