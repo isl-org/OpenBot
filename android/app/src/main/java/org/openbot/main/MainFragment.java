@@ -48,11 +48,6 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     Timber.d("onItemClick: %s", subCategory.getTitle());
 
     switch (subCategory.getTitle()) {
-      case FeatureList.DEFAULT:
-        Intent intent = new Intent(requireActivity(), DefaultActivity.class);
-        startActivity(intent);
-        break;
-
       case FeatureList.FREE_ROAM:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_freeRoamFragment);
@@ -97,6 +92,11 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
       case FeatureList.MODEL_MANAGEMENT:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_modelManagementFragment);
+        break;
+
+      case FeatureList.DEFAULT:
+        Intent intent = new Intent(requireActivity(), DefaultActivity.class);
+        startActivity(intent);
         break;
     }
   }
