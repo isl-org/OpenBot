@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -42,9 +43,54 @@
             </objects>
             <point key="canvasLocation" x="-439" y="-257"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="a1f-Wu-WLU">
+            <objects>
+                <viewController storyboardIdentifier="runOpenBot" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EeT-XN-kSC" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="u64-Zg-Hjz">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="runRobot" translatesAutoresizingMaskIntoConstraints="NO" id="4Ws-oO-4cz">
+                                <rect key="frame" x="90" y="319.66666666666669" width="213" height="213.00000000000006"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="213" id="PKZ-Um-yk2"/>
+                                    <constraint firstAttribute="height" constant="213" id="YOj-Hc-aMf"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your code is executing.." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HmK-zt-jbD">
+                                <rect key="frame" x="101" y="541.66666666666663" width="191" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="191" id="0YT-re-I9o"/>
+                                    <constraint firstAttribute="height" constant="44" id="Xno-yV-XP8"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="BhC-0o-bFy"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="tintColor" name="textColor"/>
+                        <constraints>
+                            <constraint firstItem="HmK-zt-jbD" firstAttribute="top" secondItem="4Ws-oO-4cz" secondAttribute="bottom" constant="9" id="I3K-Ek-ujR"/>
+                            <constraint firstItem="4Ws-oO-4cz" firstAttribute="centerY" secondItem="u64-Zg-Hjz" secondAttribute="centerY" id="Vbw-2V-98U"/>
+                            <constraint firstItem="HmK-zt-jbD" firstAttribute="centerX" secondItem="4Ws-oO-4cz" secondAttribute="centerX" id="hQ0-ZU-5kY"/>
+                            <constraint firstItem="4Ws-oO-4cz" firstAttribute="centerX" secondItem="u64-Zg-Hjz" secondAttribute="centerX" id="vNo-4m-smZ"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3kG-rd-Dqs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="287.78625954198475" y="-236.61971830985917"/>
+        </scene>
     </scenes>
     <resources>
         <image name="cancel" width="25" height="25"/>
+        <image name="runRobot" width="213" height="213"/>
+        <namedColor name="textColor">
+            <color red="0.05000000074505806" green="0.05000000074505806" blue="0.05000000074505806" alpha="0.81999999284744263" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

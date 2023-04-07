@@ -22,7 +22,7 @@ class Authentication {
         googleSignInFunc(clientId: clientID);
     }
 
-    func returnFileId(fileLink: String) -> String {
+    static func returnFileId(fileLink: String) -> String {
         print(fileLink)
         if let startRange = fileLink.range(of: "/d/")?.upperBound,
            let endRange = fileLink.range(of: "/edit")?.lowerBound {
@@ -87,6 +87,23 @@ class Authentication {
         if error == nil {
             // Show the sign-out button and hide the GIDSignInButton
         }
+    }
+
+    static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
+        let fileId = returnFileId(fileLink: file);
+        let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
+        let service: GTLRDriveService = GTLRDriveService()
+        let fetcher = service.fetcherService.fetcher(withURLString: url)
+        fetcher.beginFetch(completionHandler: { data, error in
+            if let error = error {
+                print("error is ", error.localizedDescription)
+                completion(nil, error)
+                return;
+            }
+            if let data = data {
+                completion(data, nil)
+            }
+        })
     }
 
 

@@ -92,5 +92,21 @@ extension UIView {
         signInText.font = signInText.font?.withSize(18);
         return signInText;
     }
+}
 
+class BottomSheetView: UIView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setup(){
+        self.backgroundColor = Colors.bdColor;
+        layer.cornerRadius = 30;
+        layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+    }
 }

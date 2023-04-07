@@ -74,6 +74,7 @@
 		66AC721929B885C70022108A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC721829B885C70022108A /* Navigation.swift */; };
 		66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */; };
 		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
+		727D31480C80A069C9686CC2 /* jsEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D313C9325317487A840E7 /* jsEvaluator.swift */; };
 		727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */; };
 		727D339EDE19D22D7B9D16B5 /* GoogleSignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3153BBE7A4D47749E6E8 /* GoogleSignInButton.swift */; };
 		727D33E21291B21856A1393B /* UiLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B76F53D6B069FF2A5C /* UiLabel.swift */; };
@@ -197,6 +198,7 @@
 		66AC721829B885C70022108A /* Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectorFloatYoloV5.swift; sourceTree = "<group>"; };
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
+		727D313C9325317487A840E7 /* jsEvaluator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = jsEvaluator.swift; sourceTree = "<group>"; };
 		727D3153BBE7A4D47749E6E8 /* GoogleSignInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleSignInButton.swift; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
 		727D3189735FC4F7A4E4A6C1 /* Browser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
@@ -361,6 +363,7 @@
 				4FEF4FB9DCF0D8F0BFCB835B /* tflite */,
 				4FEF421BF49FEE835C6DC5CB /* config.json */,
 				727D3BBE14B8FA7877902A13 /* Authentication */,
+				727D317DC854B57A8D176DA7 /* JsEvaluator */,
 			);
 			path = OpenBot;
 			sourceTree = "<group>";
@@ -598,6 +601,14 @@
 				66AC720229B885410022108A /* FreeRoamController.swift */,
 			);
 			path = FreeRoam;
+			sourceTree = "<group>";
+		};
+		727D317DC854B57A8D176DA7 /* JsEvaluator */ = {
+			isa = PBXGroup;
+			children = (
+				727D313C9325317487A840E7 /* jsEvaluator.swift */,
+			);
+			path = JsEvaluator;
 			sourceTree = "<group>";
 		};
 		727D38A54661B9A54A681AC1 /* QrScanner */ = {
@@ -1059,6 +1070,7 @@
 				727D3CCBA2ED9D056786AAC1 /* projectFragement.swift in Sources */,
 				727D3EFB9016C8224990ACE8 /* profileFragment.swift in Sources */,
 				727D3FA70675D0042BFBB89A /* scannerFragment.swift in Sources */,
+				727D31480C80A069C9686CC2 /* jsEvaluator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

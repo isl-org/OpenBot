@@ -46,12 +46,11 @@ extension HomePageViewController {
 
     @objc func signIn(_ sender: UIView) {
        Authentication.init()
-
+        print(GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer.userEmail)
     }
 
     @objc func guestLogin(_ sender: UILabel) {
-        print("Guest SignIN")
-        print(GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer.userEmail)
+        whiteSheet.removeFromSuperview();
 
     }
 }

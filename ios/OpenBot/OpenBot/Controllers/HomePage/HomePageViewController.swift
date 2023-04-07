@@ -28,8 +28,6 @@ class HomePageViewController: CameraController {
         createShadowSheet()
         bluetoothDataController.shared.startScan()
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        print(tabBarController?.viewControllers?.count);
-        print(tabBarController?.viewControllers)
         setUpTitle();
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
