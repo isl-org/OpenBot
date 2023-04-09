@@ -6,8 +6,6 @@ import android.util.Pair;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.widget.Toast;
-import org.openbot.OpenBotApplication;
 import org.openbot.utils.Enums.DriveMode;
 import org.openbot.vehicle.Control;
 
@@ -50,34 +48,79 @@ public class GameController {
     return 0;
   }
 
-  public void processButtonInput(KeyEvent event) {
+  public Control processButtonInput(KeyEvent event) {
+    float left = 0;
+    float right = 0;
     switch (event.getKeyCode()) {
       case KeyEvent.KEYCODE_BUTTON_A:
-        Toast.makeText(OpenBotApplication.getContext(), "A recognized", Toast.LENGTH_SHORT).show();
-        return;
+        //        Toast.makeText(OpenBotApplication.getContext(), "A recognized",
+        // Toast.LENGTH_SHORT).show();
+        break;
       case KeyEvent.KEYCODE_BUTTON_B:
-        Toast.makeText(OpenBotApplication.getContext(), "B recognized", Toast.LENGTH_SHORT).show();
-        return;
+        //        Toast.makeText(OpenBotApplication.getContext(), "B recognized",
+        // Toast.LENGTH_SHORT).show();
+        break;
       case KeyEvent.KEYCODE_BUTTON_Y:
-        Toast.makeText(OpenBotApplication.getContext(), "Y recognized", Toast.LENGTH_SHORT).show();
-        return;
+        //        Toast.makeText(OpenBotApplication.getContext(), "Y recognized",
+        // Toast.LENGTH_SHORT).show();
+        break;
       case KeyEvent.KEYCODE_BUTTON_X:
-        Toast.makeText(OpenBotApplication.getContext(), "X recognized", Toast.LENGTH_SHORT).show();
-        return;
+        //        Toast.makeText(OpenBotApplication.getContext(), "X recognized",
+        // Toast.LENGTH_SHORT).show();
+        break;
       case KeyEvent.KEYCODE_BUTTON_L1:
-        Toast.makeText(OpenBotApplication.getContext(), "L1 recognized", Toast.LENGTH_SHORT).show();
-        return;
+        //        Toast.makeText(OpenBotApplication.getContext(), "L1 recognized",
+        // Toast.LENGTH_SHORT).show();
+        break;
       case KeyEvent.KEYCODE_BUTTON_R1:
-        Toast.makeText(OpenBotApplication.getContext(), "R1 recognized", Toast.LENGTH_SHORT).show();
-        return;
+        //        Toast.makeText(OpenBotApplication.getContext(), "R1 recognized",
+        // Toast.LENGTH_SHORT).show();
+        break;
+      case KeyEvent.KEYCODE_DPAD_UP:
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+          left = 1.0F;
+          right = 1.0F;
+        } else if (event.getAction() == KeyEvent.ACTION_UP) {
+          left = 0.0F;
+          right = 0.0F;
+        }
+        break;
+      case KeyEvent.KEYCODE_DPAD_RIGHT:
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+          left = 1.0F;
+          right = -1.0F;
+        } else if (event.getAction() == KeyEvent.ACTION_UP) {
+          left = 0.0F;
+          right = 0.0F;
+        }
+        break;
+      case KeyEvent.KEYCODE_DPAD_DOWN:
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+          left = -1.0F;
+          right = -1.0F;
+        } else if (event.getAction() == KeyEvent.ACTION_UP) {
+          left = 0.0F;
+          right = 0.0F;
+        }
+        break;
+      case KeyEvent.KEYCODE_DPAD_LEFT:
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+          left = -1.0F;
+          right = 1.0F;
+        } else if (event.getAction() == KeyEvent.ACTION_UP) {
+          left = 0.0F;
+          right = 0.0F;
+        }
+        break;
       default:
-        Toast.makeText(
-                OpenBotApplication.getContext(),
-                "Key " + event.getKeyCode() + " not recognized",
-                Toast.LENGTH_SHORT)
-            .show();
-        return;
+        //        Toast.makeText(
+        //                OpenBotApplication.getContext(),
+        //                "Key " + event.getKeyCode() + " not recognized",
+        //                Toast.LENGTH_SHORT)
+        //            .show();
+        break;
     }
+    return new Control(left, right);
   }
 
   public Control processJoystickInput(MotionEvent event, int historyPos) {

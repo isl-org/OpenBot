@@ -117,7 +117,16 @@
   <string name="wheel_odometry">Wheel Odometry</string>
   <string name="readings">Readings</string>
   <string name="lights_slider">lights slider</string>
-
+  <string name="tips_connect_timeout">connect timeout</string>
+  <string name="tips_connect_fail">connect fail</string>
+  <string name="tips_connection_disconnected">connection has disconnected</string>
+  <string name="tips_write_operation">please enter a hex string</string>
+  <string name="indicator_leds">Indicator LEDs</string>
+  <string name="back_leds">Back LEDs</string>
+  <string name="status_leds">Status LEDs</string>
+  <string name="front_leds">Front LEDs</string>
+  <string name="bluetooth">Bluetooth</string>
+  <string name="usb">USB</string>
   <string-array name="servers">
     <item>No server</item>
   </string-array>
@@ -174,5 +183,9 @@
     <item>Slow</item>
     <item>Normal</item>
     <item>Fast</item>
+  </string-array>
+  <string-array name="connection_type">
+    <item>Bluetooth</item>
+    <item>USB</item>
   </string-array>
 </resources>

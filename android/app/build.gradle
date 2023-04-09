@@ -162,4 +162,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'
+
+    // BLE
+    implementation 'com.github.Ficat:EasyBle:v2.0.2'
+    implementation 'com.github.Ficat:EasyPermissions:v2.1.0'
 }

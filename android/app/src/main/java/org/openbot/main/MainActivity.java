@@ -1,6 +1,6 @@
 package org.openbot.main;
 
-import static org.openbot.utils.Constants.USB_ACTION_DATA_RECEIVED;
+import static org.openbot.utils.Constants.DEVICE_ACTION_DATA_RECEIVED;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -95,15 +95,15 @@ public class MainActivity extends AppCompatActivity {
                   viewModel.setUsbStatus(vehicle.isUsbConnected());
                   Timber.i("USB device detached");
                   break;
-                case USB_ACTION_DATA_RECEIVED:
-                  viewModel.setUsbData(intent.getStringExtra("data"));
+                case DEVICE_ACTION_DATA_RECEIVED:
+                  viewModel.setDeviceData(intent.getStringExtra("data"));
                   break;
               }
             }
           }
         };
     IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction(USB_ACTION_DATA_RECEIVED);
+    localIntentFilter.addAction(DEVICE_ACTION_DATA_RECEIVED);
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
     localIntentFilter.addAction(UsbConnection.ACTION_USB_PERMISSION);
@@ -126,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
     navController.addOnDestinationChangedListener(
         (controller, destination, arguments) -> {
           if (destination.getId() == R.id.mainFragment
-              || destination.getId() == R.id.settingsFragment) toolbar.setVisibility(View.VISIBLE);
+              || destination.getId() == R.id.settingsFragment
+              || destination.getId() == R.id.usbFragment) toolbar.setVisibility(View.VISIBLE);
           else toolbar.setVisibility(View.GONE);
         });
 
@@ -141,6 +142,13 @@ public class MainActivity extends AppCompatActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu_items, menu);
+    if (vehicle.getConnectionType().equals("Bluetooth")) {
+      menu.findItem(R.id.usbFragment).setVisible(false);
+      menu.findItem(R.id.bluetoothFragment).setVisible(true);
+    } else if (vehicle.getConnectionType().equals("USB")) {
+      menu.findItem(R.id.usbFragment).setVisible(true);
+      menu.findItem(R.id.bluetoothFragment).setVisible(false);
+    }
     return true;
   }
 
