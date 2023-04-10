@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
-
 import org.jetbrains.annotations.NotNull;
 import org.openbot.vehicle.Vehicle;
 import timber.log.Timber;
@@ -14,6 +13,7 @@ public class OpenBotApplication extends Application {
 
   static Context context;
   public static Vehicle vehicle;
+
   public static Context getContext() {
     return context;
   }
@@ -40,8 +40,8 @@ public class OpenBotApplication extends Application {
     }
   }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
+  @Override
+  public void onTerminate() {
+    super.onTerminate();
+  }
 }

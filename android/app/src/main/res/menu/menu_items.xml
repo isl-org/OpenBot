@@ -12,4 +12,9 @@
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/barCodeScannerFragment"
+        android:icon="@drawable/ic_qr_code_scanner"
+        android:title="@string/projects"
+        app:showAsAction="ifRoom"/>
 </menu>

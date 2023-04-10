@@ -5,20 +5,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import org.openbot.R;
 import org.openbot.common.FeatureList;
 import org.openbot.databinding.FragmentMainBinding;
 import org.openbot.model.SubCategory;
 import org.openbot.original.DefaultActivity;
-
 import timber.log.Timber;
 
 public class MainFragment extends Fragment implements OnItemClickListener<SubCategory> {
@@ -57,8 +54,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
         break;
 
       case FeatureList.PROJECTS:
-        Navigation.findNavController(requireView())
-                .navigate(R.id.projectsFragment);
+        Navigation.findNavController(requireView()).navigate(R.id.projectsFragment);
         break;
 
       case FeatureList.FREE_ROAM:

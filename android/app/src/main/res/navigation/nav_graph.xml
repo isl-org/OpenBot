@@ -34,14 +34,10 @@
         <action
             android:id="@+id/action_mainFragment_to_pointGoalNavigationFragment2"
             app:destination="@id/pointGoalNavigationFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_projectsFragment"
+            app:destination="@id/projectsFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/projectsFragment"
-        android:name="org.openbot.projects.ProjectsFragment"
-        android:label="Projects" />
-    <action
-        android:id="@+id/open_projects_fragment"
-        app:destination="@id/projectsFragment" />
     <fragment
         android:id="@+id/robotCommunicationFragment"
         android:name="org.openbot.robot.FreeRoamFragment"
@@ -70,6 +66,15 @@
         android:name="org.openbot.logging.LoggerFragment"
         android:label="fragment_logger"
         tools:layout="@layout/fragment_logger" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="org.openbot.profile.ProfileFragment"
+        android:label="@string/profile" />
+
+    <action
+        android:id="@+id/open_profile_fragment"
+        app:destination="@id/profileFragment" />
     <fragment
         android:id="@+id/AIFragment"
         android:name="org.openbot.autopilot.AutopilotFragment"
@@ -98,12 +103,31 @@
         android:label="fragment_point_goal_navigation"
         tools:layout="@layout/fragment_point_goal_navigation" />
 
+    <fragment
+        android:id="@+id/projectsFragment"
+        android:name="org.openbot.projects.ProjectsFragment"
+        android:label="Projects">
+        <action
+            android:id="@+id/action_projectsFragment_to_barCodeScannerFragment"
+            app:destination="@id/barCodeScannerFragment" />
+    </fragment>
     <action
-        android:id="@+id/open_bar_code_scanner_fragment"
-        app:destination="@id/barCodeScannerFragment" />
+        android:id="@+id/open_projects_fragment"
+        app:destination="@id/projectsFragment" />
+
     <fragment
         android:id="@+id/barCodeScannerFragment"
         android:name="org.openbot.projects.BarCodeScannerFragment"
         android:label="barCodeScanner"
-        tools:layout="@layout/fragment_bar_code_scanner"/>
+        tools:layout="@layout/fragment_bar_code_scanner">
+        <action
+            android:id="@+id/action_barCodeScannerFragment_to_blocklyExecutingFragment"
+            app:destination="@id/blocklyExecutingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/blocklyExecutingFragment"
+        android:name="org.openbot.projects.BlocklyExecutingFragment"
+        android:label="blocklyExecute"
+        tools:layout="@layout/fragment_blockly_executing" />
 </navigation>

@@ -1,38 +1,42 @@
-package org.openbot.projects;
+package org.openbot.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
+import androidx.fragment.app.Fragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
 import org.openbot.R;
-import org.openbot.common.ControlsFragment;
-import org.openbot.databinding.FragmentProjectsBinding;
+import org.openbot.databinding.FragmentProfileBinding;
 import org.openbot.googleServices.GoogleServices;
+import org.openbot.projects.GoogleSignInCallback;
 
-public class ProjectsFragment extends ControlsFragment {
-  private FragmentProjectsBinding binding;
-  private View signInButton;
-  private TextView projectScreenText;
-  private TextView projectsNotFoundTxt;
+public class ProfileFragment extends Fragment {
+
+  private FragmentProfileBinding binding;
+  private LinearLayout linearLayoutSignIn;
+  private LinearLayout linearLayoutProfile;
+  private LinearLayout signInButton;
+  private TextView logoutButton;
   private GoogleServices googleServices;
 
   @Override
   public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    binding = FragmentProjectsBinding.inflate(inflater, container, false);
+    binding = FragmentProfileBinding.inflate(inflater, container, false);
+    linearLayoutSignIn = binding.getRoot().findViewById(R.id.profile_signIn_view);
+    linearLayoutProfile = binding.getRoot().findViewById(R.id.profile_settings);
     signInButton = binding.getRoot().findViewById(R.id.sign_in_button);
-    projectsNotFoundTxt = binding.getRoot().findViewById(R.id.projects_not_found);
-    projectScreenText = binding.getRoot().findViewById(R.id.project_screen_info);
+    logoutButton = binding.getRoot().findViewById(R.id.logout_btn);
     googleServices = new GoogleServices(requireActivity(), requireContext(), newGoogleServices);
     return binding.getRoot();
   }
@@ -40,11 +44,8 @@ public class ProjectsFragment extends ControlsFragment {
   @Override
   public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    requireView()
-        .findViewById(R.id.btnScan)
-        .setOnClickListener(
-            v -> Navigation.findNavController(requireView()).navigate(R.id.barCodeScannerFragment));
     signInButton.setOnClickListener(v -> signIn());
+    logoutButton.setOnClickListener(v -> googleServices.signOut());
   }
 
   private void signIn() {
@@ -65,32 +66,23 @@ public class ProjectsFragment extends ControlsFragment {
       new GoogleSignInCallback() {
         @Override
         public void onSignInSuccess(GoogleSignInAccount account) {
-          signInButton.setVisibility(View.GONE);
-          projectsNotFoundTxt.setVisibility(View.VISIBLE);
-          projectScreenText.setText("Looks like there are no projects in your google drive yet.");
+          linearLayoutSignIn.setVisibility(View.GONE);
+          linearLayoutProfile.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onSignInFailed(Exception exception) {
-          signInButton.setVisibility(View.VISIBLE);
-          projectsNotFoundTxt.setVisibility(View.GONE);
-          projectScreenText.setText("Set up your profile by signing in with your Google account.");
+          linearLayoutSignIn.setVisibility(View.VISIBLE);
+          linearLayoutProfile.setVisibility(View.GONE);
         }
 
         @Override
         public void onSignOutSuccess() {
-          signInButton.setVisibility(View.VISIBLE);
-          projectsNotFoundTxt.setVisibility(View.GONE);
-          projectScreenText.setText("Set up your profile by signing in with your Google account.");
+          linearLayoutSignIn.setVisibility(View.VISIBLE);
+          linearLayoutProfile.setVisibility(View.GONE);
         }
 
         @Override
         public void onSignOutFailed(Exception exception) {}
       };
-
-  @Override
-  protected void processControllerKeyData(String command) {}
-
-  @Override
-  protected void processUSBData(String data) {}
 }

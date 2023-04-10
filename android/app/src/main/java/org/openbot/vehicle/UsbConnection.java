@@ -52,9 +52,12 @@ public class UsbConnection {
     localBroadcastManager = LocalBroadcastManager.getInstance(this.context);
     usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      usbPermissionIntent = PendingIntent.getActivity(this.context, 0, new Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_IMMUTABLE);
+      usbPermissionIntent =
+          PendingIntent.getActivity(
+              this.context, 0, new Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_IMMUTABLE);
     } else {
-      usbPermissionIntent = PendingIntent.getActivity(this.context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+      usbPermissionIntent =
+          PendingIntent.getActivity(this.context, 0, new Intent(ACTION_USB_PERMISSION), 0);
     }
   }
 

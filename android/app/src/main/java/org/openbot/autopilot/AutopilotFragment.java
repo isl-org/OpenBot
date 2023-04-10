@@ -90,11 +90,10 @@ public class AutopilotFragment extends CameraFragment {
 
     CheckBox bleCb = getView().findViewById(R.id.bleToggle);
     CheckBox USBCb = getView().findViewById(R.id.usbToggle);
-    if(vehicle.getConnectionType().equals("USB")) {
+    if (vehicle.getConnectionType().equals("USB")) {
       USBCb.setVisibility(View.VISIBLE);
       bleCb.setVisibility(View.INVISIBLE);
-    }
-    else if (vehicle.getConnectionType().equals("Bluetooth")){
+    } else if (vehicle.getConnectionType().equals("Bluetooth")) {
       bleCb.setVisibility(View.VISIBLE);
       USBCb.setVisibility(View.INVISIBLE);
     }
@@ -148,10 +147,10 @@ public class AutopilotFragment extends CameraFragment {
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
     binding.bleToggle.setOnClickListener(
-            v -> {
-              binding.bleToggle.setChecked(vehicle.bleConnected());
-              Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
-            });
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+        });
 
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
@@ -177,9 +176,9 @@ public class AutopilotFragment extends CameraFragment {
   }
 
   private void updateCropImageInfo() {
-//        Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
-//        Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
-//     getMaxAnalyseImageSize().getHeight());
+    //        Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
+    //        Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
+    //     getMaxAnalyseImageSize().getHeight());
     frameToCropTransform = null;
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());

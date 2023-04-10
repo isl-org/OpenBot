@@ -1,5 +1,9 @@
 package org.openbot.projects;
 
+import java.io.IOException;
+
 public interface ReadFileCallback {
-    void onFileRead(String fileContents);
+  void onFileReadSuccess(String fileContents);
+
+  void onFileReadFailed(IOException e);
 }

@@ -97,11 +97,15 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
             this,
             (requestKey, result) -> {
               KeyEvent event = result.getParcelable(Constants.DATA);
-              if(KeyEvent.ACTION_UP == event.getAction()){
+              if (KeyEvent.ACTION_UP == event.getAction()) {
                 processKeyEvent(result.getParcelable(Constants.DATA));
               }
-              Control newControl = vehicle.getGameController().processButtonInput(result.getParcelable(Constants.DATA));
-                if(vehicle.getControl().getLeft() != newControl.getLeft() && vehicle.getControl().getRight() != newControl.getRight()){
+              Control newControl =
+                  vehicle
+                      .getGameController()
+                      .processButtonInput(result.getParcelable(Constants.DATA));
+              if (vehicle.getControl().getLeft() != newControl.getLeft()
+                  && vehicle.getControl().getRight() != newControl.getRight()) {
                 vehicle.setControl(newControl);
               }
             });

@@ -9,7 +9,7 @@
         android:title="@string/projects"
         android:icon="@drawable/ic_blockly_projects" />
     <item
-        android:id="@+id/settingsFragment"
+        android:id="@+id/profileFragment"
         android:title="@string/profile"
         android:icon="@drawable/ic_profile"/>
 </menu>

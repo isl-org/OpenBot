@@ -9,71 +9,57 @@
         android:id="@+id/btnScan"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="16dp"
-        android:background="@android:color/transparent"
         android:scaleType="center"
         android:src="@drawable/ic_qr_code_scanner"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/openBotBlue" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <Button
-        android:id="@+id/sign_out_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/red"
-        android:padding="10dp"
-        android:text="Google SignOut"
-        android:textColor="#ffffff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/projects_not_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_marginBottom="10dp"
+            android:text="Oops! No projects found."
+            android:textColor="@color/openBotBlue"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
 
-    <Button
-        android:id="@+id/openbot_run_command"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/green"
-        android:padding="10dp"
-        android:text="Run"
-        android:textColor="#ffffff"
-        app:layout_constraintBottom_toBottomOf="@id/sign_in_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/project_screen_info"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/black_text"
+            android:textSize="16sp"/>
 
-    <TextView
-        android:id="@+id/user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Unknown"
-        android:textColor="@color/semi_transparent"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/openbot_run_command" />
+        <LinearLayout
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/border_radius_layout"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/wait_for_cmd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Loading ..."
-        android:textColor="@color/semi_transparent"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="@id/sign_in_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/sign_in_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign-in with Google"
+                android:textColor="@color/white_text"
+                android:gravity="center"
+                app:drawableLeftCompat="@drawable/ic_google_custom"
+                android:drawablePadding="20dp"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
