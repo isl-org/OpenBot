@@ -17,7 +17,7 @@ export function EditProfileModal(props) {
     const [fullName, setFullName] = useState(user?.displayName);
     const [isAlertSuccess, setIsAlertSuccess] = useState(false)
     const [isAlertError, setIsAlertError] = useState(false)
-    const [isLoader, setIsLoader] = useState(false)
+    const [isLoader, setIsLoader] = useState(false);
     const [userDetails, setUserDetail] = useState({
         displayName: user?.displayName,
         email: user?.email,

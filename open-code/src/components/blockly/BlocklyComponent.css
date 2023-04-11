@@ -21,3 +21,23 @@
     line-height: 2.5rem;
 }
 
+
+.blocklyFieldToggle text {
+    fill: white !important;
+}
+
+.field-toggle-on {
+    fill: green !important;
+}
+
+.field-toggle-off {
+    fill: red !important;
+}
+
+/*.zelos-renderer.dark-theme .blocklyText{*/
+/*    fill: white;*/
+/*}*/
+
+/*.zelos-renderer.light-theme .blocklyText{*/
+/*    fill: black;*/
+/*}*/

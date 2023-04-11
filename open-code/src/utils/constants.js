@@ -4,6 +4,10 @@ import React from "react";
 import {Images} from "./images";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import lightCarousal2 from "../assets/images/scanner-unscreen.gif"
+import darkCarousal2 from "../assets/images/whitescan-unscreen.gif"
+import lightCarousal3 from "../assets/images/carview.gif"
+import darkCarousal3 from "../assets/images/darkMobileVideo.gif"
 export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
 export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_forEach", "controls_flow_statements"];
 
@@ -82,15 +86,15 @@ export const Carousal = [
         carousalHeader: "Save and Download",
         carousalLine1: "Check for errors by compiling the code and, upon successful compilation, generate the QR code.",
         carousalLine2: "Use the OpenBot android application to scan the QR code and successfully save the block code on your device.",
-        videoLight: Images.Carousal2,
-        videoDark: Images.Carousal2Dark,
+        videoLight: lightCarousal2,
+        videoDark: darkCarousal2,
     },
     {
         carousalHeader: "Connect and Drive",
         carousalLine1: "Pair your smartphone with the OpenBot car and run the code that you have downloaded.",
         carousalLine2: "Carry out desired actions such as activating indicator lights, detecting objects, and more on your robot car.",
-        videoLight: Images.Carousal3,
-        videoDark: Images.Carousal3Dark,
+        videoLight: lightCarousal3,
+        videoDark: darkCarousal3,
     }
 ]
 

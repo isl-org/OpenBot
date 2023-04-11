@@ -15,7 +15,8 @@ export class FieldToggle extends Blockly.Field {
         super.init();
         Blockly.Tooltip.bindMouseEvents(this.fieldGroup_);
         this.setValue(this.state_);
-        this.showEditor_()
+        this.showEditor_();
+        this.fieldGroup_.classList.add('blocklyFieldToggle');
     }
 
     showEditor_() {
@@ -36,6 +37,9 @@ export class FieldToggle extends Blockly.Field {
     updateDisplay_() {
         if (this.textElement_) {
             this.textElement_.firstChild.nodeValue = this.state_ ? this.onText_ : this.offText_;
+            const rectElement = this.fieldGroup_.querySelector('rect');
+            rectElement.classList.toggle('field-toggle-on', this.state_);
+            rectElement.classList.toggle('field-toggle-off', !this.state_);
         }
     }
 

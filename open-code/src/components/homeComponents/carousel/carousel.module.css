@@ -43,6 +43,11 @@
     padding-top: 100px;
 }
 
+.videoStyle{
+    width: 28% !important;
+    height: auto!important;
+}
+
 .ImageSave {
     width: 35.5% !important;
     height: 374px;
@@ -139,12 +144,11 @@
     }
 
     .ImageDrag {
-        padding-top: 0px;
+        padding-top: 20px;
     }
 
     .videoStyle {
-        width: 50%;
-        /*height: 40%;*/
+        width: 40% !important;
     }
 
     [class~=dot ] {
