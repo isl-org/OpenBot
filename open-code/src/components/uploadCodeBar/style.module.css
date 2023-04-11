@@ -31,7 +31,7 @@
 .textItem {
     font-family: Gilroy-medium, sans-serif;
     margin-top: 3px;
-    margin-left: 47%;
+    margin-left: -7%;
 }
 
 .barDivLight {
@@ -130,6 +130,7 @@
 
 .iconMargin {
     margin: 10px;
+
 }
 
 .driveStyle {
@@ -149,25 +150,62 @@
 @media (max-width: 768px) {
     .uploadCodeButton {
         height: 2.5rem;
-        width: 80%;
-        margin-left: 0.5rem;
-        margin-top: 2.5rem;
-    }
-
-    .iconMargin {
         width: 40%;
-    }
-
-    .loaderBarDiv {
+        border-radius: 0.3rem;
+        margin-left: 0.5rem;
+        margin-top: 0.40rem;
     }
 
     .operationsDiv {
-        margin-right: 2rem;
+        margin-right: 1rem;
+        width: 60%;
     }
 
     .buttonMargin {
         display: flex;
         margin-top: 20px;
-
     }
+
+    .iconMargin {
+        width: 40%;
+    }
+    .iconDiv {
+        height: 1.4rem;
+        width: 1.5rem;
+    }
+    .iconSpace {
+        width: 12%;
+        margin-left: 5rem;
+    }
+
+    .buttonsDiv {
+        height: 10%;
+    }
+
+    .shrinkDriveIcon {
+        width: 1.5rem;
+    }
+
+    .driveIconStyle {
+        width: 2rem;
+        margin-top: 0.5rem;
+    }
+    .buttonStyle {
+        height: 2.5rem;
+    }
+    .commandSize {
+        width: 1rem;
+        height: 0.98rem;
+    }
+    .loaderItem {
+        margin-left: 45%;
+        margin-top: 8%;
+    }
+    .textItem {
+        margin-top: 2px;
+        margin-left: -18%;
+        font-size: 12px;
+    }
+
+
 }

@@ -104,7 +104,7 @@ export const UploadCode = () => {
                 sx={{
                     color: theme === 'light' ? "#E8E8E8" : "gray",
                 }}
-                size={40}
+                size={isMobile? 20:40}
                 thickness={6.5}
                 value={100}
                 style={{position: "absolute"}}
@@ -120,7 +120,7 @@ export const UploadCode = () => {
                         strokeLinecap: 'round',
                     },
                 }}
-                size={40}
+                size={isMobile? 20:40}
                 thickness={6.5}
             />
         </div>
@@ -133,10 +133,16 @@ export const UploadCode = () => {
     return (
         <div
             className={isLoader ? styles.loaderBarDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight) : styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
-            <div className={styles.loaderItem}>{isLoader ?
-                <CompilationLoader/> : ""}</div>
-            {isLoader ? theme === "dark" ? <WhiteText text={"Compiling Code..."} extraStyle={styles.textItem}/> :
-                <BlackText text={"Compiling Code..."} extraStyle={styles.textItem}/> : ""}
+            <div className={styles.loaderItem}>
+                {isLoader &&
+                    <div style={{display: "flex", flexDirection: "column"}}>
+                        <CompilationLoader/>
+                        {theme === "dark" ?
+                            <WhiteText text={"Compiling Code..."} extraStyle={styles.textItem}/> :
+                            <BlackText text={"Compiling Code..."} extraStyle={styles.textItem}/>}
+                    </div>
+                }
+            </div>
             <div className={styles.buttonsDiv}>
                 <UploadCodeButton buttonSelected={buttonSelected} generateCode={generateCode}
                                   buttonActive={buttonActive} clickedButton={clickedButton}/>
@@ -147,7 +153,7 @@ export const UploadCode = () => {
                     <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
                               buttonActive={buttonActive}/>
                     {!isMobile && <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
-                                buttonActive={buttonActive}/>}
+                                             buttonActive={buttonActive}/>}
                 </div>
             </div>
         </div>
@@ -167,7 +173,6 @@ function UploadCodeButton(params) {
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
     return (
-
         <div className={styles.iconMargin} onClick={generateCode}>
             <button className={styles.uploadCodeButton}
                     style={{opacity: buttonSelected === "uploadCode" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
@@ -190,16 +195,14 @@ function UndoRedo(params) {
         <div className={styles.buttonMargin + " " + styles.iconMargin}>
             <button
                 onClick={clickedButton}
-                style={{
-                    ...UploadBarStyle.buttonStyle, ...UploadBarStyle.undoButtonStyle, ...UploadBarStyle.borderStyle,
-                    opacity: buttonSelected === "undo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
-                }} name={"undo"}>
+                className={styles.buttonStyle + " " + styles.minusStyle + " " + styles.borderStyle}
+                style={{opacity: buttonSelected === "undo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
+                name={"undo"}>
                 <img alt={""} className={styles.commandSize} src={undoIcon}/>
             </button>
-            <button onClick={clickedButton} style={{
-                ...UploadBarStyle.buttonStyle, ...UploadBarStyle.plusStyle,
-                opacity: buttonSelected === "redo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
-            }}
+            <button onClick={clickedButton}
+                    className={styles.plusStyle + " " + styles.buttonStyle}
+                    style={{opacity: buttonSelected === "redo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
                     name={"redo"}>
                 <img alt={""} className={styles.commandSize} src={redoIcon}/>
             </button>
@@ -286,7 +289,7 @@ function UploadInDrive(params) {
             {signInPopUp && <SignInPopUp setSignInPopUp={setSignInPopUp} handleDriveButton={handleDriveButton}/>}
             <div onClick={() => {
                 handleDriveButton()
-            }} className={styles.iconMargin} style={{display: "flex", alignItems: "center"}}>
+            }} className={styles.iconMargin + " " + styles.iconSpace} style={{display: "flex", alignItems: "center"}}>
                 <img alt="drive" className={isDriveLoader ? styles.shrinkDriveIcon : styles.driveIconStyle}
                      src={Images.cloud} style={isDriveLoader ? {
                     position: "absolute",

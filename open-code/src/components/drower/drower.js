@@ -8,6 +8,8 @@ import rightSlider from "../../assets/images/icon/right-slider.png"
 import {ThemeContext} from "../../App"
 import {colors} from "../../utils/color";
 import rightSliderDark from "../../assets/images/icon/right-slider-dark.png"
+import {useTheme} from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export function QrDrawer() {
 
@@ -21,6 +23,8 @@ export function QrDrawer() {
 export default function PersistentDrawerRight() {
     const {theme} = useContext(ThemeContext)
     const {drawer} = useContext(StoreContext)
+    const themes = useTheme();
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     return (
         <Box sx={{display: 'flex', width: 0}}>
             <Drawer
@@ -28,8 +32,8 @@ export default function PersistentDrawerRight() {
                     width: 0,
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
-                        width: '23%',
-                        height: '81.3%',
+                        width: isMobile ? '62%' : '23%',
+                        height: isMobile ? '75%' : '81.3%',
                         marginTop: '5rem',
                         borderLeft: theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)',
                         backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
@@ -44,7 +48,7 @@ export default function PersistentDrawerRight() {
                 <QrCode/>
                 <div style={{display: 'flex'}}>
                     <RightSlider/>
-                    <div><DrawerBody/></div>
+                    <div><DrawerBody isMobile={isMobile}/></div>
 
                 </div>
 
@@ -68,16 +72,16 @@ export const RightSlider = () => {
 }
 
 export const DrawerBody = (props) => {
-
+const{isMobile}=props
     const qrScanSteps = ["Open OpenBot App on your phone", "Tap ScanQR Icon on homepage", "Point your phone to this screen to capture the code"]
 
     return (
         <>
             <div>
-                <h1 style={qrStyles.heading}>Scan and upload your code:</h1>
+                <h1 style={isMobile? qrStyles.mobileHeading:qrStyles.heading}>Scan and upload your code:</h1>
                 {qrScanSteps.map((step, key) => {
                     return (
-                        <div key={key} style={qrStyles.list}>
+                        <div key={key} style={isMobile? qrStyles.mobileList:qrStyles.list}>
                             <div>
                                 <span style={{marginRight: '.7rem'}}>{key + 1}. </span>
                             </div>

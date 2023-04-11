@@ -4,18 +4,21 @@ import {colors} from "../../utils/color";
 import icon from "../../assets/images/icon/OBplaygroundLogo.png"
 import {qrStyles} from "./styles";
 import {StoreContext} from "../../context/context";
+import {useTheme} from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const QrCode = () => {
     const [blockCode, setBlockCode] = useState("");
     const {code} = useContext(StoreContext);
     const {generate} = useContext(StoreContext);
+    const themes = useTheme();
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
     useEffect(() => {
         const qrCodeEncoder = () => {
             setBlockCode(code);
         };
         qrCodeEncoder();
-
     }, [code, generate]);
 
 
@@ -23,7 +26,7 @@ const QrCode = () => {
         <QRCodeCanvas
             id="qrCode"
             value={blockCode}
-            size={200}
+            size={isMobile ? 130 : 200}
             bgColor={colors.whiteFont}
             includeMargin={true}
             imageSettings={{src: icon}}
@@ -31,7 +34,7 @@ const QrCode = () => {
     );
     return (
         <div className="qrcode__container">
-            <div style={qrStyles.main}>{qrcode}</div>
+            <div style={isMobile ? qrStyles.mobileMain : qrStyles.main}>{qrcode}</div>
         </div>
     );
 };
