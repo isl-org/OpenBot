@@ -15,22 +15,30 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/openBotBlue" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/projects_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnScan" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/projects_not_found"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:layout_marginBottom="10dp"
             android:text="Oops! No projects found."
+            android:textAlignment="center"
             android:textColor="@color/openBotBlue"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/project_screen_info"
@@ -38,7 +46,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textColor="@color/black_text"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <LinearLayout
             android:id="@+id/sign_in_button"
@@ -50,15 +58,15 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/sign_in_notes"
+                android:id="@+id/sign_in_btn_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawablePadding="20dp"
+                android:gravity="center"
                 android:text="Sign-in with Google"
                 android:textColor="@color/white_text"
-                android:gravity="center"
-                app:drawableLeftCompat="@drawable/ic_google_custom"
-                android:drawablePadding="20dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:drawableLeftCompat="@drawable/ic_google_custom" />
         </LinearLayout>
     </LinearLayout>
 

@@ -3,6 +3,7 @@ package org.openbot.googleServices;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -20,9 +21,10 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.openbot.R;
+import org.openbot.projects.DriveProjectsAdapter;
 import org.openbot.projects.GoogleSignInCallback;
 import org.openbot.projects.ProjectsFragment;
 
@@ -32,6 +34,8 @@ public class GoogleServices extends ProjectsFragment {
   private final Context mContext;
   private final GoogleSignInCallback mCallback;
   public final GoogleSignInClient mGoogleSignInClient;
+  private SharedPreferences sharedPref;
+  private List<File> driveFiles = new ArrayList<>();
 
   public GoogleServices(Activity activity, Context context, GoogleSignInCallback callback) {
     mActivity = activity;
@@ -41,7 +45,7 @@ public class GoogleServices extends ProjectsFragment {
     // Configure Google Sign-In options
     GoogleSignInOptions gso =
         new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-
+    sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
     // Build a GoogleSignInClient with the options specified by gso
     mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
     GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(context);
@@ -75,6 +79,9 @@ public class GoogleServices extends ProjectsFragment {
               // Handle sign-out result
               if (task.isSuccessful()) {
                 mCallback.onSignOutSuccess();
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("signInMode", "");
+                editor.apply();
                 Log.d(TAG, "signOut:success");
               } else {
                 mCallback.onSignOutFailed(task.getException());
@@ -97,21 +104,21 @@ public class GoogleServices extends ProjectsFragment {
   }
 
   private Drive getDriveService() {
-    GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(getContext());
+    GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(mContext);
     if (googleAccount != null) {
       GoogleAccountCredential credential =
           GoogleAccountCredential.usingOAuth2(
-              getContext(), Collections.singletonList(DriveScopes.DRIVE_FILE));
+              mContext, Collections.singletonList(DriveScopes.DRIVE_FILE));
       credential.setSelectedAccount(googleAccount.getAccount());
       return new Drive.Builder(
               AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential)
-          .setApplicationName(getString(R.string.app_name))
+          .setApplicationName("OpenBot")
           .build();
     }
     return null;
   }
 
-  private void accessDriveFiles() {
+  public void accessDriveFiles(DriveProjectsAdapter adapter) {
     Drive googleDriveService = getDriveService();
     if (googleDriveService != null) {
       new Thread(
@@ -130,7 +137,12 @@ public class GoogleServices extends ProjectsFragment {
                               .setPageToken(pageToken)
                               .execute();
                       List<File> files = result.getFiles();
+                      //                      driveFiles = result.getFiles();
                       for (File file : files) {
+                        if (file.getName().endsWith(".js")) {
+                          driveFiles.add(file);
+                        }
+                        mActivity.runOnUiThread(adapter::notifyDataSetChanged);
                         Log.d(
                             "Google Drive File", "name=" + file.getName() + " id=" + file.getId());
                       }
@@ -144,6 +156,10 @@ public class GoogleServices extends ProjectsFragment {
               })
           .start();
     }
+  }
+
+  public List<File> getDriveFiles() {
+    return driveFiles;
   }
 
   private void downloadFileFromGDrive(String id) {

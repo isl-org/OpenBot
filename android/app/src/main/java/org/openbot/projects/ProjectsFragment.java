@@ -2,6 +2,7 @@ package org.openbot.projects;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
@@ -24,6 +27,8 @@ public class ProjectsFragment extends ControlsFragment {
   private TextView projectScreenText;
   private TextView projectsNotFoundTxt;
   private GoogleServices googleServices;
+  private RecyclerView projectsRV;
+  private DriveProjectsAdapter adapter;
 
   @Override
   public View onCreateView(
@@ -34,6 +39,7 @@ public class ProjectsFragment extends ControlsFragment {
     projectsNotFoundTxt = binding.getRoot().findViewById(R.id.projects_not_found);
     projectScreenText = binding.getRoot().findViewById(R.id.project_screen_info);
     googleServices = new GoogleServices(requireActivity(), requireContext(), newGoogleServices);
+    projectsRV = binding.getRoot().findViewById(R.id.projects_rv);
     return binding.getRoot();
   }
 
@@ -45,6 +51,7 @@ public class ProjectsFragment extends ControlsFragment {
         .setOnClickListener(
             v -> Navigation.findNavController(requireView()).navigate(R.id.barCodeScannerFragment));
     signInButton.setOnClickListener(v -> signIn());
+    showProjectsRv();
   }
 
   private void signIn() {
@@ -87,6 +94,15 @@ public class ProjectsFragment extends ControlsFragment {
         @Override
         public void onSignOutFailed(Exception exception) {}
       };
+
+  private void showProjectsRv() {
+    projectsRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+    SparseArray<int[]> driveRes = new SparseArray<>();
+    driveRes.put(R.layout.projects_list_view, new int[] {R.id.project_name, R.id.project_date});
+    adapter = new DriveProjectsAdapter(requireActivity(), googleServices.getDriveFiles(), driveRes);
+    googleServices.accessDriveFiles(adapter);
+    projectsRV.setAdapter(adapter);
+  }
 
   @Override
   protected void processControllerKeyData(String command) {}

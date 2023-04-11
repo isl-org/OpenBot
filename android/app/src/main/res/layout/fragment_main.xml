@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".main.MainFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -20,5 +20,72 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".CategoryFragment"
         tools:listitem="@layout/item_category" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/signIn_bottom_sheet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/overlay_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/signIn_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/bottom_sheet_bg"
+            android:orientation="vertical"
+            android:padding="20dp"
+            app:behavior_hideable="true"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:layout_constraintBottom_toBottomOf="@+id/list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/sign_in_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/border_radius_layout"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/sign_in_btn_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="20dp"
+                        android:gravity="center"
+                        android:text="Sign-in with Google"
+                        android:textColor="@color/white_text"
+                        android:textSize="16sp"
+                        app:drawableLeftCompat="@drawable/ic_google_custom" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/continue_as_guest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Continue as Guest"
+                    android:textColor="#B3292929"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
