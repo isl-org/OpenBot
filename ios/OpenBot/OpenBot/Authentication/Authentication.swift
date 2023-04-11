@@ -7,9 +7,9 @@ import GoogleSignIn
 import FirebaseCore
 import GoogleAPIClientForREST
 import GTMSessionFetcher
-class Authentication {
+class Authentication  {
     private let service: GTLRDriveService = GTLRDriveService()
-    private var googleSignIn = GIDSignIn.sharedInstance
+    var googleSignIn = GIDSignIn.sharedInstance
     private var userToken: String = ""
     static var googleAuthentication : Authentication = Authentication()
     init(){
@@ -32,12 +32,12 @@ class Authentication {
         return ""
     }
 
-    func googleSignInFunc(clientId: String) {
+   private func googleSignInFunc(clientId: String) {
 
 // Create Google Sign In configuration object.
     if GIDSignIn.sharedInstance.hasPreviousSignIn(){
         let user = GIDSignIn.sharedInstance.currentUser;
-        print("privious sign-in ",user);
+        print("inside previous signin ",user);
         NotificationCenter.default.post(name: .googleSignIn, object: nil);
         return
     }

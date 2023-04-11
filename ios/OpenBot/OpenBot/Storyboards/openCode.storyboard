@@ -84,6 +84,21 @@
             </objects>
             <point key="canvasLocation" x="287.78625954198475" y="-236.61971830985917"/>
         </scene>
+        <!--Edit Profile Fragment-->
+        <scene sceneID="7Sh-gH-tIo">
+            <objects>
+                <viewController storyboardIdentifier="editProfile" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2pS-aH-r85" customClass="editProfileFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1Jc-zi-hhl">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="dga-rv-clg"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n8i-MP-DVI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1283" y="-237"/>
+        </scene>
     </scenes>
     <resources>
         <image name="cancel" width="25" height="25"/>

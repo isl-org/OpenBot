@@ -4,7 +4,7 @@
 
 import Foundation
 import UIKit
-
+import GoogleSignIn
 class profileFragment: UIViewController {
     let shadowSheet = UIView(frame: UIScreen.main.bounds);
     var logoutView: UIView!;
@@ -16,11 +16,10 @@ class profileFragment: UIViewController {
         createSignInBtn();
         createEditProfileAndLogoutLabel();
         createEditProfileAndLogoutIcons()
-        createShadowSheet();
     }
 
     private func createMyProjectLabel() {
-        let label = CustomLabel(text: "My Profile", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 20, y: 90, width: 100, height: 40));
+        let label = CustomLabel(text: "My Profile", fontSize: 20, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 20, y: 90, width: 100, height: 40));
         view.addSubview(label)
     }
 
@@ -39,8 +38,14 @@ class profileFragment: UIViewController {
     private func createEditProfileAndLogoutLabel() {
         let editProfileLabel = CustomLabel(text: "Edit Profile", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 72, y: 154, width: 120, height: 40))
         view.addSubview(editProfileLabel);
+        editProfileLabel.isUserInteractionEnabled = true;
+        let tapOnEditProfile = UITapGestureRecognizer(target: self, action: #selector(editProfileHandler))
+        editProfileLabel.addGestureRecognizer(tapOnEditProfile);
         let logoutLabel = CustomLabel(text: "Logout", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 72, y: editProfileLabel.frame.origin.y + 52, width: 120, height: 40))
         view.addSubview(logoutLabel);
+        logoutLabel.isUserInteractionEnabled = true;
+        let tapOnLogout = UITapGestureRecognizer(target: self, action: #selector(logoutHandler))
+        logoutLabel.addGestureRecognizer(tapOnLogout);
     }
 
     private func createEditProfileAndLogoutIcons() {
@@ -68,7 +73,7 @@ class profileFragment: UIViewController {
         let msg = CustomLabel(text: "Are you sure you want to logout?", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: confirmLogoutLabel.frame.origin.y + 35, width: width, height: 40));
         let cancelBtn = UIButton(frame: CGRect(x: 80, y: msg.frame.origin.y + 50, width: 100, height: 35));
         cancelBtn.setTitle("CANCEL", for: .normal);
-        cancelBtn.addTarget(nil, action: #selector(cancel), for: .touchUpInside)
+        cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         cancelBtn.setTitleColor(Colors.title, for: .normal)
         logoutView.addSubview(confirmLogoutLabel);
         logoutView.addSubview(msg);
@@ -76,19 +81,28 @@ class profileFragment: UIViewController {
         let logoutBtn = UIButton(frame: CGRect(x: cancelBtn.frame.origin.x + 130, y: cancelBtn.frame.origin.y, width: 100, height: 35))
         logoutBtn.setTitle("LOGOUT", for: .normal);
         logoutBtn.setTitleColor(Colors.title, for: .normal)
-        logoutBtn.addTarget(nil, action: #selector(logout), for: .touchUpInside)
+        logoutBtn.addTarget(self, action: #selector(logout), for: .touchUpInside)
         logoutView.addSubview(logoutBtn);
     }
 
+    @objc func editProfileHandler(){
+        let storyboard = UIStoryboard(name: "openCode", bundle: nil)
+        let viewController = (storyboard.instantiateViewController(withIdentifier: "editProfile"));
+        navigationController?.pushViewController(viewController, animated: true);
+    }
+
+    @objc func logoutHandler(){
+        print("inside logoutHandler")
+        createShadowSheet();
+    }
+
     @objc func cancel(_ sender: UIButton) {
-        print("tapped cancel")
-        logoutView.removeFromSuperview();
+        shadowSheet.removeFromSuperview();
     }
 
     @objc func logout(_ sender : UIButton){
-        print("tapped logout")
-        logoutView.removeFromSuperview();
-
+        shadowSheet.removeFromSuperview();
+         GIDSignIn.sharedInstance.signOut()
     }
 
 
