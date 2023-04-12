@@ -6,16 +6,19 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
+import com.google.api.services.drive.model.File;
+import java.util.List;
 import org.openbot.R;
 import org.openbot.common.ControlsFragment;
 import org.openbot.databinding.FragmentProjectsBinding;
@@ -28,6 +31,7 @@ public class ProjectsFragment extends ControlsFragment {
   private TextView projectsNotFoundTxt;
   private GoogleServices googleServices;
   private RecyclerView projectsRV;
+  private LinearLayout noProjectsLayout;
   private DriveProjectsAdapter adapter;
 
   @Override
@@ -35,6 +39,7 @@ public class ProjectsFragment extends ControlsFragment {
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     binding = FragmentProjectsBinding.inflate(inflater, container, false);
+    noProjectsLayout = binding.getRoot().findViewById(R.id.noProjects_layout);
     signInButton = binding.getRoot().findViewById(R.id.sign_in_button);
     projectsNotFoundTxt = binding.getRoot().findViewById(R.id.projects_not_found);
     projectScreenText = binding.getRoot().findViewById(R.id.project_screen_info);
@@ -66,12 +71,14 @@ public class ProjectsFragment extends ControlsFragment {
             Intent data = result.getData();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             googleServices.handleSignInResult(task);
+            showProjectsRv();
           });
 
   private GoogleSignInCallback newGoogleServices =
       new GoogleSignInCallback() {
         @Override
         public void onSignInSuccess(GoogleSignInAccount account) {
+          noProjectsLayout.setVisibility(View.GONE);
           signInButton.setVisibility(View.GONE);
           projectsNotFoundTxt.setVisibility(View.VISIBLE);
           projectScreenText.setText("Looks like there are no projects in your google drive yet.");
@@ -79,6 +86,7 @@ public class ProjectsFragment extends ControlsFragment {
 
         @Override
         public void onSignInFailed(Exception exception) {
+          noProjectsLayout.setVisibility(View.VISIBLE);
           signInButton.setVisibility(View.VISIBLE);
           projectsNotFoundTxt.setVisibility(View.GONE);
           projectScreenText.setText("Set up your profile by signing in with your Google account.");
@@ -86,6 +94,7 @@ public class ProjectsFragment extends ControlsFragment {
 
         @Override
         public void onSignOutSuccess() {
+          noProjectsLayout.setVisibility(View.VISIBLE);
           signInButton.setVisibility(View.VISIBLE);
           projectsNotFoundTxt.setVisibility(View.GONE);
           projectScreenText.setText("Set up your profile by signing in with your Google account.");
@@ -96,12 +105,20 @@ public class ProjectsFragment extends ControlsFragment {
       };
 
   private void showProjectsRv() {
-    projectsRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+    // loader visible
+    projectsRV.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
     SparseArray<int[]> driveRes = new SparseArray<>();
     driveRes.put(R.layout.projects_list_view, new int[] {R.id.project_name, R.id.project_date});
     adapter = new DriveProjectsAdapter(requireActivity(), googleServices.getDriveFiles(), driveRes);
-    googleServices.accessDriveFiles(adapter);
+    googleServices.accessDriveFiles(adapter, noProjectsLayout);
     projectsRV.setAdapter(adapter);
+  }
+
+  /** update projects screen when there is 0 projects on google drive account. */
+  public void updateMessage(LinearLayout noProjectsLayout, List<File> driveFiles) {
+    if (driveFiles.size() <= 0) {
+      noProjectsLayout.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override

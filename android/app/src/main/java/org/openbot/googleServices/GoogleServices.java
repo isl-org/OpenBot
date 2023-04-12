@@ -2,11 +2,9 @@ package org.openbot.googleServices;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import android.widget.LinearLayout;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,19 +26,21 @@ import org.openbot.projects.DriveProjectsAdapter;
 import org.openbot.projects.GoogleSignInCallback;
 import org.openbot.projects.ProjectsFragment;
 
-public class GoogleServices extends ProjectsFragment {
+public class GoogleServices {
   private static final String TAG = "GoogleServices";
   private final Activity mActivity;
   private final Context mContext;
   private final GoogleSignInCallback mCallback;
   public final GoogleSignInClient mGoogleSignInClient;
   private SharedPreferences sharedPref;
+  private ProjectsFragment projectsFragment;
   private List<File> driveFiles = new ArrayList<>();
 
   public GoogleServices(Activity activity, Context context, GoogleSignInCallback callback) {
     mActivity = activity;
     mContext = context;
     mCallback = callback;
+    projectsFragment = new ProjectsFragment();
 
     // Configure Google Sign-In options
     GoogleSignInOptions gso =
@@ -55,20 +55,6 @@ public class GoogleServices extends ProjectsFragment {
       mCallback.onSignInFailed(null);
     }
   }
-
-  public void signIn() {
-    Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-    someActivityResultLauncher.launch(signInIntent);
-  }
-
-  ActivityResultLauncher<Intent> someActivityResultLauncher =
-      registerForActivityResult(
-          new ActivityResultContracts.StartActivityForResult(),
-          result -> {
-            Intent data = result.getData();
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
-          });
 
   public void signOut() {
     mGoogleSignInClient
@@ -118,7 +104,7 @@ public class GoogleServices extends ProjectsFragment {
     return null;
   }
 
-  public void accessDriveFiles(DriveProjectsAdapter adapter) {
+  public void accessDriveFiles(DriveProjectsAdapter adapter, LinearLayout noProjectsLayout) {
     Drive googleDriveService = getDriveService();
     if (googleDriveService != null) {
       new Thread(
@@ -135,17 +121,29 @@ public class GoogleServices extends ProjectsFragment {
                               .setSpaces("drive")
                               .setFields("nextPageToken, files(id, name)")
                               .setPageToken(pageToken)
+                              .setQ("trashed = false")
                               .execute();
                       List<File> files = result.getFiles();
-                      //                      driveFiles = result.getFiles();
+                      String fields = "createdTime, modifiedTime, name, id";
                       for (File file : files) {
                         if (file.getName().endsWith(".js")) {
-                          driveFiles.add(file);
+                          File metaFile =
+                              googleDriveService
+                                  .files()
+                                  .get(file.getId())
+                                  .setFields(fields)
+                                  .execute();
+                          driveFiles.add(metaFile);
                         }
-                        mActivity.runOnUiThread(adapter::notifyDataSetChanged);
-                        Log.d(
-                            "Google Drive File", "name=" + file.getName() + " id=" + file.getId());
                       }
+                      mActivity.runOnUiThread(
+                          new Runnable() {
+                            @Override
+                            public void run() {
+                              adapter.notifyDataSetChanged();
+                              projectsFragment.updateMessage(noProjectsLayout, driveFiles);
+                            }
+                          });
                       pageToken = result.getNextPageToken();
                     } catch (IOException e) {
                       e.printStackTrace();
@@ -182,6 +180,36 @@ public class GoogleServices extends ProjectsFragment {
           .start();
     } else {
       Log.e("Google Drive", "SignIn error - not logged in");
+    }
+  }
+
+  public void renameFile(String fileId, String newTitle) {
+    Drive googleDriveService = getDriveService();
+    if (googleDriveService != null) {
+      try {
+        File file = new File();
+        file.setName(newTitle);
+
+        googleDriveService.files().update(fileId, file).execute();
+
+        Log.d("Google Drive File", "File renamed successfully");
+      } catch (IOException e) {
+        e.printStackTrace();
+        Log.e("Google Drive File", "Error renaming file");
+      }
+    }
+  }
+
+  public void deleteFile(String fileId) {
+    Drive googleDriveService = getDriveService();
+    if (googleDriveService != null) {
+      try {
+        googleDriveService.files().delete(fileId).execute();
+        Log.d("Google Drive File", "File deleted successfully");
+      } catch (IOException e) {
+        e.printStackTrace();
+        Log.e("Google Drive File", "Error deleting file");
+      }
     }
   }
 }
