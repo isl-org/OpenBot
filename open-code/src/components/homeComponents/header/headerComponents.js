@@ -55,10 +55,12 @@ export function LogoSection() {
  */
 export function ProjectName(params) {
     const {projectName, handleClick} = params
+    const themes = useTheme();
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
     return (
         <div className={styles.playgroundName} onClick={handleClick}>
-            <span className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName}</span>
+            <span className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName.slice(0, isMobile? 8:13) + " " + ((projectName.length > (isMobile? 8:13)) ? "..." :"")}</span>
             <img src={downArrow}
                  className={`${styles.infoIcon} ${styles.arrowMargin}`}
                  alt={"arrow"}/>
@@ -78,6 +80,8 @@ export function ProjectNamePopUp(params) {
     const [reNameProject, setRenameProject] = useState("")
     const [openPopUp, setOpenPopUp] = useState(true);
     const inputRef = useRef(null);
+    const themes = useTheme();
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
 
     useEffect(() => {
@@ -97,7 +101,6 @@ export function ProjectNamePopUp(params) {
         setOpenPopUp(false);
         if (!rename)
             setOpen(false)
-
     }
     const handleClickBlur = async () => {
         setRename(false)
@@ -135,7 +138,7 @@ export function ProjectNamePopUp(params) {
                 :
                 <span onClick={() => {
                     setOpen(!open)
-                }} className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName}</span>
+                }} className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName.slice(0, isMobile? 8:13) + " " + ((projectName.length > (isMobile? 8:13)) ? "..." :"")}</span>
             }
             <img src={UpArrow}
                  className={`${styles.infoIcon} ${styles.arrowMargin}`}

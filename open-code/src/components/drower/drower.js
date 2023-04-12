@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import {StoreContext} from "../../context/context";
@@ -26,43 +26,42 @@ export default function PersistentDrawerRight() {
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     return (
-        <Box sx={{display: 'flex', width: 0}}>
-            <Drawer
-                sx={{
-                    width: 0,
-                    flexShrink: 0,
-                    '& .MuiDrawer-paper': {
-                        width: isMobile ? '62%' : '23%',
-                        height: isMobile ? '75%' : '81.3%',
-                        marginTop: '5rem',
-                        borderLeft: theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)',
-                        backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
-                        color: theme === "dark" ? colors.whiteFont : colors.blackFont,
-                    },
-                }}
-                variant="persistent"
-                anchor="right"
-                open={drawer}
-            >
+        <>
 
-                <QrCode/>
-                <div style={{display: 'flex'}}>
-                    <RightSlider/>
-                    <div><DrawerBody isMobile={isMobile}/></div>
-
-                </div>
-
-            </Drawer>
-
-        </Box>
+            <Box sx={{display: 'flex', width: 0}}>
+                <Drawer
+                    sx={{
+                        width: 0,
+                        flexShrink: 0,
+                        '& .MuiDrawer-paper': {
+                            width: isMobile ? '62%' : '23%',
+                            height: isMobile ? '75%' : '81.3%',
+                            marginTop: '5rem',
+                            borderLeft: theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)',
+                            backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
+                            color: theme === "dark" ? colors.whiteFont : colors.blackFont,
+                        },
+                    }}
+                    variant="persistent"
+                    anchor="right"
+                    open={drawer}
+                >
+                    <QrCode/>
+                    <div style={{display: 'flex'}}>
+                        <div><DrawerBody isMobile={isMobile}/></div>
+                    </div>
+                </Drawer>
+            </Box>
+        </>
     );
 }
 
 export const RightSlider = () => {
-    const {setDrawer} = useContext(StoreContext)
+    const {setDrawer, drawer} = useContext(StoreContext)
     const {theme} = useContext(ThemeContext)
+
     const closeDrawer = () => {
-        setDrawer(false);
+        setDrawer(!drawer);
     }
     return (
         <div style={qrStyles.rightSlider} onClick={closeDrawer}>
@@ -72,21 +71,20 @@ export const RightSlider = () => {
 }
 
 export const DrawerBody = (props) => {
-const{isMobile}=props
+    const {isMobile} = props
     const qrScanSteps = ["Open OpenBot App on your phone", "Tap ScanQR Icon on homepage", "Point your phone to this screen to capture the code"]
 
     return (
         <>
             <div>
-                <h1 style={isMobile? qrStyles.mobileHeading:qrStyles.heading}>Scan and upload your code:</h1>
+                <h1 style={isMobile ? qrStyles.mobileHeading : qrStyles.heading}>Scan and upload your code:</h1>
                 {qrScanSteps.map((step, key) => {
                     return (
-                        <div key={key} style={isMobile? qrStyles.mobileList:qrStyles.list}>
+                        <div key={key} style={isMobile ? qrStyles.mobileList : qrStyles.list}>
                             <div>
                                 <span style={{marginRight: '.7rem'}}>{key + 1}. </span>
                             </div>
                             <div>{step}</div>
-
                         </div>
                     )
                 })}

@@ -19,7 +19,7 @@ export function ProfileOptionModal(props) {
         setIsHelpCenterModal,
         setIsLogoutModal,
     } = props
-    const {theme, toggleTheme,setUser} = useContext(ThemeContext);
+    const {theme, toggleTheme, setUser} = useContext(ThemeContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const location = useLocation();
@@ -60,7 +60,10 @@ export function ProfileOptionModal(props) {
                 }
                 {isOnPlaygroundPage && isMobile &&
                     <>
-                        <PopUpInRowText onClick={() => toggleTheme(!theme)}
+                        <PopUpInRowText onClick={() => {
+                            handleClose()
+                            toggleTheme(!theme)
+                        }}
                                         text={"Change Theme"}
                                         icon={theme === Themes.dark ? Images.lightThemeIcon : Images.blueTheme}/>
                         <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"How To Upload"}

@@ -36,7 +36,7 @@ export function Header() {
 
     useEffect(() => {
         auth.onAuthStateChanged(function (currentUser) {
-            setUser({
+            setUser({  
                 photoURL: currentUser?.photoURL,
                 displayName: currentUser?.displayName,
                 email: currentUser?.email,

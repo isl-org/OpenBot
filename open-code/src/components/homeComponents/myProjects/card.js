@@ -143,8 +143,10 @@ function Card(props) {
                                          style={{width: `${props.projectData.projectName?.length * 1.5}ch`}}
                                          value={reNameProject}
                         /> : theme === "dark" ?
-                            <WhiteText extraStyle={styles.CardHeading} text={reNameProject}/> :
-                            <BlackText extraStyle={styles.CardHeading} text={reNameProject}/>
+                            <WhiteText extraStyle={styles.CardHeading}
+                                       text={reNameProject.slice(0, isMobile ? 8 : 13) + " " + ((reNameProject.length > (isMobile ? 8 : 13)) ? "..." : "")}/> :
+                            <BlackText extraStyle={styles.CardHeading}
+                                       text={reNameProject.slice(0, isMobile ? 8 : 13) + " " + ((reNameProject.length > (isMobile ? 8 : 13)) ? "..." : "")}/>
                         }
                     </div>
                     <img alt="pencil-icon" src={theme === Themes.dark ? Images.darkDots : Images.dots}
