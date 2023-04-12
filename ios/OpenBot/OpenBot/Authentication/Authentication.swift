@@ -7,15 +7,19 @@ import GoogleSignIn
 import FirebaseCore
 import GoogleAPIClientForREST
 import GTMSessionFetcher
-class Authentication  {
+import FirebaseAuth
+
+class Authentication {
     private let service: GTLRDriveService = GTLRDriveService()
     var googleSignIn = GIDSignIn.sharedInstance
     private var userToken: String = ""
-    static var googleAuthentication : Authentication = Authentication()
-    init(){
+    static var googleAuthentication: Authentication = Authentication()
+
+    init() {
         googleAuthLogin();
     }
-    func googleAuthLogin(){
+
+    func googleAuthLogin() {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
             return
         }
@@ -32,15 +36,14 @@ class Authentication  {
         return ""
     }
 
-   private func googleSignInFunc(clientId: String) {
-
+    private func googleSignInFunc(clientId: String) {
 // Create Google Sign In configuration object.
-    if GIDSignIn.sharedInstance.hasPreviousSignIn(){
-        let user = GIDSignIn.sharedInstance.currentUser;
-        print("inside previous signin ",user);
-        NotificationCenter.default.post(name: .googleSignIn, object: nil);
-        return
-    }
+        if GIDSignIn.sharedInstance.hasPreviousSignIn() {
+            let user = GIDSignIn.sharedInstance.currentUser;
+            print("inside previous signin ", user)
+            NotificationCenter.default.post(name: .googleSignIn, object: nil);
+            return
+        }
         let config = GIDConfiguration(clientID: clientId)
         GIDSignIn.sharedInstance.configuration = config
         let scenes = UIApplication.shared.connectedScenes
@@ -58,6 +61,14 @@ class Authentication  {
             let user = signInResult?.user
 //             If sign in succeeded, display the app's main content View.
             let userId = user?.userID ?? ""
+            let idToken = user?.idToken?.tokenString
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken!,
+                    accessToken: user?.accessToken.tokenString ?? "")
+            Auth.auth().signIn(with: credential) { result, error in
+                print("hello result",result?.user.email)
+            }
+
+            print("credential ",credential);
             print("Google User ID: \(userId)")
             let userIdToken = user?.accessToken
             print("Google ID Token: \(userIdToken?.tokenString)")
@@ -78,7 +89,6 @@ class Authentication  {
                 // Request additional Drive scope.
             }
             self.service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
-
         }
     }
 
@@ -105,7 +115,6 @@ class Authentication  {
             }
         })
     }
-
 
 
 }

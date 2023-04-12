@@ -4,6 +4,7 @@
 
 import Foundation
 import UIKit
+
 extension UIButton {
     func setInsets(
             forContentPadding contentPadding: UIEdgeInsets,
@@ -18,6 +19,25 @@ extension UIButton {
         button.setTitle("Button Title", for: .normal)
     }
 }
-class CustomButton : UIButton{
+
+class CustomButton: UIButton {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    convenience init(text: String, frame: CGRect,selector :Selector) {
+        self.init(frame: frame)
+        print("text",text)
+        setTitle(text, for: .normal);
+        layer.cornerRadius = 10;
+        layer.borderColor = Colors.title?.cgColor
+        layer.borderWidth = 2;
+        setTitleColor(UIColor(named: "gamepad"), for: .normal);
+        addTarget(nil, action: selector, for: .touchUpInside);
+    }
+
 
 }
