@@ -103,7 +103,7 @@ export const Toolbox = (props) => {
                     </Value>
                 </Block>
             </Category>
-            <Category name="LED" colour={"#506481"}>
+            <Category name="Indicator" colour={"#506481"}>
                 <Block type="leftIndicator_led"/>
                 <Block type="rightIndicator_led"/>
                 <Block type="indicatorStatus"/>
@@ -112,11 +112,23 @@ export const Toolbox = (props) => {
                 {/*<Block type="back_led"/>*/}
                 {/*<Block type="status_led"/>*/}
             </Category>
+            <Category name="LED" colour={"#61A8EC"}>
+                <Block type="brightness"/>
+            </Category>
+            <Category name="Controller" colour={"#8156C9"}>
+                <Block type="controllerMode">
+                    <Field  type="dropdown" shape="ellipse"/>
+                </Block>
+                <Block type="driveModeControls"/>
+                {/*<Block type="dualDrive"/>*/}
+                {/*<Block type="joystick"/>*/}
+                {/*<Block type="gamepad"/>*/}
+            </Category>
+
             <Category name="Phone Sensors" colour={"C26F87"}>
                 <Block type="gyroscope_reading"/>
                 <Block type="acceleration_reading"/>
                 <Block type="magnetic_reading"/>
-                {/*<Block type="toggle_switch"/>*/}
             </Category>
             <Category name="Sound" colour={"#5BBC73"}>
                 <Block type="soundIs"/>,
@@ -125,6 +137,7 @@ export const Toolbox = (props) => {
                 </Block>,
             </Category>
             <Category name="Sensors" colour={"#61A8EC"}>
+                <Block type="bumper"/>
                 <Block type="sonarReading"/>
                 <Block type="speedReading"/>
                 <Block type="voltageDividerReading"/>
@@ -140,6 +153,8 @@ export const Toolbox = (props) => {
                 <Block type="speedHigh"/>
             </Category>
             <Category name="Movement" colour={"#DA4B5D"}>
+                <Block type="motorDirection"/>
+                <Block type="stopMotor"/>
                 <Block type="forward&BackwardAtSpeed"/>
                 <Block type="forward&BackwardAtSpeedForTime"/>
                 <Block type="left&RightAtSpeed"/>

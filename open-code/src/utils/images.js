@@ -30,6 +30,11 @@ import avatar from "../assets/images/icon/Avatars.png";
 import infoLight from "../assets/images/icon/infoLight.png"
 import blueTheme from "../assets/images/icon/moon.png";
 import login from "../assets/images/icon/login.png"
+import gameIcon from "../assets/images/icon/game-icon.png";
+import joystickIcon from "../assets/images/icon/joyStick-icon.png";
+import dualDriveIcon from "../assets/images/icon/dualDrive-icon.png";
+import gamepadIcon from "../assets/images/icon/gamepad-icon.png";
+import phoneIcon from "../assets/images/icon/phone-icon.png"
 
 export const Images = {
     helpIcon: helpIcon,
@@ -64,4 +69,9 @@ export const Images = {
     infoLight:infoLight,
     blueTheme:blueTheme,
     login:login,
+    gameIcon:gameIcon,
+    joystickIcon:joystickIcon,
+    dualDriveIcon:dualDriveIcon,
+    gamepadIcon:gamepadIcon,
+    phoneIcon:phoneIcon
 }

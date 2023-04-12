@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@blockly/block-plus-minus": "^4.0.12",
     "@blockly/field-date": "^6.0.12",
+    "@blockly/field-slider": "^4.0.12",
     "@blockly/plugin-modal": "^4.0.13",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",

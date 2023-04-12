@@ -47,12 +47,18 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
     let fileMetadata;
     let mediaPart;
     if (fileType === Constants.js) {
-        metadataFields = '';
+        metadataFields = 'appProperties,id,name,createdTime';
         fileMetadata = {
             name: getCurrentProject().projectName + ".js",
             parents: [folderId],
             mimeType: "text/javascript",
             content_type: "application/json; charset=UTF-8",
+            appProperties: {
+                date: data.createdDate,
+                id: data.id,
+                storage: "drive",
+                time: data.time,
+            },
         };
     } else if (fileType === Constants.xml) {
         metadataFields = 'appProperties,id,name,createdTime';

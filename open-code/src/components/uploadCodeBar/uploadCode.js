@@ -231,7 +231,6 @@ function UploadInDrive(params) {
                 .then((res) => {
                         setIsDriveLoader(false);
                         res && setTimeout(() => {
-
                             setShowTick(true);
                         }, 1000);
                     }

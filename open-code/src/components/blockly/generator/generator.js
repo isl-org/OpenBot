@@ -363,84 +363,176 @@ javascriptGenerator['forever'] = function (block) {
     return code;
 };
 
-javascriptGenerator['leftIndicator_led'] = function(block) {
+javascriptGenerator['leftIndicator_led'] = function (block) {
     const toggleState = block.getFieldValue('TOGGLE_STATE');
-    function leftIndicatorStatus(){
-        if(toggleState==="ON"){
+
+    function leftIndicatorStatus() {
+        if (toggleState === "ON") {
             return "leftIndicatorOn()";
-        }
-        else if(toggleState==="OFF"){
+        } else if (toggleState === "OFF") {
             return "leftIndicatorOff()";
         }
     }
+
     let code = "";
-    code+=leftIndicatorStatus()+";\n";
+    code += leftIndicatorStatus() + ";\n";
     return code;
 };
 
-javascriptGenerator['rightIndicator_led'] = function(block) {
+javascriptGenerator['rightIndicator_led'] = function (block) {
     const toggleState = block.getFieldValue('TOGGLE_STATE');
 
-    function rightIndicatorStatus(){
-        if(toggleState==="ON"){
+    function rightIndicatorStatus() {
+        if (toggleState === "ON") {
             return "rightIndicatorOn()";
-        }
-        else if(toggleState==="OFF"){
+        } else if (toggleState === "OFF") {
             return "rightIndicatorOff()";
         }
     }
+
     let code = "";
-    code+=rightIndicatorStatus()+";\n";
+    code += rightIndicatorStatus() + ";\n";
     return code;
 };
 
-javascriptGenerator['indicatorStatus'] = function(block) {
+javascriptGenerator['indicatorStatus'] = function (block) {
     const toggleState = block.getFieldValue('TOGGLE_STATE');
-    function indicatorStatus(){
-        if(toggleState==="ON"){
+
+    function indicatorStatus() {
+        if (toggleState === "ON") {
             return "indicatorOn()";
-        }
-        else if(toggleState==="OFF"){
+        } else if (toggleState === "OFF") {
             return "indicatorOff()";
         }
     }
+
     let code = '';
-    code+=indicatorStatus()+";\n";
+    code += indicatorStatus() + ";\n";
     return code;
 };
 
-javascriptGenerator['gyroscope_reading'] = function(block) {
+javascriptGenerator['gyroscope_reading'] = function (block) {
     let code = "";
-    code+="gyroscopeReading()"+";\n";
+    code += "gyroscopeReading()" + ";\n";
     return code;
 };
 
-javascriptGenerator['acceleration_reading'] = function(block) {
+javascriptGenerator['acceleration_reading'] = function (block) {
     let code = "";
-    code+="accelerationReading()"+";\n";
+    code += "accelerationReading()" + ";\n";
     return code;
 };
 
-javascriptGenerator['magnetic_reading'] = function(block) {
+javascriptGenerator['magnetic_reading'] = function (block) {
     let code = "";
-    code+="magneticReading()"+";\n";
+    code += "magneticReading()" + ";\n";
     return code;
 };
 
-javascriptGenerator['speedSlow'] = function(block) {
+javascriptGenerator['speedSlow'] = function (block) {
     let code = "";
-    code+="speedSlow()"+";\n";
+    code += "speedSlow()" + ";\n";
     return code;
 };
 
-javascriptGenerator['speedMedium'] = function(block) {
+javascriptGenerator['speedMedium'] = function (block) {
     let code = "";
-    code+="speedMedium()"+";\n";
+    code += "speedMedium()" + ";\n";
     return code;
 };
 
-javascriptGenerator['speedHigh'] = function(block) {
+javascriptGenerator['speedHigh'] = function (block) {
     let code = "";
-    code+="speedHigh()"+";\n";
+    code += "speedHigh()" + ";\n";
     return code;
+};
+
+javascriptGenerator['controllerMode'] = function (block) {
+    let dropdown_controller = block.getFieldValue('controller');
+
+    function selectController() {
+        switch (dropdown_controller) {
+            case "phone": {
+                return "phoneController()";
+                break;
+            }
+            case "gamepad": {
+                return "gamepadController()";
+                break;
+            }
+        }
+    }
+
+    let code = '';
+    code += selectController() + ";\n";
+    return code;
+};
+
+
+javascriptGenerator['driveModeControls'] = function (block) {
+    let dropdown_driveModeControls = block.getFieldValue('controller');
+
+    function selectController() {
+        switch (dropdown_driveModeControls) {
+            case "dualDrive": {
+                return "dualDriveMode()";
+                break;
+            }
+            case "joystick": {
+                return "joystickMode()";
+                break;
+            }
+            case "game": {
+                return "gameMode()";
+                break;
+            }
+        }
+    }
+
+    let code = '';
+    code += selectController() + ";\n";
+    return code;
+};
+
+
+javascriptGenerator['motorDirection'] = function (block) {
+    let dropdown_driveModeControls = block.getFieldValue('motor_direction');
+
+    function selectMotorDirection() {
+        switch (dropdown_driveModeControls) {
+            case "forward": {
+                return "motorForward()";
+                break;
+            }
+            case "backward": {
+                return "motorBackward()";
+                break;
+            }
+        }
+    }
+
+    let code = '';
+    code += selectMotorDirection() + ";\n";
+    return code;
+};
+
+javascriptGenerator['stopMotor'] = function (block) {
+    let code = "";
+    code += "stopMotor()" + ";\n";
+    return code;
+};
+
+
+javascriptGenerator['bumper'] = function (block) {
+    let code = "";
+    code += "bumperCollision()" + ";\n";
+    return code;
+};
+
+
+javascriptGenerator['brightness'] = function (block) {
+    let value = block.getFieldValue('slider');
+    let code = "";
+    code += "ledBrightness(" + value + ");\n";
+    return code
 };

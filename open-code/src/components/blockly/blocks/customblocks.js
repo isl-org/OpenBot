@@ -2,8 +2,10 @@ import * as Blockly from "blockly/core";
 import '../fields/BlocklyReactField';
 import '../fields/DateField';
 import '@blockly/field-date';
+import '@blockly/field-slider';
 import {FieldToggle} from "./field_toggle";
-
+import '@blockly/block-plus-minus';
+import {Images} from "../../../utils/images";
 
 let reactDateField = {
     "type": "test_react_date_field",
@@ -874,7 +876,6 @@ Blockly.Blocks["rightIndicator_led"] = {
                     "offText": "OFF"
                 }
             ],
-            "inputsInline": true,
             "previousStatement": null,
             "nextStatement": null,
             "colour": 230,
@@ -1000,9 +1001,161 @@ Blockly.Blocks["speedHigh"] = {
 };
 
 
+Blockly.Blocks["controllerMode"] = {
+    init: function () {
+        this.jsonInit({
+                "type": "block_type",
+                "message0": "controller switched to %1",
+                "args0": [
+                    {
+                        "type": "field_dropdown",
+                        "name": "controller",
+                        "options": [
+                            [
+                                {"src": Images.phoneIcon, "width": 25, "height": 25, "alt": "phone"},
+                                "phone"
+                            ],
+                            [
+                                {"src": Images.gamepadIcon, "width": 25, "height": 25, "alt": "gamepad"},
+                                "gamepad"
+                            ]
+                        ]
+                    }
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 230,
+                "tooltip": "",
+                "helpUrl": ""
+            }
+        );
+    }
+};
 
 
+Blockly.Blocks["driveModeControls"] = {
+    init: function () {
+        this.jsonInit({
+                "type": "block_type",
+                "message0": "drive mode switched to %1",
+                "args0": [
+                    {
+                        "type": "field_dropdown",
+                        "name": "controller",
+                        "options": [
+                            [
+                                {"src": Images.dualDriveIcon, "width": 25, "height": 25, "alt": "dualDrive"},
+                                "dualDrive"
+                            ],
+                            [
+                                {"src": Images.joystickIcon, "width": 25, "height": 25, "alt": "joystick"},
+                                "joystick"
+                            ],
+                            [
+                                {"src": Images.gameIcon, "width": 25, "height": 25, "alt": "game"},
+                                "game"
+                            ],
+                        ]
+                    }
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 230,
+                "tooltip": "",
+                "helpUrl": ""
+            }
+        );
+    }
+};
 
+
+Blockly.Blocks["motorDirection"] = {
+    init: function () {
+        this.jsonInit({
+                "type": "block_type",
+                "message0": "switch direction of motor to %1",
+                "args0": [
+                    {
+                        "type": "field_dropdown",
+                        "name": "motor_direction",
+                        "options": [
+                            [
+                                "forward",
+                                "forward"
+                            ],
+                            [
+                                "backward",
+                                "backward"
+                            ],
+                        ]
+                    }
+                ],
+                "previousStatement": null,
+                "nextStatement": null,
+                "colour": 230,
+                "tooltip": "",
+                "helpUrl": ""
+            }
+        );
+    }
+};
+
+
+Blockly.Blocks["stopMotor"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "stop motor immediately",
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["bumper"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "check if bumper collided with an obstacle",
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+
+Blockly.Blocks["brightness"] = {
+    init: function () {
+        this.jsonInit({
+
+            "type": "block_type",
+            "message0": "brightness :  %1",
+            "args0": [
+                {
+                    "type": "field_slider",
+                    "name": "slider",
+                    "value": 50,
+                    "min": 0, // Minimum value for the slider
+                    "max": 200 // Maximum value for the slider
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+
+        });
+    }
+};
 
 
 

@@ -27,12 +27,21 @@
 }
 
 .field-toggle-on {
-    fill: green !important;
+    fill: #4ddc64 !important;
 }
 
 .field-toggle-off {
-    fill: red !important;
+    fill: #95a5a6 !important;
 }
+
+.blocklyDropDownMenu .goog-menuitem {
+    border-radius: 50px; /* Adjust the value to achieve the desired ellipse shape */
+}
+
+.blocklyMenuItemSelected .blocklyMenuItemCheckbox {
+    background: url("../../assets/images/icon/blockly-icons.png") no-repeat -48px -16px;
+}
+
 
 /*.zelos-renderer.dark-theme .blocklyText{*/
 /*    fill: white;*/
