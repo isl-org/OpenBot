@@ -1137,7 +1137,7 @@ Blockly.Blocks["brightness"] = {
         this.jsonInit({
 
             "type": "block_type",
-            "message0": "brightness :  %1",
+            "message0": "brightness of tail and head LEDs :  %1",
             "args0": [
                 {
                     "type": "field_slider",
