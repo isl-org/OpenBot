@@ -151,7 +151,7 @@ class GameViewController: UIViewController {
         }
     }
 
-    /// function to change the change in L2 R2 buttons
+    /// function to handle the change in L2 R2 buttons
     ///
     /// - Parameters:
     ///   - button: button name

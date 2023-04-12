@@ -160,45 +160,43 @@ class GameController: GCPhysicalInputProfile {
     /// - Returns: Events
     public func processControllerKeyData(element: GCControllerElement) -> Any {
 
-        switch (element.localizedName) {
-        case Keymap.KEYCODE_BUTTON_X.rawValue:
+        switch (element) {
+        case connectedController?.extendedGamepad?.buttonX:
             if (connectedController?.extendedGamepad?.buttonX.isPressed == false) {
                 return IndicatorEvent.LEFT
             }
-        case Keymap.KEYCODE_BUTTON_Y.rawValue:
+        case connectedController?.extendedGamepad?.buttonY:
             if (connectedController?.extendedGamepad?.buttonY.isPressed == false) {
                 return IndicatorEvent.STOP
             }
-        case Keymap.KEYCODE_BUTTON_B.rawValue:
+        case connectedController?.extendedGamepad?.buttonB:
             if (connectedController?.extendedGamepad?.buttonB.isPressed == false) {
                 return IndicatorEvent.RIGHT
             }
-        case Keymap.KEYCODE_BUTTON_A.rawValue:
+        case connectedController?.extendedGamepad?.buttonA:
             if (connectedController?.extendedGamepad?.buttonA.isPressed == false) {
                 return CMD_Events.TOGGLE_LOGS
             }
-        case Keymap.KEYCODE_BUTTON_START.rawValue:
+        case connectedController?.extendedGamepad?.buttonOptions:
             if (connectedController?.extendedGamepad?.buttonOptions?.isPressed == false) {
                 return CMD_Events.TOGGLE_NOISE
             }
-        case Keymap.KEYCODE_BUTTON_L1.rawValue:
+        case connectedController?.extendedGamepad?.leftShoulder:
             if (connectedController?.extendedGamepad?.leftShoulder.isPressed == false) {
                 return CMD_Events.CMD_DRIVE_MODE
             }
-        case Keymap.KEYCODE_BUTTON_R1.rawValue:
+        case connectedController?.extendedGamepad?.rightShoulder:
             if (connectedController?.extendedGamepad?.rightShoulder.isPressed == false) {
                 return CMD_Events.TOGGLE_NETWORK
             }
-        case Keymap.KEYCODE_BUTTON_THUMBL.rawValue:
+        case connectedController?.extendedGamepad?.leftThumbstickButton:
             if (connectedController?.extendedGamepad?.leftThumbstickButton?.isPressed == false) {
                 return CMD_Events.CMD_SPEED_DOWN
             }
-        case Keymap.KEYCODE_BUTTON_THUMBR.rawValue:
+        case connectedController?.extendedGamepad?.rightThumbstickButton:
             if (connectedController?.extendedGamepad?.rightThumbstickButton?.isPressed == false) {
                 return CMD_Events.CMD_SPEED_UP
             }
-        case Keymap.CMD_INDICATOR_STOP.rawValue:
-            return IndicatorEvent.STOP
         default:
             return ""
         }
