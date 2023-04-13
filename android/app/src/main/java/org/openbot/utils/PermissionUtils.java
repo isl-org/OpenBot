@@ -9,6 +9,7 @@ import static org.openbot.utils.Constants.REQUEST_CONTROLLER_PERMISSIONS;
 import static org.openbot.utils.Constants.REQUEST_LOGGING_PERMISSIONS;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -287,5 +288,9 @@ public class PermissionUtils {
   public static void showLocationPermissionLoggingToast(Activity activity) {
     showPermissionsLoggingToast(
         activity, activity.getResources().getString(R.string.location_permission_denied));
+  }
+
+  public static boolean getBluetoothStatus() {
+    return BluetoothAdapter.getDefaultAdapter().isEnabled();
   }
 }

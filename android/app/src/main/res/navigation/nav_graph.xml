@@ -50,6 +50,26 @@
         android:id="@+id/open_settings_fragment"
         app:destination="@id/settingsFragment"
         />
+
+    <fragment
+        android:id="@+id/bluetoothFragment"
+        android:name="org.openbot.main.BluetoothFragment"
+        android:label="@string/bluetooth" />
+
+    <action
+        android:id="@+id/open_bluetooth_fragment"
+        app:destination="@id/bluetoothFragment"
+        />
+
+    <fragment
+        android:id="@+id/usbFragment"
+        android:name="org.openbot.main.UsbFragment"
+        android:label="@string/usb" />
+
+    <action
+        android:id="@+id/open_usb_fragment"
+        app:destination="@id/usbFragment"
+        />
     <fragment
         android:id="@+id/loggerFragment"
         android:name="org.openbot.logging.LoggerFragment"
