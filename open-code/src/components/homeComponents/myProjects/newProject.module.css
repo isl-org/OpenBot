@@ -299,7 +299,8 @@
     opacity: 0.2;
     margin: 5px 0px 0 0px;
 }
-.inputTitle{
+
+.inputTitle {
     /*margin-left: -10px;*/
 }
 
@@ -360,11 +361,13 @@
     .PencilIcon {
         margin: 7% 10% 0 0px;
     }
+
     .Date {
         padding-left: 15%;
         font-size: 10px !important;
         font-weight: 200;
     }
+
     .model {
         width: 80%;
         height: 11rem;
@@ -396,30 +399,51 @@
         padding-left: 0%;
         margin: -20px;
     }
-    .inputTitle{
+
+    .inputTitle {
         /*margin-left: -10px;*/
     }
+
     .inputExtraStyle {
         height: 50px;
         width: 80%;
     }
+
     .extraInputStyle {
         font-size: 13px !important;
     }
 
     .SaveBtn {
-         width: 150px;
-        height:30px;
+        width: 150px;
+        height: 30px;
         font-size: 14px;
         margin-left: 62%;
         font-family: Gilroy-Regular;
-
     }
 
-    .creatButton{
+    .creatButton {
         width: 91%;
         margin-top: 30px;
         display: flex;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .Main {
+        padding-left: 3.8%;
+        padding-top: 12.6%;
+    }
+
+    .MessageIcon {
+        width: 45%;
+        margin-top: 3%;
+        margin-left: -3%;
+    }
+
+    .Message {
+        font-size: 12px;
+        padding:10px 2px;
+        margin-left: -15px;
     }
 
 }

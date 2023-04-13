@@ -75,14 +75,6 @@
     color: #000000;
 }
 
-.SaveAndDownloadContent {
-    font-family: 'Gilroy-Regular', serif;
-    font-size: 18px;
-    line-height: 27px;
-    text-align: left;
-    width: 82%;
-}
-
 [class~=control-dots ] {
     background-color: transparent;
     bottom: -10px !important;
@@ -120,9 +112,9 @@
     margin: 0 8px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 979px) {
     .Content {
-        padding-right: 3.4%;
+        /*padding-right: 3.4%;*/
         flex-direction: column;
         padding-top: 6.5%;
     }
@@ -160,6 +152,15 @@
     /*.carousel .control-dots .dot {*/
     /*    margin: 0 3px !important;*/
     /*}*/
+}
 
 
+/*tablet portrait mode*/
+@media (min-width: 744px) and (max-width: 800px){
+    .DragAndDropHeading{
+        font-size: 22px;
+    }
+    .DragAndDropContent{
+        font-size: 16px;
+    }
 }

@@ -58,6 +58,7 @@ export const UploadCode = () => {
                     setDrawer(true);
                 }
             ).catch((err) => {
+                console.log("err::", err)
                 setIsLoader(false);
                 errorToast("Failed to Uplaod")
             })
@@ -104,7 +105,7 @@ export const UploadCode = () => {
                 sx={{
                     color: theme === 'light' ? "#E8E8E8" : "gray",
                 }}
-                size={isMobile? 20:40}
+                size={isMobile ? 20 : 40}
                 thickness={6.5}
                 value={100}
                 style={{position: "absolute"}}
@@ -120,7 +121,7 @@ export const UploadCode = () => {
                         strokeLinecap: 'round',
                     },
                 }}
-                size={isMobile? 20:40}
+                size={isMobile ? 20 : 40}
                 thickness={6.5}
             />
         </div>
@@ -236,6 +237,7 @@ function UploadInDrive(params) {
                     }
                 )
                 .catch((err) => {
+                    console.log("err:::", err)
                     setIsDriveLoader(false);
                     errorToast("Failed to upload");
                     console.log(err)
@@ -282,7 +284,6 @@ function UploadInDrive(params) {
         </div>
     }
 
-
     return (
         <>
             {signInPopUp && <SignInPopUp setSignInPopUp={setSignInPopUp} handleDriveButton={handleDriveButton}/>}
@@ -323,7 +324,6 @@ function UploadInDrive(params) {
                     )}
                 </AnimatePresence>
             </div>
-
             {/*// <button className={styles.driveStyle + " " + styles.iconMargin}*/}
         </>
     )

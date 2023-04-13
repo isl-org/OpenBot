@@ -48,9 +48,24 @@ export const qrStyles = {
         justifyContent: 'center',
         alignItems: 'center',
     },
+    leftSlider:{
+        width: '22px',
+        height: '149px',
+        backgroundColor: 'rgba(76, 156, 214, 0.15)',
+        border: '1px solid #4C9CD626',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: ' 15px 0 0 15px',
+    },
     rightSliderIcon: {
         height: '1rem',
         width: '1rem'
+    },
+    leftSliderIcon:{
+        height: '1rem',
+        width: '1rem',
+
     },
     drawerLight: {
         color: colors.blackFont,

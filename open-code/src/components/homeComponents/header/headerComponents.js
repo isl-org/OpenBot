@@ -60,7 +60,7 @@ export function ProjectName(params) {
 
     return (
         <div className={styles.playgroundName} onClick={handleClick}>
-            <span className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName.slice(0, isMobile? 8:13) + " " + ((projectName.length > (isMobile? 8:13)) ? "..." :"")}</span>
+            <span className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName?.slice(0, isMobile? 8:projectName?.length ) + " " + ((projectName?.length > (isMobile? 8:projectName?.length)) ? "..." :"")}</span>
             <img src={downArrow}
                  className={`${styles.infoIcon} ${styles.arrowMargin}`}
                  alt={"arrow"}/>
@@ -138,7 +138,7 @@ export function ProjectNamePopUp(params) {
                 :
                 <span onClick={() => {
                     setOpen(!open)
-                }} className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName.slice(0, isMobile? 8:13) + " " + ((projectName.length > (isMobile? 8:13)) ? "..." :"")}</span>
+                }} className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName?.slice(0, isMobile? 8:projectName.length ) + " " + ((projectName?.length > (isMobile? 8:projectName?.length)) ? "..." :"")}</span>
             }
             <img src={UpArrow}
                  className={`${styles.infoIcon} ${styles.arrowMargin}`}

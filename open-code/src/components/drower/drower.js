@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext} from "react";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import {StoreContext} from "../../context/context";
@@ -11,6 +11,12 @@ import rightSliderDark from "../../assets/images/icon/right-slider-dark.png"
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+
+/**
+ *
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export function QrDrawer() {
 
     return (
@@ -27,28 +33,28 @@ export default function PersistentDrawerRight() {
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     return (
         <>
-
             <Box sx={{display: 'flex', width: 0}}>
                 <Drawer
                     sx={{
                         width: 0,
                         flexShrink: 0,
                         '& .MuiDrawer-paper': {
-                            width: isMobile ? '62%' : '23%',
+                            width: drawer ? isMobile ? '62%' : '23%' : isMobile ? '6%' : '2%',
                             height: isMobile ? '75%' : '81.3%',
                             marginTop: '5rem',
-                            borderLeft: theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)',
+                            borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
                             backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
                             color: theme === "dark" ? colors.whiteFont : colors.blackFont,
                         },
                     }}
                     variant="persistent"
                     anchor="right"
-                    open={drawer}
+                    open={true}
                 >
                     <QrCode/>
-                    <div style={{display: 'flex'}}>
-                        <div><DrawerBody isMobile={isMobile}/></div>
+                    <div style={{display: "flex"}}>
+                        <RightSlider/>
+                        <DrawerBody isMobile={isMobile}/>
                     </div>
                 </Drawer>
             </Box>
@@ -63,13 +69,22 @@ export const RightSlider = () => {
     const closeDrawer = () => {
         setDrawer(!drawer);
     }
+
     return (
-        <div style={qrStyles.rightSlider} onClick={closeDrawer}>
-            <img alt="slider" src={theme === "dark" ? rightSliderDark : rightSlider} style={qrStyles.rightSliderIcon}/>
+        <div style={drawer ? qrStyles.rightSlider : qrStyles.leftSlider} onClick={closeDrawer}>
+            <img alt="slider" src={theme === "dark" ? rightSliderDark : rightSlider}
+                 style={drawer ? qrStyles.rightSliderIcon : qrStyles.leftSliderIcon}/>
         </div>
     )
 }
 
+
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const DrawerBody = (props) => {
     const {isMobile} = props
     const qrScanSteps = ["Open OpenBot App on your phone", "Tap ScanQR Icon on homepage", "Point your phone to this screen to capture the code"]
