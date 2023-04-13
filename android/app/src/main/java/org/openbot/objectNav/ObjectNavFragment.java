@@ -120,6 +120,14 @@ public class ObjectNavFragment extends CameraFragment {
 
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
 
+    if (vehicle.getConnectionType().equals("USB")) {
+      binding.usbToggle.setVisibility(View.VISIBLE);
+      binding.bleToggle.setVisibility(View.GONE);
+    } else if (vehicle.getConnectionType().equals("Bluetooth")) {
+      binding.bleToggle.setVisibility(View.VISIBLE);
+      binding.usbToggle.setVisibility(View.GONE);
+    }
+
     classType = preferencesManager.getObjectType();
     binding.classType.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
@@ -178,11 +186,17 @@ public class ObjectNavFragment extends CameraFragment {
         .observe(getViewLifecycleOwner(), status -> binding.usbToggle.setChecked(status));
 
     binding.usbToggle.setChecked(vehicle.isUsbConnected());
+    binding.bleToggle.setChecked(vehicle.bleConnected());
 
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
-          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+          Navigation.findNavController(requireView()).navigate(R.id.open_usb_fragment);
+        });
+    binding.bleToggle.setOnClickListener(
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
         });
 
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
@@ -328,9 +342,12 @@ public class ObjectNavFragment extends CameraFragment {
 
   @Override
   public synchronized void onResume() {
+    croppedBitmap = null;
+    tracker = null;
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
+    binding.bleToggle.setChecked(vehicle.bleConnected());
     super.onResume();
   }
 

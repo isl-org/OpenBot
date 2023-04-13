@@ -104,24 +104,6 @@ enum IndicatorEvent: Int {
     case STOP = 0
 }
 
-/// The different inputs of a gamepad, used to control an OpenBot
-enum Keymap: String {
-    case KEYCODE_BUTTON_Y = "Triangle Button"
-    case KEYCODE_BUTTON_X = "Square Button"
-    case KEYCODE_BUTTON_B = "Circle Button"
-    case KEYCODE_BUTTON_A = "Cross Button"
-    case KEYCODE_BUTTON_R1 = "R1 Button"
-    case KEYCODE_BUTTON_R2 = "R2 Button"
-    case KEYCODE_BUTTON_L1 = "L1 Button"
-    case KEYCODE_BUTTON_L2 = "L2 Button"
-    case KEYCODE_BUTTON_THUMBL = "L3 Button"
-    case KEYCODE_BUTTON_THUMBR = "R3 Button"
-    case KEYCODE_BUTTON_START = "OPTIONS Button"
-    case KEYCODE_BUTTON_SELECT = "SELECT Button"
-    case KEY_Share = "SHARE Button"
-    case CMD_INDICATOR_STOP = "INDICATOR_STOP"
-}
-
 /// Control events of an OpenBot
 enum CMD_Events {
     case TOGGLE_LOGS, TOGGLE_NOISE, TOGGLE_CAMERA, TOGGLE_NETWORK, CMD_SPEED_UP, CMD_SPEED_DOWN, CMD_DRIVE_MODE

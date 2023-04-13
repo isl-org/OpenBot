@@ -48,7 +48,7 @@ class Control {
         // self.right = controlLookup(right)
         self.left = left
         self.right = right
-        print("Control: ", left, ",", right)
+        //print("Control: ", left, ",", right)
     }
     
     /// Left control getter
