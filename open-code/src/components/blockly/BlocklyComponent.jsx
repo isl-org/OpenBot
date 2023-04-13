@@ -9,6 +9,9 @@ import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
 import {updateCurrentProject} from "../../services/workspace";
 import {nanoid} from "nanoid";
+import {useTheme} from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
 Blockly.setLocale(locale);
 
 
@@ -20,6 +23,8 @@ function BlocklyComponent(props) {
     const primaryWorkspace = useRef();
     const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer} = useContext(StoreContext);
     const uniqueId = currentProjectId ? currentProjectId : nanoid()
+    const themes = useTheme();
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
     // save code in local to restore on reload page
     const handleWorkspaceChange = useCallback(() => {
@@ -38,6 +43,10 @@ function BlocklyComponent(props) {
             toolbox: toolbox.current,
             ...rest,
         });
+
+        const zoomLevel = 0.7;
+        if (isMobile)
+            primaryWorkspace.current.setScale(zoomLevel);
 
         const model = new Modal(primaryWorkspace.current);
         model.init();

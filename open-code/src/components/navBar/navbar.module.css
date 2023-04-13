@@ -675,9 +675,9 @@
 
 }
 
-@media (max-width: 400px) {
+@media (max-width: 400px) and (max-height: 670px) {
     .helpCenterPara {
-        font-size: 12px !important;
+        font-size: 10px !important;
 
     }
 }

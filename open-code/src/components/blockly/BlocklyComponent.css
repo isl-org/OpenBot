@@ -21,7 +21,6 @@
     line-height: 2.5rem;
 }
 
-
 .blocklyFieldToggle text {
     fill: white !important;
 }
@@ -41,6 +40,46 @@
 .blocklyMenuItemSelected .blocklyMenuItemCheckbox {
     background: url("../../assets/images/icon/blockly-icons.png") no-repeat -48px -16px;
 }
+
+
+@media (max-width: 768px) {
+    .blocklyTreeLabel{
+        font: 1rem sans-serif;
+        padding: 0 4px;
+    }
+
+    .blocklyTreeRow {
+        padding: 4px;
+    }
+
+    .blocklyDropDownMenu{
+        padding-bottom: inherit;
+    }
+
+    .blocklyToolboxContents {
+        padding-top: 3rem;
+        border-right: 0.5px solid black;
+        height: 100%;
+        position: relative;
+        left: 0;
+        bottom: 10px;
+    }
+}
+
+
+@media (max-width: 768px) and (max-height: 670px){
+
+    .blocklyTreeLabel{
+        font: 14px sans-serif;
+        padding: 0 4px;
+    }
+
+    .blocklyTreeRow {
+        height: 2rem;
+        line-height: 2rem;
+    }
+}
+
 
 
 /*.zelos-renderer.dark-theme .blocklyText{*/
