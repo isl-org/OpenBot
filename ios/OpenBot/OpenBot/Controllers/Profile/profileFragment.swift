@@ -5,33 +5,47 @@
 import Foundation
 import UIKit
 import GoogleSignIn
+
 class profileFragment: UIViewController {
     let shadowSheet = UIView(frame: UIScreen.main.bounds);
-    var logoutView: UIView!;
+    var logoutView = UIView()
+    let alert = UIAlertController(title: "Loading", message: "Please wait while we load the profile...", preferredStyle: .alert)
+    var firstLabel = UILabel()
+    var secondLabel = UILabel()
+    var signInBtn = GoogleSignInBtn()
+    var editProfileLabel = UILabel()
+    var logoutLabel = UILabel()
+    var userImgView = UIImageView()
+    var logoutImgView = UIImageView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        createMyProjectLabel();
+        createMyProfileLabel();
+        createEditProfileAndLogoutLabel();
+        createEditProfileAndLogoutIcons();
         createPleaseSignInLabel();
         createSignInBtn();
-        createEditProfileAndLogoutLabel();
-        createEditProfileAndLogoutIcons()
+        updateViewsVisibility()
+        NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
+
     }
 
-    private func createMyProjectLabel() {
+    private func createMyProfileLabel() {
         let label = CustomLabel(text: "My Profile", fontSize: 20, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 20, y: 90, width: 100, height: 40));
         view.addSubview(label)
     }
 
     private func createPleaseSignInLabel() {
-        let firstLabel = CustomLabel(text: "Set up your profile by signing in with", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 135, y: height / 2 - 20, width: 270, height: 40));
-        let secondLabel = CustomLabel(text: "your Google account.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 80, y: height / 2 + 10, width: 160, height: 40));
+        firstLabel = CustomLabel(text: "Set up your profile by signing in with", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 135, y: height / 2 - 20, width: 270, height: 40));
+        secondLabel = CustomLabel(text: "your Google account.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 80, y: height / 2 + 10, width: 160, height: 40));
         view.addSubview(firstLabel);
         view.addSubview(secondLabel)
     }
 
     private func createSignInBtn() {
-        let signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: height / 2 + 60, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
+        signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: height / 2 + 60, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(signIn))
+        signInBtn.addGestureRecognizer(tap);
         view.addSubview(signInBtn);
     }
 
@@ -85,13 +99,18 @@ class profileFragment: UIViewController {
         logoutView.addSubview(logoutBtn);
     }
 
-    @objc func editProfileHandler(){
+    @objc func editProfileHandler() {
+        createOverlayAlert()
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
-        let viewController = (storyboard.instantiateViewController(withIdentifier: "editProfile"));
-        navigationController?.pushViewController(viewController, animated: true);
+        let viewController = storyboard.instantiateViewController(withIdentifier: "editProfile")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.navigationController?.pushViewController(viewController, animated: true)
+            self.alert.dismiss(animated: true, completion: nil)
+
+        }
     }
 
-    @objc func logoutHandler(){
+    @objc func logoutHandler() {
         print("inside logoutHandler")
         createShadowSheet();
     }
@@ -100,11 +119,53 @@ class profileFragment: UIViewController {
         shadowSheet.removeFromSuperview();
     }
 
-    @objc func logout(_ sender : UIButton){
+    @objc func logout(_ sender: UIButton) {
         shadowSheet.removeFromSuperview();
-         GIDSignIn.sharedInstance.signOut()
+        GIDSignIn.sharedInstance.signOut()
+        updateViewsVisibility()
     }
 
+    func createOverlayAlert() {
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
+        loadingIndicator.startAnimating();
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = UIActivityIndicatorView.Style.medium
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
+    }
+
+
+    func updateViewsVisibility() {
+        if GIDSignIn.sharedInstance.currentUser != nil {
+            // Show firstLabel, secondLabel, and SignInBtn, and hide other views
+            editProfileLabel.isHidden = false
+            logoutLabel.isHidden = false
+            userImgView.isHidden = false
+            logoutImgView.isHidden = false
+
+            firstLabel.isHidden = true
+            secondLabel.isHidden = true
+            signInBtn.isHidden = true
+        } else {
+            // Show editProfileLabel, logoutLabel, userImgView, and logoutImgView, and hide other views
+            firstLabel.isHidden = false
+            secondLabel.isHidden = false
+            signInBtn.isHidden = false
+
+            editProfileLabel.isHidden = true
+            logoutLabel.isHidden = true
+            userImgView.isHidden = true
+            logoutImgView.isHidden = true
+        }
+    }
+
+    @objc func signIn() {
+        Authentication();
+    }
+
+    @objc func googleSignIn(_ notification: Notification) {
+       updateViewsVisibility()
+    }
 
 
 }

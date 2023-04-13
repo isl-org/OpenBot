@@ -35,4 +35,5 @@ class GoogleSignInBtn : UIView {
         signInText.font = signInText.font?.withSize(18);
         return signInText;
     }
+
 }

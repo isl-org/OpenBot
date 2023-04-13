@@ -45,8 +45,8 @@ extension HomePageViewController {
 
 
     @objc func signIn(_ sender: UIView) {
-       Authentication.init()
-        print(GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer.userEmail)
+       Authentication()
+
     }
 
     @objc func guestLogin(_ sender: UILabel) {

@@ -180,4 +180,10 @@ enum PATH_TYPE: String {
          ASSET = "ASSET",
          FILE = "FILE"
 }
-
+/// Class for value of all safe area value
+struct safeAreaLayoutValue{
+    static let top : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0.0
+    static let bottom : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0.0
+    static let left : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0.0;
+    static let right : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0.0;
+}

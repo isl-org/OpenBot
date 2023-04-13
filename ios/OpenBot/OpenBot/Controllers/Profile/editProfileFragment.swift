@@ -6,8 +6,8 @@ import Foundation
 import UIKit
 import GoogleSignIn
 import FirebaseAuth
-
-class editProfileFragment: UIViewController {
+import FirebaseStorage
+class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private var profileIcon: UIImageView!
     private let authentication = Authentication()
     private var firstName: UILabel!
@@ -16,12 +16,13 @@ class editProfileFragment: UIViewController {
     private var dob: UILabel!
     private var firstNameField: UITextField!
     private var lastNameField: UITextField!
+    let imagePickerVC = UIImagePickerController()
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(authentication.googleSignIn.currentUser?.profile)
+        imagePickerVC.delegate = self;
         createUserProfileImageView()
-        getUserDetails();
         createLabels();
         createTextFields();
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -30,27 +31,19 @@ class editProfileFragment: UIViewController {
     }
 
     private func createUserProfileImageView() {
-
-        profileIcon = UIImageView(frame: CGRect(x: (width - 121) / 2, y: adapted(dimensionSize: 40, to: .height), width: adapted(dimensionSize: 100, to: .height), height:adapted(dimensionSize: 100, to: .height)));
-        print(profileIcon.frame.width)
+        profileIcon = UIImageView(frame: CGRect(x: (width - 121) / 2, y: safeAreaLayoutValue.top + adapted(dimensionSize: 20, to: .height), width: adapted(dimensionSize: 100, to: .height), height: adapted(dimensionSize: 100, to: .height)));
         profileIcon.layer.cornerRadius = profileIcon.frame.size.width / 2
         profileIcon.clipsToBounds = true
-        profileIcon.layer.borderWidth = 2;
-        let imgUrl = (Auth.auth().currentUser?.photoURL ?? authentication.googleSignIn.currentUser?.profile?.imageURL(withDimension: 100))! ;
-        profileIcon.load(url: imgUrl );
+        let imgUrl = (Auth.auth().currentUser?.photoURL ?? authentication.googleSignIn.currentUser?.profile?.imageURL(withDimension: 100))!;
+        profileIcon.load(url: imgUrl);
         view.addSubview(profileIcon)
         let uploadImgIcon = UIImage(named: "uploadImage");
-        let uploadImage = UIImageView(frame: CGRect(x:profileIcon.frame.origin.x + profileIcon.frame.width/2 + adapted(dimensionSize: 10, to: .height), y:profileIcon.frame.origin.y +  profileIcon.frame.height - 40.0, width: 40.5, height: 40.5));
+        let uploadImage = UIImageView(frame: CGRect(x: profileIcon.frame.origin.x + profileIcon.frame.width / 2 + adapted(dimensionSize: 10, to: .height), y: profileIcon.frame.origin.y + profileIcon.frame.height - 40.0, width: 40.5, height: 40.5));
         uploadImage.image = uploadImgIcon;
+        uploadImage.isUserInteractionEnabled = true;
+        let tap = UITapGestureRecognizer(target: self, action: #selector(openImagePicker))
+        uploadImage.addGestureRecognizer(tap)
         view.addSubview(uploadImage);
-    }
-
-    func getUserDetails() {
-        // Access the user details from the Authentication object
-        let email = authentication.googleSignIn.currentUser?.profile?.email
-        let name = authentication.googleSignIn.currentUser?.profile?.name
-        print(email, name)
-
     }
 
     private func createLabels() {
@@ -101,15 +94,15 @@ class editProfileFragment: UIViewController {
         textField.textColor = UIColor(named: "gamepad");
     }
 
-   private  func getFirstName(name : String)->String{
+    private func getFirstName(name: String) -> String {
         let indexOfSpace = name.firstIndex(of: " ");
-       if indexOfSpace == nil {
-           return name;
-       }
-       return String(name[..<indexOfSpace!])
+        if indexOfSpace == nil {
+            return name;
+        }
+        return String(name[..<indexOfSpace!])
     }
 
-    private func getLastName(name : String)->String{
+    private func getLastName(name: String) -> String {
         let indexOfSpace = name.firstIndex(of: " ");
         if indexOfSpace == nil {
             return name;
@@ -121,13 +114,26 @@ class editProfileFragment: UIViewController {
         view.endEditing(true)
     }
 
+    @objc func openImagePicker() {
+
+        imagePickerVC.sourceType = .photoLibrary
+        present(imagePickerVC, animated: true)
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        if let image = info[.originalImage] as? UIImage {
+            profileIcon.image = image
+        }
+    }
+
     @objc func doneButtonTapped(_ sender: UITextField) {
         // Dismiss the date picker
         sender.resignFirstResponder()
     }
 
     private func createButtons() {
-        let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: height - 60, width: 147, height: 47), selector: #selector(cancel))
+        let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: height - safeAreaLayoutValue.bottom - adapted(dimensionSize: 47, to: .height), width: 147, height: 47), selector: #selector(cancel))
         view.addSubview(cancelBtn);
         let saveChangesBtn = CustomButton(text: "Save Changes", frame: CGRect(x: cancelBtn.frame.origin.x + 194.0, y: cancelBtn.frame.origin.y, width: 147, height: 47), selector: #selector(saveChanges))
         view.addSubview(saveChangesBtn)
@@ -145,20 +151,65 @@ class editProfileFragment: UIViewController {
             if let user = result?.user {
                 let changeRequest = user.createProfileChangeRequest()
                 changeRequest.displayName = (self.firstNameField.text ?? "") + " " + (self.lastNameField.text ?? "");
-                changeRequest.photoURL = URL(string: "https://www.google.com/imgres?imgurl=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fe%2Fe7%2FEverest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg&tbnid=ZH4n6DnAkszpmM&vet=12ahUKEwiZx6jc6aP-AhWdzaACHb-VD9MQMygAegUIARDdAQ..i&imgrefurl=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FMountain&docid=oiQv_zLtLLGShM&w=2000&h=1333&q=mountain&ved=2ahUKEwiZx6jc6aP-AhWdzaACHb-VD9MQMygAegUIARDdAQ")
-                print(user.displayName)
+//                changeRequest.photoURL = URL(string: "https://www.google.com/imgres?imgurl=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fe%2Fe7%2FEverest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg&tbnid=ZH4n6DnAkszpmM&vet=12ahUKEwiZx6jc6aP-AhWdzaACHb-VD9MQMygAegUIARDdAQ..i&imgrefurl=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FMountain&docid=oiQv_zLtLLGShM&w=2000&h=1333&q=mountain&ved=2ahUKEwiZx6jc6aP-AhWdzaACHb-VD9MQMygAegUIARDdAQ")
+                self.uploadImage();
                 changeRequest.commitChanges { error in
                     if let error = error {
                         print("Error updating profile: \(error.localizedDescription)")
                     } else {
                         print("Profile updated successfully")
                         self.alert.dismiss(animated: true);
-
-
                     }
                 }
             }
         }
+    }
+
+    private func uploadImage(){
+        // Get a reference to the storage service
+        let storage = Storage.storage()
+
+// Create a reference to the image file in Firebase storage using the user's UID as the filename
+        let uid = Auth.auth().currentUser?.uid ?? ""
+        let imageRef = storage.reference().child("users/\(uid)/profile.jpg")
+
+// Convert the image to data
+        guard let imageData = profileIcon.image?.jpegData(compressionQuality: 0.5) else {
+            print("Error converting image to data")
+            return
+        }
+
+// Upload the image data to Firebase storage
+        let uploadTask = imageRef.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error {
+                print("Error uploading image: \(error.localizedDescription)")
+            } else {
+                // Get the download URL of the uploaded image
+                imageRef.downloadURL { url, error in
+                    if let error = error {
+                        print("Error getting download URL: \(error.localizedDescription)")
+                    } else {
+                        // Update the user's profile with the download URL of the uploaded image
+                        let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+                        changeRequest?.photoURL = url
+                        changeRequest?.commitChanges { error in
+                            if let error = error {
+                                print("Error updating profile: \(error.localizedDescription)")
+                            } else {
+                                print("Profile updated successfully")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+// Observe the upload progress
+        uploadTask.observe(.progress) { snapshot in
+            let percentComplete = Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount) * 100.0
+            print("Upload progress: \(percentComplete)%")
+        }
+
     }
 
     func createOverlayAlert() {
