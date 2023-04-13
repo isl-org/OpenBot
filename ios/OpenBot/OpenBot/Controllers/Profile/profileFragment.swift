@@ -135,7 +135,7 @@ class profileFragment: UIViewController {
     }
 
 
-    func updateViewsVisibility() {
+    private func updateViewsVisibility() {
         if GIDSignIn.sharedInstance.currentUser != nil {
             // Show firstLabel, secondLabel, and SignInBtn, and hide other views
             editProfileLabel.isHidden = false
@@ -164,7 +164,7 @@ class profileFragment: UIViewController {
     }
 
     @objc func googleSignIn(_ notification: Notification) {
-       updateViewsVisibility()
+        updateViewsVisibility()
     }
 
 

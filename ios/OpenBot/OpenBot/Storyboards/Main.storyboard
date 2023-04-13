@@ -170,15 +170,42 @@
                                     <action selector="scanner:" destination="HCD-ib-P3k" eventType="touchUpInside" id="s0d-7N-KAn"/>
                                 </connections>
                             </button>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="639-3i-D7K">
+                                <rect key="frame" x="20" y="160" width="374" height="653"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="waT-zc-zDE">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="5Us-Xz-UqV">
+                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="TgX-TD-3xy">
+                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2DM-aV-cMO"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="2DM-aV-cMO" firstAttribute="trailing" secondItem="m6i-3F-ym5" secondAttribute="trailing" constant="17" id="1H3-Nj-bAg"/>
+                            <constraint firstItem="639-3i-D7K" firstAttribute="bottom" secondItem="2DM-aV-cMO" secondAttribute="bottom" id="Ed7-ps-e6O"/>
+                            <constraint firstItem="639-3i-D7K" firstAttribute="top" secondItem="m6i-3F-ym5" secondAttribute="bottom" constant="35" id="K1i-pY-YOv"/>
                             <constraint firstItem="m6i-3F-ym5" firstAttribute="top" secondItem="2DM-aV-cMO" secondAttribute="top" constant="9" id="V1i-vL-iJ1"/>
+                            <constraint firstItem="639-3i-D7K" firstAttribute="trailing" secondItem="Cg0-nA-jin" secondAttribute="trailingMargin" id="XmB-C8-KZH"/>
+                            <constraint firstItem="639-3i-D7K" firstAttribute="centerX" secondItem="Cg0-nA-jin" secondAttribute="centerX" id="Yh7-4f-07C"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Projects" image="project" id="Tmh-Xr-mbP"/>
+                    <connections>
+                        <outlet property="projectCollectionView" destination="639-3i-D7K" id="lXM-eK-fcd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HHR-1M-DEf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

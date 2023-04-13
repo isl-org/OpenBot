@@ -78,6 +78,25 @@ struct Constants {
     static let types: [String] = ["AUTOPILOT", "DETECTOR", "NAVIGATION"]
     static let classes: [String] = ["AUTOPILOT_F", "MOBILENET", "YOLOV4", "YOLOV5", "EFFICIENTDET", "NAVIGATION"]
     static let devices: [String] = ["CPU", "XNNPACK"]
+
+
+    static let temp : [ProjectItem] = [
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Pratap", projectDate: "today"),
+        ProjectItem(projectName: "Yadav", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Nitish", projectDate: "today"),
+    ]
 }
 
 /// The different speed modes of the OpenBot

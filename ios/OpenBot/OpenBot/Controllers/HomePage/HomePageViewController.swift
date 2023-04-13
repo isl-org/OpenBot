@@ -16,7 +16,7 @@ var leadingConstraint = NSLayoutConstraint()
 var isClientConnected: Bool = false
 let bottomSheet = UIView();
 let whiteSheet = UIView(frame: UIScreen.main.bounds)
-class HomePageViewController: CameraController {
+class HomePageViewController: CameraController,UICollectionViewDataSource,UICollectionViewDelegate {
     @IBOutlet weak var bluetooth: UIButton!
     @IBOutlet weak var settings: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
@@ -172,18 +172,6 @@ class HomePageViewController: CameraController {
           whiteSheet.removeFromSuperview()
       }
 
-}
-
-extension UIViewController: UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        let viewController = (storyboard?.instantiateViewController(withIdentifier: Constants.gameModes[indexPath.row].identifier))!
-        navigationController?.pushViewController(viewController, animated: true);
-    }
-}
-
-/// to configure the grid displayed on the homepage.
-extension UIViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         Constants.gameModes.count;
     }
@@ -202,7 +190,17 @@ extension UIViewController: UICollectionViewDataSource {
         return currentViewControllerName
 
     }
+
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let viewController = (storyboard?.instantiateViewController(withIdentifier: Constants.gameModes[indexPath.row].identifier))!
+        navigationController?.pushViewController(viewController, animated: true);
+    }
+
 }
+
+
+/// to configure the grid displayed on the homepage.
 
 extension UIBarButtonItem {
     convenience init(image: UIImage, title: String, target: Any?, action: Selector?, titleColor: UIColor) {
