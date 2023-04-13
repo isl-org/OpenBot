@@ -44,29 +44,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <CheckBox
-            android:id="@+id/usbToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:button="@drawable/usb_toggle"
-            app:layout_constraintBottom_toBottomOf="@+id/camera_toggle"
-            app:layout_constraintEnd_toStartOf="@+id/camera_toggle"
-            app:layout_constraintTop_toTopOf="@+id/camera_toggle" />
-
-        <ImageView
-            android:id="@+id/camera_toggle"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="16dp"
-            android:background="@android:color/transparent"
-            android:scaleType="center"
-            android:src="@drawable/ic_cameraswitch"
-            android:text="@string/camera_facing_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/autoLinearLayout"
-            app:tint="@color/openBotBlue" />
-
         <LinearLayout
             android:id="@+id/autoLinearLayout"
             android:layout_width="wrap_content"
@@ -95,6 +72,39 @@
                 android:text="@string/dynamic_speed" />
 
         </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/usbToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:button="@drawable/usb_toggle"
+            app:layout_constraintBottom_toBottomOf="@+id/camera_toggle"
+            app:layout_constraintEnd_toStartOf="@+id/camera_toggle"
+            app:layout_constraintTop_toTopOf="@+id/camera_toggle" />
+
+        <CheckBox
+            android:id="@+id/bleToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:button="@drawable/ble_toggle"
+            app:layout_constraintBottom_toBottomOf="@+id/camera_toggle"
+            app:layout_constraintEnd_toStartOf="@+id/camera_toggle"
+            app:layout_constraintTop_toTopOf="@+id/camera_toggle" />
+
+        <ImageView
+            android:id="@+id/camera_toggle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="16dp"
+            android:background="@android:color/transparent"
+            android:scaleType="center"
+            android:src="@drawable/ic_cameraswitch"
+            android:text="@string/camera_facing_back"
+            app:layout_constraintTop_toTopOf="@+id/autoLinearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/openBotBlue" />
 
 
         <LinearLayout

@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import org.openbot.env.Logger;
 import org.openbot.utils.Constants;
+import timber.log.Timber;
 
 public class UsbConnection {
   private static final int USB_VENDOR_ID = 6790; // 0x2341; // 9025
@@ -169,7 +170,7 @@ public class UsbConnection {
     // Add whatever you want here
     LOGGER.i("Serial data received: " + data);
     localBroadcastManager.sendBroadcast(
-        new Intent(Constants.USB_ACTION_DATA_RECEIVED)
+        new Intent(Constants.DEVICE_ACTION_DATA_RECEIVED)
             .putExtra("from", "usb")
             .putExtra("data", data));
   }
@@ -202,6 +203,8 @@ public class UsbConnection {
       busy = true;
       serialDevice.write(msg.getBytes(UTF_8));
       busy = false;
+    } else {
+      Timber.d("USB busy, could not send: %s", msg);
     }
   }
 

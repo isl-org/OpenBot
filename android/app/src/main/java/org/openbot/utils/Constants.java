@@ -4,8 +4,7 @@ import android.Manifest;
 
 public class Constants {
 
-  public static final String USB_ACTION_DATA_RECEIVED = "usb.data_received";
-
+  public static final String DEVICE_ACTION_DATA_RECEIVED = "device.data_received";
   public static final int REQUEST_CAMERA_PERMISSION = 1;
   public static final int REQUEST_AUDIO_PERMISSION = 2;
   public static final int REQUEST_STORAGE_PERMISSION = 3;
@@ -15,6 +14,8 @@ public class Constants {
   public static final int REQUEST_CONTROLLER_PERMISSIONS = 7;
   public static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
   public static final String PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+  public static final String PERMISSION_COARSE_LOCATION =
+      Manifest.permission.ACCESS_COARSE_LOCATION;
   public static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
   public static final String PERMISSION_BLUETOOTH = Manifest.permission.BLUETOOTH;
   public static final String PERMISSION_AUDIO = Manifest.permission.RECORD_AUDIO;
