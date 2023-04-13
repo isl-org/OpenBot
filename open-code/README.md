@@ -1,3 +1,5 @@
+<img src="../docs/images/playground_banner.png" alt="banner" width="100%"/>
+
 # OpenBot Playground
 
 ## Introduction
