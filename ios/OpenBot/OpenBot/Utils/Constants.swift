@@ -70,6 +70,7 @@ struct Constants {
         ModeItem(label: Strings.modelManagement, icon: Images.modelManagementIcon!, identifier: Strings.ScreenModelManagement),
         ModeItem(label: Strings.robotInfo, icon: Images.robotInfoIcon!, identifier: Strings.ScreenRobotInfo),
         ModeItem(label: Strings.navigation, icon: Images.objectTrackingIcon!, identifier: Strings.ScreenNavigation),
+        ModeItem(label: "OpenCode", icon: Images.freeRoam!, identifier: "opencode")
     ]
     static let frameColors: [UIColor] = [UIColor.red, UIColor.orange, UIColor.blue, UIColor.green, UIColor.brown]
     static let autopilotMode = "AUTOPILOT"
@@ -160,4 +161,11 @@ enum PATH_TYPE: String {
     case URL = "URL",
          ASSET = "ASSET",
          FILE = "FILE"
+}
+/// Class for value of all safe area value
+struct safeAreaLayoutValue{
+    static let top : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0.0
+    static let bottom : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0.0
+    static let left : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0.0;
+    static let right : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0.0;
 }

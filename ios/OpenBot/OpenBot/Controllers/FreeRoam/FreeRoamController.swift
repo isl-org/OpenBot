@@ -27,6 +27,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("navigationController is :",navigationController);
         setupNavigationBarItem()
         setupSpeedMode()
         applySafeAreaConstraints()
@@ -552,6 +553,22 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+//        MyNavigationController.shared.popViewController(animated: false);
+//        let homepageController = (storyboard?.instantiateViewController(withIdentifier: "homePage"))!
+//        let profileController = (storyboard?.instantiateViewController(withIdentifier: "profileController"))!
+//        let projectController = (storyboard?.instantiateViewController(withIdentifier: "projectsController"))!
+//        tabBarController?.viewControllers = [homepageController,profileController,projectController]
+
+
+    }
+
+    override func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
+        super.beginAppearanceTransition(isAppearing, animated: animated)
+
+    }
+
+    override func endAppearanceTransition() {
+        super.endAppearanceTransition()
     }
 
     /// open the bluetooth settings screen

@@ -85,6 +85,11 @@ class AutopilotFragment: CameraController {
     /// function that remove viewController from navigation
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+//        MyNavigationController.shared.popViewController(animated: false);
+//        let homepageController = (storyboard?.instantiateViewController(withIdentifier: "homePage"))!
+//        let profileController = (storyboard?.instantiateViewController(withIdentifier: "profileController"))!
+//        let projectController = (storyboard?.instantiateViewController(withIdentifier: "projectsController"))!
+//        tabBarController?.viewControllers = [homepageController,profileController,projectController]
     }
 
     /// function to switch camera from front to back and vice versa, called when camera icon is pressed

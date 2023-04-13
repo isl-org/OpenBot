@@ -65,3 +65,48 @@ extension UIView {
         }
     }
 }
+
+/**
+ extension to create google Sign-In button
+ */
+extension UIView {
+    func createSignInButton(frame: CGRect) -> UIView {
+        let signInBtn = UIView(frame: frame);
+        signInBtn.backgroundColor = UIColor(named: "signInButtonColor");
+        signInBtn.layer.cornerRadius = 10;
+        signInBtn.addSubview(createGoogleIcon(frame: CGRect(x: signInBtn.frame.width / 2 - 100, y: 16, width: 20, height: 20)));
+        signInBtn.addSubview(createSingInText(frame: CGRect(x: signInBtn.frame.width / 2 - 69, y: 5, width: 160, height: 40)))
+        return signInBtn;
+    }
+
+    private func createGoogleIcon(frame: CGRect) -> UIImageView {
+        let googleIcon = UIImageView(frame: frame);
+        googleIcon.image = UIImage(named: "googleIcon");
+        return googleIcon;
+    }
+
+    private func createSingInText(frame: CGRect) -> UILabel {
+        let signInText = UILabel(frame: frame);
+        signInText.text = "Sign-in with Google";
+        signInText.textColor = Colors.bdColor;
+        signInText.font = signInText.font?.withSize(18);
+        return signInText;
+    }
+}
+
+class BottomSheetView: UIView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setup(){
+        self.backgroundColor = Colors.bdColor;
+        layer.cornerRadius = 30;
+        layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+    }
+}
