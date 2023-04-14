@@ -715,5 +715,39 @@
         font-size: 16px;
 
     }
+    .editProfileModal {
+        width: 90%;
+        height: 520px;
+        padding-left: 2%;
+    }
+    .profileImg {
+        height: 100px;
+        width: 100px;
+        border-radius: 221px;
+       margin-bottom: 20px;
+    }
+
+    .profileImg img {
+        height: 30px;
+        width: 30px;
+    }
+
+    .inputExtraStyle {
+        width: 40%;
+        height: 50%;
+        /*margin: 20px 10px 20px 10px;*/
+    }
+
+    .emailInputExtraStyle {
+        width: 80% !important;
+    }
+    .headStyle {
+        font-size: 18px !important;
+    }
+
+    .extraInputStyle {
+        font-size: 20px !important;
+    }
+
 
 }

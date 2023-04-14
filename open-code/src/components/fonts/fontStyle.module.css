@@ -1,5 +1,6 @@
 
 .whiteFont {
+    /*font-size: 18px;*/
     color: #f2f2f2;
     font-family: 'Gilroy-Regular', serif;
 }
@@ -25,6 +26,18 @@
 @media (max-width: 768px) {
     .blackFont{
         font-size: 12px;
+    }
+}
+@media (min-width: 744px) and (max-width: 1024px){
+
+    .blueFont {
+        font-size: 18px;
+    }
+    .whiteFont {
+        font-size: 18px;
+    }
+    .whiteFont {
+        font-size: 18px;
     }
 
 }

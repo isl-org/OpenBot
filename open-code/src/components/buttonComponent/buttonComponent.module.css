@@ -41,3 +41,18 @@
         margin: 20px 0px 20px 20px;
     }
 }
+
+@media (min-width: 744px) and (max-width: 1024px){
+    .containedButton {
+        height: 53px;
+        width: 167px;
+        font-size: 18px;
+        margin: 20px 0px 20px 20px;
+    }
+    .normalButton {
+        height: 53px;
+        width: 167px;
+        font-size: 18px;
+        margin: 20px 0px 20px 20px;
+    }
+}
