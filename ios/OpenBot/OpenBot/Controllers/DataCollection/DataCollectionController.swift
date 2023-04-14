@@ -193,7 +193,7 @@ class DataCollectionController: CameraController {
                     case .HIGH:
                         scaledSize = CGSize(width: CGFloat(1920.0), height: CGFloat(1080.0))
                     }
-                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize, with: self.preAllocatedMemoryPool!) else {
+                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize, preserveAspectRatio: false, with: self.preAllocatedMemoryPool!) else {
                         debugPrint("unable to resize/crop sample buffer")
                         return
                     }
@@ -206,7 +206,7 @@ class DataCollectionController: CameraController {
                 if self.isTrainingSelected {
                     let imageName = String(self.count) + Strings.underscore + Strings.crop
                     let scaledSize = CGSize(width: CGFloat(self.widthOfTrainingImage), height: CGFloat(self.heightOfTrainingImage))
-                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize, with: self.preAllocatedMemoryPool!) else {
+                    guard let scaledPixelBuffer = imagePixelBuffer.resized(to: scaledSize, preserveAspectRatio: false, with: self.preAllocatedMemoryPool!) else {
                         debugPrint("unable to resize/crop sample buffer")
                         return
                     }
