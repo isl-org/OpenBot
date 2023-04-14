@@ -14,7 +14,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="@+id/cardView"
         app:srcCompat="@drawable/ic_edit_profile_pic" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="120dp"
