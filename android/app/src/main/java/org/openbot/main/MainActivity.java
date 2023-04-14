@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     vehicle = OpenBotApplication.vehicle;
     bottomNavigationView = findViewById(R.id.bottomNavigationView);
     bottomNavigationView.setSelectedItemId(R.id.home);
-
     //    if (vehicle == null) {
     //      SharedPreferences sharedPreferences =
     // PreferenceManager.getDefaultSharedPreferences(this);
@@ -124,6 +123,11 @@ public class MainActivity extends AppCompatActivity {
         new AppBarConfiguration.Builder(navController.getGraph()).build();
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+
+    bottomNavigationView.setOnItemReselectedListener(
+        item -> {
+          // Do nothing when the selected item is already selected
+        });
 
     NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
     NavigationUI.setupWithNavController(bottomNavigationView, navController);

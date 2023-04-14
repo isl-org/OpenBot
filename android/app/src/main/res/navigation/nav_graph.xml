@@ -70,7 +70,11 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="org.openbot.profile.ProfileFragment"
-        android:label="@string/profile" />
+        android:label="@string/profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_EditProfileFragment"
+            app:destination="@id/EditProfileFragment" />
+    </fragment>
 
     <action
         android:id="@+id/open_profile_fragment"
@@ -110,6 +114,9 @@
         <action
             android:id="@+id/action_projectsFragment_to_barCodeScannerFragment"
             app:destination="@id/barCodeScannerFragment" />
+        <action
+            android:id="@+id/action_projectsFragment_to_blocklyExecutingFragment"
+            app:destination="@id/blocklyExecutingFragment" />
     </fragment>
     <action
         android:id="@+id/open_projects_fragment"
@@ -130,4 +137,10 @@
         android:name="org.openbot.projects.BlocklyExecutingFragment"
         android:label="blocklyExecute"
         tools:layout="@layout/fragment_blockly_executing" />
+
+    <fragment
+        android:id="@+id/EditProfileFragment"
+        android:name="org.openbot.profile.EditProfileFragment"
+        android:label="editProfile"
+        tools:layout="@layout/fragment_edit_profile" />
 </navigation>

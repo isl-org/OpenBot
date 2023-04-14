@@ -108,49 +108,37 @@ public class GoogleServices {
     Drive googleDriveService = getDriveService();
     if (googleDriveService != null) {
       new Thread(
-              new Runnable() {
-                @Override
-                public void run() {
-                  String pageToken = null;
-                  do {
-                    try {
-                      FileList result =
-                          googleDriveService
-                              .files()
-                              .list()
-                              .setSpaces("drive")
-                              .setFields("nextPageToken, files(id, name)")
-                              .setPageToken(pageToken)
-                              .setQ("trashed = false")
-                              .execute();
-                      List<File> files = result.getFiles();
-                      String fields = "createdTime, modifiedTime, name, id";
-                      for (File file : files) {
-                        if (file.getName().endsWith(".js")) {
-                          File metaFile =
-                              googleDriveService
-                                  .files()
-                                  .get(file.getId())
-                                  .setFields(fields)
-                                  .execute();
-                          driveFiles.add(metaFile);
-                        }
+              () -> {
+                String pageToken = null;
+                do {
+                  try {
+                    driveFiles.clear();
+                    FileList result =
+                        googleDriveService
+                            .files()
+                            .list()
+                            .setSpaces("drive")
+                            .setFields("nextPageToken, files(id, name, createdTime, modifiedTime)")
+                            .setPageToken(pageToken)
+                            .setQ("trashed = false")
+                            .execute();
+                    List<File> files = result.getFiles();
+                    for (File file : files) {
+                      if (file.getName().endsWith(".js")) {
+                        driveFiles.add(file);
                       }
-                      mActivity.runOnUiThread(
-                          new Runnable() {
-                            @Override
-                            public void run() {
-                              adapter.notifyDataSetChanged();
-                              projectsFragment.updateMessage(noProjectsLayout, driveFiles);
-                            }
-                          });
-                      pageToken = result.getNextPageToken();
-                    } catch (IOException e) {
-                      e.printStackTrace();
-                      pageToken = null;
                     }
-                  } while (pageToken != null);
-                }
+                    mActivity.runOnUiThread(
+                        () -> {
+                          adapter.notifyDataSetChanged();
+                          projectsFragment.updateMessage(noProjectsLayout, driveFiles);
+                        });
+                    pageToken = result.getNextPageToken();
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                    pageToken = null;
+                  }
+                } while (pageToken != null);
               })
           .start();
     }

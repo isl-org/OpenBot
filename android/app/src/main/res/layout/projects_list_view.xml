@@ -11,7 +11,6 @@
         android:id="@+id/project_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Blink LED"
         android:textColor="@color/black_text"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -22,17 +21,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/project_name"
-        android:text="Jan 4, 2023"
         android:textColor="@color/black_text"
         android:textSize="14sp"
         android:maxLines="1"/>
 
-    <ImageView
-        android:id="@+id/three_dot"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_three_dot" />
     <ImageView
         android:id="@+id/blue_arrow"
         android:layout_width="55dp"

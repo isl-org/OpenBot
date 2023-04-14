@@ -145,7 +145,7 @@ public class BarCodeScannerFragment extends Fragment {
           if (newState == BottomSheetBehavior.STATE_EXPANDED
               || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
             overlayView.setVisibility(View.VISIBLE);
-          } else {
+          } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
             overlayView.setVisibility(View.GONE);
           }
         }

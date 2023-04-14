@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.SparseArray;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.drive.model.File;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -32,12 +33,12 @@ public class DriveProjectsAdapter extends CommonRecyclerViewAdapter<File> {
     TextView projectName = (TextView) holder.mViews.get(R.id.project_name);
     TextView updatedDate = (TextView) holder.mViews.get(R.id.project_date);
     String projectNameModified = data.getName().substring(0, data.getName().length() - 3);
-    if (projectNameModified.length() > 7) {
-      projectNameModified = projectNameModified.substring(0, 7) + "...";
+    if (projectNameModified.length() > 10) {
+      projectNameModified = projectNameModified.substring(0, 10) + "...";
     }
     projectName.setText(projectNameModified);
-    com.google.api.client.util.DateTime dateTime =
-        new com.google.api.client.util.DateTime(String.valueOf(data.getCreatedTime()));
+    DateTime dateTime =
+        new com.google.api.client.util.DateTime(String.valueOf(data.getModifiedTime()));
     Instant instant = Instant.ofEpochMilli(dateTime.getValue());
     LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
     DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MMMM, yyyy");
