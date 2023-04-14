@@ -4,8 +4,12 @@
 
 import Foundation
 import UIKit
-
+import GoogleSignIn
+import GoogleAPIClientForREST
+import GTMSessionFetcher
 class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+    let service: GTLRDriveService = GTLRDriveService()
+    private let authentication : Authentication = Authentication.googleAuthentication
     @IBOutlet weak var projectCollectionView: UICollectionView!
     let signInView: UIView = UIView(frame: UIScreen.main.bounds)
     var allProjects: [ProjectItem] = [];
@@ -17,7 +21,15 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createMyProjectLabel();
         createPleaseSignInLabel();
         createSignInBtn();
-
+        authentication.getAllFolders();
+        self.getFilesInFolder(folderId: "1SnBn8E8W33TU5fBbih47NW1ngLjoF3_N") { files, error in
+            if let files = files {
+                print("files are : ",files);
+            }
+            if let error = error {
+                print(error)
+            }
+        }
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
@@ -91,5 +103,26 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private func updateViewsVisibility() {
         signInView.isHidden = true;
     }
+
+    func getFilesInFolder(folderId: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
+        let query = GTLRDriveQuery_FilesList.query()
+        query.q = "'\(folderId)' in parents"
+        query.fields = "nextPageToken, files(id, name, createdTime, modifiedTime, mimeType, size)"
+
+        service.executeQuery(query) { (ticket, result, error) in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            guard let files = (result as? GTLRDrive_FileList)?.files else {
+                completion([], nil)
+                return
+            }
+            completion(files, nil)
+        }
+    }
+
+
+
 }
 

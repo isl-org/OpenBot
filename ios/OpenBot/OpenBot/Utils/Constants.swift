@@ -70,7 +70,6 @@ struct Constants {
         ModeItem(label: Strings.modelManagement, icon: Images.modelManagementIcon!, identifier: Strings.ScreenModelManagement),
         ModeItem(label: Strings.robotInfo, icon: Images.robotInfoIcon!, identifier: Strings.ScreenRobotInfo),
         ModeItem(label: Strings.navigation, icon: Images.objectTrackingIcon!, identifier: Strings.ScreenNavigation),
-        ModeItem(label: "OpenCode", icon: Images.freeRoam!, identifier: "opencode")
     ]
     static let frameColors: [UIColor] = [UIColor.red, UIColor.orange, UIColor.blue, UIColor.green, UIColor.brown]
     static let autopilotMode = "AUTOPILOT"
@@ -81,21 +80,19 @@ struct Constants {
 
 
     static let temp : [ProjectItem] = [
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Pratap", projectDate: "today"),
-        ProjectItem(projectName: "Yadav", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
-        ProjectItem(projectName: "Nitish", projectDate: "today"),
+        ProjectItem(projectName: "Blink Led", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Blink", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Blink Led2", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Sonar", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Move", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Movement", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Test", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Back Movement", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Controls", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Test Controls", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Nitish's Project", projectDate: "14/04/2023"),
+        ProjectItem(projectName: "Nitish Test1", projectDate: "14/04/2023"),
+
     ]
 }
 

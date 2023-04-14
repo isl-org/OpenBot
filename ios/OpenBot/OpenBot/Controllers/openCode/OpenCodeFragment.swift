@@ -217,7 +217,7 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
     }
 
     func googleSignInFunc(clientId: String) {
-
+        print("inside googleSignInFunc")
 // Create Google Sign In configuration object.
         let config = GIDConfiguration(clientID: clientId)
         GIDSignIn.sharedInstance.configuration = config
@@ -255,41 +255,43 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
             self.userIcon.load(url: URL(string: googleProfilePicURL)!);
             let driveScope = "https://www.googleapis.com/auth/drive.readonly"
             let grantedScopes = user?.grantedScopes
+            print("driveScope ",grantedScopes);
             if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
                 // Request additional Drive scope.
+                user?.addScopes([driveScope], presenting: self)
             }
             self.service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
-//            self.getAllFoldersInDrive(accessToken: userIdToken?.tokenString ?? "") { files, error in
-//                if let files = files {
-//                    print("all folders are : ", files);
-//                    let folderId = files[0].identifier;
-//                    self.getFilesInFolder(folderId: folderId ?? "") { files, error in
-//                        if let files = files {
-//                            print("files are ", files);
-//                            for file in files {
-//                                if let fileId = file.identifier {
-//                                    self.downloadFile(withId: fileId, accessToken: user?.accessToken.tokenString ?? "") { data, error in
-//                                        if let data = data {
-//                                            print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: ""))
-//                                            return
-//                                        }
-//                                        if let error = error {
-//                                            print("error is ->", error)
-//                                        }
-//                                    }
-//                                }
-//
-//                            }
-//                        }
-//                        if let error = error {
-//                            print("error in getting files", error)
-//                        }
-//                    }
-//                }
-//                if let error = error {
-//                    print(error);
-//                }
-//            }
+            self.getAllFoldersInDrive(accessToken: userIdToken?.tokenString ?? "") { files, error in
+                if let files = files {
+                    print("all folders are : ", files);
+                    let folderId = files[0].identifier;
+                    self.getFilesInFolder(folderId: folderId ?? "") { files, error in
+                        if let files = files {
+                            print("files are ", files);
+                            for file in files {
+                                if let fileId = file.identifier {
+                                    self.downloadFile(withId: fileId, accessToken: user?.accessToken.tokenString ?? "") { data, error in
+                                        if let data = data {
+                                            print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: ""))
+                                            return
+                                        }
+                                        if let error = error {
+                                            print("error is ->", error)
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                        if let error = error {
+                            print("error in getting files", error)
+                        }
+                    }
+                }
+                if let error = error {
+                    print(error);
+                }
+            }
 
         }
     }
@@ -303,7 +305,9 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
 
 
         service.executeQuery(query) { (ticket, result, error) in
+
             if let error = error {
+                print("error in getting folder")
                 completion(nil, error)
                 return
             }
@@ -340,6 +344,7 @@ class OpenCodeFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate
         service.executeQuery(query) { (ticket, result, error) in
             if let error = error {
                 completion(nil, error)
+                print("error in getting files")
                 return
             }
             guard let files = (result as? GTLRDrive_FileList)?.files else {
