@@ -52,7 +52,7 @@ function BlocklyComponent(props) {
         model.init();
         model.render({
             shouldCloseOnOverlayClick: true,
-            shouldCloseOnEsc: true
+            shouldCloseOnEsc: true,
         });
 
         primaryWorkspace.current.addChangeListener(handleWorkspaceChange);

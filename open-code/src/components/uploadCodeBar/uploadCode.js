@@ -20,12 +20,12 @@ import {motion, AnimatePresence} from "framer-motion";
 import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {googleSigIn} from "../../services/firebase";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
+import {pythonGenerator} from "blockly/python";
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
-    const [isLoader, setIsLoader] = useState(false)
+    const [isLoader, setIsLoader] = useState(false);
     const {theme} = useContext(ThemeContext);
     const [signInPopUp, setSignInPopUp] = useState(false);
     const [uploadCodeSignIn, setUploadCodeSignIn] = useState(false);
@@ -42,18 +42,21 @@ export const UploadCode = () => {
 
 
     const generateCode = () => {
-        console.log("here")
         if (localStorage.getItem("isSigIn") === "true") {
             setDrawer(false);
             setIsLoader(true);
             const code = javascriptGenerator.workspaceToCode(
                 primaryWorkspace.current
             );
+            // const code=pythonGenerator.workspaceToCode(
+            //     primaryWorkspace.current
+            // );
+
             setGenerateCode(!generate);
             let updatedCode = code + Constants.endCode;
             console.log(updatedCode);
             uploadToGoogleDrive(updatedCode, "js").then((res) => {
-                    setCode(res);
+                    setCode(res);  
                     setIsLoader(false);
                     setDrawer(true);
                 }
