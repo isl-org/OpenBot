@@ -262,8 +262,7 @@ class ObjectTrackingFragment: CameraController {
             let transform = CGAffineTransform.identity.scaledBy(x: scaleX, y: scaleY)
             convertedRect = detection.applying(transform)
         }
-        
-/*        if convertedRect.origin.x < 0 {
+        if convertedRect.origin.x < 0 {
             convertedRect.origin.x = edgeOffset
         }
         
@@ -277,7 +276,7 @@ class ObjectTrackingFragment: CameraController {
         
         if convertedRect.maxX > UIScreen.main.bounds.maxX {
             convertedRect.size.width = UIScreen.main.bounds.maxX - convertedRect.origin.x - edgeOffset
-        }*/
+        }
         frame.frame = convertedRect
         frame.layer.borderColor = color.cgColor
         frame.layer.borderWidth = 3.0
