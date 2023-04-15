@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,19 +89,15 @@ public class AutopilotFragment extends CameraFragment {
     binding.threads.setText(String.valueOf(getNumThreads()));
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
-    CheckBox bleCb = getView().findViewById(R.id.bleToggle);
-    CheckBox USBCb = getView().findViewById(R.id.usbToggle);
     if (vehicle.getConnectionType().equals("USB")) {
-      USBCb.setVisibility(View.VISIBLE);
-      bleCb.setVisibility(View.INVISIBLE);
+      binding.usbToggle.setVisibility(View.VISIBLE);
+      binding.bleToggle.setVisibility(View.GONE);
     } else if (vehicle.getConnectionType().equals("Bluetooth")) {
-      bleCb.setVisibility(View.VISIBLE);
-      USBCb.setVisibility(View.INVISIBLE);
+      binding.bleToggle.setVisibility(View.VISIBLE);
+      binding.usbToggle.setVisibility(View.GONE);
     }
-
     List<String> models =
-        getModelNames(
-            f -> f.type.equals(Model.TYPE.AUTOPILOT) && f.pathType != Model.PATH_TYPE.URL);
+        getModelNames(f -> f.type.equals(Model.TYPE.CMDNAV) && f.pathType != Model.PATH_TYPE.URL);
     initModelSpinner(binding.modelSpinner, models, preferencesManager.getAutopilotModel());
     initServerSpinner(binding.serverSpinner);
     setAnalyserResolution(Enums.Preview.HD.getValue());
@@ -144,7 +141,13 @@ public class AutopilotFragment extends CameraFragment {
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
-          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+          Navigation.findNavController(requireView()).navigate(R.id.open_usb_fragment);
+        });
+
+    binding.bleToggle.setOnClickListener(
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
         });
     binding.bleToggle.setOnClickListener(
         v -> {
@@ -234,7 +237,7 @@ public class AutopilotFragment extends CameraFragment {
     try {
       Timber.d(
           "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-      autopilot = Autopilot.create(requireActivity(), model, device, numThreads);
+      autopilot = new Autopilot(requireActivity(), model, device, numThreads);
       croppedBitmap =
           Bitmap.createBitmap(
               autopilot.getImageSizeX(), autopilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
@@ -252,7 +255,10 @@ public class AutopilotFragment extends CameraFragment {
               () ->
                   binding.inputResolution.setText(
                       String.format(
-                          "%dx%d", autopilot.getImageSizeX(), autopilot.getImageSizeY())));
+                          Locale.getDefault(),
+                          "%dx%d",
+                          autopilot.getImageSizeX(),
+                          autopilot.getImageSizeY())));
 
       Matrix cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
@@ -273,11 +279,13 @@ public class AutopilotFragment extends CameraFragment {
 
   @Override
   public synchronized void onResume() {
-    super.onResume();
+    croppedBitmap = null;
+    tracker = null;
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
     binding.bleToggle.setChecked(vehicle.bleConnected());
+    super.onResume();
   }
 
   @Override
@@ -307,6 +315,17 @@ public class AutopilotFragment extends CameraFragment {
             R.string.speedInfo,
             String.format(
                 Locale.US, "%3.0f,%3.0f", vehicle.getLeftWheelRpm(), vehicle.getRightWheelRpm())));
+  }
+
+  @Override
+  protected void processKeyEvent(KeyEvent keyCode) {
+    if (binding.autoSwitch.isChecked()
+        && (keyCode.getKeyCode() == KeyEvent.KEYCODE_BUTTON_THUMBL
+            || keyCode.getKeyCode() == KeyEvent.KEYCODE_BUTTON_THUMBR)) {
+      audioPlayer.playFromString("Autopilot active. Cannot change speed mode.");
+    } else {
+      super.processKeyEvent(keyCode);
+    }
   }
 
   @Override
@@ -364,13 +383,19 @@ public class AutopilotFragment extends CameraFragment {
     binding.autoSwitch.setChecked(b);
     binding.controllerContainer.controlMode.setEnabled(!b);
     binding.controllerContainer.driveMode.setEnabled(!b);
-    binding.controllerContainer.speedInfo.setEnabled(!b);
+    binding.controllerContainer.speedMode.setEnabled(!b);
 
     binding.controllerContainer.controlMode.setAlpha(b ? 0.5f : 1f);
     binding.controllerContainer.driveMode.setAlpha(b ? 0.5f : 1f);
     binding.controllerContainer.speedMode.setAlpha(b ? 0.5f : 1f);
 
-    if (!b) handler.postDelayed(() -> vehicle.setControl(0, 0), 500);
+    if (!b) {
+      setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
+      handler.postDelayed(() -> vehicle.setControl(0, 0), 500);
+    } else {
+      binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_high);
+      vehicle.setSpeedMultiplier(Enums.SpeedMode.FAST.getValue());
+    }
   }
 
   private long frameNum = 0;
@@ -474,7 +499,7 @@ public class AutopilotFragment extends CameraFragment {
   }
 
   private void setSpeedMode(Enums.SpeedMode speedMode) {
-    if (speedMode != null) {
+    if (speedMode != null && !binding.autoSwitch.isChecked()) {
       switch (speedMode) {
         case SLOW:
           binding.controllerContainer.speedMode.setImageResource(R.drawable.ic_speed_low);

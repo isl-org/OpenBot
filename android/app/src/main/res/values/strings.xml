@@ -165,4 +165,34 @@
     <string name="text_on_qr_screen">Place QR code inside the frame to scan. Please avoid shake to get results quickly.</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="logout">Logout</string>
+    <string name="auto_mode">Auto Mode</string>
+    <string name="dynamic_speed">Dynamic Speed</string>
+
+    <string name="bumpers">Bumpers</string>
+    <string name="n_a">N/A</string>
+    <string name="robot_type">Robot Type:</string>
+    <string name="indicators">Indicators</string>
+    <string name="back">Back</string>
+    <string name="voltage_divider">Voltage Divider</string>
+    <string name="status">Status</string>
+    <string name="front">Front</string>
+    <string name="robot_icon">Robot Icon</string>
+    <string name="wheel_odometry_front">Wheel Odometry Front</string>
+    <string name="wheel_odometry_back">Wheel Odometry Back</string>
+    <string name="backward">Backward</string>
+    <string name="forward">Forward</string>
+    <string name="stop">Stop</string>
+    <string name="motors">Motors</string>
+    <string name="leds">LEDs</string>
+    <string name="lights">Lights</string>
+    <string name="sensors">Sensors</string>
+    <string name="send_commands">Send Commands</string>
+    <string name="wheel_odometry">Wheel Odometry</string>
+    <string name="readings">Readings</string>
+    <string name="lights_slider">lights slider</string>
+    <string name="indicator_leds">Indicator LEDs</string>
+    <string name="back_leds">Back LEDs</string>
+    <string name="status_leds">Status LEDs</string>
+    <string name="front_leds">Front LEDs</string>
+    <string name="usb">USB</string>
 </resources>

@@ -52,30 +52,30 @@ public class GameController {
     float left = 0;
     float right = 0;
     switch (event.getKeyCode()) {
-        //      case KeyEvent.KEYCODE_BUTTON_A:
+      case KeyEvent.KEYCODE_BUTTON_A:
         //        Toast.makeText(OpenBotApplication.getContext(), "A recognized",
         // Toast.LENGTH_SHORT).show();
-        //        return null;
-        //      case KeyEvent.KEYCODE_BUTTON_B:
+        break;
+      case KeyEvent.KEYCODE_BUTTON_B:
         //        Toast.makeText(OpenBotApplication.getContext(), "B recognized",
         // Toast.LENGTH_SHORT).show();
-        //        return null;
-        //      case KeyEvent.KEYCODE_BUTTON_Y:
+        break;
+      case KeyEvent.KEYCODE_BUTTON_Y:
         //        Toast.makeText(OpenBotApplication.getContext(), "Y recognized",
         // Toast.LENGTH_SHORT).show();
-        //        return null;
-        //      case KeyEvent.KEYCODE_BUTTON_X:
+        break;
+      case KeyEvent.KEYCODE_BUTTON_X:
         //        Toast.makeText(OpenBotApplication.getContext(), "X recognized",
         // Toast.LENGTH_SHORT).show();
-        //        return null;
-        //      case KeyEvent.KEYCODE_BUTTON_L1:
+        break;
+      case KeyEvent.KEYCODE_BUTTON_L1:
         //        Toast.makeText(OpenBotApplication.getContext(), "L1 recognized",
         // Toast.LENGTH_SHORT).show();
-        //        return null;
-        //      case KeyEvent.KEYCODE_BUTTON_R1:
+        break;
+      case KeyEvent.KEYCODE_BUTTON_R1:
         //        Toast.makeText(OpenBotApplication.getContext(), "R1 recognized",
         // Toast.LENGTH_SHORT).show();
-        //        return null;
+        break;
       case KeyEvent.KEYCODE_DPAD_UP:
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
           left = 1.0F;
@@ -113,6 +113,11 @@ public class GameController {
         }
         break;
       default:
+        //        Toast.makeText(
+        //                OpenBotApplication.getContext(),
+        //                "Key " + event.getKeyCode() + " not recognized",
+        //                Toast.LENGTH_SHORT)
+        //            .show();
         break;
     }
     return new Control(left, right);

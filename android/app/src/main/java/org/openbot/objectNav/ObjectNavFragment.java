@@ -21,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -38,6 +39,7 @@ import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
+import org.openbot.utils.CameraUtils;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.MovingAverage;
@@ -51,7 +53,7 @@ public class ObjectNavFragment extends CameraFragment {
   private HandlerThread handlerThread;
 
   private boolean computingNetwork = false;
-  private static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
+  public static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
 
   private static final float TEXT_SIZE_DIP = 10;
 
@@ -100,34 +102,31 @@ public class ObjectNavFragment extends CameraFragment {
 
     binding.plusConfidence.setOnClickListener(
         v -> {
-          String trimConfVaue = binding.confidenceValue.getText().toString().trim();
-          int confValue = Integer.parseInt(trimConfVaue.substring(0, trimConfVaue.length() - 1));
-          if (confValue > 100) return;
+          String trimConfValue = binding.confidenceValue.getText().toString().trim();
+          int confValue = Integer.parseInt(trimConfValue.substring(0, trimConfValue.length() - 1));
+          if (confValue >= 95) return;
           confValue += 5;
           binding.confidenceValue.setText(confValue + "%");
           MINIMUM_CONFIDENCE_TF_OD_API = confValue / 100f;
         });
     binding.minusConfidence.setOnClickListener(
         v -> {
-          String trimConfVaue = binding.confidenceValue.getText().toString().trim();
-          int confValue = Integer.parseInt(trimConfVaue.substring(0, trimConfVaue.length() - 1));
-          if (confValue < 5) return;
+          String trimConfValue = binding.confidenceValue.getText().toString().trim();
+          int confValue = Integer.parseInt(trimConfValue.substring(0, trimConfValue.length() - 1));
+          if (confValue <= 5) return;
           confValue -= 5;
-
           binding.confidenceValue.setText(confValue + "%");
           MINIMUM_CONFIDENCE_TF_OD_API = confValue / 100f;
         });
 
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
 
-    CheckBox bleCb = getView().findViewById(R.id.bleToggle);
-    CheckBox USBCb = getView().findViewById(R.id.usbToggle);
     if (vehicle.getConnectionType().equals("USB")) {
-      USBCb.setVisibility(View.VISIBLE);
-      bleCb.setVisibility(View.INVISIBLE);
+      binding.usbToggle.setVisibility(View.VISIBLE);
+      binding.bleToggle.setVisibility(View.GONE);
     } else if (vehicle.getConnectionType().equals("Bluetooth")) {
-      bleCb.setVisibility(View.VISIBLE);
-      USBCb.setVisibility(View.INVISIBLE);
+      binding.bleToggle.setVisibility(View.VISIBLE);
+      binding.usbToggle.setVisibility(View.GONE);
     }
 
     classType = preferencesManager.getObjectType();
@@ -193,7 +192,12 @@ public class ObjectNavFragment extends CameraFragment {
     binding.usbToggle.setOnClickListener(
         v -> {
           binding.usbToggle.setChecked(vehicle.isUsbConnected());
-          Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
+          Navigation.findNavController(requireView()).navigate(R.id.open_usb_fragment);
+        });
+    binding.bleToggle.setOnClickListener(
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
         });
     binding.bleToggle.setOnClickListener(
         v -> {
@@ -222,12 +226,18 @@ public class ObjectNavFragment extends CameraFragment {
                     Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()))));
 
     binding.autoSwitch.setOnClickListener(v -> setNetworkEnabled(binding.autoSwitch.isChecked()));
+    binding.dynamicSpeed.setChecked(preferencesManager.getDynamicSpeed());
+    binding.dynamicSpeed.setOnClickListener(
+        v -> {
+          preferencesManager.setDynamicSpeed(binding.dynamicSpeed.isChecked());
+          tracker.setDynamicSpeed(preferencesManager.getDynamicSpeed());
+        });
   }
 
   private void updateCropImageInfo() {
     //    Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
     //    Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
-    // getMaxAnalyseImageSize().getHeight());
+    //     getMaxAnalyseImageSize().getHeight());
     frameToCropTransform = null;
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
@@ -239,6 +249,7 @@ public class ObjectNavFragment extends CameraFragment {
     borderedText.setTypeface(Typeface.MONOSPACE);
 
     tracker = new MultiBoxTracker(requireContext());
+    tracker.setDynamicSpeed(preferencesManager.getDynamicSpeed());
 
     Timber.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
@@ -285,6 +296,7 @@ public class ObjectNavFragment extends CameraFragment {
       Timber.d("Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
       detector = Detector.create(requireActivity(), model, device, numThreads);
 
+      assert detector != null;
       croppedBitmap =
           Bitmap.createBitmap(
               detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
@@ -313,7 +325,11 @@ public class ObjectNavFragment extends CameraFragment {
                 binding.classType.setSelection(
                     detector.getLabels().indexOf(preferencesManager.getObjectType()));
                 binding.inputResolution.setText(
-                    String.format("%dx%d", detector.getImageSizeX(), detector.getImageSizeY()));
+                    String.format(
+                        Locale.getDefault(),
+                        "%dx%d",
+                        detector.getImageSizeX(),
+                        detector.getImageSizeY()));
               });
 
     } catch (IllegalArgumentException | IOException e) {
@@ -332,6 +348,8 @@ public class ObjectNavFragment extends CameraFragment {
 
   @Override
   public synchronized void onResume() {
+    croppedBitmap = null;
+    tracker = null;
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
@@ -391,9 +409,10 @@ public class ObjectNavFragment extends CameraFragment {
 
   private void setNetworkEnabled(boolean b) {
     binding.autoSwitch.setChecked(b);
+
     binding.controllerContainer.controlMode.setEnabled(!b);
     binding.controllerContainer.driveMode.setEnabled(!b);
-    binding.controllerContainer.speedInfo.setEnabled(!b);
+    binding.controllerContainer.speedMode.setEnabled(!b);
 
     binding.controllerContainer.controlMode.setAlpha(b ? 0.5f : 1f);
     binding.controllerContainer.driveMode.setAlpha(b ? 0.5f : 1f);
@@ -420,7 +439,12 @@ public class ObjectNavFragment extends CameraFragment {
       runInBackground(
           () -> {
             final Canvas canvas = new Canvas(croppedBitmap);
-            canvas.drawBitmap(bitmap, frameToCropTransform, null);
+            if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+              canvas.drawBitmap(
+                  CameraUtils.flipBitmapHorizontal(bitmap), frameToCropTransform, null);
+            } else {
+              canvas.drawBitmap(bitmap, frameToCropTransform, null);
+            }
 
             if (detector != null) {
               Timber.i("Running detection on image %s", frameNum);

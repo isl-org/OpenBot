@@ -2,10 +2,12 @@ package org.openbot.main;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,40 +81,59 @@ public class BluetoothFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    if (!BleManager.isBluetoothOn()) BleManager.toggleBluetooth(true);
     // for most devices whose version is over Android6,scanning may need GPS permission
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !isGpsOn()) {
+      startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
       Toast.makeText(getActivity(), "Please turn on GPS before scanning", Toast.LENGTH_LONG).show();
       return;
     }
-    EasyPermissions.with(getActivity())
-        .request(Manifest.permission.ACCESS_FINE_LOCATION)
-        .autoRetryWhenUserRefuse(true, null)
-        .result(
-            new RequestExecutor.ResultReceiver() {
-              @Override
-              public void onPermissionsRequestResult(boolean grantAll, List<Permission> results) {
-                TextView tv = getView().findViewById(R.id.btn_refresh);
-
-                if (grantAll) {
-                  tv.setOnClickListener(
-                      new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                          startScan();
-                        }
-                      });
-                  startScan();
-                } else {
-                  Toast.makeText(
-                          getActivity(),
-                          "Please go to settings to grant location permission manually",
-                          Toast.LENGTH_LONG)
-                      .show();
-                  EasyPermissions.goToSettingsActivity(getActivity());
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      EasyPermissions.with(getActivity())
+          .request(
+              Manifest.permission.ACCESS_FINE_LOCATION,
+              Manifest.permission.BLUETOOTH_SCAN,
+              Manifest.permission.BLUETOOTH_CONNECT)
+          .autoRetryWhenUserRefuse(true, null)
+          .result(
+              new RequestExecutor.ResultReceiver() {
+                @Override
+                public void onPermissionsRequestResult(boolean grantAll, List<Permission> results) {
+                  checkPermission(grantAll);
                 }
-              }
-            });
+              });
+    } else {
+      EasyPermissions.with(getActivity())
+          .request(Manifest.permission.ACCESS_FINE_LOCATION)
+          .autoRetryWhenUserRefuse(true, null)
+          .result(
+              new RequestExecutor.ResultReceiver() {
+                @Override
+                public void onPermissionsRequestResult(boolean grantAll, List<Permission> results) {
+                  checkPermission(grantAll);
+                }
+              });
+    }
+  }
+
+  private void checkPermission(boolean grantAll) {
+    TextView tv = getView().findViewById(R.id.btn_refresh);
+    if (grantAll) {
+      if (!BleManager.isBluetoothOn()) BleManager.toggleBluetooth(true);
+      tv.setOnClickListener(
+          new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              startScan();
+            }
+          });
+      startScan();
+    } else {
+      Toast.makeText(
+              getActivity().getApplicationContext(),
+              "Please go to settings to grant location and Near by Devices permission manually",
+              Toast.LENGTH_LONG)
+          .show();
+    }
   }
 
   private void startScan() {
@@ -142,8 +163,5 @@ public class BluetoothFragment extends Fragment {
   public void onDestroy() {
     super.onDestroy();
     vehicle.stopScan();
-    //        if (manager != null) {
-    //            manager.destroy();
-    //        }
   }
 }

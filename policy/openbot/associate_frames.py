@@ -107,15 +107,20 @@ def associate(first_list, second_list, max_offset):
     return matches
 
 
-def match_frame_ctrl_cmd(
-    data_dir, datasets, max_offset, redo_matching=False, remove_zeros=True
+def match_frame_ctrl_input(
+    data_dir,
+    datasets,
+    max_offset,
+    redo_matching=False,
+    remove_zeros=True,
+    policy="autopilot",
 ):
     frames = []
     for dataset in datasets:
         for folder in utils.list_dirs(os.path.join(data_dir, dataset)):
             session_dir = os.path.join(data_dir, dataset, folder)
             frame_list = match_frame_session(
-                session_dir, max_offset, redo_matching, remove_zeros
+                session_dir, max_offset, redo_matching, remove_zeros, policy
             )
             for timestamp in list(frame_list):
                 frames.append(frame_list[timestamp][0])
@@ -123,8 +128,23 @@ def match_frame_ctrl_cmd(
 
 
 def match_frame_session(
-    session_dir, max_offset, redo_matching=False, remove_zeros=True
+    session_dir, max_offset, redo_matching=False, remove_zeros=True, policy="autopilot"
 ):
+    if policy == "autopilot":
+        matched_frames_file_name = "matched_frame_ctrl_cmd.txt"
+        processed_frames_file_name = "matched_frame_ctrl_cmd_processed.txt"
+        log_file = "indicatorLog.txt"
+        csv_label_string = "timestamp (frame),time_offset (cmd-frame),time_offset (ctrl-frame),frame,left,right,cmd\n"
+        csv_label_string_processed = "timestamp,frame,left,right,cmd\n"
+    elif policy == "point_goal_nav":
+        matched_frames_file_name = "matched_frame_ctrl_goal.txt"
+        processed_frames_file_name = "matched_frame_ctrl_goal_processed.txt"
+        log_file = "goalLog.txt"
+        csv_label_string = "timestamp (frame),time_offset (goal-frame),time_offset (ctrl-frame),frame,left,right,dist,sinYaw,cosYaw\n"
+        csv_label_string_processed = "timestamp,frame,left,right,dist,sinYaw,cosYaw\n"
+    else:
+        raise Exception("Unknown policy")
+
     sensor_path = os.path.join(session_dir, "sensor_data")
     img_path = os.path.join(session_dir, "images")
     print("Processing folder %s" % (session_dir))
@@ -156,7 +176,7 @@ def match_frame_session(
         print(" Frames and controls matched.")
 
     if not redo_matching and os.path.isfile(
-        os.path.join(sensor_path, "matched_frame_ctrl_cmd.txt")
+        os.path.join(sensor_path, matched_frames_file_name)
     ):
         print(" Frames and commands already matched.")
     else:
@@ -164,58 +184,79 @@ def match_frame_session(
         frame_list = read_file_list(os.path.join(sensor_path, "matched_frame_ctrl.txt"))
         if len(frame_list) == 0:
             raise Exception("Empty matched_frame_ctrl.txt")
-        cmd_list = read_file_list(os.path.join(sensor_path, "indicatorLog.txt"))
-        # Set indicator signal to 0 for initial frames
-        if len(cmd_list) == 0 or sorted(frame_list)[0] < sorted(cmd_list)[0]:
-            cmd_list[sorted(frame_list)[0]] = ["0"]
+        cmd_list = read_file_list(os.path.join(sensor_path, log_file))
+
+        if policy == "autopilot":
+            # Set indicator signal to 0 for initial frames
+            if len(cmd_list) == 0 or sorted(frame_list)[0] < sorted(cmd_list)[0]:
+                cmd_list[sorted(frame_list)[0]] = ["0"]
+
+        elif policy == "point_goal_nav":
+            if len(cmd_list) == 0:
+                raise Exception("Empty goalLog.txt")
+
         matches = associate(frame_list, cmd_list, max_offset)
-        with open(os.path.join(sensor_path, "matched_frame_ctrl_cmd.txt"), "w") as f:
-            f.write(
-                "timestamp (frame),time_offset (cmd-frame),time_offset (ctrl-frame),frame,left,right,cmd\n"
-            )
+        with open(os.path.join(sensor_path, matched_frames_file_name), "w") as f:
+            f.write(csv_label_string)
             for a, b in matches:
                 f.write(
                     "%d,%d,%s,%s\n"
                     % (a, b - a, ",".join(frame_list[a]), ",".join(cmd_list[b]))
                 )
-        print(" Frames and commands matched.")
+        print(" Frames and high-level commands matched.")
 
     if not redo_matching and os.path.isfile(
-        os.path.join(sensor_path, "matched_frame_ctrl_cmd_processed.txt")
+        os.path.join(sensor_path, processed_frames_file_name)
     ):
         print(" Preprocessing already completed.")
     else:
         # Cleanup: Add path and remove frames where vehicle was stationary
-        frame_list = read_file_list(
-            os.path.join(sensor_path, "matched_frame_ctrl_cmd.txt")
-        )
-        with open(
-            os.path.join(sensor_path, "matched_frame_ctrl_cmd_processed.txt"), "w"
-        ) as f:
-            f.write("timestamp,frame,left,right,cmd\n")
+        frame_list = read_file_list(os.path.join(sensor_path, matched_frames_file_name))
+        with open(os.path.join(sensor_path, processed_frames_file_name), "w") as f:
+            f.write(csv_label_string_processed)
             # max_ctrl = get_max_ctrl(frame_list)
             for timestamp in list(frame_list):
                 frame = frame_list[timestamp]
                 if len(frame) < 6:
                     continue
-                left = int(frame[3])
-                right = int(frame[4])
-                # left = normalize(max_ctrl, frame[3])
-                # right = normalize(max_ctrl, frame[4])
-                if remove_zeros and left == 0 and right == 0:
-                    print(f" Removed timestamp: {timestamp}")
-                    del frame
-                else:
-                    frame_name = os.path.join(img_path, frame[2] + "_crop.jpeg")
-                    cmd = int(frame[5])
-                    f.write(
-                        "%s,%s,%d,%d,%d\n" % (timestamp, frame_name, left, right, cmd)
-                    )
+
+                if policy == "autopilot":
+                    left = int(frame[3])
+                    right = int(frame[4])
+                    # left = normalize(max_ctrl, frame[3])
+                    # right = normalize(max_ctrl, frame[4])
+                    if remove_zeros and left == 0 and right == 0:
+                        print(f" Removed timestamp: {timestamp}")
+                        del frame
+                    else:
+                        frame_name = os.path.join(img_path, frame[2] + "_crop.jpeg")
+                        cmd = int(frame[5])
+                        f.write(
+                            "%s,%s,%d,%d,%d\n"
+                            % (timestamp, frame_name, left, right, cmd)
+                        )
+
+                elif policy == "point_goal_nav":
+                    left = float(frame_list[timestamp][3])
+                    right = float(frame_list[timestamp][4])
+                    if remove_zeros and left == 0.0 and right == 0.0:
+                        print(" Removed timestamp:%s" % (timestamp))
+                        del frame_list[timestamp]
+                    else:
+                        frame_name = os.path.join(
+                            img_path, frame_list[timestamp][2] + ".jpeg"
+                        )
+                        dist = float(frame_list[timestamp][5])
+                        sinYaw = float(frame_list[timestamp][6])
+                        cosYaw = float(frame_list[timestamp][7])
+                        f.write(
+                            "%s,%s,%f,%f,%f,%f,%f\n"
+                            % (timestamp, frame_name, left, right, dist, sinYaw, cosYaw)
+                        )
+
         print(" Preprocessing completed.")
 
-    return read_file_list(
-        os.path.join(sensor_path, "matched_frame_ctrl_cmd_processed.txt")
-    )
+    return read_file_list(os.path.join(sensor_path, processed_frames_file_name))
 
 
 def normalize(max_ctrl, val):

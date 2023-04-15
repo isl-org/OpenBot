@@ -12,6 +12,7 @@ import com.ficat.easyble.Logger;
 import com.ficat.easyble.gatt.bean.CharacteristicInfo;
 import com.ficat.easyble.gatt.bean.ServiceInfo;
 import com.ficat.easyble.gatt.callback.BleConnectCallback;
+import com.ficat.easyble.gatt.callback.BleMtuCallback;
 import com.ficat.easyble.gatt.callback.BleNotifyCallback;
 import com.ficat.easyble.gatt.callback.BleWriteCallback;
 import com.ficat.easyble.scan.BleScanCallback;
@@ -51,8 +52,6 @@ public class BluetoothManager {
     if (!BleManager.supportBle(this.context)) {
       return;
     }
-    // open bluetooth without a request dialog
-    BleManager.toggleBluetooth(true);
 
     BleManager.ScanOptions scanOptions =
         BleManager.ScanOptions.newInstance()
@@ -115,8 +114,6 @@ public class BluetoothManager {
         BleManager.getInstance().disconnect(bleDevice.address);
         bleDevice = null;
       }
-      //            BleManager.getInstance().connect(device.address, connectCallback);
-      //            bleDevice = device;
     } else {
       BleManager.getInstance().connect(bleDevice.address, connectCallback);
     }
@@ -139,14 +136,14 @@ public class BluetoothManager {
           deviceList.add(indexValue, device);
           adapter.notifyDataSetChanged();
           addDeviceInfoDataAndUpdate();
-          Logger.e("Successfully connected: " + " " + device);
+          Logger.i("Successfully connected: " + " " + device);
         }
 
         @Override
         public void onDisconnected(String info, int status, BleDevice device) {
           bleDevice = null;
           adapter.notifyDataSetChanged();
-          Logger.e("disconnected!");
+          Logger.i("disconnected!");
         }
 
         @Override
@@ -172,7 +169,9 @@ public class BluetoothManager {
         if (characteristicInfo.notify) {
           notifyCharacteristic = characteristicInfo;
           notifyServiceInfo = e.getKey();
-          read();
+          if (isBleConnected())
+            // Set the MTU size to 64 bytes
+            BleManager.getInstance().setMtu(bleDevice, 64, mtuCallback);
         }
         if (characteristicInfo.writable) {
           writeServiceInfo = e.getKey();
@@ -180,12 +179,6 @@ public class BluetoothManager {
         }
       }
     }
-  }
-
-  public void read() {
-    if (isBleConnected())
-      BleManager.getInstance()
-          .notify(bleDevice, notifyServiceInfo.uuid, notifyCharacteristic.uuid, notifyCallback);
   }
 
   public void write(String msg) {
@@ -200,12 +193,25 @@ public class BluetoothManager {
     }
   }
 
+  public BleMtuCallback mtuCallback =
+      new BleMtuCallback() {
+        @Override
+        public void onMtuChanged(int mtu, BleDevice device) {
+          BleManager.getInstance()
+              .notify(bleDevice, notifyServiceInfo.uuid, notifyCharacteristic.uuid, notifyCallback);
+        }
+
+        @Override
+        public void onFailure(int failCode, String info, BleDevice device) {
+          Logger.e("mtu fail:" + info + " " + failCode);
+        }
+      };
   public BleWriteCallback writeCallback =
       new BleWriteCallback() {
         @Override
         public void onWriteSuccess(byte[] data, BleDevice device) {
           String value = new String(data, StandardCharsets.UTF_8);
-          Logger.e("write success:" + value);
+          Logger.i("write success:" + value);
         }
 
         @Override
@@ -241,7 +247,7 @@ public class BluetoothManager {
 
   private void onSerialDataReceived(String data) {
     // Add whatever you want here
-    Logger.e("Serial data received from BLE: " + data);
+    Logger.i("Serial data received from BLE: " + data);
     localBroadcastManager.sendBroadcast(
         new Intent(Constants.DEVICE_ACTION_DATA_RECEIVED)
             .putExtra("from", "usb")

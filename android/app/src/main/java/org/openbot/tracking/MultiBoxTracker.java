@@ -73,6 +73,7 @@ public class MultiBoxTracker {
   private int sensorOrientation;
   private float leftControl;
   private float rightControl;
+  private boolean useDynamicSpeed = false;
 
   public MultiBoxTracker(final Context context) {
     for (final int color : COLORS) {
@@ -143,21 +144,30 @@ public class MultiBoxTracker {
             false);
   }
 
+  /**
+   * Determine the robot controls/steering from the position of the tracked object/person on screen.
+   * The follow speed is adjusted based on the area of the bounding box of the tracked object.
+   * Assumption: large object box --> close to object --> slow down
+   *
+   * @return the adjusted speed control for left and right wheels in the range -1.0 ... 1.0
+   */
   public synchronized Control updateTarget() {
     if (!trackedObjects.isEmpty()) {
-      // Pick person with highest probability
+      // Pick detection with highest probability
       final RectF trackedPos = new RectF(trackedObjects.get(0).location);
       final boolean rotated = sensorOrientation % 180 == 90;
       float imgWidth = (float) (rotated ? frameHeight : frameWidth);
+      // calculate track box area for distance estimate
+      float boxArea = trackedPos.height() * trackedPos.width();
       float centerX = (rotated ? trackedPos.centerY() : trackedPos.centerX());
       // Make sure object center is in frame
       centerX = Math.max(0.0f, Math.min(centerX, imgWidth));
       // Scale relative position along x-axis between -1 and 1
       float x_pos_norm = 1.0f - 2.0f * centerX / imgWidth;
-      // Scale to control signal and account for rotation
+      // Scale for steering signal and account for rotation,
       float x_pos_scaled = rotated ? -x_pos_norm * 1.0f : x_pos_norm * 1.0f;
       //// Scale by "exponential" function: y = x / sqrt(1-x^2)
-      // Math.max (Math.min(x_pos_norm / Math.sqrt(1 - x_pos_norm * x_pos_norm),2),-2) * 255.0f;
+      // Math.max (Math.min(x_pos_norm / Math.sqrt(1 - x_pos_norm * x_pos_norm),2),-2);
 
       if (x_pos_scaled < 0) {
         leftControl = 1.0f;
@@ -166,10 +176,26 @@ public class MultiBoxTracker {
         leftControl = 1.0f - x_pos_scaled;
         rightControl = 1.0f;
       }
+
+      // adjust speed depending on size of detected object bounding box
+      if (useDynamicSpeed) {
+        float scaleFactor = 1.0f - boxArea / (frameWidth * frameHeight);
+        scaleFactor = scaleFactor > 0.75f ? 1.0f : scaleFactor; // tracked object far, full speed
+        // apply scale factor if tracked object is not too near, otherwise stop
+        if (scaleFactor > 0.25f) {
+          leftControl *= scaleFactor;
+          rightControl *= scaleFactor;
+        } else {
+          leftControl = 0.0f;
+          rightControl = 0.0f;
+        }
+      }
+
     } else {
       leftControl = 0.0f;
       rightControl = 0.0f;
     }
+
     return new Control(
         (0 > sensorOrientation) ? rightControl : leftControl,
         (0 > sensorOrientation) ? leftControl : rightControl);
@@ -260,6 +286,15 @@ public class MultiBoxTracker {
         break;
       }
     }
+  }
+
+  /**
+   * Set use of dynamic speed on or off (used in updateTarget())
+   *
+   * @param isEnabled
+   */
+  public void setDynamicSpeed(boolean isEnabled) {
+    useDynamicSpeed = isEnabled;
   }
 
   private static class TrackedRecognition {

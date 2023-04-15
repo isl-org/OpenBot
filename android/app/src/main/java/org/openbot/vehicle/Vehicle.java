@@ -38,7 +38,7 @@ public class Vehicle {
   private final Context context;
   private final int baudRate;
 
-  private String vehicleType = "RTR_V1";
+  private String vehicleType = "";
   private boolean hasVoltageDivider = false;
   private boolean hasIndicators = false;
   private boolean hasSonar = false;
@@ -48,7 +48,7 @@ public class Vehicle {
   private boolean hasLedsFront = false;
   private boolean hasLedsBack = false;
   private boolean hasLedsStatus = false;
-
+  private boolean isReady = false;
   private BluetoothManager bluetoothManager;
   SharedPreferences sharedPreferences;
   public String connectionType;
@@ -75,6 +75,14 @@ public class Vehicle {
 
   public void setMaxBatteryVoltage(float maxBatteryVoltage) {
     this.maxBatteryVoltage = maxBatteryVoltage;
+  }
+
+  public boolean isReady() {
+    return isReady;
+  }
+
+  public void setReady(boolean ready) {
+    isReady = ready;
   }
 
   public boolean isHasVoltageDivider() {
@@ -193,7 +201,7 @@ public class Vehicle {
       setHasLedsBack(true);
     }
     if (message.contains(":ls:")) {
-      setHasLedsBack(true);
+      setHasLedsStatus(true);
     }
   }
 
@@ -381,9 +389,11 @@ public class Vehicle {
   }
 
   private void sendStringToDevice(String message) {
-    if (getConnectionType().equals("USB") && usbConnection.isOpen()) {
+    if (getConnectionType().equals("USB") && usbConnection != null) {
       usbConnection.send(message);
-    } else if (getConnectionType().equals("Bluetooth") && bluetoothManager.isBleConnected()) {
+    } else if (getConnectionType().equals("Bluetooth")
+        && bluetoothManager != null
+        && bluetoothManager.isBleConnected()) {
       sendStringToBle(message);
     }
   }
@@ -394,6 +404,12 @@ public class Vehicle {
 
   public float getRightSpeed() {
     return control.getRight() * speedMultiplier;
+  }
+
+  public void sendLightIntensity(float frontPercent, float backPercent) {
+    int front = (int) (frontPercent * 255.f);
+    int back = (int) (backPercent * 255.f);
+    sendStringToDevice(String.format(Locale.US, "l%d,%d\n", front, back));
   }
 
   public void sendControl() {
@@ -414,27 +430,19 @@ public class Vehicle {
   }
 
   protected void sendHeartbeat(int timeout_ms) {
-    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      usbConnection.send(String.format(Locale.getDefault(), "h%d\n", timeout_ms));
-    }
+    sendStringToDevice(String.format(Locale.getDefault(), "h%d\n", timeout_ms));
   }
 
   protected void setSonarFrequency(int interval_ms) {
-    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      usbConnection.send(String.format(Locale.getDefault(), "s%d\n", interval_ms));
-    }
+    sendStringToDevice(String.format(Locale.getDefault(), "s%d\n", interval_ms));
   }
 
   protected void setVoltageFrequency(int interval_ms) {
-    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      usbConnection.send(String.format(Locale.getDefault(), "v%d\n", interval_ms));
-    }
+    sendStringToDevice(String.format(Locale.getDefault(), "v%d\n", interval_ms));
   }
 
   protected void setWheelOdometryFrequency(int interval_ms) {
-    if (usbConnection != null && usbConnection.isOpen() && !usbConnection.isBusy()) {
-      usbConnection.send(String.format(Locale.getDefault(), "w%d\n", interval_ms));
-    }
+    sendStringToDevice(String.format(Locale.getDefault(), "w%d\n", interval_ms));
   }
 
   private class HeartBeatTask extends TimerTask {
@@ -464,10 +472,6 @@ public class Vehicle {
     setControl(control);
   }
 
-  public BluetoothManager getBluetoothManager() {
-    return bluetoothManager;
-  }
-
   public ScanDeviceAdapter getBleAdapter() {
     return bluetoothManager.adapter;
   }
@@ -489,18 +493,6 @@ public class Vehicle {
 
   public List<BleDevice> getDeviceList() {
     return bluetoothManager.deviceList;
-  }
-
-  public void setDeviceList(List<BleDevice> deviceList) {
-    bluetoothManager.deviceList = deviceList;
-  }
-
-  public void addBleDevice(BleDevice device) {
-    bluetoothManager.deviceList.add(device);
-  }
-
-  public void removeBleDevice(BleDevice device) {
-    bluetoothManager.deviceList.remove(device);
   }
 
   public void setBleDevice(BleDevice device) {
@@ -527,11 +519,6 @@ public class Vehicle {
     return bluetoothManager.isBleConnected();
   }
 
-  enum CONNECTION_TYPE {
-    Bluetooth,
-    USB
-  }
-
   private void setConnectionPreferences(String name, String value) {
     SharedPreferences.Editor editor = sharedPreferences.edit();
     editor.putString(name, value);
@@ -540,7 +527,9 @@ public class Vehicle {
 
   private String getConnectionPreferences(String name, String defaultValue) {
     try {
-      return sharedPreferences.getString(name, defaultValue);
+      if (sharedPreferences != null) {
+        return sharedPreferences.getString(name, defaultValue);
+      } else return defaultValue;
     } catch (ClassCastException e) {
       return defaultValue;
     }
@@ -548,9 +537,5 @@ public class Vehicle {
 
   public String getConnectionType() {
     return getConnectionPreferences("connection_type", "USB");
-  }
-
-  public void setConnectionType(String type) {
-    setConnectionPreferences("connection_type", type);
   }
 }

@@ -23,8 +23,7 @@ public class ScanDeviceAdapter extends CommonRecyclerViewAdapter<BleDevice> {
   }
 
   @Override
-  public void bindDataToItem(
-      CommonRecyclerViewAdapter.MyViewHolder holder, BleDevice data, int position) {
+  public void bindDataToItem(MyViewHolder holder, BleDevice data, int position) {
     TextView tvName = (TextView) holder.mViews.get(R.id.ble_name);
     TextView tvAddress = (TextView) holder.mViews.get(R.id.ble_address);
     TextView tvConnectionState = (TextView) holder.mViews.get(R.id.ble_connection_state);

@@ -26,7 +26,8 @@ public class SharedPreferencesManager {
 
   private static final String OBJECT_TYPE = "OBJECT_TYPE";
   private static final String DEFAULT_OBJECT_TYPE = "person";
-
+  // object tracker switch for speed adjusted by estimated object distance
+  private static final String OBJECT_NAV_DYNAMIC_SPEED = "OBJECT_NAV_DYNAMICSPEED";
   private static final int DEFAULT_DEVICE = Network.Device.CPU.ordinal();
   private static final String DEVICE = "DEVICE";
   private static final int DEFAULT_NUM_THREAD = 4;
@@ -72,6 +73,11 @@ public class SharedPreferencesManager {
     return preferences.getInt(NUM_THREAD, DEFAULT_NUM_THREAD);
   }
 
+  /**
+   * Get selected camera lens facing
+   *
+   * @return true for LENS_FACING_FRONT, false for LENS_FACING_BACK
+   */
   public boolean getCameraSwitch() {
     return preferences.getBoolean(CAMERA_SWITCH, false);
   }
@@ -130,6 +136,14 @@ public class SharedPreferencesManager {
 
   public void setDriveMode(int mode) {
     preferences.edit().putInt(DRIVE_MODE, mode).apply();
+  }
+
+  public void setDynamicSpeed(boolean isEnabled) {
+    preferences.edit().putBoolean(OBJECT_NAV_DYNAMIC_SPEED, isEnabled).apply();
+  }
+
+  public boolean getDynamicSpeed() {
+    return preferences.getBoolean(OBJECT_NAV_DYNAMIC_SPEED, false);
   }
 
   public void setLogMode(int mode) {

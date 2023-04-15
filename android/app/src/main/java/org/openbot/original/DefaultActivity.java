@@ -100,11 +100,12 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
     borderedText.setTypeface(Typeface.MONOSPACE);
 
     tracker = new MultiBoxTracker(this);
+    tracker.setDynamicSpeed(preferencesManager.getDynamicSpeed());
 
     previewWidth = size.getWidth();
     previewHeight = size.getHeight();
 
-    sensorOrientation = rotation - getScreenOrientation();
+    sensorOrientation = rotation - ImageUtils.getScreenOrientation(this);
     LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
     LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);
@@ -378,7 +379,7 @@ public class DefaultActivity extends CameraActivity implements OnImageAvailableL
       } else {
         LOGGER.d(
             "Creating autopilot (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-        autopilot = Autopilot.create(this, model, device, numThreads);
+        autopilot = new Autopilot(this, model, device, numThreads);
         croppedBitmap =
             Bitmap.createBitmap(
                 autopilot.getImageSizeX(), autopilot.getImageSizeY(), Config.ARGB_8888);
