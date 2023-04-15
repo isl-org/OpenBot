@@ -51,7 +51,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     func createMyProjectLabel() {
         let label = CustomLabel(text: "My Projects", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 20, y: 90, width: 200, height: 40));
-        label.font = HelveticaNeue.bold(size: 12);
+        label.font = HelveticaNeue.regular(size: 15);
         view.addSubview(label)
 
     }

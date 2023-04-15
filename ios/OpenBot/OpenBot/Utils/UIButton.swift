@@ -35,7 +35,7 @@ class CustomButton: UIButton {
         layer.cornerRadius = 10;
         layer.borderColor = Colors.title?.cgColor
         layer.borderWidth = 2;
-        setTitleColor(UIColor(named: "gamepad"), for: .normal);
+        setTitleColor(traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, for: .normal);
         addTarget(nil, action: selector, for: .touchUpInside);
     }
 

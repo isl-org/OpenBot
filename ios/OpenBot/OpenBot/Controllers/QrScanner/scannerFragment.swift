@@ -8,6 +8,7 @@ import AVFoundation
 
 class scannerFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     let cameraView = UIView();
+    let alert = UIAlertController(title: "Loading", message: "Please wait while we load data...", preferredStyle: .alert)
     var userToken: String = ""
     private var commands: String = ""
     private var projectFileId: String = "";
@@ -70,9 +71,11 @@ class scannerFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate 
                 print("QR code data: \(qrCodeString)")
                 qrResult = qrCodeString;
                 captureSession.stopRunning();
+                createOverlayAlert();
                 print("Qr Scan Successful");
                 Authentication.download(file: qrResult) { data, error in
                     self.createBottomSheet()
+                    self.alert.dismiss(animated: true);
                     if let error = error {
                         self.createErrorUI()
                         return;
@@ -81,8 +84,6 @@ class scannerFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate 
                         self.createSuccessUI();
                         print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") as Any)
                         self.commands = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
-
-
                     }
                 }
             }
@@ -206,6 +207,15 @@ class scannerFragment: UIViewController, AVCaptureMetadataOutputObjectsDelegate 
 
     @objc private func scan() {
         print("Start robot");
+    }
+
+    func createOverlayAlert() {
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
+        loadingIndicator.startAnimating();
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = UIActivityIndicatorView.Style.medium
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
     }
 
 }

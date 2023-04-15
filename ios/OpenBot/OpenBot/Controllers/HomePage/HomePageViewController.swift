@@ -26,6 +26,7 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
     override func viewDidLoad() {
         super.viewDidLoad()
         createShadowSheet()
+        UITabBar.appearance().tintColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white: UIColor.black;
         bluetoothDataController.shared.startScan()
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         setUpTitle();

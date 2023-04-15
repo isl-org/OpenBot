@@ -47,10 +47,10 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
     }
 
     private func createLabels() {
-        firstName = CustomLabel(text: "First Name", fontSize: 16, fontColor: UIColor(named: "gamepad") ?? .black, frame: CGRect(x: 26, y: (profileIcon.frame.origin.y + profileIcon.frame.width + adapted(dimensionSize: 40, to: .height)), width: 150, height: 40))
-        lastName = CustomLabel(text: "Last Name", fontSize: 16, fontColor: UIColor(named: "gamepad") ?? .black, frame: CGRect(x: 26, y: (firstName.frame.origin.y + 100.0), width: 150, height: 40))
-        dob = CustomLabel(text: "Date Of Birth", fontSize: 16, fontColor: UIColor(named: "gamepad") ?? .black, frame: CGRect(x: 26, y: (lastName.frame.origin.y + 100.0), width: 150, height: 40))
-        email = CustomLabel(text: "Email", fontSize: 16, fontColor: UIColor(named: "gamepad") ?? .black, frame: CGRect(x: 26, y: (dob.frame.origin.y + 100.0), width: 150, height: 40))
+        firstName = CustomLabel(text: "First Name", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (profileIcon.frame.origin.y + profileIcon.frame.width + adapted(dimensionSize: 40, to: .height)), width: 150, height: 40))
+        lastName = CustomLabel(text: "Last Name", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (firstName.frame.origin.y + 100.0), width: 150, height: 40))
+        dob = CustomLabel(text: "Date Of Birth", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (lastName.frame.origin.y + 100.0), width: 150, height: 40))
+        email = CustomLabel(text: "Email", fontSize: 16, fontColor:traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (dob.frame.origin.y + 100.0), width: 150, height: 40))
         view.addSubview(firstName);
         view.addSubview(lastName);
         view.addSubview(dob);
@@ -91,7 +91,7 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
         textField.layer.borderWidth = 1.5
         textField.layer.cornerRadius = 8;
         textField.text = value;
-        textField.textColor = UIColor(named: "gamepad");
+        textField.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
     }
 
     private func getFirstName(name: String) -> String {

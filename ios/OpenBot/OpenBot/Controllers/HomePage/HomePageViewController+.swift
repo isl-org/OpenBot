@@ -22,6 +22,10 @@ extension HomePageViewController {
     func createShadowSheet() {
         whiteSheet.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         tabBarController?.view.addSubview(whiteSheet)
+        if GIDSignIn.sharedInstance.hasPreviousSignIn(){
+            whiteSheet.isHidden = true;
+        }
+        tabBarController?.view.addSubview(whiteSheet)
         createSignInBottomSheet()
     }
 
