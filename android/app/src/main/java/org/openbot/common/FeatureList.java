@@ -72,7 +72,7 @@ public class FeatureList {
     ArrayList<SubCategory> subCategories;
 
     subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(DEFAULT, R.drawable.openbot_icon, "#4B7BFF"));
+    subCategories.add(new SubCategory(DEFAULT, R.drawable.ic_openbot, "#4B7BFF"));
     subCategories.add(new SubCategory(PROJECTS, R.drawable.ic_projects, "#FFAC6C"));
     categories.add(new Category(LEGACY, subCategories));
 
