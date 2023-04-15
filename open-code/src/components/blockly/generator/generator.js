@@ -91,13 +91,6 @@ javascriptGenerator['timer'] = function (block) {
     return code;
 };
 
-javascriptGenerator['pause'] = function (block) {
-    let number_time = block.getFieldValue('time');
-    let code = '';
-    code += "pause(" + number_time + ");\n"
-    return code;
-};
-
 javascriptGenerator['soundIs'] = function (block) {
     let dropdown_booleanType = block.getFieldValue('DROPDOWN');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
@@ -517,9 +510,9 @@ javascriptGenerator['motorDirection'] = function (block) {
     return code;
 };
 
-javascriptGenerator['stopMotor'] = function (block) {
+javascriptGenerator['motorStop'] = function (block) {
     let code = "";
-    code += "stopMotor()" + ";\n";
+    code += "motorStop()" + ";\n";
     return code;
 };
 
@@ -541,7 +534,7 @@ javascriptGenerator['brightness'] = function (block) {
 javascriptGenerator['wait'] = function (block) {
     let value = block.getFieldValue('time');
     let code = "";
-    code += "wait(" + value + ");\n";
+    code += "pause(" + value + ");\n";
     return code
 };
 
@@ -561,13 +554,6 @@ pythonGenerator['timer'] = function (block) {
     let value_num = pythonGenerator.valueToCode(block, 'num', javascriptGenerator.ORDER_ATOMIC);
     let code = '';
     code += 'pause(' + number_name + ")\n" + value_num;
-    return code;
-};
-
-pythonGenerator['pause'] = function (block) {
-    let number_time = block.getFieldValue('time');
-    let code = '';
-    code += "pause(" + number_time + ")\n"
     return code;
 };
 
@@ -983,9 +969,9 @@ pythonGenerator['motorDirection'] = function (block) {
     return code;
 };
 
-pythonGenerator['stopMotor'] = function (block) {
+pythonGenerator['motorStop'] = function (block) {
     let code = "";
-    code += "stopMotor()\n";
+    code += "motorStop()\n";
     return code;
 };
 
@@ -1008,6 +994,6 @@ pythonGenerator['brightness'] = function (block) {
 pythonGenerator['wait'] = function (block) {
     let value = block.getFieldValue('time');
     let code = "";
-    code += "wait(" + value + ")\n";
+    code += "pause(" + value + ")\n";
     return code
 };

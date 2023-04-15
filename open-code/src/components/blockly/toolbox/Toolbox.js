@@ -83,8 +83,7 @@ export const Toolbox = (props) => {
                 <Block type="logic_null"/>
                 <Block type="math_number"/>,
                 <Block type="text"/>
-                <Block type="wait"/>
-                <Block type="timer"/>
+
                 <Block type="variables_set" gap="8">
                     <Field name="VAR"></Field>
                     <Value name="VALUE">
@@ -154,7 +153,7 @@ export const Toolbox = (props) => {
             </Category>
             <Category name="Movement" colour={"#DA4B5D"}>
                 <Block type="motorDirection"/>
-                <Block type="stopMotor"/>
+                <Block type="motorStop"/>
                 <Block type="forward&BackwardAtSpeed"/>
                 <Block type="forward&BackwardAtSpeedForTime"/>
                 <Block type="left&RightAtSpeed"/>
@@ -163,6 +162,7 @@ export const Toolbox = (props) => {
                 <Block type="movementCircular"/>
                 <Block type="circularAtSpeed"/>
                 <Block type="circularAtSpeedForTime"/>
+                <Block type="wait"/>
                 <Block type="movementStop"/>
             </Category>
         </>

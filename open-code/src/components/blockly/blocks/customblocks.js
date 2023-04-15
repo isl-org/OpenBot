@@ -181,7 +181,7 @@ Blockly.Blocks["wait"] = {
                 {
                     "type": "field_number",
                     "name": "time",
-                    "value": 30,
+                    "value": 3000,
                     "min": 0
                 }
             ],
@@ -318,7 +318,7 @@ Blockly.Blocks["forward&BackwardAtSpeed"] = {
                 {
                     "type": "field_number",
                     "name": "specified_amount",
-                    "value": 30,
+                    "value": 192,
                     "min": -255,
                     "max": 255
                 }
@@ -355,7 +355,7 @@ Blockly.Blocks["forward&BackwardAtSpeedForTime"] = {
                 {
                     "type": "field_number",
                     "name": "speed_value",
-                    "value": 30,
+                    "value": 192,
                     "min": -255,
                     "max": 255
                 },
@@ -397,7 +397,7 @@ Blockly.Blocks["left&RightAtSpeed"] = {
                 {
                     "type": "field_number",
                     "name": "specified_amount",
-                    "value": 30,
+                    "value": 192,
                     "min": -255,
                     "max": 255
                 }
@@ -425,7 +425,7 @@ Blockly.Blocks["moveLeft&Right"] = {
                 {
                     "type": "field_number",
                     "name": "left_distance",
-                    "value": 30,
+                    "value": 192,
                     "min": -255,
                     "max": 255
                 },
@@ -437,7 +437,7 @@ Blockly.Blocks["moveLeft&Right"] = {
                 {
                     "type": "field_number",
                     "name": "right_distance",
-                    "value": 30,
+                    "value": 192,
                     "min": -255,
                     "max": 255
                 }
@@ -465,7 +465,7 @@ Blockly.Blocks["moveLeft&RightForTime"] = {
                 {
                     "type": "field_number",
                     "name": "left_distance",
-                    "value": 30,
+                    "value": 192,
                     "min": -255,
                     "max": 255
                 },
@@ -477,14 +477,14 @@ Blockly.Blocks["moveLeft&RightForTime"] = {
                 {
                     "type": "field_number",
                     "name": "right_distance",
-                    "value": 30,
+                    "value": 192,
                     "min": -255,
                     "max": 255
                 },
                 {
                     "type": "field_number",
                     "name": "time",
-                    "value": 300,
+                    "value": 3000,
                     "min": 0
                 }
             ],
@@ -534,7 +534,7 @@ Blockly.Blocks["circularAtSpeed"] = {
                 {
                     "type": "field_number",
                     "name": "speed_value",
-                    "value": 50,
+                    "value": 192,
                     "min": -255,
                     "max": 255
                 }
@@ -563,14 +563,14 @@ Blockly.Blocks["circularAtSpeedForTime"] = {
                 {
                     "type": "field_number",
                     "name": "speed_value",
-                    "value": 50,
+                    "value": 192,
                     "min": -255,
                     "max": 255
                 },
                 {
                     "type": "field_number",
                     "name": "time",
-                    "value": 300,
+                    "value": 3000,
                     "min": 0
                 }
             ],
@@ -1101,7 +1101,7 @@ Blockly.Blocks["motorDirection"] = {
 };
 
 
-Blockly.Blocks["stopMotor"] = {
+Blockly.Blocks["motorStop"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
@@ -1144,7 +1144,7 @@ Blockly.Blocks["brightness"] = {
                     "name": "slider",
                     "value": 50,
                     "min": 0, // Minimum value for the slider
-                    "max": 200 // Maximum value for the slider
+                    "max": 100 // Maximum value for the slider
                 }
             ],
             "previousStatement": null,
