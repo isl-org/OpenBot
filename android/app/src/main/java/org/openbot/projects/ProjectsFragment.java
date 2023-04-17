@@ -69,7 +69,7 @@ public class ProjectsFragment extends ControlsFragment {
     barCodeScannerFragment = new BarCodeScannerFragment();
     signInButton.setOnClickListener(v -> signIn());
     swipeRefreshLayout = requireView().findViewById(R.id.refreshLayout);
-    dpBottomSheetBehavior.setBottomSheetCallback(dpBottomSheetCallback);
+    dpBottomSheetBehavior.addBottomSheetCallback(dpBottomSheetCallback);
     requireView()
         .findViewById(R.id.dp_start_btn)
         .setOnClickListener(

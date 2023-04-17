@@ -41,9 +41,11 @@ public class BarCodeScannerFragment extends Fragment {
   @Override
   public View onCreateView(
       @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
+    // Inflate the layout for Barcode Scanner View fragment.
     FragmentBarCodeScannerBinding binding =
         FragmentBarCodeScannerBinding.inflate(inflater, container, false);
+
+    // initialise 2 bottom-sheet one is for correct QR code another one is for wrong QR code.
     ConstraintLayout successQrBottomSheet =
         binding.getRoot().findViewById(R.id.qr_bottom_sheet_success);
     ConstraintLayout errorQrBottomSheet =
@@ -64,17 +66,17 @@ public class BarCodeScannerFragment extends Fragment {
     LinearLayout qrStartBtn = requireView().findViewById(R.id.qr_start_btn);
     LinearLayout qrReScanBtn = requireView().findViewById(R.id.re_scan_btn);
     overlayView = requireView().findViewById(R.id.overlay_view);
-    initialiseDetectorsAndSources();
+      startScan();
     crossImageView.setOnClickListener(
         v -> Navigation.findNavController(requireView()).popBackStack());
     qrCancelBtn.setOnClickListener(v -> onQRCancelButton());
     qrStartBtn.setOnClickListener(v -> onQRStartButton());
     qrReScanBtn.setOnClickListener(v -> onQRReScanButton());
-    successBottomSheetBehavior.setBottomSheetCallback(successBottomSheetCallback);
-    failedBottomSheetBehavior.setBottomSheetCallback(failedBottomSheetCallback);
+    successBottomSheetBehavior.addBottomSheetCallback(successBottomSheetCallback);
+    failedBottomSheetBehavior.addBottomSheetCallback(failedBottomSheetCallback);
   }
 
-  private void initialiseDetectorsAndSources() {
+  private void startScan() {
     barcodeDetector =
         new BarcodeDetector.Builder(requireContext())
             .setBarcodeFormats(Barcode.ALL_FORMATS)

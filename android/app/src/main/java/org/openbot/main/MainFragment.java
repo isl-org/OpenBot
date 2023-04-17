@@ -71,7 +71,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
       signInBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
       overlayView.setVisibility(View.GONE);
     }
-    signInBottomSheetBehavior.setBottomSheetCallback(signInBottomSheetCallback);
+    signInBottomSheetBehavior.addBottomSheetCallback(signInBottomSheetCallback);
   }
 
   @Override
@@ -136,6 +136,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     }
   }
 
+  /** Called after google signIn button tapped of bottom sheet. */
   private void signIn() {
     Intent signInIntent = googleServices.mGoogleSignInClient.getSignInIntent();
     googleLogInActivityResultLauncher.launch(signInIntent);
@@ -170,6 +171,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
         public void onSignOutFailed(Exception exception) {}
       };
 
+  /** save signIn Mode in app local storage when tap on continue as guest. */
   private void continueAsGuest() {
     SharedPreferences.Editor editor = sharedPref.edit();
     editor.putString("signInMode", "continueAsGuest");
@@ -177,6 +179,7 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     signInBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
   }
 
+  /** handle user sigIn BottomSheet background shadow screen. */
   private BottomSheetBehavior.BottomSheetCallback signInBottomSheetCallback =
       new BottomSheetBehavior.BottomSheetCallback() {
         @Override

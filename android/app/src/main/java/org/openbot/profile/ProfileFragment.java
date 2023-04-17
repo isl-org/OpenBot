@@ -34,7 +34,7 @@ public class ProfileFragment extends Fragment {
   @Override
   public View onCreateView(
       @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
+    // Inflate the layout for Profile fragment
     binding = FragmentProfileBinding.inflate(inflater, container, false);
     linearLayoutSignIn = binding.getRoot().findViewById(R.id.profile_signIn_view);
     linearLayoutProfile = binding.getRoot().findViewById(R.id.profile_settings);
@@ -49,13 +49,14 @@ public class ProfileFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     signInButton.setOnClickListener(v -> signIn());
-    logoutButton.setOnClickListener(v -> onSignOut());
+    logoutButton.setOnClickListener(v -> signOut());
     editProfileButton.setOnClickListener(
         v ->
             Navigation.findNavController(requireView())
                 .navigate(R.id.action_profileFragment_to_EditProfileFragment));
   }
 
+  /** launch activity to choose google account for google signIn. */
   private void signIn() {
     Intent signInIntent = googleServices.mGoogleSignInClient.getSignInIntent();
     googleLogInActivityResultLauncher.launch(signInIntent);
@@ -70,7 +71,8 @@ public class ProfileFragment extends Fragment {
             googleServices.handleSignInResult(task);
           });
 
-  private void onSignOut() {
+  /** open alert b0x to confirm user for signOut. */
+  private void signOut() {
     AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
     builder.setTitle("Confirm Logout");
     builder.setMessage("Are you sure you want to logout?");
@@ -81,6 +83,7 @@ public class ProfileFragment extends Fragment {
     alertDialog.show();
   }
 
+  /** update fragment layout after user signedIn. */
   private GoogleSignInCallback newGoogleServices =
       new GoogleSignInCallback() {
         @Override

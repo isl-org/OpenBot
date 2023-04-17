@@ -145,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
             toolbar.setVisibility(View.GONE);
             bottomNavigationView.setVisibility(View.GONE);
           }
+
+          // To update the toolbar icon according to the Fragment.
           Menu menu = toolbar.getMenu();
           if (destination.getId() == R.id.projectsFragment) {
             menu.findItem(R.id.bluetoothFragment).setVisible(false);

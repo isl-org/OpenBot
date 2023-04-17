@@ -39,11 +39,11 @@ public class EditProfileFragment extends Fragment {
     editProfilePicBtn.setOnClickListener(v -> imageChooser());
   }
 
+  /** open image gallery to choose for update profile pic. */
   private void imageChooser() {
     Intent i = new Intent();
     i.setType("image/*");
     i.setAction(Intent.ACTION_GET_CONTENT);
-
     launchImagePickerActivity.launch(i);
   }
 
@@ -53,7 +53,6 @@ public class EditProfileFragment extends Fragment {
           result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
               Intent data = result.getData();
-              // do your operation from here....
               if (data != null && data.getData() != null) {
                 Uri selectedImageUri = data.getData();
                 Bitmap selectedImageBitmap = null;
