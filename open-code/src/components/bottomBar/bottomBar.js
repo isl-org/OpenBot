@@ -20,11 +20,11 @@ import {getCurrentProject} from "../../services/workspace";
 
 
 /**
- *
+ * Bottom Bar contains generate code, upload on drive icon , zoom in-out and undo redo functionality.
  * @returns {JSX.Element}
  * @constructor
  */
-export const UploadCode = () => {
+export const BottomBar = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
     const [isLoader, setIsLoader] = useState(false);
@@ -32,17 +32,16 @@ export const UploadCode = () => {
     const [signInPopUp, setSignInPopUp] = useState(false);
     const [uploadCodeSignIn, setUploadCodeSignIn] = useState(false);
     const themes = useTheme();
+    let primaryWorkspace = useRef();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-
     const {
         generate,
         setGenerateCode,
         setCode,
         setDrawer,
     } = useContext(StoreContext);
-    let primaryWorkspace = useRef();
 
-
+    //generate javascript or python code and upload to google drive
     const generateCode = () => {
         if (localStorage.getItem("isSigIn") === "true") {
             setDrawer(false);
@@ -50,15 +49,15 @@ export const UploadCode = () => {
             const code = javascriptGenerator.workspaceToCode(
                 primaryWorkspace.current
             );
+
             // const code=pythonGenerator.workspaceToCode(
             //     primaryWorkspace.current
             // );
-
             setGenerateCode(!generate);
             let updatedCode = code + Constants.endCode;
             console.log(updatedCode);
             uploadToGoogleDrive(updatedCode, "js").then((res) => {
-                    setCode(res);  
+                    setCode(res);
                     setIsLoader(false);
                     setDrawer(true);
                 }
@@ -72,6 +71,7 @@ export const UploadCode = () => {
         }
     };
 
+    //handle click  on bottom bar button event which affect workspace
     const clickedButton = (e) => {
         const {name} = e.target;
         setButtonSelected(name);
@@ -103,6 +103,7 @@ export const UploadCode = () => {
 
     };
 
+    //loader when uploading to google drive.
     const CompilationLoader = () => {
         return <div>
             <CircularProgress
@@ -132,10 +133,6 @@ export const UploadCode = () => {
         </div>
     }
 
-
-    /**
-     * save projects on Google Drive
-     */
     return (
         <div
             className={isLoader ? styles.loaderBarDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight) : styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
@@ -150,7 +147,7 @@ export const UploadCode = () => {
                 }
             </div>
             <div className={styles.buttonsDiv}>
-                <UploadCodeButton buttonSelected={buttonSelected} generateCode={generateCode}
+                <GenerateCodeButton buttonSelected={buttonSelected} generateCode={generateCode}
                                   buttonActive={buttonActive} clickedButton={clickedButton}/>
                 {uploadCodeSignIn &&
                     <SignInPopUp setSignInPopUp={setUploadCodeSignIn} handleDriveButton={generateCode}/>}
@@ -168,12 +165,12 @@ export const UploadCode = () => {
 
 
 /**
- * Upload Code Button
+ * Generate Code Button
  * @param params
  * @returns {JSX.Element}
  * @constructor
  */
-function UploadCodeButton(params) {
+function GenerateCodeButton(params) {
     const {generateCode, buttonSelected, clickedButton, buttonActive} = params
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
