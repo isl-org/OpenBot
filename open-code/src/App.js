@@ -2,7 +2,7 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useEffect, useState} from "react";
-import {Constants, errorToast, Themes} from "./utils/constants";
+import {Constants, Themes} from "./utils/constants";
 import {useLocation} from "react-router-dom";
 import styles from "./components/homeComponents/carousel/carousel.module.css";
 import {Images} from "./utils/images";
@@ -37,10 +37,8 @@ function App() {
                 // User is signed in.
                 user.getIdTokenResult()
                     .then((idTokenResult) => {
-                        console.log("idTokenResult::::::", idTokenResult)
                         const expirationTime = idTokenResult?.expirationTime;
                         const sessionTimeoutMs = new Date(expirationTime).getTime() - Date.now() ;
-                        console.log('sessionTimeOut:::::', sessionTimeoutMs)
                         if (timeoutId) {
                             clearTimeout(timeoutId);
                         }

@@ -189,7 +189,6 @@ export async function getFolderId() {
 
     const searchResponse = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(Constants.FolderName)}'+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false&access_token=${accessToken}`);
     const searchResult = await searchResponse.json();
-    console.log("searchResult", searchResult)
     if (searchResult.error &&searchResult.error.code === 401) {
         alert("your session has expired please login again.")
         googleSignOut().then()
@@ -305,9 +304,6 @@ export async function deleteFileFromGoogleDrive(fileId) {
         method: "DELETE",
         headers: headers
     })
-        .then(() => {
-            console.log("File has been deleted successfully")
-        })
         .catch((err) => {
             errorToast("Something went wrong.")
             console.log(err)
@@ -394,7 +390,6 @@ export async function fileRename(newFileName, oldName, fileType) {
             "name": newFileName + `.${Constants.js}`
         }
     }
-    console.log("fileId::::", fileId.fileId)
     await fetch(`https://www.googleapis.com/drive/v3/files/${fileId.fileId}?parents=${folderId}&fields=name`, {
         method: 'PATCH',
         headers: {
@@ -405,7 +400,6 @@ export async function fileRename(newFileName, oldName, fileType) {
 
     })
         .then((res) => res.json())
-        .then((data) => console.log(data))
         .catch(err => console.log(err))
 }
 

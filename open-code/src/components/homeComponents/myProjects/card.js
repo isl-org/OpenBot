@@ -47,7 +47,6 @@ function Card(props) {
         navigate(`playground`);
     }
     const handleClick = (event) => {
-        console.log("event::;", event)
         setAnchorEl(event.currentTarget);
         setOpenPopUp(!openPopUp);
     };
@@ -119,7 +118,6 @@ function Card(props) {
             }
             <div onClick={() => {
                 handleOpenProject(props.projectData).catch((err) => {
-                    console.log(props.projectData)
                     console.log("error on fetching blocks: ", err);
                 })
             }} className={` ${styles.Card} ${theme === "dark" ? styles.darkBoxShadow : styles.lightBoxShadow}`}>
@@ -131,7 +129,6 @@ function Card(props) {
                                          onClick={(e) => e.stopPropagation()}
                                          onFocus={(e) => e.target.select()}
                                          onBlur={async () => {
-                                             console.log("reName::", reNameProject)
                                              await handleClickBlur()
                                          }}
                                          onChange={(e) => setReNameProject(e.target.value)}
@@ -182,9 +179,7 @@ export default Card;
 export const handleRename = async (reNameProject, projectName, setReNameProject) => {
     let updatedProjectName = reNameProject;
     if (reNameProject !== projectName) {
-        console.log("rename:::", reNameProject)
         const projectWithSameName = getAllLocalProjects()?.find((project) => project.projectName === reNameProject)
-        console.log("pr:::", projectWithSameName)
         if (reNameProject === projectWithSameName?.projectName) {
             let projectsArray = getAllLocalProjects();
             if (projectsArray) {

@@ -14,7 +14,7 @@ function NewProjectButton(props) {
     const {isProject} = props;
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const [isInputError, setIsInputError] = useState(true);
+    const [setIsInputError] = useState(true);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const {

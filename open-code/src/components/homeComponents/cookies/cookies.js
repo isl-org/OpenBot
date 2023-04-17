@@ -7,7 +7,6 @@ import {ThemeContext} from "../../../App";
 import BlackText from "../../fonts/blackText";
 import {Constants} from "../../../utils/constants";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import {useLocation} from "react-router-dom";
 import {useTheme} from "@mui/material";
 
 

@@ -362,7 +362,7 @@ Blockly.Blocks["forward&BackwardAtSpeedForTime"] = {
                 {
                     "type": "field_number",
                     "name": "time",
-                    "value": 400
+                    "value": 4000
                 }
             ],
             "previousStatement": null,
@@ -609,18 +609,9 @@ Blockly.Blocks["movementStop"] = {
 Blockly.Blocks["sonarReading"] = {
     init: function () {
         this.jsonInit({
-            "type": "block_type",
-            "message0": "%1",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "sonar",
-                    "text": "sonar reading"
-                },
-            ],
-            "inputsInline": false,
-            "previousStatement": null,
-            "nextStatement": null,
+            "type": "ellipse_block",
+            "message0": "sonar reading",
+            "output": "string",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -632,17 +623,9 @@ Blockly.Blocks["sonarReading"] = {
 Blockly.Blocks["speedReading"] = {
     init: function () {
         this.jsonInit({
-            "type": "block_type",
-            "message0": "%1",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "battery",
-                    "text": "speed reading"
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
+            "type": "ellipse_block",
+            "message0": "speed reading",
+            "output": "string",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -653,17 +636,9 @@ Blockly.Blocks["speedReading"] = {
 Blockly.Blocks["voltageDividerReading"] = {
     init: function () {
         this.jsonInit({
-            "type": "block_type",
-            "message0": "%1",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "voltage_divider",
-                    "text": "voltage divider reading"
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
+            "type": "ellipse_block",
+            "message0": "voltage divider reading",
+            "output": "string",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -702,7 +677,7 @@ Blockly.Blocks["wheelOdometerSensors"] = {
             "nextStatement": null,
             "colour": 240,
             "tooltip": "",
-            "helpUrl": ""
+            "helpUrl": "",
         });
     }
 };
@@ -1157,5 +1132,48 @@ Blockly.Blocks["brightness"] = {
     }
 };
 
+Blockly.Blocks["string"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "%1",
+            "args0": [
+                {
+                    "type": "field_number",
+                    "name": "value",
+                    "value": 0,
+                }
+            ],
+            "output": "string",
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["speedAdjustment"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "set speed at %1",
+            "args0": [
+                {
+                    "type": "field_slider",
+                    "name": "speed",
+                    "value": 192,
+                    "min": -255,
+                    "max": 255
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+
+        });
+    }
+};
 
 

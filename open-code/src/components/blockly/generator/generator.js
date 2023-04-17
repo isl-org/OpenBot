@@ -16,16 +16,11 @@
  * limitations under the License.
  */
 
-/**
- * @fileoverview Define generation methods for custom blocks.
- * @author samelh@google.com (Sam El-Husseini)
- */
-
 
 import {javascriptGenerator} from 'blockly/javascript';
 import {pythonGenerator} from "blockly/python";
 
-javascriptGenerator['test_react_field'] = function (block) {
+javascriptGenerator['test_react_field'] = function () {
     return 'console.log(\'custom block\');\n';
 };
 
@@ -34,8 +29,7 @@ javascriptGenerator['test_react_date_field'] = function (block) {
 };
 
 javascriptGenerator['sensebox_display_clearDisplay'] = function () {
-    let code = "display.clearDisplay();\n";
-    return code;
+    return "display.clearDisplay();\n";
 };
 javascriptGenerator['controls_repeat_ext'] = function (Block) {
     // Repeat n times.
@@ -116,15 +110,15 @@ javascriptGenerator['soundType'] = function (block) {
         switch (dropdown_type) {
             case "slow_mode" : {
                 return "slow";
-                break;
             }
             case "medium_mode" : {
                 return "medium";
-                break;
             }
             case "fast_mode" : {
                 return "fast";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -142,15 +136,15 @@ javascriptGenerator['soundMode'] = function (block) {
         switch (dropdown_mode_type) {
             case "OPTION1" : {
                 return "dual drive";
-                break;
             }
             case "OPTION2" : {
                 return "joystick control";
-                break;
             }
             case "OPTION3" : {
                 return "gamepad";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -169,11 +163,12 @@ javascriptGenerator['forward&BackwardAtSpeed'] = function (block) {
         switch (dropdown_direction_type) {
             case "move_forward" : {
                 return "moveForward";
-                break;
             }
             case "move_backward" : {
                 return "moveBackward";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -192,17 +187,18 @@ javascriptGenerator['forward&BackwardAtSpeedForTime'] = function (block) {
         switch (dropdown_select_direction) {
             case "Forward_direction" : {
                 return "moveForward";
-                break;
             }
             case "Backward_direction" : {
                 return "moveBackward";
-                break;
+            }
+            default:{
+
             }
         }
     }
 
     let code = "";
-    code += selectMovement() + "(" + number_speed_value + ");\n" + "pause(" + number_time + ");\n";
+    code += selectMovement() + "(" + number_speed_value + ");\npause(" + number_time + ");\n";
     return code;
 };
 
@@ -215,11 +211,12 @@ javascriptGenerator['left&RightAtSpeed'] = function (block) {
         switch (dropdown_direction_type) {
             case "move_left" : {
                 return "moveLeft";
-                break;
             }
             case "move_right": {
                 return "moveRight";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -244,8 +241,7 @@ javascriptGenerator['moveLeft&RightForTime'] = function (block) {
     let number_time = block.getFieldValue('time');
 
     let code = '';
-    code += "moveOpenBot(" + number_left_distance + "," + number_right_distance + ");\n" + "pause(" + number_time + ");\n";
-    ;
+    code += "moveOpenBot(" + number_left_distance + "," + number_right_distance + ");\npause(" + number_time + ");\n";
     return code;
 };
 
@@ -269,26 +265,26 @@ javascriptGenerator['circularAtSpeedForTime'] = function (block) {
     let number_speed_value = block.getFieldValue('speed_value');
     let number_time = block.getFieldValue('time');
     let code = '';
-    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ");\n" + "pause(" + number_time + ");\n";
+    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ");\npause(" + number_time + ");\n";
     return code;
 };
 
-javascriptGenerator['movementStop'] = function (block) {
+javascriptGenerator['movementStop'] = function () {
     let code = '';
     code += "stopRobot();\n"
     return code;
 };
 
-javascriptGenerator['sonarReading'] = function (block) {
+javascriptGenerator['sonarReading'] = function () {
     let code = '';
     code += "sonarReading();\n";
     return code;
 };
 
-javascriptGenerator['speedReading'] = function (block) {
+javascriptGenerator['speedReading'] = function () {
     let code = '';
-    code += "speedReading();\n";
-    return code;
+    code += "speedReading()";
+    return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['wheelOdometerSensors'] = function (block) {
@@ -299,11 +295,12 @@ javascriptGenerator['wheelOdometerSensors'] = function (block) {
         switch (dropdown_wheel_sensors) {
             case "front_sensor": {
                 return "frontWheelReading";
-                break;
             }
             case "back_sensor": {
                 return "backWheelReading";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -313,34 +310,34 @@ javascriptGenerator['wheelOdometerSensors'] = function (block) {
 };
 
 
-javascriptGenerator['indicatorLedSensor'] = function (block) {
+javascriptGenerator['indicatorLedSensor'] = function () {
     let code = '';
     code += "indicatorReading();\n";
     return code;
 };
 
-javascriptGenerator['frontLedSensor'] = function (block) {
+javascriptGenerator['frontLedSensor'] = function () {
     let code = '';
     code += "frontLedReading();\n";
     return code;
 };
 
-javascriptGenerator['backLedSensor'] = function (block) {
+javascriptGenerator['backLedSensor'] = function () {
     let code = '';
     code += "backLedReading();\n";
     return code;
 };
 
-javascriptGenerator['ledStatusSensor'] = function (block) {
+javascriptGenerator['ledStatusSensor'] = function () {
     let code = '';
     code += "ledStatus();\n";
     return code;
 };
 
-javascriptGenerator['voltageDividerReading'] = function (block) {
+javascriptGenerator['voltageDividerReading'] = function () {
     let code = '';
-    code += "voltageDividerReading();\n";
-    return code;
+    code += "voltageDividerReading()";
+    return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['start'] = function (block) {
@@ -353,7 +350,7 @@ javascriptGenerator['start'] = function (block) {
 javascriptGenerator['forever'] = function (block) {
     const statements_start_blocks = javascriptGenerator.statementToCode(block, 'forever_loop_blocks');
     let code = "";
-    code += "function forever(){\n" + statements_start_blocks + "}";
+    code+="function forever (){\n while(true){\n" + statements_start_blocks + "}\n}";
     return code;
 };
 
@@ -405,39 +402,39 @@ javascriptGenerator['indicatorStatus'] = function (block) {
     return code;
 };
 
-javascriptGenerator['gyroscope_reading'] = function (block) {
+javascriptGenerator['gyroscope_reading'] = function () {
     let code = "";
-    code += "gyroscopeReading()" + ";\n";
+    code += "gyroscopeReading();\n";
     return code;
 };
 
-javascriptGenerator['acceleration_reading'] = function (block) {
+javascriptGenerator['acceleration_reading'] = function () {
     let code = "";
-    code += "accelerationReading()" + ";\n";
+    code += "accelerationReading();\n";
     return code;
 };
 
-javascriptGenerator['magnetic_reading'] = function (block) {
+javascriptGenerator['magnetic_reading'] = function () {
     let code = "";
-    code += "magneticReading()" + ";\n";
+    code += "magneticReading();\n";
     return code;
 };
 
-javascriptGenerator['speedSlow'] = function (block) {
+javascriptGenerator['speedSlow'] = function () {
     let code = "";
-    code += "speedSlow()" + ";\n";
+    code += "speedSlow();\n";
     return code;
 };
 
-javascriptGenerator['speedMedium'] = function (block) {
+javascriptGenerator['speedMedium'] = function () {
     let code = "";
-    code += "speedMedium()" + ";\n";
+    code += "speedMedium();\n";
     return code;
 };
 
-javascriptGenerator['speedHigh'] = function (block) {
+javascriptGenerator['speedHigh'] = function () {
     let code = "";
-    code += "speedHigh()" + ";\n";
+    code += "speedHigh();\n";
     return code;
 };
 
@@ -448,11 +445,12 @@ javascriptGenerator['controllerMode'] = function (block) {
         switch (dropdown_controller) {
             case "phone": {
                 return "phoneController()";
-                break;
             }
             case "gamepad": {
                 return "gamepadController()";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -470,15 +468,15 @@ javascriptGenerator['driveModeControls'] = function (block) {
         switch (dropdown_driveModeControls) {
             case "dualDrive": {
                 return "dualDriveMode()";
-                break;
             }
             case "joystick": {
                 return "joystickMode()";
-                break;
             }
             case "game": {
                 return "gameMode()";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -496,11 +494,12 @@ javascriptGenerator['motorDirection'] = function (block) {
         switch (dropdown_driveModeControls) {
             case "forward": {
                 return "motorForward()";
-                break;
             }
             case "backward": {
                 return "motorBackward()";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -510,16 +509,16 @@ javascriptGenerator['motorDirection'] = function (block) {
     return code;
 };
 
-javascriptGenerator['motorStop'] = function (block) {
+javascriptGenerator['motorStop'] = function () {
     let code = "";
-    code += "motorStop()" + ";\n";
+    code += "motorStop();\n";
     return code;
 };
 
 
-javascriptGenerator['bumper'] = function (block) {
+javascriptGenerator['bumper'] = function () {
     let code = "";
-    code += "bumperCollision()" + ";\n";
+    code += "bumperCollision();\n";
     return code;
 };
 
@@ -538,6 +537,26 @@ javascriptGenerator['wait'] = function (block) {
     return code
 };
 
+javascriptGenerator['sonarReading'] = function () {
+    let code = "";
+    code += "sonarReading() ";
+    return [code, javascriptGenerator.ORDER_NONE];
+};
+
+javascriptGenerator['string'] = function (block) {
+    let value = block.getFieldValue('value');
+    let code = "";
+    code += value;
+    return [code, javascriptGenerator.ORDER_NONE];
+};
+
+
+javascriptGenerator['speedAdjustment'] = function(block) {
+    let number_speed = block.getFieldValue('speed');
+    let code = '';
+    code+="setSpeed("+number_speed+");\n";
+    return code;
+};
 
 
  // Code generation in Python
@@ -582,15 +601,15 @@ pythonGenerator['soundType'] = function (block) {
         switch (dropdown_type) {
             case "slow_mode" : {
                 return "slow";
-                break;
             }
             case "medium_mode" : {
                 return "medium";
-                break;
             }
             case "fast_mode" : {
                 return "fast";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -608,15 +627,15 @@ pythonGenerator['soundMode'] = function (block) {
         switch (dropdown_mode_type) {
             case "OPTION1" : {
                 return "dual drive";
-                break;
             }
             case "OPTION2" : {
                 return "joystick control";
-                break;
             }
             case "OPTION3" : {
                 return "gamepad";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -635,11 +654,12 @@ pythonGenerator['forward&BackwardAtSpeed'] = function (block) {
         switch (dropdown_direction_type) {
             case "move_forward" : {
                 return "moveForward";
-                break;
             }
             case "move_backward" : {
                 return "moveBackward";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -658,17 +678,18 @@ pythonGenerator['forward&BackwardAtSpeedForTime'] = function (block) {
         switch (dropdown_select_direction) {
             case "Forward_direction" : {
                 return "moveForward";
-                break;
             }
             case "Backward_direction" : {
                 return "moveBackward";
-                break;
+            }
+            default:{
+
             }
         }
     }
 
     let code = "";
-    code += selectMovement() + "(" + number_speed_value + ")\n" + "pause(" + number_time + ")\n";
+    code += selectMovement() + "(" + number_speed_value + ")\npause(" + number_time + ")\n";
     return code;
 };
 
@@ -681,11 +702,12 @@ pythonGenerator['left&RightAtSpeed'] = function (block) {
         switch (dropdown_direction_type) {
             case "move_left" : {
                 return "moveLeft";
-                break;
             }
             case "move_right": {
                 return "moveRight";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -710,7 +732,7 @@ pythonGenerator['moveLeft&RightForTime'] = function (block) {
     let number_time = block.getFieldValue('time');
 
     let code = '';
-    code += "moveOpenBot(" + number_left_distance + "," + number_right_distance + ")\n" + "pause(" + number_time + ")\n";
+    code += "moveOpenBot(" + number_left_distance + "," + number_right_distance + ")\npause(" + number_time + ")\n";
     return code;
 };
 
@@ -734,26 +756,26 @@ pythonGenerator['circularAtSpeedForTime'] = function (block) {
     let number_speed_value = block.getFieldValue('speed_value');
     let number_time = block.getFieldValue('time');
     let code = '';
-    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ")\n" + "pause(" + number_time + ")\n";
+    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ")\npause(" + number_time + ")\n";
     return code;
 };
 
-pythonGenerator['movementStop'] = function (block) {
+pythonGenerator['movementStop'] = function () {
     let code = '';
     code += "stopRobot()\n"
     return code;
 };
 
-pythonGenerator['sonarReading'] = function (block) {
+pythonGenerator['sonarReading'] = function () {
     let code = '';
     code += "sonarReading()\n";
     return code;
 };
 
-pythonGenerator['speedReading'] = function (block) {
+pythonGenerator['speedReading'] = function () {
     let code = '';
-    code += "speedReading()\n";
-    return code;
+    code += "speedReading()";
+    return [code, pythonGenerator.ORDER_NONE];
 };
 
 
@@ -765,11 +787,12 @@ pythonGenerator['wheelOdometerSensors'] = function (block) {
         switch (dropdown_wheel_sensors) {
             case "front_sensor": {
                 return "frontWheelReading";
-                break;
             }
             case "back_sensor": {
                 return "backWheelReading";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -779,34 +802,34 @@ pythonGenerator['wheelOdometerSensors'] = function (block) {
 };
 
 
-pythonGenerator['indicatorLedSensor'] = function (block) {
+pythonGenerator['indicatorLedSensor'] = function () {
     let code = '';
     code += "indicatorReading()\n";
     return code;
 };
 
-pythonGenerator['frontLedSensor'] = function (block) {
+pythonGenerator['frontLedSensor'] = function () {
     let code = '';
     code += "frontLedReading()\n";
     return code;
 };
 
-pythonGenerator['backLedSensor'] = function (block) {
+pythonGenerator['backLedSensor'] = function () {
     let code = '';
     code += "backLedReading()\n";
     return code;
 };
 
-pythonGenerator['ledStatusSensor'] = function (block) {
+pythonGenerator['ledStatusSensor'] = function () {
     let code = '';
     code += "ledStatus()\n";
     return code;
 };
 
-pythonGenerator['voltageDividerReading'] = function (block) {
+pythonGenerator['voltageDividerReading'] = function () {
     let code = '';
-    code += "voltageDividerReading()\n";
-    return code;
+    code += "voltageDividerReading()";
+    return [code, pythonGenerator.ORDER_NONE];
 };
 
 pythonGenerator['forever'] = function (block) {
@@ -864,37 +887,37 @@ pythonGenerator['indicatorStatus'] = function (block) {
     return code;
 };
 
-pythonGenerator['gyroscope_reading'] = function (block) {
+pythonGenerator['gyroscope_reading'] = function () {
     let code = "";
     code += "gyroscopeReading()\n";
     return code;
 };
 
-pythonGenerator['acceleration_reading'] = function (block) {
+pythonGenerator['acceleration_reading'] = function () {
     let code = "";
     code += "accelerationReading()\n";
     return code;
 };
 
-pythonGenerator['magnetic_reading'] = function (block) {
+pythonGenerator['magnetic_reading'] = function () {
     let code = "";
     code += "magneticReading()\n";
     return code;
 };
 
-pythonGenerator['speedSlow'] = function (block) {
+pythonGenerator['speedSlow'] = function () {
     let code = "";
     code += "speedSlow()\n";
     return code;
 };
 
-pythonGenerator['speedMedium'] = function (block) {
+pythonGenerator['speedMedium'] = function () {
     let code = "";
     code += "speedMedium()\n";
     return code;
 };
 
-pythonGenerator['speedHigh'] = function (block) {
+pythonGenerator['speedHigh'] = function () {
     let code = "";
     code += "speedHigh()\n";
     return code;
@@ -907,11 +930,12 @@ pythonGenerator['controllerMode'] = function (block) {
         switch (dropdown_controller) {
             case "phone": {
                 return "phoneController()";
-                break;
             }
             case "gamepad": {
                 return "gamepadController()";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -929,15 +953,15 @@ pythonGenerator['driveModeControls'] = function (block) {
         switch (dropdown_driveModeControls) {
             case "dualDrive": {
                 return "dualDriveMode()";
-                break;
             }
             case "joystick": {
                 return "joystickMode()";
-                break;
             }
             case "game": {
                 return "gameMode()";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -955,11 +979,12 @@ pythonGenerator['motorDirection'] = function (block) {
         switch (dropdown_driveModeControls) {
             case "forward": {
                 return "motorForward()";
-                break;
             }
             case "backward": {
                 return "motorBackward()";
-                break;
+            }
+            default:{
+
             }
         }
     }
@@ -969,14 +994,14 @@ pythonGenerator['motorDirection'] = function (block) {
     return code;
 };
 
-pythonGenerator['motorStop'] = function (block) {
+pythonGenerator['motorStop'] = function () {
     let code = "";
     code += "motorStop()\n";
     return code;
 };
 
 
-pythonGenerator['bumper'] = function (block) {
+pythonGenerator['bumper'] = function () {
     let code = "";
     code += "bumperCollision()\n";
     return code;
@@ -996,4 +1021,24 @@ pythonGenerator['wait'] = function (block) {
     let code = "";
     code += "pause(" + value + ")\n";
     return code
+};
+
+pythonGenerator['sonar_block'] = function () {
+    let code = "";
+    code += "sonarReading() ";
+    return [code, pythonGenerator.ORDER_NONE];
+};
+
+pythonGenerator['string'] = function (block) {
+    let value = block.getFieldValue('value');
+    let code = "";
+    code += value;
+    return [code, pythonGenerator.ORDER_NONE];
+};
+
+pythonGenerator['speedAdjustment'] = function(block) {
+    let number_speed = block.getFieldValue('speed');
+    let code = '';
+    code+="setSpeed("+number_speed+")\n";
+    return code;
 };

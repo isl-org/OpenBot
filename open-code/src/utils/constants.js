@@ -1,6 +1,5 @@
 import Blockly from "blockly/core";
 import {colors} from "./color";
-import React from "react";
 import {Images} from "./images";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -65,7 +64,7 @@ export const Constants = {
     CookieMsg: "Our website use cookies. By continuing navigating, we assume your permission to deploy cookies as detailed in our Privacy Policy.",
     FolderName: "openBot-Playground",
     baseUrl: "https://www.googleapis.com/drive/v3",
-    endCode: "\nstart();\n" + "forever();\n",
+    endCode: "\nstart();\nforever();\n",
     js: "js",
     xml: "xml"
 }

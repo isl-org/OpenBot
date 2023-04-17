@@ -3,7 +3,6 @@ import styles from "./inputComponent.module.css"
 import BlackText from "../fonts/blackText";
 import {ThemeContext} from "../../App";
 import {colors} from "../../utils/color";
-import {renameProject} from "../../services/workspace";
 
 export default function SimpleInputComponent(props) {
     const {

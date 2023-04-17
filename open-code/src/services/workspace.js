@@ -6,8 +6,6 @@ import {
     getFolderId,
     fileRename,
 } from "./googleDrive";
-import {handleUniqueName} from "../components/homeComponents/myProjects/newProjectButton";
-
 
 /**
  * get project from drive when user signedIn
@@ -21,7 +19,6 @@ export async function getDriveProjects(driveProjects) {
             //getting allDocs from Google Drive
             let allFilesFromGoogleDrive = await getAllFilesFromGoogleDrive();
             //check if there is any project or not if then in driveProject push only required data.
-            console.log("allFilesFromGoogleDrive", allFilesFromGoogleDrive)
             allFilesFromGoogleDrive.length > 0 && allFilesFromGoogleDrive.forEach((doc) => {
                 //check project is not deleted
                 if (!doc?.trashed) {
@@ -59,10 +56,10 @@ export async function deleteProjectFromStorage(projectName) {
                     const restObject = getAllLocalProjects().filter((res) => (res.projectName !== project.projectName));
                     localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restObject))
                 }
+                return "";
             })
             await getDriveProjects(allProject);
             const findCurrentProject = allProject.find(currentProject => currentProject?.projectName === projectName);
-            console.log("findCurrentProject", findCurrentProject)
             findCurrentProject && await checkFileExistsInFolder(await getFolderId(), findCurrentProject?.projectName, "js").then(async (response) => {
                 if (response.exists)
                     await deleteFileFromGoogleDrive(response?.fileId)
@@ -80,6 +77,8 @@ export async function deleteProjectFromStorage(projectName) {
                     const restObject = getAllLocalProjects().filter((res) => (res.projectName !== project.projectName));
                     localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restObject))
                 }
+                return "";
+
             })
         }
     } catch (err) {
@@ -178,10 +177,13 @@ export function updateLocalProjects() {
         let allProjects = getAllLocalProjects()
         let index = allProjects?.findIndex(obj => obj.id === getCurrentProject().id)
         allProjects?.find((project) => {
-            if (project.id === getCurrentProject().id) {
-                allProjects.splice(index, 1, getCurrentProject())
+                if (project.id === getCurrentProject().id) {
+                    allProjects.splice(index, 1, getCurrentProject())
+                }
+                return "";
+
             }
-        })
+        )
         localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(allProjects));
         // localStorage.setItem(localStorageKeys.currentProject, "")
     }
@@ -197,7 +199,6 @@ export async function getFilterProjects() {
     let allDriveProjects = [];
     let allLocalProjects = getAllLocalProjects()
     await getDriveProjects(allDriveProjects).then(() => {
-        console.log("allDriveProjects", allDriveProjects)
         allProjects = allLocalProjects?.concat(allDriveProjects) || allDriveProjects
         const uniqueIds = {}; // object to keep track of unique id values
         filterProjects = allProjects.filter(project => {
