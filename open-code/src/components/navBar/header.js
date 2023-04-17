@@ -36,7 +36,7 @@ export function Header() {
 
     useEffect(() => {
         auth.onAuthStateChanged(function (currentUser) {
-            setUser({  
+            setUser({
                 photoURL: currentUser?.photoURL,
                 displayName: currentUser?.displayName,
                 email: currentUser?.email,
@@ -45,14 +45,17 @@ export function Header() {
     }, [isEditProfileModal,setUser])
 
     const handleClick = (event) => {
-        setOpen(!open);
-        setAnchorEl(anchorEl ? null : event.currentTarget);
+        setOpen(!open); // open and close popup
+        setAnchorEl(anchorEl ? null : event.currentTarget); //popup event
     };
+
+    //delete file from local and drive
     const handleDeleteProject = () => {
         deleteProjectFromStorage(projectName).then(() => {
             navigate(PathName.home);
         });
     }
+
     const handleSignOut = () => {
         googleSignOut().then(() => {
             setIsLogoutModal(false);
@@ -64,10 +67,10 @@ export function Header() {
             {/*delete project modal*/}
             {deleteProject &&
                 <PopUpModal setVariable={setDeleteProject}
-                             headerText={"Delete this file?"}
-                             containText={"You cannot restore this file later."}
-                             buttonText={"Delete"}
-                             handleButtonClick={handleDeleteProject}/>
+                            headerText={"Delete this file?"}
+                            containText={"You cannot restore this file later."}
+                            buttonText={"Delete"}
+                            handleButtonClick={handleDeleteProject}/>
             }
 
             <div className={styles.navbarDiv}>
@@ -88,7 +91,6 @@ export function Header() {
                     {/* delete edit profile option popup*/}
                     {isProfileModal &&
                         <ProfileOptionModal
-
                             isProfileModal={isProfileModal}
                             setIsProfileModal={setIsProfileModal}
                             setIsEditProfileModal={setIsEditProfileModal}
@@ -105,10 +107,10 @@ export function Header() {
                     {/*log out pop up*/}
                     {isLogoutModal &&
                         <PopUpModal setVariable={setIsLogoutModal}
-                                     headerText={"Confirm Logout"}
-                                     containText={"Are you sure you want to logout?"}
-                                     buttonText={"Ok"}
-                                     handleButtonClick={handleSignOut}/>
+                                    headerText={"Confirm Logout"}
+                                    containText={"Are you sure you want to logout?"}
+                                    buttonText={"Ok"}
+                                    handleButtonClick={handleSignOut}/>
                     }
                     {/*help icon pop up*/}
                     {isHelpCenterModal && <HelpCenterModal isHelpCenterModal={isHelpCenterModal}
@@ -132,14 +134,13 @@ function RightSection(params) {
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     return (
         <>
-
             {/*help icon if screen is playground and device is not mobile*/}
             {location.pathname === PathName.playGround && !isMobile &&
-                < img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon}
-                      onClick={() => setIsHelpCenterModal(true)}
-                      style={{height: 24}}/>
+                <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon}
+                     onClick={() => setIsHelpCenterModal(true)}
+                     style={{height: 24}}/>
             }
-            {/*if screen is playground and it's mobile than do not show change theme icon and divider*/}
+            {/*if screen is playground, and it's mobile than do not show change theme icon and divider*/}
             {!(location.pathname === PathName.playGround && isMobile) &&
                 <>
                     {/*change theme icon*/}
@@ -167,6 +168,7 @@ function ProjectNameSection(params) {
     const {anchorEl, handleClick, projectName, open, setOpen, setDeleteProject, theme, setProjectName} = params
     const location = useLocation();
     return (
+        //when screen is playground then show project name and if clicked on prject name then show projectName with popUp
         location.pathname === PathName.playGround ? !open ?
                 <ProjectName handleClick={handleClick} projectName={projectName}/>
                 :

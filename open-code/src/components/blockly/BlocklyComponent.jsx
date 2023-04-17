@@ -14,7 +14,12 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 Blockly.setLocale(locale);
 
-
+/**
+ * WorkSpace
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function BlocklyComponent(props) {
     const {initialXml, children, onWorkspaceChange, ...rest} = props;
     const blocklyDiv = useRef();
@@ -58,7 +63,7 @@ function BlocklyComponent(props) {
         primaryWorkspace.current.addChangeListener(handleWorkspaceChange);
         primaryWorkspace.current.addChangeListener(Blockly.Events.disableOrphans);
 
-        //blocks fetching from firebase in card.js
+        //blocks fetching from drive in card.js
         if (currentProjectXml) {
             Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(currentProjectXml), primaryWorkspace.current);
         } else {

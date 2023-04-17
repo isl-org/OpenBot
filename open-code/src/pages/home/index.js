@@ -11,10 +11,12 @@ import {updateLocalProjects} from "../../services/workspace";
  * @constructor
  */
 function Home() {
+
     useEffect(() => {
+        //update local projects if there is any change.
         updateLocalProjects()
-        // getFromGoogleDrive()
     }, [])
+
     return (
         <div style={{height: '100vh'}}>
             <Header/>

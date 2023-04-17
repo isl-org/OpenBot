@@ -1,15 +1,11 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import Blockly from "blockly/core";
-import uploadIcon from "../../assets/images/icon/upload-cloud.png"
 import {UploadBarStyle} from "./styles";
 import styles from "./style.module.css"
-import undoIcon from "../../assets/images/icon/undo.png";
-import redoIcon from "../../assets/images/icon/redo.png";
 import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
-import {getCurrentProject} from "../../services/workspace";
 import {Constants, errorToast,} from "../../utils/constants";
 import {CircularProgress, circularProgressClasses, useTheme} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
@@ -20,8 +16,14 @@ import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {googleSigIn} from "../../services/firebase";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
+import {getCurrentProject} from "../../services/workspace";
 
 
+/**
+ *
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
@@ -183,7 +185,7 @@ function UploadCodeButton(params) {
                     name={"uploadCode"} onClick={clickedButton}>
                 {!isMobile && <span className={styles.leftButton + " " + styles.iconMargin}>Generate Code</span>}
                 <img alt={""}
-                     className={styles.iconDiv + " " + styles.iconMargin} src={uploadIcon}/>
+                     className={styles.iconDiv + " " + styles.iconMargin} src={Images.uploadIcon}/>
             </button>
         </div>
     )
@@ -202,13 +204,13 @@ function UndoRedo(params) {
                 className={styles.buttonStyle + " " + styles.minusStyle + " " + styles.borderStyle}
                 style={{opacity: buttonSelected === "undo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
                 name={"undo"}>
-                <img alt={""} className={styles.commandSize} src={undoIcon}/>
+                <img alt={""} className={styles.commandSize} src={Images.undoIcon}/>
             </button>
             <button onClick={clickedButton}
                     className={styles.plusStyle + " " + styles.buttonStyle}
                     style={{opacity: buttonSelected === "redo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
                     name={"redo"}>
-                <img alt={""} className={styles.commandSize} src={redoIcon}/>
+                <img alt={""} className={styles.commandSize} src={Images.redoIcon}/>
             </button>
         </div>
     )

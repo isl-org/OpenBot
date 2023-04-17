@@ -6,7 +6,7 @@ import {Carousal} from "../../../utils/constants";
 import {Carousel} from "react-responsive-carousel";
 
 /**
- *
+ * Carousel
  * @returns {JSX.Element}
  * @constructor
  */

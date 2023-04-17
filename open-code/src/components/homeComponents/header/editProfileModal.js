@@ -9,6 +9,13 @@ import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 import BlueButton from "../../buttonComponent/blueButtonComponent";
 import {Constants, Themes} from "../../../utils/constants";
 
+
+/**
+ * Edit  Profile option modal contains profile image picker and edit name, birthdate nad email field.
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export function EditProfileModal(props) {
     const {isEditProfileModal, setIsEditProfileModal, user} = props
     const inputRef = useRef();
@@ -35,8 +42,8 @@ export function EditProfileModal(props) {
         setIsEditProfileModal(false)
     }
 
+    //handle image change
     function handleChange(e) {
-        console.log(e.target.files[0].name.replace(/HEIC/g, 'jpg'));
         setFile(e.target.files[0])
         setUserDetail({
             ...userDetails,
@@ -44,6 +51,7 @@ export function EditProfileModal(props) {
         })
     }
 
+    //handle name change
     function handleNameChange(name) {
         setFullName(name)
         setUserDetail({
@@ -71,7 +79,7 @@ export function EditProfileModal(props) {
                             setIsAlertSuccess(false)
                         }.bind(this), 3000);
                 }).catch((error) => {
-                    console.log(error)
+                    console.log("error::::", error);
                     setIsAlertError(true)
                 })
                 setIsLoader(false)
@@ -88,18 +96,16 @@ export function EditProfileModal(props) {
                 <LoaderComponent color="blue" height="20" width="20"/>
                 :
                 <Box className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>
-
                     <div className={styles.crossIconDiv}>
                         <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
                              src={theme === Themes.dark ? Images.darkCrossIcon : Images.lightCrossIcon}/>
                     </div>
-
+                    {/* profile icon */}
                     <div style={{backgroundImage: `url(${userDetails.photoUrl})`}} className={styles.profileImg}>
                         <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
                         <img onClick={() => inputRef.current?.click()} alt={"edit profile icon"}
                              className={styles.editProfileIcon} src={Images.editProfileIcon}/>
                     </div>
-
                     <div style={{display: "flex"}}>
                         <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
                                               headStyle={styles.headStyle}

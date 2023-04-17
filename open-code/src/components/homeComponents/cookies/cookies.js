@@ -11,7 +11,7 @@ import {useTheme} from "@mui/material";
 
 
 /**
- *  Cokkie
+ *  render Accept Cookie card
  * @returns {JSX.Element}
  * @constructor
  */
@@ -19,7 +19,6 @@ function CookiesComponent() {
     const {theme} = useContext(ThemeContext)
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-
 
     return (
         <CookieConsent
@@ -43,6 +42,7 @@ function CookiesComponent() {
 
 export default CookiesComponent;
 
+// Accept cookie button
 function ButtonText() {
     return (
         <>
@@ -52,6 +52,7 @@ function ButtonText() {
     )
 }
 
+//decline button
 function DeclineButtonText() {
     const {theme} = useContext(ThemeContext)
     return (

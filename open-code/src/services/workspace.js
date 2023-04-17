@@ -48,18 +48,22 @@ export async function getDriveProjects(driveProjects) {
 export async function deleteProjectFromStorage(projectName) {
 
     try {
+        //delete file from localProject so find project from local first then update the all projects by uploading project list.
+        JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
+            if (project.projectName === projectName) {
+                //restProject contains all the projects except deleted project
+                const restProjects = getAllLocalProjects().filter((res) => (res.projectName !== project.projectName));
+                //set restProjects as all project in local
+                localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restProjects))
+            }
+        })
+        //delete file from Google Drive
         if (localStorage.getItem("isSigIn") === "true") {
-            //deleting file from Google Drive
             const allProject = []
-            JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
-                if (project.projectName === projectName) {
-                    const restObject = getAllLocalProjects().filter((res) => (res.projectName !== project.projectName));
-                    localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restObject))
-                }
-                return "";
-            })
+            //deleting file from Google Drive
             await getDriveProjects(allProject);
             const findCurrentProject = allProject.find(currentProject => currentProject?.projectName === projectName);
+            //check if file present in drive or not js and xml
             findCurrentProject && await checkFileExistsInFolder(await getFolderId(), findCurrentProject?.projectName, "js").then(async (response) => {
                 if (response.exists)
                     await deleteFileFromGoogleDrive(response?.fileId)
@@ -69,17 +73,6 @@ export async function deleteProjectFromStorage(projectName) {
                     await deleteFileFromGoogleDrive(response?.fileId)
             })
 
-
-        } else {
-            //delete file from localProject
-            JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
-                if (project.projectName === projectName) {
-                    const restObject = getAllLocalProjects().filter((res) => (res.projectName !== project.projectName));
-                    localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restObject))
-                }
-                return "";
-
-            })
         }
     } catch (err) {
         console.log(err);
@@ -113,7 +106,7 @@ export function updateCurrentProject(uniqueId, projectName, code) {
     if (!found) {
         //add current project in local
         createProjectInLocal(localStorage.getItem(localStorageKeys.currentProject))
-
+        // auto sync
         // if (localStorage.getItem("isSigIn") === "true") {
         //     let data = {
         //         id: getCurrentProject().id,
@@ -185,13 +178,12 @@ export function updateLocalProjects() {
             }
         )
         localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(allProjects));
-        // localStorage.setItem(localStorageKeys.currentProject, "")
     }
 }
 
 
 /**
- * remove duplicate project get from drive and also save in local.
+ * remove duplicate project get from drive and also save in local. and give high priority to local project
  */
 export async function getFilterProjects() {
     let allProjects
@@ -202,12 +194,10 @@ export async function getFilterProjects() {
         allProjects = allLocalProjects?.concat(allDriveProjects) || allDriveProjects
         const uniqueIds = {}; // object to keep track of unique id values
         filterProjects = allProjects.filter(project => {
-
             // check if id value has already been seen
             if (uniqueIds[project.id]) {
                 return false;
             }
-
             // mark id value as seen
             uniqueIds[project.id] = true;
 
@@ -222,6 +212,12 @@ export async function getFilterProjects() {
     return filterProjects;
 }
 
+
+/**
+ * Format Date
+ * @returns {{currentTime: string, currentDate: string}}
+ * @constructor
+ */
 export function FormatDate() {
     const date = new Date();
     const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
@@ -230,6 +226,7 @@ export function FormatDate() {
     const currentTime = date.toLocaleTimeString('en-US', timeOptions);
     return {currentDate: currentDate, currentTime: currentTime}
 }
+
 
 /**
  * project rename functionality

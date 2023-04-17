@@ -11,6 +11,13 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLocation} from "react-router-dom";
 import {googleSigIn} from "../../../services/firebase";
 
+
+/**
+ * profile option modal have edit profile, how to upload, change theme, signIn and logout option
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export function ProfileOptionModal(props) {
     const {
         isProfileModal,
@@ -19,10 +26,10 @@ export function ProfileOptionModal(props) {
         setIsHelpCenterModal,
         setIsLogoutModal,
     } = props
-    const {theme, toggleTheme, setUser} = useContext(ThemeContext);
-    const themes = useTheme();
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const location = useLocation();
+    const themes = useTheme();
+    const {theme, toggleTheme, setUser} = useContext(ThemeContext);
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
     const isHomePage = location.pathname === PathName.home;
     const isOnPlaygroundPage = location.pathname === PathName.playGround;
@@ -35,6 +42,7 @@ export function ProfileOptionModal(props) {
         handleClose()
         setVariable(true)
     }
+
     const handleSignIn = () => {
         googleSigIn().then(response => {
             setUser({
@@ -60,12 +68,13 @@ export function ProfileOptionModal(props) {
                 }
                 {isOnPlaygroundPage && isMobile &&
                     <>
-                        <PopUpInRowText onClick={() => {
-                            handleClose()
-                            toggleTheme(!theme)
-                        }}
-                                        text={"Change Theme"}
-                                        icon={theme === Themes.dark ? Images.lightThemeIcon : Images.blueTheme}/>
+                        <PopUpInRowText
+                            onClick={() => {
+                                handleClose();
+                                toggleTheme(!theme)
+                            }}
+                            text={"Change Theme"}
+                            icon={theme === Themes.dark ? Images.lightThemeIcon : Images.blueTheme}/>
                         <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"How To Upload"}
                                         icon={theme === Themes.dark ? Images.helpIcon : Images.infoLight}/>
                     </>
@@ -106,4 +115,3 @@ function PopUpInRowText(params) {
         </div>
     )
 }
-

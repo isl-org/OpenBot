@@ -17,8 +17,8 @@ export const NewProject = () => {
     const [projects, setProjects] = useState([]);
     const {theme} = useContext(ThemeContext)
 
-    //TODO get projects from drive and store in local storage when signIn
     useEffect(() => {
+        //get projects from drive and as well as from local
         getFilterProjects().then((filterProject) => {
             setProjects(filterProject)
         })
@@ -29,7 +29,9 @@ export const NewProject = () => {
             <div className={styles.Heading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>My Projects
             </div>
             <div className={styles.ButtonsMessage}>
+                {/*add new project button*/}
                 <NewProjectButton isProject={projects.length}/>
+                {/*here project is sorted based on updated time*/}
                 {projects.length > 0 ?
                     projects?.sort((z, a) => moment(`${a.updatedDate} ${a.time}`, 'MMMM D, YYYY h:mm')
                         .valueOf() - moment(`${z.updatedDate} ${z.time}`, 'MMMM D, YYYY h:mm')
@@ -39,6 +41,7 @@ export const NewProject = () => {
                         />
                     ))
                     :
+                    //if there is no project then create new prject component will be rendered.
                     <CreateNewProject/>
                 }
             </div>
@@ -48,7 +51,7 @@ export const NewProject = () => {
 
 
 /**
- * Create New Project
+ * Create New Project which has img and with text saying click to create new project.
  * @returns {JSX.Element}
  * @constructor
  */

@@ -4,12 +4,16 @@ import {controlsBlocks, loopBlocks} from "../blocks/generalBlocks";
 import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
 import '../generator/generator';
 import '../blocks/customblocks';
-// import styles from "../BlocklyComponent.css"
-export const Toolbox = (props) => {
 
+/**
+ * ToolBox has box component
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export const Toolbox = (props) => {
     return (
         <>
-
             <Category name="Control" colour={"#567AE4"}>
                 <Block type="controls_if" gap="8">
                     <Value name="IF0">
@@ -21,6 +25,7 @@ export const Toolbox = (props) => {
                 {controlBlocksType.map((type, index) => {
                     return controlsBlocks(type, index)
                 })}
+
                 <Block type="logic_compare" gap="8">
                     <Value name="A">
                         <Shadow type="math_number">
@@ -33,8 +38,10 @@ export const Toolbox = (props) => {
                         </Shadow>
                     </Value>
                 </Block>
+
                 <Block type="start"/>
                 <Block type="forever"/>
+
             </Category>
 
             <Category name="Loops" colour={"#C54E30"}>
@@ -103,14 +110,17 @@ export const Toolbox = (props) => {
                     </Value>
                 </Block>
             </Category>
+
             <Category name="Indicator" colour={"#506481"}>
                 <Block type="leftIndicator_led"/>
                 <Block type="rightIndicator_led"/>
                 <Block type="indicatorStatus"/>
             </Category>
+
             <Category name="LED" colour={"#61A8EC"}>
                 <Block type="brightness"/>
             </Category>
+
             <Category name="Controller" colour={"#8156C9"}>
                 <Block type="controllerMode">
                     <Field  type="dropdown" shape="ellipse"/>
@@ -123,12 +133,14 @@ export const Toolbox = (props) => {
                 <Block type="acceleration_reading"/>
                 <Block type="magnetic_reading"/>
             </Category>
+
             <Category name="Sound" colour={"#5BBC73"}>
                 <Block type="soundIs"/>,
                 <Block type="soundType"/>,
                 <Block type="soundMode">
                 </Block>,
             </Category>
+
             <Category name="Sensors" colour={"#61A8EC"}>
                 <Block type="bumper"/>
                 <Block type="sonarReading"/>
@@ -140,11 +152,13 @@ export const Toolbox = (props) => {
                 <Block type="backLedSensor"/>
                 <Block type="ledStatusSensor"/>
             </Category>
+
             <Category name="Speed" colour={"#567AE4"}>
                 <Block type="speedSlow"/>
                 <Block type="speedMedium"/>
                 <Block type="speedHigh"/>
             </Category>
+
             <Category name="Movement" colour={"#DA4B5D"}>
                 <Block type="forward&BackwardAtSpeed"/>
                 <Block type="forward&BackwardAtSpeedForTime"/>

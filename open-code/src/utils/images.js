@@ -35,6 +35,9 @@ import joystickIcon from "../assets/images/icon/joyStick-icon.png";
 import dualDriveIcon from "../assets/images/icon/dualDrive-icon.png";
 import gamepadIcon from "../assets/images/icon/gamepad-icon.png";
 import phoneIcon from "../assets/images/icon/phone-icon.png"
+import undoIcon from "../assets/images/icon/undo.png";
+import redoIcon from "../assets/images/icon/redo.png";
+import uploadIcon from "../assets/images/icon/upload-cloud.png"
 
 export const Images = {
     helpIcon: helpIcon,
@@ -73,5 +76,9 @@ export const Images = {
     joystickIcon:joystickIcon,
     dualDriveIcon:dualDriveIcon,
     gamepadIcon:gamepadIcon,
-    phoneIcon:phoneIcon
+    phoneIcon:phoneIcon,
+    undoIcon:undoIcon,
+    redoIcon:redoIcon,
+    uploadIcon:uploadIcon,
+
 }

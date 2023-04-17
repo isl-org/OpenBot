@@ -8,7 +8,6 @@ import styles from "./components/homeComponents/carousel/carousel.module.css";
 import {Images} from "./utils/images";
 import {auth, googleSignOut} from "./services/firebase";
 import {ToastContainer} from "react-toastify";
-
 export const ThemeContext = createContext(null);
 
 
@@ -29,7 +28,7 @@ function App() {
         theme === Themes.dark ? darkElement.classList.add("dark-mode") : darkElement.classList.remove("dark-mode");
     }, [theme]);
 
-
+    //session time out function.
     useEffect(() => {
         let timeoutId;
         const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -77,20 +76,20 @@ function App() {
         localStorage.setItem("theme", darkThemeMq.matches ? Themes.dark : Themes.light);
     }
 
+    //if theme is dark and when click on change theme then setTheme light and vice-versa.
     const toggleTheme = () => {
         if (theme === "light") {
             setTheme("dark");
             localStorage.setItem("theme", Themes.dark)
-            document.body.classList.replace("light", "dark");
+            document.body.classList.replace("light", "dark"); // for background theme
         } else {
             setTheme("light");
             localStorage.setItem("theme", Themes.light)
-            document.body.classList.replace("dark", "light");
+            document.body.classList.replace("dark", "light"); //for background theme
         }
     };
 
     return (
-
         <ThemeContext.Provider value={{theme, toggleTheme}}>
             <StoreProvider>
                 <div id={theme}>
@@ -106,6 +105,7 @@ function App() {
 }
 
 export default App;
+
 
 /**
  * component to display the loading icon on the screen

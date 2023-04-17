@@ -25,6 +25,7 @@ import {Images} from "../../../utils/images";
  */
 export function LogoSection() {
     let navigate = useNavigate()
+
     //onClickEvent
     const openHomepage = () => {
         let path = `/`;
@@ -32,9 +33,9 @@ export function LogoSection() {
     }
     return (
         <div className={styles.navbarTitleDiv}>
-            <img alt="" className={`${styles.mainIcon} ${styles.iconMargin}`} src={icon} onClick={() => {
-                openHomepage()
-            }}/>
+            {/*icon*/}
+            <img className={`${styles.mainIcon} ${styles.iconMargin}`} src={icon} onClick={() => openHomepage()}/>
+            {/*name*/}
             <div className={styles.navbarHeadDiv} onClick={() => openHomepage()}>
                 <span className={`${styles.mainTitle} `}>OpenBot</span>
                 <span className={`${styles.mainTitle} ${styles.subTitle}`}>PlayGround</span>
@@ -58,7 +59,8 @@ export function ProjectName(params) {
 
     return (
         <div className={styles.playgroundName} onClick={handleClick}>
-            <span className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName?.slice(0, isMobile? 8:projectName?.length ) + " " + ((projectName?.length > (isMobile? 8:projectName?.length)) ? "..." :"")}</span>
+            <span
+                className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName?.slice(0, isMobile ? 8 : projectName?.length) + " " + ((projectName?.length > (isMobile ? 8 : projectName?.length)) ? "..." : "")}</span>
             <img src={downArrow}
                  className={`${styles.infoIcon} ${styles.arrowMargin}`}
                  alt={"arrow"}/>
@@ -136,7 +138,8 @@ export function ProjectNamePopUp(params) {
                 :
                 <span onClick={() => {
                     setOpen(!open)
-                }} className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName?.slice(0, isMobile? 8:projectName.length ) + " " + ((projectName?.length > (isMobile? 8:projectName?.length)) ? "..." :"")}</span>
+                }}
+                      className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName?.slice(0, isMobile ? 8 : projectName.length) + " " + ((projectName?.length > (isMobile ? 8 : projectName?.length)) ? "..." : "")}</span>
             }
             <img src={UpArrow}
                  className={`${styles.infoIcon} ${styles.arrowMargin}`}
@@ -180,7 +183,7 @@ export function EditProjectPopUp(params) {
                 clickOutside()
             }
         };
-        document.addEventListener("mousedown", handleClickOutside,{ passive: true });
+        document.addEventListener("mousedown", handleClickOutside, {passive: true});
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
@@ -192,7 +195,8 @@ export function EditProjectPopUp(params) {
             ref={popUpRef}
             key={id} open={open} anchorEl={anchorEl}>
             <div
-                className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel) + " " + extraStyle} style={{marginTop:(location.pathname === PathName.home) && 10}}>
+                className={styles.option + " " + (theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel) + " " + extraStyle}
+                style={{marginTop: (location.pathname === PathName.home) && 10}}>
                 <div
                     className={`${styles.item} ${styles.renameDivMargin}  ${(theme === "dark" ? styles.darkItem : styles.lightItem)}`}
                     onClick={async (event) => {
@@ -220,7 +224,7 @@ export function EditProjectPopUp(params) {
 }
 
 /**
- * Profile signin option if not signed in or else show profile icon with name
+ * Profile signIn option if not signed in or else show profile icon with name
  * @param params
  * @returns {JSX.Element}
  * @constructor
@@ -231,6 +235,7 @@ export function ProfileSignIn(params) {
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const location = useLocation();
 
+    //open google signIn and set user details in User
     const handleSignIn = () => {
         googleSigIn().then(response => {
             setUser({
@@ -245,10 +250,11 @@ export function ProfileSignIn(params) {
 
     return (
         localStorage.getItem("isSigIn") === "true" ?
+            //signIn then show Image and down Arrow
             <ImageWithArrow setIsProfileModal={setIsProfileModal} user={user} isMobile={isMobile} signIn={true}/>
             :
             (isMobile && location.pathname === PathName.playGround) ?
-                //user is not signedIn and in playground screen then show avatar
+                //user is not signedIn and in playground screen then show avatar with down arrow
                 <ImageWithArrow setIsProfileModal={setIsProfileModal} user={user} isMobile={isMobile} signIn={false}/>
                 :
                 // signIn button
@@ -259,6 +265,13 @@ export function ProfileSignIn(params) {
     )
 }
 
+
+/**
+ * Component render Image with arrow  which is clickable
+ * @param params
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function ImageWithArrow(params) {
     const {setIsProfileModal, user, isMobile, signIn} = params
     return (

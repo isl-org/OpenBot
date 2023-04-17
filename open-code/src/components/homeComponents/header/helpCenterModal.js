@@ -7,6 +7,13 @@ import BlackText from "../../fonts/blackText";
 import {HelpCenterText} from "../../../utils/constants";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+
+/**
+ * HelpCenterModal contains static how to upload code details
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export function HelpCenterModal(props) {
     const {isHelpCenterModal, setIsHelpCenterModal} = props
     const theme = useContext(ThemeContext)
@@ -21,13 +28,23 @@ export function HelpCenterModal(props) {
             open={isHelpCenterModal}>
             <Box
                 className={styles.helpCenterModalBox + " " + (theme.theme === "dark" ? styles.darkHelpCenterModal : styles.lightHelpCenterModal)}>
-                {isMobile ? <div className={styles.helpDetailsModelDiv}><HelpDetails handleClose={handleClose}/></div>
+                {isMobile ?
+                    <div className={styles.helpDetailsModelDiv}>
+                        <HelpDetails handleClose={handleClose}/>
+                    </div>
                     : <HelpDetails handleClose={handleClose}/>}
             </Box>
         </Modal>
     )
 }
 
+
+/**
+ * Help Details modal
+ * @param params
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function HelpDetails(params) {
     const {handleClose} = params
     const theme = useContext(ThemeContext)
@@ -38,11 +55,12 @@ function HelpDetails(params) {
             <div
                 className={styles.dragAndDropDiv + " " + (theme.theme === "dark" && styles.darkModeRightBorder)}>
                 <img alt={"screen display"} src={Images.laptop} className={styles.screenDisplayImage}/>
-                <div style={{width: isMobile?"95%":"80%", marginTop: "15%"}}>
+                <div style={{width: isMobile ? "95%" : "80%", marginTop: "15%"}}>
                     <BlackText extraStyle={styles.integerNumber} text={1}/>
                     <div
-                        style={{marginLeft: isMobile?"6%":"10%", paddingTop: "8%"}}>
-                        <BlackText divStyle={{marginBottom: isMobile?"9%":"12%"}} extrastyle={styles.helpCentreHeader}
+                        style={{marginLeft: isMobile ? "6%" : "10%", paddingTop: "8%"}}>
+                        <BlackText divStyle={{marginBottom: isMobile ? "9%" : "12%"}}
+                                   extrastyle={styles.helpCentreHeader}
                                    text={"Drag and Drop"}/>
                         <BlackText extraStyle={styles.helpCenterPara}
                                    text={HelpCenterText.dragAndDropFirstLine}/>
@@ -66,8 +84,9 @@ function HelpDetails(params) {
                     <div>
                         <BlackText text={2} extraStyle={styles.integerNumber}/>
                     </div>
-                    <div style={ {width: isMobile?"90%":"70%", paddingLeft: "5%"}}>
-                        <BlackText divStyle={{marginTop: "7%", marginBottom: "8%"}} text={"Save and Download"} extrastyle={styles.helpCentreHeader}/>
+                    <div style={{width: isMobile ? "90%" : "70%", paddingLeft: "5%"}}>
+                        <BlackText divStyle={{marginTop: "7%", marginBottom: "8%"}} text={"Save and Download"}
+                                   extrastyle={styles.helpCentreHeader}/>
                         <BlackText extraStyle={styles.helpCenterPara}
                                    text={HelpCenterText.saveAndDownloadFirstLine}/>
                         <BlackText extraStyle={styles.helpCenterPara}
@@ -78,7 +97,7 @@ function HelpDetails(params) {
                     <div>
                         <BlackText text={3} extraStyle={styles.integerNumber}/>
                     </div>
-                    <div style={{width: isMobile?"90%":"70%", paddingLeft: "5%"}}>
+                    <div style={{width: isMobile ? "90%" : "70%", paddingLeft: "5%"}}>
                         <div style={{marginTop: "10%"}}>
                             <BlackText divStyle={{paddingTop: "5%", marginBottom: "8%"}}
                                        text={"Connect and Drive"} extrastyle={styles.helpCentreHeader}/>

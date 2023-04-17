@@ -7,7 +7,7 @@ import BlueButton from "../../buttonComponent/blueButtonComponent";
 
 
 /**
- * Pop up for delete,log out and signIn
+ * Pop up for delete,log out and signIn and session expire
  * @param props
  * @returns {JSX.Element}
  * @constructor
