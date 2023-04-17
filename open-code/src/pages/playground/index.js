@@ -1,7 +1,7 @@
 import React from 'react';
 import BlocklyComponent from "../../components/blockly";
 import {Toolbox} from "../../components/blockly/toolbox/Toolbox";
-import {BottomBar, UploadCode} from "../../components/bottomBar/bottomBar";
+import {BottomBar} from "../../components/bottomBar/bottomBar";
 import {Header} from "../../components/navBar/header";
 import {QrDrawer} from "../../components/drower/drower";
 import {useLocation} from 'react-router-dom';
