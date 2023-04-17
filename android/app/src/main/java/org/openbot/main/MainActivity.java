@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         (controller, destination, arguments) -> {
           if (destination.getId() == R.id.mainFragment
               || destination.getId() == R.id.settingsFragment
+                  || destination.getId() == R.id.usbFragment
               || destination.getId() == R.id.projectsFragment
               || destination.getId() == R.id.profileFragment) {
             toolbar.setVisibility(View.VISIBLE);
@@ -171,8 +172,10 @@ public class MainActivity extends AppCompatActivity {
     getMenuInflater().inflate(R.menu.menu_items, menu);
     menu.findItem(R.id.barCodeScannerFragment).setVisible(false);
     if (vehicle.getConnectionType().equals("Bluetooth")) {
+      menu.findItem(R.id.usbFragment).setVisible(false);
       menu.findItem(R.id.bluetoothFragment).setVisible(true);
     } else if (vehicle.getConnectionType().equals("USB")) {
+      menu.findItem(R.id.usbFragment).setVisible(true);
       menu.findItem(R.id.bluetoothFragment).setVisible(false);
     }
     return true;

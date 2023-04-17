@@ -290,7 +290,6 @@ public class AutopilotFragment extends CameraFragment {
 
   @Override
   public synchronized void onPause() {
-    croppedBitmap = null;
     handlerThread.quitSafely();
     try {
       handlerThread.join();
