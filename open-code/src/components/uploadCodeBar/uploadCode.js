@@ -10,7 +10,6 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
 import {getCurrentProject} from "../../services/workspace";
-import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {Constants, errorToast,} from "../../utils/constants";
 import {CircularProgress, circularProgressClasses, useTheme} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
@@ -20,7 +19,8 @@ import {motion, AnimatePresence} from "framer-motion";
 import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {googleSigIn} from "../../services/firebase";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import {pythonGenerator} from "blockly/python";
+import {uploadToGoogleDrive} from "../../services/googleDrive";
+
 
 export const UploadCode = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});

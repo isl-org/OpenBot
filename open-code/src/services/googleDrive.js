@@ -1,5 +1,6 @@
 import {Constants, errorToast, localStorageKeys} from "../utils/constants";
 import {getCurrentProject} from "./workspace";
+import {googleSignOut} from "./firebase";
 
 /**
  * function that upload project data on Google Drive
@@ -188,6 +189,11 @@ export async function getFolderId() {
 
     const searchResponse = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(Constants.FolderName)}'+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false&access_token=${accessToken}`);
     const searchResult = await searchResponse.json();
+    console.log("searchResult", searchResult)
+    if (searchResult.error &&searchResult.error.code === 401) {
+        alert("your session has expired please login again.")
+        googleSignOut().then()
+    }
     const folderId = searchResult?.files[0]?.id || null;
     return folderId;
 }

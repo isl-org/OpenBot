@@ -63,7 +63,7 @@ export const Constants = {
     LoadingTime: 800,
     ProfileSuccessMsg: "Profile updated successfully!",
     CookieMsg: "Our website use cookies. By continuing navigating, we assume your permission to deploy cookies as detailed in our Privacy Policy.",
-    FolderName: "openCode-openBot",
+    FolderName: "openBot-Playground",
     baseUrl: "https://www.googleapis.com/drive/v3",
     endCode: "\nstart();\n" + "forever();\n",
     js: "js",
