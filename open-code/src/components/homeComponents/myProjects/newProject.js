@@ -50,6 +50,7 @@ export const NewProject = () => {
     );
 };
 
+
 /**
  * Renders an image with a message to create a new project
  * @returns {JSX.Element}

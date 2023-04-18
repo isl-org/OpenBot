@@ -17,7 +17,7 @@ export const uploadToGoogleDrive = async (data, fileType) => {
     if (folderId) {
         response = await uploadFileToFolder(accessToken, data, folderId, fileType === Constants.xml ?? Constants.js);
     } else {
-        await new CreateFolder(accessToken).then((folderId) => {
+        await  CreateFolder(accessToken).then((folderId) => {
                 response = uploadFileToFolder(accessToken, data, folderId, fileType === Constants.xml ?? Constants.js);
             }
         );

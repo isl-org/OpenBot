@@ -9,9 +9,11 @@ import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 import {localStorageKeys, Themes} from "../../../utils/constants";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+
 /**
- *
- * @param props
+ * This component represents a button that allows the user to create a new project.
+ * @param {Object} props - The props object that contains the properties for this component.
+ * @param {boolean} props.isProject - A boolean indicating whether or not there are any projects.
  * @returns {JSX.Element}
  * @constructor
  */
@@ -76,7 +78,7 @@ function NewProjectButton(props) {
             <div className={styles.Content + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}
                  style={{marginRight: isProject > 0 && !isMobile ? 42 : 0}}
                  onClick={handleOpen}>
-
+                {/*add new project icon*/}
                 <div className={styles.Card + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
                     <div className={styles.Button + " " + (theme === "dark" ? styles.ButtonDark : styles.ButtonLight)}>
                         <div className={styles.AddIconImage}>
@@ -86,48 +88,11 @@ function NewProjectButton(props) {
                 </div>
 
             </div>
-
-            <Modal
-                open={open}
-                onClose={handleClose}
-                className={"model"}
-            >
-                <div className={styles.model + " " + (theme === "dark" ? styles.modelDark : styles.modelLight)}>
-                    {/* The header section of the Modal*/}
-                    <div
-                        className={styles.ModelHeading + " " + (theme === "dark" ? styles.ModelHeadingDark : styles.ModelHeadingLight)}>
-
-                        {/* Title of the Modal*/}
-                        <div>Create a New Project</div>
-                        {/* Close button icon displayed depending on the selected theme*/}
-                        {(theme === Themes.light ?
-                            <img alt="cross" src={Images.lightCrossIcon} className={styles.CrossIcon}
-                                 onClick={handleClose}/> :
-                            <img alt="cross" src={Images.darkCrossIcon} className={styles.CrossIcon}
-                                 onClick={handleClose}/>)}
-                    </div>
-                    {/* A line separating the header and content sections of the Modal*/}
-                    <div
-                        className={styles.line + " " + (theme === "dark" ? styles.ModelHeadingDark : styles.ModelHeadingLight)}/>
-                    <div className={styles.Input}>
-                        <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
-                                              inputTitle={"Give your project a name"}
-                                              placeHolder={"Project Name"}
-                                              extraInputStyle={styles.extraInputStyle}
-                                              value={projectName} extraMargin={styles.inputBoxMargin}
-                                              onDataChange={handleProjectNameChange}
-                                              OpenNewProjectHandle={OpenNewProjectHandle}
-                        />
-                    </div>
-                    {/*The button to create a new project*/}
-                    {isMobile ?
-                        <div className={styles.creatButton}>
-                            <CreateButton OpenNewProjectHandle={OpenNewProjectHandle}/>
-                        </div> :
-                        <CreateButton OpenNewProjectHandle={OpenNewProjectHandle}/>
-                    }
-                </div>
-            </Modal>
+            {/*create new project modal*/}
+            <CreateNewProjectModal
+                open={open} handleProjectNameChange={handleProjectNameChange}
+                OpenNewProjectHandle={OpenNewProjectHandle} isMobile={isMobile}
+                handleClose={handleClose} projectName={projectName}/>
         </>
 
     );
@@ -137,7 +102,61 @@ export default NewProjectButton;
 
 
 /**
+ * Create new Project PopUp
+ * @param params
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function CreateNewProjectModal(params) {
+    const {open, handleClose, projectName, handleProjectNameChange, OpenNewProjectHandle, isMobile} = params
+    const {theme} = useContext(ThemeContext)
+    return (
+        <Modal
+            open={open}
+            onClose={handleClose}
+            className={"model"}
+        >
+            <div className={styles.model + " " + (theme === "dark" ? styles.modelDark : styles.modelLight)}>
+                {/* The header section of the Modal*/}
+                <div
+                    className={styles.ModelHeading + " " + (theme === "dark" ? styles.ModelHeadingDark : styles.ModelHeadingLight)}>
 
+                    {/* Title of the Modal*/}
+                    <div>Create a New Project</div>
+                    {/* Close button icon displayed depending on the selected theme*/}
+                    {(theme === Themes.light ?
+                        <img alt="cross" src={Images.lightCrossIcon} className={styles.CrossIcon}
+                             onClick={handleClose}/> :
+                        <img alt="cross" src={Images.darkCrossIcon} className={styles.CrossIcon}
+                             onClick={handleClose}/>)}
+                </div>
+                {/* A line separating the header and content sections of the Modal*/}
+                <div
+                    className={styles.line + " " + (theme === "dark" ? styles.ModelHeadingDark : styles.ModelHeadingLight)}/>
+                <div className={styles.Input}>
+                    <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
+                                          inputTitle={"Give your project a name"}
+                                          placeHolder={"Project Name"}
+                                          extraInputStyle={styles.extraInputStyle}
+                                          value={projectName} extraMargin={styles.inputBoxMargin}
+                                          onDataChange={handleProjectNameChange}
+                                          OpenNewProjectHandle={OpenNewProjectHandle}
+                    />
+                </div>
+                {/*The button to create a new project*/}
+                {isMobile ?
+                    <div className={styles.creatButton}>
+                        <CreateButton OpenNewProjectHandle={OpenNewProjectHandle}/>
+                    </div> :
+                    <CreateButton OpenNewProjectHandle={OpenNewProjectHandle}/>
+                }
+            </div>
+        </Modal>
+    )
+}
+
+
+/**
  * handleUniqueName - Given an array of projects and a project name,
  * checks if the project name already exists in the array, and returns a unique
  * project name by appending a number to the end of the project name if needed.

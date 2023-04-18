@@ -34,7 +34,8 @@ export function LogoSection() {
     return (
         <div className={styles.navbarTitleDiv}>
             {/*icon*/}
-            <img alt="openBotIcon" className={`${styles.mainIcon} ${styles.iconMargin}`} src={icon} onClick={() => openHomepage()}/>
+            <img alt="openBotIcon" className={`${styles.mainIcon} ${styles.iconMargin}`} src={icon}
+                 onClick={() => openHomepage()}/>
             {/*name*/}
             <div className={styles.navbarHeadDiv} onClick={() => openHomepage()}>
                 <span className={`${styles.mainTitle} `}>OpenBot</span>
@@ -70,7 +71,15 @@ export function ProjectName(params) {
 
 
 /**
- *ProjectName's POP up which has reName and delete file options
+ * This component renders the pop-up for renaming and deleting a project
+ * @param {Object} params - The component parameters
+ * @param {Object} params.anchorEl - The anchor element for the pop-up
+ * @param {Function} params.setDeleteProject - The function to delete a project
+ * @param {Object} params.theme - The current theme
+ * @param {string} params.projectName - The name of the project
+ * @param {Function} params.setOpen - The function to open the pop-up
+ * @param {boolean} params.open - Whether or not the pop-up is open
+ * @param {Function} params.setProjectName - The function to set the project name
  * @returns {JSX.Element}
  * @constructor
  */
@@ -84,36 +93,48 @@ export function ProjectNamePopUp(params) {
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
 
+    // Update rename project state variable when the project name changes
     useEffect(() => {
-        setRenameProject(projectName)
-    }, [projectName])
+        setRenameProject(projectName);
+    }, [projectName]);
 
-
+    // Define the function to delete a project
     const handleDelete = () => {
-        setDeleteProject(true)
-    }
-    const handleBlur = async () => {
-        setOpen(false)
-        handleClickBlur().then();
+        setDeleteProject(true);
+    };
 
-    }
+    // Handle the blur event on the input element
+    const handleBlur = async () => {
+        setOpen(false);
+        handleClickBlur().then();
+    };
+
+    // Handle a click outside the pop-up
     const handleClickOutside = () => {
         setOpenPopUp(false);
-        if (!rename)
-            setOpen(false)
-    }
+        if (!rename) setOpen(false);
+    };
+
+    // Handle a blur event on the input element
     const handleClickBlur = async () => {
-        setRename(false)
+        setRename(false);
         if (!reNameProject || reNameProject <= 0) {
-            setRenameProject(projectName)
+            setRenameProject(projectName);
         }
         if (reNameProject !== projectName) {
-            await handleRename(reNameProject, projectName, setRenameProject).then(async (updatedProjectName) => {
-                setProjectName(updatedProjectName);
-                await renameProject(updatedProjectName, projectName, PathName.playGround).then()
-            });
+            await handleRename(reNameProject, projectName, setRenameProject).then(
+                async (updatedProjectName) => {
+                    setProjectName(updatedProjectName);
+                    await renameProject(
+                        updatedProjectName,
+                        projectName,
+                        PathName.playGround
+                    ).then();
+                }
+            );
         }
-    }
+    };
+
     return (
         <div className={styles.playgroundName}>
             {/*project name with edit field and arrow*/}
@@ -123,7 +144,7 @@ export function ProjectNamePopUp(params) {
                        onClick={(e) => {
                            e.stopPropagation();
                        }}
-                       ref={inputRef} // set the ref to the input element
+                       ref={inputRef}  // set the ref to the input element
                        onChange={(e) => setRenameProject(e.target.value)}
                        onFocus={(e) => e.target.select()}
                        onBlur={handleBlur}
@@ -161,6 +182,13 @@ export function ProjectNamePopUp(params) {
     )
 }
 
+
+/**
+ * EditProjectPopUp is a popup component that shows options to rename or delete a project file.
+ * @param params
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export function EditProjectPopUp(params) {
     const {
         open,
@@ -173,10 +201,12 @@ export function EditProjectPopUp(params) {
         inputRef,
         handleRename
     } = params
-    const id = open ? 'simple-popper' : undefined
-    const popUpRef = useRef(null);
+    const id = open ? 'simple-popper' : undefined // Define the ID of the popup element.
+    const popUpRef = useRef(null);// Create a reference to the popup element for detecting clicks outside the popup.
     const location = useLocation();
 
+
+     // Use the useEffect hook to detect clicks outside the popup.
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (popUpRef.current && !popUpRef.current.contains(event.target)) {
@@ -187,7 +217,7 @@ export function EditProjectPopUp(params) {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [popUpRef,clickOutside]);
+    }, [popUpRef, clickOutside]);
 
     return (
         <Popper
@@ -222,6 +252,7 @@ export function EditProjectPopUp(params) {
 
     )
 }
+
 
 /**
  * Profile signIn option if not signed in or else show profile icon with name

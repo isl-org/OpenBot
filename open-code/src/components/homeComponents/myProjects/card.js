@@ -8,9 +8,7 @@ import WhiteText from "../../fonts/whiteText";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
 import {
-    deleteProjectFromStorage,
-    getAllLocalProjects,
-    getDriveProjects,
+    deleteProjectFromStorage, getAllLocalProjects, getDriveProjects,
     renameProject
 } from "../../../services/workspace";
 import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
@@ -20,6 +18,13 @@ import {handleUniqueName} from "./newProjectButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material";
 
+
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function Card(props) {
     const {theme} = useContext(ThemeContext);
     const {
@@ -176,6 +181,14 @@ function Card(props) {
 
 export default Card;
 
+
+/**
+ *
+ * @param reNameProject
+ * @param projectName
+ * @param setReNameProject
+ * @returns {Promise<string>}
+ */
 export const handleRename = async (reNameProject, projectName, setReNameProject) => {
     let updatedProjectName = reNameProject;
     if (reNameProject !== projectName) {
