@@ -15,33 +15,42 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 Blockly.setLocale(locale);
 
 /**
- * WorkSpace
- * @param props
+ * Blockly workspace component
+ * @param {Object} props - component props
+ * @param {string} props.initialXml - initial XML code to load into the workspace
+ * @param {Function} props.onWorkspaceChange - function to call when workspace changes
+ * @param {Object} props.rest - additional props to pass to Blockly inject method
  * @returns {JSX.Element}
- * @constructor
  */
 function BlocklyComponent(props) {
     const {initialXml, children, onWorkspaceChange, ...rest} = props;
+
+    // Refs for the workspace, toolbox, and blockly div
     const blocklyDiv = useRef();
-    const {theme} = useContext(ThemeContext);
     const toolbox = useRef();
     const primaryWorkspace = useRef();
+
+    // Get context values from the store
+    const {theme} = useContext(ThemeContext);
     const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer} = useContext(StoreContext);
-    const uniqueId = currentProjectId ? currentProjectId : nanoid()
+
+    const uniqueId = currentProjectId ? currentProjectId : nanoid()    // Generate a unique ID for the workspace if it doesn't exist
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
-    // save code in local to restore on reload page
+    // Save workspace code to local storage when workspace changes
     const handleWorkspaceChange = useCallback(() => {
         setDrawer(false);
         if (projectName !== undefined) {
             updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
         }
-
-    }, []);
-
+        if (onWorkspaceChange) {
+            onWorkspaceChange();
+        }
+    }, [projectName, uniqueId, fileId, folderId, setDrawer, onWorkspaceChange]);
 
     useEffect(() => {
+        // Create the primary workspace instance
         primaryWorkspace.current = Blockly.inject(blocklyDiv.current, {
             theme: theme === "dark" ? DarkTheme : LightTheme,
             renderer: "zelos",
@@ -49,10 +58,13 @@ function BlocklyComponent(props) {
             ...rest,
         });
 
+        // Set the zoom level for mobile devices
         const zoomLevel = 0.7;
-        if (isMobile)
+        if (isMobile) {
             primaryWorkspace.current.setScale(zoomLevel);
+        }
 
+        // Create and render a new modal instance
         const model = new Modal(primaryWorkspace.current);
         model.init();
         model.render({
@@ -60,21 +72,24 @@ function BlocklyComponent(props) {
             shouldCloseOnEsc: true,
         });
 
+        // Add change listener to the workspace and disable orphaned blocks
         primaryWorkspace.current.addChangeListener(handleWorkspaceChange);
         primaryWorkspace.current.addChangeListener(Blockly.Events.disableOrphans);
 
-        //blocks fetching from drive in card.js
+        // Load XML code into the workspace if it exists, otherwise load initial XML code
         if (currentProjectXml) {
             Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(currentProjectXml), primaryWorkspace.current);
         } else {
             Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(initialXml), primaryWorkspace.current);
         }
 
+        // Clean up the workspace when the component unmounts
         return () => {
             primaryWorkspace.current.dispose();
         }
-    }, [theme, toolbox, blocklyDiv, props]);
+    }, [theme, toolbox, blocklyDiv, props, isMobile, handleWorkspaceChange, currentProjectXml, initialXml]);
 
+    // Return the blockly div and hidden toolbox
     return (
         <React.Fragment>
             <div

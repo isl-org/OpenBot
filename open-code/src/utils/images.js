@@ -24,7 +24,7 @@ import Carousal3Dark from "../../src/assets/images/mobile_dark.mp4";
 import cloud from "../assets/images/icon/cloud.png"
 import lightThemeIcon from "../assets/images/icon/light-theme-icon.png"
 import darkThemeIcon from "../assets/images/icon/whiteMode/white-mode-icon.png"
-import dots from  "../assets/images/threedots.png";
+import dots from "../assets/images/threedots.png";
 import darkDots from "../assets/images/darkdoticon.png";
 import avatar from "../assets/images/icon/Avatars.png";
 import infoLight from "../assets/images/icon/infoLight.png"
@@ -37,9 +37,17 @@ import gamepadIcon from "../assets/images/icon/gamepad-icon.png";
 import phoneIcon from "../assets/images/icon/phone-icon.png"
 import undoIcon from "../assets/images/icon/undo.png";
 import redoIcon from "../assets/images/icon/redo.png";
-import uploadIcon from "../assets/images/icon/upload-cloud.png"
+import uploadIcon from "../assets/images/icon/upload-cloud.png";
+import rightSlider from "../assets/images/icon/right-slider.png";
+import rightSliderDark from "../assets/images/icon/right-slider-dark.png";
 
+/**
+ * Images used in opeBot-Playgorund is listed here
+ * @type {{lightThemeIcon: *, darkPencilIcon: *, line: *, undoIcon: *, pencilIcon: *, profileImage: *, laptop: *, lightCrossIcon: *, login: *, gameIcon: *, joystickIcon: *, gamepadIcon: *, cloud: *, infoLight: *, logo: *, blueTheme: *, crossIcon: *, darkDots: *, phoneIcon: *, logoutIcon: *, Carousal2Dark: *, dots: *, uploadIcon: *, redoIcon: *, Carousal3Dark: *, avatar: *, darkThemeIcon: *, errorEmojiIcon: *, editProfileIcon: *, darkUserIcon: *, darkLogoutIcon: *, dualDriveIcon: *, dragDropWhite: *, dragDropDark: *, userIcon: *, darkCrossIcon: *, successfulEmojiIcon: *, helpIcon: *, Carousal3: *, Carousal2: *}}
+ */
 export const Images = {
+    rightSlider:rightSlider,
+    rightSliderDark:rightSliderDark,
     helpIcon: helpIcon,
     logoutIcon: logoutIcon,
     userIcon: userIcon,
@@ -64,21 +72,21 @@ export const Images = {
     Carousal3: Carousal3,
     Carousal3Dark: Carousal3Dark,
     cloud: cloud,
-    lightThemeIcon:lightThemeIcon,
-    darkThemeIcon:darkThemeIcon,
-    dots:dots,
-    darkDots:darkDots,
-    avatar:avatar,
-    infoLight:infoLight,
-    blueTheme:blueTheme,
-    login:login,
-    gameIcon:gameIcon,
-    joystickIcon:joystickIcon,
-    dualDriveIcon:dualDriveIcon,
-    gamepadIcon:gamepadIcon,
-    phoneIcon:phoneIcon,
-    undoIcon:undoIcon,
-    redoIcon:redoIcon,
-    uploadIcon:uploadIcon,
+    lightThemeIcon: lightThemeIcon,
+    darkThemeIcon: darkThemeIcon,
+    dots: dots,
+    darkDots: darkDots,
+    avatar: avatar,
+    infoLight: infoLight,
+    blueTheme: blueTheme,
+    login: login,
+    gameIcon: gameIcon,
+    joystickIcon: joystickIcon,
+    dualDriveIcon: dualDriveIcon,
+    gamepadIcon: gamepadIcon,
+    phoneIcon: phoneIcon,
+    undoIcon: undoIcon,
+    redoIcon: redoIcon,
+    uploadIcon: uploadIcon,
 
 }

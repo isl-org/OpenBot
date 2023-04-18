@@ -168,7 +168,7 @@ function ProjectNameSection(params) {
     const {anchorEl, handleClick, projectName, open, setOpen, setDeleteProject, theme, setProjectName} = params
     const location = useLocation();
     return (
-        //when screen is playground then show project name and if clicked on prject name then show projectName with popUp
+        //when screen is playground then show project name and if clicked on project name then show projectName with popUp
         location.pathname === PathName.playGround ? !open ?
                 <ProjectName handleClick={handleClick} projectName={projectName}/>
                 :

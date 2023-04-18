@@ -8,13 +8,11 @@ import darkCarousal2 from "../assets/images/whitescan-unscreen.gif"
 import lightCarousal3 from "../assets/images/carview.gif"
 import darkCarousal3 from "../assets/images/darkMobileVideo.gif"
 
+
 export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
 export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_forEach", "controls_flow_statements"];
 
 
-/**
- * Dark theme.
- */
 export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     'base': Blockly.Themes.Classic,
     'componentStyles': {
@@ -99,6 +97,10 @@ export const Carousal = [
 ]
 
 
+/**
+ * error Toast
+ * @param message
+ */
 export const errorToast = (message) => {
     toast.error(message, {
         position: 'top-center',

@@ -4,37 +4,28 @@ import Drawer from '@mui/material/Drawer';
 import {StoreContext} from "../../context/context";
 import QrCode from "../qrcode/qrcode";
 import {qrStyles} from "../qrcode/styles";
-import rightSlider from "../../assets/images/icon/right-slider.png"
 import {ThemeContext} from "../../App"
 import {colors} from "../../utils/color";
-import rightSliderDark from "../../assets/images/icon/right-slider-dark.png"
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import {Images} from "../../utils/images";
 
 
 /**
- *
+ * QrDrawer component renders a drawer with a QR code and some instructions on how to use it.
  * @returns {JSX.Element}
  * @constructor
  */
 export function QrDrawer() {
-
-    return (
-        <>
-            <PersistentDrawerRight/>
-        </>
-    )
-}
-
-export default function PersistentDrawerRight() {
-    const {theme} = useContext(ThemeContext)
-    const {drawer} = useContext(StoreContext)
-    const themes = useTheme();
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const {theme} = useContext(ThemeContext) // Retrieve the current theme from the ThemeContext
+    const {drawer} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
+    const themes = useTheme();// Get the current theme breakpoints using useTheme hook
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));// Determine if the screen is a mobile device using useMediaQuery hook
     return (
         <>
             <Box sx={{display: 'flex', width: 0}}>
                 <Drawer
+                    // Styling for the drawer
                     sx={{
                         width: 0,
                         flexShrink: 0,
@@ -47,6 +38,7 @@ export default function PersistentDrawerRight() {
                             color: theme === "dark" ? colors.whiteFont : colors.blackFont,
                         },
                     }}
+                    // Drawer is always visible and can only be closed programmatically
                     variant="persistent"
                     anchor="right"
                     open={true}
@@ -62,17 +54,23 @@ export default function PersistentDrawerRight() {
     );
 }
 
+/**
+ * RightSlider is a component that renders a clickable icon that opens and closes the drawer.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const RightSlider = () => {
     const {setDrawer, drawer} = useContext(StoreContext)
     const {theme} = useContext(ThemeContext)
 
     const closeDrawer = () => {
-        setDrawer(!drawer);
+        setDrawer(!drawer);// Function that closes the drawer when the icon is clicked
     }
 
+    // Render the icon with the correct style and theme
     return (
         <div style={drawer ? qrStyles.rightSlider : qrStyles.leftSlider} onClick={closeDrawer}>
-            <img alt="slider" src={theme === "dark" ? rightSliderDark : rightSlider}
+            <img alt="slider" src={theme === "dark" ? Images.rightSliderDark : Images.rightSlider}
                  style={drawer ? qrStyles.rightSliderIcon : qrStyles.leftSliderIcon}/>
         </div>
     )
@@ -80,7 +78,7 @@ export const RightSlider = () => {
 
 
 /**
- *
+ *  DrawerBody is a component that renders the instructions for scanning the QR code.
  * @param props
  * @returns {JSX.Element}
  * @constructor

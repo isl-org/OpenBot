@@ -9,7 +9,12 @@ import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 import {localStorageKeys, Themes} from "../../../utils/constants";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function NewProjectButton(props) {
     const {isProject} = props;
     let navigate = useNavigate();
@@ -17,6 +22,7 @@ function NewProjectButton(props) {
     const [isInputError, setIsInputError] = useState(true);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const {theme} = useContext(ThemeContext)
     const {
         projectName,
         setProjectName,
@@ -25,44 +31,52 @@ function NewProjectButton(props) {
         setFileId,
     } = useContext(StoreContext)
 
+    // Function to open the modal
     const handleOpen = () => {
+        // Clear current project data from local storage and context
         localStorage.setItem(localStorageKeys.currentProject, "");
         setCurrentProjectXml("")
         setProjectName();
         setCurrentProjectId();
-        setOpen(true);
+        setOpen(true);// open modal
         setFileId("")
     }
+
+    // Function to close the modal
     const handleClose = () => setOpen(false);
 
+    // Function to handle new project creation
     const OpenNewProjectHandle = () => {
         if (!projectName || projectName <= 0) {
+            // If project name is not entered or is empty, set input error flag
             setIsInputError(true)
         } else {
             let updatedProjectName = projectName;
             const getAllProjects = localStorage.getItem(localStorageKeys.allProjects);
             let projectsArray = JSON.parse(getAllProjects);
             if (projectsArray) {
+                // If there are already projects, check for unique name
                 updatedProjectName = handleUniqueName(projectsArray, updatedProjectName, projectName);
                 setProjectName(updatedProjectName);
             }
-            setIsInputError(false)
+            setIsInputError(false);  // Clear input error flag
+            // Navigate to playground page and close modal
             let path = `playground`;
             navigate(path);
             handleClose();
         }
     }
-    const {theme} = useContext(ThemeContext)
 
     function handleProjectNameChange(name) {
-        setProjectName(name);
+        setProjectName(name); // Function to handle project name input change
     }
 
     return (
         <>
             <div className={styles.Content + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}
-                 style={{marginRight: (isProject > 0 && !isMobile) && 42}}
+                 style={{marginRight: isProject > 0 && !isMobile ? 42 : 0}}
                  onClick={handleOpen}>
+
                 <div className={styles.Card + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
                     <div className={styles.Button + " " + (theme === "dark" ? styles.ButtonDark : styles.ButtonLight)}>
                         <div className={styles.AddIconImage}>
@@ -70,22 +84,29 @@ function NewProjectButton(props) {
                         </div>
                     </div>
                 </div>
+
             </div>
+
             <Modal
                 open={open}
                 onClose={handleClose}
                 className={"model"}
             >
                 <div className={styles.model + " " + (theme === "dark" ? styles.modelDark : styles.modelLight)}>
+                    {/* The header section of the Modal*/}
                     <div
                         className={styles.ModelHeading + " " + (theme === "dark" ? styles.ModelHeadingDark : styles.ModelHeadingLight)}>
+
+                        {/* Title of the Modal*/}
                         <div>Create a New Project</div>
+                        {/* Close button icon displayed depending on the selected theme*/}
                         {(theme === Themes.light ?
                             <img alt="cross" src={Images.lightCrossIcon} className={styles.CrossIcon}
                                  onClick={handleClose}/> :
                             <img alt="cross" src={Images.darkCrossIcon} className={styles.CrossIcon}
                                  onClick={handleClose}/>)}
                     </div>
+                    {/* A line separating the header and content sections of the Modal*/}
                     <div
                         className={styles.line + " " + (theme === "dark" ? styles.ModelHeadingDark : styles.ModelHeadingLight)}/>
                     <div className={styles.Input}>
@@ -98,6 +119,7 @@ function NewProjectButton(props) {
                                               OpenNewProjectHandle={OpenNewProjectHandle}
                         />
                     </div>
+                    {/*The button to create a new project*/}
                     {isMobile ?
                         <div className={styles.creatButton}>
                             <CreateButton OpenNewProjectHandle={OpenNewProjectHandle}/>
@@ -115,14 +137,19 @@ export default NewProjectButton;
 
 
 /**
- * handle project name :: return unique name
- * @param projectsArray
- * @param updatedProjectName
- * @param projectName
- * @returns {string|*}
+
+ * handleUniqueName - Given an array of projects and a project name,
+ * checks if the project name already exists in the array, and returns a unique
+ * project name by appending a number to the end of the project name if needed.
+ * @param {Array} projectsArray - An array of existing project objects
+ * @param {string} updatedProjectName - The project name to check for uniqueness
+ * @param {string} projectName - The original project name
+ * @returns {string} - A unique project name
  */
 export function handleUniqueName(projectsArray, updatedProjectName, projectName) {
     const findProject = projectsArray.find(project => project.projectName === updatedProjectName)
+
+    // If the project name already exists in the array, append a number to make it unique
     if (findProject) {
         const projectTitle = findProject.projectName
         const lastCharacter = projectTitle.charAt(projectTitle.length - 1);
@@ -131,18 +158,26 @@ export function handleUniqueName(projectsArray, updatedProjectName, projectName)
         } else {
             updatedProjectName = projectTitle + "1";
         }
+        // Recursively check if the updated project name is already in use
         let checkProject = projectsArray.find(project => project.projectName === updatedProjectName);
         if (checkProject) {
             return handleUniqueName(projectsArray, updatedProjectName, projectName)
         } else {
             return updatedProjectName;
         }
-
     } else {
+        // If the project name is unique, return the original project name
         return projectName;
     }
 }
 
+
+/**
+ * Create icon
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function CreateButton(props) {
     const {OpenNewProjectHandle} = props
     return (

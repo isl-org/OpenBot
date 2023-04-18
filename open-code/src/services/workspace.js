@@ -1,11 +1,8 @@
 import {localStorageKeys, PathName} from "../utils/constants";
 import {
-    checkFileExistsInFolder,
-    deleteFileFromGoogleDrive,
-    getAllFilesFromGoogleDrive,
-    getFolderId,
-    fileRename,
+    checkFileExistsInFolder, deleteFileFromGoogleDrive, getAllFilesFromGoogleDrive, getFolderId, fileRename,
 } from "./googleDrive";
+
 
 /**
  * get project from drive when user signedIn
@@ -175,7 +172,6 @@ export function updateLocalProjects() {
                     allProjects.splice(index, 1, getCurrentProject())
                 }
                 return "";
-
             }
         )
         localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(allProjects));
@@ -230,30 +226,37 @@ export function FormatDate() {
 
 
 /**
- * project rename functionality
- * @param projectName
- * @param oldName
+ * Renames a project by updating its name in local storage and potentially in Google Drive if the user is signed in.
+ * @param {string} projectName - The new name for the project.
+ * @param {string} oldName - The current name of the project.
+ * @param {string} screen - The current screen the user is on. Used to determine whether to refresh the page after renaming the project.
  * @returns {Promise<void>}
  */
 export async function renameProject(projectName, oldName, screen) {
+    // Only proceed if the project names are different
     if (projectName !== oldName) {
+        // Prepare data for updating local storage and Google Drive
         let data = {
             projectName: projectName,
             xmlValue: getCurrentProject()?.xmlValue,
             id: getCurrentProject()?.id,
         }
-        //update local
+        // Update project name in local storage
         const allProjects = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects));
         let projectsArray = allProjects || []
         const specificProject = projectsArray.findIndex((project) => project.projectName === oldName);
         projectsArray[specificProject].projectName = projectName;
         localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(projectsArray))
+
+        // If user is signed in, update project name in Google Drive and check for renamed files
         if (localStorage.getItem("isSigIn") === "true") {
+            // Add project name to data object for updating project in Google Drive
             data = Object.assign(data, {projectName: projectName});
+            // Update current project in Google Drive if it has the old project name
             if (oldName === getCurrentProject().projectName) {
                 updateCurrentProject(data.id, projectName, data.xmlValue)
             }
-
+            // Check if XML and JS files for the project exist and rename them if necessary
             const xmlFileExists = await checkFileExistsInFolder(await getFolderId(), oldName, "xml");
             const jsFileExists = await checkFileExistsInFolder(await getFolderId(), oldName, "js");
             if (xmlFileExists.exists)
@@ -261,12 +264,14 @@ export async function renameProject(projectName, oldName, screen) {
             if (jsFileExists.exists)
                 await fileRename(projectName, oldName, "js")
 
+            // If user is not signed in, only update current project if it has the old project name
         } else {
             if (oldName === getCurrentProject()?.projectName) {
                 data = Object.assign(data, {projectName: projectName});
                 updateCurrentProject(data.id, projectName, data.xmlValue)
             }
         }
+        // Refresh page if user is on home screen
         if (screen === PathName.home) {
             window.location.reload();
         }

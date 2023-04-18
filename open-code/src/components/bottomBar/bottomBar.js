@@ -46,6 +46,8 @@ export const BottomBar = () => {
         if (localStorage.getItem("isSigIn") === "true") {
             setDrawer(false);
             setIsLoader(true);
+
+            //javaScript generator
             const code = javascriptGenerator.workspaceToCode(
                 primaryWorkspace.current
             );
@@ -53,9 +55,11 @@ export const BottomBar = () => {
             // const code=pythonGenerator.workspaceToCode(
             //     primaryWorkspace.current
             // );
+
             setGenerateCode(!generate);
             let updatedCode = code + Constants.endCode;
             console.log(updatedCode);
+
             uploadToGoogleDrive(updatedCode, "js").then((res) => {
                     setCode(res);
                     setIsLoader(false);
@@ -64,7 +68,8 @@ export const BottomBar = () => {
             ).catch((err) => {
                 console.log("err::", err)
                 setIsLoader(false);
-                errorToast("Failed to Upload")
+                errorToast("Failed to Upload");
+
             })
         } else {
             setUploadCodeSignIn(true);
@@ -147,16 +152,23 @@ export const BottomBar = () => {
                 }
             </div>
             <div className={styles.buttonsDiv}>
+                {/*generate code*/}
                 <GenerateCodeButton buttonSelected={buttonSelected} generateCode={generateCode}
-                                  buttonActive={buttonActive} clickedButton={clickedButton}/>
+                                    buttonActive={buttonActive} clickedButton={clickedButton}/>
+                {/*if not signedIn so signIn PopUp*/}
                 {uploadCodeSignIn &&
-                    <SignInPopUp setSignInPopUp={setUploadCodeSignIn} handleDriveButton={generateCode}/>}
+                    <SignInPopUp setSignInPopUp={setUploadCodeSignIn} handleDriveButton={generateCode}/>
+                }
                 <div className={styles.operationsDiv}>
+                    {/*upload icon*/}
                     <UploadInDrive setSignInPopUp={setSignInPopUp} signInPopUp={signInPopUp}/>
+                    {/*undo redo*/}
                     <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
                               buttonActive={buttonActive}/>
-                    {!isMobile && <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
-                                             buttonActive={buttonActive}/>}
+                    {/*zoom in out*/}
+                    {!isMobile &&
+                        <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
+                                   buttonActive={buttonActive}/>}
                 </div>
             </div>
         </div>
@@ -213,11 +225,23 @@ function UndoRedo(params) {
     )
 }
 
+
+/**
+ * Component to handle the uploading of an XML file to Google Drive.
+ * Shows a button with a cloud icon, which will trigger the upload when clicked.
+ * If the user is not signed in, a sign in popup will be shown.
+ * While the upload is in progress, a loader will be shown.
+ * After the upload is complete, a tick animation will be shown briefly.
+ * @param {Function} params.setSignInPopUp - A function to set the sign in popup state.
+ * @param {Boolean} params.signInPopUp - A boolean to determine if the sign in popup should be shown.
+ * @returns {JSX.Element}
+ */
 function UploadInDrive(params) {
     const {setSignInPopUp, signInPopUp} = params
     const [isDriveLoader, setIsDriveLoader] = useState(false);
     const [showTick, setShowTick] = useState(false);
 
+    //if signIn add code in xml file to google drive or else show signIn pop Up
     const handleDriveButton = () => {
         if (localStorage.getItem("isSigIn") === "true") {
             setIsDriveLoader(true);
@@ -229,13 +253,14 @@ function UploadInDrive(params) {
                 fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
                 createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
             }
-            //upload on google drive
+            // Call function to upload data to Google Drive
             uploadToGoogleDrive(data, "xml")
                 .then((res) => {
                         setIsDriveLoader(false);
+                        //after response show tick after 400ms
                         res && setTimeout(() => {
                             setShowTick(true);
-                        }, 1000);
+                        }, 400);
                     }
                 )
                 .catch((err) => {
@@ -244,10 +269,13 @@ function UploadInDrive(params) {
                     console.log(err)
                 })
         } else {
+            // If user is not signed in, show sign in popup
             setSignInPopUp(true);
         }
 
     }
+
+    // Remove tick animation after 1000ms
     useEffect(() => {
         if (showTick) {
             const timeout = setTimeout(() => {
@@ -257,7 +285,7 @@ function UploadInDrive(params) {
         }
     }, [showTick]);
 
-
+    //tick animation
     const tickVariants = {
         hidden: {
             pathLength: 0,
@@ -272,6 +300,8 @@ function UploadInDrive(params) {
             }
         }
     };
+
+    //drive loader
     const DriveLoader = () => {
         return <div>
             <CircularProgress
@@ -287,16 +317,21 @@ function UploadInDrive(params) {
 
     return (
         <>
+            {/* Show sign in popup if required */}
             {signInPopUp && <SignInPopUp setSignInPopUp={setSignInPopUp} handleDriveButton={handleDriveButton}/>}
-            <div onClick={() => {
-                handleDriveButton()
-            }} className={styles.iconMargin + " " + styles.iconSpace} style={{display: "flex", alignItems: "center"}}>
+
+            {/* Upload button */}
+            <div onClick={() => handleDriveButton()} className={styles.iconMargin + " " + styles.iconSpace}
+                 style={{display: "flex", alignItems: "center"}}>
+
+                {/*icon*/}
                 <img alt="drive" className={isDriveLoader ? styles.shrinkDriveIcon : styles.driveIconStyle}
-                     src={Images.cloud} style={isDriveLoader ? {
-                    position: "absolute",
-                    marginLeft: 6,
-                } : {}}/>
+                     src={Images.cloud} style={isDriveLoader ? {position: "absolute", marginLeft: 6} : {}}/>
+
+                {/*loader*/}
                 <div>{isDriveLoader && <DriveLoader/>}</div>
+
+                {/*tick animation*/}
                 <AnimatePresence>
                     {showTick && (
                         <motion.svg
@@ -324,35 +359,47 @@ function UploadInDrive(params) {
                         </motion.svg>
                     )}
                 </AnimatePresence>
+
             </div>
             {/*// <button className={styles.driveStyle + " " + styles.iconMargin}*/}
         </>
     )
 }
 
+/**
+ Component for zooming in and out of an image or content.
+ @param {Function} params.clickedButton - The function to be called when a zoom button is clicked.
+ @param {string} params.buttonSelected - The currently selected zoom button ('plus' or 'minus').
+ @param {boolean} params.buttonActive - A flag indicating whether or not the zoom buttons are active.
+ @returns {JSX.Element}
+ */
 function ZoomInOut(params) {
-    const {clickedButton, buttonSelected, buttonActive} = params
+    const {clickedButton, buttonSelected, buttonActive} = params;
+
     return (
         <div className={styles.iconMargin}>
-
             <button onClick={clickedButton}
                     className={styles.buttonStyle + " " + styles.minusStyle + " " + styles.borderStyle}
-                    style={{
-                        opacity: buttonSelected === "minus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
-                    }} name={"minus"}>
+                    style={{opacity: buttonSelected === "minus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
+                    name={"minus"}>
                 <span className={styles.operationSize}>-</span>
             </button>
-            <button onClick={clickedButton} className={styles.plusStyle + " " + styles.buttonStyle} style={{
-                opacity: buttonSelected === "plus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""
-            }}
+            <button onClick={clickedButton}
+                    className={styles.plusStyle + " " + styles.buttonStyle}
+                    style={{opacity: buttonSelected === "plus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
                     name={"plus"}>
                 <span className={styles.operationSize}>+</span>
             </button>
         </div>
-    )
+    );
 }
 
-
+/**
+ * SignIn Pop Up
+ * @param params
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export function SignInPopUp(params) {
     const {setSignInPopUp, handleDriveButton} = params
     const {setUser} = useContext(StoreContext);

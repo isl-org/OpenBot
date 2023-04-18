@@ -2,138 +2,90 @@ import {Constants, errorToast, localStorageKeys} from "../utils/constants";
 import {getCurrentProject} from "./workspace";
 import {googleSignOut} from "./firebase";
 
+
 /**
  * function that upload project data on Google Drive
  * @param data
- * @param uniqueId
+ * @param fileType
  * @returns {Promise<void>}
  */
 export const uploadToGoogleDrive = async (data, fileType) => {
     const accessToken = getAccessToken();
     const folderId = await getFolderId();
     let response;
-    if (fileType === Constants.xml) {
-        //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
-        if (folderId) {
-            response = await uploadFileToFolder(accessToken, data, folderId, "xml");
-        } else {
-            await new CreateFolder(accessToken).then((folderId) => {
-                    response = uploadFileToFolder(accessToken, data, folderId, "xml");
-                }
-            );
-        }
-    } else if (fileType === Constants.js) {
-        //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
-        if (folderId) {
-            response = await uploadFileToFolder(accessToken, data, folderId, "js");
-        } else {
-            await new CreateFolder(accessToken).then(async (folderId) => {
-                    response = await uploadFileToFolder(accessToken, data, folderId, "js");
-                }
-            );
-        }
+    //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else then directly create folder
+    if (folderId) {
+        response = await uploadFileToFolder(accessToken, data, folderId, fileType === Constants.xml ?? Constants.js);
+    } else {
+        await new CreateFolder(accessToken).then((folderId) => {
+                response = uploadFileToFolder(accessToken, data, folderId, fileType === Constants.xml ?? Constants.js);
+            }
+        );
     }
-
     return response;
-
 }
+
+
 /**
  * uploading file to folder
  * @param accessToken
  * @param data
  * @param folderId
+ * @param fileType
  */
 const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
-    let metadataFields;
-    let fileMetadata;
-    let mediaPart;
-    if (fileType === Constants.js) {
-        metadataFields = 'appProperties,id,name,createdTime';
-        fileMetadata = {
-            name: getCurrentProject().projectName + ".js",
-            parents: [folderId],
-            mimeType: "text/javascript",
-            content_type: "application/json; charset=UTF-8",
-            appProperties: {
-                date: data.createdDate,
-                id: data.id,
-                storage: "drive",
-                time: data.time,
-            },
-        };
-    } else if (fileType === Constants.xml) {
-        metadataFields = 'appProperties,id,name,createdTime';
-        fileMetadata = {
-            name: data.projectName + ".xml",
-            parents: [folderId],
-            mimeType: "text/xml",
-            content_type: "application/json; charset=UTF-8",
-            appProperties: {
-                date: data.createdDate,
-                id: data.id,
-                storage: "drive",
-                time: data.time,
-            },
-        };
-    }
     const boundary = "foo_bar_baz";
+    let metadataFields = 'appProperties,id,name,createdTime';
+    let fileMetadata = {
+        name: fileType === Constants.js ? getCurrentProject().projectName + ".js" : data.projectName + ".xml",
+        parents: [folderId],
+        mimeType: fileType === Constants.js ? "text/javascript" : "text/xml",
+        content_type: "application/json; charset=UTF-8",
+        appProperties: {
+            date: data.createdDate,
+            id: data.id,
+            storage: "drive",
+            time: data.time,
+        },
+    };
+
     const metadataPart = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(fileMetadata)}\r\n`;
-    if (fileType === Constants.xml) {
-        mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${data.xmlValue}\r\n`;
-    } else if (fileType === Constants.js) {
-        mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${data}\r\n`;
-    }
+    let mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${fileType === Constants.xml ? data.xmlValue : data}\r\n`;
     const requestBody = `${metadataPart}${mediaPart}--${boundary}--\r\n`;
     const headers = {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": `multipart/related; boundary=${boundary}`,
         "Content-Length": requestBody?.length,
     };
-    let res;
-    if (fileType === Constants.xml) {
-        // Check if a file with the specified fileId exists
-        let fileExistWithFileID = await checkFileExistsInFolder(folderId, data.projectName, 'xml')
-        if (fileExistWithFileID.exists) {
-            //delete file and then create new file
-            await deleteFileFromGoogleDrive(fileExistWithFileID.fileId).then(async () => {
-                res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
-            });
-        } else {
-            // If a file with the specified fileId doesn't exist, create a new file
-            res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
-        }
-    } else if (fileType === Constants.js) {
-        // Check if a file with the specified fileId exists
-        let fileExistWithFileID = await checkFileExistsInFolder(folderId, getCurrentProject().projectName, 'js')
-        if (fileExistWithFileID.exists) {
-            //delete file and then create new file
-            await deleteFileFromGoogleDrive(fileExistWithFileID.fileId);
-            res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
-        } else {
-            // If a file with the specified fileId doesn't exist, create a new file
-            res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
-        }
-    }
 
+    let res;
+
+    // Check if a file with the specified fileId exists
+    let fileExistWithFileID = await checkFileExistsInFolder(folderId, fileType === Constants.xml ? data.projectName : getCurrentProject().projectName, fileType === Constants.xml ?? Constants.js)
+    if (fileExistWithFileID.exists) {
+        //delete file and then create new file
+        await deleteFileFromGoogleDrive(fileExistWithFileID.fileId).then(async () => {
+            res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
+        });
+    } else {
+        // If a file with the specified fileId doesn't exist, create a new file
+        res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
+    }
     return res;
 
 };
 
+
 /**
  * check file exist or not
- * @param folderIdx
+ * @param folderId
  * @param fileName
+ * @param fileType
  * @returns {Promise<{exists: boolean, fileId}>}
  */
-
 export async function checkFileExistsInFolder(folderId, fileName, fileType) {
-    let fileNameWithExtension = fileName;
-    if (fileType === Constants.js) {
-        fileNameWithExtension += `.${Constants.js}`;
-    } else if (fileType === Constants.xml) {
-        fileNameWithExtension += `.${Constants.xml}`;
-    }
     const accessToken = getAccessToken();
+    let fileNameWithExtension = fileName + `.${fileType === Constants.js ?? Constants.xml}`; //add extension
     const response = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(fileNameWithExtension)}'+and+'${encodeURIComponent(folderId)}'+in+parents+and+trashed=false&access_token=${accessToken}`);
     const result = await response.json();
     if (result && result.files.length > 0) {
@@ -148,7 +100,6 @@ export async function checkFileExistsInFolder(folderId, fileName, fileType) {
  * Create folder
  * @constructor
  * @param accessToken
- * @param folderId
  */
 async function CreateFolder(accessToken) {
 
@@ -189,7 +140,8 @@ export async function getFolderId() {
 
     const searchResponse = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(Constants.FolderName)}'+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false&access_token=${accessToken}`);
     const searchResult = await searchResponse.json();
-    if (searchResult.error &&searchResult.error.code === 401) {
+    //if session expire give alert and signOut user.
+    if (searchResult.error && searchResult.error.code === 401) {
         alert("your session has expired please login again.")
         googleSignOut().then()
     }
@@ -288,7 +240,7 @@ export async function getSelectedProjectFromGoogleDrive(folderId, fileId, access
 
 /**
  * deleting file
- * @param fileId-   54 ewZ-= .  `1
+ * @param fileId
  */
 export async function deleteFileFromGoogleDrive(fileId) {
     const folderId = await getFolderId();
@@ -332,7 +284,7 @@ export function SharingFileFromGoogleDrive(fileId, isJSFile) {
             body: JSON.stringify(permission)
         };
 
-// Share the file
+        // Share the file
         fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions?sendNotificationEmail=false&supportsAllDrives=true`, params)
             .then(response => {
                 if (!response.ok) {
@@ -372,22 +324,21 @@ export async function getShareableLink(fileId, folderId) {
 
 }
 
+
+/**
+ * Rename file's name in google drive
+ * @param newFileName
+ * @param oldName
+ * @param fileType
+ * @returns {Promise<void>}
+ */
 export async function fileRename(newFileName, oldName, fileType) {
     const folderId = await getFolderId();
     const accessToken = getAccessToken();
-    let body;
-    let fileId;
-    if (fileType === Constants.xml) {
-        fileId = await checkFileExistsInFolder(folderId, oldName, "xml");
-        body = {
-            "name": newFileName + `.${Constants.xml}`
-        }
-    } else {
-        fileId = await checkFileExistsInFolder(folderId, oldName, "js");
-        body = {
-            "name": newFileName + `.${Constants.js}`
-        }
-    }
+
+    let fileId = await checkFileExistsInFolder(folderId, oldName, fileType === Constants.xml ?? Constants.js); //check according to file type
+    let body = {"name": newFileName + `.${fileType === Constants.xml ?? Constants.js}`} //add name with extension according to fileType
+
     await fetch(`https://www.googleapis.com/drive/v3/files/${fileId.fileId}?parents=${folderId}&fields=name`, {
         method: 'PATCH',
         headers: {
@@ -395,13 +346,18 @@ export async function fileRename(newFileName, oldName, fileType) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
-
     })
         .then((res) => res.json())
         .catch(err => console.log(err))
 }
 
 
+/**
+ * Google Drive's openBot-playground folder made public
+ * @param folderId
+ * @param accessToken
+ * @returns {Promise<void>}
+ */
 export const makeFolderPublic = async (folderId, accessToken) => {
     const url = `${Constants.baseUrl}/files/${folderId}/permissions`;
     const options = {
@@ -411,38 +367,12 @@ export const makeFolderPublic = async (folderId, accessToken) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            type: 'anyone',
-            role: 'reader',
+            type: 'anyone',  //public
+            role: 'reader', // read rights
         }),
     };
 
     await fetch(url, options).catch(() =>
-        errorToast("Something went wrong ")
+        errorToast("Something went wrong")
     );
 };
-
-
-//
-// //upload file in Google Drive openBot folder
-// function UpdateFile(response, requestBody, data, metadataFields) {
-//
-//     const accessToken = localStorage.getItem(localStorageKeys.accessToken);
-//     let headers = {
-//         Authorization: `Bearer ${accessToken}`,
-//         'Content-Type': 'application/xml',
-//     }
-//
-//     return response.json().then(file => {
-//         // Make a PATCH request to update the file content
-//         fetch(`https://www.googleapis.com/upload/drive/v3/files/${data.fileId}?uploadType=media&fields=${metadataFields}`, {
-//             method: 'PATCH',
-//             headers: headers,
-//             body: requestBody,
-//
-//         }).then(response => {
-//             console.log('response after trying to update:::', response);
-//         }).catch(error => {
-//             console.log('Error updating file:', error);
-//         });
-//     });
-// }

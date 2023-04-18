@@ -5,13 +5,14 @@ import {ThemeContext} from "../../../App";
 import {Carousal} from "../../../utils/constants";
 import {Carousel} from "react-responsive-carousel";
 
+
 /**
- * Carousel
+ * HomeCarousel - a component that renders a carousel
  * @returns {JSX.Element}
  * @constructor
  */
 export const HomeCarousel = () => {
-
+    // Render the carousel with the array of slides
     return (
         <Carousel axis={'horizontal'} infiniteLoop={true} interval={4000} autoPlay={true} showThumbs={false}>
             {Carousal.map((slide) => (
@@ -21,10 +22,9 @@ export const HomeCarousel = () => {
     )
 }
 
-
 /**
- * CarousalComponent :: ui to render Carousal
- * @param params
+ * CarousalComponent - a component that renders a single slide in the carousel
+ * @param {object} params.slide - an object containing the information for a single slide
  * @returns {JSX.Element}
  * @constructor
  */

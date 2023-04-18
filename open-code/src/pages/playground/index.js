@@ -9,7 +9,7 @@ import {PathName} from "../../utils/constants";
 
 
 /**
- * Playground Screen
+ * Playground Screen :: Displays the Playground screen which contains a Blockly workspace.
  * @returns {JSX.Element}
  * @constructor
  */
@@ -18,9 +18,10 @@ function Playground() {
     return (
         <div>
             <Header/>
-            {/* show QR Drawer */}
+            {/* If the current URL pathname is for the Playground screen, display the QR Drawer component */}
             {location.pathname === PathName.playGround ? <QrDrawer/> : ""}
             <header>
+                {/* Display the Blockly workspace */}
                 <BlocklyComponent readOnly={false}
                                   move={{
                                       scrollbars: true,
@@ -35,6 +36,7 @@ function Playground() {
                 <Toolbox/>
                 </BlocklyComponent>
             </header>
+            {/* Display the BottomBar component */}
             <BottomBar/>
         </div>
 
