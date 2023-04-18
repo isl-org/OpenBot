@@ -24,5 +24,9 @@ public class BotFunctionUtils {
     "rightIndicatorOn",
     "leftIndicatorOn",
     "IndicatorOff",
+    "rightIndicatorOff",
+    "leftIndicatorOff",
+    "IndicatorOn",
+    "ledBrightness",
   };
 }

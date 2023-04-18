@@ -158,6 +158,27 @@ public class BotFunctions implements SensorEventListener {
     v.setIndicator(0);
   }
 
+  @JavascriptInterface
+  public void rightIndicatorOff() {
+    v.setIndicator(0);
+  }
+
+  @JavascriptInterface
+  public void leftIndicatorOff() {
+    v.setIndicator(0);
+  }
+
+  @JavascriptInterface
+  public void IndicatorOn() {
+    v.setIndicator(1);
+    v.setIndicator(-1);
+  }
+
+  @JavascriptInterface
+  public void ledBrightness(int value) {
+    v.sendLightIntensity(value, value);
+  }
+
   @Override
   public void onSensorChanged(SensorEvent event) {
     switch (event.sensor.getType()) {
