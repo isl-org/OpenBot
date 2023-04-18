@@ -13,18 +13,30 @@ export const uploadToGoogleDrive = async (data, fileType) => {
     const accessToken = getAccessToken();
     const folderId = await getFolderId();
     let response;
-    //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else then directly create folder
-    if (folderId) {
-        response = await uploadFileToFolder(accessToken, data, folderId, fileType === Constants.xml ?? Constants.js);
-    } else {
-        await  CreateFolder(accessToken).then((folderId) => {
-                response = uploadFileToFolder(accessToken, data, folderId, fileType === Constants.xml ?? Constants.js);
-            }
-        );
+    if (fileType === Constants.xml) {
+        //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
+        if (folderId) {
+            response = await uploadFileToFolder(accessToken, data, folderId, "xml");
+        } else {
+            await new CreateFolder(accessToken).then((folderId) => {
+                    response = uploadFileToFolder(accessToken, data, folderId, "xml");
+                }
+            );
+        }
+    } else if (fileType === Constants.js) {
+        //if folder id then check if exist in googleDrive then directly upload file or else create folder and upload else  then directly create folder
+        if (folderId) {
+            response = await uploadFileToFolder(accessToken, data, folderId, "js");
+        } else {
+            await new CreateFolder(accessToken).then(async (folderId) => {
+                    response = await uploadFileToFolder(accessToken, data, folderId, "js");
+                }
+            );
+        }
+
     }
     return response;
 }
-
 
 /**
  * uploading file to folder
@@ -34,23 +46,45 @@ export const uploadToGoogleDrive = async (data, fileType) => {
  * @param fileType
  */
 const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
+    let metadataFields;
+    let fileMetadata;
+    let mediaPart;
+    if (fileType === Constants.js) {
+        metadataFields = 'appProperties,id,name,createdTime';
+        fileMetadata = {
+            name: getCurrentProject().projectName + ".js",
+            parents: [folderId],
+            mimeType: "text/javascript",
+            content_type: "application/json; charset=UTF-8",
+            appProperties: {
+                date: data.createdDate,
+                id: data.id,
+                storage: "drive",
+                time: data.time,
+            },
+        };
+    } else if (fileType === Constants.xml) {
+        metadataFields = 'appProperties,id,name,createdTime';
+        fileMetadata = {
+            name: data.projectName + ".xml",
+            parents: [folderId],
+            mimeType: "text/xml",
+            content_type: "application/json; charset=UTF-8",
+            appProperties: {
+                date: data.createdDate,
+                id: data.id,
+                storage: "drive",
+                time: data.time,
+            },
+        };
+    }
+
     const boundary = "foo_bar_baz";
-    let metadataFields = 'appProperties,id,name,createdTime';
-    let fileMetadata = {
-        name: fileType === Constants.js ? getCurrentProject().projectName + ".js" : data.projectName + ".xml",
-        parents: [folderId],
-        mimeType: fileType === Constants.js ? "text/javascript" : "text/xml",
-        content_type: "application/json; charset=UTF-8",
-        appProperties: {
-            date: data.createdDate,
-            id: data.id,
-            storage: "drive",
-            time: data.time,
-        },
-    };
+
+    console.log("fileMetadata", fileMetadata)
 
     const metadataPart = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(fileMetadata)}\r\n`;
-    let mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${fileType === Constants.xml ? data.xmlValue : data}\r\n`;
+    mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${fileType === Constants.xml ? data.xmlValue : data}\r\n`;
     const requestBody = `${metadataPart}${mediaPart}--${boundary}--\r\n`;
     const headers = {
         Authorization: `Bearer ${accessToken}`,
@@ -61,17 +95,33 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
     let res;
 
     // Check if a file with the specified fileId exists
-    let fileExistWithFileID = await checkFileExistsInFolder(folderId, fileType === Constants.xml ? data.projectName : getCurrentProject().projectName, fileType === Constants.xml ?? Constants.js)
-    if (fileExistWithFileID.exists) {
-        //delete file and then create new file
-        await deleteFileFromGoogleDrive(fileExistWithFileID.fileId).then(async () => {
+    // let fileExistWithFileID = await checkFileExistsInFolder(folderId, fileType === Constants.xml ? data.projectName : getCurrentProject()?.projectName, fileType === Constants.xml ?? Constants.js)
+    // console.log("fileExistWithFileID", fileExistWithFileID);
+    if (fileType === Constants.xml) {
+        // Check if a file with the specified fileId exists
+        let fileExistWithFileID = await checkFileExistsInFolder(folderId, data.projectName, 'xml')
+        if (fileExistWithFileID.exists) {
+            //delete file and then create new file
+            await deleteFileFromGoogleDrive(fileExistWithFileID.fileId).then(async () => {
+                res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
+            });
+        } else {
+            // If a file with the specified fileId doesn't exist, create a new file
             res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
-        });
-    } else {
-        // If a file with the specified fileId doesn't exist, create a new file
-        res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
+        }
+    } else if (fileType === Constants.js) {
+        // Check if a file with the specified fileId exists
+        let fileExistWithFileID = await checkFileExistsInFolder(folderId, getCurrentProject().projectName, 'js')
+        if (fileExistWithFileID.exists) {
+            //delete file and then create new file
+            await deleteFileFromGoogleDrive(fileExistWithFileID.fileId);
+            res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
+        } else {
+            // If a file with the specified fileId doesn't exist, create a new file
+            res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
+            return res;
+        }
     }
-    return res;
 
 };
 
@@ -85,7 +135,12 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
  */
 export async function checkFileExistsInFolder(folderId, fileName, fileType) {
     const accessToken = getAccessToken();
-    let fileNameWithExtension = fileName + `.${fileType === Constants.js ?? Constants.xml}`; //add extension
+    let fileNameWithExtension = fileName;
+    if (fileType === Constants.js) {
+        fileNameWithExtension += `.${Constants.js}`;
+    } else if (fileType === Constants.xml) {
+        fileNameWithExtension += `.${Constants.xml}`;
+    }
     const response = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(fileNameWithExtension)}'+and+'${encodeURIComponent(folderId)}'+in+parents+and+trashed=false&access_token=${accessToken}`);
     const result = await response.json();
     if (result && result.files.length > 0) {
