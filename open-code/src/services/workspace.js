@@ -56,6 +56,7 @@ export async function deleteProjectFromStorage(projectName) {
                 //set restProjects as all project in local
                 localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restProjects))
             }
+            return null;
         })
         //delete file from Google Drive
         if (localStorage.getItem("isSigIn") === "true") {

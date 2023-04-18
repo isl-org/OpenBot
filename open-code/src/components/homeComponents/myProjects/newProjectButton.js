@@ -14,7 +14,7 @@ function NewProjectButton(props) {
     const {isProject} = props;
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const [setIsInputError] = useState(true);
+    const [isInputError, setIsInputError] = useState(true);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const {
@@ -81,8 +81,9 @@ function NewProjectButton(props) {
                         className={styles.ModelHeading + " " + (theme === "dark" ? styles.ModelHeadingDark : styles.ModelHeadingLight)}>
                         <div>Create a New Project</div>
                         {(theme === Themes.light ?
-                            <img alt="" src={Images.lightCrossIcon} className={styles.CrossIcon} onClick={handleClose}/> :
-                            <img alt="" src={Images.darkCrossIcon} className={styles.CrossIcon}
+                            <img alt="cross" src={Images.lightCrossIcon} className={styles.CrossIcon}
+                                 onClick={handleClose}/> :
+                            <img alt="cross" src={Images.darkCrossIcon} className={styles.CrossIcon}
                                  onClick={handleClose}/>)}
                     </div>
                     <div

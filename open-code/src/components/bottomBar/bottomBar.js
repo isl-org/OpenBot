@@ -64,7 +64,7 @@ export const BottomBar = () => {
             ).catch((err) => {
                 console.log("err::", err)
                 setIsLoader(false);
-                errorToast("Failed to Uplaod")
+                errorToast("Failed to Upload")
             })
         } else {
             setUploadCodeSignIn(true);
@@ -239,7 +239,6 @@ function UploadInDrive(params) {
                     }
                 )
                 .catch((err) => {
-                    console.log("err:::", err)
                     setIsDriveLoader(false);
                     errorToast("Failed to upload");
                     console.log(err)
@@ -359,7 +358,6 @@ export function SignInPopUp(params) {
     const {setUser} = useContext(StoreContext);
 
     const handleSignIn = () => {
-        console.log("signInPop")
         googleSigIn().then(response => {
             setUser({
                 photoURL: response?.user.photoURL,

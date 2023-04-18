@@ -17,7 +17,7 @@ export const uploadToGoogleDrive = async (data, fileType) => {
         if (folderId) {
             response = await uploadFileToFolder(accessToken, data, folderId, "xml");
         } else {
-            await CreateFolder(accessToken).then((folderId) => {
+            await new CreateFolder(accessToken).then((folderId) => {
                     response = uploadFileToFolder(accessToken, data, folderId, "xml");
                 }
             );
@@ -27,7 +27,7 @@ export const uploadToGoogleDrive = async (data, fileType) => {
         if (folderId) {
             response = await uploadFileToFolder(accessToken, data, folderId, "js");
         } else {
-            await CreateFolder(accessToken).then(async (folderId) => {
+            await new CreateFolder(accessToken).then(async (folderId) => {
                     response = await uploadFileToFolder(accessToken, data, folderId, "js");
                 }
             );
@@ -193,8 +193,7 @@ export async function getFolderId() {
         alert("your session has expired please login again.")
         googleSignOut().then()
     }
-    const folderId = searchResult?.files[0]?.id || null;
-    return folderId;
+    return searchResult?.files[0]?.id || null;
 }
 
 
@@ -220,7 +219,7 @@ export function CreateFile(data, folderId, metadataFields, headers, requestBody)
         headers: headers,
         body: requestBody
     })
-        .then(response => response.json()).catch(err => errorToast("error in upload"))
+        .then(response => response.json()).catch(() => errorToast("error in upload"))
         .then(async (file) => {
             if (file.error) {
                 errorToast(file.error.message);
@@ -228,8 +227,7 @@ export function CreateFile(data, folderId, metadataFields, headers, requestBody)
                 const isJSFile = file?.name.endsWith('.js');
                 file && SharingFileFromGoogleDrive(file?.id, isJSFile);
                 if (isJSFile) {
-                    let link = await getShareableLink(file.id, folderId);
-                    return link;
+                    return await getShareableLink(file.id, folderId);
                 } else {
                     return true;
                 }
@@ -290,7 +288,7 @@ export async function getSelectedProjectFromGoogleDrive(folderId, fileId, access
 
 /**
  * deleting file
- * @param fileId
+ * @param fileId-   54 ewZ-= .  `1
  */
 export async function deleteFileFromGoogleDrive(fileId) {
     const folderId = await getFolderId();
@@ -314,6 +312,7 @@ export async function deleteFileFromGoogleDrive(fileId) {
 /**
  * permissions for sharing Google Drive files
  * @param fileId
+ * @param isJSFile
  */
 export function SharingFileFromGoogleDrive(fileId, isJSFile) {
     const accessToken = getAccessToken();
@@ -367,8 +366,7 @@ export async function getShareableLink(fileId, folderId) {
             return response.json();
         })
         .then(data => {
-            const shareableLink = data.webViewLink.replace('/view', '/edit?usp=sharing');
-            return shareableLink;
+            return data.webViewLink.replace('/view', '/edit?usp=sharing');
         })
         .catch(error => console.error(error));
 

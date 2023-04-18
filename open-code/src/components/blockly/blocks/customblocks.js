@@ -3,9 +3,9 @@ import '../fields/BlocklyReactField';
 import '../fields/DateField';
 import '@blockly/field-date';
 import '@blockly/field-slider';
-import {FieldToggle} from "./field_toggle";
 import '@blockly/block-plus-minus';
 import {Images} from "../../../utils/images";
+import "./field_toggle";
 
 let reactDateField = {
     "type": "test_react_date_field",
@@ -48,6 +48,8 @@ Blockly.Blocks['test_react_field'] = {
         this.setStyle('loop_blocks');
     }
 };
+
+
 Blockly.Blocks["append_text"] = {
     init: function () {
         this.setColour(230)

@@ -77,7 +77,7 @@ export function EditProfileModal(props) {
                         function () {
                             handleClose()
                             setIsAlertSuccess(false)
-                        }.bind(this), 3000);
+                        }.bind(), 3000);
                 }).catch((error) => {
                     console.log("error::::", error);
                     setIsAlertError(true)

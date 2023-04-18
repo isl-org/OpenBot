@@ -34,7 +34,7 @@ export function LogoSection() {
     return (
         <div className={styles.navbarTitleDiv}>
             {/*icon*/}
-            <img className={`${styles.mainIcon} ${styles.iconMargin}`} src={icon} onClick={() => openHomepage()}/>
+            <img alt="openBotIcon" className={`${styles.mainIcon} ${styles.iconMargin}`} src={icon} onClick={() => openHomepage()}/>
             {/*name*/}
             <div className={styles.navbarHeadDiv} onClick={() => openHomepage()}>
                 <span className={`${styles.mainTitle} `}>OpenBot</span>
