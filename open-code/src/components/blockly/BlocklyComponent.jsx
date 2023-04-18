@@ -44,9 +44,9 @@ function BlocklyComponent(props) {
         if (projectName !== undefined) {
             updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
         }
-        if (onWorkspaceChange) {
-            onWorkspaceChange();
-        }
+        // if (onWorkspaceChange) {
+        //     onWorkspaceChange();
+        // }
     }, [projectName, uniqueId, fileId, folderId, setDrawer, onWorkspaceChange]);
 
     useEffect(() => {
@@ -87,7 +87,7 @@ function BlocklyComponent(props) {
         return () => {
             primaryWorkspace.current.dispose();
         }
-    }, [theme, toolbox, blocklyDiv, props, isMobile, handleWorkspaceChange, currentProjectXml, initialXml]);
+    }, [theme, toolbox, blocklyDiv, props]);
 
     // Return the blockly div and hidden toolbox
     return (
