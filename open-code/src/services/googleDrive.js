@@ -121,12 +121,13 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
             //delete file and then create new file
             await deleteFileFromGoogleDrive(fileExistWithFileID.fileId);
             res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
+
         } else {
             // If a file with the specified fileId doesn't exist, create a new file
             res = await CreateFile(data, folderId, metadataFields, headers, requestBody);
-            return res;
         }
     }
+    return res;
 };
 
 

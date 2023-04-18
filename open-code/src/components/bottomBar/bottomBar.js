@@ -58,9 +58,10 @@ export const BottomBar = () => {
 
             setGenerateCode(!generate);
             let updatedCode = code + Constants.endCode;
-            console.log(updatedCode);
+            console.log("updatedCode::::", updatedCode);
 
             uploadToGoogleDrive(updatedCode, "js").then((res) => {
+                console.log("res::",res)
                     setCode(res);
                     setIsLoader(false);
                     setDrawer(true);
