@@ -84,7 +84,12 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
     console.log("fileMetadata", fileMetadata)
 
     const metadataPart = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(fileMetadata)}\r\n`;
-    mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${fileType === Constants.xml ? data.xmlValue : data}\r\n`;
+    if (fileType === Constants.xml) {
+        mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${data.xmlValue}\r\n`;
+    } else if (fileType === Constants.js) {
+        mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${data}\r\n`;
+    }
+
     const requestBody = `${metadataPart}${mediaPart}--${boundary}--\r\n`;
     const headers = {
         Authorization: `Bearer ${accessToken}`,
@@ -122,7 +127,6 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
             return res;
         }
     }
-
 };
 
 
@@ -264,7 +268,7 @@ export async function getAllFilesFromGoogleDrive() {
     const filesResult = await filesResponse.json();
 
     // Step 3: get xmlValue and append to each file.
-    await Promise.all(filesResult.files.map(async (file) => {
+    await Promise.all(filesResult.files?.map(async (file) => {
         file.xmlValue = await getSelectedProjectFromGoogleDrive(folderId, file.id, accessToken);
     }));
 
