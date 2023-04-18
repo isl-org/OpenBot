@@ -2,9 +2,7 @@ package org.openbot.projects;
 
 import java.io.IOException;
 
-/**
- * This is an interface that defines two methods for handling the results of reading a file.
- */
+/** This is an interface that defines two methods for handling the results of reading a file. */
 public interface ReadFileCallback {
   // This method is called when the file is successfully read.
   // It is passed the contents of the file as a string.
@@ -14,4 +12,3 @@ public interface ReadFileCallback {
   // It is passed the exception as an argument.
   void onFileReadFailed(IOException e);
 }
-

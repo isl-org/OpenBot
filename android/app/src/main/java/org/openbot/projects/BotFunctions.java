@@ -10,9 +10,7 @@ import org.openbot.vehicle.Control;
 import org.openbot.vehicle.Vehicle;
 import timber.log.Timber;
 
-/**
- * implement openBot functions according to block codes.
- */
+/** implement openBot functions according to block codes. */
 public class BotFunctions implements SensorEventListener {
   private final Vehicle v;
   private final AudioPlayer ap;
@@ -20,6 +18,7 @@ public class BotFunctions implements SensorEventListener {
 
   /**
    * get vehicle and audioPlayer in parameters to control openBot commands.
+   *
    * @param vehicle
    * @param audioPlayer
    */

@@ -41,6 +41,7 @@ public class GoogleServices {
 
   /**
    * Constructor for the GoogleServices class
+   *
    * @param activity
    * @param context
    * @param callback
@@ -68,9 +69,7 @@ public class GoogleServices {
     }
   }
 
-  /**
-   * Method to sign out of the current Google account.
-   */
+  /** Method to sign out of the current Google account. */
   public void signOut() {
     mGoogleSignInClient
         .signOut()
@@ -96,6 +95,7 @@ public class GoogleServices {
 
   /**
    * Method to handle the result of a Google Sign-In attempt
+   *
    * @param completedTask
    */
   public void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -105,7 +105,8 @@ public class GoogleServices {
       Log.d(TAG, "handleSignInResult:success - " + account.getEmail());
       mCallback.onSignInSuccess(account);
     } catch (ApiException e) {
-      // The ApiException status code indicates the detailed failure reason and Notify callback of sign-in failure.
+      // The ApiException status code indicates the detailed failure reason and Notify callback of
+      // sign-in failure.
       Log.e(TAG, "handleSignInResult:failed", e);
       mCallback.onSignInFailed(e);
     }
@@ -113,6 +114,7 @@ public class GoogleServices {
 
   /**
    * Helper method to get the Drive API service
+   *
    * @return
    */
   private Drive getDriveService() {
@@ -134,6 +136,7 @@ public class GoogleServices {
 
   /**
    * Retrieves a list of Google Drive files that are not trashed and have the file extension ".js".
+   *
    * @param adapter
    * @param noProjectsLayout
    */
@@ -149,7 +152,8 @@ public class GoogleServices {
                   try {
                     // clear the existing list of drive files.
                     driveFiles.clear();
-                    // query for files on Google Drive that are not in the trash folder and have a ".js" extension.
+                    // query for files on Google Drive that are not in the trash folder and have a
+                    // ".js" extension.
                     FileList result =
                         googleDriveService
                             .files()
@@ -166,7 +170,8 @@ public class GoogleServices {
                         driveFiles.add(file);
                       }
                     }
-                    // update the UI on the main thread to reflect the changes in the list of drive files.
+                    // update the UI on the main thread to reflect the changes in the list of drive
+                    // files.
                     mActivity.runOnUiThread(
                         () -> {
                           adapter.notifyDataSetChanged();
@@ -188,6 +193,7 @@ public class GoogleServices {
 
   /**
    * Returns the list of files retrieved from Google Drive by the accessDriveFiles method.
+   *
    * @return The list of project files
    */
   public List<File> getDriveFiles() {
@@ -196,6 +202,7 @@ public class GoogleServices {
 
   /**
    * Downloads a file from Google Drive with the given file ID.
+   *
    * @param fileId the ID of the file to download
    */
   private void downloadFileFromGDrive(String fileId) {
@@ -220,6 +227,7 @@ public class GoogleServices {
 
   /**
    * Renames a file with the given ID to the given new title.
+   *
    * @param fileId the ID of the file to rename
    * @param newTitle the new title to give the file
    */
@@ -244,6 +252,7 @@ public class GoogleServices {
 
   /**
    * Deletes a file with the given ID from Google Drive.
+   *
    * @param fileId fileId the ID of the file to delete.
    */
   public void deleteFile(String fileId) {

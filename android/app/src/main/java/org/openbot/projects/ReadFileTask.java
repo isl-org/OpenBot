@@ -8,9 +8,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * call this class to read the public google drive file using file id.
- */
+/** call this class to read the public google drive file using file id. */
 public class ReadFileTask extends AsyncTask<Void, Void, Void> {
   String fileId;
   private ReadFileCallback callback;
@@ -22,8 +20,8 @@ public class ReadFileTask extends AsyncTask<Void, Void, Void> {
 
   /**
    * This is an asynchronous task that will download a file from a URL and return its contents.
-   * @param voids The parameters of the task.
    *
+   * @param voids The parameters of the task.
    * @return
    */
   protected Void doInBackground(Void... voids) {
@@ -61,9 +59,10 @@ public class ReadFileTask extends AsyncTask<Void, Void, Void> {
     return null;
   }
 
-  /**]
-   * This method is called after the doInBackground method has finished executing.
-   * It will be passed the file contents as a string.
+  /**
+   * ] This method is called after the doInBackground method has finished executing. It will be
+   * passed the file contents as a string.
+   *
    * @param fileContents
    */
   protected void onPostExecute(String fileContents) {

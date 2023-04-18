@@ -14,11 +14,14 @@ import java.util.List;
 import org.openbot.R;
 import org.openbot.main.CommonRecyclerViewAdapter;
 
-/** This is a custom adapter for displaying a list of files representing projects in Google Drive. */
+/**
+ * This is a custom adapter for displaying a list of files representing projects in Google Drive.
+ */
 public class DriveProjectsAdapter extends CommonRecyclerViewAdapter<File> {
 
   /**
    * Constructor for creating a new instance of the adapter.
+   *
    * @param context
    * @param dataList
    * @param resLayoutAndViewIds
@@ -33,6 +36,7 @@ public class DriveProjectsAdapter extends CommonRecyclerViewAdapter<File> {
 
   /**
    * This method specifies the resource layout type for the list item at the given position.
+   *
    * @param position the position of item
    * @return
    */
@@ -43,6 +47,7 @@ public class DriveProjectsAdapter extends CommonRecyclerViewAdapter<File> {
 
   /**
    * This method binds the data for a file to a view holder for a list item.
+   *
    * @param holder
    * @param data
    * @param position
@@ -61,7 +66,8 @@ public class DriveProjectsAdapter extends CommonRecyclerViewAdapter<File> {
     // Set the text of the project name view to the modified project name.
     projectName.setText(projectNameModified);
 
-    // Format the project date according to the UI design and set the text of the updated date view to the formatted date.
+    // Format the project date according to the UI design and set the text of the updated date view
+    // to the formatted date.
     DateTime dateTime = new DateTime(String.valueOf(data.getModifiedTime()));
     Instant instant = Instant.ofEpochMilli(dateTime.getValue());
     LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();

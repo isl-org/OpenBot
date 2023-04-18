@@ -184,7 +184,8 @@ public class ProjectsFragment extends ControlsFragment {
                         () -> {
                           AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
                           builder.setTitle("Error");
-                          builder.setMessage("Something error with this file! pull down to refresh and try again.");
+                          builder.setMessage(
+                              "Something error with this file! pull down to refresh and try again.");
                           builder.setCancelable(false);
                           builder.setNegativeButton("Ok", (dialog, which) -> dialog.cancel());
                           AlertDialog alertDialog = builder.create();

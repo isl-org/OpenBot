@@ -14,7 +14,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import com.google.android.gms.vision.CameraSource;
@@ -46,12 +45,10 @@ public class BarCodeScannerFragment extends Fragment {
         FragmentBarCodeScannerBinding.inflate(inflater, container, false);
 
     // initialise 2 bottom-sheet one is for correct QR code another one is for wrong QR code.
-    ConstraintLayout successQrBottomSheet =
-        binding.getRoot().findViewById(R.id.qr_bottom_sheet_success);
-    ConstraintLayout errorQrBottomSheet =
-        binding.getRoot().findViewById(R.id.qr_bottom_sheet_error);
-    successBottomSheetBehavior = BottomSheetBehavior.from(successQrBottomSheet);
-    failedBottomSheetBehavior = BottomSheetBehavior.from(errorQrBottomSheet);
+    successBottomSheetBehavior =
+        BottomSheetBehavior.from(binding.getRoot().findViewById(R.id.qr_bottom_sheet_success));
+    failedBottomSheetBehavior =
+        BottomSheetBehavior.from(binding.getRoot().findViewById(R.id.qr_bottom_sheet_error));
     successBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     failedBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     return binding.getRoot();
@@ -66,7 +63,7 @@ public class BarCodeScannerFragment extends Fragment {
     LinearLayout qrStartBtn = requireView().findViewById(R.id.qr_start_btn);
     LinearLayout qrReScanBtn = requireView().findViewById(R.id.re_scan_btn);
     overlayView = requireView().findViewById(R.id.overlay_view);
-      startScan();
+    startScan();
     crossImageView.setOnClickListener(
         v -> Navigation.findNavController(requireView()).popBackStack());
     qrCancelBtn.setOnClickListener(v -> onQRCancelButton());

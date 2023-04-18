@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         (controller, destination, arguments) -> {
           if (destination.getId() == R.id.mainFragment
               || destination.getId() == R.id.settingsFragment
-                  || destination.getId() == R.id.usbFragment
+              || destination.getId() == R.id.usbFragment
               || destination.getId() == R.id.projectsFragment
               || destination.getId() == R.id.profileFragment) {
             toolbar.setVisibility(View.VISIBLE);

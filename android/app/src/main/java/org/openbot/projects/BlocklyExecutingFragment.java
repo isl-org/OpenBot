@@ -29,11 +29,12 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   @Override
   public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    //initialise web view to execute javascript block codes.
+    // initialise web view to execute javascript block codes.
     myWebView = new WebView(getContext());
     myWebView.getSettings().setJavaScriptEnabled(true);
 
-    // execute js code when you navigate on block codes executing screen and string js code variable is not null.
+    // execute js code when you navigate on block codes executing screen and string js code variable
+    // is not null.
     if (barCodeScannerFragment.finalCode != null) {
       runJSCommand(barCodeScannerFragment.finalCode);
     }
@@ -41,6 +42,7 @@ public class BlocklyExecutingFragment extends ControlsFragment {
 
   /**
    * get javascript code in string from googleDrive file and run execute in webView.
+   *
    * @param finalCode
    */
   private void runJSCommand(String finalCode) {
@@ -48,7 +50,8 @@ public class BlocklyExecutingFragment extends ControlsFragment {
     if (activity != null) {
       activity.runOnUiThread(
           () -> {
-            // set speed multiplier at maximum because openBot moving according to speed set in block codes.
+            // set speed multiplier at maximum because openBot moving according to speed set in
+            // block codes.
             // save default speed multiplier in variable to set again in initial state.
             previousSpeedMultiplier = vehicle.getSpeedMultiplier();
             vehicle.setSpeedMultiplier(255);
@@ -67,7 +70,7 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   @Override
   public void onPause() {
     super.onPause();
-    //set default speed multiplier when you go back from this screen.
+    // set default speed multiplier when you go back from this screen.
     if (previousSpeedMultiplier != 0) {
       vehicle.setSpeedMultiplier(previousSpeedMultiplier);
     }
