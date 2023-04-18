@@ -31,10 +31,9 @@ public class BlocklyExecutingFragment extends ControlsFragment {
     super.onViewCreated(view, savedInstanceState);
     // initialise web view to execute javascript block codes.
     myWebView = new WebView(getContext());
+    // enable JavaScript in the web-view.
     myWebView.getSettings().setJavaScriptEnabled(true);
-
-    // execute js code when you navigate on block codes executing screen and string js code variable
-    // is not null.
+    // if string js code variable is not null execute js code when you navigate on this fragment.
     if (barCodeScannerFragment.finalCode != null) {
       runJSCommand(barCodeScannerFragment.finalCode);
     }
@@ -50,12 +49,13 @@ public class BlocklyExecutingFragment extends ControlsFragment {
     if (activity != null) {
       activity.runOnUiThread(
           () -> {
-            // set speed multiplier at maximum because openBot moving according to speed set in
-            // block codes.
-            // save default speed multiplier in variable to set again in initial state.
+            // store previous speed multiplier value.
             previousSpeedMultiplier = vehicle.getSpeedMultiplier();
+            // set the speed multiplier to maximum value (255) because openBot moving according to
             vehicle.setSpeedMultiplier(255);
+            // add a JavaScript interface to the web-view.
             myWebView.addJavascriptInterface(new BotFunctions(vehicle, audioPlayer), "Android");
+            // execute the JavaScript code in the web-view.
             myWebView.evaluateJavascript(finalCode, null);
           });
     }
@@ -70,7 +70,8 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   @Override
   public void onPause() {
     super.onPause();
-    // set default speed multiplier when you go back from this screen.
+    // if previous speed multiplier value is not 0, set the speed multiplier back to its previous
+    // value when you go back from this screen.
     if (previousSpeedMultiplier != 0) {
       vehicle.setSpeedMultiplier(previousSpeedMultiplier);
     }
