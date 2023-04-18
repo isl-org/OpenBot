@@ -210,6 +210,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     ///
     /// - Parameter payload: string that should be sent to the connected device
     func sendData(payload: String) {
+        print("sending payload ",payload);
         let dataToSend: Data? = payload.data(using: String.Encoding.utf8)
         if (dataToSend != nil && discoveredPeripheral != nil && discoveredPeripheral.canSendWriteWithoutResponse) {
             if let writeCharacteristics {

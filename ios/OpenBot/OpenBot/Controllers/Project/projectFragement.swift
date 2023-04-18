@@ -14,22 +14,24 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     let signInView: UIView = UIView(frame: UIScreen.main.bounds)
     var allProjects: [ProjectItem] = [];
 
+    /**
+       Function calls after view will loaded.
+    */
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("inside profile")
         view.addSubview(signInView);
         createMyProjectLabel();
         createPleaseSignInLabel();
         createSignInBtn();
         authentication.getAllFolders();
-        self.getFilesInFolder(folderId: "1SnBn8E8W33TU5fBbih47NW1ngLjoF3_N") { files, error in
-            if let files = files {
-                print("files are : ",files);
-            }
-            if let error = error {
-                print(error)
-            }
-        }
+//        self.getFilesInFolder(folderId: "1SnBn8E8W33TU5fBbih47NW1ngLjoF3_N") { files, error in
+//            if let files = files {
+//                print("files are : ",files);
+//            }
+//            if let error = error {
+//                print(error)
+//            }
+//        }
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
@@ -46,9 +48,18 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         projectCollectionView.register(projectCollectionViewCell.nib(), forCellWithReuseIdentifier: projectCollectionViewCell.identifier)
         projectCollectionView.delegate = self
         projectCollectionView.dataSource = self
+
+    }
+
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         updateViewsVisibility();
     }
 
+    /**
+     Function to create my project label
+     */
     func createMyProjectLabel() {
         let label = CustomLabel(text: "My Projects", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 20, y: 90, width: 200, height: 40));
         label.font = HelveticaNeue.regular(size: 15);
@@ -56,6 +67,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     }
 
+    /**
+     Functions to create the message
+     */
     func createPleaseSignInLabel() {
         let firstLabel = CustomLabel(text: "Please sign in first to access your", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 115, y: height / 2 - 20, width: 250, height: 40));
         let secondLabel = CustomLabel(text: "Projects.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 32.5, y: height / 2 + 10, width: 65, height: 40));
@@ -63,21 +77,42 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         signInView.addSubview(secondLabel)
     }
 
+    /**
+     Function to create Google sign-in button
+     */
     func createSignInBtn() {
         let signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: height / 2 + 60, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
         signInView.addSubview(signInBtn);
     }
 
+    /**
+     Function called after qr scanner icon loaded and will add qr scanner view controller to navigation
+     - Parameter sender:
+     */
     @IBAction func scanner(_ sender: Any) {
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
         let viewController = (storyboard.instantiateViewController(withIdentifier: "qrScanner"))
         navigationController?.pushViewController(viewController, animated: true);
     }
 
+    /**
+
+     - Parameters:
+       - collectionView:
+       - section:
+     - Returns: count of projects inside user drive
+     */
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         Constants.temp.count;
     }
 
+    /**
+     Function to setup each cells for projects
+     - Parameters:
+       - collectionView:
+       - indexPath:
+     - Returns:
+     */
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: projectCollectionViewCell.identifier, for: indexPath) as! projectCollectionViewCell;
         cell.configure(with: Constants.temp[indexPath.row]);
@@ -100,10 +135,27 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 //    }
 
 
+    /**
+     Function to update UI based on google sign-in
+     */
     private func updateViewsVisibility() {
-        signInView.isHidden = true;
+        if GIDSignIn.sharedInstance.currentUser != nil{
+            signInView.isHidden = true;
+            projectCollectionView.isHidden = false
+        }
+        else{
+            projectCollectionView.isHidden = true
+            signInView.isHidden = false;
+        }
+
     }
 
+    /**
+     Function to find all files inside the drive.
+     - Parameters:
+       - folderId:
+       - completion:
+     */
     func getFilesInFolder(folderId: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         let query = GTLRDriveQuery_FilesList.query()
         query.q = "'\(folderId)' in parents"

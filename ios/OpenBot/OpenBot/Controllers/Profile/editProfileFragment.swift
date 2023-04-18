@@ -7,7 +7,14 @@ import UIKit
 import GoogleSignIn
 import FirebaseAuth
 import FirebaseStorage
-class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+/***
+ class for fragment of edit profile section
+ */
+class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+/**
+ Outlets for the user interface elements used in this view controller.
+*/
     private var profileIcon: UIImageView!
     private let authentication = Authentication()
     private var firstName: UILabel!
@@ -19,6 +26,9 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
     let imagePickerVC = UIImagePickerController()
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
 
+/**
+    Method calls after view loaded
+ */
     override func viewDidLoad() {
         super.viewDidLoad()
         imagePickerVC.delegate = self;
@@ -30,6 +40,9 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
         createButtons();
     }
 
+    /**
+     function creates the user profile image view and related components.
+     */
     private func createUserProfileImageView() {
         profileIcon = UIImageView(frame: CGRect(x: (width - 121) / 2, y: safeAreaLayoutValue.top + adapted(dimensionSize: 20, to: .height), width: adapted(dimensionSize: 100, to: .height), height: adapted(dimensionSize: 100, to: .height)));
         profileIcon.layer.cornerRadius = profileIcon.frame.size.width / 2
@@ -46,11 +59,14 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
         view.addSubview(uploadImage);
     }
 
+    /**
+     This function creates the labels for the text fields.
+     */
     private func createLabels() {
         firstName = CustomLabel(text: "First Name", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (profileIcon.frame.origin.y + profileIcon.frame.width + adapted(dimensionSize: 40, to: .height)), width: 150, height: 40))
         lastName = CustomLabel(text: "Last Name", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (firstName.frame.origin.y + 100.0), width: 150, height: 40))
         dob = CustomLabel(text: "Date Of Birth", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (lastName.frame.origin.y + 100.0), width: 150, height: 40))
-        email = CustomLabel(text: "Email", fontSize: 16, fontColor:traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (dob.frame.origin.y + 100.0), width: 150, height: 40))
+        email = CustomLabel(text: "Email", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (dob.frame.origin.y + 100.0), width: 150, height: 40))
         view.addSubview(firstName);
         view.addSubview(lastName);
         view.addSubview(dob);
@@ -58,6 +74,9 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
 
     }
 
+    /**
+     This function creates input fields
+     */
     private func createTextFields() {
         firstNameField = CustomTextField(frame: CGRect(x: 17, y: firstName.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
         view.addSubview(firstNameField);
@@ -73,6 +92,7 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
         toolbar.items = [UIBarButtonItem.flexibleSpace(), doneButton]
         dobField.inputAccessoryView = toolbar
+        dob.isEnabled = false;
         let img = UIImageView(frame: CGRect(x: dobField.frame.size.width - 40, y: 15, width: 20, height: 20));
         img.image = UIImage(named: "calendar");
         dobField.addSubview(img)
@@ -85,6 +105,12 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
         view.addSubview(emailField);
     }
 
+    /**
+     Function to setup the textFields their radius background Colors
+     - Parameters:
+       - textField: the field to be set
+       - value: default value to textField
+     */
     private func setTextField(textField: UITextField, value: String) {
         textField.layer.masksToBounds = true;
         textField.layer.borderColor = UIColor(red: 0 / 255, green: 113 / 255, blue: 197 / 255, alpha: 0.4).cgColor
@@ -94,6 +120,11 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
         textField.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
     }
 
+    /**
+     Function to get first name of user from Full name
+     - Parameter name:
+     - Returns: first name of user
+     */
     private func getFirstName(name: String) -> String {
         let indexOfSpace = name.firstIndex(of: " ");
         if indexOfSpace == nil {
@@ -102,6 +133,11 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
         return String(name[..<indexOfSpace!])
     }
 
+    /**
+     function to return the last name of user from google sign-in
+     - Parameter name:
+     - Returns:
+     */
     private func getLastName(name: String) -> String {
         let indexOfSpace = name.firstIndex(of: " ");
         if indexOfSpace == nil {
@@ -110,28 +146,46 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
         return String(name[indexOfSpace!...])
     }
 
+    /**
+     function to remove the keyboard from screen
+     */
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
 
+    /**
+     Function to open the image picker on tap of image
+     */
     @objc func openImagePicker() {
-
         imagePickerVC.sourceType = .photoLibrary
         present(imagePickerVC, animated: true)
     }
 
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    /**
+     delegate called after successfully selecting an image
+     - Parameters:
+       - picker:
+       - info:
+     */
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true, completion: nil)
         if let image = info[.originalImage] as? UIImage {
             profileIcon.image = image
         }
     }
 
+    /**
+     handler of done button of date picker
+     - Parameter sender:
+     */
     @objc func doneButtonTapped(_ sender: UITextField) {
         // Dismiss the date picker
         sender.resignFirstResponder()
     }
 
+    /**
+     Function to create button named cancle and done.
+     */
     private func createButtons() {
         let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: height - safeAreaLayoutValue.bottom - adapted(dimensionSize: 47, to: .height), width: 147, height: 47), selector: #selector(cancel))
         view.addSubview(cancelBtn);
@@ -140,10 +194,18 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
         saveChangesBtn.backgroundColor = Colors.title
     }
 
+    /**
+     handle of cancel button tap. This will return to profile page
+     - Parameter sender:
+     */
     @objc func cancel(_ sender: UIButton) {
         navigationController?.popViewController(animated: true);
     }
 
+    /**
+     Handler of done button. Calls apis for update the profile
+     - Parameter sender:
+     */
     @objc func saveChanges(_ sender: UIButton) {
         createOverlayAlert()
         let credential = GoogleAuthProvider.credential(withIDToken: (authentication.googleSignIn.currentUser?.idToken!.tokenString)!, accessToken: (authentication.googleSignIn.currentUser?.accessToken.tokenString)!)
@@ -165,7 +227,10 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
         }
     }
 
-    private func uploadImage(){
+    /**
+     A function for update of user image. Calls after done button tap
+     */
+    private func uploadImage() {
         // Get a reference to the storage service
         let storage = Storage.storage()
 
@@ -212,6 +277,9 @@ class editProfileFragment: UIViewController,UIImagePickerControllerDelegate, UIN
 
     }
 
+    /**
+     Method to create animation
+     */
     func createOverlayAlert() {
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
         loadingIndicator.startAnimating();

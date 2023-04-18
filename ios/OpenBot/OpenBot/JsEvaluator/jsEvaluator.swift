@@ -4,7 +4,9 @@
 
 import Foundation
 import JavaScriptCore
-
+/**
+ Class to evaluate the JS code inside openBot
+ */
 class jsEvaluator {
     private var command: String;
     private var vehicleControl: Control = Control();
@@ -12,6 +14,10 @@ class jsEvaluator {
     let bluetooth = bluetoothDataController.shared
     var jsContext: JSContext!
 
+    /**
+     initializer of jsEvaluator class
+     - Parameter jsCode:
+     */
     init(jsCode: String) {
         command = jsCode;
         print(command);
@@ -19,10 +25,16 @@ class jsEvaluator {
         evaluateJavaScript()
     }
 
+    /**
+     initializer of JSContext
+     */
     func initializeJS() {
         jsContext = JSContext()
     }
 
+    /**
+     function defined for all the methods of openBot blockly
+     */
     func evaluateJavaScript() {
         let runOpenBotThreadClass: runOpenBotThread = runOpenBotThread()
         DispatchQueue.global(qos: .background).async {
@@ -151,6 +163,10 @@ class jsEvaluator {
 
     }
 
+    /**
+     Function to implement the wait
+     - Parameter forTime:
+     */
     func wait(forTime: Double) {
         print("inside wait", forTime);
         DispatchQueue.global(qos: .background).async {
@@ -161,7 +177,10 @@ class jsEvaluator {
         }
     }
 
-
+    /**
+     Function to send commands to bluetooth
+     - Parameter control:
+     */
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
@@ -170,11 +189,18 @@ class jsEvaluator {
         }
     }
 
+    /**
+     Internal class of type thread to implement wait
+     */
     class runOpenBotThread: Thread {
         weak var jsEvaluator: jsEvaluator?
         let bluetooth = bluetoothDataController.shared
         private var vehicleControl: Control = Control();
 
+        /**
+         function to send controls to openBot
+         - Parameter control:
+         */
         func sendControl(control: Control) {
            print("actual speed from car -> ", bluetooth.speedometer)
             if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
@@ -202,37 +228,62 @@ class jsEvaluator {
             }
         }
 
+        /**
+         main function to thread
+         */
         override func main() {
             print("inside main of waitThread")
             jsEvaluator?.semaphore.signal()
         }
 
+        /**
+         Strat of block
+         */
         func startBlock() {
             print("inside start");
         }
 
+        /**
+         Loop of blocks
+         */
         func loop() {
             print("inside loop")
         }
 
+        /**
+         function for move forward the robot
+         - Parameter speed:
+         */
         func moveForward(speed: Float) {
             print("inside moveforward", speed)
             let carControl = Control(left: speed, right: speed)
             sendControl(control: carControl);
         }
 
-
+        /**
+         Function to move openBot
+         - Parameters:
+           - left: left wheel speed
+           - right: right wheel speed
+         */
         func moveOpenBot(left: Int, right: Int) {
             print("inside move")
             let carControl = Control(left: Float(left), right: Float(right));
             sendControl(control: carControl);
         }
 
+        /**
+
+         - Parameter radius:
+         */
         func moveCircular(radius: Float) {
             print("inside moveCircular")
             bluetooth.sendData(payload: "c" + String(200) + "," + String(200) + "\n");
         }
 
+        /**
+         Function to stop the car
+         */
         func stop() {
             print("inside stop robot")
             let control = Control(left: 0, right: 0);
@@ -243,6 +294,10 @@ class jsEvaluator {
             bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
         }
 
+        /**
+         Function to move moveBackward the car
+         - Parameter speed:
+         */
         func moveBackward(speed: Float) {
             print("inside moveBackward", speed)
             let carControl = Control(left: -speed, right: -speed);
@@ -250,12 +305,20 @@ class jsEvaluator {
 
         }
 
+        /**
+         function to turn left the car
+         - Parameter speed:
+         */
         func moveLeft(speed: Float) {
             print("inside moveLeft", speed)
             let carControl = Control(left: 0, right: speed);
             sendControl(control: carControl);
         }
 
+        /**
+         Function to turn right car
+         - Parameter speed:
+         */
         func moveRight(speed: Float) {
             print("inside Right", speed)
             let carControl = Control(left: speed, right: 0);
@@ -270,21 +333,34 @@ class jsEvaluator {
             print("inside playsound speed ", playSoundSpeed);
         }
 
+        /**
+         Function to move motor backward with full speed
+         */
         func motorBackward() {
             let control = Control(left: -192, right: -192);
             sendControl(control: control);
         }
 
+        /**
+         Function to move forward
+         */
         func motorForward() {
             let control = Control(left: 192, right: 192);
             sendControl(control: control);
         }
 
+        /**
+         Function to stop motor
+         */
         func motorStop() {
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
         }
 
+        /**
+         handler of led of openBot
+         - Parameter factor:
+         */
         func setLedBrightness(factor: Int) {
             print("inside setLedBrightness");
             let front = (factor * 255) / 100
@@ -292,23 +368,31 @@ class jsEvaluator {
             bluetooth.sendData(payload: "l" + String(front) + "," + String(back) + "\n")
         }
 
+        /**
+         Function to turn on left indicator
+         */
         func setLeftIndicatorOn() {
             print("inside setLeftIndicatorOn");
             let indicatorValues = "i1,0\n"
             bluetooth.sendData(payload: indicatorValues)
         }
 
+        /**
+         Function to turn on right indicator
+         */
         func setRightIndicatorOn() {
             print("inside setRightIndicatorOn");
             let indicatorValues = "i0,1\n"
             bluetooth.sendData(payload: indicatorValues)
         }
 
+        /**
+         Function to turn off  indicators
+         */
         func indicatorOff() {
             print("inside indicatorOff");
             let indicatorValues = "i0,0\n"
             bluetooth.sendData(payload: indicatorValues)
         }
     }
-
 }

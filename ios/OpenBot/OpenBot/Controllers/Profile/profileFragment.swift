@@ -5,7 +5,9 @@
 import Foundation
 import UIKit
 import GoogleSignIn
-
+/**
+ Class for profile fragment extending ViewController.
+ */
 class profileFragment: UIViewController {
     let shadowSheet = UIView(frame: UIScreen.main.bounds);
     var logoutView = UIView()
@@ -18,6 +20,9 @@ class profileFragment: UIViewController {
     var userImgView = UIImageView()
     var logoutImgView = UIImageView()
 
+    /**
+     Calls after view of profile will load. This will create UI of the View
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         createMyProfileLabel();
@@ -30,11 +35,17 @@ class profileFragment: UIViewController {
 
     }
 
+    /**
+     Function to create My profile Label on top
+     */
     private func createMyProfileLabel() {
         let label = CustomLabel(text: "My Profile", fontSize: 20, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 20, y: 90, width: 100, height: 40));
         view.addSubview(label)
     }
 
+    /**
+     Function to create the message for sign-in
+     */
     private func createPleaseSignInLabel() {
         firstLabel = CustomLabel(text: "Set up your profile by signing in with", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 135, y: height / 2 - 20, width: 270, height: 40));
         secondLabel = CustomLabel(text: "your Google account.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 80, y: height / 2 + 10, width: 160, height: 40));
@@ -42,6 +53,9 @@ class profileFragment: UIViewController {
         view.addSubview(secondLabel)
     }
 
+    /**
+     Function to create google sign-in button.
+     */
     private func createSignInBtn() {
         signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: height / 2 + 60, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
         let tap = UITapGestureRecognizer(target: self, action: #selector(signIn))
@@ -49,6 +63,9 @@ class profileFragment: UIViewController {
         view.addSubview(signInBtn);
     }
 
+    /**
+     Function to create labels for edit profile and logout
+     */
     private func createEditProfileAndLogoutLabel() {
         let editProfileLabel = CustomLabel(text: "Edit Profile", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 72, y: 154, width: 120, height: 40))
         view.addSubview(editProfileLabel);
@@ -62,6 +79,9 @@ class profileFragment: UIViewController {
         logoutLabel.addGestureRecognizer(tapOnLogout);
     }
 
+    /**
+     Function to create edit profile and logout icons
+     */
     private func createEditProfileAndLogoutIcons() {
         let userIcon = UIImage(named: "user_icon");
         let logoutIcon = UIImage(named: "logout");
@@ -73,12 +93,18 @@ class profileFragment: UIViewController {
         view.addSubview(logoutImgView);
     }
 
+    /**
+     Function to create shadow sheet which will load on logout popup.
+     */
     private func createShadowSheet() {
         shadowSheet.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         tabBarController?.view.addSubview(shadowSheet)
         createLogoutPopup()
     }
 
+    /**
+     Function to create logout popup
+     */
     private func createLogoutPopup() {
         logoutView = UIView(frame: CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 20, width: width * 0.90, height: 168));
         shadowSheet.addSubview(logoutView);
@@ -99,6 +125,9 @@ class profileFragment: UIViewController {
         logoutView.addSubview(logoutBtn);
     }
 
+    /**
+     Function that will add edit profile view controller to navigation controller
+     */
     @objc func editProfileHandler() {
         createOverlayAlert()
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
@@ -110,6 +139,9 @@ class profileFragment: UIViewController {
         }
     }
 
+    /**
+     Function for logout from google
+     */
     @objc func logoutHandler() {
         print("inside logoutHandler")
         createShadowSheet();
@@ -119,12 +151,18 @@ class profileFragment: UIViewController {
         shadowSheet.removeFromSuperview();
     }
 
+    /**
+     Function for logout from google
+     */
     @objc func logout(_ sender: UIButton) {
         shadowSheet.removeFromSuperview();
         GIDSignIn.sharedInstance.signOut()
         updateViewsVisibility()
     }
 
+    /**
+     Function to start animation
+     */
     func createOverlayAlert() {
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
         loadingIndicator.startAnimating();
@@ -134,7 +172,9 @@ class profileFragment: UIViewController {
         present(alert, animated: true, completion: nil)
     }
 
-
+    /**
+     Refresh the UI based on google sign-in and guest sign-in
+     */
     private func updateViewsVisibility() {
         if GIDSignIn.sharedInstance.currentUser != nil {
             // Show firstLabel, secondLabel, and SignInBtn, and hide other views
@@ -159,6 +199,9 @@ class profileFragment: UIViewController {
         }
     }
 
+    /**
+     Function to call Authentication class constructor.
+     */
     @objc func signIn() {
         Authentication();
     }
