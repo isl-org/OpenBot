@@ -61,38 +61,43 @@ class jsEvaluator {
                 let playSound: @convention(block) (Bool) -> Void = { (isPlaySound) in
                     runOpenBotThreadClass.playSound(isPlaySound: isPlaySound);
                 }
-                let playSoundSpeed: @convention(block) (String) -> Void = {(speed) in
-                    runOpenBotThreadClass.playSoundSpeed(speedMode : speed);
+                let playSoundSpeed: @convention(block) (String) -> Void = { (speed) in
+                    runOpenBotThreadClass.playSoundSpeed(speedMode: speed);
                 }
-                let motorBackward: @convention(block) () -> Void = {() in
+                let motorBackward: @convention(block) () -> Void = { () in
                     runOpenBotThreadClass.motorBackward();
                 }
-                let motorForward: @convention(block) () -> Void = {() in
+                let motorForward: @convention(block) () -> Void = { () in
                     runOpenBotThreadClass.motorForward()
                 }
-                let motorStop: @convention(block) () -> Void = {() in
+                let motorStop: @convention(block) () -> Void = { () in
                     runOpenBotThreadClass.motorStop()
                 }
                 let playSoundMode: @convention(block) () -> Void = { () in
 
                 }
-                let ledBrightness: @convention(block)(Int) -> Void = { brightnessFactor in
-                    runOpenBotThreadClass.setLedBrightness(factor : brightnessFactor);
+                let ledBrightness: @convention(block) (Int) -> Void = { brightnessFactor in
+                    runOpenBotThreadClass.setLedBrightness(factor: brightnessFactor);
                 }
-                let leftIndicatorOn: @convention(block)() -> Void = {() in
+                let leftIndicatorOn: @convention(block) () -> Void = { () in
                     runOpenBotThreadClass.setLeftIndicatorOn();
                 }
 
-                let rightIndicatorOn: @convention(block)() -> Void = {() in
+                let rightIndicatorOn: @convention(block) () -> Void = { () in
                     runOpenBotThreadClass.setRightIndicatorOn();
                 }
-                let indicatorOff: @convention(block)() -> Void = {() in
+                let indicatorOff: @convention(block) () -> Void = { () in
                     runOpenBotThreadClass.indicatorOff();
                 }
-                let stopRobot : @convention(block)() -> Void = {() in
+                let stopRobot: @convention(block) () -> Void = { () in
                     runOpenBotThreadClass.stop()
                 }
-
+                let leftIndicatorOff: @convention(block) () -> Void = { () in
+                    runOpenBotThreadClass.indicatorOff();
+                }
+                let rightIndicatorOff: @convention(block) () -> Void = { () in
+                    runOpenBotThreadClass.indicatorOff();
+                }
                 context.setObject(moveForward,
                         forKeyedSubscript: "moveForward" as NSString)
                 context.setObject(loop,
@@ -130,11 +135,15 @@ class jsEvaluator {
                 context.setObject(leftIndicatorOn,
                         forKeyedSubscript: "leftIndicatorOn" as NSString);
                 context.setObject(rightIndicatorOn,
-                        forKeyedSubscript: "RightIndicatorOn" as NSString);
+                        forKeyedSubscript: "rightIndicatorOn" as NSString);
                 context.setObject(indicatorOff,
                         forKeyedSubscript: "indicatorOff" as NSString);
                 context.setObject(stopRobot,
                         forKeyedSubscript: "stopRobot" as NSString);
+                context.setObject(rightIndicatorOff,
+                        forKeyedSubscript: "rightIndicatorOff" as NSString);
+                context.setObject(leftIndicatorOff,
+                        forKeyedSubscript: "leftIndicatorOff" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -143,7 +152,7 @@ class jsEvaluator {
     }
 
     func wait(forTime: Double) {
-        print("inside stop");
+        print("inside wait", forTime);
         DispatchQueue.global(qos: .background).async {
             let command = Control(left: 0, right: 0);
             self.sendControl(control: command);
@@ -154,7 +163,6 @@ class jsEvaluator {
 
 
     func sendControl(control: Control) {
-        print("inside sendControl")
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
             let right = (control.getRight() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
@@ -165,10 +173,33 @@ class jsEvaluator {
     class runOpenBotThread: Thread {
         weak var jsEvaluator: jsEvaluator?
         let bluetooth = bluetoothDataController.shared
+        private var vehicleControl: Control = Control();
 
         func sendControl(control: Control) {
-            print("inside sendControl")
-            bluetooth.sendData(payload: "c" + String(control.getLeft()) + "," + String(control.getRight()) + "\n")
+           print("actual speed from car -> ", bluetooth.speedometer)
+            if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
+                var left : Double = 0.0;
+                var right : Double = 0.0;
+                switch gameController.selectedSpeedMode {
+                case .SLOW:
+                    left = Double(control.getLeft()) / Double(gameController.selectedSpeedMode.rawValue);
+                    right = Double(control.getRight()) / Double(gameController.selectedSpeedMode.rawValue);
+                    break;
+                case .NORMAL:
+                    left = Double(control.getLeft()) / Double(gameController.selectedSpeedMode.rawValue);
+                    right = Double(control.getRight()) / Double(gameController.selectedSpeedMode.rawValue);
+                    break;
+                case .FAST:
+                    left = Double(control.getLeft()) / Double(gameController.selectedSpeedMode.rawValue);
+                    right = Double(control.getRight()) / Double(gameController.selectedSpeedMode.rawValue);
+                    break;
+                }
+                print("gamecontroller speed rayvalue -> :", gameController.selectedSpeedMode.rawValue)
+                left = (left * Double(gameController.selectedSpeedMode.rawValue)).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+                right = (right * Double(gameController.selectedSpeedMode.rawValue)).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
+                print("left is : ->", left, " right is :-> ", right);
+                bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
+            }
         }
 
         override func main() {
@@ -185,7 +216,7 @@ class jsEvaluator {
         }
 
         func moveForward(speed: Float) {
-            print("inside moveforward")
+            print("inside moveforward", speed)
             let carControl = Control(left: speed, right: speed)
             sendControl(control: carControl);
         }
@@ -203,72 +234,77 @@ class jsEvaluator {
         }
 
         func stop() {
-            print("inside stop")
+            print("inside stop robot")
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
+            while(bluetooth.speedometer != "w0.00,0.00"){
+                bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
+            }
+            bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
         }
 
         func moveBackward(speed: Float) {
-            print("inside moveBackward")
+            print("inside moveBackward", speed)
             let carControl = Control(left: -speed, right: -speed);
             sendControl(control: carControl);
 
         }
 
         func moveLeft(speed: Float) {
-            print("inside moveLeft")
+            print("inside moveLeft", speed)
             let carControl = Control(left: 0, right: speed);
             sendControl(control: carControl);
         }
 
         func moveRight(speed: Float) {
-            print("inside Right")
-            let carControl = Control(left: 0, right: speed);
+            print("inside Right", speed)
+            let carControl = Control(left: speed, right: 0);
             sendControl(control: carControl);
         }
-        func playSound(isPlaySound: Bool){
+
+        func playSound(isPlaySound: Bool) {
             print("inside playsound");
         }
 
-        func playSoundSpeed(speedMode : String){
-            print("inside playsound speed ",playSoundSpeed);
+        func playSoundSpeed(speedMode: String) {
+            print("inside playsound speed ", playSoundSpeed);
         }
 
-        func motorBackward(){
+        func motorBackward() {
             let control = Control(left: -192, right: -192);
             sendControl(control: control);
         }
 
-        func motorForward(){
+        func motorForward() {
             let control = Control(left: 192, right: 192);
             sendControl(control: control);
         }
 
-        func motorStop(){
+        func motorStop() {
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
         }
 
-        func setLedBrightness(factor : Int){
+        func setLedBrightness(factor: Int) {
             print("inside setLedBrightness");
             let front = (factor * 255) / 100
             let back = ((factor * 255)) / 100
             bluetooth.sendData(payload: "l" + String(front) + "," + String(back) + "\n")
         }
 
-        func setLeftIndicatorOn(){
+        func setLeftIndicatorOn() {
             print("inside setLeftIndicatorOn");
             let indicatorValues = "i1,0\n"
             bluetooth.sendData(payload: indicatorValues)
         }
 
-        func setRightIndicatorOn(){
+        func setRightIndicatorOn() {
             print("inside setRightIndicatorOn");
             let indicatorValues = "i0,1\n"
             bluetooth.sendData(payload: indicatorValues)
         }
 
-        func indicatorOff(){
+        func indicatorOff() {
             print("inside indicatorOff");
             let indicatorValues = "i0,0\n"
             bluetooth.sendData(payload: indicatorValues)

@@ -8,12 +8,14 @@
 
 ## App Screens
 
-### Main Menu
+### Home
 
-The app starts with a menu screen that shows all available screens. The Bluetooth connection screen can be opened by clicking on the Bluetooth icon on top right hand side. The settings screen can be opened with a click on the settings icon right next to it. By clicking on the other icons, the user can access various screens whose functionalities are explained in subsequent sections.
+The application begins with a bottom sheet featuring Google sign-in options. The sheet presents two buttons: `Sign-in with Google` and `Continue as Guest`. The former triggers a Google sign-in prompt, while the latter opens a menu screen displaying all available screens. Clicking on the Bluetooth icon located on the top right-hand side of the app will open the Bluetooth connection screen, while clicking on the adjacent settings icon will open the settings screen. Other icons provide access to various screens, each with their own functionalities, as detailed in subsequent sections.
+
+The bottom of the app displays a tab bar with tabs for `Home, Projects, and Profile`. By default, the Home tab is displayed. If a user is logged in, all their saved projects in the "openbot-opencode" folder on Google Drive will be listed here. Otherwise, a sign-in prompt will be displayed. The Profile tab includes buttons for accessing the user's profile and signing out.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.jpg" alt="Main Menu" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.gif" alt="Main Menu" width="25%"/>
 <img style="padding-right: 2%;" src="../../docs/images/ios_bluetooth_screen.jpg" alt="Bluetooth" width="25%"/>
 <img style="padding-right: 2%;" src="../../docs/images/ios_settings_screen.jpg" alt="Settings" width="25%"/>
 </p>
@@ -38,11 +40,11 @@ Free Roam offers simple robot control with real time updates and information abo
 
 - **Drive Mode**: There are 3 drive modes displayed on the view:
 
-    - D -> Drive, when the robot is driving forward
+  - D -> Drive, when the robot is driving forward
 
-    - N -> Neutral, when the robot is stationary
+  - N -> Neutral, when the robot is stationary
 
-    - R -> Reverse, when the robot is moving backwards
+  - R -> Reverse, when the robot is moving backwards
 
 - **Speed**: The speedometer shows the realtime speed of the robot.
 
@@ -141,24 +143,24 @@ Simple UI for collection of data sets.
 
 - **Preview Resolution**: Used to switch between resolutions of camera preview. There are 3 settings:
 
-    - ***HIGH*** (1920x1080p)
+  - ***HIGH*** (1920x1080p)
 
-    - ***MEDIUM*** (1280x720p)
+  - ***MEDIUM*** (1280x720p)
 
-    - ***LOW*** (640x360)
+  - ***LOW*** (640x360)
 
 
 - **Model Resolution**: Used to switch between resolutions of images saved for training different models.
 
 - **Log Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may:
 
-    - press the **A button** to **start** the data collection process
+  - press the **A button** to **start** the data collection process
 
-    - press the **A button again** to **stop** data collection and save the collected data in a .zip file
+  - press the **A button again** to **stop** data collection and save the collected data in a .zip file
 
-    - alternatively press the **R1 button** to **stop** data collection **without saving** the collected data (for instance because of an unexpected collision with the environment)
+  - alternatively press the **R1 button** to **stop** data collection **without saving** the collected data (for instance because of an unexpected collision with the environment)
 
-    - remember to use the controller mapping fragment to ensure you are using the correct buttons.
+  - remember to use the controller mapping fragment to ensure you are using the correct buttons.
 
 - **Vehicle Status**: The field **Battery** displays the battery voltage as measured by the microcontroller via the voltage divider. The field **Speed (l,r)** reports the left and right speed of the (front) wheels in rpm. It is measured by the microcontroller via the optical wheel speed sensors. The field **Sonar** shows the free space in front of the car in centimeters. It is measured by the microcontroller via the ultrasonic sensor. Note, you will only receive values a few seconds after the USB connections has been established.
 
@@ -174,7 +176,7 @@ Simple UI to check the button and joystick mapping of a connected BT controller.
 
 ### Robot Info
 
-Simple UI to get robot info and test basic functionality. The **Robot Type** as configured in the firmware is displayed as text and animation. The checkmarks in the sections **Sensors**, **Wheel Odometry** and **LEDs** show which features are supported by the connected robot. The section **Readings** provides the most important sensor measurements. In the section **Send Commands**, users can send basic motor commands by pressing the corresponding buttons and control the front and rear LEDs with a slider. 
+Simple UI to get robot info and test basic functionality. The **Robot Type** as configured in the firmware is displayed as text and animation. The checkmarks in the sections **Sensors**, **Wheel Odometry** and **LEDs** show which features are supported by the connected robot. The section **Readings** provides the most important sensor measurements. In the section **Send Commands**, users can send basic motor commands by pressing the corresponding buttons and control the front and rear LEDs with a slider.
 
 <p align="left">
 <img src="../../docs/images/ios_screen_robot_info.gif" alt="Robot Info" width="50%" />
@@ -212,6 +214,65 @@ All models are quantized for better performance on embedded devices. Note that m
 <img src="../../docs/images/ios_screen_model_management.gif" alt="Model Management" width="25%" />
 </p>
 
+
+### Navigation
+
+The `Point Goal Navigation` screen allows the user to set a goal location for the robot to navigate to using forward and left values in 3D space. To access this screen, simply tap on the corresponding button in the app.
+
+Upon tapping, a popup will appear with two input fields labeled `Forward` and `Left`. The user can enter values into these fields to set the goal location for the robot to navigate to. The popup also contains two buttons: `Cancel` and `Start`.
+
+- `Cancel` button: This button will return the user to the home screen and cancel the navigation process.
+
+
+- `Start` button: This button will create a point in 3D space using the forward and left values entered by the user and start the navigation process. The robot will begin moving towards the goal location and adjusting its trajectory and speed as needed to reach the destination.
+
+If the robot successfully reaches the goal location, a message will appear indicating that the goal has been reached, and the robot will stop moving.
+
+Note that this feature uses `ARKit`, a framework developed by Apple for augmented reality applications. The user will need to have an ARKit-compatible device to use this feature.
+
+<p align="left">
+<img src="../../docs/images/ios_navigation_screen.jpeg" alt="Model Management" width="25%" />
+</p>
+
+
+### Projects
+
+The Projects section of the application features a `My Projects` section with a `QR Scanner` icon at the top. When the user taps on QR Scanner, a new fragment will open with a camera view of the QR Scanner. If the user scans the Qr code of the Openbot project link successfully, a popup of the project will open, allowing the user to run the project. If there are any issues during the scan, an error message will be displayed.
+
+If the user is signed in, all of their projects from Google Drive will be listed here. Otherwise, a message and a sign-in button will appear.
+
+- `QR Scanner` The QR Scanner icon is located at the top of the Projects tab. Tapping on it opens a new screen with a camera view, which allows the user to scan the QR Code of the project link. After a successful scan, a popup will appear asking the user if they want to run OpenBot. Upon tapping Run, a new screen will load with the OpenBot and the project will start running.
+
+
+- `Projects` If the user is signed in to their Google account and has projects in the Google Drive folder named openBot-openCode, all projects will be listed in the Projects tab along with their corresponding title and creation date. Tapping on a project will bring up a bottom sheet asking the user if they want to run the current project.
+
+If the user is not signed in, a Google Sign-in button will appear on the screen, prompting the user to sign in before accessing their projects.
+
+<p align="left">
+<img src="../../docs/images/ios_project_screen.jpeg" alt="Project Screen" width="25%" />
+<img src="../../docs/images/ios_no_signin.jpeg" alt="Project Screen" width="25%" />
+<img src="../../docs/images/ios_qr_scan.gif" alt="Project Screen" width="25%" />
+</p>
+
+
+### Profile
+
+The `Profile` tab in the app provides different options based on whether the user is signed in or not.
+
+If the user is not signed in, a `Google Sign-in` button will appear, prompting the user to sign in to their Google account. Once signed in, the user will be able to access their profile and other features.
+
+If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edit Profile` and `Logout`.
+
+-  `Edit Profile`  button: This button allows the user to edit their profile information, such as their name, profile picture, and other details. Tapping on this button will open a new screen where the user can update their profile information.
+
+- `Logout` button: This button allows the user to log out of their account. Tapping on this button will log the user out and return them to the login screen.
+
+Note that the Profile tab is only available to signed-in users. If a user is not signed in, they will not be able to access the Profile tab or its features.
+
+<p align="left">
+<img src="../../docs/images/ios_profile_screen.jpeg" alt="Project Screen" width="25%" />
+<img src="../../docs/images/ios_edit_profile_screen.jpeg" alt="Project Screen" width="25%" />
+</p>
 
 
 ## Code Structure
