@@ -1,12 +1,13 @@
 import Blockly from "blockly/core";
 import {colors} from "./color";
-import {Images} from "./images";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import lightCarousal2 from "../assets/images/scanner-unscreen.gif"
 import darkCarousal2 from "../assets/images/whitescan-unscreen.gif"
 import lightCarousal3 from "../assets/images/carview.gif"
 import darkCarousal3 from "../assets/images/darkMobileVideo.gif"
+import dragDropWhite from "../assets/images/drag_drop_white.mp4";
+import dragDropDark from "../assets/images/drag_drop_dark.mp4";
 
 
 export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
@@ -77,8 +78,8 @@ export const Carousal = [
         carousalHeader: "Drag and Drop",
         carousalLine1: "Drag and drop the selected block of code into the input field.",
         carousalLine2: "Repeat the steps of selecting and placing all required code blocks, and then connecting them together to create a sequence of actions.",
-        videoLight: Images.dragDropWhite,
-        videoDark: Images.dragDropDark,
+        videoLight: dragDropWhite,
+        videoDark: dragDropDark,
     },
     {
         carousalHeader: "Save and Download",
