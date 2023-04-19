@@ -43,6 +43,10 @@ Make sure to Add following command to pod file.
 
 - Add the Firebase SDK to your Xcode project by adding all of above [Pods](#Pods).
 
+<p align="left">
+<img src="../../../../docs/images/ios_firebase_registration.png" alt="firebase" width="25%" />
+</p>
+
 ### Set up the iOS Project
 
 Install the Firebase SDK using CocoaPods. Open the Terminal app on your Mac and navigate to your Xcode project's root directory. Run the following command to create a Podfile in your Xcode project's root directory:
