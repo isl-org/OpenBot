@@ -114,3 +114,4 @@ Some common issues that may occur during the Firebase configuration process and 
 ### Note
 
 Make sure to use same firebase project for you web as well as ios project.
+For more information visit https://firebase.google.com/docs/ios/setup#swift_uikit
