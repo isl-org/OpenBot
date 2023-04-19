@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.LinearLayout;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.openbot.databinding.FragmentProjectsBinding;
 import org.openbot.projects.DriveProjectsAdapter;
 import org.openbot.projects.GoogleSignInCallback;
 import org.openbot.projects.ProjectsFragment;
@@ -137,10 +139,11 @@ public class GoogleServices {
   /**
    * Retrieves a list of Google Drive files that are not trashed and have the file extension ".js".
    *
+   * @param binding
    * @param adapter
-   * @param noProjectsLayout
+   * @param binding
    */
-  public void accessDriveFiles(DriveProjectsAdapter adapter, LinearLayout noProjectsLayout) {
+  public void accessDriveFiles(DriveProjectsAdapter adapter, FragmentProjectsBinding binding) {
     // get a Google Drive service instance.
     Drive googleDriveService = getDriveService();
     if (googleDriveService != null) {
@@ -175,7 +178,7 @@ public class GoogleServices {
                     mActivity.runOnUiThread(
                         () -> {
                           adapter.notifyDataSetChanged();
-                          projectsFragment.updateMessage(noProjectsLayout, driveFiles);
+                          projectsFragment.updateMessage(driveFiles, binding);
                         });
                     // update page token to get the next set of files if available.
                     pageToken = result.getNextPageToken();
