@@ -130,10 +130,10 @@ class RobotInfoFrame: UIViewController {
 
     /// creates refresh button
     func createRefreshIcon() {
-        if let image = UIImage(named: "refresh")?.withRenderingMode(.alwaysTemplate) {
-            refreshIcon = createIcons(iconImage: image, leadingAnchor: width - 100, topAnchor: topPadding + adapted(dimensionSize: 30, to: .height))
+        if let image = UIImage(named: "refresh") {
+            refreshIcon = createIcons(iconImage: image, leadingAnchor: width - 100, topAnchor: topPadding + 20 )
         }
-        refreshIcon.tintColor = Colors.bdColor
+
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(refresh(tapGestureRecognizer:)))
         refreshIcon.isUserInteractionEnabled = true
         refreshIcon.addGestureRecognizer(tapGesture)
@@ -147,7 +147,7 @@ class RobotInfoFrame: UIViewController {
         } else {
             bleButton.setImage(Images.bluetoothDisconnected!, for: .normal)
         }
-        bleButton.frame = CGRect(x: width - 60, y: topPadding + adapted(dimensionSize: 40, to: .height), width: 40, height: 40)
+        bleButton.frame = CGRect(x: width - 60, y: topPadding + adapted(dimensionSize: 40, to: .height), width: 45, height: 45)
         view.addSubview(bleButton)
         bleButton.addTarget(self, action: #selector(openBluetoothSettings(_:)), for: .touchDown)
         return bleButton
@@ -240,7 +240,7 @@ class RobotInfoFrame: UIViewController {
     func createIcons(iconImage: UIImage, leadingAnchor: CGFloat, topAnchor: CGFloat) -> UIImageView {
         let icon = UIImageView()
         icon.image = iconImage
-        icon.frame.size = CGSize(width: 20, height: 20)
+        icon.frame.size = CGSize(width: 30, height: 30)
         view.addSubview(icon)
         icon.frame.origin.x = leadingAnchor
         icon.frame.origin.y = topAnchor
@@ -323,7 +323,7 @@ class RobotInfoFrame: UIViewController {
             robotName.frame.origin.x = robotType.frame.origin.x + CGFloat((robotType.text?.count ?? 0) * 10) + adapted(dimensionSize: 35, to: .height)
             sensorHeading.frame.origin = CGPoint(x: 10, y: 210)
             blueToothIconButton.frame.origin = CGPoint(x: width - 40, y: topPadding + adapted(dimensionSize: 22, to: .height))
-            refreshIcon.frame.origin.y = topPadding + adapted(dimensionSize: 30, to: .height)
+            refreshIcon.frame.origin.y = topPadding + adapted(dimensionSize: 25, to: .height)
             refreshIcon.frame.origin.x = blueToothIconButton.frame.origin.x - 50
             voltageDividerCheckBox.frame.origin = CGPoint(x: 20, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 40, to: .height))
             voltageDividerLabel.frame.origin = CGPoint(x: 55, y: sensorHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height))

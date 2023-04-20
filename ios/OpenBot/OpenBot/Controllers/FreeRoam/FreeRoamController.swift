@@ -279,10 +279,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openBluetoothSettings(tapGestureRecognizer:)))
-
         blueToothIconRect.isUserInteractionEnabled = true
         blueToothIconRect.addGestureRecognizer(tapGesture)
-
         firstView.addSubview(blueToothIconRect)
         blueToothIconRect.addSubview(bluetoothIcon)
     }

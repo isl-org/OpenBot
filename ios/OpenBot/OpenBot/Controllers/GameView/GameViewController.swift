@@ -41,6 +41,7 @@ class GameViewController: UIViewController {
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationBarItem()
         dateFormatter.dateFormat = "HH:mm:ss.SSSS"
         gameController.resetControl = true
         NotificationCenter.default.addObserver(self, selector: #selector(didConnectController), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil)
@@ -195,7 +196,21 @@ class GameViewController: UIViewController {
             controlImage.addSubview(overlayRightThumb_var)
         }
     }
+
+    func setupNavigationBarItem() {
+        if UIImage(named: "back") != nil {
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.controllerMapping, target: self, action: #selector(back(sender:)), titleColor: Colors.navigationColor ?? .white)
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+    }
+
+    @objc func back(sender: UIBarButtonItem) {
+        _ = navigationController?.popViewController(animated: true)
+    }
+
 }
+
 
 protocol InputManagerDelegate: AnyObject {
     func inputManager(_ manager: GameViewController, didConnect controller: GCController)
@@ -241,5 +256,7 @@ class DrawRect: UIView {
         color.set()
         bpath.fill()
     }
+
+
 }
 
