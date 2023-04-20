@@ -23,10 +23,8 @@ public class BotFunctionUtils {
     "playSoundSpeed",
     "rightIndicatorOn",
     "leftIndicatorOn",
-    "IndicatorOff",
     "rightIndicatorOff",
     "leftIndicatorOff",
-    "IndicatorOn",
     "ledBrightness",
   };
 }

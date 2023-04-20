@@ -6,10 +6,9 @@
 2. **App under development:** The application is under development and may crash or exhibit unexpected behaviour depending on your phone model and version of the operating system. Make sure to test all functionalities with no wheels connected. Use at your own risk!
 
 ## App Screens
-
-### Main Menu
-
-The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon at the top right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
+When you open the app, you will see two sign-in options: Google Sign-In and Continue as Guest. Google Sign-In gives you more features for your openBot playground projects we discuss it below. Once you have signed in or chosen to continue as a guest, you will be directed to the app's main screen.
+### Home Screen
+The app starts with a Home screen that shows all available screens to control your openBot. The settings screen can be opened with a click on the icon in the top right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
 
 <p align="left">
 <img style="padding-right: 2%;" src="../../docs/images/screen_main.gif" alt="Main Menu" width="24.5%"/>
@@ -22,7 +21,7 @@ The app starts with a menu screen that shows all available screens. The settings
 
 #### USB Connection
 
-Tap the USB icon to open the USB options. The drop-down menu is used to set the baud rate. The default is 115200 and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
+Tap the USB icon to open the USB options. The drop-down menu is used to set the baud rate. The default is 115200, and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
 
 <p align="left">
 <img src="../../docs/images/usb_disconnected.jpg" alt="Connecting device" width="25%"/>
@@ -371,6 +370,22 @@ Use the drop-down menu to select the device on which the neural network should b
 
 If a model is active, the inference speed in [ms] will be displayed next to the device which is running the model.
 
+### Projects Screen
+
+The Projects Tab screen displays a list of your openBot Playground projects if you are signed in with your Google account. You can execute these projects to connect with your openBot, or scan their QR codes by clicking the scanner icon in the top right corner. If you are not signed in, the screen will display a Google Sign-In button and a QR code icon for scanning the QR code of your Playground project. To access the openBot Playground projects, you need to sign in with your Google account and ensure that the account has projects stored on Google Drive. However, if you don't want to sign in, you can still execute your Playground project by scanning its QR code without Google Sign-In.
+
+- **Google Drive projects**: To run a Google Drive project, tap on the project you want to execute and wait for the contents of the project file to be read. If the file is successfully retrieved without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Drive file. To resolve this issue, refresh the project screen by pulling down and then repeating the same process.
+- **Qr code scanner**: To scan the QR code of a Playground project, click on the QR code icon located in the top right corner of the screen. Grant camera access to the app so that it can scan the QR code. Once the code is scanned, wait for the contents of the file to be read. If the file is retrieved successfully without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Drive file. To resolve this issue, generate a new QR code in Playground and repeat the process.
+- **Executing Project**: If your openBot Playground project runs successfully, a screen with the message `Your code is executing...` will appear.
+
+### Profile Screen
+The `Profile` tab in the app provides different options based on whether the user is signed in or not.
+If the user is not signed in, a `Google Sign-in` button will appear, prompting the user to sign in to their Google account. Once signed in, the user will be able to access their profile and other features.
+If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edit Profile` and `Logout`.
+
+- **Edit Profile**: Tapping on this button will open a new screen where the user can update their profile information, such as their name and profile picture.
+- **Logout**: This button allows the user to log out of their account. Tapping on this button will log the user out and return them to the login screen.
+
 ## Add your own fragment
 
 Please refer to the [ContributionGuide](ContributionGuide.md) to learn how to add your own fragments to the OpenBot app.
@@ -382,31 +397,3 @@ The [TensorFlow Lite Object Detection Android Demo](https://github.com/tensorflo
 ## Next (optional)
 
 Train your own [Driving Policy](../../policy/README.md)
-
-#### wireless/Bluetooth connection
-
-for Bluetooth connection make sure that your android device has BLE(Bluetooth Low Energy) support.
-
-Select the connection type Bluetooth from the Settings menu.
-<p align="left">
-<img src="../../docs/images/ble_1.jpeg" alt="Settings Menu" width="25%"/>
-<img src="../../docs/images/ble_2.jpeg" alt="Choose connection type" width="25%"/>
-</p>
-
-If your Android version is greater than or equal to 7.0, you need to turn on the location service and allow location permission from setting to search for nearby BLE devices.
-
-If you choose the Bluetooth connection type, you get a Bluetooth icon on the home screen of the app. Tap the icon to start BLE scanning, it takes 4 seconds to scan all nearby BLE devices. Then you will get the list of all available BLE devices.
-<p align="left">
-<img src="../../docs/images/ble_3.jpeg" alt="Home Screen" width="25%"/>
-</p>
-
-After getting the list of BLE devices you can easily connect with your openBot by tapping on Connect button.
-<p align="left">
-<img src="../../docs/images/ble_4.jpeg" alt="BLE devices" width="25%"/>
-<img src="../../docs/images/ble_5.jpeg" alt="Connecting device" width="25%"/>
-</p>
-
-On successful connection the Connect button will change to Disconnect. You can now go back to the Home screen.
-<p align="left">
-<img src="../../docs/images/ble_6.jpeg" alt="Disconnect button" width="25%"/>
-</p>
