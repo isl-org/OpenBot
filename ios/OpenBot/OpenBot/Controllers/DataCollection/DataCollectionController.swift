@@ -314,11 +314,6 @@ class DataCollectionController: CameraController {
             }
         }
         _ = navigationController?.popViewController(animated: true)
-//        MyNavigationController.shared.popViewController(animated: false);
-//        let homepageController = (storyboard?.instantiateViewController(withIdentifier: "homePage"))!
-//        let profileController = (storyboard?.instantiateViewController(withIdentifier: "profileController"))!
-//        let projectController = (storyboard?.instantiateViewController(withIdentifier: "projectsController"))!
-//        tabBarController?.viewControllers = [homepageController,profileController,projectController]
     }
 
     /// function to update the data from device.

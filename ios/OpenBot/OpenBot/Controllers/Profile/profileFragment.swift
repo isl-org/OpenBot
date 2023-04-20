@@ -5,6 +5,7 @@
 import Foundation
 import UIKit
 import GoogleSignIn
+
 /**
  Class for profile fragment extending ViewController.
  */
@@ -19,6 +20,8 @@ class profileFragment: UIViewController {
     var logoutLabel = UILabel()
     var userImgView = UIImageView()
     var logoutImgView = UIImageView()
+    var signInView = UIView()
+    var guestView = UIView()
 
     /**
      Calls after view of profile will load. This will create UI of the View
@@ -26,6 +29,10 @@ class profileFragment: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         createMyProfileLabel();
+        signInView = CustomView(frame: view.bounds, backgroundColor: traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white);
+        guestView = CustomView(frame: view.bounds, backgroundColor: traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white);
+        view.addSubview(signInView);
+        view.addSubview(guestView);
         createEditProfileAndLogoutLabel();
         createEditProfileAndLogoutIcons();
         createPleaseSignInLabel();
@@ -49,8 +56,10 @@ class profileFragment: UIViewController {
     private func createPleaseSignInLabel() {
         firstLabel = CustomLabel(text: "Set up your profile by signing in with", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 135, y: height / 2 - 20, width: 270, height: 40));
         secondLabel = CustomLabel(text: "your Google account.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 80, y: height / 2 + 10, width: 160, height: 40));
-        view.addSubview(firstLabel);
-        view.addSubview(secondLabel)
+//        view.addSubview(firstLabel);
+//        view.addSubview(secondLabel);
+        guestView.addSubview(firstLabel);
+        guestView.addSubview(secondLabel);
     }
 
     /**
@@ -60,7 +69,8 @@ class profileFragment: UIViewController {
         signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: height / 2 + 60, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
         let tap = UITapGestureRecognizer(target: self, action: #selector(signIn))
         signInBtn.addGestureRecognizer(tap);
-        view.addSubview(signInBtn);
+//        view.addSubview(signInBtn);
+        guestView.addSubview(signInBtn);
     }
 
     /**
@@ -68,12 +78,12 @@ class profileFragment: UIViewController {
      */
     private func createEditProfileAndLogoutLabel() {
         let editProfileLabel = CustomLabel(text: "Edit Profile", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 72, y: 154, width: 120, height: 40))
-        view.addSubview(editProfileLabel);
+        signInView.addSubview(editProfileLabel);
         editProfileLabel.isUserInteractionEnabled = true;
         let tapOnEditProfile = UITapGestureRecognizer(target: self, action: #selector(editProfileHandler))
         editProfileLabel.addGestureRecognizer(tapOnEditProfile);
         let logoutLabel = CustomLabel(text: "Logout", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 72, y: editProfileLabel.frame.origin.y + 52, width: 120, height: 40))
-        view.addSubview(logoutLabel);
+        signInView.addSubview(logoutLabel);
         logoutLabel.isUserInteractionEnabled = true;
         let tapOnLogout = UITapGestureRecognizer(target: self, action: #selector(logoutHandler))
         logoutLabel.addGestureRecognizer(tapOnLogout);
@@ -89,8 +99,8 @@ class profileFragment: UIViewController {
         let logoutImgView = UIImageView(frame: CGRect(x: 38, y: userImgView.frame.origin.y + 52, width: logoutIcon?.size.width ?? 24, height: logoutIcon?.size.height ?? 18));
         userImgView.image = userIcon;
         logoutImgView.image = logoutIcon;
-        view.addSubview(userImgView);
-        view.addSubview(logoutImgView);
+        signInView.addSubview(userImgView);
+        signInView.addSubview(logoutImgView);
     }
 
     /**
@@ -178,24 +188,12 @@ class profileFragment: UIViewController {
     private func updateViewsVisibility() {
         if GIDSignIn.sharedInstance.currentUser != nil {
             // Show firstLabel, secondLabel, and SignInBtn, and hide other views
-            editProfileLabel.isHidden = false
-            logoutLabel.isHidden = false
-            userImgView.isHidden = false
-            logoutImgView.isHidden = false
-
-            firstLabel.isHidden = true
-            secondLabel.isHidden = true
-            signInBtn.isHidden = true
+            signInView.isHidden = false;
+            guestView.isHidden = true;
         } else {
             // Show editProfileLabel, logoutLabel, userImgView, and logoutImgView, and hide other views
-            firstLabel.isHidden = false
-            secondLabel.isHidden = false
-            signInBtn.isHidden = false
-
-            editProfileLabel.isHidden = true
-            logoutLabel.isHidden = true
-            userImgView.isHidden = true
-            logoutImgView.isHidden = true
+            signInView.isHidden = true;
+            guestView.isHidden = false;
         }
     }
 

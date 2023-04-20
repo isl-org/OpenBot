@@ -30,7 +30,6 @@ class CustomButton: UIButton {
 
     convenience init(text: String, frame: CGRect,selector :Selector) {
         self.init(frame: frame)
-        print("text",text)
         setTitle(text, for: .normal);
         layer.cornerRadius = 10;
         layer.borderColor = Colors.title?.cgColor

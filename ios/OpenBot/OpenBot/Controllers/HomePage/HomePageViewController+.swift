@@ -30,7 +30,7 @@ extension HomePageViewController {
     }
 
     func createSignInButton() {
-        let signInBtn = bottomSheet.createSignInButton(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: 42, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
+        let signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: 42, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
         bottomSheet.addSubview(signInBtn)
         signInBtn.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(signIn))
@@ -50,7 +50,6 @@ extension HomePageViewController {
 
     @objc func signIn(_ sender: UIView) {
        Authentication()
-
     }
 
     @objc func guestLogin(_ sender: UILabel) {
