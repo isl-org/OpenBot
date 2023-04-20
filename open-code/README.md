@@ -1,13 +1,12 @@
-<img src="../docs/images/playground_banner.png" alt="banner" width="100%"/>
+<img src="../docs/images/playground_banner.png" alt="banner">
 
 # OpenBot Playground
 
-OpenBot Playground is open source project, to play with the components of OpenBot into Block Coding format.
-In playground, you can create your set of instructions that you want to give to the OpenBot robot, and it follows them.
+OpenBot Playground is a drag and drop platform to support OpenBot application, where anyone can build instructions for the robot.
 
 ## Getting Started
 
-You can run this application directly from the [Link](http://openbot-playground.com "Link").
+You can run this application directly from the [Link](http://openbot.itinker.io "Link").
 
 or you can run it locally via creating a local copy of the project.
 To achieve this, navigate into the `openBot/open-code` folder, set environment variables and run application.
@@ -18,13 +17,13 @@ create a `.env` file inside `open-code` folder.
 To run this project, you will need to add the following environment variables to your .env file.
 
 ```
-REACT_APP_FIREBASE_API_KEY=AIzaSyCITlkh63TnSnJQBlzqbJwwtBDr_w3e1Pg
-REACT_APP_AUTH_DOMAIN=opencode-openbot.firebaseapp.com
-REACT_APP_PROJECT_ID=opencode-openbot
-REACT_APP_STORAGE_BUCKET=opencode-openbot.appspot.com
-REACT_APP_MESSAGING_SENDER_ID=955078484078
-REACT_APP_APP_ID=1:955078484078:web:64774c120f9d3a0f65867f
-REACT_APP_MEASUREMENT_ID=G-SZJL3F5QXF 
+REACT_APP_FIREBASE_API_KEY=<REACT_APP_FIREBASE_API_KEY>
+REACT_APP_AUTH_DOMAIN=<REACT_APP_AUTH_DOMAIN>
+REACT_APP_PROJECT_ID=<REACT_APP_PROJECT_ID>
+REACT_APP_STORAGE_BUCKET=<REACT_APP_STORAGE_BUCKET>
+REACT_APP_MESSAGING_SENDER_ID=<REACT_APP_MESSAGING_SENDER_ID>
+REACT_APP_APP_ID=<REACT_APP_APP_ID>
+REACT_APP_MEASUREMENT_ID=<REACT_APP_MEASUREMENT_ID>
 GENERATE_SOURCEMAP=false
 ```
 
