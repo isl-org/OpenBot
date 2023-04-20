@@ -41,6 +41,18 @@
     background: url("../../assets/images/icon/blockly-icons.png") no-repeat -48px -16px;
 }
 
+.sensorsHeading>.blocklyFlyoutLabelText {
+    font-size: 1.4rem !important;
+    fill: white !important;
+    font-family: Gilroy-Bold, sans-serif;
+}
+
+.Heading>.blocklyFlyoutLabelText {
+    font-size: 1.4rem !important;
+    fill: white !important;
+    font-family: Gilroy-Bold, sans-serif;
+}
+
 
 @media (max-width: 768px) {
     .blocklyTreeLabel{
@@ -63,6 +75,12 @@
         position: relative;
         left: 0;
         bottom: 10px;
+    }
+    .sensorsHeading>.blocklyFlyoutLabelText {
+        font-size: 1.2rem !important;
+    }
+    .Heading>.blocklyFlyoutLabelText {
+        font-size: 1.2rem !important;
     }
 }
 

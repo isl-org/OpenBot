@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import Blockly from "blockly/core";
-import {UploadBarStyle} from "./styles";
 import styles from "./style.module.css"
 import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
@@ -59,7 +58,6 @@ export const BottomBar = () => {
             setGenerateCode(!generate);
             let updatedCode = code + Constants.endCode;
             console.log("updatedCode::::", updatedCode);
-
             uploadToGoogleDrive(updatedCode, "js").then((res) => {
                 console.log("res::",res)
                     setCode(res);
@@ -190,9 +188,9 @@ function GenerateCodeButton(params) {
 
     return (
         <div className={styles.iconMargin} onClick={generateCode}>
-            <button className={styles.uploadCodeButton}
-                    style={{opacity: buttonSelected === "uploadCode" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
-                    name={"uploadCode"} onClick={clickedButton}>
+            <button
+                className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
+                name={"uploadCode"} onClick={clickedButton}>
                 {!isMobile && <span className={styles.leftButton + " " + styles.iconMargin}>Generate Code</span>}
                 <img alt={""}
                      className={styles.iconDiv + " " + styles.iconMargin} src={Images.uploadIcon}/>
@@ -211,14 +209,12 @@ function UndoRedo(params) {
         <div className={styles.buttonMargin + " " + styles.iconMargin}>
             <button
                 onClick={clickedButton}
-                className={styles.buttonStyle + " " + styles.minusStyle + " " + styles.borderStyle}
-                style={{opacity: buttonSelected === "undo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
+                className={`${styles.buttonStyle} ${styles.minusStyle} ${styles.borderStyle} ${buttonSelected === "undo" && buttonActive ? styles.buttonColor : ""}`}
                 name={"undo"}>
                 <img alt={""} className={styles.commandSize} src={Images.undoIcon}/>
             </button>
             <button onClick={clickedButton}
-                    className={styles.plusStyle + " " + styles.buttonStyle}
-                    style={{opacity: buttonSelected === "redo" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
+                    className={`${styles.buttonStyle} ${styles.plusStyle} ${buttonSelected === "redo" && buttonActive ? styles.buttonColor : ""}`}
                     name={"redo"}>
                 <img alt={""} className={styles.commandSize} src={Images.redoIcon}/>
             </button>
@@ -380,14 +376,12 @@ function ZoomInOut(params) {
     return (
         <div className={styles.iconMargin}>
             <button onClick={clickedButton}
-                    className={styles.buttonStyle + " " + styles.minusStyle + " " + styles.borderStyle}
-                    style={{opacity: buttonSelected === "minus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
+                    className={`${styles.buttonStyle} ${styles.minusStyle} ${styles.borderStyle} ${buttonSelected === "minus" && buttonActive ? styles.buttonColor : ""}`}
                     name={"minus"}>
                 <span className={styles.operationSize}>-</span>
             </button>
             <button onClick={clickedButton}
-                    className={styles.plusStyle + " " + styles.buttonStyle}
-                    style={{opacity: buttonSelected === "plus" && buttonActive ? UploadBarStyle.buttonColor.opacity : ""}}
+                    className={`${styles.buttonStyle} ${styles.plusStyle} ${buttonSelected === "plus" && buttonActive ? styles.buttonColor : ""}`}
                     name={"plus"}>
                 <span className={styles.operationSize}>+</span>
             </button>

@@ -16,11 +16,13 @@ export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "contro
 
 export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     'base': Blockly.Themes.Classic,
+    'blockStyles': {
+    },
     'componentStyles': {
         'workspaceBackgroundColour': colors.blocklyBackground,
         'toolboxBackgroundColour': colors.blocklyBackground,
         'toolboxForegroundColour': colors.whiteFont,
-        'flyoutBackgroundColour': 'rgba(211, 211, 211, 0.8)',
+        'flyoutBackgroundColour': '#686868',
     },
 });
 
@@ -30,7 +32,7 @@ export const LightTheme = Blockly.Theme.defineTheme('light', {
         'workspaceBackgroundColour': colors.whiteBackground,
         'toolboxBackgroundColour': colors.whiteBackground,
         'toolboxForegroundColour': colors.blackFont,
-        'flyoutBackgroundColour': 'rgba(211, 211, 211, 0.8)',
+        'flyoutBackgroundColour': '#686868',
     },
 });
 

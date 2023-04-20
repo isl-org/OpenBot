@@ -57,8 +57,7 @@ export const NewProject = () => {
  * @constructor
  */
 function CreateNewProject() {
-    const {theme} = useContext(ThemeContext);
-
+    const {theme} = useContext(ThemeContext)
     return (
         <div className={styles.MessageIcon}>
             <img alt="Triangle" className={styles.TriangleIcon} src={theme === 'dark' ? DarkTriangle : Triangle}/>

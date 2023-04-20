@@ -27,6 +27,7 @@ export class FieldToggle extends Blockly.Field {
         super.showEditor_();
     }
 
+    //set the text value to the selected state
     setValue(newValue) {
         this.state_ = !!newValue;
         const text = this.state_ ? this.onText_ : this.offText_;
@@ -34,6 +35,7 @@ export class FieldToggle extends Blockly.Field {
         this.updateDisplay_();
     }
 
+    //update the value of state after clicking on element
     updateDisplay_() {
         if (this.textElement_) {
             this.textElement_.firstChild.nodeValue = this.state_ ? this.onText_ : this.offText_;
@@ -49,15 +51,9 @@ export class FieldToggle extends Blockly.Field {
 
 }
 
+
+//registering the custom field "field_toggle"
 Blockly.fieldRegistry.register('field_toggle', FieldToggle);
-
-FieldToggle.fromJson = function(options) {
-    const state = (options['state'] === 'true');
-    const onText = options['onText'] || 'ON';
-    const offText = options['offText'] || 'OFF';
-    return new FieldToggle(state, onText, offText);
-};
-
 
 
 

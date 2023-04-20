@@ -1,8 +1,8 @@
 import React from 'react';
-import {Block, Category, Field, Shadow, Value} from "../index";
+import {Block, Button, Category, Field, Label, Shadow, Value} from "../index";
 import {controlsBlocks, loopBlocks} from "../blocks/generalBlocks";
 import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
-import '../generator/generator';
+import '../generator/javascriptGenerator';
 import '../blocks/customblocks';
 
 /**
@@ -15,6 +15,7 @@ export const Toolbox = (props) => {
     return (
         <>
             <Category name="Control" colour={"#567AE4"}>
+                <Label text="Control" web-class="Heading"></Label>
                 <Block type="controls_if" gap="8">
                     <Value name="IF0">
                         <Shadow type="logic_boolean">
@@ -25,7 +26,9 @@ export const Toolbox = (props) => {
                 {controlBlocksType.map((type, index) => {
                     return controlsBlocks(type, index)
                 })}
-
+                <Block type="wait"/>
+                <Block type="start"/>
+                <Block type="forever"/>
                 <Block type="logic_compare" gap="8">
                     <Value name="A">
                         <Shadow type="math_number">
@@ -38,18 +41,14 @@ export const Toolbox = (props) => {
                         </Shadow>
                     </Value>
                 </Block>
-
-                <Block type="start"/>
-                <Block type="forever"/>
-
             </Category>
 
-            <Category name="Loops" colour={"#C54E30"}>
 
+            <Category name="Loops" colour={"#C54E30"}>
+                <Label text="Loops" web-class="Heading"></Label>
                 {loopBlocksType.map((type, index) => {
                     return loopBlocks(type, index)
                 })}
-                xx
                 <Block type="controls_for">
                     <Value name="FROM">
                         <Shadow type="math_number">
@@ -70,6 +69,7 @@ export const Toolbox = (props) => {
             </Category>
 
             <Category name="Operators" colour={"#8156C9"}>
+                <Label text="Operators" web-class="Heading"></Label>
                 <Block type="math_arithmetic"/>,
                 <Block type="math_number"/>,
                 <Block type="math_modulo"/>,
@@ -82,97 +82,64 @@ export const Toolbox = (props) => {
             </Category>
 
             <Category name="Variables" colour={"#D030BA"}>
-
+                <Label text="Variables" web-class="Heading"></Label>
+                {/*<Button text="create new variable.." callbackKey="customVariableButton"></Button>*/}
                 <Block type="variables_set"/>
                 <Block type="variables_get"/>
                 <Block type="math_change"/>
                 <Block type="logic_boolean"/>
                 <Block type="logic_null"/>
-                {/*<Block type="math_number"/>*/}
+                <Block type="math_number"/>
                 <Block type="string"/>
                 <Block type="text"/>
-
-                <Block type="variables_set" gap="8">
-                    <Field name="VAR"></Field>
-                    <Value name="VALUE">
-                        <Block type="lists_create_with">
-                            <Value name="ADD0">
-                                <Shadow type="math_number">
-                                    <Field name="NUM">0</Field>
-                                </Shadow>
-                            </Value>
-                            <Value name="ADD1">
-                                <Shadow type="math_number">
-                                    <Field name="NUM">1</Field>
-                                </Shadow>
-                            </Value>
-                        </Block>
-                    </Value>
-                </Block>
             </Category>
 
-            <Category name="Indicator" colour={"#506481"}>
-                <Block type="leftIndicator_led"/>
-                <Block type="rightIndicator_led"/>
-                <Block type="indicatorStatus"/>
-            </Category>
-
-            <Category name="LED" colour={"#61A8EC"}>
+            <Category name="Lights" colour={"#506481"}>
+                <Label text="Lights" web-class="Heading"></Label>
+                <Block type="indicators"/>
                 <Block type="brightness"/>
+                <Block type="brightnessHighOrLow"/>
             </Category>
 
             <Category name="Controller" colour={"#8156C9"}>
-                <Block type="controllerMode">
-                    <Field  type="dropdown" shape="ellipse"/>
-                </Block>
+                <Label text="Controller" web-class="Heading"></Label>
+                <Block type="controllerMode"></Block>
                 <Block type="driveModeControls"/>
             </Category>
 
-            <Category name="Phone Sensors" colour={"C26F87"}>
-                <Block type="gyroscope_reading"/>
-                <Block type="acceleration_reading"/>
-                <Block type="magnetic_reading"/>
-            </Category>
-
             <Category name="Sound" colour={"#5BBC73"}>
-                <Block type="soundIs"/>,
+                <Label text="Sound" web-class="Heading"></Label>
                 <Block type="soundType"/>,
                 <Block type="soundMode">
                 </Block>,
             </Category>
 
             <Category name="Sensors" colour={"#61A8EC"}>
+                <Label text="Phone Sensors" web-class="sensorsHeading"></Label>
+                <Block type="gyroscope_reading"/>
+                <Block type="acceleration_reading"/>
+                <Block type="magnetic_reading"/>
+                <Label text="Car Sensors" web-class="sensorsHeading"></Label>
                 <Block type="bumper"/>
                 <Block type="sonarReading"/>
                 <Block type="speedReading"/>
                 <Block type="voltageDividerReading"/>
                 <Block type="wheelOdometerSensors"/>
-                <Block type="indicatorLedSensor"/>
-                <Block type="frontLedSensor"/>
-                <Block type="backLedSensor"/>
-                <Block type="ledStatusSensor"/>
-            </Category>
-
-            <Category name="Speed" colour={"#567AE4"}>
-                <Block type="speedSlow"/>
-                <Block type="speedMedium"/>
-                <Block type="speedHigh"/>
             </Category>
 
             <Category name="Movement" colour={"#DA4B5D"}>
+                <Label text="Movement" web-class="Heading"></Label>
+                <Block type="speedControl"/>
                 <Block type="forward&BackwardAtSpeed"/>
-                <Block type="forward&BackwardAtSpeedForTime"/>
                 <Block type="left&RightAtSpeed"/>
                 <Block type="moveLeft&Right"/>
-                <Block type="moveLeft&RightForTime"/>
                 {/*<Block type="movementCircular"/>*/}
                 {/*<Block type="circularAtSpeed"/>*/}
                 {/*<Block type="circularAtSpeedForTime"/>*/}
-                <Block type="wait"/>
-                <Block type="speedAdjustment"/>
+                {/*<Block type="speedAdjustment"/>*/}
                 <Block type="movementStop"/>
-                <Block type="motorDirection"/>
-                <Block type="motorStop"/>
+                {/*<Block type="motorDirection"/>*/}
+                {/*<Block type="motorStop"/>*/}
             </Category>
         </>
     );

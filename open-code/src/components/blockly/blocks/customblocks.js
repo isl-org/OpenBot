@@ -7,6 +7,11 @@ import '@blockly/block-plus-minus';
 import {Images} from "../../../utils/images";
 import "./field_toggle";
 
+/**
+ * Defining blocks and their behaviour
+ * @type {{previousStatement: null, nextStatement: null, type: string, message0: string, args0: [{date: string, name: string, type: string}]}}
+ */
+
 let reactDateField = {
     "type": "test_react_date_field",
     "message0": "date field: %1",
@@ -46,57 +51,6 @@ Blockly.Blocks['test_react_field'] = {
     init: function () {
         this.jsonInit(testReactField);
         this.setStyle('loop_blocks');
-    }
-};
-
-
-Blockly.Blocks["append_text"] = {
-    init: function () {
-        this.setColour(230)
-        this.appendDummyInput()
-            .appendField('to')
-            .appendField(new Blockly.FieldDropdown([
-                ['x', 'ITEM1'],
-                ['item', 'ITEM2'],
-                ['Delete the x variable', 'ITEM3']
-            ]), "ITEMS")
-            .appendField('append text')
-            .appendField(new Blockly.FieldTextInput("default text"), "VARIABLE")
-        this.setPreviousStatement(true);
-        this.setNextStatement(true, 'Action')
-    }
-};
-
-
-Blockly.Blocks["sensebox_display_clearDisplay"] = {
-    init: function () {
-        this.appendDummyInput().appendField(
-            Blockly.Msg.senseBox_display_clearDisplay
-        );
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setTooltip(Blockly.Msg.senseBox_display_clearDisplay_tooltip);
-        this.setHelpUrl(Blockly.Msg.senseBox_display_helpurl);
-    },
-};
-
-Blockly.Blocks['controls_repeat_ext'] = {
-    init: function () {
-        this.jsonInit({
-            "message0": "repeat %1 times",
-            "args0": [
-                {
-                    "type": "input_value",
-                    "name": "TIMES",
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "tooltip": "Do some statements several times.",
-            "helpUrl": "https://en.wikipedia.org/wiki/For_loop"
-        });
-        this.appendStatementInput('DO')
-            .appendField("do");
     }
 };
 
@@ -189,41 +143,9 @@ Blockly.Blocks["wait"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
+            "colour": 210,
             "tooltip": "",
             "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["soundIs"] = {
-    init: function () {
-        this.jsonInit({
-
-            "type": "block_type",
-            "message0": "sound on %1",
-            "args0": [
-                {
-                    "type": "field_dropdown",
-                    "name": "DROPDOWN",
-                    "options": [
-                        [
-                            "true",
-                            "sound_on"
-                        ],
-                        [
-                            "false",
-                            "sound_off"
-                        ]
-                    ]
-                },
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 345,
-            "tooltip": "",
-            "helpUrl": "",
-
         });
     }
 };
@@ -232,7 +154,7 @@ Blockly.Blocks["soundType"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "sound speed %1",
+            "message0": "play sound speed %1",
             "args0": [
                 {
                     "type": "field_dropdown",
@@ -240,15 +162,15 @@ Blockly.Blocks["soundType"] = {
                     "options": [
                         [
                             "slow",
-                            "slow_mode"
+                            "slow"
                         ],
                         [
                             "medium",
-                            "medium_mode"
+                            "medium"
                         ],
                         [
                             "fast",
-                            "fast_mode"
+                            "fast"
                         ]
                     ]
                 },
@@ -266,7 +188,7 @@ Blockly.Blocks["soundMode"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "sound mode %1",
+            "message0": "play sound mode %1",
             "args0": [
                 {
                     "type": "field_dropdown",
@@ -328,48 +250,6 @@ Blockly.Blocks["forward&BackwardAtSpeed"] = {
             "previousStatement": null,
             "nextStatement": null,
             "colour": 195,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["forward&BackwardAtSpeedForTime"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "move %1 at speed %2 for %3 ms",
-            "args0": [
-                {
-                    "type": "field_dropdown",
-                    "name": "select_direction",
-                    "options": [
-                        [
-                            "Forward",
-                            "Forward_direction"
-                        ],
-                        [
-                            "Backward",
-                            "Backward_direction"
-                        ]
-                    ]
-                },
-                {
-                    "type": "field_number",
-                    "name": "speed_value",
-                    "value": 192,
-                    "min": -255,
-                    "max": 255
-                },
-                {
-                    "type": "field_number",
-                    "name": "time",
-                    "value": 4000
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
             "tooltip": "",
             "helpUrl": ""
         });
@@ -453,51 +333,6 @@ Blockly.Blocks["moveLeft&Right"] = {
     }
 };
 
-Blockly.Blocks["moveLeft&RightForTime"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "move %1 %2 %3 %4 for %5 ms",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "left_name",
-                    "text": "left at"
-                },
-                {
-                    "type": "field_number",
-                    "name": "left_distance",
-                    "value": 192,
-                    "min": -255,
-                    "max": 255
-                },
-                {
-                    "type": "field_label_serializable",
-                    "name": "right_name",
-                    "text": "and right at"
-                },
-                {
-                    "type": "field_number",
-                    "name": "right_distance",
-                    "value": 192,
-                    "min": -255,
-                    "max": 255
-                },
-                {
-                    "type": "field_number",
-                    "name": "time",
-                    "value": 3000,
-                    "min": 0
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 195,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
 
 Blockly.Blocks["movementCircular"] = {
     init: function () {
@@ -652,14 +487,9 @@ Blockly.Blocks["voltageDividerReading"] = {
 Blockly.Blocks["wheelOdometerSensors"] = {
     init: function () {
         this.jsonInit({
-            "type": "block_type",
-            "message0": "%1 %2",
+            "type": "ellipse_block",
+            "message0": " wheel odometry %1 ",
             "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "sensors",
-                    "text": "wheel odometry"
-                },
                 {
                     "type": "field_dropdown",
                     "name": "wheel_sensors",
@@ -675,30 +505,7 @@ Blockly.Blocks["wheelOdometerSensors"] = {
                     ]
                 }
             ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 240,
-            "tooltip": "",
-            "helpUrl": "",
-        });
-    }
-};
-
-
-Blockly.Blocks["indicatorLedSensor"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "%1",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "indicator_led",
-                    "text": "indicator led reading"
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
+            "output": "string",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -706,68 +513,6 @@ Blockly.Blocks["indicatorLedSensor"] = {
     }
 };
 
-Blockly.Blocks["frontLedSensor"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "%1",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "front_led",
-                    "text": "front led reading"
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 240,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["backLedSensor"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "%1",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "back_led",
-                    "text": "back led reading"
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 240,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["ledStatusSensor"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "%1",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "led_status",
-                    "text": "led status reading"
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 240,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
 
 Blockly.Blocks["start"] = {
     init: function () {
@@ -815,101 +560,28 @@ Blockly.Blocks["forever"] = {
     }
 };
 
-Blockly.Blocks["leftIndicator_led"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "left indicator %1",
-            "args0": [
-                {
-                    "type": "field_toggle",
-                    "name": "TOGGLE_STATE",
-                    "state": true,
-                    "onText": "ON",
-                    "offText": "OFF"
-                }
-            ],
-            "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["rightIndicator_led"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "right indicator %1",
-            "args0": [
-                {
-                    "type": "field_toggle",
-                    "name": "TOGGLE_STATE",
-                    "state": true,
-                    "onText": "ON",
-                    "offText": "OFF"
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["indicatorStatus"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "Indicator %1",
-            "args0": [
-                {
-                    "type": "field_toggle",
-                    "name": "TOGGLE_STATE",
-                    "state": true,
-                    "onText": "ON",
-                    "offText": "OFF"
-                }
-            ],
-            "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
 
 Blockly.Blocks["gyroscope_reading"] = {
     init: function () {
         this.jsonInit({
-            "type": "block_type",
+            "type": "ellipse_block",
             "message0": "gyroscope reading",
-            "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
+            "output": "string",
+            "colour": 240,
             "tooltip": "",
             "helpUrl": ""
         });
     }
 };
 
+
 Blockly.Blocks["acceleration_reading"] = {
     init: function () {
         this.jsonInit({
-            "type": "block_type",
+            "type": "ellipse_block",
             "message0": "acceleration reading",
-            "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
+            "output": "string",
+            "colour": 240,
             "tooltip": "",
             "helpUrl": ""
         });
@@ -919,70 +591,55 @@ Blockly.Blocks["acceleration_reading"] = {
 Blockly.Blocks["magnetic_reading"] = {
     init: function () {
         this.jsonInit({
-            "type": "block_type",
+            "type": "ellipse_block",
             "message0": "magnetic reading",
-            "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
+            "output": "string",
+            "colour": 240,
             "tooltip": "",
             "helpUrl": ""
         });
     }
 };
 
-
-Blockly.Blocks["speedSlow"] = {
+Blockly.Blocks["speedControl"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "change speed to slow",
-            "inputsInline": true,
+            "message0": "set speed to %1",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "type",
+                    "options": [
+                        [
+                            "slow",
+                            "slow"
+                        ],
+                        [
+                            "medium",
+                            "medium"
+                        ],
+                        [
+                            "fast",
+                            "fast"
+                        ]
+                    ]
+                }
+            ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": "",
-        });
-    }
-};
-
-Blockly.Blocks["speedMedium"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "change speed to medium",
-            "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["speedHigh"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "change speed to high",
-            "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
+            "colour": 195,
             "tooltip": "",
             "helpUrl": ""
         });
     }
 };
-
 
 Blockly.Blocks["controllerMode"] = {
     init: function () {
         this.jsonInit({
                 "type": "block_type",
-                "message0": "controller switched to %1",
+                "message0": "switch controller to %1",
                 "args0": [
                     {
                         "type": "field_dropdown",
@@ -1014,7 +671,7 @@ Blockly.Blocks["driveModeControls"] = {
     init: function () {
         this.jsonInit({
                 "type": "block_type",
-                "message0": "drive mode switched to %1",
+                "message0": "switch drive mode to %1",
                 "args0": [
                     {
                         "type": "field_dropdown",
@@ -1093,15 +750,14 @@ Blockly.Blocks["motorStop"] = {
     }
 };
 
+
 Blockly.Blocks["bumper"] = {
     init: function () {
         this.jsonInit({
-            "type": "block_type",
+            "type": "ellipse_block",
             "message0": "check if bumper collided with an obstacle",
-            "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
+            "output": "string",
+            "colour": 240,
             "tooltip": "",
             "helpUrl": ""
         });
@@ -1114,7 +770,7 @@ Blockly.Blocks["brightness"] = {
         this.jsonInit({
 
             "type": "block_type",
-            "message0": "brightness of tail and head LEDs :  %1",
+            "message0": "set brightness of tail and head LEDs %1",
             "args0": [
                 {
                     "type": "field_slider",
@@ -1138,7 +794,7 @@ Blockly.Blocks["string"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "%1",
+            "message0": "sensor input %1",
             "args0": [
                 {
                     "type": "field_number",
@@ -1147,7 +803,7 @@ Blockly.Blocks["string"] = {
                 }
             ],
             "output": "string",
-            "colour": 230,
+            "colour": 330,
             "tooltip": "",
             "helpUrl": ""
         });
@@ -1178,4 +834,65 @@ Blockly.Blocks["speedAdjustment"] = {
     }
 };
 
+Blockly.Blocks["indicators"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "turn %1 indicator %2",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "side",
+                    "options": [
+                        [
+                            "left",
+                            "left"
+                        ],
+                        [
+                            "right",
+                            "right"
+                        ]
+                    ]
+                },
+                {
+                    "type": "field_toggle",
+                    "name": "TOGGLE_STATE",
+                    "state": true,
+                    "onText": "ON",
+                    "offText": "OFF"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+
+        });
+    }
+};
+
+
+Blockly.Blocks["brightnessHighOrLow"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "turn LED brightness %1",
+            "args0": [
+                {
+                    "type": "field_toggle",
+                    "name": "TOGGLE_STATE",
+                    "state": true,
+                    "onText": "ON",
+                    "offText": "OFF"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
 

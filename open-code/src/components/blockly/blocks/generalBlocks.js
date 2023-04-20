@@ -1,6 +1,6 @@
 import {Block, Field, Shadow, Value} from "../index";
 import React from "react";
-import './customblocks'
+import './customblocks';
 
 export const controlsBlocks = (type, index) => {
     return <Block key={index} type={type}/>

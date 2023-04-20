@@ -37,17 +37,19 @@ function BlocklyComponent(props) {
     const uniqueId = currentProjectId ? currentProjectId : nanoid()    // Generate a unique ID for the workspace if it doesn't exist
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-
     // Save workspace code to local storage when workspace changes
     const handleWorkspaceChange = useCallback(() => {
         setDrawer(false);
         if (projectName !== undefined) {
             updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
         }
+
+
         // if (onWorkspaceChange) {
         //     onWorkspaceChange();
         // }
     }, [projectName, uniqueId, fileId, folderId, setDrawer, onWorkspaceChange]);
+
 
     useEffect(() => {
         // Create the primary workspace instance
@@ -59,6 +61,7 @@ function BlocklyComponent(props) {
         });
 
         // Set the zoom level for mobile devices
+        //decreased size of blocks in mobile view
         const zoomLevel = 0.7;
         if (isMobile) {
             primaryWorkspace.current.setScale(zoomLevel);
@@ -74,6 +77,8 @@ function BlocklyComponent(props) {
 
         // Add change listener to the workspace and disable orphaned blocks
         primaryWorkspace.current.addChangeListener(handleWorkspaceChange);
+
+        //blocks who are not attach to start or forever gets disabled
         primaryWorkspace.current.addChangeListener(Blockly.Events.disableOrphans);
 
         // Load XML code into the workspace if it exists, otherwise load initial XML code
@@ -87,7 +92,7 @@ function BlocklyComponent(props) {
         return () => {
             primaryWorkspace.current.dispose();
         }
-    }, [theme, toolbox, blocklyDiv, props]);
+    }, [theme, toolbox, blocklyDiv, props,]);
 
     // Return the blockly div and hidden toolbox
     return (
