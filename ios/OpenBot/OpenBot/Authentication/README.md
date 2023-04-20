@@ -95,12 +95,16 @@ Run your app and check the console output. If you see "User is signed in with ui
 
 Some common issues that may occur during the Firebase configuration process and their solutions:
 
-    1. CocoaPods installation errors: If you encounter issues during the CocoaPods installation, such as pod install failing to run or not installing the correct Firebase SDK version, try the following solutions:
+```shell
+1. CocoaPods installation errors: If you encounter issues during the CocoaPods installation, such as pod install failing to run or not installing the correct Firebase SDK version, try the following solutions:
+```
 - Update your CocoaPods version by running sudo gem install cocoapods.
 - Delete the Podfile.lock file and run pod install again.
 - Make sure you have added the Firebase SDK pod to your Podfile correctly, using the exact version specified in the Firebase Console.
 
-2. **Firebase configuration errors: If you are unable to configure Firebase correctly, such as not being able to initialize Firebase in your app, try the following solutions:**
+```shell
+2. Firebase configuration errors: If you are unable to configure Firebase correctly, such as not being able to initialize Firebase in your app, try the following solutions:
+```
 
 - Double-check that you have followed all the steps in the "Set up the iOS Project" section of this document correctly.
 - Make sure you have added the Firebase configuration file (GoogleService-Info.plist) to your Xcode project correctly.
