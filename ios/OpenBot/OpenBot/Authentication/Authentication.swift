@@ -65,10 +65,10 @@ class Authentication {
             let credential = GoogleAuthProvider.credential(withIDToken: idToken!,
                     accessToken: user?.accessToken.tokenString ?? "")
             Auth.auth().signIn(with: credential) { result, error in
-                print("hello result",result?.user.email)
+                print("hello result", result?.user.email)
             }
 
-            print("credential ",credential);
+            print("credential ", credential);
             print("Google User ID: \(userId)")
             let userIdToken = user?.accessToken
             print("Google ID Token: \(userIdToken?.tokenString)")
@@ -156,9 +156,9 @@ class Authentication {
             return
         }
         let scopes = googleSignIn.currentUser?.grantedScopes
-        print("inside getFolder access are",scopes);
+        print("inside getFolder access are", scopes);
         self.getAllFoldersInDrive(accessToken: accessToken) { files, error in
-            if let files = files{
+            if let files = files {
                 print("files are ", files);
             }
             if let error = error {
@@ -175,7 +175,7 @@ class Authentication {
         query.q = "mimeType='application/vnd.google-apps.folder' and trashed=false or name='Results'"
         query.fields = "nextPageToken, files(id, name, createdTime)"
         query.spaces = "drive"
-        print("services  is :",service)
+        print("services  is :", service)
         service.executeQuery(query) { (ticket, result, error) in
 
             if let error = error {
