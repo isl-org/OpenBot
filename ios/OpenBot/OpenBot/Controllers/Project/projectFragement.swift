@@ -14,6 +14,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     let signInView: UIView = UIView(frame: UIScreen.main.bounds)
     var allProjects: [ProjectItem] = [];
 
+
     /**
        Function calls after view will loaded.
     */
@@ -24,6 +25,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createPleaseSignInLabel();
         createSignInBtn();
         authentication.getAllFolders();
+        NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
 //        self.getFilesInFolder(folderId: "1SnBn8E8W33TU5fBbih47NW1ngLjoF3_N") { files, error in
 //            if let files = files {
 //                print("files are : ",files);
@@ -83,6 +85,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     func createSignInBtn() {
         let signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: height / 2 + 60, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
         signInView.addSubview(signInBtn);
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(signIn))
+        signInBtn.isUserInteractionEnabled = true
+        signInBtn.addGestureRecognizer(tapGesture)
     }
 
     /**
@@ -174,6 +179,13 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
     }
 
+    @objc func signIn(){
+        Authentication.init()
+    }
+
+    @objc func  googleSignIn(_ notification: Notification){
+       updateViewsVisibility()
+    }
 
 
 }
