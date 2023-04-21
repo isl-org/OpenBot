@@ -553,13 +553,6 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
-//        MyNavigationController.shared.popViewController(animated: false);
-//        let homepageController = (storyboard?.instantiateViewController(withIdentifier: "homePage"))!
-//        let profileController = (storyboard?.instantiateViewController(withIdentifier: "profileController"))!
-//        let projectController = (storyboard?.instantiateViewController(withIdentifier: "projectsController"))!
-//        tabBarController?.viewControllers = [homepageController,profileController,projectController]
-
-
     }
 
     override func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {

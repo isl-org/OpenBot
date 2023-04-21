@@ -29,7 +29,7 @@ class scannerFragment: CameraController {
         createScannerBorder()
         cameraView.frame = CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230)
         initializeCamera()
-        view.addSubview(cameraView);tat
+        view.addSubview(cameraView);
         createShadowSheet()
     }
 
