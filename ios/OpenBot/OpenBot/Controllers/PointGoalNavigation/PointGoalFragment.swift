@@ -43,6 +43,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
         super.viewDidLoad()
         sceneView = ARSCNView(frame: view.bounds)
         sceneView.debugOptions = []
+        setupNavigationBarItem()
         view.addSubview(sceneView)
         let scene = SCNScene()
         sceneView.scene = scene
@@ -64,6 +65,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
+        sendControl(control: Control());
     }
 
     /***
@@ -319,7 +321,6 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     ///   - pixelBuffer: pixelBuffer from camera
     ///   - position: position of camera
     func processPixelBuffer(_ pixelBuffer: CVPixelBuffer, _ currentPosition: SCNNode) {
-
         guard !isNavQueueBusy else {
             return
         }
@@ -465,13 +466,25 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     /// - Parameter control:
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = control.getLeft() * gameController.selectedSpeedMode.rawValue
-            let right = control.getRight() * gameController.selectedSpeedMode.rawValue
+            let left = control.getLeft() * SpeedMode.NORMAL.rawValue
+            let right = control.getRight() * SpeedMode.NORMAL.rawValue
             vehicleControl = control
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)))
             NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
         }
+    }
+
+    func setupNavigationBarItem() {
+        if UIImage(named: "back") != nil {
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.navigation, target: self, action: #selector(back(sender:)), titleColor: Colors.navigationColor ?? .white)
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+    }
+
+    @objc func back(sender: UIBarButtonItem) {
+        _ = navigationController?.popViewController(animated: true)
     }
 }
 

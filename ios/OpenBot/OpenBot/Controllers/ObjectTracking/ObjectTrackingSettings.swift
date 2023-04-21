@@ -160,17 +160,34 @@ class ObjectTrackingSettings: UIView {
 
     /// function to create the bluetooth button
     func createBluetoothIcon() {
+        let bluetoothIconView = UIView();
+        bluetoothIconView.frame.origin = CGPoint(x: width - adapted(dimensionSize: 85, to: .height), y: adapted(dimensionSize: 10, to: .height));
+        bluetoothIconView.frame.size = CGSize(width: 40, height: 50);
+        addSubview(bluetoothIconView);
         if (isBluetoothConnected) {
-            bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected!, x: 5, y: 15, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         } else {
-            bluetoothIcon = createIcons(iconImg: Images.bluetoothDisconnected!, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -adapted(dimensionSize: 60, to: .height), x: 24.5, y: 21, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            bluetoothIcon = createIcons(iconImg: Images.bluetoothDisconnected!, x: 5, y: 15, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         }
+        bluetoothIconView.addSubview(bluetoothIcon);
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ble(_:)))
+        bluetoothIconView.isUserInteractionEnabled = true
+        bluetoothIconView.addGestureRecognizer(tapGesture)
+
     }
 
     /// function to create the camera button
     func createCameraIcon() {
         if let image = Images.frontCamera {
-            _ = createIcons(iconImg: image, topAnchor: adapted(dimensionSize: 20, to: .height), trailingAnchor: -20, x: 16.5, y: 17.5, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
+            let cameraIconView = UIView();
+            cameraIconView.frame.origin = CGPoint(x: width - adapted(dimensionSize: 50, to: .width), y: adapted(dimensionSize: 20, to: .height));
+            cameraIconView.frame.size = CGSize(width: 50, height: 50);
+            addSubview(cameraIconView)
+            let camera = createIcons(iconImg: image, x: 5, y: 0, size: resized(size: image.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue, action: #selector(switchCamera(_:)))
+            cameraIconView.addSubview(camera);
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(switchCamera(_:)))
+            cameraIconView.isUserInteractionEnabled = true
+            cameraIconView.addGestureRecognizer(tapGesture)
         }
     }
 
@@ -184,17 +201,10 @@ class ObjectTrackingSettings: UIView {
     }
 
     /// function to create the icons UI
-    func createIcons(iconImg: UIImage, topAnchor: CGFloat, trailingAnchor: CGFloat, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) -> UIImageView {
+    func createIcons(iconImg: UIImage, x: CGFloat, y: CGFloat, size: CGSize, backgroundColor: UIColor, action: Selector?) -> UIImageView {
         let iconImage = UIImageView(frame: CGRect(x: x, y: y, width: size.width, height: size.height))
         iconImage.image = iconImg
-        addSubview(iconImage)
-        iconImage.translatesAutoresizingMaskIntoConstraints = false
-        iconImage.topAnchor.constraint(equalTo: self.topAnchor, constant: topAnchor).isActive = true
-        iconImage.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: trailingAnchor).isActive = true
         iconImage.layer.cornerRadius = 30
-        let tapGesture = UITapGestureRecognizer(target: self, action: action)
-        iconImage.isUserInteractionEnabled = true
-        iconImage.addGestureRecognizer(tapGesture)
         return iconImage
     }
 
