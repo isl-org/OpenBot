@@ -55,6 +55,7 @@ export const BottomBar = () => {
             //     primaryWorkspace.current
             // );
 
+
             setGenerateCode(!generate);
             let updatedCode = code + Constants.endCode;
             console.log("updatedCode::::", updatedCode);

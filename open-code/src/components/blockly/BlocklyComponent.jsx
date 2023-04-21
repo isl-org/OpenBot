@@ -44,11 +44,46 @@ function BlocklyComponent(props) {
             updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
         }
 
+    }, []);
 
-        // if (onWorkspaceChange) {
-        //     onWorkspaceChange();
-        // }
-    }, [projectName, uniqueId, fileId, folderId, setDrawer, onWorkspaceChange]);
+    const enableAllChildBlocks = (block) => {
+        if (block) {
+            block.setEnabled(true);
+            const children = block.getChildren();
+            for (let i = 0; i < children.length; i++) {
+                enableAllChildBlocks(children[i]);
+            }
+        }
+    };
+    const disableChildBlocks = (blocks) => {
+        if (blocks.length > 1) {
+            for (let i = 1; i < blocks.length; i++) {
+                blocks[i].setEnabled(false);
+            }
+        }
+    };
+    const handlingBlocks = (event, blockType) => {
+        let existingBlocks = primaryWorkspace.current.getBlocksByType(blockType);
+        if (event.type === Blockly.Events.CREATE && event.blockId) {
+            let block = primaryWorkspace.current.getBlockById(event.blockId);
+            if (block.type === blockType) {
+                disableChildBlocks(existingBlocks);
+            }
+        } else if (event.type === Blockly.Events.DELETE && event.blockId) {
+            if (existingBlocks.length > 0) {
+                existingBlocks[0].setEnabled(true);
+                enableAllChildBlocks(existingBlocks[0]);
+            }
+        }
+    };
+
+    //handling duplicacy for start and forever
+    const handleDuplicateBlocks = useCallback((event) => {
+        const blockTypes = ["start", "forever"];
+        blockTypes.forEach((blockType) => {
+            handlingBlocks(event, blockType);
+        });
+    }, []);
 
 
     useEffect(() => {
@@ -75,11 +110,14 @@ function BlocklyComponent(props) {
             shouldCloseOnEsc: true,
         });
 
-        // Add change listener to the workspace and disable orphaned blocks
+        // Add change listener to the workspace
         primaryWorkspace.current.addChangeListener(handleWorkspaceChange);
 
         //blocks who are not attach to start or forever gets disabled
         primaryWorkspace.current.addChangeListener(Blockly.Events.disableOrphans);
+
+        //handle start and forever duplicate blocks occurrence
+        primaryWorkspace.current.addChangeListener(handleDuplicateBlocks);
 
         // Load XML code into the workspace if it exists, otherwise load initial XML code
         if (currentProjectXml) {
@@ -92,7 +130,7 @@ function BlocklyComponent(props) {
         return () => {
             primaryWorkspace.current.dispose();
         }
-    }, [theme, toolbox, blocklyDiv, props,]);
+    }, [theme, toolbox, blocklyDiv, props]);
 
     // Return the blockly div and hidden toolbox
     return (
