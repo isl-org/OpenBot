@@ -129,7 +129,7 @@ javascriptGenerator['soundMode'] = function (block) {
 
 javascriptGenerator['forward&BackwardAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
-    let number_specified_amount = block.getFieldValue('specified_amount');
+    let number_specified_amount = block.getFieldValue('slider');
 
     function selectMovement() {
         switch (dropdown_direction_type) {
@@ -153,7 +153,7 @@ javascriptGenerator['forward&BackwardAtSpeed'] = function (block) {
 
 javascriptGenerator['left&RightAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
-    let number_specified_amount = block.getFieldValue('specified_amount');
+    let number_specified_amount = block.getFieldValue('slider');
 
     function selectMovement() {
         switch (dropdown_direction_type) {

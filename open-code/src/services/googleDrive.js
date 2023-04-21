@@ -80,9 +80,6 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
     }
 
     const boundary = "foo_bar_baz";
-
-    console.log("fileMetadata", fileMetadata)
-
     const metadataPart = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(fileMetadata)}\r\n`;
     if (fileType === Constants.xml) {
         mediaPart = `--${boundary}\r\nContent-Type: ${fileMetadata.mimeType}\r\n\r\n${data.xmlValue}\r\n`;

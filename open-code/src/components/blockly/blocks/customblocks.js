@@ -240,11 +240,12 @@ Blockly.Blocks["forward&BackwardAtSpeed"] = {
                     ]
                 },
                 {
-                    "type": "field_number",
-                    "name": "specified_amount",
+                    "type": "field_slider",
+                    "name": "slider",
                     "value": 192,
-                    "min": -255,
-                    "max": 255
+                    "min": -255, // Minimum value for the slider
+                    "max": 255 // Maximum value for the slider
+
                 }
             ],
             "previousStatement": null,
@@ -277,11 +278,12 @@ Blockly.Blocks["left&RightAtSpeed"] = {
                     ]
                 },
                 {
-                    "type": "field_number",
-                    "name": "specified_amount",
+                    "type": "field_slider",
+                    "name": "slider",
                     "value": 192,
-                    "min": -255,
-                    "max": 255
+                    "min": -255, // Minimum value for the slider
+                    "max": 255 // Maximum value for the slider
+
                 }
             ],
             "previousStatement": null,
@@ -305,11 +307,12 @@ Blockly.Blocks["moveLeft&Right"] = {
                     "text": "left at"
                 },
                 {
-                    "type": "field_number",
+                    "type": "field_slider",
                     "name": "left_distance",
                     "value": 192,
-                    "min": -255,
-                    "max": 255
+                    "min": -255, // Minimum value for the slider
+                    "max": 255 // Maximum value for the slider
+
                 },
                 {
                     "type": "field_label_serializable",
@@ -317,12 +320,13 @@ Blockly.Blocks["moveLeft&Right"] = {
                     "text": "and right at"
                 },
                 {
-                    "type": "field_number",
+                    "type": "field_slider",
                     "name": "right_distance",
                     "value": 192,
-                    "min": -255,
-                    "max": 255
-                }
+                    "min": -255, // Minimum value for the slider
+                    "max": 255 // Maximum value for the slider
+
+                },
             ],
             "previousStatement": null,
             "nextStatement": null,
@@ -409,7 +413,7 @@ Blockly.Blocks["circularAtSpeedForTime"] = {
                     "name": "time",
                     "value": 3000,
                     "min": 0
-                }
+                },
             ],
             "previousStatement": null,
             "nextStatement": null,
