@@ -6,7 +6,7 @@ import Foundation
 import AVFoundation
 import UIKit
 
-class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate,AVCaptureMetadataOutputObjectsDelegate {
     static let shared: CameraController = CameraController()
     var captureSession: AVCaptureSession!
     var videoOutput: AVCaptureVideoDataOutput!
