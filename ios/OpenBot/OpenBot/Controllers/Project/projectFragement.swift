@@ -26,14 +26,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createSignInBtn();
         authentication.getAllFolders();
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
-//        self.getFilesInFolder(folderId: "1SnBn8E8W33TU5fBbih47NW1ngLjoF3_N") { files, error in
-//            if let files = files {
-//                print("files are : ",files);
-//            }
-//            if let error = error {
-//                print(error)
-//            }
-//        }
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
@@ -56,6 +48,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        authentication.getAllFolders();
         updateViewsVisibility();
     }
 
@@ -153,30 +146,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             signInView.isHidden = false;
         }
 
-    }
-
-    /**
-     Function to find all files inside the drive.
-     - Parameters:
-       - folderId:
-       - completion:
-     */
-    func getFilesInFolder(folderId: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
-        let query = GTLRDriveQuery_FilesList.query()
-        query.q = "'\(folderId)' in parents"
-        query.fields = "nextPageToken, files(id, name, createdTime, modifiedTime, mimeType, size)"
-
-        service.executeQuery(query) { (ticket, result, error) in
-            if let error = error {
-                completion(nil, error)
-                return
-            }
-            guard let files = (result as? GTLRDrive_FileList)?.files else {
-                completion([], nil)
-                return
-            }
-            completion(files, nil)
-        }
     }
 
     @objc func signIn(){

@@ -96,7 +96,6 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        print(tabBarController?.viewControllers)
         DataLogger.shared.deleteZipFileFromDocument()
         viewControllerName = classNameFrom(self)
         if (isBluetoothConnected) {

@@ -20,7 +20,6 @@ class jsEvaluator {
      */
     init(jsCode: String) {
         command = jsCode;
-        print(command);
         initializeJS();
         evaluateJavaScript()
     }
@@ -202,29 +201,8 @@ class jsEvaluator {
          - Parameter control:
          */
         func sendControl(control: Control) {
-           print("actual speed from car -> ", bluetooth.speedometer)
             if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-                var left : Double = 0.0;
-                var right : Double = 0.0;
-                switch gameController.selectedSpeedMode {
-                case .SLOW:
-                    left = Double(control.getLeft()) / Double(gameController.selectedSpeedMode.rawValue);
-                    right = Double(control.getRight()) / Double(gameController.selectedSpeedMode.rawValue);
-                    break;
-                case .NORMAL:
-                    left = Double(control.getLeft()) / Double(gameController.selectedSpeedMode.rawValue);
-                    right = Double(control.getRight()) / Double(gameController.selectedSpeedMode.rawValue);
-                    break;
-                case .FAST:
-                    left = Double(control.getLeft()) / Double(gameController.selectedSpeedMode.rawValue);
-                    right = Double(control.getRight()) / Double(gameController.selectedSpeedMode.rawValue);
-                    break;
-                }
-                print("gamecontroller speed rayvalue -> :", gameController.selectedSpeedMode.rawValue)
-                left = (left * Double(gameController.selectedSpeedMode.rawValue)).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-                right = (right * Double(gameController.selectedSpeedMode.rawValue)).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-                print("left is : ->", left, " right is :-> ", right);
-                bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
+                bluetooth.sendData(payload: "c" + String(control.getLeft()) + "," + String(control.getRight()) + "\n")
             }
         }
 
@@ -232,7 +210,6 @@ class jsEvaluator {
          main function to thread
          */
         override func main() {
-            print("inside main of waitThread")
             jsEvaluator?.semaphore.signal()
         }
 

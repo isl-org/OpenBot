@@ -80,7 +80,6 @@ class Authentication {
             print("Google User Last Name: \(userLastName)")
             let userEmail = user?.profile?.email ?? ""
             print("Google User Email: \(userEmail)")
-
             let googleProfilePicURL = user?.profile?.imageURL(withDimension: 150)?.absoluteString ?? ""
             print("Google Profile Avatar URL: \(googleProfilePicURL)")
             let driveScope = "https://www.googleapis.com/auth/drive.readonly"
@@ -88,14 +87,14 @@ class Authentication {
             print("grantedScopes ", grantedScopes);
             if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
                 // Request additional Drive scope.
-                user?.addScopes([driveScope], presenting: rootViewController)
-               
+//                user?.addScopes([driveScope], presenting: rootViewController)
             }
             self.service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
             self.getAllFoldersInDrive(accessToken: userIdToken?.tokenString ?? "") { files, error in
                 if let files = files {
                     print("all folders are : ", files);
                     let folderId = files[0].identifier;
+//                    let folderId = "1eHMSMTSotwBlOZHTdDXj97BJmlJg9SFe"
                     self.getFilesInFolder(folderId: folderId ?? "") { files, error in
                         if let files = files {
                             print("files are ", files);
@@ -156,7 +155,8 @@ class Authentication {
             print("Access token is nil")
             return
         }
-
+        let scopes = googleSignIn.currentUser?.grantedScopes
+        print("inside getFolder access are",scopes);
         self.getAllFoldersInDrive(accessToken: accessToken) { files, error in
             if let files = files{
                 print("files are ", files);
@@ -169,12 +169,13 @@ class Authentication {
 
 
     private func getAllFoldersInDrive(accessToken: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
+        print("access token is :", accessToken);
         let query = GTLRDriveQuery_FilesList.query()
+        self.service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
         query.q = "mimeType='application/vnd.google-apps.folder' and trashed=false or name='Results'"
         query.fields = "nextPageToken, files(id, name, createdTime)"
         query.spaces = "drive"
-
-
+        print("services  is :",service)
         service.executeQuery(query) { (ticket, result, error) in
 
             if let error = error {
@@ -190,6 +191,7 @@ class Authentication {
             }
         }
     }
+
     func getFilesInFolder(folderId: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         let query = GTLRDriveQuery_FilesList.query()
         query.q = "'\(folderId)' in parents"
