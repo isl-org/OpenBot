@@ -60,7 +60,7 @@ public class DriveProjectsAdapter extends CommonRecyclerViewAdapter<File> {
 
     // Modify the project name to remove the '.js' file extension and truncate it if it is too long.
     String projectNameModified = data.getName().replace(".js", "");
-    if (projectNameModified.length() > 10) {
+    if (projectNameModified.length() > 12) {
       projectNameModified = projectNameModified.substring(0, 10) + "...";
     }
     // Set the text of the project name view to the modified project name.

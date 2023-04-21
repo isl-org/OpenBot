@@ -372,20 +372,44 @@ If a model is active, the inference speed in [ms] will be displayed next to the 
 
 ### Projects Screen
 
-The Projects Tab screen displays a list of your openBot Playground projects if you are signed in with your Google account. You can execute these projects to connect with your openBot, or scan their QR codes by clicking the scanner icon in the top right corner. If you are not signed in, the screen will display a Google Sign-In button and a QR code icon for scanning the QR code of your Playground project. To access the openBot Playground projects, you need to sign in with your Google account and ensure that the account has projects stored on Google Drive. However, if you don't want to sign in, you can still execute your Playground project by scanning its QR code without Google Sign-In.
+The Projects Tab screen displays a list of your openBot Playground projects if you are signed in with your Google account. You can execute these projects to connect with your openBot, or scan their QR codes by clicking the scanner icon in the top right corner. If you are not signed in, the screen will display a Google Sign-In button, but you can still easily scan your project's QR code without signing in. If you get the message `Oops, no project found` on the screen after signing in, make sure that the account has projects stored on Google Drive.
+<p align="left">
+<img src="../../docs/images/projects_tab_screen.gif" alt="Project Screen" width="25%"/>
+<img src="../../docs/images/no_projects_found.jpg" alt="No project screen" width="25%"/>
+</p>
 
 - **Google Drive projects**: To run a Google Drive project, tap on the project you want to execute and wait for the contents of the project file to be read. If the file is successfully retrieved without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Drive file. To resolve this issue, refresh the project screen by pulling down and then repeating the same process.
+
+
 - **Qr code scanner**: To scan the QR code of a Playground project, click on the QR code icon located in the top right corner of the screen. Grant camera access to the app so that it can scan the QR code. Once the code is scanned, wait for the contents of the file to be read. If the file is retrieved successfully without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Drive file. To resolve this issue, generate a new QR code in Playground and repeat the process.
+
+
 - **Executing Project**: If your openBot Playground project runs successfully, a screen with the message `Your code is executing...` will appear.
+
+<p align="left">
+<img src="../../docs/images/google_drive_projects_execute.gif" alt="Google Drive project execute" width="25%"/>
+<img src="../../docs/images/qr_code_scanner_projects_execute.gif" alt="Qr code scanner project execute" width="25%"/>
+</p>
 
 ### Profile Screen
 The `Profile` tab in the app provides different options based on whether the user is signed in or not.
 If the user is not signed in, a `Google Sign-in` button will appear, prompting the user to sign in to their Google account. Once signed in, the user will be able to access their profile and other features.
 If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edit Profile` and `Logout`.
 
+<p>
+<img src="../../docs/images/logged_out_profile_screen.jpg" alt="Logged out profile screen" width="25%"/>
+<img src="../../docs/images/logged_in_profile_screen.jpg" alt="Logged in profile screen" width="25%"/>
+</p>
+
 - **Edit Profile**: Tapping on this button will open a new screen where the user can update their profile information, such as their name and profile picture.
+
+
 - **Logout**: This button allows the user to log out of their account. Tapping on this button will log the user out and return them to the login screen.
 
+<p>
+<img src="../../docs/images/edit_profile_screen.jpg" alt="Edit profile screen" width="25%"/>
+<img src="../../docs/images/logout_dialog_box.jpg" alt="Logout dialog box" width="25%"/>
+</p>
 ## Add your own fragment
 
 Please refer to the [ContributionGuide](ContributionGuide.md) to learn how to add your own fragments to the OpenBot app.

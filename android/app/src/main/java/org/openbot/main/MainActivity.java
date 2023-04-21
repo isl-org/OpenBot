@@ -149,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
           // To update the toolbar icon according to the Fragment.
           Menu menu = toolbar.getMenu();
           if (destination.getId() == R.id.projectsFragment) {
-            menu.findItem(R.id.bluetoothFragment).setVisible(false);
             menu.findItem(R.id.settingsFragment).setVisible(false);
             menu.findItem(R.id.barCodeScannerFragment).setVisible(true);
           } else {

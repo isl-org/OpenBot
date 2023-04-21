@@ -9,10 +9,16 @@ Firebase Google Sign-In Authentication is a feature of the Firebase platform tha
 ### Set up your Firebase project
 
 - Go to the [Firebase Console](https://console.firebase.google.com/) and create a `new project`.
-
+<p>
+<img src="../../../../../../../../docs/images/create_project.jpg" alt="Create project" width="25%"/>
+<img src="../../../../../../../../docs/images/enter_project_name.jpg" alt="Enter project name" width="24%"/>
+<img src="../../../../../../../../docs/images/disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
+</p>
 
 - Add a `new Android app` to your project and follow the instructions to `register your app` with Firebase.
-
+<p>
+<img src="../../../../../../../../docs/images/add_android_app.jpg" alt="Create project" width="25%"/>
+</p>
 
 - When you add a new Android app to your Firebase project, Firebase will ask you to provide the `package name` of your app, along with an optional `SHA-1` fingerprint for the signing certificate used to `sign your app's APK`.
 
@@ -36,11 +42,22 @@ Firebase Google Sign-In Authentication is a feature of the Firebase platform tha
     ```
     This command is similar to the Mac command, but uses a `different path` to locate the debug.keystore file. `%USERPROFILE%` is a system environment variable that points to the current user's profile directory, which contains the `.android` directory where the `debug.keystore` file is located.
 
-
 - Download the `google-services.json` file and `add` it to your app's `app directory`.
 
+<p>
+<img src="../../../../../../../../docs/images/package_name.jpg" alt="Package Name" width="24.7%"/>
+<img src="../../../../../../../../docs/images/google_service_json_file.jpg" alt="Google services json file" width="21.5%"/>
+<img src="../../../../../../../../docs/images/continue_to_console.jpg" alt="Continue to console" width="21%"/>
+</p>
 
 - In the `Firebase Console`, go to the `Authentication section` and `enable` the `Google Sign-In` provider.
+
+<p>
+<img src="../../../../../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="23%"/>
+<img src="../../../../../../../../docs/images/firebase_authentication.jpg" alt="Firebase authentication" width="20%"/>
+<img src="../../../../../../../../docs/images/google_signin.jpg" alt="Google signin" width="28%"/>
+<img src="../../../../../../../../docs/images/google_signin_enable.jpg" alt="Google signin enable" width="15%"/>
+</p>
 
 
 - If you have `skipped the step to add the SHA-1 key` to your Firebase project during the setup process, you can `still add` it later by following these steps:
@@ -52,5 +69,9 @@ Firebase Google Sign-In Authentication is a feature of the Firebase platform tha
   - Enter the `SHA-1` key for your app's signing certificate.
   - Click on `Save` to add the SHA-1 key to your Firebase project.
 
+<p>
+<img src="../../../../../../../../docs/images/gear_icon.jpg" alt="Gear icon" width="30%"/>
+<img src="../../../../../../../../docs/images/add_sha1.jpg" alt="Add SHA1" width="43%"/>
+</p>
 
 - If you have `already implemented Firebase authentication` before adding the key, you may need to `update` your app's `configuration` by `replacing` the `google-services.json` file in your project directory with the `updated` one from your `Firebase console`.
