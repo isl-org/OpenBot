@@ -3,7 +3,7 @@ import BlocklyComponent from "../../components/blockly";
 import {Toolbox} from "../../components/blockly/toolbox/Toolbox";
 import {BottomBar} from "../../components/bottomBar/bottomBar";
 import {Header} from "../../components/navBar/header";
-import {QrDrawer} from "../../components/drower/drower";
+import {QrDrawer} from "../../components/drawer/drawer";
 import {useLocation} from 'react-router-dom';
 import {PathName} from "../../utils/constants";
 

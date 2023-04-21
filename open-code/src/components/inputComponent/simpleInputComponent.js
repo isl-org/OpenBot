@@ -4,6 +4,13 @@ import BlackText from "../fonts/blackText";
 import {ThemeContext} from "../../App";
 import {colors} from "../../utils/color";
 
+
+/**
+ * Simple Input Component :: input field
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export default function SimpleInputComponent(props) {
     const {
         inputTitle,

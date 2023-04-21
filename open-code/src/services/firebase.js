@@ -58,7 +58,7 @@ export async function googleSigIn() {
 }
 
 /**
- * function to log out user from Google account
+ * function to log out user from Goole account
  * @returns {Promise<void>}
  */
 export async function googleSignOut() {

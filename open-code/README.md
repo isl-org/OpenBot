@@ -8,12 +8,12 @@ OpenBot Playground is a drag and drop platform to support OpenBot application, w
 
 You can run this application directly from the [Link](http://openbot.itinker.io "Link").
 
-or you can run it locally via creating a local copy of the project.
+You can also run it locally via creating a local copy of the project.
 To achieve this, navigate into the `openBot/open-code` folder, set environment variables and run application.
 
 ## Environment Variables
 
-create a `.env` file inside `open-code` folder.
+Create a `.env` file inside `open-code` folder.
 To run this project, you will need to add the following environment variables to your .env file.
 
 ```
@@ -54,7 +54,7 @@ npm start
 1. Sync your Google Drive with the OpenBot, and it will automatically save the data on it.
 2. Store the data into local storage.
 3. Scan the output QR directly from the OpenBot application to run the program.
-4. In OpenBot mobile apps, after logging in, you can retrieve saved files from Google Drive and load them with just one
+4. In OpenBot mobile apps, after logging in, you can retrieve the saved files from Google Drive and load them with just one
    click.
 5. Design the instructions for OpenBot with zero code.
 6. Fully responsive design optimized for mobile and tablet browsing.
@@ -65,20 +65,20 @@ npm start
 
 The `OpenBot Playground` starts with homepage that contains following component:
 
-- [Header](#header) : contains change theme and signIn user section
-- [Carousel](#Carousal): explain how the Playground works
+- [Header](#header) : contains the following two sections, change theme and signIn user
+- [Carousel](#Carousal): Explains how the Playground works
 - [Project Section](#project-section) : List of Projects and Create new Project button
 
 ### PlayGround Page
 
 The `PlayGround` page is a key feature of the `OpenBot Playground` platform that provides a variety of coding blocks for
-users to create different types of functionality, such as Control, Loops, Movement, Operators, Sensors, and more.
+users to create different types of functionality, such as Control, Loops, Movement, Operators, Sensors, and many more.
 
-- [Header](#header) : contains project name, help centre, change theme and signIn user section.
+- [Header](#header) : Contains project name, help centre, change theme and signIn user section.
 - [Workspace](#workSpace): Space where users can drag and drop the coding blocks to generate their code, which can be
   converted into both JavaScript and Python.
-- [Playground Bottom Bar](#Playground Bottom Bar) : contains generate code ,upload in drive, zoom in and out , undo,
-  redo buttons.
+- [Playground Bottom Bar](#Playground-Bottom-Bar) : Contain buttons to generate code ,upload in drive, zoom in and out , undo,
+  redo.
 
 ### Header
 
@@ -115,21 +115,21 @@ where you can update your profile image and display name.
 
 
 - #### Playground page additional
-    - The Playground page header retains the same design as the homepage header, while incorporating additional
-      functionalities. In
-      the center, the project name is displayed with a downward arrow, providing options for renaming and deleting the
-      project.
+- The Playground page header retains the same design as the homepage header, while incorporating additional
+functionalities. In
+the center, the project name is displayed with a downward arrow, providing options for renaming and deleting the
+project.
 
-         <p align="left"> 
-         <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_rename_and_delete_options.png" alt="Playground Sign In" width="50%" height="50%" />
-         </p>
+<p align="left">
+<img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_rename_and_delete_options.png" alt="Playground Sign In" width="50%" height="50%" />
+</p>
 
-    - On the right side, a help button has been added, featuring three sections that explain how to effectively
-      drag and drop blocks, save and download project progress, and upload to Drive for seamless collaboration.
+- On the right side, a help button has been added, featuring three sections that explain how to effectively
+drag and drop blocks, save and download project progress, and upload to drive for seamless collaboration.
 
-        <p align="left">
-        <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_help.png" alt="Playground Help" width="50%"/>
-        </p>
+<p align="left">
+<img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_help.png" alt="Playground Help" width="50%"/>
+</p>
 
 #### Carousal
 
@@ -150,6 +150,7 @@ Clicking the 'Create' icon opens a 'Create New Project' popup with an input for 
 Once a suitable name is entered and the 'Create' button or enter is pressed, the project's playground will open. If the
 user enters a name already assigned to another project, the system will automatically generate a unique name by
 appending an integer to the end of the name.
+
 <p align="left">
 <img style="padding-right: 2%;" src="../docs/images/create_new_project.png" alt="Create New Project" width="30%"/>
 <img style="padding-right: 2%;" src="../docs/images/my_projects.png" alt="my Project" width="30%"/>
@@ -162,13 +163,13 @@ To generate code, users can drag and drop coding blocks into the workspace. The 
 JavaScript and Python.
 
 - Blocks can be selected from the left section and dropped into the workspace as needed.
-- To delete a block, users can simply drag it to the trash can icon.
+- To delete a block, users can simply drag it to the trash icon.
 - If a block does not fit into the "Start" or "Forever" block, it will be disabled to prevent errors in the generated
   code.
-- Users can restore a deleted block from the trash can by clicking on it, which will display a list of deleted blocks.
-  They can then drag and drop the desired block from the trash can back into the workspace.
+- Users can restore a deleted block from the trash by clicking on it, which will display a list of deleted blocks.
+  They can then drag and drop the desired block from the trash back into the workspace.
 <p align="left">
-  <img style="padding-right: 2%;" src="../docs/images/playground_workspace.gif" alt="Create New Project" width="50%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_workspace.gif" alt="Create New Project" width="50%"/>
 </p>
 
 
@@ -176,9 +177,9 @@ JavaScript and Python.
 
 - To ensure a successful web experience of the openBot playground using Google Drive, users should fulfill the following
   conditions:
-    - user should not have any other folder in their Google Drive with the same name as the website generated
-      openBot-PlayGround folder.
-    - user should not create same name file in openBot-PlayGround folder.
+  - user should not have any other folder in their Google Drive with the same name as the website generated
+  openBot-PlayGround folder.
+  - user should not create same name file in openBot-PlayGround folder.
   <p align="left">
   <img style="padding-right: 2%; margin-top: 2%;" src="../docs/images/google_drive_folder.png" alt="Generate Code" width="30%"/>
   <img style="padding-right: 2%; margin-top: 2%" src="../docs/images/playground_drive_file.png" alt="Generate Code" width="50%"/>

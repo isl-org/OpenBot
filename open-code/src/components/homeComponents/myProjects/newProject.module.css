@@ -22,6 +22,14 @@
     justify-content: flex-start;
     flex-wrap: wrap;
 }
+.loaderStyle{
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 20px;
+    padding-left: 40%;
+    width: 100%;
+}
 
 .Content {
     margin-top: 22px;

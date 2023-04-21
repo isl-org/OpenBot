@@ -20,7 +20,7 @@ import {useTheme} from "@mui/material";
 
 
 /**
- *
+ * Card
  * @param props
  * @returns {JSX.Element}
  * @constructor
@@ -58,7 +58,7 @@ function Card(props) {
 
     /**
      * fetching blocks xml of selected project on home page
-     * @param projectId
+     * @param projectData - data of the project to be opened
      * @returns {Promise<void>}
      */
     const handleOpenProject = async (projectData) => {
@@ -75,6 +75,7 @@ function Card(props) {
                 setProjectName(findCurrentProject.projectName);
                 openExistingProject();
             } else {
+                // Selected project from local storage
                 const findCurrentProject = getAllLocalProjects().find(currentProject => currentProject.id === projectData.id)
                 setCurrentProjectXml(findCurrentProject.xmlValue);
                 setProjectName(findCurrentProject.projectName);
@@ -86,13 +87,19 @@ function Card(props) {
             console.error(error);
         }
     }
+
+    // Handle click event for deleting a project
     const handleDelete = (event) => {
         event.stopPropagation();
         setDeleteProject(true)
     }
+
+    // Handle click event for closing the pop-up menu
     const handleClickOutside = () => {
         setOpenPopUp(false);
     }
+
+    // Handle click event for renaming a project
     const handleClickBlur = async () => {
         if (!reNameProject || reNameProject <= 0) {
             setReNameProject(props.projectData.projectName)
@@ -104,7 +111,6 @@ function Card(props) {
             });
         }
     }
-
 
     const handleDeleteProject = () => {
         deleteProjectFromStorage(props.projectData.projectName).then(() => {
@@ -183,7 +189,7 @@ export default Card;
 
 
 /**
- *
+ * Renames a project with the given new name, checking for duplicates and ensuring a unique name if necessary.
  * @param reNameProject
  * @param projectName
  * @param setReNameProject
@@ -192,10 +198,14 @@ export default Card;
 export const handleRename = async (reNameProject, projectName, setReNameProject) => {
     let updatedProjectName = reNameProject;
     if (reNameProject !== projectName) {
+
+        // Check if there is already a project with the new name.
         const projectWithSameName = getAllLocalProjects()?.find((project) => project.projectName === reNameProject)
+
         if (reNameProject === projectWithSameName?.projectName) {
             let projectsArray = getAllLocalProjects();
             if (projectsArray) {
+                // If there is a project with the same name, update the new name to ensure uniqueness.
                 updatedProjectName = handleUniqueName(projectsArray, updatedProjectName, reNameProject);
             }
         }
