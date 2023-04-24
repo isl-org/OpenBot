@@ -32,7 +32,7 @@ function BlocklyComponent(props) {
 
     // Get context values from the store
     const {theme} = useContext(ThemeContext);
-    const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer} = useContext(StoreContext);
+    const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer,setWorkspace} = useContext(StoreContext);
 
     const uniqueId = currentProjectId ? currentProjectId : nanoid()    // Generate a unique ID for the workspace if it doesn't exist
     const themes = useTheme();
@@ -45,6 +45,7 @@ function BlocklyComponent(props) {
         }
 
     }, []);
+
 
     const enableAllChildBlocks = (block) => {
         if (block) {
@@ -101,6 +102,8 @@ function BlocklyComponent(props) {
         if (isMobile) {
             primaryWorkspace.current.setScale(zoomLevel);
         }
+
+        setWorkspace(primaryWorkspace.current)
 
         // Create and render a new modal instance
         const model = new Modal(primaryWorkspace.current);

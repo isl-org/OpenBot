@@ -29,6 +29,7 @@ export default ({children}) => {
     const [fileId, setFileId] = useState(savedFileId);
     const [folderId, setFolderId] = useState(savedFolderId);
     const[user,setUser]=useState();
+    const[workspace,setWorkspace]=useState();
 
     const store = {
         projectName, setProjectName,
@@ -41,6 +42,7 @@ export default ({children}) => {
         fileId, setFileId,
         folderId, setFolderId,
         user,setUser,
+        workspace,setWorkspace
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }
