@@ -27,7 +27,7 @@ Make sure to Add following command to pod file.
 
 ### Create Firebase Project
 
-- Go to the Firebase Console (https://console.firebase.google.com/) and sign in with your Google account.
+- Go to the [Firebase Console](https://console.firebase.google.com/) and sign in with your Google account.
 
 - Click on the "Add Project" button to create a new Firebase project.
 
