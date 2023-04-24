@@ -131,9 +131,9 @@ project.
    - On the right side, a help button has been added, featuring three sections that explain how to effectively
 drag and drop blocks, save and download project progress, and upload to drive for seamless collaboration.
 
-    <p align="left">
-    <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_help.png" alt="Playground Help" width="50%"/>
-    </p>
+       <p align="left">
+       <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_help.png" alt="Playground Help" width="50%"/>
+       </p>
 
 #### Carousal
 
