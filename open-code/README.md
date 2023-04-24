@@ -9,25 +9,10 @@ OpenBot Playground is a drag and drop platform to support OpenBot application, w
 You can run this application directly from the [Link](http://openbot.itinker.io "Link").
 
 You can also run it locally via creating a local copy of the project.
-To achieve this, navigate into the `openBot/open-code` folder, set environment variables and run application.
+To achieve this, navigate into the `openBot/open-code` folder, [set firebase project](src/services/README.md) and run application.
 
-## Environment Variables
 
-Create a `.env` file inside `open-code` folder.
-To run this project, you will need to add the following environment variables to your .env file.
-
-```
-REACT_APP_FIREBASE_API_KEY=<REACT_APP_FIREBASE_API_KEY>
-REACT_APP_AUTH_DOMAIN=<REACT_APP_AUTH_DOMAIN>
-REACT_APP_PROJECT_ID=<REACT_APP_PROJECT_ID>
-REACT_APP_STORAGE_BUCKET=<REACT_APP_STORAGE_BUCKET>
-REACT_APP_MESSAGING_SENDER_ID=<REACT_APP_MESSAGING_SENDER_ID>
-REACT_APP_APP_ID=<REACT_APP_APP_ID>
-REACT_APP_MEASUREMENT_ID=<REACT_APP_MEASUREMENT_ID>
-GENERATE_SOURCEMAP=false
-```
-
-Install
+after [firebase setup](src/services/README.md) run following commands 
 
 If you're using npm
 
@@ -47,7 +32,7 @@ Run application
 npm start
 ```
 
-## Key features
+
 
 ### Application Features
 
@@ -58,6 +43,25 @@ npm start
    click.
 5. Design the instructions for OpenBot with zero code.
 6. Fully responsive design optimized for mobile and tablet browsing.
+
+### Project Storage 
+This project allows users to store their data both locally and on `Google Drive`. When the project is created, it is automatically stored in the `local storage` of the user's device. As changes are made to the project, the local storage is updated in real-time.
+
+Additionally, users can upload their project to Google Drive by clicking on the [upload icon](#upload-in-drive). This allows users to access their project from any device with internet access, making it easier to work on the project from different locations.
+  - #### Local Storage
+    Local storage is a built-in web technology that allows web applications to store data locally within the user's browser. This means that the project is stored on the user's device and can be accessed without an internet connection.
+
+    In this project, the local storage is used to store the project whenever changes are made to it. The project is stored in the browser's cache, which means that it will persist even if the user closes the tab or the browser.
+  
+  - #### Google Drive Storage
+    Google Drive is a cloud-based storage service provided by Google. It allows users to store and share files online, as well as access them from any device with internet access.
+
+    In this project, users can upload their project to Google Drive by clicking on the upload icon when they are signed in to the website. The project is then stored on the user's Google Drive account, which means that it can be accessed from any device with internet access.
+
+    To access their project from Google Drive, users can simply log in to their Google account and navigate to [my projects](#project-section), where all their stored projects will be displayed.
+
+
+
 
 ## OpenBot Playground Screens
 
