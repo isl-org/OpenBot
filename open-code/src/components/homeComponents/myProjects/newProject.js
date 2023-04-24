@@ -9,6 +9,7 @@ import Card from './card';
 import NewProjectButton from './newProjectButton';
 import LoaderComponent from "../../loader/loaderComponent";
 
+
 /**
  * Displays all projects with the option to create a new project
  * @returns {JSX.Element}
