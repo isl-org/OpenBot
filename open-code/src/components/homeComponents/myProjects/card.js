@@ -33,6 +33,7 @@ function Card(props) {
         setCurrentProjectId,
         setFileId,
         setDrawer,
+        setIsError
     } = useContext(StoreContext);
     const [openPopUp, setOpenPopUp] = useState(false);
     const [rename, setRename] = useState(false);
@@ -65,6 +66,7 @@ function Card(props) {
         localStorage.setItem(localStorageKeys.currentProject, "");
         setCurrentProjectId(projectData.id);
         setDrawer(false);
+        setIsError(false);
         try {
             if (projectData.storage === "drive") {
                 //selected project from Google Drive

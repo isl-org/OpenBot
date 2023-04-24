@@ -37,7 +37,9 @@ export const BottomBar = () => {
         setGenerateCode,
         setCode,
         setDrawer,
-        workspace
+        workspace,
+        isError,
+        setIsError
     } = useContext(StoreContext);
 
     //generate javascript or python code and upload to google drive
@@ -45,32 +47,37 @@ export const BottomBar = () => {
         if (localStorage.getItem("isSigIn") === "true") {
             setDrawer(false);
             setIsLoader(true);
-
             //javaScript generator
             let code = javascriptGenerator.workspaceToCode(
                 workspace
             );
 
-            const start=workspace.getBlocksByType("start")
-            if(start.length>0)
-                code+="\nstart();"
-            const forever=workspace.getBlocksByType("forever")
-            if(forever.length>0)
-                code+="\nforever();"
-            setGenerateCode(!generate);
-            console.log( code);
-            uploadToGoogleDrive(code, "js").then((res) => {
-                console.log("res::",res)
-                    setCode(res);
-                    setIsLoader(false);
-                    setDrawer(true);
-                }
-            ).catch((err) => {
-                console.log("err::", err)
+            const start = workspace.getBlocksByType("start")
+            const forever = workspace.getBlocksByType("forever")
+            if (start.length === 0 && forever.length === 0) {
+                setDrawer(false);
                 setIsLoader(false);
-                errorToast("Failed to Upload");
+                setIsError(true);
+            } else {
+                if (start.length > 0)
+                    code += "\nstart();";
+                if (forever.length > 0)
+                    code += "\nforever();";
+                setGenerateCode(!generate);
+                console.log(code);
+                uploadToGoogleDrive(code, "js").then((res) => {
+                        console.log("res::", res)
+                        setCode(res);
+                        setIsLoader(false);
+                        setDrawer(true);
+                    }
+                ).catch((err) => {
+                    console.log("err::", err)
+                    setIsLoader(false);
+                    errorToast("Failed to Upload");
 
-            })
+                })
+            }
         } else {
             setUploadCodeSignIn(true);
         }
@@ -140,10 +147,18 @@ export const BottomBar = () => {
 
     return (
         <div
-            className={isLoader ? styles.loaderBarDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight) : styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
-            <div className={styles.loaderItem}>
+            className={isLoader || isError ? styles.loaderBarDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight) : styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
+            <div>
+                {isError && <div style={{display: "flex", flexDirection: "column"}}
+                                 className={styles.errorDiv}>
+                    <div>Compilation failed due to following error(s).</div>
+                    <div className={styles.errorItems}>error 1 : &nbsp;&nbsp; No start or forever block
+                        present in the playground.
+                    </div>
+                </div>
+                }
                 {isLoader &&
-                    <div style={{display: "flex", flexDirection: "column"}}>
+                    <div style={{display: "flex", flexDirection: "column"}} className={styles.loaderText}>
                         <CompilationLoader/>
                         {theme === "dark" ?
                             <WhiteText text={"Compiling Code..."} extraStyle={styles.textItem}/> :

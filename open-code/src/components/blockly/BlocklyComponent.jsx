@@ -32,7 +32,7 @@ function BlocklyComponent(props) {
 
     // Get context values from the store
     const {theme} = useContext(ThemeContext);
-    const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer,setWorkspace} = useContext(StoreContext);
+    const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer,setWorkspace,setIsError} = useContext(StoreContext);
 
     const uniqueId = currentProjectId ? currentProjectId : nanoid()    // Generate a unique ID for the workspace if it doesn't exist
     const themes = useTheme();
@@ -40,6 +40,7 @@ function BlocklyComponent(props) {
     // Save workspace code to local storage when workspace changes
     const handleWorkspaceChange = useCallback(() => {
         setDrawer(false);
+        setIsError(false);
         if (projectName !== undefined) {
             updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
         }
@@ -103,6 +104,7 @@ function BlocklyComponent(props) {
             primaryWorkspace.current.setScale(zoomLevel);
         }
 
+        //storing current workspace behaviour and features
         setWorkspace(primaryWorkspace.current)
 
         // Create and render a new modal instance
