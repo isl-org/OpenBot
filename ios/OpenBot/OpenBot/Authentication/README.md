@@ -10,7 +10,7 @@ In addition to these features, OpenBot also allows users to perform updates to t
 To integrate Firebase into an iOS openBot application for Google sign-in, we will need a few prerequisites.
 
 - A Google Account To use Google Sign-in with Firebase, you must have a Google account. If you don't have one, you can create one for free at https://accounts.google.com/signup.
-- A Firebase Project To use Firebase, you need to create a Firebase project. You can create a project by visiting the Firebase Console at https://console.firebase.google.com.
+- A Firebase Project To use Firebase, you need to create a Firebase project. You can create a project by visiting the [Firebase Console](https://console.firebase.google.com).
 - Cocoapods is a dependency manager for Swift and Objective-C projects. To install the Firebase SDK, you need to have Cocoapods installed on your system.
 
 ### Pods
@@ -27,7 +27,7 @@ Make sure to Add following command to pod file.
 
 ### Create Firebase Project
 
-- Go to the Firebase Console (https://console.firebase.google.com/) and sign in with your Google account.
+- Go to the [Firebase Console](https://console.firebase.google.com/) and sign in with your Google account.
 
 - Click on the "Add Project" button to create a new Firebase project.
 
