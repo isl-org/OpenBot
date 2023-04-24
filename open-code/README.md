@@ -12,7 +12,7 @@ You can also run it locally via creating a local copy of the project.
 To achieve this, navigate into the `openBot/open-code` folder, [set firebase project](src/services/README.md) and run application.
 
 
-after [firebase setup](src/services/README.md) run following commands 
+after [firebase setup](src/services/README.md) run following commands: 
 
 If you're using npm
 
@@ -119,21 +119,21 @@ where you can update your profile image and display name.
 
 
 - #### Playground page additional
-- The Playground page header retains the same design as the homepage header, while incorporating additional
+  - The Playground page header retains the same design as the homepage header, while incorporating additional
 functionalities. In
 the center, the project name is displayed with a downward arrow, providing options for renaming and deleting the
 project.
 
-<p align="left">
-<img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_rename_and_delete_options.png" alt="Playground Sign In" width="50%" height="50%" />
-</p>
+     <p align="left">
+     <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_rename_and_delete_options.png" alt="Playground Sign In" width="50%" height="50%" />
+     </p>
 
-- On the right side, a help button has been added, featuring three sections that explain how to effectively
+   - On the right side, a help button has been added, featuring three sections that explain how to effectively
 drag and drop blocks, save and download project progress, and upload to drive for seamless collaboration.
 
-<p align="left">
-<img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_help.png" alt="Playground Help" width="50%"/>
-</p>
+    <p align="left">
+    <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_help.png" alt="Playground Help" width="50%"/>
+    </p>
 
 #### Carousal
 
