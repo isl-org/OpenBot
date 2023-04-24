@@ -179,6 +179,7 @@ class Authentication {
         service.executeQuery(query) { (ticket, result, error) in
 
             if let error = error {
+                
                 print("error in getting folder")
                 completion(nil, error)
                 return
