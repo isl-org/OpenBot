@@ -1,8 +1,6 @@
 package org.openbot.projects;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -46,7 +44,6 @@ public class ProjectsFragment extends ControlsFragment {
   private BottomSheetBehavior dpBottomSheetBehavior;
   private View overlayView;
   private SwipeRefreshLayout swipeRefreshLayout;
-    private SharedPreferences sharedPref;
 
   @Override
   public View onCreateView(
@@ -57,8 +54,7 @@ public class ProjectsFragment extends ControlsFragment {
     signInButton = binding.getRoot().findViewById(R.id.sign_in_button);
     projectsNotFoundTxt = binding.getRoot().findViewById(R.id.projects_not_found);
     projectScreenText = binding.getRoot().findViewById(R.id.project_screen_info);
-      sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
-      googleServices = new GoogleServices(requireActivity(), requireContext(), newGoogleServices);
+    googleServices = new GoogleServices(requireActivity(), requireContext(), newGoogleServices);
     projectsRV = binding.getRoot().findViewById(R.id.projects_rv);
     ConstraintLayout driveProjectBottomSheet = binding.getRoot().findViewById(R.id.dp_bottom_sheet);
     overlayView = binding.getRoot().findViewById(R.id.overlay_view);
@@ -111,9 +107,6 @@ public class ProjectsFragment extends ControlsFragment {
       new GoogleSignInCallback() {
         @Override
         public void onSignInSuccess(GoogleSignInAccount account) {
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("signInMode", "googleSignIn");
-            editor.apply();
           noProjectsLayout.setVisibility(View.GONE);
           signInButton.setVisibility(View.GONE);
           projectsNotFoundTxt.setVisibility(View.VISIBLE);
@@ -126,7 +119,7 @@ public class ProjectsFragment extends ControlsFragment {
           signInButton.setVisibility(View.VISIBLE);
           projectsNotFoundTxt.setVisibility(View.GONE);
           projectScreenText.setText("Set up your profile by signing in with your Google account.");
-            binding.projectsLoader.setVisibility(View.GONE);
+          binding.projectsLoader.setVisibility(View.GONE);
         }
 
         @Override
@@ -142,10 +135,7 @@ public class ProjectsFragment extends ControlsFragment {
       };
 
   private void showProjectsRv() {
-      String signInKey = sharedPref.getString("signInMode", "");
-      if (signInKey.equals("googleSignIn")) {
-          binding.projectsLoader.setVisibility(View.VISIBLE);
-      }
+      binding.projectsLoader.setVisibility(View.VISIBLE);
     projectsRV.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
     SparseArray<int[]> driveRes = new SparseArray<>();
     driveRes.put(R.layout.projects_list_view, new int[] {R.id.project_name, R.id.project_date});
@@ -160,10 +150,10 @@ public class ProjectsFragment extends ControlsFragment {
 
   /** update projects screen when there is 0 projects on google drive account. */
   public void updateMessage(List<File> driveFiles, FragmentProjectsBinding binding) {
-      binding.projectsLoader.setVisibility(View.GONE);
+    binding.projectsLoader.setVisibility(View.GONE);
 
-      if (driveFiles.size() <= 0) {
-          binding.noProjectsLayout.setVisibility(View.VISIBLE);
+    if (driveFiles.size() <= 0) {
+      binding.noProjectsLayout.setVisibility(View.VISIBLE);
     }
   }
 

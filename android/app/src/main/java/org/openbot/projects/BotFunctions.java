@@ -4,13 +4,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.webkit.JavascriptInterface;
+import java.util.Objects;
 import org.openbot.env.AudioPlayer;
 import org.openbot.utils.Enums;
 import org.openbot.vehicle.Control;
 import org.openbot.vehicle.Vehicle;
-
-import java.util.Objects;
-
 import timber.log.Timber;
 
 /** implement openBot functions according to block codes. */
@@ -136,9 +134,9 @@ public class BotFunctions implements SensorEventListener {
 
   @JavascriptInterface
   public void playSoundSpeed(String speedMode) {
-    if(Objects.equals(speedMode, "slow")){
+    if (Objects.equals(speedMode, "slow")) {
       ap.playSpeedMode("matthew", Enums.SpeedMode.SLOW);
-    } else if (Objects.equals(speedMode, "medium")){
+    } else if (Objects.equals(speedMode, "medium")) {
       ap.playSpeedMode("matthew", Enums.SpeedMode.NORMAL);
     } else if (Objects.equals(speedMode, "fast")) {
       ap.playSpeedMode("matthew", Enums.SpeedMode.FAST);

@@ -4,15 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.openbot.databinding.FragmentProjectsBinding;
 import org.openbot.projects.DriveProjectsAdapter;
 import org.openbot.projects.GoogleSignInCallback;
@@ -129,7 +127,7 @@ public class GoogleServices {
       credential.setSelectedAccount(googleAccount.getAccount());
       // Build and return the Drive API service.
       return new Drive.Builder(
-              AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential)
+              new NetHttpTransport(), JacksonFactory.getDefaultInstance(), credential)
           .setApplicationName("OpenBot")
           .build();
     }

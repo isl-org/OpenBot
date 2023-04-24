@@ -2,29 +2,50 @@
 
 Google Firebase is a mobile and web application development platform that offers a variety of services and tools to help developers build high-quality apps quickly and efficiently. It includes features such as real-time database, user authentication, hosting, cloud storage, and more, all integrated into a single platform. Firebase provides a convenient and scalable solution for developers to manage their backend infrastructure, allowing them to focus on building great user experiences.
 
-## Firebase Google Sign-In Authentication
+- ### Firebase Google Sign-In Authentication
 
-Firebase Google Sign-In Authentication is a feature of the Firebase platform that allows users to sign in to mobile or web apps using their Google credentials. This service provides a secure and convenient way for users to access apps without having to remember and manage separate login credentials. Firebase manages the entire authentication process, from verifying the user's identity with Google to providing a unique user ID that can be used to personalize the user's experience within the app. This feature also includes additional security measures, such as two-factor authentication, to help protect user accounts from unauthorized access.
+  Firebase Google Sign-In Authentication is a feature of the Firebase platform that allows users to sign in to mobile or web apps using their Google credentials. This service provides a secure and convenient way for users to access apps without having to remember and manage separate login credentials. Firebase manages the entire authentication process, from verifying the user's identity with Google to providing a unique user ID that can be used to personalize the user's experience within the app. This feature also includes additional security measures, such as two-factor authentication, to help protect user accounts from unauthorized access.
+
+- ### Usage
+  In this application, we use Firebase for Google sign-in authentication to access [OpenBot Playground](https://github.com/3dwesupport/OpenBot/tree/react-blockly/open-code#readme) projects uploaded on Google Drive. If you plan to clone this Android application and build it on your device, it's important to note that you will need to set up your own [Firebase Project](https://github.com/3dwesupport/OpenBot/tree/android-blockly-v2/android/app/src/main/java/org/openbot/googleServices#set-up-your-firebase-project). This is because the SHA1 key is required for Google Sign-In authentication. 
+  
+  And you will need to [set up Firebase](https://github.com/3dwesupport/OpenBot/tree/react-blockly/open-code#readme) for the [OpenBot Playground](https://www.openbot.itinker.io/) web application as well. This is because the Android app retrieves files from the user's Google Drive, which is created by Firebase Google Drive services. It's important to use the same Firebase project for both the Android and web applications for Google Drive services to work properly.
+  
+  If you do not want to use OpenBot Playground services, you do not need to set up Firebase authentication or Google sign-in authentication.
+
+### Prerequisites
+To integrate Firebase into an Android openBot application for Google sign-in, we will need a few prerequisites.
+- **Google Account:** To use Google Sign-in with Firebase, you must have a Google account. If you don't have one, click here to [create](https://accounts.google.com/signup) free Google account.
+- **Firebase Account:** You need to have a Firebase account and create a new Firebase project for your Android application. You can create a new Firebase project from the [Firebase Console](https://console.firebase.google.com/).
 ****
+
 ### Set up your Firebase project
 
-- Go to the [Firebase Console](https://console.firebase.google.com/) and create a `new project`.
+- Go to the [Firebase Console](https://console.firebase.google.com/) and create a `new project` following these steps.
+  1. Click on the "Create Project" button.
+  2. Enter a name for your Firebase project.
+  3. Click "Next" and disable Google Analytics services if you don't want to use them.
+  4. Click on the "Create Project" button.
 <p>
 <img src="../../../../../../../../docs/images/create_project.jpg" alt="Create project" width="25%"/>
 <img src="../../../../../../../../docs/images/enter_project_name.jpg" alt="Enter project name" width="24%"/>
 <img src="../../../../../../../../docs/images/disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
 </p>
 
-- Add a `new Android app` to your project and follow the instructions to `register your app` with Firebase.
-<p>
-<img src="../../../../../../../../docs/images/add_android_app.jpg" alt="Create project" width="25%"/>
-</p>
-
-- When you add a new Android app to your Firebase project, Firebase will ask you to provide the `package name` of your app, along with an optional `SHA-1` fingerprint for the signing certificate used to `sign your app's APK`.
-
+- To add a new Android app to your Firebase project, do the following:
+  1. Click on the Android icon in the Firebase project.
+  2. Enter `package name` of your Android app. This should be `unique` for Firebase.
+  3. Enter your app's nickname.
+  4. The `SHA1` key is also `mandatory` for the signing certificate used to `sign your app's APK`. Enter it in the appropriate field.
+  5. Click on the `Register` button.
+  
 
 - About the `SHA-1` fingerprint is a unique identifier for your `app's signing certificate`, and is used by Firebase to verify the authenticity of your app when communicating with Firebase servers. If you plan to use Firebase Authentication in your app, you will need to provide an `SHA-1` fingerprint `for the signing certificate` used to sign the `release version` of your app.
-
+  
+<p>
+<img src="../../../../../../../../docs/images/add_android_app.jpg" alt="Create project" width="40%"/>
+<img src="../../../../../../../../docs/images/package_name.jpg" alt="Package Name" width="35%"/>
+</p>
 
 - To obtain the `SHA-1` fingerprint for the debug signing certificate, you can use the `keytool` command-line tool that is included with the `Java SDK`. Here's how to use it on `Mac` and `Windows`:
   
@@ -43,20 +64,29 @@ Firebase Google Sign-In Authentication is a feature of the Firebase platform tha
     This command is similar to the Mac command, but uses a `different path` to locate the debug.keystore file. `%USERPROFILE%` is a system environment variable that points to the current user's profile directory, which contains the `.android` directory where the `debug.keystore` file is located.
 
 - Download the `google-services.json` file and `add` it to your app's `app directory`.
+- Click on the `Next` button and skip the third step (adding the Firebase SDK) as it's already done for this project.
+- Continue to the Firebase Console to configure the Firebase services you want to use in your Android app.
 
 <p>
-<img src="../../../../../../../../docs/images/package_name.jpg" alt="Package Name" width="24.7%"/>
-<img src="../../../../../../../../docs/images/google_service_json_file.jpg" alt="Google services json file" width="21.5%"/>
-<img src="../../../../../../../../docs/images/continue_to_console.jpg" alt="Continue to console" width="21%"/>
+<img src="../../../../../../../../docs/images/google_service_json_file.jpg" alt="Google services json file" width="41%"/>
+<img src="../../../../../../../../docs/images/continue_to_console.jpg" alt="Continue to console" width="40.2%"/>
 </p>
 
-- In the `Firebase Console`, go to the `Authentication section` and `enable` the `Google Sign-In` provider.
+- To `enable Google Sign-In authentication` for your Firebase project, follow these steps:
+  1. Go to the Firebase Console and select your project.
+  2. Click on the `All products` option in the left `sidebar menu`.
+  3. Click on `Authentication`.
+  4. Click on the `Get Started` button.
+  5. Click on the `Google icon`.
+  6. Click on the `toggle button` to `enable` Google Sign-In authentication.
 
 <p>
-<img src="../../../../../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="23%"/>
-<img src="../../../../../../../../docs/images/firebase_authentication.jpg" alt="Firebase authentication" width="20%"/>
-<img src="../../../../../../../../docs/images/google_signin.jpg" alt="Google signin" width="28%"/>
-<img src="../../../../../../../../docs/images/google_signin_enable.jpg" alt="Google signin enable" width="15%"/>
+<img src="../../../../../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="47.5%"/>
+<img src="../../../../../../../../docs/images/firebase_authentication.jpg" alt="Firebase authentication" width="42%"/>
+</p>
+<p>
+<img src="../../../../../../../../docs/images/google_signin.jpg" alt="Google signin" width="60%"/>
+<img src="../../../../../../../../docs/images/google_signin_enable.jpg" alt="Google signin enable" width="31.5%"/>
 </p>
 
 
