@@ -150,9 +150,10 @@ class Authentication {
         })
     }
 
-    func getAllFolders() {
+    func getAllFolders(completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         guard let accessToken = googleSignIn.currentUser?.accessToken.tokenString else {
             print("Access token is nil")
+            completion(nil, nil)
             return
         }
         let scopes = googleSignIn.currentUser?.grantedScopes
@@ -160,12 +161,14 @@ class Authentication {
         self.getAllFoldersInDrive(accessToken: accessToken) { files, error in
             if let files = files {
                 print("files are ", files);
-            }
-            if let error = error {
+                completion(files, nil)
+            } else if let error = error {
                 print("error is ", error);
+                completion(nil, error)
             }
         }
     }
+
 
 
     private func getAllFoldersInDrive(accessToken: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {

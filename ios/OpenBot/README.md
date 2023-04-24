@@ -8,14 +8,14 @@
 
 ## App Screens
 
-### Home
+### Main Menu
 
-The application begins with a bottom sheet featuring Google sign-in options. The sheet presents two buttons: `Sign-in with Google` and `Continue as Guest`. The former triggers a Google sign-in prompt, while the latter opens a menu screen displaying all available screens. Clicking on the Bluetooth icon located on the top right-hand side of the app will open the Bluetooth connection screen, while clicking on the adjacent settings icon will open the settings screen. Other icons provide access to various screens, each with their own functionalities, as detailed in subsequent sections.
+The app starts with a menu screen that shows all available screens. The Bluetooth connection screen can be opened by clicking on the Bluetooth icon on top right hand side. The settings screen can be opened with a click on the settings icon right next to it. By clicking on the other icons, the user can access various screens whose functionalities are explained in subsequent sections.
 
-The bottom of the app displays a tab bar with tabs for `Home, Projects, and Profile`. By default, the Home tab is displayed. If a user is logged in, all their saved projects in the "openbot-opencode" folder on Google Drive will be listed here. Otherwise, a sign-in prompt will be displayed. The Profile tab includes buttons for accessing the user's profile and signing out.
+The bottom of the app displays a tab bar with tabs for `Home, Projects, and Profile`. By default, the Home tab is displayed. If a user is logged in, all their saved projects in the "openbot-opencode" folder on Google Drive will be listed in Projects tab. The Profile tab includes buttons for accessing the user's profile and signing out.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.gif" alt="Main Menu" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.jpeg" alt="Main Menu" width="25%"/>
 <img style="padding-right: 2%;" src="../../docs/images/ios_bluetooth_screen.jpg" alt="Bluetooth" width="25%"/>
 <img style="padding-right: 2%;" src="../../docs/images/ios_settings_screen.jpg" alt="Settings" width="25%"/>
 </p>
@@ -194,6 +194,11 @@ Simple UI for running autopilot models.
 
 </p>
 
+- **Server**: If you have the [web app](../../policy#web-app) for policy training running, you can select it here and send trained autopilot models to the robot.
+- **Model**: Choose a trained model to use for autopilot mode.
+- **Device**: Use CPU, GPU or NNAPI for inference (more details [here](#device)).
+- **Threads**: Number of threads to use (only makes a difference when CPU is selected as device).
+- **Control**: Controller, Drive Mode and Speed are used to control robot settings as described in the [control section](#control).
 
 ### Object Tracking
 
@@ -205,6 +210,14 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 <img src="../../docs/images/ios_object_tracking_screen.jpg" alt="Object Tracking" width="50%" />
 </p>
 
+- **Dynamic Speed**: reduces the robot speed in "Auto Mode" if it gets closer to the tracked object.
+  The speed is scaled based on the area of the bouding box (works best in landscape orientation).
+- **Model**: Choose an object detector based on your phone performance.
+- **Object**: Pick the object you want to track. The models can detect the 80 COCO [object classes](https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/).
+- **Confidence**: Confidence threshold to determine if detections are accepted. Increase if you get false detections, decrease if the object of interest it not detected.
+- **Device**: Use CPU, GPU or NNAPI for inference (more details [here](#device)).
+- **Threads**: Number of threads to use (only makes a difference when CPU is selected as device).
+- **Control**: Controller, Drive Mode and Speed are used to control robot settings as described in the [control section](#control).
 
 ### Model Management
 
@@ -282,3 +295,5 @@ The [TensorFlow Lite Object Detection iOS Demo](https://github.com/tensorflow/ex
 ## Next (optional)
 
 Train your own [Driving Policy](../../policy/README.md)
+
+Firebase Authentication [Firebase](../OpenBot/OpenBot/Authentication/README.md)

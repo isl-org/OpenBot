@@ -13,8 +13,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     @IBOutlet weak var projectCollectionView: UICollectionView!
     let signInView: UIView = UIView(frame: UIScreen.main.bounds)
     var allProjects: [ProjectItem] = [];
-
-
+    let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
     /**
        Function calls after view will loaded.
     */
@@ -24,7 +23,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createMyProjectLabel();
         createPleaseSignInLabel();
         createSignInBtn();
-        authentication.getAllFolders();
+        createOverlayAlert();
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
@@ -45,10 +44,15 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated);
+        if allProjects.count == 0{
+            loadProjects()
+        }
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        authentication.getAllFolders();
         updateViewsVisibility();
     }
 
@@ -101,7 +105,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      - Returns: count of projects inside user drive
      */
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        Constants.temp.count;
+        allProjects.count;
     }
 
     /**
@@ -113,7 +117,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      */
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: projectCollectionViewCell.identifier, for: indexPath) as! projectCollectionViewCell;
-        cell.configure(with: Constants.temp[indexPath.row]);
+        cell.configure(with: allProjects[indexPath.row]);
         cell.layer.cornerRadius = adapted(dimensionSize: 10, to: .height)
         cell.translatesAutoresizingMaskIntoConstraints = true
         leadingConstraint = cell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
@@ -153,7 +157,41 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
     @objc func  googleSignIn(_ notification: Notification){
-       updateViewsVisibility()
+       updateViewsVisibility();
+        allProjects = [];
+    }
+
+    private func loadProjects(){
+        authentication.getAllFolders { files, error in
+            if let files = files {
+                print("hello files ", files)
+                self.authentication.getFilesInFolder(folderId: files[0].identifier ?? "") { files, error in
+                    if let files = files {
+                        for file in files {
+                            if file.mimeType == "text/javascript" {
+                                let project = ProjectItem(projectName: file.name ?? "", projectDate: file.modifiedTime?.stringValue ?? "")
+                                self.allProjects.append(project);
+                            }
+                        }
+                        self.projectCollectionView.reloadData();
+                        self.alert.dismiss(animated: true);
+                    } else if let error = error {
+                        print("Error getting files in folder: ", error.localizedDescription)
+                    }
+                }
+            } else if let error = error {
+                print("Error getting folders: ", error.localizedDescription)
+            }
+        }
+    }
+
+    func createOverlayAlert() {
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
+        loadingIndicator.startAnimating();
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = UIActivityIndicatorView.Style.medium
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
     }
 
 
