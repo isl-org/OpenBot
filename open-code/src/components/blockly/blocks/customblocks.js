@@ -243,7 +243,7 @@ Blockly.Blocks["forward&BackwardAtSpeed"] = {
                     "type": "field_slider",
                     "name": "slider",
                     "value": 192,
-                    "min": -255, // Minimum value for the slider
+                    "min": 0, // Minimum value for the slider
                     "max": 255 // Maximum value for the slider
 
                 }
@@ -281,7 +281,7 @@ Blockly.Blocks["left&RightAtSpeed"] = {
                     "type": "field_slider",
                     "name": "slider",
                     "value": 192,
-                    "min": -255, // Minimum value for the slider
+                    "min": 0, // Minimum value for the slider
                     "max": 255 // Maximum value for the slider
 
                 }

@@ -1,11 +1,11 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Blockly from "blockly/core";
 import styles from "./style.module.css"
 import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
-import {Constants, errorToast,} from "../../utils/constants";
+import {errorToast,} from "../../utils/constants";
 import {CircularProgress, circularProgressClasses, useTheme} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
@@ -31,13 +31,13 @@ export const BottomBar = () => {
     const [signInPopUp, setSignInPopUp] = useState(false);
     const [uploadCodeSignIn, setUploadCodeSignIn] = useState(false);
     const themes = useTheme();
-    let primaryWorkspace = useRef();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const {
         generate,
         setGenerateCode,
         setCode,
         setDrawer,
+        workspace
     } = useContext(StoreContext);
 
     //generate javascript or python code and upload to google drive
@@ -47,19 +47,19 @@ export const BottomBar = () => {
             setIsLoader(true);
 
             //javaScript generator
-            const code = javascriptGenerator.workspaceToCode(
-                primaryWorkspace.current
+            let code = javascriptGenerator.workspaceToCode(
+                workspace
             );
 
-            // const code=pythonGenerator.workspaceToCode(
-            //     primaryWorkspace.current
-            // );
-
-
+            const start=workspace.getBlocksByType("start")
+            if(start.length>0)
+                code+="\nstart();"
+            const forever=workspace.getBlocksByType("forever")
+            if(forever.length>0)
+                code+="\nforever();"
             setGenerateCode(!generate);
-            let updatedCode = code + Constants.endCode;
-            console.log("updatedCode::::", updatedCode);
-            uploadToGoogleDrive(updatedCode, "js").then((res) => {
+            console.log( code);
+            uploadToGoogleDrive(code, "js").then((res) => {
                 console.log("res::",res)
                     setCode(res);
                     setIsLoader(false);
