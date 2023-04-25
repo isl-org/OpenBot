@@ -50,6 +50,7 @@ struct Colors {
     static let textColor = UIColor(named: "textColor")
     static let navigationColor = UIColor(named: "navigationColor")
     static let modelDetail = UIColor(named: "modelDetailPopup")
+    static let blue = UIColor(red: 0, green: 113, blue: 197, alpha: 1);
 }
 
 /// Set of constants used in the code
@@ -78,22 +79,6 @@ struct Constants {
     static let classes: [String] = ["AUTOPILOT_F", "MOBILENET", "YOLOV4", "YOLOV5", "EFFICIENTDET", "NAVIGATION"]
     static let devices: [String] = ["CPU", "XNNPACK"]
 
-
-//    static let temp : [ProjectItem] = [
-//        ProjectItem(projectName: "Blink Led", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Blink", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Blink Led2", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Sonar", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Move", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Movement", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Test", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Back Movement", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Controls", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Test Controls", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Nitish's Project", projectDate: "14/04/2023"),
-//        ProjectItem(projectName: "Nitish Test1", projectDate: "14/04/2023"),
-//
-//    ]
 }
 
 /// The different speed modes of the OpenBot

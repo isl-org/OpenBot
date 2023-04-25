@@ -14,20 +14,24 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     @IBOutlet weak var projectCollectionView: UICollectionView!
     var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
     let signInView: UIView = UIView(frame: UIScreen.main.bounds)
+    let noProjectMessageView: UIView = UIView(frame: UIScreen.main.bounds);
     var allProjects: [ProjectItem] = [];
-    var command : String = ""
+    var command: String = ""
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
-
     /**
        Function calls after view will loaded.
     */
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(signInView);
+        view.addSubview(noProjectMessageView);
         createMyProjectLabel();
         createPleaseSignInLabel();
+        createNoProjectMessage();
         createSignInBtn();
-        createOverlayAlert();
+        if GIDSignIn.sharedInstance.currentUser != nil {
+            createOverlayAlert();
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
@@ -50,8 +54,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated);
-        if allProjects.count == 0 {
-            loadProjects()
+        if allProjects.count == 0 && GIDSignIn.sharedInstance.currentUser != nil {
+            loadProjects();
         }
     }
 
@@ -75,9 +79,23 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      */
     func createPleaseSignInLabel() {
         let firstLabel = CustomLabel(text: "Please sign in first to access your", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 115, y: height / 2 - 20, width: 250, height: 40));
-        let secondLabel = CustomLabel(text: "Projects.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 32.5, y: height / 2 + 10, width: 65, height: 40));
+        let secondLabel = CustomLabel(text: "projects.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 32.5, y: height / 2 + 10, width: 65, height: 40));
         signInView.addSubview(firstLabel);
         signInView.addSubview(secondLabel)
+    }
+
+    func createNoProjectMessage() {
+        let firstLabel = CustomLabel(text: "Oops! No projects found.", fontSize: 22, fontColor: Colors.title ?? .blue, frame: CGRect(x: width / 2 - 115, y: height / 2 - 20, width: 280, height: 40));
+        firstLabel.font = HelveticaNeue.bold(size: 16);
+        let label = CustomLabel(text: "Looks like there are no projects\nin your google drive yet.",
+                fontSize: 18,
+                fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white: UIColor.black,
+                frame: CGRect(x: width / 2 - 115, y: height / 2, width: 250, height: 80))
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.textAlignment = .center
+        noProjectMessageView.addSubview(firstLabel);
+        noProjectMessageView.addSubview(label);
     }
 
     /**
@@ -161,12 +179,20 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private func updateViewsVisibility() {
         if GIDSignIn.sharedInstance.currentUser != nil {
             signInView.isHidden = true;
-            projectCollectionView.isHidden = false
+            noProjectMessageView.isHidden = true;
+            projectCollectionView.isHidden = false;
+            if allProjects.count == 0 {
+                noProjectMessageView.isHidden = false
+
+            } else {
+                noProjectMessageView.isHidden = true
+            }
         } else {
             projectCollectionView.isHidden = true
             signInView.isHidden = false;
+            noProjectMessageView.isHidden = true;
         }
-
+        print( noProjectMessageView.isHidden , allProjects.count)
     }
 
     @objc func signIn() {
@@ -181,18 +207,18 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private func loadProjects() {
         authentication.getAllFolders { files, error in
             if let files = files {
-                print("hello files ", files)
                 self.authentication.getFilesInFolder(folderId: files[0].identifier ?? "") { files, error in
                     if let files = files {
                         for file in files {
                             if file.mimeType == "text/javascript" {
                                 print(file)
-                                let project = ProjectItem(projectName: file.name ?? "", projectDate: file.modifiedTime?.stringValue ?? "", projectId: file.identifier ?? "")
+                                let project = ProjectItem(projectName: Authentication.returnFileName(name: file.name ?? "Unknown") ?? "Unknown", projectDate: file.modifiedTime?.stringValue ?? "", projectId: file.identifier ?? "")
                                 self.allProjects.append(project);
                             }
                         }
                         self.projectCollectionView.reloadData();
                         self.alert.dismiss(animated: true);
+                        self.updateViewsVisibility()
                     } else if let error = error {
                         print("Error getting files in folder: ", error.localizedDescription)
                     }
@@ -202,6 +228,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             }
         }
     }
+
 
     func createOverlayAlert() {
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView

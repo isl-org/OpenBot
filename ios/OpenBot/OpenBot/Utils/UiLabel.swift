@@ -18,10 +18,10 @@ class CustomLabel : UILabel {
         super.init(coder: aDecoder)
     }
 
-    func createLabel(text : String,fontSize : CGFloat, fontColor : UIColor,frame : CGRect){
-        self.text = text;
-        self.frame = frame;
+    func createLabel(text: String, fontSize: CGFloat, fontColor: UIColor, frame: CGRect) {
+        self.text = text
+        self.frame = frame
         font = font.withSize(fontSize)
-        textColor = fontColor;
+        textColor = fontColor
     }
 }

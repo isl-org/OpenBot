@@ -52,7 +52,7 @@ class GoogleSignInBtn : UIView {
     private func createSingInText(frame: CGRect) -> UILabel {
         let signInText = UILabel(frame: frame);
         signInText.text = "Sign-in with Google";
-        signInText.textColor = Colors.bdColor;
+        signInText.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black
         signInText.font = signInText.font?.withSize(18);
         return signInText;
     }

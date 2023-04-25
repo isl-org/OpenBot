@@ -133,10 +133,10 @@ class Authentication {
         }
     }
 
-     static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
+    static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let fileId = returnFileId(fileLink: file);
         let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
-        print("url is :",url)
+        print("url is :", url)
         let service: GTLRDriveService = GTLRDriveService()
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
@@ -150,9 +150,9 @@ class Authentication {
             }
         })
     }
-      static func download(fileId: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
+
+    static func download(fileId: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
-        print("url is :",url)
         let service: GTLRDriveService = GTLRDriveService()
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
@@ -166,6 +166,8 @@ class Authentication {
             }
         })
     }
+
+
     func getAllFolders(completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         guard let accessToken = googleSignIn.currentUser?.accessToken.tokenString else {
             print("Access token is nil")
@@ -186,7 +188,6 @@ class Authentication {
     }
 
 
-
     private func getAllFoldersInDrive(accessToken: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         print("access token is :", accessToken);
         let query = GTLRDriveQuery_FilesList.query()
@@ -198,7 +199,7 @@ class Authentication {
         service.executeQuery(query) { (ticket, result, error) in
 
             if let error = error {
-                
+
                 print("error in getting folder")
                 completion(nil, error)
                 return
@@ -211,6 +212,26 @@ class Authentication {
             }
         }
     }
+
+    static func getFileNameFromPublicURL(url: String) {
+        let fileId = returnFileId(fileLink: url);
+        let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: fileId)
+        let service: GTLRDriveService = GTLRDriveService()
+//        service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
+        service.executeQuery(query) { (ticket, file, error) in
+            if let error = error {
+                print("Error retrieving file name: \(error)")
+            } else if let file = file as? GTLRDataObject {
+                if let fileName = file.json?["name"] as? String {
+                    print("File name: \(fileName)")
+                } else {
+                    print("File name not found")
+                }
+            }
+        }
+
+    }
+
 
     func getFilesInFolder(folderId: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         let query = GTLRDriveQuery_FilesList.query()
@@ -244,6 +265,12 @@ class Authentication {
                 completion(nil, nil)
             }
         }
+    }
+
+    static func returnFileName(name: String) -> String {
+        let fileName = name.components(separatedBy: ".js");
+        return fileName.first ?? "Unknown";
+
     }
 
 }

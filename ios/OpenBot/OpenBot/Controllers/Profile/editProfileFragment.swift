@@ -213,7 +213,6 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
             if let user = result?.user {
                 let changeRequest = user.createProfileChangeRequest()
                 changeRequest.displayName = (self.firstNameField.text ?? "") + " " + (self.lastNameField.text ?? "");
-//                changeRequest.photoURL = URL(string: "https://www.google.com/imgres?imgurl=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fe%2Fe7%2FEverest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg&tbnid=ZH4n6DnAkszpmM&vet=12ahUKEwiZx6jc6aP-AhWdzaACHb-VD9MQMygAegUIARDdAQ..i&imgrefurl=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FMountain&docid=oiQv_zLtLLGShM&w=2000&h=1333&q=mountain&ved=2ahUKEwiZx6jc6aP-AhWdzaACHb-VD9MQMygAegUIARDdAQ")
                 self.uploadImage();
                 changeRequest.commitChanges { error in
                     if let error = error {

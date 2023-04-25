@@ -105,13 +105,13 @@ class scannerFragment: CameraController {
                 hasSuccessfulScan = true
                 createOverlayAlert();
                 Authentication.download(file: qrResult) { data, error in
-//                    self.createBottomSheet()
                     self.alert.dismiss(animated: true);
                     if let error = error {
                         self.createErrorUI()
                         return;
                     }
                     if let data = data {
+                        print(self.qrResult);
                         self.createSuccessUI();
                         print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") as Any)
                         self.commands = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
@@ -168,9 +168,6 @@ class scannerFragment: CameraController {
         self.whiteSheet.scanQr.addTarget(self, action: #selector(self.scan), for: .touchUpInside);
         view.addSubview(whiteSheet);
     }
-
-
-
 
 
     /**
@@ -241,6 +238,6 @@ class scannerFragment: CameraController {
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
     }
-    
+
 
 }
