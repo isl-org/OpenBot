@@ -44,6 +44,7 @@ public class ProjectsFragment extends ControlsFragment {
   private BottomSheetBehavior dpBottomSheetBehavior;
   private View overlayView;
   private SwipeRefreshLayout swipeRefreshLayout;
+  private boolean isSignedIn = false;
 
   @Override
   public View onCreateView(
@@ -110,6 +111,7 @@ public class ProjectsFragment extends ControlsFragment {
           noProjectsLayout.setVisibility(View.GONE);
           signInButton.setVisibility(View.GONE);
           projectsNotFoundTxt.setVisibility(View.VISIBLE);
+          isSignedIn = true;
           projectScreenText.setText("Looks like there are no projects in your google drive yet.");
         }
 
@@ -118,6 +120,7 @@ public class ProjectsFragment extends ControlsFragment {
           noProjectsLayout.setVisibility(View.VISIBLE);
           signInButton.setVisibility(View.VISIBLE);
           projectsNotFoundTxt.setVisibility(View.GONE);
+          isSignedIn = false;
           projectScreenText.setText("Set up your profile by signing in with your Google account.");
           binding.projectsLoader.setVisibility(View.GONE);
         }
@@ -127,6 +130,7 @@ public class ProjectsFragment extends ControlsFragment {
           noProjectsLayout.setVisibility(View.VISIBLE);
           signInButton.setVisibility(View.VISIBLE);
           projectsNotFoundTxt.setVisibility(View.GONE);
+          isSignedIn = false;
           projectScreenText.setText("Set up your profile by signing in with your Google account.");
         }
 
@@ -135,15 +139,15 @@ public class ProjectsFragment extends ControlsFragment {
       };
 
   private void showProjectsRv() {
-      binding.projectsLoader.setVisibility(View.VISIBLE);
+      if(isSignedIn){
+          binding.projectsLoader.setVisibility(View.VISIBLE);
+      }
     projectsRV.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
     SparseArray<int[]> driveRes = new SparseArray<>();
     driveRes.put(R.layout.projects_list_view, new int[] {R.id.project_name, R.id.project_date});
     setScanDeviceAdapter(
         new DriveProjectsAdapter(requireActivity(), googleServices.getDriveFiles(), driveRes),
-        (itemView, position) -> {
-          readFileFromDrive(googleServices.getDriveFiles().get(position).getId());
-        });
+        (itemView, position) -> readFileFromDrive(googleServices.getDriveFiles().get(position).getId()));
     googleServices.accessDriveFiles(adapter, binding);
     projectsRV.setAdapter(adapter);
   }
@@ -165,6 +169,8 @@ public class ProjectsFragment extends ControlsFragment {
   }
 
   private void readFileFromDrive(String fileId) {
+      binding.projectsLoader.setVisibility(View.VISIBLE);
+      binding.overlayView.setVisibility(View.VISIBLE);
     new ReadFileTask(
             fileId,
             new ReadFileCallback() {
@@ -177,7 +183,7 @@ public class ProjectsFragment extends ControlsFragment {
                   }
                 }
                 barCodeScannerFragment.finalCode = code;
-                dpBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                  dpBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
               }
 
               @Override
@@ -206,7 +212,8 @@ public class ProjectsFragment extends ControlsFragment {
           // Handle state changes here
           if (newState == BottomSheetBehavior.STATE_EXPANDED
               || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
-            overlayView.setVisibility(View.VISIBLE);
+              binding.projectsLoader.setVisibility(View.GONE);
+              overlayView.setVisibility(View.VISIBLE);
           } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
             overlayView.setVisibility(View.GONE);
           }

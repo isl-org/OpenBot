@@ -14,6 +14,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.IOException;
+
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentBarCodeScannerBinding;
@@ -26,6 +27,7 @@ public class BarCodeScannerFragment extends CameraFragment {
   private BottomSheetBehavior successBottomSheetBehavior;
   private BottomSheetBehavior failedBottomSheetBehavior;
   private boolean barCodeAccess = true;
+  private boolean cameraToggle = false;
   public static String finalCode;
 
   @Override
@@ -33,6 +35,7 @@ public class BarCodeScannerFragment extends CameraFragment {
       @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment and set it as the root view for the fragment.
     binding = FragmentBarCodeScannerBinding.inflate(inflater, container, false);
+    binding.barCodeLoader.setVisibility(View.GONE);
     // Get the BottomSheetBehavior objects for the success and error bottom sheets.
     successBottomSheetBehavior = BottomSheetBehavior.from(binding.qrBottomSheetSuccess);
     failedBottomSheetBehavior = BottomSheetBehavior.from(binding.qrBottomSheetError);
@@ -60,6 +63,10 @@ public class BarCodeScannerFragment extends CameraFragment {
     // Add callbacks for the success and error bottom sheets.
     successBottomSheetBehavior.addBottomSheetCallback(successBottomSheetCallback);
     failedBottomSheetBehavior.addBottomSheetCallback(failedBottomSheetCallback);
+    if(preferencesManager.getCameraSwitch()){
+      toggleCamera();
+      cameraToggle = true;
+    }
     initialiseQrDetector();
   }
 
@@ -96,8 +103,9 @@ public class BarCodeScannerFragment extends CameraFragment {
           if (newState == BottomSheetBehavior.STATE_EXPANDED
               || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
             // Make the overlay view visible when the bottom sheet is expanded or half-expanded.
+            binding.barCodeLoader.setVisibility(View.GONE);
             binding.overlayView.setVisibility(View.VISIBLE);
-          } else {
+          } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
             // Make the overlay view invisible and set barCodeAccess is true to start detecting qr
             // code when the bottom sheet is hidden
             binding.overlayView.setVisibility(View.GONE);
@@ -143,6 +151,10 @@ public class BarCodeScannerFragment extends CameraFragment {
       // If a qr code is detected and barCodeAccess is true, get the qr code value and call
       // extractFileID().
       if (barcodes.size() != 0 && barCodeAccess) {
+        requireActivity().runOnUiThread(() -> {
+          binding.overlayView.setVisibility(View.VISIBLE);
+          binding.barCodeLoader.setVisibility(View.VISIBLE);
+        });
         barCodeAccess = false;
         String qrCodeValue = barcodes.valueAt(0).displayValue;
         extractFileID(qrCodeValue);
@@ -218,5 +230,11 @@ public class BarCodeScannerFragment extends CameraFragment {
     } else {
       failedBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
+  }
+
+  @Override
+  public void onPause(){
+    super.onPause();
+    if(cameraToggle) toggleCamera();
   }
 }
