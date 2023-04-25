@@ -7,13 +7,17 @@ import UIKit
 import GoogleSignIn
 import GoogleAPIClientForREST
 import GTMSessionFetcher
+
 class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     let service: GTLRDriveService = GTLRDriveService()
-    private let authentication : Authentication = Authentication.googleAuthentication
+    private let authentication: Authentication = Authentication.googleAuthentication
     @IBOutlet weak var projectCollectionView: UICollectionView!
+    var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
     let signInView: UIView = UIView(frame: UIScreen.main.bounds)
     var allProjects: [ProjectItem] = [];
+    var command : String = ""
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+
     /**
        Function calls after view will loaded.
     */
@@ -46,7 +50,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated);
-        if allProjects.count == 0{
+        if allProjects.count == 0 {
             loadProjects()
         }
     }
@@ -130,38 +134,51 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     }
 
-//    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        collectionView.deselectItem(at: indexPath, animated: true)
-//        let viewController = (storyboard?.instantiateViewController(withIdentifier: Constants.gameModes[indexPath.row].identifier))!
-//        navigationController?.pushViewController(viewController, animated: true);
-//    }
-
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(allProjects[indexPath.row].projectName);
+        createOverlayAlert();
+        collectionView.deselectItem(at: indexPath, animated: true)
+        getCommandOfSelectedFile(project: allProjects[indexPath.row]) { result, error in
+            if let result = result {
+                self.alert.dismiss(animated: true);
+                self.command = result;
+                self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: self.allProjects[indexPath.row].projectName);
+                self.whiteSheet.startBtn.addTarget(self, action: #selector(self.start), for: .touchUpInside);
+                self.whiteSheet.cancelBtn.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
+                self.tabBarController?.view.addSubview(self.whiteSheet);
+            } else if let error = error {
+                print("Error is", error)
+                self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
+                self.whiteSheet.scanQr.addTarget(self, action: #selector(self.scanQr), for: .touchUpInside);
+                self.tabBarController?.view.addSubview(self.whiteSheet);
+            }
+        }
+    }
 
     /**
      Function to update UI based on google sign-in
      */
     private func updateViewsVisibility() {
-        if GIDSignIn.sharedInstance.currentUser != nil{
+        if GIDSignIn.sharedInstance.currentUser != nil {
             signInView.isHidden = true;
             projectCollectionView.isHidden = false
-        }
-        else{
+        } else {
             projectCollectionView.isHidden = true
             signInView.isHidden = false;
         }
 
     }
 
-    @objc func signIn(){
+    @objc func signIn() {
         Authentication.init()
     }
 
-    @objc func  googleSignIn(_ notification: Notification){
-       updateViewsVisibility();
+    @objc func googleSignIn(_ notification: Notification) {
+        updateViewsVisibility();
         allProjects = [];
     }
 
-    private func loadProjects(){
+    private func loadProjects() {
         authentication.getAllFolders { files, error in
             if let files = files {
                 print("hello files ", files)
@@ -169,7 +186,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                     if let files = files {
                         for file in files {
                             if file.mimeType == "text/javascript" {
-                                let project = ProjectItem(projectName: file.name ?? "", projectDate: file.modifiedTime?.stringValue ?? "")
+                                print(file)
+                                let project = ProjectItem(projectName: file.name ?? "", projectDate: file.modifiedTime?.stringValue ?? "", projectId: file.identifier ?? "")
                                 self.allProjects.append(project);
                             }
                         }
@@ -194,6 +212,36 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         present(alert, animated: true, completion: nil)
     }
 
+    func getCommandOfSelectedFile(project: ProjectItem, completion: @escaping (String?, Error?) -> Void) {
+        let id = project.projectId
+        print("hello id ", id);
+        Authentication.download(fileId: id) { data, error in
+            if let error = error {
+                completion(nil, error);
+            }
+            if let data = data {
+                print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") as Any)
+                completion(String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? "", nil)
+            }
+        }
+    }
 
+    @objc private func start() {
+        let storyboard = UIStoryboard(name: "openCode", bundle: nil)
+        whiteSheet.removeFromSuperview();
+        let viewController = (storyboard.instantiateViewController(withIdentifier: "runOpenBot"));
+        navigationController?.pushViewController(viewController, animated: true);
+        bottomSheet.removeFromSuperview();
+        jsEvaluator(jsCode: command);
+    }
+
+    @objc private func cancel() {
+        whiteSheet.animateBottomSheet();
+    }
+
+    @objc private func scanQr() {
+        whiteSheet.animateBottomSheet();
+//        initializeCamera();
+    }
 }
 

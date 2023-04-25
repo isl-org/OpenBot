@@ -5,5 +5,6 @@
 import Foundation
 public struct ProjectItem {
     var projectName : String;
-    var projectDate : String
+    var projectDate : String;
+    var projectId : String
 }

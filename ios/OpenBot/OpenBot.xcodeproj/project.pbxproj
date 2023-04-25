@@ -97,7 +97,6 @@
 		727D3AC020F4956E20B53A9A /* UITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D5655D02C86CD08281C /* UITextField.swift */; };
 		727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3189735FC4F7A4E4A6C1 /* Browser.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
-		727D3C82AACCD756550D83EA /* HomePageViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D36FCD8BE958B54933FFC /* HomePageViewController+.swift */; };
 		727D3CCBA2ED9D056786AAC1 /* projectFragement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D326C57B2AFC7F2AEEDB1 /* projectFragement.swift */; };
 		727D3D05C58FC97350145FFD /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D388488E1FFD98E542061 /* Authentication.swift */; };
 		727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B02AB471D9F31B0747 /* Font.swift */; };
@@ -220,7 +219,6 @@
 		727D33AFAD7EDEC111578DE8 /* projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = projects.swift; sourceTree = "<group>"; };
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
-		727D36FCD8BE958B54933FFC /* HomePageViewController+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HomePageViewController+.swift"; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
 		727D384384E67F20294222AC /* editProfileFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = editProfileFragment.swift; sourceTree = "<group>"; };
 		727D388488E1FFD98E542061 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
@@ -552,7 +550,6 @@
 			children = (
 				66AC71EB29B885410022108A /* HomePageViewController.swift */,
 				66AC71EC29B885410022108A /* modesCollectionViewCell.swift */,
-				727D36FCD8BE958B54933FFC /* HomePageViewController+.swift */,
 			);
 			path = HomePage;
 			sourceTree = "<group>";
@@ -1124,7 +1121,6 @@
 				4FEF43D0E4F94DBBD4DB0614 /* Date.swift in Sources */,
 				727D341D19B074C289BA78C2 /* OpenCodeFragment.swift in Sources */,
 				727D3D05C58FC97350145FFD /* Authentication.swift in Sources */,
-				727D3C82AACCD756550D83EA /* HomePageViewController+.swift in Sources */,
 				727D33E21291B21856A1393B /* UiLabel.swift in Sources */,
 				727D339EDE19D22D7B9D16B5 /* GoogleSignInButton.swift in Sources */,
 				727D3CCBA2ED9D056786AAC1 /* projectFragement.swift in Sources */,
@@ -1214,7 +1210,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.openbot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emboidedai.openbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1254,7 +1250,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.openbot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emboidedai.openbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;

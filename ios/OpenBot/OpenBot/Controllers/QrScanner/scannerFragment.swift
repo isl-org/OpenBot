@@ -10,14 +10,12 @@ import AVFoundation
  class for qrScanner
  */
 class scannerFragment: CameraController {
-//    let cameraView = UIView();
+    var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
     let alert = UIAlertController(title: "Loading", message: "Please wait while we load data...", preferredStyle: .alert)
     var userToken: String = ""
     private var commands: String = ""
     private var projectFileId: String = "";
     var qrResult: String = "";
-    let whiteSheet = UIView(frame: UIScreen.main.bounds)
-    let bottomSheet = BottomSheetView(frame: CGRect(x: 0, y: height - 200, width: width, height: 200));
 
 /**
     Method calls after view will load and initialize the UI and camera
@@ -30,7 +28,6 @@ class scannerFragment: CameraController {
         cameraView.frame = CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230)
         initializeCamera()
         view.addSubview(cameraView);
-        createShadowSheet()
     }
 
     /**
@@ -108,7 +105,7 @@ class scannerFragment: CameraController {
                 hasSuccessfulScan = true
                 createOverlayAlert();
                 Authentication.download(file: qrResult) { data, error in
-                    self.createBottomSheet()
+//                    self.createBottomSheet()
                     self.alert.dismiss(animated: true);
                     if let error = error {
                         self.createErrorUI()
@@ -130,6 +127,7 @@ class scannerFragment: CameraController {
      */
     override func initializeCamera() {
         // Configure the input device (camera)
+        hasSuccessfulScan = false;
         guard let captureDevice = AVCaptureDevice.default(for: .video) else {
             return
         }
@@ -152,84 +150,28 @@ class scannerFragment: CameraController {
     }
 
     /**
-     Creating bottom sheet
-     */
-    private func createBottomSheet() {
-        whiteSheet.addSubview(bottomSheet)
-    }
-
-    /**
      Creating Bottom sheet for QR scan Successful
      */
     private func createSuccessUI() {
-        createBottomSheetHeading()
-        createBottomSheetMsg()
-        createStartBtn()
-        createCancelBtn();
+        self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "temp");
+        self.whiteSheet.startBtn.addTarget(self, action: #selector(self.start), for: .touchUpInside);
+        self.whiteSheet.cancelBtn.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
+        view.addSubview(self.whiteSheet);
     }
 
     /**
      Creating Bottom sheet for QR scan Error
      */
     private func createErrorUI() {
-        createErrorHeading()
-        createErrorMsg()
-        createScanQrBtn()
+        print("inside error ");
+        self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
+        self.whiteSheet.scanQr.addTarget(self, action: #selector(self.scan), for: .touchUpInside);
+        view.addSubview(whiteSheet);
     }
 
-    /**
-     Method to create shadow sheet
-     */
-    private func createShadowSheet() {
-        whiteSheet.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        view.addSubview(whiteSheet)
-    }
 
-    /**
-     Meethod to create Bottom sheet popup heading
-     */
-    private func createBottomSheetHeading() {
-        let heading = CustomLabel(text: "QR scanned successfully",
-                fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 23, width: 260, height: 40));
-        heading.font = HelveticaNeue.bold(size: 15);
-        bottomSheet.addSubview(heading);
-    }
 
-    /**
-     Method to create Bottom sheet Message
-     */
-    private func createBottomSheetMsg() {
-        let firstMsg = CustomLabel(text: "Blink LED file detected. Start to execute the code",
-                fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 57, width: 320, height: 40));
-        let secondMsg = CustomLabel(text: "your OpenBot.",
-                fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 77, width: 100, height: 40))
-        bottomSheet.addSubview(firstMsg);
-        bottomSheet.addSubview(secondMsg);
-    }
 
-    /**
-    Method to create Start button which run the project
-    */
-    private func createStartBtn() {
-        let startBtn = UIButton(frame: CGRect(x: 19, y: 120, width: 120, height: 40));
-        startBtn.backgroundColor = Colors.title;
-        startBtn.setTitle("Start", for: .normal);
-        startBtn.addTarget(nil, action: #selector(start), for: .touchUpInside);
-        startBtn.layer.cornerRadius = 10;
-        bottomSheet.addSubview(startBtn);
-    }
-
-    /**
-     Method to create Cancel button and reload the Scanner
-     */
-    private func createCancelBtn() {
-        let cancelBtn = UIButton(frame: CGRect(x: 160, y: 120, width: 120, height: 40));
-        cancelBtn.backgroundColor = Colors.title;
-        cancelBtn.setTitle("Cancel", for: .normal);
-        cancelBtn.addTarget(nil, action: #selector(cancel), for: .touchUpInside)
-        cancelBtn.layer.cornerRadius = 10;
-        bottomSheet.addSubview(cancelBtn);
-    }
 
     /**
      function to start and run the project
@@ -238,7 +180,7 @@ class scannerFragment: CameraController {
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
         let viewController = (storyboard.instantiateViewController(withIdentifier: "runOpenBot"));
         navigationController?.pushViewController(viewController, animated: true);
-        bottomSheet.removeFromSuperview();
+        whiteSheet.removeFromSuperview();
         jsEvaluator(jsCode: commands);
     }
 
@@ -246,12 +188,12 @@ class scannerFragment: CameraController {
      Function to remove bottom sheet and restart scanner
      */
     @objc private func cancel() {
-        bottomSheet.removeFromSuperview();
+        whiteSheet.animateBottomSheet();
         initializeCamera();
     }
 
     /**
-     Function to create Error Heading
+     Function to create Error Heading  mukerian
      */
     private func createErrorHeading() {
         let errorHeading = CustomLabel(text: "Error",
@@ -284,6 +226,7 @@ class scannerFragment: CameraController {
      Function to initialize camera for rescan
      */
     @objc private func scan() {
+        whiteSheet.animateBottomSheet();
         initializeCamera();
     }
 
@@ -298,5 +241,6 @@ class scannerFragment: CameraController {
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
     }
+    
 
 }

@@ -133,9 +133,10 @@ class Authentication {
         }
     }
 
-    static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
+     static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let fileId = returnFileId(fileLink: file);
         let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
+        print("url is :",url)
         let service: GTLRDriveService = GTLRDriveService()
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
@@ -149,7 +150,22 @@ class Authentication {
             }
         })
     }
-
+      static func download(fileId: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
+        let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
+        print("url is :",url)
+        let service: GTLRDriveService = GTLRDriveService()
+        let fetcher = service.fetcherService.fetcher(withURLString: url)
+        fetcher.beginFetch(completionHandler: { data, error in
+            if let error = error {
+                print("error is ", error.localizedDescription)
+                completion(nil, error)
+                return;
+            }
+            if let data = data {
+                completion(data, nil)
+            }
+        })
+    }
     func getAllFolders(completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         guard let accessToken = googleSignIn.currentUser?.accessToken.tokenString else {
             print("Access token is nil")
