@@ -15,8 +15,8 @@ import errorEmojiIcon from "../../src/assets/images/icon/error-emozi-icon.png"
 import pencilIcon from "../../src/assets/images/icon/pencil-icon.png"
 import darkPencilIcon from "../../src/assets/images/icon/dark-pencil-icon.png"
 import logo from "../../src/assets/images/icon/OBplaygroundLogo.png"
-import dragDropWhite from "../../src/assets/images/drag_drop_white.mp4";
-import dragDropDark from "../../src/assets/images/drag_drop_dark.mp4";
+import dragDropWhite from "../../src/assets/images/drag_drop_white.gif";
+import dragDropDark from "../../src/assets/images/drag_drop_dark.gif";
 import Carousal2 from "../../src/assets/images/qr_light.mov";
 import Carousal2Dark from "../../src/assets/images/qr_dark.mp4";
 import Carousal3 from "../../src/assets/images/mobile_white.mp4";

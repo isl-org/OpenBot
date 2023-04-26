@@ -4,9 +4,6 @@ import styles from "./carousel.module.css";
 import {ThemeContext} from "../../../App";
 import {Carousal} from "../../../utils/constants";
 import {Carousel} from "react-responsive-carousel";
-import dragDropWhite from "../../../assets/images/drag_drop_white.mp4";
-import dragDropDark from "../../../assets/images/drag_drop_dark.mp4";
-
 
 /**
  * HomeCarousel - a component that renders a carousel
@@ -44,13 +41,8 @@ function CarousalComponent(params) {
                     {slide.carousalLine1}<br/>{slide.carousalLine2}
                 </div>
             </div>
-            {slide.carousalHeader === "Drag and Drop" ?
-                <video src={theme === "dark" ? dragDropDark : dragDropWhite}
-                       className={`${styles.ImageDrag} ${styles.videoStyle}`}
-                       autoPlay={true} loop={true}/> :
-                <img alt="gif" src={theme === "dark" ? slide.videoDark : slide.videoLight}
-                     className={`${styles.ImageDrag} ${styles.videoStyle}`}/>
-            }
+            <img alt="gif" src={theme === "dark" ? slide.videoDark : slide.videoLight}
+                 className={`${styles.ImageDrag} ${styles.videoStyle}`}/>
         </div>
     )
 }
