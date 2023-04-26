@@ -41,7 +41,7 @@ export async function uploadProfilePic(file, fileName) {
     if (fileName === undefined) {
         return
     }
-    const fileRef = ref(FirebaseStorage, auth.currentUser.uid + fileName)
+    const fileRef = ref(FirebaseStorage, "profile_pictures/"+auth.currentUser.uid + ".jpg")
     await uploadBytes(fileRef, file);
     return getDownloadURL(fileRef)
 }

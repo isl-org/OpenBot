@@ -32,16 +32,14 @@ function BlocklyComponent(props) {
 
     // Get context values from the store
     const {theme} = useContext(ThemeContext);
-    const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer,setWorkspace} = useContext(StoreContext);
-
-    const uniqueId = currentProjectId ? currentProjectId : nanoid()    // Generate a unique ID for the workspace if it doesn't exist
+    const {projectName, currentProjectXml, fileId, folderId, setDrawer,setWorkspace} = useContext(StoreContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     // Save workspace code to local storage when workspace changes
     const handleWorkspaceChange = useCallback(() => {
         setDrawer(false);
         if (projectName !== undefined) {
-            updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
+            updateCurrentProject( projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
         }
 
     }, []);

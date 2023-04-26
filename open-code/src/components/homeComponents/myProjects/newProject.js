@@ -8,6 +8,7 @@ import styles from './newProject.module.css';
 import Card from './card';
 import NewProjectButton from './newProjectButton';
 import LoaderComponent from "../../loader/loaderComponent";
+import {StoreContext} from "../../../context/context";
 
 
 /**
@@ -18,13 +19,17 @@ import LoaderComponent from "../../loader/loaderComponent";
 export const NewProject = () => {
     const [projects, setProjects] = useState(undefined);
     const {theme} = useContext(ThemeContext);
+    const {user} = useContext(StoreContext)
+
 
     useEffect(() => {
         // Fetch projects from the API and update state
+        setProjects(undefined);
         getFilterProjects().then((filterProject) => {
             setProjects(filterProject);
         });
-    }, []);
+
+    }, [user]);
 
     return (
         <div className={`${styles.Main} ${theme === 'dark' ? styles.MainDark : styles.MainLight}`}>

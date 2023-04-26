@@ -8,6 +8,7 @@ import styles from "./components/homeComponents/carousel/carousel.module.css";
 import {Images} from "./utils/images";
 import {auth, googleSignOut} from "./services/firebase";
 import {ToastContainer} from "react-toastify";
+
 export const ThemeContext = createContext(null);
 
 
@@ -17,8 +18,6 @@ export const ThemeContext = createContext(null);
  * @constructor
  */
 function App() {
-    const location = useLocation();
-    const [isLoading, setIsLoading] = useState(false);
     let onPageLoad = localStorage.getItem("theme") || ""
     const [theme, setTheme] = useState(onPageLoad);
 
@@ -37,7 +36,7 @@ function App() {
                 user.getIdTokenResult()
                     .then((idTokenResult) => {
                         const expirationTime = idTokenResult?.expirationTime;
-                        const sessionTimeoutMs = new Date(expirationTime).getTime() - Date.now() ;
+                        const sessionTimeoutMs = new Date(expirationTime).getTime() - Date.now();
                         if (timeoutId) {
                             clearTimeout(timeoutId);
                         }
@@ -61,13 +60,6 @@ function App() {
         }
     }, []);
 
-
-    useEffect(() => {
-        setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-        }, Constants.LoadingTime);
-    }, [location]);
 
     //check if user prefer theme is saved or not if not then saved it to system theme
     if (!localStorage.getItem("theme")) {
@@ -93,10 +85,7 @@ function App() {
         <ThemeContext.Provider value={{theme, toggleTheme}}>
             <StoreProvider>
                 <div id={theme}>
-                    {isLoading ?
-                        <LoadingComponent/> :
-                        <RouterComponent/>
-                    }
+                    <RouterComponent/>
                 </div>
                 <ToastContainer autoClose={5000}/>
             </StoreProvider>

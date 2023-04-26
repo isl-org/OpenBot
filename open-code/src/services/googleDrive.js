@@ -193,10 +193,12 @@ async function CreateFolder(accessToken) {
 export async function getFolderId() {
     // Authenticate the user and obtain an access token for the Google Drive API
     const accessToken = getAccessToken();
-    // Step 1: Get the ID of the folder with the specified name
 
+    // Step 1: Get the ID of the folder with the specified name
     const searchResponse = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(Constants.FolderName)}'+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false&access_token=${accessToken}`);
+    console.log(searchResponse)
     const searchResult = await searchResponse.json();
+    console.log(searchResult)
     //if session expire give alert and signOut user.
     if (searchResult.error && searchResult.error.code === 401) {
         alert("your session has expired please login again.")
@@ -262,15 +264,20 @@ export async function getAllFilesFromGoogleDrive() {
     // Step 1: Get the ID of the folder with the specified name
     const folderId = await getFolderId();
     // Step 2: Retrieve all files in the folder with their metadata
-    const filesResponse = await fetch(`${Constants.baseUrl}/files?q=mimeType='text/xml' and trashed=false and parents='${folderId}'&fields=files(id,name,createdTime,modifiedTime,appProperties,mimeType)&access_token=${accessToken}`);
-    const filesResult = await filesResponse.json();
+    console.log("folderOID:::",folderId)
+    if(folderId) {
+        const filesResponse = await fetch(`${Constants.baseUrl}/files?q=mimeType='text/xml' and trashed=false and parents='${folderId}'&fields=files(id,name,createdTime,modifiedTime,appProperties,mimeType)&access_token=${accessToken}`);
+        const filesResult = await filesResponse.json();
 
-    // Step 3: get xmlValue and append to each file.
-    await Promise.all(filesResult.files?.map(async (file) => {
-        file.xmlValue = await getSelectedProjectFromGoogleDrive(folderId, file.id, accessToken);
-    }));
+        // Step 3: get xmlValue and append to each file.
+        await Promise.all(filesResult.files?.map(async (file) => {
+            file.xmlValue = await getSelectedProjectFromGoogleDrive(folderId, file.id, accessToken);
+        }));
 
-    return filesResult.files;
+        return filesResult.files;
+    }else{
+        return [];
+    }
 }
 
 
@@ -390,12 +397,23 @@ export async function getShareableLink(fileId, folderId) {
  * @returns {Promise<void>}
  */
 export async function fileRename(newFileName, oldName, fileType) {
+    console.log("newFileName, oldName, fileType,newFileName, oldName, fileType", newFileName, oldName, fileType)
     const folderId = await getFolderId();
     const accessToken = getAccessToken();
-
-    let fileId = await checkFileExistsInFolder(folderId, oldName, fileType === Constants.xml ?? Constants.js); //check according to file type
-    let body = {"name": newFileName + `.${fileType === Constants.xml ?? Constants.js}`} //add name with extension according to fileType
-
+    let fileId=undefined;
+    let body;
+    if (fileType === Constants.xml) {
+         fileId = await checkFileExistsInFolder(folderId, oldName, Constants.xml); //check according to file type
+        console.log("fileId", fileId)
+         body = {"name": newFileName + `.${Constants.xml}`} //add name with extension according to fileType
+        console.log("body::", body)
+    }else{
+         fileId = await checkFileExistsInFolder(folderId, oldName,  Constants.js); //check according to file type
+        console.log("fileId", fileId)
+         body = {"name": newFileName + `.${Constants.js}`} //add name with extension according to fileType
+        console.log("body::", body)
+    }
+    console.log("folderId:",folderId, fileId.fileId)
     await fetch(`https://www.googleapis.com/drive/v3/files/${fileId.fileId}?parents=${folderId}&fields=name`, {
         method: 'PATCH',
         headers: {

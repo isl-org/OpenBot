@@ -6,7 +6,7 @@ import styles from "./newProject.module.css";
 import {ThemeContext} from "../../../App";
 import {Images} from "../../../utils/images";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
-import {localStorageKeys, Themes} from "../../../utils/constants";
+import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 
@@ -29,7 +29,6 @@ function NewProjectButton(props) {
         projectName,
         setProjectName,
         setCurrentProjectXml,
-        setCurrentProjectId,
         setFileId,
     } = useContext(StoreContext)
 
@@ -39,7 +38,6 @@ function NewProjectButton(props) {
         localStorage.setItem(localStorageKeys.currentProject, "");
         setCurrentProjectXml("")
         setProjectName();
-        setCurrentProjectId();
         setOpen(true);// open modal
         setFileId("")
     }
@@ -63,8 +61,7 @@ function NewProjectButton(props) {
             }
             setIsInputError(false);  // Clear input error flag
             // Navigate to playground page and close modal
-            let path = `playground`;
-            navigate(path);
+            navigate(PathName.playGround);
             handleClose();
         }
     }

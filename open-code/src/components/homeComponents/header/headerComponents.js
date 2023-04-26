@@ -28,8 +28,7 @@ export function LogoSection() {
 
     //onClickEvent
     const openHomepage = () => {
-        let path = `/`;
-        navigate(path);
+        navigate(PathName.home);
     }
     return (
         <div className={styles.navbarTitleDiv}>

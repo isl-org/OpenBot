@@ -30,21 +30,21 @@ function Card(props) {
     const {
         setCurrentProjectXml,
         setProjectName,
-        setCurrentProjectId,
         setFileId,
         setDrawer,
     } = useContext(StoreContext);
+    const {projectData,} = props
     const [openPopUp, setOpenPopUp] = useState(false);
+    const [deleteProject, setDeleteProject] = useState(false);
     const [rename, setRename] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [reNameProject, setReNameProject] = useState("")
-    const [deleteProject, setDeleteProject] = useState(false);
     const inputRef = useRef(null);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
     useEffect(() => {
-        setReNameProject(props.projectData.projectName)
+        setReNameProject(projectData.projectName)
     }, [])
 
     let navigate = useNavigate();
@@ -62,27 +62,14 @@ function Card(props) {
      * @returns {Promise<void>}
      */
     const handleOpenProject = async (projectData) => {
+
         localStorage.setItem(localStorageKeys.currentProject, "");
-        setCurrentProjectId(projectData.id);
         setDrawer(false);
         try {
-            if (projectData.storage === "drive") {
-                //selected project from Google Drive
-                const allProject = []
-                await getDriveProjects(allProject);
-                const findCurrentProject = allProject.find(currentProject => currentProject.id === projectData.id);
-                setCurrentProjectXml(findCurrentProject.xmlValue);
-                setProjectName(findCurrentProject.projectName);
-                openExistingProject();
-            } else {
-                // Selected project from local storage
-                const findCurrentProject = getAllLocalProjects().find(currentProject => currentProject.id === projectData.id)
-                setCurrentProjectXml(findCurrentProject.xmlValue);
-                setProjectName(findCurrentProject.projectName);
-                setFileId(findCurrentProject.fileId);
-                openExistingProject();
-            }
-
+            setCurrentProjectXml(projectData.xmlValue);
+            setProjectName(projectData.projectName);
+            setFileId(projectData.fileId);
+            openExistingProject();
         } catch (error) {
             console.error(error);
         }
@@ -102,20 +89,19 @@ function Card(props) {
     // Handle click event for renaming a project
     const handleClickBlur = async () => {
         if (!reNameProject || reNameProject <= 0) {
-            setReNameProject(props.projectData.projectName)
+            setReNameProject(projectData.projectName)
         }
         setRename(false)
-        if (reNameProject !== props.projectData.projectName) {
-            await handleRename(reNameProject, props.projectData.projectName, setReNameProject).then(async (updatedProjectName) => {
-                await renameProject(updatedProjectName, props.projectData.projectName, PathName.home).then()
+        if (reNameProject !== projectData.projectName) {
+            await handleRename(reNameProject, projectData.projectName, setReNameProject).then(async (updatedProjectName) => {
+                await renameProject(updatedProjectName, projectData.projectName, PathName.home).then()
             });
         }
     }
 
     const handleDeleteProject = () => {
-        deleteProjectFromStorage(props.projectData.projectName).then(() => {
-            let path = `/`;
-            navigate(path);
+        deleteProjectFromStorage(projectData.projectName).then(() => {
+            setDeleteProject(false);
         });
     }
 
@@ -128,7 +114,7 @@ function Card(props) {
                                           handleButtonClick={handleDeleteProject}/>
             }
             <div onClick={() => {
-                handleOpenProject(props.projectData).catch((err) => {
+                handleOpenProject(projectData).catch((err) => {
                     console.log("error on fetching blocks: ", err);
                 })
             }} className={` ${styles.Card} ${theme === "dark" ? styles.darkBoxShadow : styles.lightBoxShadow}`}>
@@ -148,7 +134,7 @@ function Card(props) {
                                                  await handleClickBlur()
                                              }
                                          }}
-                                         style={{width: `${props.projectData.projectName?.length * 1.5}ch`}}
+                                         style={{width: `${projectData.projectName?.length * 1.5}ch`}}
                                          value={reNameProject}
                         /> : theme === "dark" ?
                             <WhiteText extraStyle={styles.CardHeading}
@@ -178,8 +164,8 @@ function Card(props) {
                 </div>
                 <BlackText divStyle={{marginTop: (!isMobile && 4), marginBottom: (!isMobile && 5)}}
                            extraStyle={styles.Date}
-                           text={props.projectData.updatedDate}/>
-                <BlackText extraStyle={styles.Date} text={props.projectData.time}/>
+                           text={projectData.updatedDate}/>
+                <BlackText extraStyle={styles.Date} text={projectData.time}/>
             </div>
         </div>
     );

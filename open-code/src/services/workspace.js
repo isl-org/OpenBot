@@ -2,6 +2,7 @@ import {localStorageKeys, PathName} from "../utils/constants";
 import {
     checkFileExistsInFolder, deleteFileFromGoogleDrive, getAllFilesFromGoogleDrive, getFolderId, fileRename,
 } from "./googleDrive";
+import moment from "moment/moment";
 
 
 /**
@@ -84,11 +85,10 @@ export async function deleteProjectFromStorage(projectName) {
  * @param projectName
  * @param code
  */
-export function updateCurrentProject(uniqueId, projectName, code) {
+export function updateCurrentProject( projectName, code) {
 
     const project = {
         storage: "local",
-        id: uniqueId,
         projectName: projectName,
         xmlValue: code,
         updatedDate: FormatDate().currentDate,
@@ -98,7 +98,7 @@ export function updateCurrentProject(uniqueId, projectName, code) {
     localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
     //now will check current project is in all project or not.
     const found = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
-        return project.id === getCurrentProject().id
+        return project.projectName === getCurrentProject().projectName
     })
     //current project is not in local so will save it in local
     if (!found) {
@@ -164,11 +164,12 @@ export function getAllLocalProjects() {
  * current project changes save in local storage.
  */
 export function updateLocalProjects() {
+
     if (getCurrentProject()) {
         let allProjects = getAllLocalProjects()
-        let index = allProjects?.findIndex(obj => obj.id === getCurrentProject().id)
+        let index = allProjects?.findIndex(obj => obj.projectName === getCurrentProject().projectName)
         allProjects?.find((project) => {
-                if (project.id === getCurrentProject().id) {
+                if (project.projectName === getCurrentProject().projectName) {
                     allProjects.splice(index, 1, getCurrentProject())
                 }
                 return "";
@@ -192,16 +193,17 @@ export async function getFilterProjects() {
         const uniqueIds = {}; // object to keep track of unique id values
         filterProjects = allProjects.filter(project => {
             // check if id value has already been seen
-            if (uniqueIds[project.id]) {
+            if (uniqueIds[project.projectName]) {
                 return false;
             }
             // mark id value as seen
-            uniqueIds[project.id] = true;
+            uniqueIds[project.projectName] = true;
 
             // check if storage value is 'drive'
             if (project.storage === 'drive') {
+                console.log("project:::::", project.projectName, project)
                 // check if id value is unique
-                return allProjects.filter(o => o.id === project.id).length === 1;
+                return allProjects.filter(o => o.projectName === project.projectName).length === 1;
             }
             return true;
         });
@@ -239,7 +241,6 @@ export async function renameProject(projectName, oldName, screen) {
         let data = {
             projectName: projectName,
             xmlValue: getCurrentProject()?.xmlValue,
-            id: getCurrentProject()?.id,
         }
         // Update project name in local storage
         const allProjects = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects));
@@ -254,7 +255,7 @@ export async function renameProject(projectName, oldName, screen) {
             data = Object.assign(data, {projectName: projectName});
             // Update current project in Google Drive if it has the old project name
             if (oldName === getCurrentProject().projectName) {
-                updateCurrentProject(data.id, projectName, data.xmlValue)
+                updateCurrentProject(projectName, data.xmlValue)
             }
             // Check if XML and JS files for the project exist and rename them if necessary
             const xmlFileExists = await checkFileExistsInFolder(await getFolderId(), oldName, "xml");
@@ -268,7 +269,7 @@ export async function renameProject(projectName, oldName, screen) {
         } else {
             if (oldName === getCurrentProject()?.projectName) {
                 data = Object.assign(data, {projectName: projectName});
-                updateCurrentProject(data.id, projectName, data.xmlValue)
+                updateCurrentProject(projectName, data.xmlValue)
             }
         }
         // Refresh page if user is on home screen

@@ -25,7 +25,6 @@ export default ({children}) => {
     const [code, setCode] = useState("");
     const [generate, setGenerateCode] = useState(false);
     const [currentProjectXml, setCurrentProjectXml] = useState(savedProjectXml);
-    const [currentProjectId, setCurrentProjectId] = useState(savedProjectId);
     const [fileId, setFileId] = useState(savedFileId);
     const [folderId, setFolderId] = useState(savedFolderId);
     const[user,setUser]=useState();
@@ -38,7 +37,6 @@ export default ({children}) => {
         code, setCode,
         generate, setGenerateCode,
         currentProjectXml, setCurrentProjectXml,
-        currentProjectId, setCurrentProjectId,
         fileId, setFileId,
         folderId, setFolderId,
         user,setUser,
