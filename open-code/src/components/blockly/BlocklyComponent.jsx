@@ -32,7 +32,7 @@ function BlocklyComponent(props) {
 
     // Get context values from the store
     const {theme} = useContext(ThemeContext);
-    const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer,setWorkspace,setIsError} = useContext(StoreContext);
+    const {projectName, currentProjectId, currentProjectXml, fileId, folderId, setDrawer,setWorkspace,setIsError,setCurrentProjectXml} = useContext(StoreContext);
 
     const uniqueId = currentProjectId ? currentProjectId : nanoid()    // Generate a unique ID for the workspace if it doesn't exist
     const themes = useTheme();
@@ -42,6 +42,7 @@ function BlocklyComponent(props) {
         setDrawer(false);
         setIsError(false);
         if (projectName !== undefined) {
+            setCurrentProjectXml(Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
             updateCurrentProject(uniqueId, projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
         }
 
