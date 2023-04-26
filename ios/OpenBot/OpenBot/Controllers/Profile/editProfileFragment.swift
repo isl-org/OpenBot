@@ -50,6 +50,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         let imgUrl = (Auth.auth().currentUser?.photoURL ?? authentication.googleSignIn.currentUser?.profile?.imageURL(withDimension: 100))!;
         profileIcon.load(url: imgUrl);
         view.addSubview(profileIcon)
+        profileIcon.contentMode = .scaleAspectFill
         let uploadImgIcon = UIImage(named: "uploadImage");
         let uploadImage = UIImageView(frame: CGRect(x: profileIcon.frame.origin.x + profileIcon.frame.width / 2 + adapted(dimensionSize: 10, to: .height), y: profileIcon.frame.origin.y + profileIcon.frame.height - 40.0, width: 40.5, height: 40.5));
         uploadImage.image = uploadImgIcon;
@@ -71,7 +72,6 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         view.addSubview(lastName);
         view.addSubview(dob);
         view.addSubview(email);
-
     }
 
     /**
@@ -235,14 +235,43 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
 
 // Create a reference to the image file in Firebase storage using the user's UID as the filename
         let uid = Auth.auth().currentUser?.uid ?? ""
-        let imageRef = storage.reference().child("users/\(uid)/profile.jpg")
+        let imageRef = storage.reference().child("profile_pictures/\(uid).jpg")
 
 // Convert the image to data
-        guard let imageData = profileIcon.image?.jpegData(compressionQuality: 0.5) else {
+        guard let image = profileIcon.image, let imageData = image.jpegData(compressionQuality: 0.5) else {
             print("Error converting image to data")
             return
         }
 
+        let maxSize: CGFloat = 1024 // maximum size of the image
+        var actualHeight = image.size.height
+        var actualWidth = image.size.width
+        var maxHeight = maxSize
+        var maxWidth = maxSize
+
+// Check the aspect ratio of the image
+        let aspectRatio = actualWidth/actualHeight
+
+        if aspectRatio > 1 {
+            // Landscape image
+            maxWidth = maxSize
+            maxHeight = maxSize/aspectRatio
+        } else {
+            // Portrait image
+            maxHeight = maxSize
+            maxWidth = maxSize*aspectRatio
+        }
+
+        let rect = CGRect(x: 0.0, y: 0.0, width: maxWidth, height: maxHeight)
+        UIGraphicsBeginImageContext(rect.size)
+        image.draw(in: rect)
+        let compressedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        guard let compressedImageData = compressedImage?.jpegData(compressionQuality: 0.5) else {
+            print("Error compressing image")
+            return
+        }
 // Upload the image data to Firebase storage
         let uploadTask = imageRef.putData(imageData, metadata: nil) { metadata, error in
             if let error = error {
