@@ -51,6 +51,7 @@ struct Colors {
     static let navigationColor = UIColor(named: "navigationColor")
     static let modelDetail = UIColor(named: "modelDetailPopup")
     static let blue = UIColor(red: 0, green: 113, blue: 197, alpha: 1);
+    static let lightBlack = UIColor(red: 0.16, green: 0.16, blue: 0.16, alpha: 1.00)
 }
 
 /// Set of constants used in the code

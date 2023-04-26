@@ -9,6 +9,8 @@ import GoogleAPIClientForREST
 import GTMSessionFetcher
 
 class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+    let bluetooth = bluetoothDataController.shared
+    @IBOutlet weak var bluetoothIcon: UIImageView!
     private let service: GTLRDriveService = GTLRDriveService()
     private let authentication: Authentication = Authentication.googleAuthentication
     @IBOutlet weak var projectCollectionView: UICollectionView!
@@ -19,6 +21,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private var command: String = ""
     private let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
     private var allProjectCommands: [ProjectData] = [];
+    private var myProjectLabel: CustomLabel = CustomLabel(frame: .zero)
 
     /**
        Function calls after view will loaded.
@@ -43,12 +46,21 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         layout.minimumInteritemSpacing = 10
         layout.sectionInset = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
         layout.minimumLineSpacing = 30
-        layout.collectionView?.backgroundColor = .red
         projectCollectionView.collectionViewLayout = layout;
         projectCollectionView.register(projectCollectionViewCell.nib(), forCellWithReuseIdentifier: projectCollectionViewCell.identifier)
         projectCollectionView.delegate = self
         projectCollectionView.dataSource = self
+        createRefresh();
+        setupBluetoothIcon();
+        apply();
+    }
 
+    func createRefresh() {
+        projectCollectionView.refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: projectCollectionView.bounds.width, height: projectCollectionView.bounds.height));
+//        refreshControl.frame = CGRect(x: 0, y: 0, width: projectCollectionView.bounds.width, height: projectCollectionView.bounds.height)
+//        projectCollectionView.addSubview(refreshControl)
+        projectCollectionView?.refreshControl?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+//        refreshControl.backgroundColor = Colors.lightBlack
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -64,14 +76,21 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         updateViewsVisibility();
     }
 
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+//        apply();
+    }
+
     /**
      Function to create my project label
      */
     func createMyProjectLabel() {
-        let label = CustomLabel(text: "My Projects", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: safeAreaLayoutValue.left + 20, y: 90, width: 200, height: 40));
-        label.font = HelveticaNeue.regular(size: 15);
-        view.addSubview(label)
-
+        myProjectLabel = CustomLabel(text: "My Projects", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(origin: .zero, size: CGSize(width: 200, height: 40)));
+        myProjectLabel.font = HelveticaNeue.regular(size: 15);
+        myProjectLabel.translatesAutoresizingMaskIntoConstraints = false;
+        view.addSubview(myProjectLabel)
+        myProjectLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true;
+        myProjectLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true;
     }
 
     /**
@@ -97,6 +116,10 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         label.font = HelveticaNeue.regular(size: 12);
         noProjectMessageView.addSubview(firstLabel);
         noProjectMessageView.addSubview(label);
+    }
+
+    private func setupBluetoothIcon(){
+       bluetoothIcon.image =  isBluetoothConnected ?  Images.bluetoothConnected : Images.bluetoothDisconnected;
     }
 
     /**
@@ -165,6 +188,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                     self.command = result;
                 } else if let error = error {
                     print("Error is", error)
+                    self.whiteSheet.removeFromSuperview();
+                    self.alert.dismiss(animated: true);
                     self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
                     self.whiteSheet.scanQr.addTarget(self, action: #selector(self.scanQr), for: .touchUpInside);
                     self.tabBarController?.view.addSubview(self.whiteSheet);
@@ -205,6 +230,15 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         Authentication.init()
     }
 
+    private func apply() {
+        if currentOrientation == .portrait {
+
+        } else if currentOrientation == .landscapeLeft {
+        } else if currentOrientation == .landscapeRight {
+
+        }
+    }
+
     @objc func googleSignIn(_ notification: Notification) {
         allProjects = [];
         if GIDSignIn.sharedInstance.currentUser != nil {
@@ -214,6 +248,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
     private func loadProjects() {
+        allProjects = [];
+        allProjectCommands = [];
+        projectCollectionView.reloadData();
         authentication.getAllFolders { files, error in
             if let files = files {
                 self.authentication.getFilesInFolder(folderId: files[0].identifier ?? "") { files, error in
@@ -286,7 +323,14 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     @objc private func scanQr() {
         whiteSheet.animateBottomSheet();
-//        initializeCamera();
+    }
+
+    @objc func refreshData() {
+        allProjects = [];
+        allProjectCommands = [];
+        projectCollectionView.reloadData();
+        loadProjects()
+        projectCollectionView.refreshControl?.endRefreshing()
     }
 }
 

@@ -118,7 +118,7 @@ class profileFragment: UIViewController {
     private func createLogoutPopup() {
         logoutView = UIView(frame: CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 20, width: width * 0.90, height: 168));
         shadowSheet.addSubview(logoutView);
-        logoutView.backgroundColor = Colors.modelDetail;
+        logoutView.backgroundColor = Colors.lightBlack;
         let confirmLogoutLabel = CustomLabel(text: "Confirm Logout", fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: 22, width: 150, height: 40));
         let msg = CustomLabel(text: "Are you sure you want to logout?", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: confirmLogoutLabel.frame.origin.y + 35, width: width, height: 40));
         let cancelBtn = UIButton(frame: CGRect(x: 80, y: msg.frame.origin.y + 50, width: 100, height: 35));
