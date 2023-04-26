@@ -29,9 +29,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createPleaseSignInLabel();
         createNoProjectMessage();
         createSignInBtn();
-        if GIDSignIn.sharedInstance.currentUser != nil {
-            createOverlayAlert();
-        }
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
@@ -56,6 +53,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         super.viewWillAppear(animated);
         if allProjects.count == 0 && GIDSignIn.sharedInstance.currentUser != nil {
             loadProjects();
+            createOverlayAlert();
         }
     }
 
@@ -68,7 +66,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      Function to create my project label
      */
     func createMyProjectLabel() {
-        let label = CustomLabel(text: "My Projects", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 20, y: 90, width: 200, height: 40));
+        let label = CustomLabel(text: "My Projects", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: safeAreaLayoutValue.left + 20, y: 90, width: 200, height: 40));
         label.font = HelveticaNeue.regular(size: 15);
         view.addSubview(label)
 
@@ -85,15 +83,16 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
     func createNoProjectMessage() {
-        let firstLabel = CustomLabel(text: "Oops! No projects found.", fontSize: 22, fontColor: Colors.title ?? .blue, frame: CGRect(x: width / 2 - 115, y: height / 2 - 20, width: 280, height: 40));
+        let firstLabel = CustomLabel(text: "Oops! No projects found.", fontSize: 22, fontColor: Colors.title ?? .blue, frame: CGRect(x: width / 2 - 140, y: height / 2 - 20, width: 280, height: 40));
         firstLabel.font = HelveticaNeue.bold(size: 16);
         let label = CustomLabel(text: "Looks like there are no projects\nin your google drive yet.",
                 fontSize: 18,
                 fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white: UIColor.black,
-                frame: CGRect(x: width / 2 - 115, y: height / 2, width: 250, height: 80))
+                frame: CGRect(x: width / 2 - 140, y: height / 2, width: 280, height: 80))
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center
+        label.font = HelveticaNeue.regular(size: 12);
         noProjectMessageView.addSubview(firstLabel);
         noProjectMessageView.addSubview(label);
     }
@@ -200,8 +199,11 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
     @objc func googleSignIn(_ notification: Notification) {
-        updateViewsVisibility();
         allProjects = [];
+        if GIDSignIn.sharedInstance.currentUser != nil{
+            loadProjects();
+        }
+
     }
 
     private func loadProjects() {
