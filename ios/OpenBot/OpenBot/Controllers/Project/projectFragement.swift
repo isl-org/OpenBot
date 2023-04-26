@@ -9,15 +9,17 @@ import GoogleAPIClientForREST
 import GTMSessionFetcher
 
 class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
-    let service: GTLRDriveService = GTLRDriveService()
+    private let service: GTLRDriveService = GTLRDriveService()
     private let authentication: Authentication = Authentication.googleAuthentication
     @IBOutlet weak var projectCollectionView: UICollectionView!
-    var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
-    let signInView: UIView = UIView(frame: UIScreen.main.bounds)
-    let noProjectMessageView: UIView = UIView(frame: UIScreen.main.bounds);
-    var allProjects: [ProjectItem] = [];
-    var command: String = ""
-    let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+    private var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
+    private let signInView: UIView = UIView(frame: UIScreen.main.bounds)
+    private let noProjectMessageView: UIView = UIView(frame: UIScreen.main.bounds);
+    private var allProjects: [ProjectItem] = [];
+    private var command: String = ""
+    private let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+    private var allProjectCommands: [ProjectData] = [];
+
     /**
        Function calls after view will loaded.
     */
@@ -87,7 +89,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         firstLabel.font = HelveticaNeue.bold(size: 16);
         let label = CustomLabel(text: "Looks like there are no projects\nin your google drive yet.",
                 fontSize: 18,
-                fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white: UIColor.black,
+                fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black,
                 frame: CGRect(x: width / 2 - 140, y: height / 2, width: 280, height: 80))
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -152,24 +154,29 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(allProjects[indexPath.row].projectName);
-        createOverlayAlert();
         collectionView.deselectItem(at: indexPath, animated: true)
-        getCommandOfSelectedFile(project: allProjects[indexPath.row]) { result, error in
-            if let result = result {
-                self.alert.dismiss(animated: true);
-                self.command = result;
-                self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: self.allProjects[indexPath.row].projectName);
-                self.whiteSheet.startBtn.addTarget(self, action: #selector(self.start), for: .touchUpInside);
-                self.whiteSheet.cancelBtn.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
-                self.tabBarController?.view.addSubview(self.whiteSheet);
-            } else if let error = error {
-                print("Error is", error)
-                self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
-                self.whiteSheet.scanQr.addTarget(self, action: #selector(self.scanQr), for: .touchUpInside);
-                self.tabBarController?.view.addSubview(self.whiteSheet);
+        if allProjectCommands.count != 0 {
+            command = allProjectCommands[indexPath.row].projectCommand;
+        } else {
+            createOverlayAlert();
+            getCommandOfSelectedFile(project: allProjects[indexPath.row]) { result, error in
+                if let result = result {
+                    self.alert.dismiss(animated: true);
+                    self.command = result;
+                } else if let error = error {
+                    print("Error is", error)
+                    self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
+                    self.whiteSheet.scanQr.addTarget(self, action: #selector(self.scanQr), for: .touchUpInside);
+                    self.tabBarController?.view.addSubview(self.whiteSheet);
+                    return;
+                }
             }
         }
+        self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: self.allProjects[indexPath.row].projectName);
+        self.whiteSheet.startBtn.addTarget(self, action: #selector(self.start), for: .touchUpInside);
+        self.whiteSheet.cancelBtn.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
+        self.tabBarController?.view.addSubview(self.whiteSheet);
+
     }
 
     /**
@@ -191,7 +198,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             signInView.isHidden = false;
             noProjectMessageView.isHidden = true;
         }
-        print( noProjectMessageView.isHidden , allProjects.count)
+        print(noProjectMessageView.isHidden, allProjects.count)
     }
 
     @objc func signIn() {
@@ -200,7 +207,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     @objc func googleSignIn(_ notification: Notification) {
         allProjects = [];
-        if GIDSignIn.sharedInstance.currentUser != nil{
+        if GIDSignIn.sharedInstance.currentUser != nil {
             loadProjects();
         }
 
@@ -216,6 +223,15 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                                 print(file)
                                 let project = ProjectItem(projectName: Authentication.returnFileName(name: file.name ?? "Unknown") ?? "Unknown", projectDate: file.modifiedTime?.stringValue ?? "", projectId: file.identifier ?? "")
                                 self.allProjects.append(project);
+                                let projectCommand = self.getCommandOfSelectedFile(project: project) { command, error in
+                                    if let error = error {
+                                        print("error in getting commands of \(project.projectName)")
+                                    }
+                                    if let command = command {
+                                        let projectData = ProjectData(projectId: file.identifier ?? "", projectCommand: command);
+                                        self.allProjectCommands.append(projectData);
+                                    }
+                                }
                             }
                         }
                         self.projectCollectionView.reloadData();

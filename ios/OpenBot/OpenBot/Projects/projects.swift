@@ -8,3 +8,8 @@ public struct ProjectItem {
     var projectDate : String;
     var projectId : String
 }
+
+public struct ProjectData {
+    var projectId : String;
+    var projectCommand : String;
+}
