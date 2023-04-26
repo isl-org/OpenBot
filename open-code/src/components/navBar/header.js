@@ -51,7 +51,7 @@ export function Header() {
 
     //delete file from local and drive
     const handleDeleteProject = () => {
-        deleteProjectFromStorage(projectName).then(() => {
+        deleteProjectFromStorage(projectName).then((res) => {
             navigate(PathName.home);
         });
     }

@@ -46,18 +46,23 @@ export async function getDriveProjects(driveProjects) {
 export async function deleteProjectFromStorage(projectName) {
 
     try {
+
         //delete file from localProject so find project from local first then update the all projects by uploading project list.
         JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
+
             if (project.projectName === projectName) {
                 //restProject contains all the projects except deleted project
                 const restProjects = getAllLocalProjects().filter((res) => (res.projectName !== project.projectName));
+
                 //set restProjects as all project in local
                 localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(restProjects))
             }
+
             return null;
         })
         //delete file from Google Drive
         if (localStorage.getItem("isSigIn") === "true") {
+
             const allProject = []
             //deleting file from Google Drive
             await getDriveProjects(allProject);
@@ -71,7 +76,6 @@ export async function deleteProjectFromStorage(projectName) {
                 if (response.exists)
                     await deleteFileFromGoogleDrive(response?.fileId)
             })
-
         }
     } catch (err) {
         console.log(err);

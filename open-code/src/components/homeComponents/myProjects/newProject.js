@@ -9,6 +9,7 @@ import Card from './card';
 import NewProjectButton from './newProjectButton';
 import LoaderComponent from "../../loader/loaderComponent";
 import {StoreContext} from "../../../context/context";
+import {useLocation} from "react-router-dom";
 
 
 /**
@@ -19,24 +20,28 @@ import {StoreContext} from "../../../context/context";
 export const NewProject = () => {
     const [projects, setProjects] = useState(undefined);
     const {theme} = useContext(ThemeContext);
-    const {user} = useContext(StoreContext)
+    const {user} = useContext(StoreContext);
+    const [deleteLoader, setDeleteLoader] = useState(false);
+    const location = useLocation();
 
 
     useEffect(() => {
         // Fetch projects from the API and update state
         setProjects(undefined);
-        getFilterProjects().then((filterProject) => {
-            setProjects(filterProject);
-        });
+        if (!deleteLoader) {
+            getFilterProjects().then((filterProject) => {
+                setProjects(filterProject);
+            });
+        }
 
-    }, [user]);
+    }, [user,deleteLoader,location]);
 
     return (
         <div className={`${styles.Main} ${theme === 'dark' ? styles.MainDark : styles.MainLight}`}>
             <div className={`${styles.Heading} ${theme === 'dark' ? styles.MainDark : styles.MainLight}`}>
                 My Projects
             </div>
-            {projects ?
+            {projects && !deleteLoader ?
                 <div className={styles.ButtonsMessage}>
 
                     {/* Render the new project button if there are existing projects */}
@@ -48,7 +53,7 @@ export const NewProject = () => {
                                 moment(`${a.updatedDate} ${a.time}`, 'MMMM D, YYYY h:mm').valueOf() -
                                 moment(`${z.updatedDate} ${z.time}`, 'MMMM D, YYYY h:mm').valueOf()
                         )
-                            .map((project, key) => <Card key={key} projectData={project}/>)
+                            .map((project, key) => <Card key={key} projectData={project} setDeleteLoader={setDeleteLoader}/>)
                     ) : (
                         // If there are no projects, render create new project component
                         <CreateNewProject/>

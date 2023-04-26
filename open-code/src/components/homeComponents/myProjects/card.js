@@ -32,9 +32,9 @@ function Card(props) {
         setProjectName,
         setFileId,
         setDrawer,
-        setIsError
+        setIsError,
     } = useContext(StoreContext);
-    const {projectData,} = props
+    const {projectData, setDeleteLoader,} = props
     const [openPopUp, setOpenPopUp] = useState(false);
     const [deleteProject, setDeleteProject] = useState(false);
     const [rename, setRename] = useState(false);
@@ -102,9 +102,13 @@ function Card(props) {
     }
 
     const handleDeleteProject = () => {
-        deleteProjectFromStorage(projectData.projectName).then(() => {
-            setDeleteProject(false);
+        setDeleteLoader(true);
+        deleteProjectFromStorage(projectData.projectName).then((res) => {
+            setTimeout(()=>{
+                setDeleteLoader(false);
+            },1000)
         });
+
     }
 
     return (
