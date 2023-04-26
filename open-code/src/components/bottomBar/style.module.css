@@ -23,7 +23,8 @@
     width: 100%;
 }
 
-.loaderItem {
+
+.loaderText{
     margin-left: 50%;
     margin-top: 2%;
 }
@@ -32,6 +33,20 @@
     font-family: Gilroy-medium, sans-serif;
     margin-top: 3px;
     margin-left: -7%;
+}
+
+.errorDiv{
+    font-family: Gilroy-medium, sans-serif;
+    color: #D70000;
+    font-weight: 600;
+    margin-left: 5%;
+    font-size: 20px;
+    margin-top: 1%;
+}
+
+.errorItems{
+    font-size: 15px;
+    line-height: 30px;
 }
 
 .barDivLight {
@@ -197,15 +212,26 @@
         width: 1rem;
         height: 0.98rem;
     }
-    .loaderItem {
-        margin-left: 45%;
-        margin-top: 8%;
-    }
     .textItem {
         margin-top: 2px;
         margin-left: -18%;
         font-size: 12px;
     }
 
+    .errorDiv{
+        font-size: 15px;
+        margin-left: 5%;
+        margin-top: 3%;
+    }
+
+    .loaderText{
+        margin-left: 45%;
+        margin-top: 8%;
+    }
+
+    .errorItems{
+        font-size: 12px;
+        line-height: 50px;
+    }
 
 }

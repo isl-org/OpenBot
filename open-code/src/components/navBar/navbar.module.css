@@ -399,14 +399,14 @@
 }
 
 .darkThemeIcon {
-    height: 1.3rem;
-    width: 1.3rem;
+    height: 23px;
+    width: 23px;
     cursor: pointer;
 }
 
 .lightThemeIcon {
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 23px;
+    width: 23px;
     cursor: pointer;
 }
 

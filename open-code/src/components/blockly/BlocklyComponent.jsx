@@ -8,7 +8,6 @@ import {DarkTheme, LightTheme} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
 import {updateCurrentProject} from "../../services/workspace";
-import {nanoid} from "nanoid";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -32,14 +31,26 @@ function BlocklyComponent(props) {
 
     // Get context values from the store
     const {theme} = useContext(ThemeContext);
-    const {projectName, currentProjectXml, fileId, folderId, setDrawer,setWorkspace} = useContext(StoreContext);
+    const {
+        projectName,
+        currentProjectXml,
+        fileId,
+        folderId,
+        setDrawer,
+        setWorkspace,
+        setIsError,
+        setCurrentProjectXml
+    } = useContext(StoreContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+
     // Save workspace code to local storage when workspace changes
     const handleWorkspaceChange = useCallback(() => {
         setDrawer(false);
+        setIsError(false);
         if (projectName !== undefined) {
-            updateCurrentProject( projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
+            setCurrentProjectXml(Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
+            updateCurrentProject(projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
         }
 
     }, []);
@@ -101,6 +112,7 @@ function BlocklyComponent(props) {
             primaryWorkspace.current.setScale(zoomLevel);
         }
 
+        //storing current workspace behaviour and features
         setWorkspace(primaryWorkspace.current)
 
         // Create and render a new modal instance

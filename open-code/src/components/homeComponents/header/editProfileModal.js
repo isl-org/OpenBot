@@ -7,7 +7,8 @@ import {Box, Modal} from "@mui/material";
 import LoaderComponent from "../../loader/loaderComponent";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 import BlueButton from "../../buttonComponent/blueButtonComponent";
-import {Constants, Themes} from "../../../utils/constants";
+import {Constants, errorToast, Themes} from "../../../utils/constants";
+import Compressor from 'compressorjs';
 
 
 /**
@@ -42,9 +43,23 @@ export function EditProfileModal(props) {
         setIsEditProfileModal(false)
     }
 
+    function handleCompressFile(e){
+        const file = e.target.files[0];
+        new Compressor(file, {
+            quality: 0.2, // Set the compression quality (0 to 1)
+            success(result) {
+                setFile(result)
+            },
+            error(err) {
+                errorToast(err.message);
+                console.log(err.message);
+            },
+        });
+    }
+
     //handle image change
     function handleChange(e) {
-        setFile(e.target.files[0])
+        handleCompressFile(e);
         setUserDetail({
             ...userDetails,
             photoUrl: URL.createObjectURL(e.target.files[0])

@@ -32,6 +32,7 @@ function Card(props) {
         setProjectName,
         setFileId,
         setDrawer,
+        setIsError
     } = useContext(StoreContext);
     const {projectData,} = props
     const [openPopUp, setOpenPopUp] = useState(false);
@@ -65,6 +66,7 @@ function Card(props) {
 
         localStorage.setItem(localStorageKeys.currentProject, "");
         setDrawer(false);
+        setIsError(false);
         try {
             setCurrentProjectXml(projectData.xmlValue);
             setProjectName(projectData.projectName);
