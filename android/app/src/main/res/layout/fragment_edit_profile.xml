@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background"
-    android:paddingVertical="20dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -51,9 +50,12 @@
             android:textSize="18sp" />
 
         <EditText
+            android:id="@+id/first_name"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
+            android:maxLines="1"
+            android:inputType="textNoSuggestions"
             android:background="@drawable/border_radius_input_text"
             android:paddingHorizontal="10dp" />
 
@@ -65,9 +67,12 @@
             android:textSize="18sp" />
 
         <EditText
+            android:id="@+id/last_name"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
+            android:maxLines="1"
+            android:inputType="textNoSuggestions"
             android:background="@drawable/border_radius_input_text"
             android:paddingHorizontal="10dp" />
 
@@ -82,6 +87,8 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
+            android:maxLines="1"
+            android:inputType="date"
             android:background="@drawable/border_radius_input_text"
             android:paddingHorizontal="10dp" />
 
@@ -93,9 +100,15 @@
             android:textSize="18sp" />
 
         <EditText
+            android:id="@+id/email_address"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
+            android:inputType="textEmailAddress"
+            android:focusable="false"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:textColor="@color/semi_transparent"
             android:background="@drawable/border_radius_input_text"
             android:paddingHorizontal="10dp" />
     </LinearLayout>
@@ -106,6 +119,7 @@
         android:layout_width="155dp"
         android:layout_height="45dp"
         android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/border_radius_qr_buttons"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -124,6 +138,7 @@
         android:layout_width="155dp"
         android:layout_height="45dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/border_radius_qr_buttons"
         android:backgroundTint="@color/blue_buttons"
         android:gravity="center"
@@ -137,5 +152,24 @@
             android:textColor="@color/white_text"
             android:textSize="18sp" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/loader_view"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone"
+        android:focusable="true" />
+    <ProgressBar
+        android:id="@+id/profileUpdateLoader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

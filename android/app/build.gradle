@@ -96,7 +96,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.3.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'com.google.firebase:firebase-auth:21.1.0'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore:24.5.0'
+    implementation 'com.google.firebase:firebase-storage:20.1.0'
 
     def nav_version = "2.3.5"
     // Java language implementation
@@ -149,8 +151,8 @@ dependencies {
     // classpath.
     androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.3.0'
 
-    implementation platform('com.google.firebase:firebase-bom:31.2.3')
-    implementation 'com.google.android.gms:play-services-auth:20.4.1'
+    implementation platform('com.google.firebase:firebase-bom:31.5.0')
+    implementation 'com.google.android.gms:play-services-auth:20.5.0'
     // Declare the dependencies for the Crashlytics and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-crashlytics'

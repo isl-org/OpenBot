@@ -14,7 +14,6 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.IOException;
-
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentBarCodeScannerBinding;
@@ -63,7 +62,7 @@ public class BarCodeScannerFragment extends CameraFragment {
     // Add callbacks for the success and error bottom sheets.
     successBottomSheetBehavior.addBottomSheetCallback(successBottomSheetCallback);
     failedBottomSheetBehavior.addBottomSheetCallback(failedBottomSheetCallback);
-    if(preferencesManager.getCameraSwitch()){
+    if (preferencesManager.getCameraSwitch()) {
       toggleCamera();
       cameraToggle = true;
     }
@@ -151,10 +150,12 @@ public class BarCodeScannerFragment extends CameraFragment {
       // If a qr code is detected and barCodeAccess is true, get the qr code value and call
       // extractFileID().
       if (barcodes.size() != 0 && barCodeAccess) {
-        requireActivity().runOnUiThread(() -> {
-          binding.overlayView.setVisibility(View.VISIBLE);
-          binding.barCodeLoader.setVisibility(View.VISIBLE);
-        });
+        requireActivity()
+            .runOnUiThread(
+                () -> {
+                  binding.overlayView.setVisibility(View.VISIBLE);
+                  binding.barCodeLoader.setVisibility(View.VISIBLE);
+                });
         barCodeAccess = false;
         String qrCodeValue = barcodes.valueAt(0).displayValue;
         extractFileID(qrCodeValue);
@@ -233,8 +234,8 @@ public class BarCodeScannerFragment extends CameraFragment {
   }
 
   @Override
-  public void onPause(){
+  public void onPause() {
     super.onPause();
-    if(cameraToggle) toggleCamera();
+    if (cameraToggle) toggleCamera();
   }
 }

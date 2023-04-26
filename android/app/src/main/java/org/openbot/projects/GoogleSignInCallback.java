@@ -1,13 +1,13 @@
 package org.openbot.projects;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * This is an interface that defines four methods for handling the results of google signIn and
  * signOut services.
  */
 public interface GoogleSignInCallback {
-  void onSignInSuccess(GoogleSignInAccount account);
+  void onSignInSuccess(FirebaseUser account);
 
   void onSignInFailed(Exception exception);
 

@@ -16,6 +16,7 @@ import androidx.navigation.Navigation;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import org.openbot.R;
 import org.openbot.databinding.FragmentProfileBinding;
 import org.openbot.googleServices.GoogleServices;
@@ -87,7 +88,7 @@ public class ProfileFragment extends Fragment {
   private GoogleSignInCallback newGoogleServices =
       new GoogleSignInCallback() {
         @Override
-        public void onSignInSuccess(GoogleSignInAccount account) {
+        public void onSignInSuccess(FirebaseUser account) {
           linearLayoutSignIn.setVisibility(View.GONE);
           linearLayoutProfile.setVisibility(View.VISIBLE);
         }

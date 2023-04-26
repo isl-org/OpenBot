@@ -17,6 +17,10 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +41,7 @@ public class GoogleServices {
   public final GoogleSignInClient mGoogleSignInClient;
   private SharedPreferences sharedPref;
   private ProjectsFragment projectsFragment;
+  private FirebaseAuth firebaseAuth;
   private List<File> driveFiles = new ArrayList<>();
 
   /**
@@ -52,21 +57,54 @@ public class GoogleServices {
     mContext = context;
     mCallback = callback;
     projectsFragment = new ProjectsFragment();
-
+    firebaseAuth = FirebaseAuth.getInstance();
     // Set up Google Sign-In options
     GoogleSignInOptions gso =
-        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestIdToken(
+                "955078484078-kbadvp54dljcpk0g0j5bnf5c17q63ir2.apps.googleusercontent.com")
+            .requestProfile()
+            .build();
     // Set up Shared Preferences
     sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
     // Set up Google Sign-In client
     mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
     // Check if there is a signed-in account already and notify the callback accordingly
-    GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(context);
-    if (googleSignInAccount != null) {
-      mCallback.onSignInSuccess(googleSignInAccount);
+    FirebaseUser user = firebaseAuth.getCurrentUser();
+    if (user != null) {
+      mCallback.onSignInSuccess(user);
     } else {
       mCallback.onSignInFailed(null);
     }
+  }
+
+  /**
+   * login with firebase using google signIn credential.
+   *
+   * @param credential use for firebase login.
+   */
+  private void firebaseAuthWithGoogle(AuthCredential credential) {
+    firebaseAuth
+        .signInWithCredential(credential)
+        .addOnCompleteListener(
+            mActivity,
+            task -> {
+              Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+              if (task.isSuccessful()) {
+                Log.d(TAG, "onComplete: successful");
+                // Get the signed-in account and Notify callback of successful sign-in.
+                mCallback.onSignInSuccess(task.getResult().getUser());
+              } else {
+                Log.w(TAG, "signInWithCredential" + task.getException().getMessage());
+                task.getException().printStackTrace();
+                // The ApiException status code indicates the detailed failure reason and Notify
+                // callback of
+                // sign-in failure.
+                Log.e(TAG, "handleSignInResult:failed", task.getException());
+                mCallback.onSignInFailed(task.getException());
+              }
+            });
   }
 
   /** Method to sign out of the current Google account. */
@@ -78,6 +116,8 @@ public class GoogleServices {
             task -> {
               // Handle sign-out result.
               if (task.isSuccessful()) {
+                // firebase user sign-out.
+                firebaseAuth.signOut();
                 // Notify callback of successful sign-out.
                 mCallback.onSignOutSuccess();
                 // Update Shared Preferences to ask again for signIn.
@@ -102,8 +142,10 @@ public class GoogleServices {
     try {
       // Get the signed-in account and Notify callback of successful sign-in.
       GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+      AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+      // Set credential for firebase authentication.
+      firebaseAuthWithGoogle(credential);
       Log.d(TAG, "handleSignInResult:success - " + account.getEmail());
-      mCallback.onSignInSuccess(account);
     } catch (ApiException e) {
       // The ApiException status code indicates the detailed failure reason and Notify callback of
       // sign-in failure.
@@ -241,7 +283,6 @@ public class GoogleServices {
         file.setName(newTitle);
         // Update the file with the new title.
         googleDriveService.files().update(fileId, file).execute();
-
         Log.d("Google Drive File", "File renamed successfully");
       } catch (IOException e) {
         // log any errors that occur when renaming the file.

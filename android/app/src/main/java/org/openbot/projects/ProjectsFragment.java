@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.api.services.drive.model.File;
+import com.google.firebase.auth.FirebaseUser;
 import java.io.IOException;
 import java.util.List;
 import org.openbot.R;
@@ -107,7 +108,7 @@ public class ProjectsFragment extends ControlsFragment {
   private GoogleSignInCallback newGoogleServices =
       new GoogleSignInCallback() {
         @Override
-        public void onSignInSuccess(GoogleSignInAccount account) {
+        public void onSignInSuccess(FirebaseUser account) {
           noProjectsLayout.setVisibility(View.GONE);
           signInButton.setVisibility(View.GONE);
           projectsNotFoundTxt.setVisibility(View.VISIBLE);
@@ -139,15 +140,16 @@ public class ProjectsFragment extends ControlsFragment {
       };
 
   private void showProjectsRv() {
-      if(isSignedIn){
-          binding.projectsLoader.setVisibility(View.VISIBLE);
-      }
+    if (isSignedIn) {
+      binding.projectsLoader.setVisibility(View.VISIBLE);
+    }
     projectsRV.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
     SparseArray<int[]> driveRes = new SparseArray<>();
     driveRes.put(R.layout.projects_list_view, new int[] {R.id.project_name, R.id.project_date});
     setScanDeviceAdapter(
         new DriveProjectsAdapter(requireActivity(), googleServices.getDriveFiles(), driveRes),
-        (itemView, position) -> readFileFromDrive(googleServices.getDriveFiles().get(position).getId()));
+        (itemView, position) ->
+            readFileFromDrive(googleServices.getDriveFiles().get(position).getId()));
     googleServices.accessDriveFiles(adapter, binding);
     projectsRV.setAdapter(adapter);
   }
@@ -169,8 +171,8 @@ public class ProjectsFragment extends ControlsFragment {
   }
 
   private void readFileFromDrive(String fileId) {
-      binding.projectsLoader.setVisibility(View.VISIBLE);
-      binding.overlayView.setVisibility(View.VISIBLE);
+    binding.projectsLoader.setVisibility(View.VISIBLE);
+    binding.overlayView.setVisibility(View.VISIBLE);
     new ReadFileTask(
             fileId,
             new ReadFileCallback() {
@@ -183,7 +185,7 @@ public class ProjectsFragment extends ControlsFragment {
                   }
                 }
                 barCodeScannerFragment.finalCode = code;
-                  dpBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                dpBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
               }
 
               @Override
@@ -196,7 +198,13 @@ public class ProjectsFragment extends ControlsFragment {
                           builder.setMessage(
                               "Something error with this file! pull down to refresh and try again.");
                           builder.setCancelable(false);
-                          builder.setNegativeButton("Ok", (dialog, which) -> dialog.cancel());
+                          builder.setNegativeButton(
+                              "Ok",
+                              (dialog, which) -> {
+                                dialog.cancel();
+                                binding.projectsLoader.setVisibility(View.GONE);
+                                binding.overlayView.setVisibility(View.GONE);
+                              });
                           AlertDialog alertDialog = builder.create();
                           alertDialog.show();
                         });
@@ -212,8 +220,8 @@ public class ProjectsFragment extends ControlsFragment {
           // Handle state changes here
           if (newState == BottomSheetBehavior.STATE_EXPANDED
               || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
-              binding.projectsLoader.setVisibility(View.GONE);
-              overlayView.setVisibility(View.VISIBLE);
+            binding.projectsLoader.setVisibility(View.GONE);
+            overlayView.setVisibility(View.VISIBLE);
           } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
             overlayView.setVisibility(View.GONE);
           }
