@@ -220,6 +220,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
                     } else {
                         print("Profile updated successfully")
                         self.alert.dismiss(animated: true);
+                        self.showToast("Profile updated successfully")
                     }
                 }
             }
@@ -290,6 +291,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
                                 print("Error updating profile: \(error.localizedDescription)")
                             } else {
                                 print("Profile updated successfully")
+                                self.showToast("Profile updated successfully")
                             }
                         }
                     }

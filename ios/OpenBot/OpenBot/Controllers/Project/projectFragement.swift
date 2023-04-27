@@ -53,6 +53,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createRefresh();
         setupBluetoothIcon();
         apply();
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
     }
 
     func createRefresh() {
@@ -118,8 +120,11 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         noProjectMessageView.addSubview(label);
     }
 
-    private func setupBluetoothIcon(){
-       bluetoothIcon.image =  isBluetoothConnected ?  Images.bluetoothConnected : Images.bluetoothDisconnected;
+    private func setupBluetoothIcon() {
+        bluetoothIcon.image = isBluetoothConnected ? Images.bluetoothConnected : Images.bluetoothDisconnected;
+        bluetoothIcon.isUserInteractionEnabled = true;
+        let tap = UITapGestureRecognizer(target: self, action: #selector(ble))
+        bluetoothIcon.addGestureRecognizer(tap)
     }
 
     /**
@@ -230,6 +235,11 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         Authentication.init()
     }
 
+    @objc func ble() {
+        let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
+        navigationController?.pushViewController(nextViewController!, animated: true)
+    }
+
     private func apply() {
         if currentOrientation == .portrait {
 
@@ -308,6 +318,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
     }
 
+
     @objc private func start() {
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
         whiteSheet.removeFromSuperview();
@@ -331,6 +342,17 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         projectCollectionView.reloadData();
         loadProjects()
         projectCollectionView.refreshControl?.endRefreshing()
+    }
+
+    /// function to change the icon of bluetooth when bluetooth is connected or disconnected
+    ///
+    /// - Parameter notification:
+    @objc func updateConnect(_ notification: Notification) {
+        if (isBluetoothConnected) {
+            bluetoothIcon.image = Images.bluetoothConnected
+        } else {
+            bluetoothIcon.image = Images.bluetoothDisconnected
+        }
     }
 }
 
