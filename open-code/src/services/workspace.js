@@ -216,7 +216,7 @@ export async function getFilterProjects() {
     })
 
     filterProjects.sort((a, b) => {
-        return new Date(a.updatedTime) - new Date(b.updatedTime);
+        return new Date(b.updatedTime) - new Date(a.updatedTime);
     });
 
     return filterProjects;
