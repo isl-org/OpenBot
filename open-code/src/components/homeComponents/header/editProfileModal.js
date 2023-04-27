@@ -43,6 +43,8 @@ export function EditProfileModal(props) {
         setIsEditProfileModal(false)
     }
 
+
+    //compressing the profile image
     function handleCompressFile(e){
         const file = e.target.files[0];
         new Compressor(file, {

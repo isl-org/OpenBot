@@ -42,7 +42,7 @@ export function Header() {
                 email: currentUser?.email,
             });
         })
-    }, [isEditProfileModal,setUser])
+    }, [isEditProfileModal, setUser])
 
     const handleClick = (event) => {
         setOpen(!open); // open and close popup

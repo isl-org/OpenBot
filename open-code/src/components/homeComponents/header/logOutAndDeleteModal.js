@@ -14,7 +14,7 @@ import BlueButton from "../../buttonComponent/blueButtonComponent";
  */
 export function PopUpModal(props) {
     const {theme} = useContext(ThemeContext)
-    const {setVariable, headerText, buttonText, containText, handleButtonClick,} = props;
+    const {setVariable, headerText, buttonText, containText, handleButtonClick} = props;
     const [open, setOpen] = useState(true);
 
 
