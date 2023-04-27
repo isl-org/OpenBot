@@ -9,6 +9,7 @@ import GoogleAPIClientForREST
 import GTMSessionFetcher
 
 class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+    @IBOutlet weak var qrScannerIcon: UIView!
     let bluetooth = bluetoothDataController.shared
     @IBOutlet weak var bluetoothIcon: UIImageView!
     private let service: GTLRDriveService = GTLRDriveService()
@@ -53,8 +54,14 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createRefresh();
         setupBluetoothIcon();
         apply();
+        setupScannerIcon()
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+    }
+
+    private func setupScannerIcon(){
+        let tap = UITapGestureRecognizer(target: self, action: #selector(scanner))
+        qrScannerIcon.addGestureRecognizer(tap)
     }
 
     func createRefresh() {
@@ -142,7 +149,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      Function called after qr scanner icon loaded and will add qr scanner view controller to navigation
      - Parameter sender:
      */
-    @IBAction func scanner(_ sender: Any) {
+    @objc func scanner(_ sender: Any) {
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
         let viewController = (storyboard.instantiateViewController(withIdentifier: "qrScanner"))
         navigationController?.pushViewController(viewController, animated: true);

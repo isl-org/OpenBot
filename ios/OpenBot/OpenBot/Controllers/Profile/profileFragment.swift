@@ -171,18 +171,6 @@ class profileFragment: UIViewController {
     }
 
     /**
-     Function to start animation
-     */
-    func createOverlayAlert() {
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
-        loadingIndicator.startAnimating();
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.style = UIActivityIndicatorView.Style.medium
-        alert.view.addSubview(loadingIndicator)
-        present(alert, animated: true, completion: nil)
-    }
-
-    /**
      Refresh the UI based on google sign-in and guest sign-in
      */
     private func updateViewsVisibility() {
@@ -206,6 +194,18 @@ class profileFragment: UIViewController {
 
     @objc func googleSignIn(_ notification: Notification) {
         updateViewsVisibility()
+    }
+
+    /**
+     Method to create animation
+     */
+    func createOverlayAlert() {
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
+        loadingIndicator.startAnimating();
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = UIActivityIndicatorView.Style.medium
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
     }
 
 

@@ -19,18 +19,19 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     private let authentication = Authentication()
     private var firstName: UILabel!
     private var lastName: UILabel!
+    let alert = UIAlertController(title: "Loading", message: "Please wait while we load the profile...", preferredStyle: .alert)
     private var email: UILabel!
     private var dob: UILabel!
     private var firstNameField: UITextField!
     private var lastNameField: UITextField!
     let imagePickerVC = UIImagePickerController()
-    let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
 
 /**
     Method calls after view loaded
  */
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad();
+        createOverlayAlert();
         imagePickerVC.delegate = self;
         createUserProfileImageView()
         createLabels();
@@ -48,7 +49,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         profileIcon.layer.cornerRadius = profileIcon.frame.size.width / 2
         profileIcon.clipsToBounds = true
         let imgUrl = (Auth.auth().currentUser?.photoURL ?? authentication.googleSignIn.currentUser?.profile?.imageURL(withDimension: 100))!;
-        profileIcon.load(url: imgUrl);
+        profileIcon.load(url: imgUrl)
         view.addSubview(profileIcon)
         profileIcon.contentMode = .scaleAspectFill
         let uploadImgIcon = UIImage(named: "uploadImage");
@@ -59,6 +60,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         uploadImage.addGestureRecognizer(tap)
         view.addSubview(uploadImage);
     }
+
 
     /**
      This function creates the labels for the text fields.
@@ -92,13 +94,13 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
         toolbar.items = [UIBarButtonItem.flexibleSpace(), doneButton]
         dobField.inputAccessoryView = toolbar
-        dob.isEnabled = false;
         let img = UIImageView(frame: CGRect(x: dobField.frame.size.width - 40, y: 15, width: 20, height: 20));
         img.image = UIImage(named: "calendar");
         dobField.addSubview(img)
         let emailField = CustomTextField(frame: CGRect(x: 17, y: email.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
         setTextField(textField: emailField, value: authentication.googleSignIn.currentUser?.profile?.email ?? "");
         emailField.isEnabled = false
+        emailField.textColor = traitCollection.userInterfaceStyle == .dark ? Colors.lightBlack: UIColor.lightGray;
         view.addSubview(firstNameField);
         view.addSubview(lastNameField);
         view.addSubview(dobField);
@@ -212,7 +214,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         Auth.auth().signIn(with: credential) { result, error in
             if let user = result?.user {
                 let changeRequest = user.createProfileChangeRequest()
-                changeRequest.displayName = (self.firstNameField.text ?? "") + " " + (self.lastNameField.text ?? "");
+                changeRequest.displayName = (self.firstNameField.text ?? "")  + (self.lastNameField.text ?? "");
                 self.uploadImage();
                 changeRequest.commitChanges { error in
                     if let error = error {
@@ -220,7 +222,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
                     } else {
                         print("Profile updated successfully")
                         self.alert.dismiss(animated: true);
-                        self.showToast("Profile updated successfully")
+                        self.showToast("Profile Updated Successfully", icon: UIImage(named: "check")!);
                     }
                 }
             }
@@ -291,7 +293,6 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
                                 print("Error updating profile: \(error.localizedDescription)")
                             } else {
                                 print("Profile updated successfully")
-                                self.showToast("Profile updated successfully")
                             }
                         }
                     }
@@ -317,6 +318,16 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         loadingIndicator.style = UIActivityIndicatorView.Style.medium
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
+    }
+
+    func imageDidLoad() {
+        alert.dismiss(animated: true);
+    }
+
+    func imageLoadFailed() {
+        showToast("Error while loading profile picture",icon: UIImage(named: "check")!);
+        alert.dismiss(animated: true);
+//
     }
 
 }

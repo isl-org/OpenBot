@@ -45,34 +45,44 @@ extension UIViewController {
        - text:
        - delay:
      */
-    func showToast(_ text: String, delay: TimeInterval = DELAY_LONG) {
+    func showToast(_ text: String, delay: TimeInterval = DELAY_LONG, icon: UIImage) {
+        let toastView = UIView();
+        let checkIcon = UIImageView();
+        toastView.backgroundColor = UIColor.black;
+        checkIcon.image = icon;
+        toastView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(toastView)
+        let safeArea = view.safeAreaLayoutGuide
+        toastView.widthAnchor.constraint(equalToConstant: 270).isActive = true;
+        toastView.heightAnchor.constraint(equalToConstant: 35).isActive = true;
+        toastView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: width/2 - 135).isActive = true;
+        toastView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: height - 200).isActive = true;
+        checkIcon.translatesAutoresizingMaskIntoConstraints = false;
+        toastView.addSubview(checkIcon);
+        checkIcon.widthAnchor.constraint(equalToConstant: icon.size.width);
+        checkIcon.heightAnchor.constraint(equalToConstant: icon.size.height);
+        checkIcon.leadingAnchor.constraint(equalTo: toastView.leadingAnchor, constant: 17).isActive = true
+        checkIcon.topAnchor.constraint(equalTo: toastView.topAnchor, constant: 6).isActive = true
         let label = ToastLabel()
         label.backgroundColor = UIColor(white: 0, alpha: 0.5)
         label.textColor = .white
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.alpha = 0
+        label.font = HelveticaNeue.regular(size: 12);
         label.text = text
-        label.clipsToBounds = true
-        label.layer.cornerRadius = 20
-        label.numberOfLines = 0
-        label.textInsets = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
         label.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label)
+        toastView.addSubview(label)
 
         let saveArea = view.safeAreaLayoutGuide
-        label.centerXAnchor.constraint(equalTo: saveArea.centerXAnchor, constant: 0).isActive = true
-        label.leadingAnchor.constraint(greaterThanOrEqualTo: saveArea.leadingAnchor, constant: 15).isActive = true
-        label.trailingAnchor.constraint(lessThanOrEqualTo: saveArea.trailingAnchor, constant: -15).isActive = true
-        label.bottomAnchor.constraint(equalTo: saveArea.bottomAnchor, constant: -30).isActive = true
-
+        label.widthAnchor.constraint(equalToConstant: width).isActive = true;
+        label.heightAnchor.constraint(equalToConstant: 40).isActive = true;
+        label.leadingAnchor.constraint(equalTo: checkIcon.trailingAnchor, constant: 17).isActive = true;
+        label.topAnchor.constraint(equalTo: toastView.topAnchor,constant: -5).isActive = true;
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
-            label.alpha = 1
+            toastView.alpha = 1
         }, completion: { _ in
             UIView.animate(withDuration: 0.5, delay: delay, options: .curveEaseOut, animations: {
-                label.alpha = 0
+                toastView.alpha = 0
             }, completion: { _ in
-                label.removeFromSuperview()
+                toastView.removeFromSuperview();
             })
         })
     }

@@ -158,18 +158,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m6i-3F-ym5">
-                                <rect key="frame" x="373" y="101" width="24" height="24"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="24" id="1VP-we-vKD"/>
-                                    <constraint firstAttribute="height" constant="24" id="L3n-gC-5tt"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="qrScanner"/>
-                                <connections>
-                                    <action selector="scanner:" destination="HCD-ib-P3k" eventType="touchUpInside" id="s0d-7N-KAn"/>
-                                </connections>
-                            </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="639-3i-D7K">
                                 <rect key="frame" x="20" y="160" width="374" height="653"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -190,27 +178,65 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetoothConnected" translatesAutoresizingMaskIntoConstraints="NO" id="5dN-mP-pN7">
-                                <rect key="frame" x="328.5" y="100.5" width="15" height="23"/>
-                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8lJ-h5-vjt">
+                                <rect key="frame" x="345" y="101" width="45" height="45"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qrScanner" translatesAutoresizingMaskIntoConstraints="NO" id="IU9-4Y-anr">
+                                        <rect key="frame" x="10" y="0.0" width="24" height="24"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="24" id="aZI-EQ-BWo"/>
+                                            <constraint firstAttribute="width" constant="24" id="eaM-oI-6fJ"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="45" id="Ggw-Y5-SBS"/>
+                                    <constraint firstItem="IU9-4Y-anr" firstAttribute="top" secondItem="8lJ-h5-vjt" secondAttribute="top" id="KFx-M5-YRd"/>
+                                    <constraint firstAttribute="height" constant="45" id="aUi-tT-D8C"/>
+                                    <constraint firstAttribute="trailing" secondItem="IU9-4Y-anr" secondAttribute="trailing" constant="11" id="wB9-Pn-pOb"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kGN-Gy-879">
+                                <rect key="frame" x="280" y="101" width="45" height="45"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetoothConnected" translatesAutoresizingMaskIntoConstraints="NO" id="yiM-4h-xvS">
+                                        <rect key="frame" x="10.5" y="-0.5" width="25" height="25"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="24" id="J8P-QY-cgP"/>
+                                            <constraint firstAttribute="height" constant="24" id="Jkp-rt-DBD"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="24" id="VRJ-r7-7jg"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="24" id="uE1-1d-FhM"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="OKl-E9-RV9"/>
+                                    <constraint firstItem="yiM-4h-xvS" firstAttribute="top" secondItem="kGN-Gy-879" secondAttribute="top" id="fmk-UW-xf4"/>
+                                    <constraint firstAttribute="trailing" secondItem="yiM-4h-xvS" secondAttribute="trailing" constant="10" id="hR0-0X-fM4"/>
+                                    <constraint firstAttribute="width" constant="45" id="z2i-jj-ICX"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2DM-aV-cMO"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="2DM-aV-cMO" firstAttribute="trailing" secondItem="m6i-3F-ym5" secondAttribute="trailing" constant="17" id="1H3-Nj-bAg"/>
+                            <constraint firstItem="8lJ-h5-vjt" firstAttribute="leading" secondItem="kGN-Gy-879" secondAttribute="trailing" constant="20" id="5N0-iu-hwQ"/>
                             <constraint firstItem="639-3i-D7K" firstAttribute="bottom" secondItem="2DM-aV-cMO" secondAttribute="bottom" id="Ed7-ps-e6O"/>
-                            <constraint firstItem="639-3i-D7K" firstAttribute="top" secondItem="m6i-3F-ym5" secondAttribute="bottom" constant="35" id="K1i-pY-YOv"/>
-                            <constraint firstItem="m6i-3F-ym5" firstAttribute="top" secondItem="2DM-aV-cMO" secondAttribute="top" constant="9" id="V1i-vL-iJ1"/>
+                            <constraint firstItem="2DM-aV-cMO" firstAttribute="trailing" secondItem="8lJ-h5-vjt" secondAttribute="trailing" constant="24" id="O2y-PW-NNV"/>
+                            <constraint firstItem="kGN-Gy-879" firstAttribute="top" secondItem="2DM-aV-cMO" secondAttribute="top" constant="9" id="WQz-5J-Tfy"/>
                             <constraint firstItem="639-3i-D7K" firstAttribute="trailing" secondItem="Cg0-nA-jin" secondAttribute="trailingMargin" id="XmB-C8-KZH"/>
                             <constraint firstItem="639-3i-D7K" firstAttribute="centerX" secondItem="Cg0-nA-jin" secondAttribute="centerX" id="Yh7-4f-07C"/>
-                            <constraint firstItem="5dN-mP-pN7" firstAttribute="top" secondItem="2DM-aV-cMO" secondAttribute="top" constant="9" id="oQX-pz-GFi"/>
-                            <constraint firstItem="m6i-3F-ym5" firstAttribute="leading" secondItem="5dN-mP-pN7" secondAttribute="trailing" constant="30" id="syu-Tl-Taq"/>
+                            <constraint firstItem="639-3i-D7K" firstAttribute="top" secondItem="8lJ-h5-vjt" secondAttribute="bottom" constant="14" id="fWO-U5-jRO"/>
+                            <constraint firstItem="8lJ-h5-vjt" firstAttribute="top" secondItem="2DM-aV-cMO" secondAttribute="top" constant="9" id="tjy-Rj-BJV"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Projects" image="project" id="Tmh-Xr-mbP"/>
                     <connections>
-                        <outlet property="bluetoothIcon" destination="5dN-mP-pN7" id="v9e-Er-s5J"/>
+                        <outlet property="bluetoothIcon" destination="yiM-4h-xvS" id="hRu-Qu-zR6"/>
                         <outlet property="projectCollectionView" destination="639-3i-D7K" id="lXM-eK-fcd"/>
+                        <outlet property="qrScannerIcon" destination="8lJ-h5-vjt" id="YnU-Rb-x8q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HHR-1M-DEf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
