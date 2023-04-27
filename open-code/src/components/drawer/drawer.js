@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import {StoreContext} from "../../context/context";
@@ -18,38 +18,41 @@ import {Images} from "../../utils/images";
  */
 export function QrDrawer() {
     const {theme} = useContext(ThemeContext) // Retrieve the current theme from the ThemeContext
-    const {drawer} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
+    const {drawer, code} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
     const themes = useTheme();// Get the current theme breakpoints using useTheme hook
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));// Determine if the screen is a mobile device using useMediaQuery hook
+
     return (
         <>
-            <Box sx={{display: 'flex', width: 0}}>
-                <Drawer
-                    // Styling for the drawer
-                    sx={{
-                        width: 0,
-                        flexShrink: 0,
-                        '& .MuiDrawer-paper': {
-                            width: drawer ? isMobile ? '62%' : '23%' : isMobile ? '6%' : '2%',
-                            height: isMobile ? '75%' : '81.3%',
-                            marginTop: '5rem',
-                            borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
-                            backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
-                            color: theme === "dark" ? colors.whiteFont : colors.blackFont,
-                        },
-                    }}
-                    // Drawer is always visible and can only be closed programmatically
-                    variant="persistent"
-                    anchor="right"
-                    open={true}
-                >
-                    <QrCode/>
-                    <div style={{display: "flex"}}>
-                        <RightSlider/>
-                        <DrawerBody isMobile={isMobile}/>
-                    </div>
-                </Drawer>
-            </Box>
+            {code &&
+                <Box sx={{display: 'flex', width: 0}}>
+                    <Drawer
+                        // Styling for the drawer
+                        sx={{
+                            width: 0,
+                            flexShrink: 0,
+                            '& .MuiDrawer-paper': {
+                                width: drawer ? isMobile ? '62%' : '23%' : isMobile ? '6%' : '2%',
+                                height: isMobile ? '75%' : '81.3%',
+                                marginTop: '5rem',
+                                borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
+                                backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
+                                color: theme === "dark" ? colors.whiteFont : colors.blackFont,
+                            },
+                        }}
+                        // Drawer is always visible and can only be closed programmatically
+                        variant="persistent"
+                        anchor="right"
+                        open={true}
+                    >
+                        <QrCode/>
+                        <div style={{display: "flex"}}>
+                            <RightSlider/>
+                            <DrawerBody isMobile={isMobile}/>
+                        </div>
+                    </Drawer>
+                </Box>
+            }
         </>
     );
 }

@@ -8,7 +8,7 @@ import WhiteText from "../../fonts/whiteText";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
 import {
-    deleteProjectFromStorage, getAllLocalProjects, getDriveProjects,
+    deleteProjectFromStorage, getAllLocalProjects, getCurrentProject, getDriveProjects,
     renameProject
 } from "../../../services/workspace";
 import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
@@ -17,6 +17,7 @@ import {PopUpModal} from "../header/logOutAndDeleteModal";
 import {handleUniqueName} from "./newProjectButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material";
+import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../../services/googleDrive";
 
 
 /**
@@ -33,6 +34,7 @@ function Card(props) {
         setFileId,
         setDrawer,
         setIsError,
+        setCode,
     } = useContext(StoreContext);
     const {projectData, setDeleteLoader,} = props
     const [openPopUp, setOpenPopUp] = useState(false);
@@ -71,6 +73,14 @@ function Card(props) {
             setCurrentProjectXml(projectData.xmlValue);
             setProjectName(projectData.projectName);
             setFileId(projectData.fileId);
+            if (localStorage.getItem("isSigIn") === "true") {
+                let folderId = await getFolderId();
+                let fileExistWithFileID = await checkFileExistsInFolder(folderId, projectData.projectName, 'js')
+                if (fileExistWithFileID.exists) {
+                    let QrLink = await getShareableLink(fileExistWithFileID.fileId, folderId)
+                    setCode(QrLink);
+                }
+            }
             openExistingProject();
         } catch (error) {
             console.error(error);
@@ -104,9 +114,9 @@ function Card(props) {
     const handleDeleteProject = () => {
         setDeleteLoader(true);
         deleteProjectFromStorage(projectData.projectName).then((res) => {
-            setTimeout(()=>{
+            setTimeout(() => {
                 setDeleteLoader(false);
-            },1000)
+            }, 1000)
         });
 
     }

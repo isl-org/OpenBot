@@ -9,7 +9,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 const QrCode = () => {
     const [blockCode, setBlockCode] = useState("");
-    const {code,generate} = useContext(StoreContext);
+    const {code, generate} = useContext(StoreContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
@@ -30,6 +30,7 @@ const QrCode = () => {
             includeMargin={true}
             imageSettings={{src: icon}}
         />
+
     );
     return (
         <div className="qrcode__container">

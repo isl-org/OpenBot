@@ -308,9 +308,9 @@ function ImageWithArrow(params) {
         <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
             {/*image display*/}
             {signIn ? user?.photoURL ?
-                    <img alt="Profile Icon" src={user.photoURL}
-                         style={{height: 28, width: 28, borderRadius: 90,}}/>
-                    :
+                                <img alt="Profile Icon" src={user.photoURL}
+                                     style={{height: 30, width: 30, borderRadius: '50%', objectFit: 'cover'}}/>
+                                :
                     <LoaderComponent color="white" height="20" width="20"/>
                 :
                 //Show avatar when not signIn
