@@ -12,9 +12,9 @@
 
     <ImageView
         android:id="@+id/btnCross"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginVertical="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginVertical="20dp"
         android:layout_marginEnd="30dp"
         android:scaleType="center"
         android:src="@drawable/ic_cross"
