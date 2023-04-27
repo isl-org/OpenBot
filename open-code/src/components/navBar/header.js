@@ -31,6 +31,7 @@ export function Header() {
     const [isEditProfileModal, setIsEditProfileModal] = useState(false);
     const [isLogoutModal, setIsLogoutModal] = useState(false);
     const [open, setOpen] = useState(false);
+    const[deleteLoader,setDeleteLoader]=useState(false);
     const location = useLocation();
     let navigate = useNavigate();
 
@@ -42,7 +43,7 @@ export function Header() {
                 email: currentUser?.email,
             });
         })
-    }, [isEditProfileModal,setUser])
+    }, [isEditProfileModal, setUser])
 
     const handleClick = (event) => {
         setOpen(!open); // open and close popup
@@ -51,6 +52,7 @@ export function Header() {
 
     //delete file from local and drive
     const handleDeleteProject = () => {
+        setDeleteLoader(true);
         deleteProjectFromStorage(projectName).then((res) => {
             navigate(PathName.home);
         });
@@ -70,6 +72,7 @@ export function Header() {
                             headerText={"Delete this file?"}
                             containText={"You cannot restore this file later."}
                             buttonText={"Delete"}
+                            deleteLoader={deleteLoader}
                             handleButtonClick={handleDeleteProject}/>
             }
 

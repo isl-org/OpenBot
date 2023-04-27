@@ -214,3 +214,8 @@ Here is an upload in Drive and generate Code Demo :
 
 The undo-redo button helps to do undo redo functionalities in the playground.
 The plus icon is for zoom-in and the minus icon is for zoom-out.
+
+
+## Next(optional)
+
+Firebase Authentication troubleshooting [Firebase](src/services/README.md#troubleshooting)

@@ -4,6 +4,7 @@ import {Box, Modal} from "@mui/material";
 import styles from "../../navBar/navbar.module.css";
 import BlackText from "../../fonts/blackText";
 import BlueButton from "../../buttonComponent/blueButtonComponent";
+import LoaderComponent from "../../loader/loaderComponent";
 
 
 /**
@@ -14,7 +15,8 @@ import BlueButton from "../../buttonComponent/blueButtonComponent";
  */
 export function PopUpModal(props) {
     const {theme} = useContext(ThemeContext)
-    const {setVariable, headerText, buttonText, containText, handleButtonClick,} = props;
+    const {setVariable, headerText, buttonText, containText, handleButtonClick, deleteLoader} = props;
+
     const [open, setOpen] = useState(true);
 
 
@@ -29,25 +31,27 @@ export function PopUpModal(props) {
                 className={styles.logoutModal}
                 open={open}
                 onClose={() => handleClose()}>
-                <Box
-                    className={styles.logoutModalBox + " " + (theme === "dark" ? styles.darkLogoutModalBox : styles.lightLogoutModalBox)}>
-                    <BlackText extraStyle={styles.headerStyle} text={headerText}/>
-                    <div style={{marginTop: 20}}>
-                        <BlackText
-                            extraStyle={(theme === "dark" ? styles.darkLogoutMessageModal : styles.lightLogoutMessageModal)}
-                            text={containText}/>
-                    </div>
-                    <div className={styles.logoutButtonsDiv}>
-                        <BlueButton onClick={handleClose} buttonName={"Cancel"}
-                                    buttonStyle={styles.buttonStyle}
-                                    extraStyle={styles.logoutButtonsExtraStyle + " " + styles.cancelExtraStyle}/>
-                        <BlueButton onClick={() => {
-                            handleButtonClick()
-                        }} buttonType={"contained"} buttonName={buttonText}
-                                    buttonStyle={styles.buttonStyle}
-                                    extraStyle={styles.logoutButtonsExtraStyle}/>
-                    </div>
-                </Box>
+                {deleteLoader ?
+                    <LoaderComponent/>
+                    : <Box
+                        className={styles.logoutModalBox + " " + (theme === "dark" ? styles.darkLogoutModalBox : styles.lightLogoutModalBox)}>
+                        <BlackText extraStyle={styles.headerStyle} text={headerText}/>
+                        <div style={{marginTop: 20}}>
+                            <BlackText
+                                extraStyle={(theme === "dark" ? styles.darkLogoutMessageModal : styles.lightLogoutMessageModal)}
+                                text={containText}/>
+                        </div>
+                        <div className={styles.logoutButtonsDiv}>
+                            <BlueButton onClick={handleClose} buttonName={"Cancel"}
+                                        buttonStyle={styles.buttonStyle}
+                                        extraStyle={styles.logoutButtonsExtraStyle + " " + styles.cancelExtraStyle}/>
+                            <BlueButton onClick={() => {
+                                handleButtonClick()
+                            }} buttonType={"contained"} buttonName={buttonText}
+                                        buttonStyle={styles.buttonStyle}
+                                        extraStyle={styles.logoutButtonsExtraStyle}/>
+                        </div>
+                    </Box>}
             </Modal>
         </div>
     );
