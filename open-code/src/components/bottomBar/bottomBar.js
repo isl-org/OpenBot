@@ -261,9 +261,6 @@ function UploadInDrive(params) {
             const data = {
                 projectName: getCurrentProject().projectName,
                 xmlValue: getCurrentProject().xmlValue,
-                time: getCurrentProject().time,
-                id: getCurrentProject().id,
-                fileId: getCurrentProject().fileId,// require to check if already exist in folder or not
                 createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
             }
             // Call function to upload data to Google Drive

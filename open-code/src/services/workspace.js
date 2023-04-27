@@ -26,6 +26,7 @@ export async function getDriveProjects(driveProjects) {
                         id: doc.appProperties.id,
                         projectName: doc.name.replace(/\.[^/.]+$/, ""),
                         updatedDate: doc.appProperties.date,
+                        updatedTime: doc.appProperties.updatedTime,
                         time: doc.appProperties.time,
                     });
                 }
@@ -89,7 +90,7 @@ export async function deleteProjectFromStorage(projectName) {
  * @param projectName
  * @param code
  */
-export function updateCurrentProject( projectName, code) {
+export function updateCurrentProject(projectName, code) {
 
     const project = {
         storage: "local",
@@ -97,6 +98,7 @@ export function updateCurrentProject( projectName, code) {
         xmlValue: code,
         updatedDate: FormatDate().currentDate,
         time: FormatDate().currentTime,
+        updatedTime: new Date(),
     }
     //current project will first get store in current
     localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
@@ -212,6 +214,11 @@ export async function getFilterProjects() {
             return true;
         });
     })
+
+    filterProjects.sort((a, b) => {
+        return new Date(b.updatedTime) - new Date(a.updatedTime);
+    });
+
     return filterProjects;
 }
 
@@ -250,8 +257,13 @@ export async function renameProject(projectName, oldName, screen) {
         const allProjects = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects));
         let projectsArray = allProjects || []
         const specificProject = projectsArray.findIndex((project) => project.projectName === oldName);
-        projectsArray[specificProject].projectName = projectName;
-        localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(projectsArray))
+
+        //if project only in drive then specificProject in local will not be present, so it will return -1
+        if (specificProject >= 0) {
+            //if project is in localStorage then update their name.
+            projectsArray[specificProject].projectName = projectName;
+            localStorage.setItem(localStorageKeys.allProjects, JSON.stringify(projectsArray))
+        }
 
         // If user is signed in, update project name in Google Drive and check for renamed files
         if (localStorage.getItem("isSigIn") === "true") {
@@ -276,9 +288,6 @@ export async function renameProject(projectName, oldName, screen) {
                 updateCurrentProject(projectName, data.xmlValue)
             }
         }
-        // Refresh page if user is on home screen
-        if (screen === PathName.home) {
-            window.location.reload();
-        }
+
     }
 }

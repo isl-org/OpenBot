@@ -205,7 +205,7 @@ export function EditProjectPopUp(params) {
     const location = useLocation();
 
 
-     // Use the useEffect hook to detect clicks outside the popup.
+    // Use the useEffect hook to detect clicks outside the popup.
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (popUpRef.current && !popUpRef.current.contains(event.target)) {
@@ -308,9 +308,9 @@ function ImageWithArrow(params) {
         <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
             {/*image display*/}
             {signIn ? user?.photoURL ?
-                                <img alt="Profile Icon" src={user.photoURL}
-                                     style={{height: 30, width: 30, borderRadius: '50%', objectFit: 'cover'}}/>
-                                :
+                    <img alt="Profile Icon" src={user.photoURL}
+                         style={{height: 30, width: 30, borderRadius: '50%', objectFit: 'cover'}}/>
+                    :
                     <LoaderComponent color="white" height="20" width="20"/>
                 :
                 //Show avatar when not signIn

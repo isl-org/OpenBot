@@ -39,8 +39,6 @@ function Playground() {
             {/* Display the BottomBar component */}
             <BottomBar/>
         </div>
-
-
     );
 
 }

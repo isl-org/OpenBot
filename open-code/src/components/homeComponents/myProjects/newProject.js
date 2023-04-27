@@ -20,12 +20,12 @@ import {useLocation} from "react-router-dom";
 export const NewProject = () => {
     const [projects, setProjects] = useState(undefined);
     const {theme} = useContext(ThemeContext);
-    const {user,setCode} = useContext(StoreContext);
+    const {user, setCode} = useContext(StoreContext);
     const [deleteLoader, setDeleteLoader] = useState(false);
     const location = useLocation();
 
-
     useEffect(() => {
+
         // Fetch projects from the API and update state
         setProjects(undefined);
         setCode(undefined);
@@ -35,7 +35,7 @@ export const NewProject = () => {
             });
         }
 
-    }, [user,deleteLoader,location]);
+    }, [user, deleteLoader, location]);
 
     return (
         <div className={`${styles.Main} ${theme === 'dark' ? styles.MainDark : styles.MainLight}`}>
@@ -48,17 +48,13 @@ export const NewProject = () => {
                     {/* Render the new project button if there are existing projects */}
                     <NewProjectButton isProject={projects?.length}/>
                     {/* Sort the projects based on the last updated date and time */}
-                    {projects?.length > 0 ? (
-                        projects?.sort(
-                            (z, a) =>
-                                moment(`${a.updatedDate} ${a.time}`, 'MMMM D, YYYY h:mm').valueOf() -
-                                moment(`${z.updatedDate} ${z.time}`, 'MMMM D, YYYY h:mm').valueOf()
-                        )
-                            .map((project, key) => <Card key={key} projectData={project} setDeleteLoader={setDeleteLoader}/>)
-                    ) : (
+                    {projects?.length > 0 ?
+                        projects?.map((project, key) => <Card key={key} projectData={project}
+                                                              setDeleteLoader={setDeleteLoader}/>)
+                        :
                         // If there are no projects, render create new project component
                         <CreateNewProject/>
-                    )}
+                    }
 
                 </div>
                 :

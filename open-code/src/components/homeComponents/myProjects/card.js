@@ -8,8 +8,7 @@ import WhiteText from "../../fonts/whiteText";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
 import {
-    deleteProjectFromStorage, getAllLocalProjects, getCurrentProject, getDriveProjects,
-    renameProject
+    deleteProjectFromStorage, getAllLocalProjects, renameProject
 } from "../../../services/workspace";
 import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
 import {EditProjectPopUp} from "../header/headerComponents";
@@ -35,20 +34,18 @@ function Card(props) {
         setDrawer,
         setIsError,
         setCode,
+
     } = useContext(StoreContext);
     const {projectData, setDeleteLoader,} = props
     const [openPopUp, setOpenPopUp] = useState(false);
     const [deleteProject, setDeleteProject] = useState(false);
     const [rename, setRename] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [reNameProject, setReNameProject] = useState("")
+    const [reNameProject, setReNameProject] = useState(null)
     const inputRef = useRef(null);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
-    useEffect(() => {
-        setReNameProject(projectData.projectName)
-    }, [])
 
     let navigate = useNavigate();
     const openExistingProject = () => {
@@ -100,13 +97,18 @@ function Card(props) {
 
     // Handle click event for renaming a project
     const handleClickBlur = async () => {
+
         if (!reNameProject || reNameProject <= 0) {
             setReNameProject(projectData.projectName)
         }
         setRename(false)
+        setDeleteLoader(true);
         if (reNameProject !== projectData.projectName) {
             await handleRename(reNameProject, projectData.projectName, setReNameProject).then(async (updatedProjectName) => {
-                await renameProject(updatedProjectName, projectData.projectName, PathName.home).then()
+                await renameProject(updatedProjectName, projectData.projectName, PathName.home).then(()=>{
+                    setDeleteLoader(false);
+                    }
+                )
             });
         }
     }
@@ -151,12 +153,12 @@ function Card(props) {
                                              }
                                          }}
                                          style={{width: `${projectData.projectName?.length * 1.5}ch`}}
-                                         value={reNameProject}
+                                         value={reNameProject ?? projectData.projectName}
                         /> : theme === "dark" ?
                             <WhiteText extraStyle={styles.CardHeading}
-                                       text={reNameProject.slice(0, isMobile ? 8 : 10) + " " + ((reNameProject.length > (isMobile ? 8 : 10)) ? "..." : "")}/> :
+                                       text={projectData.projectName.slice(0, isMobile ? 8 : 10) + " " + ((projectData.projectName.length > (isMobile ? 8 : 10)) ? "..." : "")}/> :
                             <BlackText extraStyle={styles.CardHeading}
-                                       text={reNameProject.slice(0, isMobile ? 8 : 10) + " " + ((reNameProject.length > (isMobile ? 8 : 10)) ? "..." : "")}/>
+                                       text={projectData.projectName.slice(0, isMobile ? 8 : 10) + " " + ((projectData.projectName.length > (isMobile ? 8 : 10)) ? "..." : "")}/>
                         }
                     </div>
                     <img alt="pencil-icon" src={theme === Themes.dark ? Images.darkDots : Images.dots}

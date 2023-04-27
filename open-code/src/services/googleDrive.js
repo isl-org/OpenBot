@@ -1,5 +1,5 @@
 import {Constants, errorToast, localStorageKeys} from "../utils/constants";
-import {getCurrentProject} from "./workspace";
+import {FormatDate, getCurrentProject} from "./workspace";
 import {googleSignOut} from "./firebase";
 
 
@@ -57,10 +57,10 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
             mimeType: "text/javascript",
             content_type: "application/json; charset=UTF-8",
             appProperties: {
-                date: data.createdDate,
-                id: data.id,
+                date: FormatDate().currentDate,
+                time: FormatDate().currentTime,
+                updatedTime: new Date(),
                 storage: "drive",
-                time: data.time,
             },
         };
     } else if (fileType === Constants.xml) {
@@ -71,10 +71,10 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
             mimeType: "text/xml",
             content_type: "application/json; charset=UTF-8",
             appProperties: {
-                date: data.createdDate,
-                id: data.id,
+                date: FormatDate().currentDate,
+                time: FormatDate().currentTime,
+                updatedTime: new Date(),
                 storage: "drive",
-                time: data.time,
             },
         };
     }
@@ -262,19 +262,19 @@ export async function getAllFilesFromGoogleDrive() {
     // Step 1: Get the ID of the folder with the specified name
     const folderId = await getFolderId();
     // Step 2: Retrieve all files in the folder with their metadata
-    if(folderId) {
+    if (folderId) {
         const filesResponse = await fetch(`${Constants.baseUrl}/files?q=mimeType='text/xml' and trashed=false and parents='${folderId}'&fields=files(id,name,createdTime,modifiedTime,appProperties,mimeType)&access_token=${accessToken}`);
         const filesResult = await filesResponse.json();
 
         // Step 3: get xmlValue and append to each file.
         await Promise.all(filesResult.files?.map(async (file) => {
-            if(file.id) {
+            if (file.id) {
                 file.xmlValue = await getSelectedProjectFromGoogleDrive(folderId, file.id, accessToken);
             }
         }));
 
         return filesResult.files;
-    }else{
+    } else {
         return [];
     }
 }
@@ -400,20 +400,20 @@ export async function fileRename(newFileName, oldName, fileType) {
     console.log("newFileName, oldName, fileType,newFileName, oldName, fileType", newFileName, oldName, fileType)
     const folderId = await getFolderId();
     const accessToken = getAccessToken();
-    let fileId=undefined;
+    let fileId = undefined;
     let body;
     if (fileType === Constants.xml) {
-         fileId = await checkFileExistsInFolder(folderId, oldName, Constants.xml); //check according to file type
+        fileId = await checkFileExistsInFolder(folderId, oldName, Constants.xml); //check according to file type
         console.log("fileId", fileId)
-         body = {"name": newFileName + `.${Constants.xml}`} //add name with extension according to fileType
+        body = {"name": newFileName + `.${Constants.xml}`} //add name with extension according to fileType
         console.log("body::", body)
-    }else{
-         fileId = await checkFileExistsInFolder(folderId, oldName,  Constants.js); //check according to file type
+    } else {
+        fileId = await checkFileExistsInFolder(folderId, oldName, Constants.js); //check according to file type
         console.log("fileId", fileId)
-         body = {"name": newFileName + `.${Constants.js}`} //add name with extension according to fileType
+        body = {"name": newFileName + `.${Constants.js}`} //add name with extension according to fileType
         console.log("body::", body)
     }
-    console.log("folderId:",folderId, fileId.fileId)
+    console.log("folderId:", folderId, fileId.fileId)
     await fetch(`https://www.googleapis.com/drive/v3/files/${fileId.fileId}?parents=${folderId}&fields=name`, {
         method: 'PATCH',
         headers: {
