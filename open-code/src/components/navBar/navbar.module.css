@@ -179,6 +179,10 @@
     background-repeat: no-repeat;
     background-position: center;
 }
+.loader{
+    align-items: center;
+    justify-content: center;
+}
 
 .editProfileIcon {
     height: 30px;

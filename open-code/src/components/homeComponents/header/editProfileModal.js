@@ -45,7 +45,7 @@ export function EditProfileModal(props) {
 
 
     //compressing the profile image
-    function handleCompressFile(e){
+    function handleCompressFile(e) {
         const file = e.target.files[0];
         new Compressor(file, {
             quality: 0.2, // Set the compression quality (0 to 1)
@@ -94,7 +94,7 @@ export function EditProfileModal(props) {
                         function () {
                             handleClose()
                             setIsAlertSuccess(false)
-                        }.bind(), 3000);
+                        }.bind(), 1000);
                 }).catch((error) => {
                     console.log("error::::", error);
                     setIsAlertError(true)
@@ -109,43 +109,47 @@ export function EditProfileModal(props) {
         <Modal
             open={isEditProfileModal}
             style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            {isLoader ?
-                <LoaderComponent color="blue" height="20" width="20"/>
-                :
-                <Box className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>
-                    <div className={styles.crossIconDiv}>
-                        <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
-                             src={theme === Themes.dark ? Images.darkCrossIcon : Images.lightCrossIcon}/>
-                    </div>
-                    {/* profile icon */}
-                    <div style={{backgroundImage: `url(${userDetails.photoUrl})`}} className={styles.profileImg}>
-                        <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
-                        <img onClick={() => inputRef.current?.click()} alt={"edit profile icon"}
-                             className={styles.editProfileIcon} src={Images.editProfileIcon}/>
-                    </div>
-                    <div style={{display: "flex"}}>
-                        <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
-                                              headStyle={styles.headStyle}
-                                              inputTitle={"Full Name"} extraInputStyle={styles.extraInputStyle}
-                                              value={fullName} onDataChange={handleNameChange}/>
-                        <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
-                                              headStyle={styles.headStyle}
-                                              inputTitle={"Date Of Birth"} extraInputStyle={styles.extraInputStyle}/>
-                    </div>
-                    <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle}
-                                          headStyle={styles.headStyle}
-                                          inputTitle={"Email address"} value={user?.email}
-                                          extraInputStyle={styles.extraInputStyle}/>
 
-                    <div className={styles.buttonSection}>
-                        <BlueButton onClick={handleSubmit} buttonType={"contained"} buttonName={"Save"}
-                                    buttonStyle={styles.buttonText}/>
-                        <BlueButton onClick={handleClose} buttonName={"Cancel"} buttonStyle={styles.buttonText}/>
-                    </div>
-                    {isAlertSuccess && <Alert message={"Profile updated successfully!"}/>}
-                    {isAlertError && <Alert message={"Oops! There was an error."}/>}
-                </Box>
-            }
+            <Box className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>
+                <div className={styles.crossIconDiv}>
+                    <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
+                         src={theme === Themes.dark ? Images.darkCrossIcon : Images.lightCrossIcon}/>
+                </div>
+                {/* profile icon */}
+                <div style={{backgroundImage: `url(${userDetails.photoUrl})`}}
+                     className={styles.profileImg + " " + (isLoader && styles.loader)}>
+                    {isLoader ?
+                        <LoaderComponent color="blue" height="20" width="20"/> :
+                        <>
+                            <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
+                            <img onClick={() => inputRef.current?.click()} alt={"edit profile icon"}
+                                 className={styles.editProfileIcon} src={Images.editProfileIcon}/>
+                        </>
+                    }
+                </div>
+                <div style={{display: "flex"}}>
+                    <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
+                                          headStyle={styles.headStyle}
+                                          inputTitle={"Full Name"} extraInputStyle={styles.extraInputStyle}
+                                          value={fullName} onDataChange={handleNameChange}/>
+                    <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
+                                          headStyle={styles.headStyle}
+                                          inputTitle={"Date Of Birth"} extraInputStyle={styles.extraInputStyle}/>
+                </div>
+                <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle}
+                                      headStyle={styles.headStyle}
+                                      inputTitle={"Email address"} value={user?.email}
+                                      extraInputStyle={styles.extraInputStyle}/>
+
+                <div className={styles.buttonSection}>
+                    <BlueButton onClick={handleSubmit} buttonType={"contained"} buttonName={"Save"}
+                                buttonStyle={styles.buttonText}/>
+                    <BlueButton onClick={handleClose} buttonName={"Cancel"} buttonStyle={styles.buttonText}/>
+                </div>
+                {isAlertSuccess && <Alert message={"Profile updated successfully!"}/>}
+                {isAlertError && <Alert message={"Oops! There was an error."}/>}
+            </Box>
+
         </Modal>
     )
 }
