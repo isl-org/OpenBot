@@ -25,7 +25,7 @@
 
 @media (max-width: 768px) {
     .blackFont{
-        font-size: 12px;
+        font-size: 14px;
     }
 }
 @media (min-width: 744px) and (max-width: 1024px){

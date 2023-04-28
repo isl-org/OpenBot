@@ -233,6 +233,7 @@
     margin-top: 30px;
 }
 
+
 .cardContent {
     margin-top: 22px;
     display: flex;
@@ -385,7 +386,7 @@
     .ModelHeading {
         height: 15%;
         width: 95%;
-        font-size: 14px;
+        font-size: 15px;
         margin-left: 0.2rem;
         padding-bottom: 5px;
     }
@@ -426,13 +427,17 @@
         height: 30px;
         font-size: 14px;
         margin-left: 62%;
-        font-family: Gilroy-Regular;
+        font-family: Gilroy-Regular,sans-serif;
     }
 
     .creatButton {
         width: 91%;
-        margin-top: 30px;
+        margin-top: 35px;
         display: flex;
+    }
+
+    .inputBoxMargin {
+        margin-top: 15px;
     }
 }
 
