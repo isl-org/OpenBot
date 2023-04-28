@@ -64,9 +64,9 @@ public class RobotInfoFragment extends ControlsFragment {
           vehicle.sendLightIntensity(value / 100, value / 100);
         });
 
-    binding.motorsForwardButton.setOnClickListener(v -> vehicle.setControl(0.5f, 0.5f));
+    binding.motorsForwardButton.setOnClickListener(v -> vehicle.setControl(0.75f, 0.75f));
 
-    binding.motorsBackwardButton.setOnClickListener(v -> vehicle.setControl(-0.5f, -0.5f));
+    binding.motorsBackwardButton.setOnClickListener(v -> vehicle.setControl(-0.75f, -0.75f));
 
     binding.motorsStopButton.setOnClickListener(v -> vehicle.setControl(0.0f, 0.0f));
 
@@ -91,6 +91,7 @@ public class RobotInfoFragment extends ControlsFragment {
           binding.robotIcon.setImageResource(R.drawable.diy);
           break;
         case "RTR_TT":
+        case "RTR_TT2":
           binding.robotIcon.setImageResource(R.drawable.rtr_tt);
           break;
         case "RTR_520":
