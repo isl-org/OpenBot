@@ -143,7 +143,11 @@ public class ProjectsFragment extends ControlsFragment {
     if (isSignedIn) {
       binding.projectsLoader.setVisibility(View.VISIBLE);
     }
-    projectsRV.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
+    // Set Grid layout according to screen width dimension.
+      int screenWidth = getResources().getDisplayMetrics().widthPixels;
+      int itemWidth = getResources().getDimensionPixelSize(R.dimen.project_card_view);
+      int numColumns = screenWidth / itemWidth;
+    projectsRV.setLayoutManager(new GridLayoutManager(requireActivity(), numColumns));
     SparseArray<int[]> driveRes = new SparseArray<>();
     driveRes.put(R.layout.projects_list_view, new int[] {R.id.project_name, R.id.project_date});
     setScanDeviceAdapter(

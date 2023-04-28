@@ -78,6 +78,7 @@ public class BarCodeScannerFragment extends CameraFragment {
           if (newState == BottomSheetBehavior.STATE_EXPANDED
               || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
             // Make the overlay view visible when the bottom sheet is expanded or half-expanded.
+            binding.barCodeLoader.setVisibility(View.GONE);
             binding.overlayView.setVisibility(View.VISIBLE);
           } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
             // Make the overlay view invisible and set barCodeAccess is true to start detecting qr
