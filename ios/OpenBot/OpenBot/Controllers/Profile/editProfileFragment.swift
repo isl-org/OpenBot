@@ -11,7 +11,7 @@ import FirebaseStorage
 /***
  class for fragment of edit profile section
  */
-class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate {
 /**
  Outlets for the user interface elements used in this view controller.
 */
@@ -25,6 +25,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     private var firstNameField: UITextField!
     private var lastNameField: UITextField!
     let imagePickerVC = UIImagePickerController()
+    private var scrollView = UIScrollView();
 
 /**
     Method calls after view loaded
@@ -32,13 +33,32 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     override func viewDidLoad() {
         super.viewDidLoad();
         createOverlayAlert();
+        view.addSubview(scrollView);
+        let contentHeight: CGFloat = currentOrientation == .portrait ? height * 0.6 : 1000;
+        scrollView.contentSize = CGSize(width: width, height: contentHeight)
         imagePickerVC.delegate = self;
         createUserProfileImageView()
+
+        scrollView.frame =  currentOrientation == .portrait ?CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height) : CGRect(x: height/2, y: profileIcon.top , width: height/2, height: height);
         createLabels();
         createTextFields();
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         createButtons();
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        if currentOrientation == .portrait{
+            scrollView.isScrollEnabled = false
+            scrollView.contentSize = CGSize(width: width, height: 800);
+            scrollView.frame =  CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height)
+        }
+        else{
+            scrollView.frame =  CGRect(x: height/2, y: profileIcon.top , width: height/2, height: height);
+            scrollView.contentSize = CGSize(width: width, height: 1000);
+            scrollView.isScrollEnabled = true
+        }
     }
 
     /**
@@ -66,14 +86,14 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      This function creates the labels for the text fields.
      */
     private func createLabels() {
-        firstName = CustomLabel(text: "First Name", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (profileIcon.frame.origin.y + profileIcon.frame.width + adapted(dimensionSize: 40, to: .height)), width: 150, height: 40))
+        firstName = CustomLabel(text: "First Name", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: 0, width: 150, height: 40))
         lastName = CustomLabel(text: "Last Name", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (firstName.frame.origin.y + 100.0), width: 150, height: 40))
         dob = CustomLabel(text: "Date Of Birth", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (lastName.frame.origin.y + 100.0), width: 150, height: 40))
         email = CustomLabel(text: "Email", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (dob.frame.origin.y + 100.0), width: 150, height: 40))
-        view.addSubview(firstName);
-        view.addSubview(lastName);
-        view.addSubview(dob);
-        view.addSubview(email);
+        scrollView.addSubview(firstName);
+        scrollView.addSubview(lastName);
+        scrollView.addSubview(dob);
+        scrollView.addSubview(email);
     }
 
     /**
@@ -101,10 +121,10 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         setTextField(textField: emailField, value: authentication.googleSignIn.currentUser?.profile?.email ?? "");
         emailField.isEnabled = false
         emailField.textColor = traitCollection.userInterfaceStyle == .dark ? Colors.lightBlack: UIColor.lightGray;
-        view.addSubview(firstNameField);
-        view.addSubview(lastNameField);
-        view.addSubview(dobField);
-        view.addSubview(emailField);
+        scrollView.addSubview(firstNameField);
+        scrollView.addSubview(lastNameField);
+        scrollView.addSubview(dobField);
+        scrollView.addSubview(emailField);
     }
 
     /**
@@ -189,10 +209,11 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      Function to create button named cancle and done.
      */
     private func createButtons() {
-        let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: height - safeAreaLayoutValue.bottom - adapted(dimensionSize: 47, to: .height), width: 147, height: 47), selector: #selector(cancel))
-        view.addSubview(cancelBtn);
+        let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: email.bottom  +   adapted(dimensionSize: 60, to: .height), width: 147, height: 47), selector: #selector(cancel))
+        scrollView.addSubview(cancelBtn);
+        print(cancelBtn.frame.origin)
         let saveChangesBtn = CustomButton(text: "Save Changes", frame: CGRect(x: cancelBtn.frame.origin.x + 194.0, y: cancelBtn.frame.origin.y, width: 147, height: 47), selector: #selector(saveChanges))
-        view.addSubview(saveChangesBtn)
+        scrollView.addSubview(saveChangesBtn)
         saveChangesBtn.backgroundColor = Colors.title
     }
 
@@ -327,7 +348,6 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     func imageLoadFailed() {
         showToast("Error while loading profile picture",icon: UIImage(named: "check")!);
         alert.dismiss(animated: true);
-//
     }
 
 }

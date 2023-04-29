@@ -29,6 +29,8 @@ class profileFragment: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         createMyProfileLabel();
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
         signInView = CustomView(frame: view.bounds, backgroundColor: traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white);
         guestView = CustomView(frame: view.bounds, backgroundColor: traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white);
         view.addSubview(signInView);
@@ -40,6 +42,21 @@ class profileFragment: UIViewController {
         updateViewsVisibility()
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
 
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        if currentOrientation == .portrait {
+            userImgView.frame.origin.x = safeAreaLayoutValue.left + 38;
+            logoutImgView.frame.origin.x = safeAreaLayoutValue.left + 38;
+            editProfileLabel.frame.origin.x = userImgView.right + 20;
+            logoutLabel.frame.origin.x = editProfileLabel.left;
+        } else {
+            userImgView.frame.origin.x = safeAreaLayoutValue.top + 38;
+            logoutImgView.frame.origin.x = safeAreaLayoutValue.top + 38;
+            editProfileLabel.frame.origin.x = userImgView.right + 20;
+            logoutLabel.frame.origin.x = editProfileLabel.left;
+        }
     }
 
     /**
@@ -77,12 +94,12 @@ class profileFragment: UIViewController {
      Function to create labels for edit profile and logout
      */
     private func createEditProfileAndLogoutLabel() {
-        let editProfileLabel = CustomLabel(text: "Edit Profile", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 72, y: 145, width: 120, height: 50))
+        editProfileLabel = CustomLabel(text: "Edit Profile", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: userImgView.right + 72, y: 145, width: 120, height: 50))
         signInView.addSubview(editProfileLabel);
         editProfileLabel.isUserInteractionEnabled = true;
         let tapOnEditProfile = UITapGestureRecognizer(target: self, action: #selector(editProfileHandler))
         editProfileLabel.addGestureRecognizer(tapOnEditProfile);
-        let logoutLabel = CustomLabel(text: "Logout", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 72, y: editProfileLabel.bottom + 25, width: 120, height: 50))
+        logoutLabel = CustomLabel(text: "Logout", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: userImgView.right + 72, y: editProfileLabel.bottom + 25, width: 120, height: 50))
         signInView.addSubview(logoutLabel);
         logoutLabel.isUserInteractionEnabled = true;
         let tapOnLogout = UITapGestureRecognizer(target: self, action: #selector(logoutHandler))
@@ -95,8 +112,8 @@ class profileFragment: UIViewController {
     private func createEditProfileAndLogoutIcons() {
         let userIcon = UIImage(named: "user_icon");
         let logoutIcon = UIImage(named: "logout");
-        let userImgView = UIImageView(frame: CGRect(x: 38, y: 162, width: userIcon?.size.width ?? 18, height: userIcon?.size.height ?? 18));
-        let logoutImgView = UIImageView(frame: CGRect(x: 38, y: userImgView.bottom + 52, width: logoutIcon?.size.width ?? 24, height: logoutIcon?.size.height ?? 18));
+        userImgView = UIImageView(frame: CGRect(x: safeAreaLayoutValue.left + 38, y: 162, width: userIcon?.size.width ?? 18, height: userIcon?.size.height ?? 18));
+        logoutImgView = UIImageView(frame: CGRect(x: safeAreaLayoutValue.left + 38, y: userImgView.bottom + 52, width: logoutIcon?.size.width ?? 24, height: logoutIcon?.size.height ?? 18));
         userImgView.image = userIcon;
         logoutImgView.image = logoutIcon;
         signInView.addSubview(userImgView);
