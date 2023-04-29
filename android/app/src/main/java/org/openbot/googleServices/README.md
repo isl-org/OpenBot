@@ -43,7 +43,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 - About the `SHA-1` fingerprint/key is a unique identifier for your `app's signing certificate`, and is used by Firebase to verify the authenticity of your app when communicating with Firebase servers. If you plan to use Firebase Authentication in your app, you will need to provide an `SHA-1` key `for the signing certificate` used to sign the `release version` of your app.
   
 <p>
-<img src="../../../../../../../../docs/images/add_android_app.jpg" alt="Create project" width="40%"/>
+<img src="../../../../../../../../docs/images/add_android_app.jpg" alt="Add Android Application" width="40%"/>
 <img src="../../../../../../../../docs/images/package_name.jpg" alt="Package Name" width="35%"/>
 </p>
 
