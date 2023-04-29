@@ -48,8 +48,7 @@ public class BarCodeScannerFragment extends CameraFragment {
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     // Set click listeners for the cross, start, cancel, and re-scan buttons.
-    binding.btnCross.setOnClickListener(
-        v -> requireActivity().onBackPressed());
+    binding.btnCross.setOnClickListener(v -> requireActivity().onBackPressed());
     binding.qrCancelBtn.setOnClickListener(
         v -> successBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
     // Navigate to the BlocklyExecutingFragment when the start button is clicked.

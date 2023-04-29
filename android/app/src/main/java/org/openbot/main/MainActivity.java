@@ -2,7 +2,6 @@ package org.openbot.main;
 
 import static org.openbot.utils.Constants.DEVICE_ACTION_DATA_RECEIVED;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,26 +17,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import java.util.Objects;
 import org.openbot.OpenBotApplication;
 import org.openbot.R;
-import org.openbot.projects.BarCodeScannerFragment;
-import org.openbot.projects.ProjectsFragment;
 import org.openbot.utils.Constants;
 import org.openbot.vehicle.UsbConnection;
 import org.openbot.vehicle.Vehicle;
-
-import java.util.Objects;
-
 import timber.log.Timber;
 
 // For a library module, uncomment the following line
@@ -181,8 +174,9 @@ public class MainActivity extends AppCompatActivity {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu_items, menu);
     // Get the current destination id.
-    int currentDestinationId = Objects.requireNonNull(navController.getCurrentDestination()).getId();
-    if(currentDestinationId == R.id.projectsFragment){
+    int currentDestinationId =
+        Objects.requireNonNull(navController.getCurrentDestination()).getId();
+    if (currentDestinationId == R.id.projectsFragment) {
       menu.findItem(R.id.barCodeScannerFragment).setVisible(true);
       menu.findItem(R.id.settingsFragment).setVisible(false);
     } else {
@@ -201,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-    if(item.getItemId() == R.id.barCodeScannerFragment){
+    if (item.getItemId() == R.id.barCodeScannerFragment) {
       navController.navigate(R.id.barCodeScannerFragment);
       return true;
     }
