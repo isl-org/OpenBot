@@ -1,59 +1,103 @@
+## Google Firebase
 
-# Firebase
+Google Firebase is a mobile and web application development platform that offers a variety of services and tools to help
+developers build high-quality apps quickly and efficiently. It includes features such as real-time database, user
+authentication, hosting, cloud storage and many more, all these are integrated into a single platform. Firebase provides
+a convenient and scalable solution for developers to manage their backend infrastructure, allowing them to focus on
+building great user experiences.
 
-OpenBot utilizes Firebase, a mobile and web application development platform owned by Google, for Google sign-in. With Firebase, we can easily sign in to OpenBot using their Google account, which allows them to load existing projects from Google Drive and upload new ones.
+- ### Firebase Google Sign-In Authentication
 
-In addition to these features, OpenBot also allows users to perform updates to their profile. Firebase provides a comprehensive set of tools for authentication, making it easy for users to securely manage their personal information and account settings.
+  Firebase Google Sign-In Authentication is a feature of the Firebase platform that allows users to sign in to mobile or
+  web apps using their Google credentials. This service provides a secure and convenient way for users to access apps
+  without having to remember and manage separate login credentials. Firebase manages the entire authentication process,
+  from verifying the user's identity with Google to providing a unique user ID that can be used to personalize the user'
+  s experience within the app. This feature also includes additional security measures, such as two-factor
+  authentication, to help protect user's account from unauthorized access.
 
-### Prerequisites
+- ### Usage
+  In this application, we use Firebase for Google Sign-In authentication to
+  access [OpenBot Playground](https://github.com/3dwesupport/OpenBot/tree/react-blockly/open-code#readme) projects
+  uploaded on Google Drive.
 
-To integrate Firebase into an iOS openBot application for Google sign-in, we will need a few prerequisites.
+- ### Note
+  If you plan to clone this IOS application and build it on your device, it's important to note that you will need
+  to [set up Firebase](https://github.com/3dwesupport/OpenBot/tree/react-blockly/open-code#readme) for
+  the [OpenBot Playground](https://www.openbot.itinker.io/) web application as well. This is because the IOS app
+  retrieves files from the user's Google Drive, which is created by Firebase Google Drive services. It's important to
+  use the same Firebase project for both the IOS and web applications for Google Drive services to work properly.
 
-- A Google Account To use Google Sign-in with Firebase, you must have a Google account. If you don't have one, you can create one for free at https://accounts.google.com/signup.
-- A Firebase Project To use Firebase, you need to create a Firebase project. You can create a project by visiting the [Firebase Console](https://console.firebase.google.com).
-- Cocoapods is a dependency manager for Swift and Objective-C projects. To install the Firebase SDK, you need to have Cocoapods installed on your system.
+- ### Prerequisites
+  To integrate Firebase into an IOS OpenBot application for Google Sign-In, we will need a few prerequisites.
+- **Google Account:** To use Google Sign-In with Firebase, you must have a Google account. If you don't have one, click
+  here to [create](https://accounts.google.com/signup) free Google account.
+- **Cocoapods:** It is a dependency manager for Swift and Objective-C projects. To install the Firebase SDK, you need to
+  have Cocoapods installed on your system.
 
-### Pods
+### Set up your Firebase project
 
-Make sure to Add following command to pod file.
-```
-  pod 'Firebase/Core'
-  pod 'Firebase/Storage'
-  pod 'Firebase/Auth'
-  pod 'GoogleSignIn'
-  pod 'GoogleSignInSwiftSupport'
-  pod 'GoogleAPIClientForREST/Drive' 
-  ```
+- Go to the [Firebase Console](https://console.firebase.google.com/) and create a `new project` following these steps.
+    1. Click on the "Create Project" button.
+    2. Enter a name for your Firebase project.
+    3. Click "Next" and disable Google Analytics services if you don't want to use them.
+    4. Click on the "Create Project" button.
 
-### Create Firebase Project
+    <p>
+    <img src="../../../../docs/images/create_project.jpg" alt="Create project" width="25%"/>
+    <img src="../../../../docs/images/enter_project_name.jpg" alt="Enter project name" width="24%"/>
+    <img src="../../../../docs/images/disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
+    </p>
 
-- Go to the [Firebase Console](https://console.firebase.google.com/) and sign in with your Google account.
+- To add a new IOS app to your Firebase project, do the following:
+    1. Click on the IOS icon in the Firebase project.
+    2. Enter your app's bundle ID. This should be the same bundle ID as the one used in your Xcode project.
+    3. Enter your app's nickname.
+    4. Click on the "Register app" button to complete the process.
+    5. Download the GoogleService-Info.plist file and add it to your Xcode project. This file contains the configuration
+       information needed to use Firebase in your app.
 
-- Click on the "Add Project" button to create a new Firebase project.
+       <p>
+       <img src="../../../../docs/images/add_ios_app.jpg" alt="Add IOS Application" width="40%"/>
+       <img src="../../../../docs/images/bundle_id.jpg" alt="Bundle ID Name" width="35%"/>
+       </p>
 
-- Enter a name for your project, select your country/region, and then click on the "Create Project" button.
+    6. Click on the `Next` button and skip the third (Add Firebase SDK) and fourth (Add initialization code) steps as
+       it's already done for this project.
+    7. Continue to the Firebase Console to configure the Firebase services you want to use in your IOS app.
 
-- Once your project is created, click on the "iOS" icon to add Firebase to your iOS app.
+   <p>
+     <img src="../../../../docs/images/google_service_Info_plist.jpg" alt="Add IOS Application" width="40%"/>
+     <img src="../../../../docs/images/continue_to_console_ios.jpg" alt="Bundle ID Name" width="35%"/>
+   </p>
 
-- Enter the bundle ID of your iOS app in the "iOS bundle ID" field.
+- To `enable Google Sign-In authentication` for your Firebase project, follow these steps:
+    1. Go to the Firebase Console and select your project.
+    2. Click on the `All products` option in the left `sidebar menu`.
+    3. Click on `Authentication`.
+    4. Click on the `Get Started` button.
+    5. Click on the `Google icon`.
+    6. Click on the `toggle button` to `enable` Google Sign-In authentication.
 
-- Enter an App nickname and click on the "Register App" button.
-
-- Download the "GoogleService-Info.plist" configuration file and add it to your    Xcode project.
-
-- Add the Firebase SDK to your Xcode project by adding all of above [Pods](#Pods).
-
-<p align="left">
-<img src="../../../../docs/images/ios_firebase_registration.png" alt="firebase" width="25%" />
-</p>
+    <p>
+    <img src="../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="47.5%"/>
+    <img src="../../../../docs/images/firebase_authentication.jpg" alt="Firebase authentication" width="42%"/>
+    </p>
+    <p>
+    <img src="../../../../docs/images/google_signin.jpg" alt="Google Sign-In" width="60%"/>
+    <img src="../../../../docs/images/google_signin_enable.jpg" alt="Google Sign-In enable" width="31.5%"/>
+    </p>
 
 ### Set up the iOS Project
 
-Install the Firebase SDK using CocoaPods. Open the Terminal app on your Mac and navigate to your Xcode project's root directory. Run the following command to create a Podfile in your Xcode project's root directory:
+Install the Firebase SDK using CocoaPods. Open the Terminal app on your Mac and navigate to your Xcode project's root
+directory. Run the following command to create a Podfile in your Xcode project's root directory:
+
 ```
 pod init
 ```
+
 Open the Podfile using your preferred text editor and add the following lines at the end of the file:
+
 ```
   pod 'Firebase/Core'
   pod 'Firebase/Storage'
@@ -62,34 +106,12 @@ Open the Podfile using your preferred text editor and add the following lines at
   pod 'GoogleSignInSwiftSupport'
   pod 'GoogleAPIClientForREST/Drive' 
   ```
+
 Save and close the Podfile, then Run the following command to install the Firebase SDKs:
+
   ```
   pod install
 ```
-You can now import the Firebase SDKs in your Swift code by adding the following lines at the top of your Swift file:
-```
-import Firebase
-import FirebaseAuth
-```
-
-### Verify the Firebase Integration
-To verify that the Firebase SDK has been integrated correctly, add the following code to your app's `AppDelegate.swift` file:
-```
-FirebaseApp.configure()
-```
-This code initializes Firebase and sets up the default Firebase app. You can place this code in the application(_:didFinishLaunchingWithOptions:) method.
-
-Next, add the following code to a view controller:
-```
-if let currentUser = Auth.auth().currentUser {
-    print("User is signed in with uid: \(currentUser.uid)")
-} else {
-    print("No user is signed in.")
-}
-```
-This code checks if there is a signed-in user and prints the user's unique ID to the console. You can place this code in the viewDidLoad() method.
-
-Run your app and check the console output. If you see "User is signed in with uid: " followed by a user ID, then the Firebase integration was successful!
 
 ### Troubleshooting
 
@@ -98,9 +120,11 @@ Some common issues that may occur during the Firebase configuration process and 
 ```shell
 1. CocoaPods installation errors: If you encounter issues during the CocoaPods installation, such as pod install failing to run or not installing the correct Firebase SDK version, try the following solutions:
 ```
+
 - Update your CocoaPods version by running sudo gem install cocoapods.
 - Delete the Podfile.lock file and run pod install again.
-- Make sure you have added the Firebase SDK pod to your Podfile correctly, using the exact version specified in the Firebase Console.
+- Make sure you have added the Firebase SDK pod to your Podfile correctly, using the exact version specified in the
+  Firebase Console.
 
 ```shell
 2. Firebase configuration errors: If you are unable to configure Firebase correctly, such as not being able to initialize Firebase in your app, try the following solutions:
@@ -109,13 +133,11 @@ Some common issues that may occur during the Firebase configuration process and 
 - Double-check that you have followed all the steps in the "Set up the iOS Project" section of this document correctly.
 - Make sure you have added the Firebase configuration file (GoogleService-Info.plist) to your Xcode project correctly.
 - Ensure that the Firebase SDK has been added to your Xcode project correctly and is being imported in your code.
-- Verify that your Firebase project is set up correctly in the Firebase Console, including the correct bundle ID and other project settings.
-- Conflicts with other libraries: If you experience conflicts with other libraries in your project, such as having conflicting dependencies or incompatible SDK versions, try the following solutions:
+- Verify that your Firebase project is set up correctly in the Firebase Console, including the correct bundle ID and
+  other project settings.
+- Conflicts with other libraries: If you experience conflicts with other libraries in your project, such as having
+  conflicting dependencies or incompatible SDK versions, try the following solutions:
 - Ensure that you have specified the correct Firebase SDK version in your Podfile.
-- Try updating your other libraries to the latest version to see if the issue is   resolved.
-- Check for any conflicting dependencies or library versions and try to resolve them by removing or updating the conflicting libraries.
-
-### Note
-
-Make sure to use same firebase project for you web as well as ios project.
-For more information visit https://firebase.google.com/docs/ios/setup#swift_uikit
+- Try updating your other libraries to the latest version to see if the issue is resolved.
+- Check for any conflicting dependencies or library versions and try to resolve them by removing or updating the
+  conflicting libraries.
