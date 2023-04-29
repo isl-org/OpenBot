@@ -67,7 +67,8 @@ export const Constants = {
     baseUrl: "https://www.googleapis.com/drive/v3",
     endCode: "\nstart();\nforever();\n",
     js: "js",
-    xml: "xml"
+    xml: "xml",
+    InternetOffMsg : "Please check your internet connection."
 }
 
 export const PathName = {

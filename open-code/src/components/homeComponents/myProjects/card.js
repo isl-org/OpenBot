@@ -10,7 +10,7 @@ import {useNavigate} from "react-router-dom";
 import {
     deleteProjectFromStorage, getAllLocalProjects, renameProject
 } from "../../../services/workspace";
-import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
+import {errorToast, localStorageKeys, PathName, Themes} from "../../../utils/constants";
 import {EditProjectPopUp} from "../header/headerComponents";
 import {PopUpModal} from "../header/logOutAndDeleteModal";
 import {handleUniqueName} from "./newProjectButton";
@@ -34,7 +34,7 @@ function Card(props) {
         setDrawer,
         setIsError,
         setCode,
-
+        isOnline,
     } = useContext(StoreContext);
     const {projectData, setDeleteLoader,} = props
     const [openPopUp, setOpenPopUp] = useState(false);
@@ -71,14 +71,20 @@ function Card(props) {
             setProjectName(projectData.projectName);
             setFileId(projectData.fileId);
             if (localStorage.getItem("isSigIn") === "true") {
-                let folderId = await getFolderId();
-                let fileExistWithFileID = await checkFileExistsInFolder(folderId, projectData.projectName, 'js')
-                if (fileExistWithFileID.exists) {
-                    let QrLink = await getShareableLink(fileExistWithFileID.fileId, folderId)
-                    setCode(QrLink);
+                if (isOnline) {
+                    let folderId = await getFolderId();
+                    let fileExistWithFileID = await checkFileExistsInFolder(folderId, projectData.projectName, 'js')
+                    if (fileExistWithFileID.exists) {
+                        let QrLink = await getShareableLink(fileExistWithFileID.fileId, folderId)
+                        setCode(QrLink);
+                    }
+                    openExistingProject();
+                } else {
+                    errorToast("Please Check your internet connection.")
                 }
+            } else {
+                openExistingProject();
             }
-            openExistingProject();
         } catch (error) {
             console.error(error);
         }
@@ -105,8 +111,8 @@ function Card(props) {
         setDeleteLoader(true);
         if (reNameProject !== projectData.projectName) {
             await handleRename(reNameProject, projectData.projectName, setReNameProject).then(async (updatedProjectName) => {
-                await renameProject(updatedProjectName, projectData.projectName, PathName.home).then(()=>{
-                    setDeleteLoader(false);
+                await renameProject(updatedProjectName, projectData.projectName, PathName.home).then(() => {
+                        setDeleteLoader(false);
                     }
                 )
             });

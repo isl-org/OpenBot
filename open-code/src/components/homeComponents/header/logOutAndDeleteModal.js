@@ -5,6 +5,8 @@ import styles from "../../navBar/navbar.module.css";
 import BlackText from "../../fonts/blackText";
 import BlueButton from "../../buttonComponent/blueButtonComponent";
 import LoaderComponent from "../../loader/loaderComponent";
+import {StoreContext} from "../../../context/context";
+import {Constants, errorToast} from "../../../utils/constants";
 
 
 /**
@@ -16,7 +18,7 @@ import LoaderComponent from "../../loader/loaderComponent";
 export function PopUpModal(props) {
     const {theme} = useContext(ThemeContext)
     const {setVariable, headerText, buttonText, containText, handleButtonClick, deleteLoader} = props;
-
+    const {isOnline} = useContext(StoreContext)
     const [open, setOpen] = useState(true);
 
 
@@ -24,6 +26,14 @@ export function PopUpModal(props) {
         setVariable(false);
         return setOpen(false);
     };
+
+    const handleRightButton = () => {
+        if (isOnline) {
+            handleButtonClick()
+        } else {
+            errorToast(Constants.InternetOffMsg)
+        }
+    }
 
     return (
         <div>
@@ -45,9 +55,8 @@ export function PopUpModal(props) {
                             <BlueButton onClick={handleClose} buttonName={"Cancel"}
                                         buttonStyle={styles.buttonStyle}
                                         extraStyle={styles.logoutButtonsExtraStyle + " " + styles.cancelExtraStyle}/>
-                            <BlueButton onClick={() => {
-                                handleButtonClick()
-                            }} buttonType={"contained"} buttonName={buttonText}
+                            <BlueButton onClick={() => handleRightButton()} buttonType={"contained"}
+                                        buttonName={buttonText}
                                         buttonStyle={styles.buttonStyle}
                                         extraStyle={styles.logoutButtonsExtraStyle}/>
                         </div>

@@ -11,12 +11,13 @@ import trash from "../../../assets/images/icon/trash.png";
 import LoaderComponent from "../../loader/loaderComponent";
 import WhiteText from "../../fonts/whiteText";
 import {googleSigIn} from "../../../services/firebase";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {renameProject} from "../../../services/workspace";
-import {PathName} from "../../../utils/constants";
+import {Constants, errorToast, PathName} from "../../../utils/constants";
 import {handleRename} from "../myProjects/card";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {Images} from "../../../utils/images";
+import {StoreContext} from "../../../context/context";
 
 /**
  * Display logo with openCode text (Header's Left side)
@@ -264,18 +265,23 @@ export function ProfileSignIn(params) {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const location = useLocation();
+    const {isOnline} = useContext(StoreContext)
 
     //open google signIn and set user details in User
     const handleSignIn = () => {
-        googleSigIn().then(response => {
-            setUser({
-                photoURL: response?.user.photoURL,
-                displayName: response?.user.displayName,
-                email: response?.user.email
+        if (isOnline) {
+            googleSigIn().then(response => {
+                setUser({
+                    photoURL: response?.user.photoURL,
+                    displayName: response?.user.displayName,
+                    email: response?.user.email
+                });
+            }).catch((error) => {
+                console.log("signIn error: ", error)
             });
-        }).catch((error) => {
-            console.log("signIn error: ", error)
-        });
+        } else {
+            errorToast(Constants.InternetOffMsg);
+        }
     }
 
     return (

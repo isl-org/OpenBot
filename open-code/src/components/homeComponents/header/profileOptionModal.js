@@ -6,10 +6,11 @@ import {colors} from "../../../utils/color";
 import {Images} from "../../../utils/images";
 import WhiteText from "../../fonts/whiteText";
 import BlueText from "../../fonts/blueText";
-import {PathName, Themes} from "../../../utils/constants";
+import {Constants, errorToast, PathName, Themes} from "../../../utils/constants";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLocation} from "react-router-dom";
 import {googleSigIn} from "../../../services/firebase";
+import {StoreContext} from "../../../context/context";
 
 
 /**
@@ -29,6 +30,7 @@ export function ProfileOptionModal(props) {
     const location = useLocation();
     const themes = useTheme();
     const {theme, toggleTheme, setUser} = useContext(ThemeContext);
+    const {isOnline} = useContext(StoreContext)
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
     const isHomePage = location.pathname === PathName.home;
@@ -44,15 +46,19 @@ export function ProfileOptionModal(props) {
     }
 
     const handleSignIn = () => {
-        googleSigIn().then(response => {
-            setUser({
-                photoURL: response?.user.photoURL,
-                displayName: response?.user.displayName,
-                email: response?.user.email
+        if (isOnline) {
+            googleSigIn().then(response => {
+                setUser({
+                    photoURL: response?.user.photoURL,
+                    displayName: response?.user.displayName,
+                    email: response?.user.email
+                });
+            }).catch((error) => {
+                console.log("signIn error: ", error)
             });
-        }).catch((error) => {
-            console.log("signIn error: ", error)
-        });
+        } else {
+            errorToast(Constants.InternetOffMsg)
+        }
     }
 
     return (

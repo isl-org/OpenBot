@@ -9,6 +9,7 @@ import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 import BlueButton from "../../buttonComponent/blueButtonComponent";
 import {Constants, errorToast, Themes} from "../../../utils/constants";
 import Compressor from 'compressorjs';
+import {StoreContext} from "../../../context/context";
 
 
 /**
@@ -21,6 +22,7 @@ export function EditProfileModal(props) {
     const {isEditProfileModal, setIsEditProfileModal, user} = props
     const inputRef = useRef();
     const {theme} = useContext(ThemeContext)
+    const {isOnline} = useContext(StoreContext)
     const [file, setFile] = useState(user?.photoURL && user.photoURL);
     const [fullName, setFullName] = useState(user?.displayName);
     const [isAlertSuccess, setIsAlertSuccess] = useState(false)
@@ -78,29 +80,33 @@ export function EditProfileModal(props) {
     }
 
     const handleSubmit = async () => {
-        //TODO date of birth condition needs to be handle
-        if (user.photoURL !== file || user.displayName !== userDetails.displayName) {
-            setIsLoader(true);
-            await uploadProfilePic(file, file.name).then((photoURL) => {
-                if (user.photoURL === file) {
-                    photoURL = file;
-                }
-                auth.currentUser.updateProfile({
-                    photoURL: photoURL,
-                    displayName: userDetails.displayName,
-                }).then(() => {
-                    setIsAlertSuccess(true)
-                    setTimeout(
-                        function () {
-                            handleClose()
-                            setIsAlertSuccess(false)
-                        }.bind(), 1000);
-                }).catch((error) => {
-                    console.log("error::::", error);
-                    setIsAlertError(true)
+        if (isOnline) {
+            //TODO date of birth condition needs to be handle
+            if (user.photoURL !== file || user.displayName !== userDetails.displayName) {
+                setIsLoader(true);
+                await uploadProfilePic(file, file.name).then((photoURL) => {
+                    if (user.photoURL === file) {
+                        photoURL = file;
+                    }
+                    auth.currentUser.updateProfile({
+                        photoURL: photoURL,
+                        displayName: userDetails.displayName,
+                    }).then(() => {
+                        setIsAlertSuccess(true)
+                        setTimeout(
+                            function () {
+                                handleClose()
+                                setIsAlertSuccess(false)
+                            }.bind(), 1000);
+                    }).catch((error) => {
+                        console.log("error::::", error);
+                        setIsAlertError(true)
+                    })
+                    setIsLoader(false)
                 })
-                setIsLoader(false)
-            })
+            }
+        } else {
+            errorToast(Constants.InternetOffMsg);
         }
     }
 

@@ -5,7 +5,7 @@ import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
-import {errorToast,} from "../../utils/constants";
+import {Constants, errorToast,} from "../../utils/constants";
 import {CircularProgress, circularProgressClasses, useTheme} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
@@ -31,6 +31,7 @@ export const BottomBar = () => {
     const [signInPopUp, setSignInPopUp] = useState(false);
     const [uploadCodeSignIn, setUploadCodeSignIn] = useState(false);
     const themes = useTheme();
+    const {isOnline} = useContext(StoreContext)
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const {
         generate,
@@ -44,42 +45,46 @@ export const BottomBar = () => {
 
     //generate javascript or python code and upload to google drive
     const generateCode = () => {
-        if (localStorage.getItem("isSigIn") === "true") {
-            setDrawer(false);
-            setIsLoader(true);
-            //javaScript generator
-            let code = javascriptGenerator.workspaceToCode(
-                workspace
-            );
-
-            const start = workspace.getBlocksByType("start")
-            const forever = workspace.getBlocksByType("forever")
-            if (start.length === 0 && forever.length === 0) {
+        if (isOnline) {
+            if (localStorage.getItem("isSigIn") === "true") {
                 setDrawer(false);
-                setIsLoader(false);
-                setIsError(true);
-            } else {
-                if (start.length > 0)
-                    code += "\nstart();";
-                if (forever.length > 0)
-                    code += "\nforever();";
-                setGenerateCode(!generate);
-                console.log(code);
-                uploadToGoogleDrive(code, "js").then((res) => {
-                        console.log("res::", res)
-                        setCode(res);
-                        setIsLoader(false);
-                        setDrawer(true);
-                    }
-                ).catch((err) => {
-                    console.log("err::", err)
-                    setIsLoader(false);
-                    errorToast("Failed to Upload");
+                setIsLoader(true);
+                //javaScript generator
+                let code = javascriptGenerator.workspaceToCode(
+                    workspace
+                );
 
-                })
+                const start = workspace.getBlocksByType("start")
+                const forever = workspace.getBlocksByType("forever")
+                if (start.length === 0 && forever.length === 0) {
+                    setDrawer(false);
+                    setIsLoader(false);
+                    setIsError(true);
+                } else {
+                    if (start.length > 0)
+                        code += "\nstart();";
+                    if (forever.length > 0)
+                        code += "\nforever();";
+                    setGenerateCode(!generate);
+                    console.log(code);
+                    uploadToGoogleDrive(code, "js").then((res) => {
+                            console.log("res::", res)
+                            setCode(res);
+                            setIsLoader(false);
+                            setDrawer(true);
+                        }
+                    ).catch((err) => {
+                        console.log("err::", err)
+                        setIsLoader(false);
+                        errorToast("Failed to Upload");
+
+                    })
+                }
+            } else {
+                setUploadCodeSignIn(true);
             }
         } else {
-            setUploadCodeSignIn(true);
+            errorToast(Constants.InternetOffMsg)
         }
     };
 
@@ -253,34 +258,39 @@ function UploadInDrive(params) {
     const {setSignInPopUp, signInPopUp} = params
     const [isDriveLoader, setIsDriveLoader] = useState(false);
     const [showTick, setShowTick] = useState(false);
+    const {isOnline} = useContext(StoreContext)
 
     //if signIn add code in xml file to google drive or else show signIn pop Up
     const handleDriveButton = () => {
-        if (localStorage.getItem("isSigIn") === "true") {
-            setIsDriveLoader(true);
-            const data = {
-                projectName: getCurrentProject().projectName,
-                xmlValue: getCurrentProject().xmlValue,
-                createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
-            }
-            // Call function to upload data to Google Drive
-            uploadToGoogleDrive(data, "xml")
-                .then((res) => {
+        if (isOnline) {
+            if (localStorage.getItem("isSigIn") === "true") {
+                setIsDriveLoader(true);
+                const data = {
+                    projectName: getCurrentProject().projectName,
+                    xmlValue: getCurrentProject().xmlValue,
+                    createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
+                }
+                // Call function to upload data to Google Drive
+                uploadToGoogleDrive(data, "xml")
+                    .then((res) => {
+                            setIsDriveLoader(false);
+                            //after response show tick after 400ms
+                            res && setTimeout(() => {
+                                setShowTick(true);
+                            }, 400);
+                        }
+                    )
+                    .catch((err) => {
                         setIsDriveLoader(false);
-                        //after response show tick after 400ms
-                        res && setTimeout(() => {
-                            setShowTick(true);
-                        }, 400);
-                    }
-                )
-                .catch((err) => {
-                    setIsDriveLoader(false);
-                    errorToast("Failed to upload");
-                    console.log(err)
-                })
-        } else {
-            // If user is not signed in, show sign in popup
-            setSignInPopUp(true);
+                        errorToast("Failed to upload");
+                        console.log(err)
+                    })
+            } else {
+                // If user is not signed in, show sign in popup
+                setSignInPopUp(true);
+            }
+        }else{
+            errorToast(Constants.InternetOffMsg)
         }
 
     }

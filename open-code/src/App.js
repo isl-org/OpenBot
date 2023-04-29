@@ -20,6 +20,21 @@ export const ThemeContext = createContext(null);
 function App() {
     let onPageLoad = localStorage.getItem("theme") || ""
     const [theme, setTheme] = useState(onPageLoad);
+    const [internetOn, setInternetOn] = useState(window.navigator.onLine);
+
+
+    useEffect(() => {
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, []);
+
+    const handleOnline = () => setInternetOn(true);
+    const handleOffline = () => setInternetOn(false);
 
     useEffect(() => {
         //to change body theme of the site
@@ -83,7 +98,7 @@ function App() {
 
     return (
         <ThemeContext.Provider value={{theme, toggleTheme}}>
-            <StoreProvider>
+            <StoreProvider isOnline={internetOn}>
                 <div id={theme}>
                     <RouterComponent/>
                 </div>

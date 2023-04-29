@@ -197,11 +197,6 @@ export async function getFolderId() {
     // Step 1: Get the ID of the folder with the specified name
     const searchResponse = await fetch(`${Constants.baseUrl}/files?q=name='${encodeURIComponent(Constants.FolderName)}'+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false&access_token=${accessToken}`);
     const searchResult = await searchResponse.json();
-    //if session expire give alert and signOut user.
-    if (searchResult.error && searchResult.error.code === 401) {
-        alert("your session has expired please login again.")
-        googleSignOut().then()
-    }
     return searchResult?.files[0]?.id || null;
 }
 
