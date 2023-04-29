@@ -677,6 +677,10 @@
         flex-direction: row;
     }
 
+    .buttonIcon {
+        font-size: 15px;
+    }
+
 }
 
 @media (max-width: 400px) and (max-height: 670px) {
