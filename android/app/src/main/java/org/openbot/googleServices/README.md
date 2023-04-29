@@ -23,8 +23,8 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 
 - Go to the [Firebase Console](https://console.firebase.google.com/) and create a `new project` following these steps.
   1. Click on the "Create Project" button.
-  2. Enter a name for your Firebase project.
-  3. Click "Next" and disable Google Analytics services if you don't want to use them.
+  2. Enter a name for your Firebase project and click "Next" button.
+  3. Google Analytics can be disabled if you do not want to use them.
   4. Click on the "Create Project" button.
 <p>
 <img src="../../../../../../../../docs/images/create_project.jpg" alt="Create project" width="25%"/>
@@ -36,7 +36,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
   1. Click on the Android icon in the Firebase project.
   2. Enter `package name` of your Android app. This should be `unique` for Firebase.
   3. Enter your app's nickname.
-  4. The `SHA-1` key is also `mandatory` for the signing certificate used to `sign your app's APK`. Enter it in the appropriate field.
+  4. The **SHA-1 key** is **mandatory** for Firebase Google SignIn service to sign your application's APK. Enter it in the appropriate field.
   5. Click on the `Register` button.
   
 
@@ -47,7 +47,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 <img src="../../../../../../../../docs/images/package_name.jpg" alt="Package Name" width="35%"/>
 </p>
 
-- To obtain the `SHA-1` key for the debug signing certificate, you can use the `keytool` (command-line tool) that is included with the `Java SDK`. Here's how to use it on `Mac` and `Windows`:
+- To obtain the `SHA-1` key, you can use the `keytool` (command-line tool) that is included with the `Java SDK`. Here's how to use it on `Mac` and `Windows`:
   
 
   - **On Mac**
@@ -64,7 +64,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
     This command is similar to the Mac command, but uses a `different path` to locate the debug.keystore file. `%USERPROFILE%` is a system environment variable that points to the current user's profile directory, which contains the `.android` directory where the `debug.keystore` file is located.
 
 - Download the `google-services.json` file and `add` it to your Application's `app directory`.
-- Click on the `Next` button and skip the third step (adding the Firebase SDK) as it's already done for this project.
+- Click on the next button, And you have to skip the third step because we already **add firebase SDK** in gradle file for this project.
 - Continue to the Firebase Console to configure the Firebase services you want to use in your Android app.
 
 <p>
@@ -105,3 +105,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 </p>
 
 - If you have `already implemented Firebase authentication` before adding the SHA-1 key, you may need to `update` your app's `configuration`. This can be done by `replacing` the `google-services.json` file in project directory with the `updated google-services.json` file from Firebase project setting.
+
+<p>
+<img src="../../../../../../../../docs/images/updated_google_service_json_file.jpg" alt="Updated Google service json file" width="40%"/>
+</p>
