@@ -54,7 +54,7 @@
 //------------------------------------------------------//
 
 // Setup the OpenBot version (DIY, PCB_V1, PCB_V2, RTR_TT, RC_CAR, LITE, RTR_TT2, RTR_520, DIY_ESP32)
-#define OPENBOT RTR_TT2
+#define OPENBOT DIY
 
 //------------------------------------------------------//
 // SETTINGS - Global settings
@@ -505,10 +505,14 @@ const int CH_PWM_L1 = 0;
 const int CH_PWM_L2 = 1;
 const int CH_PWM_R1 = 2;
 const int CH_PWM_R2 = 3;
-const int PIN_PWM_L1 = 13;
-const int PIN_PWM_L2 = 12;
-const int PIN_PWM_R1 = 27;
-const int PIN_PWM_R2 = 33;
+const int PIN_PWM_LF1 = 13;
+const int PIN_PWM_LF2 = 12;
+const int PIN_PWM_LB1 = 13;
+const int PIN_PWM_LB2 = 12;
+const int PIN_PWM_RF1 = 27;
+const int PIN_PWM_RF2 = 33;
+const int PIN_PWM_RB1 = 27;
+const int PIN_PWM_RB2 = 33;
 const int PIN_SPEED_LF = 5;
 const int PIN_SPEED_RF = 18;
 const int PIN_VIN = 39;
@@ -828,7 +832,7 @@ void setup() {
   esp_wifi_deinit();
 #endif
 
-#if (OPENBOT == RTR_TT2 || OPENBOT == RTR_520)
+#if (MCU == ESP32 && OPENBOT != MTV)
   // PWMs
   // Configure PWM functionalitites
   ledcSetup(CH_PWM_L1, FREQ, RES);
