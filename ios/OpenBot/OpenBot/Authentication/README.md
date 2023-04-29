@@ -57,7 +57,7 @@ building great user experiences.
        information needed to use Firebase in your app.
 
        <p>
-       <img src="../../../../docs/images/add_ios_app.jpg" alt="Add IOS Application" width="40%"/>
+       <img src="../../../../docs/images/add_ios_app.jpg" alt="Add IOS Application" width="47.5%"/>
        <img src="../../../../docs/images/bundle_id.jpg" alt="Bundle ID Name" width="35%"/>
        </p>
 
@@ -67,7 +67,7 @@ building great user experiences.
 
    <p>
      <img src="../../../../docs/images/google_service_Info_plist.jpg" alt="Add IOS Application" width="40%"/>
-     <img src="../../../../docs/images/continue_to_console_ios.jpg" alt="Bundle ID Name" width="35%"/>
+     <img src="../../../../docs/images/continue_to_console_ios.jpg" alt="Bundle ID Name" width="36.5%"/>
    </p>
 
 - To `enable Google Sign-In authentication` for your Firebase project, follow these steps:
