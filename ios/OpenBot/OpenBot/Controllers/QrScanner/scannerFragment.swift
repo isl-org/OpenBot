@@ -16,10 +16,10 @@ class scannerFragment: CameraController {
     private var commands: String = ""
     private var projectFileId: String = "";
     var qrResult: String = "";
-    var firstMsg = CustomLabel(frame: .zero);
-    var secondMsg = CustomLabel(frame: .zero);
+    var msg  =  CustomLabel(frame: .zero);
     var heading = CustomLabel(frame: .zero);
     var border = UIImageView();
+    let firstHalfView = UIView();
 
 /**
     Method calls after view will load and initialize the UI and camera
@@ -29,25 +29,19 @@ class scannerFragment: CameraController {
         createScanHeading()
         createScanMessage()
         createScannerBorder()
-        cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: height - 223 , y: 95, width: 230, height: 230)
+        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top, width: width, height: height/2) : CGRect(x: safeAreaLayoutValue.top, y: 0, width: width, height: height/2);
+        view.addSubview(firstHalfView);
+        cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: width + safeAreaLayoutValue.top + 22 , y: 95, width: 230, height: 230)
         initializeCamera()
         view.addSubview(cameraView);
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator);
-        cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: height  - 318, y: 90, width: 230, height: 230)
-        border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: height  - 340, y: 70, width: 268, height: 273)
-        if currentOrientation == .portrait {
-            heading.frame.origin = CGPoint(x: width / 2 - 65, y: 145);
-            firstMsg.frame.origin = CGPoint(x: width / 2 - 160, y: 185);
-            secondMsg.frame.origin = CGPoint(x: height / 2  - 115, y: 210)
-        }
-        else{
-            heading.frame.origin = CGPoint(x: 155, y: 159);
-            firstMsg.frame.origin = CGPoint(x: 96, y: 210);
-            secondMsg.frame.origin = CGPoint(x: 141, y: 230);
-        }
+        firstHalfView.frame.origin = currentOrientation == .portrait ? CGPoint(x: 0, y: safeAreaLayoutValue.top) : CGPoint(x: safeAreaLayoutValue.top, y: 0);
+        border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: firstHalfView.right, y: 70, width: 268, height: 273)
+        cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: border.left + 22, y: 90, width: 230, height: 230)
+
     }
 
     /**
@@ -70,37 +64,43 @@ class scannerFragment: CameraController {
      Create Heading of Fragment
      */
     private func createScanHeading() {
-        if currentOrientation == .portrait {
-            heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 20, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 65, y: 145, width: 130, height: 40))
-        } else {
-            heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 20, fontColor: Colors.textColor ?? .black, frame: CGRect(x: height / 2 - safeAreaLayoutValue.top - 65, y: 145, width: 130, height: 40))
-        }
-        view.addSubview(heading);
+        heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 22, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 65, y: 145, width: 145, height: 40))
+
+//        if currentOrientation == .portrait {
+//        } else {
+//            heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 22, fontColor: Colors.textColor ?? .black, frame: CGRect(x: height / 2 - safeAreaLayoutValue.top - 85, y: 145, width: 145, height: 40))
+//        }
+        heading.textAlignment = .center;
+        firstHalfView.addSubview(heading);
+
+
     }
 
     /**
      Create Message of Fragment
      */
     private func createScanMessage() {
+        let message = "Place qr code inside the frame to scan. Please avoid shake to get results quickly."
+        let font = UIFont(name: "HelveticaNeue", size: 15)!
+        let messageSize = (message as NSString).boundingRect(with: CGSize(width: 320, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
+        let messageHeight = ceil(messageSize.height)
 
-        if currentOrientation == .portrait{
-            firstMsg = CustomLabel.init(text: "Place qr code inside the frame to scan. Please", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 160, y: 185, width: 320, height: 40))
-            secondMsg = CustomLabel.init(text: "void shake to get results quickly.", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 115, y: 210, width: 230, height: 40))
-        }
-        else{
-            firstMsg = CustomLabel.init(text: "Place qr code inside the frame to scan. Please", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 96, y: 210, width: 320, height: 40))
-            secondMsg = CustomLabel.init(text: "void shake to get results quickly.", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 51, y: 230, width: 230, height: 40))
-        }
-        view.addSubview(firstMsg);
-        view.addSubview(secondMsg)
+        msg = CustomLabel(text: message, fontSize: 15, fontColor: Colors.textColor ?? .black, frame:
+                CGRect(x: width / 2 - 160, y: 190, width: 320, height: messageHeight))
+        msg.numberOfLines = 0
+        msg.lineBreakMode = .byWordWrapping
+        msg.textAlignment = .center
+        msg.font = font
+        firstHalfView.addSubview(msg)
     }
+
 
     /**
      Create border for Scanner view
      */
     private func createScannerBorder() {
         border.image = UIImage(named: "scanner-boundary");
-        border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: height / 2 - 300, y: 95, width: 268, height: 273)
+        border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) :CGRect(x: width + safeAreaLayoutValue.top, y: 70, width: 268, height: 273)
         view.addSubview(border);
     }
 
@@ -191,7 +191,6 @@ class scannerFragment: CameraController {
      Creating Bottom sheet for QR scan Error
      */
     private func createErrorUI() {
-        print("inside error ");
         self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
         self.whiteSheet.scanQr.addTarget(self, action: #selector(self.scan), for: .touchUpInside);
         view.addSubview(whiteSheet);

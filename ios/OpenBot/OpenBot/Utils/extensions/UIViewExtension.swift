@@ -68,20 +68,75 @@ extension UIView {
 }
 
 class BottomSheetView: UIView {
+
     override init(frame: CGRect) {
-        super.init(frame: frame)
+        let newFrame = currentOrientation == .portrait ? CGRect(x: safeAreaLayoutValue.left, y: height - 200, width: width - safeAreaLayoutValue.left, height: 200) :
+                currentOrientation == .landscapeLeft ? CGRect(x: safeAreaLayoutValue.top, y: width - 200, width: height - safeAreaLayoutValue.top, height: 200) :
+                CGRect(x: safeAreaLayoutValue.bottom, y: width - 200, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 200);
+        super.init(frame: newFrame)
         setup()
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+
+
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+
 
     private func setup() {
         self.backgroundColor = Colors.bdColor;
         layer.cornerRadius = 30;
         layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
     }
+
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection != nil && previousTraitCollection!.verticalSizeClass != traitCollection.verticalSizeClass {
+            if traitCollection.verticalSizeClass == .compact {
+                frame = currentOrientation == .landscapeLeft ? CGRect(x: safeAreaLayoutValue.top, y: width - 200, width: height - safeAreaLayoutValue.top, height: 200) :
+                        CGRect(x: safeAreaLayoutValue.bottom, y: width - 200, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 200);
+            } else {
+                frame = CGRect(x: safeAreaLayoutValue.left, y: height - 200, width: width - safeAreaLayoutValue.left, height: 200)
+            }
+        }
+    }
+
+    var orientationDidChanged: UIDeviceOrientation = .portrait {
+        didSet {
+            if oldValue == .landscapeLeft && orientationDidChanged == .landscapeRight {
+                // The device orientation has changed from landscape left to landscape right
+                // Do something here
+                frame = CGRect(x: safeAreaLayoutValue.bottom, y: width - 200, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 200)
+
+            }
+            if oldValue == .landscapeRight && orientationDidChanged == .landscapeLeft {
+
+                // The device orientation has changed from landscape right to landscape left
+                frame = CGRect(x: safeAreaLayoutValue.top, y: width - 200, width: height - safeAreaLayoutValue.top, height: 200)
+
+            }
+        }
+    }
+
+
+    @objc func orientationDidChange() {
+        switch UIDevice.current.orientation {
+        case .portrait, .portraitUpsideDown, .landscapeLeft, .landscapeRight:
+            orientationDidChanged = UIDevice.current.orientation
+        default:
+            break
+        }
+    }
+
+
 }
 
 class CustomView: UIView {
@@ -106,12 +161,14 @@ class CustomView: UIView {
 
 class openCodeRunBottomSheet: UIView {
     let startBtn = UIButton(frame: CGRect(x: 19, y: 120, width: 120, height: 40));
-    let bottomSheet = BottomSheetView(frame: CGRect(x: 0, y: height - 200, width: width, height: 200));
+    let bottomSheet = BottomSheetView(frame: .zero);
     let cancelBtn = UIButton(frame: CGRect(x: 160, y: 120, width: 120, height: 40));
     let scanQr = UIButton(frame: CGRect(x: 19, y: 120, width: 120, height: 40));
-    var fileName : String = "";
+    var fileName: String = "";
+
     override init(frame: CGRect) {
         super.init(frame: frame);
+        backgroundColor = .purple
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -132,6 +189,23 @@ class openCodeRunBottomSheet: UIView {
         fileName == "" ? createErrorUI() : createSuccessUI();
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if previousTraitCollection != nil && previousTraitCollection!.verticalSizeClass != traitCollection.verticalSizeClass {
+            // The vertical size class has changed (i.e. the device orientation has changed)
+            if traitCollection.verticalSizeClass == .compact {
+                // The device is in landscape orientation
+                // Do something here
+                frame = CGRect(x: 0, y: 0, width: height, height: width);
+            } else {
+                // The device is in portrait orientation
+                // Do something here
+                frame = CGRect(x: 0, y: 0, width: width, height: height);
+            }
+        }
+    }
+
     private func setup() {
         self.backgroundColor = UIColor.black.withAlphaComponent(0.6)
     }
@@ -144,7 +218,6 @@ class openCodeRunBottomSheet: UIView {
      Creating Bottom sheet for QR scan Error
      */
     private func createErrorUI() {
-        print("inside error")
         DispatchQueue.main.async {
             self.createErrorHeading()
             self.createErrorMsg()
@@ -157,7 +230,6 @@ class openCodeRunBottomSheet: UIView {
      Creating Bottom sheet for QR scan Successful
      */
     private func createSuccessUI() {
-        print("sucess")
         DispatchQueue.main.async {
             self.createBottomSheetHeading()
             self.createBottomSheetMsg(fileName: self.fileName);
@@ -273,7 +345,7 @@ class openCodeRunBottomSheet: UIView {
     @objc private func scan() {
     }
 
-    func animateBottomSheet(){
+    func animateBottomSheet() {
         let animationDuration: TimeInterval = 0.3
 // Animate the bottom sheet off the screen
         UIView.animate(withDuration: animationDuration, animations: {
