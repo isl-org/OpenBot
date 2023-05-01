@@ -2,7 +2,6 @@ package org.openbot.googleServices;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -39,7 +38,6 @@ public class GoogleServices {
   private final Context mContext;
   private final GoogleSignInCallback mCallback;
   public final GoogleSignInClient mGoogleSignInClient;
-  private SharedPreferences sharedPref;
   private ProjectsFragment projectsFragment;
   private FirebaseAuth firebaseAuth;
   private List<File> driveFiles = new ArrayList<>();
@@ -67,7 +65,6 @@ public class GoogleServices {
             .requestProfile()
             .build();
     // Set up Shared Preferences
-    sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
     // Set up Google Sign-In client
     mGoogleSignInClient = GoogleSignIn.getClient(mActivity, gso);
     // Check if there is a signed-in account already and notify the callback accordingly
@@ -120,10 +117,6 @@ public class GoogleServices {
                 firebaseAuth.signOut();
                 // Notify callback of successful sign-out.
                 mCallback.onSignOutSuccess();
-                // Update Shared Preferences to ask again for signIn.
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("signInMode", "");
-                editor.apply();
                 Log.d(TAG, "signOut:success");
               } else {
                 // Notify callback of sign-out failure

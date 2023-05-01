@@ -70,6 +70,7 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   @Override
   public void onPause() {
     super.onPause();
+    myWebView.destroy();
     // if previous speed multiplier value is not 0, set the speed multiplier back to its previous
     // value when you go back from this screen.
     if (previousSpeedMultiplier != 0) {
