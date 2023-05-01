@@ -3,7 +3,7 @@
 - #### Usage
   In web application, we use Firebase for Google sign-in authentication to upload OpenBot Playground projects on Google
   Drive. If you clone this project and run on your device, you must set up your own Firebase project because the
-  firebase config is required for sign-in authentication.
+  firebase configuration is required for sign-in authentication.
 - #### About  Google Sign-In
   Firebase Google Sign-In Authentication is a feature of the Firebase platform that allows users to sign in to mobile or
   web apps using their Google credentials. This service provides a secure and convenient way for users to access apps

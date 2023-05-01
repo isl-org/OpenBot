@@ -110,7 +110,7 @@ function PopUpInRowText(params) {
     const {onClick, text, icon} = params
     return (
         <div onClick={onClick}
-             className={`${styles.item} ${styles.popUpItem} ${styles.editProfileMargin}  ${(theme.theme === Themes.dark ? styles.darkItem : styles.lightItem)}`}>
+             className={`${styles.item} ${styles.editProfileMargin}  ${(theme.theme === Themes.dark ? styles.darkItem : styles.lightItem)}`}>
             <img alt="icon" src={icon}
                  className={styles.modalIcon}/>
             <span className={`${styles.inRowText}`}>

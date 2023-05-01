@@ -18,13 +18,13 @@
 
 .profileOptionModalStyle {
     outline: none;
-    width: 260px;
+    width: 240px;
     position: absolute;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 6px;
     right: 4%;
     top: 65px;
-    padding-top: 1.5rem;
+    padding-top: 0.8rem;
 }
 
 
@@ -89,15 +89,14 @@
 .item {
     font-size: 20px;
     display: flex;
+    align-items: center;
     align-content: center;
-    justify-content: space-between;
+    justify-content: space-around;
     cursor: pointer;
-    padding: 0.5rem 0 0.5rem 2rem;
+    padding: 0.5rem 0 0.5rem 1rem;
     border-style: none none none solid;
 }
-.popUpItem{
-    padding: 0rem 0  0.5rem 2rem;
-}
+
 
 .renameDivMargin {
     padding-right: 6.5rem;
@@ -109,8 +108,9 @@
 }
 
 .editProfileMargin {
-    padding-right: 5.5rem;
-    margin-bottom: 1rem;
+    padding-right: 3.5rem;
+    /*padding-top: 0.5rem;*/
+    margin-bottom: 0.5rem;
 }
 
 .inRowText {
@@ -179,7 +179,8 @@
     background-repeat: no-repeat;
     background-position: center;
 }
-.loader{
+
+.loader {
     align-items: center;
     justify-content: center;
 }
@@ -687,52 +688,63 @@
     .helpCenterPara {
         font-size: 10px !important;
     }
+
 }
 
 /*tablet portrait mode*/
-@media (min-width: 744px) and (max-width: 1024px){
+@media (min-width: 744px) and (max-width: 1024px) {
     .navbarDiv {
         height: 6rem;
     }
+
     .navbarTitleDiv {
         margin-left: 1.5rem;
     }
+
     .navbarIconDiv {
         margin-right: 1rem;
     }
+
     .mainIcon {
         height: 3rem;
         width: 3rem;
     }
+
     .mainTitle {
         font-size: 22px;
     }
+
     .lineIcon {
-       margin-right: 15px;
+        margin-right: 15px;
         margin-left: 5px;
     }
+
     .profileOptionModalStyle {
         width: 11.75rem;
         padding-top: 1.5rem;
     }
+
     .item {
         padding: 0rem 1rem 0.7rem 1.5rem;
         font-size: 22px;
     }
+
     .modalText {
         font-size: 16px;
 
     }
+
     .editProfileModal {
         width: 90%;
         height: 520px;
         padding-left: 2%;
     }
+
     .profileImg {
         height: 100px;
         width: 100px;
         border-radius: 221px;
-       margin-bottom: 20px;
+        margin-bottom: 20px;
     }
 
     .profileImg img {
@@ -749,6 +761,7 @@
     .emailInputExtraStyle {
         width: 80% !important;
     }
+
     .headStyle {
         font-size: 18px !important;
     }
@@ -757,5 +770,34 @@
         font-size: 20px !important;
     }
 
+
+}
+
+@media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
+    /* CSS rules for mobile landscape view */
+    .navbarDiv {
+        height: 4rem;
+    }
+
+    .mainTitle {
+        font-size: 16px;
+    }
+
+    .mainIcon {
+        height: 1.8rem;
+        width: 1.8rem;
+    }
+
+    .iconMargin {
+        margin: 0px 10px 0px 0px;
+    }
+
+    .profileOptionModalStyle {
+        width: 13.50rem;
+    }
+    .item {
+        padding-left: 0.5rem;
+        font-size: 16px;
+    }
 
 }

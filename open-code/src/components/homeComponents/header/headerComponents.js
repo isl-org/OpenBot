@@ -19,6 +19,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {Images} from "../../../utils/images";
 import {StoreContext} from "../../../context/context";
 
+
 /**
  * Display logo with openCode text (Header's Left side)
  * @returns {JSX.Element}

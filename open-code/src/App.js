@@ -2,10 +2,7 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useEffect, useState} from "react";
-import {Constants, Themes} from "./utils/constants";
-import {useLocation} from "react-router-dom";
-import styles from "./components/homeComponents/carousel/carousel.module.css";
-import {Images} from "./utils/images";
+import {Themes} from "./utils/constants";
 import {auth, googleSignOut} from "./services/firebase";
 import {ToastContainer} from "react-toastify";
 
@@ -110,16 +107,3 @@ function App() {
 
 export default App;
 
-
-/**
- * component to display the loading icon on the screen
- * @returns {JSX.Element}
- * @constructor
- */
-function LoadingComponent() {
-    return (
-        <div className={styles.loading}>
-            <img alt="loadingIcon" className={styles.spin} src={Images.logo}/>
-        </div>
-    )
-}

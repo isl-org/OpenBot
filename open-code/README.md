@@ -10,9 +10,7 @@ You can run this application directly from the [Link](http://openbot.itinker.io 
 
 You can also run it locally via creating a local copy of the project.
 To achieve this, navigate into the `openBot/open-code` folder, [set firebase project](src/services/README.md) and run application.
-
-
-after [firebase setup](src/services/README.md) run following commands: 
+After [firebase setup](src/services/README.md) run following commands: 
 
 If you're using npm
 
@@ -69,24 +67,23 @@ Additionally, users can upload their project to Google Drive by clicking on the 
 
 The `OpenBot Playground` starts with homepage that contains following component:
 
-- [Header](#header) : contains the following two sections, change theme and signIn user
-- [Carousel](#Carousal): Explains how the Playground works
-- [Project Section](#project-section) : List of Projects and Create new Project button
+- [Header](#header) : Header contains the following two sections, change theme and sign-in user.
+- [Carousel](#Carousal):Carousal's Content Explains how the Playground works.
+- [Project Section](#project-section) :Project section contains List of Projects and Create new Project button.
 
-### PlayGround Page
+### Playground Page
 
-The `PlayGround` page is a key feature of the `OpenBot Playground` platform that provides a variety of coding blocks for
+The `Playground` page is a key feature of the `OpenBot Playground` platform that provides a variety of coding blocks for
 users to create different types of functionality, such as Control, Loops, Movement, Operators, Sensors, and many more.
 
-- [Header](#header) : Contains project name, help centre, change theme and signIn user section.
+- [Header](#header) : Header contains project name, help centre, change theme and signIn user section.
 - [Workspace](#workSpace): Space where users can drag and drop the coding blocks to generate their code, which can be
   converted into both JavaScript and Python.
-- [Playground Bottom Bar](#Playground-Bottom-Bar) : Contain buttons to generate code ,upload in drive, zoom in and out , undo,
-  redo.
+- [Playground Bottom Bar](#Playground-Bottom-Bar) : Bottom bar Contains buttons to generate code ,upload project in drive, zoom in and out blocks , undo and redo changes in workspace.
 
 ### Header
 
-The header of the `home ` screen has the `OpenCode` logo in the left section. The right side of the header have two
+The header of the `Openbot-Playground` website has it's logo in the top left section. The right side of the header have two
 buttons.
 
 - #### Change theme
@@ -100,7 +97,7 @@ Theme icon allows you to switch between light mode and dark mode, and vice versa
 
 - #### Sign-in
 
-The "Sign-in" button opens a Google sign-in popup on the screen and prompts you to choose your email for login, with all
+The "Sign-in" button opens a Google sign-in popup on the screen and prompts you to enter your email for login, with all
 necessary permissions granted, including modifying ***Google Drive***.
 <p align="left">
 <img style="padding-right: 2%;" src="../docs/images/playground_signIn.gif" alt="Playground Sign In" width="60%" height="20%"/>
@@ -146,12 +143,12 @@ Carousal's container explains how Application works.
 
 #### Project Section
 
-The 'My Projects' section displays projects stored in local storage and Google Drive (if the user is signed in), with
+The 'My Projects' section display the projects stored in local storage and Google Drive (if the user is signed in), with
 each project showing its name, creation/edit date, and previous block versions. Clicking on a project redirects the user
 to its playground page. To create a new project, simply click on the `create icon`.
 
 Clicking the 'Create' icon opens a 'Create New Project' popup with an input for the project name and a 'Create' button.
-Once a suitable name is entered and the 'Create' button or enter is pressed, the project's playground will open. If the
+Once a suitable name is entered and the 'Create' button or enter is pressed, the project's playground screen will open. If the
 user enters a name already assigned to another project, the system will automatically generate a unique name by
 appending an integer to the end of the name.
 
@@ -167,7 +164,7 @@ To generate code, users can drag and drop coding blocks into the workspace. The 
 JavaScript and Python.
 
 - Blocks can be selected from the left section and dropped into the workspace as needed.
-- To delete a block, users can simply drag it to the trash icon.
+- To delete a block, users can simply drag it to the trash icon located at the bottom right corner.
 - If a block does not fit into the "Start" or "Forever" block, it will be disabled to prevent errors in the generated
   code.
 - Users can restore a deleted block from the trash by clicking on it, which will display a list of deleted blocks.
@@ -179,11 +176,11 @@ JavaScript and Python.
 
 #### Playground Bottom Bar
 
-- To ensure a successful web experience of the openBot playground using Google Drive, users should fulfill the following
+- To ensure a successful web experience of the openBot-PlayGround using Google Drive, users should fulfill the following
   conditions:
-  - user should not have any other folder in their Google Drive with the same name as the website generated
-  openBot-PlayGround folder.
-  - user should not create same name file in openBot-PlayGround folder.
+  - User should not have any other folder in their Google Drive with the same name as the website generated
+    openBot-PlayGround folder.
+  - User should not create same name file in openBot-PlayGround folder.
   <p align="left">
   <img style="padding-right: 2%; margin-top: 2%;" src="../docs/images/google_drive_folder.png" alt="Generate Code" width="30%"/>
   <img style="padding-right: 2%; margin-top: 2%" src="../docs/images/playground_drive_file.png" alt="Generate Code" width="50%"/>
@@ -191,12 +188,12 @@ JavaScript and Python.
 
 - #### Generate Code
 
-Generate Code button on the Playground Bottom Bar serves two important functions. Firstly, it generates a QR code that
+Generate Code button on the Playground bottom bar serves two important functions. Firstly, it generates a QR code that
 represents the link of the JavaScript/Python file uploaded to the user's Google Drive as part of the project. This QR
 code is displayed in a side window for easy access and sharing. Secondly, the button also uploads a JavaScript/Python
 file containing the code for the project to the user's Google Drive.
 
-The QR code generated by the button provides a public, shareable link to the JavaScript/Python file on Google Drive.
+The QR code generated by the button provides a public shareable link to the JavaScript/Python file on Google Drive.
 This link can be accessed by scanning the QR code using the OpenBot IOS/Android app. This allows users to run the car
 based on the code generated using the coding blocks directly from their mobile device. The ability to share the QR code
 and access the code on mobile devices adds another level of convenience and accessibility to the openBot playground.
@@ -212,7 +209,7 @@ Here is an upload in Drive and generate Code Demo :
 
 - #### WorkSpace Controller
 
-The undo-redo button helps to do undo redo functionalities in the playground.
+The undo and redo button helps to do undo redo functionalities in the playground.
 The plus icon is for zoom-in and the minus icon is for zoom-out.
 
 

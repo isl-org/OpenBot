@@ -13,7 +13,10 @@ import {Carousel} from "react-responsive-carousel";
 export const HomeCarousel = () => {
     // Render the carousel with the array of slides
     return (
-        <Carousel axis={'horizontal'} infiniteLoop={true} interval={4000} autoPlay={true} showThumbs={false}>
+        <Carousel axis={'horizontal'} infiniteLoop={true}
+                  swipeScrollTolerance={50}
+                  preventMovementUntilSwipeScrollTolerance={true}c
+                  interval={4000} autoPlay={true} showThumbs={false}>
             {Carousal.map((slide) => (
                 <CarousalComponent key={slide} slide={slide}/>
             ))}
