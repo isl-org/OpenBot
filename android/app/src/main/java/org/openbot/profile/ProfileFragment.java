@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -25,11 +23,6 @@ import org.openbot.projects.GoogleSignInCallback;
 public class ProfileFragment extends Fragment {
 
   private FragmentProfileBinding binding;
-  private LinearLayout linearLayoutSignIn;
-  private LinearLayout linearLayoutProfile;
-  private LinearLayout signInButton;
-  private TextView editProfileButton;
-  private TextView logoutButton;
   private GoogleServices googleServices;
 
   @Override
@@ -37,11 +30,6 @@ public class ProfileFragment extends Fragment {
       @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for Profile fragment
     binding = FragmentProfileBinding.inflate(inflater, container, false);
-    linearLayoutSignIn = binding.getRoot().findViewById(R.id.profile_signIn_view);
-    linearLayoutProfile = binding.getRoot().findViewById(R.id.profile_settings);
-    signInButton = binding.getRoot().findViewById(R.id.sign_in_button);
-    logoutButton = binding.getRoot().findViewById(R.id.logout_btn);
-    editProfileButton = binding.getRoot().findViewById(R.id.edit_profile_btn);
     googleServices = new GoogleServices(requireActivity(), requireContext(), newGoogleServices);
     return binding.getRoot();
   }
@@ -49,9 +37,9 @@ public class ProfileFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    signInButton.setOnClickListener(v -> signIn());
-    logoutButton.setOnClickListener(v -> signOut());
-    editProfileButton.setOnClickListener(
+    binding.signInButton.setOnClickListener(v -> signIn());
+    binding.logoutBtn.setOnClickListener(v -> signOut());
+    binding.editProfileBtn.setOnClickListener(
         v ->
             Navigation.findNavController(requireView())
                 .navigate(R.id.action_profileFragment_to_EditProfileFragment));
@@ -78,8 +66,8 @@ public class ProfileFragment extends Fragment {
     builder.setTitle("Confirm Logout");
     builder.setMessage("Are you sure you want to logout?");
     builder.setCancelable(false);
-    builder.setPositiveButton("LOG OUT", (dialog, which) -> googleServices.signOut());
-    builder.setNegativeButton("CANCEL", (dialog, which) -> dialog.cancel());
+    builder.setPositiveButton("LOG OUT", (dialog, id) -> googleServices.signOut());
+    builder.setNegativeButton("CANCEL", (dialog, id) -> dialog.cancel());
     AlertDialog alertDialog = builder.create();
     alertDialog.show();
   }
@@ -89,20 +77,20 @@ public class ProfileFragment extends Fragment {
       new GoogleSignInCallback() {
         @Override
         public void onSignInSuccess(FirebaseUser account) {
-          linearLayoutSignIn.setVisibility(View.GONE);
-          linearLayoutProfile.setVisibility(View.VISIBLE);
+          binding.signOutScreen.setVisibility(View.GONE);
+          binding.profileSettings.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onSignInFailed(Exception exception) {
-          linearLayoutSignIn.setVisibility(View.VISIBLE);
-          linearLayoutProfile.setVisibility(View.GONE);
+          binding.signOutScreen.setVisibility(View.VISIBLE);
+          binding.profileSettings.setVisibility(View.GONE);
         }
 
         @Override
         public void onSignOutSuccess() {
-          linearLayoutSignIn.setVisibility(View.VISIBLE);
-          linearLayoutProfile.setVisibility(View.GONE);
+          binding.signOutScreen.setVisibility(View.VISIBLE);
+          binding.profileSettings.setVisibility(View.GONE);
         }
 
         @Override

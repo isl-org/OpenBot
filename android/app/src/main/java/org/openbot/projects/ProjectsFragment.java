@@ -6,62 +6,46 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.api.services.drive.model.File;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import java.io.IOException;
 import java.util.List;
 import org.openbot.R;
-import org.openbot.common.ControlsFragment;
 import org.openbot.databinding.FragmentProjectsBinding;
 import org.openbot.googleServices.GoogleServices;
 import org.openbot.main.CommonRecyclerViewAdapter;
 import org.openbot.utils.BotFunctionUtils;
 
-public class ProjectsFragment extends ControlsFragment {
+public class ProjectsFragment extends Fragment {
   private FragmentProjectsBinding binding;
-  private View signInButton;
-  private TextView projectScreenText;
-  private TextView projectsNotFoundTxt;
   private GoogleServices googleServices;
-  private RecyclerView projectsRV;
-  private LinearLayout noProjectsLayout;
   private DriveProjectsAdapter adapter;
   private BarCodeScannerFragment barCodeScannerFragment;
-  private BottomSheetBehavior dpBottomSheetBehavior;
-  private View overlayView;
+  private BottomSheetBehavior projectsBottomSheetBehavior;
   private SwipeRefreshLayout swipeRefreshLayout;
-  private boolean isSignedIn = false;
+  private SparseArray<int[]> driveRes = new SparseArray<>();
 
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     binding = FragmentProjectsBinding.inflate(inflater, container, false);
-    noProjectsLayout = binding.getRoot().findViewById(R.id.noProjects_layout);
-    signInButton = binding.getRoot().findViewById(R.id.sign_in_button);
-    projectsNotFoundTxt = binding.getRoot().findViewById(R.id.projects_not_found);
-    projectScreenText = binding.getRoot().findViewById(R.id.project_screen_info);
     googleServices = new GoogleServices(requireActivity(), requireContext(), newGoogleServices);
-    projectsRV = binding.getRoot().findViewById(R.id.projects_rv);
-    ConstraintLayout driveProjectBottomSheet = binding.getRoot().findViewById(R.id.dp_bottom_sheet);
-    overlayView = binding.getRoot().findViewById(R.id.overlay_view);
-    dpBottomSheetBehavior = BottomSheetBehavior.from(driveProjectBottomSheet);
-    dpBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    projectsBottomSheetBehavior = BottomSheetBehavior.from(binding.projectsBottomSheet);
+    projectsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     return binding.getRoot();
   }
 
@@ -69,9 +53,9 @@ public class ProjectsFragment extends ControlsFragment {
   public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     barCodeScannerFragment = new BarCodeScannerFragment();
-    signInButton.setOnClickListener(v -> signIn());
+    binding.signInButton.setOnClickListener(v -> signIn());
     swipeRefreshLayout = requireView().findViewById(R.id.refreshLayout);
-    dpBottomSheetBehavior.addBottomSheetCallback(dpBottomSheetCallback);
+    projectsBottomSheetBehavior.addBottomSheetCallback(dpBottomSheetCallback);
     requireView()
         .findViewById(R.id.dp_start_btn)
         .setOnClickListener(
@@ -80,8 +64,12 @@ public class ProjectsFragment extends ControlsFragment {
                     .navigate(R.id.action_projectsFragment_to_blocklyExecutingFragment));
     requireView()
         .findViewById(R.id.dp_cancel_btn)
-        .setOnClickListener(v -> dpBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
-    showProjectsRv();
+        .setOnClickListener(
+            v -> projectsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
+
+    if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+      showProjectsRv();
+    }
 
     swipeRefreshLayout.setOnRefreshListener(
         () -> {
@@ -102,6 +90,7 @@ public class ProjectsFragment extends ControlsFragment {
             Intent data = result.getData();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             googleServices.handleSignInResult(task);
+            binding.signOutLayout.setVisibility(View.GONE);
             showProjectsRv();
           });
 
@@ -109,30 +98,17 @@ public class ProjectsFragment extends ControlsFragment {
       new GoogleSignInCallback() {
         @Override
         public void onSignInSuccess(FirebaseUser account) {
-          noProjectsLayout.setVisibility(View.GONE);
-          signInButton.setVisibility(View.GONE);
-          projectsNotFoundTxt.setVisibility(View.VISIBLE);
-          isSignedIn = true;
-          projectScreenText.setText("Looks like there are no projects in your google drive yet.");
+          binding.signOutLayout.setVisibility(View.GONE);
         }
 
         @Override
         public void onSignInFailed(Exception exception) {
-          noProjectsLayout.setVisibility(View.VISIBLE);
-          signInButton.setVisibility(View.VISIBLE);
-          projectsNotFoundTxt.setVisibility(View.GONE);
-          isSignedIn = false;
-          projectScreenText.setText("Set up your profile by signing in with your Google account.");
-          binding.projectsLoader.setVisibility(View.GONE);
+          binding.signOutLayout.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onSignOutSuccess() {
-          noProjectsLayout.setVisibility(View.VISIBLE);
-          signInButton.setVisibility(View.VISIBLE);
-          projectsNotFoundTxt.setVisibility(View.GONE);
-          isSignedIn = false;
-          projectScreenText.setText("Set up your profile by signing in with your Google account.");
+          binding.signOutLayout.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -140,31 +116,21 @@ public class ProjectsFragment extends ControlsFragment {
       };
 
   private void showProjectsRv() {
-    if (isSignedIn) {
-      binding.projectsLoader.setVisibility(View.VISIBLE);
-    }
+    binding.noProjectsLayout.setVisibility(View.GONE);
+    binding.projectsLoader.setVisibility(View.VISIBLE);
+    binding.refreshLayout.setVisibility(View.VISIBLE);
     // Set Grid layout according to screen width dimension.
     int screenWidth = getResources().getDisplayMetrics().widthPixels;
     int itemWidth = getResources().getDimensionPixelSize(R.dimen.project_card_view);
     int numColumns = screenWidth / itemWidth;
-    projectsRV.setLayoutManager(new GridLayoutManager(requireActivity(), numColumns));
-    SparseArray<int[]> driveRes = new SparseArray<>();
+    binding.projectsRv.setLayoutManager(new GridLayoutManager(requireActivity(), numColumns));
     driveRes.put(R.layout.projects_list_view, new int[] {R.id.project_name, R.id.project_date});
     setScanDeviceAdapter(
         new DriveProjectsAdapter(requireActivity(), googleServices.getDriveFiles(), driveRes),
         (itemView, position) ->
             readFileFromDrive(googleServices.getDriveFiles().get(position).getId()));
     googleServices.accessDriveFiles(adapter, binding);
-    projectsRV.setAdapter(adapter);
-  }
-
-  /** update projects screen when there is 0 projects on google drive account. */
-  public void updateMessage(List<File> driveFiles, FragmentProjectsBinding binding) {
-    binding.projectsLoader.setVisibility(View.GONE);
-
-    if (driveFiles.size() <= 0) {
-      binding.noProjectsLayout.setVisibility(View.VISIBLE);
-    }
+    binding.projectsRv.setAdapter(adapter);
   }
 
   private void setScanDeviceAdapter(
@@ -172,6 +138,14 @@ public class ProjectsFragment extends ControlsFragment {
       @NonNull CommonRecyclerViewAdapter.OnItemClickListener onItemClickListener) {
     this.adapter = adapter;
     adapter.setOnItemClickListener(onItemClickListener);
+  }
+
+  /** update projects screen when there is 0 projects on google drive account. */
+  public void updateMessage(List<File> driveFiles, FragmentProjectsBinding binding) {
+    binding.projectsLoader.setVisibility(View.GONE);
+    if (driveFiles.size() <= 0) {
+      binding.noProjectsLayout.setVisibility(View.VISIBLE);
+    }
   }
 
   private void readFileFromDrive(String fileId) {
@@ -189,7 +163,7 @@ public class ProjectsFragment extends ControlsFragment {
                   }
                 }
                 barCodeScannerFragment.finalCode = code;
-                dpBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                projectsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
               }
 
               @Override
@@ -225,9 +199,9 @@ public class ProjectsFragment extends ControlsFragment {
           if (newState == BottomSheetBehavior.STATE_EXPANDED
               || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
             binding.projectsLoader.setVisibility(View.GONE);
-            overlayView.setVisibility(View.VISIBLE);
+            binding.overlayView.setVisibility(View.VISIBLE);
           } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-            overlayView.setVisibility(View.GONE);
+            binding.overlayView.setVisibility(View.GONE);
           }
         }
 
@@ -240,12 +214,6 @@ public class ProjectsFragment extends ControlsFragment {
   @Override
   public void onResume() {
     super.onResume();
-    dpBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    projectsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
   }
-
-  @Override
-  protected void processControllerKeyData(String command) {}
-
-  @Override
-  protected void processUSBData(String data) {}
 }

@@ -5,20 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/edit_profile_pic_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border_radius_profile_pic"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="@+id/cardView"
-        app:srcCompat="@drawable/ic_edit_profile_pic" />
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+    <FrameLayout
+        android:id="@+id/profile_pic_frame_layout"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="50dp"
-        app:cardCornerRadius="90dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/border_radius_profile_pic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -28,9 +20,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/edit_profile_pic_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_pic_frame_layout"
+        app:layout_constraintEnd_toEndOf="@+id/profile_pic_frame_layout"
+        app:srcCompat="@drawable/ic_edit_profile_pic" />
+
 
     <LinearLayout
+        android:id="@+id/linearLayout9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -39,7 +43,7 @@
         app:layout_constraintBottom_toTopOf="@+id/save_changes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView">
+        app:layout_constraintTop_toBottomOf="@+id/profile_pic_frame_layout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,9 +58,9 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
-            android:maxLines="1"
-            android:inputType="textNoSuggestions"
             android:background="@drawable/border_radius_input_text"
+            android:inputType="textNoSuggestions"
+            android:maxLines="1"
             android:paddingHorizontal="10dp" />
 
         <TextView
@@ -71,9 +75,9 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
-            android:maxLines="1"
-            android:inputType="textNoSuggestions"
             android:background="@drawable/border_radius_input_text"
+            android:inputType="textNoSuggestions"
+            android:maxLines="1"
             android:paddingHorizontal="10dp" />
 
         <TextView
@@ -87,9 +91,9 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
-            android:maxLines="1"
-            android:inputType="date"
             android:background="@drawable/border_radius_input_text"
+            android:inputType="date"
+            android:maxLines="1"
             android:paddingHorizontal="10dp" />
 
         <TextView
@@ -104,13 +108,13 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
-            android:inputType="textEmailAddress"
-            android:focusable="false"
+            android:background="@drawable/border_radius_input_text"
             android:clickable="false"
             android:cursorVisible="false"
-            android:textColor="@color/semi_transparent"
-            android:background="@drawable/border_radius_input_text"
-            android:paddingHorizontal="10dp" />
+            android:focusable="false"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="10dp"
+            android:textColor="@color/semi_transparent" />
     </LinearLayout>
 
 

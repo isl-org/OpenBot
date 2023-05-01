@@ -9,12 +9,14 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -87,7 +89,10 @@ public class EditProfileFragment extends Fragment {
                       MediaStore.Images.Media.getBitmap(
                           requireActivity().getContentResolver(), selectedImageUri);
                   // Set the selected image bitmap to the profile picture ImageView.
-                  binding.profilePic.setImageBitmap(selectedImageBitmap);
+                  Glide.with(this)
+                      .load(selectedImageBitmap)
+                      .apply(RequestOptions.circleCropTransform())
+                      .into(binding.profilePic);
                 } catch (IOException e) {
                   e.printStackTrace();
                 }
@@ -124,32 +129,60 @@ public class EditProfileFragment extends Fragment {
                       .addOnSuccessListener(
                           uri ->
                               user.updateProfile(
-                                  new UserProfileChangeRequest.Builder()
-                                      .setDisplayName(userName)
-                                      .setPhotoUri(uri)
-                                      .build()));
-                  startLoader(false);
+                                      new UserProfileChangeRequest.Builder()
+                                          .setDisplayName(userName)
+                                          .setPhotoUri(uri)
+                                          .build())
+                                  .addOnCompleteListener(
+                                      task -> {
+                                        if (task.isSuccessful()) {
+                                          // The profile update was successful
+                                          startLoader(false);
+                                          showToast(true);
+                                        } else {
+                                          // The profile update failed
+                                          startLoader(false);
+                                          showToast(false);
+                                        }
+                                      }));
                 })
             .addOnFailureListener(
                 e -> {
                   // Failed to upload image
                   startLoader(false);
+                  showToast(false);
                 });
       } catch (IOException e) {
         startLoader(false);
+        showToast(false);
         e.printStackTrace();
       }
     } else if (!userName.isBlank()) {
-      user.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(userName).build());
-      startLoader(false);
+      user.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(userName).build())
+          .addOnCompleteListener(
+              task -> {
+                if (task.isSuccessful()) {
+                  // The profile update was successful
+                  startLoader(false);
+                  showToast(true);
+                } else {
+                  // The profile update failed
+                  startLoader(false);
+                  showToast(false);
+                }
+              });
     }
   }
 
-  /** Set the profile details from the FirebaseUser object to the UI elements in the layout. */
+  /**
+   * Set the profile details from the FirebaseUser hello object to the UI elements in the layout.
+   */
   private void setProfileDetails() {
-
     // Load the profile picture using Glide library
-    Glide.with(this).load(user.getPhotoUrl()).into(binding.profilePic);
+    Glide.with(this)
+        .load(user.getPhotoUrl())
+        .apply(RequestOptions.circleCropTransform())
+        .into(binding.profilePic);
 
     // Split the full name into first and last names, and set them to their respective text fields
     String fullName = user.getDisplayName();
@@ -182,6 +215,22 @@ public class EditProfileFragment extends Fragment {
     } else {
       binding.loaderView.setVisibility(View.GONE);
       binding.profileUpdateLoader.setVisibility(View.GONE);
+    }
+  }
+
+  private void showToast(boolean success) {
+    if (success) {
+      Toast.makeText(
+              requireContext().getApplicationContext(),
+              "✅   Profile Update Successfully.",
+              Toast.LENGTH_SHORT)
+          .show();
+    } else {
+      Toast.makeText(
+              requireContext().getApplicationContext(),
+              "⚠️   Profile Update Unsuccessful.",
+              Toast.LENGTH_SHORT)
+          .show();
     }
   }
 }
