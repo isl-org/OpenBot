@@ -24,7 +24,7 @@
 }
 
 
-.loaderText{
+.loaderText {
     margin-left: 50%;
     margin-top: 2%;
 }
@@ -35,7 +35,7 @@
     margin-left: -7%;
 }
 
-.errorDiv{
+.errorDiv {
     font-family: Gilroy-medium, sans-serif;
     color: #D70000;
     font-weight: 600;
@@ -44,7 +44,7 @@
     margin-top: 1%;
 }
 
-.errorItems{
+.errorItems {
     font-size: 15px;
     line-height: 30px;
 }
@@ -65,7 +65,7 @@
     border: none;
     border-radius: 0.5rem;
     height: 3.1rem;
-    width: 95%;
+    width: 270px;
     background: rgb(0, 113, 197);
     cursor: pointer;
 }
@@ -165,15 +165,14 @@
 @media (max-width: 768px) {
     .uploadCodeButton {
         height: 2.5rem;
-        width: 40%;
+        width: 53px;
         border-radius: 0.3rem;
         margin-left: 0.5rem;
         margin-top: 0.40rem;
     }
 
     .operationsDiv {
-        margin-right: 1rem;
-        width: 60%;
+        margin-right: -0.5rem;
     }
 
     .buttonMargin {
@@ -184,10 +183,12 @@
     .iconMargin {
         width: 40%;
     }
+
     .iconDiv {
         height: 1.4rem;
         width: 1.5rem;
     }
+
     .iconSpace {
         width: 12%;
         margin-left: 5rem;
@@ -205,33 +206,89 @@
         width: 2rem;
         margin-top: 0.5rem;
     }
+
     .buttonStyle {
         height: 2.5rem;
     }
+
     .commandSize {
         width: 1rem;
         height: 0.98rem;
     }
+
     .textItem {
         margin-top: 2px;
         margin-left: -18%;
         font-size: 12px;
     }
 
-    .errorDiv{
+    .errorDiv {
         font-size: 15px;
         margin-left: 5%;
         margin-top: 3%;
     }
 
-    .loaderText{
+    .loaderText {
         margin-left: 45%;
         margin-top: 8%;
     }
 
-    .errorItems{
+    .errorItems {
         font-size: 12px;
         line-height: 50px;
     }
 
+}
+
+
+@media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
+
+    .barDiv {
+        height: 18%;
+    }
+
+    .uploadCodeButton {
+        height: 2.3rem;
+        margin-left: 1.4rem;
+        width: 100px;
+        margin-bottom: 0.3rem;
+    }
+
+    .buttonsDiv {
+        height: 18%;
+    }
+
+    .operationsDiv {
+        margin-right: 1.4rem;
+    }
+
+    .buttonStyle {
+        margin-bottom: 0.3rem;
+        height: 2.3rem;
+    }
+
+    .loaderBarDiv {
+        height: 30%;
+    }
+
+    .loaderText {
+        margin-left: 50%;
+        margin-top: 2%;
+    }
+
+    .textItem {
+        margin-top: 3px;
+        margin-left: -12%;
+        font-size: 14px;
+    }
+
+    .errorDiv {
+        margin-top: 1.5%;
+        font-size: 15px;
+    }
+
+    .errorItems {
+        font-size: 12px;
+        line-height: 20px;
+    }
 }

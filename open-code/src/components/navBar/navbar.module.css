@@ -770,7 +770,11 @@
         font-size: 20px !important;
     }
 
-
+    .helpDetailsModelDiv {
+        display: flex;
+        flex-direction: row;
+    }
+    
 }
 
 @media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {

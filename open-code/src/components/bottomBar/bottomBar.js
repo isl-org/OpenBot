@@ -33,6 +33,9 @@ export const BottomBar = () => {
     const themes = useTheme();
     const {isOnline} = useContext(StoreContext)
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
+
+
     const {
         generate,
         setGenerateCode,
@@ -186,7 +189,7 @@ export const BottomBar = () => {
                     <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
                               buttonActive={buttonActive}/>
                     {/*zoom in out*/}
-                    {!isMobile &&
+                    {isMobile || isMobileLandscape ? "" :
                         <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
                                    buttonActive={buttonActive}/>}
                 </div>
@@ -206,15 +209,19 @@ function GenerateCodeButton(params) {
     const {generateCode, buttonSelected, clickedButton, buttonActive} = params
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
 
     return (
         <div className={styles.iconMargin} onClick={generateCode}>
             <button
                 className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
                 name={"uploadCode"} onClick={clickedButton}>
-                {!isMobile && <span className={styles.leftButton + " " + styles.iconMargin}>Generate Code</span>}
-                <img alt={""}
-                     className={styles.iconDiv + " " + styles.iconMargin} src={Images.uploadIcon}/>
+                {isMobile || isMobileLandscape ? (
+                    ""
+                ) : (
+                    <span className={styles.leftButton + " " + styles.iconMargin}>Generate Code</span>
+                )} <img alt={""}
+                        className={styles.iconDiv + " " + styles.iconMargin} src={Images.uploadIcon}/>
             </button>
         </div>
     )
@@ -289,7 +296,7 @@ function UploadInDrive(params) {
                 // If user is not signed in, show sign in popup
                 setSignInPopUp(true);
             }
-        }else{
+        } else {
             errorToast(Constants.InternetOffMsg)
         }
 

@@ -461,6 +461,6 @@ javascriptGenerator['brightnessHighOrLow'] = function(block) {
         }
     }
     let code = "";
-    code+="ledBrightness("+indicatorStatus()+");\n";
+    code+="toggleLed("+indicatorStatus()+");\n";
     return code;
 };

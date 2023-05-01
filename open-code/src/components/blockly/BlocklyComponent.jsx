@@ -28,6 +28,7 @@ function BlocklyComponent(props) {
     const blocklyDiv = useRef();
     const toolbox = useRef();
     const primaryWorkspace = useRef();
+    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
 
     // Get context values from the store
     const {theme} = useContext(ThemeContext);
@@ -107,7 +108,7 @@ function BlocklyComponent(props) {
                     wheel: true,
                     startScale: 1.0,
                     maxScale: 3,
-                    minScale: 0.3,
+                    minScale: 0.2,
                     scaleSpeed: 1.5,
                     pinch: true},
             ...rest,
@@ -159,7 +160,7 @@ function BlocklyComponent(props) {
             <div
                 ref={blocklyDiv}
                 id="blocklyDiv"
-                style={{width: "100%", height: "81.6%"}}
+                style={{width: "100%", height: isMobileLandscape?"66%":"81.6%"}}
             />
             <div style={{display: "none"}} ref={toolbox}>
                 {children}
