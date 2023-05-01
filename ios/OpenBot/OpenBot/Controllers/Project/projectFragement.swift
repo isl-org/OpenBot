@@ -16,8 +16,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private let authentication: Authentication = Authentication.googleAuthentication
     @IBOutlet weak var projectCollectionView: UICollectionView!
     private var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
-    private let signInView: UIView = UIView(frame: UIScreen.main.bounds)
-    private let noProjectMessageView: UIView = UIView(frame: UIScreen.main.bounds);
+    private let signInView: UIView = UIView();
+    private let noProjectMessageView: UIView = UIView();
     private var allProjects: [ProjectItem] = [];
     private var command: String = ""
     private let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
@@ -30,6 +30,11 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(signInView);
+        signInView.frame.size = CGSize(width: width, height: height / 2);
+        signInView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
+                : CGRect(x: height / 2 - width / 2, y: 0, width: width, height: height / 2);
+        noProjectMessageView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
+                : CGRect(x: height / 2 - 200, y: width / 2 - 100, width: width, height: height / 2);
         view.addSubview(noProjectMessageView);
         createMyProjectLabel();
         createPleaseSignInLabel();
@@ -59,7 +64,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
     }
 
-    private func setupScannerIcon(){
+    private func setupScannerIcon() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(scanner))
         qrScannerIcon.addGestureRecognizer(tap)
     }
@@ -87,7 +92,13 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-//        apply();
+        if currentOrientation == .portrait {
+            signInView.frame.origin = CGPoint(x: 0, y: height / 2 - 100);
+            noProjectMessageView.frame.origin = CGPoint(x: 0, y: height / 2 - 100);
+        } else {
+            signInView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
+            noProjectMessageView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
+        }
     }
 
     /**
@@ -106,19 +117,20 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      Functions to create the message
      */
     func createPleaseSignInLabel() {
-        let firstLabel = CustomLabel(text: "Please sign in first to access your", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 115, y: height / 2 - 20, width: 250, height: 40));
-        let secondLabel = CustomLabel(text: "projects.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 32.5, y: height / 2 + 10, width: 65, height: 40));
+        let firstLabel = CustomLabel(text: "Please sign in first to access your", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 115, y: 20, width: 250, height: 40));
+        let secondLabel = CustomLabel(text: "projects.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 32.5, y: firstLabel.bottom - 5, width: 65, height: 40));
         signInView.addSubview(firstLabel);
         signInView.addSubview(secondLabel)
     }
 
     func createNoProjectMessage() {
-        let firstLabel = CustomLabel(text: "Oops! No projects found.", fontSize: 22, fontColor: Colors.title ?? .blue, frame: CGRect(x: width / 2 - 140, y: height / 2 - 20, width: 280, height: 40));
+        let firstLabel = CustomLabel(text: "Oops! No projects found.", fontSize: 22, fontColor: Colors.title ?? .blue, frame: CGRect(x: width / 2 - 140, y: 20, width: 280, height: 40));
+        firstLabel.textAlignment = .center;
         firstLabel.font = HelveticaNeue.bold(size: 16);
         let label = CustomLabel(text: "Looks like there are no projects\nin your google drive yet.",
                 fontSize: 18,
                 fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black,
-                frame: CGRect(x: width / 2 - 140, y: height / 2, width: 280, height: 80))
+                frame: CGRect(x: width / 2 - 140, y: firstLabel.bottom - 5, width: 280, height: 80))
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center
@@ -138,7 +150,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      Function to create Google sign-in button
      */
     func createSignInBtn() {
-        let signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: height / 2 + 60, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
+        let signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: 100, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
         signInView.addSubview(signInBtn);
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(signIn))
         signInBtn.isUserInteractionEnabled = true

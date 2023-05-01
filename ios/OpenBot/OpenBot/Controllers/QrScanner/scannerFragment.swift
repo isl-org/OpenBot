@@ -10,13 +10,14 @@ import AVFoundation
  class for qrScanner
  */
 class scannerFragment: CameraController {
+    var previewLayer = AVCaptureVideoPreviewLayer();
     var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
     let alert = UIAlertController(title: "Loading", message: "Please wait while we load data...", preferredStyle: .alert)
     var userToken: String = ""
     private var commands: String = ""
     private var projectFileId: String = "";
     var qrResult: String = "";
-    var msg  =  CustomLabel(frame: .zero);
+    var msg = CustomLabel(frame: .zero);
     var heading = CustomLabel(frame: .zero);
     var border = UIImageView();
     let firstHalfView = UIView();
@@ -29,11 +30,12 @@ class scannerFragment: CameraController {
         createScanHeading()
         createScanMessage()
         createScannerBorder()
-        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top, width: width, height: height/2) : CGRect(x: safeAreaLayoutValue.top, y: 0, width: width, height: height/2);
+        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top, width: width, height: height / 2) : CGRect(x: safeAreaLayoutValue.top, y: 0, width: width, height: height / 2);
         view.addSubview(firstHalfView);
-        cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: width + safeAreaLayoutValue.top + 22 , y: 95, width: 230, height: 230)
+        cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: width + safeAreaLayoutValue.top + 22, y: 95, width: 230, height: 230)
         initializeCamera()
         view.addSubview(cameraView);
+
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -41,7 +43,18 @@ class scannerFragment: CameraController {
         firstHalfView.frame.origin = currentOrientation == .portrait ? CGPoint(x: 0, y: safeAreaLayoutValue.top) : CGPoint(x: safeAreaLayoutValue.top, y: 0);
         border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: firstHalfView.right, y: 70, width: 268, height: 273)
         cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: border.left + 22, y: 90, width: 230, height: 230)
-
+        var orientation = AVCaptureVideoOrientation(rawValue: 1);
+        switch currentOrientation {
+        case .portrait:
+            orientation = AVCaptureVideoOrientation.portrait
+        case .landscapeLeft :
+            orientation = AVCaptureVideoOrientation.landscapeRight
+        case .landscapeRight :
+            orientation = AVCaptureVideoOrientation.landscapeLeft;
+        default :
+            orientation = AVCaptureVideoOrientation.portrait
+        }
+        previewLayer.connection?.videoOrientation = orientation ?? .portrait
     }
 
     /**
@@ -65,15 +78,8 @@ class scannerFragment: CameraController {
      */
     private func createScanHeading() {
         heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 22, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 65, y: 145, width: 145, height: 40))
-
-//        if currentOrientation == .portrait {
-//        } else {
-//            heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 22, fontColor: Colors.textColor ?? .black, frame: CGRect(x: height / 2 - safeAreaLayoutValue.top - 85, y: 145, width: 145, height: 40))
-//        }
         heading.textAlignment = .center;
         firstHalfView.addSubview(heading);
-
-
     }
 
     /**
@@ -86,7 +92,7 @@ class scannerFragment: CameraController {
         let messageHeight = ceil(messageSize.height)
 
         msg = CustomLabel(text: message, fontSize: 15, fontColor: Colors.textColor ?? .black, frame:
-                CGRect(x: width / 2 - 160, y: 190, width: 320, height: messageHeight))
+        CGRect(x: width / 2 - 160, y: 190, width: 320, height: messageHeight))
         msg.numberOfLines = 0
         msg.lineBreakMode = .byWordWrapping
         msg.textAlignment = .center
@@ -100,7 +106,7 @@ class scannerFragment: CameraController {
      */
     private func createScannerBorder() {
         border.image = UIImage(named: "scanner-boundary");
-        border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) :CGRect(x: width + safeAreaLayoutValue.top, y: 70, width: 268, height: 273)
+        border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: width + safeAreaLayoutValue.top, y: 70, width: 268, height: 273)
         view.addSubview(border);
     }
 
@@ -169,12 +175,12 @@ class scannerFragment: CameraController {
         captureSession.addOutput(output);
         output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main);
         output.metadataObjectTypes = [.qr] // specify the types of metadata to capture (in this case, only QR codes)
-        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.videoGravity = .resizeAspectFill
         previewLayer.frame = cameraView.layer.bounds
         cameraView.layer.addSublayer(previewLayer)
+        previewLayer.connection?.videoOrientation = AVCaptureVideoOrientation(rawValue: currentOrientation.rawValue) ?? .portrait;
         captureSession.startRunning()
-
     }
 
     /**
