@@ -821,19 +821,31 @@
         font-size: 48px !important;
         line-height: 44px;
     }
+
     .screenDisplayImage {
         width: 224px;
         height: 127px;
         margin-top: 20%;
     }
+
     .helpCenterPara {
         font-size: 16px !important;
     }
 
     .helpCentreHeader {
         font-family: Gilroy-Bold, sans-serif !important;
-       font-weight: bolder !important;
+        font-weight: bolder !important;
+    }
 
+    .editProfileModal {
+        margin-top: 220px;
+        width: 90%;
+        height: 500px;
+        padding-left: 2%;
+    }
+
+    .successAlertBox {
+        width: 40%;
     }
 
 }

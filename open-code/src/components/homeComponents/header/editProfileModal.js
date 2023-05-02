@@ -114,7 +114,7 @@ export function EditProfileModal(props) {
     return (
         <Modal
             open={isEditProfileModal}
-            style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+            style={{display: "flex", alignItems: "center", justifyContent: "center", overflow: "scroll"}}>
 
             <Box className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>
                 <div className={styles.crossIconDiv}>
@@ -152,6 +152,7 @@ export function EditProfileModal(props) {
                                 buttonStyle={styles.buttonText}/>
                     <BlueButton onClick={handleClose} buttonName={"Cancel"} buttonStyle={styles.buttonText}/>
                 </div>
+                <Alert message={"Profile updated successfully!"}/>
                 {isAlertSuccess && <Alert message={"Profile updated successfully!"}/>}
                 {isAlertError && <Alert message={"Oops! There was an error."}/>}
             </Box>
