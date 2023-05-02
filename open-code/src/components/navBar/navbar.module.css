@@ -847,5 +847,9 @@
     .successAlertBox {
         width: 40%;
     }
+    .Edit {
+        font-size: 1rem !important;
+        line-height: 10px;
+    }
 
 }

@@ -22,7 +22,8 @@
     justify-content: flex-start;
     flex-wrap: wrap;
 }
-.loaderStyle{
+
+.loaderStyle {
     justify-content: center;
     flex-direction: row;
     align-items: center;
@@ -427,7 +428,7 @@
         height: 30px;
         font-size: 14px;
         margin-left: 62%;
-        font-family: Gilroy-Regular,sans-serif;
+        font-family: Gilroy-Regular, sans-serif;
     }
 
     .creatButton {
@@ -455,8 +456,65 @@
 
     .Message {
         font-size: 12px;
-        padding:10px 2px;
+        padding: 10px 2px;
         margin-left: -15px;
+    }
+
+
+}
+
+@media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
+
+    .Card {
+        width: 220px;
+        height: 130px;
+    }
+
+    .Button {
+        width: 220px;
+        height: 120px;
+    }
+
+    .Content {
+        width: 220px;
+    }
+
+    .AddIconImage {
+        width: 18%;
+        height: 30%;
+    }
+
+    .CardHeading {
+        font-weight: 600;
+        font-size: 1rem !important;
+    }
+
+    .ModelHeading {
+        font-size: 15px;
+        padding-bottom: 0px;
+    }
+
+    .CrossIcon {
+        width: 14px;
+        height: 14px;
+        margin-right: 10px;
+    }
+
+    .inputExtraStyle {
+        height: 50px;
+        width: 80%;
+    }
+
+    .inputBoxMargin {
+        margin-top: 15px;
+    }
+
+    .SaveBtn {
+        width: 100px;
+        height: 30px;
+        font-size: 14px;
+        margin-left: 66%;
+        font-family: Gilroy-Medium, sans-serif;
     }
 
 }

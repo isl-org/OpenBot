@@ -45,6 +45,7 @@ function Card(props) {
     const inputRef = useRef(null);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
 
 
     let navigate = useNavigate();
@@ -162,9 +163,9 @@ function Card(props) {
                                          value={reNameProject ?? projectData.projectName}
                         /> : theme === "dark" ?
                             <WhiteText extraStyle={styles.CardHeading}
-                                       text={projectData.projectName.slice(0, isMobile ? 8 : 10) + " " + ((projectData.projectName.length > (isMobile ? 8 : 10)) ? "..." : "")}/> :
+                                       text={projectData?.projectName?.slice(0, isMobile ? 8 : 10) + " " + ((projectData?.projectName?.length > (isMobile ? 8 : 10)) ? "..." : "")}/> :
                             <BlackText extraStyle={styles.CardHeading}
-                                       text={projectData.projectName.slice(0, isMobile ? 8 : 10) + " " + ((projectData.projectName.length > (isMobile ? 8 : 10)) ? "..." : "")}/>
+                                       text={projectData?.projectName?.slice(0, isMobile ? 8 : 10) + " " + ((projectData?.projectName?.length > (isMobile ? 8 : 10)) ? "..." : "")}/>
                         }
                     </div>
                     <img alt="pencil-icon" src={theme === Themes.dark ? Images.darkDots : Images.dots}
