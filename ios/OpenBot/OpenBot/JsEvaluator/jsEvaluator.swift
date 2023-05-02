@@ -109,6 +109,9 @@ class jsEvaluator {
                 let rightIndicatorOff: @convention(block) () -> Void = { () in
                     runOpenBotThreadClass.indicatorOff();
                 }
+                let sonarReading : @convention(block) () -> Int = { () in
+                    runOpenBotThreadClass.sonarReading();
+                }
                 context.setObject(moveForward,
                         forKeyedSubscript: "moveForward" as NSString)
                 context.setObject(loop,
@@ -155,6 +158,8 @@ class jsEvaluator {
                         forKeyedSubscript: "rightIndicatorOff" as NSString);
                 context.setObject(leftIndicatorOff,
                         forKeyedSubscript: "leftIndicatorOff" as NSString);
+                context.setObject(sonarReading,
+                        forKeyedSubscript: "sonarReading" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -370,6 +375,16 @@ class jsEvaluator {
             print("inside indicatorOff");
             let indicatorValues = "i0,0\n"
             bluetooth.sendData(payload: indicatorValues)
+        }
+
+        func sonarReading() -> Int {
+            if bluetooth.sonarData != nil {
+                let index = bluetooth.sonarData.index(after: bluetooth.sonarData.startIndex)
+                let distance = min(Int(String(bluetooth.sonarData[index...])) ?? 0, 300)
+                print("inside sonar reading" , distance);
+                return distance ?? 0;
+            }
+         return  0 ;
         }
     }
 }
