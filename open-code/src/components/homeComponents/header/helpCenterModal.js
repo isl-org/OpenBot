@@ -24,7 +24,7 @@ export function HelpCenterModal(props) {
     }
     return (
         <Modal
-            style={{display: "flex", alignItems: "center", justifyContent: "center"}}
+            style={{display: "flex", alignItems: "center", justifyContent: "center", overflow: "scroll"}}
             open={isHelpCenterModal}>
             <Box
                 className={styles.helpCenterModalBox + " " + (theme.theme === "dark" ? styles.darkHelpCenterModal : styles.lightHelpCenterModal)}>
@@ -50,6 +50,8 @@ function HelpDetails(params) {
     const theme = useContext(ThemeContext)
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const isLandScape = window.matchMedia("(max-width: 767px) and (orientation: landscape)").matches
+    console.log("isMobile::", isMobile)
     return (
         <>
             <div
@@ -85,8 +87,10 @@ function HelpDetails(params) {
                         <BlackText text={2} extraStyle={styles.integerNumber}/>
                     </div>
                     <div style={{width: isMobile ? "90%" : "70%", paddingLeft: "5%"}}>
-                        <BlackText divStyle={{marginTop: "7%", marginBottom: "8%"}} text={"Save and Download"}
-                                   extrastyle={styles.helpCentreHeader}/>
+                        <BlackText
+                            divStyle={{marginTop: "7%", marginBottom: "8%"}}
+                            text={"Save and Download"}
+                            extrastyle={styles.helpCentreHeader}/>
                         <BlackText extraStyle={styles.helpCenterPara}
                                    text={HelpCenterText.saveAndDownloadFirstLine}/>
                         <BlackText extraStyle={styles.helpCenterPara}

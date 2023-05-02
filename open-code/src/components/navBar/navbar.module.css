@@ -774,7 +774,7 @@
         display: flex;
         flex-direction: row;
     }
-    
+
 }
 
 @media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
@@ -799,9 +799,41 @@
     .profileOptionModalStyle {
         width: 13.50rem;
     }
+
     .item {
         padding-left: 0.5rem;
         font-size: 16px;
+    }
+
+    .helpCenterModalBox {
+        margin-top: 260px;
+        height: 490px;
+        width: 90%;
+
+    }
+
+    .dragAndDropDiv {
+        width: 60%;
+        padding-left: 2.3%;
+    }
+
+    .integerNumber {
+        font-size: 48px !important;
+        line-height: 44px;
+    }
+    .screenDisplayImage {
+        width: 224px;
+        height: 127px;
+        margin-top: 20%;
+    }
+    .helpCenterPara {
+        font-size: 16px !important;
+    }
+
+    .helpCentreHeader {
+        font-family: Gilroy-Bold, sans-serif !important;
+       font-weight: bolder !important;
+
     }
 
 }
