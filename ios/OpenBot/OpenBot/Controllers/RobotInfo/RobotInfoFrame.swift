@@ -59,7 +59,9 @@ class RobotInfoFrame: UIViewController {
         } else {
             topPadding = 20
         }
+
         createUI()
+        setupLogo();
         updateConstraints()
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
@@ -74,16 +76,16 @@ class RobotInfoFrame: UIViewController {
     func setupLogo() {
         openBotIcon.translatesAutoresizingMaskIntoConstraints = false;
         openBotIcon.heightAnchor.constraint(equalToConstant: 150).isActive = true;
+        topAnchorConstraint = openBotIcon.topAnchor.constraint(equalTo: robotType.bottomAnchor, constant: 10)
         if currentOrientation == .portrait {
             centerXConstraint = openBotIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0)
-            topAnchorConstraint = openBotIcon.topAnchor.constraint(equalTo: robotType.bottomAnchor, constant: 10)
+
         } else {
             centerXConstraint = openBotIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -width / 2)
-            topAnchorConstraint = openBotIcon.topAnchor.constraint(equalTo: robotType.bottomAnchor, constant: 10)
         }
         NSLayoutConstraint.activate([centerXConstraint, topAnchorConstraint]);
     }
-    
+
     /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -101,7 +103,7 @@ class RobotInfoFrame: UIViewController {
 
     }
 
-    
+
     /// function to create the UI for the robot info
     func createUI() {
         createRobotTypeHeading()
@@ -131,7 +133,7 @@ class RobotInfoFrame: UIViewController {
     /// creates refresh button
     func createRefreshIcon() {
         if let image = UIImage(named: "refresh") {
-            refreshIcon = createIcons(iconImage: image, leadingAnchor: width - 100, topAnchor: topPadding + 20 )
+            refreshIcon = createIcons(iconImage: image, leadingAnchor: width - 100, topAnchor: topPadding + 20)
         }
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(refresh(tapGestureRecognizer:)))
@@ -318,8 +320,8 @@ class RobotInfoFrame: UIViewController {
 
     /// function to create the constrains of the buttons,labels,headings and images.
     func updateConstraints() {
-        setupLogo()
         if currentOrientation == .portrait {
+
             robotType.frame.origin.y = topPadding + adapted(dimensionSize: 25, to: .height)
             robotName.frame.origin.y = topPadding + adapted(dimensionSize: 25, to: .height)
             robotName.frame.origin.x = robotType.frame.origin.x + CGFloat((robotType.text?.count ?? 0) * 10) + adapted(dimensionSize: 35, to: .height)
@@ -359,6 +361,7 @@ class RobotInfoFrame: UIViewController {
             stopButton.frame.origin = CGPoint(x: 260, y: sendCommandsHeading.frame.origin.y + adapted(dimensionSize: 35, to: .height))
             lightLabel.frame.origin = CGPoint(x: 20, y: motorLabel.frame.origin.y + 50)
             lightSlider.frame = CGRect(x: 70, y: (motorLabel.frame.origin.y + adapted(dimensionSize: 45, to: .height)), width: width - 90, height: 40)
+            centerXConstraint.constant = 0;
         } else {
             robotName.frame.origin.y = 20
             robotType.frame.origin = CGPoint(x: 10, y: 20)
@@ -399,6 +402,7 @@ class RobotInfoFrame: UIViewController {
             stopButton.frame.origin = CGPoint(x: 250, y: motorLabel.frame.origin.y)
             lightLabel.frame.origin = CGPoint(x: 10, y: motorLabel.frame.origin.y + 50)
             lightSlider.frame = CGRect(x: 60, y: (motorLabel.frame.origin.y + adapted(dimensionSize: 45, to: .height)), width: width - 100, height: 40)
+            centerXConstraint.constant = -width / 2;
         }
     }
 
@@ -415,6 +419,7 @@ class RobotInfoFrame: UIViewController {
 
     /// function to update the robot status
     func updateRobotInfo() {
+        getRobotInfo()
         robotInfo = bluetooth.robotInfo
         if robotInfo != "" {
             setRobotName()
@@ -589,6 +594,11 @@ class RobotInfoFrame: UIViewController {
         updateSonar()
         updateVoltage()
         updateSpeedometer()
+        if robotInfo == "" {
+            getRobotInfo()
+            updateRobotInfo()
+        }
+
     }
 
     /// updating sonar values from ble data
