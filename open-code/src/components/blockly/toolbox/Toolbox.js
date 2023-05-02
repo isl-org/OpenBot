@@ -77,7 +77,6 @@ export const Toolbox = (props) => {
                 <Block type="math_constant"/>,
                 <Block type="math_number_property"/>,
                 <Block type="math_round"/>,
-                <Block type="math_on_list"/>,
                 <Block type="math_random_int"/>,
             </Category>
 
@@ -90,7 +89,6 @@ export const Toolbox = (props) => {
                 <Block type="logic_boolean"/>
                 <Block type="logic_null"/>
                 <Block type="math_number"/>
-                <Block type="string"/>
                 <Block type="text"/>
             </Category>
 

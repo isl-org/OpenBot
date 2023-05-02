@@ -239,12 +239,11 @@ javascriptGenerator['wheelOdometerSensors'] = function (block) {
                 return "backWheelReading";
             }
             default: {
-
             }
         }
     }
 
-    code += selectWheelSensor() + "();\n";
+    code += selectWheelSensor() + "()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
@@ -271,19 +270,19 @@ javascriptGenerator['forever'] = function (block) {
 
 javascriptGenerator['gyroscope_reading'] = function () {
     let code = "";
-    code += "gyroscopeReading();\n";
+    code += "gyroscopeReading()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['acceleration_reading'] = function () {
     let code = "";
-    code += "accelerationReading();\n";
+    code += "accelerationReading()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['magnetic_reading'] = function () {
     let code = "";
-    code += "magneticReading();\n";
+    code += "magneticReading()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
@@ -319,10 +318,10 @@ javascriptGenerator['controllerMode'] = function (block) {
     function selectController() {
         switch (dropdown_controller) {
             case "phone": {
-                return "phoneController()";
+                return "'phone'";
             }
             case "gamepad": {
-                return "gamepadController()";
+                return "'gamepad'";
             }
             default: {
 
@@ -331,7 +330,7 @@ javascriptGenerator['controllerMode'] = function (block) {
     }
 
     let code = '';
-    code += selectController() + ";\n";
+    code += "switchController("+selectController() + ");\n";
     return code;
 };
 
@@ -342,13 +341,13 @@ javascriptGenerator['driveModeControls'] = function (block) {
     function selectController() {
         switch (dropdown_driveModeControls) {
             case "dualDrive": {
-                return "dualDriveMode()";
+                return "'dual'";
             }
             case "joystick": {
-                return "joystickMode()";
+                return "'joystick'";
             }
             case "game": {
-                return "gameMode()";
+                return "'game'";
             }
             default: {
 
@@ -357,7 +356,7 @@ javascriptGenerator['driveModeControls'] = function (block) {
     }
 
     let code = '';
-    code += selectController() + ";\n";
+    code += "switchDriveMode("+selectController() + ");\n";
     return code;
 };
 
@@ -393,7 +392,7 @@ javascriptGenerator['motorStop'] = function () {
 
 javascriptGenerator['bumper'] = function () {
     let code = "";
-    code += "bumperCollision();\n";
+    code += "bumperCollision()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
@@ -417,14 +416,6 @@ javascriptGenerator['sonarReading'] = function () {
     code += "sonarReading() ";
     return [code, javascriptGenerator.ORDER_NONE];
 };
-
-javascriptGenerator['string'] = function (block) {
-    let value = block.getFieldValue('value');
-    let code = "";
-    code += value;
-    return [code, javascriptGenerator.ORDER_NONE];
-};
-
 
 javascriptGenerator['speedAdjustment'] = function (block) {
     let number_speed = block.getFieldValue('speed');
