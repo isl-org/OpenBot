@@ -629,7 +629,7 @@ class RobotInfoFrame: UIViewController {
             let index_2 = speedometer.index(before: indexOfComma)
             let leftFront = Float(speedometer[index_1...index_2])
             let rightFront = Float(speedometer[speedometer.index(after: indexOfComma)...])
-            speed.text = Strings.speed + " (l,r) " + String(leftFront!) + " " + String(rightFront!) + " rpm"
+            speed.text = Strings.speed + " (l,r) " + String(Int(leftFront!)) + "," + String(Int(rightFront!)) + " rpm"
         }
     }
 
