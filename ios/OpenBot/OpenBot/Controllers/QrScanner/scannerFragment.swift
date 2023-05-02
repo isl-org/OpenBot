@@ -12,6 +12,7 @@ import AVFoundation
 class scannerFragment: CameraController {
     var previewLayer = AVCaptureVideoPreviewLayer();
     var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
+    @IBOutlet weak var cancelBtn: UIView!
     let alert = UIAlertController(title: "Loading", message: "Please wait while we load data...", preferredStyle: .alert)
     var userToken: String = ""
     private var commands: String = ""
@@ -30,17 +31,20 @@ class scannerFragment: CameraController {
         createScanHeading()
         createScanMessage()
         createScannerBorder()
-        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top, width: width, height: height / 2) : CGRect(x: safeAreaLayoutValue.top, y: 0, width: width, height: height / 2);
+        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top + 100, width: width, height: height / 2 - 100) : CGRect(x: safeAreaLayoutValue.top, y: 80, width: width, height: height / 2-100);
         view.addSubview(firstHalfView);
         cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: width + safeAreaLayoutValue.top + 22, y: 95, width: 230, height: 230)
         initializeCamera()
         view.addSubview(cameraView);
+        cancelBtn.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(removeFragment(_:)))
+        cancelBtn.addGestureRecognizer(tap)
 
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator);
-        firstHalfView.frame.origin = currentOrientation == .portrait ? CGPoint(x: 0, y: safeAreaLayoutValue.top) : CGPoint(x: safeAreaLayoutValue.top, y: 0);
+        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top + 100, width: width, height: height / 2 - 100) : CGRect(x: safeAreaLayoutValue.top, y: 80, width: width, height: height / 2-100);
         border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: firstHalfView.right, y: 70, width: 268, height: 273)
         cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: border.left + 22, y: 90, width: 230, height: 230)
         var orientation = AVCaptureVideoOrientation(rawValue: 1);
@@ -69,15 +73,13 @@ class scannerFragment: CameraController {
      Remove current Fragment
      - Parameter sender:
      */
-    @IBAction func removeScanner(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
+ 
 
     /**
      Create Heading of Fragment
      */
     private func createScanHeading() {
-        heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 22, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 65, y: 145, width: 145, height: 40))
+        heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 22, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 65, y: 70, width: 145, height: 40))
         heading.textAlignment = .center;
         firstHalfView.addSubview(heading);
     }
@@ -92,7 +94,7 @@ class scannerFragment: CameraController {
         let messageHeight = ceil(messageSize.height)
 
         msg = CustomLabel(text: message, fontSize: 15, fontColor: Colors.textColor ?? .black, frame:
-        CGRect(x: width / 2 - 160, y: 190, width: 320, height: messageHeight))
+        CGRect(x: width / 2 - 160, y: heading.bottom, width: 320, height: messageHeight))
         msg.numberOfLines = 0
         msg.lineBreakMode = .byWordWrapping
         msg.textAlignment = .center
@@ -258,6 +260,11 @@ class scannerFragment: CameraController {
     @objc private func scan() {
         whiteSheet.animateBottomSheet();
         initializeCamera();
+    }
+
+    @objc  func removeFragment(_ sender: UIView){
+        print("i am here")
+        navigationController?.popViewController(animated: true);
     }
 
     /**

@@ -18,30 +18,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R0X-Ve-GNV">
-                                <rect key="frame" x="359" y="76" width="25" height="25"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PlR-Zh-eGN">
+                                <rect key="frame" x="335" y="59" width="40" height="40"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="cancel" translatesAutoresizingMaskIntoConstraints="NO" id="QfM-Xr-f8N">
+                                        <rect key="frame" x="6" y="6" width="30" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="25" id="Mie-9z-EXF"/>
-                                    <constraint firstAttribute="width" constant="25" id="V7P-AQ-vLm"/>
+                                    <constraint firstAttribute="width" constant="40" id="gnK-jy-HE8"/>
+                                    <constraint firstAttribute="height" constant="40" id="wc9-rj-t11"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="cancel"/>
-                                <connections>
-                                    <action selector="removeScanner:" destination="3Px-Ta-prs" eventType="touchUpInside" id="eSj-y7-wnW"/>
-                                </connections>
-                            </button>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Fkn-4e-SDy"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Fkn-4e-SDy" firstAttribute="trailing" secondItem="R0X-Ve-GNV" secondAttribute="trailing" constant="9" id="TmG-IO-Ivd"/>
-                            <constraint firstItem="R0X-Ve-GNV" firstAttribute="top" secondItem="Fkn-4e-SDy" secondAttribute="top" constant="17" id="iaN-X5-9eO"/>
+                            <constraint firstItem="PlR-Zh-eGN" firstAttribute="top" secondItem="Fkn-4e-SDy" secondAttribute="top" id="goN-aw-cwm"/>
+                            <constraint firstItem="Fkn-4e-SDy" firstAttribute="trailing" secondItem="PlR-Zh-eGN" secondAttribute="trailing" constant="18" id="rJK-Ft-Thw"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="cancelBtn" destination="PlR-Zh-eGN" id="svp-e2-jYh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wiu-Fv-Q4S" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-439" y="-257"/>
+            <point key="canvasLocation" x="-440.45801526717554" y="-257.04225352112678"/>
         </scene>
         <!--Run Robot-->
         <scene sceneID="a1f-Wu-WLU">
