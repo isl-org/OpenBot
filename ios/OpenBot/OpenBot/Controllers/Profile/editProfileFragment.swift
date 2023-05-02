@@ -38,26 +38,30 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         scrollView.contentSize = CGSize(width: width, height: contentHeight)
         imagePickerVC.delegate = self;
         createUserProfileImageView()
-
-        scrollView.frame =  currentOrientation == .portrait ?CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height) : CGRect(x: height/2, y: profileIcon.top , width: height/2, height: height);
+        scrollView.frame =  currentOrientation == .portrait ?CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height) :  CGRect(x: height - width - safeAreaLayoutValue.bottom, y: profileIcon.top , width: width, height: height);
         createLabels();
         createTextFields();
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         createButtons();
+        automaticallyAdjustsScrollViewInsets = false
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
         if currentOrientation == .portrait{
             scrollView.isScrollEnabled = false
             scrollView.contentSize = CGSize(width: width, height: 800);
             scrollView.frame =  CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height)
+            scrollView.contentInset.bottom = 0
         }
         else{
-            scrollView.frame =  CGRect(x: height/2, y: profileIcon.top , width: height/2, height: height);
+            scrollView.frame =  CGRect(x: height - width - safeAreaLayoutValue.bottom, y: profileIcon.top , width: width, height: height);
             scrollView.contentSize = CGSize(width: width, height: 1000);
             scrollView.isScrollEnabled = true
+            scrollView.contentInset.bottom = view.safeAreaInsets.bottom
+            scrollView.contentOffset.y += view.safeAreaInsets.bottom
         }
     }
 
@@ -350,4 +354,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         alert.dismiss(animated: true);
     }
 
+
+
 }
+
