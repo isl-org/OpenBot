@@ -241,7 +241,7 @@
 }
 
 
-@media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
+@media only screen and (min-width: 400px) and (max-width: 1024px) and (max-height:440px)  and (orientation: landscape) {
 
     .barDiv {
         height: 18%;
