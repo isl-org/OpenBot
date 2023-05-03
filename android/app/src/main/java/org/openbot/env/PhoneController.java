@@ -2,7 +2,10 @@ package org.openbot.env;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
+import android.util.Size;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -42,21 +45,39 @@ public class PhoneController {
   }
 
   private void init(Context context) {
+    Log.d(TAG, "initialized");
     ControllerConfig.getInstance().init(context);
 
-    videoServer =
-        "RTSP".equals(ControllerConfig.getInstance().getVideoServerType())
-            ? new RtspServer()
-            : new WebRtcServer();
+    switch (ControllerConfig.getInstance().getVideoServerType()) {
+      case "RTP":
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+          videoServer = new RtpServer();
+        }
+        break;
+      case "RTSP":
+        videoServer = new RtspServer();
+        break;
+      case "WebRTC":
+        videoServer = new WebRtcServer();
+    }
 
     videoServer.init(context);
     videoServer.setCanStart(true);
 
+    // Video Stream port
+    String[] videoServerAddress = ControllerConfig.getInstance().getVideoServerAddress();
+    videoServer.setServerAddress(videoServerAddress[0], videoServerAddress[1]);
+
+    // Controller port
     this.connectionSelector = ConnectionSelector.getInstance(context);
+    connectionSelector
+        .getConnection()
+        .setServerAddress(videoServerAddress[0], videoServerAddress[2]);
     connectionSelector.getConnection().setDataCallback(new DataReceived());
 
-    android.util.Size resolution =
-        CameraUtils.getClosestCameraResolution(context, new android.util.Size(640, 360));
+    // 1280 x 960 is the best resolution that is desirable for both video streaming quality and
+    // efficiency
+    Size resolution = CameraUtils.getClosestCameraResolution(context, new Size(1280, 960));
     videoServer.setResolution(resolution.getWidth(), resolution.getHeight());
 
     handleBotEvents();
@@ -69,6 +90,8 @@ public class PhoneController {
       view = new org.openbot.customview.WebRTCSurfaceView(context);
     } else if (videoServer instanceof RtspServer) {
       view = new org.openbot.customview.AutoFitSurfaceGlView(context);
+    } else if (videoServer instanceof RtpServer) {
+      view = new org.openbot.customview.AutoFitSurfaceView(context);
     }
     if (view != null) {
       addVideoView(view, context);
@@ -90,6 +113,8 @@ public class PhoneController {
       videoServer.setView((WebRTCSurfaceView) videoView);
     } else if (videoView instanceof AutoFitSurfaceGlView) {
       videoServer.setView((AutoFitSurfaceGlView) videoView);
+    } else if (videoView instanceof SurfaceView) {
+      videoServer.setView((SurfaceView) videoView);
     }
   }
 

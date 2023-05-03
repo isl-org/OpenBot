@@ -89,6 +89,9 @@ public class NetworkServiceConnection implements ILocalConnection {
   }
 
   @Override
+  public void setServerAddress(String ip, String port) {}
+
+  @Override
   public boolean isVideoCapable() {
     return true;
   }

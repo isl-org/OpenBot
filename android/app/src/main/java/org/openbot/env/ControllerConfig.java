@@ -10,7 +10,8 @@ public class ControllerConfig {
 
   enum VIDEO_SERVER_TYPE {
     WEBRTC,
-    RTSP
+    RTSP,
+    RTP
   }
 
   private String currentServerType;
@@ -27,7 +28,7 @@ public class ControllerConfig {
 
   void init(Context context) {
     preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    currentServerType = get("video_server", "WEBRTC");
+    currentServerType = get("video_server", "RTP");
   }
 
   private void set(String name, String value) {
@@ -59,7 +60,14 @@ public class ControllerConfig {
   }
 
   public String getVideoServerType() {
-    return get("video_server", "WEBRTC");
+    return get("video_server", "RTP");
+  }
+
+  public String[] getVideoServerAddress() {
+    String ip = get("ip", "127.0.0.1");
+    String port_stream = get("port_stream", "8046");
+    String port_control = get("port_control", "8040");
+    return new String[] {ip, port_stream, port_control};
   }
 
   public void setVideoServerType(String type) {

@@ -13,11 +13,12 @@ def get_ip():
 class ServerSocket:
     MSGLEN = 512
 
-    def __init__(self, sock=None):
+    def __init__(self, sock=None, PORT=19400):
+        self.PORT = PORT
         if sock is None:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.sock.bind(("0.0.0.0", 19400))
+            self.sock.bind(("0.0.0.0", self.PORT))
             self.sock.listen()
 
         else:

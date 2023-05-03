@@ -29,4 +29,6 @@ public interface IVideoServer {
   void setView(com.pedro.rtplibrary.view.OpenGlView view);
 
   void setCanStart(boolean canStart);
+
+  void setServerAddress(String ip, String port);
 }

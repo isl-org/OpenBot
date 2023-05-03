@@ -20,5 +20,7 @@ public interface ILocalConnection {
 
   void start();
 
+  void setServerAddress(String ip, String port);
+
   boolean isVideoCapable();
 }
