@@ -33,7 +33,7 @@ export const BottomBar = () => {
     const themes = useTheme();
     const {isOnline} = useContext(StoreContext)
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
+    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
 
 
     const {
@@ -209,7 +209,7 @@ function GenerateCodeButton(params) {
     const {generateCode, buttonSelected, clickedButton, buttonActive} = params
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
+    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
 
     return (
         <div className={styles.iconMargin} onClick={generateCode}>

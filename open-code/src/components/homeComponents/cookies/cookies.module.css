@@ -119,7 +119,7 @@
 
 @media (max-width: 768px) {
     .main {
-       width:92% !important;
+        width: 92% !important;
         left: 16px !important;
         right: 20px !important;
         height: 180px !important;
@@ -141,20 +141,25 @@
     .textDiv {
         margin-bottom: 20px;
     }
-    .acceptButton{
+
+    .acceptButton {
         width: 42%;
         height: 38px;
     }
+
     .btnText {
         font-size: 12px;
     }
-    .declineButton{
+
+    .declineButton {
         width: 42%;
         height: 38px;
     }
-    .btnDeclineText{
+
+    .btnDeclineText {
         font-size: 12px;
     }
+
     .buttonWrapper {
         margin: 0px 10px 10px 0px;
         padding-right: 20px;

@@ -65,7 +65,7 @@
     border: none;
     border-radius: 0.5rem;
     height: 3.1rem;
-    width: 270px;
+    width: 100%;
     background: rgb(0, 113, 197);
     cursor: pointer;
 }
@@ -165,7 +165,7 @@
 @media (max-width: 768px) {
     .uploadCodeButton {
         height: 2.5rem;
-        width: 53px;
+        width: 55%;
         border-radius: 0.3rem;
         margin-left: 0.5rem;
         margin-top: 0.40rem;
@@ -241,7 +241,7 @@
 }
 
 
-@media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
+@media only screen and (min-width: 400px) and (max-width: 1024px) and (max-height:440px)  and (orientation: landscape) {
 
     .barDiv {
         height: 18%;

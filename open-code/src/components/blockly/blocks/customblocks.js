@@ -154,7 +154,7 @@ Blockly.Blocks["soundType"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "play sound speed %1",
+            "message0": "play sound %1 speed",
             "args0": [
                 {
                     "type": "field_dropdown",
@@ -188,7 +188,7 @@ Blockly.Blocks["soundMode"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "play sound mode %1",
+            "message0": "play sound %1 mode",
             "args0": [
                 {
                     "type": "field_dropdown",
@@ -452,7 +452,7 @@ Blockly.Blocks["sonarReading"] = {
         this.jsonInit({
             "type": "ellipse_block",
             "message0": "sonar reading",
-            "output": "string",
+            "output": "Number",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -466,7 +466,7 @@ Blockly.Blocks["speedReading"] = {
         this.jsonInit({
             "type": "ellipse_block",
             "message0": "speed reading",
-            "output": "string",
+            "output": "Number",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -479,7 +479,7 @@ Blockly.Blocks["voltageDividerReading"] = {
         this.jsonInit({
             "type": "ellipse_block",
             "message0": "voltage divider reading",
-            "output": "string",
+            "output": "Number",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -509,7 +509,7 @@ Blockly.Blocks["wheelOdometerSensors"] = {
                     ]
                 }
             ],
-            "output": "string",
+            "output": "Number",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -570,7 +570,7 @@ Blockly.Blocks["gyroscope_reading"] = {
         this.jsonInit({
             "type": "ellipse_block",
             "message0": "gyroscope reading",
-            "output": "string",
+            "output": "Number",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -584,7 +584,7 @@ Blockly.Blocks["acceleration_reading"] = {
         this.jsonInit({
             "type": "ellipse_block",
             "message0": "acceleration reading",
-            "output": "string",
+            "output": "Number",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -597,7 +597,7 @@ Blockly.Blocks["magnetic_reading"] = {
         this.jsonInit({
             "type": "ellipse_block",
             "message0": "magnetic reading",
-            "output": "string",
+            "output": "Number",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -760,7 +760,7 @@ Blockly.Blocks["bumper"] = {
         this.jsonInit({
             "type": "ellipse_block",
             "message0": "check if bumper collided with an obstacle",
-            "output": "string",
+            "output": "Number",
             "colour": 240,
             "tooltip": "",
             "helpUrl": ""
@@ -790,26 +790,6 @@ Blockly.Blocks["brightness"] = {
             "tooltip": "",
             "helpUrl": ""
 
-        });
-    }
-};
-
-Blockly.Blocks["string"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "sensor input %1",
-            "args0": [
-                {
-                    "type": "field_number",
-                    "name": "value",
-                    "value": 0,
-                }
-            ],
-            "output": "string",
-            "colour": 330,
-            "tooltip": "",
-            "helpUrl": ""
         });
     }
 };
