@@ -30,7 +30,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(signInView);
-        signInView.frame.size = CGSize(width: width, height: height / 2);
         signInView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
                 : CGRect(x: height / 2 - width / 2, y: 0, width: width, height: height / 2);
         noProjectMessageView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
@@ -71,10 +70,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     func createRefresh() {
         projectCollectionView.refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: projectCollectionView.bounds.width, height: projectCollectionView.bounds.height));
-//        refreshControl.frame = CGRect(x: 0, y: 0, width: projectCollectionView.bounds.width, height: projectCollectionView.bounds.height)
-//        projectCollectionView.addSubview(refreshControl)
         projectCollectionView?.refreshControl?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-//        refreshControl.backgroundColor = Colors.lightBlack
     }
 
     override func viewWillAppear(_ animated: Bool) {

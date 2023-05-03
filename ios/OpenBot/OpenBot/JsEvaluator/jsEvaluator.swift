@@ -4,6 +4,7 @@
 
 import Foundation
 import JavaScriptCore
+
 /**
  Class to evaluate the JS code inside openBot
  */
@@ -109,9 +110,16 @@ class jsEvaluator {
                 let rightIndicatorOff: @convention(block) () -> Void = { () in
                     runOpenBotThreadClass.indicatorOff();
                 }
-                let sonarReading : @convention(block) () -> Int = { () in
+                let sonarReading: @convention(block) () -> Int = { () in
                     runOpenBotThreadClass.sonarReading();
                 }
+                let switchController: @convention(block) (String) -> Void = { (controller) in
+                    runOpenBotThreadClass.switchController(controller : controller)
+                }
+                let switchDriveMode: @convention(block) (String) -> Void = { (driveMode) in
+                    runOpenBotThreadClass.switchDriveMode(driveMode: driveMode)
+                }
+
                 context.setObject(moveForward,
                         forKeyedSubscript: "moveForward" as NSString)
                 context.setObject(loop,
@@ -160,6 +168,10 @@ class jsEvaluator {
                         forKeyedSubscript: "leftIndicatorOff" as NSString);
                 context.setObject(sonarReading,
                         forKeyedSubscript: "sonarReading" as NSString);
+                context.setObject(switchController,
+                        forKeyedSubscript: "switchController" as NSString);
+                context.setObject(switchDriveMode,
+                        forKeyedSubscript: "switchDriveMode" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -270,7 +282,7 @@ class jsEvaluator {
             print("inside stop robot")
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
-            while(bluetooth.speedometer != "w0.00,0.00"){
+            while (bluetooth.speedometer != "w0.00,0.00") {
                 bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
             }
             bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
@@ -378,13 +390,41 @@ class jsEvaluator {
         }
 
         func sonarReading() -> Int {
-            if bluetooth.sonarData != nil {
+            if bluetooth != nil && bluetooth.sonarData != "" {
                 let index = bluetooth.sonarData.index(after: bluetooth.sonarData.startIndex)
                 let distance = min(Int(String(bluetooth.sonarData[index...])) ?? 0, 300)
-                print("inside sonar reading" , distance);
                 return distance ?? 0;
             }
-         return  0 ;
+            return 0;
+        }
+
+        func switchDriveMode(driveMode: String) {
+            switch driveMode {
+            case "dual" :
+                gameController.selectedDriveMode = .DUAL;
+                break;
+            case "joystick" :
+                gameController.selectedDriveMode = .JOYSTICK;
+                break;
+            case "game" :
+                gameController.selectedDriveMode = .GAME;
+                break;
+            default:
+                break;
+            }
+        }
+
+        func switchController(controller: String) {
+            switch controller {
+            case "phone" :
+                gameController.selectedControlMode = .PHONE;
+                break;
+            case "gamepad" :
+                gameController.selectedControlMode = .GAMEPAD;
+                break;
+            default:
+                break;
+            }
         }
     }
 }

@@ -32,7 +32,8 @@ class profileFragment: UIViewController {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
         signInView = CustomView(frame: view.bounds, backgroundColor: traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white);
-        guestView = CustomView(frame: view.bounds, backgroundColor: traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white);
+        guestView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
+                : CGRect(x: height / 2 - width / 2, y: 0, width: width, height: height / 2);
         view.addSubview(signInView);
         view.addSubview(guestView);
         createEditProfileAndLogoutLabel();
@@ -47,11 +48,13 @@ class profileFragment: UIViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
+            guestView.frame.origin = CGPoint(x: 0, y: height / 2 - 100);
             userImgView.frame.origin.x = safeAreaLayoutValue.left + 38;
             logoutImgView.frame.origin.x = safeAreaLayoutValue.left + 38;
             editProfileLabel.frame.origin.x = userImgView.right + 20;
             logoutLabel.frame.origin.x = editProfileLabel.left;
         } else {
+            guestView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
             userImgView.frame.origin.x = safeAreaLayoutValue.top + 38;
             logoutImgView.frame.origin.x = safeAreaLayoutValue.top + 38;
             editProfileLabel.frame.origin.x = userImgView.right + 20;
@@ -63,18 +66,20 @@ class profileFragment: UIViewController {
      Function to create My profile Label on top
      */
     private func createMyProfileLabel() {
-        let label = CustomLabel(text: "My Profile", fontSize: 20, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 20, y: 90, width: 100, height: 40));
+        let label = CustomLabel(text: "My Profile", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(origin: .zero, size: CGSize(width: 200, height: 40)));
+        label.font = HelveticaNeue.regular(size: 15);
+        label.translatesAutoresizingMaskIntoConstraints = false;
         view.addSubview(label)
+        label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true;
+        label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true;
     }
 
     /**
      Function to create the message for sign-in
      */
     private func createPleaseSignInLabel() {
-        firstLabel = CustomLabel(text: "Set up your profile by signing in with", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 135, y: height / 2 - 20, width: 270, height: 40));
-        secondLabel = CustomLabel(text: "your Google account.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 80, y: height / 2 + 10, width: 160, height: 40));
-//        view.addSubview(firstLabel);
-//        view.addSubview(secondLabel);
+        firstLabel = CustomLabel(text: "Set up your profile by signing in with", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 135, y: 20, width: 270, height: 40));
+        secondLabel = CustomLabel(text: "your Google account.", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 80, y: firstLabel.bottom - 5, width: 160, height: 40));
         guestView.addSubview(firstLabel);
         guestView.addSubview(secondLabel);
     }
@@ -83,10 +88,9 @@ class profileFragment: UIViewController {
      Function to create google sign-in button.
      */
     private func createSignInBtn() {
-        signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: height / 2 + 60, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
+        let signInBtn = GoogleSignInBtn(frame: CGRect(x: adapted(dimensionSize: 17, to: .width), y: 100, width: width - adapted(dimensionSize: 34, to: .width), height: 52))
         let tap = UITapGestureRecognizer(target: self, action: #selector(signIn))
         signInBtn.addGestureRecognizer(tap);
-//        view.addSubview(signInBtn);
         guestView.addSubview(signInBtn);
     }
 
