@@ -74,7 +74,7 @@ function NewProjectButton(props) {
     return (
         <>
             <div className={styles.Content + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}
-                 style={{marginRight: isProject > 0 ? (!isMobile || isMobileLandscape) && 42 : 0}}
+                 style={{marginRight: isProject > 0 ? (!isMobile) && 42 : 0}}
                  onClick={handleOpen}>
                 {/*add new project icon*/}
                 <div className={styles.Card + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
@@ -113,6 +113,7 @@ function CreateNewProjectModal(params) {
             open={open}
             onClose={handleClose}
             className={"model"}
+            style={{overflow: "scroll"}}
         >
             <div className={styles.model + " " + (theme === "dark" ? styles.modelDark : styles.modelLight)}>
                 {/* The header section of the Modal*/}
@@ -120,7 +121,7 @@ function CreateNewProjectModal(params) {
                     className={styles.ModelHeading + " " + (theme === "dark" ? styles.ModelHeadingDark : styles.ModelHeadingLight)}>
 
                     {/* Title of the Modal*/}
-                    <div>Create a New Project</div>
+                    <span>Create a New Project</span>
                     {/* Close button icon displayed depending on the selected theme*/}
                     {(theme === Themes.light ?
                         <img alt="cross" src={Images.lightCrossIcon} className={styles.CrossIcon}

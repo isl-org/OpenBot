@@ -132,13 +132,11 @@
 }
 
 .ModelHeading {
-    height: 27%;
-    width: 85%;
     font-family: Gilroy-SemiBold, sans-serif;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     display: flex;
     align-items: center;
-    margin-left: 4.2rem;
+    padding: 25px 25px 20px 25px;
     justify-content: space-between;
 }
 
@@ -153,8 +151,8 @@
 }
 
 .CrossIcon {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
 }
 
@@ -162,8 +160,8 @@
     display: flex;
     flex-direction: column;
     padding-top: 2%;
-    padding-left: 7%;
-    margin-bottom: 6%;
+    padding-left: 4%;
+    margin-bottom: 5%;
 }
 
 .label {
@@ -385,11 +383,8 @@
     }
 
     .ModelHeading {
-        height: 15%;
-        width: 95%;
+        padding: 5px 5px 5px 5px;
         font-size: 15px;
-        margin-left: 0.2rem;
-        padding-bottom: 5px;
     }
 
     .CrossIcon {
@@ -463,20 +458,25 @@
 
 }
 
-@media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
+@media only screen and (min-width: 350px) and (max-width: 1024px) and (orientation: landscape) {
 
     .Card {
-        width: 220px;
+        width: 100%;
         height: 130px;
+        margin-right: 42px;
+    }
+
+    .cardContent {
+        width: 33%;
     }
 
     .Button {
-        width: 220px;
-        height: 120px;
+        width: 100%;
+        height: 130px;
     }
 
     .Content {
-        width: 220px;
+        width: 33%;
     }
 
     .AddIconImage {
@@ -491,7 +491,7 @@
 
     .ModelHeading {
         font-size: 15px;
-        padding-bottom: 0px;
+        padding: 2px 2px 10px 2px;
     }
 
     .CrossIcon {
@@ -513,8 +513,18 @@
         width: 100px;
         height: 30px;
         font-size: 14px;
-        margin-left: 66%;
         font-family: Gilroy-Medium, sans-serif;
+    }
+    .model {
+        width: 60%;
+        height: 15rem;
+        padding: 18px 20px 0px 20px;
+    }
+    .creatButton {
+        width: 91%;
+    }
+    .line {
+        margin: 5px -20px 0 -20px;
     }
 
 }

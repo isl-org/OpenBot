@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import styles from "./newProject.module.css"
 import style from "../../../components/navBar/navbar.module.css"
 import {Images} from "../../../utils/images";
@@ -46,7 +46,6 @@ function Card(props) {
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
-
 
     let navigate = useNavigate();
     const openExistingProject = () => {
