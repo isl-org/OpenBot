@@ -152,7 +152,7 @@ export function EditProfileModal(props) {
                                 buttonStyle={styles.buttonText}/>
                     <BlueButton onClick={handleClose} buttonName={"Cancel"} buttonStyle={styles.buttonText}/>
                 </div>
-                <Alert message={"Profile updated successfully!"}/>
+
                 {isAlertSuccess && <Alert message={"Profile updated successfully!"}/>}
                 {isAlertError && <Alert message={"Oops! There was an error."}/>}
             </Box>

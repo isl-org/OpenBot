@@ -21,7 +21,7 @@ export function QrDrawer() {
     const {drawer, code} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
     const themes = useTheme();// Get the current theme breakpoints using useTheme hook
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));// Determine if the screen is a mobile device using useMediaQuery hook
-
+    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
     return (
         <>
             {code &&
@@ -32,7 +32,7 @@ export function QrDrawer() {
                             width: 0,
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
-                                width: drawer ? isMobile ? '62%' : '23%' : isMobile ? '6%' : '2%',
+                                width: drawer ? isMobile ? isMobileLandscape ? '32%' : '62%' : '23%' : isMobile ? isMobileLandscape ? '3%' : '6%' : '2%',
                                 height: isMobile ? '75%' : '81.3%',
                                 marginTop: '5rem',
                                 borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
@@ -65,7 +65,7 @@ export function QrDrawer() {
 export const RightSlider = () => {
     const {setDrawer, drawer} = useContext(StoreContext)
     const {theme} = useContext(ThemeContext)
-
+    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
     const closeDrawer = () => {
         setDrawer(!drawer);// Function that closes the drawer when the icon is clicked
     }
