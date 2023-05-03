@@ -6,6 +6,7 @@ import android.hardware.SensorEventListener;
 import android.webkit.JavascriptInterface;
 import java.util.Objects;
 import org.openbot.env.AudioPlayer;
+import org.openbot.env.SharedPreferencesManager;
 import org.openbot.utils.Enums;
 import org.openbot.vehicle.Control;
 import org.openbot.vehicle.Vehicle;
@@ -15,6 +16,7 @@ import timber.log.Timber;
 public class BotFunctions implements SensorEventListener {
   private final Vehicle v;
   private final AudioPlayer ap;
+  private final SharedPreferencesManager sp;
   private final String TAG = "sensor reading";
 
   /**
@@ -22,10 +24,13 @@ public class BotFunctions implements SensorEventListener {
    *
    * @param vehicle
    * @param audioPlayer
+   * @param sharedPreferencesManager
    */
-  public BotFunctions(Vehicle vehicle, AudioPlayer audioPlayer) {
+  public BotFunctions(
+      Vehicle vehicle, AudioPlayer audioPlayer, SharedPreferencesManager sharedPreferencesManager) {
     v = vehicle;
     ap = audioPlayer;
+    sp = sharedPreferencesManager;
   }
 
   /** openBot Movement functions */
@@ -84,10 +89,15 @@ public class BotFunctions implements SensorEventListener {
     v.setControl(0, 0);
   }
 
-  /** openBot Sensor functions */
+  /**
+   * openBot Sensor functions
+   *
+   * @return
+   */
   @JavascriptInterface
-  public void sonarReading() {
+  public float sonarReading() {
     Timber.tag(TAG).d("sonarReading - %s", v.getSonarReading());
+    return v.getSonarReading();
   }
 
   @JavascriptInterface
@@ -177,6 +187,26 @@ public class BotFunctions implements SensorEventListener {
   @JavascriptInterface
   public void ledBrightness(int value) {
     v.sendLightIntensity(value, value);
+  }
+
+  @JavascriptInterface
+  public void switchController(String controllerMode) {
+    if (Objects.equals(controllerMode, "gamepad")) {
+      sp.setControlMode(0);
+    } else if (Objects.equals(controllerMode, "phone")) {
+      sp.setControlMode(1);
+    }
+  }
+
+  @JavascriptInterface
+  public void switchDriveMode(String driveMode) {
+    if (Objects.equals(driveMode, "dual")) {
+      sp.setDriveMode(0);
+    } else if (Objects.equals(driveMode, "game")) {
+      sp.setDriveMode(1);
+    } else if (Objects.equals(driveMode, "joystick")) {
+      sp.setDriveMode(2);
+    }
   }
 
   @Override

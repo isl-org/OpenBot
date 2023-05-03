@@ -29,6 +29,7 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/qrCodeView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -56,10 +57,10 @@
         android:id="@+id/scanner_view_border"
         android:layout_width="250dp"
         android:layout_height="250dp"
+        android:layout_marginEnd="40dp"
         android:src="@drawable/qr_scanner_border"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btnCross"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout4"
+        app:layout_constraintEnd_toStartOf="@+id/btnCross"
         app:layout_constraintTop_toTopOf="parent" />
 
     <SurfaceView

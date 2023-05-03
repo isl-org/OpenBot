@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import org.openbot.common.ControlsFragment;
 import org.openbot.databinding.FragmentBlocklyExecutingBinding;
+import org.openbot.env.SharedPreferencesManager;
 
 public class BlocklyExecutingFragment extends ControlsFragment {
 
@@ -17,10 +18,13 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   private int previousSpeedMultiplier;
   private BarCodeScannerFragment barCodeScannerFragment;
 
+  private SharedPreferencesManager sharedPreferencesManager;
+
   @Override
   public View onCreateView(
       @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     barCodeScannerFragment = new BarCodeScannerFragment();
+    sharedPreferencesManager = new SharedPreferencesManager(requireContext());
     // Inflate the layout for Blocks code executing Fragment.
     binding = FragmentBlocklyExecutingBinding.inflate(inflater, container, false);
     return binding.getRoot();
@@ -54,7 +58,8 @@ public class BlocklyExecutingFragment extends ControlsFragment {
             // set the speed multiplier to maximum value (255) because openBot moving according to
             vehicle.setSpeedMultiplier(255);
             // add a JavaScript interface to the web-view.
-            myWebView.addJavascriptInterface(new BotFunctions(vehicle, audioPlayer), "Android");
+            myWebView.addJavascriptInterface(
+                new BotFunctions(vehicle, audioPlayer, sharedPreferencesManager), "Android");
             // execute the JavaScript code in the web-view.
             myWebView.evaluateJavascript(finalCode, null);
           });

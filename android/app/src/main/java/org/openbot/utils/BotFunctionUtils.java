@@ -26,5 +26,7 @@ public class BotFunctionUtils {
     "rightIndicatorOff",
     "leftIndicatorOff",
     "ledBrightness",
+    "switchDriveMode",
+    "switchController",
   };
 }
