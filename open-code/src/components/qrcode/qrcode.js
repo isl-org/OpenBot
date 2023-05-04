@@ -6,6 +6,7 @@ import {qrStyles} from "./styles";
 import {StoreContext} from "../../context/context";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import styles from "./qrCode.module.css"
 
 const QrCode = () => {
     const [blockCode, setBlockCode] = useState("");

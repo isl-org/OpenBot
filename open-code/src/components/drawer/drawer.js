@@ -9,7 +9,7 @@ import {colors} from "../../utils/color";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {Images} from "../../utils/images";
-
+import styles from "../qrcode/qrCode.module.css"
 
 /**
  * QrDrawer component renders a drawer with a QR code and some instructions on how to use it.
@@ -33,7 +33,7 @@ export function QrDrawer() {
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
                                 width: drawer ? isMobile ? isMobileLandscape ? '32%' : '62%' : '23%' : isMobile ? isMobileLandscape ? '3%' : '6%' : '2%',
-                                height: isMobile ? '75%' : '81.3%',
+                                height: isMobile ? isMobileLandscape ? '62%' : '75%' : '81.3%',
                                 marginTop: '5rem',
                                 borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
                                 backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
@@ -65,14 +65,13 @@ export function QrDrawer() {
 export const RightSlider = () => {
     const {setDrawer, drawer} = useContext(StoreContext)
     const {theme} = useContext(ThemeContext)
-    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
     const closeDrawer = () => {
         setDrawer(!drawer);// Function that closes the drawer when the icon is clicked
     }
 
     // Render the icon with the correct style and theme
     return (
-        <div style={drawer ? qrStyles.rightSlider : qrStyles.leftSlider} onClick={closeDrawer}>
+        <div className={styles.slider + " " + (!drawer && styles.leftSlider)} onClick={closeDrawer}>
             <img alt="slider" src={theme === "dark" ? Images.rightSliderDark : Images.rightSlider}
                  style={drawer ? qrStyles.rightSliderIcon : qrStyles.leftSliderIcon}/>
         </div>
@@ -93,7 +92,8 @@ export const DrawerBody = (props) => {
     return (
         <>
             <div>
-                <h1 style={isMobile ? qrStyles.mobileHeading : qrStyles.heading}>Scan and upload your code:</h1>
+                <h1 className={styles.heading} style={isMobile ? qrStyles.mobileHeading : qrStyles.heading}>Scan and
+                    upload your code:</h1>
                 {qrScanSteps.map((step, key) => {
                     return (
                         <div key={key} style={isMobile ? qrStyles.mobileList : qrStyles.list}>

@@ -33,7 +33,7 @@ function Playground() {
                                        <Block type="forever" x="250" y="100"/>
                                       </xml>`}
                 >
-                <Toolbox/>
+                    <Toolbox/>
                 </BlocklyComponent>
             </header>
             {/* Display the BottomBar component */}

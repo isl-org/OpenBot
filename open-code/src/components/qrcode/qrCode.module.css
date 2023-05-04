@@ -1,0 +1,25 @@
+.slider {
+    width: 22px;
+    height: 149px;
+    background-color: rgba(76, 156, 214, 0.15);
+    border: 1px solid #4C9CD626;
+    border-radius: 0 15px 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.leftSlider {
+    border-radius: 15px 0 0 15px;
+}
+
+
+@media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
+    .slider {
+        margin-top: -180px;
+    }
+
+    .heading {
+        margin-top: 0px !important;
+    }
+}
