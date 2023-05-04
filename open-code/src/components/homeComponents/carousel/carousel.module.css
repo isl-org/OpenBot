@@ -36,7 +36,6 @@
     line-height: 27px;
     color: #000000;
     text-align: left;
-    width: 88%;
 }
 
 .ImageDrag {
@@ -161,6 +160,6 @@
         font-size: 22px;
     }
     .DragAndDropContent{
-        font-size: 16px;
+        font-size: 12px;
     }
 }
