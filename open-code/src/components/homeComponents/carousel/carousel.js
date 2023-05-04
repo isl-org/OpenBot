@@ -15,7 +15,7 @@ export const HomeCarousel = () => {
     return (
         <Carousel axis={'horizontal'} infiniteLoop={true}
                   swipeScrollTolerance={50}
-                  preventMovementUntilSwipeScrollTolerance={true}c
+                  preventMovementUntilSwipeScrollTolerance={true}
                   interval={4000} autoPlay={true} showThumbs={false}>
             {Carousal.map((slide) => (
                 <CarousalComponent key={slide} slide={slide}/>
@@ -33,14 +33,20 @@ export const HomeCarousel = () => {
 function CarousalComponent(params) {
     const {slide} = params
     const {theme} = useContext(ThemeContext)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
+
     return (
         <div className={styles.Content + " " + (theme === "dark" ? styles.darkBg : styles.lightBg)}>
             <div className={styles.HeadingContent}>
-                <div
-                    className={styles.DragAndDropHeading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>{slide.carousalHeader}
+                <div style={{fontSize: isIOS && isMobileLandscape && "18px"}}
+                     className={styles.DragAndDropHeading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>{slide.carousalHeader}
                 </div>
-                <div
-                    className={styles.DragAndDropContent + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
+                <div style={{
+                    fontSize: isIOS && isMobileLandscape && "10px",
+                    lineHeight: isIOS && isMobileLandscape && "14px"
+                }}
+                     className={styles.DragAndDropContent + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
                     {slide.carousalLine1}<br/>{slide.carousalLine2}
                 </div>
             </div>

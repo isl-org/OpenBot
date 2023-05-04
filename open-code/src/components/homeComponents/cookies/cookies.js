@@ -25,7 +25,7 @@ function CookiesComponent() {
             declineButtonText={<DeclineButtonText/>}
             buttonClasses={Style.acceptButton}
             declineButtonClasses={Style.declineButton + " " + (theme === "dark" ? Style.declineButtonDark : Style.declineButtonLight)}
-            buttonWrapperClasses={isIOS?Style.iosButtonDiv:isAndroid?Style.androidButtonDiv:Style.buttonWrapper}
+            buttonWrapperClasses={isIOS ? Style.iosButtonDiv : isAndroid ? Style.androidButtonDiv : Style.buttonWrapper}
             enableDeclineButton
         >
             <img className={Style.cookieImage} src={CookieImage} alt=""/>
@@ -39,11 +39,13 @@ export default CookiesComponent;
 // Accept cookie button
 function ButtonText() {
     const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
 
     return (
         <>
             <img className={Style.btnImage} src={CookiesIcon} alt="icon"/>
-            <div className={Style.btnText} style={{fontSize:isAndroid && "16px"}}>Accept cookies</div>
+            <div className={Style.btnText} style={{fontSize: isAndroid && isMobileLandscape && "16px"}}>Accept cookies
+            </div>
         </>
     )
 }
