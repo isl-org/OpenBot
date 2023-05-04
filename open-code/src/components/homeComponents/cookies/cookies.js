@@ -6,9 +6,6 @@ import CookieImage from "../../../assets/images/icon/cookies.png";
 import {ThemeContext} from "../../../App";
 import BlackText from "../../fonts/blackText";
 import {Constants} from "../../../utils/constants";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import {useTheme} from "@mui/material";
-
 
 /**
  *  render Accept Cookie card
@@ -17,8 +14,8 @@ import {useTheme} from "@mui/material";
  */
 function CookiesComponent() {
     const {theme} = useContext(ThemeContext)
-    const themes = useTheme();
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
     return (
         <CookieConsent
@@ -28,14 +25,11 @@ function CookiesComponent() {
             declineButtonText={<DeclineButtonText/>}
             buttonClasses={Style.acceptButton}
             declineButtonClasses={Style.declineButton + " " + (theme === "dark" ? Style.declineButtonDark : Style.declineButtonLight)}
-            buttonWrapperClasses={Style.buttonWrapper}
+            buttonWrapperClasses={isIOS?Style.iosButtonDiv:isAndroid?Style.androidButtonDiv:Style.buttonWrapper}
             enableDeclineButton
         >
             <img className={Style.cookieImage} src={CookieImage} alt=""/>
-            <div style={{width: "608px", color: "#6F6C90"}}>
-                <BlackText
-                    text={Constants.CookieMsg} divStyle={{width : isMobile &&"42%"}}/>
-            </div>
+            <BlackText text={Constants.CookieMsg}/>
         </CookieConsent>
     );
 }
@@ -44,10 +38,12 @@ export default CookiesComponent;
 
 // Accept cookie button
 function ButtonText() {
+    const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+
     return (
         <>
             <img className={Style.btnImage} src={CookiesIcon} alt="icon"/>
-            <div className={Style.btnText}>Accept cookies</div>
+            <div className={Style.btnText} style={{fontSize:isAndroid && "16px"}}>Accept cookies</div>
         </>
     )
 }
@@ -55,6 +51,7 @@ function ButtonText() {
 //decline button
 function DeclineButtonText() {
     const {theme} = useContext(ThemeContext)
+
     return (
         <div
             className={Style.btnDeclineText + " " + (theme === "dark" ? Style.btnDeclineTextDark : Style.btnDeclineTextLight)}>Decline</div>)

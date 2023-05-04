@@ -29,6 +29,7 @@
     flex: 0 1 auto !important;
     padding-left: 48px;
     gap: 22px;
+    width: 735px;
 }
 
 .ContentAndImageLight {
@@ -45,6 +46,16 @@
 }
 
 .buttonWrapper {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.iosButtonDiv{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.androidButtonDiv{
     display: flex;
     flex-direction: row-reverse;
 }
@@ -138,10 +149,6 @@
         height: 35px;
     }
 
-    .textDiv {
-        margin-bottom: 20px;
-    }
-
     .acceptButton {
         width: 42%;
         height: 38px;
@@ -161,8 +168,50 @@
     }
 
     .buttonWrapper {
-        margin: 0px 10px 10px 0px;
+        margin: 0px 10px 10px 15px;
         padding-right: 20px;
         width: 100%;
+    }
+    .iosButtonDiv{
+        margin: 0px 10px 10px 15px;
+        padding-right: 20px;
+        width: 100%;
+    }
+    .androidButtonDiv{
+        margin: 0px 10px 10px 15px;
+        padding-right: 20px;
+        width: 100%;
+    }
+}
+
+@media only screen and (max-height: 440px) and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
+    .main {
+        left: 4% !important;
+    }
+
+    .ContentAndImage {
+        padding: 20px 0 0 30px;
+        width:90% ;
+    }
+
+    .cookieImage {
+        width: 40px;
+        height: 40px;
+    }
+
+    .buttonWrapper {
+    }
+
+    .iosButtonDiv{
+        margin: -20px 0 0 0;
+    }
+
+    .androidButtonDiv{
+        margin: -110px 0 0 80px;
+
+    }
+
+    .btnText {
+        font-size: 12px;
     }
 }
