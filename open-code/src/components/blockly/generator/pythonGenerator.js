@@ -1,44 +1,17 @@
-// Code generation in Python
 import {pythonGenerator} from "blockly/python";
 
-pythonGenerator['start'] = function (block) {
-    const statements_start_blocks = pythonGenerator.statementToCode(block, 'start_blocks');
-    let code = "";
-    code += "def start():\n" + statements_start_blocks + "";
-    return code;
-};
+/**
+ * code generation of blocks in javascript and python
+ * @returns {string}
+ */
 
-pythonGenerator['timer'] = function (block) {
-    let number_name = block.getFieldValue('NAME');
-    let value_num = pythonGenerator.valueToCode(block, 'num', pythonGenerator.ORDER_ATOMIC);
-    let code = '';
-    code += 'pause(' + number_name + ")\n" + value_num;
-    return code;
-};
 
 pythonGenerator['soundType'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
     let value_name = pythonGenerator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
 
-    function selectSound() {
-        switch (dropdown_type) {
-            case "slow_mode" : {
-                return "slow";
-            }
-            case "medium_mode" : {
-                return "medium";
-            }
-            case "fast_mode" : {
-                return "fast";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += "playSoundSpeed(" + selectSound() + ")\n" + value_name;
+    code += "playSoundSpeed(" + "'" + dropdown_type + "'" + ")\n" + value_name;
     return code;
 };
 
@@ -49,13 +22,13 @@ pythonGenerator['soundMode'] = function (block) {
     function soundMode() {
         switch (dropdown_mode_type) {
             case "OPTION1" : {
-                return "dual drive";
+                return "'dual drive'";
             }
             case "OPTION2" : {
-                return "joystick control";
+                return "'joystick control'";
             }
             case "OPTION3" : {
-                return "gamepad";
+                return "'gamepad'";
             }
             default: {
 
@@ -71,7 +44,7 @@ pythonGenerator['soundMode'] = function (block) {
 
 pythonGenerator['forward&BackwardAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
-    let number_specified_amount = block.getFieldValue('specified_amount');
+    let number_specified_amount = block.getFieldValue('slider');
 
     function selectMovement() {
         switch (dropdown_direction_type) {
@@ -92,34 +65,10 @@ pythonGenerator['forward&BackwardAtSpeed'] = function (block) {
     return code;
 };
 
-pythonGenerator['forward&BackwardAtSpeedForTime'] = function (block) {
-    let dropdown_select_direction = block.getFieldValue('select_direction');
-    let number_speed_value = block.getFieldValue('speed_value');
-    let number_time = block.getFieldValue('time');
-
-    function selectMovement() {
-        switch (dropdown_select_direction) {
-            case "Forward_direction" : {
-                return "moveForward";
-            }
-            case "Backward_direction" : {
-                return "moveBackward";
-            }
-            default: {
-
-            }
-        }
-    }
-
-    let code = "";
-    code += selectMovement() + "(" + number_speed_value + ")\npause(" + number_time + ")\n";
-    return code;
-};
-
 
 pythonGenerator['left&RightAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
-    let number_specified_amount = block.getFieldValue('specified_amount');
+    let number_specified_amount = block.getFieldValue('slider');
 
     function selectMovement() {
         switch (dropdown_direction_type) {
@@ -149,15 +98,6 @@ pythonGenerator['moveLeft&Right'] = function (block) {
     return code;
 };
 
-pythonGenerator['moveLeft&RightForTime'] = function (block) {
-    let number_left_distance = block.getFieldValue('left_distance');
-    let number_right_distance = block.getFieldValue('right_distance');
-    let number_time = block.getFieldValue('time');
-
-    let code = '';
-    code += "moveOpenBot(" + number_left_distance + "," + number_right_distance + ")\npause(" + number_time + ")\n";
-    return code;
-};
 
 pythonGenerator['movementCircular'] = function (block) {
     let number_radius_value = block.getFieldValue('radius_value');
@@ -201,7 +141,6 @@ pythonGenerator['speedReading'] = function () {
     return [code, pythonGenerator.ORDER_NONE];
 };
 
-
 pythonGenerator['wheelOdometerSensors'] = function (block) {
     let dropdown_wheel_sensors = block.getFieldValue('wheel_sensors');
     let code = '';
@@ -215,39 +154,14 @@ pythonGenerator['wheelOdometerSensors'] = function (block) {
                 return "backWheelReading";
             }
             default: {
-
             }
         }
     }
 
-    code += selectWheelSensor() + "()\n";
-    return code;
+    code += selectWheelSensor() + "()";
+    return [code, pythonGenerator.ORDER_NONE];
 };
 
-
-pythonGenerator['indicatorLedSensor'] = function () {
-    let code = '';
-    code += "indicatorReading()\n";
-    return code;
-};
-
-pythonGenerator['frontLedSensor'] = function () {
-    let code = '';
-    code += "frontLedReading()\n";
-    return code;
-};
-
-pythonGenerator['backLedSensor'] = function () {
-    let code = '';
-    code += "backLedReading()\n";
-    return code;
-};
-
-pythonGenerator['ledStatusSensor'] = function () {
-    let code = '';
-    code += "ledStatus()\n";
-    return code;
-};
 
 pythonGenerator['voltageDividerReading'] = function () {
     let code = '';
@@ -255,107 +169,51 @@ pythonGenerator['voltageDividerReading'] = function () {
     return [code, pythonGenerator.ORDER_NONE];
 };
 
+pythonGenerator['start'] = function (block) {
+    const statements_start_blocks = pythonGenerator.statementToCode(block, 'start_blocks');
+    let code = "";
+    code += "def start():\n" + statements_start_blocks;
+    return code;
+};
+
 pythonGenerator['forever'] = function (block) {
     const statements_start_blocks = pythonGenerator.statementToCode(block, 'forever_loop_blocks');
     let code = "";
-    code += "def forever():\n while(true):\n" + statements_start_blocks + "\n}";
-    return code;
-};
-
-pythonGenerator['leftIndicator_led'] = function (block) {
-    const toggleState = block.getFieldValue('TOGGLE_STATE');
-
-    function leftIndicatorStatus() {
-        if (toggleState === "ON") {
-            return "leftIndicatorOn()";
-        } else if (toggleState === "OFF") {
-            return "leftIndicatorOff()";
-        }
-    }
-
-    let code = "";
-    code += leftIndicatorStatus() + "\n";
-    return code;
-};
-
-pythonGenerator['rightIndicator_led'] = function (block) {
-    const toggleState = block.getFieldValue('TOGGLE_STATE');
-
-    function rightIndicatorStatus() {
-        if (toggleState === "ON") {
-            return "rightIndicatorOn()";
-        } else if (toggleState === "OFF") {
-            return "rightIndicatorOff()";
-        }
-    }
-
-    let code = "";
-    code += rightIndicatorStatus() + "\n";
-    return code;
-};
-
-pythonGenerator['indicatorStatus'] = function (block) {
-    const toggleState = block.getFieldValue('TOGGLE_STATE');
-
-    function indicatorStatus() {
-        if (toggleState === "ON") {
-            return "indicatorOn()";
-        } else if (toggleState === "OFF") {
-            return "indicatorOff()";
-        }
-    }
-
-    let code = '';
-    code += indicatorStatus() + "\n";
+    code += "def forever():\n while(true):\n" + statements_start_blocks + "\n";
     return code;
 };
 
 pythonGenerator['gyroscope_reading'] = function () {
     let code = "";
-    code += "gyroscopeReading()\n";
-    return code;
+    code += "gyroscopeReading()";
+    return [code, pythonGenerator.ORDER_NONE];
 };
 
 pythonGenerator['acceleration_reading'] = function () {
     let code = "";
-    code += "accelerationReading()\n";
-    return code;
+    code += "accelerationReading()";
+    return [code, pythonGenerator.ORDER_NONE];
 };
 
 pythonGenerator['magnetic_reading'] = function () {
     let code = "";
-    code += "magneticReading()\n";
-    return code;
+    code += "magneticReading()";
+    return [code, pythonGenerator.ORDER_NONE];
 };
 
-pythonGenerator['speedSlow'] = function () {
-    let code = "";
-    code += "speedSlow()\n";
-    return code;
-};
+pythonGenerator['speedControl'] = function (block) {
+    let dropdown_type = block.getFieldValue('type');
 
-pythonGenerator['speedMedium'] = function () {
-    let code = "";
-    code += "speedMedium()\n";
-    return code;
-};
-
-pythonGenerator['speedHigh'] = function () {
-    let code = "";
-    code += "speedHigh()\n";
-    return code;
-};
-
-pythonGenerator['controllerMode'] = function (block) {
-    let dropdown_controller = block.getFieldValue('controller');
-
-    function selectController() {
-        switch (dropdown_controller) {
-            case "phone": {
-                return "phoneController()";
+    function chooseSpeed() {
+        switch (dropdown_type) {
+            case "slow": {
+                return "'slow'";
             }
-            case "gamepad": {
-                return "gamepadController()";
+            case "medium": {
+                return "'medium'";
+            }
+            case "fast": {
+                return "'fast'";
             }
             default: {
 
@@ -364,7 +222,30 @@ pythonGenerator['controllerMode'] = function (block) {
     }
 
     let code = '';
-    code += selectController() + "\n";
+    code += "setSpeed(" + chooseSpeed() + ")\n";
+    return code;
+};
+
+
+pythonGenerator['controllerMode'] = function (block) {
+    let dropdown_controller = block.getFieldValue('controller');
+
+    function selectController() {
+        switch (dropdown_controller) {
+            case "phone": {
+                return "'phone'";
+            }
+            case "gamepad": {
+                return "'gamepad'";
+            }
+            default: {
+
+            }
+        }
+    }
+
+    let code = '';
+    code += "switchController(" + selectController() + ")\n";
     return code;
 };
 
@@ -375,13 +256,13 @@ pythonGenerator['driveModeControls'] = function (block) {
     function selectController() {
         switch (dropdown_driveModeControls) {
             case "dualDrive": {
-                return "dualDriveMode()";
+                return "'dual'";
             }
             case "joystick": {
-                return "joystickMode()";
+                return "'joystick'";
             }
             case "game": {
-                return "gameMode()";
+                return "'game'";
             }
             default: {
 
@@ -390,7 +271,7 @@ pythonGenerator['driveModeControls'] = function (block) {
     }
 
     let code = '';
-    code += selectController() + "\n";
+    code += "switchDriveMode(" + selectController() + ")\n";
     return code;
 };
 
@@ -426,8 +307,8 @@ pythonGenerator['motorStop'] = function () {
 
 pythonGenerator['bumper'] = function () {
     let code = "";
-    code += "bumperCollision()\n";
-    return code;
+    code += "bumperCollision()";
+    return [code, pythonGenerator.ORDER_NONE];
 };
 
 
@@ -435,9 +316,8 @@ pythonGenerator['brightness'] = function (block) {
     let value = block.getFieldValue('slider');
     let code = "";
     code += "ledBrightness(" + value + ")\n";
-    return code;
+    return code
 };
-
 
 pythonGenerator['wait'] = function (block) {
     let value = block.getFieldValue('time');
@@ -446,16 +326,9 @@ pythonGenerator['wait'] = function (block) {
     return code
 };
 
-pythonGenerator['sonar_block'] = function () {
+pythonGenerator['sonarReading'] = function () {
     let code = "";
     code += "sonarReading() ";
-    return [code, pythonGenerator.ORDER_NONE];
-};
-
-pythonGenerator['string'] = function (block) {
-    let value = block.getFieldValue('value');
-    let code = "";
-    code += value;
     return [code, pythonGenerator.ORDER_NONE];
 };
 
@@ -463,5 +336,38 @@ pythonGenerator['speedAdjustment'] = function (block) {
     let number_speed = block.getFieldValue('speed');
     let code = '';
     code += "setSpeed(" + number_speed + ")\n";
+    return code;
+};
+
+pythonGenerator['indicators'] = function (block) {
+    const dropdown_side = block.getFieldValue('side');
+    const toggleState = block.getFieldValue('TOGGLE_STATE');
+
+    function indicatorStatus() {
+        if (toggleState === "ON") {
+            return "On";
+        } else if (toggleState === "OFF") {
+            return "Off";
+        }
+    }
+
+    let code = "";
+    code += dropdown_side + "Indicator" + indicatorStatus() + "()\n";
+    return code;
+};
+
+pythonGenerator['brightnessHighOrLow'] = function (block) {
+    const toggleState = block.getFieldValue('TOGGLE_STATE');
+
+    function indicatorStatus() {
+        if (toggleState === "ON") {
+            return "'ON'";
+        } else if (toggleState === "OFF") {
+            return "'OFF'";
+        }
+    }
+
+    let code = "";
+    code += "toggleLed(" + indicatorStatus() + ")\n";
     return code;
 };

@@ -25,78 +25,12 @@ import {javascriptGenerator} from 'blockly/javascript';
  */
 
 
-javascriptGenerator['test_react_field'] = function () {
-    return 'console.log(\'custom block\');\n';
-};
-
-javascriptGenerator['test_react_date_field'] = function (block) {
-    return 'console.log(' + block.getField('DATE').getText() + ');\n';
-};
-
-javascriptGenerator['sensebox_display_clearDisplay'] = function () {
-    return "display.clearDisplay();\n";
-};
-javascriptGenerator['controls_repeat_ext'] = function (Block) {
-    // Repeat n times.
-
-    const repeats =
-        javascriptGenerator.valueToCode(
-            Block,
-            'TIMES',
-            javascriptGenerator.ORDER_ASSIGNMENT
-        ) || '0';
-
-    let branch = javascriptGenerator.statementToCode(Block, 'DO');
-    branch = javascriptGenerator.addLoopTrap(branch, Block.id);
-    let code = '';
-    const loopVar = 'i';
-    code +=
-        'for (int ' +
-        loopVar +
-        ' = 1; ' +
-        loopVar +
-        ' <= ' +
-        repeats +
-        '; ' +
-        loopVar +
-        '+= 1) {\n' +
-        branch +
-        '}\n';
-
-    return code;
-};
-javascriptGenerator['Add'] = function (block) {
-    let argument0 = javascriptGenerator.valueToCode(block, 'A', javascriptGenerator.ORDER_ATOMIC);
-    let argument1 = javascriptGenerator.valueToCode(block, 'B', javascriptGenerator.ORDER_ATOMIC);
-    let code = '';
-    code += 'console.log(' + argument0 + '+' + argument1 + ')\n'
-    return code;
-};
-
-
-javascriptGenerator['print'] = function (block) {
-    let value = javascriptGenerator.valueToCode(block, 'print', javascriptGenerator.ORDER_ATOMIC);
-    let code = '';
-    code += 'console.log(' + value + ')\n';
-
-    return code;
-};
-
-javascriptGenerator['timer'] = function (block) {
-    let number_name = block.getFieldValue('NAME');
-    let value_num = javascriptGenerator.valueToCode(block, 'num', javascriptGenerator.ORDER_ATOMIC);
-    let code = '';
-    code += 'pause(' + number_name + ");\n" + value_num;
-    return code;
-};
-
-
 javascriptGenerator['soundType'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
 
     let code = '';
-    code += "playSoundSpeed("+"'" + dropdown_type + "'"+");\n" + value_name;
+    code += "playSoundSpeed(" + "'" + dropdown_type + "'" + ");\n" + value_name;
     return code;
 };
 
@@ -286,7 +220,7 @@ javascriptGenerator['magnetic_reading'] = function () {
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
-javascriptGenerator['speedControl'] = function(block) {
+javascriptGenerator['speedControl'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
 
     function chooseSpeed() {
@@ -307,7 +241,7 @@ javascriptGenerator['speedControl'] = function(block) {
     }
 
     let code = '';
-    code+="setSpeed("+chooseSpeed()+");\n";
+    code += "setSpeed(" + chooseSpeed() + ");\n";
     return code;
 };
 
@@ -330,7 +264,7 @@ javascriptGenerator['controllerMode'] = function (block) {
     }
 
     let code = '';
-    code += "switchController("+selectController() + ");\n";
+    code += "switchController(" + selectController() + ");\n";
     return code;
 };
 
@@ -356,7 +290,7 @@ javascriptGenerator['driveModeControls'] = function (block) {
     }
 
     let code = '';
-    code += "switchDriveMode("+selectController() + ");\n";
+    code += "switchDriveMode(" + selectController() + ");\n";
     return code;
 };
 
@@ -424,7 +358,7 @@ javascriptGenerator['speedAdjustment'] = function (block) {
     return code;
 };
 
-javascriptGenerator['indicators'] = function(block) {
+javascriptGenerator['indicators'] = function (block) {
     const dropdown_side = block.getFieldValue('side');
     const toggleState = block.getFieldValue('TOGGLE_STATE');
 
@@ -437,11 +371,11 @@ javascriptGenerator['indicators'] = function(block) {
     }
 
     let code = "";
-    code+=dropdown_side+"Indicator"+indicatorStatus()+"();\n";
+    code += dropdown_side + "Indicator" + indicatorStatus() + "();\n";
     return code;
 };
 
-javascriptGenerator['brightnessHighOrLow'] = function(block) {
+javascriptGenerator['brightnessHighOrLow'] = function (block) {
     const toggleState = block.getFieldValue('TOGGLE_STATE');
 
     function indicatorStatus() {
@@ -451,7 +385,8 @@ javascriptGenerator['brightnessHighOrLow'] = function(block) {
             return "'OFF'";
         }
     }
+
     let code = "";
-    code+="toggleLed("+indicatorStatus()+");\n";
+    code += "toggleLed(" + indicatorStatus() + ");\n";
     return code;
 };

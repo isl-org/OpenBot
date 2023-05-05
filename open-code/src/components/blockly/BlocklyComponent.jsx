@@ -104,13 +104,15 @@ function BlocklyComponent(props) {
             renderer: "zelos",
             toolbox: toolbox.current,
             zoom:
-                {controls: false,
+                {
+                    controls: false,
                     wheel: true,
                     startScale: 1.0,
                     maxScale: 3,
                     minScale: 0.2,
                     scaleSpeed: 1.5,
-                    pinch: true},
+                    pinch: true
+                },
             ...rest,
         });
 
@@ -160,7 +162,7 @@ function BlocklyComponent(props) {
             <div
                 ref={blocklyDiv}
                 id="blocklyDiv"
-                style={{width: "100%", height: isMobileLandscape?"66%":"81.6%"}}
+                style={{width: "100%", height: isMobileLandscape ? "66%" : "81.6%"}}
             />
             <div style={{display: "none"}} ref={toolbox}>
                 {children}

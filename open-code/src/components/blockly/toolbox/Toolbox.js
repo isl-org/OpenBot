@@ -4,7 +4,7 @@ import {controlsBlocks, loopBlocks} from "../blocks/generalBlocks";
 import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
 import '../generator/javascriptGenerator';
 import '../blocks/customblocks';
-
+import "../generator/pythonGenerator"
 /**
  * ToolBox has box component
  * @param props

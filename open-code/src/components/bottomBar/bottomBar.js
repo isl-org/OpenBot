@@ -17,7 +17,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {getCurrentProject} from "../../services/workspace";
 
-
 /**
  * Bottom Bar contains generate code, upload on drive icon , zoom in-out and undo redo functionality.
  * @returns {JSX.Element}
