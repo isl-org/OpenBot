@@ -80,8 +80,8 @@ public class BotFunctions implements SensorEventListener {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    Control control = new Control(0, 0);
-    v.setControl(control);
+//    Control control = new Control(0, 0);
+//    v.setControl(control);
   }
 
   @JavascriptInterface
@@ -101,25 +101,29 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
-  public void speedReading() {
+  public float speedReading() {
     Timber.tag(TAG).d("Left speed - %s", v.getLeftWheelRpm());
     Timber.tag(TAG).d("Right speed - %s", v.getRightWheelRpm());
+    float speedReading = (v.getLeftWheelRpm() + v.getRightWheelRpm())/2;
+    return speedReading;
   }
 
   @JavascriptInterface
-  public void voltageDividerReading() {
+  public float voltageDividerReading() {
     Timber.tag(TAG).d("Battery Voltage - %s", v.getBatteryVoltage());
-    Timber.tag(TAG).d("Battery Percentage - %s", v.getBatteryPercentage());
+    return v.getBatteryVoltage();
   }
 
   @JavascriptInterface
-  public void frontWheelReading() {
+  public boolean frontWheelReading() {
     Timber.tag(TAG).d("Odometer Front - %s", v.isHasWheelOdometryFront());
+    return v.isHasWheelOdometryFront();
   }
 
   @JavascriptInterface
-  public void backWheelReading() {
+  public boolean backWheelReading() {
     Timber.tag(TAG).d("Odometer Back - %s", v.isHasWheelOdometryBack());
+    return v.isHasWheelOdometryBack();
   }
 
   @JavascriptInterface
