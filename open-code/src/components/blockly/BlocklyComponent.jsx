@@ -10,6 +10,8 @@ import {StoreContext} from "../../context/context";
 import {updateCurrentProject} from "../../services/workspace";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import CodeEditor from "../editor/codeEditor";
+import styles from "./BlocklyComponent.css"
 
 Blockly.setLocale(locale);
 
@@ -39,6 +41,7 @@ function BlocklyComponent(props) {
         folderId,
         setDrawer,
         setWorkspace,
+        workspace,
         setIsError,
         setCurrentProjectXml
     } = useContext(StoreContext);
@@ -159,14 +162,21 @@ function BlocklyComponent(props) {
     // Return the blockly div and hidden toolbox
     return (
         <React.Fragment>
-            <div
-                ref={blocklyDiv}
-                id="blocklyDiv"
-                style={{width: "100%", height: isMobileLandscape ? "66%" : "81.6%"}}
-            />
+
+            <div style={{display: 'flex', height: '80vh'}}>
+                <div
+                    ref={blocklyDiv}
+                    id="blocklyDiv"
+                    style={{width: "65%", height: isMobileLandscape ? "66%" : ""}}
+                />
+                <div style={{width: "35%", height: isMobileLandscape ? "66%" : "80vh", justifyContent: "flex-end"}}>
+                    {workspace && <CodeEditor/>}
+                </div>
+            </div>
             <div style={{display: "none"}} ref={toolbox}>
                 {children}
             </div>
+
         </React.Fragment>
     );
 }

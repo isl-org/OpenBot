@@ -1,5 +1,4 @@
 #blocklyDiv {
-    position: fixed;
     color: #000000;
     background-color: white;
 }
@@ -12,6 +11,11 @@
     position: relative;
     left: 0;
     bottom: 10px;
+}
+.playGroundSpace{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 /* Adds space between the categories, rounds the corners and adds space around the label. */
