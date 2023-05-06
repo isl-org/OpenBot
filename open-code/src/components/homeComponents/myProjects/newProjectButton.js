@@ -108,6 +108,10 @@ export default NewProjectButton;
 function CreateNewProjectModal(params) {
     const {open, handleClose, projectName, handleProjectNameChange, OpenNewProjectHandle, isMobile} = params
     const {theme} = useContext(ThemeContext)
+    const isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
+
     return (
         <Modal
             open={open}
@@ -144,7 +148,7 @@ function CreateNewProjectModal(params) {
                 </div>
                 {/*The button to create a new project*/}
                 {isMobile ?
-                    <div className={styles.creatButton}>
+                    <div className={isMobileLandscape && isIOS?styles.iosButton:isMobileLandscape && isAndroid?styles.androidButton:styles.creatButton}>
                         <CreateButton OpenNewProjectHandle={OpenNewProjectHandle}/>
                     </div> :
                     <CreateButton OpenNewProjectHandle={OpenNewProjectHandle}/>

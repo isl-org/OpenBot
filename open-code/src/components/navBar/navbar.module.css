@@ -779,6 +779,7 @@
 
 @media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
     /* CSS rules for mobile landscape view */
+
     .navbarDiv {
         height: 4rem;
     }
@@ -856,4 +857,23 @@
         font-size: 15px;
     }
 
+    .option{
+        height: 86px !important;
+        width: 157px !important;
+    }
+
+    .option .icon {
+        width: 18px;
+        height: 18px;
+        padding-left: 0;
+    }
+
+    .option .item {
+        padding-left: 0;
+        font-size: 14px;
+    }
+
+    .renameText {
+        padding-right: 13px;
+    }
 }

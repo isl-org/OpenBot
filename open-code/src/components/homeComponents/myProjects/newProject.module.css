@@ -432,6 +432,18 @@
         display: flex;
     }
 
+    .iosButton{
+        width: 91%;
+        margin-top: 35px;
+        display: flex;
+    }
+
+    .androidButton{
+        width: 91%;
+        margin-top: 35px;
+        display: flex;
+    }
+
     .inputBoxMargin {
         margin-top: 15px;
     }
@@ -516,12 +528,16 @@
         font-family: Gilroy-Medium, sans-serif;
     }
     .model {
-        width: 60%;
-        height: 15rem;
+        width: 50%;
+        height: 13rem;
         padding: 18px 20px 0px 20px;
     }
-    .creatButton {
-        width: 91%;
+
+    .androidButton{
+        width: 84%;
+    }
+    .iosButton{
+        width: 100%;
     }
     .line {
         margin: 5px -20px 0 -20px;
