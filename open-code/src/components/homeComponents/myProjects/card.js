@@ -16,7 +16,6 @@ import {PopUpModal} from "../header/logOutAndDeleteModal";
 import {handleUniqueName} from "./newProjectButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material";
-import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../../services/googleDrive";
 
 
 /**
@@ -62,7 +61,6 @@ function Card(props) {
      * @returns {Promise<void>}
      */
     const handleOpenProject = async (projectData) => {
-
         localStorage.setItem(localStorageKeys.currentProject, "");
         setDrawer(false);
         setIsError(false);
@@ -70,21 +68,8 @@ function Card(props) {
             setCurrentProjectXml(projectData.xmlValue);
             setProjectName(projectData.projectName);
             setFileId(projectData.fileId);
-            if (localStorage.getItem("isSigIn") === "true") {
-                if (isOnline) {
-                    let folderId = await getFolderId();
-                    let fileExistWithFileID = await checkFileExistsInFolder(folderId, projectData.projectName, 'js')
-                    if (fileExistWithFileID.exists) {
-                        let QrLink = await getShareableLink(fileExistWithFileID.fileId, folderId)
-                        setCode(QrLink);
-                    }
-                    openExistingProject();
-                } else {
-                    errorToast("Please Check your internet connection.")
-                }
-            } else {
-                openExistingProject();
-            }
+            openExistingProject();
+
         } catch (error) {
             console.error(error);
         }

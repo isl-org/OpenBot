@@ -4,14 +4,14 @@ import Blockly from 'blockly/core';
 import locale from 'blockly/msg/en';
 import 'blockly/blocks';
 import {ThemeContext} from "../../App";
-import {DarkTheme, LightTheme} from "../../utils/constants";
+import {DarkTheme, errorToast, LightTheme} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
-import {updateCurrentProject} from "../../services/workspace";
+import {getCurrentProject, updateCurrentProject} from "../../services/workspace";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../services/googleDrive";
 import CodeEditor from "../editor/codeEditor";
-
 
 Blockly.setLocale(locale);
 
@@ -41,9 +41,11 @@ function BlocklyComponent(props) {
         folderId,
         setDrawer,
         setWorkspace,
-        workspace,
         setIsError,
-        setCurrentProjectXml
+        setCurrentProjectXml,
+        isOnline,
+        setCode,
+        workspace
     } = useContext(StoreContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
@@ -99,8 +101,30 @@ function BlocklyComponent(props) {
         });
     }, []);
 
+    const checkQRCode = async () => {
+        if (localStorage.getItem("isSigIn") === "true") {
+            if (isOnline) {
+                let folderId = await getFolderId();
+                let fileExistWithFileID = await checkFileExistsInFolder(folderId, getCurrentProject().projectName, 'js')
+                if (fileExistWithFileID.exists) {
+                    let QrLink = await getShareableLink(fileExistWithFileID.fileId, folderId)
+                    setCode(QrLink);
+                }
+            } else {
+                errorToast("Please Check your internet connection.")
+            }
+        }
+    }
 
     useEffect(() => {
+        checkQRCode().catch(err => {
+            console.log(err);
+        });
+
+    }, [])
+
+    useEffect(() => {
+
         // Create the primary workspace instance
         primaryWorkspace.current = Blockly.inject(blocklyDiv.current, {
             theme: theme === "dark" ? DarkTheme : LightTheme,
