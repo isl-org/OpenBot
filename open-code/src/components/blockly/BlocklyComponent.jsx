@@ -11,13 +11,13 @@ import {updateCurrentProject} from "../../services/workspace";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import CodeEditor from "../editor/codeEditor";
-import styles from "./BlocklyComponent.css"
+
 
 Blockly.setLocale(locale);
 
 /**
  * Blockly workspace component
- * @param {Object} props - component props
+ *
  * @param {string} props.initialXml - initial XML code to load into the workspace
  * @param {Function} props.onWorkspaceChange - function to call when workspace changes
  * @param {Object} props.rest - additional props to pass to Blockly inject method
