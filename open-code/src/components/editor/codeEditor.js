@@ -16,7 +16,6 @@ import {javascriptGenerator} from "blockly/javascript";
 function CodeEditor(params) {
     const editorRef = useRef(null);
     const {workspace,currentProjectXml} = useContext(StoreContext);
-
     useEffect(() => {
         console.log("workSpaceChanged::",workspace)
         const editor = ace.edit(editorRef.current);
