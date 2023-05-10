@@ -63,7 +63,6 @@ function BlocklyComponent(props) {
 
     }, []);
 
-
     const enableAllChildBlocks = (block) => {
         if (block) {
             block.setEnabled(true);
