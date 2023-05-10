@@ -81,7 +81,6 @@
 		727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */; };
 		727D339EDE19D22D7B9D16B5 /* GoogleSignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3153BBE7A4D47749E6E8 /* GoogleSignInButton.swift */; };
 		727D33E21291B21856A1393B /* UiLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B76F53D6B069FF2A5C /* UiLabel.swift */; };
-		727D341D19B074C289BA78C2 /* OpenCodeFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3FF6960418014E6027A9 /* OpenCodeFragment.swift */; };
 		727D3457F432B9743263C307 /* sensorDataRetrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */; };
 		727D34602C26673639AA0D0B /* Dimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3946DB74E63117B32AF4 /* Dimension.swift */; };
 		727D348793BC7E328164FDB2 /* DataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3157F2B5E5DBB1565EDD /* DataLogger.swift */; };
@@ -242,7 +241,6 @@
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIDeviceExtension.swift; path = extensions/UIDeviceExtension.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
-		727D3FF6960418014E6027A9 /* OpenCodeFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenCodeFragment.swift; path = openCode/OpenCodeFragment.swift; sourceTree = "<group>"; };
 		74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
 		9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBotTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -514,7 +512,6 @@
 				66AC71FA29B885410022108A /* Autopilot */,
 				66AC71FD29B885410022108A /* ObjectTracking */,
 				66AC720029B885410022108A /* FreeRoam */,
-				727D3FF6960418014E6027A9 /* OpenCodeFragment.swift */,
 				727D3E7CACC6AC0539AC7BC4 /* Profile */,
 				727D3F1F46201738BE703091 /* Project */,
 				727D38A54661B9A54A681AC1 /* QrScanner */,
@@ -1122,7 +1119,6 @@
 				727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */,
 				66AC721429B885410022108A /* ObjectTrackingFragment.swift in Sources */,
 				4FEF43D0E4F94DBBD4DB0614 /* Date.swift in Sources */,
-				727D341D19B074C289BA78C2 /* OpenCodeFragment.swift in Sources */,
 				727D3D05C58FC97350145FFD /* Authentication.swift in Sources */,
 				727D33E21291B21856A1393B /* UiLabel.swift in Sources */,
 				727D339EDE19D22D7B9D16B5 /* GoogleSignInButton.swift in Sources */,

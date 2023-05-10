@@ -438,14 +438,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk" customClass="BluetoothTableViewCell" customModule="OpenBot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="49" width="414" height="34"/>
+                                <rect key="frame" x="0.0" y="49" width="414" height="34.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="321" y="0.0" width="88" height="34"/>
+                                            <rect key="frame" x="323.5" y="0.0" width="85.5" height="34.5"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">
@@ -563,6 +563,36 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eyf-mM-Ifq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2746" y="-552"/>
+        </scene>
+        <!--Open Code Fragment-->
+        <scene sceneID="hGm-iD-S8b">
+            <objects>
+                <viewController storyboardIdentifier="OpenCodeFragment" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Zc1-0G-fnW" customClass="OpenCodeFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="nBw-nb-zkx">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="On7-u1-lB5"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QEb-LB-O91" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2865.217391304348" y="1906.4732142857142"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="mKI-D2-Y7C">
+            <objects>
+                <viewController id="Q6q-7V-dLY" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jI3-nq-Eah">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="Iqo-SF-BgN"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ml9-kg-nvP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1377" y="1400"/>
         </scene>
     </scenes>
     <resources>

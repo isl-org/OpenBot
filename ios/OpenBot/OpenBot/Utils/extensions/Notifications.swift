@@ -47,4 +47,5 @@ extension Notification.Name {
     static let clientConnected = Notification.Name("clientConnected");
     static let clientDisConnected = Notification.Name("clientDisConnected");
     static let googleSignIn = Notification.Name("googleSignIn");
+    static let cancelThread = Notification.Name("cancelThread");
 }

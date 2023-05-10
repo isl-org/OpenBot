@@ -11,18 +11,22 @@ import JavaScriptCore
 class jsEvaluator {
     private var command: String;
     private var vehicleControl: Control = Control();
-    let semaphore = DispatchSemaphore(value: 0)
-    let bluetooth = bluetoothDataController.shared
-    var jsContext: JSContext!
+    let semaphore = DispatchSemaphore(value: 0);
+    let bluetooth = bluetoothDataController.shared;
+    var jsContext: JSContext!;
+    var runOpenBotThreadClass: runOpenBotThread?
+    var isCanceled: Bool = false;
 
     /**
      initializer of jsEvaluator class
      - Parameter jsCode:
      */
+
     init(jsCode: String) {
         command = jsCode;
         initializeJS();
         evaluateJavaScript()
+        NotificationCenter.default.addObserver(self, selector: #selector(cancelThread), name: .cancelThread, object: nil)
     }
 
     /**
@@ -32,92 +36,118 @@ class jsEvaluator {
         jsContext = JSContext()
     }
 
+    @objc func cancelThread() {
+        isCanceled = true;
+        runOpenBotThreadClass?.cancel()
+        print(runOpenBotThreadClass?.isCancelled)
+
+    }
+
+
     /**
      function defined for all the methods of openBot blockly
      */
     func evaluateJavaScript() {
-        let runOpenBotThreadClass: runOpenBotThread = runOpenBotThread()
+        self.runOpenBotThreadClass = runOpenBotThread();
+        runOpenBotThreadClass?.start();
         DispatchQueue.global(qos: .background).async {
             if let context = JSContext() {
+
                 let moveForward: @convention(block) (Float) -> Void = { (speed) in
-                    return (runOpenBotThreadClass.moveForward(speed: speed))
+                    self.runOpenBotThreadClass?.moveForward(speed: speed);
                 }
                 let loop: @convention(block) () -> Void = { () in
-                    return (runOpenBotThreadClass.loop());
+                    return (loop());
                 }
                 let start: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.startBlock();
+                    self.runOpenBotThreadClass?.startBlock();
                 }
                 let moveOpenBot: @convention(block) (Int, Int) -> Void = { (left, right) in
-                    return (runOpenBotThreadClass.moveOpenBot(left: left, right: right));
+                    return (self.runOpenBotThreadClass?.moveOpenBot(left: left, right: right))!;
                 }
                 let moveCircular: @convention(block) (Float) -> Void = { (radius) in
-                    runOpenBotThreadClass.moveCircular(radius: radius);
+                    self.runOpenBotThreadClass?.moveCircular(radius: radius);
                 }
                 let stop: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.stop();
+                    print("hello nitish")
+                    self.runOpenBotThreadClass?.stop();
                 }
                 let pause: @convention(block) (Double) -> Void = { (time) in
                     self.wait(forTime: time)
                     self.semaphore.wait()
                 }
                 let moveBackward: @convention(block) (Float) -> Void = { (speed) in
-                    runOpenBotThreadClass.moveBackward(speed: speed);
+                    self.runOpenBotThreadClass?.moveBackward(speed: speed);
                 }
                 let moveLeft: @convention(block) (Float) -> Void = { (speed) in
-                    runOpenBotThreadClass.moveLeft(speed: speed)
+                    self.runOpenBotThreadClass?.moveLeft(speed: speed)
                 }
                 let moveRight: @convention(block) (Float) -> Void = { (speed) in
-                    runOpenBotThreadClass.moveRight(speed: speed)
+                    self.runOpenBotThreadClass?.moveRight(speed: speed)
                 }
                 let playSound: @convention(block) (Bool) -> Void = { (isPlaySound) in
-                    runOpenBotThreadClass.playSound(isPlaySound: isPlaySound);
+                    self.runOpenBotThreadClass?.playSound(isPlaySound: isPlaySound);
                 }
                 let playSoundSpeed: @convention(block) (String) -> Void = { (speed) in
-                    runOpenBotThreadClass.playSoundSpeed(speedMode: speed);
+                    self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
                 }
                 let motorBackward: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.motorBackward();
+                    self.runOpenBotThreadClass?.motorBackward();
                 }
                 let motorForward: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.motorForward()
+                    self.runOpenBotThreadClass?.motorForward()
                 }
                 let motorStop: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.motorStop()
+                    self.runOpenBotThreadClass?.motorStop()
                 }
                 let playSoundMode: @convention(block) () -> Void = { () in
 
                 }
                 let ledBrightness: @convention(block) (Int) -> Void = { brightnessFactor in
-                    runOpenBotThreadClass.setLedBrightness(factor: brightnessFactor);
+                    self.runOpenBotThreadClass?.setLedBrightness(factor: brightnessFactor);
                 }
                 let leftIndicatorOn: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.setLeftIndicatorOn();
+                    self.runOpenBotThreadClass?.setLeftIndicatorOn();
                 }
 
                 let rightIndicatorOn: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.setRightIndicatorOn();
+                    self.runOpenBotThreadClass?.setRightIndicatorOn();
                 }
                 let indicatorOff: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.indicatorOff();
+                    self.runOpenBotThreadClass?.indicatorOff();
                 }
                 let stopRobot: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.stop()
+                    self.runOpenBotThreadClass?.stop()
                 }
                 let leftIndicatorOff: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.indicatorOff();
+                    self.runOpenBotThreadClass?.indicatorOff();
                 }
                 let rightIndicatorOff: @convention(block) () -> Void = { () in
-                    runOpenBotThreadClass.indicatorOff();
+                    self.runOpenBotThreadClass?.indicatorOff();
                 }
-                let sonarReading: @convention(block) () -> Int = { () in
-                    runOpenBotThreadClass.sonarReading();
+                let sonarReading: @convention(block) () -> Int = { () -> Int in
+                    self.runOpenBotThreadClass?.sonarReading() ?? 0;
                 }
                 let switchController: @convention(block) (String) -> Void = { (controller) in
-                    runOpenBotThreadClass.switchController(controller : controller)
+                    self.runOpenBotThreadClass?.switchController(controller: controller)
                 }
                 let switchDriveMode: @convention(block) (String) -> Void = { (driveMode) in
-                    runOpenBotThreadClass.switchDriveMode(driveMode: driveMode)
+                    self.runOpenBotThreadClass?.switchDriveMode(driveMode: driveMode)
+                }
+                let bumperCollision: @convention(block) () -> Void = { () in
+                    self.runOpenBotThreadClass?.bumperCollision();
+                }
+                let speedReading: @convention(block) () -> Int = { () -> Int in
+                    self.runOpenBotThreadClass?.speedReading() ?? 0;
+                }
+                let voltageDividerReading: @convention(block) () ->  Double = { () -> Double in
+                    self.runOpenBotThreadClass?.voltageDividerReading() ?? 0;
+                }
+                let frontWheelReading: @convention(block) () ->  Float = { () -> Float in
+                    self.runOpenBotThreadClass?.frontWheelReading() ?? 0;
+                }
+                let backWheelReading: @convention(block) () ->  Float = { () -> Float in
+                    self.runOpenBotThreadClass?.backWheelReading() ?? 0;
                 }
 
                 context.setObject(moveForward,
@@ -172,9 +202,23 @@ class jsEvaluator {
                         forKeyedSubscript: "switchController" as NSString);
                 context.setObject(switchDriveMode,
                         forKeyedSubscript: "switchDriveMode" as NSString);
+                context.setObject(bumperCollision,
+                        forKeyedSubscript: "bumperCollision" as NSString);
+                context.setObject(speedReading,
+                        forKeyedSubscript: "speedReading" as NSString);
+                context.setObject(voltageDividerReading,
+                        forKeyedSubscript: "voltageDividerReading" as NSString);
+                context.setObject(backWheelReading,
+                        forKeyedSubscript: "backWheelReading" as NSString);
+                context.setObject(frontWheelReading,
+                        forKeyedSubscript: "frontWheelReading" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
+        }
+
+        func loop() {
+
         }
 
     }
@@ -184,6 +228,9 @@ class jsEvaluator {
      - Parameter forTime:
      */
     func wait(forTime: Double) {
+        if isCanceled {
+            return;
+        }
         print("inside wait", forTime);
         DispatchQueue.global(qos: .background).async {
             let command = Control(left: 0, right: 0);
@@ -213,15 +260,20 @@ class jsEvaluator {
         let bluetooth = bluetoothDataController.shared
         private var vehicleControl: Control = Control();
 
+
         /**
          function to send controls to openBot
          - Parameter control:
          */
         func sendControl(control: Control) {
+            if isCancelled {
+                return
+            }
             if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
                 bluetooth.sendData(payload: "c" + String(control.getLeft()) + "," + String(control.getRight()) + "\n")
             }
         }
+
 
         /**
          main function to thread
@@ -234,14 +286,24 @@ class jsEvaluator {
          Strat of block
          */
         func startBlock() {
-            print("inside start");
+            if isCancelled {
+                return
+            }
+
         }
 
         /**
          Loop of blocks
          */
         func loop() {
-            print("inside loop")
+            if isCancelled {
+                return
+            }
+            while (true) {
+                print("inside loop")
+                motorForward();
+                motorStop();
+            }
         }
 
         /**
@@ -249,7 +311,10 @@ class jsEvaluator {
          - Parameter speed:
          */
         func moveForward(speed: Float) {
-            print("inside moveforward", speed)
+            if isCancelled {
+                return
+            }
+            print("inside move forward", speed)
             let carControl = Control(left: speed, right: speed)
             sendControl(control: carControl);
         }
@@ -261,6 +326,9 @@ class jsEvaluator {
            - right: right wheel speed
          */
         func moveOpenBot(left: Int, right: Int) {
+            if isCancelled {
+                return
+            }
             print("inside move")
             let carControl = Control(left: Float(left), right: Float(right));
             sendControl(control: carControl);
@@ -271,6 +339,9 @@ class jsEvaluator {
          - Parameter radius:
          */
         func moveCircular(radius: Float) {
+            if isCancelled {
+                return
+            }
             print("inside moveCircular")
             bluetooth.sendData(payload: "c" + String(200) + "," + String(200) + "\n");
         }
@@ -279,6 +350,9 @@ class jsEvaluator {
          Function to stop the car
          */
         func stop() {
+            if isCancelled {
+                return
+            }
             print("inside stop robot")
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
@@ -293,6 +367,9 @@ class jsEvaluator {
          - Parameter speed:
          */
         func moveBackward(speed: Float) {
+            if isCancelled {
+                return
+            }
             print("inside moveBackward", speed)
             let carControl = Control(left: -speed, right: -speed);
             sendControl(control: carControl);
@@ -304,6 +381,9 @@ class jsEvaluator {
          - Parameter speed:
          */
         func moveLeft(speed: Float) {
+            if isCancelled {
+                return
+            }
             print("inside moveLeft", speed)
             let carControl = Control(left: 0, right: speed);
             sendControl(control: carControl);
@@ -314,16 +394,25 @@ class jsEvaluator {
          - Parameter speed:
          */
         func moveRight(speed: Float) {
+            if isCancelled {
+                return
+            }
             print("inside Right", speed)
             let carControl = Control(left: speed, right: 0);
             sendControl(control: carControl);
         }
 
         func playSound(isPlaySound: Bool) {
+            if isCancelled {
+                return
+            }
             print("inside playsound");
         }
 
         func playSoundSpeed(speedMode: String) {
+            if isCancelled {
+                return
+            }
             print("inside playsound speed ", playSoundSpeed);
         }
 
@@ -331,6 +420,9 @@ class jsEvaluator {
          Function to move motor backward with full speed
          */
         func motorBackward() {
+            if isCancelled {
+                return
+            }
             let control = Control(left: -192, right: -192);
             sendControl(control: control);
         }
@@ -339,6 +431,9 @@ class jsEvaluator {
          Function to move forward
          */
         func motorForward() {
+            if isCancelled {
+                return
+            }
             let control = Control(left: 192, right: 192);
             sendControl(control: control);
         }
@@ -347,6 +442,9 @@ class jsEvaluator {
          Function to stop motor
          */
         func motorStop() {
+            if isCancelled {
+                return
+            }
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
         }
@@ -356,6 +454,9 @@ class jsEvaluator {
          - Parameter factor:
          */
         func setLedBrightness(factor: Int) {
+            if isCancelled {
+                return
+            }
             print("inside setLedBrightness");
             let front = (factor * 255) / 100
             let back = ((factor * 255)) / 100
@@ -366,6 +467,9 @@ class jsEvaluator {
          Function to turn on left indicator
          */
         func setLeftIndicatorOn() {
+            if isCancelled {
+                return
+            }
             print("inside setLeftIndicatorOn");
             let indicatorValues = "i1,0\n"
             bluetooth.sendData(payload: indicatorValues)
@@ -375,6 +479,9 @@ class jsEvaluator {
          Function to turn on right indicator
          */
         func setRightIndicatorOn() {
+            if isCancelled {
+                return
+            }
             print("inside setRightIndicatorOn");
             let indicatorValues = "i0,1\n"
             bluetooth.sendData(payload: indicatorValues)
@@ -384,29 +491,42 @@ class jsEvaluator {
          Function to turn off  indicators
          */
         func indicatorOff() {
+            if isCancelled {
+                return
+            }
             print("inside indicatorOff");
             let indicatorValues = "i0,0\n"
             bluetooth.sendData(payload: indicatorValues)
         }
 
+        /**
+        function to get sonar sensor reading
+         - Returns:
+         */
         func sonarReading() -> Int {
-            if bluetooth != nil && bluetooth.sonarData != "" {
-                let index = bluetooth.sonarData.index(after: bluetooth.sonarData.startIndex)
-                let distance = min(Int(String(bluetooth.sonarData[index...])) ?? 0, 300)
-                return distance ?? 0;
+            if isCancelled {
+                return 0
             }
-            return 0;
+
+            return bluetooth.getSonar();
         }
 
+        /**
+         Function to change drive mode
+         - Parameter driveMode:
+         */
         func switchDriveMode(driveMode: String) {
+            if isCancelled {
+                return
+            }
             switch driveMode {
-            case "dual" :
+            case "dual":
                 gameController.selectedDriveMode = .DUAL;
                 break;
-            case "joystick" :
+            case "joystick":
                 gameController.selectedDriveMode = .JOYSTICK;
                 break;
-            case "game" :
+            case "game":
                 gameController.selectedDriveMode = .GAME;
                 break;
             default:
@@ -414,17 +534,100 @@ class jsEvaluator {
             }
         }
 
+        /**
+         function to switch between phone controller and game controller
+         - Parameter controller:
+         */
         func switchController(controller: String) {
+
+            if isCancelled {
+                return
+            }
             switch controller {
-            case "phone" :
+            case "phone":
                 gameController.selectedControlMode = .PHONE;
                 break;
-            case "gamepad" :
+            case "gamepad":
                 gameController.selectedControlMode = .GAMEPAD;
                 break;
             default:
                 break;
             }
         }
+
+        /**
+         function to get bumper logs
+         */
+        func bumperCollision() {
+            if isCancelled {
+                return
+            }
+            print(bluetooth.bumperData.count)
+        }
+
+        /**
+         Function retuns speed of vehicle
+         - Returns:
+         */
+        func speedReading() -> Int {
+            if isCancelled {
+                return 0
+            }
+            return bluetooth.getSpeed();
+        }
+
+        /**
+         Function returns voltage divider reading
+         - Returns:
+         */
+        func voltageDividerReading() -> Double {
+            if isCancelled {
+                return 0;
+            }
+            return bluetooth.getVoltage();
+        }
+
+        /**
+         Function returns right front wheel speed
+         - Returns:
+         */
+        func backWheelReading() -> Float {
+            if isCancelled {
+                return 0;
+            }
+            let speedometer = bluetooth.speedometer;
+            if speedometer != "" {
+                let index_1 = speedometer.index(after: speedometer.startIndex)
+                let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
+                let index_2 = speedometer.index(before: indexOfComma)
+                let rightFont = Float(speedometer[speedometer.index(after: indexOfComma)...])
+                return rightFont ?? 0.0;
+            }
+            return 0;
+        }
+
+        /**
+         Function returns left front wheel reading
+         - Returns:
+         */
+        func frontWheelReading() -> Float {
+            if isCancelled {
+                return 0;
+            }
+            let speedometer = bluetooth.speedometer;
+            if speedometer != "" {
+                let index_1 = speedometer.index(after: speedometer.startIndex)
+                let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
+                let index_2 = speedometer.index(before: indexOfComma)
+                let leftFront = Float(speedometer[index_1...index_2])
+                return leftFront ?? 0.0;
+            }
+            return 0;
+        }
+
+
     }
+
+
 }
+

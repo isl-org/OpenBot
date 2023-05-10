@@ -502,8 +502,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     /// update the speedometer value
     func updateSpeedometer() {
-        let oldTag = view.viewWithTag(100)
-        oldTag?.removeFromSuperview()
+        let oldTag = view.viewWithTag(100);
+        oldTag?.removeFromSuperview();
         let a = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
         a.tag = 100
         let speedometer = bluetooth.speedometer
