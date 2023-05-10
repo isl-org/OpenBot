@@ -16,8 +16,7 @@ export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "contro
 
 export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     'base': Blockly.Themes.Classic,
-    'blockStyles': {
-    },
+    'blockStyles': {},
     'componentStyles': {
         'workspaceBackgroundColour': colors.blocklyBackground,
         'toolboxBackgroundColour': colors.blocklyBackground,
@@ -67,9 +66,16 @@ export const Constants = {
     baseUrl: "https://www.googleapis.com/drive/v3",
     endCode: "\nstart();\nforever();\n",
     js: "js",
+    py: "py",
+    qr: "qr",
     xml: "xml",
-    InternetOffMsg : "Please check your internet connection."
+    InternetOffMsg: "Please check your internet connection."
+
 }
+
+export const Category =[
+    "js","py",
+]
 
 export const PathName = {
     "home": "/",

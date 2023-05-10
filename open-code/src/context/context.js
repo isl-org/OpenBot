@@ -1,10 +1,10 @@
 import React, {createContext, useState} from 'react'
 import {getCurrentProject} from "../services/workspace";
-import {localStorageKeys} from "../utils/constants";
+import {Constants, localStorageKeys} from "../utils/constants";
 
 export const StoreContext = createContext(null)
 
-export default ({children,isOnline}) => {
+export default ({children, isOnline}) => {
     let savedProjectName = null
     let savedProjectId = null
     let savedProjectXml = null
@@ -27,22 +27,24 @@ export default ({children,isOnline}) => {
     const [currentProjectXml, setCurrentProjectXml] = useState(savedProjectXml);
     const [fileId, setFileId] = useState(savedFileId);
     const [folderId, setFolderId] = useState(savedFolderId);
-    const[user,setUser]=useState();
-    const[workspace,setWorkspace]=useState();
+    const [category, setCategory] = useState(Constants.qr);
+    const [user, setUser] = useState();
+    const [workspace, setWorkspace] = useState();
     const [isError, setIsError] = useState(false);
 
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,
         logOut, setLogOut,
+        category, setCategory,
         code, setCode,
         generate, setGenerateCode,
         currentProjectXml, setCurrentProjectXml,
         fileId, setFileId,
         folderId, setFolderId,
-        user,setUser,
-        workspace,setWorkspace,
-        isError, setIsError,isOnline
+        user, setUser,
+        workspace, setWorkspace,
+        isError, setIsError, isOnline
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

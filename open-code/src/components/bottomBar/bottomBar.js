@@ -1,21 +1,34 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState, useRef} from "react";
 import Blockly from "blockly/core";
 import styles from "./style.module.css"
+import style from "../../../src/components/navBar/navbar.module.css";
 import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
-import {Constants, errorToast,} from "../../utils/constants";
-import {CircularProgress, circularProgressClasses, useTheme} from "@mui/material";
+import {Constants, errorToast, PathName, Themes,} from "../../utils/constants";
+import {
+    Box,
+    CircularProgress,
+    circularProgressClasses, FormControl, MenuItem,
+    Modal, Popper, Select, SelectChangeEvent,
+    ToggleButton,
+    ToggleButtonGroup,
+    useTheme
+} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
 import {motion, AnimatePresence} from "framer-motion";
-import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
-import {googleSigIn} from "../../services/firebase";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {getCurrentProject} from "../../services/workspace";
+import downArrow from "../../assets/images/icon/down-arrow.png";
+import renameIcon from "../../assets/images/icon/rename-icon.png";
+import Edit from "../../assets/images/icon/edit.png";
+import deleteIcon from "../../assets/images/icon/delete-icon.png";
+import trash from "../../assets/images/icon/trash.png";
+
 
 /**
  * Bottom Bar contains generate code, upload on drive icon , zoom in-out and undo redo functionality.
@@ -27,22 +40,19 @@ export const BottomBar = () => {
     const [buttonActive, setButtonActive] = useState(false);
     const [isLoader, setIsLoader] = useState(false);
     const {theme} = useContext(ThemeContext);
-    const [signInPopUp, setSignInPopUp] = useState(false);
-    const [uploadCodeSignIn, setUploadCodeSignIn] = useState(false);
     const themes = useTheme();
-    const {isOnline} = useContext(StoreContext)
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
 
-
     const {
+        isOnline,
         generate,
         setGenerateCode,
         setCode,
         setDrawer,
         workspace,
         isError,
-        setIsError
+        setIsError, setCategory,
     } = useContext(StoreContext);
 
     //generate javascript or python code and upload to google drive
@@ -74,6 +84,7 @@ export const BottomBar = () => {
                             setCode(res);
                             setIsLoader(false);
                             setDrawer(true);
+                            setCategory(Constants.qr);
                         }
                     ).catch((err) => {
                         console.log("err::", err)
@@ -83,12 +94,13 @@ export const BottomBar = () => {
                     })
                 }
             } else {
-                setUploadCodeSignIn(true);
+                errorToast("Please sign-In to generate QR.")
             }
         } else {
             errorToast(Constants.InternetOffMsg)
         }
     };
+
 
     //handle click  on bottom bar button event which affect workspace
     const clickedButton = (e) => {
@@ -175,15 +187,12 @@ export const BottomBar = () => {
             </div>
             <div className={styles.buttonsDiv}>
                 {/*generate code*/}
-                <GenerateCodeButton buttonSelected={buttonSelected} generateCode={generateCode}
+                <GenerateCodeButton buttonSelected={buttonSelected} generateCode={generateCode} setDrawer={setDrawer}
                                     buttonActive={buttonActive} clickedButton={clickedButton}/>
-                {/*if not signedIn so signIn PopUp*/}
-                {uploadCodeSignIn &&
-                    <SignInPopUp setSignInPopUp={setUploadCodeSignIn} handleDriveButton={generateCode}/>
-                }
+
                 <div className={styles.operationsDiv}>
                     {/*upload icon*/}
-                    <UploadInDrive setSignInPopUp={setSignInPopUp} signInPopUp={signInPopUp}/>
+                    <UploadInDrive/>
                     {/*undo redo*/}
                     <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
                               buttonActive={buttonActive}/>
@@ -205,23 +214,49 @@ export const BottomBar = () => {
  * @constructor
  */
 function GenerateCodeButton(params) {
-    const {generateCode, buttonSelected, clickedButton, buttonActive} = params
+    const {generateCode, buttonSelected, clickedButton, buttonActive, setDrawer} = params
     const themes = useTheme();
+    const {setCategory} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
+    const [language, setLanguage] = useState(Constants.js);
+
+    const handleDropDown = (event) => {
+        console.log("event:::",event.target.value)
+        setLanguage(event.target.value);
+        setCategory(event.target.value);
+        setDrawer(true);
+
+    }
+
 
     return (
-        <div className={styles.iconMargin} onClick={generateCode}>
+        <div className={styles.iconMargin + " " + styles.noSpace}>
             <button
                 className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
-                name={"uploadCode"} onClick={clickedButton}>
+                name={"uploadCode"} onClick={generateCode}>
+                <img alt={""}
+                     className={styles.iconDiv} src={Images.uploadIcon}/>
                 {isMobile || isMobileLandscape ? (
                     ""
                 ) : (
-                    <span className={styles.leftButton + " " + styles.iconMargin}>Generate Code</span>
-                )} <img alt={""}
-                        className={styles.iconDiv + " " + styles.iconMargin} src={Images.uploadIcon}/>
+                    <span className={styles.leftButton + " " + styles.iconMargin}>generate QR </span>
+                )}
             </button>
+            <FormControl
+                className={`${styles.uploadCodeButton} ${styles.language}`}>
+                <Select
+                    value={language}
+                    onChange={(e) => handleDropDown(e)}
+                    displayEmpty
+                    inputProps={{'aria-label': 'Without label'}}
+                >
+                    <MenuItem value={Constants.js}>
+                        <em>JavaScript</em>
+                    </MenuItem>
+                    <MenuItem value={Constants.py}>Python</MenuItem>
+                </Select>
+            </FormControl>
         </div>
     )
 }
@@ -261,7 +296,6 @@ function UndoRedo(params) {
  * @returns {JSX.Element}
  */
 function UploadInDrive(params) {
-    const {setSignInPopUp, signInPopUp} = params
     const [isDriveLoader, setIsDriveLoader] = useState(false);
     const [showTick, setShowTick] = useState(false);
     const {isOnline} = useContext(StoreContext)
@@ -276,6 +310,7 @@ function UploadInDrive(params) {
                     xmlValue: getCurrentProject().xmlValue,
                     createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
                 }
+
                 // Call function to upload data to Google Drive
                 uploadToGoogleDrive(data, "xml")
                     .then((res) => {
@@ -292,8 +327,8 @@ function UploadInDrive(params) {
                         console.log(err)
                     })
             } else {
-                // If user is not signed in, show sign in popup
-                setSignInPopUp(true);
+                // If user is not signed in, show sign in alert
+                errorToast("Please sign in to save project in drive.")
             }
         } else {
             errorToast(Constants.InternetOffMsg)
@@ -343,8 +378,6 @@ function UploadInDrive(params) {
 
     return (
         <>
-            {/* Show sign in popup if required */}
-            {signInPopUp && <SignInPopUp setSignInPopUp={setSignInPopUp} handleDriveButton={handleDriveButton}/>}
 
             {/* Upload button */}
             <div onClick={() => handleDriveButton()} className={styles.iconMargin + " " + styles.iconSpace}
@@ -392,6 +425,7 @@ function UploadInDrive(params) {
     )
 }
 
+
 /**
  Component for zooming in and out of an image or content.
  @param {Function} params.clickedButton - The function to be called when a zoom button is clicked.
@@ -416,39 +450,4 @@ function ZoomInOut(params) {
             </button>
         </div>
     );
-}
-
-/**
- * SignIn Pop Up
- * @param params
- * @returns {JSX.Element}
- * @constructor
- */
-export function SignInPopUp(params) {
-    const {setSignInPopUp, handleDriveButton} = params
-    const {setUser} = useContext(StoreContext);
-
-    const handleSignIn = () => {
-        googleSigIn().then(response => {
-            setUser({
-                photoURL: response?.user.photoURL,
-                displayName: response?.user.displayName,
-                email: response?.user.email
-            });
-            setSignInPopUp(false);
-            handleDriveButton();
-        }).catch((error) => {
-            console.log("signIn error: ", error)
-        });
-    }
-
-    return (
-        <PopUpModal
-            headerText={"Sign in First"}
-            containText={"Please sign in to upload your files securely."}
-            buttonText={"Sign In"}
-            handleButtonClick={handleSignIn}
-            setVariable={setSignInPopUp}
-        />
-    )
 }

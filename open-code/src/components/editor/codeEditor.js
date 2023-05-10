@@ -5,6 +5,8 @@ import 'ace-builds/src-noconflict/theme-chrome';
 import {useContext} from "react";
 import {StoreContext} from "../../context/context";
 import {javascriptGenerator} from "blockly/javascript";
+import {pythonGenerator} from "blockly/python";
+import {Constants} from "../../utils/constants";
 
 
 /**
@@ -15,25 +17,36 @@ import {javascriptGenerator} from "blockly/javascript";
  */
 function CodeEditor(params) {
     const editorRef = useRef(null);
-    const {workspace,currentProjectXml} = useContext(StoreContext);
+    const {workspace, currentProjectXml,category,drawer} = useContext(StoreContext);
 
     useEffect(() => {
-        console.log("workSpaceChanged::",workspace)
+        console.log("workSpaceChanged::", workspace)
         const editor = ace.edit(editorRef.current);
-        let code = javascriptGenerator.workspaceToCode(
-            workspace
-        ) ;
 
-        editor.session.setMode('ace/mode/javascript');
+        let code;
+        let mode;
+        let theme = "ace/theme/chrome";
+
+        if (category === Constants.py) {
+            code = pythonGenerator.workspaceToCode(workspace);
+            mode = "ace/mode/python";
+
+        } else {
+            code = javascriptGenerator.workspaceToCode(workspace);
+            mode = "ace/mode/javascript";
+
+        }
+        console.log("code",code)
+        editor.session.setMode(mode);
         editor.setTheme('ace/theme/chrome');
         editor.setValue(code);
 
         return () => {
             editor.destroy();
         };
-    }, [workspace,currentProjectXml]);
+    }, [workspace, currentProjectXml,category,drawer]);
 
-    return <div ref={editorRef} style={{height: '100%'}}/>;
+    return <div ref={editorRef} style={{height: '100%',width:'100%'}}/>;
 }
 
 export default CodeEditor;

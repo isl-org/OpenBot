@@ -69,6 +69,10 @@
     background: rgb(0, 113, 197);
     cursor: pointer;
 }
+.language{
+    color: white;
+
+}
 
 .leftButton {
     display: flex;
@@ -78,6 +82,15 @@
     color: rgb(248, 249, 251);
     pointer-events: none;
 }
+
+.optionExtraStyle {
+    height: 125px;
+    width: 260px;
+    position: sticky;
+    top: 65px;
+    left: 39vw;
+}
+
 
 .iconDiv {
     height: 1.5rem;
@@ -146,6 +159,10 @@
 .iconMargin {
     margin: 10px;
 
+}
+.noSpace{
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .driveStyle {
