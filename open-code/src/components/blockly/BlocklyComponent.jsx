@@ -4,14 +4,14 @@ import Blockly from 'blockly/core';
 import locale from 'blockly/msg/en';
 import 'blockly/blocks';
 import {ThemeContext} from "../../App";
-import {DarkTheme, errorToast, LightTheme} from "../../utils/constants";
+import {Constants, DarkTheme, errorToast, LightTheme} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
 import {getCurrentProject, updateCurrentProject} from "../../services/workspace";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../services/googleDrive";
-import CodeEditor from "../editor/codeEditor";
+
 
 Blockly.setLocale(locale);
 
@@ -45,14 +45,16 @@ function BlocklyComponent(props) {
         setCurrentProjectXml,
         isOnline,
         setCode,
-        workspace
+        category,
     } = useContext(StoreContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
     // Save workspace code to local storage when workspace changes
     const handleWorkspaceChange = useCallback(() => {
-        setDrawer(false);
+        if (category === Constants.xml) {
+            setDrawer(false);
+        }
         setIsError(false);
         if (projectName !== undefined) {
             setCurrentProjectXml(Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
@@ -60,7 +62,6 @@ function BlocklyComponent(props) {
         }
 
     }, []);
-
 
     const enableAllChildBlocks = (block) => {
         if (block) {
@@ -186,21 +187,14 @@ function BlocklyComponent(props) {
     // Return the blockly div and hidden toolbox
     return (
         <React.Fragment>
-
-            <div style={{display: 'flex', height: '80vh'}}>
-                <div
-                    ref={blocklyDiv}
-                    id="blocklyDiv"
-                    style={{width: "65%", height: isMobileLandscape ? "66%" : ""}}
-                />
-                <div style={{width: "35%", height: isMobileLandscape ? "66%" : "80vh", justifyContent: "flex-end"}}>
-                    {workspace && <CodeEditor/>}
-                </div>
-            </div>
+            <div
+                ref={blocklyDiv}
+                id="blocklyDiv"
+                style={{width: "100%", height: isMobileLandscape ? "66%" : "81.6%"}}
+            />
             <div style={{display: "none"}} ref={toolbox}>
                 {children}
             </div>
-
         </React.Fragment>
     );
 }

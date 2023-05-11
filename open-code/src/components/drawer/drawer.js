@@ -2,7 +2,6 @@ import React, {useContext} from "react";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import {StoreContext} from "../../context/context";
-import QrCode from "../qrcode/qrcode";
 import {qrStyles} from "../qrcode/styles";
 import {ThemeContext} from "../../App"
 import {colors} from "../../utils/color";
@@ -10,21 +9,25 @@ import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {Images} from "../../utils/images";
 import styles from "../qrcode/qrCode.module.css"
+import QrCode from "../qrcode/qrcode";
+import {Constants} from "../../utils/constants";
+import CodeEditor from "../editor/codeEditor";
+
 
 /**
  * QrDrawer component renders a drawer with a QR code and some instructions on how to use it.
  * @returns {JSX.Element}
  * @constructor
  */
-export function QrDrawer() {
+export function RightDrawer() {
     const {theme} = useContext(ThemeContext) // Retrieve the current theme from the ThemeContext
-    const {drawer, code} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
+    const {drawer, code, category} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
     const themes = useTheme();// Get the current theme breakpoints using useTheme hook
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));// Determine if the screen is a mobile device using useMediaQuery hook
     const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
     return (
         <>
-            {code &&
+            {(code || category !== Constants.qr) &&
                 <Box sx={{display: 'flex', width: 0}}>
                     <Drawer
                         // Styling for the drawer
@@ -32,7 +35,7 @@ export function QrDrawer() {
                             width: 0,
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
-                                width: drawer ? isMobile ? isMobileLandscape ? '32%' : '62%' : '23%' : isMobile ? isMobileLandscape ? '3%' : '6%' : '2%',
+                                width: drawer ? category !== Constants.qr ? isMobile ? isMobileLandscape ? '32%' : '62%' : '40%' : isMobile ? isMobileLandscape ? '32%' : '62%' : '23%' : isMobile ? isMobileLandscape ? '3%' : '6%' : '2%',
                                 height: isMobile ? isMobileLandscape ? '62%' : '75%' : '81.3%',
                                 marginTop: '5rem',
                                 borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
@@ -45,17 +48,30 @@ export function QrDrawer() {
                         anchor="right"
                         open={true}
                     >
-                        <QrCode/>
-                        <div style={{display: "flex"}}>
-                            <RightSlider/>
-                            <DrawerBody isMobile={isMobile}/>
-                        </div>
+                        {category === Constants.qr ?
+                            <>
+                                <QrCode/>
+                                <div style={{display: "flex"}}>
+                                    <RightSlider/>
+                                    <DrawerBody isMobile={isMobile}/>
+                                </div>
+                            </> :
+                            <>
+
+                                <div style={{display: "flex",height:"100%",position:"relative", overflow:"scroll"}}>
+                                    <CodeEditor/>
+                                </div>
+                            </>
+
+
+                        }
                     </Drawer>
                 </Box>
             }
         </>
     );
 }
+
 
 /**
  * RightSlider is a component that renders a clickable icon that opens and closes the drawer.
@@ -88,7 +104,7 @@ export const RightSlider = () => {
 export const DrawerBody = (props) => {
     const {isMobile} = props
     const qrScanSteps = ["Open OpenBot App on your phone", "Tap ScanQR Icon on homepage", "Point your phone to this screen to capture the code"]
-
+    console.log("here::")
     return (
         <>
             <div>
@@ -108,3 +124,4 @@ export const DrawerBody = (props) => {
         </>
     )
 }
+

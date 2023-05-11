@@ -46,6 +46,7 @@ export function Header() {
     }, [isEditProfileModal, setUser])
 
     const handleClick = (event) => {
+        console.log("event::",event)
         setOpen(!open); // open and close popup
         setAnchorEl(anchorEl ? null : event.currentTarget); //popup event
     };

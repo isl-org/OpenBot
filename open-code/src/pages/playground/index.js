@@ -3,7 +3,7 @@ import BlocklyComponent from "../../components/blockly";
 import {Toolbox} from "../../components/blockly/toolbox/Toolbox";
 import {BottomBar} from "../../components/bottomBar/bottomBar";
 import {Header} from "../../components/navBar/header";
-import {QrDrawer} from "../../components/drawer/drawer";
+import {RightDrawer} from "../../components/drawer/drawer";
 import {useLocation} from 'react-router-dom';
 import {PathName} from "../../utils/constants";
 
@@ -19,7 +19,7 @@ function Playground() {
         <div>
             <Header/>
             {/* If the current URL pathname is for the Playground screen, display the QR Drawer component */}
-            {location.pathname === PathName.playGround ? <QrDrawer/> : ""}
+            {location.pathname === PathName.playGround ? <RightDrawer/> : ""}
             <header>
                 {/* Display the Blockly workspace */}
                 <BlocklyComponent readOnly={false}
