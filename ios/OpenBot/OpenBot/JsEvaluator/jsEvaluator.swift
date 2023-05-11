@@ -9,13 +9,13 @@ import JavaScriptCore
  Class to evaluate the JS code inside openBot
  */
 class jsEvaluator {
-    private var command: String;
+    private var command: String = "";
     private var vehicleControl: Control = Control();
     let semaphore = DispatchSemaphore(value: 0);
     let bluetooth = bluetoothDataController.shared;
     var jsContext: JSContext!;
     var runOpenBotThreadClass: runOpenBotThread?
-    var isCanceled: Bool = false;
+    var cancelLoop: Bool = false;
 
     /**
      initializer of jsEvaluator class
@@ -24,11 +24,18 @@ class jsEvaluator {
 
     init(jsCode: String) {
         command = jsCode;
+        setupCommand()
         initializeJS();
         evaluateJavaScript()
         NotificationCenter.default.addObserver(self, selector: #selector(cancelThread), name: .cancelThread, object: nil)
     }
 
+    private func setupCommand(){
+        if command.contains("forever()") {
+            command = command.replacingOccurrences(of: "function forever (){ while(true){ ", with: "function forever (){ while(!" + String(self.cancelLoop) + "){ pause(0.5); ")
+        }
+
+    }
     /**
      initializer of JSContext
      */
@@ -36,13 +43,11 @@ class jsEvaluator {
         jsContext = JSContext()
     }
 
+
     @objc func cancelThread() {
-        isCanceled = true;
+        cancelLoop = true;
         runOpenBotThreadClass?.cancel()
-        print(runOpenBotThreadClass?.isCancelled)
-
     }
-
 
     /**
      function defined for all the methods of openBot blockly
@@ -55,6 +60,7 @@ class jsEvaluator {
 
                 let moveForward: @convention(block) (Float) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.moveForward(speed: speed);
+
                 }
                 let loop: @convention(block) () -> Void = { () in
                     return (loop());
@@ -63,13 +69,14 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.startBlock();
                 }
                 let moveOpenBot: @convention(block) (Int, Int) -> Void = { (left, right) in
-                    return (self.runOpenBotThreadClass?.moveOpenBot(left: left, right: right))!;
+                    print(self.cancelLoop)
+                    self.runOpenBotThreadClass?.moveOpenBot(left: left, right: right);
+
                 }
                 let moveCircular: @convention(block) (Float) -> Void = { (radius) in
                     self.runOpenBotThreadClass?.moveCircular(radius: radius);
                 }
                 let stop: @convention(block) () -> Void = { () in
-                    print("hello nitish")
                     self.runOpenBotThreadClass?.stop();
                 }
                 let pause: @convention(block) (Double) -> Void = { (time) in
@@ -140,13 +147,13 @@ class jsEvaluator {
                 let speedReading: @convention(block) () -> Int = { () -> Int in
                     self.runOpenBotThreadClass?.speedReading() ?? 0;
                 }
-                let voltageDividerReading: @convention(block) () ->  Double = { () -> Double in
+                let voltageDividerReading: @convention(block) () -> Double = { () -> Double in
                     self.runOpenBotThreadClass?.voltageDividerReading() ?? 0;
                 }
-                let frontWheelReading: @convention(block) () ->  Float = { () -> Float in
+                let frontWheelReading: @convention(block) () -> Float = { () -> Float in
                     self.runOpenBotThreadClass?.frontWheelReading() ?? 0;
                 }
-                let backWheelReading: @convention(block) () ->  Float = { () -> Float in
+                let backWheelReading: @convention(block) () -> Float = { () -> Float in
                     self.runOpenBotThreadClass?.backWheelReading() ?? 0;
                 }
 
@@ -215,6 +222,7 @@ class jsEvaluator {
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
+
         }
 
         func loop() {
@@ -228,7 +236,7 @@ class jsEvaluator {
      - Parameter forTime:
      */
     func wait(forTime: Double) {
-        if isCanceled {
+        if cancelLoop {
             return;
         }
         print("inside wait", forTime);
@@ -299,11 +307,6 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            while (true) {
-                print("inside loop")
-                motorForward();
-                motorStop();
-            }
         }
 
         /**
@@ -326,10 +329,10 @@ class jsEvaluator {
            - right: right wheel speed
          */
         func moveOpenBot(left: Int, right: Int) {
+            print("inside move")
             if isCancelled {
                 return
             }
-            print("inside move")
             let carControl = Control(left: Float(left), right: Float(right));
             sendControl(control: carControl);
         }
@@ -624,10 +627,6 @@ class jsEvaluator {
             }
             return 0;
         }
-
-
     }
-
-
 }
 
