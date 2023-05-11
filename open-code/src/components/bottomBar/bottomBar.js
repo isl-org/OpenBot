@@ -1,21 +1,12 @@
-import React, {useContext, useEffect, useState, useRef} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Blockly from "blockly/core";
 import styles from "./style.module.css"
-import style from "../../../src/components/navBar/navbar.module.css";
 import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
-import {Constants, errorToast, PathName, Themes,} from "../../utils/constants";
-import {
-    Box,
-    CircularProgress,
-    circularProgressClasses, FormControl, MenuItem,
-    Modal, Popper, Select, SelectChangeEvent,
-    ToggleButton,
-    ToggleButtonGroup,
-    useTheme
-} from "@mui/material";
+import {Constants, errorToast} from "../../utils/constants";
+import {CircularProgress, circularProgressClasses, FormControl, MenuItem, Select, useTheme} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
@@ -23,11 +14,6 @@ import {motion, AnimatePresence} from "framer-motion";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {getCurrentProject} from "../../services/workspace";
-import downArrow from "../../assets/images/icon/down-arrow.png";
-import renameIcon from "../../assets/images/icon/rename-icon.png";
-import Edit from "../../assets/images/icon/edit.png";
-import deleteIcon from "../../assets/images/icon/delete-icon.png";
-import trash from "../../assets/images/icon/trash.png";
 
 
 /**
@@ -222,7 +208,6 @@ function GenerateCodeButton(params) {
     const [language, setLanguage] = useState(Constants.js);
 
     const handleDropDown = (event) => {
-        console.log("event:::",event.target.value)
         setLanguage(event.target.value);
         setCategory(event.target.value);
         setDrawer(true);
@@ -244,6 +229,35 @@ function GenerateCodeButton(params) {
                 )}
             </button>
             <FormControl
+                variant="standard"
+                sx={{
+                    "& .MuiInputBase-root": {
+                        fontfamily: "Gilroy-Medium, sans-serif",
+                        width: "120px",
+                        color: "white",
+                        border: "none",
+                        '&:before': {
+                            border: 'none'
+                        },
+                        '&:after': {
+                            border: 'none'
+                        },
+                        '&:hover:not(.Mui-disabled):before': {
+                            border: 'none'
+                        }
+                    },
+                    '& .MuiMenuItem-root': {
+                        color: '#000',
+                        fontSize: '20px',
+                        padding: '10px',
+                        '&:hover': {
+                            backgroundColor: '#f5f5f5'
+                        }
+                    },
+                    '& .MuiSelect-icon': {
+                        color: 'white'
+                    }
+                }}
                 className={`${styles.uploadCodeButton} ${styles.language}`}>
                 <Select
                     value={language}
@@ -254,7 +268,7 @@ function GenerateCodeButton(params) {
                     <MenuItem value={Constants.js}>
                         <em>JavaScript</em>
                     </MenuItem>
-                    <MenuItem value={Constants.py}>Python</MenuItem>
+                    <MenuItem value={Constants.py}> Python </MenuItem>
                 </Select>
             </FormControl>
         </div>

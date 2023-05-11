@@ -70,7 +70,7 @@
     cursor: pointer;
 }
 .language{
-    color: white;
+  margin-left: 3rem !important;
 
 }
 
@@ -162,7 +162,8 @@
 }
 .noSpace{
     display: flex;
-    justify-content: space-evenly;
+    width: 31%;
+    justify-content: space-between;
 }
 
 .driveStyle {

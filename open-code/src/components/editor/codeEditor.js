@@ -11,6 +11,8 @@ import {ThemeContext} from "../../App";
 import 'ace-builds/src-noconflict/theme-one_dark';
 import 'ace-builds/src-noconflict/theme-textmate';
 import {RightSlider} from "../drawer/drawer";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import {useTheme} from "@mui/material";
 
 
 /**
@@ -22,7 +24,11 @@ import {RightSlider} from "../drawer/drawer";
 function CodeEditor(params) {
     const editorRef = useRef(null);
     const {workspace, currentProjectXml, category, drawer} = useContext(StoreContext);
+    const themes = useTheme();// Get the current theme breakpoints using useTheme hook
+    const isMobile = useMediaQuery(themes.breakpoints.down('md'));// Determine if the screen is a mobile device using useMediaQuery hook
+    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
     const {theme} = useContext(ThemeContext);
+
     useEffect(() => {
         const editor = ace.edit(editorRef.current);
         let code;
@@ -36,6 +42,7 @@ function CodeEditor(params) {
             code = javascriptGenerator.workspaceToCode(workspace);
             mode = "ace/mode/javascript";
         }
+
         editor.session.setMode(mode);
         editor.setReadOnly(true);
         editor.setTheme(theme === "dark" ? "ace/theme/one_dark" : "ace/theme/textmate");
@@ -50,10 +57,11 @@ function CodeEditor(params) {
         return () => {
             editor.destroy();
         };
+
     }, [workspace, currentProjectXml, category, drawer, theme]);
 
-    return <div>
-        <div style={{zIndex: 2, position: "absolute", marginTop: "300px"}}><RightSlider/></div>
+    return (<div>
+        <div style={{zIndex: 2, position: "absolute", marginTop: isMobileLandscape ? "230px":"300px"}}><RightSlider/></div>
         <div ref={editorRef} style={{
             position: "absolute",
             zIndex: 1,
@@ -61,7 +69,8 @@ function CodeEditor(params) {
             width: '100%',
             backgroundColor: theme === "dark" ? "#202020" : '#FFFFFF',
         }}/>
-    </div>
+    </div>)
 }
+
 
 export default CodeEditor;

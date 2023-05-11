@@ -48,6 +48,7 @@ export async function deleteProjectFromStorage(projectName) {
 
     try {
 
+        //TODO current project delete
         //delete file from localProject so find project from local first then update the all projects by uploading project list.
         JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
 

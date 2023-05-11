@@ -35,9 +35,9 @@ export function RightDrawer() {
                             width: 0,
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
-                                width: drawer ? category !== Constants.qr ? isMobile ? isMobileLandscape ? '32%' : '62%' : '40%' : isMobile ? isMobileLandscape ? '32%' : '62%' : '23%' : isMobile ? isMobileLandscape ? '3%' : '6%' : '2%',
-                                height: isMobile ? isMobileLandscape ? '62%' : '75%' : '81.3%',
-                                marginTop: '5rem',
+                                width: drawer ? category !== Constants.qr ? isMobile ? isMobileLandscape ? '35%' : '62%' : '40%' : isMobile ? isMobileLandscape ? '32%' : '62%' : '23%' : isMobile ? isMobileLandscape ? '3%' : '6%' : '2%',
+                                height: isMobile ? isMobileLandscape ? '65.5%' : '78.3%' : '81.3%',
+                                marginTop: isMobile ? isMobileLandscape ? '4rem':'5rem' : '5rem',
                                 borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
                                 backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
                                 color: theme === "dark" ? colors.whiteFont : colors.blackFont,
@@ -56,13 +56,10 @@ export function RightDrawer() {
                                     <DrawerBody isMobile={isMobile}/>
                                 </div>
                             </> :
-                            <>
 
-                                <div style={{display: "flex",height:"100%",position:"relative", overflow:"scroll"}}>
-                                    <CodeEditor/>
-                                </div>
-                            </>
-
+                            <div style={{display: "flex", height: "100%", position: "relative", overflow: "scroll"}}>
+                                <CodeEditor/>
+                            </div>
 
                         }
                     </Drawer>
