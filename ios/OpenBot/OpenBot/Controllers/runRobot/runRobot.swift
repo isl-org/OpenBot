@@ -13,8 +13,7 @@ class runRobot : UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        print("viewWillDisappear")
-        bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
         NotificationCenter.default.post(name: .cancelThread, object: nil)
+        bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
     }
 }

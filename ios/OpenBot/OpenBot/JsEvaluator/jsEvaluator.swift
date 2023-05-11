@@ -16,6 +16,7 @@ class jsEvaluator {
     var jsContext: JSContext!;
     var runOpenBotThreadClass: runOpenBotThread?
     var cancelLoop: Bool = false;
+    let sensor = sensorDataRetrieve.shared
 
     /**
      initializer of jsEvaluator class
@@ -30,12 +31,13 @@ class jsEvaluator {
         NotificationCenter.default.addObserver(self, selector: #selector(cancelThread), name: .cancelThread, object: nil)
     }
 
-    private func setupCommand(){
+    private func setupCommand() {
         if command.contains("forever()") {
             command = command.replacingOccurrences(of: "function forever (){ while(true){ ", with: "function forever (){ while(!" + String(self.cancelLoop) + "){ pause(0.5); ")
         }
 
     }
+
     /**
      initializer of JSContext
      */
@@ -47,6 +49,7 @@ class jsEvaluator {
     @objc func cancelThread() {
         cancelLoop = true;
         runOpenBotThreadClass?.cancel()
+        bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n");
     }
 
     /**
@@ -69,9 +72,11 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.startBlock();
                 }
                 let moveOpenBot: @convention(block) (Int, Int) -> Void = { (left, right) in
-                    print(self.cancelLoop)
+                    print(self.cancelLoop, "hello nitish", left, right)
                     self.runOpenBotThreadClass?.moveOpenBot(left: left, right: right);
-
+                    if self.cancelLoop == true {
+                        self.sendControl(control: Control());
+                    }
                 }
                 let moveCircular: @convention(block) (Float) -> Void = { (radius) in
                     self.runOpenBotThreadClass?.moveCircular(radius: radius);
@@ -133,7 +138,7 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.indicatorOff();
                 }
                 let sonarReading: @convention(block) () -> Int = { () -> Int in
-                    self.runOpenBotThreadClass?.sonarReading() ?? 0;
+                    return self.runOpenBotThreadClass?.sonarReading() ?? 0;
                 }
                 let switchController: @convention(block) (String) -> Void = { (controller) in
                     self.runOpenBotThreadClass?.switchController(controller: controller)
@@ -155,6 +160,19 @@ class jsEvaluator {
                 }
                 let backWheelReading: @convention(block) () -> Float = { () -> Float in
                     self.runOpenBotThreadClass?.backWheelReading() ?? 0;
+                }
+                let gyroscopeReading:  @convention(block) () -> Void = { () -> Void in
+//                    let gyro = Gyroscope(x: self.sensor.angularRateX, y: self.sensor.angularRateY, z: self.sensor.angularRateZ);
+//                    return gyro;
+                }
+                let accelerationReading:  @convention(block) () -> Void = { () -> Void in
+//                    let acceleration = Acceleration(x: self.sensor.accelerationX, y: self.sensor.accelerationY, z: self.sensor.accelerationZ);
+//                    return acceleration;
+                }
+                let magneticReading: @convention(block) () -> Void = { () -> Void in
+                    print("inside magneticReading")
+//                    let magnetic = Magnetic(x: self.sensor.magneticFieldX, y: self.sensor.magneticFieldY, z: self.sensor.magneticFieldZ);
+                    print(sensorDataRetrieve.shared.accelerationZ)
                 }
 
                 context.setObject(moveForward,
@@ -219,6 +237,12 @@ class jsEvaluator {
                         forKeyedSubscript: "backWheelReading" as NSString);
                 context.setObject(frontWheelReading,
                         forKeyedSubscript: "frontWheelReading" as NSString);
+                context.setObject(gyroscopeReading,
+                        forKeyedSubscript: "gyroscopeReading" as NSString);
+                context.setObject(accelerationReading,
+                        forKeyedSubscript: "accelerationReading" as NSString);
+                context.setObject(magneticReading,
+                        forKeyedSubscript: "magneticReading" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -275,6 +299,7 @@ class jsEvaluator {
          */
         func sendControl(control: Control) {
             if isCancelled {
+                bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
                 return
             }
             if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
@@ -315,6 +340,7 @@ class jsEvaluator {
          */
         func moveForward(speed: Float) {
             if isCancelled {
+                sendControl(control: Control());
                 return
             }
             print("inside move forward", speed)
@@ -331,6 +357,8 @@ class jsEvaluator {
         func moveOpenBot(left: Int, right: Int) {
             print("inside move")
             if isCancelled {
+                sendControl(control: Control());
+
                 return
             }
             let carControl = Control(left: Float(left), right: Float(right));
@@ -343,6 +371,7 @@ class jsEvaluator {
          */
         func moveCircular(radius: Float) {
             if isCancelled {
+                sendControl(control: Control());
                 return
             }
             print("inside moveCircular")
@@ -354,6 +383,7 @@ class jsEvaluator {
          */
         func stop() {
             if isCancelled {
+                sendControl(control: Control());
                 return
             }
             print("inside stop robot")
@@ -371,6 +401,7 @@ class jsEvaluator {
          */
         func moveBackward(speed: Float) {
             if isCancelled {
+                sendControl(control: Control());
                 return
             }
             print("inside moveBackward", speed)
@@ -385,6 +416,7 @@ class jsEvaluator {
          */
         func moveLeft(speed: Float) {
             if isCancelled {
+                sendControl(control: Control());
                 return
             }
             print("inside moveLeft", speed)
@@ -398,6 +430,7 @@ class jsEvaluator {
          */
         func moveRight(speed: Float) {
             if isCancelled {
+                sendControl(control: Control());
                 return
             }
             print("inside Right", speed)
@@ -424,6 +457,7 @@ class jsEvaluator {
          */
         func motorBackward() {
             if isCancelled {
+                sendControl(control: Control());
                 return
             }
             let control = Control(left: -192, right: -192);
@@ -435,6 +469,7 @@ class jsEvaluator {
          */
         func motorForward() {
             if isCancelled {
+                sendControl(control: Control());
                 return
             }
             let control = Control(left: 192, right: 192);
@@ -446,6 +481,7 @@ class jsEvaluator {
          */
         func motorStop() {
             if isCancelled {
+                sendControl(control: Control());
                 return
             }
             let control = Control(left: 0, right: 0);
@@ -458,6 +494,7 @@ class jsEvaluator {
          */
         func setLedBrightness(factor: Int) {
             if isCancelled {
+                bluetooth.sendData(payload: "l" + String(0) + "," + String(0) + "\n")
                 return
             }
             print("inside setLedBrightness");
@@ -471,6 +508,7 @@ class jsEvaluator {
          */
         func setLeftIndicatorOn() {
             if isCancelled {
+                bluetooth.sendData(payload: "i0,0\n")
                 return
             }
             print("inside setLeftIndicatorOn");
@@ -483,6 +521,7 @@ class jsEvaluator {
          */
         func setRightIndicatorOn() {
             if isCancelled {
+                bluetooth.sendData(payload: "i0,0\n")
                 return
             }
             print("inside setRightIndicatorOn");
@@ -510,7 +549,6 @@ class jsEvaluator {
             if isCancelled {
                 return 0
             }
-
             return bluetooth.getSonar();
         }
 
