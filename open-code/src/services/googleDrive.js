@@ -18,7 +18,7 @@ export const uploadToGoogleDrive = async (data, fileType) => {
         if (folderId) {
             response = await uploadFileToFolder(accessToken, data, folderId, "xml");
         } else {
-            await new CreateFolder(accessToken).then((folderId) => {
+            await CreateFolder(accessToken).then((folderId) => {
                     response = uploadFileToFolder(accessToken, data, folderId, "xml");
                 }
             );
@@ -28,7 +28,7 @@ export const uploadToGoogleDrive = async (data, fileType) => {
         if (folderId) {
             response = await uploadFileToFolder(accessToken, data, folderId, "js");
         } else {
-            await new CreateFolder(accessToken).then(async (folderId) => {
+            await CreateFolder(accessToken).then(async (folderId) => {
                     response = await uploadFileToFolder(accessToken, data, folderId, "js");
                 }
             );
