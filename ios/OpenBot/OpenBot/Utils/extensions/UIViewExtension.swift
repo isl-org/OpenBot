@@ -83,11 +83,9 @@ class BottomSheetView: UIView {
     }
 
 
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 
 
     private func setup() {
@@ -168,7 +166,6 @@ class openCodeRunBottomSheet: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame);
-        backgroundColor = .purple
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -304,7 +301,9 @@ class openCodeRunBottomSheet: UIView {
                     }
                 }, completion: { _ in
                     // Remove the view from its superview
-                    self.removeFromSuperview()
+                    self.removeFromSuperview();
+                    NotificationCenter.default.post(name: .reInitializeCamera, object: nil);
+
                 })
             default:
                 break
@@ -343,6 +342,7 @@ class openCodeRunBottomSheet: UIView {
     }
 
     @objc private func scan() {
+
     }
 
     func animateBottomSheet() {

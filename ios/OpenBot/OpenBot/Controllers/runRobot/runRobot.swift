@@ -7,8 +7,8 @@ import UIKit
 class runRobot : UIViewController {
     let bluetooth = bluetoothDataController.shared
     override func viewDidLoad() {
-        print("loaded runRobot")
         super.viewDidLoad()
+
     }
 
     override func viewDidDisappear(_ animated: Bool) {

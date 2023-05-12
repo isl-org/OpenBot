@@ -16,7 +16,6 @@ class jsEvaluator {
     var jsContext: JSContext!;
     var runOpenBotThreadClass: runOpenBotThread?
     var cancelLoop: Bool = false;
-    let sensor = sensorDataRetrieve.shared
 
     /**
      initializer of jsEvaluator class
@@ -33,7 +32,7 @@ class jsEvaluator {
 
     private func setupCommand() {
         if command.contains("forever()") {
-            command = command.replacingOccurrences(of: "function forever (){ while(true){ ", with: "function forever (){ while(!" + String(self.cancelLoop) + "){ pause(0.5); ")
+            command = command.replacingOccurrences(of: "function forever (){ while(true){ ", with: "function forever (){ while(!" + String(self.cancelLoop) + "){ pause(0.03); ")
         }
 
     }
@@ -72,7 +71,6 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.startBlock();
                 }
                 let moveOpenBot: @convention(block) (Int, Int) -> Void = { (left, right) in
-                    print(self.cancelLoop, "hello nitish", left, right)
                     self.runOpenBotThreadClass?.moveOpenBot(left: left, right: right);
                     if self.cancelLoop == true {
                         self.sendControl(control: Control());
@@ -161,88 +159,87 @@ class jsEvaluator {
                 let backWheelReading: @convention(block) () -> Float = { () -> Float in
                     self.runOpenBotThreadClass?.backWheelReading() ?? 0;
                 }
-                let gyroscopeReading:  @convention(block) () -> Void = { () -> Void in
-//                    let gyro = Gyroscope(x: self.sensor.angularRateX, y: self.sensor.angularRateY, z: self.sensor.angularRateZ);
-//                    return gyro;
+                let gyroscopeReading: @convention(block) (String) -> Double = { (axis) -> Double in
+                    self.runOpenBotThreadClass?.gyroscopeReading(axis: axis) ?? 0.0;
+
                 }
-                let accelerationReading:  @convention(block) () -> Void = { () -> Void in
-//                    let acceleration = Acceleration(x: self.sensor.accelerationX, y: self.sensor.accelerationY, z: self.sensor.accelerationZ);
-//                    return acceleration;
+                let accelerationReading: @convention(block) (String) -> Double = { (axis) -> Double in
+                   let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: axis) ?? 0.0;
+                    print(temp);
+                    return temp;
                 }
-                let magneticReading: @convention(block) () -> Void = { () -> Void in
-                    print("inside magneticReading")
-//                    let magnetic = Magnetic(x: self.sensor.magneticFieldX, y: self.sensor.magneticFieldY, z: self.sensor.magneticFieldZ);
-                    print(sensorDataRetrieve.shared.accelerationZ)
+                let magneticReading: @convention(block) (String) -> Double = { (axis) -> Double in
+                    self.runOpenBotThreadClass?.magneticReading(axis: axis) ?? 0.0;
                 }
 
                 context.setObject(moveForward,
-                        forKeyedSubscript: "moveForward" as NSString)
+                        forKeyedSubscript: Strings.moveForward as NSString)
                 context.setObject(loop,
-                        forKeyedSubscript: "loop" as NSString)
+                        forKeyedSubscript: Strings.loop as NSString)
                 context.setObject(start,
-                        forKeyedSubscript: "start" as NSString)
+                        forKeyedSubscript: Strings.start as NSString)
                 context.setObject(moveOpenBot,
-                        forKeyedSubscript: "moveOpenBot" as NSString)
+                        forKeyedSubscript: Strings.moveOpenBot as NSString)
                 context.setObject(moveCircular,
-                        forKeyedSubscript: "moveCircular" as NSString)
+                        forKeyedSubscript: Strings.moveCircular as NSString)
                 context.setObject(stop,
-                        forKeyedSubscript: "stop" as NSString)
+                        forKeyedSubscript: Strings.stop as NSString)
                 context.setObject(pause,
-                        forKeyedSubscript: "pause" as NSString)
+                        forKeyedSubscript: Strings.pause as NSString)
                 context.setObject(moveBackward,
-                        forKeyedSubscript: "moveBackward" as NSString);
+                        forKeyedSubscript: Strings.moveBackward as NSString);
                 context.setObject(moveLeft,
-                        forKeyedSubscript: "moveLeft" as NSString);
+                        forKeyedSubscript: Strings.moveLeft as NSString);
                 context.setObject(moveRight,
-                        forKeyedSubscript: "moveRight" as NSString);
+                        forKeyedSubscript: Strings.moveRight as NSString);
                 context.setObject(playSound,
-                        forKeyedSubscript: "playSound" as NSString);
+                        forKeyedSubscript: Strings.playSound as NSString);
                 context.setObject(playSoundSpeed,
-                        forKeyedSubscript: "playSoundSpeed" as NSString);
+                        forKeyedSubscript: Strings.playSoundSpeed as NSString);
                 context.setObject(motorBackward,
-                        forKeyedSubscript: "motorBackward" as NSString);
+                        forKeyedSubscript: Strings.motorBackward as NSString);
                 context.setObject(motorForward,
-                        forKeyedSubscript: "motorForward" as NSString);
+                        forKeyedSubscript: Strings.motorForward as NSString);
                 context.setObject(motorStop,
-                        forKeyedSubscript: "motorStop" as NSString);
+                        forKeyedSubscript: Strings.motorStop as NSString);
                 context.setObject(playSoundMode,
-                        forKeyedSubscript: "playSoundMode" as NSString);
+                        forKeyedSubscript: Strings.playSoundMode as NSString);
                 context.setObject(ledBrightness,
-                        forKeyedSubscript: "ledBrightness" as NSString);
+                        forKeyedSubscript: Strings.ledBrightness as NSString);
                 context.setObject(leftIndicatorOn,
-                        forKeyedSubscript: "leftIndicatorOn" as NSString);
+                        forKeyedSubscript: Strings.leftIndicatorOn as NSString);
                 context.setObject(rightIndicatorOn,
-                        forKeyedSubscript: "rightIndicatorOn" as NSString);
+                        forKeyedSubscript: Strings.rightIndicatorOn as NSString);
                 context.setObject(indicatorOff,
-                        forKeyedSubscript: "indicatorOff" as NSString);
+                        forKeyedSubscript: Strings.indicatorOff as NSString);
                 context.setObject(stopRobot,
-                        forKeyedSubscript: "stopRobot" as NSString);
+                        forKeyedSubscript: Strings.stopRobot as NSString);
                 context.setObject(rightIndicatorOff,
-                        forKeyedSubscript: "rightIndicatorOff" as NSString);
+                        forKeyedSubscript: Strings.rightIndicatorOff as NSString);
                 context.setObject(leftIndicatorOff,
-                        forKeyedSubscript: "leftIndicatorOff" as NSString);
+                        forKeyedSubscript: Strings.leftIndicatorOff as NSString);
                 context.setObject(sonarReading,
-                        forKeyedSubscript: "sonarReading" as NSString);
+                        forKeyedSubscript: Strings.sonarReading as NSString);
                 context.setObject(switchController,
-                        forKeyedSubscript: "switchController" as NSString);
+                        forKeyedSubscript: Strings.switchController as NSString);
                 context.setObject(switchDriveMode,
-                        forKeyedSubscript: "switchDriveMode" as NSString);
+                        forKeyedSubscript: Strings.switchDriveMode as NSString);
                 context.setObject(bumperCollision,
-                        forKeyedSubscript: "bumperCollision" as NSString);
+                        forKeyedSubscript: Strings.bumperCollision as NSString);
                 context.setObject(speedReading,
-                        forKeyedSubscript: "speedReading" as NSString);
+                        forKeyedSubscript: Strings.speedReading as NSString);
                 context.setObject(voltageDividerReading,
-                        forKeyedSubscript: "voltageDividerReading" as NSString);
+                        forKeyedSubscript: Strings.voltageDividerReading as NSString);
                 context.setObject(backWheelReading,
-                        forKeyedSubscript: "backWheelReading" as NSString);
+                        forKeyedSubscript: Strings.backWheelReading as NSString);
                 context.setObject(frontWheelReading,
-                        forKeyedSubscript: "frontWheelReading" as NSString);
+                        forKeyedSubscript: Strings.frontWheelReading as NSString);
                 context.setObject(gyroscopeReading,
-                        forKeyedSubscript: "gyroscopeReading" as NSString);
+                        forKeyedSubscript: Strings.gyroscopeReading as NSString);
                 context.setObject(accelerationReading,
-                        forKeyedSubscript: "accelerationReading" as NSString);
+                        forKeyedSubscript: Strings.accelerationReading as NSString);
                 context.setObject(magneticReading,
-                        forKeyedSubscript: "magneticReading" as NSString);
+                        forKeyedSubscript: Strings.magneticReading as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -291,6 +288,7 @@ class jsEvaluator {
         weak var jsEvaluator: jsEvaluator?
         let bluetooth = bluetoothDataController.shared
         private var vehicleControl: Control = Control();
+        private let sensor = sensorDataRetrieve.shared
 
 
         /**
@@ -664,6 +662,57 @@ class jsEvaluator {
                 return leftFront ?? 0.0;
             }
             return 0;
+        }
+
+        func gyroscopeReading(axis: String) -> Double {
+            if isCancelled {
+                return 0.0;
+            }
+            sensor.sampleIMU();
+            switch axis {
+            case "x":
+                return sensor.angularRateX;
+            case "y":
+                return sensor.angularRateY;
+            case "z":
+                return sensor.angularRateZ;
+            default:
+                return 0.0
+            }
+        }
+
+        func accelerationReading(axis: String) -> Double {
+            if isCancelled {
+                return 0.0;
+            }
+            sensor.sampleIMU();
+            switch axis {
+            case "x":
+                return sensor.accelerationX;
+            case "y":
+                return sensor.accelerationY;
+            case "z":
+                return sensor.accelerationZ;
+            default:
+                return 0.0
+            }
+        }
+
+        func magneticReading(axis: String) -> Double {
+            if isCancelled {
+                return 0.0;
+            }
+            sensor.sampleIMU();
+            switch axis {
+            case "x":
+                return sensor.magneticFieldX;
+            case "y":
+                return sensor.magneticFieldY;
+            case "z":
+                return sensor.magneticFieldZ;
+            default:
+                return 0.0
+            }
         }
     }
 }

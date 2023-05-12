@@ -48,4 +48,5 @@ extension Notification.Name {
     static let clientDisConnected = Notification.Name("clientDisConnected");
     static let googleSignIn = Notification.Name("googleSignIn");
     static let cancelThread = Notification.Name("cancelThread");
+    static let reInitializeCamera = Notification.Name("reInitializeCamera");
 }

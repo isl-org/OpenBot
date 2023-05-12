@@ -37,10 +37,8 @@ class Authentication {
     }
 
     private func googleSignInFunc(clientId: String) {
-// Create Google Sign In configuration object.
         if GIDSignIn.sharedInstance.hasPreviousSignIn() {
             let user = GIDSignIn.sharedInstance.currentUser;
-            print("inside previous signin ", user)
             NotificationCenter.default.post(name: .googleSignIn, object: nil);
             return
         }
@@ -59,7 +57,6 @@ class Authentication {
             NotificationCenter.default.post(name: .googleSignIn, object: nil);
             self.signIn(signIn: self.googleSignIn, didSignInForUser: self.googleSignIn.currentUser, withError: error as NSError?)
             let user = signInResult?.user
-//             If sign in succeeded, display the app's main content View.
             let userId = user?.userID ?? ""
             let idToken = user?.idToken?.tokenString
             let credential = GoogleAuthProvider.credential(withIDToken: idToken!,
@@ -155,17 +152,34 @@ class Authentication {
         let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
         let service: GTLRDriveService = GTLRDriveService()
         let fetcher = service.fetcherService.fetcher(withURLString: url)
+
+        // Add retry logic with a delay
+        var retryCount = 0
+        let maxRetries = 3
+
         fetcher.beginFetch(completionHandler: { data, error in
             if let error = error {
-                print("error is ", error.localizedDescription)
+                    // Retry the request if it's a 403 error
+                    if retryCount < maxRetries {
+                        retryCount += 1
+                        let delayInSeconds = TimeInterval(retryCount * 5) // Increase delay for each retry
+                        DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) {
+                            download(fileId: fileId, completion: completion)
+                        }
+                        return
+                    }
+
+
+                // Handle other errors
+                print("Error: ", error.localizedDescription)
                 completion(nil, error)
-                return;
             }
-            if let data = data {
+            else if let data = data {
                 completion(data, nil)
             }
         })
     }
+
 
 
     func getAllFolders(completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
@@ -195,7 +209,6 @@ class Authentication {
         query.q = "mimeType='application/vnd.google-apps.folder' and trashed=false or name='Results'"
         query.fields = "nextPageToken, files(id, name, createdTime)"
         query.spaces = "drive"
-        print("services  is :", service)
         service.executeQuery(query) { (ticket, result, error) in
 
             if let error = error {
@@ -217,7 +230,6 @@ class Authentication {
         let fileId = returnFileId(fileLink: url);
         let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: fileId)
         let service: GTLRDriveService = GTLRDriveService()
-//        service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
         service.executeQuery(query) { (ticket, file, error) in
             if let error = error {
                 print("Error retrieving file name: \(error)")

@@ -31,7 +31,7 @@ class scannerFragment: CameraController {
         createScanHeading()
         createScanMessage()
         createScannerBorder()
-        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top + 100, width: width, height: height / 2 - 100) : CGRect(x: safeAreaLayoutValue.top, y: 80, width: width, height: height / 2-100);
+        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top + 100, width: width, height: height / 2 - 100) : CGRect(x: safeAreaLayoutValue.top, y: 80, width: width, height: height / 2 - 100);
         view.addSubview(firstHalfView);
         cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: width + safeAreaLayoutValue.top + 22, y: 95, width: 230, height: 230)
         initializeCamera()
@@ -39,23 +39,29 @@ class scannerFragment: CameraController {
         cancelBtn.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(removeFragment(_:)))
         cancelBtn.addGestureRecognizer(tap)
+        NotificationCenter.default.addObserver(self, selector: #selector(reInitializeCamera), name: .reInitializeCamera, object: nil);
 
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated);
+        NotificationCenter.default.removeObserver(self);
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator);
-        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top + 100, width: width, height: height / 2 - 100) : CGRect(x: safeAreaLayoutValue.top, y: 80, width: width, height: height / 2-100);
+        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top + 100, width: width, height: height / 2 - 100) : CGRect(x: safeAreaLayoutValue.top, y: 80, width: width, height: height / 2 - 100);
         border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: firstHalfView.right, y: 70, width: 268, height: 273)
         cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: border.left + 22, y: 90, width: 230, height: 230)
         var orientation = AVCaptureVideoOrientation(rawValue: 1);
         switch currentOrientation {
         case .portrait:
             orientation = AVCaptureVideoOrientation.portrait
-        case .landscapeLeft :
+        case .landscapeLeft:
             orientation = AVCaptureVideoOrientation.landscapeRight
-        case .landscapeRight :
+        case .landscapeRight:
             orientation = AVCaptureVideoOrientation.landscapeLeft;
-        default :
+        default:
             orientation = AVCaptureVideoOrientation.portrait
         }
         previewLayer.connection?.videoOrientation = orientation ?? .portrait
@@ -73,7 +79,7 @@ class scannerFragment: CameraController {
      Remove current Fragment
      - Parameter sender:
      */
- 
+
 
     /**
      Create Heading of Fragment
@@ -189,9 +195,9 @@ class scannerFragment: CameraController {
      Creating Bottom sheet for QR scan Successful
      */
     private func createSuccessUI() {
-        self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "temp");
-        self.whiteSheet.startBtn.addTarget(self, action: #selector(self.start), for: .touchUpInside);
-        self.whiteSheet.cancelBtn.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "temp");
+        whiteSheet.startBtn.addTarget(self, action: #selector(self.start), for: .touchUpInside);
+        whiteSheet.cancelBtn.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
         view.addSubview(self.whiteSheet);
     }
 
@@ -199,8 +205,8 @@ class scannerFragment: CameraController {
      Creating Bottom sheet for QR scan Error
      */
     private func createErrorUI() {
-        self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
-        self.whiteSheet.scanQr.addTarget(self, action: #selector(self.scan), for: .touchUpInside);
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
+        whiteSheet.scanQr.addTarget(self, action: #selector(self.scan), for: .touchUpInside);
         view.addSubview(whiteSheet);
     }
 
@@ -262,8 +268,7 @@ class scannerFragment: CameraController {
         initializeCamera();
     }
 
-    @objc  func removeFragment(_ sender: UIView){
-        print("i am here")
+    @objc func removeFragment(_ sender: UIView) {
         navigationController?.popViewController(animated: true);
     }
 
@@ -277,6 +282,10 @@ class scannerFragment: CameraController {
         loadingIndicator.style = UIActivityIndicatorView.Style.medium
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
+    }
+
+    @objc func reInitializeCamera() {
+        initializeCamera()
     }
 
 

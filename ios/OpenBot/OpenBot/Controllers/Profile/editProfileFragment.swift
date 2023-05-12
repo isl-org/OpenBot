@@ -111,13 +111,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         setTextField(textField: lastNameField, value: getLastName(name: Auth.auth().currentUser?.displayName ?? ""));
         let dobField = CustomTextField(frame: CGRect(x: 17, y: dob.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
         setTextField(textField: dobField, value: "19/09/2000");
-        let datePicker = UIDatePicker()
-        datePicker.datePickerMode = .date
-        dobField.inputView = datePicker
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
-        toolbar.items = [UIBarButtonItem.flexibleSpace(), doneButton]
-        dobField.inputAccessoryView = toolbar
+        dobField.isEnabled = false
         let img = UIImageView(frame: CGRect(x: dobField.frame.size.width - 40, y: 15, width: 20, height: 20));
         img.image = UIImage(named: "calendar");
         dobField.addSubview(img)
