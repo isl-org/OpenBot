@@ -37,26 +37,8 @@ javascriptGenerator['soundType'] = function (block) {
 javascriptGenerator['soundMode'] = function (block) {
     let dropdown_mode_type = block.getFieldValue('mode_type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
-
-    function soundMode() {
-        switch (dropdown_mode_type) {
-            case "OPTION1" : {
-                return "'dual drive'";
-            }
-            case "OPTION2" : {
-                return "'joystick control'";
-            }
-            case "OPTION3" : {
-                return "'gamepad'";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += "playSoundMode(" + soundMode() + ");\n" + value_name;
+    code += "playSoundMode(" + dropdown_mode_type + ");\n" + value_name;
     return code;
 };
 
@@ -64,23 +46,8 @@ javascriptGenerator['soundMode'] = function (block) {
 javascriptGenerator['forward&BackwardAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
     let number_specified_amount = block.getFieldValue('slider');
-
-    function selectMovement() {
-        switch (dropdown_direction_type) {
-            case "move_forward" : {
-                return "moveForward";
-            }
-            case "move_backward" : {
-                return "moveBackward";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += selectMovement() + "(" + number_specified_amount + ");\n";
+    code += dropdown_direction_type + "(" + number_specified_amount + ");\n";
     return code;
 };
 
@@ -88,23 +55,8 @@ javascriptGenerator['forward&BackwardAtSpeed'] = function (block) {
 javascriptGenerator['left&RightAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
     let number_specified_amount = block.getFieldValue('slider');
-
-    function selectMovement() {
-        switch (dropdown_direction_type) {
-            case "move_left" : {
-                return "moveLeft";
-            }
-            case "move_right": {
-                return "moveRight";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += selectMovement() + "(" + number_specified_amount + ");\n";
+    code += dropdown_direction_type + "(" + number_specified_amount + ");\n";
     return code;
 };
 
@@ -163,21 +115,7 @@ javascriptGenerator['speedReading'] = function () {
 javascriptGenerator['wheelOdometerSensors'] = function (block) {
     let dropdown_wheel_sensors = block.getFieldValue('wheel_sensors');
     let code = '';
-
-    function selectWheelSensor() {
-        switch (dropdown_wheel_sensors) {
-            case "front_sensor": {
-                return "frontWheelReading";
-            }
-            case "back_sensor": {
-                return "backWheelReading";
-            }
-            default: {
-            }
-        }
-    }
-
-    code += selectWheelSensor() + "()";
+    code += dropdown_wheel_sensors + "()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 

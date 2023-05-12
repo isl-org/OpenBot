@@ -86,7 +86,7 @@ Blockly.Blocks["soundMode"] = {
                     "options": [
                         [
                             "dual drive",
-                            "OPTION1"
+                            "dual drive"
                         ],
                         [
                             "joystick control",
@@ -121,11 +121,11 @@ Blockly.Blocks["forward&BackwardAtSpeed"] = {
                     "options": [
                         [
                             "forward",
-                            "move_forward"
+                            "moveForward"
                         ],
                         [
                             "backward",
-                            "move_backward"
+                            "moveBackward"
                         ],
                     ]
                 },
@@ -159,11 +159,11 @@ Blockly.Blocks["left&RightAtSpeed"] = {
                     "options": [
                         [
                             "left",
-                            "move_left"
+                            "moveLeft"
                         ],
                         [
                             "right",
-                            "move_right"
+                            "moveRight"
                         ],
                     ]
                 },
@@ -390,11 +390,11 @@ Blockly.Blocks["wheelOdometerSensors"] = {
                     "options": [
                         [
                             "Front",
-                            "front_sensor"
+                            "frontWheelReading"
                         ],
                         [
                             "Back",
-                            "back_sensor"
+                            "backWheelReading"
                         ]
                     ]
                 }
