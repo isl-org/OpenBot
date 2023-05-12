@@ -205,21 +205,21 @@ javascriptGenerator['forever'] = function (block) {
 javascriptGenerator['gyroscope_reading'] = function (block) {
     let code = '';
     let dropdown_type = block.getFieldValue('axis');
-    code += "gyroscopeReading(" + dropdown_type + ")";
+    code += "gyroscopeReading('" + dropdown_type + "')";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['acceleration_reading'] = function (block) {
     let code = "";
     let dropdown_type = block.getFieldValue('axis');
-    code += "accelerationReading(" + dropdown_type + ")";
+    code += "accelerationReading('" + dropdown_type + "')";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['magnetic_reading'] = function (block) {
     let code = "";
     let dropdown_type = block.getFieldValue('axis');
-    code += "magneticReading(" + dropdown_type + ")";
+    code += "magneticReading('" + dropdown_type + "')";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
