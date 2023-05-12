@@ -205,118 +205,52 @@ javascriptGenerator['forever'] = function (block) {
 javascriptGenerator['gyroscope_reading'] = function (block) {
     let code = '';
     let dropdown_type = block.getFieldValue('axis');
-    code += "gyroscopeReading(" + "'" + dropdown_type + "'" + ");\n";
+    code += "gyroscopeReading(" + dropdown_type + ")";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['acceleration_reading'] = function (block) {
     let code = "";
     let dropdown_type = block.getFieldValue('axis');
-    code += "accelerationReading(" + "'" + dropdown_type + "'" + ");\n";
+    code += "accelerationReading(" + dropdown_type + ")";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['magnetic_reading'] = function (block) {
     let code = "";
     let dropdown_type = block.getFieldValue('axis');
-    code += "magneticReading(" + "'" + dropdown_type + "'" + ");\n";
+    code += "magneticReading(" + dropdown_type + ")";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['speedControl'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
-
-    function chooseSpeed() {
-        switch (dropdown_type) {
-            case "slow": {
-                return "'slow'";
-            }
-            case "medium": {
-                return "'medium'";
-            }
-            case "fast": {
-                return "'fast'";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += "setSpeed(" + chooseSpeed() + ");\n";
+    code += "setSpeed(" + dropdown_type + ");\n";
     return code;
 };
 
 
 javascriptGenerator['controllerMode'] = function (block) {
     let dropdown_controller = block.getFieldValue('controller');
-
-    function selectController() {
-        switch (dropdown_controller) {
-            case "phone": {
-                return "'phone'";
-            }
-            case "gamepad": {
-                return "'gamepad'";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += "switchController(" + selectController() + ");\n";
+    code += "switchController(" + dropdown_controller + ");\n";
     return code;
 };
 
 
 javascriptGenerator['driveModeControls'] = function (block) {
     let dropdown_driveModeControls = block.getFieldValue('controller');
-
-    function selectController() {
-        switch (dropdown_driveModeControls) {
-            case "dualDrive": {
-                return "'dual'";
-            }
-            case "joystick": {
-                return "'joystick'";
-            }
-            case "game": {
-                return "'game'";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += "switchDriveMode(" + selectController() + ");\n";
+    code += "switchDriveMode(" + dropdown_driveModeControls + ");\n";
     return code;
 };
 
 
 javascriptGenerator['motorDirection'] = function (block) {
     let dropdown_driveModeControls = block.getFieldValue('motor_direction');
-
-    function selectMotorDirection() {
-        switch (dropdown_driveModeControls) {
-            case "forward": {
-                return "motorForward()";
-            }
-            case "backward": {
-                return "motorBackward()";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += selectMotorDirection() + ";\n";
+    code += dropdown_driveModeControls + ";\n";
     return code;
 };
 

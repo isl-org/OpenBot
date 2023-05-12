@@ -466,15 +466,15 @@ Blockly.Blocks["gyroscope_reading"] = {
                     "name": "axis",
                     "options": [
                         [
-                            "x",
+                            "x axis",
                             "x"
                         ],
                         [
-                            "y",
+                            "y axis",
                             "y"
                         ],
                         [
-                            "z",
+                            "z axis",
                             "z"
                         ]
                     ]
@@ -533,15 +533,15 @@ Blockly.Blocks["magnetic_reading"] = {
                     "name": "axis",
                     "options": [
                         [
-                            "x",
+                            "x axis",
                             "x"
                         ],
                         [
-                            "y",
+                            "y axis",
                             "y"
                         ],
                         [
-                            "z",
+                            "z axis",
                             "z"
                         ]
                     ]
@@ -567,15 +567,15 @@ Blockly.Blocks["speedControl"] = {
                     "options": [
                         [
                             "slow",
-                            "slow"
+                            "'slow'"
                         ],
                         [
                             "medium",
-                            "medium"
+                            "'medium'"
                         ],
                         [
                             "fast",
-                            "fast"
+                            "'fast'"
                         ]
                     ]
                 }
@@ -601,11 +601,11 @@ Blockly.Blocks["controllerMode"] = {
                         "options": [
                             [
                                 {"src": Images.phoneIcon, "width": 25, "height": 25, "alt": "phone"},
-                                "phone"
+                                "'phone'"
                             ],
                             [
                                 {"src": Images.gamepadIcon, "width": 25, "height": 25, "alt": "gamepad"},
-                                "gamepad"
+                                "'gamepad'"
                             ]
                         ]
                     }
@@ -633,15 +633,15 @@ Blockly.Blocks["driveModeControls"] = {
                         "options": [
                             [
                                 {"src": Images.dualDriveIcon, "width": 25, "height": 25, "alt": "dualDrive"},
-                                "dualDrive"
+                                "'dualDrive'"
                             ],
                             [
                                 {"src": Images.joystickIcon, "width": 25, "height": 25, "alt": "joystick"},
-                                "joystick"
+                                "'joystick'"
                             ],
                             [
                                 {"src": Images.gameIcon, "width": 25, "height": 25, "alt": "game"},
-                                "game"
+                                "'game'"
                             ],
                         ]
                     }
@@ -669,11 +669,11 @@ Blockly.Blocks["motorDirection"] = {
                         "options": [
                             [
                                 "forward",
-                                "forward"
+                                "'forward'"
                             ],
                             [
                                 "backward",
-                                "backward"
+                                "'backward'"
                             ],
                         ]
                     }
