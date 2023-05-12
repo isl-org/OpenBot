@@ -1,15 +1,13 @@
 import {pythonGenerator} from "blockly/python";
 
+
 /**
  * code generation of blocks in javascript and python
  * @returns {string}
  */
-
-
 pythonGenerator['soundType'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
     let value_name = pythonGenerator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
-
     let code = '';
     code += "playSoundSpeed(" + "'" + dropdown_type + "'" + ")\n" + value_name;
     return code;
@@ -18,26 +16,8 @@ pythonGenerator['soundType'] = function (block) {
 pythonGenerator['soundMode'] = function (block) {
     let dropdown_mode_type = block.getFieldValue('mode_type');
     let value_name = pythonGenerator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
-
-    function soundMode() {
-        switch (dropdown_mode_type) {
-            case "OPTION1" : {
-                return "'dual drive'";
-            }
-            case "OPTION2" : {
-                return "'joystick control'";
-            }
-            case "OPTION3" : {
-                return "'gamepad'";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += "playSoundMode(" + soundMode() + ")\n" + value_name;
+    code += "playSoundMode(" + dropdown_mode_type + ")\n" + value_name;
     return code;
 };
 
@@ -45,23 +25,8 @@ pythonGenerator['soundMode'] = function (block) {
 pythonGenerator['forward&BackwardAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
     let number_specified_amount = block.getFieldValue('slider');
-
-    function selectMovement() {
-        switch (dropdown_direction_type) {
-            case "move_forward" : {
-                return "moveForward";
-            }
-            case "move_backward" : {
-                return "moveBackward";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += selectMovement() + "(" + number_specified_amount + ")\n";
+    code += dropdown_direction_type + "(" + number_specified_amount + ")\n";
     return code;
 };
 
@@ -69,30 +34,14 @@ pythonGenerator['forward&BackwardAtSpeed'] = function (block) {
 pythonGenerator['left&RightAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
     let number_specified_amount = block.getFieldValue('slider');
-
-    function selectMovement() {
-        switch (dropdown_direction_type) {
-            case "move_left" : {
-                return "moveLeft";
-            }
-            case "move_right": {
-                return "moveRight";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += selectMovement() + "(" + number_specified_amount + ")\n";
+    code += dropdown_direction_type + "(" + number_specified_amount + ")\n";
     return code;
 };
 
 pythonGenerator['moveLeft&Right'] = function (block) {
     let number_left_distance = block.getFieldValue('left_distance');
     let number_right_distance = block.getFieldValue('right_distance');
-
     let code = '';
     code += "moveOpenBot(" + number_left_distance + "," + number_right_distance + ")\n";
     return code;
@@ -144,21 +93,7 @@ pythonGenerator['speedReading'] = function () {
 pythonGenerator['wheelOdometerSensors'] = function (block) {
     let dropdown_wheel_sensors = block.getFieldValue('wheel_sensors');
     let code = '';
-
-    function selectWheelSensor() {
-        switch (dropdown_wheel_sensors) {
-            case "front_sensor": {
-                return "frontWheelReading";
-            }
-            case "back_sensor": {
-                return "backWheelReading";
-            }
-            default: {
-            }
-        }
-    }
-
-    code += selectWheelSensor() + "()";
+    code += dropdown_wheel_sensors + "()";
     return [code, pythonGenerator.ORDER_NONE];
 };
 
@@ -183,118 +118,55 @@ pythonGenerator['forever'] = function (block) {
     return code;
 };
 
-pythonGenerator['gyroscope_reading'] = function () {
-    let code = "";
-    code += "gyroscopeReading()";
+pythonGenerator['gyroscope_reading'] = function (block) {
+    let code = '';
+    let dropdown_type = block.getFieldValue('axis');
+    code += "gyroscopeReading('" + dropdown_type + "')";
     return [code, pythonGenerator.ORDER_NONE];
 };
 
-pythonGenerator['acceleration_reading'] = function () {
+pythonGenerator['acceleration_reading'] = function (block) {
     let code = "";
-    code += "accelerationReading()";
+    let dropdown_type = block.getFieldValue('axis');
+    code += "accelerationReading('" + dropdown_type + "')";
     return [code, pythonGenerator.ORDER_NONE];
 };
 
-pythonGenerator['magnetic_reading'] = function () {
+pythonGenerator['magnetic_reading'] = function (block) {
     let code = "";
-    code += "magneticReading()";
+    let dropdown_type = block.getFieldValue('axis');
+    code += "magneticReading('" + dropdown_type + "')";
     return [code, pythonGenerator.ORDER_NONE];
 };
 
 pythonGenerator['speedControl'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
-
-    function chooseSpeed() {
-        switch (dropdown_type) {
-            case "slow": {
-                return "'slow'";
-            }
-            case "medium": {
-                return "'medium'";
-            }
-            case "fast": {
-                return "'fast'";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += "setSpeed(" + chooseSpeed() + ")\n";
+    code += "setSpeed(" + dropdown_type + ")\n";
     return code;
 };
 
 
 pythonGenerator['controllerMode'] = function (block) {
     let dropdown_controller = block.getFieldValue('controller');
-
-    function selectController() {
-        switch (dropdown_controller) {
-            case "phone": {
-                return "'phone'";
-            }
-            case "gamepad": {
-                return "'gamepad'";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += "switchController(" + selectController() + ")\n";
+    code += "switchController(" + dropdown_controller + ")\n";
     return code;
 };
 
 
 pythonGenerator['driveModeControls'] = function (block) {
     let dropdown_driveModeControls = block.getFieldValue('controller');
-
-    function selectController() {
-        switch (dropdown_driveModeControls) {
-            case "dualDrive": {
-                return "'dual'";
-            }
-            case "joystick": {
-                return "'joystick'";
-            }
-            case "game": {
-                return "'game'";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += "switchDriveMode(" + selectController() + ")\n";
+    code += "switchDriveMode(" + dropdown_driveModeControls + ")\n";
     return code;
 };
 
 
 pythonGenerator['motorDirection'] = function (block) {
     let dropdown_driveModeControls = block.getFieldValue('motor_direction');
-
-    function selectMotorDirection() {
-        switch (dropdown_driveModeControls) {
-            case "forward": {
-                return "motorForward()";
-            }
-            case "backward": {
-                return "motorBackward()";
-            }
-            default: {
-
-            }
-        }
-    }
-
     let code = '';
-    code += selectMotorDirection() + "\n";
+    code += dropdown_driveModeControls + "\n";
     return code;
 };
 
@@ -371,3 +243,4 @@ pythonGenerator['brightnessHighOrLow'] = function (block) {
     code += "toggleLed(" + indicatorStatus() + ")\n";
     return code;
 };
+
