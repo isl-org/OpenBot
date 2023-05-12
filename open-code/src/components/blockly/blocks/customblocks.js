@@ -500,15 +500,15 @@ Blockly.Blocks["acceleration_reading"] = {
                     "name": "axis",
                     "options": [
                         [
-                            "x",
+                            "x axis",
                             "x"
                         ],
                         [
-                            "y",
+                            "y axis",
                             "y"
                         ],
                         [
-                            "z",
+                            "z axis",
                             "z"
                         ]
                     ]
