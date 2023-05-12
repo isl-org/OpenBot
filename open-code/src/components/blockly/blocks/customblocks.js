@@ -459,7 +459,27 @@ Blockly.Blocks["gyroscope_reading"] = {
     init: function () {
         this.jsonInit({
             "type": "ellipse_block",
-            "message0": "gyroscope reading",
+            "message0": "gyroscope reading %1",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "axis",
+                    "options": [
+                        [
+                            "x",
+                            "x"
+                        ],
+                        [
+                            "y",
+                            "y"
+                        ],
+                        [
+                            "z",
+                            "z"
+                        ]
+                    ]
+                }
+            ],
             "output": "Number",
             "colour": 240,
             "tooltip": "",
@@ -473,7 +493,27 @@ Blockly.Blocks["acceleration_reading"] = {
     init: function () {
         this.jsonInit({
             "type": "ellipse_block",
-            "message0": "acceleration reading",
+            "message0": "acceleration reading %1",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "axis",
+                    "options": [
+                        [
+                            "x",
+                            "x"
+                        ],
+                        [
+                            "y",
+                            "y"
+                        ],
+                        [
+                            "z",
+                            "z"
+                        ]
+                    ]
+                }
+            ],
             "output": "Number",
             "colour": 240,
             "tooltip": "",
@@ -486,7 +526,27 @@ Blockly.Blocks["magnetic_reading"] = {
     init: function () {
         this.jsonInit({
             "type": "ellipse_block",
-            "message0": "magnetic reading",
+            "message0": "magnetic reading %1",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "axis",
+                    "options": [
+                        [
+                            "x",
+                            "x"
+                        ],
+                        [
+                            "y",
+                            "y"
+                        ],
+                        [
+                            "z",
+                            "z"
+                        ]
+                    ]
+                }
+            ],
             "output": "Number",
             "colour": 240,
             "tooltip": "",

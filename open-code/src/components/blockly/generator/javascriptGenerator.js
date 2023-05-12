@@ -24,13 +24,13 @@ import {javascriptGenerator} from 'blockly/javascript';
  * @returns {string}
  */
 
-
 javascriptGenerator['soundType'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
 
     let code = '';
     code += "playSoundSpeed(" + "'" + dropdown_type + "'" + ");\n" + value_name;
+
     return code;
 };
 
@@ -202,21 +202,24 @@ javascriptGenerator['forever'] = function (block) {
     return code;
 };
 
-javascriptGenerator['gyroscope_reading'] = function () {
-    let code = "";
-    code += "gyroscopeReading()";
+javascriptGenerator['gyroscope_reading'] = function (block) {
+    let code = '';
+    let dropdown_type = block.getFieldValue('axis');
+    code += "gyroscopeReading(" + "'" + dropdown_type + "'" + ");\n";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
-javascriptGenerator['acceleration_reading'] = function () {
+javascriptGenerator['acceleration_reading'] = function (block) {
     let code = "";
-    code += "accelerationReading()";
+    let dropdown_type = block.getFieldValue('axis');
+    code += "accelerationReading(" + "'" + dropdown_type + "'" + ");\n";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
-javascriptGenerator['magnetic_reading'] = function () {
+javascriptGenerator['magnetic_reading'] = function (block) {
     let code = "";
-    code += "magneticReading()";
+    let dropdown_type = block.getFieldValue('axis');
+    code += "magneticReading(" + "'" + dropdown_type + "'" + ");\n";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
