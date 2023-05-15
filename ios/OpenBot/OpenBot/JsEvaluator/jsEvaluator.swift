@@ -159,17 +159,47 @@ class jsEvaluator {
                 let backWheelReading: @convention(block) () -> Float = { () -> Float in
                     self.runOpenBotThreadClass?.backWheelReading() ?? 0;
                 }
-                let gyroscopeReading: @convention(block) (String) -> Double = { (axis) -> Double in
-                    self.runOpenBotThreadClass?.gyroscopeReading(axis: axis) ?? 0.0;
+                let gyroscopeReadingX: @convention(block) () -> Double = { () -> Double in
+                    self.runOpenBotThreadClass?.gyroscopeReading(axis: "x") ?? 0.0;
 
                 }
-                let accelerationReading: @convention(block) (String) -> Double = { (axis) -> Double in
-                   let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: axis) ?? 0.0;
+                let gyroscopeReadingY: @convention(block) () -> Double = { () -> Double in
+                    self.runOpenBotThreadClass?.gyroscopeReading(axis: "y") ?? 0.0;
+
+                }
+                let gyroscopeReadingZ: @convention(block) () -> Double = { () -> Double in
+                    self.runOpenBotThreadClass?.gyroscopeReading(axis: "z") ?? 0.0;
+
+                }
+                let accelerationReadingX: @convention(block) () -> Double = { () -> Double in
+                   let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: "x") ?? 0.0;
                     print(temp);
                     return temp;
                 }
-                let magneticReading: @convention(block) (String) -> Double = { (axis) -> Double in
-                    self.runOpenBotThreadClass?.magneticReading(axis: axis) ?? 0.0;
+                let accelerationReadingY: @convention(block) () -> Double = { () -> Double in
+                    let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: "y") ?? 0.0;
+                    print(temp);
+                    return temp;
+                }
+                let accelerationReadingZ: @convention(block) () -> Double = { () -> Double in
+                    let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: "z") ?? 0.0;
+                    print(temp);
+                    return temp;
+                }
+                let magneticReadingX: @convention(block) () -> Double = { () -> Double in
+                   let temp =  self.runOpenBotThreadClass?.magneticReading(axis: "x") ?? 0.0;
+                    print("magnetic reading x",temp)
+                    return temp;
+                }
+                let magneticReadingY: @convention(block) () -> Double = { () -> Double in
+                    let temp =  self.runOpenBotThreadClass?.magneticReading(axis: "y") ?? 0.0;
+                    print(temp)
+                    return temp;
+                }
+                let magneticReadingZ: @convention(block) () -> Double = { () -> Double in
+                    let temp =  self.runOpenBotThreadClass?.magneticReading(axis: "z") ?? 0.0;
+                    print(temp)
+                    return temp;
                 }
 
                 context.setObject(moveForward,
@@ -234,12 +264,24 @@ class jsEvaluator {
                         forKeyedSubscript: Strings.backWheelReading as NSString);
                 context.setObject(frontWheelReading,
                         forKeyedSubscript: Strings.frontWheelReading as NSString);
-                context.setObject(gyroscopeReading,
-                        forKeyedSubscript: Strings.gyroscopeReading as NSString);
-                context.setObject(accelerationReading,
-                        forKeyedSubscript: Strings.accelerationReading as NSString);
-                context.setObject(magneticReading,
-                        forKeyedSubscript: Strings.magneticReading as NSString);
+                context.setObject(gyroscopeReadingX,
+                        forKeyedSubscript: "gyroscopeReadingX" as NSString);
+                context.setObject(gyroscopeReadingY,
+                        forKeyedSubscript: "gyroscopeReadingY" as NSString);
+                context.setObject(gyroscopeReadingZ,
+                        forKeyedSubscript: "gyroscopeReadingZ" as NSString);
+                context.setObject(accelerationReadingX,
+                        forKeyedSubscript: "accelerationReadingX" as NSString);
+                context.setObject(accelerationReadingY,
+                        forKeyedSubscript: "accelerationReadingY" as NSString);
+                context.setObject(accelerationReadingZ,
+                        forKeyedSubscript: "accelerationReadingZ" as NSString);
+                context.setObject(magneticReadingX,
+                        forKeyedSubscript: "magneticReadingX" as NSString);
+                context.setObject(magneticReadingY,
+                        forKeyedSubscript: "magneticReadingY" as NSString);
+                context.setObject(magneticReadingZ,
+                        forKeyedSubscript: "magneticReadingZ" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -387,7 +429,7 @@ class jsEvaluator {
             print("inside stop robot")
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
-            while (bluetooth.speedometer != "w0.00,0.00") {
+            while (bluetooth.peri != nil && bluetooth.speedometer != "w0.00,0.00") {
                 bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
             }
             bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
