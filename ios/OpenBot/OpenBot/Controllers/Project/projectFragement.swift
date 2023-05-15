@@ -72,8 +72,11 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
     private func setupOpenCodeIcon(){
-        let tap = UITapGestureRecognizer(target: self, action: #selector(loadWebView))
-        openCodeWebView.addGestureRecognizer(tap)
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(loadWebView))
+//        openCodeWebView.addGestureRecognizer(tap)
+        if let url = URL(string: "https://www.openbot.itinker.io/") {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
     }
 
     func createRefresh() {

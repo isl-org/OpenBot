@@ -21,10 +21,6 @@ class openCodeWebView : UIViewController,WKUIDelegate{
 //        let myURL = URL(string:"https://www.openbot.itinker.io/")
 //        let myRequest = URLRequest(url: myURL!)
 //        webView.load(myRequest)
-
-        if let url = URL(string: "https://www.openbot.itinker.io/") {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        }
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
