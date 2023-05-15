@@ -86,6 +86,7 @@
 		727D348793BC7E328164FDB2 /* DataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3157F2B5E5DBB1565EDD /* DataLogger.swift */; };
 		727D34E3CC491BD7758C572F /* WebRTCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */; };
 		727D354EAA4CA78176DD1064 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D383824EABABFDE0806CE /* Toast.swift */; };
+		727D36856575D19091290CFF /* webViewFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35EAA13908B142BC4773 /* webViewFragment.swift */; };
 		727D36915DB88577316D9C46 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A8D7ACD08EF11740FC2 /* Connection.swift */; };
 		727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */; };
 		727D37C2806C8F8AC502DDBE /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 727D3278D9F8247EB0FF1B73 /* README.md */; };
@@ -218,6 +219,7 @@
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
 		727D33AFAD7EDEC111578DE8 /* projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = projects.swift; sourceTree = "<group>"; };
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
+		727D35EAA13908B142BC4773 /* webViewFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = webViewFragment.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
 		727D383824EABABFDE0806CE /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
@@ -516,6 +518,7 @@
 				727D3F1F46201738BE703091 /* Project */,
 				727D38A54661B9A54A681AC1 /* QrScanner */,
 				727D356FCD75B6B73D8C5A7C /* runRobot */,
+				727D3AD9225580EC94775651 /* WebView */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -654,6 +657,14 @@
 				727D3E372C09E1BADA2A03FA /* scannerFragment.swift */,
 			);
 			path = QrScanner;
+			sourceTree = "<group>";
+		};
+		727D3AD9225580EC94775651 /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				727D35EAA13908B142BC4773 /* webViewFragment.swift */,
+			);
+			path = WebView;
 			sourceTree = "<group>";
 		};
 		727D3BBE14B8FA7877902A13 /* Authentication */ = {
@@ -1135,6 +1146,7 @@
 				727D303C061B9CA823E99905 /* projects.swift in Sources */,
 				727D37C2806C8F8AC502DDBE /* README.md in Sources */,
 				727D354EAA4CA78176DD1064 /* Toast.swift in Sources */,
+				727D36856575D19091290CFF /* webViewFragment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

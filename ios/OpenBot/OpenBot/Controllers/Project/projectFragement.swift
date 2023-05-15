@@ -19,6 +19,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private let signInView: UIView = UIView();
     private let noProjectMessageView: UIView = UIView();
     private var allProjects: [ProjectItem] = [];
+    var vehicleControl = Control();
+    @IBOutlet weak var openCodeWebView: UIView!
     private var command: String = ""
     private let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
     private var allProjectCommands: [ProjectData] = [];
@@ -58,7 +60,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createRefresh();
         setupBluetoothIcon();
         apply();
-        setupScannerIcon()
+        setupScannerIcon();
+        setupOpenCodeIcon();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
     }
@@ -66,6 +69,11 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private func setupScannerIcon() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(scanner))
         qrScannerIcon.addGestureRecognizer(tap)
+    }
+
+    private func setupOpenCodeIcon(){
+        let tap = UITapGestureRecognizer(target: self, action: #selector(loadWebView))
+        openCodeWebView.addGestureRecognizer(tap)
     }
 
     func createRefresh() {
@@ -84,6 +92,17 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateViewsVisibility();
+       bluetooth.stopRobot();
+    }
+
+    /**
+         function to send controls to openBot
+         - Parameter control:
+         */
+    func sendControl(control: Control) {
+        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
+            bluetooth.sendData(payload: "c" + String(control.getLeft()) + "," + String(control.getRight()) + "\n")
+        }
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -160,6 +179,12 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     @objc func scanner(_ sender: Any) {
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
         let viewController = (storyboard.instantiateViewController(withIdentifier: "qrScanner"))
+        navigationController?.pushViewController(viewController, animated: true);
+    }
+
+    @objc func loadWebView(_ sender : Any){
+        let storyboard = UIStoryboard(name: "openCode", bundle: nil)
+        let viewController = (storyboard.instantiateViewController(withIdentifier: "webView"))
         navigationController?.pushViewController(viewController, animated: true);
     }
 
