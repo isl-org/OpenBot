@@ -69,10 +69,6 @@
     background: rgb(0, 113, 197);
     cursor: pointer;
 }
-.language{
-  margin-left: 3rem !important;
-
-}
 
 .leftButton {
     display: flex;
@@ -160,9 +156,9 @@
     margin: 10px;
 
 }
+
 .noSpace{
     display: flex;
-    width: 31%;
     justify-content: space-between;
 }
 

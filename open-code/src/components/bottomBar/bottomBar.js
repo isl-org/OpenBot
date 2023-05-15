@@ -211,12 +211,10 @@ function GenerateCodeButton(params) {
         setLanguage(event.target.value);
         setCategory(event.target.value);
         setDrawer(true);
-
     }
 
-
     return (
-        <div className={styles.iconMargin + " " + styles.noSpace}>
+        <div className={styles.iconMargin + " " + styles.noSpace} style={{width: isMobile ? "25%" : "31%"}}>
             <button
                 className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
                 name={"uploadCode"} onClick={generateCode}>
@@ -228,49 +226,44 @@ function GenerateCodeButton(params) {
                     <span className={styles.leftButton + " " + styles.iconMargin}>generate QR </span>
                 )}
             </button>
-            <FormControl
-                variant="standard"
-                sx={{
-                    "& .MuiInputBase-root": {
-                        fontfamily: "Gilroy-Medium, sans-serif",
-                        width: "120px",
-                        color: "white",
-                        border: "none",
-                        '&:before': {
-                            border: 'none'
-                        },
-                        '&:after': {
-                            border: 'none'
-                        },
-                        '&:hover:not(.Mui-disabled):before': {
-                            border: 'none'
-                        }
-                    },
-                    '& .MuiMenuItem-root': {
-                        color: '#000',
-                        fontSize: '20px',
-                        padding: '10px',
-                        '&:hover': {
-                            backgroundColor: '#f5f5f5'
-                        }
-                    },
-                    '& .MuiSelect-icon': {
-                        color: 'white'
-                    }
-                }}
-                className={`${styles.uploadCodeButton} ${styles.language}`}>
-                <Select
-                    value={language}
-                    onChange={(e) => handleDropDown(e)}
-                    displayEmpty
-                    inputProps={{'aria-label': 'Without label'}}
-                >
-                    <MenuItem value={Constants.js}>
-                        <em>JavaScript</em>
-                    </MenuItem>
-                    <MenuItem value={Constants.py}> Python </MenuItem>
-                </Select>
-            </FormControl>
+            <div className={`${styles.uploadCodeButton}`} style={{marginLeft: "1rem"}}>
+                <FormControl variant="standard"
+                             sx={{
+                                 "& .MuiInputBase-root": {
+                                     fontFamily: "Gilroy-Medium, sans-serif",
+                                     color: "white",
+                                     fontSize: " 1.2rem",
+                                     paddingLeft: "7px",
+                                     border: "none",
+                                     '&:before': {
+                                         border: 'none'
+                                     },
+                                     '&:after': {
+                                         border: 'none'
+                                     },
+                                     '&:hover:not(.Mui-disabled):before': {
+                                         border: 'none'
+                                     }
+                                 },
+                                 '& .MuiSelect-icon': {
+                                     color: 'white',
+                                 }
+                             }}>
+                    <Select
+                        value={language}
+                        onChange={(e) => handleDropDown(e)}
+                        displayEmpty
+                        inputProps={{'aria-label': 'Without label'}}
+                    >
+
+                        {isMobile ? <MenuItem value={Constants.js}>JS</MenuItem> :
+                            <MenuItem value={Constants.js}>JavaScript</MenuItem>}
+                        {isMobile ? <MenuItem value={Constants.py}> Py </MenuItem> :
+                            <MenuItem value={Constants.py}> Python </MenuItem>}
+                    </Select>
+                </FormControl>
+            </div>
+
         </div>
     )
 }

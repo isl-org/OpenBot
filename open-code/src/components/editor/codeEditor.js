@@ -15,7 +15,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material";
 
 
-/**
+/**x
  * Code Editor to display Js code and python code.
  * @param params
  * @returns {JSX.Element}
@@ -61,7 +61,7 @@ function CodeEditor(params) {
     }, [workspace, currentProjectXml, category, drawer, theme]);
 
     return (<div>
-        <div style={{zIndex: 2, position: "absolute", marginTop: isMobileLandscape ? "230px":"300px"}}><RightSlider/></div>
+        <div style={{zIndex: 2, position: "absolute", marginTop: isMobile ? "200px":"300px"}}><RightSlider/></div>
         <div ref={editorRef} style={{
             position: "absolute",
             zIndex: 1,
