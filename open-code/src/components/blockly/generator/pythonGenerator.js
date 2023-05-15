@@ -2,7 +2,7 @@ import {pythonGenerator} from "blockly/python";
 
 
 /**
- * code generation of blocks in javascript and python
+ * code generation of blocks in python
  * @returns {string}
  */
 pythonGenerator['soundType'] = function (block) {
@@ -121,21 +121,60 @@ pythonGenerator['forever'] = function (block) {
 pythonGenerator['gyroscope_reading'] = function (block) {
     let code = '';
     let dropdown_type = block.getFieldValue('axis');
-    code += "gyroscopeReading('" + dropdown_type + "')";
+
+    function scaleType() {
+        switch (dropdown_type) {
+            case "x":
+                return "X";
+            case "y":
+                return "Y";
+            case "z":
+                return "Z";
+            default:
+        }
+    }
+
+    code += "gyroscopeReading" + scaleType() + "()";
     return [code, pythonGenerator.ORDER_NONE];
 };
 
 pythonGenerator['acceleration_reading'] = function (block) {
     let code = "";
     let dropdown_type = block.getFieldValue('axis');
-    code += "accelerationReading('" + dropdown_type + "')";
+
+    function scaleType() {
+        switch (dropdown_type) {
+            case "x":
+                return "X";
+            case "y":
+                return "Y";
+            case "z":
+                return "Z";
+            default:
+        }
+    }
+
+    code += "accelerationReading" + scaleType() + "()";
     return [code, pythonGenerator.ORDER_NONE];
 };
 
 pythonGenerator['magnetic_reading'] = function (block) {
     let code = "";
     let dropdown_type = block.getFieldValue('axis');
-    code += "magneticReading('" + dropdown_type + "')";
+
+    function scaleType() {
+        switch (dropdown_type) {
+            case "x":
+                return "X";
+            case "y":
+                return "Y";
+            case "z":
+                return "Z";
+            default:
+        }
+    }
+
+    code += "magneticReading" + scaleType() + "()";
     return [code, pythonGenerator.ORDER_NONE];
 };
 

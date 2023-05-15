@@ -20,7 +20,7 @@
 import {javascriptGenerator} from 'blockly/javascript';
 
 /**
- * code generation of blocks in javascript and python
+ * code generation of blocks in javascript
  * @returns {string}
  */
 
@@ -143,21 +143,60 @@ javascriptGenerator['forever'] = function (block) {
 javascriptGenerator['gyroscope_reading'] = function (block) {
     let code = '';
     let dropdown_type = block.getFieldValue('axis');
-    code += "gyroscopeReading('" + dropdown_type + "')";
+
+    function scaleType() {
+        switch (dropdown_type) {
+            case "x":
+                return "X";
+            case "y":
+                return "Y";
+            case "z":
+                return "Z";
+            default:
+        }
+    }
+
+    code += "gyroscopeReading" + scaleType() + "()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['acceleration_reading'] = function (block) {
     let code = "";
     let dropdown_type = block.getFieldValue('axis');
-    code += "accelerationReading('" + dropdown_type + "')";
+
+    function scaleType() {
+        switch (dropdown_type) {
+            case "x":
+                return "X";
+            case "y":
+                return "Y";
+            case "z":
+                return "Z";
+            default:
+        }
+    }
+
+    code += "accelerationReading" + scaleType() + "()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
 javascriptGenerator['magnetic_reading'] = function (block) {
     let code = "";
     let dropdown_type = block.getFieldValue('axis');
-    code += "magneticReading('" + dropdown_type + "')";
+
+    function scaleType() {
+        switch (dropdown_type) {
+            case "x":
+                return "X";
+            case "y":
+                return "Y";
+            case "z":
+                return "Z";
+            default:
+        }
+    }
+
+    code += "magneticReading" + scaleType() + "()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
