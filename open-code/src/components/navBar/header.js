@@ -9,7 +9,7 @@ import {HelpCenterModal} from "../homeComponents/header/helpCenterModal";
 import {EditProfileModal} from "../homeComponents/header/editProfileModal";
 import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
-import {PathName} from "../../utils/constants";
+import {localStorageKeys, PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -35,12 +35,17 @@ export function Header() {
     const location = useLocation();
     let navigate = useNavigate();
 
-    useEffect(() => {
-        auth.onAuthStateChanged(function (currentUser) {
+    useEffect( () => {
+        auth.onAuthStateChanged(async function (currentUser) {
+            console.log("currentUser:::",currentUser)
+            const userCredential = await currentUser.getIdTokenResult();
+            localStorage.setItem("isSigIn", "true");
+            localStorage.setItem(localStorageKeys.accessToken, userCredential.token);
+            console.log("userCredential",userCredential)
             setUser({
-                photoURL: currentUser?.photoURL,
-                displayName: currentUser?.displayName,
-                email: currentUser?.email,
+                photoURL: userCredential?.claims.picture,
+                displayName: userCredential?.claims.name,
+                email: userCredential?.claims.email,
             });
         })
     }, [isEditProfileModal, setUser])

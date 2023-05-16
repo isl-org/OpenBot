@@ -51,11 +51,25 @@ export async function uploadProfilePic(file, fileName) {
  * @returns {Promise<firebase.auth.UserCredential>}
  */
 export async function googleSigIn() {
-    const signIn = await auth.signInWithPopup(provider)
-    localStorage.setItem("isSigIn", "true");
-    localStorage.setItem(localStorageKeys.accessToken, signIn?.credential?.accessToken);
+    const signIn = await auth.signInWithRedirect(provider)
     return signIn
 }
+/**
+ * Function to handle the authentication state change and get the user credential.
+ * @returns {Promise<firebase.auth.UserCredential | null>}
+ */
+export async function handleAuthStateChange() {
+    try {
+        const result = await auth.getRedirectResult();
+        const userCredential = result.credential;
+        return userCredential;
+    } catch (error) {
+        // Handle error if necessary
+        console.error("Error getting user credential:", error);
+        return null;
+    }
+}
+
 
 /**
  * function to log out user from Goole account
