@@ -2,80 +2,66 @@
 // Created by Nitish Yadav on 16/05/23.
 //
 
-import Foundation
 import AVFoundation
 import UIKit
-
+/**
+    class for playing audio
+ */
 class AudioPlayer : AVPlayer  {
     var player: AVPlayer?
     var playerItem: AVPlayerItem?
-    var playButton: UIButton?
     static let shared : AudioPlayer = AudioPlayer();
+
+    /**
+     Initializer of AudioPlayer class with observers
+     */
     override init(){
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidFinishPlaying(_:)), name: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem)
         player?.currentItem?.addObserver(self, forKeyPath: "status", options: [.new, .initial], context: nil)
     }
 
+    /**
+     Destroying objects of Audio Player
+     */
     deinit {
         NotificationCenter.default.removeObserver(self)
         player?.currentItem?.removeObserver(self, forKeyPath: "status")
     }
 
-
-    @objc func playButtonTapped(_ sender: UIButton) {
-        playAssetAudio()
-    }
-
-    func playAssetAudio() {
-        guard let assetData = NSDataAsset(name: "dual_drive_control")?.data else {
-            print("Asset data not found.")
-            return
-        }
-        let tempDirectoryURL = FileManager.default.temporaryDirectory
-        let tempFileURL = tempDirectoryURL.appendingPathComponent("temp_audio.mp3")
-        print(tempFileURL);
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-            try assetData.write(to: tempFileURL)
-            let playerItem = AVPlayerItem(url: tempFileURL)
-            player = AVPlayer(playerItem: playerItem)
-            print(player, "  ", playerItem)
-            player?.play()
-        } catch {
-            print("Error writing asset data to temporary file: \(error.localizedDescription)")
-        }
-    }
-
+    /**
+     Called after audio file finished playing
+     - Parameter notification:
+     */
     @objc func playerItemDidFinishPlaying(_ notification: Notification) {
-        // Playback finished
-        print("played");
     }
 
+    /**
+
+     - Parameters:
+       - keyPath:
+       - object:
+       - change:
+       - context:
+     */
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "status" {
             if let statusInt = change?[.newKey] as? Int, let status = AVPlayer.Status(rawValue: statusInt) {
-                switch status {
-                case .failed:
-                    print("AVPlayerItem status: Failed")
-                case .readyToPlay:
-                    print("AVPlayerItem status: Ready to play")
-                case .unknown:
-                    print("AVPlayerItem status: Unknown")
-                }
             }
         }
     }
 
-    func play(name: String) {
+    /**
+     private function to play the audio
+     - Parameter name: name of file from assets to be played
+     */
+    private func play(name: String) {
         guard let assetData = NSDataAsset(name: name)?.data else {
             print("Asset data not found.")
             return
         }
         let tempDirectoryURL = FileManager.default.temporaryDirectory
-        let tempFileURL = tempDirectoryURL.appendingPathComponent("temp_audio.mp3")
-        print(tempFileURL);
+        let tempFileURL = tempDirectoryURL.appendingPathComponent("\(name)_audio.mp3")
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
             try AVAudioSession.sharedInstance().setActive(true)
@@ -83,16 +69,17 @@ class AudioPlayer : AVPlayer  {
             let playerItem = AVPlayerItem(url: tempFileURL)
             player = AVPlayer(playerItem: playerItem)
             player?.currentItem?.addObserver(self as! NSObject, forKeyPath: "status", options: [.new, .initial], context: nil)
-            print(player, "  ", playerItem)
             player?.play()
-
         } catch {
             print("Error writing asset data to temporary file: \(error.localizedDescription)")
         }
     }
 
+    /**
+     function to play drive mode ie. Dual, Joystick and game
+     - Parameter driveMode:
+     */
     func playDriveMode(driveMode: DriveMode) {
-        print(driveMode,driveMode.hashValue)
         switch driveMode {
         case .DUAL:
             play(name: "dual_drive_control");
@@ -107,6 +94,10 @@ class AudioPlayer : AVPlayer  {
         }
     }
 
+    /**
+     Function to play speed mode ie. Slow, Normal and Fast
+     - Parameter speedMode:
+     */
     func playSpeedMode(speedMode: SpeedMode) {
         switch speedMode {
 
@@ -122,6 +113,10 @@ class AudioPlayer : AVPlayer  {
         }
     }
 
+    /**
+     Function to play noice
+     - Parameter isEnabled:
+     */
     func playNoise(isEnabled: Bool) {
         if isEnabled {
             play(name: "noise_enabled");
@@ -130,6 +125,10 @@ class AudioPlayer : AVPlayer  {
         }
     }
 
+    /**
+     Function to play whether logging enable or not
+     - Parameter isEnabled:
+     */
     func playLogging(isEnabled : Bool){
         if isEnabled{
             play(name: "logging_started");
@@ -138,6 +137,5 @@ class AudioPlayer : AVPlayer  {
             play(name: "logging_stopped");
         }
     }
-
 }
 
