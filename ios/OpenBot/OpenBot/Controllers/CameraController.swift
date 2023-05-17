@@ -95,7 +95,7 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
         case .authorized:
             initializeCamera()
         case .notDetermined:
-            print("notDetermined")
+            print("");
         case .restricted:
             createAllowAlert(alertFor: Strings.camera)
         case .denied:

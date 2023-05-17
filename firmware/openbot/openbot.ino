@@ -44,16 +44,17 @@
 #define RC_CAR 4     // RC truck prototypes
 #define LITE 5       // Smaller DIY version for education
 //Robot bodies with ESP32 as MCU --> Select ESP32 Dev Module as board
-#define RTR_520 6    // Ready-to-Run with 520-motors
-#define MTV 7        // Multi Terrain Vehicle
-#define DIY_ESP32 8  // DIY without PCB
+#define RTR_TT2 6   // Ready-to-Run with TT-motors
+#define RTR_520 7    // Ready-to-Run with 520-motors
+#define MTV 8        // Multi Terrain Vehicle
+#define DIY_ESP32 9  // DIY without PCB
 
 //------------------------------------------------------//
 // SETUP - Choose your body
 //------------------------------------------------------//
 
-// Setup the OpenBot version (DIY, PCB_V1, PCB_V2, RTR_TT, RC_CAR, LITE, RTR_520, DIY_ESP32)
-#define OPENBOT RTR_520
+// Setup the OpenBot version (DIY, PCB_V1, PCB_V2, RTR_TT, RC_CAR, LITE, RTR_TT2, RTR_520, DIY_ESP32)
+#define OPENBOT DIY
 
 //------------------------------------------------------//
 // SETTINGS - Global settings
@@ -91,7 +92,7 @@ boolean coast_mode = 1;
 // HAS_LEDS_BACK                        Enable/Disable back LEDs
 // HAS_LEDS_STATUS                      Enable/Disable status LEDs
 // HAS_BLUETOOTH                        Enable/Disable bluetooth connectivity (1,0)
-// NOTE: HAS_BLUETOOTH will only work with the ESP32 board (RTR_520, MTV, DIY_ESP32)
+// NOTE: HAS_BLUETOOTH will only work with the ESP32 board (RTR_TT2, RTR_520, MTV, DIY_ESP32)
 
 // PIN_TRIGGER                          Arduino pin tied to trigger pin on ultrasonic sensor.
 // PIN_ECHO                             Arduino pin tied to echo pin on ultrasonic sensor.
@@ -278,6 +279,82 @@ const int PIN_PWM_R2 = 10;
 const int PIN_LED_LI = 4;
 const int PIN_LED_RI = 7;
 
+//-------------------------RTR_TT2----------------------//
+#elif (OPENBOT == RTR_TT2)
+const String robot_type = "RTR_TT2";
+#define MCU ESP32
+#include <esp_wifi.h>
+#define HAS_BLUETOOTH 1
+#define analogWrite ledcWrite
+#define attachPinChangeInterrupt attachInterrupt
+#define detachPinChangeInterrupt detachInterrupt
+#define digitalPinToPinChangeInterrupt digitalPinToInterrupt
+#define PIN_PWM_L1 CH_PWM_L1
+#define PIN_PWM_L2 CH_PWM_L2
+#define PIN_PWM_R1 CH_PWM_R1
+#define PIN_PWM_R2 CH_PWM_R2
+#define HAS_VOLTAGE_DIVIDER 1
+const float VOLTAGE_DIVIDER_FACTOR = (30 + 10) / 10;
+const float VOLTAGE_MIN = 6.0f;
+const float VOLTAGE_LOW = 9.0f;
+const float VOLTAGE_MAX = 12.6f;
+const float ADC_FACTOR = 3.3 / 4095;
+#define HAS_INDICATORS 1
+#define HAS_SONAR 1
+#define SONAR_MEDIAN 0
+#define HAS_BUMPER 1
+#define HAS_SPEED_SENSORS_FRONT 1
+#define HAS_SPEED_SENSORS_BACK 1
+#define HAS_LEDS_FRONT 1
+#define HAS_LEDS_BACK 1
+#define HAS_LEDS_STATUS 1
+//PWM properties
+const int FREQ = 5000;
+const int RES = 8;
+const int CH_PWM_L1 = 0;
+const int CH_PWM_L2 = 1;
+const int CH_PWM_R1 = 2;
+const int CH_PWM_R2 = 3;
+const int CH_LED_LF = 4;
+const int CH_LED_RF = 5;
+const int CH_LED_LB = 6;
+const int CH_LED_RB = 7;
+const int PIN_PWM_LF1 = 16;
+const int PIN_PWM_LF2 = 17;
+const int PIN_PWM_LB1 = 19;
+const int PIN_PWM_LB2 = 18;
+const int PIN_PWM_RF1 = 25;
+const int PIN_PWM_RF2 = 26;
+const int PIN_PWM_RB1 = 32;
+const int PIN_PWM_RB2 = 33;
+const int PIN_SPEED_LF = 21;
+const int PIN_SPEED_RF = 35;
+const int PIN_SPEED_LB = 23;
+const int PIN_SPEED_RB = 36;
+const int PIN_VIN = 39;
+const int PIN_TRIGGER = 12;
+const int PIN_ECHO = 14;
+const int PIN_LED_LI = 22;
+const int PIN_LED_RI = 27;
+const int PIN_LED_LB = 22;
+const int PIN_LED_RB = 27;
+const int PIN_LED_LF = 4;
+const int PIN_LED_RF = 13;
+const int PIN_LED_Y = 0;
+const int PIN_LED_G = 2;
+const int PIN_LED_B = 15;
+const int PIN_BUMPER = 34;
+const int BUMPER_NOISE = 512;
+const int BUMPER_EPS = 50;
+const int BUMPER_AF = 3890;
+const int BUMPER_BF = 3550;
+const int BUMPER_CF = 3330;
+const int BUMPER_LF = 3100;
+const int BUMPER_RF = 2930;
+const int BUMPER_BB = 2750;
+const int BUMPER_LB = 2180;
+const int BUMPER_RB = 2000;
+
 //-------------------------RTR_520----------------------//
 #elif (OPENBOT == RTR_520)
 const String robot_type = "RTR_520";
@@ -428,10 +505,14 @@ const int CH_PWM_L1 = 0;
 const int CH_PWM_L2 = 1;
 const int CH_PWM_R1 = 2;
 const int CH_PWM_R2 = 3;
-const int PIN_PWM_L1 = 13;
-const int PIN_PWM_L2 = 12;
-const int PIN_PWM_R1 = 27;
-const int PIN_PWM_R2 = 33;
+const int PIN_PWM_LF1 = 13;
+const int PIN_PWM_LF2 = 12;
+const int PIN_PWM_LB1 = 13;
+const int PIN_PWM_LB2 = 12;
+const int PIN_PWM_RF1 = 27;
+const int PIN_PWM_RF2 = 33;
+const int PIN_PWM_RB1 = 27;
+const int PIN_PWM_RB2 = 33;
 const int PIN_SPEED_LF = 5;
 const int PIN_SPEED_RF = 18;
 const int PIN_VIN = 39;
@@ -751,7 +832,7 @@ void setup() {
   esp_wifi_deinit();
 #endif
 
-#if (OPENBOT == RTR_520)
+#if (MCU == ESP32 && OPENBOT != MTV)
   // PWMs
   // Configure PWM functionalitites
   ledcSetup(CH_PWM_L1, FREQ, RES);
@@ -1603,7 +1684,7 @@ void send_wheel_reading(long duration) {
 
 void update_indicator() {
   if (indicator_left > 0) {
-#if (OPENBOT == RTR_520 && PIN_LED_LI == PIN_LED_LB)
+#if ((OPENBOT == RTR_TT2 || OPENBOT == RTR_520) && PIN_LED_LI == PIN_LED_LB)
     ledcDetachPin(PIN_LED_LB);
 #endif
     digitalWrite(PIN_LED_LI, !digitalRead(PIN_LED_LI));
@@ -1613,12 +1694,12 @@ void update_indicator() {
 #else
     digitalWrite(PIN_LED_LI, LOW);
 #endif
-#if (OPENBOT == RTR_520 && PIN_LED_LI == PIN_LED_LB)
+#if ((OPENBOT == RTR_TT2 || OPENBOT == RTR_520) && PIN_LED_LI == PIN_LED_LB)
     ledcAttachPin(PIN_LED_LB, CH_LED_LB);
 #endif
   }
   if (indicator_right > 0) {
-#if (OPENBOT == RTR_520 && PIN_LED_RI == PIN_LED_RB)
+#if ((OPENBOT == RTR_TT2 || OPENBOT == RTR_520) && PIN_LED_RI == PIN_LED_RB)
     ledcDetachPin(PIN_LED_RB);
 #endif
     digitalWrite(PIN_LED_RI, !digitalRead(PIN_LED_RI));
@@ -1628,7 +1709,7 @@ void update_indicator() {
 #else
     digitalWrite(PIN_LED_RI, LOW);
 #endif
-#if (OPENBOT == RTR_520 && PIN_LED_RI == PIN_LED_RB)
+#if ((OPENBOT == RTR_TT2 || OPENBOT == RTR_520) && PIN_LED_RI == PIN_LED_RB)
     ledcAttachPin(PIN_LED_RB, CH_LED_RB);
 #endif
   }
@@ -1639,7 +1720,7 @@ void update_indicator() {
 #if (HAS_LEDS_FRONT || HAS_LEDS_BACK)
 void update_light() {
 #if (HAS_LEDS_FRONT)
-#if (OPENBOT == RTR_520)
+#if (OPENBOT == RTR_TT2 || OPENBOT == RTR_520)
   analogWrite(CH_LED_LF, light_front);
   analogWrite(CH_LED_RF, light_front);
 #else
@@ -1649,7 +1730,7 @@ void update_light() {
 #endif
 
 #if (HAS_LEDS_BACK)
-#if (OPENBOT == RTR_520)
+#if (OPENBOT == RTR_TT2 || OPENBOT == RTR_520)
   analogWrite(CH_LED_LB, light_back);
   analogWrite(CH_LED_RB, light_back);
 #else

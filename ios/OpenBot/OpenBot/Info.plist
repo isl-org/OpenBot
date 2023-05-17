@@ -94,5 +94,7 @@
 			</dict>
 		</dict>
 	</array>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>Allow Audio Player for sound mode</string>
 </dict>
 </plist>
