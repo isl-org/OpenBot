@@ -38,7 +38,7 @@ javascriptGenerator['soundMode'] = function (block) {
     let dropdown_mode_type = block.getFieldValue('mode_type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
     let code = '';
-    code += "playSoundMode(" + dropdown_mode_type + ");\n" + value_name;
+    code += "playSoundMode('" + dropdown_mode_type + "');\n" + value_name;
     return code;
 };
 
@@ -302,5 +302,35 @@ javascriptGenerator['brightnessHighOrLow'] = function (block) {
 
     let code = "";
     code += "toggleLed(" + indicatorStatus() + ");\n";
+    return code;
+};
+
+javascriptGenerator['followObjects'] = function(block) {
+    let dropdown_follow_objects = block.getFieldValue('follow objects');
+    let code = '';
+    code+="follow('"+dropdown_follow_objects+"');\n"
+    return code;
+};
+
+javascriptGenerator['navigate'] = function(block) {
+    let dropdown_navigate_models = block.getFieldValue('navigate models');
+    let code = '';
+    code+="navigationModel('"+dropdown_navigate_models+"');\n"
+    return code;
+};
+
+javascriptGenerator['navigateForwardAndLeft'] = function(block) {
+    let left_position = block.getFieldValue('left');
+    let right_position = block.getFieldValue('right');
+    let code = '';
+    code+="reachGoal("+left_position+","+right_position+");\n";
+    return code;
+};
+
+javascriptGenerator['navigateXAndY'] = function(block) {
+    let positionX = block.getFieldValue('x');
+    let positionY = block.getFieldValue('y');
+    let code = '';
+    code+="reachPosition("+positionX+","+positionY+");\n";
     return code;
 };

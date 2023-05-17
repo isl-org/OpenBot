@@ -1,6 +1,5 @@
 import {pythonGenerator} from "blockly/python";
 
-
 /**
  * code generation of blocks in python
  * @returns {string}
@@ -17,7 +16,7 @@ pythonGenerator['soundMode'] = function (block) {
     let dropdown_mode_type = block.getFieldValue('mode_type');
     let value_name = pythonGenerator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
     let code = '';
-    code += "playSoundMode(" + dropdown_mode_type + ")\n" + value_name;
+    code += "playSoundMode('" + dropdown_mode_type + "')\n" + value_name;
     return code;
 };
 
@@ -283,3 +282,32 @@ pythonGenerator['brightnessHighOrLow'] = function (block) {
     return code;
 };
 
+pythonGenerator['followObjects'] = function(block) {
+    let dropdown_follow_objects = block.getFieldValue('follow objects');
+    let code = '';
+    code+="follow('"+dropdown_follow_objects+"')\n"
+    return code;
+};
+
+pythonGenerator['navigate'] = function(block) {
+    let dropdown_navigate_models = block.getFieldValue('navigate models');
+    let code = '';
+    code+="navigationModel('"+dropdown_navigate_models+"')\n"
+    return code;
+};
+
+pythonGenerator['navigateForwardAndLeft'] = function(block) {
+    let left_position = block.getFieldValue('left');
+    let right_position = block.getFieldValue('right');
+    let code = '';
+    code+="reachGoal("+left_position+","+right_position+")\n";
+    return code;
+};
+
+pythonGenerator['navigateXAndY'] = function(block) {
+    let positionX = block.getFieldValue('x');
+    let positionY = block.getFieldValue('y');
+    let code = '';
+    code+="reachPosition("+positionX+","+positionY+")\n";
+    return code;
+};

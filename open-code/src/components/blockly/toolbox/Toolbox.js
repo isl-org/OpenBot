@@ -82,7 +82,6 @@ export const Toolbox = (props) => {
 
             <Category name="Variables" colour={"#D030BA"}>
                 <Label text="Variables" web-class="Heading"></Label>
-                {/*<Button text="create new variable.." callbackKey="customVariableButton"></Button>*/}
                 <Block type="variables_set"/>
                 <Block type="variables_get"/>
                 <Block type="math_change"/>
@@ -138,6 +137,12 @@ export const Toolbox = (props) => {
                 <Block type="movementStop"/>
                 {/*<Block type="motorDirection"/>*/}
                 {/*<Block type="motorStop"/>*/}
+            </Category>
+            <Category name="AI" colour={"#D030BA"}>
+                <Block type="followObjects"/>
+                <Block type="navigate"/>
+                <Block type="navigateXAndY"/>
+                <Block type="navigateForwardAndLeft"/>
             </Category>
         </>
     );
