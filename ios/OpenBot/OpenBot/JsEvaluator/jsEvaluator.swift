@@ -202,6 +202,24 @@ class jsEvaluator {
                     return temp;
                 }
 
+                let navigationModel: @convention(block) (String) -> Void = {(model) in
+                    self.runOpenBotThreadClass?.navigationModel(model : model);
+                }
+
+                let reachGoal: @convention(block) (Double,Double) -> Void = {(forward,left) in
+                    self.runOpenBotThreadClass?.reachGoal(forward : forward, left : left);
+                }
+
+                let reachPosition: @convention(block) (Double,Double) -> Void = {(x,y) in
+                    self.runOpenBotThreadClass?.reachPosition(x : x, y : y);
+                }
+
+                let follow: @convention(block) (String)-> Void = { (object) in
+                    self.runOpenBotThreadClass?.follow(object:object);
+                }
+
+
+
                 context.setObject(moveForward,
                         forKeyedSubscript: Strings.moveForward as NSString)
                 context.setObject(loop,
@@ -282,6 +300,14 @@ class jsEvaluator {
                         forKeyedSubscript: "magneticReadingY" as NSString);
                 context.setObject(magneticReadingZ,
                         forKeyedSubscript: "magneticReadingZ" as NSString);
+                context.setObject(navigationModel,
+                        forKeyedSubscript: "navigationModel" as NSString);
+                context.setObject(reachGoal,
+                        forKeyedSubscript: "reachGoal" as NSString)
+                context.setObject(follow,
+                        forKeyedSubscript: "follow" as NSString);
+                context.setObject(reachPosition,
+                        forKeyedSubscript: "reachPosition" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -786,6 +812,22 @@ class jsEvaluator {
             default:
                 return 0.0
             }
+        }
+
+        func navigationModel(model : String){
+            print(model);
+        }
+
+        func reachGoal(forward : Double, left : Double){
+            print(forward,left);
+        }
+
+        func reachPosition(x : Double, y : Double){
+            print(x , y);
+        }
+
+        func follow(object : String){
+            print(object);
         }
     }
 }
