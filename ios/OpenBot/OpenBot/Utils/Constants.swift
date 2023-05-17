@@ -50,6 +50,8 @@ struct Colors {
     static let textColor = UIColor(named: "textColor")
     static let navigationColor = UIColor(named: "navigationColor")
     static let modelDetail = UIColor(named: "modelDetailPopup")
+    static let blue = UIColor(red: 0, green: 113, blue: 197, alpha: 1);
+    static let lightBlack = UIColor(red: 0.16, green: 0.16, blue: 0.16, alpha: 1.00)
 }
 
 /// Set of constants used in the code
@@ -77,6 +79,7 @@ struct Constants {
     static let types: [String] = ["AUTOPILOT", "DETECTOR", "NAVIGATION"]
     static let classes: [String] = ["AUTOPILOT_F", "MOBILENET", "YOLOV4", "YOLOV5", "EFFICIENTDET", "NAVIGATION"]
     static let devices: [String] = ["CPU", "XNNPACK"]
+
 }
 
 /// The different speed modes of the OpenBot
@@ -160,4 +163,11 @@ enum PATH_TYPE: String {
     case URL = "URL",
          ASSET = "ASSET",
          FILE = "FILE"
+}
+/// Class for value of all safe area value
+struct safeAreaLayoutValue{
+    static let top : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0.0
+    static let bottom : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0.0
+    static let left : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0.0;
+    static let right : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0.0;
 }

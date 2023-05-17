@@ -28,6 +28,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("navigationController is :",navigationController);
         setupNavigationBarItem()
         setupSpeedMode()
         applySafeAreaConstraints()
@@ -509,8 +510,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     /// update the speedometer value
     func updateSpeedometer() {
-        let oldTag = view.viewWithTag(100)
-        oldTag?.removeFromSuperview()
+        let oldTag = view.viewWithTag(100);
+        oldTag?.removeFromSuperview();
         let a = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
         a.tag = 100
         let speedometer = bluetooth.speedometer
@@ -558,6 +559,15 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+    }
+
+    override func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
+        super.beginAppearanceTransition(isAppearing, animated: animated)
+
+    }
+
+    override func endAppearanceTransition() {
+        super.endAppearanceTransition()
     }
 
     /// open the bluetooth settings screen

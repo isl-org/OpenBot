@@ -150,7 +150,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     }
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        //print("Data sent to :", peripheral.name as Any);
+        print("Data sent to :", peripheral.name as Any);
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
@@ -210,6 +210,7 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     ///
     /// - Parameter payload: string that should be sent to the connected device
     func sendData(payload: String) {
+        print("sending payload ", payload);
         let dataToSend: Data? = payload.data(using: String.Encoding.utf8)
         if (dataToSend != nil && discoveredPeripheral != nil && discoveredPeripheral.canSendWriteWithoutResponse) {
             if let writeCharacteristics {
@@ -248,6 +249,39 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     @objc func startNotification() {
         //        tempCentralManager = CBCentralManager(delegate: self, queue: nil)
     }
+
+    func getSonar() -> Int {
+        if sonarData != "" {
+            let index = sonarData.index(after: sonarData.startIndex)
+            let actualSonarValue = min(Int(String(sonarData[index...])) ?? 0, 300)
+            return actualSonarValue
+        }
+        return 0;
+
+    }
+
+    func getSpeed() -> Int {
+        if speedometer != "" {
+            let index_1 = speedometer.index(after: speedometer.startIndex)
+            let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
+            let index_2 = speedometer.index(before: indexOfComma)
+            let leftFront = Float(speedometer[index_1...index_2])
+            let rightFont = Float(speedometer[speedometer.index(after: indexOfComma)...])
+            let value = Int(((leftFront ?? 0) + (rightFont ?? 0)) / 2)
+            return value;
+        }
+        return 0;
+    }
+
+    func getVoltage() -> Double {
+        if voltageDivider != "" {
+            let index = voltageDivider.index(after: voltageDivider.startIndex)
+            return Double(String(voltageDivider[index...])) ?? 0
+        }
+        return 0.0;
+    }
+
+
 }
 
 
