@@ -109,17 +109,14 @@ class VehicleControl: UIView {
             switch (driveMode) {
             case .JOYSTICK:
                 driveMode = .GAME;
-                audioPlayer.playDriveMode(driveMode: driveMode);
                 createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 break;
             case .GAME:
                 driveMode = .DUAL;
-                audioPlayer.playDriveMode(driveMode: driveMode)
                 createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 break;
             case .DUAL:
                 driveMode = .JOYSTICK;
-                audioPlayer.playDriveMode(driveMode: driveMode)
                 createAndUpdateButton(iconName: Images.joystickIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 break;
             }
@@ -133,17 +130,14 @@ class VehicleControl: UIView {
             switch (speedMode) {
             case .SLOW:
                 speedMode = .NORMAL;
-                audioPlayer.playSpeedMode(speedMode: speedMode);
                 createAndUpdateButton(iconName: Images.mediumIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
                 break;
             case .NORMAL:
                 speedMode = .FAST;
-                audioPlayer.playSpeedMode(speedMode: speedMode);
                 createAndUpdateButton(iconName: Images.fastIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
                 break;
             case .FAST:
                 speedMode = .SLOW;
-                audioPlayer.playSpeedMode(speedMode: speedMode);
                 createAndUpdateButton(iconName: Images.slowIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
                 break;
             }
@@ -217,6 +211,7 @@ class VehicleControl: UIView {
             break;
         }
         updateSpeedMode(self);
+        audioPlayer.playSpeedMode(speedMode: speedMode);
     }
 
     ///function to increase the speed modes.
@@ -230,10 +225,12 @@ class VehicleControl: UIView {
         case .FAST:
             return;
         }
+        audioPlayer.playSpeedMode(speedMode: speedMode);
     }
 
     /// function to update the drive modes.
     @objc func updateDrive(_ notification: Notification) {
         updateDriveMode(self)
+        audioPlayer.playDriveMode(driveMode: driveMode);
     }
 }

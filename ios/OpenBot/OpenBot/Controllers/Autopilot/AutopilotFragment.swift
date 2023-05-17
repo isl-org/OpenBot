@@ -27,8 +27,6 @@ class AutopilotFragment: CameraController {
     /// Called after the view fragment has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
-        let x = AudioPlayer();
-        x.playDriveMode(driveMode: DriveMode.JOYSTICK);
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         expandedAutoPilotView = expandedAutoPilot(frame: CGRect(x: 0, y: height - 375, width: width, height: 400))
         expandedAutoPilotView!.backgroundColor = Colors.freeRoamButtonsColor

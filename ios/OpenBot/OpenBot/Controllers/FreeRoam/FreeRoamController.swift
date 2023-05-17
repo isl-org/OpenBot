@@ -62,6 +62,13 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         gameController.resetControl = false
     }
 
+    /**
+     Removing all notifications
+     */
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     /// Called after the view was dismissed, covered or otherwise hidden.
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated);
@@ -391,21 +398,18 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     @objc func joystick(_ sender: UIView) {
         selectedDriveMode = DriveMode.JOYSTICK
         gameController.selectedDriveMode = DriveMode.JOYSTICK
-        audioPlayer.playDriveMode(driveMode: DriveMode.JOYSTICK)
         updateGameControllerModeType()
     }
 
     @objc func gameMode(_ sender: UIView) {
         selectedDriveMode = DriveMode.GAME
         gameController.selectedDriveMode = DriveMode.GAME
-        audioPlayer.playDriveMode(driveMode: DriveMode.GAME)
         updateGameControllerModeType()
     }
 
     @objc func dualMode(_ sender: UIView) {
         selectedDriveMode = DriveMode.DUAL
         gameController.selectedDriveMode = DriveMode.DUAL
-        audioPlayer.playDriveMode(driveMode: DriveMode.DUAL)
         updateGameControllerModeType()
     }
 
@@ -429,35 +433,29 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     @objc func phoneMode(_ sender: UIView) {
         selectedControlMode = ControlMode.PHONE
-//        audioPlayer.play(driveMode:ControlMode.PHONE )
         updateControlMode()
     }
 
     @objc func gamepadMode(_ sender: UIView) {
         selectedControlMode = ControlMode.GAMEPAD;
-//        audioPlayer.play(driveMode:ControlMode.GAMEPAD )
         updateControlMode()
     }
 
     @objc func slow(_ sender: UIView) {
         selectedSpeedMode = SpeedMode.SLOW
         gameController.selectedSpeedMode = SpeedMode.SLOW
-        audioPlayer.playSpeedMode(speedMode: SpeedMode.SLOW)
         updateSpeedModes()
     }
 
     @objc func medium(_ sender: UIView) {
         selectedSpeedMode = SpeedMode.NORMAL
         gameController.selectedSpeedMode = SpeedMode.NORMAL
-        audioPlayer.playSpeedMode(speedMode: SpeedMode.NORMAL)
-
         updateSpeedModes()
     }
 
     @objc func fast(_ sender: UIView) {
         selectedSpeedMode = SpeedMode.FAST
         gameController.selectedSpeedMode = SpeedMode.FAST
-        audioPlayer.playSpeedMode(speedMode: SpeedMode.FAST)
         updateSpeedModes()
     }
 
@@ -589,6 +587,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             selectedSpeedMode = .NORMAL;
             break;
         }
+        audioPlayer.playSpeedMode(speedMode: selectedSpeedMode);
         updateSpeedModes()
     }
 
@@ -604,6 +603,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         case .FAST:
             return
         }
+        audioPlayer.playSpeedMode(speedMode: selectedSpeedMode);
         updateSpeedModes()
     }
 
@@ -625,6 +625,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             }
         }
         updateGameControllerModeType()
+        audioPlayer.playDriveMode(driveMode: selectedDriveMode);
     }
 
     /// update screen data coming from application

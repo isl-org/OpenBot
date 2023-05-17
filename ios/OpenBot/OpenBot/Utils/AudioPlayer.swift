@@ -18,40 +18,10 @@ class AudioPlayer : AVPlayer  {
     }
 
     deinit {
+        NotificationCenter.default.removeObserver(self)
         player?.currentItem?.removeObserver(self, forKeyPath: "status")
     }
 
-
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//
-//        let url = URL(string: "https://s3.amazonaws.com/kargopolov/kukushka.mp3")
-//        let playerItem: AVPlayerItem = AVPlayerItem(url: url!)
-//        guard let audioData = NSDataAsset(name: "dual_drive_control")?.data else {
-//            fatalError("Unable to find asset ")
-//        }
-//        print(audioData)
-////        let playerItem : AVPlayerItem = AVPlayerItem(asset: <#T##AVAsset##AVFoundation.AVAsset#>)
-//        player = AVPlayer(playerItem: playerItem)
-//
-//        let playerLayer = AVPlayerLayer(player: player!)
-//        playerLayer.frame = CGRect(x: 0, y: 0, width: 10, height: 50)
-//        self.view.layer.addSublayer(playerLayer)
-//
-//        playButton = UIButton(type: UIButton.ButtonType.system) as UIButton
-//        let xPostion: CGFloat = 50
-//        let yPostion: CGFloat = 100
-//        let buttonWidth: CGFloat = 150
-//        let buttonHeight: CGFloat = 45
-//
-//        playButton!.frame = CGRect(x: xPostion, y: yPostion, width: buttonWidth, height: buttonHeight)
-//        playButton!.backgroundColor = UIColor.lightGray
-//        playButton!.setTitle("Play", for: UIControl.State.normal)
-//        playButton!.tintColor = UIColor.black
-//        playButton!.addTarget(self, action: #selector(self.playButtonTapped(_:)), for: .touchUpInside)
-//
-//        self.view.addSubview(playButton!)
-//    }
 
     @objc func playButtonTapped(_ sender: UIButton) {
         playAssetAudio()
