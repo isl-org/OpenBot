@@ -163,6 +163,7 @@
     <string name="scanner">Scanner</string>
     <string name="home">Home</string>
     <string name="scan_qr_code">Scan QR Code</string>
+    <string name="playground">Playground</string>
     <string name="text_on_qr_screen">Place QR code inside the frame to scan. Please avoid shake to get results quickly.</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="logout">Logout</string>

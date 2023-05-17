@@ -132,6 +132,9 @@
         <action
             android:id="@+id/action_projectsFragment_to_blocklyExecutingFragment"
             app:destination="@id/blocklyExecutingFragment" />
+        <action
+            android:id="@+id/action_projectsFragment_to_playGroundFragment"
+            app:destination="@id/playGroundFragment" />
     </fragment>
     <action
         android:id="@+id/open_projects_fragment"
@@ -146,6 +149,12 @@
             android:id="@+id/action_barCodeScannerFragment_to_blocklyExecutingFragment"
             app:destination="@id/blocklyExecutingFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/playGroundFragment"
+        android:name="org.openbot.playground.PlayGroundViewFragment"
+        android:label="PlayGround"
+        tools:layout="@layout/fragment_playground"/>
 
     <fragment
         android:id="@+id/blocklyExecutingFragment"

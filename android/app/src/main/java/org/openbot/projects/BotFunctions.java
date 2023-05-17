@@ -1,74 +1,87 @@
 package org.openbot.projects;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.webkit.JavascriptInterface;
 import java.util.Objects;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.utils.Enums;
-import org.openbot.vehicle.Control;
 import org.openbot.vehicle.Vehicle;
-import timber.log.Timber;
 
 /** implement openBot functions according to block codes. */
 public class BotFunctions implements SensorEventListener {
-  private final Vehicle v;
-  private final AudioPlayer ap;
-  private final SharedPreferencesManager sp;
-  private final String TAG = "sensor reading";
+  private final Vehicle vehicle;
+  private final AudioPlayer audioPlayer;
+  private final SharedPreferencesManager sharedPreferencesManager;
+  private final SensorManager sensorManager;
+  private final Sensor accelerometerSensor;
+  private final Sensor gyroscopeSensor;
+  private final Sensor magneticSensor;
+  private final float[] gyroscopeValues = new float[3]; // Array to store gyroscope values
+  private final float[] accelerometerValues = new float[3]; // Array to store accelerometer values
+  private final float[] magneticFieldValues = new float[3]; // Array to store magnetic values
 
   /**
    * get vehicle and audioPlayer in parameters to control openBot commands.
    *
-   * @param vehicle
-   * @param audioPlayer
-   * @param sharedPreferencesManager
+   * @param getVehicle
+   * @param getAudioPlayer
+   * @param getSharedPreferencesManager
    */
   public BotFunctions(
-      Vehicle vehicle, AudioPlayer audioPlayer, SharedPreferencesManager sharedPreferencesManager) {
-    v = vehicle;
-    ap = audioPlayer;
-    sp = sharedPreferencesManager;
+      Vehicle getVehicle,
+      AudioPlayer getAudioPlayer,
+      SharedPreferencesManager getSharedPreferencesManager,
+      Context mContext) {
+    vehicle = getVehicle;
+    audioPlayer = getAudioPlayer;
+    sharedPreferencesManager = getSharedPreferencesManager;
+    sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
+    accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+    magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
   }
 
   /** openBot Movement functions */
   @JavascriptInterface
   public void moveForward(int speed) {
-    double speedResult = (double) speed / (double) v.getSpeedMultiplier();
-    v.setControl((float) speedResult, (float) speedResult);
+    double speedResult = (double) speed / (double) vehicle.getSpeedMultiplier();
+    vehicle.setControl((float) speedResult, (float) speedResult);
   }
 
   @JavascriptInterface
   public void moveBackward(int speed) {
-    double speedResult = (double) speed / (double) v.getSpeedMultiplier();
-    v.setControl((float) -speedResult, (float) -speedResult);
+    double speedResult = (double) speed / (double) vehicle.getSpeedMultiplier();
+    vehicle.setControl((float) -speedResult, (float) -speedResult);
   }
 
   @JavascriptInterface
   public void moveLeft(int speed) {
-    double speedResult = (double) speed / (double) v.getSpeedMultiplier();
-    v.setControl(0, (float) speedResult);
+    double speedResult = (double) speed / (double) vehicle.getSpeedMultiplier();
+    vehicle.setControl(0, (float) speedResult);
   }
 
   @JavascriptInterface
   public void moveRight(int speed) {
-    double speedResult = (double) speed / (double) v.getSpeedMultiplier();
-    v.setControl((float) speedResult, 0);
+    double speedResult = (double) speed / (double) vehicle.getSpeedMultiplier();
+    vehicle.setControl((float) speedResult, 0);
   }
 
   @JavascriptInterface
   public void moveOpenBot(int leftSpeed, int rightSpeed) {
-    double leftSpeedResult = (double) leftSpeed / (double) v.getSpeedMultiplier();
-    double rightSpeedResult = (double) rightSpeed / (double) v.getSpeedMultiplier();
-    v.setControl((float) leftSpeedResult, (float) rightSpeedResult);
+    double leftSpeedResult = (double) leftSpeed / (double) vehicle.getSpeedMultiplier();
+    double rightSpeedResult = (double) rightSpeed / (double) vehicle.getSpeedMultiplier();
+    vehicle.setControl((float) leftSpeedResult, (float) rightSpeedResult);
   }
 
   //    @JavascriptInterface
   //    public void openBotmoveCircular(int a) {
   //        Control control = new Control(1F, 1F);
-  //        v.setControl(control);
+  //        vehicle.setControl(control);
   //    }
 
   @JavascriptInterface
@@ -80,13 +93,13 @@ public class BotFunctions implements SensorEventListener {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-//    Control control = new Control(0, 0);
-//    v.setControl(control);
+    //    Control control = new Control(0, 0);
+    //    vehicle.setControl(control);
   }
 
   @JavascriptInterface
   public void stopRobot() {
-    v.setControl(0, 0);
+    vehicle.setControl(0, 0);
   }
 
   /**
@@ -96,120 +109,168 @@ public class BotFunctions implements SensorEventListener {
    */
   @JavascriptInterface
   public float sonarReading() {
-    Timber.tag(TAG).d("sonarReading - %s", v.getSonarReading());
-    return v.getSonarReading();
+    return vehicle.getSonarReading();
   }
 
   @JavascriptInterface
   public float speedReading() {
-    Timber.tag(TAG).d("Left speed - %s", v.getLeftWheelRpm());
-    Timber.tag(TAG).d("Right speed - %s", v.getRightWheelRpm());
-    float speedReading = (v.getLeftWheelRpm() + v.getRightWheelRpm())/2;
+    float speedReading = (vehicle.getLeftWheelRpm() + vehicle.getRightWheelRpm()) / 2;
     return speedReading;
   }
 
   @JavascriptInterface
   public float voltageDividerReading() {
-    Timber.tag(TAG).d("Battery Voltage - %s", v.getBatteryVoltage());
-    return v.getBatteryVoltage();
+    return vehicle.getBatteryVoltage();
   }
 
   @JavascriptInterface
   public boolean frontWheelReading() {
-    Timber.tag(TAG).d("Odometer Front - %s", v.isHasWheelOdometryFront());
-    return v.isHasWheelOdometryFront();
+    return vehicle.isHasWheelOdometryFront();
   }
 
   @JavascriptInterface
   public boolean backWheelReading() {
-    Timber.tag(TAG).d("Odometer Back - %s", v.isHasWheelOdometryBack());
-    return v.isHasWheelOdometryBack();
+    return vehicle.isHasWheelOdometryBack();
   }
 
   @JavascriptInterface
-  public void gyroscopeReading() {}
+  public float gyroscopeReadingX() {
+    sensorManager.registerListener(
+        this, gyroscopeSensor, sharedPreferencesManager.getDelay() * 1000);
+    return gyroscopeValues[0];
+  }
 
   @JavascriptInterface
-  public void accelerationReading() {}
+  public float gyroscopeReadingY() {
+    sensorManager.registerListener(
+        this, gyroscopeSensor, sharedPreferencesManager.getDelay() * 1000);
+    return gyroscopeValues[1];
+  }
 
   @JavascriptInterface
-  public void magneticReading() {}
+  public float gyroscopeReadingZ() {
+    sensorManager.registerListener(
+        this, gyroscopeSensor, sharedPreferencesManager.getDelay() * 1000);
+    return gyroscopeValues[2];
+  }
+
+  @JavascriptInterface
+  public float accelerationReadingX() {
+    sensorManager.registerListener(
+        this, accelerometerSensor, sharedPreferencesManager.getDelay() * 1000);
+    return accelerometerValues[0];
+  }
+
+  @JavascriptInterface
+  public float accelerationReadingY() {
+    sensorManager.registerListener(
+        this, accelerometerSensor, sharedPreferencesManager.getDelay() * 1000);
+    return accelerometerValues[1];
+  }
+
+  @JavascriptInterface
+  public float accelerationReadingZ() {
+    sensorManager.registerListener(
+        this, accelerometerSensor, sharedPreferencesManager.getDelay() * 1000);
+    return accelerometerValues[2];
+  }
+
+  @JavascriptInterface
+  public float magneticReadingX() {
+    sensorManager.registerListener(
+        this, magneticSensor, sharedPreferencesManager.getDelay() * 1000);
+    return magneticFieldValues[0];
+  }
+
+  @JavascriptInterface
+  public float magneticReadingY() {
+    sensorManager.registerListener(
+        this, magneticSensor, sharedPreferencesManager.getDelay() * 1000);
+    return magneticFieldValues[1];
+  }
+
+  @JavascriptInterface
+  public float magneticReadingZ() {
+    sensorManager.registerListener(
+        this, magneticSensor, sharedPreferencesManager.getDelay() * 1000);
+    return magneticFieldValues[2];
+  }
 
   @JavascriptInterface
   public void indicatorReading() {
-    Timber.tag(TAG).d("Indicator - %s", v.isHasIndicators());
+    //    Timber.tag(TAG).d("Indicator - %s", vehicle.isHasIndicators());
   }
 
   /** service command to robot */
   @JavascriptInterface
   public void noiseEnable(boolean playSound) {
-    ap.playNoise("matthew", playSound);
+    audioPlayer.playNoise("matthew", playSound);
   }
 
   @JavascriptInterface
   public void playSoundSpeed(String speedMode) {
     if (Objects.equals(speedMode, "slow")) {
-      ap.playSpeedMode("matthew", Enums.SpeedMode.SLOW);
+      audioPlayer.playSpeedMode("matthew", Enums.SpeedMode.SLOW);
     } else if (Objects.equals(speedMode, "medium")) {
-      ap.playSpeedMode("matthew", Enums.SpeedMode.NORMAL);
+      audioPlayer.playSpeedMode("matthew", Enums.SpeedMode.NORMAL);
     } else if (Objects.equals(speedMode, "fast")) {
-      ap.playSpeedMode("matthew", Enums.SpeedMode.FAST);
+      audioPlayer.playSpeedMode("matthew", Enums.SpeedMode.FAST);
     }
   }
 
   @JavascriptInterface
   public void rightIndicatorOn() {
-    v.setIndicator(1);
+    vehicle.setIndicator(1);
   }
 
   @JavascriptInterface
   public void leftIndicatorOn() {
-    v.setIndicator(-1);
+    vehicle.setIndicator(-1);
   }
 
   @JavascriptInterface
   public void IndicatorOff() {
-    v.setIndicator(0);
+    vehicle.setIndicator(0);
   }
 
   @JavascriptInterface
   public void rightIndicatorOff() {
-    v.setIndicator(0);
+    vehicle.setIndicator(0);
   }
 
   @JavascriptInterface
   public void leftIndicatorOff() {
-    v.setIndicator(0);
+    vehicle.setIndicator(0);
   }
 
   @JavascriptInterface
   public void IndicatorOn() {
-    v.setIndicator(1);
-    v.setIndicator(-1);
+    vehicle.setIndicator(1);
+    vehicle.setIndicator(-1);
   }
 
   @JavascriptInterface
   public void ledBrightness(int value) {
-    v.sendLightIntensity(value, value);
+    vehicle.sendLightIntensity(value, value);
   }
 
   @JavascriptInterface
   public void switchController(String controllerMode) {
     if (Objects.equals(controllerMode, "gamepad")) {
-      sp.setControlMode(0);
+      sharedPreferencesManager.setControlMode(0);
     } else if (Objects.equals(controllerMode, "phone")) {
-      sp.setControlMode(1);
+      sharedPreferencesManager.setControlMode(1);
     }
   }
 
   @JavascriptInterface
   public void switchDriveMode(String driveMode) {
     if (Objects.equals(driveMode, "dual")) {
-      sp.setDriveMode(0);
+      sharedPreferencesManager.setDriveMode(0);
     } else if (Objects.equals(driveMode, "game")) {
-      sp.setDriveMode(1);
+      sharedPreferencesManager.setDriveMode(1);
     } else if (Objects.equals(driveMode, "joystick")) {
-      sp.setDriveMode(2);
+      sharedPreferencesManager.setDriveMode(2);
     }
   }
 
@@ -219,44 +280,23 @@ public class BotFunctions implements SensorEventListener {
       case Sensor.TYPE_ACCELEROMETER:
         // Acceleration including gravity along the X, Y and Z axis
         // Units are m/s^2
-        Timber.tag(TAG)
-            .d(
-                "Acceleration Reading - %s",
-                event.timestamp
-                    + ","
-                    + event.values[0]
-                    + ","
-                    + event.values[1]
-                    + ","
-                    + event.values[2]);
+        accelerometerValues[0] = event.values[0]; // Accelerometer X-axis value
+        accelerometerValues[1] = event.values[1]; // Accelerometer Y-axis value
+        accelerometerValues[2] = event.values[2]; // Accelerometer Z-axis value
         break;
       case Sensor.TYPE_GYROSCOPE:
         // Angular speed around the device's local X, Y and Z axis
         // Units are radians/second
         // The coordinate system is the same as is used by the acceleration sensor
-        Timber.tag(TAG)
-            .d(
-                "Gyroscope Reading - %s",
-                event.timestamp
-                    + ","
-                    + event.values[0]
-                    + ","
-                    + event.values[1]
-                    + ","
-                    + event.values[2]);
+        gyroscopeValues[0] = event.values[0]; // Gyroscope X-axis value
+        gyroscopeValues[1] = event.values[1]; // Gyroscope Y-axis value
+        gyroscopeValues[2] = event.values[2]; // Gyroscope Z-axis value
         break;
       case Sensor.TYPE_MAGNETIC_FIELD:
         // Ambient magnetic field in the X, Y and Z axis in micro-Tesla (uT).
-        Timber.tag(TAG)
-            .d(
-                "Magnetic Reading - %s",
-                event.timestamp
-                    + ","
-                    + event.values[0]
-                    + ","
-                    + event.values[1]
-                    + ","
-                    + event.values[2]);
+        magneticFieldValues[0] = event.values[0]; // magneticField X-axis value
+        magneticFieldValues[1] = event.values[1]; // magneticField Y-axis value
+        magneticFieldValues[2] = event.values[2]; // magneticField Z-axis value
         break;
       default:
         break;

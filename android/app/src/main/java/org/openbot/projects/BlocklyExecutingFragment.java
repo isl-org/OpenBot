@@ -59,7 +59,8 @@ public class BlocklyExecutingFragment extends ControlsFragment {
             vehicle.setSpeedMultiplier(255);
             // add a JavaScript interface to the web-view.
             myWebView.addJavascriptInterface(
-                new BotFunctions(vehicle, audioPlayer, sharedPreferencesManager), "Android");
+                new BotFunctions(vehicle, audioPlayer, sharedPreferencesManager, requireContext()),
+                "Android");
             // execute the JavaScript code in the web-view.
             myWebView.evaluateJavascript(finalCode, null);
           });
