@@ -815,18 +815,30 @@ class jsEvaluator {
         }
 
         func navigationModel(model : String){
+            if isCancelled {
+                return
+            }
             print(model);
         }
 
         func reachGoal(forward : Double, left : Double){
+            if isCancelled {
+                return
+            }
             print(forward,left);
         }
 
         func reachPosition(x : Double, y : Double){
+            if isCancelled {
+                return
+            }
             print(x , y);
         }
 
         func follow(object : String){
+            if isCancelled {
+                return
+            }
             print(object);
         }
     }
