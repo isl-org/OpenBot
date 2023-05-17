@@ -9,7 +9,7 @@ import {HelpCenterModal} from "../homeComponents/header/helpCenterModal";
 import {EditProfileModal} from "../homeComponents/header/editProfileModal";
 import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
-import {PathName} from "../../utils/constants";
+import {localStorageKeys, PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -31,22 +31,27 @@ export function Header() {
     const [isEditProfileModal, setIsEditProfileModal] = useState(false);
     const [isLogoutModal, setIsLogoutModal] = useState(false);
     const [open, setOpen] = useState(false);
-    const[deleteLoader,setDeleteLoader]=useState(false);
+    const [deleteLoader, setDeleteLoader] = useState(false);
     const location = useLocation();
     let navigate = useNavigate();
 
     useEffect(() => {
-        auth.onAuthStateChanged(function (currentUser) {
+        auth.onAuthStateChanged(async function (currentUser) {
+            console.log("currentUser:::", currentUser)
+            const userCredential = await currentUser.getIdTokenResult();
+            localStorage.setItem("isSigIn", "true");
+            localStorage.setItem(localStorageKeys.accessToken, userCredential.token);
+            console.log("userCredential", userCredential)
             setUser({
-                photoURL: currentUser?.photoURL,
-                displayName: currentUser?.displayName,
-                email: currentUser?.email,
+                photoURL: userCredential?.claims.picture,
+                displayName: userCredential?.claims.name,
+                email: userCredential?.claims.email,
             });
         })
     }, [isEditProfileModal, setUser])
 
     const handleClick = (event) => {
-        console.log("event::",event)
+        console.log("event::", event)
         setOpen(!open); // open and close popup
         setAnchorEl(anchorEl ? null : event.currentTarget); //popup event
     };
