@@ -110,8 +110,8 @@ class jsEvaluator {
                 let motorStop: @convention(block) () -> Void = { () in
                     self.runOpenBotThreadClass?.motorStop()
                 }
-                let playSoundMode: @convention(block) () -> Void = { () in
-
+                let playSoundMode: @convention(block) (String) -> Void = { (mode) in
+                    self.runOpenBotThreadClass?.playSoundMode(driveMode : mode);
                 }
                 let ledBrightness: @convention(block) (Int) -> Void = { brightnessFactor in
                     self.runOpenBotThreadClass?.setLedBrightness(factor: brightnessFactor);
@@ -331,7 +331,7 @@ class jsEvaluator {
         let bluetooth = bluetoothDataController.shared
         private var vehicleControl: Control = Control();
         private let sensor = sensorDataRetrieve.shared
-
+        private let audioPlayer = AudioPlayer.shared
 
         /**
          function to send controls to openBot
@@ -489,7 +489,38 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            print("inside playsound speed ", playSoundSpeed);
+           switch speedMode {
+           case "slow":
+               audioPlayer.playSpeedMode(speedMode: .SLOW);
+               break
+           case "medium":
+               audioPlayer.playSpeedMode(speedMode: .NORMAL);
+               break
+           case "fast":
+               audioPlayer.playSpeedMode(speedMode: .FAST);
+               break
+           default:
+               break
+           }
+        }
+
+        func playSoundMode(driveMode : String){
+            if isCancelled {
+                return
+            }
+            switch driveMode {
+            case "dual":
+                audioPlayer.playDriveMode(driveMode: .DUAL);
+                break
+            case "joystick":
+                audioPlayer.playDriveMode(driveMode: .JOYSTICK);
+                break
+            case "game":
+                audioPlayer.playDriveMode(driveMode: .GAME);
+                break
+            default:
+                break
+            }
         }
 
         /**
