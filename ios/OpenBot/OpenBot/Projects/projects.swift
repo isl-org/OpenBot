@@ -3,13 +3,17 @@
 //
 
 import Foundation
-public struct ProjectItem {
-    var projectName : String;
-    var projectDate : String;
-    var projectId : String
+import Foundation
+
+public struct ProjectItem: Codable {
+    var projectName: String
+    var projectDate: String
+    var projectId: String
 }
 
-public struct ProjectData {
-    var projectId : String;
-    var projectCommand : String;
+public struct ProjectData: Codable {
+    var projectId: String
+    var projectCommand: String
 }
+
+

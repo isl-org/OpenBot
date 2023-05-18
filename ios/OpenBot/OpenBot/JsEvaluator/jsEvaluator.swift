@@ -28,6 +28,7 @@ class jsEvaluator {
         initializeJS();
         evaluateJavaScript()
         NotificationCenter.default.addObserver(self, selector: #selector(cancelThread), name: .cancelThread, object: nil)
+        print("Js code is ", jsCode);
     }
 
     private func setupCommand() {
