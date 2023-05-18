@@ -106,7 +106,7 @@ function BlocklyComponent(props) {
         if (localStorage.getItem("isSigIn") === "true") {
             if (isOnline) {
                 let folderId = await getFolderId();
-                if(folderId) {
+                if (folderId) {
                     let fileExistWithFileID = await checkFileExistsInFolder(folderId, getCurrentProject().projectName, 'js')
                     if (fileExistWithFileID.exists) {
                         let QrLink = await getShareableLink(fileExistWithFileID.fileId, folderId)
@@ -120,6 +120,7 @@ function BlocklyComponent(props) {
     }
 
     useEffect(() => {
+
         checkQRCode().catch(err => {
             console.log(err);
         });
