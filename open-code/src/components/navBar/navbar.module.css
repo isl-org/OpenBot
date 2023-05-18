@@ -693,6 +693,7 @@
 
 /*tablet portrait mode*/
 @media (min-width: 744px) and (max-width: 1024px) {
+
     .navbarDiv {
         height: 6rem;
     }
@@ -725,7 +726,7 @@
     }
 
     .item {
-        padding: 0rem 1rem 0.7rem 1.5rem;
+        padding: 0rem 1.5rem 0.7rem .5rem !important;
         font-size: 22px;
     }
 
@@ -774,7 +775,23 @@
         display: flex;
         flex-direction: row;
     }
+    .option {
+        height: 100px !important;
+        width: 160px !important;
+    }
 
+    .option .item {
+        font-size: 0.8rem;
+        padding: 2px 0 10px 10px !important;
+        justify-content: start;
+    }
+    .renameText {
+        margin-left: 1rem;
+    }
+
+    .deleteText {
+        margin-left: 1rem;
+    }
 }
 
 @media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
@@ -847,12 +864,13 @@
     .successAlertBox {
         width: 40%;
     }
+
     .Edit {
         font-size: 1rem !important;
         line-height: 10px;
     }
 
-    .buttonIcon{
+    .buttonIcon {
         font-size: 15px;
     }
 

@@ -312,7 +312,7 @@
     /*margin-left: -10px;*/
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .Main {
         padding-left: 3.8%;
         padding-top: 12.6%;
@@ -437,10 +437,16 @@
     }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
+
+/*tablet portrait mode*/
+@media (min-width: 744px) and (max-width: 1024px) {
     .Main {
         padding-left: 3.8%;
         padding-top: 12.6%;
+    }
+
+    .Button {
+        width: 100%;
     }
 
     .MessageIcon {
@@ -455,7 +461,23 @@
         margin-left: -15px;
     }
 
+    .cardContent {
+        width: 33%;
+    }
 
+    .Card {
+        width: 100%;
+    }
+
+    .Content {
+        width: 33%;
+    }
+
+    .SaveBtn {
+        width: 150px;
+        padding: 0.5rem;
+        margin-left: 70%;
+    }
 }
 
 @media only screen and (min-width: 350px) and (max-width: 1024px) and (orientation: landscape) {
@@ -515,14 +537,17 @@
         font-size: 14px;
         font-family: Gilroy-Medium, sans-serif;
     }
+
     .model {
         width: 60%;
         height: 15rem;
         padding: 18px 20px 0px 20px;
     }
+
     .creatButton {
         width: 91%;
     }
+
     .line {
         margin: 5px -20px 0 -20px;
     }
