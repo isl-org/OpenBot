@@ -17,7 +17,6 @@ import {handleUniqueName} from "./newProjectButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material";
 
-
 /**
  * Card
  * @param props
@@ -69,7 +68,6 @@ function Card(props) {
             setProjectName(projectData.projectName);
             setFileId(projectData.fileId);
             openExistingProject();
-
         } catch (error) {
             console.error(error);
         }

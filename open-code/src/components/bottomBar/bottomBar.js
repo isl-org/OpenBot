@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import Blockly from "blockly/core";
 import styles from "./style.module.css"
 import {javascriptGenerator} from 'blockly/javascript';
@@ -6,15 +6,25 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
 import {Constants, errorToast} from "../../utils/constants";
-import {CircularProgress, circularProgressClasses, FormControl, MenuItem, Select, useTheme} from "@mui/material";
+import {
+    CircularProgress,
+    circularProgressClasses,
+    Popper,
+    useTheme
+} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
 import {motion, AnimatePresence} from "framer-motion";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
-import {getCurrentProject} from "../../services/workspace";
-
+import {getAllLocalProjects, getCurrentProject} from "../../services/workspace";
+import renameIcon from "../../assets/images/icon/rename-icon.png";
+import Edit from "../../assets/images/icon/edit.png";
+import deleteIcon from "../../assets/images/icon/delete-icon.png";
+import trash from "../../assets/images/icon/trash.png";
+import navbarStyle from "../navBar/navbar.module.css"
+import BlueText from "../fonts/blueText";
 
 /**
  * Bottom Bar contains generate code, upload on drive icon , zoom in-out and undo redo functionality.
@@ -92,6 +102,7 @@ export const BottomBar = () => {
     const clickedButton = (e) => {
         const {name} = e.target;
         setButtonSelected(name);
+
         switch (name) {
             case "redo": {
                 Blockly.getMainWorkspace().undo(true);
@@ -192,7 +203,6 @@ export const BottomBar = () => {
     );
 }
 
-
 /**
  * Generate Code Button
  * @param params
@@ -202,19 +212,51 @@ export const BottomBar = () => {
 function GenerateCodeButton(params) {
     const {generateCode, buttonSelected, clickedButton, buttonActive, setDrawer} = params
     const themes = useTheme();
-    const {setCategory} = useContext(StoreContext);
+    const {category, setCategory, drawer} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
-    const [language, setLanguage] = useState(Constants.js);
+    const [language, setLanguage] = useState(category === Constants.qr ? Constants.js : category);
+    const theme = useContext(ThemeContext)
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [openPopupArrow, setOpenPopupArrow] = useState(false);
+    const [arrowClick, setArrowClicked] = useState(false)
+    // const [openPopup, setOpenPopUp]=useState(true);
+    const popUpRef = useRef(null);// Create a reference to the popup element for detecting clicks outside the popup.
+    const handleClick = (event) => {
+        event.stopPropagation();
+        setOpenPopupArrow(!openPopupArrow);
+        setAnchorEl(anchorEl ? null : event.currentTarget);
+        setArrowClicked(true);
 
-    const handleDropDown = (event) => {
-        setLanguage(event.target.value);
-        setCategory(event.target.value);
+    };
+    const id = openPopupArrow ? 'simple-popper' : undefined;
+
+    const handleLanguageDropDown = (lang) => {
+        setLanguage(lang);
+        setCategory(lang);
         setDrawer(true);
+        setAnchorEl(null);
+        setOpenPopupArrow(!openPopupArrow);
     }
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popUpRef.current && !popUpRef.current.contains(event.target) && !arrowClick) {
+                setOpenPopupArrow(false);
+                setAnchorEl(null);
+            }
+            setArrowClicked(false); // Reset arrowClicked back to false
+        };
+        document.addEventListener("mousedown", handleClickOutside, {passive: true});
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [popUpRef, arrowClick,]);
+
     return (
-        <div className={styles.iconMargin + " " + styles.noSpace} style={{width: isMobile ? "25%" : "31%"}}>
+        <div className={styles.iconMargin + " " + styles.noSpace}
+             style={{width: isMobile ? "31%" : "31%"}}>
+            {/*generate QR code*/}
             <button
                 className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
                 name={"uploadCode"} onClick={generateCode}>
@@ -226,44 +268,52 @@ function GenerateCodeButton(params) {
                     <span className={styles.leftButton + " " + styles.iconMargin}>generate QR </span>
                 )}
             </button>
-            <div className={`${styles.uploadCodeButton}`} style={{marginLeft: "1rem"}}>
-                <FormControl variant="standard"
-                             sx={{
-                                 "& .MuiInputBase-root": {
-                                     fontFamily: "Gilroy-Medium, sans-serif",
-                                     color: "white",
-                                     fontSize: " 1.2rem",
-                                     paddingLeft: "7px",
-                                     border: "none",
-                                     '&:before': {
-                                         border: 'none'
-                                     },
-                                     '&:after': {
-                                         border: 'none'
-                                     },
-                                     '&:hover:not(.Mui-disabled):before': {
-                                         border: 'none'
-                                     }
-                                 },
-                                 '& .MuiSelect-icon': {
-                                     color: 'white',
-                                 }
-                             }}>
-                    <Select
-                        value={language}
-                        onChange={(e) => handleDropDown(e)}
-                        displayEmpty
-                        inputProps={{'aria-label': 'Without label'}}
-                    >
 
-                        {isMobile ? <MenuItem value={Constants.js}>JS</MenuItem> :
-                            <MenuItem value={Constants.js}>JavaScript</MenuItem>}
-                        {isMobile ? <MenuItem value={Constants.py}> Py </MenuItem> :
-                            <MenuItem value={Constants.py}> Python </MenuItem>}
-                    </Select>
-                </FormControl>
+            {/*dropdown language selection*/}
+            <div onClick={() => {
+                setDrawer(true);
+                setCategory(language);
+            }
+            } className={`${styles.uploadCodeButton}`} style={{marginLeft: "1rem"}}>
+                {isMobile ? language === Constants.js ? theme.theme === "dark" ?
+                    <WhiteText text={"JS"} extraStyle={styles.pyFont}/> :
+                    <BlueText text={"JS"} extraStyle={styles.pyFont}/> : theme.theme === "dark" ?
+                    <WhiteText text={"Py"} extraStyle={styles.pyFont}/> :
+                    <BlueText text={"Py"} extraStyle={styles.pyFont}/> : <span
+                    className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "Javascript" : "Python"}</span>}
+                <img ref={popUpRef}
+                     onClick={handleClick}
+                     src={openPopupArrow ? Images.downArrowIcon : Images.UpArrowIcon}
+                     style={{margin: "2px", height: "1.5rem", width: "1.5rem", cursor: "pointer"}}
+                     alt={"arrow"}/>
             </div>
-
+            <Popper ref={popUpRef} id={id} open={openPopupArrow} anchorEl={anchorEl}>
+                <div
+                    className={`${styles.langOption} ${(theme.theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel)}`}>
+                    <div onClick={(event) => {
+                        handleLanguageDropDown(Constants.js, event)
+                    }}
+                         className={`${styles.langItem} ${styles.jsDivMargin}  ${(theme.theme === "dark" ? navbarStyle.darkItem : navbarStyle.lightItem)}`}
+                    >
+                        {!isMobile && <img alt="Icon" className={styles.langIcon}
+                                           src={theme.theme === "dark" ? renameIcon : Edit}/>}
+                        {theme.theme === "dark" ?
+                            <WhiteText inlineStyle={{fontWeight: 400}} text={isMobile ? "JS" : "Javascript"}/> :
+                            <BlueText text={isMobile ? "JS" : "Javascript"}/>
+                        }
+                    </div>
+                    <div onClick={(event) => handleLanguageDropDown(Constants.py, event)}
+                         className={`${styles.langItem} ${styles.pyDivMargin} ${(theme.theme === "dark" ? navbarStyle.darkItem : navbarStyle.lightItem)}`}
+                    >
+                        {!isMobile && <img alt="Icon" className={styles.langIcon}
+                                           src={theme.theme === "dark" ? deleteIcon : trash}/>}
+                        {theme.theme === "dark" ?
+                            <WhiteText text={isMobile ? "Py" : "Python"} extraStyle={styles.pyFont}/> :
+                            <BlueText text={isMobile ? "Py" : "Python"} extraStyle={styles.pyFont}/>
+                        }
+                    </div>
+                </div>
+            </Popper>
         </div>
     )
 }
