@@ -4,9 +4,54 @@ body {
     font-family: 'Roboto';
 }
 
+p {
+    margin: 0;
+    padding: 0;
+}
+
 /* Used to suppress error:
 ResizeObserver - loop limit exceeded */
 video::-webkit-media-controls-timeline {
     align-self: center;
     width: calc(100% - 64px);
   }
+
+.button {
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for controlls */
+#command-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 7px;
+}
+
+.key-display {
+    border-radius: 5px;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, .7);
+    outline: 3px solid rgba(255, 255, 255, 0.141);
+    border-right: 5px solid rgba(0, 0, 0, .3);
+    border-bottom: 5px solid rgba(0, 0, 0, .3);
+    border-left: 2px solid rgba(0, 0, 0, .3);
+    border-top: 2px solid rgba(0, 0, 0, .3);
+    transition: all .1s ease;
+    color: white;
+}
+
+.key-pressed p {
+    font-weight: bold;
+}
+
+.key-pressed .key-display {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.2);
+}

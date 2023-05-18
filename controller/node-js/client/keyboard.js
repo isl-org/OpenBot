@@ -45,7 +45,18 @@ export function Keyboard () {
   const createMenuList = () => {
     const listItems = menuTable.map(item => {
       const liItem = document.createElement('li')
-      liItem.appendChild(document.createTextNode(`${item.key}: ${item.description}`))
+
+      // key symbol
+      const keyDisplay = document.createElement('div')
+      keyDisplay.innerText = item.key
+      keyDisplay.classList.add('key-display')
+
+      const keyDesc = document.createElement('p')
+      keyDesc.innerText = item.description
+      keyDesc.classList.add('key-desc')
+
+      liItem.appendChild(keyDisplay)
+      liItem.appendChild(keyDesc)
       liItem.setAttribute('key', item.key)
       liItem.setAttribute('keypressCode', item.keypressCode)
 
@@ -58,8 +69,12 @@ export function Keyboard () {
     list.forEach(liItem => {
       const keypressName = liItem.getAttribute('keypressCode')
 
-      liItem.setAttribute('style',
-        pressedKeys.has(keypressName) ? 'font-weight: bold' : 'font-weight: normal')
+      // set style class according to press state
+      if (pressedKeys.has(keypressName)) {
+        liItem.classList.add('key-pressed')
+      } else {
+        liItem.classList.remove('key-pressed')
+      }
     })
   }
 
