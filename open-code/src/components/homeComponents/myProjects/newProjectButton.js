@@ -24,8 +24,6 @@ function NewProjectButton(props) {
     const [isInputError, setIsInputError] = useState(true);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
-    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
 
     const {theme} = useContext(ThemeContext)
     const {
@@ -76,7 +74,7 @@ function NewProjectButton(props) {
     return (
         <>
             <div className={styles.Content + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}
-                 style={{marginRight: isProject > 0 ? (!isMobile && !tabletQuery) && 42 : 0}}
+                 style={{marginRight: isProject > 0 ? (!isMobile) && 42 : 0}}
                  onClick={handleOpen}>
                 {/*add new project icon*/}
                 <div className={styles.Card + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
