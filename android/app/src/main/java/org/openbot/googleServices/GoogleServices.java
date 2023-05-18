@@ -2,7 +2,6 @@ package org.openbot.googleServices;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,6 +27,7 @@ import org.openbot.databinding.FragmentProjectsBinding;
 import org.openbot.projects.DriveProjectsAdapter;
 import org.openbot.projects.GoogleSignInCallback;
 import org.openbot.projects.ProjectsFragment;
+import timber.log.Timber;
 
 /** google signIn and google drive files management service class */
 public class GoogleServices {
@@ -38,9 +38,9 @@ public class GoogleServices {
   private final Context mContext;
   private final GoogleSignInCallback mCallback;
   public final GoogleSignInClient mGoogleSignInClient;
-  private ProjectsFragment projectsFragment;
-  private FirebaseAuth firebaseAuth;
-  private List<File> driveFiles = new ArrayList<>();
+  private final ProjectsFragment projectsFragment;
+  private final FirebaseAuth firebaseAuth;
+  private final List<File> driveFiles = new ArrayList<>();
 
   /**
    * Constructor for the GoogleServices class
@@ -87,18 +87,18 @@ public class GoogleServices {
         .addOnCompleteListener(
             mActivity,
             task -> {
-              Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+              Timber.tag(TAG).d("signInWithCredential:onComplete:%s", task.isSuccessful());
               if (task.isSuccessful()) {
-                Log.d(TAG, "onComplete: successful");
+                Timber.tag(TAG).d("onComplete: successful");
                 // Get the signed-in account and Notify callback of successful sign-in.
                 mCallback.onSignInSuccess(task.getResult().getUser());
               } else {
-                Log.w(TAG, "signInWithCredential" + task.getException().getMessage());
+                Timber.tag(TAG).w("signInWithCredential%s", task.getException().getMessage());
                 task.getException().printStackTrace();
                 // The ApiException status code indicates the detailed failure reason and Notify
                 // callback of
                 // sign-in failure.
-                Log.e(TAG, "handleSignInResult:failed", task.getException());
+                Timber.tag(TAG).e(task.getException(), "handleSignInResult:failed");
                 mCallback.onSignInFailed(task.getException());
               }
             });
@@ -117,11 +117,11 @@ public class GoogleServices {
                 firebaseAuth.signOut();
                 // Notify callback of successful sign-out.
                 mCallback.onSignOutSuccess();
-                Log.d(TAG, "signOut:success");
+                Timber.tag(TAG).d("signOut:success");
               } else {
                 // Notify callback of sign-out failure
                 mCallback.onSignOutFailed(task.getException());
-                Log.e(TAG, "signOut:failed", task.getException());
+                Timber.tag(TAG).e(task.getException(), "signOut:failed");
               }
             });
   }
@@ -138,11 +138,11 @@ public class GoogleServices {
       AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
       // Set credential for firebase authentication.
       firebaseAuthWithGoogle(credential);
-      Log.d(TAG, "handleSignInResult:success - " + account.getEmail());
+      Timber.tag(TAG).d("handleSignInResult:success - %s", account.getEmail());
     } catch (ApiException e) {
       // The ApiException status code indicates the detailed failure reason and Notify callback of
       // sign-in failure.
-      Log.e(TAG, "handleSignInResult:failed", e);
+      Timber.tag(TAG).e(e, "handleSignInResult:failed");
       mCallback.onSignInFailed(e);
     }
   }
@@ -252,14 +252,14 @@ public class GoogleServices {
                   // Get the Google Drive file with the given ID
                   File gDriveFile = googleDriveService.files().get(fileId).execute();
 
-                  Log.i("Google Drive", String.valueOf(gDriveFile));
+                  Timber.tag("Google Drive").i(String.valueOf(gDriveFile));
                 } catch (IOException e) {
                   e.printStackTrace();
                 }
               })
           .start();
     } else {
-      Log.e("Google Drive", "SignIn error - not logged in");
+      Timber.tag("Google Drive").e("SignIn error - not logged in");
     }
   }
 
@@ -278,11 +278,11 @@ public class GoogleServices {
         file.setName(newTitle);
         // Update the file with the new title.
         googleDriveService.files().update(fileId, file).execute();
-        Log.d("Google Drive File", "File renamed successfully");
+        Timber.tag("Google Drive File").d("File renamed successfully");
       } catch (IOException e) {
         // log any errors that occur when renaming the file.
         e.printStackTrace();
-        Log.e("Google Drive File", "Error renaming file");
+        Timber.tag("Google Drive File").e("Error renaming file");
       }
     }
   }
@@ -298,11 +298,11 @@ public class GoogleServices {
       try {
         // Delete the file with the given ID
         googleDriveService.files().delete(fileId).execute();
-        Log.d("Google Drive File", "File deleted successfully");
+        Timber.tag("Google Drive File").d("File deleted successfully");
       } catch (IOException e) {
         // log any errors that occur when deleting the file.
         e.printStackTrace();
-        Log.e("Google Drive File", "Error deleting file");
+        Timber.tag("Google Drive File").e("Error deleting file");
       }
     }
   }

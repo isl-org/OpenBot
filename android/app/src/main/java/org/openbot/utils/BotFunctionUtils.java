@@ -34,5 +34,9 @@ public class BotFunctionUtils {
     "ledBrightness",
     "switchDriveMode",
     "switchController",
+    "navigationModel",
+    "reachGoal",
+    "follow",
+    "reachPosition",
   };
 }

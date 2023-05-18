@@ -11,6 +11,7 @@ import org.openbot.env.AudioPlayer;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.utils.Enums;
 import org.openbot.vehicle.Vehicle;
+import timber.log.Timber;
 
 /** implement openBot functions according to block codes. */
 public class BotFunctions implements SensorEventListener {
@@ -272,6 +273,26 @@ public class BotFunctions implements SensorEventListener {
     } else if (Objects.equals(driveMode, "joystick")) {
       sharedPreferencesManager.setDriveMode(2);
     }
+  }
+
+  @JavascriptInterface
+  public void navigationModel(String AIModel) {
+    Timber.tag("Navigation Model").i(AIModel);
+  }
+
+  @JavascriptInterface
+  public void reachGoal(int leftSpeed, int rightSpeed) {
+    Timber.tag("Reach Goal").i(leftSpeed + ", " + rightSpeed);
+  }
+
+  @JavascriptInterface
+  public void follow(String object) {
+    Timber.tag("follow").i(object);
+  }
+
+  @JavascriptInterface
+  public void reachPosition(int x, int y) {
+    Timber.tag("Reach Position").i(x + ", " + y);
   }
 
   @Override
