@@ -96,5 +96,10 @@
 	</array>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>Allow Audio Player for sound mode</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>http</string>
+		<string>https</string>
+	</array>
 </dict>
 </plist>

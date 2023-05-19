@@ -210,13 +210,28 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     ///
     /// - Parameter payload: string that should be sent to the connected device
     func sendData(payload: String) {
-        print("sending payload ", payload);
+
         let dataToSend: Data? = payload.data(using: String.Encoding.utf8)
+        print("sending payload inside bluetooth ", payload, dataToSend, discoveredPeripheral);
+
         if (dataToSend != nil && discoveredPeripheral != nil && discoveredPeripheral.canSendWriteWithoutResponse) {
             if let writeCharacteristics {
+                print("writing to peripherals")
                 discoveredPeripheral.writeValue(dataToSend!, for: writeCharacteristics, type: CBCharacteristicWriteType.withoutResponse)
             }
         }
+    }
+
+    func stopRobot() {
+        let payLoad = "c-200,-200\n";
+        let dataToSend: Data? = payLoad.data(using: String.Encoding.utf8);
+        if discoveredPeripheral != nil {
+            if let writeCharacteristics {
+                discoveredPeripheral.writeValue(dataToSend!, for: writeCharacteristics, type: CBCharacteristicWriteType.withResponse);
+            }
+        }
+
+
     }
 
     /// function to disconnect the connected device
