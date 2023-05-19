@@ -25,7 +25,8 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
-        UITabBar.appearance().tintColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white: UIColor.black;
+        UITabBar.appearance().tintColor = traitCollection.userInterfaceStyle == .dark ? .white: UIColor(red: 0.00, green: 0.44, blue: 0.77, alpha: 1.00);
+        UITabBar.appearance().unselectedItemTintColor = traitCollection.userInterfaceStyle == .dark ? .gray :UIColor(red: 0.50, green: 0.73, blue: 0.89, alpha: 1.00)
         bluetoothDataController.shared.startScan()
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         setUpTitle();

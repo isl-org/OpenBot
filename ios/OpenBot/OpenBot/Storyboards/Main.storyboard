@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="SWT-9V-gJg">
-    <device id="retina6_1" orientation="portrait" appearance="dark"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <accessibilityOverrides isEnabled="YES" boldText="YES" buttonShapes="YES" onOffLabels="YES" increaseContrast="YES" reduceTransparency="YES" dynamicTypePreference="2"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -360,7 +360,6 @@
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="XrE-cq-2U0">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
                         <segue destination="drE-y0-l4o" kind="relationship" relationship="viewControllers" id="NlB-Et-vzI"/>
@@ -622,7 +621,7 @@
         <image name="controller" width="444.66665649414062" height="405.66665649414062"/>
         <image name="home" width="22" height="22"/>
         <image name="ic_openbot" width="72" height="72"/>
-        <image name="open_code" width="31" height="30"/>
+        <image name="open_code" width="96" height="96"/>
         <image name="project" width="24" height="24"/>
         <image name="qrScanner" width="24" height="24"/>
         <image name="settings" width="39" height="39"/>

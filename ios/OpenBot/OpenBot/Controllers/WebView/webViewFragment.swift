@@ -5,11 +5,16 @@
 import Foundation
 import UIKit
 import WebKit
-
+/**
+ class for webview
+ */
 class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
     var webView: WKWebView!
     var newWebviewPopupWindow: WKWebView?
     let authentication = Authentication.googleAuthentication
+    /**
+     Function to configure webview before its load
+     */
     override func loadView() {
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.applicationNameForUserAgent = "Mozilla/6.0 (iPhone; CPU iPhone OS 16_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Mobile/15E148 Safari/604.1"
@@ -24,9 +29,13 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
         let userScript = WKUserScript(source: userScriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
         userContentController.addUserScript(userScript)
         webConfiguration.userContentController = userContentController
+        print(webView.frame)
 
     }
 
+    /**
+     Function called after view loaded and request to load the url
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.navigationDelegate = self
@@ -35,9 +44,14 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webView.load(myRequest)
     }
 
+    /**
+     Delegate called after webview loaded
+     - Parameters:
+       - webView:
+       - navigation:
+     */
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         print("didFinish")
-
         // Access cookies
         webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
             for cookie in cookies {
@@ -45,20 +59,6 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
             }
         }
 
-        if let accessToken = authentication.googleSignIn.currentUser?.accessToken.tokenString {
-            let script = "window.localStorage.setItem('accessToken', '\(accessToken)')"
-            webView.evaluateJavaScript(script) { result, error in
-                if let error = error {
-                    print("Error setting accessToken in local storage: \(error)")
-                } else {
-                    print("accessToken added to local storage")
-                }
-            }
-        } else {
-            print("accessToken is nil")
-        }
-
-        // Access local storage
         webView.evaluateJavaScript("Object.entries(window.localStorage)") { result, error in
             if let error = error {
                 print("Error accessing local storage: \(error)")
@@ -72,6 +72,15 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
         }
     }
 
+    /**
+     Function to set the UI of popups
+     - Parameters:
+       - webView:
+       - configuration:
+       - navigationAction:
+       - windowFeatures:
+     - Returns:
+     */
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         newWebviewPopupWindow = WKWebView(frame: view.bounds, configuration: configuration)
         newWebviewPopupWindow!.backgroundColor = UIColor.clear // Set background color to clear
