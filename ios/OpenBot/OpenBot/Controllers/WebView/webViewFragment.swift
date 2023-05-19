@@ -6,14 +6,14 @@ import Foundation
 import UIKit
 import WebKit
 
-class openCodeWebView: UIViewController, WKUIDelegate,WKNavigationDelegate {
+class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
     var webView: WKWebView!
     var newWebviewPopupWindow: WKWebView?
-
+    let authentication = Authentication.googleAuthentication
     override func loadView() {
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.applicationNameForUserAgent = "Mozilla/6.0 (iPhone; CPU iPhone OS 16_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Mobile/15E148 Safari/604.1"
-        webView = WKWebView(frame: CGRect(x: 0, y: 100, width: 200, height: 400), configuration: webConfiguration)
+        webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         webView.uiDelegate = self
         view = webView
@@ -24,24 +24,51 @@ class openCodeWebView: UIViewController, WKUIDelegate,WKNavigationDelegate {
         let userScript = WKUserScript(source: userScriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
         userContentController.addUserScript(userScript)
         webConfiguration.userContentController = userContentController
+
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        webView.navigationDelegate = self
         let myURL = URL(string: "https://www.openbot.itinker.io/")
         let myRequest = URLRequest(url: myURL!)
         webView.load(myRequest)
     }
 
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        // Check if the navigation action is for a sign-in process
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        print("didFinish")
 
-        if navigationAction.navigationType == .formSubmitted {
-            // Allow the navigation
-            decisionHandler(.allow)
+        // Access cookies
+        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+            for cookie in cookies {
+                print("Cookie: \(cookie.name) = \(cookie.value)")
+            }
+        }
+
+        if let accessToken = authentication.googleSignIn.currentUser?.accessToken.tokenString {
+            let script = "window.localStorage.setItem('accessToken', '\(accessToken)')"
+            webView.evaluateJavaScript(script) { result, error in
+                if let error = error {
+                    print("Error setting accessToken in local storage: \(error)")
+                } else {
+                    print("accessToken added to local storage")
+                }
+            }
         } else {
-            // Cancel the navigation
-            decisionHandler(.cancel)
+            print("accessToken is nil")
+        }
+
+        // Access local storage
+        webView.evaluateJavaScript("Object.entries(window.localStorage)") { result, error in
+            if let error = error {
+                print("Error accessing local storage: \(error)")
+            } else if let entries = result as? [[String]] {
+                for entry in entries {
+                    let key = entry[0]
+                    let value = entry[1]
+                    print("Key: \(key), Value: \(value)")
+                }
+            }
         }
     }
 
@@ -61,5 +88,6 @@ class openCodeWebView: UIViewController, WKUIDelegate,WKNavigationDelegate {
         webView.removeFromSuperview()
         newWebviewPopupWindow = nil
     }
+
 
 }
