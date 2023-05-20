@@ -27,7 +27,6 @@ export function RightDrawer() {
     const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
 
-
     return (
         <>
             {(code || category !== Constants.qr) &&
@@ -104,7 +103,6 @@ export const RightSlider = () => {
 export const DrawerBody = (props) => {
     const {isMobile} = props
     const qrScanSteps = ["Open OpenBot App on your phone", "Tap ScanQR Icon on homepage", "Point your phone to this screen to capture the code"]
-    console.log("here::")
     return (
         <>
             <div>

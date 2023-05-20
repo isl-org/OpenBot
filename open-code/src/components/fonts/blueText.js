@@ -2,10 +2,10 @@ import React from "react";
 import styles from "./fontStyle.module.css"
 
 function BlueText(props) {
-    const {extraStyle, text} = props
+    const {extraStyle, text,inlineStyle} = props
     return (
         <div>
-            <span className={styles.blueFont + " " + extraStyle}>{text}</span>
+            <span style={inlineStyle} className={styles.blueFont + " " + extraStyle}>{text}</span>
         </div>
     );
 

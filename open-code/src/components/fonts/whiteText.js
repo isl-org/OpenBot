@@ -2,10 +2,10 @@ import React from "react";
 import styles from "./fontStyle.module.css"
 
 function WhiteText(props) {
-    const {extraStyle, text} = props
+    const {extraStyle, text,inlineStyle} = props
     return (
         <div>
-            <span className={styles.whiteFont + " " + extraStyle}>{text}</span>
+            <span style={inlineStyle} className={styles.whiteFont + " " + extraStyle}>{text}</span>
         </div>
     );
 

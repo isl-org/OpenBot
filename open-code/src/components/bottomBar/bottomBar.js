@@ -37,8 +37,8 @@ export const BottomBar = () => {
     const [isLoader, setIsLoader] = useState(false);
     const {theme} = useContext(ThemeContext);
     const themes = useTheme();
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
+    const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
+    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches;
 
     const {
         isOnline,
@@ -197,6 +197,7 @@ export const BottomBar = () => {
                     {isMobile || isMobileLandscape ? "" :
                         <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
                                    buttonActive={buttonActive}/>}
+
                 </div>
             </div>
         </div>
@@ -213,13 +214,15 @@ function GenerateCodeButton(params) {
     const {generateCode, buttonSelected, clickedButton, buttonActive, setDrawer} = params
     const themes = useTheme();
     const {category, setCategory, drawer} = useContext(StoreContext);
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
     const [language, setLanguage] = useState(category === Constants.qr ? Constants.js : category);
     const theme = useContext(ThemeContext)
     const [anchorEl, setAnchorEl] = useState(null);
     const [openPopupArrow, setOpenPopupArrow] = useState(false);
-    const [arrowClick, setArrowClicked] = useState(false)
+    const [arrowClick, setArrowClicked] = useState(false);
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
+
     // const [openPopup, setOpenPopUp]=useState(true);
     const popUpRef = useRef(null);// Create a reference to the popup element for detecting clicks outside the popup.
     const handleClick = (event) => {
@@ -255,17 +258,17 @@ function GenerateCodeButton(params) {
 
     return (
         <div className={styles.iconMargin + " " + styles.noSpace}
-             style={{width: isMobile ? "31%" : "31%"}}>
+             style={{width: isMobile ? "23%" : "31%"}}>
             {/*generate QR code*/}
             <button
                 className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
                 name={"uploadCode"} onClick={generateCode}>
                 <img alt={""}
                      className={styles.iconDiv} src={Images.uploadIcon}/>
-                {isMobile || isMobileLandscape ? (
+                {isMobile || isMobileLandscape || tabletQuery.matches ? (
                     ""
                 ) : (
-                    <span className={styles.leftButton + " " + styles.iconMargin}>generate QR </span>
+                    <span className={styles.leftButton + " " + styles.iconMargin}>Generate QR </span>
                 )}
             </button>
 
@@ -275,11 +278,9 @@ function GenerateCodeButton(params) {
                 setCategory(language);
             }
             } className={`${styles.uploadCodeButton}`} style={{marginLeft: "1rem"}}>
-                {isMobile ? language === Constants.js ? theme.theme === "dark" ?
+                {isMobile ||isMobileLandscape || tabletQuery.matches ? language === Constants.js ?
                     <WhiteText text={"JS"} extraStyle={styles.pyFont}/> :
-                    <BlueText text={"JS"} extraStyle={styles.pyFont}/> : theme.theme === "dark" ?
-                    <WhiteText text={"Py"} extraStyle={styles.pyFont}/> :
-                    <BlueText text={"Py"} extraStyle={styles.pyFont}/> : <span
+                    <WhiteText text={"Py"} extraStyle={styles.pyFont}/> : <span
                     className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "Javascript" : "Python"}</span>}
                 <img ref={popUpRef}
                      onClick={handleClick}
@@ -298,8 +299,8 @@ function GenerateCodeButton(params) {
                         {!isMobile && <img alt="Icon" className={styles.langIcon}
                                            src={theme.theme === "dark" ? renameIcon : Edit}/>}
                         {theme.theme === "dark" ?
-                            <WhiteText inlineStyle={{fontWeight: 400}} text={isMobile ? "JS" : "Javascript"}/> :
-                            <BlueText text={isMobile ? "JS" : "Javascript"}/>
+                            <WhiteText inlineStyle={{fontWeight: 400}} text={"Javascript"}/> :
+                            <BlueText text={"Javascript"}/>
                         }
                     </div>
                     <div onClick={(event) => handleLanguageDropDown(Constants.py, event)}
@@ -308,8 +309,8 @@ function GenerateCodeButton(params) {
                         {!isMobile && <img alt="Icon" className={styles.langIcon}
                                            src={theme.theme === "dark" ? deleteIcon : trash}/>}
                         {theme.theme === "dark" ?
-                            <WhiteText text={isMobile ? "Py" : "Python"} extraStyle={styles.pyFont}/> :
-                            <BlueText text={isMobile ? "Py" : "Python"} extraStyle={styles.pyFont}/>
+                            <WhiteText inlineStyle ={{marginLeft:isMobile && "-24px"}} text={"Python"} /> :
+                            <BlueText inlineStyle ={{marginLeft:isMobile && "-24px"}} text={"Python"} />
                         }
                     </div>
                 </div>
@@ -492,7 +493,6 @@ function UploadInDrive(params) {
  */
 function ZoomInOut(params) {
     const {clickedButton, buttonSelected, buttonActive} = params;
-
     return (
         <div className={styles.iconMargin}>
             <button onClick={clickedButton}

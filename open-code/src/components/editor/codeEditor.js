@@ -25,9 +25,10 @@ function CodeEditor(params) {
     const editorRef = useRef(null);
     const {workspace, currentProjectXml, category, drawer} = useContext(StoreContext);
     const themes = useTheme();// Get the current theme breakpoints using useTheme hook
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));// Determine if the screen is a mobile device using useMediaQuery hook
+    const isMobile = useMediaQuery(themes.breakpoints.down('sm'));// Determine if the screen is a mobile device using useMediaQuery hook
     const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
     const {theme} = useContext(ThemeContext);
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
 
     useEffect(() => {
         const editor = ace.edit(editorRef.current);
@@ -68,6 +69,7 @@ function CodeEditor(params) {
             height: '100%',
             width: '100%',
             backgroundColor: theme === "dark" ? "#202020" : '#FFFFFF',
+            fontSize:isMobile?"13px":tabletQuery?"19px":"15px"
         }}/>
     </div>)
 }

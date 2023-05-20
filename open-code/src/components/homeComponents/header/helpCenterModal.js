@@ -18,7 +18,7 @@ export function HelpCenterModal(props) {
     const {isHelpCenterModal, setIsHelpCenterModal} = props
     const theme = useContext(ThemeContext)
     const themes = useTheme();
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const handleClose = () => {
         setIsHelpCenterModal(false)
     }
@@ -49,18 +49,16 @@ function HelpDetails(params) {
     const {handleClose} = params
     const theme = useContext(ThemeContext)
     const themes = useTheme();
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const isLandScape = window.matchMedia("(max-width: 767px) and (orientation: landscape)").matches
-    console.log("isMobile::", isMobile)
     return (
         <>
             <div
                 className={styles.dragAndDropDiv + " " + (theme.theme === "dark" && styles.darkModeRightBorder)}>
                 <img alt={"screen display"} src={Images.laptop} className={styles.screenDisplayImage}/>
-                <div style={{width: isMobile ? "95%" : "80%", marginTop: "15%"}}>
+                <div className={styles.dragAndDropDivContent}>
                     <BlackText extraStyle={styles.integerNumber} text={1}/>
-                    <div
-                        style={{marginLeft: isMobile ? "6%" : "10%", paddingTop: "8%"}}>
+                    <div className={styles.dragAndDropPara}>
                         <BlackText divStyle={{marginBottom: isMobile ? "9%" : "12%"}}
                                    extrastyle={styles.helpCentreHeader}
                                    text={"Drag and Drop"}/>
@@ -86,7 +84,7 @@ function HelpDetails(params) {
                     <div>
                         <BlackText text={2} extraStyle={styles.integerNumber}/>
                     </div>
-                    <div style={{width: isMobile ? "90%" : "70%", paddingLeft: "5%"}}>
+                    <div className={styles.saveAndDownloadDivContent} style={{width: isMobile ? "90%" : "70%", paddingLeft: "5%"}}>
                         <BlackText
                             divStyle={{marginTop: "7%", marginBottom: "8%"}}
                             text={"Save and Download"}
@@ -99,9 +97,9 @@ function HelpDetails(params) {
                 </div>
                 <div className={styles.connectAndDriveDiv}>
                     <div>
-                        <BlackText text={3} extraStyle={styles.integerNumber}/>
+                        <BlackText text={3} divStyle={{paddingTop:"20px"}} extraStyle={styles.integerNumber}/>
                     </div>
-                    <div style={{width: isMobile ? "90%" : "70%", paddingLeft: "5%"}}>
+                    <div className={styles.connectAndDriveDivPara}>
                         <div style={{marginTop: "10%"}}>
                             <BlackText divStyle={{paddingTop: "5%", marginBottom: "8%"}}
                                        text={"Connect and Drive"} extrastyle={styles.helpCentreHeader}/>
