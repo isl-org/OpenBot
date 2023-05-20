@@ -22,15 +22,13 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webView.configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         webView.uiDelegate = self
         view = webView
-
+        webView.configuration.userContentController.addUserScript(self.getZoomDisableScript())
         // Add userContentController with WKUserScript to log JavaScript errors
         let userContentController = WKUserContentController()
         let userScriptSource = "window.onerror = function(message, source, lineno, colno, error) { console.log('JavaScript Error: ' + message + ' at ' + source + ':' + lineno); };"
         let userScript = WKUserScript(source: userScriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
         userContentController.addUserScript(userScript)
         webConfiguration.userContentController = userContentController
-        print(webView.frame)
-
     }
 
     /**
@@ -88,7 +86,6 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
         newWebviewPopupWindow!.navigationDelegate = self
         newWebviewPopupWindow!.uiDelegate = self
         view.addSubview(newWebviewPopupWindow!)
-        print(newWebviewPopupWindow)
         return newWebviewPopupWindow!
     }
 
@@ -98,5 +95,16 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
         newWebviewPopupWindow = nil
     }
 
+    /**
+     function to inject script to prevent zoom of webView
+     - Returns:
+     */
+    private func getZoomDisableScript() -> WKUserScript {
+        let source: String = "var meta = document.createElement('meta');" +
+                "meta.name = 'viewport';" +
+                "meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';" +
+                "var head = document.getElementsByTagName('head')[0];" + "head.appendChild(meta);"
+        return WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+    }
 
 }
