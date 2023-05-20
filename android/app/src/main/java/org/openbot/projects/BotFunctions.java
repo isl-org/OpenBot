@@ -277,22 +277,22 @@ public class BotFunctions implements SensorEventListener {
 
   @JavascriptInterface
   public void navigationModel(String AIModel) {
-    Timber.tag("Navigation Model").i(AIModel);
+    Timber.tag("Ai Blocks").i(AIModel);
   }
 
   @JavascriptInterface
   public void reachGoal(int leftSpeed, int rightSpeed) {
-    Timber.tag("Reach Goal").i(leftSpeed + ", " + rightSpeed);
+    Timber.tag("Ai Blocks").i(leftSpeed + ", " + rightSpeed);
   }
 
   @JavascriptInterface
   public void follow(String object) {
-    Timber.tag("follow").i(object);
+    Timber.tag("Ai Blocks").i(object);
   }
 
   @JavascriptInterface
   public void reachPosition(int x, int y) {
-    Timber.tag("Reach Position").i(x + ", " + y);
+    Timber.tag("Ai Blocks").i(x + ", " + y);
   }
 
   @Override

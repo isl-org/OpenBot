@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
@@ -19,13 +20,15 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.openbot.databinding.FragmentProjectsBinding;
+import org.openbot.projects.DriveProjectList;
 import org.openbot.projects.DriveProjectsAdapter;
 import org.openbot.projects.GoogleSignInCallback;
+import org.openbot.projects.ProjectsDataInObject;
 import org.openbot.projects.ProjectsFragment;
 import timber.log.Timber;
 
@@ -40,7 +43,7 @@ public class GoogleServices {
   public final GoogleSignInClient mGoogleSignInClient;
   private final ProjectsFragment projectsFragment;
   private final FirebaseAuth firebaseAuth;
-  private final List<File> driveFiles = new ArrayList<>();
+  private DriveProjectList driveProjectList = DriveProjectList.getInstance();
 
   /**
    * Constructor for the GoogleServices class
@@ -186,8 +189,6 @@ public class GoogleServices {
                 String pageToken = null;
                 do {
                   try {
-                    // clear the existing list of drive files.
-                    driveFiles.clear();
                     // query for files on Google Drive that are not in the trash folder and have a
                     // ".js" extension.
                     FileList result =
@@ -200,12 +201,23 @@ public class GoogleServices {
                             .setQ("trashed = false")
                             .execute();
                     List<File> files = result.getFiles();
-                    // add any file with a ".js" extension to the list of drive files.
+                    // Iterate through the files
                     for (File file : files) {
                       if (file.getName().endsWith(".js")) {
-                        //                        File downloadDriveProjects =
-                        // googleDriveService.files().get(file.getId()).execute();
-                        driveFiles.add(file);
+                        String projectName = file.getName();
+                        String projectId = file.getId();
+                        DateTime projectDate = file.getModifiedTime();
+                        // Read the content of the file
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                        googleDriveService
+                            .files()
+                            .get(file.getId())
+                            .executeMediaAndDownloadTo(outputStream);
+                        String projectCommands = outputStream.toString();
+                        // Create a Project object and add it to the ArrayList
+                        driveProjectList.projectsList.add(
+                            new ProjectsDataInObject(
+                                projectId, projectName, projectDate, projectCommands));
                       }
                     }
                     // update the UI on the main thread to reflect the changes in the list of drive
@@ -213,7 +225,8 @@ public class GoogleServices {
                     mActivity.runOnUiThread(
                         () -> {
                           adapter.notifyDataSetChanged();
-                          projectsFragment.updateMessage(driveFiles, binding);
+                          projectsFragment.updateMessage(
+                              driveProjectList.getAllProjects(), binding);
                         });
                     // update page token to get the next set of files if available.
                     pageToken = result.getNextPageToken();
@@ -227,15 +240,6 @@ public class GoogleServices {
               })
           .start();
     }
-  }
-
-  /**
-   * Returns the list of files retrieved from Google Drive by the accessDriveFiles method.
-   *
-   * @return The list of project files
-   */
-  public List<File> getDriveFiles() {
-    return driveFiles;
   }
 
   /**

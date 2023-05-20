@@ -1,5 +1,6 @@
 package org.openbot.projects;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,10 +18,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.api.services.drive.model.File;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import java.io.IOException;
 import java.util.List;
 import org.openbot.R;
 import org.openbot.databinding.FragmentProjectsBinding;
@@ -37,6 +35,7 @@ public class ProjectsFragment extends Fragment {
   private BottomSheetBehavior projectsBottomSheetBehavior;
   private SwipeRefreshLayout swipeRefreshLayout;
   private SparseArray<int[]> driveRes = new SparseArray<>();
+  private DriveProjectList driveProjectList = DriveProjectList.getInstance();
 
   @Override
   public View onCreateView(
@@ -73,6 +72,7 @@ public class ProjectsFragment extends Fragment {
 
     swipeRefreshLayout.setOnRefreshListener(
         () -> {
+          driveProjectList.projectsList.clear();
           showProjectsRv();
           swipeRefreshLayout.setRefreshing(false);
         });
@@ -91,6 +91,7 @@ public class ProjectsFragment extends Fragment {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             googleServices.handleSignInResult(task);
             binding.signOutLayout.setVisibility(View.GONE);
+            driveProjectList.projectsList.clear();
             showProjectsRv();
           });
 
@@ -117,7 +118,6 @@ public class ProjectsFragment extends Fragment {
 
   private void showProjectsRv() {
     binding.noProjectsLayout.setVisibility(View.GONE);
-    binding.projectsLoader.setVisibility(View.VISIBLE);
     binding.refreshLayout.setVisibility(View.VISIBLE);
     // Set Grid layout according to screen width dimension.
     int screenWidth = getResources().getDisplayMetrics().widthPixels;
@@ -126,10 +126,15 @@ public class ProjectsFragment extends Fragment {
     binding.projectsRv.setLayoutManager(new GridLayoutManager(requireActivity(), numColumns));
     driveRes.put(R.layout.projects_list_view, new int[] {R.id.project_name, R.id.project_date});
     setScanDeviceAdapter(
-        new DriveProjectsAdapter(requireActivity(), googleServices.getDriveFiles(), driveRes),
+        new DriveProjectsAdapter(requireActivity(), driveProjectList.getAllProjects(), driveRes),
         (itemView, position) ->
-            readFileFromDrive(googleServices.getDriveFiles().get(position).getId()));
-    googleServices.accessDriveFiles(adapter, binding);
+            onTapProjectItem(
+                driveProjectList.getAllProjects().get(position).getProjectCommands(),
+                driveProjectList.getAllProjects().get(position).getProjectName()));
+    if (driveProjectList.getAllProjects().size() <= 0) {
+      binding.projectsLoader.setVisibility(View.VISIBLE);
+      googleServices.accessDriveFiles(adapter, binding);
+    }
     binding.projectsRv.setAdapter(adapter);
   }
 
@@ -141,54 +146,27 @@ public class ProjectsFragment extends Fragment {
   }
 
   /** update projects screen when there is 0 projects on google drive account. */
-  public void updateMessage(List<File> driveFiles, FragmentProjectsBinding binding) {
+  public void updateMessage(
+      List<ProjectsDataInObject> driveFiles, FragmentProjectsBinding binding) {
     binding.projectsLoader.setVisibility(View.GONE);
     if (driveFiles.size() <= 0) {
       binding.noProjectsLayout.setVisibility(View.VISIBLE);
     }
   }
 
-  private void readFileFromDrive(String fileId) {
-    binding.projectsLoader.setVisibility(View.VISIBLE);
-    binding.overlayView.setVisibility(View.VISIBLE);
-    new ReadFileTask(
-            fileId,
-            new ReadFileCallback() {
-              @Override
-              public void onFileReadSuccess(String fileContents) {
-                String code = fileContents;
-                for (String fun : BotFunctionUtils.botFunctionArray) {
-                  if (code.contains(fun)) {
-                    code = code.replace(fun, "Android." + fun);
-                  }
-                }
-                barCodeScannerFragment.finalCode = code;
-                projectsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-              }
-
-              @Override
-              public void onFileReadFailed(IOException e) {
-                requireActivity()
-                    .runOnUiThread(
-                        () -> {
-                          AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-                          builder.setTitle("Error");
-                          builder.setMessage(
-                              "Something error with this file! pull down to refresh and try again.");
-                          builder.setCancelable(false);
-                          builder.setNegativeButton(
-                              "Ok",
-                              (dialog, which) -> {
-                                dialog.cancel();
-                                binding.projectsLoader.setVisibility(View.GONE);
-                                binding.overlayView.setVisibility(View.GONE);
-                              });
-                          AlertDialog alertDialog = builder.create();
-                          alertDialog.show();
-                        });
-              }
-            })
-        .execute();
+  @SuppressLint("SetTextI18n")
+  private void onTapProjectItem(String fileContents, String projectName) {
+    String code = fileContents;
+    for (String fun : BotFunctionUtils.botFunctionArray) {
+      if (code.contains(fun)) {
+        code = code.replace(fun, "Android." + fun);
+      }
+    }
+    barCodeScannerFragment.finalCode = code;
+    binding.dpMessage.setText(
+        projectName.replace(".js", "")
+            + " file detected.Start to execute the code on your OpenBot.");
+    projectsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
   }
 
   private BottomSheetBehavior.BottomSheetCallback dpBottomSheetCallback =
