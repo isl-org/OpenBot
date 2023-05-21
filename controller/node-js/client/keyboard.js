@@ -46,17 +46,16 @@ export function Keyboard () {
     const listItems = menuTable.map(item => {
       const liItem = document.createElement('li')
 
-      // key symbol
-      const keyDisplay = document.createElement('div')
-      keyDisplay.innerText = item.key
-      keyDisplay.classList.add('key-display')
+      const keySymbol = document.createElement('div')
+      keySymbol.innerText = item.key
+      keySymbol.classList.add('key-display')
 
-      const keyDesc = document.createElement('p')
-      keyDesc.innerText = item.description
-      keyDesc.classList.add('key-desc')
+      const keyDescription = document.createElement('p')
+      keyDescription.innerText = item.description
+      keyDescription.classList.add('key-desc')
 
-      liItem.appendChild(keyDisplay)
-      liItem.appendChild(keyDesc)
+      liItem.appendChild(keySymbol)
+      liItem.appendChild(keyDescription)
       liItem.setAttribute('key', item.key)
       liItem.setAttribute('keypressCode', item.keypressCode)
 
@@ -69,7 +68,7 @@ export function Keyboard () {
     list.forEach(liItem => {
       const keypressName = liItem.getAttribute('keypressCode')
 
-      // set style class according to press state
+      // set class according to press state
       if (pressedKeys.has(keypressName)) {
         liItem.classList.add('key-pressed')
       } else {

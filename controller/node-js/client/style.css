@@ -1,7 +1,8 @@
 body {
     background-color: #f0f8ff;
-    margin: 3%;
-    font-family: 'Roboto';
+    font-family: Gilroy-Regular, sans-serif;
+    background-color: #f8f9fb;
+    margin: 0;
 }
 
 p {
@@ -9,11 +10,61 @@ p {
     padding: 0;
 }
 
+/* Font */
+@font-face {
+    font-family: 'Gilroy';
+    src: url('font/Gilroy/Gilroy-Black.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-Regular';
+    /*400*/
+    src: url('font/Gilroy/Gilroy-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-Medium';
+    /*500*/
+    src: url('font/Gilroy/Gilroy-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-SemiBold';
+    /*600*/
+    src: url('font/Gilroy/Gilroy-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-Bold';
+    /*700*/
+    src: url('font/Gilroy/Gilroy-Bold.ttf') format('truetype');
+}
+
 /* Used to suppress error:
 ResizeObserver - loop limit exceeded */
 video::-webkit-media-controls-timeline {
     align-self: center;
     width: calc(100% - 64px);
+  }
+
+.video-container {
+    height: calc(100% - 4rem);
+    width: calc(100% - 4rem); 
+    overflow: hidden;
+    border: 2px dashed #0071C5;
+    background-color: #0070c50d;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.video-container video {
+    height: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
 .button {
@@ -26,12 +77,16 @@ video::-webkit-media-controls-timeline {
     background: rgba(0, 0, 0, 0.1);
 }
 
+.button:active {
+    background: rgba(0, 0, 0, 0.2);
+}
+
 /* Styles for controlls */
 #command-list li {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 7px;
+    margin: 5px 0;
 }
 
 .key-display {
