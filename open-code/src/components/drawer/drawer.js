@@ -27,7 +27,6 @@ export function RightDrawer() {
     const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
 
-
     return (
         <>
             {(code || category !== Constants.qr) &&
@@ -38,9 +37,9 @@ export function RightDrawer() {
                             width: 0,
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
-                                width: drawer ? category !== Constants.qr ?  isMobile ? isMobileLandscape ? '35%' : '62%' : '40%' : isMobile ? isMobileLandscape ? '32%' : '62%' : tabletQuery? '40%':'23%' : isMobile ? isMobileLandscape ? '3%' : '6%' : '2%',
+                                width: drawer ? category !== Constants.qr ? isMobile ? isMobileLandscape ? '35%' : '62%' : '40%' : isMobile ? isMobileLandscape ? '32%' : '62%' : tabletQuery ? '40%' : '23%' : isMobile ? isMobileLandscape ? '3%' : '6%' : '2%',
                                 height: isMobile ? isMobileLandscape ? '65.5%' : '78.3%' : '81.3%',
-                                marginTop: isMobile ? isMobileLandscape ? '4rem' : '5rem' : tabletQuery ? '6rem': '5rem',
+                                marginTop: isMobile ? isMobileLandscape ? '4rem' : '5rem' : tabletQuery ? '6rem' : '5rem',
                                 borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
                                 backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
                                 color: theme === "dark" ? colors.whiteFont : colors.blackFont,

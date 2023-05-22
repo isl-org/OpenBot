@@ -77,7 +77,11 @@ export const BottomBar = () => {
                     console.log(code);
                     uploadToGoogleDrive(code, "js").then((res) => {
                             console.log("res::", res)
-                            setCode(res);
+                            let linkCode = {
+                                linkCode: res,
+                                projectName: getCurrentProject().projectName
+                            }
+                            setCode(linkCode);
                             setIsLoader(false);
                             setDrawer(true);
                             setCategory(Constants.qr);

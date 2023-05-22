@@ -30,6 +30,7 @@ export function LogoSection() {
     const openHomepage = () => {
         navigate(PathName.home);
     }
+
     return (
         <div className={styles.navbarTitleDiv}>
             {/*icon*/}
