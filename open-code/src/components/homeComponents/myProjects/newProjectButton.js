@@ -24,7 +24,7 @@ function NewProjectButton(props) {
     const [isInputError, setIsInputError] = useState(true);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
+
     const {theme} = useContext(ThemeContext)
     const {
         projectName,

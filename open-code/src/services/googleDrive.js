@@ -258,7 +258,7 @@ export async function getAllFilesFromGoogleDrive() {
     const folderId = await getFolderId();
     // Step 2: Retrieve all files in the folder with their metadata
     if (folderId) {
-        const filesResponse = await fetch(`${Constants.baseUrl}/files?q=mimeType='text/xml' and trashed=false and parents='${folderId}'&fields=files(id,name,createdTime,modifiedTime,appProperties,mimeType)&access_token=${accessToken}`);
+        const filesResponse = await fetch(`${Constants.baseUrl}/files?q=trashed=false and parents='${folderId}'&fields=files(id,name,createdTime,modifiedTime,appProperties,mimeType)&access_token=${accessToken}`);
         const filesResult = await filesResponse.json();
 
         // Step 3: get xmlValue and append to each file.

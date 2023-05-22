@@ -1,9 +1,7 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import styles from "../../navBar/navbar.module.css";
 import icon from "../../../assets/images/icon/OBplaygroundLogo.png";
-import downArrow from "../../../assets/images/icon/down-arrow.png";
 import {Popper, useTheme} from "@mui/material";
-import UpArrow from "../../../assets/images/icon/up-arrow.png";
 import renameIcon from "../../../assets/images/icon/rename-icon.png";
 import Edit from "../../../assets/images/icon/edit.png";
 import deleteIcon from "../../../assets/images/icon/delete-icon.png";
@@ -32,6 +30,7 @@ export function LogoSection() {
     const openHomepage = () => {
         navigate(PathName.home);
     }
+
     return (
         <div className={styles.navbarTitleDiv}>
             {/*icon*/}
@@ -63,7 +62,7 @@ export function ProjectName(params) {
         <div className={styles.playgroundName} onClick={handleClick}>
             <span
                 className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName?.slice(0, isMobile ? 8 : projectName?.length) + " " + ((projectName?.length > (isMobile ? 8 : projectName?.length)) ? "..." : "")}</span>
-            <img src={downArrow}
+            <img src={Images.downArrowIcon}
                  className={`${styles.infoIcon} ${styles.arrowMargin}`}
                  alt={"arrow"}/>
         </div>
@@ -163,7 +162,7 @@ export function ProjectNamePopUp(params) {
                 }}
                       className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName?.slice(0, isMobile ? 8 : projectName.length) + " " + ((projectName?.length > (isMobile ? 8 : projectName?.length)) ? "..." : "")}</span>
             }
-            <img src={UpArrow}
+            <img src={Images.UpArrowIcon}
                  className={`${styles.infoIcon} ${styles.arrowMargin}`}
                  alt={"arrow"}/>
             {openPopUp &&
@@ -214,9 +213,9 @@ export function EditProjectPopUp(params) {
                 clickOutside()
             }
         };
-        document.addEventListener("mousedown", handleClickOutside, {passive: true});
+        document.addEventListener("pointerup", handleClickOutside, {passive: true});
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("pointerup", handleClickOutside);
         };
     }, [popUpRef, clickOutside]);
 
@@ -327,7 +326,7 @@ function ImageWithArrow(params) {
             {/*name*/}
             {!isMobile && <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>}
             {/*dropdown arrow*/}
-            <img alt="arrow button" className={styles.icon} src={downArrow}
+            <img alt="arrow button" className={styles.icon} src={Images.downArrowIcon}
                  style={{height: isMobile ? 25 : 20, width: isMobile ? 25 : 20}}/>
         </div>
     )

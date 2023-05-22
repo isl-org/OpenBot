@@ -115,7 +115,24 @@
         padding-top: 2rem;
         padding-bottom: 2rem;
         height: 200%;
+    }
+}
 
+@media (min-width: 744px) and (max-width: 1024px) and (min-height: 650px){
+
+    .blocklyTreeLabel {
+        font-size: 24px;
+        padding: 0 4px;
+    }
+
+    .blocklyTreeRow {
+        height: 75px;
+        line-height: 75px;
+        padding-right: 2.5rem;
+    }
+
+    .blocklyTreeRowContentContainer{
+        padding-left: 0.5rem;
     }
 }
 

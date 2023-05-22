@@ -176,7 +176,59 @@
     margin-right: 1px;
 }
 
-@media (max-width: 768px) {
+.langOption{
+    height: 100px;
+    width: 200px;
+    position: absolute;
+    top: -155px;
+    left: -7vw;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 22px rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    font-family: Gilroy-Regular, sans-serif;
+}
+
+.langItem {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: space-around;
+    cursor: pointer;
+    padding: 0 0 0.5rem 1rem;
+    border-style: none none none solid;
+}
+
+.darkTitleModel {
+    background-color: #303030;
+}
+
+.lightTitleModel {
+    background-color: #ffffff;
+}
+
+.jsDivMargin {
+    padding-right: 2rem;
+    margin-top: 0.8rem;
+    padding-top: 6px;
+}
+
+.pyDivMargin {
+    padding-top: 6px;
+    padding-right: 4rem;
+}
+
+.langIcon {
+    width: 24px;
+    height: 24px;
+    margin-left: 2px;
+}
+
+.pyFont{
+    padding-left: 6px !important;
+}
+
+@media (max-width: 767px) {
     .uploadCodeButton {
         height: 2.5rem;
         width: 55%;
@@ -252,6 +304,24 @@
         line-height: 50px;
     }
 
+    .langOption{
+        height: 70px;
+        width: 120px;
+        top: -110px;
+        left: -15vw;
+    }
+
+    .langItem {
+        padding: 0 0 0.5rem 0;
+    }
+
+    .pyFont{
+        padding-left: 6px !important;
+    }
+
+    .langItem {
+        font-size: 15px ;
+    }
 }
 
 
@@ -305,4 +375,48 @@
         font-size: 12px;
         line-height: 20px;
     }
+
+    .langOption{
+        height: 80px;
+        width: 160px;
+        top: -118px;
+        left: -14vw;
+    }
+
+}
+
+
+@media (min-width: 744px) and (max-width: 1024px) and (min-height: 650px) {
+    .barDiv {
+        height: 8%;
+    }
+
+    .buttonsDiv{
+        margin-bottom: 1%;
+    }
+
+    .operationsDiv {
+        margin-right: 2rem;
+    }
+
+    .noSpace{
+        margin-left: -2%;
+    }
+
+    .loaderText {
+        margin-top: 6%;
+    }
+
+    .textItem {
+        margin-top: 10px;
+        margin-left: -17%;
+        font-size: 24px;
+
+    }
+
+    .langOption{
+        height: 100px;
+        width: 160px;
+    }
+
 }

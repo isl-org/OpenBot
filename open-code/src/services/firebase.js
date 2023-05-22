@@ -53,7 +53,7 @@ export async function uploadProfilePic(file, fileName) {
 export async function googleSigIn() {
     const signIn = await auth.signInWithPopup(provider)
     localStorage.setItem("isSigIn", "true");
-    localStorage.setItem(localStorageKeys.accessToken, signIn?.credential?.accessToken);
+    localStorage.setItem(localStorageKeys.accessToken, signIn.credential?.accessToken);
     return signIn
 }
 

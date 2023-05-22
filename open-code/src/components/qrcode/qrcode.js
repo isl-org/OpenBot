@@ -9,14 +9,15 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import styles from "./qrCode.module.css"
 
 const QrCode = () => {
-    const [blockCode, setBlockCode] = useState("");
+    const [blockCode, setBlockCode] = useState(undefined);
     const {code, generate} = useContext(StoreContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
     useEffect(() => {
         const qrCodeEncoder = () => {
-            setBlockCode(code);
+            console.log("code for qr", code)
+            setBlockCode(JSON.stringify(code));
         };
         qrCodeEncoder();
     }, [code, generate]);
