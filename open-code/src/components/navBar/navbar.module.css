@@ -455,7 +455,27 @@
 }
 
 
-@media (max-width: 768px) {
+.dragAndDropDivContent {
+    width: 80%;
+    margin-top: 15%;
+}
+
+.dragAndDropPara {
+    margin-left: 10%;
+    padding-top: 8%;
+}
+
+.connectAndDriveDivPara{
+    width: 70%;
+    padding-left: 5%;
+}
+
+@media (max-width: 767px) {
+
+    .connectAndDriveDivPara{
+        width: 90%;
+    }
+
     .mainTitle {
         font-size: 1.0rem;
     }
@@ -682,17 +702,29 @@
         font-size: 15px;
     }
 
+    .dragAndDropDivContent {
+        width: 95%;
+    }
+
+    .dragAndDropPara {
+        margin-left: 6%;
+    }
+
 }
 
 @media (max-width: 400px) and (max-height: 670px) {
     .helpCenterPara {
         font-size: 10px !important;
     }
-
 }
 
 /*tablet portrait mode*/
-@media (min-width: 744px) and (max-width: 1024px) {
+@media (min-width: 744px) and (max-width: 1024px) and (min-height: 650px) {
+
+    .dragAndDropPara {
+        margin-left: 6%;
+        padding-top: 12%;
+    }
 
     .navbarDiv {
         height: 6rem;
@@ -721,7 +753,7 @@
     }
 
     .profileOptionModalStyle {
-        width: 11.75rem;
+        width: 13.75rem;
         padding-top: 1.5rem;
     }
 
@@ -775,6 +807,7 @@
         display: flex;
         flex-direction: row;
     }
+
     .option {
         height: 100px !important;
         width: 160px !important;
@@ -785,6 +818,7 @@
         padding: 2px 0 10px 10px !important;
         justify-content: start;
     }
+
     .renameText {
         margin-left: 1rem;
     }
@@ -792,9 +826,53 @@
     .deleteText {
         margin-left: 1rem;
     }
+
+    .helpCenterModalBox {
+        width: 90%;
+        height: 65%;
+    }
+
+    .helpCentreRightSide {
+        width: 50%;
+    }
+
+    .dragAndDropDiv {
+        width: 48%;
+    }
+
+    .screenDisplayImage {
+        /*width: 90%;*/
+        /*height: 25%;*/
+        margin-top: 20%;
+        width: 300px;
+    }
+
+    .dragAndDropDivContent {
+        width: 90%;
+        margin-top: 25%;
+    }
+
+    .integerNumber {
+        line-height: 100%;
+    }
+
+    .saveAndDownloadDivContent {
+        padding-top: 8%;
+    }
+
+    .connectAndDriveDivPara{
+        padding-top: 2%;
+        width: 87%;
+        padding-left: 5%;
+    }
+
+    .crossIcon {
+        height: 20px !important;
+        width: 20px !important;
+    }
 }
 
-@media only screen and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
+@media only screen and (max-height: 440px) and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
     /* CSS rules for mobile landscape view */
     .navbarDiv {
         height: 4rem;
@@ -826,7 +904,6 @@
         margin-top: 260px;
         height: 490px;
         width: 90%;
-
     }
 
     .dragAndDropDiv {
@@ -872,6 +949,18 @@
 
     .buttonIcon {
         font-size: 15px;
+    }
+
+    .dragAndDropDivContent {
+        width: 95%;
+    }
+
+    .dragAndDropPara {
+        padding-top: 6%;
+    }
+
+    .connectAndDriveDivPara{
+        width: 90%;
     }
 
 }

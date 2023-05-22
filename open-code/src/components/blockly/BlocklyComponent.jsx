@@ -31,6 +31,7 @@ function BlocklyComponent(props) {
     const toolbox = useRef();
     const primaryWorkspace = useRef();
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
 
     // Get context values from the store
     const {theme} = useContext(ThemeContext);
@@ -48,7 +49,7 @@ function BlocklyComponent(props) {
         category,
     } = useContext(StoreContext);
     const themes = useTheme();
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
 
     // Save workspace code to local storage when workspace changes
     const handleWorkspaceChange = useCallback(() => {
@@ -134,7 +135,6 @@ function BlocklyComponent(props) {
     }, [])
 
     useEffect(() => {
-
         // Create the primary workspace instance
         primaryWorkspace.current = Blockly.inject(blocklyDiv.current, {
             theme: theme === "dark" ? DarkTheme : LightTheme,
@@ -199,7 +199,7 @@ function BlocklyComponent(props) {
             <div
                 ref={blocklyDiv}
                 id="blocklyDiv"
-                style={{width: "100%", height: isMobileLandscape ? "66%" : "81.6%"}}
+                style={{width: "100%", height: isMobileLandscape ? "66%" : tabletQuery ? "83.7%" : "81.3%"}}
             />
             <div style={{display: "none"}} ref={toolbox}>
                 {children}

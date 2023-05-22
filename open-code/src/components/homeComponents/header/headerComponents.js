@@ -213,9 +213,9 @@ export function EditProjectPopUp(params) {
                 clickOutside()
             }
         };
-        document.addEventListener("mousedown", handleClickOutside, {passive: true});
+        document.addEventListener("pointerup", handleClickOutside, {passive: true});
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("pointerup", handleClickOutside);
         };
     }, [popUpRef, clickOutside]);
 

@@ -18,26 +18,35 @@ export async function getDriveProjects(driveProjects) {
             let allFilesFromGoogleDrive = await getAllFilesFromGoogleDrive();
             //check if there is any project or not if then in driveProject push only required data.
             allFilesFromGoogleDrive.length > 0 && allFilesFromGoogleDrive.forEach((doc) => {
-                //check project is not deleted
-                if (!doc?.trashed) {
-                    driveProjects?.push({
-                        storage: "drive",
-                        xmlValue: doc.xmlValue,
-                        id: doc.appProperties.id,
-                        projectName: doc.name.replace(/\.[^/.]+$/, ""),
-                        updatedDate: doc.appProperties.date,
-                        updatedTime: doc.appProperties.updatedTime,
-                        time: doc.appProperties.time,
-                    });
+                    //check project is not deleted
+                    if (!doc?.trashed) {
+                        if (doc.mimeType === "text/xml") {
+                            driveProjects?.push({
+                                storage: "drive",
+                                xmlValue: doc.xmlValue,
+                                id: doc.appProperties.id,
+                                projectName: doc.name.replace(/\.[^/.]+$/, ""),
+                                updatedDate: doc.appProperties.date,
+                                updatedTime: doc.appProperties.updatedTime,
+                                time: doc.appProperties.time,
+                            });
+                        } else {
+                            driveProjects?.push({
+                                projectName: doc.name.replace(/\.[^/.]+$/, ""),
+                                projectType: doc.mimeType
+                            });
+
+                        }
+                    }
                 }
-            })
+            )
             return driveProjects
-        } catch (error) {
+        } catch
+            (error) {
             console.error(error);
         }
     }
 }
-
 
 /**
  * delete project from local and drive also if you are signedIn.
@@ -69,8 +78,9 @@ export async function deleteProjectFromStorage(projectName) {
             //deleting file from Google Drive
             await getDriveProjects(allProject);
             const findCurrentProject = allProject.find(currentProject => currentProject?.projectName === projectName);
+            const findJSProject = allProject.find(currentProject => currentProject?.projectName === projectName && currentProject?.projectType === "text/javascript");
             //check if file present in drive or not js and xml
-            findCurrentProject && await checkFileExistsInFolder(await getFolderId(), findCurrentProject?.projectName, "js").then(async (response) => {
+            findJSProject && await checkFileExistsInFolder(await getFolderId(), findJSProject?.projectName, "js").then(async (response) => {
                 if (response.exists)
                     await deleteFileFromGoogleDrive(response?.fileId)
             })
@@ -196,7 +206,8 @@ export async function getFilterProjects() {
     let allDriveProjects = [];
     let allLocalProjects = getAllLocalProjects()
     await getDriveProjects(allDriveProjects).then(() => {
-        allProjects = allLocalProjects?.concat(allDriveProjects) || allDriveProjects
+        const allXmlProjects = allDriveProjects.filter((res) => res.projectType === undefined);// getting only xml projects from Google Drive
+        allProjects = allLocalProjects?.concat(allXmlProjects) || allXmlProjects
         const uniqueIds = {}; // object to keep track of unique id values
         filterProjects = allProjects.filter(project => {
             // check if id value has already been seen
@@ -208,7 +219,6 @@ export async function getFilterProjects() {
 
             // check if storage value is 'drive'
             if (project.storage === 'drive') {
-                console.log("project:::::", project.projectName, project)
                 // check if id value is unique
                 return allProjects.filter(o => o.projectName === project.projectName).length === 1;
             }
