@@ -217,20 +217,17 @@ function GenerateCodeButton(params) {
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
     const [language, setLanguage] = useState(category === Constants.qr ? Constants.js : category);
-    const theme = useContext(ThemeContext)
+    const theme = useContext(ThemeContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [openPopupArrow, setOpenPopupArrow] = useState(false);
     const [arrowClick, setArrowClicked] = useState(false);
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
-
-    // const [openPopup, setOpenPopUp]=useState(true);
     const popUpRef = useRef(null);// Create a reference to the popup element for detecting clicks outside the popup.
     const handleClick = (event) => {
         event.stopPropagation();
         setOpenPopupArrow(!openPopupArrow);
         setAnchorEl(anchorEl ? null : event.currentTarget);
         setArrowClicked(true);
-
     };
     const id = openPopupArrow ? 'simple-popper' : undefined;
 
@@ -245,14 +242,15 @@ function GenerateCodeButton(params) {
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (popUpRef.current && !popUpRef.current.contains(event.target) && !arrowClick) {
+
                 setOpenPopupArrow(false);
                 setAnchorEl(null);
             }
             setArrowClicked(false); // Reset arrowClicked back to false
         };
-        document.addEventListener("mousedown", handleClickOutside, {passive: true});
+        document.addEventListener("pointerup", handleClickOutside, {passive: true});
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("pointerup", handleClickOutside);
         };
     }, [popUpRef, arrowClick,]);
 
@@ -278,7 +276,7 @@ function GenerateCodeButton(params) {
                 setCategory(language);
             }
             } className={`${styles.uploadCodeButton}`} style={{marginLeft: "1rem"}}>
-                {isMobile ||isMobileLandscape || tabletQuery.matches ? language === Constants.js ?
+                {isMobile || isMobileLandscape || tabletQuery.matches ? language === Constants.js ?
                     <WhiteText text={"JS"} extraStyle={styles.pyFont}/> :
                     <WhiteText text={"Py"} extraStyle={styles.pyFont}/> : <span
                     className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "Javascript" : "Python"}</span>}
@@ -309,8 +307,8 @@ function GenerateCodeButton(params) {
                         {!isMobile && <img alt="Icon" className={styles.langIcon}
                                            src={theme.theme === "dark" ? deleteIcon : trash}/>}
                         {theme.theme === "dark" ?
-                            <WhiteText inlineStyle ={{marginLeft:isMobile && "-24px"}} text={"Python"} /> :
-                            <BlueText inlineStyle ={{marginLeft:isMobile && "-24px"}} text={"Python"} />
+                            <WhiteText inlineStyle={{marginLeft: isMobile && "-24px"}} text={"Python"}/> :
+                            <BlueText inlineStyle={{marginLeft: isMobile && "-24px"}} text={"Python"}/>
                         }
                     </div>
                 </div>
