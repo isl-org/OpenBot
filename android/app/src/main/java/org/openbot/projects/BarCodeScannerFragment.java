@@ -6,236 +6,257 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
+
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import java.io.IOException;
+
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentBarCodeScannerBinding;
 import org.openbot.utils.BotFunctionUtils;
 
+
 public class BarCodeScannerFragment extends CameraFragment {
 
-  private FragmentBarCodeScannerBinding binding;
-  private BarcodeDetector barcodeDetector;
-  private BottomSheetBehavior successBottomSheetBehavior;
-  private BottomSheetBehavior failedBottomSheetBehavior;
-  private boolean barCodeAccess = true;
-  private boolean cameraToggle = false;
-  public static String finalCode;
+    private FragmentBarCodeScannerBinding binding;
+    private BarcodeDetector barcodeDetector;
+    private BottomSheetBehavior successBottomSheetBehavior;
+    private BottomSheetBehavior failedBottomSheetBehavior;
+    private boolean barCodeAccess = true;
+    private boolean cameraToggle = false;
+    public static String finalCode;
 
-  @Override
-  public View onCreateView(
-      @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    // Inflate the layout for this fragment and set it as the root view for the fragment.
-    binding = FragmentBarCodeScannerBinding.inflate(inflater, container, false);
-    binding.barCodeLoader.setVisibility(View.GONE);
-    // Get the BottomSheetBehavior objects for the success and error bottom sheets.
-    successBottomSheetBehavior = BottomSheetBehavior.from(binding.qrBottomSheetSuccess);
-    failedBottomSheetBehavior = BottomSheetBehavior.from(binding.qrBottomSheetError);
-    // Set the initial state of both bottom sheets to hidden.
-    successBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-    failedBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-    return inflateFragment(binding, inflater, container);
-  }
-
-  @Override
-  public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    // Set click listeners for the cross, start, cancel, and re-scan buttons.
-    binding.btnCross.setOnClickListener(v -> requireActivity().onBackPressed());
-    binding.qrCancelBtn.setOnClickListener(
-        v -> successBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
-    // Navigate to the BlocklyExecutingFragment when the start button is clicked.
-    binding.qrStartBtn.setOnClickListener(
-        v ->
-            Navigation.findNavController(requireView())
-                .navigate(R.id.action_barCodeScannerFragment_to_blocklyExecutingFragment));
-    binding.reScanBtn.setOnClickListener(
-        v -> failedBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
-    // Add callbacks for the success and error bottom sheets.
-    successBottomSheetBehavior.addBottomSheetCallback(successBottomSheetCallback);
-    failedBottomSheetBehavior.addBottomSheetCallback(failedBottomSheetCallback);
-    if (preferencesManager.getCameraSwitch()) {
-      toggleCamera();
-      cameraToggle = true;
+    @Override
+    public View onCreateView(
+            @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment and set it as the root view for the fragment.
+        binding = FragmentBarCodeScannerBinding.inflate(inflater, container, false);
+        binding.barCodeLoader.setVisibility(View.GONE);
+        // Get the BottomSheetBehavior objects for the success and error bottom sheets.
+        successBottomSheetBehavior = BottomSheetBehavior.from(binding.qrBottomSheetSuccess);
+        failedBottomSheetBehavior = BottomSheetBehavior.from(binding.qrBottomSheetError);
+        // Set the initial state of both bottom sheets to hidden.
+        successBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        failedBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        return inflateFragment(binding, inflater, container);
     }
-    initialiseQrDetector();
-  }
 
-  /** Define a BottomSheetCallback object for the success bottom sheet. */
-  private BottomSheetBehavior.BottomSheetCallback successBottomSheetCallback =
-      new BottomSheetBehavior.BottomSheetCallback() {
-        @Override
-        public void onStateChanged(@NonNull View bottomSheet, int newState) {
-          // Handle state changes here of success bottomSheet.
-          if (newState == BottomSheetBehavior.STATE_EXPANDED
-              || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
-            // Make the overlay view visible when the bottom sheet is expanded or half-expanded.
-            binding.barCodeLoader.setVisibility(View.GONE);
-            binding.overlayView.setVisibility(View.VISIBLE);
-          } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-            // Make the overlay view invisible and set barCodeAccess is true to start detecting qr
-            // code when the bottom sheet is hidden.
-            binding.overlayView.setVisibility(View.GONE);
-            barCodeAccess = true;
-          }
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Set click listeners for the cross, start, cancel, and re-scan buttons.
+        binding.btnCross.setOnClickListener(v -> requireActivity().onBackPressed());
+        binding.qrCancelBtn.setOnClickListener(
+                v -> successBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
+        // Navigate to the BlocklyExecutingFragment when the start button is clicked.
+        binding.qrStartBtn.setOnClickListener(
+                v ->
+                        Navigation.findNavController(requireView())
+                                .navigate(R.id.action_barCodeScannerFragment_to_blocklyExecutingFragment));
+        binding.reScanBtn.setOnClickListener(
+                v -> failedBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
+        // Add callbacks for the success and error bottom sheets.
+        successBottomSheetBehavior.addBottomSheetCallback(successBottomSheetCallback);
+        failedBottomSheetBehavior.addBottomSheetCallback(failedBottomSheetCallback);
+        if (preferencesManager.getCameraSwitch()) {
+            toggleCamera();
+            cameraToggle = true;
         }
-
-        @Override
-        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-          // Handle sliding events here
-        }
-      };
-
-  /** Define a BottomSheetCallback object for the failed bottom sheet. */
-  private BottomSheetBehavior.BottomSheetCallback failedBottomSheetCallback =
-      new BottomSheetBehavior.BottomSheetCallback() {
-        @Override
-        public void onStateChanged(@NonNull View bottomSheet, int newState) {
-          // Handle state changes here of failed bottomSheet.
-          if (newState == BottomSheetBehavior.STATE_EXPANDED
-              || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
-            // Make the overlay view visible when the bottom sheet is expanded or half-expanded.
-            binding.barCodeLoader.setVisibility(View.GONE);
-            binding.overlayView.setVisibility(View.VISIBLE);
-          } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-            // Make the overlay view invisible and set barCodeAccess is true to start detecting qr
-            // code when the bottom sheet is hidden
-            binding.overlayView.setVisibility(View.GONE);
-            barCodeAccess = true;
-          }
-        }
-
-        @Override
-        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-          // Handle sliding events here
-        }
-      };
-
-  @Override
-  protected void processControllerKeyData(String command) {}
-
-  @Override
-  protected void processUSBData(String data) {}
-
-  @Override
-  protected void processFrame(Bitmap image, ImageProxy imageProxy) {
-    startQrDetection(image);
-  }
-
-  /** Initialize a new instance of the BarcodeDetector with all barcode formats supported. */
-  private void initialiseQrDetector() {
-    barcodeDetector =
-        new BarcodeDetector.Builder(requireContext())
-            .setBarcodeFormats(Barcode.ALL_FORMATS)
-            .build();
-  }
-
-  /**
-   * start qr code detection If the image is not null, create a new Frame with the image and detect
-   * any Qr code in it.
-   *
-   * @param image the image to detect qr code.
-   */
-  private void startQrDetection(Bitmap image) {
-    if (image != null) {
-      Frame frame = new Frame.Builder().setBitmap(image).build();
-      SparseArray<Barcode> barcodes = barcodeDetector.detect(frame);
-      // If a qr code is detected and barCodeAccess is true, get the qr code value and call
-      // extractFileID().
-      if (barcodes.size() != 0 && barCodeAccess) {
-        requireActivity()
-            .runOnUiThread(
-                () -> {
-                  binding.overlayView.setVisibility(View.VISIBLE);
-                  binding.barCodeLoader.setVisibility(View.VISIBLE);
-                });
-        barCodeAccess = false;
-        String qrCodeValue = barcodes.valueAt(0).displayValue;
-        extractFileID(qrCodeValue);
-      }
+        initialiseQrDetector();
     }
-  }
 
-  /**
-   * To extract the drive file id from URL Link.
-   *
-   * @param urlLink the link to use extract file id.
-   */
-  private void extractFileID(String urlLink) {
-    // If the URL string contains "/file/d/", extract the file ID and call readFileFromDrive().
-    if (urlLink.contains("/file/d/")) {
-      String id = urlLink.substring(urlLink.indexOf("/file/d/") + 8, urlLink.indexOf("/edit"));
-      try {
-        readFileFromDrive(id);
-      } catch (IOException e) {
-        // If an IOException occurs while reading the file, handle the bottom sheet with a failure
-        // state.
-        handleBottomSheet(false);
-        throw new RuntimeException(e);
-      }
-    } else {
-      // If the URL string doesn't contain "/file/d/", handle the bottom sheet with a failure state.
-      handleBottomSheet(false);
-    }
-  }
-
-  /**
-   * To read google drive file contents using file id, Call a new instance of the ReadFileTask with
-   * the given file ID and a callback to handle success/failure.
-   *
-   * @param fileId
-   * @throws IOException
-   */
-  private void readFileFromDrive(String fileId) throws IOException {
-    new ReadFileTask(
-            fileId,
-            new ReadFileCallback() {
-              @Override
-              public void onFileReadSuccess(String fileContents) {
-                // If the file is read successfully, replace any bot function calls with "Android."
-                // + functionName.
-                String code = fileContents;
-                for (String fun : BotFunctionUtils.botFunctionArray) {
-                  if (code.contains(fun)) {
-                    code = code.replace(fun, "Android." + fun);
-                  }
+    /**
+     * Define a BottomSheetCallback object for the success bottom sheet.
+     */
+    private BottomSheetBehavior.BottomSheetCallback successBottomSheetCallback =
+            new BottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                    // Handle state changes here of success bottomSheet.
+                    if (newState == BottomSheetBehavior.STATE_EXPANDED
+                            || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
+                        // Make the overlay view visible when the bottom sheet is expanded or half-expanded.
+                        binding.barCodeLoader.setVisibility(View.GONE);
+                        binding.overlayView.setVisibility(View.VISIBLE);
+                    } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                        // Make the overlay view invisible and set barCodeAccess is true to start detecting qr
+                        // code when the bottom sheet is hidden.
+                        binding.overlayView.setVisibility(View.GONE);
+                        barCodeAccess = true;
+                    }
                 }
-                // Set the finalCode to the modified code and handle the bottom sheet with a success
-                // state.
-                finalCode = code;
-                handleBottomSheet(true);
-              }
 
-              @Override
-              public void onFileReadFailed(IOException e) {
-                // If an IOException occurs while reading the file, handle the bottom sheet with a
-                // failure state.
-                handleBottomSheet(false);
-              }
-            })
-        .execute();
-  }
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                    // Handle sliding events here
+                }
+            };
 
-  private void handleBottomSheet(boolean scanSuccess) {
-    // If scanSuccess is true, expand the success bottom sheet, otherwise expand the failure bottom
-    // sheet.
-    if (scanSuccess) {
-      successBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-    } else {
-      failedBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    /**
+     * Define a BottomSheetCallback object for the failed bottom sheet.
+     */
+    private BottomSheetBehavior.BottomSheetCallback failedBottomSheetCallback =
+            new BottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                    // Handle state changes here of failed bottomSheet.
+                    if (newState == BottomSheetBehavior.STATE_EXPANDED
+                            || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
+                        // Make the overlay view visible when the bottom sheet is expanded or half-expanded.
+                        binding.barCodeLoader.setVisibility(View.GONE);
+                        binding.overlayView.setVisibility(View.VISIBLE);
+                    } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                        // Make the overlay view invisible and set barCodeAccess is true to start detecting qr
+                        // code when the bottom sheet is hidden
+                        binding.overlayView.setVisibility(View.GONE);
+                        barCodeAccess = true;
+                    }
+                }
+
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                    // Handle sliding events here
+                }
+            };
+
+    @Override
+    protected void processControllerKeyData(String command) {
     }
-  }
 
-  @Override
-  public void onPause() {
-    super.onPause();
-    if (cameraToggle) toggleCamera();
-  }
+    @Override
+    protected void processUSBData(String data) {
+    }
+
+    @Override
+    protected void processFrame(Bitmap image, ImageProxy imageProxy) {
+        startQrDetection(image);
+    }
+
+    /**
+     * Initialize a new instance of the BarcodeDetector with all barcode formats supported.
+     */
+    private void initialiseQrDetector() {
+        barcodeDetector =
+                new BarcodeDetector.Builder(requireContext())
+                        .setBarcodeFormats(Barcode.ALL_FORMATS)
+                        .build();
+    }
+
+    /**
+     * start qr code detection If the image is not null, create a new Frame with the image and detect
+     * any Qr code in it.
+     *
+     * @param image the image to detect qr code.
+     */
+    private void startQrDetection(Bitmap image) {
+        if (image != null) {
+            Frame frame = new Frame.Builder().setBitmap(image).build();
+            SparseArray<Barcode> barcodes = barcodeDetector.detect(frame);
+            // If a qr code is detected and barCodeAccess is true, get the qr code value and call
+            // extractFileID().
+            if (barcodes.size() != 0 && barCodeAccess) {
+                requireActivity()
+                        .runOnUiThread(
+                                () -> {
+                                    binding.overlayView.setVisibility(View.VISIBLE);
+                                    binding.barCodeLoader.setVisibility(View.VISIBLE);
+                                });
+                barCodeAccess = false;
+                String qrCodeValue = barcodes.valueAt(0).displayValue;
+                //grCode value is in Json object
+                Gson gson = new Gson();
+                JsonObject jsonObject = gson.fromJson(qrCodeValue, JsonObject.class); //get json
+                String linkCode = jsonObject.get("linkCode").getAsString(); // get as string
+                String projectName = jsonObject.get("projectName").getAsString(); // get as string
+                binding.qrMessage.setText(projectName + " file detected. Start to execute the code on your OpenBot.");
+                extractFileID(linkCode);
+            }
+        }
+    }
+
+    /**
+     * To extract the drive file id from URL Link.
+     *
+     * @param urlLink the link to use extract file id.
+     */
+    private void extractFileID(String urlLink) {
+        // If the URL string contains "/file/d/", extract the file ID and call readFileFromDrive().
+        if (urlLink.contains("/file/d/")) {
+            String id = urlLink.substring(urlLink.indexOf("/file/d/") + 8, urlLink.indexOf("/edit"));
+            try {
+                readFileFromDrive(id);
+            } catch (IOException e) {
+                // If an IOException occurs while reading the file, handle the bottom sheet with a failure
+                // state.
+                handleBottomSheet(false);
+                throw new RuntimeException(e);
+            }
+        } else {
+            // If the URL string doesn't contain "/file/d/", handle the bottom sheet with a failure state.
+            handleBottomSheet(false);
+        }
+    }
+
+    /**
+     * To read google drive file contents using file id, Call a new instance of the ReadFileTask with
+     * the given file ID and a callback to handle success/failure.
+     *
+     * @param fileId
+     * @throws IOException
+     */
+    private void readFileFromDrive(String fileId) throws IOException {
+        new ReadFileTask(
+                fileId,
+                new ReadFileCallback() {
+                    @Override
+                    public void onFileReadSuccess(String fileContents) {
+                        // If the file is read successfully, replace any bot function calls with "Android."
+                        // + functionName.
+                        String code = fileContents;
+                        for (String fun : BotFunctionUtils.botFunctionArray) {
+                            if (code.contains(fun)) {
+                                code = code.replace(fun, "Android." + fun);
+                            }
+                        }
+                        // Set the finalCode to the modified code and handle the bottom sheet with a success
+                        // state.
+                        finalCode = code;
+                        handleBottomSheet(true);
+                    }
+
+                    @Override
+                    public void onFileReadFailed(IOException e) {
+                        // If an IOException occurs while reading the file, handle the bottom sheet with a
+                        // failure state.
+                        handleBottomSheet(false);
+                    }
+                })
+                .execute();
+    }
+
+    private void handleBottomSheet(boolean scanSuccess) {
+        // If scanSuccess is true, expand the success bottom sheet, otherwise expand the failure bottom
+        // sheet.
+        if (scanSuccess) {
+            successBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            failedBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (cameraToggle) toggleCamera();
+    }
 }
