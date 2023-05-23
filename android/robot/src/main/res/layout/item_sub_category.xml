@@ -27,7 +27,7 @@
         android:gravity="start"
         android:maxLines="2"
         android:paddingVertical="8dp"
-        android:textSize="12dp"
+        android:textSize="13dp"
         android:paddingHorizontal="4dp"
         android:textColor="@android:color/black"
         tools:text="Subcategory" />
