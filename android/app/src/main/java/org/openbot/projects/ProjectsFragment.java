@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.List;
 import org.openbot.R;
 import org.openbot.databinding.FragmentProjectsBinding;
+import org.openbot.env.SharedPreferencesManager;
 import org.openbot.googleServices.GoogleServices;
 import org.openbot.main.CommonRecyclerViewAdapter;
 import org.openbot.utils.BotFunctionUtils;
@@ -35,13 +36,14 @@ public class ProjectsFragment extends Fragment {
   private BottomSheetBehavior projectsBottomSheetBehavior;
   private SwipeRefreshLayout swipeRefreshLayout;
   private SparseArray<int[]> driveRes = new SparseArray<>();
-  private DriveProjectList driveProjectList = DriveProjectList.getInstance();
+  private SharedPreferencesManager sharedPreferencesManager;
 
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     binding = FragmentProjectsBinding.inflate(inflater, container, false);
+    sharedPreferencesManager = new SharedPreferencesManager(requireContext());
     googleServices = new GoogleServices(requireActivity(), requireContext(), newGoogleServices);
     projectsBottomSheetBehavior = BottomSheetBehavior.from(binding.projectsBottomSheet);
     projectsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -72,7 +74,6 @@ public class ProjectsFragment extends Fragment {
 
     swipeRefreshLayout.setOnRefreshListener(
         () -> {
-          driveProjectList.projectsList.clear();
           showProjectsRv();
           swipeRefreshLayout.setRefreshing(false);
         });
@@ -91,7 +92,6 @@ public class ProjectsFragment extends Fragment {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             googleServices.handleSignInResult(task);
             binding.signOutLayout.setVisibility(View.GONE);
-            driveProjectList.projectsList.clear();
             showProjectsRv();
           });
 
@@ -119,6 +119,7 @@ public class ProjectsFragment extends Fragment {
   private void showProjectsRv() {
     binding.noProjectsLayout.setVisibility(View.GONE);
     binding.refreshLayout.setVisibility(View.VISIBLE);
+    googleServices.projectsList = sharedPreferencesManager.getProjectList();
     // Set Grid layout according to screen width dimension.
     int screenWidth = getResources().getDisplayMetrics().widthPixels;
     int itemWidth = getResources().getDimensionPixelSize(R.dimen.project_card_view);
@@ -126,15 +127,15 @@ public class ProjectsFragment extends Fragment {
     binding.projectsRv.setLayoutManager(new GridLayoutManager(requireActivity(), numColumns));
     driveRes.put(R.layout.projects_list_view, new int[] {R.id.project_name, R.id.project_date});
     setScanDeviceAdapter(
-        new DriveProjectsAdapter(requireActivity(), driveProjectList.getAllProjects(), driveRes),
+        new DriveProjectsAdapter(requireActivity(), googleServices.projectsList, driveRes),
         (itemView, position) ->
             onTapProjectItem(
-                driveProjectList.getAllProjects().get(position).getProjectCommands(),
-                driveProjectList.getAllProjects().get(position).getProjectName()));
-    if (driveProjectList.getAllProjects().size() <= 0) {
+                googleServices.projectsList.get(position).getProjectCommands(),
+                googleServices.projectsList.get(position).getProjectName()));
+    if (googleServices.projectsList.size() <= 0) {
       binding.projectsLoader.setVisibility(View.VISIBLE);
-      googleServices.accessDriveFiles(adapter, binding);
     }
+    googleServices.accessDriveFiles(adapter, binding);
     binding.projectsRv.setAdapter(adapter);
   }
 

@@ -22,10 +22,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import org.openbot.databinding.FragmentProjectsBinding;
-import org.openbot.projects.DriveProjectList;
+import org.openbot.env.SharedPreferencesManager;
 import org.openbot.projects.DriveProjectsAdapter;
 import org.openbot.projects.GoogleSignInCallback;
 import org.openbot.projects.ProjectsDataInObject;
@@ -43,7 +47,8 @@ public class GoogleServices {
   public final GoogleSignInClient mGoogleSignInClient;
   private final ProjectsFragment projectsFragment;
   private final FirebaseAuth firebaseAuth;
-  private DriveProjectList driveProjectList = DriveProjectList.getInstance();
+  public ArrayList<ProjectsDataInObject> projectsList = new ArrayList<>();
+  private SharedPreferencesManager sharedPreferencesManager;
 
   /**
    * Constructor for the GoogleServices class
@@ -77,6 +82,7 @@ public class GoogleServices {
     } else {
       mCallback.onSignInFailed(null);
     }
+    sharedPreferencesManager = new SharedPreferencesManager(mContext);
   }
 
   /**
@@ -200,13 +206,24 @@ public class GoogleServices {
                             .setPageToken(pageToken)
                             .setQ("trashed = false")
                             .execute();
-                    List<File> files = result.getFiles();
+                    List<File> driveProjectFiles = result.getFiles();
+
+                    // Create a HashSet to store the drive project IDs.
+                    Set<String> driveProjectId = new HashSet<>();
+
+                    // Create a HashSet to store the local project IDs.
+                    Set<String> localProjectId = new HashSet<>();
+                    for (ProjectsDataInObject obj : projectsList) {
+                      localProjectId.add(obj.getProjectId());
+                    }
                     // Iterate through the files
-                    for (File file : files) {
+                    for (File file : driveProjectFiles) {
                       if (file.getName().endsWith(".js")) {
+                        driveProjectId.add(file.getId());
                         String projectName = file.getName();
                         String projectId = file.getId();
                         DateTime projectDate = file.getModifiedTime();
+
                         // Read the content of the file
                         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                         googleDriveService
@@ -214,19 +231,33 @@ public class GoogleServices {
                             .get(file.getId())
                             .executeMediaAndDownloadTo(outputStream);
                         String projectCommands = outputStream.toString();
-                        // Create a Project object and add it to the ArrayList
-                        driveProjectList.projectsList.add(
-                            new ProjectsDataInObject(
-                                projectId, projectName, projectDate, projectCommands));
+
+                        if (!localProjectId.contains(file.getId())) {
+                          // Create a Project object and add it to the ArrayList
+                          projectsList.add(
+                              new ProjectsDataInObject(
+                                  projectId, projectName, projectDate, projectCommands));
+                        }
                       }
                     }
+
+                    // Iterate over the local projects and remove any that are not present in the
+                    // driveProjectId set
+                    Iterator<ProjectsDataInObject> iterator = projectsList.iterator();
+                    while (iterator.hasNext()) {
+                      ProjectsDataInObject project = iterator.next();
+                      if (!driveProjectId.contains(project.getProjectId())) {
+                        iterator.remove();
+                      }
+                      sharedPreferencesManager.setProjectLIst(projectsList);
+                    }
+
                     // update the UI on the main thread to reflect the changes in the list of drive
                     // files.
                     mActivity.runOnUiThread(
                         () -> {
                           adapter.notifyDataSetChanged();
-                          projectsFragment.updateMessage(
-                              driveProjectList.getAllProjects(), binding);
+                          projectsFragment.updateMessage(projectsList, binding);
                         });
                     // update page token to get the next set of files if available.
                     pageToken = result.getNextPageToken();
