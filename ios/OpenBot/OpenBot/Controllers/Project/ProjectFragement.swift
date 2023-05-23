@@ -98,16 +98,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      */
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated);
-        if GIDSignIn.sharedInstance.currentUser != nil {
-            if Reachability.isConnectedToNetwork() {
-                tempAllProjects.removeAll()
-                loadProjects();
-            } else {
-                allProjects = decodeProjectFromUserDefault()
-                allProjectCommands = decodeProjectDataFromUserDefault()
-                alert.dismiss(animated: true);
-            }
-        }
+        reloadProjects();
 
     }
 
@@ -456,11 +447,24 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      Function to refresh the table
      */
     @objc func refreshData() {
-        if Reachability.isConnectedToNetwork() {
-            loadProjects()
-            projectCollectionView.reloadData();
-        }
+        reloadProjects()
         projectCollectionView.refreshControl?.endRefreshing();
+    }
+
+    /**
+     function to reload all projects on viewWillAppear and refresh
+     */
+    private func reloadProjects() {
+        if GIDSignIn.sharedInstance.currentUser != nil {
+            if Reachability.isConnectedToNetwork() {
+                tempAllProjects.removeAll()
+                loadProjects();
+            } else {
+                allProjects = decodeProjectFromUserDefault()
+                allProjectCommands = decodeProjectDataFromUserDefault()
+                alert.dismiss(animated: true);
+            }
+        }
     }
 
 
