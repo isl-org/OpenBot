@@ -78,7 +78,7 @@ export const BottomBar = () => {
                     uploadToGoogleDrive(code, "js").then((res) => {
                             console.log("res::", res)
                             let linkCode = {
-                                linkCode: res,
+                                driveLink: res,
                                 projectName: getCurrentProject().projectName
                             }
                             setCode(linkCode);

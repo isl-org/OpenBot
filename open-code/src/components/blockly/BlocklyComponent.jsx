@@ -114,7 +114,7 @@ function BlocklyComponent(props) {
                         console.log(QrLink)
                         let linkCode = {
                             driveLink: QrLink,
-                            projectName : getCurrentProject().projectName
+                            projectName: getCurrentProject().projectName
                         }
 
                         setCode(linkCode);
