@@ -16,4 +16,9 @@ public struct ProjectData: Codable {
     var projectCommand: String
 }
 
+public struct QrData: Codable {
+    let driveLink: String
+    let projectName: String
+}
+
 

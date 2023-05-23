@@ -22,6 +22,7 @@ class scannerFragment: CameraController {
     var heading = CustomLabel(frame: .zero);
     var border = UIImageView();
     let firstHalfView = UIView();
+    var projectName: String = "";
 
 /**
     Method calls after view will load and initialize the UI and camera
@@ -128,7 +129,6 @@ class scannerFragment: CameraController {
        - connection:
      */
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-
         if hasSuccessfulScan {
             // Ignore any further metadata objects if a successful scan has occurred
             return
@@ -141,24 +141,37 @@ class scannerFragment: CameraController {
             }
             if let qrCodeString = qrCodeObject.stringValue {
                 // Handle the QR code data here
-                print("QR code data: \(qrCodeString)")
-                qrResult = qrCodeString;
-                captureSession.stopRunning();
-                hasSuccessfulScan = true
-                createOverlayAlert();
-                Authentication.download(file: qrResult) { data, error in
-                    self.alert.dismiss(animated: true);
-                    if let error = error {
-                        self.createErrorUI()
-                        return;
+                do {
+                    guard let jsonData = qrCodeString.data(using: .utf8) else {
+                        return
                     }
-                    if let data = data {
-                        print(self.qrResult);
-                        self.createSuccessUI();
-                        print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") as Any)
-                        self.commands = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
-                        return;
+                    let qrCodeData = try JSONDecoder().decode(QrData.self, from: jsonData)
+                    qrResult = qrCodeData.driveLink
+                    projectName = qrCodeData.projectName
+                    print("QRResult", qrResult)
+                    captureSession.stopRunning();
+                    hasSuccessfulScan = true
+                    createOverlayAlert();
+                    Authentication.download(file: qrResult) { data, error in
+                        self.alert.dismiss(animated: true);
+                        if let error = error {
+                            self.hasSuccessfulScan = false
+                            self.createErrorUI()
+                            return;
+                        }
+                        if let data = data {
+                            print(self.qrResult);
+                            self.createSuccessUI();
+                            print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") as Any)
+                            self.commands = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
+                            return;
+                        }
                     }
+                } catch {
+                    print("Error decoding JSON: \(error)")
+                    createErrorUI();
+                    self.hasSuccessfulScan = true
+                    return;
                 }
             }
         }
@@ -195,7 +208,7 @@ class scannerFragment: CameraController {
      Creating Bottom sheet for QR scan Successful
      */
     private func createSuccessUI() {
-        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "temp");
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: projectName);
         whiteSheet.startBtn.addTarget(self, action: #selector(self.start), for: .touchUpInside);
         whiteSheet.cancelBtn.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
         view.addSubview(self.whiteSheet);
@@ -205,7 +218,7 @@ class scannerFragment: CameraController {
      Creating Bottom sheet for QR scan Error
      */
     private func createErrorUI() {
-        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: String());
         whiteSheet.scanQr.addTarget(self, action: #selector(self.scan), for: .touchUpInside);
         view.addSubview(whiteSheet);
     }

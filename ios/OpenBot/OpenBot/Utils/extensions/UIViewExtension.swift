@@ -238,7 +238,7 @@ class openCodeRunBottomSheet: UIView {
 
     private func createBottomSheetHeading() {
         let heading = CustomLabel(text: "QR scanned successfully",
-                fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 23, width: 260, height: 40));
+                fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 23, width: 290, height: 40));
         heading.font = HelveticaNeue.bold(size: 15);
         bottomSheet.addSubview(heading);
     }
