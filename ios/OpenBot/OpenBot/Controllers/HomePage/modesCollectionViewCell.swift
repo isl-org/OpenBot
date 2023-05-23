@@ -13,7 +13,7 @@ class modesCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        icon = UIImageView(frame: CGRect(x: 0, y: frame.size.height/4, width: frame.size.width, height: frame.size.height/2))
+        icon = UIImageView(frame: CGRect(x: 0, y: frame.size.height/6, width: frame.size.width, height: frame.size.height/1.5))
         icon.contentMode = .scaleAspectFit
         contentView.addSubview(icon)
         
@@ -21,7 +21,7 @@ class modesCollectionViewCell: UICollectionViewCell {
         title.isEditable = false
         title.isScrollEnabled = false
         title.textAlignment = .left
-        title.font = UIFont.systemFont(ofSize: 14)
+        title.font = UIFont.systemFont(ofSize: 12)
         
         contentView.addSubview(title)
         

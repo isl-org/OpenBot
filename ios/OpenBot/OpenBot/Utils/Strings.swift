@@ -12,7 +12,7 @@ struct Strings {
     static let objectTracking: String = "Object Tracking"
     static let modelManagement: String = "Model Management"
     static let robotInfo: String = "Robot Info"
-    static let navigation: String = "Navigation"
+    static let navigation: String = "Point Goal Navigation"
 
     // Misc
     static let controller: String = "Controller"
