@@ -70,14 +70,6 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
         modesCollectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         self.view.addSubview(modesCollectionView)
         
-        // Layout constraints
-                /*NSLayoutConstraint.activate([
-                    modesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                    modesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                    modesCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
-                    modesCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-                ])*/
-        
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         changeNavigationColor()
         NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
@@ -155,7 +147,6 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
 
     func setUpTitle() {
         titleLabel.text = Strings.OpenBot
-        //titleLabel.textColor = Colors.title;
     }
 
     @IBAction func onTapSettings() {
@@ -214,9 +205,6 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: modesCollectionViewCell.identifier, for: indexPath) as! modesCollectionViewCell;
         
         cell.configure(with: Constants.gameModes[indexPath.section][indexPath.row]);
-        //cell.layer.cornerRadius = adapted(dimensionSize: 10, to: .height)
-        //cell.translatesAutoresizingMaskIntoConstraints = true
-        //leadingConstraint = cell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
         
         return cell
         
@@ -268,9 +256,7 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
      collectionView.deselectItem(at: indexPath, animated: true)
      let viewController = (storyboard?.instantiateViewController(withIdentifier: Constants.gameModes[indexPath.section][indexPath.row].identifier))!
      navigationController?.pushViewController(viewController, animated: true);
-        
     }
-
 }
 
 
