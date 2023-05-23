@@ -19,6 +19,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private let signInView: UIView = UIView();
     private let noProjectMessageView: UIView = UIView();
     private var allProjects: [ProjectItem] = [];
+    private var tempAllProjects: [ProjectItem] = [];
     var vehicleControl = Control();
     @IBOutlet weak var openCodeWebView: UIView!
     private var command: String = ""
@@ -64,6 +65,10 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         setupOpenCodeIcon();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+        if authentication.googleSignIn.currentUser != nil{
+            createOverlayAlert();
+        }
+
     }
 
     /**
@@ -77,7 +82,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     /**
      Function create refresh
      */
-    private func setupOpenCodeIcon(){
+    private func setupOpenCodeIcon() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(loadWebView))
         openCodeWebView.addGestureRecognizer(tap)
     }
@@ -93,15 +98,16 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      */
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated);
-        if Reachability.isConnectedToNetwork(){
-            if allProjects.count == 0 && GIDSignIn.sharedInstance.currentUser != nil {
+        if GIDSignIn.sharedInstance.currentUser != nil {
+            if Reachability.isConnectedToNetwork() {
+                tempAllProjects.removeAll()
                 loadProjects();
-                createOverlayAlert();
+            } else {
+                allProjects = decodeProjectFromUserDefault()
+                allProjectCommands = decodeProjectDataFromUserDefault()
             }
-        }else{
-            allProjects = decodeProjectFromUserDefault()
-            allProjectCommands = decodeProjectDataFromUserDefault()
         }
+
     }
 
     /**
@@ -111,7 +117,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateViewsVisibility();
-       bluetooth.stopRobot();
+        bluetooth.stopRobot();
     }
 
     /**
@@ -213,7 +219,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         navigationController?.pushViewController(viewController, animated: true);
     }
 
-    @objc func loadWebView(_ sender : Any){
+    @objc func loadWebView(_ sender: Any) {
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
         let viewController = (storyboard.instantiateViewController(withIdentifier: "webView"))
         navigationController?.pushViewController(viewController, animated: true);
@@ -268,7 +274,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                 if let result = result {
                     self.alert.dismiss(animated: true);
                     self.command = result;
-                } else if let error = error {
+                } else if error != nil {
                     self.whiteSheet.removeFromSuperview();
                     self.alert.dismiss(animated: true);
                     self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
@@ -342,8 +348,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      function add commands to allProjectCommand variable
      */
     private func loadProjects() {
-        allProjects = [];
-        allProjectCommands = [];
         projectCollectionView.reloadData();
         authentication.getAllFolders { files, error in
             if let files = files {
@@ -351,10 +355,15 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                     if let files = files {
                         for file in files {
                             if file.mimeType == "text/javascript" {
-                                let project = ProjectItem(projectName: Authentication.returnFileName(name: file.name ?? "Unknown") ?? "Unknown", projectDate: file.modifiedTime?.stringValue ?? "", projectId: file.identifier ?? "")
-                                self.allProjects.append(project);
+                                let project = ProjectItem(projectName: Authentication.returnFileName(name: file.name ?? "Unknown"), projectDate: file.modifiedTime?.stringValue ?? "", projectId: file.identifier ?? "")
+                                if !self.tempAllProjects.contains { $0.projectId == project.projectId } {
+                                    self.tempAllProjects.append(project);
+                                }
                             }
                         }
+                        self.allProjects = self.tempAllProjects
+                        self.projectCollectionView.reloadData();
+                        self.removeExtraProjectsFromAllProjectData();
                         self.loadAllProjectData { data, error in
                             if let data = data {
                                 self.allProjectCommands = data;
@@ -391,6 +400,10 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         loadingIndicator.style = UIActivityIndicatorView.Style.medium
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
+        // Schedule a timer to automatically dismiss the alert after 15 seconds
+        Timer.scheduledTimer(withTimeInterval: 15.0, repeats: false) { timer in
+            self.dismiss(animated: true, completion: nil)
+        }
     }
 
     /**
@@ -425,7 +438,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
     /**
-     Cancel hander of bottom sheet
+     Cancel handler of bottom sheet
      */
     @objc private func cancel() {
         whiteSheet.animateBottomSheet();
@@ -442,11 +455,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      Function to refresh the table
      */
     @objc func refreshData() {
-        if Reachability.isConnectedToNetwork(){
-            allProjects = [];
-            allProjectCommands = [];
-            projectCollectionView.reloadData();
+        if Reachability.isConnectedToNetwork() {
             loadProjects()
+            projectCollectionView.reloadData();
         }
         projectCollectionView.refreshControl?.endRefreshing();
     }
@@ -463,7 +474,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
     }
 
-    private func decodeProjectFromUserDefault()->[ProjectItem]{
+    private func decodeProjectFromUserDefault() -> [ProjectItem] {
         if let data = UserDefaults.standard.data(forKey: "allProjects") {
             do {
                 let decoder = JSONDecoder()
@@ -480,7 +491,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      private function to decode the project data from user default
      - Returns:
      */
-    private func decodeProjectDataFromUserDefault()->[ProjectData]{
+    private func decodeProjectDataFromUserDefault() -> [ProjectData] {
         if let data = UserDefaults.standard.data(forKey: "allProjectCommands") {
             do {
                 let decoder = JSONDecoder()
@@ -507,9 +518,13 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
 
         for project in allProjects {
+            if allProjectCommands.contains(where: { $0.projectId == project.projectId }) {
+                tempCommand.append(ProjectData(projectId: project.projectId, projectCommand: returnCommandOfSelectedCell(projectId: project.projectId)));
+                continue;
+            }
             group.enter() // Enter the dispatch group
 
-            let fileData = getCommandOfSelectedFile(project: project) { data, error in
+            let _: () = getCommandOfSelectedFile(project: project) { data, error in
                 defer {
                     group.leave() // Leave the dispatch group when the operation is completed
                 }
@@ -540,13 +555,23 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      - Parameter projectId:
      - Returns:
      */
-    func returnCommandOfSelectedCell(projectId : String)->String{
-        for command in allProjectCommands{
+    func returnCommandOfSelectedCell(projectId: String) -> String {
+        for command in allProjectCommands {
             if command.projectId == projectId {
                 return command.projectCommand
             }
         }
         return "";
     }
+
+    private func removeExtraProjectsFromAllProjectData() {
+        for i in stride(from: allProjectCommands.count - 1, through: 0, by: -1) {
+            let itemID = allProjectCommands[i].projectId
+            if !allProjects.contains(where: { $0.projectId == itemID }) {
+                allProjectCommands.remove(at: i)
+            }
+        }
+    }
+
 }
 

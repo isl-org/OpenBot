@@ -20,6 +20,10 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webConfiguration.applicationNameForUserAgent = "Mozilla/6.0 (iPhone; CPU iPhone OS 16_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Mobile/15E148 Safari/604.1"
         webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.configuration.defaultWebpagePreferences.allowsContentJavaScript = true
+        webView.scrollView.panGestureRecognizer.isEnabled = false
+        webView.scrollView.pinchGestureRecognizer?.isEnabled = false
+// Disable other gesture recognizers if necessary
+
         webView.uiDelegate = self
         view = webView
         webView.configuration.userContentController.addUserScript(self.getZoomDisableScript())
@@ -39,6 +43,9 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webView.navigationDelegate = self
         let myURL = URL(string: "https://www.openbot.itinker.io/")
         let myRequest = URLRequest(url: myURL!)
+        webView.isUserInteractionEnabled = true
+        webView.allowsLinkPreview = false
+        webView.configuration.preferences.javaScriptEnabled = true
         webView.load(myRequest)
     }
 
@@ -108,3 +115,5 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
     }
 
 }
+
+
