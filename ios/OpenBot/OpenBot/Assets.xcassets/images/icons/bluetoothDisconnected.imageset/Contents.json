@@ -49,6 +49,7 @@
       "scale" : "2x"
     },
     {
+      "filename" : "clarity_bluetooth-off-solid 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -59,7 +60,6 @@
           "value" : "light"
         }
       ],
-      "filename" : "bluetooth-unselect 3.svg",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -70,7 +70,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "clarity_bluetooth-off-solid 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
@@ -78,5 +77,8 @@
   "info" : {
     "author" : "xcode",
     "version" : 1
+  },
+  "properties" : {
+    "localizable" : true
   }
 }

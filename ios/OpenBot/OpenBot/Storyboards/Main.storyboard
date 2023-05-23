@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PA5-nf-qH0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PA5-nf-qH0">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <accessibilityOverrides isEnabled="YES" boldText="YES" buttonShapes="YES" onOffLabels="YES" increaseContrast="YES" reduceTransparency="YES" dynamicTypePreference="2"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -162,17 +162,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="L5H-sX-MZP" userLabel="Upper Band">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="137"/>
+                                <color key="backgroundColor" name="HomePageTitleColor"/>
+                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OpenBot" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDx-Ys-4aG">
-                                <rect key="frame" x="12" y="92" width="113" height="33"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="33" id="JqA-jr-Vcd"/>
-                                </constraints>
+                                <rect key="frame" x="12" y="82" width="113" height="54"/>
                                 <fontDescription key="fontDescription" name="Questrial-Regular" family="Questrial" pointSize="28"/>
-                                <color key="textColor" name="HomePageTitleColor"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Ce8-ek-lG7">
-                                <rect key="frame" x="0.0" y="144" width="414" height="649"/>
+                                <rect key="frame" x="0.0" y="155" width="414" height="638"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Mxr-ZR-LOu">
                                     <size key="itemSize" width="128" height="128"/>
@@ -192,7 +193,10 @@
                                 </cells>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z72-El-xFG">
-                                <rect key="frame" x="318" y="92" width="38" height="36"/>
+                                <rect key="frame" x="318" y="92" width="38" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="QAl-eV-98a"/>
+                                </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="bluetoothConnected" title="" imagePadding="0.0">
                                     <color key="baseForegroundColor" name="HomePageTitleColor"/>
@@ -202,11 +206,15 @@
                                 </connections>
                             </button>
                             <button autoresizesSubviews="NO" toolTip="Settings" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" buttonType="system" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5c8-Vo-nJ6">
-                                <rect key="frame" x="369" y="99" width="18" height="22"/>
+                                <rect key="frame" x="369" y="92" width="33" height="40"/>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="aXn-Nm-Niv"/>
+                                </constraints>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="settings">
+                                <buttonConfiguration key="configuration" style="plain" image="gearshape.fill" catalog="system">
                                     <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
+                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
                                 <connections>
                                     <action selector="onTapSettings" destination="8dq-jC-bEe" eventType="touchUpInside" id="w8h-px-2IB"/>
@@ -216,17 +224,21 @@
                         <viewLayoutGuide key="safeArea" id="3bM-uf-XtB"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="3bM-uf-XtB" firstAttribute="trailing" secondItem="5c8-Vo-nJ6" secondAttribute="trailing" constant="27" id="Nbb-Zu-Ekr"/>
+                            <constraint firstItem="L5H-sX-MZP" firstAttribute="top" secondItem="is3-d9-Un6" secondAttribute="top" id="2Gk-dG-0CX"/>
+                            <constraint firstItem="5c8-Vo-nJ6" firstAttribute="trailing" secondItem="3bM-uf-XtB" secondAttribute="trailing" constant="-12" id="Nbb-Zu-Ekr"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Z72-El-xFG" secondAttribute="trailing" constant="38" id="WeT-f2-TdF"/>
+                            <constraint firstItem="L5H-sX-MZP" firstAttribute="trailing" secondItem="is3-d9-Un6" secondAttribute="trailing" id="Xkm-IS-XHg"/>
                             <constraint firstItem="Ce8-ek-lG7" firstAttribute="top" secondItem="5c8-Vo-nJ6" secondAttribute="bottom" constant="23" id="XwE-MK-CUq"/>
                             <constraint firstItem="3bM-uf-XtB" firstAttribute="bottom" secondItem="Ce8-ek-lG7" secondAttribute="bottom" constant="69" id="cIT-9A-L9t"/>
+                            <constraint firstItem="L5H-sX-MZP" firstAttribute="leading" secondItem="is3-d9-Un6" secondAttribute="leading" id="dLM-8c-nvc"/>
                             <constraint firstItem="uDx-Ys-4aG" firstAttribute="leading" secondItem="3bM-uf-XtB" secondAttribute="leading" constant="12" id="dSW-c9-MLk"/>
                             <constraint firstItem="3bM-uf-XtB" firstAttribute="trailing" secondItem="Ce8-ek-lG7" secondAttribute="trailing" id="gTR-c2-eZz"/>
+                            <constraint firstItem="L5H-sX-MZP" firstAttribute="bottom" secondItem="3bM-uf-XtB" secondAttribute="top" constant="45" id="i8T-BS-XDJ"/>
                             <constraint firstItem="Ce8-ek-lG7" firstAttribute="leading" secondItem="3bM-uf-XtB" secondAttribute="leading" id="j8Z-fZ-RFN"/>
                             <constraint firstItem="Ce8-ek-lG7" firstAttribute="top" secondItem="uDx-Ys-4aG" secondAttribute="bottom" constant="19" id="kCK-d5-1bb"/>
                             <constraint firstItem="Z72-El-xFG" firstAttribute="top" secondItem="3bM-uf-XtB" secondAttribute="top" id="kMU-7N-GDm"/>
-                            <constraint firstItem="uDx-Ys-4aG" firstAttribute="top" secondItem="3bM-uf-XtB" secondAttribute="top" id="nMm-Ys-4Lx"/>
-                            <constraint firstItem="5c8-Vo-nJ6" firstAttribute="top" secondItem="3bM-uf-XtB" secondAttribute="top" constant="7" id="q7W-va-6c1"/>
+                            <constraint firstItem="uDx-Ys-4aG" firstAttribute="centerY" secondItem="Z72-El-xFG" secondAttribute="centerY" constant="-3" id="nMm-Ys-4Lx"/>
+                            <constraint firstItem="5c8-Vo-nJ6" firstAttribute="centerY" secondItem="Z72-El-xFG" secondAttribute="centerY" id="q7W-va-6c1"/>
                             <constraint firstItem="5c8-Vo-nJ6" firstAttribute="leading" secondItem="Z72-El-xFG" secondAttribute="trailing" constant="13" id="uqk-zC-2Vg"/>
                         </constraints>
                     </view>
@@ -329,14 +341,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk" customClass="BluetoothTableViewCell" customModule="OpenBot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="49" width="414" height="34.5"/>
+                                <rect key="frame" x="0.0" y="49" width="414" height="34"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="321" y="0.0" width="88" height="34.5"/>
+                                            <rect key="frame" x="321" y="0.0" width="88" height="34"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">
@@ -425,8 +437,8 @@
     <resources>
         <image name="bluetoothConnected" width="14" height="22"/>
         <image name="controller" width="444.66665649414062" height="405.66665649414062"/>
+        <image name="gearshape.fill" catalog="system" width="128" height="123"/>
         <image name="ic_openbot" width="72" height="72"/>
-        <image name="settings" width="39" height="39"/>
         <namedColor name="HomePageTitleColor">
             <color red="0.0" green="0.4392156862745098" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -440,7 +452,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.69803921568627447" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "white logo openbot 2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -11,7 +12,6 @@
           "value" : "light"
         }
       ],
-      "filename" : "blue logo openbot 4.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -22,7 +22,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "white logo openbot 2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

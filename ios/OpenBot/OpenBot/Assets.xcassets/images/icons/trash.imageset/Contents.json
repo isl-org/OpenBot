@@ -11,6 +11,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "baseline_delete_black_72pt_1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -21,6 +22,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "baseline_delete_white_72pt_1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -35,6 +37,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "baseline_delete_black_72pt_2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -45,11 +48,11 @@
           "value" : "dark"
         }
       ],
+      "filename" : "baseline_delete_white_72pt_2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "trash 5.svg",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -60,7 +63,7 @@
           "value" : "light"
         }
       ],
-      "filename" : "trash 2.svg",
+      "filename" : "baseline_delete_black_72pt_3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -71,7 +74,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "trash_dark 2.svg",
+      "filename" : "baseline_delete_white_72pt_3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

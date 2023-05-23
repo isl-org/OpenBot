@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "baseline_format_list_bulleted_white_48pt_1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -11,7 +12,6 @@
           "value" : "light"
         }
       ],
-      "filename" : "edit_white.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -22,11 +22,11 @@
           "value" : "dark"
         }
       ],
-      "filename" : "edit_dark.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "baseline_format_list_bulleted_white_48pt_2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -51,6 +51,7 @@
       "scale" : "2x"
     },
     {
+      "filename" : "baseline_format_list_bulleted_white_48pt_3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
