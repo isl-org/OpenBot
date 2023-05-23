@@ -176,7 +176,7 @@ public class BarCodeScannerFragment extends CameraFragment {
                 //grCode value is in Json object
                 Gson gson = new Gson();
                 JsonObject jsonObject = gson.fromJson(qrCodeValue, JsonObject.class); //get json
-                String linkCode = jsonObject.get("linkCode").getAsString(); // get as string
+                String linkCode = jsonObject.get("driveLink").getAsString(); // get as string
                 String projectName = jsonObject.get("projectName").getAsString(); // get as string
                 binding.qrMessage.setText(projectName + " file detected. Start to execute the code on your OpenBot.");
                 extractFileID(linkCode);
