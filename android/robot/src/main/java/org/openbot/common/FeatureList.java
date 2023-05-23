@@ -73,7 +73,7 @@ public class FeatureList {
     subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FC814A"));
     subCategories.add(new SubCategory(DATA_COLLECTION, R.drawable.ic_storage, "#93C47D"));
-    subCategories.add(new SubCategory(CONTROLLER_MAPPING, R.drawable.ic_joystick, "#7268A6"));
+    subCategories.add(new SubCategory(CONTROLLER_MAPPING, R.drawable.ic_controller, "#7268A6"));
     subCategories.add(new SubCategory(ROBOT_INFO, R.drawable.ic_openbot, "#4B7BFF"));
     categories.add(new Category(GENERAL, subCategories));
 
