@@ -70,6 +70,7 @@
 		66AC721629B885410022108A /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC720129B885410022108A /* GaugeView.swift */; };
 		66AC721729B885410022108A /* FreeRoamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC720229B885410022108A /* FreeRoamController.swift */; };
 		66AC721929B885C70022108A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC721829B885C70022108A /* Navigation.swift */; };
+		66B3C59C2A1D673D0079BC16 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B3C59B2A1D673D0079BC16 /* UIButton.swift */; };
 		66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */; };
 		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
 		727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */; };
@@ -183,6 +184,7 @@
 		66AC720129B885410022108A /* GaugeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GaugeView.swift; sourceTree = "<group>"; };
 		66AC720229B885410022108A /* FreeRoamController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreeRoamController.swift; sourceTree = "<group>"; };
 		66AC721829B885C70022108A /* Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
+		66B3C59B2A1D673D0079BC16 /* UIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectorFloatYoloV5.swift; sourceTree = "<group>"; };
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 			children = (
 				660FACAE29BFEDE000223373 /* BlueDress */,
 				4FEF443C3B9B9931D5108052 /* Constants.swift */,
+				66B3C59B2A1D673D0079BC16 /* UIButton.swift */,
 				4FEF4178D0A2805591A6A3A6 /* Strings.swift */,
 				727D3C4EBE89B9B6E537BE8B /* Device.swift */,
 				727D3946DB74E63117B32AF4 /* Dimension.swift */,
@@ -916,6 +919,7 @@
 				66AC721129B885410022108A /* GameViewController.swift in Sources */,
 				727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */,
 				727D36915DB88577316D9C46 /* Connection.swift in Sources */,
+				66B3C59C2A1D673D0079BC16 /* UIButton.swift in Sources */,
 				727D3E780CA6260A927019BD /* Client.swift in Sources */,
 				66AC720629B885410022108A /* PointGoalFragment.swift in Sources */,
 				727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */,
