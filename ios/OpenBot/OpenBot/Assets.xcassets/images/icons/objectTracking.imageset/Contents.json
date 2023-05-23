@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "baseline_person_search_white_48pt_1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -15,6 +16,7 @@
       "scale" : "1x"
     },
     {
+      "filename" : "baseline_person_search_white_48pt_2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -29,7 +31,7 @@
       "scale" : "2x"
     },
     {
-      "filename" : "object_tracking_lite 2.png",
+      "filename" : "baseline_person_search_white_48pt_3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },

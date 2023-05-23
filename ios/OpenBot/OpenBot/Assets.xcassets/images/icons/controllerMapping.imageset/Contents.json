@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "baseline_sports_esports_white_48pt_1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -25,6 +26,7 @@
       "scale" : "1x"
     },
     {
+      "filename" : "baseline_sports_esports_white_48pt_2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -49,7 +51,7 @@
       "scale" : "2x"
     },
     {
-      "filename" : "controller_mapping_lite 2.png",
+      "filename" : "baseline_sports_esports_white_48pt_3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
