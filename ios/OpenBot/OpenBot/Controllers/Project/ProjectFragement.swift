@@ -65,7 +65,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         setupOpenCodeIcon();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
-        if authentication.googleSignIn.currentUser != nil{
+        if authentication.googleSignIn.currentUser != nil {
             createOverlayAlert();
         }
 
@@ -105,6 +105,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             } else {
                 allProjects = decodeProjectFromUserDefault()
                 allProjectCommands = decodeProjectDataFromUserDefault()
+                alert.dismiss(animated: true);
             }
         }
 
